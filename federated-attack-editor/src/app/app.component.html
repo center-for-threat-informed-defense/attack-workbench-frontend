@@ -1,0 +1,20 @@
+<div [class]="'app ' + theme">
+    <app-header></app-header>
+
+    <mat-drawer-container class="app-body">
+        <mat-drawer-content>
+            <div class="content">
+                <app-toolbar (onToggleTheme)="toggleTheme()"></app-toolbar>
+                <div class="router-padding">
+                    <router-outlet></router-outlet>
+                </div>
+            </div>
+        </mat-drawer-content>
+        <mat-drawer mode="side" position="end" opened>
+            <div class="drawer">
+                <app-resources-drawer (drawerResize)="resizeDrawers()"></app-resources-drawer>
+            </div>
+        </mat-drawer>
+    </mat-drawer-container>
+    <!-- <app-footer></app-footer> -->
+</div>

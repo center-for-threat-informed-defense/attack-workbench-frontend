@@ -1,0 +1,53 @@
+@import "../../../../../../../style/globals";
+$card-padding: 10px;
+.stix-card {
+    .card-header {
+        .title-block {
+            padding: $card-padding;
+            display: inline-block;
+            transform: translateY(1px);
+            @extend .text-label;
+            &.active {
+                border-top-left-radius: 5px;
+                border-top-right-radius: 5px;
+                .dark & { 
+                    background: color-alternate(secondary, 2.5);
+                    border-color: color-alternate(secondary, 3);
+                    border-bottom-color: color-alternate(secondary, 2.5);
+                 }
+                .light & { 
+                    background: color(light);
+                    border-color: color-alternate(light, 2);
+                    border-bottom-color: color(light);
+                 }
+                border: 1px solid;
+            }
+            // &:not(.active) {
+                //     opacity: 0.5;
+            // }
+        }
+    }
+    .card-section {
+        padding: $card-padding;
+        .dark & { 
+            background: color-alternate(secondary, 2.5);
+            border-color: color-alternate(secondary, 3);
+         }
+        .light & { 
+            background: color(light);
+            border-color: color-alternate(light, 2);
+        }
+        border: 1px solid;
+        &:not(:last-child) {
+            .light & { border-bottom-color: color-alternate(light); }
+            .dark & { border-bottom-color: color-alternate(secondary, 3); }
+        } &:not(:first-child) {
+            border-top-width: 0;
+        }
+    }
+
+    .route {
+        display: inline-block;
+        &+.route { margin-left: 10px; }
+    }
+}

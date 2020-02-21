@@ -1,0 +1,42 @@
+@import "../../../style/globals";
+.resources-drawer {
+    height: 100%;
+    box-sizing: content-box;
+    display: block;
+    vertical-align: top;
+    .controls, .content {
+        display: inline-block
+    }
+    .controls {
+        float: left;
+        border-left: 1px solid;
+        border-bottom: 1px solid;
+        border-bottom-left-radius: 5px;
+        transform: translateX(1px); //cover drawer border
+        .light & { 
+            background: color-alternate(light); 
+            border-right: 1px solid color-alternate(light,2); 
+        }
+        .dark & { 
+            background: color-alternate(secondary); 
+            border-right: 1px solid color-alternate(secondary,2);
+        }        
+        .control {
+            display: block;
+        }
+    }
+    .content {
+        height: 100%;
+        border-left: 1px solid;
+        .light & { background: color-alternate(light); }
+        .dark & { background: color-alternate(secondary); }
+        mat-toolbar {
+            height: 48px;
+            .light & { background: color-alternate(light, 2); }
+            .dark & { background: color-alternate(secondary, 2); }
+
+            .subsubheading { margin: 0 auto; }
+        }
+    }
+    
+}

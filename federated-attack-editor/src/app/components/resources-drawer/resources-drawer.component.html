@@ -1,0 +1,24 @@
+<div class="resources-drawer">
+    <div class="controls">
+        <button *ngFor="let tab of tabs" (click)="onTabClick(tab)"  [matTooltip]="tab.name" matTooltipPosition="left" mat-button class="control">
+            <mat-icon [attr.aria-label]="tab.label">{{tab.icon}}</mat-icon>
+        </button>
+    </div>
+    <div class="content" *ngIf="currentTab == 'search'">
+        <mat-toolbar>
+            <span class="subsubheading">search</span>
+        </mat-toolbar>
+        <app-resources-search></app-resources-search>
+    </div>
+    <div class="content" *ngIf="currentTab == 'tram'">
+        <mat-toolbar>
+            <span class="subsubheading">threat reports</span>
+        </mat-toolbar>
+        <app-resources-tram></app-resources-tram>
+    </div>
+    <div class="content" *ngIf="currentTab == 'saved'">
+        <mat-toolbar>
+            <span class="subsubheading">saved items</span>
+        </mat-toolbar>
+    </div>
+</div>

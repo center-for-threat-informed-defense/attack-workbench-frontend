@@ -1,0 +1,11 @@
+@import "../../../style/globals";
+.spacer {
+    flex: 1 1 auto;
+}
+.app-title {
+    a {
+        border-bottom-width: 0 !important;
+        &:hover { color: inherit !important; }
+        .dark & { color: color(engenuity-purple) !important; }
+    }
+}

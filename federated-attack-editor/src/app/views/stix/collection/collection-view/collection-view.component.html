@@ -1,0 +1,7 @@
+<div class="collection-view">
+    <div *ngIf="collection">
+        <h1>{{collection.name}}</h1>
+        <p>{{collection.description}}</p>
+    </div>
+    <app-loading-overlay *ngIf="!collection"></app-loading-overlay>
+</div>

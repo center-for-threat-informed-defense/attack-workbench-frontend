@@ -1,0 +1,38 @@
+.form-row {
+    display: flex;
+    flex-direction: row;
+    mat-form-field + mat-form-field {
+        margin-left: 30px;
+    }
+
+    button.mat-stroked-button:disabled {
+        opacity: 0.5;
+    }
+
+    &.align-right {
+        float: right;
+    }
+}
+
+.input-group { //sequential joined mat-form-fields of appearance-outline type
+    mat-form-field.mat-form-field-appearance-outline:not(:first-child) {
+        .mat-form-field-outline-start { //left border
+            border-radius: 0;
+            border-left-width: 0;
+        }
+    }
+    mat-form-field.mat-form-field-appearance-outline:not(:last-child) {
+        .mat-form-field-outline-end { //right border
+            border-radius: 0;
+        }
+    }
+
+    //border left restoration for focused and hover states
+    .mat-form-field-appearance-outline:not(:first-child):not(.mat-form-field-disabled) { .mat-form-field-flex:hover, &.mat-focused { .mat-form-field-outline-start {
+        border-left-width: 1px !important;
+    }}}
+}
+// disabled form field style
+mat-form-field.mat-form-field-appearance-outline.mat-form-field-disabled {
+    opacity: 0.5;
+}

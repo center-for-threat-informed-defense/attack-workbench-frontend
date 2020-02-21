@@ -1,0 +1,14 @@
+@import "../.../../../../../../style/globals";
+.collectionInfo {
+    mat-form-field {box-sizing: content-box;}
+    .name {
+        flex-grow: 1
+    }
+    .version {
+        width: 25%;
+    }
+    .description {
+        width: 100%;
+    }
+    
+}

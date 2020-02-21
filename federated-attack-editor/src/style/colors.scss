@@ -1,0 +1,92 @@
+/**
+ * Colors used across the website.
+ * For each color-pair:
+ *   - "color" refers to the color itself
+ *   - "on-color" refers to the most readable text-color to appear on top of the color. 
+ * Note: some colors don't define on-colors. This is because, for these colors, they aren't intended to
+ * appear with inner content. For example, "link" is only intended to be used for link text, which inherently
+ * cannot have inner text.
+ */
+$colors: (
+    // angular palatte colors
+    primary-light: (color: #6240c5, on-color: white), 
+    primary:       (color: #966df9, on-color: black), 
+    primary-dark:  (color: #3d2979, on-color: white), 
+    
+    secondary-light: (color: #2a373f, on-color: white), 
+    secondary:       (color: #1c252b, on-color: white), 
+    secondary-dark:  (color: #121b21, on-color: white), 
+    
+    light-light: (color: white,   on-color: #050505), 
+    light:       (color: white,   on-color: #050505), 
+    light-dark:  (color: #F0F1F2, on-color: #050505), 
+
+    dark-light: (color: #050505, on-color: #F0F1F2), 
+    dark:       (color: #050505,  on-color: #F0F1F2), 
+    dark-dark:  (color: #050505,  on-color: #F0F1F2), 
+
+    //engenuity brand colors
+    engenuity-purple: (color: #6241c5, on-color: white),
+    engenuity-black: (color: #1d252c, on-color: white),
+    mitre-blue: (color: #005b94, on-color: black),
+    spark-yellow: (color: #fff601, on-color: black),
+    balanced-blue: (color: #0096d1, on-color: black),
+    engenuity-gray: (color: #f0f1f2, on-color: black),
+);
+
+// accessor helper for $colors. Gets the color of the named pair
+@function color($name) {
+    @return map-get(map-get($colors, $name), "color");
+}
+
+// given a color name, get an alternate version of the color, for patterning
+// if the base color is dark, the alternate will be slightly lighter.
+// if the base color is light, the alternate will be slightly darker.
+// contrast, an optional argument, multiplies to create a more distint or similar color. >1 is more distant, <1 is more similar.
+@function color-alternate($name, $contrast: 1) {
+    @return mix(invert(color($name)), color($name), $weight: $contrast * 5%); 
+}
+
+// accessor helper for $colors. Gets the on-color of the named pair
+@function on-color($name) {
+    @return map-get(map-get($colors, $name), "on-color");
+}
+
+// given a color-name, get an emphasized version of the on-color.
+// The emphasized on-color is less like the background color.
+@function on-color-emphasis($name) {
+    @return mix(invert(color($name)), on-color($name)); 
+}
+// given a color-name, get an deemphasized version of the on-color.
+// The deemphasized on-color is more like the background color.
+@function on-color-deemphasis($name) {
+    @return mix(color($name), on-color($name), 25%); 
+}
+
+// given a color name, compute a border color for the color
+@function border-color($name) {
+    @return mix(invert(color($name)), color($name), 12.5%); 
+    // @return rgba(invert(color($name)), 0.125);
+}
+
+// escape the color. Note param is a color and not a color name: this is not an accessor to the color map above.
+// replaces # with %23 in hex colors
+// see https://codepen.io/gunnarbittersmann/pen/BoovjR for explanation of why we have to escape # for the background image
+@function escape-color($color) {
+    $hex: ie-hex-str($color);
+    @return "%23"+ str-slice($string: #{$hex}, $start-at: 4); //skip #AA in #AARRGGBB
+}
+
+//convert the color to a material-supporting color map
+@function to-material-map($color) {
+    @return (
+        50: color($color + "-light"),
+        100: color($color),
+        200: color($color + "-dark"),
+        contrast: (
+            50: on-color($color + "-light"),
+            100: on-color($color),
+            200: on-color($color + "-dark")
+        )
+    )
+}
