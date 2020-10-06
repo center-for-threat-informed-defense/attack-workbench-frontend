@@ -1,20 +1,20 @@
 {
   "name": "attack-editor",
+  "version": "0.0.0",
   "description": "Application for creating and editing ATT&CK-like content.",
   "keywords": [
-      "cti",
-      "cyber-threat-intelligence",
-      "attack",
-      "mitre-attack",
-      "mitre-corporation",
-      "ctid",
-      "center-for-threat-informed-defense",
-      "cybersecurity"
+    "cti",
+    "cyber-threat-intelligence",
+    "attack",
+    "mitre-attack",
+    "mitre-corporation",
+    "ctid",
+    "center-for-threat-informed-defense",
+    "cybersecurity"
   ],
-  "version": "0.0",
-  "license": { 
-      "type": "Apache-2.0",
-      "url": "https://opensource.org/licenses/apache2.0.php"
+  "license": {
+    "type": "Apache-2.0",
+    "url": "https://opensource.org/licenses/apache2.0.php"
   },
   "scripts": {
     "ng": "ng",
