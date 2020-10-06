@@ -9,7 +9,7 @@ import { Software } from 'src/app/classes/stix/software';
 })
 export class SoftwareListComponent implements OnInit {
 
-    private software: Software[] = [];
+    public software: Software[] = [];
 
     constructor(private softwareService: SoftwareService) { }
 

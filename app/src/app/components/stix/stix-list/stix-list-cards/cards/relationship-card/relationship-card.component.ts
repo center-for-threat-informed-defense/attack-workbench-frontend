@@ -9,7 +9,7 @@ import { Relationship } from 'src/app/classes/stix/relationship';
   encapsulation: ViewEncapsulation.None
 })
 export class RelationshipCardComponent extends StixCardComponent implements OnInit {
-    private relationship: Relationship = new Relationship({
+    public relationship: Relationship = new Relationship({
         "type": "relationship",
         "target_ref": "Brute Force",
         "description": "Set account lockout policies after a certain number of failed login attempts to prevent passwords from being guessed. Too strict a policy may create a denial of service condition and render environments un-usable, with all accounts used in the brute force being locked-out.",

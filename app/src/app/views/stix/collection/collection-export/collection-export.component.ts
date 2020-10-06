@@ -25,12 +25,12 @@ import { StixObject } from 'src/app/classes/stix/stix-object';
 })
 export class CollectionExportComponent implements OnInit {
 
-    private collection: Collection;
+    public collection: Collection;
 
-    private collectionInformation: FormGroup;
+    public collectionInformation: FormGroup;
 
     // this won't actually be here, it's just for the mockups
-    private contents: StixObject[] = [];
+    public contents: StixObject[] = [];
 
     constructor(private route: ActivatedRoute, 
                 private collectionService: CollectionService, 

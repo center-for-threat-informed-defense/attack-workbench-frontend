@@ -9,7 +9,7 @@ import { Group } from 'src/app/classes/stix/group';
 })
 export class GroupListComponent implements OnInit {
 
-    private groups: Group[] = [];
+    public groups: Group[] = [];
 
     constructor(private groupService: GroupService) { }
 

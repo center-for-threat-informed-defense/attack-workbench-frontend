@@ -8,7 +8,7 @@ import { Component, OnInit, ViewEncapsulation, Output, EventEmitter } from '@ang
 })
 export class ResourcesDrawerComponent implements OnInit {
     @Output() drawerResize = new EventEmitter(); //emit events when the drawer is opened/closed
-    private tabs = [
+    public tabs = [
         {
             "name": "search",
             "label": "search",
@@ -25,9 +25,9 @@ export class ResourcesDrawerComponent implements OnInit {
             "icon": "bookmarks"
         }
     ]
-    private currentTab: string = "";
+    public currentTab: string = "";
 
-    private onTabClick(tab: any) {
+    public onTabClick(tab: any) {
         if (this.currentTab == tab.name) this.currentTab = "";
         else this.currentTab = tab.name;
         setTimeout(() => this.drawerResize.emit()); // emit after render loop

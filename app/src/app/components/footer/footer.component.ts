@@ -6,8 +6,8 @@ import { version, name } from "../../../../package.json";
   styleUrls: ['./footer.component.scss']
 })
 export class FooterComponent implements OnInit {
-    private appVersion: string = version;
-    private appName: string = name;
+    public appVersion: string = version;
+    public appName: string = name;
     constructor() { }
     
     ngOnInit() {

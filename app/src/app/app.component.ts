@@ -13,9 +13,9 @@ export class AppComponent {
     constructor(private overlayContainer: OverlayContainer) {
         this.syncOverlayTheme();
     }
-    private theme = "light";
+    public theme = "light";
     //toggle the current theme
-    private toggleTheme() {
+    public toggleTheme() {
         this.theme = this.theme == "light"? "dark" : "light";
         this.syncOverlayTheme();
     }

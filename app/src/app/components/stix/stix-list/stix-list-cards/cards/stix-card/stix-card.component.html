@@ -1,12 +1,12 @@
 <div class="stix-card">
     <div class="card-header">
         <div class="title-block active">
-            {{stixObject.name}}
+            name here
         </div>
     </div>
     <div class="card-body">
         <div class="card-section">
-            {{summarize(stixObject.description)}}
+            description here
         </div>
         <div class="card-section">
             <div class="route" *ngFor="let route of stixObject.routes"><a [routerLink]="'/' + [stixObject.attackType, stixObject.stixID, route.route].join('/')">{{route.label}}</a></div>

@@ -8,7 +8,7 @@ import { FormGroup, FormBuilder, ValidationErrors, ValidatorFn, Validators } fro
 })
 export class CollectionImportComponent implements OnInit {
 
-    private collectionInfo: FormGroup;
+    public collectionInfo: FormGroup;
 
     constructor(private formBuilder: FormBuilder) { }
 

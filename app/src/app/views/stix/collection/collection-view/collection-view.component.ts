@@ -12,7 +12,7 @@ import { CollectionService } from 'src/app/services/stix/collection/collection.s
 })
 export class CollectionViewComponent implements OnInit {
     
-    private collection: Collection;
+    public collection: Collection;
 
     constructor(private route: ActivatedRoute, private collectionService: CollectionService) { }
 

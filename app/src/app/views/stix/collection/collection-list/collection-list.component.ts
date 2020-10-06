@@ -9,7 +9,7 @@ import { Collection } from 'src/app/classes/stix/collection';
 })
 export class CollectionListComponent implements OnInit {
 
-    private collections: Collection[] = [];
+    public collections: Collection[] = [];
         
     constructor(private collectionService: CollectionService) { }
 

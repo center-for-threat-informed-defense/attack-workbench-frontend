@@ -7,7 +7,7 @@ import { Component, OnInit, ViewEncapsulation, Output, EventEmitter } from '@ang
   encapsulation: ViewEncapsulation.None
 })
 export class ToolbarComponent implements OnInit {
-    @Output() onToggleTheme = new EventEmitter();
+    @Output() public onToggleTheme = new EventEmitter();
     
     constructor() {}
 
@@ -15,7 +15,7 @@ export class ToolbarComponent implements OnInit {
     }
     
     //emit a toggle theme event
-    private emitToggleTheme() {
+    public emitToggleTheme() {
         this.onToggleTheme.emit();
     }
 }
