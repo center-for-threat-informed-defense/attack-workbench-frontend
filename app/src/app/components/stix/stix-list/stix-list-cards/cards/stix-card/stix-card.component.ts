@@ -8,7 +8,7 @@ import { StixObject } from 'src/app/classes/stix/stix-object';
   encapsulation: ViewEncapsulation.None
 })
 export class StixCardComponent implements OnInit {
-    @Input() stixObject: StixObject;
+    @Input() public stixObject: StixObject;
 
     constructor() { }
 

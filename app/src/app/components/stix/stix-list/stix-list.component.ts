@@ -1,7 +1,7 @@
 import { Component, OnInit, Input, ViewEncapsulation } from '@angular/core';
 import { StixObject } from 'src/app/classes/stix/stix-object';
 import { CollectionService } from 'src/app/services/stix/collection/collection.service';
-import { MatTreeNestedDataSource } from '@angular/material';
+import { MatTreeNestedDataSource } from '@angular/material/tree';
 import { NestedTreeControl } from '@angular/cdk/tree';
 
 @Component({
@@ -12,17 +12,17 @@ import { NestedTreeControl } from '@angular/cdk/tree';
 })
 export class StixListComponent implements OnInit {
 
-    @Input() stixObjects: StixObject[]; //TODO get rid of this in favor of stix list cards loading using filters
-    @Input() showOnly: StixListConfig = {};
+    @Input() public stixObjects: StixObject[]; //TODO get rid of this in favor of stix list cards loading using filters
+    @Input() public showOnly: StixListConfig = {};
     //view mode
-    private mode: string = "cards";
+    public mode: string = "cards";
     //options provided to the user for grouping and filtering
-    private filterOptions: FilterGroup[];
+    public filterOptions: FilterGroup[];
     //current grouping and filtering selections
-    private filter: string[] = [];
-    private groupBy: string[] = [];
+    public filter: string[] = [];
+    public groupBy: string[] = [];
     // search query
-    private query: string = "";
+    public query: string = "";
     
     
     //dataSource for the tree
@@ -58,7 +58,7 @@ export class StixListComponent implements OnInit {
 
     constructor(private collectionService: CollectionService) {}
 
-    private generateSections() {
+    public generateSections() {
         // parse filters into StixListConfig objects
         let parsedFilters: StixListConfig[] = [];
         for (let filter of this.filter) {

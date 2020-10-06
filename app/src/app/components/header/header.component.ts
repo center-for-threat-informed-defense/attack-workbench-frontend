@@ -8,7 +8,7 @@ import { stixRoutes } from "../../app-routing-stix.module";
   encapsulation: ViewEncapsulation.None
 })
 export class HeaderComponent implements OnInit {
-    private routes: any[];
+    public routes: any[];
 
     constructor(private route: ActivatedRoute) {
         this.routes = stixRoutes;

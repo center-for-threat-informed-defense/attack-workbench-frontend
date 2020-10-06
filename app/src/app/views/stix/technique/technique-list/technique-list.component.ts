@@ -9,7 +9,7 @@ import { Technique } from 'src/app/classes/stix/technique';
 })
 export class TechniqueListComponent implements OnInit {
 
-  private techniques: Technique[] = [];
+  public techniques: Technique[] = [];
 
   constructor(private techniqueService: TechniqueService) { }
 
