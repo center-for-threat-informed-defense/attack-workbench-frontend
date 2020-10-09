@@ -1,10 +1,12 @@
 import { Relationship } from './relationship';
 import { VersionNumber } from '../version-number';
 import { v4 as uuid } from 'uuid';
+import { DisplaySettings } from '../display-settings';
 export abstract class StixObject {
     public readonly stixID: string; // STIX ID
     public readonly type: string;   // STIX type
     public readonly attackType: string; // ATT&CK type
+    
 
     public get routes(): any[] { // route to view the object
         let baseRoute = "/" + [this.attackType, this.stixID].join("/")
@@ -25,6 +27,8 @@ export abstract class StixObject {
 
     public deprecated: boolean = false; //is object deprecated?
     public revoked: boolean = false;    //is object revoked?
+
+    public displaySettings: DisplaySettings; //settings for how to display this object
     
     /**
      * Initialize the STIX object

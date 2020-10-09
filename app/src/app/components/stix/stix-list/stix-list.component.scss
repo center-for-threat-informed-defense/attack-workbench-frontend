@@ -47,7 +47,7 @@
         //     background: none;
         // }
 
-        .mat-cell + .mat-cell {
+        .mat-cell + .mat-cell, .mat-header-cell + .mat-header-cell {
             padding-left: 12px;
         }
 
