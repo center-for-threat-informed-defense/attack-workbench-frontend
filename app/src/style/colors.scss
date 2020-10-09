@@ -65,7 +65,7 @@ $colors: (
 
 // given a color name, compute a border color for the color
 @function border-color($name) {
-    @return mix(invert(color($name)), color($name), 12.5%); 
+    @return mix(color($name), on-color($name), 70%); 
     // @return rgba(invert(color($name)), 0.125);
 }
 
