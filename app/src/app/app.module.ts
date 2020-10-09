@@ -37,9 +37,6 @@ import { BreadcrumbModule } from "angular-crumbs";
 import { MaterialFileInputModule } from 'ngx-material-file-input';
 
 import { StixListComponent } from './components/stix/stix-list/stix-list.component';
-import { StixListCardsComponent } from './components/stix/stix-list/stix-list-cards/stix-list-cards.component';
-import { StixCardComponent } from './components/stix/stix-list/stix-list-cards/cards/stix-card/stix-card.component';
-import { RelationshipCardComponent } from './components/stix/stix-list/stix-list-cards/cards/relationship-card/relationship-card.component';
 
 import { LandingPageComponent } from './views/landing-page/landing-page.component';
 import { HelpPageComponent } from './views/help-page/help-page.component';
@@ -90,9 +87,6 @@ import { TechniqueEditComponent } from './views/stix/technique/technique-edit/te
     HelpPageComponent,
     
     StixListComponent,
-    StixListCardsComponent,
-    StixCardComponent,
-    RelationshipCardComponent,
     
     ToolbarComponent,
     

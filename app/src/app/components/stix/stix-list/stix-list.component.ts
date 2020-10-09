@@ -7,6 +7,16 @@ import {animate, state, style, transition, trigger} from '@angular/animations';
 import {MatSort} from '@angular/material/sort';
 import {MatPaginator} from '@angular/material/paginator';
 
+import { Collection } from 'src/app/classes/stix/collection';
+import { Mitigation } from 'src/app/classes/stix/mitigation';
+import { Software } from 'src/app/classes/stix/software';
+import { Tactic } from 'src/app/classes/stix/tactic';
+import { Technique } from 'src/app/classes/stix/technique';
+import { Relationship } from 'src/app/classes/stix/relationship';
+import { Matrix } from 'src/app/classes/stix/matrix';
+import { Group } from 'src/app/classes/stix/group';
+import { DisplayProperty } from 'src/app/classes/display-settings';
+
 @Component({
   selector: 'app-stix-list',
   templateUrl: './stix-list.component.html',
@@ -22,11 +32,10 @@ import {MatPaginator} from '@angular/material/paginator';
 })
 export class StixListComponent implements OnInit {
 
-    @Input() public relatedTo: String = null;
-    @Input() public type: String = null
 
     @Input() public stixObjects: StixObject[]; //TODO get rid of this in favor of stix list cards loading using filters
-    @Input() public showOnly: StixListConfig = {};
+    @Input() public config: StixListConfig = {};
+
     //view mode
     public mode: string = "cards";
     //options provided to the user for grouping and filtering
@@ -38,11 +47,9 @@ export class StixListComponent implements OnInit {
     public query: string = "";
 
     // TABLE STUFF
-    public tableColumns: string[] = [
-        "name", 
-        "attackType",
-        "version"
-    ]
+    public tableColumns: string[];
+    public tableColumnsDisplay: Map<string, string>; // property to display for each displayProperty
+    public tableDetail: DisplayProperty[];
     public expandedElement: StixObject | null;
     // @ViewChild(MatSort) public sort: MatSort;
     // @ViewChild(MatPaginator) public paginator: MatPaginator;
@@ -80,66 +87,103 @@ export class StixListComponent implements OnInit {
     constructor(private collectionService: CollectionService) {}
 
     ngOnInit() {
-        this.collections = this.collectionService.getAll().map((collection) => {return {"value": "collection." + collection.stixID, "label": collection.name}})
+        // this.collections = this.collectionService.getAll().map((collection) => {return {"value": "collection." + collection.stixID, "label": collection.name}})
         this.filterOptions = []
-        if ("type" in this.showOnly) { this.filter.push("type." + this.showOnly.type); }
+         // parse the config
+        if ("type" in this.config) { 
+            this.filter.push("type." + this.config.type); 
+            // set columns according to type
+            let obj: StixObject = null;
+            switch(this.config.type) {
+                case "collection":
+                    obj = new Collection()
+                    break;
+                case "group":
+                    obj = new Group()
+                    break;
+                case "matrix":
+                    obj = new Matrix()
+                    break;
+                case "mitigation":
+                    obj = new Mitigation()
+                    break;
+                case "software":
+                    obj = new Software("malware");
+                    break;
+                case "tactic":
+                    obj = new Tactic();
+                    break;
+                case "technique":
+                    obj = new Technique()
+                    break;
+                case "relationship":
+                    obj = new Relationship();
+                    break;
+            }
+            this.tableColumnsDisplay = new Map<string, string>();
+            for (let displayprop of obj.displaySettings.tableColumns) {
+                this.tableColumnsDisplay.set(displayprop.property, displayprop.display);
+            };
+            console.log(this.tableColumnsDisplay)
+            this.tableColumns = obj.displaySettings.tableColumns.map((x) => x.property);
+            this.tableDetail = obj.displaySettings.tableDetail;
+        }
         else {
             this.filterOptions.push({
                 "name": "type", //TODO make more extensible to additional types
-                "disabled": "type" in this.showOnly,
+                "disabled": "type" in this.config,
                 "values": this.types
             })
             this.groupBy = ["type"];
         }
-        if ("domain" in this.showOnly) { this.filter.push("domain." + this.showOnly.domain); }
-        else {
-            this.filterOptions.push({
-                "name": "domain", //TODO dynamic domain values
-                "disabled": "domain" in this.showOnly,
-                "values": this.domains
-            })
-            if (this.groupBy.length == 0) this.groupBy = ["domain"];
+        if ("relatedTo" in this.config) {
+
+        } 
+        if ("query" in this.config) {
+
         }
-        if ("collection" in this.showOnly) { this.filter.push("collection." + this.showOnly.collection); }
-        else {
-            this.filterOptions.push({
-                "name": "collection", //TODO dynamic collection list
-                "disabled": "collection" in this.showOnly,
-                "values": this.collections
-            })
-            if (this.groupBy.length == 0) this.groupBy = ["collection"];
-        }
-        if ("status" in this.showOnly) { this.filter.push("status." + this.showOnly.status); }
-        else {
-            this.filterOptions.push({
-                "name": "status",
-                "disabled": "status" in this.showOnly,
-                "values": this.statuses
-            })
-            if (this.groupBy.length == 0) this.groupBy = ["status"];
-        }
+
+        // if ("domain" in this.config) { this.filter.push("domain." + this.config.domain); }
+        // else {
+        //     this.filterOptions.push({
+        //         "name": "domain", //TODO dynamic domain values
+        //         "disabled": "domain" in this.config,
+        //         "values": this.domains
+        //     })
+        //     if (this.groupBy.length == 0) this.groupBy = ["domain"];
+        // }
+        // if ("collection" in this.config) { this.filter.push("collection." + this.config.collection); }
+        // else {
+        //     this.filterOptions.push({
+        //         "name": "collection", //TODO dynamic collection list
+        //         "disabled": "collection" in this.config,
+        //         "values": this.collections
+        //     })
+        //     if (this.groupBy.length == 0) this.groupBy = ["collection"];
+        // }
+        // if ("status" in this.config) { this.filter.push("status." + this.config.status); }
+        // else {
+        //     this.filterOptions.push({
+        //         "name": "status",
+        //         "disabled": "status" in this.config,
+        //         "values": this.statuses
+        //     })
+        //     if (this.groupBy.length == 0) this.groupBy = ["status"];
+        // }
     }
 }
 
 //allowed types for StixListConfig
-type type_attacktype = "collection" | "group" | "matrix" | "mitigation" | "software" | "tactic" | "technique";
+type type_attacktype = "collection" | "group" | "matrix" | "mitigation" | "software" | "tactic" | "technique" | "relationship";
 type type_domain = "enterprise-attack" | "mobile-attack";
 type type_status = "status.wip" | "status.awaiting-review" | "status.reviewed";
 export interface StixListConfig {
+    /** STIX ID; force the list to show relationships with the given object */
+    relatedTo?: string;
     /** force the list to show only this type */
     type?: type_attacktype;
-    /** force the list to show only this domain */
-    domain?: type_domain;
-    /** force the list to show only this collection; arg is stix ID */
-    collection?: string;
-    /** force the list to show only objects with this status */
-    status?: type_status;
-}
-
-export interface StixListNode {
-    name: string;
-    filters: StixListConfig[];
-    children?: StixListNode[];
+    /** force the list to show only objects matching this query */
+    query?: any;
 }
 
 export interface FilterValue {

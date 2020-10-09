@@ -4,9 +4,11 @@ export class Tactic extends StixObject {
     public name: string;
     public description: string;
 
-    constructor(sdo: any) {
+    constructor(sdo?: any) {
         super(sdo);
-        this.name = sdo.name;
-        this.description = sdo.description;
+        if (sdo) {
+            this.name = sdo.name;
+            this.description = sdo.description;
+        }
     }
 }
