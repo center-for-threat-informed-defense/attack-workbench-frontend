@@ -1,4 +1,6 @@
 @import "../../../../style/globals";
+@import '~@angular/material/theming';
+
 .controls {
     .input-group {
         width: 100%;
@@ -10,51 +12,56 @@
     }
 }
 
-.list {
-    .tree {
-        .subtree-collapsed {
-            display: none;
+.table-container {
+    .dark & { 
+        border-radius: 5px;
+        border: 1px solid border-color(dark);
+    }
+    .light & {
+        // border: 1px solid border-color(light);
+        @include mat-elevation(8);
+    }
+    // width: 100%;
+    table {
+        width: 100%;
+        table-layout: fixed;
+
+        th, td { 
+            .light & { border-color: border-color(light); }
+            .dark &  { border-color: border-color(dark); }
+        } 
+        th {
+            .light & { color: on-color-deemphasis(light); }
+            .dark &  { color: on-color-deemphasis(dark); }
         }
-        ul, li {
-            margin-top: 0;
-            margin-bottom: 0;
-            list-style-type: none;
+
+        tr.detail-row {
+            height: 0;
         }
-        .node-li { 
-            width: 100%;
-            &.expanded { 
-                margin-bottom: 5px;
-            }
+
+        tr.element-row:not(.expanded):hover {
+            .light & { background: color-alternate(light); }
+            .dark &  { background: rgba(border-color(dark), 0.25);  }
         }
-        .node-header { 
-            cursor: pointer; user-select: none;
-            transition: all ease 0.2s;
-            .light & {
-                border-bottom: 1px solid color-alternate(light, 2);
-                &:hover { background: color-alternate(light, 2); }
-            }
-            .dark & {
-                border-bottom: 1px solid color-alternate(secondary, 2);
-                &:hover { background: color-alternate(secondary, 2); }
-            }
-        }
-        // .tree-content {
-        //     padding: 40px 40px 0 40px;
+        // tr.element-row:not(.expanded):active {
+        //     background: none;
         // }
 
-        .mat-tree > { .mat-tree-node, .mat-nested-tree-node { &:first-child >.node-li>.node-header { 
-            // rounded borders for top level elements
-            border-top-left-radius: 5px;
-            border-top-right-radius: 5px;
-        }}}
-        .mat-tree-node, .mat-nested-tree-node { &:last-child .node-li:not(.expanded) .node-header { 
-            border-bottom-left-radius: 5px;
-            border-bottom-right-radius: 5px;
-        }}
+        .mat-cell + .mat-cell {
+            padding-left: 12px;
+        }
+
+        .element-detail {
+            overflow: hidden;
+            display: flex;
+        }
+
+        .element-row td {
+            border-bottom-width: 0;
+        }
+
+        .element-description { 
+            padding: 16px;
+        }
     }
-    .tree .node-header, .content-tree, .content-flat {
-        .light & { background: color-alternate(light); }
-        .dark & { background: color-alternate(secondary); }
-    }
-    // .flat {}
 }
