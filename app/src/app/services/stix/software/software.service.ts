@@ -22,7 +22,7 @@ export class SoftwareService extends StixService {
         this.http.get(this.domainData['enterprise']).subscribe(data => {
             let software = data['objects'].filter((o) => o.type === 'malware' || o.type === 'tool');
             for(let sw of software) {
-                let s = new Software(sw);
+                let s = new Software(sw.type, sw);
                 if(!this.software.some(o => o.stixID === s.stixID) ) {
                     this.software.push(s);
                 }

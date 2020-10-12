@@ -6,6 +6,7 @@ import { NestedTreeControl } from '@angular/cdk/tree';
 import {animate, state, style, transition, trigger} from '@angular/animations';
 import {MatSort} from '@angular/material/sort';
 import {MatPaginator} from '@angular/material/paginator';
+import { RouterModule } from '@angular/router';
 
 import { Collection } from 'src/app/classes/stix/collection';
 import { Mitigation } from 'src/app/classes/stix/mitigation';
@@ -124,7 +125,6 @@ export class StixListComponent implements OnInit {
             for (let displayprop of obj.displaySettings.tableColumns) {
                 this.tableColumnsDisplay.set(displayprop.property, displayprop.display);
             };
-            console.log(this.tableColumnsDisplay)
             this.tableColumns = obj.displaySettings.tableColumns.map((x) => x.property);
             this.tableDetail = obj.displaySettings.tableDetail;
         }
@@ -184,6 +184,8 @@ export interface StixListConfig {
     type?: type_attacktype;
     /** force the list to show only objects matching this query */
     query?: any;
+    /** show links to view/edit pages for relevant objects? */
+    showLinks?: boolean;
 }
 
 export interface FilterValue {

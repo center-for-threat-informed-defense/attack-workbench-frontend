@@ -28,7 +28,6 @@ export class GroupService extends StixService {
                     this.groups.push(g);
                 }
             }
-            console.log("loaded groups", this.groups)
         });
         return this.groups;
     }

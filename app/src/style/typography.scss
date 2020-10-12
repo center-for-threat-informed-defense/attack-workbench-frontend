@@ -31,11 +31,10 @@
 }
 .text-label {
     font-family: Knockout,Arial,sans-serif;
-    font-weight: bold;
+    // font-weight: bold;
     font-size: 16px;
     // text-transform: uppercase;
 }
-
 
 %typography {
     font-family: Sentinel-Book,serif;
@@ -47,7 +46,7 @@
     h2, h3 { @extend .subheading; }
     h4 { @extend .subsubheading; }
 
-    a:not(.mat-tab-link) {
+    a:not(.mat-button) {
         color: inherit;
         text-decoration: none;
         transition: all 0.2s ease;
