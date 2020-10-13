@@ -79,8 +79,8 @@ $warn: mat-palette($mat-red);
         background: color(light);
     }
     .dark & {
-        color: on-color(secondary);
-        background: color(secondary);
+        color: on-color-alternate(dark);
+        background: color-alternate(dark);
     }
 }
 
