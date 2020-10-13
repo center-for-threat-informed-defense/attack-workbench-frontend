@@ -1,33 +1,34 @@
 <div class="stix-list">
     <!-- list controls -->
-    <div class="controls">
-        <div class="input-group">
-            <mat-form-field class="search" appearance="outline">
-                <mat-label>search</mat-label>
-                <input matInput [(ngModel)]="query">
-            </mat-form-field>
-
-            <mat-form-field appearance="outline">
-                <mat-label>filters</mat-label>
-                <mat-select multiple [(ngModel)]="filter">
-                    <mat-optgroup *ngFor="let group of filterOptions" [label]="group.name" [disabled]="group.disabled">
-                        <mat-option *ngFor="let filter of group.values" [value]="filter.value">{{filter.label}}</mat-option>
-                    </mat-optgroup>
-                </mat-select>
-            </mat-form-field>
-
-            <!-- <mat-form-field appearance="outline">
-                <mat-label>view mode</mat-label>
-                <mat-select [(ngModel)]="mode">
-                    <mat-option value="table">table</mat-option>
-                    <mat-option value="cards">cards</mat-option>
-                </mat-select>
-            </mat-form-field> -->
-        </div>
-    </div>
+    
 
 
     <div class="table-container" *ngIf="stixObjects.length > 0">
+        <div class="controls">
+            <div class="input-group">
+                <mat-form-field class="search" appearance="fill">
+                    <mat-label>search</mat-label>
+                    <input matInput [(ngModel)]="query">
+                </mat-form-field>
+    
+                <mat-form-field appearance="fill">
+                    <mat-label>filters</mat-label>
+                    <mat-select multiple [(ngModel)]="filter">
+                        <mat-optgroup *ngFor="let group of filterOptions" [label]="group.name" [disabled]="group.disabled">
+                            <mat-option *ngFor="let filter of group.values" [value]="filter.value">{{filter.label}}</mat-option>
+                        </mat-optgroup>
+                    </mat-select>
+                </mat-form-field>
+    
+                <!-- <mat-form-field appearance="outline">
+                    <mat-label>view mode</mat-label>
+                    <mat-select [(ngModel)]="mode">
+                        <mat-option value="table">table</mat-option>
+                        <mat-option value="cards">cards</mat-option>
+                    </mat-select>
+                </mat-form-field> -->
+            </div>
+        </div>
         <table mat-table multiTemplateDataRows matSort
                [dataSource]="stixObjects" >
             <!-- column definitions -->
