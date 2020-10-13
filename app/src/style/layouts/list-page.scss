@@ -1,6 +1,10 @@
 .list-page {
-    h1 {
-        margin-top: 0;
+    .list-page-header {
         text-align: center;
+        h1 {
+            margin-top: 0;
+            margin-bottom: 16px;
+        }
+        margin-bottom: 16px;
     }
 }
