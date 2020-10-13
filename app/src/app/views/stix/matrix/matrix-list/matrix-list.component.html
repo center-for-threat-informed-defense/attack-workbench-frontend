@@ -1,1 +1,11 @@
-<p>matrix-list works!</p>
+<div class="list-page">
+    <div class="list-page-header">
+        <h1>matrices</h1>
+        <div class="button-group">
+            <a mat-stroked-button>
+                <mat-icon>add</mat-icon> <span class="text-label">new matrix</span>
+            </a>
+        </div>
+    </div>
+    <app-stix-list [stixObjects]="matrices" [config]="{'type': 'matrix', 'showLinks': true}"></app-stix-list>
+</div>

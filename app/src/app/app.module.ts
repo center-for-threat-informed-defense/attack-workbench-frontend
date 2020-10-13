@@ -17,6 +17,8 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatIconModule } from "@angular/material/icon";
 import { MatTableModule } from '@angular/material/table';
+import { MatSortModule } from '@angular/material/sort';
+import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
@@ -29,16 +31,14 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { OverlayModule } from '@angular/cdk/overlay';
 import { MatExpansionModule } from '@angular/material/expansion';
-import { MatTreeModule } from '@angular/material/tree';
-import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatRadioModule } from '@angular/material/radio';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 import { BreadcrumbModule } from "angular-crumbs";
 import { MaterialFileInputModule } from 'ngx-material-file-input';
 
 import { StixListComponent } from './components/stix/stix-list/stix-list.component';
-import { StixListCardsComponent } from './components/stix/stix-list/stix-list-cards/stix-list-cards.component';
-import { StixCardComponent } from './components/stix/stix-list/stix-list-cards/cards/stix-card/stix-card.component';
-import { RelationshipCardComponent } from './components/stix/stix-list/stix-list-cards/cards/relationship-card/relationship-card.component';
 
 import { LandingPageComponent } from './views/landing-page/landing-page.component';
 import { HelpPageComponent } from './views/help-page/help-page.component';
@@ -89,9 +89,6 @@ import { TechniqueEditComponent } from './views/stix/technique/technique-edit/te
     HelpPageComponent,
     
     StixListComponent,
-    StixListCardsComponent,
-    StixCardComponent,
-    RelationshipCardComponent,
     
     ToolbarComponent,
     
@@ -145,6 +142,8 @@ import { TechniqueEditComponent } from './views/stix/technique/technique-edit/te
     MatSidenavModule,
     MatIconModule,
     MatTableModule,
+    MatSortModule,
+    MatPaginatorModule,
     MatTabsModule,
     MatTooltipModule,
     MatButtonToggleModule,
@@ -156,8 +155,9 @@ import { TechniqueEditComponent } from './views/stix/technique/technique-edit/te
     MatInputModule,
     MatSelectModule,
     MatExpansionModule,
-    MatTreeModule,
-    MatPaginatorModule,
+    MatCheckboxModule,
+    MatRadioModule,
+    MatProgressSpinnerModule,
     
     OverlayModule
   ],
@@ -167,6 +167,8 @@ import { TechniqueEditComponent } from './views/stix/technique/technique-edit/te
     MatSidenavModule,
     MatIconModule,
     MatTableModule,
+    MatSortModule,
+    MatPaginatorModule,
     MatTabsModule,
     MatTooltipModule,
     MatButtonToggleModule,
@@ -178,8 +180,9 @@ import { TechniqueEditComponent } from './views/stix/technique/technique-edit/te
     MatInputModule,
     MatSelectModule,
     MatExpansionModule,
-    MatTreeModule,
-    MatPaginatorModule,
+    MatCheckboxModule,
+    MatRadioModule,
+    MatProgressSpinnerModule,
 
     OverlayModule
   ],

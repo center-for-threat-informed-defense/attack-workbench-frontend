@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { Tactic } from 'src/app/classes/stix/tactic';
+import { TacticService } from 'src/app/services/stix/tactic/tactic.service';
 
 @Component({
   selector: 'app-tactic-list',
@@ -7,9 +9,11 @@ import { Component, OnInit } from '@angular/core';
 })
 export class TacticListComponent implements OnInit {
 
-  constructor() { }
+    public tactics: Tactic[] = [];
 
-  ngOnInit() {
-  }
+    constructor(private tacticService: TacticService) { }
 
+    ngOnInit() {
+        this.tactics = this.tacticService.getAll();
+    }
 }

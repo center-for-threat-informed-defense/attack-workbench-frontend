@@ -1,4 +1,11 @@
-<div class="group-list">
-    <h1>groups</h1>
-    <app-stix-list [stixObjects]="groups" [showOnly]="{type: 'group'}"></app-stix-list>
+<div class="list-page">
+    <div class="list-page-header">
+        <h1>groups</h1>
+        <div class="button-group">
+            <a mat-stroked-button>
+                <mat-icon>add</mat-icon> <span class="text-label">new group</span>
+            </a>
+        </div>
+    </div>
+    <app-stix-list [stixObjects]="groups" [config]="{type: 'group', 'showLinks': true}"></app-stix-list>
 </div>
