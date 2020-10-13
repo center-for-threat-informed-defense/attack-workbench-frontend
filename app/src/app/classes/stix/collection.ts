@@ -20,35 +20,6 @@ export class Collection extends StixObject {
             }
         ]
     }
-
-    public displaySettings: DisplaySettings = { //setup display of technique
-        tableColumns: [
-            {
-                "property": "name",
-                "display": "plain"
-            },
-            {
-                "property": "version",
-                "display": "plain"
-            },
-            {
-                "property": "modified",
-                "display": "date"
-            }
-        ],
-        tableDetail: [
-            {
-                "property": "description",
-                "display": "descriptive"
-            }
-        ],
-        viewCard: [
-
-        ],
-        viewMain: [
-
-        ]
-    }
     
     public updateAvailable: boolean = false;
 
@@ -61,3 +32,33 @@ export class Collection extends StixObject {
         
     }
 }
+
+const collectionDisplaySettings: DisplaySettings = { //configuration for display of collections
+    tableColumns: [
+        {
+            "property": "name",
+            "display": "plain"
+        },
+        {
+            "property": "version",
+            "display": "plain"
+        },
+        {
+            "property": "modified",
+            "display": "date"
+        }
+    ],
+    tableDetail: [
+        {
+            "property": "description",
+            "display": "descriptive"
+        }
+    ],
+    viewCard: [
+
+    ],
+    viewMain: [
+
+    ]
+}
+export {collectionDisplaySettings};

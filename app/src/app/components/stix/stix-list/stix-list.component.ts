@@ -16,7 +16,7 @@ import { Technique } from 'src/app/classes/stix/technique';
 import { Relationship } from 'src/app/classes/stix/relationship';
 import { Matrix } from 'src/app/classes/stix/matrix';
 import { Group } from 'src/app/classes/stix/group';
-import { DisplayProperty } from 'src/app/classes/display-settings';
+import { DisplayProperty, getDisplaySettings } from 'src/app/classes/display-settings';
 import { SelectionModel } from '@angular/cdk/collections';
 
 @Component({
@@ -113,39 +113,13 @@ export class StixListComponent implements OnInit {
         if ("type" in this.config) { 
             this.filter.push("type." + this.config.type); 
             // set columns according to type
-            let obj: StixObject = null;
-            switch(this.config.type) {
-                case "collection":
-                    obj = new Collection()
-                    break;
-                case "group":
-                    obj = new Group()
-                    break;
-                case "matrix":
-                    obj = new Matrix()
-                    break;
-                case "mitigation":
-                    obj = new Mitigation()
-                    break;
-                case "software":
-                    obj = new Software("malware");
-                    break;
-                case "tactic":
-                    obj = new Tactic();
-                    break;
-                case "technique":
-                    obj = new Technique()
-                    break;
-                case "relationship":
-                    obj = new Relationship();
-                    break;
-            }
+            let displaySettings = getDisplaySettings(this.config.type)
             this.tableColumnsDisplay = new Map<string, string>();
-            for (let displayprop of obj.displaySettings.tableColumns) {
+            for (let displayprop of displaySettings.tableColumns) {
                 this.tableColumnsDisplay.set(displayprop.property, displayprop.display);
             };
-            this.tableColumns = obj.displaySettings.tableColumns.map((x) => x.property);
-            this.tableDetail = obj.displaySettings.tableDetail;
+            this.tableColumns = displaySettings.tableColumns.map((x) => x.property);
+            this.tableDetail = displaySettings.tableDetail;
         }
         else {
             this.filterOptions.push({

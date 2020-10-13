@@ -108,9 +108,9 @@
                     }
                 }
                 .controls {
-                    a {
-                        // display: inline-block;
+                    a { // links to pages in detail column
                         @extend .text-label;
+                        text-align: right;
                         text-transform: uppercase;
                         border-right: none;
                         border-top-right-radius: 0;

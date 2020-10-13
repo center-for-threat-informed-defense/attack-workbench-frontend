@@ -6,39 +6,6 @@ export class Software extends StixObject {
     public name: string;
     public description: string;
 
-    public displaySettings: DisplaySettings = { //setup display of technique
-        tableColumns: [
-            {
-                "property": "name",
-                "display": "plain"
-            },
-            {
-                "property": "type",
-                "display": "plain"
-            },
-            {
-                "property": "version",
-                "display": "plain"
-            },
-            {
-                "property": "modified",
-                "display": "date"
-            }
-        ],
-        tableDetail: [
-            {
-                "property": "description",
-                "display": "descriptive"
-            }
-        ],
-        viewCard: [
-
-        ],
-        viewMain: [
-
-        ]
-    }
-
     constructor(type: type_software, sdo?: any) {
         super(sdo, type);
         if (sdo) {
@@ -47,3 +14,38 @@ export class Software extends StixObject {
         }
     }
 }
+
+const softwareDisplaySettings: DisplaySettings = { //configuration for display of software
+    tableColumns: [
+        {
+            "property": "name",
+            "display": "plain"
+        },
+        {
+            "property": "type",
+            "display": "plain"
+        },
+        {
+            "property": "version",
+            "display": "plain"
+        },
+        {
+            "property": "modified",
+            "display": "date"
+        }
+    ],
+    tableDetail: [
+        {
+            "property": "description",
+            "display": "descriptive"
+        }
+    ],
+    viewCard: [
+
+    ],
+    viewMain: [
+
+    ]
+}
+
+export {softwareDisplaySettings};
