@@ -9,7 +9,20 @@
         .search {
             flex-grow: 1;
         }
+        border-bottom: 1px solid;
+        .light & { border-color: border-color(light); }
+        .dark &  { border-color: border-color(dark); }
     }
+    .mat-form-field-wrapper {
+        // padding-bottom: 0px;
+        margin-bottom: -1.34375em; // remove bottom padding used for hint
+    }
+    .mat-form-field-flex {
+        padding: 12px 24px 0 24px !important; // override default padding for alignment w/ table
+    }
+    // .light & { border-color: border-color(light); }
+    // .dark &  { border-color: border-color(dark); }
+    // border-bottom: 1px solid;
 }
 
 .table-container {

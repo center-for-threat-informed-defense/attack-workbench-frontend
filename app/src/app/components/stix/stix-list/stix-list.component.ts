@@ -169,11 +169,11 @@ export class StixListComponent implements OnInit {
 
         // if ("domain" in this.config) { this.filter.push("domain." + this.config.domain); }
         // else {
-        //     this.filterOptions.push({
-        //         "name": "domain", //TODO dynamic domain values
-        //         "disabled": "domain" in this.config,
-        //         "values": this.domains
-        //     })
+        // this.filterOptions.push({
+        //     "name": "domain", //TODO dynamic domain values
+        //     "disabled": "domain" in this.config,
+        //     "values": this.domains
+        // })
         //     if (this.groupBy.length == 0) this.groupBy = ["domain"];
         // }
         // if ("collection" in this.config) { this.filter.push("collection." + this.config.collection); }
@@ -187,11 +187,11 @@ export class StixListComponent implements OnInit {
         // }
         // if ("status" in this.config) { this.filter.push("status." + this.config.status); }
         // else {
-        //     this.filterOptions.push({
-        //         "name": "status",
-        //         "disabled": "status" in this.config,
-        //         "values": this.statuses
-        //     })
+        this.filterOptions.push({
+            "name": "status",
+            "disabled": "status" in this.config,
+            "values": this.statuses
+        })
         //     if (this.groupBy.length == 0) this.groupBy = ["status"];
         // }
     }
