@@ -30,15 +30,34 @@
     <div class="table-container" *ngIf="stixObjects.length > 0">
         <table mat-table multiTemplateDataRows matSort
                [dataSource]="stixObjects" >
-            <!-- cell definitions -->
+            <!-- column definitions -->
             <ng-container matColumnDef="{{column}}" *ngFor="let column of tableColumns">
                 <th mat-header-cell mat-sort-header *matHeaderCellDef> {{column}} </th>
                 <td mat-cell *matCellDef="let element"> {{element[column]}} ({{tableColumnsDisplay.get(column)}}) </td>
             </ng-container>
+            
+            <!-- select column -->
+            <ng-container matColumnDef="select">
+                <th mat-header-cell *matHeaderCellDef [ngClass]="config.select">
+                    <!-- nothing in header -->
+                </th>
+                <td mat-cell *matCellDef="let element" [ngClass]="config.select">
+                    <mat-checkbox *ngIf="config.select && config.select == 'many'" color="primary" 
+                                  (click)="$event.stopPropagation()"
+                                  (change)="$event ? selection.toggle(element.stixID) : null"
+                                  [checked]="selection.isSelected(element.stixID)">
+                    </mat-checkbox>
+                    <mat-radio-button *ngIf="config.select && config.select == 'one'" color="primary" 
+                                    (click)="$event.stopPropagation()"
+                                    (change)="$event ? selection.toggle(element.stixID) : null"
+                                    [selected]="selection.isSelected(element.stixID)">
+                    </mat-radio-button>
+                </td>
+            </ng-container>
 
-            <!-- expanded content defition -->
+            <!-- expanded content formatting -->
             <ng-container matColumnDef="expandedDetail">
-                <td mat-cell *matCellDef="let element" [attr.colspan]="tableColumns.length">
+                <td mat-cell *matCellDef="let element" [attr.colspan]="tableColumns_controls.length">
                     <div class="element-detail" @detailExpand *ngIf="expandedElement === element">
                         <div class="element-description columns">
                             <div class="column is-narrow controls" *ngIf="config.showLinks">
@@ -65,8 +84,8 @@
             </ng-container>
 
             <!-- row definitions -->
-            <tr mat-header-row *matHeaderRowDef="tableColumns"></tr>
-            <tr mat-row *matRowDef="let element; columns: tableColumns;"
+            <tr mat-header-row *matHeaderRowDef="tableColumns_controls"></tr>
+            <tr mat-row *matRowDef="let element; columns: tableColumns_controls;"
                 class="element-row"
                 [class.expanded]="expandedElement === element"
                 (click)="expandedElement = expandedElement === element ? null : element">
