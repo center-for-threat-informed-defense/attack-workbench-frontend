@@ -33,6 +33,7 @@ import { OverlayModule } from '@angular/cdk/overlay';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatRadioModule } from '@angular/material/radio';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 import { BreadcrumbModule } from "angular-crumbs";
 import { MaterialFileInputModule } from 'ngx-material-file-input';
@@ -156,6 +157,7 @@ import { TechniqueEditComponent } from './views/stix/technique/technique-edit/te
     MatExpansionModule,
     MatCheckboxModule,
     MatRadioModule,
+    MatProgressSpinnerModule,
     
     OverlayModule
   ],
@@ -180,6 +182,7 @@ import { TechniqueEditComponent } from './views/stix/technique/technique-edit/te
     MatExpansionModule,
     MatCheckboxModule,
     MatRadioModule,
+    MatProgressSpinnerModule,
 
     OverlayModule
   ],

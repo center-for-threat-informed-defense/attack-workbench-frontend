@@ -1,9 +1,8 @@
 <div class="stix-list">
-    <!-- list controls -->
-    
-
-
-    <div class="table-container" *ngIf="stixObjects.length > 0">
+    <div class="table-container" *ngIf="stixObjects.length > 0; else loading" @fadeIn>
+        <!-- -------- -->
+        <!-- CONTROLS -->
+        <!-- -------- -->
         <div class="controls">
             <div class="input-group">
                 <mat-form-field class="search" appearance="fill">
@@ -19,16 +18,11 @@
                         </mat-optgroup>
                     </mat-select>
                 </mat-form-field>
-    
-                <!-- <mat-form-field appearance="outline">
-                    <mat-label>view mode</mat-label>
-                    <mat-select [(ngModel)]="mode">
-                        <mat-option value="table">table</mat-option>
-                        <mat-option value="cards">cards</mat-option>
-                    </mat-select>
-                </mat-form-field> -->
             </div>
         </div>
+        <!-- ----- -->
+        <!-- TABLE -->
+        <!-- ----- -->
         <table mat-table multiTemplateDataRows matSort
                [dataSource]="stixObjects" >
             <!-- column definitions -->
@@ -92,8 +86,13 @@
                 (click)="expandedElement = expandedElement === element ? null : element">
             </tr>
             <tr mat-row *matRowDef="let row; columns: ['expandedDetail']" class="detail-row"></tr>
-
         </table>
+        <!-- ---------- -->
+        <!-- PAGINATION -->
+        <!-- ---------- -->
         <mat-paginator [length]="resultsLength" [pageSize]="30"></mat-paginator>
     </div>
+    <ng-template #loading>
+        <app-loading-overlay></app-loading-overlay>
+    </ng-template>
 </div>
