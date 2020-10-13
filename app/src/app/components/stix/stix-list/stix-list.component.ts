@@ -17,6 +17,7 @@ import { Relationship } from 'src/app/classes/stix/relationship';
 import { Matrix } from 'src/app/classes/stix/matrix';
 import { Group } from 'src/app/classes/stix/group';
 import { DisplayProperty } from 'src/app/classes/display-settings';
+import { SelectionModel } from '@angular/cdk/collections';
 
 @Component({
     selector: 'app-stix-list',
@@ -53,14 +54,28 @@ export class StixListComponent implements OnInit {
 
     // TABLE STUFF
     public tableColumns: string[];
+    public tableColumns_controls: string[]; //including select behavior
     public tableColumnsDisplay: Map<string, string>; // property to display for each displayProperty
     public tableDetail: DisplayProperty[];
     public expandedElement: StixObject | null;
     // @ViewChild(MatSort) public sort: MatSort;
     // @ViewChild(MatPaginator) public paginator: MatPaginator;
 
+    // Selection stuff
+    public selection: SelectionModel<string>;
+    /** Whether the number of selected elements matches the total number of rows. */
+    // public isAllSelected() {
+    //     const numSelected = this.selection.selected.length;
+    //     const numRows = this.stixObjects.length;
+    //     return numSelected == numRows;
+    // }
     
-    
+    // /** Selects all rows if they are not all selected; otherwise clear selection. */
+    // public selectAll() {
+    //     this.isAllSelected() ?
+    //         this.selection.clear() :
+    //         this.stixObjects.forEach(row => this.selection.select(row.stixID));
+    // }
     
 
 
@@ -146,6 +161,11 @@ export class StixListComponent implements OnInit {
         if ("query" in this.config) {
 
         }
+        this.tableColumns_controls = Array.from(this.tableColumns); // shallow copy
+        if ("select" in this.config) {
+            this.selection = new SelectionModel<string>(this.config.select == "many");
+            this.tableColumns_controls.unshift("select") // add select column to view
+        }
 
         // if ("domain" in this.config) { this.filter.push("domain." + this.config.domain); }
         // else {
@@ -181,6 +201,7 @@ export class StixListComponent implements OnInit {
 type type_attacktype = "collection" | "group" | "matrix" | "mitigation" | "software" | "tactic" | "technique" | "relationship";
 type type_domain = "enterprise-attack" | "mobile-attack";
 type type_status = "status.wip" | "status.awaiting-review" | "status.reviewed";
+type selection_types = "one" | "many"
 export interface StixListConfig {
     /** STIX ID; force the list to show relationships with the given object */
     relatedTo?: string;
@@ -190,6 +211,11 @@ export interface StixListConfig {
     query?: any;
     /** show links to view/edit pages for relevant objects? */
     showLinks?: boolean;
+    /** can the user select in this list? allowed options:
+     *     "one": user can select a single element at a time
+     *     "many": user can select as many elements as they want
+     */
+    select?: selection_types;
 }
 
 export interface FilterValue {
