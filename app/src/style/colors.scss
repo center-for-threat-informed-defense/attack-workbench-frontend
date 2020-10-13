@@ -60,7 +60,7 @@ $colors: (
 // given a color-name, get an deemphasized version of the on-color.
 // The deemphasized on-color is more like the background color.
 @function on-color-deemphasis($name) {
-    @return mix(color($name), on-color($name), 25%); 
+    @return mix(color($name), on-color($name), 30%); 
 }
 
 // given a color name, compute a border color for the color

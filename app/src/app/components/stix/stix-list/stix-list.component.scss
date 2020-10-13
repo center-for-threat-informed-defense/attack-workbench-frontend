@@ -3,6 +3,7 @@
 
 .controls {
     .input-group {
+        font-size: 16px;
         width: 100%;
         display: flex;
         flex-direction: row;
@@ -19,6 +20,10 @@
     }
     .mat-form-field-flex {
         padding: 12px 24px 0 24px !important; // override default padding for alignment w/ table
+    }
+    .mat-form-field-label {
+        .light & { color: on-color-deemphasis(light); }
+        .dark &  { color: on-color-deemphasis(dark); }
     }
     // .light & { border-color: border-color(light); }
     // .dark &  { border-color: border-color(dark); }
@@ -44,9 +49,15 @@
             .dark &  { border-color: border-color(dark); }
         } 
         th {
-            .light & { color: on-color-deemphasis(light); }
-            .dark &  { color: on-color-deemphasis(dark); }
+            font-size: 20px;
+            text-transform: uppercase;
+            // border-bottom-width: 3px;
+            // border-bottom-style: double;
         }
+        // th {
+        //     .light & { color: on-color-deemphasis(light); }
+        //     .dark &  { color: on-color-deemphasis(dark); }
+        // }
 
         tr.detail-row {
             height: 0;
