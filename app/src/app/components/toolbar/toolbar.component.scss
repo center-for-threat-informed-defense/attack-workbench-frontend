@@ -2,7 +2,7 @@
 .object-toolbar {
     mat-toolbar {
         .light & { background: color-alternate(light); }
-        .dark & { background: color-alternate(secondary); }
+        .dark & { background: color-alternate(dark); }
         height: 48px;
         padding-right: 0px;
 

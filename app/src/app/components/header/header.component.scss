@@ -1,11 +1,23 @@
 @import "../../../style/globals";
-.spacer {
-    flex: 1 1 auto;
-}
-.app-title {
-    a {
-        border-bottom-width: 0 !important;
-        &:hover { color: inherit !important; }
-        .dark & { color: color(engenuity-purple) !important; }
+.header {
+    .light & { background: color(primary); color: on-color(primary); }
+    .dark & { background: color(light); }
+    .spacer {
+        flex: 1 1 auto;
+    }
+    .app-title {
+        a {
+            border-bottom-width: 0 !important;
+            .dark & { color: color(primary); }
+            &:hover { color: inherit !important; }
+        }
+    }
+    button {
+        .dark & { color: on-color(light); }
+        font-family: Gilroy Bold,Arial, sans-serif;
+        text-transform: uppercase;
+        letter-spacing: .1rem;
+        // font-size: .54545rem;
+        font-weight: 300;
     }
 }

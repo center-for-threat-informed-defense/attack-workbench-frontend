@@ -18,8 +18,8 @@
             border-right: 1px solid color-alternate(light,2); 
         }
         .dark & { 
-            background: color-alternate(secondary); 
-            border-right: 1px solid color-alternate(secondary,2);
+            background: color-alternate(dark); 
+            border-right: 1px solid color-alternate(dark,2);
         }        
         .control {
             display: block;
@@ -29,11 +29,11 @@
         height: 100%;
         border-left: 1px solid;
         .light & { background: color-alternate(light); }
-        .dark & { background: color-alternate(secondary); }
+        .dark & { background: color-alternate(dark); }
         mat-toolbar {
             height: 48px;
             .light & { background: color-alternate(light, 2); }
-            .dark & { background: color-alternate(secondary, 2); }
+            .dark & { background: color-alternate(dark, 2); }
 
             .subsubheading { margin: 0 auto; }
         }
