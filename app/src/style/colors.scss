@@ -7,31 +7,27 @@
  * appear with inner content. For example, "link" is only intended to be used for link text, which inherently
  * cannot have inner text.
  */
+
+$engenuity-purple: #6241c5;
+$engenuity-black: #1d252c;
+$mitre-blue: #005b94;
+$spark-yellow: #fff601;
+$balanced-blue: #0096d1;
+$engenuity-gray: #f0f1f2;
+
 $colors: (
-    // angular palatte colors
-    primary-light: (color: #6240c5, on-color: white), 
-    primary:       (color: #966df9, on-color: black), 
-    primary-dark:  (color: #3d2979, on-color: white), 
-    
-    secondary-light: (color: #2a373f, on-color: white), 
-    secondary:       (color: #1c252b, on-color: white), 
-    secondary-dark:  (color: #121b21, on-color: white), 
-    
-    light-light: (color: white,   on-color: #050505), 
-    light:       (color: white,   on-color: #050505), 
-    light-dark:  (color: #F0F1F2, on-color: #050505), 
-
-    dark-light: (color: #050505, on-color: #F0F1F2), 
-    dark:       (color: #050505,  on-color: #F0F1F2), 
-    dark-dark:  (color: #050505,  on-color: #F0F1F2), 
-
-    //engenuity brand colors
-    engenuity-purple: (color: #6241c5, on-color: white),
-    engenuity-black: (color: #1d252c, on-color: white),
-    mitre-blue: (color: #005b94, on-color: black),
-    spark-yellow: (color: #fff601, on-color: black),
-    balanced-blue: (color: #0096d1, on-color: black),
-    engenuity-gray: (color: #f0f1f2, on-color: black),
+    // angular palette colors
+    primary:       (color: $engenuity-purple, on-color: #F0F1F2), 
+    secondary:       (color: $balanced-blue, on-color: black), 
+    light:       (color: $engenuity-gray,   on-color: #050505), 
+    dark:       (color: $engenuity-black,  on-color: #F0F1F2), 
+    //engenuity brand colors -- named helpers
+    engenuity-purple: (color: $engenuity-purple, on-color: #F0F1F2),
+    engenuity-black: (color:$engenuity-black, on-color: #F0F1F2),
+    mitre-blue: (color: $mitre-blue, on-color: black),
+    spark-yellow: (color: $spark-yellow, on-color: black),
+    balanced-blue: (color: $balanced-blue, on-color: black),
+    engenuity-gray: (color: $engenuity-gray, on-color: #050505),
 );
 
 // accessor helper for $colors. Gets the color of the named pair
@@ -80,13 +76,13 @@ $colors: (
 //convert the color to a material-supporting color map
 @function to-material-map($color) {
     @return (
-        50: color($color + "-light"),
+        50: color($color),
         100: color($color),
-        200: color($color + "-dark"),
+        200: color($color),
         contrast: (
-            50: on-color($color + "-light"),
+            50: on-color($color),
             100: on-color($color),
-            200: on-color($color + "-dark")
+            200: on-color($color)
         )
     )
 }
