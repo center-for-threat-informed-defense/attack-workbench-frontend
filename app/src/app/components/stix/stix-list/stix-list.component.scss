@@ -50,7 +50,7 @@
             } 
             th {
                 font-size: 20px;
-                text-transform: uppercase;
+                @extend .text-label;
                 // border-bottom-width: 3px;
                 // border-bottom-style: double;
             }
@@ -111,7 +111,6 @@
                         a { // links to pages in detail column
                             @extend .text-label;
                             text-align: right;
-                            text-transform: uppercase;
                             border-right: none;
                             border-top-right-radius: 0;
                             border-bottom-right-radius: 0;

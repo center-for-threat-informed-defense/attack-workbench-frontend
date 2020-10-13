@@ -1,4 +1,11 @@
 <div class="list-page">
-    <h1>techniques</h1>
+    <div class="list-page-header">
+        <h1>techniques</h1>
+        <div class="button-group">
+            <a mat-stroked-button>
+                <mat-icon>add</mat-icon> <span class="text-label">new technique</span>
+            </a>
+        </div>
+    </div>
     <app-stix-list [stixObjects]="techniques" [config]="{'type': 'technique', 'showLinks': true}"></app-stix-list>
 </div>
