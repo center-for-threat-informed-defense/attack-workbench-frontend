@@ -33,7 +33,7 @@
                [dataSource]="stixObjects" >
             <!-- column definitions -->
             <ng-container matColumnDef="{{column}}" *ngFor="let column of tableColumns">
-                <th mat-header-cell mat-sort-header *matHeaderCellDef> {{column}} </th>
+                <th mat-header-cell mat-sort-header *matHeaderCellDef class="text-label"> {{column}} </th>
                 <td mat-cell *matCellDef="let element"> {{element[column]}} ({{tableColumnsDisplay.get(column)}}) </td>
             </ng-container>
             
