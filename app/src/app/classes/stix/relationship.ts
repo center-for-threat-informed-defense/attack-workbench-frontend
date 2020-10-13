@@ -5,12 +5,14 @@ export class Relationship extends StixObject {
     public readonly target_ref: string;
     public readonly relationship_type: string;
     public description: string;
-    constructor(sdo: any) {
-        super(sdo);
-        this.source_ref = sdo.source_ref;
-        this.target_ref = sdo.target_ref;
-        this.relationship_type = sdo.relationship_type;
-        this.description = sdo.description;
+    constructor(sdo?: any) {
+        super(sdo, "relationship");
+        if (sdo) {
+            this.source_ref = sdo.source_ref;
+            this.target_ref = sdo.target_ref;
+            this.relationship_type = sdo.relationship_type;
+            this.description = sdo.description;
+        }
     }
 
     

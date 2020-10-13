@@ -1,10 +1,12 @@
 import { Relationship } from './relationship';
 import { VersionNumber } from '../version-number';
 import { v4 as uuid } from 'uuid';
+import { DisplaySettings } from '../display-settings';
 export abstract class StixObject {
     public readonly stixID: string; // STIX ID
     public readonly type: string;   // STIX type
     public readonly attackType: string; // ATT&CK type
+    
 
     public get routes(): any[] { // route to view the object
         let baseRoute = "/" + [this.attackType, this.stixID].join("/")
@@ -25,7 +27,7 @@ export abstract class StixObject {
 
     public deprecated: boolean = false; //is object deprecated?
     public revoked: boolean = false;    //is object revoked?
-    
+
     /**
      * Initialize the STIX object
      * @param sdo the STIX domain object to initialize data from
@@ -98,3 +100,24 @@ export abstract class StixObject {
         return null; //TODO
     }
 }
+
+const genericDisplaySettings: DisplaySettings = { // configuration for display of generic STIX objects
+    tableColumns: [
+        {
+            "property": "attackType",
+            "display": "plain"
+        },
+        {
+            "property": "version",
+            "display": "plain"
+        },
+        {
+            "property": "modified",
+            "display": "date"
+        },
+    ],
+    tableDetail: [],
+    viewCard: [],
+    viewMain: []
+}
+export {genericDisplaySettings};

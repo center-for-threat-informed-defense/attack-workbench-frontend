@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { Mitigation } from 'src/app/classes/stix/mitigation';
+import { MitigationService } from 'src/app/services/stix/mitigation/mitigation.service';
 
 @Component({
   selector: 'app-mitigation-list',
@@ -7,9 +9,11 @@ import { Component, OnInit } from '@angular/core';
 })
 export class MitigationListComponent implements OnInit {
 
-  constructor() { }
+    public mitigations: Mitigation[] = [];
 
-  ngOnInit() {
-  }
+    constructor(private mitigationService: MitigationService) { }
 
+    ngOnInit() {
+        this.mitigations = this.mitigationService.getAll();
+    }
 }

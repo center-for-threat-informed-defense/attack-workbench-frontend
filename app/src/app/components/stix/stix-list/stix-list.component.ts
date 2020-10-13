@@ -3,17 +3,51 @@ import { StixObject } from 'src/app/classes/stix/stix-object';
 import { CollectionService } from 'src/app/services/stix/collection/collection.service';
 import { MatTreeNestedDataSource } from '@angular/material/tree';
 import { NestedTreeControl } from '@angular/cdk/tree';
+import {animate, state, style, transition, trigger} from '@angular/animations';
+import {MatSort} from '@angular/material/sort';
+import {MatPaginator} from '@angular/material/paginator';
+import { RouterModule } from '@angular/router';
+
+import { Collection } from 'src/app/classes/stix/collection';
+import { Mitigation } from 'src/app/classes/stix/mitigation';
+import { Software } from 'src/app/classes/stix/software';
+import { Tactic } from 'src/app/classes/stix/tactic';
+import { Technique } from 'src/app/classes/stix/technique';
+import { Relationship } from 'src/app/classes/stix/relationship';
+import { Matrix } from 'src/app/classes/stix/matrix';
+import { Group } from 'src/app/classes/stix/group';
+import { DisplayProperty, getDisplaySettings } from 'src/app/classes/display-settings';
+import { SelectionModel } from '@angular/cdk/collections';
 
 @Component({
-  selector: 'app-stix-list',
-  templateUrl: './stix-list.component.html',
-  styleUrls: ['./stix-list.component.scss'],
-  encapsulation: ViewEncapsulation.None
+    selector: 'app-stix-list',
+    templateUrl: './stix-list.component.html',
+    styleUrls: ['./stix-list.component.scss'],
+    encapsulation: ViewEncapsulation.None,
+    animations: [
+        trigger("detailExpand", [
+            transition(":enter", [
+                style({ height: '0px', minHeight: '0px'}),
+                animate("100ms cubic-bezier(0.4, 0.0, 0.2, 1)", style({height: '*'}))
+            ]),
+            transition(':leave', [
+                animate('100ms cubic-bezier(0.4, 0.0, 0.2, 1)', style({ height: '0px', minHeight: '0px' }))
+            ])
+        ]),
+        trigger("fadeIn", [
+            transition(":enter", [
+                style({ opacity: 0 }),
+                animate("500ms cubic-bezier(0.4, 0.0, 0.2, 1)", style({opacity: '1'}))
+            ])
+        ])
+    ]
 })
 export class StixListComponent implements OnInit {
 
+
     @Input() public stixObjects: StixObject[]; //TODO get rid of this in favor of stix list cards loading using filters
-    @Input() public showOnly: StixListConfig = {};
+    @Input() public config: StixListConfig = {};
+
     //view mode
     public mode: string = "cards";
     //options provided to the user for grouping and filtering
@@ -23,16 +57,36 @@ export class StixListComponent implements OnInit {
     public groupBy: string[] = [];
     // search query
     public query: string = "";
+
+    // TABLE STUFF
+    public tableColumns: string[];
+    public tableColumns_controls: string[]; //including select behavior
+    public tableColumnsDisplay: Map<string, string>; // property to display for each displayProperty
+    public tableDetail: DisplayProperty[];
+    public expandedElement: StixObject | null;
+    // @ViewChild(MatSort) public sort: MatSort;
+    // @ViewChild(MatPaginator) public paginator: MatPaginator;
+
+    // Selection stuff
+    public selection: SelectionModel<string>;
+    /** Whether the number of selected elements matches the total number of rows. */
+    // public isAllSelected() {
+    //     const numSelected = this.selection.selected.length;
+    //     const numRows = this.stixObjects.length;
+    //     return numSelected == numRows;
+    // }
     
+    // /** Selects all rows if they are not all selected; otherwise clear selection. */
+    // public selectAll() {
+    //     this.isAllSelected() ?
+    //         this.selection.clear() :
+    //         this.stixObjects.forEach(row => this.selection.select(row.stixID));
+    // }
     
-    //dataSource for the tree
-    private dataSource = new MatTreeNestedDataSource<StixListNode>();
-    //control for node visibility for the tree
-    private treeControl = new NestedTreeControl<StixListNode>(node => node.children);
-    //trackBy function for the tree
-    private treeNodeTrackBy(index, item: StixListNode) {
-        return item.name;
-    }
+
+
+
+
 
     //all possible each type of filter/groupBy
     private types: FilterValue[] = [
@@ -58,232 +112,90 @@ export class StixListComponent implements OnInit {
 
     constructor(private collectionService: CollectionService) {}
 
-    public generateSections() {
-        // parse filters into StixListConfig objects
-        let parsedFilters: StixListConfig[] = [];
-        for (let filter of this.filter) {
-            let filterType = filter.split(".")[0];
-            let filterConfig: StixListConfig = {}
-            filterConfig[filterType] = filter;
-            parsedFilters.push(filterConfig);
-        }
-
-        this.dataSource.data = null; //for some reason if you don't first set it to null Angular doesn't see a change
-        if (this.groupBy.includes("type")) this.dataSource.data = this.generateTypeSections(parsedFilters);
-        else this.dataSource.data = this.generateSubsection("type", parsedFilters);
-    }
-    // does the given node have children?
-    private hasChildren(index, node) { return !!node.children && node.children.length > 0}
-
-    /**
-     * generate the next subsection of the current section
-     * @param {string} currentSection: name of the current section
-     * @param {StixListConfig[]} parentFilters: filters inherited from parent sections
-     * @returns {StixListNode[]} node tree for this subsection and all child subsections
-     */
-    private generateSubsection(currentSection: string, parentFilters: StixListConfig[]): StixListNode[] {
-        if (currentSection == "type") {
-            if (!this.groupBy.includes("domain")) {
-                return this.generateSubsection("domain", parentFilters);
-            } else {
-                return this.generateDomainSections(parentFilters);
-            }
-        } else if (currentSection == "domain") {
-            if (!this.groupBy.includes("collection")) {
-                return this.generateSubsection("collection", parentFilters);
-            } else {
-                return this.generateCollectionSections(parentFilters);
-            }
-        } else if (currentSection == "collection") {
-            if (this.groupBy.includes("status")) {
-                return this.generateStatusSections(parentFilters);
-            } else return []; //else don't skip because there's nothing else
-        }
-    }
-    /**
-     * generate sections for each type, and child sections
-     * @param {StixListConfig[]} parentFilters filters inherited from parent sections
-     * @returns {StixListNode[]} node tree for this subsection and all child subsections
-     */
-    private generateTypeSections(parentFilters: StixListConfig[]): StixListNode[] {
-        let configs: StixListNode[] = []
-        for (let thetype of this.types) {
-            // check if this type is filtered
-            let filtered = false;
-            for (let filter of parentFilters) {
-                if (filter.type && filter.type == thetype.value) {
-                    filtered = false;
-                    break;
-                } else if (filter.type) { filtered = true; }
-            }
-
-            if (filtered) continue;
-
-            // add the type
-            //remove other filters for type because we only want this type for descendants
-            let filters = parentFilters.filter((filter: StixListConfig) => !filter.type).concat([{"type": thetype.value as type_attacktype}]);
-            configs.push({
-                name: thetype.label,
-                filters: filters,
-                children: this.generateSubsection("type", filters)
-            })
-        }
-        return configs;
-    }
-    /**
-     * generate sections for each domain, and child sections
-     * @param {StixListConfig[]} parentFilters filters inherited from parent sections
-     * @returns {StixListNode[]} node tree for this subsection and all child subsections
-     */
-    private generateDomainSections(parentFilters: StixListConfig[]): StixListNode[] {
-        let configs: StixListNode[] = []
-        for (let domain of this.domains) {
-            // check if this domain is filtered
-            let filtered = false;
-            for (let filter of parentFilters) {
-                if (filter.domain && filter.domain == domain.value) {
-                    filtered = false;
-                    break;
-                } else if (filter.domain) { filtered = true; }
-            }
-
-            if (filtered) continue;
-
-            //add the domain
-            //remove other filters for domain because we only want this domain for descendants
-            let filters = parentFilters.filter((filter: StixListConfig) => !filter.domain).concat([{"domain": domain.value as type_domain}]);
-            configs.push({
-                name: domain.label,
-                filters: filters,
-                children: this.generateSubsection("domain", filters)
-            })
-        }
-        return configs;
-    }
-
-    /**
-     * generate sections for each collection, and child sections
-     * @param {StixListConfig[]} parentFilters filters inherited from parent sections
-     * @returns {StixListNode[]} node tree for this subsection and all child subsections
-     */
-    private generateCollectionSections(parentFilters: StixListConfig[]): StixListNode[] {
-        let configs: StixListNode[] = []
-        for (let collection of this.collections) {
-            // check if this collection is filtered
-            let filtered = false;
-            for (let filter of parentFilters) {
-                if (filter.collection && filter.collection == collection.value) {
-                    filtered = false;
-                    break;
-                } else if (filter.collection) { filtered = true; }
-            }
-
-            if (filtered) continue;
-
-            //add the collection
-            //remove other filters for collection because we only want this collection for descendants
-            let filters = parentFilters.filter((filter: StixListConfig) => !filter.collection).concat([{"collection": collection.value}]);
-            configs.push({
-                name: collection.label,
-                filters: filters,
-                children: this.generateSubsection("collection", filters)
-            })
-        }
-        return configs;
-    }
-
-    /**
-     * generate sections for each status, and child sections
-     * @param {StixListConfig[]} parentFilters filters inherited from parent sections
-     * @returns {StixListNode[]} node tree for this subsection and all child subsections
-     */
-    private generateStatusSections(parentFilters: StixListConfig[]): StixListNode[] {
-        let configs: StixListNode[] = []
-        for (let status of this.statuses) {
-            // check if this status is filtered
-            let filtered = false;
-            for (let filter of parentFilters) {
-                if (filter.status && filter.status == status.value) {
-                    filtered = false;
-                    break;
-                } else if (filter.status) { filtered = true; }
-            }
-
-            if (filtered) continue;
-
-            //add the status
-            //remove other filters for status because we only want this status for descendants
-            configs.push({
-                name: status.label,
-                filters: parentFilters.filter((filter: StixListConfig) => !filter.status).concat([{"status": status.value as type_status}]),
-                children: []
-            })
-        }
-        return configs;
-    }
-
     ngOnInit() {
-        this.collections = this.collectionService.getAll().map((collection) => {return {"value": "collection." + collection.stixID, "label": collection.name}})
+        // this.collections = this.collectionService.getAll().map((collection) => {return {"value": "collection." + collection.stixID, "label": collection.name}})
         this.filterOptions = []
-        if ("type" in this.showOnly) { this.filter.push("type." + this.showOnly.type); }
+         // parse the config
+        if ("type" in this.config) { 
+            this.filter.push("type." + this.config.type); 
+            // set columns according to type
+            let displaySettings = getDisplaySettings(this.config.type)
+            this.tableColumnsDisplay = new Map<string, string>();
+            for (let displayprop of displaySettings.tableColumns) {
+                this.tableColumnsDisplay.set(displayprop.property, displayprop.display);
+            };
+            this.tableColumns = displaySettings.tableColumns.map((x) => x.property);
+            this.tableDetail = displaySettings.tableDetail;
+        }
         else {
             this.filterOptions.push({
                 "name": "type", //TODO make more extensible to additional types
-                "disabled": "type" in this.showOnly,
+                "disabled": "type" in this.config,
                 "values": this.types
             })
             this.groupBy = ["type"];
         }
-        if ("domain" in this.showOnly) { this.filter.push("domain." + this.showOnly.domain); }
-        else {
-            this.filterOptions.push({
-                "name": "domain", //TODO dynamic domain values
-                "disabled": "domain" in this.showOnly,
-                "values": this.domains
-            })
-            if (this.groupBy.length == 0) this.groupBy = ["domain"];
+        if ("relatedTo" in this.config) {
+
+        } 
+        if ("query" in this.config) {
+
         }
-        if ("collection" in this.showOnly) { this.filter.push("collection." + this.showOnly.collection); }
-        else {
-            this.filterOptions.push({
-                "name": "collection", //TODO dynamic collection list
-                "disabled": "collection" in this.showOnly,
-                "values": this.collections
-            })
-            if (this.groupBy.length == 0) this.groupBy = ["collection"];
+        this.tableColumns_controls = Array.from(this.tableColumns); // shallow copy
+        if ("select" in this.config) {
+            this.selection = new SelectionModel<string>(this.config.select == "many");
+            this.tableColumns_controls.unshift("select") // add select column to view
         }
-        if ("status" in this.showOnly) { this.filter.push("status." + this.showOnly.status); }
-        else {
-            this.filterOptions.push({
-                "name": "status",
-                "disabled": "status" in this.showOnly,
-                "values": this.statuses
-            })
-            if (this.groupBy.length == 0) this.groupBy = ["status"];
-        }
-        this.generateSections();
+
+        // if ("domain" in this.config) { this.filter.push("domain." + this.config.domain); }
+        // else {
+        // this.filterOptions.push({
+        //     "name": "domain", //TODO dynamic domain values
+        //     "disabled": "domain" in this.config,
+        //     "values": this.domains
+        // })
+        //     if (this.groupBy.length == 0) this.groupBy = ["domain"];
+        // }
+        // if ("collection" in this.config) { this.filter.push("collection." + this.config.collection); }
+        // else {
+        //     this.filterOptions.push({
+        //         "name": "collection", //TODO dynamic collection list
+        //         "disabled": "collection" in this.config,
+        //         "values": this.collections
+        //     })
+        //     if (this.groupBy.length == 0) this.groupBy = ["collection"];
+        // }
+        // if ("status" in this.config) { this.filter.push("status." + this.config.status); }
+        // else {
+        this.filterOptions.push({
+            "name": "status",
+            "disabled": "status" in this.config,
+            "values": this.statuses
+        })
+        //     if (this.groupBy.length == 0) this.groupBy = ["status"];
+        // }
     }
 }
 
 //allowed types for StixListConfig
-type type_attacktype = "collection" | "group" | "matrix" | "mitigation" | "software" | "tactic" | "technique";
+type type_attacktype = "collection" | "group" | "matrix" | "mitigation" | "software" | "tactic" | "technique" | "relationship";
 type type_domain = "enterprise-attack" | "mobile-attack";
 type type_status = "status.wip" | "status.awaiting-review" | "status.reviewed";
+type selection_types = "one" | "many"
 export interface StixListConfig {
+    /** STIX ID; force the list to show relationships with the given object */
+    relatedTo?: string;
     /** force the list to show only this type */
     type?: type_attacktype;
-    /** force the list to show only this domain */
-    domain?: type_domain;
-    /** force the list to show only this collection; arg is stix ID */
-    collection?: string;
-    /** force the list to show only objects with this status */
-    status?: type_status;
-}
-
-export interface StixListNode {
-    name: string;
-    filters: StixListConfig[];
-    children?: StixListNode[];
+    /** force the list to show only objects matching this query */
+    query?: any;
+    /** show links to view/edit pages for relevant objects? */
+    showLinks?: boolean;
+    /** can the user select in this list? allowed options:
+     *     "one": user can select a single element at a time
+     *     "many": user can select as many elements as they want
+     */
+    select?: selection_types;
 }
 
 export interface FilterValue {

@@ -46,6 +46,7 @@ $warn: mat-palette($mat-red);
         is-dark: false
     ));
     background: color(light);
+    color: on-color(light);
     ::-webkit-scrollbar-thumb {
         background: rgba(on-color(light), 0.15);
         &:hover { background: rgba(on-color(light), 0.25); }
@@ -53,14 +54,15 @@ $warn: mat-palette($mat-red);
 }
 .dark {
     @include angular-material-theme((
-        primary: mat-palette(to-material-map(light), 50, 100, 200),
-        accent: mat-palette(to-material-map(primary), 50, 100, 200),
+        primary: mat-palette(to-material-map(primary), 50, 100, 200),
+        accent: mat-palette(to-material-map(secondary), 50, 100, 200),
         foreground: mat-palette(to-material-map(light), 50, 100, 200),
-        background: mat-palette(to-material-map(secondary), 50, 100, 200),
+        background: mat-palette(to-material-map(dark), 50, 100, 200),
         warn: $warn,
         is-dark: true
     ));
-    background: color(secondary);
+    background: color(dark);
+    color: on-color(dark);
     ::-webkit-scrollbar-thumb {
         background: rgba(on-color(dark), 0.15);
         &:hover { background: rgba(on-color(dark), 0.25); }
