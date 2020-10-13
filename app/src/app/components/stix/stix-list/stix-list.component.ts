@@ -19,17 +19,21 @@ import { Group } from 'src/app/classes/stix/group';
 import { DisplayProperty } from 'src/app/classes/display-settings';
 
 @Component({
-  selector: 'app-stix-list',
-  templateUrl: './stix-list.component.html',
-  styleUrls: ['./stix-list.component.scss'],
-  encapsulation: ViewEncapsulation.None,
-  animations: [
-    trigger('detailExpand', [
-        state('collapsed', style({height: '0px', minHeight: '0'})),
-        state('expanded', style({height: '*'})),
-        transition('expanded <=> collapsed', animate('225ms cubic-bezier(0.4, 0.0, 0.2, 1)')),
-      ]),
-  ]
+    selector: 'app-stix-list',
+    templateUrl: './stix-list.component.html',
+    styleUrls: ['./stix-list.component.scss'],
+    encapsulation: ViewEncapsulation.None,
+    animations: [
+        trigger("detailExpand", [
+            transition(":enter", [
+                style({ height: '0px', minHeight: '0px'}),
+                animate("100ms cubic-bezier(0.4, 0.0, 0.2, 1)", style({height: '*'}))
+            ]),
+            transition(':leave', [
+                animate('100ms cubic-bezier(0.4, 0.0, 0.2, 1)', style({ height: '0px', minHeight: '0px' }))
+            ])
+        ])
+    ]
 })
 export class StixListComponent implements OnInit {
 
