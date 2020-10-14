@@ -41,6 +41,7 @@
   
     // letter-spacing: 0.25pt;
     font-size: 18px;
+    line-height: 1.5;
 
     h1 { @extend .heading; }
     h2, h3 { @extend .subheading; }

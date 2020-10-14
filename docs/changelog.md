@@ -2,18 +2,18 @@
 <!--                                                                    -->
 <!--    Completed Entry template:                                       -->
 <!--                                                                    -->
-<!--    # Date in DD MMM YYYY format                                    -->
-<!--    ## ATT&CK Editor version ##.##.##                               -->
-<!--    ### New Features                                                -->
-<!--    ### Improvements                                                -->
-<!--    ### Fixes                                                       -->
+<!--    ## Date in DD MMM YYYY format                                    -->
+<!--    ### ATT&CK Editor version ##.##.##                               -->
+<!--    #### New Features                                                -->
+<!--    #### Improvements                                                -->
+<!--    #### Fixes                                                       -->
 <!--                                                                    -->
 <!--    Entries for pull request template:                              -->
 <!--                                                                    -->
-<!--    # Changes staged on develop                                     -->
-<!--    ### New Features                                                -->
-<!--    ### Improvements                                                -->
-<!--    ### Fixes                                                       -->
+<!--    ## Changes staged on develop                                     -->
+<!--    #### New Features                                                -->
+<!--    #### Improvements                                                -->
+<!--    #### Fixes                                                       -->
 <!--                                                                    -->
 <!--                                                                    -->
 <!--    VERSION NUMBERING                                               -->
@@ -29,3 +29,5 @@
 <!--                                                                    -->
 <!--    Versions must match across repos, and must be reflected in      -->
 <!--    each repo's package.json file's version marking.                -->
+
+# Changelog

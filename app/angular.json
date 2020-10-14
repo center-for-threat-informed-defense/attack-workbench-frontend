@@ -24,13 +24,17 @@
             "tsConfig": "tsconfig.app.json",
             "aot": true,
             "assets": [
+              { "glob": "**/*", "input": "../docs", "output": "/assets/docs" },
+              { "glob": "CHANGELOG.md", "input": "../", "output": "/assets/docs" },
               "src/favicon.ico",
               "src/assets"
             ],
             "styles": [
-              "src/style/theme.scss"
+              "src/style/theme.scss",
             ],
-            "scripts": []
+            "scripts": [
+                "node_modules/marked/lib/marked.js",
+            ]
           },
           "configurations": {
             "production": {
