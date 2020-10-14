@@ -37,6 +37,7 @@
     "@angular/platform-browser-dynamic": "~10.1.1",
     "@angular/router": "~10.1.1",
     "angular-crumbs": "^3.0.1",
+    "ngx-markdown": "^10.1.1",
     "ngx-material-file-input": "^2.1.1",
     "rxjs": "~6.6.0",
     "tslib": "^2.0.0",

@@ -1,17 +1,14 @@
+//angular imports
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-
 import { AppRoutingModule } from './app-routing.module';
 import { AppRoutingStixModule } from "./app-routing-stix.module"
-import { HttpClientModule } from '@angular/common/http'
+import { HttpClient, HttpClientModule } from '@angular/common/http'
 
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { HeaderComponent } from './components/header/header.component';
-import { FooterComponent } from './components/footer/footer.component';
-import { ResourcesDrawerComponent } from './components/resources-drawer/resources-drawer.component';
-import { LoadingOverlayComponent } from './components/loading-overlay/loading-overlay.component';
 
+// material imports
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatButtonModule } from '@angular/material/button';
 import { MatSidenavModule } from '@angular/material/sidenav';
@@ -35,9 +32,16 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
+// other library imports
 import { BreadcrumbModule } from "angular-crumbs";
 import { MaterialFileInputModule } from 'ngx-material-file-input';
+import { MarkdownModule } from "ngx-markdown";
 
+// custom components
+import { HeaderComponent } from './components/header/header.component';
+import { FooterComponent } from './components/footer/footer.component';
+import { ResourcesDrawerComponent } from './components/resources-drawer/resources-drawer.component';
+import { LoadingOverlayComponent } from './components/loading-overlay/loading-overlay.component';
 import { StixListComponent } from './components/stix/stix-list/stix-list.component';
 
 import { LandingPageComponent } from './views/landing-page/landing-page.component';
@@ -128,6 +132,7 @@ import { TechniqueEditComponent } from './views/stix/technique/technique-edit/te
   imports: [
     BreadcrumbModule,
     MaterialFileInputModule,
+    MarkdownModule.forRoot({loader: HttpClient}),
     
     BrowserModule,
 
