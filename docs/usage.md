@@ -7,11 +7,11 @@ Federated ATT&CK is a tool designed to containerize the MITRE ATT&CK&reg; knowle
 
 Accessing and sharing ATT&CK knowledge is realized through _collections_. A collection is a set of related ATT&CK objects; collections may be used represent specific releases of a dataset such as "enterprise ATT&CK v7.2", or any other set of objects one may want to share with someone else. 
 
-Collections can be created by anyone, not just ATT&CK. The Federated ATT&CK Editor application includes workflows for both [importing](#importing-a-collection) and [creating new collections](#exporting-a-collection). Collections can be shared as STIX bundles, uploaded to the internet, sent through email, or hosted on a [TAXII server](https://oasis-open.github.io/cti-documentation/taxii/intro.html). 
+Collections can be created by anyone, not just ATT&CK. The Federated ATT&CK Editor application includes workflows for both importing and creating new collections. Collections can be shared as STIX bundles, uploaded to the internet, sent through email, or hosted on a [TAXII server](https://oasis-open.github.io/cti-documentation/taxii/intro.html). 
 
 Objects may exist in multiple collections simultaneously, and objects can exist within the editor outside of the context of a collection. Collections exist at the _version_ level of an object: a specific version of the object is tagged with the collection instead of the object as a whole. If a user imports a collection, and then edits an object from that collection (thereby creating a new version of the object), the new version will not exist within that collection.
 
-You can read more about the technical specifications for a collection, such as the STIX representation of a collection object, in our [collections](/docs/collections) document.
+You can read more about the technical specifications for a collection, such as the STIX representation of a collection object, in our [collections](/docs/collections.md) document.
 
 ### Importing a collection
 There are multiple means through which a collection can be imported. The "import collection" workflow provides the means through which a collection can be specified, its contents reviewed, and then incorporated to the local knowledge base instance.

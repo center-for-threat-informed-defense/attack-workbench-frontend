@@ -1,4 +1,4 @@
 <div class="help-page">
     <!-- import usage documentation from markdown according to route config-->
-    <markdown [src]="route.snapshot.data.markdown"></markdown>
+    <markdown #markdownElement [src]="route.snapshot.data.markdown" (load)="onMarkdownLoad($event)"></markdown>
 </div>
