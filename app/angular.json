@@ -25,7 +25,6 @@
             "aot": true,
             "assets": [
               { "glob": "**/*", "input": "../docs", "output": "/assets/docs" },
-              { "glob": "CHANGELOG.md", "input": "../", "output": "/assets/docs" },
               "src/favicon.ico",
               "src/assets"
             ],

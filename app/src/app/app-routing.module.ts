@@ -53,7 +53,7 @@ const routes: Routes = [
                         "path": "changelog",
                         "data": {
                             "breadcrumb": "changelog",
-                            "markdown": "/assets/docs/CHANGELOG.md"
+                            "markdown": "/assets/docs/changelog.md"
                         },
                         "component": HelpPageComponent,
                     },
