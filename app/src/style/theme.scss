@@ -69,8 +69,11 @@ $warn: mat-palette($mat-red);
     }
 }
 
-.cdk-overlay-container.light, .cdk-overlay-container.dark { //ensure that overlay doesn't visually cover everything
+.cdk-overlay-container, .cdk-overlay-container{ //ensure that overlay doesn't visually cover everything
     background: transparent;
+    .mat-tooltip {
+        background: color-alternate(dark, 4);
+    }
 }
 
 .mat-select-panel {

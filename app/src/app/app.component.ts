@@ -1,6 +1,7 @@
 import { Component, ViewChild } from '@angular/core';
 import { MatDrawerContainer } from '@angular/material/sidenav';
 import { OverlayContainer } from '@angular/cdk/overlay';
+import { getCookie, setCookie, hasCookie } from "./util/cookies";
 
 @Component({
   selector: 'app-root',
@@ -11,20 +12,28 @@ export class AppComponent {
     //drawer container to resize when contents change size
     @ViewChild(MatDrawerContainer, {static: true}) container: MatDrawerContainer;
     constructor(private overlayContainer: OverlayContainer) {
-        this.syncOverlayTheme();
+        if (hasCookie("theme")) {
+            this.setTheme(getCookie("theme"))
+        } else {
+            this.setTheme("light");
+        }
     }
+
     public theme = "light";
     //toggle the current theme
     public toggleTheme() {
-        this.theme = this.theme == "light"? "dark" : "light";
-        this.syncOverlayTheme();
+        this.setTheme(this.theme == "light"? "dark" : "light");
     }
-
-    private syncOverlayTheme() {
+    
+    public setTheme(theme: string) {
+        console.log("setting theme to", theme)
+        this.theme = theme;
         const overlayContainerClasses = this.overlayContainer.getContainerElement().classList;
         overlayContainerClasses.remove("dark", "light");
         overlayContainerClasses.add(this.theme);
+        setCookie("theme", theme, 30);
     }
+
 
 
     resizeDrawers() {
