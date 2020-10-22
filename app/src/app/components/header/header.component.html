@@ -6,6 +6,6 @@
     <div class="spacer"></div>
     <div class="links">
         <button mat-button *ngFor="let stixRoute of routes" [routerLink]="stixRoute.path">{{stixRoute.data.breadcrumb}}</button>
-        <button mat-icon-button  routerLink="/docs/usage"><mat-icon aria-label="help">help_outline</mat-icon></button>
+        <button mat-icon-button  routerLink="/docs"><mat-icon aria-label="help">help_outline</mat-icon></button>
     </div>
 </mat-toolbar>

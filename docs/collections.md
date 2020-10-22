@@ -1,9 +1,15 @@
 # Collections
 A _collection_ is a set of related ATT&CK objects; collections may be used represent specific releases of a dataset such as "Enterprise ATT&CK v7.2", or any other set of objects one may want to share with someone else. 
 
-Collections are represented in STIX using the `x-mitre-collection` type, described below. Collections and their contents may be held within STIX bundles or TAXII collections.
+Collections are meant to be shared. Collections can be shared as STIX bundles, uploaded to the internet, sent through email, or hosted on a [TAXII server](https://oasis-open.github.io/cti-documentation/taxii/intro.html). 
+
+Data providers may opt to describe their published collections through a _collection index_ (described below), a data structure designed to provide a machine-readable listing of collections. 
+
+Typically collections are not modified after they are published. Subsequent releases of a dataset such as "Enterprise ATT&CK" would be represented by an entirely new collection; the continuity between releases is conveyed by the _collection index_ object detailed below. 
 
 ## Collection Properties
+Collections are represented in STIX using the `x-mitre-collection` type, described below. This collection defining object should typically be provided alongside the contents of the collection within a STIX bundle or TAXII collection.
+
 | Property Name | Data Type | Details |
 |:--------------|:----------|:--------|
 | **type** (required) | `string` | The type property identifies the type of object. The value of this property MUST be `x-mitre-collection` |
@@ -16,7 +22,7 @@ Collections are represented in STIX using the `x-mitre-collection` type, describ
 | **spec_version** (required) | `string` | The version of the STIX specification used to represent the object. This value MUST be `2.1`.
 | **created_by_ref** (required) | `string` | identifier | Specifies the **id** property of the `identity` object that describes the entity that created this collection. |
 | **object_marking_refs** (required) | `list` of type `identifier` | Specifies a list of **id** properties of `marking-definition` objects that apply to this object. Typically used for copyright statements. |
-| **x_mitre_contents** (required) | `list` of type _object version reference_ | Specifies the objects contained within the collection. See the _`_object version reference_ type below.  |
+| **x_mitre_contents** (required) | `list` of type _object version reference_ | Specifies the objects contained within the collection. See the _object version reference_ type below.  |
 
 ## Object Version Reference Properties
 Object version references are used to refer to a specific version of a STIX object. They do this by combining a STIX ID of the object with the modified timestamp of the given version.
@@ -79,9 +85,10 @@ Object version references are used to refer to a specific version of a STIX obje
 
 Collections may be referenced by _collection indexes_, which are essentially an organized list of collections. Typically, collection indexes only refer to collections created by the organization maintaining the index. The Federated ATT&CK Editor can subscribe to collections within the index to automatically receive updates when the index itself is updated.
 
-Collection Indexes are plain JSON, _not_ STIX, and therefore _should not_ be included within STIX bundles or on a TAXII server. They instead refer to the STIX bundles or TAXII collections wherein the collections are held.
 
 ## Collection Index Properties
+Collection Indexes are plain JSON, _not_ STIX, and therefore _should not_ be included within STIX bundles or on a TAXII server. They instead refer to the STIX bundles or TAXII collections wherein the collections are held.
+
 | Property Name | Data Type | Details |
 |:--------------|:----------|:--------|
 | **name** (required) | `string` | A name used for display purposes. |
