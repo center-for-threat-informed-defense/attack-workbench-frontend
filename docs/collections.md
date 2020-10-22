@@ -32,6 +32,7 @@ Object version references are used to refer to a specific version of a STIX obje
 {
     "id": "x-mitre-collection--23320f4-22ad-8467-3b73-ed0c869a12838",
     "type": "x-mitre-collection",
+    "spec_version": "2.1",
     "name": "Enterprise ATT&CK",
     "version": "6.2.0",
     "description": "Version 6.2 of the Enterprise ATT&CK dataset",
@@ -103,7 +104,8 @@ Collection version objects describe specific versions of collections within a _c
 
 | Property Name | Data Type | Details |
 |:--------------|:----------|:--------|
-| **version** (required) | `string` | Must match the version of the collection being referenced. |
+| **version** (required) | `string` | Must match the **version** field of the collection being referenced. |
+| **id** (required) | `identifier` | Must match the **id** field of the collection being referenced. |
 | **url** (optional) | `string` | Specifies the URL of the collection STIX bundle holding the collection. Either this property or **taxii_url** _MUST_ bes specified. |
 | **taxii_url** (optional) | `string` | Specifies the TAXII URL of the TAXII collection holding the collection. Either this property or **url** _MUST_ bes specified. |
 | **created** (optional) | `timestamp` | Represents the time when the collection version was created. This property _should_ match the **created** property of the collection to which it refers. |
@@ -123,20 +125,32 @@ Collection version objects describe specific versions of collections within a _c
             "description": "The Enterprise domain of the ATT&CK dataset",
             "versions": [
                 {
+                    "id": "x-mitre-collection--1ef887fd-d5f4-426f-9b17-3fb76ce75175",
                     "version": "5.0.0",
-                    "url": "https://raw.githubusercontent.com/mitre/cti/ATT%26CK-v5.0/enterprise-attack/enterprise-attack.json"
+                    "url": "https://raw.githubusercontent.com/mitre/cti/ATT%26CK-v5.0/enterprise-attack/enterprise-attack.json",
+                    "created": "2019-07-31T00:00:00.000Z",
+                    "modified": "2019-07-31T00:00:00.000Z"
                 }
                 {
+                    "id": "x-mitre-collection--06a397cc-5e7e-4319-a418-8285efc299ef",
                     "version": "6.0.0",
-                    "url": "https://raw.githubusercontent.com/mitre/cti/ATT%26CK-v6.0/enterprise-attack/enterprise-attack.json"
+                    "url": "https://raw.githubusercontent.com/mitre/cti/ATT%26CK-v6.0/enterprise-attack/enterprise-attack.json",
+                    "created": "2019-10-24T00:00:00.000Z",
+                    "modified": "2019-10-24T00:00:00.000Z"
                 },
                 {
+                    "id": "x-mitre-collection--0b831d8d-9c7e-4cd6-b1ca-2523f3dcc9cd",
                     "version": "6.1.0",
-                    "url": "https://raw.githubusercontent.com/mitre/cti/ATT%26CK-v6.1/enterprise-attack/enterprise-attack.json"
+                    "url": "https://raw.githubusercontent.com/mitre/cti/ATT%26CK-v6.1/enterprise-attack/enterprise-attack.json",
+                    "created": "2019-11-21T00:00:00.000Z",
+                    "modified": "2019-11-21T00:00:00.000Z"
                 },
                 {
+                    "id": "x-mitre-collection--5a706fa2-9f76-4634-81af-818c98c390eb",
                     "version": "6.2.0",
                     "url": "https://raw.githubusercontent.com/mitre/cti/ATT%26CK-v6.2/enterprise-attack/enterprise-attack.json",
+                    "created": "2019-12-02T00:00:00.000Z",
+                    "modified": "2019-12-02T00:00:00.000Z",
                     "release_notes": "information about what changed in v6.2.0 goes here"
                 }
             ]
@@ -146,20 +160,32 @@ Collection version objects describe specific versions of collections within a _c
             "description": "The Mobile domain of the ATT&CK dataset",
             "versions": [
                 {
+                    "id": "x-mitre-collection--dac0d2d7-8653-445c-9bff-82f934c1e858",
                     "version": "5.0.0",
-                    "url": "https://raw.githubusercontent.com/mitre/cti/ATT%26CK-v5.0/mobile-attack/mobile-attack.json"
+                    "url": "https://raw.githubusercontent.com/mitre/cti/ATT%26CK-v5.0/mobile-attack/mobile-attack.json",
+                    "created": "2019-07-31T00:00:00.000Z",
+                    "modified": "2019-07-31T00:00:00.000Z"
                 }
                 {
+                    "id": "x-mitre-collection--6361c66f-b3c1-42f9-865c-17eb934bc93c",
                     "version": "6.0.0",
-                    "url": "https://raw.githubusercontent.com/mitre/cti/ATT%26CK-v6.0/mobile-attack/mobile-attack.json"
+                    "url": "https://raw.githubusercontent.com/mitre/cti/ATT%26CK-v6.0/mobile-attack/mobile-attack.json",
+                    "created": "2019-10-24T00:00:00.000Z",
+                    "modified": "2019-10-24T00:00:00.000Z"
                 },
                 {
+                    "id": "x-mitre-collection--fe2d6502-2ab5-4ce4-b0a1-e8a7ad920a4d",
                     "version": "6.1.0",
-                    "url": "https://raw.githubusercontent.com/mitre/cti/ATT%26CK-v6.1/mobile-attack/mobile-attack.json"
+                    "url": "https://raw.githubusercontent.com/mitre/cti/ATT%26CK-v6.1/mobile-attack/mobile-attack.json",
+                    "created": "2019-11-21T00:00:00.000Z",
+                    "modified": "2019-11-21T00:00:00.000Z"
                 },
                 {
+                    "id": "x-mitre-collection--7ed75f9f-012c-4197-81f9-56ed0701ec94",
                     "version": "6.2.0",
                     "url": "https://raw.githubusercontent.com/mitre/cti/ATT%26CK-v6.2/mobile-attack/mobile-attack.json",
+                    "created": "2019-12-02T00:00:00.000Z",
+                    "modified": "2019-12-02T00:00:00.000Z",
                     "release_notes": "information about what changed in v6.2.0 goes here"
                 }
             ]
@@ -169,8 +195,11 @@ Collection version objects describe specific versions of collections within a _c
             "description": "The ICS domain of the ATT&CK dataset",
             "versions": [
                 {
+                    "id": "x-mitre-collection--90c00720-636b-4485-b342-8751d232bf09",
                     "version": "8.0.0",
-                    "taxii_url": "https://cti-taxii.mitre.org/stix/collections/0bb14cfb-58fa-4284-ba85-43ab76dd4622"
+                    "taxii_url": "https://cti-taxii.mitre.org/stix/collections/0bb14cfb-58fa-4284-ba85-43ab76dd4622",
+                    "created": "2020-10-01T00:00:00.000Z",
+                    "modified": "2020-10-01T00:00:00.000Z"
                 }
             ]
         }
