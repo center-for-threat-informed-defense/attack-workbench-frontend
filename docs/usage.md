@@ -5,7 +5,7 @@ Federated ATT&CK is a tool designed to containerize the MITRE ATT&CK&reg; knowle
 
 ## Collections
 
-Accessing and sharing ATT&CK knowledge is realized through _collections_. A collection is a set of related ATT&CK objects; collections may be used represent specific releases of a dataset such as "enterprise ATT&CK v7.2", or any other set of objects one may want to share with someone else. 
+Accessing and sharing ATT&CK knowledge is realized through _collections_. A collection is a set of related ATT&CK objects; collections may be used represent specific releases of a dataset such as "Enterprise ATT&CK v7.2", or any other set of objects one may want to share with someone else. 
 
 Collections can be created by anyone, not just ATT&CK. The Federated ATT&CK Editor application includes workflows for both importing and creating new collections. Collections can be shared as STIX bundles, uploaded to the internet, sent through email, or hosted on a [TAXII server](https://oasis-open.github.io/cti-documentation/taxii/intro.html). 
 
