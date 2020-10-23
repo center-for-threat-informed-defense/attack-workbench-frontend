@@ -14,6 +14,7 @@
         </button>
         <mat-menu #navigation="matMenu" backdropClass="override-light">
             <button mat-menu-item *ngFor="let stixRoute of routes" [routerLink]="stixRoute.path">{{stixRoute.data.breadcrumb}}</button>
+            <button mat-menu-item  routerLink="/docs">documentation</button>
         </mat-menu>
     </div>
 </mat-toolbar>

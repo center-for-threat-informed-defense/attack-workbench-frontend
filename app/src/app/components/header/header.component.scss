@@ -8,8 +8,8 @@
     .app-title {
         a {
             border-bottom-width: 0 !important;
-            .dark & { color: color(primary); }
-            &:hover { color: inherit !important; }
+            .dark &, .dark &:hover { color: color(primary); }
+            .light &, .light &:hover { color: color(light); }
         }
     }
     button {
