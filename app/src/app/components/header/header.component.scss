@@ -20,4 +20,13 @@
         // font-size: .54545rem;
         font-weight: 300;
     }
+    .links {
+        overflow: hidden;
+    }
+    .hamburger {
+        position: relative;
+        width: 0;
+        overflow-x: visible;
+        left: -40px;
+    }
 }

@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, HostListener, ViewChild, ViewEncapsulation } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { stixRoutes } from "../../app-routing-stix.module";
 @Component({
@@ -7,14 +7,26 @@ import { stixRoutes } from "../../app-routing-stix.module";
   styleUrls: ['./header.component.scss'],
   encapsulation: ViewEncapsulation.None
 })
-export class HeaderComponent implements OnInit {
+export class HeaderComponent implements AfterViewInit {
     public routes: any[];
+
+    @ViewChild('linkMenu', {static: false})
+    private linkMenu: ElementRef;
 
     constructor(private route: ActivatedRoute) {
         this.routes = stixRoutes;
     }
 
-    ngOnInit() {
+    ngAfterViewInit() {
+        setTimeout(() => this.onResize(), 1000); //very hacky workaround: check menu size after 1 second to allow stuff to load
+    }
+
+    public showHamburger: boolean = false;
+
+    @HostListener('window:resize', ['$event'])
+    public onResize(event?: any) {
+         //if the element overflows, show hamburger instead
+        this.showHamburger = this.linkMenu.nativeElement.offsetWidth < this.linkMenu.nativeElement.scrollWidth;
     }
 
 }

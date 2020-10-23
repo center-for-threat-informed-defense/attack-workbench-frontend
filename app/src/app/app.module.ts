@@ -31,6 +31,7 @@ import { MatExpansionModule } from '@angular/material/expansion';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatMenuModule } from '@angular/material/menu';
 
 // other library imports
 import { BreadcrumbModule } from "angular-crumbs";
@@ -163,6 +164,7 @@ import { TechniqueEditComponent } from './views/stix/technique/technique-edit/te
     MatCheckboxModule,
     MatRadioModule,
     MatProgressSpinnerModule,
+    MatMenuModule,
     
     OverlayModule
   ],
@@ -188,6 +190,7 @@ import { TechniqueEditComponent } from './views/stix/technique/technique-edit/te
     MatCheckboxModule,
     MatRadioModule,
     MatProgressSpinnerModule,
+    MatMenuModule,
 
     OverlayModule
   ],
