@@ -55,7 +55,7 @@ export class HelpPageComponent implements OnInit {
         }
     }
 
-    ngOnDistroy(): void {
+    ngOnDestroy(): void {
         if (this.listenObj) { 
             this.listenObj();
         }
