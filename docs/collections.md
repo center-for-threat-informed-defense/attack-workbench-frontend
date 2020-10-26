@@ -3,9 +3,11 @@ A _collection_ is a set of related ATT&CK objects; collections may be used repre
 
 Collections are meant to be shared. Collections can be shared as STIX bundles, uploaded to the internet, sent through email, or hosted on a [TAXII server](https://oasis-open.github.io/cti-documentation/taxii/intro.html). 
 
-Data providers may opt to describe their published collections through a _collection index_ (described below), a data structure designed to provide a machine-readable listing of collections. 
+Data providers may opt to describe their published collections through a _collection index_ (detailed below), a data structure designed to provide a machine-readable listing of collections. Collection indexes provide the means through which data consumers can _subscribe_ to updates from a data provider.
 
-Typically collections are not modified after they are published. Subsequent releases of a dataset such as "Enterprise ATT&CK" would be represented by an entirely new collection; the continuity between releases is conveyed by the _collection index_ object detailed below. 
+Typically collections are not modified after they are published. Subsequent releases of a dataset such as "Enterprise ATT&CK" would be represented by a new _version_ of the collection stored in a separate STIX bundle or TAXII collection; the continuity between releases is conveyed by the _collection index_ object detailed below. 
+
+Collections by design reference a specific version of each object they contain. Conceptually, the object as a whole is not part of the collection; the collection instead contains the object as it was recorded at a specific moment in time. Oftentimes sequential versions of a collection will include updated versions of the contained objects in addition to new objects. This can be used to track the evolution of a dataset over time.
 
 ## Collection Properties
 Collections are represented in STIX using the `x-mitre-collection` type, described below. This collection defining object should typically be provided alongside the contents of the collection within a STIX bundle or TAXII collection.
@@ -102,8 +104,10 @@ Collection References describe to specific collections within a _collection inde
 
 | Property Name | Data Type | Details |
 |:--------------|:----------|:--------|
+| **id** (required) | `identifier` | Must match the **id** field of the collection being referenced. All versions of the referenced collection must have the same **id**. |
 | **name** (required) | `string` | The name of the collection. |
 | **description** (required) | `string` | The description of the collection. |
+| **created** (required) | `timestamp` | Represents the time when the collection was created. This property _should_ match the **created** property of the collection to which it refers. All collection versions must have the same `created` time. |
 | **versions** (required) | `list` of type _collection Version_ | Specifies the distinct versions of the given collection. See the _collection version_ data type below. |
 
 ## Collection Version Properties
@@ -112,11 +116,9 @@ Collection version objects describe specific versions of collections within a _c
 | Property Name | Data Type | Details |
 |:--------------|:----------|:--------|
 | **version** (required) | `string` | Must match the **version** field of the collection being referenced. |
-| **id** (required) | `identifier` | Must match the **id** field of the collection being referenced. |
-| **url** (optional) | `string` | Specifies the URL of the collection STIX bundle holding the collection. Either this property or **taxii_url** _MUST_ bes specified. |
-| **taxii_url** (optional) | `string` | Specifies the TAXII URL of the TAXII collection holding the collection. Either this property or **url** _MUST_ bes specified. |
-| **created** (optional) | `timestamp` | Represents the time when the collection version was created. This property _should_ match the **created** property of the collection to which it refers. |
-| **modified** (optional) | `timestamp` | Represents the time when the collection version was last modified. This property _should_ match the **modified** property of the collection to which it refers. |
+| **modified** (required) | `timestamp` | Represents the time when the collection version was last modified. This property _should_ match the **modified** property of the collection to which it refers. |
+| **url** (optional) | `string` | Specifies the URL of the collection STIX bundle holding the collection. Either this property or **taxii_url** _MUST_ be specified. |
+| **taxii_url** (optional) | `string` | Specifies the TAXII URL of the TAXII collection holding the collection. Either this property or **url** _MUST_ be specified. |
 | **release_notes** (optional) | `string` | Release notes for this version of the collection. |
 
 ## Collection Index Example
@@ -128,84 +130,72 @@ Collection version objects describe specific versions of collections within a _c
     "modified": "2019-07-17T20:04:40.297Z",
     "collections": [
         {
+            "id": "x-mitre-collection--23320f4-22ad-8467-3b73-ed0c869a12838",
             "name": "Enterprise ATT&CK",
             "description": "The Enterprise domain of the ATT&CK dataset",
+            "created": "2019-07-31T00:00:00.000Z",
             "versions": [
                 {
-                    "id": "x-mitre-collection--1ef887fd-d5f4-426f-9b17-3fb76ce75175",
                     "version": "5.0.0",
                     "url": "https://raw.githubusercontent.com/mitre/cti/ATT%26CK-v5.0/enterprise-attack/enterprise-attack.json",
-                    "created": "2019-07-31T00:00:00.000Z",
                     "modified": "2019-07-31T00:00:00.000Z"
                 }
                 {
-                    "id": "x-mitre-collection--06a397cc-5e7e-4319-a418-8285efc299ef",
                     "version": "6.0.0",
                     "url": "https://raw.githubusercontent.com/mitre/cti/ATT%26CK-v6.0/enterprise-attack/enterprise-attack.json",
-                    "created": "2019-10-24T00:00:00.000Z",
                     "modified": "2019-10-24T00:00:00.000Z"
                 },
                 {
-                    "id": "x-mitre-collection--0b831d8d-9c7e-4cd6-b1ca-2523f3dcc9cd",
                     "version": "6.1.0",
                     "url": "https://raw.githubusercontent.com/mitre/cti/ATT%26CK-v6.1/enterprise-attack/enterprise-attack.json",
-                    "created": "2019-11-21T00:00:00.000Z",
                     "modified": "2019-11-21T00:00:00.000Z"
                 },
                 {
-                    "id": "x-mitre-collection--5a706fa2-9f76-4634-81af-818c98c390eb",
                     "version": "6.2.0",
                     "url": "https://raw.githubusercontent.com/mitre/cti/ATT%26CK-v6.2/enterprise-attack/enterprise-attack.json",
-                    "created": "2019-12-02T00:00:00.000Z",
                     "modified": "2019-12-02T00:00:00.000Z",
                     "release_notes": "information about what changed in v6.2.0 goes here"
                 }
             ]
         },
         {
+            "id": "x-mitre-collection--dac0d2d7-8653-445c-9bff-82f934c1e858",
             "name": "Mobile ATT&CK",
             "description": "The Mobile domain of the ATT&CK dataset",
+            "created": "2019-07-31T00:00:00.000Z",
             "versions": [
                 {
-                    "id": "x-mitre-collection--dac0d2d7-8653-445c-9bff-82f934c1e858",
                     "version": "5.0.0",
                     "url": "https://raw.githubusercontent.com/mitre/cti/ATT%26CK-v5.0/mobile-attack/mobile-attack.json",
-                    "created": "2019-07-31T00:00:00.000Z",
                     "modified": "2019-07-31T00:00:00.000Z"
-                }
+                },
                 {
-                    "id": "x-mitre-collection--6361c66f-b3c1-42f9-865c-17eb934bc93c",
                     "version": "6.0.0",
                     "url": "https://raw.githubusercontent.com/mitre/cti/ATT%26CK-v6.0/mobile-attack/mobile-attack.json",
-                    "created": "2019-10-24T00:00:00.000Z",
                     "modified": "2019-10-24T00:00:00.000Z"
                 },
                 {
-                    "id": "x-mitre-collection--fe2d6502-2ab5-4ce4-b0a1-e8a7ad920a4d",
                     "version": "6.1.0",
                     "url": "https://raw.githubusercontent.com/mitre/cti/ATT%26CK-v6.1/mobile-attack/mobile-attack.json",
-                    "created": "2019-11-21T00:00:00.000Z",
                     "modified": "2019-11-21T00:00:00.000Z"
                 },
                 {
-                    "id": "x-mitre-collection--7ed75f9f-012c-4197-81f9-56ed0701ec94",
                     "version": "6.2.0",
                     "url": "https://raw.githubusercontent.com/mitre/cti/ATT%26CK-v6.2/mobile-attack/mobile-attack.json",
-                    "created": "2019-12-02T00:00:00.000Z",
                     "modified": "2019-12-02T00:00:00.000Z",
                     "release_notes": "information about what changed in v6.2.0 goes here"
                 }
             ]
         },
         {
+            "id": "x-mitre-collection--90c00720-636b-4485-b342-8751d232bf09",
             "name": "ATT&CK for ICS",
             "description": "The ICS domain of the ATT&CK dataset",
+            "created": "2020-10-01T00:00:00.000Z",
             "versions": [
                 {
-                    "id": "x-mitre-collection--90c00720-636b-4485-b342-8751d232bf09",
                     "version": "8.0.0",
                     "taxii_url": "https://cti-taxii.mitre.org/stix/collections/0bb14cfb-58fa-4284-ba85-43ab76dd4622",
-                    "created": "2020-10-01T00:00:00.000Z",
                     "modified": "2020-10-01T00:00:00.000Z"
                 }
             ]
