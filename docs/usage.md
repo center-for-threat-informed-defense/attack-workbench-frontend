@@ -9,7 +9,7 @@ Accessing and sharing ATT&CK knowledge is realized through _collections_. A coll
 
 Collections can be created by anyone, not just ATT&CK. The Federated ATT&CK Editor application includes workflows for both importing and creating new collections. Collections can be shared as STIX bundles, uploaded to the internet, sent through email, or hosted on a [TAXII server](https://oasis-open.github.io/cti-documentation/taxii/intro.html). 
 
-Data providers may opt to describe their published collections through a _collection index_ which provides a listing of collections. The Federated ATT&CK Editor can be configured to subscribe to such indexes to automatically receive updates when they are available, or to allow the user to easily browse a set of collections.
+Data providers may opt to describe their published collections through a _collection index_ which provides a listing of collections. The Federated ATT&CK Editor can be configured to subscribe to such indexes to automatically receive updates when they are available, or to allow the user to easily browse the collections listed by an index.
 
 Objects may exist in multiple collections simultaneously, and objects can exist within the editor outside of the context of a collection. Collections exist at the _version_ level of an object: a specific version of the object is tagged with the collection instead of the object as a whole. If a user imports a collection, and then edits an object from that collection (thereby creating a new version of the object), the new version will not exist within that collection.
 
