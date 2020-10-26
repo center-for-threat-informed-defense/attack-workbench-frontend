@@ -107,7 +107,7 @@ Collection References describe to specific collections within a _collection inde
 | **id** (required) | `identifier` | Must match the **id** field of the collection being referenced. All versions of the referenced collection must have the same **id**. |
 | **name** (required) | `string` | The name of the collection. |
 | **description** (required) | `string` | The description of the collection. |
-| **created** (required) | `timestamp` | Represents the time when the collection was created. This property _should_ match the **created** property of the collection to which it refers. All collection versions must have the same `created` time. |
+| **created** (required) | `timestamp` | Represents the time when the collection was created. This property must match the **created** property of the collection to which it refers. All collection versions must have the same `created` time. |
 | **versions** (required) | `list` of type _collection Version_ | Specifies the distinct versions of the given collection. See the _collection version_ data type below. |
 
 ## Collection Version Properties
@@ -116,9 +116,9 @@ Collection version objects describe specific versions of collections within a _c
 | Property Name | Data Type | Details |
 |:--------------|:----------|:--------|
 | **version** (required) | `string` | Must match the **version** field of the collection being referenced. |
-| **modified** (required) | `timestamp` | Represents the time when the collection version was last modified. This property _should_ match the **modified** property of the collection to which it refers. |
-| **url** (optional) | `string` | Specifies the URL of the collection STIX bundle holding the collection. Either this property or **taxii_url** _MUST_ be specified. |
-| **taxii_url** (optional) | `string` | Specifies the TAXII URL of the TAXII collection holding the collection. Either this property or **url** _MUST_ be specified. |
+| **modified** (required) | `timestamp` | Represents the time when the collection version was last modified. This property must match the **modified** property of the collection to which it refers. |
+| **url** (optional*) | `string` | Specifies the URL of the collection STIX bundle holding the collection. *Either this property or **taxii_url** _MUST_ be specified. |
+| **taxii_url** (optional*) | `string` | Specifies the TAXII URL of the TAXII collection holding the collection. *Either this property or **url** _MUST_ be specified. |
 | **release_notes** (optional) | `string` | Release notes for this version of the collection. |
 
 ## Collection Index Example
