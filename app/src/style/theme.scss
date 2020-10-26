@@ -69,8 +69,26 @@ $warn: mat-palette($mat-red);
     }
 }
 
-.cdk-overlay-container.light, .cdk-overlay-container.dark { //ensure that overlay doesn't visually cover everything
+//patch overlays for theme compatibility
+.cdk-overlay-container, .cdk-overlay-container{ //ensure that overlay doesn't visually cover everything
     background: transparent;
+    .mat-tooltip { // tooltip styling
+        background: color-alternate(dark, 4);
+    }
+    &.dark .mat-menu-panel {
+        background: color(dark);
+        color: on-color(dark);
+        .mat-menu-item:hover {
+            background: color-alternate(dark);
+        }
+    }
+    &.light .mat-menu-panel {
+        background: color(light);
+        color: on-color(light);
+        .mat-menu-item:hover {
+            background: color-alternate(light);
+        }
+    }
 }
 
 .mat-select-panel {
