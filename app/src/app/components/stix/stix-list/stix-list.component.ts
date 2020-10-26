@@ -1,22 +1,11 @@
 import { Component, OnInit, Input, ViewEncapsulation } from '@angular/core';
 import { StixObject } from 'src/app/classes/stix/stix-object';
 import { CollectionService } from 'src/app/services/stix/collection/collection.service';
-import { MatTreeNestedDataSource } from '@angular/material/tree';
-import { NestedTreeControl } from '@angular/cdk/tree';
 import {animate, state, style, transition, trigger} from '@angular/animations';
 import {MatSort} from '@angular/material/sort';
 import {MatPaginator} from '@angular/material/paginator';
 import { RouterModule } from '@angular/router';
 
-import { Collection } from 'src/app/classes/stix/collection';
-import { Mitigation } from 'src/app/classes/stix/mitigation';
-import { Software } from 'src/app/classes/stix/software';
-import { Tactic } from 'src/app/classes/stix/tactic';
-import { Technique } from 'src/app/classes/stix/technique';
-import { Relationship } from 'src/app/classes/stix/relationship';
-import { Matrix } from 'src/app/classes/stix/matrix';
-import { Group } from 'src/app/classes/stix/group';
-import { DisplayProperty, getDisplaySettings } from 'src/app/classes/display-settings';
 import { SelectionModel } from '@angular/cdk/collections';
 
 @Component({
@@ -59,10 +48,10 @@ export class StixListComponent implements OnInit {
     public query: string = "";
 
     // TABLE STUFF
-    public tableColumns: string[];
+    public tableColumns: string[] = [];
     public tableColumns_controls: string[]; //including select behavior
-    public tableColumnsDisplay: Map<string, string>; // property to display for each displayProperty
-    public tableDetail: DisplayProperty[];
+    public tableColumnsDisplay: Map<string, string> = new Map<string, string>(); // property to display for each displayProperty
+    public tableDetail: any[];
     public expandedElement: StixObject | null;
     // @ViewChild(MatSort) public sort: MatSort;
     // @ViewChild(MatPaginator) public paginator: MatPaginator;
@@ -82,6 +71,11 @@ export class StixListComponent implements OnInit {
     //         this.selection.clear() :
     //         this.stixObjects.forEach(row => this.selection.select(row.stixID));
     // }
+
+    private addColumn(name: string, display: string) {
+        this.tableColumns.push(name);
+        this.tableColumnsDisplay.set(name, display);
+    }
     
 
 
@@ -113,19 +107,53 @@ export class StixListComponent implements OnInit {
     constructor(private collectionService: CollectionService) {}
 
     ngOnInit() {
-        // this.collections = this.collectionService.getAll().map((collection) => {return {"value": "collection." + collection.stixID, "label": collection.name}})
         this.filterOptions = []
          // parse the config
         if ("type" in this.config) { 
             this.filter.push("type." + this.config.type); 
             // set columns according to type
-            let displaySettings = getDisplaySettings(this.config.type)
-            this.tableColumnsDisplay = new Map<string, string>();
-            for (let displayprop of displaySettings.tableColumns) {
-                this.tableColumnsDisplay.set(displayprop.property, displayprop.display);
-            };
-            this.tableColumns = displaySettings.tableColumns.map((x) => x.property);
-            this.tableDetail = displaySettings.tableDetail;
+            switch(this.config.type) {
+                case "collection":
+                case "matrix":
+                case "tactic":
+                case "mitigation":
+                    this.addColumn("name", "plain");
+                    this.tableDetail = [{
+                        "property": "description",
+                        "display": "descriptive"
+                    }]
+                    break;
+                case "group":
+                    this.addColumn("name", "plain");
+                    this.addColumn("aliases", "tags");
+                    this.tableDetail = [{
+                        "property": "description",
+                        "display": "descriptive"
+                    }]
+                    break;
+                case "software":
+                    this.addColumn("name", "plain");
+                    this.addColumn("type", "plain");
+                    this.tableDetail = [{
+                        "property": "description",
+                        "display": "descriptive"
+                    }]
+                    break;
+                case "technique":
+                    this.addColumn("name", "plain");
+                    this.addColumn("platforms", "tags");
+                    this.tableDetail = [{
+                        "property": "description",
+                        "display": "descriptive"
+                    }]
+                    break;
+                // case "relationship":
+                //     break;
+                default:
+                    this.addColumn("attacktype", "plain");
+            }
+            this.addColumn("version", "version");
+            this.addColumn("modified", "timestamp");
         }
         else {
             this.filterOptions.push({
