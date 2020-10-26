@@ -5,9 +5,11 @@ Federated ATT&CK is a tool designed to containerize the MITRE ATT&CK&reg; knowle
 
 ## Collections
 
-Accessing and sharing ATT&CK knowledge is realized through _collections_. A collection is a set of related ATT&CK objects; collections may be used represent specific releases of a dataset such as "enterprise ATT&CK v7.2", or any other set of objects one may want to share with someone else. 
+Accessing and sharing ATT&CK knowledge is realized through _collections_. A collection is a set of related ATT&CK objects; collections may be used represent specific releases of a dataset such as "Enterprise ATT&CK v7.2", or any other set of objects one may want to share with someone else. 
 
 Collections can be created by anyone, not just ATT&CK. The Federated ATT&CK Editor application includes workflows for both importing and creating new collections. Collections can be shared as STIX bundles, uploaded to the internet, sent through email, or hosted on a [TAXII server](https://oasis-open.github.io/cti-documentation/taxii/intro.html). 
+
+Data providers may opt to describe their published collections through a _collection index_ which provides a listing of collections. The Federated ATT&CK Editor can be configured to subscribe to such indexes to automatically receive updates when they are available, or to allow the user to easily browse the collections listed by an index.
 
 Objects may exist in multiple collections simultaneously, and objects can exist within the editor outside of the context of a collection. Collections exist at the _version_ level of an object: a specific version of the object is tagged with the collection instead of the object as a whole. If a user imports a collection, and then edits an object from that collection (thereby creating a new version of the object), the new version will not exist within that collection.
 
@@ -17,9 +19,10 @@ You can read more about the technical specifications for a collection, such as t
 There are multiple means through which a collection can be imported. The "import collection" workflow provides the means through which a collection can be specified, its contents reviewed, and then incorporated to the local knowledge base instance.
 
 #### 1. Indicate the collection
-Users can import the collection in two different ways:
+Users can import the collection in several different ways:
 - *Import from URL*: In cases where the collection has been hosted on the internet, the user may specify the URL which the application can download the collection from.
 - *Upload from file*: Users can also upload a STIX bundle representing the collection.
+- *Import from collection index*: The user can choose to import collections listed by attached _collection indexes_, which are essentially lists of collections on the internet.
 
 #### 2. Review contents
 In this step, the user should review the contents of the collection being imported. The review step is provided to ensure that users have control over the contents of their local knowledge base. Users can choose to only import specific objects from the collection if they so choose, or likewise exclude certain objects from the import. 

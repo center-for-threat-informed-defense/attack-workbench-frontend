@@ -8,8 +8,8 @@
     .app-title {
         a {
             border-bottom-width: 0 !important;
-            .dark & { color: color(primary); }
-            &:hover { color: inherit !important; }
+            .dark &, .dark &:hover { color: color(primary); }
+            .light &, .light &:hover { color: color(light); }
         }
     }
     button {
@@ -19,5 +19,14 @@
         letter-spacing: .1rem;
         // font-size: .54545rem;
         font-weight: 300;
+    }
+    .links {
+        overflow: hidden;
+    }
+    .hamburger {
+        position: relative;
+        width: 0;
+        overflow-x: visible;
+        left: -40px;
     }
 }
