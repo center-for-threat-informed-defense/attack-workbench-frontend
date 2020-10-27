@@ -1,0 +1,64 @@
+// adapted from https://codepen.io/finnhvman/pen/xyOORQ
+
+.labelled-box {
+    position: relative;
+    display: inline-block;
+    padding-top: 6px;
+}
+
+// content
+.labelled-box > .content {
+    box-sizing: border-box;
+    margin: 0;
+    border: solid 1px; 
+    .dark & { border-color: border-color(dark); border-top-color: transparent; }
+    .light & { border-color: border-color(light); border-top-color: transparent; }
+    border-radius: 4px;
+    padding: 15px 13px 15px;
+    width: 100%;
+}
+
+// label
+.labelled-box > .content + label {
+    @extend .text-label;
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: flex;
+    .dark & { border-color: border-color(dark); color: border-color(dark); }
+    .light & { border-color: border-color(light); color: border-color(dark); }
+    width: 100%;
+    max-height: 100%;
+    font-size: 75%;
+    line-height: 15px;
+}
+
+// corners
+.labelled-box > .content + label::before,
+.labelled-box > .content + label::after {
+    content: "";
+    display: block;
+    box-sizing: border-box;
+    margin-top: 6px;
+    border-top: solid 1px;
+    .dark & { border-top-color: border-color(dark); }
+    .light & { border-top-color: border-color(light); }
+    min-width: 10px;
+    height: 8px;
+    pointer-events: none;
+    box-shadow: inset 0 1px transparent;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.labelled-box > .content + label::before {
+    margin-right: 4px;
+    border-left: solid 1px transparent;
+    border-radius: 4px 0;
+}
+
+.labelled-box > .content + label::after {
+    flex-grow: 1;
+    margin-left: 4px;
+    border-right: solid 1px transparent;
+    border-radius: 0 4px;
+}
