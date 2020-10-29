@@ -51,6 +51,7 @@ $warn: mat-palette($mat-red);
         background: rgba(on-color(light), 0.15);
         &:hover { background: rgba(on-color(light), 0.25); }
     }
+    scrollbar-color: rgba(on-color(light), 0.15) transparent; //firefox scrollbar styles
 }
 .dark {
     @include angular-material-theme((
@@ -67,6 +68,7 @@ $warn: mat-palette($mat-red);
         background: rgba(on-color(dark), 0.15);
         &:hover { background: rgba(on-color(dark), 0.25); }
     }
+    scrollbar-color: rgba(on-color(dark), 0.15) transparent; //firefox scrollbar styles
 }
 
 //patch overlays for theme compatibility
