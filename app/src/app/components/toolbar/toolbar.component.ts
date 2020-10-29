@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewEncapsulation, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation, Output, EventEmitter, Input } from '@angular/core';
 
 @Component({
   selector: 'app-toolbar',
@@ -9,16 +9,25 @@ import { Component, OnInit, ViewEncapsulation, Output, EventEmitter } from '@ang
 export class ToolbarComponent implements OnInit {
     @Output() public onToggleTheme = new EventEmitter();
     @Output() public onToggleSidebar = new EventEmitter();
+    @Output() public onScrollTop = new EventEmitter();
+    
+    @Input() public canScroll: boolean;
+
     constructor() {}
 
     ngOnInit() {
     }
     
-    //emit a toggle theme event
+    // emit a toggle theme event
     public emitToggleTheme() {
         this.onToggleTheme.emit();
     }
+    // emit toggle sidebar event
     public emitToggleSidebar() { 
         this.onToggleSidebar.emit();
+    }
+    // emit scroll to top event
+    public emitScrollTop() { 
+        this.onScrollTop.emit();
     }
 }

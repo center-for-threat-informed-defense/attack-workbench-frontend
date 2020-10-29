@@ -5,6 +5,12 @@
         .dark & { background: color-alternate(dark); }
         height: 48px;
         padding-right: 0px;
+        button {
+            transition: opacity ease 0.5s;
+        }
+        button.mat-button-disabled {
+            opacity: 0.5;
+        }
 
         breadcrumb {
             .breadcrumb {
@@ -17,18 +23,6 @@
                     }
                 }
             }
-            // padding: 0;
-            // margin: 0;
-            // list-style: none;
-            // .breadcrumb-item {
-            //     display: inline-block;
-            //     & + .breadcrumb-item {
-            //         &:before {
-            //             content: "/";
-            //             padding: 10px;
-            //         }
-            //     }
-            // }
         }
         .spacer {
             flex: 1 1 auto;
