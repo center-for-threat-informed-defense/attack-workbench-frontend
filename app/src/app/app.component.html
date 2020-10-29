@@ -1,11 +1,10 @@
-<div [class]="'app ' + theme">
-    <app-header></app-header>
-
+<div [class]="'app ' + theme" cdkScrollable>
+    <app-header [style.margin-top]="-hiddenHeaderPX + 'px'" #header></app-header>
     <mat-drawer-container class="app-body">
         <mat-drawer-content>
             <div class="content">
-                <app-toolbar (onToggleTheme)="toggleTheme()" (onToggleSidebar)="sidebar.toggle()"></app-toolbar>
-                <div class="router-padding">
+                <app-toolbar (onToggleTheme)="toggleTheme()" (onToggleSidebar)="sidebar.toggle()" (onScrollTop)="scrollToTop()" [canScroll]="hiddenHeaderPX != 0"></app-toolbar>
+                <div class="router-padding" #scrollRef>
                     <router-outlet></router-outlet>
                 </div>
             </div>
