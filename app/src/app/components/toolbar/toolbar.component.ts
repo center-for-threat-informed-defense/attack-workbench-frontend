@@ -8,7 +8,7 @@ import { Component, OnInit, ViewEncapsulation, Output, EventEmitter } from '@ang
 })
 export class ToolbarComponent implements OnInit {
     @Output() public onToggleTheme = new EventEmitter();
-    
+    @Output() public onToggleSidebar = new EventEmitter();
     constructor() {}
 
     ngOnInit() {
@@ -17,5 +17,8 @@ export class ToolbarComponent implements OnInit {
     //emit a toggle theme event
     public emitToggleTheme() {
         this.onToggleTheme.emit();
+    }
+    public emitToggleSidebar() { 
+        this.onToggleSidebar.emit();
     }
 }

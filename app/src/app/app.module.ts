@@ -48,8 +48,6 @@ import { StixListComponent } from './components/stix/stix-list/stix-list.compone
 import { LandingPageComponent } from './views/landing-page/landing-page.component';
 import { HelpPageComponent } from './views/help-page/help-page.component';
 import { ToolbarComponent } from './components/toolbar/toolbar.component';
-import { ResourcesTramComponent } from './components/resources-drawer/drawers/resources-tram/resources-tram.component';
-import { ResourcesSearchComponent } from './components/resources-drawer/drawers/resources-search/resources-search.component';
 
 import { CollectionListComponent } from './views/stix/collection/collection-list/collection-list.component';
 import { CollectionViewComponent } from './views/stix/collection/collection-view/collection-view.component';
@@ -98,8 +96,6 @@ import { TechniqueEditComponent } from './views/stix/technique/technique-edit/te
     ToolbarComponent,
     
     ResourcesDrawerComponent,
-    ResourcesTramComponent,
-    ResourcesSearchComponent,
 
     CollectionListComponent,
     CollectionViewComponent,

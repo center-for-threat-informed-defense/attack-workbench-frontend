@@ -15,15 +15,20 @@ export class ResourcesDrawerComponent implements OnInit {
             "icon": "search"
         },
         {
-            "name": "tram",
-            "label": "threat reports",
-            "icon": "tram" //alternate icon: assignments
+            "name": "citations",
+            "label": "citation finder",
+            "icon": "superscript"
         },
         {
-            "name": "saved",
-            "label": "saved items",
-            "icon": "bookmarks"
+            "name": "history",
+            "label": "versions",
+            "icon": "history"
         }
+        // {
+        //     "name": "saved",
+        //     "label": "saved items",
+        //     "icon": "bookmarks"
+        // }
     ]
     public currentTab: string = "";
 
@@ -32,6 +37,12 @@ export class ResourcesDrawerComponent implements OnInit {
         else this.currentTab = tab.name;
         setTimeout(() => this.drawerResize.emit()); // emit after render loop
     }
+
+    @Output() public onClose = new EventEmitter();
+    public close() {
+        this.onClose.emit();
+    }
+
 
     constructor() { }
 
