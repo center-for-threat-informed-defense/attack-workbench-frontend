@@ -4,15 +4,15 @@
     <mat-drawer-container class="app-body">
         <mat-drawer-content>
             <div class="content">
-                <app-toolbar (onToggleTheme)="toggleTheme()"></app-toolbar>
+                <app-toolbar (onToggleTheme)="toggleTheme()" (onToggleSidebar)="sidebar.toggle()"></app-toolbar>
                 <div class="router-padding">
                     <router-outlet></router-outlet>
                 </div>
             </div>
         </mat-drawer-content>
-        <mat-drawer mode="side" position="end" opened>
+        <mat-drawer mode="side" position="end" #sidebar>
             <div class="drawer">
-                <app-resources-drawer (drawerResize)="resizeDrawers()"></app-resources-drawer>
+                <app-resources-drawer (drawerResize)="resizeDrawers()" (onClose)="sidebar.toggle()"></app-resources-drawer>
             </div>
         </mat-drawer>
     </mat-drawer-container>

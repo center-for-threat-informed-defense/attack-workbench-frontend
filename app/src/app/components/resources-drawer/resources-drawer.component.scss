@@ -1,42 +1,28 @@
 @import "../../../style/globals";
 .resources-drawer {
+    display: flex;
+    flex-direction: column;
+    max-width: 33vw;
     height: 100%;
-    box-sizing: content-box;
-    display: block;
-    vertical-align: top;
-    .controls, .content {
-        display: inline-block
-    }
-    .controls {
-        float: left;
-        border-left: 1px solid;
-        border-bottom: 1px solid;
-        border-bottom-left-radius: 5px;
-        transform: translateX(1px); //cover drawer border
-        .light & { 
-            background: color-alternate(light); 
-            border-right: 1px solid color-alternate(light,2); 
-        }
-        .dark & { 
-            background: color-alternate(dark); 
-            border-right: 1px solid color-alternate(dark,2);
-        }        
-        .control {
-            display: block;
+    border-left: 1px solid;
+    .dark & { border-color: border-color(dark); }
+    .light & { border-color: border-color(light); }
+    mat-toolbar {
+        .light & { background: color-alternate(light); }
+        .dark & { background: color-alternate(dark); }
+        height: 48px;
+        padding-left: 0px;
+        padding-right: 0px;
+        .spacer {
+            flex: 1 1 auto;
         }
     }
     .content {
-        height: 100%;
-        border-left: 1px solid;
-        .light & { background: color-alternate(light); }
-        .dark & { background: color-alternate(dark); }
-        mat-toolbar {
-            height: 48px;
-            .light & { background: color-alternate(light, 2); }
-            .dark & { background: color-alternate(dark, 2); }
-
-            .subsubheading { margin: 0 auto; }
-        }
+        flex-grow: 1;
+        overflow: auto;
+        margin-top: 5px; // separate toolbar
+        margin-right: 5px; // separate scrollbar
+        padding: 45px 20px 50px 25px;
     }
-    
+
 }

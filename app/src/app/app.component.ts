@@ -33,8 +33,11 @@ export class AppComponent {
         overlayContainerClasses.add(this.theme);
         setCookie("theme", theme, 30);
     }
-
-
+    
+    // public showSidebar: boolean = false;
+    // public toggleSidebar() {
+    //     this.
+    // }
 
     resizeDrawers() {
         console.log("resizing drawer")
