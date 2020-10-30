@@ -77,7 +77,7 @@ import { TacticEditComponent } from './views/stix/tactic/tactic-edit/tactic-edit
 import { TechniqueViewComponent } from './views/stix/technique/technique-view/technique-view.component';
 import { TechniqueListComponent } from './views/stix/technique/technique-list/technique-list.component';
 import { TechniqueEditComponent } from './views/stix/technique/technique-edit/technique-edit.component';
-
+import { DescriptiveHelperComponent } from './util/descriptive-helper/descriptive-helper.component';
 
 
 @NgModule({
@@ -125,6 +125,7 @@ import { TechniqueEditComponent } from './views/stix/technique/technique-edit/te
     TechniqueViewComponent,
     TechniqueListComponent,
     TechniqueEditComponent,
+    DescriptiveHelperComponent
   ],
   imports: [
     BreadcrumbModule,

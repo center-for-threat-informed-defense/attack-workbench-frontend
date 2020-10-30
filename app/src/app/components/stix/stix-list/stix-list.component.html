@@ -70,7 +70,8 @@
                             </div>
                             <div class="column description">
                                 <div *ngFor="let property of tableDetail">
-                                    {{element[property.property]}} ({{property.display}})
+                                    <app-descriptive-helper [description]="element[property.property]" [config]="{'firstParagraphOnly': true}"></app-descriptive-helper>
+                                    <!-- {{element[property.property]}} ({{property.display}}) -->
                                 </div>
                             </div>
                         </div>
