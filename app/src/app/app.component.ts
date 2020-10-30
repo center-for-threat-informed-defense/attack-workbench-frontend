@@ -50,8 +50,8 @@ export class AppComponent implements AfterViewInit {
     // when a scroll happens
     private scrollEvent($event): void {
         let headerHeight = this.header.nativeElement.offsetHeight;
-        // constrain amount of hidden to bounds
-        this.hiddenHeaderPX = Math.min(Math.max(0, this.scrollRef.nativeElement.scrollTop/2), headerHeight); 
+        // constrain amount of hidden to bounds, round up because decimal scroll causes flicker
+        this.hiddenHeaderPX = Math.floor(Math.min(Math.max(0, this.scrollRef.nativeElement.scrollTop/2), headerHeight)); 
     }
     // scroll to the top of the main content
     public scrollToTop(): void {
