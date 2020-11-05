@@ -1,5 +1,4 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { MarkdownComponent, MarkdownService } from 'ngx-markdown';
 import { ExternalReferences } from 'src/app/classes/external-references';
 
 @Component({
@@ -9,7 +8,7 @@ import { ExternalReferences } from 'src/app/classes/external-references';
 })
 export class DescriptiveHelperComponent implements OnInit {
 
-  @Input() public description: string; // Description
+  @Input() public description: string; // Descriptive property
   @Input() public config: DescriptiveHelperListConfig = {};
   @Input() public referencesObject: ExternalReferences;
 
@@ -23,16 +22,25 @@ export class DescriptiveHelperComponent implements OnInit {
     this.description = this.description.split('\n')[0];
   }
 
+  /**
+   * remove references from descriptive property
+   */
   private removeReferences() {
-    // Remove references
     this.description = this.description.replace(this.reReference, "");
   }
 
+  /**
+   * return list of references from descriptive property
+   */
   private getReferencesFromDescription() {
-    // Get list of references
     return this.description.match(this.reReference);
   }
 
+  /**
+   * Replace reference citation to be rendered as HTML
+   * @param sourceName source name of the reference
+   * @param completeReference complete reference e.g., (Citation: Source Name)
+   */
   private replaceCitationHTML(sourceName: string, completeReference: string) {
 
     if (this.referencesList[sourceName]) {
@@ -59,6 +67,9 @@ export class DescriptiveHelperComponent implements OnInit {
     }
   }
 
+  /**
+   * Replace references from descriptive property
+   */
   private replaceReferences() {
     var referenceNames = this.getReferencesFromDescription()
     var cleanReferenceNames = []
@@ -85,8 +96,7 @@ export class DescriptiveHelperComponent implements OnInit {
     if (this.config['removeReferences']) {
       this.removeReferences();
     }
-
-    if (this.referencesList) {
+    else if (this.referencesList) {
       this.replaceReferences();
     }
   }
