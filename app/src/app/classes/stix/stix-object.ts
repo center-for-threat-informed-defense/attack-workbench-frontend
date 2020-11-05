@@ -1,5 +1,6 @@
 import { Relationship } from './relationship';
 import { VersionNumber } from '../version-number';
+import { ExternalReferences } from '../external-references';
 import { v4 as uuid } from 'uuid';
 
 export abstract class StixObject {
@@ -24,6 +25,7 @@ export abstract class StixObject {
     public readonly created: Date;  // object created date
     public readonly modified: Date; // object modified date
     public version: VersionNumber;  // version number of the object
+    public external_references: ExternalReferences;
 
     public deprecated: boolean = false; //is object deprecated?
     public revoked: boolean = false;    //is object revoked?
@@ -41,6 +43,8 @@ export abstract class StixObject {
             this.created = new Date(sdo.created);
             this.modified = new Date(sdo.modified);
             this.version = new VersionNumber(sdo.x_mitre_version);
+            this.external_references = new ExternalReferences(sdo["external_references"]);
+
             if ("x_mitre_deprecated" in sdo) this.deprecated = sdo.x_mitre_deprecated;
             if ("x_mitre_revoked" in sdo) this.revoked = sdo.x_mitre_revoked;
         } else {
