@@ -34,7 +34,7 @@ export class ExternalReferences {
      * @param references external references list from collection
      */
     constructor(references) {
-        // Create externalReferences object
+        // Create externalReferences list
         for (var i = 0; i < references.length; i++){
 
             // Avoid MITRE ATT&CK tags
