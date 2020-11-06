@@ -18,7 +18,7 @@ export class ExternalReferences {
 
     /**
      * Update reference counter and increase current counter by 1 
-     * @params {sourceName} index of reference
+     * @param sourceName index of reference
      */
     public updateReference(sourceName: string) {
         if(this.externalReferences[sourceName]) {
@@ -31,7 +31,7 @@ export class ExternalReferences {
 
     /**
      * Construct an external reference object
-     * @params reference list from collection
+     * @param references external references list from collection
      */
     constructor(references) {
         // Create externalReferences object
