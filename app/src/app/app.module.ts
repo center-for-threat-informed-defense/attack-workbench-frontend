@@ -43,11 +43,30 @@ import { HeaderComponent } from './components/header/header.component';
 import { FooterComponent } from './components/footer/footer.component';
 import { ResourcesDrawerComponent } from './components/resources-drawer/resources-drawer.component';
 import { LoadingOverlayComponent } from './components/loading-overlay/loading-overlay.component';
-import { StixListComponent } from './components/stix/stix-list/stix-list.component';
-
-import { LandingPageComponent } from './views/landing-page/landing-page.component';
-import { HelpPageComponent } from './views/help-page/help-page.component';
 import { ToolbarComponent } from './components/toolbar/toolbar.component';
+
+// STIX components
+import { StixListComponent } from './components/stix/stix-list/stix-list.component';
+import { TimestampPropertyComponent } from "./components/stix/timestamp-property/timestamp-property.component";
+import { ExternalReferencesComponent } from "./components/stix/external-references/external-references.component";
+
+import { AttackIDPropertyComponent } from "./components/stix/attackid-property/attackid-property.component";
+import { AttackIDEditComponent } from "./components/stix/attackid-property/attackid-edit/attackid-edit.component";
+import { AttackIDViewComponent } from "./components/stix/attackid-property/attackid-view/attackid-view.component";
+
+import { ListPropertyComponent } from "./components/stix/list-property/list-property.component";
+import { ListEditComponent } from "./components/stix/list-property/list-edit/list-edit.component";
+import { ListViewComponent } from "./components/stix/list-property/list-view/list-view.component";
+
+import { VersionPropertyComponent } from "./components/stix/version-property/version-property.component";
+import { VersionEditComponent } from "./components/stix/version-property/version-edit/version-edit.component";
+import { VersionViewComponent } from "./components/stix/version-property/version-view/version-view.component";
+
+
+// views
+
+import { HelpPageComponent } from './views/help-page/help-page.component';
+import { LandingPageComponent } from './views/landing-page/landing-page.component';
 
 import { CollectionListComponent } from './views/stix/collection/collection-list/collection-list.component';
 import { CollectionViewComponent } from './views/stix/collection/collection-view/collection-view.component';
@@ -83,19 +102,28 @@ import { TechniqueEditComponent } from './views/stix/technique/technique-edit/te
 @NgModule({
   declarations: [
     AppComponent,
+
     HeaderComponent,
     FooterComponent,
-    
     LoadingOverlayComponent,
+    ToolbarComponent,
+    ResourcesDrawerComponent,
+    
+    StixListComponent,
+    TimestampPropertyComponent,
+    ExternalReferencesComponent,
+    AttackIDPropertyComponent,
+    AttackIDEditComponent,
+    AttackIDViewComponent,
+    ListPropertyComponent,
+    ListEditComponent,
+    ListViewComponent,
+    VersionPropertyComponent,
+    VersionEditComponent,
+    VersionViewComponent,
     
     LandingPageComponent,
     HelpPageComponent,
-    
-    StixListComponent,
-    
-    ToolbarComponent,
-    
-    ResourcesDrawerComponent,
 
     CollectionListComponent,
     CollectionViewComponent,
