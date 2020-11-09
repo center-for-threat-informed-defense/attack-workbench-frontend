@@ -1,7 +1,10 @@
 @import "../../../style/globals";
 .object-toolbar {
     mat-toolbar {
-        .light & { background: color-alternate(light); }
+        box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.25);
+        .light & { 
+            background: color-alternate(light); 
+        }
         .dark & { background: color-alternate(dark); }
         height: 48px;
         padding-right: 0px;
