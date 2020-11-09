@@ -13,8 +13,9 @@
     .dark & { border-color: border-color(dark); border-top-color: transparent; }
     .light & { border-color: border-color(light); border-top-color: transparent; }
     border-radius: 4px;
-    padding: 15px 13px 15px;
+    padding: 16px 12px;
     width: 100%;
+    font-size: 16px;
 }
 
 // label
@@ -24,11 +25,11 @@
     top: 0;
     left: 0;
     display: flex;
-    .dark & { border-color: border-color(dark); color: border-color(dark); }
-    .light & { border-color: border-color(light); color: border-color(dark); }
+    .dark & { border-color: border-color(dark); color: on-color-deemphasis(dark); }
+    .light & { border-color: border-color(light); color: on-color-deemphasis(light); }
     width: 100%;
     max-height: 100%;
-    font-size: 75%;
+    font-size: 13px !important; // override 16 px font size from text-label
     line-height: 15px;
 }
 
