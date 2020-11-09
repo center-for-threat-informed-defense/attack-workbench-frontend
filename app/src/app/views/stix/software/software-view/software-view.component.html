@@ -1,1 +1,89 @@
-<p>software-view works!</p>
+<div class="software-view view-page grid spacing-12">
+    <div class="row">
+        <div class="col">
+            <h1>BabyShark</h1>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <div class="labelled-box">
+                <div class="content">
+                    S0414
+                </div>
+                <label>id</label>
+            </div>
+        </div>
+        <div class="col">
+            <div class="labelled-box">
+                <div class="content">
+                    1.1
+                </div>
+                <label>version</label>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <div class="labelled-box">
+                <div class="content">
+                    07 October 2019
+                </div>
+                <label>created</label>
+            </div>
+        </div>
+        <div class="col">
+            <div class="labelled-box">
+                <div class="content">
+                    30 March 2020
+                </div>
+                <label>modified</label>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <div class="labelled-box">
+                <div class="content">
+                    Malware
+                </div>
+                <label>type</label>
+            </div>
+        </div>
+        <div class="col">
+            <div class="labelled-box">
+                <div class="content">
+                    Windows
+                </div>
+                <label>platforms</label>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="labelled-box">
+            <div class="content">
+                BabyShark is a Microsoft Visual Basic (VB) script-based malware family that is believed to be associated with several North Korean campaigns. <sup>[1]</sup>
+            </div>
+            <label>description</label>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <h2>Techniques Used</h2>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <app-stix-list [stixObjects]="techniques? techniques.slice(0, 5) : []" [config]="{'type': 'technique', 'showLinks': false}"></app-stix-list>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <h2>Associated Groups</h2>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <app-stix-list [stixObjects]="groups? groups.slice(0, 3) : []" [config]="{'type': 'group', 'showLinks': false}"></app-stix-list>
+        </div>
+    </div>
+</div>
