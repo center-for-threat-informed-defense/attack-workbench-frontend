@@ -9,14 +9,15 @@ export abstract class StixObject {
     
 
     public get routes(): any[] { // route to view the object
-        let baseRoute = "/" + [this.attackType, this.stixID].join("/")
+        // let baseRoute = "/" + [this.attackType, this.stixID].join("/")
         return [
             {
                 "label": "view",
                 "route": ""
             }, {
                 "label": "edit",
-                "route": "/edit"
+                "route": "",
+                "query": {"editing": true}
             }
         ]
     } 

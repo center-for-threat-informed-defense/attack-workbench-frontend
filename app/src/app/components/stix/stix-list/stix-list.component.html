@@ -60,7 +60,7 @@
                         <div class="element-description columns">
                             <div class="column is-narrow controls" *ngIf="config.showLinks">
                                 <div *ngFor="let route of element.routes">
-                                    <a class="mat-button" [routerLink]="'/' + [element.attackType, element.stixID, route.route].join('/')">
+                                    <a class="mat-button" [routerLink]="'/' + [element.attackType, element.stixID, route.route].join('/')" [queryParams]="route.query">
                                         {{route.label}}
                                     </a>
                                 </div>
