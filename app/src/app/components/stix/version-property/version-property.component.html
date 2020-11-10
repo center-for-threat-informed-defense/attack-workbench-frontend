@@ -3,7 +3,7 @@
         <div class="content">
             <app-version-view [config]="config"></app-version-view>
         </div>
-        <label>version</label>
+        <label>{{config.field ? config.field : 'version'}}</label>
     </div>
     <app-version-edit *ngIf="config.mode == 'edit'" [config]="config"></app-version-edit>
 </div>
