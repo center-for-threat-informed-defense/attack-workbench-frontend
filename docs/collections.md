@@ -20,7 +20,7 @@ Collections are represented in STIX using the `x-mitre-collection` type, describ
 | **description** (optional) | `string` | More details, context, and explanation about the purpose or contents of the collection. |
 | **created** (required) | `timestamp` | Represents the time at which the collection was originally created. |
 | **modified**  (required)| `timestamp` | Represents the time at which the collection was most recently modified. |
-| **version** (required) | `string` | The version of the collection object, which must follow the MAJOR.MINOR.PATCH pattern. |
+| **x_mitre_version** (required) | `string` | The version of the collection object, which must follow the MAJOR.MINOR.PATCH pattern. |
 | **spec_version** (required) | `string` | The version of the STIX specification used to represent the object. This value MUST be `2.1`.
 | **created_by_ref** (required) | `string` | identifier | Specifies the **id** property of the `identity` object that describes the entity that created this collection. |
 | **object_marking_refs** (required) | `list` of type `identifier` | Specifies a list of **id** properties of `marking-definition` objects that apply to this object. Typically used for copyright statements. |
@@ -42,7 +42,7 @@ Object version references are used to refer to a specific version of a STIX obje
     "type": "x-mitre-collection",
     "spec_version": "2.1",
     "name": "Enterprise ATT&CK",
-    "version": "6.2.0",
+    "x_mitre_version": "6.2",
     "description": "Version 6.2 of the Enterprise ATT&CK dataset",
     "created_by_ref": "identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5",
     "created": "2018-10-17T00:14:20.652Z",
