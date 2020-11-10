@@ -1,0 +1,13 @@
+.view-page {
+    h1, h2 {
+        // width: 100%;
+        text-align: center;
+    }
+    h1 {
+        margin-top: 0;
+        margin-bottom: 16px;
+    }
+    width: 45em;
+    max-width: 100%;
+    margin: 0 auto;
+}
