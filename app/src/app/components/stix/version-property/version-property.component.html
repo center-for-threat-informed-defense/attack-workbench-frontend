@@ -1,1 +1,9 @@
-<p>version-property works!</p>
+<div class="version-property">
+    <div class="labelled-box" *ngIf="config.mode == 'view'">
+        <div class="content">
+            <app-version-view *ngIf="config.mode == 'view'" [config]="config"></app-version-view>
+        </div>
+        <label>version</label>
+    </div>
+    <app-version-edit *ngIf="config.mode == 'edit'" [config]="config"></app-version-edit>
+</div>

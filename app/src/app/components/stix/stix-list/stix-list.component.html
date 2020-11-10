@@ -28,7 +28,10 @@
             <!-- column definitions -->
             <ng-container matColumnDef="{{column}}" *ngFor="let column of tableColumns">
                 <th mat-header-cell mat-sort-header *matHeaderCellDef> {{column}} </th>
-                <td mat-cell *matCellDef="let element"> {{element[column]}} ({{tableColumnsDisplay.get(column)}}) </td>
+                <td mat-cell *matCellDef="let element">
+                    <app-version-view *ngIf="tableColumnsDisplay.get(column) == 'version'; else genericColumn" [config]="{object: element, field: column, mode: 'view'}"></app-version-view>
+                    <ng-template #genericColumn>{{element[column]}} ({{tableColumnsDisplay.get(column)}})</ng-template>
+                </td>
             </ng-container>
             
             <!-- select column -->

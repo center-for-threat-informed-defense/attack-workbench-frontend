@@ -11,7 +11,10 @@
         </div>
         <div class="col">
             <!-- VERSION NUMBER -->
-            <app-version-property></app-version-property>
+            <app-version-property [config]="{
+                mode: editing? 'edit' : 'view',
+                object: software
+            }"></app-version-property>
         </div>
     </div>
     <div class="row">

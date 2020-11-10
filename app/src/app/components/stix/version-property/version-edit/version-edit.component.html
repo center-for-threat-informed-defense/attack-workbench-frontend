@@ -1,1 +1,6 @@
-<p>version-edit works!</p>
+<div class="version-edit">
+    <mat-form-field class="version" appearance="outline">
+        <mat-label>version</mat-label>
+        <input matInput required [(ngModel)]="config.object[config.field ? config.field : 'version']">
+    </mat-form-field>
+</div>
