@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
+import { VersionPropertyConfig } from '../version-property.component';
 
 @Component({
   selector: 'app-version-view',
@@ -6,10 +7,11 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./version-view.component.scss']
 })
 export class VersionViewComponent implements OnInit {
+    @Input() public config: VersionPropertyConfig;
 
-  constructor() { }
+    constructor() { }
 
-  ngOnInit(): void {
-  }
+    ngOnInit(): void {
+    }
 
 }

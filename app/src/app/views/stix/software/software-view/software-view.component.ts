@@ -16,6 +16,8 @@ export class SoftwareViewComponent implements OnInit {
     public groups: Group[];
     public techniques: Technique[];
 
+    public editing: boolean = false;
+
     public software: Software = new Software("malware", {
         "created": "2019-10-11T16:13:19.588Z",
         "modified": "2019-10-16T15:34:22.990Z",
@@ -51,11 +53,14 @@ export class SoftwareViewComponent implements OnInit {
         "x_mitre_version": "1.0"
     })
 
-    constructor(private groupService: GroupService, private techniqueService: TechniqueService) { }
+    constructor(private groupService: GroupService, private techniqueService: TechniqueService, private route: ActivatedRoute) { }
 
     ngOnInit() {
         this.groups = this.groupService.getAll();
         this.techniques = this.techniqueService.getAll();
+        this.route.queryParams.subscribe(params => {
+            this.editing = params["editing"];
+        });
     }
 
 }
