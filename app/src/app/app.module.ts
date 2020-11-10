@@ -47,8 +47,11 @@ import { ToolbarComponent } from './components/toolbar/toolbar.component';
 
 // STIX components
 import { StixListComponent } from './components/stix/stix-list/stix-list.component';
-import { TimestampPropertyComponent } from "./components/stix/timestamp-property/timestamp-property.component";
 import { ExternalReferencesComponent } from "./components/stix/external-references/external-references.component";
+
+import { TimestampPropertyComponent } from "./components/stix/timestamp-property/timestamp-property.component";
+import { TimestampViewComponent } from "./components/stix/timestamp-property/timestamp-view/timestamp-view.component";
+import { TimestampDiffComponent } from "./components/stix/timestamp-property/timestamp-diff/timestamp-diff.component";
 
 import { AttackIDPropertyComponent } from "./components/stix/attackid-property/attackid-property.component";
 import { AttackIDEditComponent } from "./components/stix/attackid-property/attackid-edit/attackid-edit.component";
@@ -104,8 +107,10 @@ import { TechniqueListComponent } from './views/stix/technique/technique-list/te
     ResourcesDrawerComponent,
     
     StixListComponent,
-    TimestampPropertyComponent,
     ExternalReferencesComponent,
+    TimestampPropertyComponent,
+    TimestampViewComponent,
+    TimestampDiffComponent,
     AttackIDPropertyComponent,
     AttackIDEditComponent,
     AttackIDViewComponent,

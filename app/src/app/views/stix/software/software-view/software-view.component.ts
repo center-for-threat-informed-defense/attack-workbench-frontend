@@ -20,7 +20,7 @@ export class SoftwareViewComponent implements OnInit {
 
     public software: Software = new Software("malware", {
         "created": "2019-10-11T16:13:19.588Z",
-        "modified": "2019-10-16T15:34:22.990Z",
+        "modified": "2020-11-10T12:34:22.990Z",
         "labels": [
             "malware"
         ],
