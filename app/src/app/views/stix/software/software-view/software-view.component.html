@@ -20,11 +20,19 @@
     <div class="row">
         <div class="col">
             <!-- CREATED -->
-            <app-timestamp-property></app-timestamp-property>
+            <app-timestamp-property [config]="{
+                mode: 'view',
+                object: software,
+                field: 'created'
+            }"></app-timestamp-property>
         </div>
         <div class="col">
             <!-- MODIFIED -->
-            <app-timestamp-property></app-timestamp-property>
+            <app-timestamp-property [config]="{
+                mode: 'view',
+                object: software,
+                field: 'modified'
+            }"></app-timestamp-property>
         </div>
     </div>
     <div class="row">
