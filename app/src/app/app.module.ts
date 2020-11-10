@@ -75,27 +75,21 @@ import { CollectionExportComponent } from './views/stix/collection/collection-ex
 
 import { GroupViewComponent } from './views/stix/group/group-view/group-view.component';
 import { GroupListComponent } from './views/stix/group/group-list/group-list.component';
-import { GroupEditComponent } from './views/stix/group/group-edit/group-edit.component';
 
 import { MatrixViewComponent } from './views/stix/matrix/matrix-view/matrix-view.component';
-import { MatrixEditComponent } from './views/stix/matrix/matrix-edit/matrix-edit.component';
 import { MatrixListComponent } from './views/stix/matrix/matrix-list/matrix-list.component';
 
 import { MitigationListComponent } from './views/stix/mitigation/mitigation-list/mitigation-list.component';
 import { MitigationViewComponent } from './views/stix/mitigation/mitigation-view/mitigation-view.component';
-import { MitigationEditComponent } from './views/stix/mitigation/mitigation-edit/mitigation-edit.component';
 
 import { SoftwareViewComponent } from './views/stix/software/software-view/software-view.component';
 import { SoftwareListComponent } from './views/stix/software/software-list/software-list.component';
-import { SoftwareEditComponent } from './views/stix/software/software-edit/software-edit.component';
 
 import { TacticViewComponent } from './views/stix/tactic/tactic-view/tactic-view.component';
 import { TacticListComponent } from './views/stix/tactic/tactic-list/tactic-list.component';
-import { TacticEditComponent } from './views/stix/tactic/tactic-edit/tactic-edit.component';
 
 import { TechniqueViewComponent } from './views/stix/technique/technique-view/technique-view.component';
 import { TechniqueListComponent } from './views/stix/technique/technique-list/technique-list.component';
-import { TechniqueEditComponent } from './views/stix/technique/technique-edit/technique-edit.component';
 
 
 
@@ -130,29 +124,23 @@ import { TechniqueEditComponent } from './views/stix/technique/technique-edit/te
     CollectionImportComponent,
     CollectionExportComponent,
 
-    GroupViewComponent,
     GroupListComponent,
-    GroupEditComponent,
+    GroupViewComponent,
 
-    MatrixViewComponent,
-    MatrixEditComponent,
     MatrixListComponent,
+    MatrixViewComponent,
 
     MitigationListComponent,
     MitigationViewComponent,
-    MitigationEditComponent,
 
-    SoftwareViewComponent,
     SoftwareListComponent,
-    SoftwareEditComponent,
+    SoftwareViewComponent,
 
-    TacticViewComponent,
     TacticListComponent,
-    TacticEditComponent,
+    TacticViewComponent,
 
-    TechniqueViewComponent,
     TechniqueListComponent,
-    TechniqueEditComponent,
+    TechniqueViewComponent,
   ],
   imports: [
     BreadcrumbModule,
