@@ -1,7 +1,7 @@
 <div class="version-property">
-    <div class="labelled-box" *ngIf="config.mode == 'view'">
+    <div class="labelled-box" *ngIf="!config.mode || config.mode == 'view'">
         <div class="content">
-            <app-version-view *ngIf="config.mode == 'view'" [config]="config"></app-version-view>
+            <app-version-view [config]="config"></app-version-view>
         </div>
         <label>version</label>
     </div>
