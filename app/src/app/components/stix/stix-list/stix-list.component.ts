@@ -144,8 +144,7 @@ export class StixListComponent implements OnInit {
                     this.addColumn("platforms", "tags");
                     this.tableDetail = [{
                         "property": "description",
-                        "display": "descriptive",
-                        "references": "external_references"
+                        "display": "descriptive"
                     }]
                     break;
                 // case "relationship":

@@ -1,53 +1,95 @@
 export class ExternalReferences {
-    private externalReferences = {};
-    private currentCounter = 0;
+    private _externalReferences : Map<string, ExternalReference> = new Map();
+    private _currentCounter : number = 0;
 
     /**
      * return external references list
      */
-    public getExternalReferences() {
-        return this.externalReferences;
-    }
+    public get externalReferences() { return this._externalReferences; }
 
     /**
      * return current counter
      */
-    public getCurrentCounter() {
-        return this.currentCounter;
-    }
+    public get currentCounter() : number { return this._currentCounter; }
 
     /**
      * Update reference counter and increase current counter by 1 
      * @param sourceName index of reference
      */
-    public updateReference(sourceName: string) {
+    public updateReference(sourceName: string) : void {
         if(this.externalReferences[sourceName]) {
             // Update current counter first
-            this.currentCounter = this.currentCounter + 1;
+            this._currentCounter = this._currentCounter + 1;
             // Update reference counter
             this.externalReferences[sourceName]['counter'] = this.currentCounter;
         }
     }
 
     /**
-     * Construct an external reference object
-     * @param references external references list from collection
+     * Update external references map with given reference list
+     * @param references list of references
      */
-    constructor(references) {
-        // Create externalReferences list
-        for (var i = 0; i < references.length; i++){
+    public set externalReferences(references: any) {
+        if (references){
+            // Create externalReferences list
+            for (var i = 0; i < references.length; i++){
 
-            // Avoid MITRE ATT&CK tags
-            if (references[i]['external_id']){
-                continue;
+                // Avoid MITRE ATT&CK tags
+                if (references[i]['external_id']){
+                    continue;
+                }
+
+                var externalRef : ExternalReference = new ExternalReference();
+
+                externalRef.url = references[i].url;
+                externalRef.description = references[i].description;
+
+                this._externalReferences.set(references[i]['source_name'], externalRef);
+
             }
-
-            var index = references[i]['source_name'];
-            this.externalReferences[index] = {};
-
-            this.externalReferences[index]['url'] = references[i].url;
-            this.externalReferences[index]['description'] = references[i].description;
-            this.externalReferences[index]['counter'] = null;
         }
     }
+
+    /**
+     * Construct an external references object
+     * optional @param references external references list from collection
+     */
+    constructor(references?) {
+        this.externalReferences = references;
+    }
+}
+
+export class ExternalReference {
+    /** url; force */
+    private _url: string;
+    /** description; remove references from descriptive field if true */
+    private _description: string;
+    /** counter; counter to keep track of usage */
+    private _counter: number;
+
+    /**
+     * Construct an external reference object
+     * Counter will be null when created
+     */
+    constructor() {
+        this._counter = null;
+    };
+
+    /**
+     * Set url 
+     * @param url string of reference url
+     */
+    public set url(url:string) { this._url = url; };
+
+    /**
+     * Set description 
+     * @param description string of reference description
+     */
+    public set description(description:string) { this._description = description; };
+
+    /**
+     * Set description 
+     * @param counter counter for reference use
+     */
+    public set counter(counter:number) { this._counter = counter; };
 }
