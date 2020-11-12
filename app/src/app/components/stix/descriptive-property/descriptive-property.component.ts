@@ -2,14 +2,14 @@ import { Component, OnInit, Input } from '@angular/core';
 import { ExternalReferences } from 'src/app/classes/external-references';
 
 @Component({
-  selector: 'app-descriptive-helper',
-  templateUrl: './descriptive-helper.component.html',
-  styleUrls: ['./descriptive-helper.component.scss']
+  selector: 'app-descriptive-property',
+  templateUrl: './descriptive-property.component.html',
+  styleUrls: ['./descriptive-property.component.scss']
 })
-export class DescriptiveHelperComponent implements OnInit {
+export class DescriptivePropertyComponent implements OnInit {
 
   @Input() public description: string; // Descriptive property
-  @Input() public config: DescriptiveHelperListConfig = {};
+  @Input() public config: DescriptivePropertyListConfig = {};
   @Input() public referencesObject: ExternalReferences;
 
   private referencesList = {};
@@ -51,7 +51,7 @@ export class DescriptiveHelperComponent implements OnInit {
         reference_number = this.referencesList[sourceName]['counter'];
       }
       else {
-        reference_number = this.referencesObject.getCurrentCounter() + 1;
+        reference_number = this.referencesObject.currentCounter + 1;
         this.referencesObject.updateReference(sourceName);
       }
       
@@ -82,10 +82,13 @@ export class DescriptiveHelperComponent implements OnInit {
   ngOnInit(): void {
 
     // Get reference list from object
-    this.referencesList = this.referencesObject.getExternalReferences()
+    this.referencesList = this.referencesObject.externalReferences
 
     // Avoid strikethroughs
     this.description = this.description.split('~').join("`~`");
+
+    // Escape \ character by adding one next to it
+    this.description = this.description.split('\\').join("\\\\");
 
     // Check if it is only the first paragraph
     if (this.config['firstParagraphOnly']) {
@@ -103,9 +106,10 @@ export class DescriptiveHelperComponent implements OnInit {
 
 }
 
-export interface DescriptiveHelperListConfig {
+export interface DescriptivePropertyListConfig {
     /** firstParagraphOnly; force descriptive field to show first paragragh only */
     firstParagraphOnly?: boolean;
     /** removeReferences; remove references from descriptive field if true */
     removeReferences?: boolean;
 }
+

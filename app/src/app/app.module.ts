@@ -44,6 +44,7 @@ import { FooterComponent } from './components/footer/footer.component';
 import { ResourcesDrawerComponent } from './components/resources-drawer/resources-drawer.component';
 import { LoadingOverlayComponent } from './components/loading-overlay/loading-overlay.component';
 import { StixListComponent } from './components/stix/stix-list/stix-list.component';
+import { DescriptivePropertyComponent } from './components/stix/descriptive-property/descriptive-property.component';
 
 import { LandingPageComponent } from './views/landing-page/landing-page.component';
 import { HelpPageComponent } from './views/help-page/help-page.component';
@@ -77,7 +78,6 @@ import { TacticEditComponent } from './views/stix/tactic/tactic-edit/tactic-edit
 import { TechniqueViewComponent } from './views/stix/technique/technique-view/technique-view.component';
 import { TechniqueListComponent } from './views/stix/technique/technique-list/technique-list.component';
 import { TechniqueEditComponent } from './views/stix/technique/technique-edit/technique-edit.component';
-import { DescriptiveHelperComponent } from './util/descriptive-helper/descriptive-helper.component';
 
 
 @NgModule({
@@ -92,6 +92,8 @@ import { DescriptiveHelperComponent } from './util/descriptive-helper/descriptiv
     HelpPageComponent,
     
     StixListComponent,
+
+    DescriptivePropertyComponent,
     
     ToolbarComponent,
     
@@ -124,8 +126,7 @@ import { DescriptiveHelperComponent } from './util/descriptive-helper/descriptiv
 
     TechniqueViewComponent,
     TechniqueListComponent,
-    TechniqueEditComponent,
-    DescriptiveHelperComponent
+    TechniqueEditComponent
   ],
   imports: [
     BreadcrumbModule,
