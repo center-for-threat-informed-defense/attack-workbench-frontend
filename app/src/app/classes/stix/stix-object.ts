@@ -43,7 +43,7 @@ export abstract class StixObject {
             this.created = new Date(sdo.created);
             this.modified = new Date(sdo.modified);
             this.version = new VersionNumber(sdo.x_mitre_version);
-            this.external_references = new ExternalReferences(sdo["external_references"]);
+            this.external_references = new ExternalReferences(sdo.external_references]);
 
             if ("x_mitre_deprecated" in sdo) this.deprecated = sdo.x_mitre_deprecated;
             if ("x_mitre_revoked" in sdo) this.revoked = sdo.x_mitre_revoked;
