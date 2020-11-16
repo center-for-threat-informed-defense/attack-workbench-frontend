@@ -11,7 +11,7 @@ export class Software extends StixObject {
         if (sdo) {
             this.name = sdo.name;
             this.description = sdo.description;
-            this.platforms = sdo.platforms;
+            this.platforms = sdo.x_mitre_platforms;
         }
     }
 }

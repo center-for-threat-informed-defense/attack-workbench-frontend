@@ -47,7 +47,11 @@
         </div>
         <div class="col">
             <!-- PLATFORMS -->
-            <app-list-property></app-list-property>
+            <app-list-property [config]="{
+                mode: 'view',
+                object: software,
+                field: 'platforms'
+            }"></app-list-property>
         </div>
     </div>
     <div class="row">

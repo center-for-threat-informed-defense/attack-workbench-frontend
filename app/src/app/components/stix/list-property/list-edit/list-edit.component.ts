@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
+import { ListPropertyConfig } from '../list-property.component';
 
 @Component({
   selector: 'app-list-edit',
@@ -6,10 +7,11 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./list-edit.component.scss']
 })
 export class ListEditComponent implements OnInit {
+    @Input() public config: ListPropertyConfig;
 
-  constructor() { }
+    constructor() { }
 
-  ngOnInit(): void {
-  }
+    ngOnInit(): void {
+    }
 
 }
