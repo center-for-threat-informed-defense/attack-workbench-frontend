@@ -5,12 +5,15 @@
             margin-top: #{$spacing}px;
         }
         .column, .col { // either col or column works
-            display: inline-block;
-            &:not(.narrow) { flex: 1 0; }
-            .narrow        { flex: 0 1; }
+            display: inline-flex;
+            &:not(.narrow) { flex: 1 0 0; }
+            .narrow        { flex: 0 1 0; }
             &+.col, &+.column {
                 margin-left: #{$spacing}px;
             }
+            // grow children to fit
+            flex-direction: column;
+            >* { flex: 1 0; }
         }
     }
 }
