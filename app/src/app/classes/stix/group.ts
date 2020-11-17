@@ -13,8 +13,7 @@ export class Group extends StixObject {
         if (sdo) {
             this.name = sdo.name;
             this.description = sdo.description;
-            this.aliases = sdo.aliases;
+            this.aliases = sdo.aliases ? sdo.aliases : [];
         }
     }
-
 }
