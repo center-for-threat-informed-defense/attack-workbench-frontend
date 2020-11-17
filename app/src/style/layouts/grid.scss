@@ -6,8 +6,8 @@
         }
         .column, .col { // either col or column works
             display: inline-flex;
-            &:not(.narrow) { flex: 1 0; }
-            .narrow        { flex: 0 1; }
+            &:not(.narrow) { flex: 1 0 0; }
+            .narrow        { flex: 0 1 0; }
             &+.col, &+.column {
                 margin-left: #{$spacing}px;
             }

@@ -10,6 +10,10 @@ import { ListPropertyConfig } from '../list-property.component';
 export class ListViewComponent implements OnInit {
     @Input() public config: ListPropertyConfig;
 
+    public get wrap() {
+        return this.config.hasOwnProperty('wrap') ? this.config.wrap : true;
+    }
+
     constructor() { }
 
     ngOnInit(): void {

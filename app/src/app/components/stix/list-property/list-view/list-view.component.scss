@@ -3,9 +3,11 @@
 ul.list-view {
     margin: 0;
     padding: 0;
-    white-space: nowrap;
-    overflow-x: hidden;
-    text-overflow: ellipsis;
+    &:not(.wrap) {
+        white-space: nowrap;
+        overflow-x: hidden;
+        text-overflow: ellipsis;
+    }
     li.list-item {
         display: inline-block;
         &:not(:last-child):after {

@@ -29,4 +29,9 @@ export interface ListPropertyConfig {
     object: StixObject | [StixObject, StixObject];
     /* the field of the object(s) to visualize as a list */
     field: string;
+    /* Default true if omitted. For the view mode, if false, 
+     * overflow will be hidden and marked with an ellipses. 
+     * A tooltip will provide the full value.
+     */
+    wrap?: boolean
 }
