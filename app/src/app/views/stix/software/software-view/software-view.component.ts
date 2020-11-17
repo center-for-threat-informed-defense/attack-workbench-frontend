@@ -45,7 +45,7 @@ export class SoftwareViewComponent implements OnInit {
             }
         ],
         "x_mitre_platforms": [
-            "Windows"
+            "Windows", "macOS", "Linux", "AWS", "Large Dogs", "Pencils", "Norway", "Combat Wombats"
         ],
         "x_mitre_aliases": [
             "RDFSNIFFER"

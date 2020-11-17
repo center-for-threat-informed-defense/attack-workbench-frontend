@@ -125,7 +125,7 @@ export class StixListComponent implements OnInit {
                     break;
                 case "group":
                     this.addColumn("name", "plain");
-                    this.addColumn("aliases", "tags");
+                    this.addColumn("aliases", "list");
                     this.tableDetail = [{
                         "property": "description",
                         "display": "descriptive"
@@ -141,7 +141,7 @@ export class StixListComponent implements OnInit {
                     break;
                 case "technique":
                     this.addColumn("name", "plain");
-                    this.addColumn("platforms", "tags");
+                    this.addColumn("platforms", "list");
                     this.tableDetail = [{
                         "property": "description",
                         "display": "descriptive"
