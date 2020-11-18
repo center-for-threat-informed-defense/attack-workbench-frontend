@@ -8,28 +8,37 @@ export class ExternalReferences {
     public get externalReferences() { return this._externalReferences; }
 
     /**
-     * return current counter
+     * Sort _externalReferences by alphabetical order
+     * Restart index for displaying references
      */
-    // public get currentCounter(sourceName : string) : number { return this._currentCounter; }
+    public sortReferences() {
+        // Sort map
+        this._externalReferences = new Map([...this._externalReferences.entries()].sort((a,b) => a[1].description.localeCompare(b[1].description)));
+        
+        // Restart _externalReferencesIndex map
+        this._externalReferencesIndex = new Map();
+        // Start index at 1
+        var index = 1;
+        // Index 1
+        for (let [key, value] of this._externalReferences) {
+            // Add to map if it has a description
+            if(value.description){
+                this._externalReferencesIndex.set(key, index);
+                index += 1;
+            }
+        }
+    }
 
     /**
-     * Update reference counter and increase current counter by 1 
-     * @param sourceName index of reference
+     * Return index of reference to display
+     * return 0 if it was not found
+     * @param sourceName source name of reference
      */
-    // public updateReference(sourceName: string) : void {
-    //     if(this.externalReferences[sourceName]) {
-    //         // Update current counter first
-    //         // Update reference counter
-    //         this.externalReferences[sourceName]['counter'] = this.currentCounter;
-    //     }
-    // }
-
-    public sortReferences() {
-        console.log(this._externalReferences)
-        this._externalReferences[Symbol.iterator] = function* () {
-            yield* [...this.entries()].sort((a, b) => a.description - b.description);
+    public getIndexOfReference(sourceName : string) : number {
+        if(this._externalReferencesIndex.get(sourceName)) {
+            return this._externalReferencesIndex.get(sourceName);
         }
-        console.log(this._externalReferences)
+        return 0;
     }
 
     /**
@@ -44,13 +53,16 @@ export class ExternalReferences {
                 var externalRef : ExternalReference = new ExternalReference();
 
                 externalRef.url = references[i].url;
-                externalRef.description = references[i].description;
+
+                if(references[i].description) {
+                    externalRef.description = references[i].description;
+                }
 
                 this._externalReferences.set(references[i]['source_name'], externalRef);
 
             }
 
-            // Sort references by description
+            // Sort references by description and update index map
             this.sortReferences()
         }
     }
@@ -69,16 +81,11 @@ export class ExternalReference {
     private _url: string;
     /** description; remove references from descriptive field if true */
     private _description: string;
-    /** counter; index to keep track of usage */
-    private _index: number;
 
     /**
      * Construct an external reference object
-     * Counter will be null when created
      */
-    constructor() {
-        this._index = null;
-    };
+    constructor() {};
 
     /**
      * Set url 
@@ -93,8 +100,18 @@ export class ExternalReference {
     public set description(description:string) { this._description = description; };
 
     /**
-     * Set index 
-     * @param index index to display counter
+     * return external references list
      */
-    public set index(index:number) { this._index = index; };
+    public get description() { 
+        if (this._description) {
+            return this._description; 
+        }
+        return ""
+    }
+
+    /**
+     * return url
+     */
+    public get url() { return this._url; }
+
 }
