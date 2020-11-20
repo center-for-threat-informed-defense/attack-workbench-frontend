@@ -70,7 +70,7 @@
                             </div>
                             <div class="column description">
                                 <div *ngFor="let property of tableDetail">
-                                    <app-descriptive-property [config]="{'object': element, 'mode': 'view', 'displayField': element.description, 'firstParagraphOnly': false, 'referencesField': element.external_references}"></app-descriptive-property>
+                                    <app-descriptive-view [config]="{'object': element, 'mode': 'view', 'displayField': element.description, 'firstParagraphOnly': false, 'referencesField': element.external_references}"></app-descriptive-view>
                                 </div>
                             </div>
                         </div>

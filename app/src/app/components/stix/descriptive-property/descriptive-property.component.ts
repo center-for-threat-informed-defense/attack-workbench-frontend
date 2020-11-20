@@ -34,4 +34,6 @@ export interface DescriptivePropertyConfig {
   firstParagraphOnly?: boolean;
   /** referencesField; external references object */
   referencesField?: ExternalReferences;
+  /** label; label for labelled box */
+  label?: string;
 }
