@@ -1,2 +1,8 @@
-<p>{{description}}</p>
-<markdown [data]="description"></markdown>
+<div class="descriptive-property">
+    <div *ngIf="!config.mode || config.mode == 'view'">
+        <div class="content">
+            <app-descriptive-view [config]="config"></app-descriptive-view>
+        </div>
+    </div>
+    <app-descriptive-edit *ngIf="config.mode == 'edit'" [config]="config"></app-descriptive-edit>
+</div>

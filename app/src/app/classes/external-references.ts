@@ -9,10 +9,10 @@ export class ExternalReferences {
 
     /**
      * Sort _externalReferences by alphabetical order
-     * Restart index for displaying references
+     * Restart map for displaying references
      */
-    public sortReferences() {
-        // Sort map
+    public sortReferences() : void {
+        // Sort map by alphabetical order on descriptions
         this._externalReferences = new Map([...this._externalReferences.entries()].sort((a,b) => a[1].description.localeCompare(b[1].description)));
         
         // Restart _externalReferencesIndex map
@@ -39,6 +39,15 @@ export class ExternalReferences {
             return this._externalReferencesIndex.get(sourceName);
         }
         return 0;
+    }
+
+    /**
+     * Return ExternalReference object of given source name
+     * return undefined if not found
+     * @param sourceName source name of reference
+     */
+    public getReference(sourceName : string) : ExternalReference {
+        return this._externalReferences.get(sourceName);
     }
 
     /**
@@ -102,7 +111,7 @@ export class ExternalReference {
     /**
      * return external references list
      */
-    public get description() { 
+    public get description() : string { 
         if (this._description) {
             return this._description; 
         }
@@ -112,6 +121,6 @@ export class ExternalReference {
     /**
      * return url
      */
-    public get url() { return this._url; }
+    public get url() : string { return this._url; }
 
 }
