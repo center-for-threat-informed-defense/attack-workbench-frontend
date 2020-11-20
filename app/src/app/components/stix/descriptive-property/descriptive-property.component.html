@@ -1,8 +1,9 @@
 <div class="descriptive-property">
-    <div *ngIf="!config.mode || config.mode == 'view'">
+    <div class="labelled-box" *ngIf="!config.mode || config.mode == 'view'">
         <div class="content">
             <app-descriptive-view [config]="config"></app-descriptive-view>
         </div>
+        <label>{{config.label}}</label>
     </div>
     <app-descriptive-edit *ngIf="config.mode == 'edit'" [config]="config"></app-descriptive-edit>
 </div>
