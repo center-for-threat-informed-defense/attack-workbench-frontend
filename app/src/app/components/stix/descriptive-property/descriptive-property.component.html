@@ -5,5 +5,10 @@
         </div>
         <label>{{config.label}}</label>
     </div>
-    <app-descriptive-edit *ngIf="config.mode == 'edit'" [config]="config"></app-descriptive-edit>
+    <div *ngIf="config.mode == 'diff'">
+        <app-descriptive-diff [config]="config"></app-descriptive-diff>
+    </div>
+    <div *ngIf="config.mode == 'edit'">
+        <app-descriptive-edit [config]="config"></app-descriptive-edit>
+    </div>
 </div>
