@@ -22,7 +22,7 @@ import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatCardModule } from '@angular/material/card';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatStepperModule } from '@angular/material/stepper';
-import { MatFormFieldModule } from '@angular/material/form-field';
+import { getMatFormFieldDuplicatedHintError, MatFormFieldModule } from '@angular/material/form-field';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
@@ -36,15 +36,18 @@ import { MatMenuModule } from '@angular/material/menu';
 // other library imports
 import { BreadcrumbModule } from "angular-crumbs";
 import { MaterialFileInputModule } from 'ngx-material-file-input';
-import { MarkdownModule } from "ngx-markdown";
+import { MarkdownModule, MarkedOptions } from "ngx-markdown";
 
 // custom components
 import { HeaderComponent } from './components/header/header.component';
 import { FooterComponent } from './components/footer/footer.component';
 import { ResourcesDrawerComponent } from './components/resources-drawer/resources-drawer.component';
 import { LoadingOverlayComponent } from './components/loading-overlay/loading-overlay.component';
-import { StixListComponent } from './components/stix/stix-list/stix-list.component';
 import { DescriptivePropertyComponent } from './components/stix/descriptive-property/descriptive-property.component';
+import { DescriptiveViewComponent } from './components/stix/descriptive-property/descriptive-view/descriptive-view.component';
+import { DescriptiveEditComponent } from './components/stix/descriptive-property/descriptive-edit/descriptive-edit.component';
+import { DescriptiveDiffComponent } from './components/stix/descriptive-property/descriptive-diff/descriptive-diff.component';
+import { StixListComponent } from './components/stix/stix-list/stix-list.component';
 
 import { LandingPageComponent } from './views/landing-page/landing-page.component';
 import { HelpPageComponent } from './views/help-page/help-page.component';
@@ -94,6 +97,9 @@ import { TechniqueEditComponent } from './views/stix/technique/technique-edit/te
     StixListComponent,
 
     DescriptivePropertyComponent,
+    DescriptiveViewComponent,
+    DescriptiveEditComponent,
+    DescriptiveDiffComponent,
     
     ToolbarComponent,
     
@@ -131,7 +137,16 @@ import { TechniqueEditComponent } from './views/stix/technique/technique-edit/te
   imports: [
     BreadcrumbModule,
     MaterialFileInputModule,
-    MarkdownModule.forRoot({loader: HttpClient}),
+    MarkdownModule.forRoot({
+      loader: HttpClient, 
+      markedOptions: {
+        provide: MarkedOptions,
+        useValue: {
+          baseUrl: 'http://localhost:5000',
+          pedantic: true
+        }
+      }
+    }),
     
     BrowserModule,
 
