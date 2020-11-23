@@ -28,12 +28,12 @@ export interface DescriptivePropertyConfig {
    * Note: if mode is diff, pass an array of two objects to diff
    */
   object: StixObject | [StixObject, StixObject];
-  /** displayField; descriptive field to be displayed */
-  displayField: string;
+  /** field; field of object to be displayed */
+  field: string;
   /** firstParagraphOnly; force descriptive field to show first paragragh only */
   firstParagraphOnly?: boolean;
-  /** referencesField; external references object */
+  /* referencesField; external references object. 
+   * References will be removed if not included 
+   */
   referencesField?: ExternalReferences;
-  /** label; label for labelled box */
-  label?: string;
 }

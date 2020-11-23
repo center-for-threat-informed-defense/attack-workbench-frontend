@@ -11,30 +11,27 @@ export class DescriptiveViewComponent implements OnInit {
 
   // @Input() public description: string; // Descriptive view
   @Input() public config: DescriptivePropertyConfig;
-  public displayField : string;
-
-  // private referencesList : ExternalReferences = config;
 
   constructor() { }
 
   private reReference = /\(Citation: (.*?)\)/gmu;
 
-  private truncateToFirstParagraph() : void {
-    this.displayField = this.displayField.split('\n')[0];
+  private truncateToFirstParagraph(displayStr: string) : string {
+    return displayStr.split('\n')[0];
   }
 
   /**
    * remove references from descriptive property
    */
-  private removeReferences() : void {
-    this.displayField = this.displayField.replace(this.reReference, "");
+  private removeReferences(displayStr: string) : string {
+    return displayStr.replace(this.reReference, "");
   }
 
   /**
    * return list of references from descriptive property
    */
-  private getReferencesFromDescription() : Array<string> {
-    return this.displayField.match(this.reReference);
+  private getReferencesFromDescription(displayStr: string) : Array<string> {
+    return displayStr.match(this.reReference);
   }
 
   /**
@@ -42,14 +39,14 @@ export class DescriptiveViewComponent implements OnInit {
    * @param sourceName source name of the reference
    * @param completeReference complete reference e.g., (Citation: Source Name)
    */
-  private replaceCitationHTML(sourceName: string, completeReference: string) : void {
+  private replaceCitationHTML(displayStr: string, sourceName: string, completeReference: string) : string {
 
-    var reference = this.config.referencesField.getReference(sourceName);
-    var reference_number = this.config.referencesField.getIndexOfReference(sourceName);
+    let reference = this.config.referencesField.getReference(sourceName);
+    let reference_number = this.config.referencesField.getIndexOfReference(sourceName);
 
     if (reference && reference_number) {
 
-      var refHTML = ""
+      let refHTML = ""
       
       if (reference.url) {
           refHTML = "<span><sup><a href=\"" + reference.url + "\" class=\"external-link\" target=\"_blank\">[" + reference_number + "]</a></sup></span>";
@@ -58,45 +55,58 @@ export class DescriptiveViewComponent implements OnInit {
         refHTML = "<span><sup>[" + reference_number + "]</sup></span>"
       }
 
-      this.displayField = this.displayField.replace(completeReference, refHTML);
+      return displayStr.replace(completeReference, refHTML);
 
     }
+
+    return displayStr;
   }
 
   /**
    * Replace references from descriptive property
    */
-  private replaceReferences() : void {
-    var referenceNames = this.getReferencesFromDescription();
+  private replaceReferences(displayStr : string) : string {
+    let referenceNames = this.getReferencesFromDescription(displayStr);
 
-    var cleanReferenceNames = [];
+    let cleanReferenceNames = [];
 
     if(referenceNames){
-      for (var i = 0; i < referenceNames.length; i++) {
+      for (let i = 0; i < referenceNames.length; i++) {
         cleanReferenceNames[i] = referenceNames[i].split("(Citation: ")[1].slice(0, -1);
-        this.replaceCitationHTML(cleanReferenceNames[i], referenceNames[i]);
+        displayStr = this.replaceCitationHTML(displayStr, cleanReferenceNames[i], referenceNames[i]);
       }
     }
 
+    return displayStr;
+
   }
 
-  ngOnInit(): void {
+  /**
+   * get the descriptive view of of the stix object
+   */
+  public get display(): string {
 
-    this.displayField = this.config.displayField;
+    let displayStr : string = this.config.object[this.config.field];
 
     // Check if it is only the first paragraph
     if (this.config.firstParagraphOnly) {
-      this.truncateToFirstParagraph();
+      displayStr = this.truncateToFirstParagraph(displayStr);
     }
 
     if (this.config.referencesField) {
       // Replace references from references field
-      this.replaceReferences();
+      displayStr = this.replaceReferences(displayStr);
     }
     else {
       // Remove references if not defined
-      this.removeReferences();
+      displayStr = this.removeReferences(displayStr);
     }
+
+    return displayStr;
+  }
+
+  ngOnInit(): void {
+
   }
 
 }

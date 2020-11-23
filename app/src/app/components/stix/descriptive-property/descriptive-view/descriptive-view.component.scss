@@ -6,6 +6,7 @@
         a.external-link {
             border-bottom: none;
             color: color(link);
+            transition: none;
             &:hover {
                 border-bottom: 2px solid color(link);
             }

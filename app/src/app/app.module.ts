@@ -22,7 +22,7 @@ import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatCardModule } from '@angular/material/card';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatStepperModule } from '@angular/material/stepper';
-import { getMatFormFieldDuplicatedHintError, MatFormFieldModule } from '@angular/material/form-field';
+import { MatFormFieldModule } from '@angular/material/form-field';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
@@ -164,7 +164,6 @@ import { TechniqueListComponent } from './views/stix/technique/technique-list/te
       markedOptions: {
         provide: MarkedOptions,
         useValue: {
-          baseUrl: 'http://localhost:5000',
           pedantic: true
         }
       }

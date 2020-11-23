@@ -56,13 +56,13 @@
     </div>
     <div class="row">
         <!-- DESCRIPTION -->
-        <!-- TODO make this descriptive-property -->
-        <div class="labelled-box">
-            <div class="content">
-                {{software.description}}
-            </div>
-            <label>description</label>
-        </div>
+        <app-descriptive-property [config]="{
+            mode: 'view',
+            object: software,
+            field: 'description',
+            firstParagraphOnly: false, 
+            referencesField: software.external_references
+        }"></app-descriptive-property>
     </div>
     <div class="row">
         <div class="col">
