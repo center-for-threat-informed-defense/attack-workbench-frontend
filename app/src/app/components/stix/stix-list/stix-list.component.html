@@ -28,7 +28,12 @@
             <!-- column definitions -->
             <ng-container matColumnDef="{{column}}" *ngFor="let column of tableColumns">
                 <th mat-header-cell mat-sort-header *matHeaderCellDef> {{column}} </th>
-                <td mat-cell *matCellDef="let element"> {{element[column]}} ({{tableColumnsDisplay.get(column)}}) </td>
+                <td mat-cell *matCellDef="let element">
+                    <app-version-view *ngIf="tableColumnsDisplay.get(column) == 'version'" [config]="{object: element, field: column}"></app-version-view>
+                    <app-timestamp-view *ngIf="tableColumnsDisplay.get(column) == 'timestamp'" [config]="{object: element, field: column, mode: 'view'}"></app-timestamp-view>
+                    <app-list-view class="overflow-ellipses" *ngIf="tableColumnsDisplay.get(column) == 'list'" [config]="{object: element, field: column, mode: 'view', wrap: false}"></app-list-view>
+                    <div *ngIf="tableColumnsDisplay.get(column) == 'plain'">{{element[column]}}</div>
+                </td>
             </ng-container>
             
             <!-- select column -->
@@ -57,7 +62,7 @@
                         <div class="element-description columns">
                             <div class="column is-narrow controls" *ngIf="config.showLinks">
                                 <div *ngFor="let route of element.routes">
-                                    <a class="mat-button" [routerLink]="'/' + [element.attackType, element.stixID, route.route].join('/')">
+                                    <a class="mat-button" [routerLink]="'/' + [element.attackType, element.stixID, route.route].join('/')" [queryParams]="route.query">
                                         {{route.label}}
                                     </a>
                                 </div>

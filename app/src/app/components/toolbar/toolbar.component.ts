@@ -1,4 +1,5 @@
 import { Component, OnInit, ViewEncapsulation, Output, EventEmitter, Input } from '@angular/core';
+import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 
 @Component({
   selector: 'app-toolbar',
@@ -13,9 +14,23 @@ export class ToolbarComponent implements OnInit {
     
     @Input() public canScroll: boolean;
 
-    constructor() {}
+    public editing: boolean = false;
+    public editable: boolean = false; //todo pull this from router config or something
+
+    constructor(private router: Router, private route: ActivatedRoute) {}
 
     ngOnInit() {
+        this.route.queryParams.subscribe(params => {
+            this.editing = params["editing"];
+        });
+    }
+
+    public startEditing() {
+        this.router.navigate([], {queryParams: { editing: true }})
+    }
+
+    public saveEdits() {
+        this.router.navigate([], {queryParams: {}})
     }
     
     // emit a toggle theme event

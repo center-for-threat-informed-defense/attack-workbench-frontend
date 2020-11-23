@@ -1,0 +1,7 @@
+<div class="timestamp-property labelled-box">
+    <div class="content">
+        <app-timestamp-diff *ngIf="config.mode == 'diff'" [config]="config"></app-timestamp-diff>
+        <app-timestamp-view *ngIf="config.mode == 'view'" [config]="config"></app-timestamp-view>
+    </div>
+    <label>{{config.field}}</label>
+</div>
