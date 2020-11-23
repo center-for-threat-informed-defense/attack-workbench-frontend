@@ -1,0 +1,9 @@
+<div class="version-property">
+    <div class="labelled-box" *ngIf="!config.mode || config.mode == 'view'">
+        <div class="content">
+            <app-list-view [config]="config"></app-list-view>
+        </div>
+        <label>{{config.field}}</label>
+    </div>
+    <app-list-edit *ngIf="config.mode == 'edit'" [config]="config"></app-list-edit>
+</div>
