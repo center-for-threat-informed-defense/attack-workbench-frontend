@@ -1,0 +1,13 @@
+@import "../../../style/globals";
+.app-subheading {
+    
+    // font-size: 16px;
+    display: flex;
+    align-items: center;
+    .subheading-section {
+        &, div { display: inline-block; }
+        & + .subheading-section {
+            margin-left: 3ex;
+        }
+    }
+}
