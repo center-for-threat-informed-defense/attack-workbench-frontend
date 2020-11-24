@@ -1,5 +1,6 @@
 import { Component, Input, OnInit, ViewEncapsulation } from '@angular/core';
 import { StixObject } from 'src/app/classes/stix/stix-object';
+import { SidebarService } from 'src/app/services/sidebar/sidebar.service';
 
 @Component({
   selector: 'app-subheading',
@@ -10,7 +11,16 @@ import { StixObject } from 'src/app/classes/stix/stix-object';
 export class SubheadingComponent implements OnInit {
     @Input() public config: SubheadingConfig
 
-    constructor() { }
+    public openHistory() {
+        this.sidebarService.opened = true; 
+        this.sidebarService.currentTab = "history"
+    }
+    public openNotes() {
+        this.sidebarService.opened = true;
+        this.sidebarService.currentTab = "notes";
+    }
+
+    constructor(private sidebarService: SidebarService) { }
 
     ngOnInit(): void {
     }

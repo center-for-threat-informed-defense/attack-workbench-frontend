@@ -1,14 +1,14 @@
 
 <div class="section-header">
     <div class="app-subheading text-label text-deemphasis">
-        <div class="subheading-section">
+        <div class="subheading-section clickable" (click)="openHistory()">
             Modified <app-timestamp-view [config]="{
                 mode: 'view',
                 object: config.object,
                 field: 'modified'
             }"></app-timestamp-view>
         </div>
-        <div class="subheading-section">
+        <div class="subheading-section clickable" (click)="openNotes()">
             12 Notes
         </div>
     </div>

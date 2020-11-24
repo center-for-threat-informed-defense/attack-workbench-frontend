@@ -24,6 +24,12 @@
         // margin-top: 5px; // separate toolbar
         // margin-right: 5px; // separate scrollbar
         padding: 50px 20px 50px 20px;
+        .center-all { // placeholder for actual sidebar content
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
     }
 
 }

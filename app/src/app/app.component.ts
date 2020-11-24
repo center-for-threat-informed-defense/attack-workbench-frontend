@@ -1,12 +1,14 @@
-import { AfterViewInit, Component, ElementRef, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, ViewChild, ViewEncapsulation } from '@angular/core';
 import { MatDrawerContainer } from '@angular/material/sidenav';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { getCookie, setCookie, hasCookie } from "./util/cookies";
+import { SidebarService } from './services/sidebar/sidebar.service';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss']
+  styleUrls: ['./app.component.scss'],
+  encapsulation: ViewEncapsulation.None
 })
 export class AppComponent implements AfterViewInit {
     //drawer container to resize when contents change size
@@ -15,12 +17,14 @@ export class AppComponent implements AfterViewInit {
     @ViewChild("header", {static: false, read: ElementRef}) private header: ElementRef;
     @ViewChild("scrollRef", {static: false, read: ElementRef}) private scrollRef: ElementRef;
 
-    constructor(private overlayContainer: OverlayContainer) {
+    constructor(private overlayContainer: OverlayContainer, private sidebarService: SidebarService) {
         if (hasCookie("theme")) {
             this.setTheme(getCookie("theme"))
         } else {
             this.setTheme("light");
         }
+        this.sidebarService.onTabChange.subscribe(() => this.resizeDrawers());
+        this.sidebarService.onOpened.subscribe(() => this.resizeDrawers());
     }
 
     public theme = "light";
@@ -63,4 +67,6 @@ export class AppComponent implements AfterViewInit {
         console.log("resizing drawer")
         this.container.updateContentMargins();
     }
+
+    public get sidebarOpened() { return this.sidebarService.opened; }
 }

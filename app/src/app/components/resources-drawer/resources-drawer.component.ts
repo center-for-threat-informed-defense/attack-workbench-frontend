@@ -1,4 +1,5 @@
 import { Component, OnInit, ViewEncapsulation, Output, EventEmitter } from '@angular/core';
+import { SidebarService } from 'src/app/services/sidebar/sidebar.service';
 
 @Component({
     selector: 'app-resources-drawer',
@@ -8,43 +9,23 @@ import { Component, OnInit, ViewEncapsulation, Output, EventEmitter } from '@ang
 })
 export class ResourcesDrawerComponent implements OnInit {
     @Output() drawerResize = new EventEmitter(); //emit events when the drawer is opened/closed
-    public tabs = [
-        {
-            "name": "search",
-            "label": "search",
-            "icon": "search"
-        },
-        {
-            "name": "citations",
-            "label": "citation finder",
-            "icon": "superscript"
-        },
-        {
-            "name": "history",
-            "label": "versions",
-            "icon": "history"
-        }
-        // {
-        //     "name": "saved",
-        //     "label": "saved items",
-        //     "icon": "bookmarks"
-        // }
-    ]
-    public currentTab: string = "";
+    public get tabs() { return this.sidebarService.tabs; }
+    public get currentTab(): string {return this.sidebarService.currentTab; }
+
+    constructor(private sidebarService: SidebarService) { }
 
     public onTabClick(tab: any) {
-        if (this.currentTab == tab.name) this.currentTab = "";
-        else this.currentTab = tab.name;
+        this.sidebarService.currentTab = tab.name;
+        // if (this.currentTab == tab.name) this.currentTab = "";
+        // else this.currentTab = tab.name;
         setTimeout(() => this.drawerResize.emit()); // emit after render loop
     }
 
-    @Output() public onClose = new EventEmitter();
     public close() {
-        this.onClose.emit();
+        this.sidebarService.opened = false;
     }
 
 
-    constructor() { }
 
     ngOnInit() {
     }
