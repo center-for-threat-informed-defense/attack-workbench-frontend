@@ -36,4 +36,8 @@ export interface DescriptivePropertyConfig {
    * References will be removed if not included 
    */
   referencesField?: ExternalReferences;
+  /* label; label for labelled box
+   * Required when using view mode
+   */
+  label?: string;
 }
