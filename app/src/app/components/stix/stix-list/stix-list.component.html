@@ -75,7 +75,7 @@
                             </div>
                             <div class="column description">
                                 <div *ngFor="let property of tableDetail">
-                                    {{element[property.property]}} ({{property.display}})
+                                    <app-descriptive-view [config]="{'object': element, 'mode': 'view', 'field': property.property, 'firstParagraphOnly': false, 'referencesField': element.external_references}"></app-descriptive-view>
                                 </div>
                             </div>
                         </div>

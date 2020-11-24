@@ -36,7 +36,7 @@ import { MatMenuModule } from '@angular/material/menu';
 // other library imports
 import { BreadcrumbModule } from "angular-crumbs";
 import { MaterialFileInputModule } from 'ngx-material-file-input';
-import { MarkdownModule } from "ngx-markdown";
+import { MarkdownModule, MarkedOptions } from "ngx-markdown";
 
 // custom components
 import { HeaderComponent } from './components/header/header.component';
@@ -49,6 +49,11 @@ import { SubheadingComponent } from './components/subheading/subheading.componen
 // STIX components
 import { StixListComponent } from './components/stix/stix-list/stix-list.component';
 import { ExternalReferencesComponent } from "./components/stix/external-references/external-references.component";
+
+import { DescriptivePropertyComponent } from './components/stix/descriptive-property/descriptive-property.component';
+import { DescriptiveViewComponent } from './components/stix/descriptive-property/descriptive-view/descriptive-view.component';
+import { DescriptiveEditComponent } from './components/stix/descriptive-property/descriptive-edit/descriptive-edit.component';
+import { DescriptiveDiffComponent } from './components/stix/descriptive-property/descriptive-diff/descriptive-diff.component';
 
 import { TimestampPropertyComponent } from "./components/stix/timestamp-property/timestamp-property.component";
 import { TimestampViewComponent } from "./components/stix/timestamp-property/timestamp-view/timestamp-view.component";
@@ -96,7 +101,6 @@ import { TechniqueViewComponent } from './views/stix/technique/technique-view/te
 import { TechniqueListComponent } from './views/stix/technique/technique-list/technique-list.component';
 
 
-
 @NgModule({
   declarations: [
     AppComponent,
@@ -109,6 +113,11 @@ import { TechniqueListComponent } from './views/stix/technique/technique-list/te
     SubheadingComponent,
     
     StixListComponent,
+
+    DescriptivePropertyComponent,
+    DescriptiveViewComponent,
+    DescriptiveEditComponent,
+    DescriptiveDiffComponent,
     ExternalReferencesComponent,
     TimestampPropertyComponent,
     TimestampViewComponent,
@@ -152,7 +161,15 @@ import { TechniqueListComponent } from './views/stix/technique/technique-list/te
   imports: [
     BreadcrumbModule,
     MaterialFileInputModule,
-    MarkdownModule.forRoot({loader: HttpClient}),
+    MarkdownModule.forRoot({
+      loader: HttpClient, 
+      markedOptions: {
+        provide: MarkedOptions,
+        useValue: {
+          pedantic: true
+        }
+      }
+    }),
     
     BrowserModule,
 
