@@ -9,5 +9,14 @@
         & + .subheading-section {
             margin-left: 3ex;
         }
+        &.clickable {
+            cursor: pointer;
+            border-bottom: 1px solid transparent;
+            transition: ease border-color 0.2s;
+            &:hover {
+                .dark &  { border-color: on-color-deemphasis(dark); }
+                .light & { border-color: on-color-deemphasis(light); }
+            }
+        }
     }
 }

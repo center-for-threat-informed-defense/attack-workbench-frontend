@@ -1,16 +1,22 @@
-.app {
+.app-root {
     height: 100%;
     display: flex;
     flex-direction: column;
     .app-body {
         flex: 1;
     }
-    .drawer, .content {
+    .mat-drawer  {
+        overflow-y: hidden;
+        .mat-drawer-inner-container {
+            overflow: hidden;
+        }
+    }
+    .app-drawer, .app-content {
         box-sizing: border-box;
         height: 100%;
         // overflow: auto;
     }
-    .content {
+    .app-content {
         display: flex;
         flex-direction: column;
         .router-padding {
