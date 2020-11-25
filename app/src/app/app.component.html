@@ -1,17 +1,17 @@
-<div [class]="'app ' + theme">
+<div [class]="'app-root ' + theme">
     <app-header [style.margin-top]="-hiddenHeaderPX + 'px'" #header></app-header>
     <mat-drawer-container class="app-body">
         <mat-drawer-content>
-            <div class="content">
-                <app-toolbar (onToggleTheme)="toggleTheme()" (onToggleSidebar)="sidebar.toggle()" (onScrollTop)="scrollToTop()" [canScroll]="hiddenHeaderPX != 0"></app-toolbar>
+            <div class="app-content">
+                <app-toolbar (onToggleTheme)="toggleTheme()" (onScrollTop)="scrollToTop()" [canScroll]="hiddenHeaderPX != 0"></app-toolbar>
                 <div class="router-padding" #scrollRef>
                     <router-outlet></router-outlet>
                 </div>
             </div>
         </mat-drawer-content>
-        <mat-drawer mode="side" position="end" #sidebar>
-            <div class="drawer">
-                <app-resources-drawer (drawerResize)="resizeDrawers()" (onClose)="sidebar.toggle()"></app-resources-drawer>
+        <mat-drawer mode="side" position="end" #sidebar [opened]="sidebarOpened">
+            <div class="app-drawer">
+                <app-resources-drawer (drawerResize)="resizeDrawers()"></app-resources-drawer>
             </div>
         </mat-drawer>
     </mat-drawer-container>

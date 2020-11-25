@@ -12,7 +12,7 @@ ul.list-view {
         display: inline-block;
         &:not(:last-child):after {
             content: ",";
-            margin-right: 4px;
+            margin-right: 3px;
         }
         // & + li.list-item {
         //     padding-left: 4px;
