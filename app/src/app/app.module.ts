@@ -37,6 +37,7 @@ import { MatMenuModule } from '@angular/material/menu';
 import { BreadcrumbModule } from "angular-crumbs";
 import { MaterialFileInputModule } from 'ngx-material-file-input';
 import { MarkdownModule, MarkedOptions } from "ngx-markdown";
+import { PopoverModule } from "ngx-smart-popover";
 
 // custom components
 import { HeaderComponent } from './components/header/header.component';
@@ -170,6 +171,7 @@ import { TechniqueListComponent } from './views/stix/technique/technique-list/te
         }
       }
     }),
+    PopoverModule,
     
     BrowserModule,
 

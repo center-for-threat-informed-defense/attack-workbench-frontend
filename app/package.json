@@ -40,6 +40,7 @@
     "moment": "^2.29.1",
     "ngx-markdown": "^10.1.1",
     "ngx-material-file-input": "^2.1.1",
+    "ngx-smart-popover": "^1.4.0",
     "rxjs": "~6.6.0",
     "tslib": "^2.0.0",
     "uuid": "^8.3.1",

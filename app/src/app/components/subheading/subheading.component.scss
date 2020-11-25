@@ -20,3 +20,21 @@
         }
     }
 }
+
+.historyPeek {
+    .labelled-box {
+        margin-bottom: 8px;
+    }
+}
+
+// .historyPeek {
+//     .peek-entry {
+//         white-space: nowrap;
+//         .entry-block {
+//             display: inline-block;
+//             & + .entry-block {
+//                 margin-left: 3px; //spaces between blocks
+//             }
+//         }
+//     }
+// }
