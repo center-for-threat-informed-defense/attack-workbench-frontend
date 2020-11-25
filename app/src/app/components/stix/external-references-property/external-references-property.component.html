@@ -1,0 +1,7 @@
+<div class="descriptive-property">
+    <div *ngIf="!config.mode || config.mode == 'view'">
+        <app-external-references-view [config]="config"></app-external-references-view>
+    <div *ngIf="config.mode == 'diff'">
+        <app-external-references-diff [config]="config"></app-external-references-diff>
+    </div>
+</div>

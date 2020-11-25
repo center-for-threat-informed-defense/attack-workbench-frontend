@@ -1,0 +1,29 @@
+<div *ngIf="display.length > 0">
+    <div class="row">
+
+        <div class="col">
+
+        </div>
+        <div class="col">
+            <ol start="{{half+1}}.0">
+                <li *ngFor="let ref of display | slice:half">
+                    <span *ngIf="ref[1].url">
+                        <a rel="nofollow" href="{{ref[1].url}}" target="_blank">
+                            {{ref[1].description}}
+                        </a>
+                    </span>
+                    <span *ngIf="!ref[1].url">
+                        {{ref[1].description}}
+                    </span>
+                </li>
+            </ol>
+        </div>
+    </div>
+</div>
+
+<mat-list>
+    <mat-list-item>
+        <div mat-line>test</div>
+        <div mat-line> test </div>
+    </mat-list-item>
+</mat-list>

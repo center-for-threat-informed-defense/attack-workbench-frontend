@@ -87,8 +87,17 @@
     </div>
     <div class="row">
         <div class="col">
+            <h2>References</h2>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
             <!-- EXTERNAL REFERENCES -->
-            <app-external-references></app-external-references>
+            <app-external-references-property [config]="{
+                mode: 'view',
+                object: software,
+                referencesField: software.external_references
+            }"></app-external-references-property>
         </div>
     </div>
 </div>
