@@ -1,0 +1,63 @@
+<div class="section-header">
+    <div class="app-subheading text-label text-deemphasis">
+        <div class="subheading-section clickable" (click)="openHistory()" [popover]="historyPeek" popoverPlacement="bottom">
+            Modified <app-timestamp-view [config]="{
+                mode: 'view',
+                object: config.object,
+                field: 'modified',
+                humanize: true
+            }"></app-timestamp-view>
+        </div>
+        <div class="subheading-section clickable" (click)="openNotes()">
+            12 Notes
+        </div>
+    </div>
+</div>
+
+<!-- history peek popover -->
+<popover-content #historyPeek>
+    <div class="historyPeek">
+        <app-timestamp-property [config]="{
+            mode: 'view',
+            object: config.object,
+            field: 'modified',
+            attribution: 'Ⓗ Herbert Exampleuser'
+        }"></app-timestamp-property>
+        <app-timestamp-property [config]="{
+            mode: 'view',
+            object: config.object,
+            field: 'created',
+            attribution: 'Ⓜ MITRE'
+        }"></app-timestamp-property>
+    </div>
+    <!-- <table class="historyPeek">
+        <tr>
+            <td class="subheading" colspan=3>Last Modified:</td>
+        </tr>
+        <tr>
+            <td>
+                <app-timestamp-view [config]="{
+                    mode: 'view',
+                    object: config.object,
+                    field: 'modified'
+                }"></app-timestamp-view>
+            </td>
+            <td class="text-deemphasis">by</td>
+            <td>(identity)</td>
+        </tr>
+        <tr>
+            <td class="subheading" colspan=3>Created:</td>
+        </tr>
+        <tr>
+            <td>
+                <app-timestamp-view [config]="{
+                    mode: 'view',
+                    object: config.object,
+                    field: 'created'
+                }"></app-timestamp-view>
+            </td>
+            <td class="text-deemphasis">by</td>
+            <td>(identity)</td>
+        </tr>
+    </table> -->
+</popover-content>

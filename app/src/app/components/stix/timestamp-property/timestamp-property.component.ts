@@ -22,6 +22,11 @@ export interface TimestampPropertyConfig {
      *    diff: displaying the diff between two STIX objects. If this mode is selected, two StixObjects must be specified in the objects field
      */
     mode?: "view" | "diff";
+    /* humanize the timestamp? 
+     *       if true, displays relative to the current date if within last week, and older timestamps don't display the exact edit time, only date.
+     *       if false, display the full timestamp including the exact edit time.
+     */
+    humanize?: boolean;
     /* The object to show the timestamp of
      * Note: if mode is diff, pass an array of two objects to diff
      */
@@ -29,4 +34,8 @@ export interface TimestampPropertyConfig {
     /* the field of the object(s) to visualize as a timestamp. Typically "created" or "modified"
      */
     field: string;
+    /* field to display attribution information from. If omitted, does not display attribution.
+    */
+    attribution?: string;
+
 }

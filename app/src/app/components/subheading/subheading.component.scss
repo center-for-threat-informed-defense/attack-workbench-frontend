@@ -1,0 +1,40 @@
+@import "../../../style/globals";
+.app-subheading {
+    
+    // font-size: 16px;
+    display: flex;
+    align-items: center;
+    .subheading-section {
+        &, div { display: inline-block; }
+        & + .subheading-section {
+            margin-left: 3ex;
+        }
+        &.clickable {
+            cursor: pointer;
+            border-bottom: 1px solid transparent;
+            transition: ease border-color 0.2s;
+            &:hover {
+                .dark &  { border-color: on-color-deemphasis(dark); }
+                .light & { border-color: on-color-deemphasis(light); }
+            }
+        }
+    }
+}
+
+.historyPeek {
+    .labelled-box {
+        margin-bottom: 8px;
+    }
+}
+
+// .historyPeek {
+//     .peek-entry {
+//         white-space: nowrap;
+//         .entry-block {
+//             display: inline-block;
+//             & + .entry-block {
+//                 margin-left: 3px; //spaces between blocks
+//             }
+//         }
+//     }
+// }
