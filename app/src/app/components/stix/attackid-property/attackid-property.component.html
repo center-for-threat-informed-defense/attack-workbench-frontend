@@ -1,1 +1,9 @@
-<p>attackid-property works!</p>
+<div class="attackid-property">
+    <div class="labelled-box" *ngIf="!config.mode || config.mode == 'view'">
+        <div class="content">
+            <app-attackid-view [config]="config"></app-attackid-view>
+        </div>
+        <label>ID</label>
+    </div>
+    <app-attackid-edit *ngIf="config.mode == 'edit'" [config]="config"></app-attackid-edit>
+</div>
