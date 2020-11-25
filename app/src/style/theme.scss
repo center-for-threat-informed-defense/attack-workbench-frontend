@@ -71,11 +71,12 @@ $warn: mat-palette($mat-red);
     scrollbar-color: rgba(on-color(dark), 0.15) transparent; //firefox scrollbar styles
 }
 
+$tooltip-color: color-alternate(dark, 4);
 //patch overlays for theme compatibility
 .cdk-overlay-container, .cdk-overlay-container{ //ensure that overlay doesn't visually cover everything
     background: transparent;
     .mat-tooltip { // tooltip styling
-        background: color-alternate(dark, 4);
+        background: $tooltip-color;
     }
     &.dark .mat-menu-panel {
         background: color(dark);
@@ -90,6 +91,34 @@ $warn: mat-palette($mat-red);
         .mat-menu-item:hover {
             background: color-alternate(light);
         }
+    }
+}
+//patch popover style
+.popover {
+    //positioning because we didn't import bootstrap
+    position: absolute; 
+    // add border radius
+    border-radius: 4px !important; 
+    //don't force 20rem width, conform to content of popover
+    width: unset !important;
+    //override default colors
+    background-color: $tooltip-color !important; 
+    .arrow::before, .arrow::after {
+        border-bottom-color: $tooltip-color !important;
+    }
+
+    //override child labelled-box borders for visibility
+    .labelled-box .content {
+        &, & + label, .suffix {
+            border-right-color: on-color-deemphasis(dark) !important;
+            border-left-color: on-color-deemphasis(dark)!important;
+            border-bottom-color: on-color-deemphasis(dark) !important;
+        }
+        & + label::before, & + label::after {
+            border-top-color: on-color-deemphasis(dark) !important;
+        }
+        border-top-color: transparent !important;
+
     }
 }
 

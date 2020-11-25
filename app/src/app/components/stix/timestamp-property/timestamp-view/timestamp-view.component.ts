@@ -13,7 +13,7 @@ export class TimestampViewComponent implements OnInit {
     /**
      *get the formatted timestamp with relative date
      */
-    public get display(): string {
+    public get humanized(): string {
         let now = moment();
         let then = moment(this.config.object[this.config.field]);
         let difference = moment.duration(then.diff(now));
