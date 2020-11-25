@@ -5,6 +5,7 @@ export class Software extends StixObject {
     public name: string;
     public description: string;
     public platforms: string[];
+    public attackID: string;
 
     constructor(type: type_software, sdo?: any) {
         super(sdo, type);
@@ -12,6 +13,7 @@ export class Software extends StixObject {
             this.name = sdo.name;
             this.description = sdo.description;
             this.platforms = sdo.x_mitre_platforms;
+            this.attackID = sdo.external_references[0].external_id;
         }
     }
 }
