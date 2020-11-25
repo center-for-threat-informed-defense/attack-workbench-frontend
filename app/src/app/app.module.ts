@@ -36,7 +36,7 @@ import { MatMenuModule } from '@angular/material/menu';
 // other library imports
 import { BreadcrumbModule } from "angular-crumbs";
 import { MaterialFileInputModule } from 'ngx-material-file-input';
-import { MarkdownModule, MarkedOptions } from "ngx-markdown";
+import { MarkdownModule } from "ngx-markdown";
 import { PopoverModule } from "ngx-smart-popover";
 
 // custom components
@@ -164,12 +164,13 @@ import { TechniqueListComponent } from './views/stix/technique/technique-list/te
     MaterialFileInputModule,
     MarkdownModule.forRoot({
       loader: HttpClient, 
-      markedOptions: {
-        provide: MarkedOptions,
-        useValue: {
-          pedantic: true
-        }
-      }
+    //   toggle this to disable github flavored markdown
+    //   markedOptions: {
+    //     provide: MarkedOptions,
+    //     useValue: {
+    //       pedantic: true
+    //     }
+    //   }
     }),
     PopoverModule,
     
