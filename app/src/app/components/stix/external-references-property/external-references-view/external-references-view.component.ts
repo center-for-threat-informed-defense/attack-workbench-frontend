@@ -10,8 +10,7 @@ import { ExternalReference } from 'src/app/classes/external-references';
 })
 export class ExternalReferencesViewComponent implements OnInit {
   @Input() public config: ExternalReferencesPropertyConfig;
-  public half: number;
-
+  
   constructor() { }
 
   ngOnInit(): void {
@@ -22,10 +21,7 @@ export class ExternalReferencesViewComponent implements OnInit {
    * section
    */
   public get display(): Array<[number, ExternalReference]> {
-
-    let display = this.config.referencesField.list();
-    this.half = (Math.ceil(display.length / 2));
-    return display;
+    return this.config.referencesField.list();;
   }
 
 }

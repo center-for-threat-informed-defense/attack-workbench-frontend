@@ -6,24 +6,31 @@
         a.external-link {
             border-bottom: none;
             &:hover {
-                color: inherit;
-                transition: all ease 0.2s;
-                .dark & { background: color-alternate(dark); }
-                .light & { background: color-alternate(light); }
+                transition: none;
+                color: color(link);
+                border-bottom: 2px solid color(link);
             }
         }
     }
 
-    li {
-        padding-bottom: 20px;
-        padding-top: 0px;
-        padding-left: 5px;
+    ol {
+        columns: 2;
+        column-gap: 10%;
+        padding-inline-start: 1.3em;
     }
-    li a {
-        display: block;
+
+    li {
+        padding-bottom: 10%;
+        padding-top: 0px;
+        padding-left: 2%;
     }
 
     li::marker {
-        font-size: 25px;
+        font-size: 22px;
+        content: "[" attr(value) "]";
+    }
+
+    li.external-link::marker {
+        color: color(link);
     }
 }
