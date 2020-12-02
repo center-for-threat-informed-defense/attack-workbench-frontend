@@ -1,4 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
+import { StixObject } from 'src/app/classes/stix/stix-object';
+import { AttackIDPropertyConfig } from '../attackid-property.component';
 
 @Component({
   selector: 'app-attackid-view',
@@ -6,10 +8,11 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./attackid-view.component.scss']
 })
 export class AttackIDViewComponent implements OnInit {
+    @Input() public config: AttackIDPropertyConfig;
 
-  constructor() { }
+    constructor() { }
 
-  ngOnInit(): void {
-  }
+    ngOnInit(): void {
+    }
 
 }

@@ -37,7 +37,8 @@ import { MatMenuModule } from '@angular/material/menu';
 // other library imports
 import { BreadcrumbModule } from "angular-crumbs";
 import { MaterialFileInputModule } from 'ngx-material-file-input';
-import { MarkdownModule, MarkedOptions } from "ngx-markdown";
+import { MarkdownModule } from "ngx-markdown";
+import { PopoverModule } from "ngx-smart-popover";
 
 // custom components
 import { HeaderComponent } from './components/header/header.component';
@@ -45,6 +46,7 @@ import { FooterComponent } from './components/footer/footer.component';
 import { ResourcesDrawerComponent } from './components/resources-drawer/resources-drawer.component';
 import { LoadingOverlayComponent } from './components/loading-overlay/loading-overlay.component';
 import { ToolbarComponent } from './components/toolbar/toolbar.component';
+import { SubheadingComponent } from './components/subheading/subheading.component';
 
 // STIX components
 import { StixListComponent } from './components/stix/stix-list/stix-list.component';
@@ -112,6 +114,7 @@ import { TechniqueListComponent } from './views/stix/technique/technique-list/te
     LoadingOverlayComponent,
     ToolbarComponent,
     ResourcesDrawerComponent,
+    SubheadingComponent,
     
     StixListComponent,
 
@@ -166,13 +169,15 @@ import { TechniqueListComponent } from './views/stix/technique/technique-list/te
     MaterialFileInputModule,
     MarkdownModule.forRoot({
       loader: HttpClient, 
-      markedOptions: {
-        provide: MarkedOptions,
-        useValue: {
-          pedantic: true
-        }
-      }
+    //   toggle this to disable github flavored markdown
+    //   markedOptions: {
+    //     provide: MarkedOptions,
+    //     useValue: {
+    //       pedantic: true
+    //     }
+    //   }
     }),
+    PopoverModule,
     
     BrowserModule,
 

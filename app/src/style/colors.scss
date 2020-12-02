@@ -85,5 +85,10 @@ $colors: (
             100: on-color($color),
             200: on-color($color)
         )
-    )
+    );
+}
+
+.text-deemphasis {
+    .dark & { color: on-color-deemphasis(dark); }
+    .light & { color: on-color-deemphasis(light); }
 }
