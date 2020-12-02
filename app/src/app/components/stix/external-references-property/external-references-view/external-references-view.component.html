@@ -1,14 +1,25 @@
-<div *ngIf="display.length > 0">
+<div class="external-references-view" *ngIf="display.length > 0">
     <div class="row">
 
         <div class="col">
-
+            <ol>
+                <li *ngFor="let ref of display | slice:0:half">
+                    <span *ngIf="ref[1].url">
+                        <a class="external-link" rel="nofollow" href="{{ref[1].url}}" target="_blank">
+                            {{ref[1].description}}
+                        </a>
+                    </span>
+                    <span *ngIf="!ref[1].url">
+                        {{ref[1].description}}
+                    </span>
+                </li>
+            </ol>
         </div>
         <div class="col">
             <ol start="{{half+1}}.0">
                 <li *ngFor="let ref of display | slice:half">
                     <span *ngIf="ref[1].url">
-                        <a rel="nofollow" href="{{ref[1].url}}" target="_blank">
+                        <a class="external-link" rel="nofollow" href="{{ref[1].url}}" target="_blank">
                             {{ref[1].description}}
                         </a>
                     </span>
@@ -20,10 +31,3 @@
         </div>
     </div>
 </div>
-
-<mat-list>
-    <mat-list-item>
-        <div mat-line>test</div>
-        <div mat-line> test </div>
-    </mat-list-item>
-</mat-list>
