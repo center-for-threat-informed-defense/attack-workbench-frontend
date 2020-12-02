@@ -139,6 +139,13 @@
                         .description {
                             display: flex;
                             align-items: center;
+                            max-width: 36em;
+                             p:first-child {
+                                 margin-top: 6px;
+                             }
+                             p:last-child {
+                                margin-bottom: 6px;
+                            }
                         }
                     }
                 }
