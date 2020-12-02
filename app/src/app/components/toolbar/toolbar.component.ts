@@ -1,5 +1,6 @@
 import { Component, OnInit, ViewEncapsulation, Output, EventEmitter, Input } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
+import { SidebarService } from 'src/app/services/sidebar/sidebar.service';
 
 @Component({
   selector: 'app-toolbar',
@@ -17,7 +18,7 @@ export class ToolbarComponent implements OnInit {
     public editing: boolean = false;
     public editable: boolean = false; //todo pull this from router config or something
 
-    constructor(private router: Router, private route: ActivatedRoute) {}
+    constructor(private router: Router, private route: ActivatedRoute, private sidebarService: SidebarService) {}
 
     ngOnInit() {
         this.route.queryParams.subscribe(params => {
@@ -37,9 +38,9 @@ export class ToolbarComponent implements OnInit {
     public emitToggleTheme() {
         this.onToggleTheme.emit();
     }
-    // emit toggle sidebar event
-    public emitToggleSidebar() { 
-        this.onToggleSidebar.emit();
+    //toggle sidebar
+    public toggleSidebar() { 
+        this.sidebarService.opened = !this.sidebarService.opened;
     }
     // emit scroll to top event
     public emitScrollTop() { 

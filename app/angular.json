@@ -29,8 +29,9 @@
               "src/assets"
             ],
             "styles": [
-              "src/style/theme.scss",
-              "node_modules/prismjs/themes/prism-twilight.css"
+                "node_modules/prismjs/themes/prism-twilight.css",
+                "node_modules/ngx-smart-popover/scss/popover-content.component.scss",
+                "src/style/theme.scss"
             ],
             "scripts": [
                 "node_modules/marked/lib/marked.js",

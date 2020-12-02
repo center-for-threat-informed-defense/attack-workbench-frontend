@@ -2,12 +2,16 @@
     <div class="row">
         <div class="col">
             <h1>{{software.name}}</h1>
+            <app-subheading [config]="{ object: software }"></app-subheading>
         </div>
     </div>
     <div class="row">
         <div class="col">
             <!-- ATT&CK ID -->
-            <app-attackid-property></app-attackid-property>
+            <app-attackid-property [config]="{
+                mode: editing? 'edit' : 'view',
+                object: software
+            }"></app-attackid-property>
         </div>
         <div class="col">
             <!-- VERSION NUMBER -->
@@ -15,24 +19,6 @@
                 mode: editing? 'edit' : 'view',
                 object: software
             }"></app-version-property>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col">
-            <!-- CREATED -->
-            <app-timestamp-property [config]="{
-                mode: 'view',
-                object: software,
-                field: 'created'
-            }"></app-timestamp-property>
-        </div>
-        <div class="col">
-            <!-- MODIFIED -->
-            <app-timestamp-property [config]="{
-                mode: 'view',
-                object: software,
-                field: 'modified'
-            }"></app-timestamp-property>
         </div>
     </div>
     <div class="row">
@@ -67,7 +53,7 @@
     </div>
     <div class="row">
         <div class="col">
-            <h2>Techniques Used</h2>
+            <h2 class="section-header">Techniques Used</h2>
         </div>
     </div>
     <div class="row">
@@ -77,7 +63,7 @@
     </div>
     <div class="row">
         <div class="col">
-            <h2>Associated Groups</h2>
+            <h2 class="section-header">Associated Groups</h2>
         </div>
     </div>
     <div class="row">
