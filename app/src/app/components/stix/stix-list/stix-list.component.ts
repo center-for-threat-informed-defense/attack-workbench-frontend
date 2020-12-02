@@ -50,7 +50,7 @@ export class StixListComponent implements OnInit {
     // TABLE STUFF
     public tableColumns: string[] = [];
     public tableColumns_controls: string[]; //including select behavior
-    public tableColumnsDisplay: Map<string, string> = new Map<string, string>(); // property to display for each displayProperty
+    public tableColumns_settings: Map<string, any> = new Map<string, any>(); // property to display for each displayProperty
     public tableDetail: any[];
     public expandedElement: StixObject | null;
     // @ViewChild(MatSort) public sort: MatSort;
@@ -72,9 +72,9 @@ export class StixListComponent implements OnInit {
     //         this.stixObjects.forEach(row => this.selection.select(row.stixID));
     // }
 
-    private addColumn(name: string, display: string) {
+    private addColumn(name: string, display: string, sticky?: boolean) {
         this.tableColumns.push(name);
-        this.tableColumnsDisplay.set(name, display);
+        this.tableColumns_settings.set(name, {display, sticky});
     }
     
 
@@ -117,14 +117,14 @@ export class StixListComponent implements OnInit {
                 case "matrix":
                 case "tactic":
                 case "mitigation":
-                    this.addColumn("name", "plain");
+                    this.addColumn("name", "plain", true);
                     this.tableDetail = [{
                         "property": "description",
                         "display": "descriptive"
                     }]
                     break;
                 case "group":
-                    this.addColumn("name", "plain");
+                    this.addColumn("name", "plain", true);
                     this.addColumn("aliases", "list");
                     this.tableDetail = [{
                         "property": "description",
@@ -132,7 +132,7 @@ export class StixListComponent implements OnInit {
                     }]
                     break;
                 case "software":
-                    this.addColumn("name", "plain");
+                    this.addColumn("name", "plain", true);
                     this.addColumn("type", "plain");
                     this.tableDetail = [{
                         "property": "description",
@@ -140,7 +140,7 @@ export class StixListComponent implements OnInit {
                     }]
                     break;
                 case "technique":
-                    this.addColumn("name", "plain");
+                    this.addColumn("name", "plain", true);
                     this.addColumn("platforms", "list");
                     this.tableDetail = [{
                         "property": "description",
@@ -154,6 +154,7 @@ export class StixListComponent implements OnInit {
             }
             this.addColumn("version", "version");
             this.addColumn("modified", "timestamp");
+            this.addColumn("created", "timestamp");
         }
         else {
             this.filterOptions.push({
