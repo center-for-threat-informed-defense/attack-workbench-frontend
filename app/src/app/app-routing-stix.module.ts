@@ -39,7 +39,7 @@ const stixRoutes: Routes = [{
       {
         path: ':id',
         data: {
-          breadcrumb: 'TODO object name'
+          breadcrumb: 'loading...'
         },
         children: [{
             path: '',
@@ -67,7 +67,7 @@ const stixRoutes: Routes = [{
       {
         path: ':id',
         data: {
-          breadcrumb: 'TODO object name'
+          breadcrumb: 'loading...'
         },
         children: [{
             path: '',
@@ -95,7 +95,7 @@ const stixRoutes: Routes = [{
       {
         path: ':id',
         data: {
-          breadcrumb: 'TODO object name'
+          breadcrumb: 'loading...'
         },
         children: [{
             path: '',
@@ -123,7 +123,7 @@ const stixRoutes: Routes = [{
       {
         path: ':id',
         data: {
-          breadcrumb: 'TODO object name'
+          breadcrumb: 'loading...'
         },
         children: [{
             path: '',
@@ -151,7 +151,7 @@ const stixRoutes: Routes = [{
       {
         path: ':id',
         data: {
-          breadcrumb: 'TODO object name'
+          breadcrumb: 'loading...'
         },
         children: [{
             path: '',
@@ -179,7 +179,7 @@ const stixRoutes: Routes = [{
       {
         path: ':id',
         data: {
-          breadcrumb: 'TODO object name'
+          breadcrumb: 'loading...'
         },
         children: [{
             path: '',

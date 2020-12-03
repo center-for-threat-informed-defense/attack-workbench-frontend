@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { Title } from '@angular/platform-browser';
 import { ActivatedRoute } from '@angular/router';
+import { BreadcrumbService } from 'angular-crumbs';
 import { Group } from 'src/app/classes/stix/group';
 import { Relationship } from 'src/app/classes/stix/relationship';
 import { Software } from 'src/app/classes/stix/software';
@@ -125,12 +127,15 @@ export class SoftwareViewComponent implements OnInit {
         "target_name": "RDFSNIFFER" // THIS IS NOT PART OF THE SPEC, AND IS A PLACEHOLDER
     })]
 
-    constructor(private route: ActivatedRoute) { }
+    constructor(private route: ActivatedRoute, private breadcrumbService: BreadcrumbService) { }
 
     ngOnInit() {
         this.route.queryParams.subscribe(params => {
             this.editing = params["editing"];
         });
+        // set the breadcrumb to the software name
+        this.breadcrumbService.changeBreadcrumb(this.route.snapshot, this.software.name);
+        // TODO set the page title to the software name using titleService
     }
 
 }
