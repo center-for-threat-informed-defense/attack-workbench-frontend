@@ -5,8 +5,8 @@
     span {
         a.external-link {
             border-bottom: none;
+            transition: none;
             &:hover {
-                transition: none;
                 color: color(link);
                 border-bottom: 2px solid color(link);
             }
