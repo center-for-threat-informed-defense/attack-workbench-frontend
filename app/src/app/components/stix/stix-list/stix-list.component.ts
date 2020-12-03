@@ -72,9 +72,17 @@ export class StixListComponent implements OnInit {
     //         this.stixObjects.forEach(row => this.selection.select(row.stixID));
     // }
 
-    private addColumn(name: string, display: string, sticky?: boolean) {
-        this.tableColumns.push(name);
-        this.tableColumns_settings.set(name, {display, sticky});
+    /**
+     * Add a column to the table
+     * @param {string} label the label to display the field under; column name
+     * @param {string} field the field to display
+     * @param {string} display how to format the column data
+     * @param {boolean} [sticky] is the column sticky? If true, the column will be static in the X scrolling of the view
+     * @param {string[]} [classes] list of css classes to apply to the cell
+     */
+    private addColumn(label: string, field: string, display: "version" | "list" | "plain" | "timestamp" | "descriptive" | "relationship_name", sticky?: boolean, classes?: string[]) {
+        this.tableColumns.push(field);
+        this.tableColumns_settings.set(field, {label, display, sticky, classes});
     }
     
 
@@ -117,44 +125,66 @@ export class StixListComponent implements OnInit {
                 case "matrix":
                 case "tactic":
                 case "mitigation":
-                    this.addColumn("name", "plain", true);
+                    this.addColumn("name", "name", "plain", true, ["name"]);
                     this.tableDetail = [{
-                        "property": "description",
+                        "field": "description",
                         "display": "descriptive"
                     }]
+                    this.addColumn("version", "version", "version");
+                    this.addColumn("modified","modified", "timestamp");
+                    this.addColumn("created", "created", "timestamp");
                     break;
                 case "group":
-                    this.addColumn("name", "plain", true);
-                    this.addColumn("aliases", "list");
+                    this.addColumn("name", "name", "plain", true, ["name"]);
+                    this.addColumn("aliases", "aliases", "list");
                     this.tableDetail = [{
-                        "property": "description",
+                        "field": "description",
                         "display": "descriptive"
                     }]
+                    this.addColumn("version", "version", "version");
+                    this.addColumn("modified","modified", "timestamp");
+                    this.addColumn("created", "created", "timestamp");
                     break;
                 case "software":
-                    this.addColumn("name", "plain", true);
-                    this.addColumn("type", "plain");
+                    this.addColumn("name", "name", "plain", true, ["name"]);
+                    this.addColumn("type", "type", "plain");
                     this.tableDetail = [{
-                        "property": "description",
+                        "field": "description",
                         "display": "descriptive"
                     }]
+                    this.addColumn("version", "version", "version");
+                    this.addColumn("modified","modified", "timestamp");
+                    this.addColumn("created", "created", "timestamp");
                     break;
                 case "technique":
-                    this.addColumn("name", "plain", true);
-                    this.addColumn("platforms", "list");
+                    this.addColumn("name", "name", "plain", true, ["name"]);
+                    this.addColumn("platforms", "platforms", "list");
                     this.tableDetail = [{
-                        "property": "description",
+                        "field": "description",
+                        "display": "descriptive"
+                    }]
+                    this.addColumn("version", "version", "version");
+                    this.addColumn("modified","modified", "timestamp");
+                    this.addColumn("created", "created", "timestamp");
+                    break;
+                case "relationship":
+                    this.addColumn("source name", "source_name", "plain", false, ["name", "relationship-left"]);
+                    this.addColumn("type", "relationship_type", "plain", false, ["text-deemphasis", "relationship-joiner"]);
+                    this.addColumn("target name", "target_name", "plain", false, ["name", "relationship-right"]);
+                    // this.addColumn("relationship", "", "relationship_name", false);
+
+                    this.addColumn("description", "description", "descriptive", false);
+                    this.tableDetail = [{
+                        "field": "description",
                         "display": "descriptive"
                     }]
                     break;
-                // case "relationship":
-                //     break;
                 default:
-                    this.addColumn("attacktype", "plain");
+                    this.addColumn("type", "attacktype", "plain");
+                    this.addColumn("modified","modified", "timestamp");
+                    this.addColumn("created", "created", "timestamp");
             }
-            this.addColumn("version", "version");
-            this.addColumn("modified", "timestamp");
-            this.addColumn("created", "timestamp");
+
         }
         else {
             this.filterOptions.push({

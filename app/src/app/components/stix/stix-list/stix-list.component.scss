@@ -53,6 +53,27 @@
                 // overflow: auto;
                 // max-width: 100%;
                 // table-layout: fixed;
+
+                .nowrap {
+                    white-space: nowrap;
+                }
+                .name { 
+                    @extend .subheading;
+                }
+
+                // .relationship-left {
+                //     padding-right: 12px;
+                //     text-align: right;
+                // }
+                // .relationship-right {
+                //     // padding-left: 0px;
+                // }
+                // .relationship-joiner {
+                //     padding-left: 12px;
+                //     padding-right: 12px;
+                //     flex-shrink: 1;
+                // }
+
         
                 th, td { 
                     .light & { background: color(light); border-color: border-color(light); }
@@ -74,9 +95,9 @@
                 }
 
                 // utilities for forcing different sizes of columns
-                .width-limited-lg { max-width: 60em; }
-                .width-limited-md { max-width: 30em; }
-                .width-limited-sm { max-width: 20em; }
+                .width-limited-lg { min-width: 30em; max-width: 60em; }
+                .width-limited-md { min-width: 15em; max-width: 30em; }
+                .width-limited-sm { min-width: 10em; max-width: 20em; }
         
                 tr.element-row:not(.expanded):hover {
                     .light & td { background: color-alternate(light); }

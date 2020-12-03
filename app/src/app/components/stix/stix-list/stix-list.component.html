@@ -28,14 +28,17 @@
                    [dataSource]="stixObjects" >
                 <!-- column definitions -->
                 <ng-container matColumnDef="{{column}}" *ngFor="let column of tableColumns" [sticky]="tableColumns_settings.get(column)['sticky']">
-                    <th mat-header-cell mat-sort-header *matHeaderCellDef> {{column}} </th>
-                    <td mat-cell *matCellDef="let element">
+                    <th mat-header-cell mat-sort-header *matHeaderCellDef class="nowrap"> {{tableColumns_settings.get(column)["label"]}} </th>
+                    <td mat-cell *matCellDef="let element" [ngClass]="tableColumns_settings.get(column)['classes']">
                         <app-version-view *ngIf="tableColumns_settings.get(column)['display'] == 'version'" [config]="{object: element, field: column}"></app-version-view>
                         <div *ngIf="tableColumns_settings.get(column)['display']  == 'timestamp'">
                             <app-timestamp-view [config]="{object: element, field: column, mode: 'view', humanize: true}"></app-timestamp-view>
                         </div>
-                        <div class="width-limited-sm">
-                            <app-list-view *ngIf="tableColumns_settings.get(column)['display'] == 'list'" [config]="{object: element, field: column, mode: 'view', wrap: false}"></app-list-view>
+                        <div class="width-limited-sm" *ngIf="tableColumns_settings.get(column)['display'] == 'list'">
+                            <app-list-view [config]="{object: element, field: column, mode: 'view', wrap: false}"></app-list-view>
+                        </div>
+                        <div class="width-limited-md" *ngIf="tableColumns_settings.get(column)['display'] == 'descriptive'">
+                            <app-descriptive-view [config]="{'object': element, 'mode': 'view', 'field': column, 'firstParagraphOnly': true}"></app-descriptive-view>
                         </div>
                         <div *ngIf="tableColumns_settings.get(column)['display']  == 'plain'">{{element[column]}}</div>
                     </td>
@@ -80,7 +83,7 @@
                                 </div>
                                 <div class="column description">
                                     <div *ngFor="let property of tableDetail">
-                                        <app-descriptive-view [config]="{'object': element, 'mode': 'view', 'field': property.property, 'firstParagraphOnly': true}"></app-descriptive-view>
+                                        <app-descriptive-view [config]="{'object': element, 'mode': 'view', 'field': property.field, 'firstParagraphOnly': true}"></app-descriptive-view>
                                     </div>
                                 </div>
                             </div>

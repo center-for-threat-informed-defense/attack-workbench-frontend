@@ -58,7 +58,7 @@
     </div>
     <div class="row">
         <div class="col">
-            <app-stix-list [stixObjects]="techniques? techniques.slice(0, 5) : []" [config]="{'type': 'technique', 'showLinks': false}"></app-stix-list>
+            <app-stix-list [stixObjects]="relationships_techniques" [config]="{'type': 'relationship', 'showLinks': true}"></app-stix-list>
         </div>
     </div>
     <div class="row">
@@ -68,7 +68,7 @@
     </div>
     <div class="row">
         <div class="col">
-            <app-stix-list [stixObjects]="groups? groups.slice(0, 3) : []" [config]="{'type': 'group', 'showLinks': false}"></app-stix-list>
+            <app-stix-list [stixObjects]="relationships_groups" [config]="{'type': 'relationship', 'showLinks': true}"></app-stix-list>
         </div>
     </div>
     <div class="row">
