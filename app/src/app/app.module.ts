@@ -23,6 +23,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatStepperModule } from '@angular/material/stepper';
 import { MatFormFieldModule } from '@angular/material/form-field';
+import {MatListModule} from '@angular/material/list';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
@@ -49,7 +50,9 @@ import { SubheadingComponent } from './components/subheading/subheading.componen
 
 // STIX components
 import { StixListComponent } from './components/stix/stix-list/stix-list.component';
-import { ExternalReferencesComponent } from "./components/stix/external-references/external-references.component";
+import { ExternalReferencesPropertyComponent } from "./components/stix/external-references-property/external-references-property.component";
+import { ExternalReferencesViewComponent } from './components/stix/external-references-property/external-references-view/external-references-view.component';
+import { ExternalReferencesDiffComponent } from './components/stix/external-references-property/external-references-diff/external-references-diff.component';
 
 import { DescriptivePropertyComponent } from './components/stix/descriptive-property/descriptive-property.component';
 import { DescriptiveViewComponent } from './components/stix/descriptive-property/descriptive-view/descriptive-view.component';
@@ -119,7 +122,9 @@ import { TechniqueListComponent } from './views/stix/technique/technique-list/te
     DescriptiveViewComponent,
     DescriptiveEditComponent,
     DescriptiveDiffComponent,
-    ExternalReferencesComponent,
+    ExternalReferencesPropertyComponent,
+    ExternalReferencesViewComponent,
+    ExternalReferencesDiffComponent,
     TimestampPropertyComponent,
     TimestampViewComponent,
     TimestampDiffComponent,
@@ -196,6 +201,7 @@ import { TechniqueListComponent } from './views/stix/technique/technique-list/te
     MatDividerModule,
     MatStepperModule,
     MatFormFieldModule,
+    MatListModule,
     FormsModule, ReactiveFormsModule,
     MatInputModule,
     MatSelectModule,

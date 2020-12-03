@@ -1,0 +1,36 @@
+@import "../../../../../style/globals";
+@import '~@angular/material/theming';
+
+.external-references-view {
+    span {
+        a.external-link {
+            border-bottom: none;
+            transition: none;
+            &:hover {
+                color: color(link);
+                border-bottom: 2px solid color(link);
+            }
+        }
+    }
+
+    ol {
+        columns: 2;
+        column-gap: 10%;
+        padding-inline-start: 1.3em;
+    }
+
+    li {
+        padding-bottom: 10%;
+        padding-top: 0px;
+        padding-left: 2%;
+    }
+
+    li::marker {
+        font-size: 22px;
+        content: "[" attr(value) "]";
+    }
+
+    li.external-link::marker {
+        color: color(link);
+    }
+}
