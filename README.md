@@ -1,7 +1,7 @@
-# Federated ATT&CK Frontend
-- Federated ATT&CK Frontend: the front-end UI for the Federated ATT&CK Editor.
-- [Federated ATT&CK Collection Manager](https://github.com/center-for-threat-informed-defense/federated-attack-collection-manager): REST API and CLI for managing collections.
-- [Federated ATT&CK REST API](https://github.com/center-for-threat-informed-defense/federated-attack-rest-api): REST API service for storing, querying and editing ATT&CK objects.
+# ATT&CK Workbench Frontend
+- ATT&CK Workbench Frontend: the front-end UI for the ATT&CK Workbench tool.
+- [ATT&CK Workbench Collection Manager](https://github.com/center-for-threat-informed-defense/attack-workbench-collection-manager): REST API and CLI for managing collections.
+- [ATT&CK Workbench REST API](https://github.com/center-for-threat-informed-defense/attack-workbench-rest-api): REST API service for storing, querying and editing ATT&CK objects.
 
 
 ## Notice 
