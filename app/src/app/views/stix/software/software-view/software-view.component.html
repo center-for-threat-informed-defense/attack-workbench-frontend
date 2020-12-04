@@ -41,15 +41,17 @@
         </div>
     </div>
     <div class="row">
-        <!-- DESCRIPTION -->
-        <app-descriptive-property [config]="{
-            mode: 'view',
-            object: software,
-            field: 'description',
-            firstParagraphOnly: false, 
-            referencesField: software.external_references,
-            label: 'description'
-        }"></app-descriptive-property>
+        <div class="col">
+            <!-- DESCRIPTION -->
+            <app-descriptive-property [config]="{
+                mode: 'view',
+                object: software,
+                field: 'description',
+                firstParagraphOnly: false, 
+                referencesField: software.external_references,
+                label: 'description'
+            }"></app-descriptive-property>
+        </div>
     </div>
     <div class="row">
         <div class="col">

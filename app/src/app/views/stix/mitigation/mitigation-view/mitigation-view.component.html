@@ -1,1 +1,62 @@
-<p>mitigation-view works!</p>
+<div class="mitigation-view view-page grid spacing-12">
+    <div class="row">
+        <div class="col">
+            <h1>{{mitigation.name}}</h1>
+            <app-subheading [config]="{ object: mitigation }"></app-subheading>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <!-- ATT&CK ID -->
+            <app-attackid-property [config]="{
+                mode: editing? 'edit' : 'view',
+                object: mitigation
+            }"></app-attackid-property>
+        </div>
+        <div class="col">
+            <!-- VERSION NUMBER -->
+            <app-version-property [config]="{
+                mode: editing? 'edit' : 'view',
+                object: mitigation
+            }"></app-version-property>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <!-- DESCRIPTION -->
+            <app-descriptive-property [config]="{
+                mode: 'view',
+                object: mitigation,
+                field: 'description',
+                firstParagraphOnly: false, 
+                referencesField: mitigation.external_references,
+                label: 'description'
+            }"></app-descriptive-property>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <h2 class="section-header">Techniques Addressed by Mitigation</h2>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <app-stix-list [stixObjects]="techniques? techniques.slice(0, 5) : []" [config]="{'type': 'technique', 'showLinks': false}"></app-stix-list>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <h2 class="section-header">References</h2>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <!-- EXTERNAL REFERENCES -->
+            <app-external-references-property [config]="{
+                mode: 'view',
+                object: mitigation,
+                referencesField: mitigation.external_references
+            }"></app-external-references-property>
+        </div>
+    </div>
+</div>
