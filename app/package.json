@@ -1,5 +1,5 @@
 {
-  "name": "federated-attack-frontend",
+  "name": "attack-workbench-frontend",
   "version": "0.0.0",
   "description": "Application for creating and editing ATT&CK-like content.",
   "keywords": [
