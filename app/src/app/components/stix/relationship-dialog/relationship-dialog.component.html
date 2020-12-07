@@ -1,0 +1,20 @@
+<div class="relationship-dialog">
+    <mat-drawer-container class="relationship-dialog-body">
+        <mat-drawer-content>
+            <div class="relationship-content">
+                <mat-toolbar>
+                    <div class="spacer"></div>
+                    <button mat-button class="control" matTooltip="view sidebar" (click)="toggleSidebar()"><mat-icon aria-label="sidebar">view_sidebar</mat-icon></button>
+                </mat-toolbar>
+                <div class="relationship-view-wrapper">
+                    <app-relationship-view [config]="config"></app-relationship-view>
+                </div>
+            </div>
+        </mat-drawer-content>
+        <mat-drawer mode="side" position="end" #sidebar [opened]="sidebarOpened">
+            <div class="app-drawer">
+                relationship resources
+            </div>
+        </mat-drawer>
+    </mat-drawer-container>
+</div>

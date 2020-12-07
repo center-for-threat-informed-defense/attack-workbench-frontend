@@ -32,6 +32,7 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatMenuModule } from '@angular/material/menu';
+import { MatDialogModule } from '@angular/material/dialog';
 
 // other library imports
 import { BreadcrumbModule } from "angular-crumbs";
@@ -72,6 +73,8 @@ import { VersionPropertyComponent } from "./components/stix/version-property/ver
 import { VersionEditComponent } from "./components/stix/version-property/version-edit/version-edit.component";
 import { VersionViewComponent } from "./components/stix/version-property/version-view/version-view.component";
 
+import { RelationshipDialogComponent } from "./components/stix/relationship-dialog/relationship-dialog.component";
+import { RelationshipViewComponent } from "./components/stix/relationship-dialog/relationship-view/relationship-view.component";
 
 // views
 
@@ -132,6 +135,9 @@ import { TechniqueListComponent } from './views/stix/technique/technique-list/te
     VersionPropertyComponent,
     VersionEditComponent,
     VersionViewComponent,
+
+    RelationshipViewComponent,
+    RelationshipDialogComponent,
     
     LandingPageComponent,
     HelpPageComponent,
@@ -204,6 +210,7 @@ import { TechniqueListComponent } from './views/stix/technique/technique-list/te
     MatRadioModule,
     MatProgressSpinnerModule,
     MatMenuModule,
+    MatDialogModule,
     
     OverlayModule
   ],
@@ -230,6 +237,7 @@ import { TechniqueListComponent } from './views/stix/technique/technique-list/te
     MatRadioModule,
     MatProgressSpinnerModule,
     MatMenuModule,
+    MatDialogModule,
 
     OverlayModule
   ],

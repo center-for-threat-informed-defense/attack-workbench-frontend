@@ -7,6 +7,8 @@ import {MatPaginator} from '@angular/material/paginator';
 import { RouterModule } from '@angular/router';
 
 import { SelectionModel } from '@angular/cdk/collections';
+import { RelationshipDialogComponent } from '../relationship-dialog/relationship-dialog.component';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
     selector: 'app-stix-list',
@@ -84,6 +86,20 @@ export class StixListComponent implements OnInit {
         this.tableColumns.push(field);
         this.tableColumns_settings.set(field, {label, display, sticky, classes});
     }
+
+    /**
+     * Handles row click events. Open the panel, or open a modal depending on object type
+     * @param {StixObject} object of the row that was clicked
+     */
+    public onRowClick(element: StixObject) {
+        if (element.type == "relationship") { //open modal
+            this.dialog.open(RelationshipDialogComponent, {
+                data: {relationship: element}
+            });
+        } else { //expand
+            this.expandedElement = this.expandedElement === element ? null : element;
+        }
+    }
     
 
 
@@ -112,11 +128,13 @@ export class StixListComponent implements OnInit {
         {"value": "status.revoked", "label": "revoked"}
     ]
 
-    constructor(private collectionService: CollectionService) {}
+    constructor(private collectionService: CollectionService, public dialog: MatDialog) {}
 
     ngOnInit() {
         this.filterOptions = []
          // parse the config
+         let controls_before = [] // control columns which occur before the main columns
+         let controls_after = []; // control columns which occur after the main columns
         if ("type" in this.config) { 
             this.filter.push("type." + this.config.type); 
             // set columns according to type
@@ -174,10 +192,11 @@ export class StixListComponent implements OnInit {
                     // this.addColumn("relationship", "", "relationship_name", false);
 
                     this.addColumn("description", "description", "descriptive", false);
-                    this.tableDetail = [{
-                        "field": "description",
-                        "display": "descriptive"
-                    }]
+                    // this.tableDetail = [{
+                    //     "field": "description",
+                    //     "display": "descriptive"
+                    // }]
+                    controls_after.push("open-link")
                     break;
                 default:
                     this.addColumn("type", "attacktype", "plain");
@@ -200,11 +219,12 @@ export class StixListComponent implements OnInit {
         if ("query" in this.config) {
 
         }
-        this.tableColumns_controls = Array.from(this.tableColumns); // shallow copy
+        // this.tableColumns_controls = Array.from(this.tableColumns); // shallow copy
         if ("select" in this.config) {
             this.selection = new SelectionModel<string>(this.config.select == "many");
-            this.tableColumns_controls.unshift("select") // add select column to view
+            controls_before.unshift("select") // add select column to view
         }
+        this.tableColumns_controls = controls_before.concat(this.tableColumns, controls_after);
 
         // if ("domain" in this.config) { this.filter.push("domain." + this.config.domain); }
         // else {
