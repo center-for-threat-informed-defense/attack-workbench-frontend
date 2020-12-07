@@ -9,7 +9,6 @@ import { DescriptivePropertyConfig } from '../descriptive-property.component';
 })
 export class DescriptiveViewComponent implements OnInit {
 
-  // @Input() public description: string; // Descriptive view
   @Input() public config: DescriptivePropertyConfig;
 
   constructor() { }

@@ -85,7 +85,7 @@ Object version references are used to refer to a specific version of a STIX obje
 
 # Collection Indexes
 
-Collections may be referenced by _collection indexes_, which are essentially an organized list of collections. Typically, collection indexes only refer to collections created by the organization maintaining the index. The Federated ATT&CK Editor can subscribe to collections within the index to automatically receive updates when the index itself is updated.
+Collections may be referenced by _collection indexes_, which are essentially an organized list of collections. Typically, collection indexes only refer to collections created by the organization maintaining the index. The ATT&CK Workbench can subscribe to collections within the index to automatically receive updates when the index itself is updated.
 
 
 ## Collection Index Properties
@@ -93,6 +93,7 @@ Collection Indexes are plain JSON, _not_ STIX, and therefore _should not_ be inc
 
 | Property Name | Data Type | Details |
 |:--------------|:----------|:--------|
+| **id** (required) | `string` | Unique identifier for the collection index. |
 | **name** (required) | `string` | A name used for display purposes. |
 | **description** (optional) | `string` | More details, context, and explanation about the purpose or contents of the collection index. |
 | **created** (required) | `timestamp` | Represents the time at which the collection index was originally created. |
@@ -124,6 +125,7 @@ Collection version objects describe specific versions of collections within a _c
 ## Collection Index Example
 ```json
 {
+    "id": "bb8c95c0-4e8f-491e-a3c9-8b4207e43041",
     "name": "MITRE ATT&CK",
     "description": "All ATT&CK datasets",
     "created": "2017-06-01T00:00:00.000Z",
@@ -139,7 +141,7 @@ Collection version objects describe specific versions of collections within a _c
                     "version": "5.0.0",
                     "url": "https://raw.githubusercontent.com/mitre/cti/ATT%26CK-v5.0/enterprise-attack/enterprise-attack.json",
                     "modified": "2019-07-31T00:00:00.000Z"
-                }
+                },
                 {
                     "version": "6.0.0",
                     "url": "https://raw.githubusercontent.com/mitre/cti/ATT%26CK-v6.0/enterprise-attack/enterprise-attack.json",
