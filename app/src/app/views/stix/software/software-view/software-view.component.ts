@@ -70,7 +70,7 @@ export class SoftwareViewComponent implements OnInit {
         "created_by_ref": "identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5",
         "object_marking_refs": ["marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168"],
         "external_references": [{
-            "description": "Carr, N, et all. (2019, October 10). Mahalo FIN7: Responding to the Criminal Operators\\u2019 New Tools and Techniques. Retrieved October 11, 2019.",
+            "description": "Carr, N, et all. (2019, October 10). Mahalo FIN7: Responding to the Criminal Operators' New Tools and Techniques. Retrieved October 11, 2019.",
             "url": "https://www.fireeye.com/blog/threat-research/2019/10/mahalo-fin7-responding-to-new-tools-and-techniques.html",
             "source_name": "FireEye FIN7 Oct 2019"
         }],
@@ -88,7 +88,7 @@ export class SoftwareViewComponent implements OnInit {
         "created_by_ref": "identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5",
         "object_marking_refs": ["marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168"],
         "external_references": [{
-            "description": "Carr, N, et all. (2019, October 10). Mahalo FIN7: Responding to the Criminal Operators\\u2019 New Tools and Techniques. Retrieved October 11, 2019.",
+            "description": "Carr, N, et all. (2019, October 10). Mahalo FIN7: Responding to the Criminal Operators' New Tools and Techniques. Retrieved October 11, 2019.",
             "url": "https://www.fireeye.com/blog/threat-research/2019/10/mahalo-fin7-responding-to-new-tools-and-techniques.html",
             "source_name": "FireEye FIN7 Oct 2019"
         }],
@@ -106,7 +106,7 @@ export class SoftwareViewComponent implements OnInit {
         "created_by_ref": "identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5",
         "object_marking_refs": ["marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168"],
         "external_references": [{
-            "description": "Carr, N, et all. (2019, October 10). Mahalo FIN7: Responding to the Criminal Operators\\u2019 New Tools and Techniques. Retrieved October 11, 2019.",
+            "description": "Carr, N, et all. (2019, October 10). Mahalo FIN7: Responding to the Criminal Operators' New Tools and Techniques. Retrieved October 11, 2019.",
             "url": "https://www.fireeye.com/blog/threat-research/2019/10/mahalo-fin7-responding-to-new-tools-and-techniques.html",
             "source_name": "FireEye FIN7 Oct 2019"
         }],
@@ -125,7 +125,7 @@ export class SoftwareViewComponent implements OnInit {
         "created_by_ref": "identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5",
         "object_marking_refs": ["marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168"],
         "external_references": [{
-            "description": "Carr, N, et all. (2019, October 10). Mahalo FIN7: Responding to the Criminal Operators\\u2019 New Tools and Techniques. Retrieved October 11, 2019.",
+            "description": "Carr, N, et all. (2019, October 10). Mahalo FIN7: Responding to the Criminal Operators' New Tools and Techniques. Retrieved October 11, 2019.",
             "url": "https://www.fireeye.com/blog/threat-research/2019/10/mahalo-fin7-responding-to-new-tools-and-techniques.html",
             "source_name": "FireEye FIN7 Oct 2019"
         }],
