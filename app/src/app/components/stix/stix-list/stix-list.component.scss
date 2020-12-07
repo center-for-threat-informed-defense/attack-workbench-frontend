@@ -103,12 +103,14 @@
                     .light & td { background: color-alternate(light); }
                     .dark & td  { background: color-alternate(dark);  }
                 }
-                // tr.element-row:not(.expanded):active {
-                //     background: none;
-                // }
         
                 .mat-cell + .mat-cell, .mat-header-cell + .mat-header-cell {
                     padding-left: 12px;
+                }
+                // cell with just an icon in it
+                .mat-cell.icon-cell {
+                    width: 24px; //no need for text, icons are 24px wide
+                    .mat-icon { vertical-align: middle; } //vertically center icons
                 }
         
                 .mat-column-select {

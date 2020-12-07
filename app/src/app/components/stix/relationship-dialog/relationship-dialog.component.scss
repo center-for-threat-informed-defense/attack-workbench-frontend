@@ -1,0 +1,11 @@
+@import "../../../../style/globals";
+
+.relationship-dialog {
+    margin: -24px;
+    mat-toolbar {
+        @extend %toolbar;
+    }
+    .relationship-view-wrapper {
+        padding: 25px;
+    }
+}
