@@ -8,6 +8,19 @@ export class ExternalReferences {
     public get externalReferences() { return this._externalReferences; }
 
     /**
+     * Return list of external references in order
+     */
+    public list() : Array<[number, ExternalReference]> {
+        let externalRefList : Array<[number, ExternalReference]> = [];
+
+        for (let [key, value] of this._externalReferencesIndex) {
+            externalRefList.push([value, this.getReference(key)]);
+        }
+
+        return externalRefList;
+    }
+
+    /**
      * Sort _externalReferences by alphabetical order
      * Restart map for displaying references
      */
