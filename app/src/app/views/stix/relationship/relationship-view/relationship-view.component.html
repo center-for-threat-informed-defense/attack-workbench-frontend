@@ -1,8 +1,8 @@
 <div class="grid view-page spacing-12">
     <div class="row">
         <div class="col">
-            <h1>{{config.relationship.source_name}} <span class="text-deemphasis">{{config.relationship.relationship_type}}</span> {{config.relationship.target_name}}</h1>
-            <app-subheading [config]="{ object: config.relationship }"></app-subheading>
+            <h1>{{relationship.source_name}} <span class="text-deemphasis">{{relationship.relationship_type}}</span> {{relationship.target_name}}</h1>
+            <app-subheading [config]="config" (onOpenHistory)="openHistory()" (onOpenNotes)="openNotes()"></app-subheading>
         </div>
     </div>
     <div class="row">
@@ -10,10 +10,10 @@
             <!-- DESCRIPTION -->
             <app-descriptive-property [config]="{
                 mode: 'view',
-                object: config.relationship,
+                object: relationship,
                 field: 'description',
                 firstParagraphOnly: false, 
-                referencesField: config.relationship.external_references,
+                referencesField: relationship.external_references,
                 label: 'description'
             }"></app-descriptive-property>
         </div>
@@ -28,8 +28,8 @@
             <!-- EXTERNAL REFERENCES -->
             <app-external-references-property [config]="{
                 mode: 'view',
-                object: config.relationship,
-                referencesField: config.relationship.external_references
+                object: relationship,
+                referencesField: relationship.external_references
             }"></app-external-references-property>
         </div>
     </div>

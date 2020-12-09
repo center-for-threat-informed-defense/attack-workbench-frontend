@@ -76,13 +76,15 @@ import { VersionPropertyComponent } from "./components/stix/version-property/ver
 import { VersionEditComponent } from "./components/stix/version-property/version-edit/version-edit.component";
 import { VersionViewComponent } from "./components/stix/version-property/version-view/version-view.component";
 
-import { RelationshipDialogComponent } from "./components/stix/relationship-dialog/relationship-dialog.component";
-import { RelationshipViewComponent } from "./components/stix/relationship-dialog/relationship-view/relationship-view.component";
+// import { RelationshipDialogComponent } from "./components/stix/relationship-dialog/relationship-dialog.component";
 
 // views
 
 import { HelpPageComponent } from './views/help-page/help-page.component';
 import { LandingPageComponent } from './views/landing-page/landing-page.component';
+
+import { StixDialogComponent } from "./views/stix/stix-dialog/stix-dialog.component"
+import { StixPageComponent } from "./views/stix/stix-page/stix-page.component"
 
 import { CollectionListComponent } from './views/stix/collection/collection-list/collection-list.component';
 import { CollectionViewComponent } from './views/stix/collection/collection-view/collection-view.component';
@@ -106,6 +108,8 @@ import { TacticListComponent } from './views/stix/tactic/tactic-list/tactic-list
 
 import { TechniqueViewComponent } from './views/stix/technique/technique-view/technique-view.component';
 import { TechniqueListComponent } from './views/stix/technique/technique-list/technique-list.component';
+
+import { RelationshipViewComponent } from "./views/stix/relationship/relationship-view/relationship-view.component";
 
 
 @NgModule({
@@ -140,17 +144,19 @@ import { TechniqueListComponent } from './views/stix/technique/technique-list/te
     VersionPropertyComponent,
     VersionEditComponent,
     VersionViewComponent,
-
-    RelationshipViewComponent,
-    RelationshipDialogComponent,
     
     LandingPageComponent,
     HelpPageComponent,
 
+    StixDialogComponent,
+    StixPageComponent,
+    
     CollectionListComponent,
     CollectionViewComponent,
     CollectionImportComponent,
     CollectionExportComponent,
+    
+    RelationshipViewComponent,
 
     GroupListComponent,
     GroupViewComponent,

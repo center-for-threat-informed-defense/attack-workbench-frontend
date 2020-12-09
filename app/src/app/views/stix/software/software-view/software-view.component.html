@@ -2,7 +2,7 @@
     <div class="row">
         <div class="col">
             <h1>{{software.name}}</h1>
-            <app-subheading [config]="{ object: software }"></app-subheading>
+            <app-subheading [config]="config" (onOpenHistory)="openHistory()" (onOpenNotes)="openNotes()"></app-subheading>
         </div>
     </div>
     <div class="row">
@@ -51,24 +51,26 @@
             label: 'description'
         }"></app-descriptive-property>
     </div>
-    <div class="row">
-        <div class="col">
-            <h2 class="section-header">Techniques Used</h2>
+    <div *ngIf="config.showRelationships || !config.hasOwnProperty('showRelationships')">
+        <div class="row">
+            <div class="col">
+                <h2 class="section-header">Techniques Used</h2>
+            </div>
         </div>
-    </div>
-    <div class="row">
-        <div class="col">
-            <app-stix-list [stixObjects]="relationships_techniques" [config]="{'type': 'relationship'}"></app-stix-list>
+        <div class="row">
+            <div class="col">
+                <app-stix-list [stixObjects]="relationships_techniques" [config]="{'type': 'relationship'}"></app-stix-list>
+            </div>
         </div>
-    </div>
-    <div class="row">
-        <div class="col">
-            <h2 class="section-header">Associated Groups</h2>
+        <div class="row">
+            <div class="col">
+                <h2 class="section-header">Associated Groups</h2>
+            </div>
         </div>
-    </div>
-    <div class="row">
-        <div class="col">
-            <app-stix-list [stixObjects]="relationships_groups" [config]="{'type': 'relationship', 'showLinks': true}"></app-stix-list>
+        <div class="row">
+            <div class="col">
+                <app-stix-list [stixObjects]="relationships_groups" [config]="{'type': 'relationship', 'showLinks': true}"></app-stix-list>
+            </div>
         </div>
     </div>
     <div class="row">

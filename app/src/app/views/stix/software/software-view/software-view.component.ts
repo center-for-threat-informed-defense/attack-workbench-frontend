@@ -9,13 +9,14 @@ import { Technique } from 'src/app/classes/stix/technique';
 import { GroupService } from 'src/app/services/stix/group/group.service';
 import { SoftwareService } from 'src/app/services/stix/software/software.service';
 import { TechniqueService } from 'src/app/services/stix/technique/technique.service';
+import { StixViewPage } from '../../stix-view-page';
 
 @Component({
   selector: 'app-software-view',
   templateUrl: './software-view.component.html',
   styleUrls: ['./software-view.component.scss']
 })
-export class SoftwareViewComponent implements OnInit {
+export class SoftwareViewComponent extends StixViewPage implements OnInit {
     public editing: boolean = false;
 
     public software: Software = new Software("malware", {
@@ -141,7 +142,7 @@ export class SoftwareViewComponent implements OnInit {
         "target_name": "RDFSNIFFER" // THIS IS NOT PART OF THE SPEC, AND IS A PLACEHOLDER
     })]
 
-    constructor(private route: ActivatedRoute, private breadcrumbService: BreadcrumbService) { }
+    constructor(private route: ActivatedRoute, private breadcrumbService: BreadcrumbService) { super() }
 
     ngOnInit() {
         this.route.queryParams.subscribe(params => {

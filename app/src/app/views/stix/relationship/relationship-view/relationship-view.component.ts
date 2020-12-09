@@ -1,5 +1,6 @@
 import { Component, Input, OnInit, ViewEncapsulation } from '@angular/core';
-import { RelationshipDialogConfig } from '../relationship-dialog.component';
+import { Relationship } from 'src/app/classes/stix/relationship';
+import { StixViewPage } from '../../stix-view-page';
 
 @Component({
   selector: 'app-relationship-view',
@@ -7,10 +8,11 @@ import { RelationshipDialogConfig } from '../relationship-dialog.component';
   styleUrls: ['./relationship-view.component.scss'],
   encapsulation: ViewEncapsulation.None
 })
-export class RelationshipViewComponent implements OnInit {
-    @Input() public config: RelationshipDialogConfig;
+export class RelationshipViewComponent extends StixViewPage implements OnInit {
 
-    constructor() { }
+    public get relationship() { return this.config.object as Relationship; }
+
+    constructor() { super() }
 
     ngOnInit(): void {
     }
