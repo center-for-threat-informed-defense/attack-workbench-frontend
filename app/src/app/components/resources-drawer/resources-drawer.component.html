@@ -3,10 +3,12 @@
         <button *ngFor="let tab of tabs" (click)="onTabClick(tab)"  [matTooltip]="tab.name" mat-button class="control">
             <mat-icon [attr.aria-label]="tab.label">{{tab.icon}}</mat-icon>
         </button>
-        <div class="spacer"></div>
-        <button matTooltip="close sidebar" mat-button class="control" (click)="close()">
-            <mat-icon aria-label="close">close</mat-icon>
-        </button>
+        <div *ngIf="showCloseButton">
+            <div class="spacer"></div>
+            <button matTooltip="close sidebar" mat-button class="control" (click)="close()">
+                <mat-icon aria-label="close">close</mat-icon>
+            </button>
+        </div>
     </mat-toolbar>
     <div class="content">
         <!-- this is a placeholder for the actual content of the sidebar -->

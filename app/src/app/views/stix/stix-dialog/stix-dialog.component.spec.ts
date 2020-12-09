@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { RelationshipDialogComponent } from './relationship-dialog.component';
+import { StixDialogComponent } from './stix-dialog.component';
 
-describe('RelationshipDialogComponent', () => {
-  let component: RelationshipDialogComponent;
-  let fixture: ComponentFixture<RelationshipDialogComponent>;
+describe('StixDialogComponent', () => {
+  let component: StixDialogComponent;
+  let fixture: ComponentFixture<StixDialogComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ RelationshipDialogComponent ]
+      declarations: [ StixDialogComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(RelationshipDialogComponent);
+    fixture = TestBed.createComponent(StixDialogComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

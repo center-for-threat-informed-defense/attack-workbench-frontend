@@ -7,7 +7,8 @@ import {MatPaginator} from '@angular/material/paginator';
 import { RouterModule } from '@angular/router';
 
 import { SelectionModel } from '@angular/cdk/collections';
-import { RelationshipDialogComponent } from '../relationship-dialog/relationship-dialog.component';
+import { StixDialogComponent } from '../../../views/stix/stix-dialog/stix-dialog.component';
+
 import { MatDialog } from '@angular/material/dialog';
 
 @Component({
@@ -93,8 +94,12 @@ export class StixListComponent implements OnInit {
      */
     public onRowClick(element: StixObject) {
         if (element.type == "relationship") { //open modal
-            this.dialog.open(RelationshipDialogComponent, {
-                data: {relationship: element}
+            this.dialog.open(StixDialogComponent, {
+                data: {
+                    object: element,
+                    editable: true,
+                },
+                maxHeight: "75vh"
             });
         } else { //expand
             this.expandedElement = this.expandedElement === element ? null : element;
