@@ -88,8 +88,10 @@ import { StixPageComponent } from "./views/stix/stix-page/stix-page.component"
 
 import { CollectionListComponent } from './views/stix/collection/collection-list/collection-list.component';
 import { CollectionViewComponent } from './views/stix/collection/collection-view/collection-view.component';
-import { CollectionImportComponent } from './views/stix/collection/collection-import/collection-import.component';
-import { CollectionExportComponent } from './views/stix/collection/collection-export/collection-export.component';
+import { CollectionManagerComponent } from "./views/stix/collection/collection-manager/collection-manager.component";
+import { CollectionIndexListComponent } from "./views/stix/collection/collection-index/collection-index-list/collection-index-list.component";
+// import { CollectionImportComponent } from './views/stix/collection/collection-import/collection-import.component';
+// import { CollectionExportComponent } from './views/stix/collection/collection-export/collection-export.component';
 
 import { GroupViewComponent } from './views/stix/group/group-view/group-view.component';
 import { GroupListComponent } from './views/stix/group/group-list/group-list.component';
@@ -153,8 +155,10 @@ import { RelationshipViewComponent } from "./views/stix/relationship/relationshi
     
     CollectionListComponent,
     CollectionViewComponent,
-    CollectionImportComponent,
-    CollectionExportComponent,
+    CollectionManagerComponent,
+    CollectionIndexListComponent,
+    // CollectionImportComponent,
+    // CollectionExportComponent,
     
     RelationshipViewComponent,
 
