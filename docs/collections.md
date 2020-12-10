@@ -85,7 +85,7 @@ Object version references are used to refer to a specific version of a STIX obje
 
 # Collection Indexes
 
-Collections may be referenced by _collection indexes_, which are essentially an organized list of collections. Typically, collection indexes only refer to collections created by the organization maintaining the index. The Federated ATT&CK Editor can subscribe to collections within the index to automatically receive updates when the index itself is updated.
+Collections may be referenced by _collection indexes_, which are essentially an organized list of collections. Typically, collection indexes only refer to collections created by the organization maintaining the index. The ATT&CK Workbench can subscribe to collections within the index to automatically receive updates when the index itself is updated.
 
 
 ## Collection Index Properties

@@ -1,14 +1,14 @@
-# Federated ATT&CK Frontend
+# ATT&CK Workbench Frontend
 
-Federated ATT&CK is a tool designed to containerize the MITRE ATT&CK&reg; knowledge base, making ATT&CK easier to use and extend throughout the community. Our goal is to enable users of ATT&CK to easily instantiate their own copy of the ATT&CK knowledge base and provide the tools, infrastructure, and documentation to allow those organizations to both extend ATT&CK for their own needs and easily contribute to the ATT&CK knowledge base when appropriate.
+ATT&CK Workbench is a tool designed to containerize the MITRE ATT&CK&reg; knowledge base, making ATT&CK easier to use and extend throughout the community. Our goal is to enable users of ATT&CK to easily instantiate their own copy of the ATT&CK knowledge base and provide the tools, infrastructure, and documentation to allow those organizations to both extend ATT&CK for their own needs and easily contribute to the ATT&CK knowledge base when appropriate.
 
-The Federated ATT&CK Editor application is made up of several repositories:
-- Federated ATT&CK Frontend: the front-end UI for the Federated ATT&CK Editor.
-- [Federated ATT&CK Collection Manager](https://github.com/center-for-threat-informed-defense/federated-attack-collection-manager): REST API and CLI for managing collections.
-- [Federated ATT&CK REST API](https://github.com/center-for-threat-informed-defense/federated-attack-rest-api): REST API service for storing, querying and editing ATT&CK objects.
+The ATT&CK Workbench application is made up of several repositories:
+- ATT&CK Workbench Frontend: the front-end UI for the ATT&CK Workbench tool.
+- [ATT&CK Workbench Collection Manager](https://github.com/center-for-threat-informed-defense/attack-workbench-collection-manager): REST API and CLI for managing collections.
+- [ATT&CK Workbench REST API](https://github.com/center-for-threat-informed-defense/attack-workbench-rest-api): REST API service for storing, querying and editing ATT&CK objects.
 
 For more documentation, please see the `docs` folder. The docs folder is also available in the in-app help page.
-- [usage](/docs/usage.md): documentation about how to use the Federated ATT&CK Editor application.
+- [usage](/docs/usage.md): documentation about how to use the ATT&CK Workbench application.
 - [changelog](/docs/changelog.md): documentation about updates to this application.
 - [collections](/docs/collections.md): documentation about the collection data type.
 
