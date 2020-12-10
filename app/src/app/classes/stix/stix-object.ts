@@ -43,7 +43,7 @@ export abstract class StixObject {
             
             this.created = new Date(sdo.created);
             this.modified = new Date(sdo.modified);
-            this.version = new VersionNumber(sdo.x_mitre_version);
+            this.version = sdo.x_mitre_version? new VersionNumber(sdo.x_mitre_version) : new VersionNumber("0.1");
             this.external_references = new ExternalReferences(sdo.external_references);
 
             if ("x_mitre_deprecated" in sdo) this.deprecated = sdo.x_mitre_deprecated;
@@ -54,7 +54,7 @@ export abstract class StixObject {
             this.type = type;
             this.created = new Date();
             this.modified = new Date();
-            this.version = new VersionNumber("1.0");
+            this.version = new VersionNumber("0.1");
             this.external_references = new ExternalReferences()
         }
         this.attackType = {
@@ -65,7 +65,8 @@ export abstract class StixObject {
             "intrusion-set": "group",
             "course-of-action": "mitigation",
             "x-mitre-matrix": "matrix",
-            "x-mitre-tactic": "tactic"
+            "x-mitre-tactic": "tactic",
+            "relationship": "relationship"
         }[this.type]
     }
 

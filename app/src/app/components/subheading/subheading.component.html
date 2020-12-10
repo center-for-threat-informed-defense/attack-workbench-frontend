@@ -1,6 +1,6 @@
 <div class="section-header">
     <div class="app-subheading text-label text-deemphasis">
-        <div class="subheading-section clickable" (click)="openHistory()" [popover]="historyPeek" popoverPlacement="bottom">
+        <div class="subheading-section" [class.clickable]="config.sidebarControl != 'disable'" (click)="openHistory()" [popover]="historyPeek" popoverPlacement="bottom">
             Modified <app-timestamp-view [config]="{
                 mode: 'view',
                 object: config.object,
@@ -8,7 +8,7 @@
                 humanize: true
             }"></app-timestamp-view>
         </div>
-        <div class="subheading-section clickable" (click)="openNotes()">
+        <div class="subheading-section" [class.clickable]="config.sidebarControl != 'disable'" (click)="openNotes()">
             12 Notes
         </div>
     </div>

@@ -7,6 +7,9 @@ import {MatPaginator} from '@angular/material/paginator';
 import { RouterModule } from '@angular/router';
 
 import { SelectionModel } from '@angular/cdk/collections';
+import { StixDialogComponent } from '../../../views/stix/stix-dialog/stix-dialog.component';
+
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
     selector: 'app-stix-list',
@@ -50,7 +53,7 @@ export class StixListComponent implements OnInit {
     // TABLE STUFF
     public tableColumns: string[] = [];
     public tableColumns_controls: string[]; //including select behavior
-    public tableColumnsDisplay: Map<string, string> = new Map<string, string>(); // property to display for each displayProperty
+    public tableColumns_settings: Map<string, any> = new Map<string, any>(); // property to display for each displayProperty
     public tableDetail: any[];
     public expandedElement: StixObject | null;
     // @ViewChild(MatSort) public sort: MatSort;
@@ -72,9 +75,35 @@ export class StixListComponent implements OnInit {
     //         this.stixObjects.forEach(row => this.selection.select(row.stixID));
     // }
 
-    private addColumn(name: string, display: string) {
-        this.tableColumns.push(name);
-        this.tableColumnsDisplay.set(name, display);
+    /**
+     * Add a column to the table
+     * @param {string} label the label to display the field under; column name
+     * @param {string} field the field to display
+     * @param {string} display how to format the column data
+     * @param {boolean} [sticky] is the column sticky? If true, the column will be static in the X scrolling of the view
+     * @param {string[]} [classes] list of css classes to apply to the cell
+     */
+    private addColumn(label: string, field: string, display: "version" | "list" | "plain" | "timestamp" | "descriptive" | "relationship_name", sticky?: boolean, classes?: string[]) {
+        this.tableColumns.push(field);
+        this.tableColumns_settings.set(field, {label, display, sticky, classes});
+    }
+
+    /**
+     * Handles row click events. Open the panel, or open a modal depending on object type
+     * @param {StixObject} object of the row that was clicked
+     */
+    public onRowClick(element: StixObject) {
+        if (element.type == "relationship") { //open modal
+            this.dialog.open(StixDialogComponent, {
+                data: {
+                    object: element,
+                    editable: true,
+                },
+                maxHeight: "75vh"
+            });
+        } else { //expand
+            this.expandedElement = this.expandedElement === element ? null : element;
+        }
     }
     
 
@@ -104,11 +133,13 @@ export class StixListComponent implements OnInit {
         {"value": "status.revoked", "label": "revoked"}
     ]
 
-    constructor(private collectionService: CollectionService) {}
+    constructor(private collectionService: CollectionService, public dialog: MatDialog) {}
 
     ngOnInit() {
         this.filterOptions = []
          // parse the config
+         let controls_before = [] // control columns which occur before the main columns
+         let controls_after = []; // control columns which occur after the main columns
         if ("type" in this.config) { 
             this.filter.push("type." + this.config.type); 
             // set columns according to type
@@ -117,43 +148,67 @@ export class StixListComponent implements OnInit {
                 case "matrix":
                 case "tactic":
                 case "mitigation":
-                    this.addColumn("name", "plain");
+                    this.addColumn("name", "name", "plain", true, ["name"]);
                     this.tableDetail = [{
-                        "property": "description",
+                        "field": "description",
                         "display": "descriptive"
                     }]
+                    this.addColumn("version", "version", "version");
+                    this.addColumn("modified","modified", "timestamp");
+                    this.addColumn("created", "created", "timestamp");
                     break;
                 case "group":
-                    this.addColumn("name", "plain");
-                    this.addColumn("aliases", "list");
+                    this.addColumn("name", "name", "plain", true, ["name"]);
+                    this.addColumn("aliases", "aliases", "list");
                     this.tableDetail = [{
-                        "property": "description",
+                        "field": "description",
                         "display": "descriptive"
                     }]
+                    this.addColumn("version", "version", "version");
+                    this.addColumn("modified","modified", "timestamp");
+                    this.addColumn("created", "created", "timestamp");
                     break;
                 case "software":
-                    this.addColumn("name", "plain");
-                    this.addColumn("type", "plain");
+                    this.addColumn("name", "name", "plain", true, ["name"]);
+                    this.addColumn("type", "type", "plain");
                     this.tableDetail = [{
-                        "property": "description",
+                        "field": "description",
                         "display": "descriptive"
                     }]
+                    this.addColumn("version", "version", "version");
+                    this.addColumn("modified","modified", "timestamp");
+                    this.addColumn("created", "created", "timestamp");
                     break;
                 case "technique":
-                    this.addColumn("name", "plain");
-                    this.addColumn("platforms", "list");
+                    this.addColumn("name", "name", "plain", true, ["name"]);
+                    this.addColumn("platforms", "platforms", "list");
                     this.tableDetail = [{
-                        "property": "description",
+                        "field": "description",
                         "display": "descriptive"
                     }]
+                    this.addColumn("version", "version", "version");
+                    this.addColumn("modified","modified", "timestamp");
+                    this.addColumn("created", "created", "timestamp");
                     break;
-                // case "relationship":
-                //     break;
+                case "relationship":
+                    this.addColumn("source name", "source_name", "plain", false, ["name", "relationship-left"]);
+                    this.addColumn("type", "relationship_type", "plain", false, ["text-deemphasis", "relationship-joiner"]);
+                    this.addColumn("target name", "target_name", "plain", false, ["name", "relationship-right"]);
+                    // this.addColumn("relationship", "", "relationship_name", false);
+
+                    this.addColumn("description", "description", "descriptive", false);
+                    // this.tableDetail = [{
+                    //     "field": "description",
+                    //     "display": "descriptive"
+                    // }]
+                    controls_after.push("open-link")
+                    break;
                 default:
-                    this.addColumn("attacktype", "plain");
+                    this.addColumn("type", "attacktype", "plain");
+                    this.addColumn("modified","modified", "timestamp");
+                    this.addColumn("created", "created", "timestamp");
             }
-            this.addColumn("version", "version");
-            this.addColumn("modified", "timestamp");
+
         }
         else {
             this.filterOptions.push({
@@ -169,11 +224,12 @@ export class StixListComponent implements OnInit {
         if ("query" in this.config) {
 
         }
-        this.tableColumns_controls = Array.from(this.tableColumns); // shallow copy
+        // this.tableColumns_controls = Array.from(this.tableColumns); // shallow copy
         if ("select" in this.config) {
             this.selection = new SelectionModel<string>(this.config.select == "many");
-            this.tableColumns_controls.unshift("select") // add select column to view
+            controls_before.unshift("select") // add select column to view
         }
+        this.tableColumns_controls = controls_before.concat(this.tableColumns, controls_after);
 
         // if ("domain" in this.config) { this.filter.push("domain." + this.config.domain); }
         // else {
