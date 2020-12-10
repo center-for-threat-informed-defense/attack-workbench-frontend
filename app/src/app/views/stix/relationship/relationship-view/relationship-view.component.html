@@ -1,0 +1,36 @@
+<div class="grid view-page spacing-12">
+    <div class="row">
+        <div class="col">
+            <h1>{{relationship.source_name}} <span class="text-deemphasis">{{relationship.relationship_type}}</span> {{relationship.target_name}}</h1>
+            <app-subheading [config]="config" (onOpenHistory)="openHistory()" (onOpenNotes)="openNotes()"></app-subheading>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <!-- DESCRIPTION -->
+            <app-descriptive-property [config]="{
+                mode: 'view',
+                object: relationship,
+                field: 'description',
+                firstParagraphOnly: false, 
+                referencesField: relationship.external_references,
+                label: 'description'
+            }"></app-descriptive-property>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <h2 class="section-header">References</h2>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <!-- EXTERNAL REFERENCES -->
+            <app-external-references-property [config]="{
+                mode: 'view',
+                object: relationship,
+                referencesField: relationship.external_references
+            }"></app-external-references-property>
+        </div>
+    </div>
+</div>

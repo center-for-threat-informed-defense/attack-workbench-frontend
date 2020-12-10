@@ -1,0 +1,11 @@
+<div class="stix-page-wrapper">
+    <app-relationship-view *ngIf="stixType == 'relationship'" [config]="config"></app-relationship-view>
+    <app-group-view *ngIf="stixType == 'intrusion-set'" [config]="config"></app-group-view>
+    <!-- TODO also for malware -->
+    <app-software-view *ngIf="stixType == 'tool'" [config]="config"></app-software-view>
+    <app-matrix-view *ngIf="stixType == 'x-mitre-matrix'" [config]="config"></app-matrix-view>
+    <app-mitigation-view *ngIf="stixType == 'course-of-action'" [config]="config"></app-mitigation-view>
+    <app-technique-view *ngIf="stixType == 'attack-pattern'" [config]="config"></app-technique-view>
+    <app-tactic-view *ngIf="stixType == 'x-mitre-tactic'" [config]="config"></app-tactic-view>
+    <app-collection-view *ngIf="stixType == 'x-mitre-collection'" [config]="config"></app-collection-view>
+</div>

@@ -31,6 +31,8 @@
     }
     
     .table-container {
+        max-width: 60em;
+        margin: 0 auto;
         .dark & { 
             border-radius: 4px;
             border: 1px solid border-color(dark);
@@ -39,98 +41,142 @@
             // border: 1px solid border-color(light);
             @include mat-elevation(8);
         }
-        // width: 100%;
-        table {
+        .scroll-container {
             width: 100%;
-            table-layout: fixed;
-    
-            th, td { 
-                .light & { border-color: border-color(light); }
-                .dark &  { border-color: border-color(dark); }
-            } 
-            th {
-                font-size: 20px;
-                @extend .text-label;
-                // border-bottom-width: 3px;
-                // border-bottom-style: double;
-            }
-            // th {
-            //     .light & { color: on-color-deemphasis(light); }
-            //     .dark &  { color: on-color-deemphasis(dark); }
-            // }
-    
-            tr.detail-row {
-                height: 0;
-            }
-    
-            tr.element-row:not(.expanded):hover {
-                .light & { background: color-alternate(light); }
-                .dark &  { background: rgba(border-color(dark), 0.25);  }
-            }
-            // tr.element-row:not(.expanded):active {
-            //     background: none;
-            // }
-    
-            .mat-cell + .mat-cell, .mat-header-cell + .mat-header-cell {
-                padding-left: 12px;
-            }
-    
-            .mat-column-select {
-                // overflow: initial;
-                &.many {
-                    width: 28px;
+            overflow: auto;
+            max-width: 100%;
+            display: flex;
+            flex-direction: column;
+            table {
+                flex: 1 0 auto;
+                // min-width: 100%;
+                // overflow: auto;
+                // max-width: 100%;
+                // table-layout: fixed;
+
+                .nowrap {
+                    white-space: nowrap;
                 }
-                &.one {
-                    width: 30px;
+                .name { 
+                    @extend .subheading;
                 }
-            }
-    
-            .element-detail {
-                overflow: hidden;
-                display: flex;
-    
-                .element-description {
-                    padding: 16px 0;
-    
-                    &.columns {
-                        display: flex;
-                        .column {
-                            // display: inline-block;
-                            &.is-narrow {
-                                 flex-shrink: 1;
+
+                // .relationship-left {
+                //     padding-right: 12px;
+                //     text-align: right;
+                // }
+                // .relationship-right {
+                //     // padding-left: 0px;
+                // }
+                // .relationship-joiner {
+                //     padding-left: 12px;
+                //     padding-right: 12px;
+                //     flex-shrink: 1;
+                // }
+
+        
+                th, td { 
+                    .light & { background: color(light); border-color: border-color(light); }
+                    .dark &  { background: color(dark); border-color: border-color(dark); }
+                } 
+                th {
+                    font-size: 20px;
+                    @extend .text-label;
+                    // border-bottom-width: 3px;
+                    // border-bottom-style: double;
+                }
+                // th {
+                //     .light & { color: on-color-deemphasis(light); }
+                //     .dark &  { color: on-color-deemphasis(dark); }
+                // }
+        
+                tr.detail-row {
+                    height: 0;
+                }
+
+                // utilities for forcing different sizes of columns
+                .width-limited-lg { min-width: 30em; max-width: 60em; }
+                .width-limited-md { min-width: 15em; max-width: 30em; }
+                .width-limited-sm { min-width: 10em; max-width: 20em; }
+        
+                tr.element-row:not(.expanded):hover {
+                    .light & td { background: color-alternate(light); }
+                    .dark & td  { background: color-alternate(dark);  }
+                }
+        
+                .mat-cell + .mat-cell, .mat-header-cell + .mat-header-cell {
+                    padding-left: 12px;
+                }
+                // cell with just an icon in it
+                .mat-cell.icon-cell {
+                    width: 24px; //no need for text, icons are 24px wide
+                    .mat-icon { vertical-align: middle; } //vertically center icons
+                }
+        
+                .mat-column-select {
+                    // overflow: initial;
+                    &.many {
+                        width: 28px;
+                    }
+                    &.one {
+                        width: 30px;
+                    }
+                }
+        
+                .element-detail {
+                    overflow: hidden;
+                    display: flex;
+        
+                    .element-description {
+                        padding: 16px 0;
+        
+                        &.columns {
+                            display: flex;
+                            .column {
+                                // display: inline-block;
+                                &.is-narrow {
+                                     flex-shrink: 1;
+                                }
+                                & + .column {
+                                    .light & { border-color: border-color(light); }
+                                    .dark &  { border-color: border-color(dark); }
+                                    border-left: 1px solid;
+                                    padding-left: 16px;
+                                }
                             }
-                            & + .column {
-                                .light & { border-color: border-color(light); }
-                                .dark &  { border-color: border-color(dark); }
-                                border-left: 1px solid;
-                                padding-left: 16px;
+                        }
+                        .controls {
+                            a { // links to pages in detail column
+                                @extend .text-label;
+                                text-align: right;
+                                border-right: none;
+                                border-top-right-radius: 0;
+                                border-bottom-right-radius: 0;
+                                width: 100%;
+                                &:hover {
+                                    .light & { background: color-alternate(light); }
+                                    .dark &  { background: rgba(border-color(dark), 0.25);  }
+                                }
+                            }
+                        }
+                        .description {
+                            display: flex;
+                            align-items: center;
+                            max-width: 36em;
+                             p:first-child {
+                                 margin-top: 6px;
+                             }
+                             p:last-child {
+                                margin-bottom: 6px;
                             }
                         }
                     }
-                    .controls {
-                        a { // links to pages in detail column
-                            @extend .text-label;
-                            text-align: right;
-                            border-right: none;
-                            border-top-right-radius: 0;
-                            border-bottom-right-radius: 0;
-                            width: 100%;
-                            &:hover {
-                                .light & { background: color-alternate(light); }
-                                .dark &  { background: rgba(border-color(dark), 0.25);  }
-                            }
-                        }
-                    }
-                    .description {
-                        display: flex;
-                        align-items: center;
-                    }
                 }
-            }
-    
-            .element-row td {
-                border-bottom-width: 0;
-                cursor: pointer;
+        
+                .element-row td {
+                    border-bottom-width: 0;
+                    cursor: pointer;
+                }
             }
         }
     }
