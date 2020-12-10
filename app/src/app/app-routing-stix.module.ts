@@ -21,6 +21,7 @@ import { TacticListComponent } from './views/stix/tactic/tactic-list/tactic-list
 import { TechniqueViewComponent } from './views/stix/technique/technique-view/technique-view.component';
 import { TechniqueListComponent } from './views/stix/technique/technique-list/technique-list.component';
 
+import { StixPageComponent } from "./views/stix/stix-page/stix-page.component"
 import { RouterModule, Routes } from '@angular/router';
 import { NgModule } from '@angular/core';
 
@@ -39,14 +40,14 @@ const stixRoutes: Routes = [{
       {
         path: ':id',
         data: {
-          breadcrumb: 'TODO object name'
+          breadcrumb: 'loading...'
         },
         children: [{
             path: '',
             data: {
               breadcrumb: 'view'
             },
-            component: MatrixViewComponent
+            component: StixPageComponent
           }
         ]
       }
@@ -67,14 +68,14 @@ const stixRoutes: Routes = [{
       {
         path: ':id',
         data: {
-          breadcrumb: 'TODO object name'
+          breadcrumb: 'loading...'
         },
         children: [{
             path: '',
             data: {
               breadcrumb: 'view'
             },
-            component: TechniqueViewComponent
+            component: StixPageComponent
           }
         ]
       }
@@ -95,14 +96,14 @@ const stixRoutes: Routes = [{
       {
         path: ':id',
         data: {
-          breadcrumb: 'TODO object name'
+          breadcrumb: 'loading...'
         },
         children: [{
             path: '',
             data: {
               breadcrumb: 'view'
             },
-            component: TacticViewComponent
+            component: StixPageComponent
           }
         ]
       }
@@ -123,14 +124,14 @@ const stixRoutes: Routes = [{
       {
         path: ':id',
         data: {
-          breadcrumb: 'TODO object name'
+          breadcrumb: 'loading...'
         },
         children: [{
             path: '',
             data: {
               breadcrumb: 'view'
             },
-            component: MitigationViewComponent
+            component: StixPageComponent
           }
         ]
       }
@@ -151,14 +152,14 @@ const stixRoutes: Routes = [{
       {
         path: ':id',
         data: {
-          breadcrumb: 'TODO object name'
+          breadcrumb: 'loading...'
         },
         children: [{
             path: '',
             data: {
               breadcrumb: 'view'
             },
-            component: GroupViewComponent
+            component: StixPageComponent
           }
         ]
       }
@@ -179,14 +180,14 @@ const stixRoutes: Routes = [{
       {
         path: ':id',
         data: {
-          breadcrumb: 'TODO object name'
+          breadcrumb: 'loading...'
         },
         children: [{
             path: '',
             data: {
               breadcrumb: 'view'
             },
-            component: SoftwareViewComponent
+            component: StixPageComponent
           }
         ]
       }
@@ -228,7 +229,7 @@ const stixRoutes: Routes = [{
             data: {
               breadcrumb: "view"
             },
-            component: CollectionViewComponent
+            component: StixPageComponent
           },
           {
             path: "update",

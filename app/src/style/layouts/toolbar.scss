@@ -1,0 +1,34 @@
+%toolbar {
+    box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.25);
+    .light & { background: color-alternate(light); }
+    .dark &  { background: color-alternate(dark); }
+    height: 48px;
+    padding-right: 0px;
+    button {
+        transition: opacity ease 0.5s;
+    }
+    button.mat-button-disabled {
+        opacity: 0.5;
+    }
+
+    .section + .section {
+        .light & { border-left: 1px solid border-color(light); }
+        .dark &  { border-left: 1px solid border-color(dark); }
+    }
+
+    breadcrumb {
+        .breadcrumb {
+            @extend .subsubheading;
+            display: inline-block;
+            & + .breadcrumb {
+                &:before {
+                    content: "/";
+                    padding: 10px;
+                }
+            }
+        }
+    }
+    .spacer {
+        flex: 1 1 auto;
+    }
+}

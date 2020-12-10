@@ -12,18 +12,20 @@
             }
         }
     }
-
     ol {
+        padding-inline-start: 1.3em;
+    }
+    ol.twocol {
         columns: 2;
         column-gap: 10%;
-        padding-inline-start: 1.3em;
     }
 
     li {
-        padding-bottom: 10%;
+        padding-bottom: 10px;
         padding-top: 0px;
-        padding-left: 2%;
+        padding-left: 10px;
     }
+
 
     li::marker {
         font-size: 22px;
