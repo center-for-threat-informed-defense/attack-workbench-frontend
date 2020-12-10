@@ -1,6 +1,7 @@
-import { Component, Input, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, ViewEncapsulation } from '@angular/core';
 import { StixObject } from 'src/app/classes/stix/stix-object';
 import { SidebarService } from 'src/app/services/sidebar/sidebar.service';
+import { StixViewConfig } from 'src/app/views/stix/stix-view-page';
 
 @Component({
   selector: 'app-subheading',
@@ -9,15 +10,25 @@ import { SidebarService } from 'src/app/services/sidebar/sidebar.service';
   encapsulation: ViewEncapsulation.None
 })
 export class SubheadingComponent implements OnInit {
-    @Input() public config: SubheadingConfig
+    @Input() public config: StixViewConfig;
+    @Output() public onOpenHistory = new EventEmitter();
+    @Output() public onOpenNotes = new EventEmitter();
 
     public openHistory() {
-        this.sidebarService.opened = true; 
-        this.sidebarService.currentTab = "history"
+        if (this.config.sidebarControl == "service" || !this.config.hasOwnProperty("sidebarControl")) {
+            this.sidebarService.opened = true; 
+            this.sidebarService.currentTab = "history"
+        } else if (this.config.sidebarControl == "events") {
+            this.onOpenHistory.emit()
+        }
     }
     public openNotes() {
-        this.sidebarService.opened = true;
-        this.sidebarService.currentTab = "notes";
+        if (this.config.sidebarControl == "service" || !this.config.hasOwnProperty("sidebarControl")) {
+            this.sidebarService.opened = true;
+            this.sidebarService.currentTab = "notes";
+        } else if (this.config.sidebarControl == "events") {
+            this.onOpenNotes.emit()
+        }
     }
 
     constructor(private sidebarService: SidebarService) { }
@@ -25,8 +36,4 @@ export class SubheadingComponent implements OnInit {
     ngOnInit(): void {
     }
 
-}
-export interface SubheadingConfig {
-    // the object to display a subheading for
-    object: StixObject
 }

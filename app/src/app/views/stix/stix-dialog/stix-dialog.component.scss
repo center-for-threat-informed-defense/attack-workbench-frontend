@@ -1,0 +1,34 @@
+@import "../../../../style/globals";
+
+.stix-dialog {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    margin: -24px;
+    mat-toolbar {
+        @extend %toolbar;
+        padding-left: 0;
+        .mat-icon { vertical-align: middle; } //vertically center icons
+    }
+    .stix-dialog-body {
+         flex: 1;
+    }
+    .stix-content {
+        display: flex;
+        flex-direction: column;
+        .view-page-wrapper {
+            padding: 25px;
+            overflow: auto;
+        }
+    }
+    mat-drawer {
+        border-left: none !important;
+    }
+
+    .mat-drawer  {
+        overflow-y: hidden;
+        .mat-drawer-inner-container {
+            overflow: hidden;
+        }
+    }
+}
