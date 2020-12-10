@@ -92,6 +92,14 @@ $tooltip-color: color-alternate(dark, 4);
             background: color-alternate(light);
         }
     }
+    &.dark .mat-dialog-container {
+        background: color(dark);
+        color: on-color(dark);
+    }
+    &.light .mat-dialog-container {
+        background: color(light);
+        color: on-color(light);
+    }
 }
 //patch popover style
 .popover {
