@@ -2,7 +2,7 @@
     <div class="row">
         <div class="col">
             <h1>{{mitigation.name}}</h1>
-            <app-subheading [config]="{ object: mitigation }"></app-subheading>
+            <app-subheading [config]="config" (onOpenHistory)="openHistory()" (onOpenNotes)="openNotes()"></app-subheading>
         </div>
     </div>
     <div class="row">
@@ -34,14 +34,17 @@
             }"></app-descriptive-property>
         </div>
     </div>
-    <div class="row">
-        <div class="col">
-            <h2 class="section-header">Techniques Addressed by Mitigation</h2>
+    <!-- only show relationships if configured to show them -->
+    <div *ngIf="config.showRelationships || !config.hasOwnProperty('showRelationships')">
+        <div class="row">
+            <div class="col">
+                <h2 class="section-header">Techniques Addressed by Mitigation</h2>
+            </div>
         </div>
-    </div>
-    <div class="row">
-        <div class="col">
-            <app-stix-list [stixObjects]="techniques? techniques.slice(0, 5) : []" [config]="{'type': 'technique', 'showLinks': false}"></app-stix-list>
+        <div class="row">
+            <div class="col">
+                <app-stix-list [stixObjects]="relationships" [config]="{'type': 'relationship'}"></app-stix-list>
+            </div>
         </div>
     </div>
     <div class="row">
