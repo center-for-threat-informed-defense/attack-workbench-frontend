@@ -41,16 +41,19 @@
         </div>
     </div>
     <div class="row">
-        <!-- DESCRIPTION -->
-        <app-descriptive-property [config]="{
-            mode: 'view',
-            object: software,
-            field: 'description',
-            firstParagraphOnly: false, 
-            referencesField: software.external_references,
-            label: 'description'
-        }"></app-descriptive-property>
+        <div class="col">
+            <!-- DESCRIPTION -->
+            <app-descriptive-property [config]="{
+                mode: 'view',
+                object: software,
+                field: 'description',
+                firstParagraphOnly: false, 
+                referencesField: software.external_references,
+                label: 'description'
+            }"></app-descriptive-property>
+        </div>
     </div>
+    <!-- only show relationships if configured to show them -->
     <div *ngIf="config.showRelationships || !config.hasOwnProperty('showRelationships')">
         <div class="row">
             <div class="col">
@@ -69,7 +72,7 @@
         </div>
         <div class="row">
             <div class="col">
-                <app-stix-list [stixObjects]="relationships_groups" [config]="{'type': 'relationship', 'showLinks': true}"></app-stix-list>
+                <app-stix-list [stixObjects]="relationships_groups" [config]="{'type': 'relationship'}"></app-stix-list>
             </div>
         </div>
     </div>
