@@ -1,13 +1,14 @@
 @import "../../../../../../style/globals";
 .collection-index-view {
     .collection-section {
-        padding: 10px 0;
+        // padding: 10px 0;
         &.description { 
-            padding: 16px;
+            padding: 16px 0;
         }
-        & + .collection-section {
-            .dark & { border-top: 1px solid border-color(dark); }
-            .light & { border-top: 1px solid border-color(light); }
-        }
+        
+    }
+    .subscription-action {
+        .dark & { border-bottom: 1px solid border-color(dark); }
+        .light & { border-bottom: 1px solid border-color(light); }
     }
 }

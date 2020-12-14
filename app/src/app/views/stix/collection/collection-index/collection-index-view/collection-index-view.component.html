@@ -58,14 +58,18 @@
                     <div class="collection-section description">
                         {{collectionRef.description}}
                     </div>
-                    <div class="collection-section actions">
-                        <button mat-button *ngIf="!collectionRef.subscribed"><mat-icon aria-label="subscribe">sync</mat-icon> subscribe</button>
-                        <button mat-button *ngIf="collectionRef.subscribed"><mat-icon aria-label="unsubscribe">sync_disabled</mat-icon> unsubscribe</button>
-                    </div>
                     <div class="collection-section versions">
                         <mat-action-list>
+                            <mat-list-item class="clickable subscription-action" *ngIf="collectionRef.subscribed">
+                                <mat-icon mat-list-icon aria-label="subscribed" class="text-success">check_circle_outline</mat-icon> 
+                                <div mat-line>subscribed</div>
+                            </mat-list-item>
+                            <mat-list-item class="clickable subscription-action" *ngIf="!collectionRef.subscribed">
+                                <mat-icon mat-list-icon aria-label="subscribed">sync</mat-icon> 
+                                <div mat-line>subscribe</div>
+                            </mat-list-item>
                             <mat-list-item class="clickable" *ngFor="let version of collectionRef.versions">
-                                <mat-icon mat-list-icon *ngIf="version.downloaded">done</mat-icon>
+                                <mat-icon mat-list-icon class="text-success" *ngIf="version.downloaded">done</mat-icon>
                                 <mat-icon mat-list-icon *ngIf="!version.downloaded">get_app</mat-icon>
                                 <div mat-line>
                                     <b>{{version.version}}</b>

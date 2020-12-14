@@ -108,7 +108,8 @@ let exampleCollectionIndexes = [new CollectionIndex({
                 {
                     "version": "6.0.0",
                     "url": "https://raw.githubusercontent.com/mitre/cti/ATT%26CK-v6.0/mobile-attack/mobile-attack.json",
-                    "modified": "2019-10-24T00:00:00.000Z"
+                    "modified": "2019-10-24T00:00:00.000Z",
+                    "downloaded": true
                 },
                 {
                     "version": "6.1.0",
