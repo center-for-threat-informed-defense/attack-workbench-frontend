@@ -90,6 +90,7 @@ import { CollectionListComponent } from './views/stix/collection/collection-list
 import { CollectionViewComponent } from './views/stix/collection/collection-view/collection-view.component';
 import { CollectionManagerComponent } from "./views/stix/collection/collection-manager/collection-manager.component";
 import { CollectionIndexListComponent } from "./views/stix/collection/collection-index/collection-index-list/collection-index-list.component";
+import { CollectionIndexViewComponent } from "./views/stix/collection/collection-index/collection-index-view/collection-index-view.component";
 // import { CollectionImportComponent } from './views/stix/collection/collection-import/collection-import.component';
 // import { CollectionExportComponent } from './views/stix/collection/collection-export/collection-export.component';
 
@@ -157,6 +158,7 @@ import { RelationshipViewComponent } from "./views/stix/relationship/relationshi
     CollectionViewComponent,
     CollectionManagerComponent,
     CollectionIndexListComponent,
+    CollectionIndexViewComponent,
     // CollectionImportComponent,
     // CollectionExportComponent,
     
@@ -227,7 +229,7 @@ import { RelationshipViewComponent } from "./views/stix/relationship/relationshi
     MatProgressSpinnerModule,
     MatMenuModule,
     MatDialogModule,
-    
+
     OverlayModule
   ],
   exports: [

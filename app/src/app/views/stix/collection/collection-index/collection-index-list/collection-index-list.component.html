@@ -12,81 +12,14 @@
                         'object': index,
                         'field': 'modified'
                     }"></app-timestamp-view>
+                    <!-- &nbsp;<mat-chip-list *ngIf="isNew(index.modified)"><mat-chip selected color="warn">new</mat-chip></mat-chip-list> -->
                 </mat-panel-description>
-                
             </mat-expansion-panel-header>
-            <div class="panel-body grid spacing-6">
-                <div class="row">
-                    <div class="col">
-                        <app-timestamp-property [config]="{
-                            'mode': 'view',
-                            'humanize': true,
-                            'object': index,
-                            'field': 'created'
-                        }"></app-timestamp-property>
-                    </div>
-                    <div class="col">
-                        <app-timestamp-property [config]="{
-                            'mode': 'view',
-                            'humanize': true,
-                            'object': index,
-                            'field': 'modified'
-                        }"></app-timestamp-property>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col">
-                        <div class="labelled-box">
-                            <div class="content">
-                                {{index.description}}
-                            </div>
-                            <label>description</label>
-                        </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col">
-                        <h2 class="section-header">collections</h2>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col">
-                        <mat-accordion>
-                            <mat-expansion-panel *ngFor="let collectionRef of index.collections" class="mat-elevation-z0">
-                                <mat-expansion-panel-header>
-                                    <mat-panel-title>
-                                        {{collectionRef.name}}
-                                    </mat-panel-title>
-                                    <mat-panel-description>
-                                        {{collectionRef.versions.length}} versions, last updated&nbsp;<app-timestamp-view [config]="{
-                                            'mode': 'view',
-                                            'humanize': true,
-                                            'object': collectionRef,
-                                            'field': 'lastModified'
-                                        }"></app-timestamp-view>
-                                    </mat-panel-description>
-                                </mat-expansion-panel-header>
-                                <mat-action-list>
-                                    <mat-list-item mat-list-item class="clickable" matRipple *ngFor="let version of collectionRef.versions">
-                                        <mat-icon mat-list-icon>launch</mat-icon>
-                                        <div mat-line>
-                                            {{version.version}}
-                                        </div>
-                                        <div mat-line>
-                                            modified&nbsp;<app-timestamp-view [config]="{
-                                                'mode': 'view',
-                                                'humanize': true,
-                                                'object': version,
-                                                'field': 'modified'
-                                            }"></app-timestamp-view>
-                                        </div>
-                                    </mat-list-item>
-                                </mat-action-list>
-                            </mat-expansion-panel>
-                        </mat-accordion>
-                    </div>
-                </div>
-            </div>
+
+            <app-collection-index-view [config]="{
+                'index': index
+            }"></app-collection-index-view>
+
         </mat-expansion-panel>
     </mat-accordion>
 
