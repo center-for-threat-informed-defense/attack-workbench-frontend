@@ -5,7 +5,8 @@ export class Group extends StixObject {
     public name: string;
     public description: string;
     public aliases: string[];
-
+    public attackID: string;
+    public contributors: string;
     
 
     constructor(sdo?: any) {
@@ -14,6 +15,8 @@ export class Group extends StixObject {
             this.name = sdo.name;
             this.description = sdo.description;
             this.aliases = sdo.aliases ? sdo.aliases : [];
+            this.attackID = sdo.external_references[0].external_id;
+            this.contributors = sdo.x_mitre_contributors;
         }
     }
 }
