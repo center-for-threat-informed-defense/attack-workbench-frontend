@@ -1,0 +1,13 @@
+@import "../../../../../../style/globals";
+.collection-index-view {
+    .collection-section {
+        padding: 10px 0;
+        &.description { 
+            padding: 16px;
+        }
+        & + .collection-section {
+            .dark & { border-top: 1px solid border-color(dark); }
+            .light & { border-top: 1px solid border-color(light); }
+        }
+    }
+}

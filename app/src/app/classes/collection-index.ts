@@ -6,6 +6,7 @@ export class CollectionVersion {
     public url: string;
     public taxii_url: string;
     public release_notes: string;
+    public downloaded: boolean = false; //is the collection version downloaded and present in the user's local knowledge base?
     constructor(raw: any) {
         this.version = new VersionNumber(raw.version);
         this.modified = new Date(raw.modified);
@@ -13,6 +14,7 @@ export class CollectionVersion {
         else if (raw.taxii_url) this.taxii_url = raw.taxii_url;
         else throw new Error("error deserializing CollectionVersion: either 'url' or 'taxii_url' must be specified\n" + JSON.stringify(raw), )
         if (raw.release_notes) this.release_notes = raw.release_notes;
+        if (raw.downloaded) this.downloaded = raw.downloaded; // TODO this is for mock data stuff
     }
 }
 // https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/blob/develop/docs/collections.md#collection-reference-properties
@@ -22,6 +24,7 @@ export class CollectionReference {
     public description: string;
     public created: Date;
     public versions: CollectionVersion[];
+    public subscribed: boolean; //TODO how does this get determined
     public get lastModified(): Date { return this.versions[0].modified; }
     constructor(raw: any) {
         this.id = raw.id;
@@ -30,6 +33,7 @@ export class CollectionReference {
         this.created = new Date(raw.created);
         this.versions = raw.versions.map(version => new CollectionVersion(version));
         this.versions.sort((a:CollectionVersion,b:CollectionVersion) => b.version.compareTo(a.version)); //sort by modified date
+        this.subscribed = raw.subscribed ? raw.subscribed : false; // TODO this is for mock data stuff
     }
 }
 // https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/blob/develop/docs/collections.md#collection-index-properties
@@ -63,6 +67,7 @@ let exampleCollectionIndexes = [new CollectionIndex({
             "name": "Enterprise ATT&CK",
             "description": "The Enterprise domain of the ATT&CK dataset",
             "created": "2019-07-31T00:00:00.000Z",
+            "subscribed": true,
             "versions": [
                 {
                     "version": "5.0.0",
@@ -77,13 +82,15 @@ let exampleCollectionIndexes = [new CollectionIndex({
                 {
                     "version": "6.1.0",
                     "url": "https://raw.githubusercontent.com/mitre/cti/ATT%26CK-v6.1/enterprise-attack/enterprise-attack.json",
-                    "modified": "2019-11-21T00:00:00.000Z"
+                    "modified": "2019-11-21T00:00:00.000Z",
+                    "downloaded": true
                 },
                 {
                     "version": "6.2.0",
                     "url": "https://raw.githubusercontent.com/mitre/cti/ATT%26CK-v6.2/enterprise-attack/enterprise-attack.json",
                     "modified": "2019-12-02T00:00:00.000Z",
-                    "release_notes": "information about what changed in v6.2.0 goes here"
+                    "release_notes": "information about what changed in v6.2.0 goes here",
+                    "downloaded": true
                 }
             ]
         },
@@ -121,11 +128,13 @@ let exampleCollectionIndexes = [new CollectionIndex({
             "name": "ATT&CK for ICS",
             "description": "The ICS domain of the ATT&CK dataset",
             "created": "2020-10-01T00:00:00.000Z",
+            "subscribed": true,
             "versions": [
                 {
                     "version": "8.0.0",
                     "taxii_url": "https://cti-taxii.mitre.org/stix/collections/0bb14cfb-58fa-4284-ba85-43ab76dd4622",
-                    "modified": "2020-10-01T00:00:00.000Z"
+                    "modified": "2020-10-01T00:00:00.000Z",
+                    "downloaded": true
                 }
             ]
         }
@@ -175,7 +184,7 @@ let exampleCollectionIndexes = [new CollectionIndex({
     "name": "Wanda's Datasets",
     "description": "example description",
     "created": "2016-05-01T00:00:00.000Z",
-    "modified": "2020-12-04T00:00:00.000Z",
+    "modified": "2020-12-01T00:00:00.000Z",
     "collections": [
         {
             "id": "x-mitre-collection--23320f4-22ad-8467-3b73-ed0c869a12838",
@@ -194,12 +203,12 @@ let exampleCollectionIndexes = [new CollectionIndex({
             "id": "x-mitre-collection--dac0d2d7-8653-445c-9bff-82f934c1e858",
             "name": "Wanda's Software",
             "description": "Software created by Wanda",
-            "created": "2020-12-04T00:00:00.000Z",
+            "created": "2020-12-01T00:00:00.000Z",
             "versions": [
                 {
                     "version": "1.0.0",
                     "url": "https://raw.githubusercontent.com/mitre/cti/ATT%26CK-v6.2/mobile-attack/mobile-attack.json",
-                    "modified": "2020-12-04T00:00:00.000Z",
+                    "modified": "2020-12-01T00:00:00.000Z",
                 }
             ]
         },

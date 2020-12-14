@@ -1,1 +1,88 @@
-<p>collection-index-view works!</p>
+<div class="collection-index-view grid spacing-6">
+    <div class="row" *ngIf="config.show_title">
+        <div class="col">
+            <h1>{{config.index.name}}</h1>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <app-timestamp-property [config]="{
+                'mode': 'view',
+                'humanize': true,
+                'object': config.index,
+                'field': 'created'
+            }"></app-timestamp-property>
+        </div>
+        <div class="col">
+            <app-timestamp-property [config]="{
+                'mode': 'view',
+                'humanize': true,
+                'object': config.index,
+                'field': 'modified'
+            }"></app-timestamp-property>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <div class="labelled-box">
+                <div class="content">
+                    {{config.index.description}}
+                </div>
+                <label>description</label>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <h2 class="section-header">collections</h2>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <mat-accordion>
+                <mat-expansion-panel *ngFor="let collectionRef of config.index.collections" class="mat-elevation-z0">
+                    <mat-expansion-panel-header>
+                        <mat-panel-title>
+                            <b>{{collectionRef.name}}</b>
+                        </mat-panel-title>
+                        <mat-panel-description>
+                            {{collectionRef.versions.length}} versions, last updated&nbsp;<app-timestamp-view [config]="{
+                                'mode': 'view',
+                                'humanize': true,
+                                'object': collectionRef,
+                                'field': 'lastModified'
+                            }"></app-timestamp-view>
+                            <!-- &nbsp;<mat-chip-list *ngIf="isNew(collectionRef.lastModified)"><mat-chip selected color="warn">new</mat-chip></mat-chip-list> -->
+                        </mat-panel-description>
+                    </mat-expansion-panel-header>
+                    <div class="collection-section description">
+                        {{collectionRef.description}}
+                    </div>
+                    <div class="collection-section actions">
+                        <button mat-button *ngIf="!collectionRef.subscribed"><mat-icon aria-label="subscribe">sync</mat-icon> subscribe</button>
+                        <button mat-button *ngIf="collectionRef.subscribed"><mat-icon aria-label="unsubscribe">sync_disabled</mat-icon> unsubscribe</button>
+                    </div>
+                    <div class="collection-section versions">
+                        <mat-action-list>
+                            <mat-list-item class="clickable" *ngFor="let version of collectionRef.versions">
+                                <mat-icon mat-list-icon *ngIf="version.downloaded">done</mat-icon>
+                                <mat-icon mat-list-icon *ngIf="!version.downloaded">get_app</mat-icon>
+                                <div mat-line>
+                                    <b>{{version.version}}</b>
+                                </div>
+                                <div mat-line>
+                                    modified&nbsp;<app-timestamp-view [config]="{
+                                        'mode': 'view',
+                                        'humanize': true,
+                                        'object': version,
+                                        'field': 'modified'
+                                    }"></app-timestamp-view>
+                                </div>
+                            </mat-list-item>
+                        </mat-action-list>
+                    </div>
+                </mat-expansion-panel>
+            </mat-accordion>
+        </div>
+    </div>
+</div>

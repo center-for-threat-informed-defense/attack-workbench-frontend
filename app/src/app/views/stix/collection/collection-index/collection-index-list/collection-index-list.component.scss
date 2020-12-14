@@ -18,11 +18,11 @@
         }
         .mat-expansion-panel-header-title, .mat-expansion-panel-header-description {
             flex-basis: 0;
+            align-items: center;
         }
         .mat-expansion-panel-header-title { }
         .mat-expansion-panel-header-description {
             justify-content: flex-start;
-            align-items: center;
         }
     }
     .mat-list-item.clickable {
