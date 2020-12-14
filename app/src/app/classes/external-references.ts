@@ -36,8 +36,11 @@ export class ExternalReferences {
         for (let [key, value] of this._externalReferences) {
             // Add to map if it has a description
             if(value.description){
-                this._externalReferencesIndex.set(key, index);
-                index += 1;
+                // Do not include if description has (Citation: *)
+                if(!value.description.includes("(Citation:")) {
+                    this._externalReferencesIndex.set(key, index);
+                    index += 1;
+                }
             }
         }
     }
