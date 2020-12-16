@@ -25,7 +25,8 @@ export class GroupViewComponent extends StixViewPage implements OnInit {
     ], 
     "x_mitre_contributors": [
         "Robert Falcone", 
-        "Bryan Lee"
+        "Bryan Lee",
+        "Hubert Jogn"
     ], 
     "object_marking_refs": [
         "marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168"
@@ -101,7 +102,10 @@ export class GroupViewComponent extends StixViewPage implements OnInit {
         "OilRig", 
         "IRN2", 
         "HELIX KITTEN", 
-        "APT34"
+        "APT34",
+        "OilTest",
+        "APTOil",
+        "Random Name"
     ], 
   })
 
