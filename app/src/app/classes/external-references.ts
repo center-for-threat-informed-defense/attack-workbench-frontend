@@ -58,6 +58,31 @@ export class ExternalReferences {
     }
 
     /**
+     * Return if value exists in external references
+     * @param sourceName source name of reference
+     */
+    public hasValue(sourceName: string) : boolean {
+        if (this._externalReferences.get(sourceName)) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Return description of reference
+     * @param sourceName source name of reference
+     */
+    public getDescription(sourceName: string) : string {
+        if (this._externalReferences.get(sourceName)) {
+            let source = this._externalReferences.get(sourceName)
+            if (source["description"]) {
+                return source["description"];
+            }
+        }
+        return "";
+    }
+
+    /**
      * Return ExternalReference object of given source name
      * return undefined if not found
      * @param sourceName source name of reference

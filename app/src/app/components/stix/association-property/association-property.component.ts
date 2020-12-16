@@ -30,6 +30,10 @@ export interface AssociationPropertyConfig {
   /* the field of the object(s) to visualize as a association
    */
   field?: string;
+  /* referencesField; references field. 
+   * References will be removed if not included 
+   */
+  referencesField?: string;
   /* Default true if omitted. For the view mode, if false, 
   * overflow will be hidden and marked with an ellipses. 
   * A tooltip will provide the full value.

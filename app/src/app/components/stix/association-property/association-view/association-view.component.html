@@ -2,14 +2,14 @@
     <div [ngClass]="{'showMore' : showMore, 'content': true}">
         <div class="left-div">
             <ul class="list-view" [class.wrap]="wrap" [matTooltip]="config.object[config.field].join(', ')" [matTooltipDisabled]="wrap" matTooltipPosition="above">
-                <li class="list-item" *ngFor="let value of config.object[config.field]">{{value}}</li>
+                <li class="list-item" *ngFor="let value of inlineCitations">{{value}}</li>
             </ul>
         </div>
         <div class="right-div" (click)="toggleMore()">
-            <button *ngIf="!showMore" [disableRipple]="true" class="button" mat-icon-button>
+            <button *ngIf="!showMore" [disableRipple]="true" mat-icon-button>
                 <mat-icon>keyboard_arrow_down</mat-icon>
             </button>
-            <button *ngIf="showMore" [disableRipple]="true" class="button" mat-icon-button>
+            <button *ngIf="showMore" [disableRipple]="true" mat-icon-button>
                 <mat-icon>keyboard_arrow_up</mat-icon>
             </button>
         </div>
