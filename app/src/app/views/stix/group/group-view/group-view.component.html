@@ -31,11 +31,12 @@
             }"></app-list-property>
         </div>
         <div class="col">
-            <!-- VERSION NUMBER -->
-            <app-version-property [config]="{
-                mode: editing? 'edit' : 'view',
-                object: group
-            }"></app-version-property>
+            <!-- GROUP ALIASES -->
+            <app-association-property [config]="{
+                mode: 'view',
+                object: group,
+                field: 'aliases'
+            }"></app-association-property>
         </div>
     </div>
     <div class="row">

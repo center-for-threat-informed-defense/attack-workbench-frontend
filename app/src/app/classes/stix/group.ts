@@ -7,7 +7,6 @@ export class Group extends StixObject {
     public aliases: string[];
     public attackID: string;
     public contributors: string;
-    
 
     constructor(sdo?: any) {
         super(sdo, "intrusion-set");
