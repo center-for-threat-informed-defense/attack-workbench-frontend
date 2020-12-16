@@ -110,6 +110,9 @@ import { TechniqueViewComponent } from './views/stix/technique/technique-view/te
 import { TechniqueListComponent } from './views/stix/technique/technique-list/technique-list.component';
 
 import { RelationshipViewComponent } from "./views/stix/relationship/relationship-view/relationship-view.component";
+import { AssociationPropertyComponent } from './components/stix/association-property/association-property.component';
+import { AssociationViewComponent } from './components/stix/association-property/association-view/association-view.component';
+import { AssociationEditComponent } from './components/stix/association-property/association-edit/association-edit.component';
 
 
 @NgModule({
@@ -175,6 +178,9 @@ import { RelationshipViewComponent } from "./views/stix/relationship/relationshi
 
     TechniqueListComponent,
     TechniqueViewComponent,
+    AssociationPropertyComponent,
+    AssociationViewComponent,
+    AssociationEditComponent
   ],
   imports: [
     BreadcrumbModule,
