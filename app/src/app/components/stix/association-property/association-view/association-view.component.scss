@@ -1,0 +1,51 @@
+@import "../../../../../style/globals";
+
+.association-view {
+    @extend .labelled-box;
+
+    > .content {
+        padding: 0px;
+    }
+
+    > .showMore {
+        border-radius: 4px 4px 0px 0px;
+    }
+
+    ul.list-view {
+        margin: 0;
+        padding: 0;
+        &:not(.wrap) {
+            white-space: nowrap;
+            overflow-x: hidden;
+            text-overflow: ellipsis;
+        }
+        li.list-item {
+            display: inline-block;
+            &:not(:last-child):after {
+                content: ",";
+                margin-right: 3px;
+            }
+        }
+    }
+
+    .button {
+        display: inline-block; 
+        position: relative; 
+        z-index: 1;
+    }
+    
+    > .description-box {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        > .content {
+            box-sizing: border-box;
+            border: solid 1px; 
+            .dark & { border-color: border-color(dark); border-top-color: transparent; }
+            .light & { border-color: border-color(light); border-top-color: transparent; }
+            border-radius: 0px 0px 4px 4px;
+            padding: 16px 12px;
+            font-size: 16px;
+        }
+    }
+}

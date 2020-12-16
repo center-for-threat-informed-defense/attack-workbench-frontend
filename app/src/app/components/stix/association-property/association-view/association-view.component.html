@@ -1,0 +1,28 @@
+<div class="association-view" *ngIf="!config.mode || config.mode == 'view'">
+    <div [ngClass]="{'showMore' : showMore, 'content': true}">
+        <div class="left-div">
+            <ul class="list-view" [class.wrap]="wrap" [matTooltip]="config.object[config.field].join(', ')" [matTooltipDisabled]="wrap" matTooltipPosition="above">
+                <li class="list-item" *ngFor="let value of config.object[config.field]">{{value}}</li>
+            </ul>
+        </div>
+        <div class="right-div" (click)="toggleMore()">
+            <button *ngIf="!showMore" [disableRipple]="true" class="button" mat-icon-button>
+                <mat-icon>keyboard_arrow_down</mat-icon>
+            </button>
+            <button *ngIf="showMore" [disableRipple]="true" class="button" mat-icon-button>
+                <mat-icon>keyboard_arrow_up</mat-icon>
+            </button>
+        </div>
+    </div>
+    <label>{{config.field}}</label>
+
+    <div *ngIf="showMore" class="description-box">
+        <div class="content">
+            <div class="descriptions">
+                <p>content</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+

@@ -1,0 +1,4 @@
+<div class="association-property">
+    <app-association-view [config]="config"></app-association-view>
+    <app-association-edit *ngIf="config.mode == 'edit'" [config]="config"></app-association-edit>
+</div>
