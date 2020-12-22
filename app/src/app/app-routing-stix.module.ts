@@ -10,6 +10,7 @@ import { TechniqueListComponent } from './views/stix/technique/technique-list/te
 import { StixPageComponent } from "./views/stix/stix-page/stix-page.component"
 import { RouterModule, Routes } from '@angular/router';
 import { NgModule } from '@angular/core';
+import { environment } from "../environments/environment"
 
 const stixRoutes: Routes = [{
     path: 'matrix',
@@ -179,20 +180,24 @@ const stixRoutes: Routes = [{
       }
     ]
   },
-  {
-    path: 'collection',
-    data: {
-      breadcrumb: 'collections'
-    },
-    children: [{
-        path: "",
-        data: {
-          breadcrumb: "list"
-        },
-        component: CollectionManagerComponent
-    }]
-  }
+  
 ]
+
+if (environment.integrations.collection_manager.enabled) {
+    stixRoutes.push({
+        path: 'collection',
+        data: {
+            breadcrumb: 'collections'
+        },
+        children: [{
+            path: "",
+            data: {
+                breadcrumb: "list"
+            },
+            component: CollectionManagerComponent
+        }]
+    })
+}
 
 
 @NgModule({
