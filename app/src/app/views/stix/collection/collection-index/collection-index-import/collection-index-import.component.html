@@ -1,1 +1,34 @@
-<p>collection-index-import works!</p>
+<div class="collection-index-import">
+    <mat-vertical-stepper linear>
+        <mat-step label="specify index">
+            <div class="grid spacing-6">
+                <div class="row">
+                    <div class="col">
+                        <mat-form-field class="url" appearance="outline">
+                            <mat-label>specify a URL</mat-label>
+                            <input matInput [(ngModel)]="url">
+                            <mat-icon matSuffix>cloud_download</mat-icon>
+                        </mat-form-field>
+                        <button class="url-next" [class.hidden]="url.length < 1" mat-button (click)="download()">download</button>
+                    </div>
+                    <div class="col narrow" style="padding-top: 25px">
+                        or
+                    </div>
+                    <div class="col">
+                        <mat-form-field appearance="outline">
+                            <mat-label>upload a file</mat-label>
+                            <ngx-mat-file-input></ngx-mat-file-input>
+                            <mat-icon matSuffix>attach_file</mat-icon>
+                        </mat-form-field>
+                    </div>
+                </div>
+            </div>
+        </mat-step>
+        <mat-step label="review">
+            <button mat-button matStepperNext>next</button>
+        </mat-step>
+        <mat-step label="done">
+            <button mat-button matStepperNext>next</button>
+        </mat-step>
+    </mat-vertical-stepper>
+</div>

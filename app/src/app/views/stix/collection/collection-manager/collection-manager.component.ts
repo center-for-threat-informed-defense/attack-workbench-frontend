@@ -1,4 +1,6 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
+import { CollectionIndexImportComponent } from '../collection-index/collection-index-import/collection-index-import.component';
 
 @Component({
   selector: 'app-collection-manager',
@@ -8,9 +10,15 @@ import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 })
 export class CollectionManagerComponent implements OnInit {
 
-    constructor() { }
+    constructor(public dialog: MatDialog) { }
 
     ngOnInit(): void {
+    }
+
+    public openIndexImport() {
+        this.dialog.open(CollectionIndexImportComponent, {
+            maxHeight: "75vh"
+        });
     }
 
 }
