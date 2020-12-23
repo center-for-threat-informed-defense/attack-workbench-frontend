@@ -60,17 +60,17 @@
                     </div>
                     <div class="collection-section versions">
                         <mat-action-list>
-                            <mat-list-item class="clickable subscription-action" *ngIf="collectionRef.subscribed && !config.show_actions">
+                            <mat-list-item [class.clickable]="showActions" class="subscription-action" *ngIf="collectionRef.subscribed && showActions">
                                 <mat-icon mat-list-icon aria-label="subscribed" class="text-success">check_circle_outline</mat-icon> 
                                 <div mat-line>subscribed</div>
                             </mat-list-item>
-                            <mat-list-item class="clickable subscription-action" *ngIf="!collectionRef.subscribed && !config.show_actions">
+                            <mat-list-item [class.clickable]="showActions" class="subscription-action" *ngIf="!collectionRef.subscribed && showActions">
                                 <mat-icon mat-list-icon aria-label="subscribed">sync</mat-icon>
                                 <div mat-line>subscribe</div>
                             </mat-list-item>
-                            <mat-list-item class="clickable" *ngFor="let version of collectionRef.versions">
-                                <mat-icon mat-list-icon class="text-success" *ngIf="version.downloaded && !config.show_actions">done</mat-icon>
-                                <mat-icon mat-list-icon *ngIf="!version.downloaded && !config.show_actions">get_app</mat-icon>
+                            <mat-list-item [class.clickable]="showActions" *ngFor="let version of collectionRef.versions">
+                                <mat-icon mat-list-icon class="text-success" *ngIf="version.downloaded && showActions">done</mat-icon>
+                                <mat-icon mat-list-icon *ngIf="!version.downloaded && showActions">get_app</mat-icon>
                                 <div mat-line>
                                     <b>{{version.version}}</b>
                                 </div>

@@ -8,9 +8,11 @@ import { CollectionIndex } from 'src/app/classes/collection-index';
   encapsulation: ViewEncapsulation.None
 })
 export class CollectionIndexViewComponent implements OnInit {
-    @Input() index: CollectionIndex;
-    @Input() show_title: boolean = false; //if true,
     @Input() config: CollectionIndexViewConfig;
+
+    public get showActions(): boolean {
+        return !this.config.hasOwnProperty("show_actions") || this.config.show_actions;
+    }
 
     constructor() { }
 

@@ -18,7 +18,7 @@ export class CollectionManagerComponent implements OnInit {
     public openIndexImport() {
         this.dialog.open(CollectionIndexImportComponent, {
             maxHeight: "75vh",
-            minWidth: "50vw"
+            width: "50em" //45 + 5 for padding
         });
     }
 
