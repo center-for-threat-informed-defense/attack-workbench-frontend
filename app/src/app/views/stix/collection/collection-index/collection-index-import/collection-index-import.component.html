@@ -11,7 +11,7 @@
                         </mat-form-field>
                         <button class="url-next" [class.hidden]="url.length < 1" mat-button (click)="download()">download</button>
                     </div>
-                    <div class="col narrow" style="padding-top: 25px">
+                    <!-- <div class="col narrow" style="padding-top: 25px">
                         or
                     </div>
                     <div class="col">
@@ -20,12 +20,27 @@
                             <ngx-mat-file-input></ngx-mat-file-input>
                             <mat-icon matSuffix>attach_file</mat-icon>
                         </mat-form-field>
-                    </div>
+                    </div> -->
                 </div>
             </div>
         </mat-step>
         <mat-step label="review">
-            <button mat-button matStepperNext>next</button>
+            <div class="grid spacing-16" *ngIf="index">
+                <div class="row">
+                    <div class="col">
+                        <app-collection-index-view [config]="{
+                            'index': index,
+                            'show_title': true,
+                            'show_actions': false
+                        }"></app-collection-index-view>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col center">
+                        <button mat-button matStepperNext>import</button>
+                    </div>
+                </div>
+            </div>
         </mat-step>
         <mat-step label="done">
             <button mat-button matStepperNext>next</button>

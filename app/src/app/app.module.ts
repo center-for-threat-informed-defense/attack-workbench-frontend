@@ -34,6 +34,7 @@ import { MatRadioModule } from '@angular/material/radio';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatDialogModule } from '@angular/material/dialog';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 // other library imports
 import { BreadcrumbModule } from "angular-crumbs";
@@ -231,6 +232,7 @@ import { RelationshipViewComponent } from "./views/stix/relationship/relationshi
     MatProgressSpinnerModule,
     MatMenuModule,
     MatDialogModule,
+    MatSnackBarModule,
 
     OverlayModule
   ],
@@ -258,6 +260,7 @@ import { RelationshipViewComponent } from "./views/stix/relationship/relationshi
     MatProgressSpinnerModule,
     MatMenuModule,
     MatDialogModule,
+    MatSnackBarModule,
 
     OverlayModule
   ],
