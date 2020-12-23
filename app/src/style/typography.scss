@@ -11,34 +11,39 @@
     text-transform: uppercase;
 }
 .heading {
-    font-family: Gilroy,Arial,sans-serif;
+    // font-family: Gilroy,Arial,sans-serif;
+    font-family: Poppins,Arial,sans-serif;
     letter-spacing: 0.5pt;
-    font-weight: 800;
+    font-weight: 700;
     text-transform: uppercase;
 }
 .subheading {
-    font-family: Gilroy,Arial,sans-serif;
+    // font-family: Gilroy,Arial,sans-serif;
+    font-family: Poppins,Arial,sans-serif;
     letter-spacing: 0.5pt;
-    font-weight: 800;
+    font-weight: 700;
 }
 .subheading.alt {
-    font-family: Sentinel-Book,Georgia,serif;
+    // font-family: Sentinel-Book,Georgia,serif;
+    font-family: Roboto,Georgia,serif;
 }
 .subsubheading {
-    font-family: Gilroy,Arial,sans-serif;
+    // font-family: Gilroy,Arial,sans-serif;
+    font-family: Poppins,Arial,sans-serif;
     letter-spacing: 0.5pt;
     font-weight: normal;
 }
 .text-label {
-    font-family: Knockout,Arial,sans-serif;
+    // font-family: Knockout,Arial,sans-serif;
+    font-family: Roboto Condensed,Arial,sans-serif;
     // font-weight: bold;
     font-size: 16px;
     text-transform: uppercase;
 }
 
 %typography {
-    font-family: Sentinel-Book,serif;
-  
+    // font-family: Sentinel-Book,serif;
+    font-family: Roboto,serif;
     // letter-spacing: 0.25pt;
     font-size: 18px;
     line-height: 1.5;
