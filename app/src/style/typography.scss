@@ -11,30 +11,25 @@
     text-transform: uppercase;
 }
 .heading {
-    // font-family: Gilroy,Arial,sans-serif;
     font-family: Poppins,Arial,sans-serif;
     letter-spacing: 0.5pt;
     font-weight: 700;
     text-transform: uppercase;
 }
 .subheading {
-    // font-family: Gilroy,Arial,sans-serif;
     font-family: Poppins,Arial,sans-serif;
     letter-spacing: 0.5pt;
     font-weight: 700;
 }
 .subheading.alt {
-    // font-family: Sentinel-Book,Georgia,serif;
     font-family: Roboto,Georgia,serif;
 }
 .subsubheading {
-    // font-family: Gilroy,Arial,sans-serif;
     font-family: Poppins,Arial,sans-serif;
     letter-spacing: 0.5pt;
     font-weight: normal;
 }
 .text-label {
-    // font-family: Knockout,Arial,sans-serif;
     font-family: Roboto Condensed,Arial,sans-serif;
     // font-weight: bold;
     font-size: 16px;
@@ -42,7 +37,6 @@
 }
 
 %typography {
-    // font-family: Sentinel-Book,serif;
     font-family: Roboto,serif;
     // letter-spacing: 0.25pt;
     font-size: 18px;
@@ -64,7 +58,7 @@
 
     // see https://github.com/angular/components/blob/master/src/material/core/typography/_typography.scss#L24
     $custom-typography: mat-typography-config(
-        $font-family: Gilroy,
+        $font-family: Roboto,
         $headline: mat-typography-level(32px, 48px, 800, $letter-spacing: 0.5pt),
         $title:    mat-typography-level(20px, 32px, 800, $letter-spacing: 0.5pt),
         $body-1:   mat-typography-level(16px, 24px, 400, $letter-spacing: 0.25pt)
