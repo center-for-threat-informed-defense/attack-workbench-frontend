@@ -102,10 +102,7 @@ export class GroupViewComponent extends StixViewPage implements OnInit {
         "OilRig", 
         "IRN2", 
         "HELIX KITTEN", 
-        "APT34",
-        "OilTest",
-        "APTOil",
-        "Random Name"
+        "APT34"
     ], 
   })
 

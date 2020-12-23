@@ -1,11 +1,13 @@
 <div class="association-view" *ngIf="!config.mode || config.mode == 'view'">
     <div [ngClass]="{'showMore' : showMore, 'content': true}">
-        <div class="left-div">
+        <div [ngClass]="{'left-div' : includeMoreSection(), 'one-div': !includeMoreSection()}">
             <ul class="list-view" [class.wrap]="wrap" [matTooltip]="config.object[config.field].join(', ')" [matTooltipDisabled]="wrap" matTooltipPosition="above">
-                <li class="list-item" *ngFor="let value of inlineCitations">{{value}}</li>
+                <li class="list-item" *ngFor="let value of inlineCitations">
+                    <markdown [data]="value"></markdown>
+                </li>
             </ul>
         </div>
-        <div class="right-div" (click)="toggleMore()">
+        <div *ngIf="includeMoreSection()" [ngClass]="{'right-div' : includeMoreSection()}" (click)="toggleMore()">
             <button *ngIf="!showMore" [disableRipple]="true" mat-icon-button>
                 <mat-icon>keyboard_arrow_down</mat-icon>
             </button>
@@ -16,10 +18,21 @@
     </div>
     <label>{{config.field}}</label>
 
-    <div *ngIf="showMore" class="description-box">
+    <div *ngIf="showMore && includeMoreSection()" class="description-box">
         <div class="content">
             <div class="descriptions">
-                <p>content</p>
+                <table>
+                    <tr *ngFor="let value of description">
+                        <td>
+                            <strong>
+                                {{ value[0] }}
+                            </strong>
+                        </td>
+                        <td class="descr">
+                            <markdown [data]="value[1]"></markdown>
+                        </td>
+                    </tr>
+                </table>
             </div>
         </div>
     </div>

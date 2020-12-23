@@ -9,6 +9,9 @@ import { AssociationPropertyConfig } from '../association-property.component';
 })
 export class AssociationViewComponent implements OnInit {
   @Input() public config: AssociationPropertyConfig;
+
+  private reReference = /\(Citation: (.*?)\)/gmu;
+
   public showMore: boolean = false;
 
   public toggleMore() : void { this.showMore = !this.showMore; }
@@ -17,36 +20,170 @@ export class AssociationViewComponent implements OnInit {
     return this.config.hasOwnProperty('wrap') ? this.config.wrap : true;
   }
 
+  /**
+   * return list of associations with inline citations
+   */
   public get inlineCitations() {
-
     if (this.config.referencesField) {
       let value : string;
+      let associationArray : Array<string> = [];
 
-      let association_array : Array<string> = [];
-
+      let arraySize = this.config.object[this.config.field].length;
       for (value of this.config.object[this.config.field]) {
 
         let association = value;
 
           if (this.config.object[this.config.referencesField].hasValue(value)) {
             // Get citations from description
-            let descr = this.config.object[this.config.referencesField].getDescription(value)
-            console.log(descr)
-            // refHTML = "<span><sup><a href=\"" + reference.url + "\" class=\"external-link\" target=\"_blank\">[" + reference_number + "]</a></sup></span>";
+            let descr = this.config.object[this.config.referencesField].getDescription(value);
+            let referenceNamesFromDescr = this.getReferencesFromDescription(descr);
+            let referencesStr = ""
+            let referenceNames = []
+            if(referenceNamesFromDescr){
+              for (let i = 0; i < referenceNamesFromDescr.length; i++) {
+                referenceNames[i] = referenceNamesFromDescr[i].split("(Citation: ")[1].slice(0, -1);
+                referencesStr = referencesStr + this.getReferenceStr(referenceNames[i], referenceNamesFromDescr[i]);
+              }
+            }
+            association = association + referencesStr;
           }
 
-          association_array.push(association);
+          // Add ',' if it is not the last iteration
+          if (--arraySize){
+            association = association + ","
+          }
+
+          associationArray.push(association);
       }
-
-      return association_array
-  
+      return associationArray
     }
-
     return this.config[this.config.field]
   }
 
-  public displayDescriptions() {
+  /**
+   * return list of associations with descriptive text
+   */
+  public get description() : Array<[string, string]> {
+    if (this.config.referencesField) {
+      let value : string;
+      let descriptionArray : Array<[string, string]> = [];
 
+      for (value of this.config.object[this.config.field]) {
+        let displayStr = ""
+
+          if (this.config.object[this.config.referencesField].hasValue(value)) {
+            // Get citations from description
+            displayStr = this.config.object[this.config.referencesField].getDescription(value);
+            let referenceNamesFromDescr : Array<string> = this.getReferencesFromDescription(displayStr);
+            let referenceNames : Array<string> = [];
+
+            if(referenceNamesFromDescr && this.hasDescriptiveProperty(displayStr, referenceNamesFromDescr)){
+              for (let i = 0; i < referenceNamesFromDescr.length; i++) {
+                referenceNames[i] = referenceNamesFromDescr[i].split("(Citation: ")[1].slice(0, -1);
+                displayStr = this.replaceCitationHTML(displayStr, referenceNames[i], referenceNamesFromDescr[i]);
+              }
+              descriptionArray.push([value, displayStr]);
+            }
+          }
+      }
+      return descriptionArray
+    }
+    return []
+  }
+
+  /**
+   * Replace reference citation to be rendered as HTML
+   * @param sourceName source name of the reference
+   * @param completeReference complete reference e.g., (Citation: Source Name)
+   */
+  private replaceCitationHTML(displayStr: string, sourceName: string, completeReference: string) : string {
+    let reference = this.config.object[this.config.referencesField].getReference(sourceName);
+    let reference_number = this.config.object[this.config.referencesField].getIndexOfReference(sourceName);
+
+    if (reference && reference_number) {
+      let refHTML = ""
+      
+      if (reference.url) {
+          refHTML = "<span><sup><a href=\"" + reference.url + "\" class=\"external-link\" target=\"_blank\">[" + reference_number + "]</a></sup></span>";
+      }
+      else{
+        refHTML = "<span><sup>[" + reference_number + "]</sup></span>"
+      }
+      return displayStr.replace(completeReference, refHTML);
+    }
+    return displayStr;
+  }
+
+  /**
+   * Determine if string is only made by citations
+   * @param displayStr string to be verified
+   * @param completeReferences list of complete reference names
+   */
+  private hasDescriptiveProperty(displayStr: string, completeReferences: Array<string>) : boolean {
+    let displayStrCopy = displayStr;
+
+    // Remove citations from string
+    for (let i = 0; i < completeReferences.length; i++) {
+      displayStrCopy = displayStrCopy.replace(completeReferences[i], "");
+    }
+
+    // Remove spaces
+    displayStrCopy = displayStrCopy.replace(/\s/g, '')
+
+    // Check that there is a string after replacing citations
+    if(displayStrCopy) {
+      return true;
+    }
+    return false;
+  }
+
+  /**
+   * return list of references from descriptive property
+   * @param displayStr string that may contains references
+   */
+  private getReferencesFromDescription(displayStr: string) : Array<string> {
+    return displayStr.match(this.reReference);
+  }
+
+  /**
+   * return HTML string of reference
+   * @param sourceName source name of the reference
+   * @param completeReference complete reference e.g., (Citation: Source Name)
+   */
+  private getReferenceStr(sourceName: string, completeReference: string) : string {
+      let reference = this.config.object[this.config.referencesField].getReference(sourceName);
+      let reference_number = this.config.object[this.config.referencesField].getIndexOfReference(sourceName);
+
+      if (reference && reference_number) {
+        if (reference.url) {
+            return "<span><sup><a href=\"" + reference.url + "\" class=\"external-link\" target=\"_blank\">[" + reference_number + "]</a></sup></span>";
+        }
+        else{
+          return "<span><sup>[" + reference_number + "]</sup></span>"
+        }
+      }
+      return "";
+  }
+
+  /**
+   * return true if an associtation has descriptions
+   */
+  public includeMoreSection() : boolean {
+
+    let value : string;
+
+    for (value of this.config.object[this.config.field]) {
+      if (this.config.object[this.config.referencesField].hasValue(value)) {
+        // Get citations from description
+        let displayStr = this.config.object[this.config.referencesField].getDescription(value);
+        let referenceNamesFromDescr : Array<string> = this.getReferencesFromDescription(displayStr);
+
+        if(referenceNamesFromDescr && this.hasDescriptiveProperty(displayStr, referenceNamesFromDescr)){
+          return true;
+        }
+      }
+    }
+    return false;
   }
 
   constructor() { }
