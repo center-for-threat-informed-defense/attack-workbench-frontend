@@ -1,5 +1,4 @@
 import { Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
-import { FormBuilder, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
 import { MatStepper } from '@angular/material/stepper';
 import { CollectionIndex } from 'src/app/classes/collection-index';
@@ -19,14 +18,14 @@ export class CollectionIndexImportComponent implements OnInit {
     ngOnInit(): void {
     }
 
-    public url: string = "localhost:8082/collection-index.json";
+    public url: string = "";
 
     public index: CollectionIndex = null;
 
     /**
      * download the collection index at this.url and move to the next step in the stepper
      */
-    public download(): void {
+    public downloadIndex(): void {
         console.log("trigger download");
         // TODO interact with collection manager to trigger download process
         this.collectionManagerConnector.getRemoteIndex(this.url).subscribe((index) => {
@@ -34,6 +33,14 @@ export class CollectionIndexImportComponent implements OnInit {
             this.index = index;
             this.stepper.next();
         })
+    }
+    /**
+     * Save the downloaded collection index to the REST API
+     *
+     * @memberof CollectionIndexImportComponent
+     */
+    public saveIndex(): void {
+        this.stepper.next();
     }
 
 }
