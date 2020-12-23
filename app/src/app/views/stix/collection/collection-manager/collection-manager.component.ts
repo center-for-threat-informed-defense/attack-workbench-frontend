@@ -17,7 +17,8 @@ export class CollectionManagerComponent implements OnInit {
 
     public openIndexImport() {
         this.dialog.open(CollectionIndexImportComponent, {
-            maxHeight: "75vh"
+            maxHeight: "75vh",
+            minWidth: "50vw"
         });
     }
 

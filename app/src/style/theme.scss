@@ -102,6 +102,23 @@ $tooltip-color: color-alternate(dark, 4);
         background: color(light);
         color: on-color(light);
     }
+    
+    &.light .mat-snack-bar-container {
+        background: color(light);
+        color: on-color(light);
+    }
+    &.dark .mat-snack-bar-container {
+        background: color(dark);
+        color: on-color(dark);
+    }
+    .mat-snack-bar-container.success {
+        background: color(success);
+        color: on-color(success);
+    }
+    .mat-snack-bar-container.warn {
+        background: color(error);
+        color: on-color(error);
+    }
 }
 //patch popover style
 .popover {
