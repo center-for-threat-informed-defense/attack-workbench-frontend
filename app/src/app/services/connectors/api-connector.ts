@@ -8,7 +8,7 @@ export abstract class ApiConnector {
     protected handleError<T>() {
         return (error: any): Observable<T> => {
             console.error(error);
-            this.snack(error.statusText, "warn");
+            this.snack(error.error, "warn");
             return new Observable<T>();
         }
     }
