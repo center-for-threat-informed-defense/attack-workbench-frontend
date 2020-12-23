@@ -21,9 +21,9 @@
         }
         li.list-item {
             display: inline-block;
+            margin-right: 3px;
             &:not(:last-child):after {
-                content: ",";
-                margin-right: 3px;
+                content: none;
             }
         }
     }
@@ -40,6 +40,30 @@
             border-radius: 0px 0px 4px 4px;
             padding: 16px 12px;
             font-size: 16px;
+        }
+    }
+
+    .one-div {
+        padding: 16px 12px;
+    }
+
+    .descr {
+        padding: 10px;
+    }
+
+    markdown {
+        a.external-link {
+            border-bottom: none;
+            color: color(link);
+            transition: none;
+            &:hover {
+                border-bottom: 2px solid color(link);
+            }
+        }
+
+        p {
+            padding: 0;
+            margin: 0;
         }
     }
 }
