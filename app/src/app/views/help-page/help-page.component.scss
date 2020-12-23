@@ -10,9 +10,6 @@
     table {
         @extend .app-table;
     }
-    strong {
-        font-family: Gilroy,Arial,sans-serif; // sentinel book doesn't have a bold font
-    }
 
     pre code {
         font-size: 14px;
