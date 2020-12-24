@@ -16,5 +16,7 @@ export class ConfirmationDialogComponent implements OnInit {
 }
 
 export interface ConfirmationDialogConfig {
-
+    message: string; //prompt text
+    yes_suffix?: string; //optional suffix to add to the yes button
+    no_suffix?: string; //optional suffix to add to the no button
 }
