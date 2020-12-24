@@ -145,6 +145,10 @@ $tooltip-color: color-alternate(dark, 4);
     }
 }
 
+.mat-step-icon:not(.mat-step-icon-selected):not(.mat-step-icon-state-edit) {
+    .dark & { color: on-color(dark); }
+    .light & { color: on-color(light); }
+}
 /* You can add global styles to this file, and also import other style files */
 html, body { height: 100%; }
 body { 
