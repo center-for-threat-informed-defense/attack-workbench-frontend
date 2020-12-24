@@ -21,10 +21,10 @@ export abstract class ApiConnector {
         }
     }
 
-    protected handleSuccess() {
+    protected handleSuccess(message: string = "success") {
         return (success: any) => {
             console.log(success);
-            this.snack(success.statusText, "success");
+            this.snack(message, "success");
         }
     }
 

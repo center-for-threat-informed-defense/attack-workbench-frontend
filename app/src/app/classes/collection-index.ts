@@ -58,7 +58,7 @@ export interface CollectionIndexRecord {
     collection_index: CollectionIndex,
     workspace: {
         remote_url: string, //url of the index
-        update_policy: {
+        update_policy?: {
             automatic: boolean, //if true, automatically fetch updates
             interval: number, //seconds between refreshes
             last_retrieval: Date,
