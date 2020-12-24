@@ -49,6 +49,8 @@ import { ResourcesDrawerComponent } from './components/resources-drawer/resource
 import { LoadingOverlayComponent } from './components/loading-overlay/loading-overlay.component';
 import { ToolbarComponent } from './components/toolbar/toolbar.component';
 import { SubheadingComponent } from './components/subheading/subheading.component';
+import { ConfirmationDialogComponent } from "./components/confirmation-dialog/confirmation-dialog.component";
+import { EmptyListMarkerComponent } from "./components/empty-list-marker/empty-list-marker.component";
 
 // STIX components
 import { StixListComponent } from './components/stix/stix-list/stix-list.component';
@@ -127,6 +129,8 @@ import { RelationshipViewComponent } from "./views/stix/relationship/relationshi
     ToolbarComponent,
     ResourcesDrawerComponent,
     SubheadingComponent,
+    ConfirmationDialogComponent,
+    EmptyListMarkerComponent,
     
     StixListComponent,
 

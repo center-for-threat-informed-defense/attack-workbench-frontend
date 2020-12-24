@@ -1,26 +1,30 @@
 <div class="collection-index-list">
-    <mat-accordion>
-        <mat-expansion-panel *ngFor="let index of exampleCollectionIndexes" class="mat-elevation-z0">
-            <mat-expansion-panel-header>
-                <mat-panel-title>
-                    <b>{{index.name}}</b>
-                </mat-panel-title>
-                <mat-panel-description>
-                    {{index.collections.length}} collections, last updated&nbsp;<app-timestamp-view [config]="{
-                        'mode': 'view',
-                        'humanize': true,
-                        'object': index,
-                        'field': 'modified'
-                    }"></app-timestamp-view>
-                    <!-- &nbsp;<mat-chip-list *ngIf="isNew(index.modified)"><mat-chip selected color="warn">new</mat-chip></mat-chip-list> -->
-                </mat-panel-description>
-            </mat-expansion-panel-header>
-
-            <app-collection-index-view [config]="{
-                'index': index
-            }"></app-collection-index-view>
-
-        </mat-expansion-panel>
-    </mat-accordion>
-
+    <div *ngIf="(collectionIndexes$ | async) as result">
+        <mat-accordion *ngIf="result.length > 0">
+            <mat-expansion-panel *ngFor="let index of result | async" class="mat-elevation-z0">
+                <mat-expansion-panel-header>
+                    <mat-panel-title>
+                        <b>{{index.collection_index.name}}</b>
+                    </mat-panel-title>
+                    <mat-panel-description>
+                        {{index.collection_index.collections.length}} collections, last updated&nbsp;<app-timestamp-view [config]="{
+                            'mode': 'view',
+                            'humanize': true,
+                            'object': index.collection_index,
+                            'field': 'modified'
+                        }"></app-timestamp-view>
+                    </mat-panel-description>
+                </mat-expansion-panel-header>
+    
+                <app-collection-index-view [config]="{
+                    'index': index.collection_index
+                }"></app-collection-index-view>
+    
+            </mat-expansion-panel>
+        </mat-accordion>
+        <app-empty-list-marker *ngIf="result.length == 0" (onCheckAgain)="refreshIndexes()"></app-empty-list-marker>
+    </div>
+    <ng-template #loading>
+        <app-loading-overlay ></app-loading-overlay>
+    </ng-template>
 </div>
