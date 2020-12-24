@@ -1,5 +1,6 @@
-import { Component, Input, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, ViewEncapsulation } from '@angular/core';
 import { CollectionIndex } from 'src/app/classes/collection-index';
+import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/rest-api-connector.service';
 
 @Component({
   selector: 'app-collection-index-view',
@@ -9,15 +10,24 @@ import { CollectionIndex } from 'src/app/classes/collection-index';
 })
 export class CollectionIndexViewComponent implements OnInit {
     @Input() config: CollectionIndexViewConfig;
+    @Output() onDelete = new EventEmitter();
+
+    constructor(private restAPIConnector: RestApiConnectorService) { }
+
+    ngOnInit(): void {
+    }
 
     public get showActions(): boolean {
         return !this.config.hasOwnProperty("show_actions") || this.config.show_actions;
     }
 
-    constructor() { }
-
-    ngOnInit(): void {
+    public removeIndex() {
+        // remove this collection index
+        this.restAPIConnector.deleteCollectionIndex(this.config.index.id).subscribe(() => {
+            this.onDelete.emit();
+        });
     }
+
 
 }
 export interface CollectionIndexViewConfig {

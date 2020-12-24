@@ -3,6 +3,7 @@ import { MatDialogRef } from '@angular/material/dialog';
 import { MatStepper } from '@angular/material/stepper';
 import { CollectionIndex } from 'src/app/classes/collection-index';
 import { CollectionManagerConnectorService } from 'src/app/services/connectors/collection-manager/collection-manager-connector.service';
+import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/rest-api-connector.service';
 
 @Component({
   selector: 'app-collection-index-import',
@@ -13,12 +14,12 @@ import { CollectionManagerConnectorService } from 'src/app/services/connectors/c
 export class CollectionIndexImportComponent implements OnInit {
     @ViewChild(MatStepper) public stepper: MatStepper;
 
-    constructor(public dialogRef: MatDialogRef<CollectionIndexImportComponent>, private collectionManagerConnector: CollectionManagerConnectorService) { }
+    constructor(public dialogRef: MatDialogRef<CollectionIndexImportComponent>, private collectionManagerConnector: CollectionManagerConnectorService, private restAPIConnector: RestApiConnectorService) { }
 
     ngOnInit(): void {
     }
 
-    public url: string = "";
+    public url: string = "localhost:8082/collection-index.json";
 
     public index: CollectionIndex = null;
 
@@ -40,7 +41,14 @@ export class CollectionIndexImportComponent implements OnInit {
      * @memberof CollectionIndexImportComponent
      */
     public saveIndex(): void {
-        this.stepper.next();
+        this.restAPIConnector.postCollectionIndex({
+            collection_index: this.index,
+            workspace: {
+                remote_url: this.url
+            }
+        }).subscribe(result => {
+            this.stepper.next();
+        })
     }
 
 }

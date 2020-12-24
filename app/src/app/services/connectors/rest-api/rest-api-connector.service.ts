@@ -21,8 +21,9 @@ export class RestApiConnectorService extends ApiConnector {
      * @returns {Observable<CollectionIndexRecord>} posted index if successful
      */
     public postCollectionIndex(index: CollectionIndexRecord): Observable<CollectionIndexRecord> {
+        console.log("posting index")
         return this.http.post<CollectionIndexRecord>(`${this.baseUrl}/collection-indexes`, index).pipe(
-            tap(this.handleSuccess()),
+            tap(this.handleSuccess("collection index added")),
             catchError(this.handleError_single<CollectionIndexRecord>())
         )
     }
@@ -36,6 +37,19 @@ export class RestApiConnectorService extends ApiConnector {
         return this.http.get<CollectionIndexRecord[]>(`${this.baseUrl}/collection-indexes`).pipe(
             tap(_ => console.log("retrieved collection indexes")), // on success, trigger the success notification   
             catchError(this.handleError_array<CollectionIndexRecord[]>([])) // on error, trigger the error notification and continue operation without crashing (returns empty item)
+        )
+    }
+
+    /**
+     * Delete the given collection index
+     * @param {string} id the ID of the collection index to delete
+     */
+    public deleteCollectionIndex(id: string) {
+        let url = `${this.baseUrl}/collection-indexes/${id}`
+        console.log(url);
+        return this.http.delete(url).pipe(
+            tap(this.handleSuccess("collection index removed")),
+            catchError(this.handleError_single())
         )
     }
 }

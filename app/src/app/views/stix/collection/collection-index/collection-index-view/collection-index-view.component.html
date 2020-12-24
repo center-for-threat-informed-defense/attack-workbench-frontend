@@ -89,4 +89,9 @@
             </mat-accordion>
         </div>
     </div>
+    <div class="row" *ngIf="showActions">
+        <div class="col center removeActions">
+            <button mat-button (click)="removeIndex()">remove index</button>
+        </div>
+    </div>
 </div>

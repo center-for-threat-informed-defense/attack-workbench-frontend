@@ -1,7 +1,7 @@
 <div class="collection-index-list">
     <div *ngIf="(collectionIndexes$ | async) as result">
         <mat-accordion *ngIf="result.length > 0">
-            <mat-expansion-panel *ngFor="let index of result | async" class="mat-elevation-z0">
+            <mat-expansion-panel *ngFor="let index of result" class="mat-elevation-z0">
                 <mat-expansion-panel-header>
                     <mat-panel-title>
                         <b>{{index.collection_index.name}}</b>
@@ -18,7 +18,7 @@
     
                 <app-collection-index-view [config]="{
                     'index': index.collection_index
-                }"></app-collection-index-view>
+                }" (onDelete)="refreshIndexes()"></app-collection-index-view>
     
             </mat-expansion-panel>
         </mat-accordion>
