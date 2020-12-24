@@ -21,12 +21,25 @@ export class RestApiConnectorService extends ApiConnector {
      * @returns {Observable<CollectionIndexRecord>} posted index if successful
      */
     public postCollectionIndex(index: CollectionIndexRecord): Observable<CollectionIndexRecord> {
-        console.log("posting index")
         return this.http.post<CollectionIndexRecord>(`${this.baseUrl}/collection-indexes`, index).pipe(
             tap(this.handleSuccess("collection index added")),
             catchError(this.handleError_single<CollectionIndexRecord>())
         )
     }
+
+    /**
+     * Update the given collection index
+     * @param {CollectionIndexRecord} index the index to update
+     * @param {string} [successMessage="collection index updated"] message to show to the user in the snackbar on success
+     * @returns {Observable<CollectionIndexRecord>} the updated record
+     */
+    public putCollectionIndex(index: CollectionIndexRecord, successMessage: string = "collection index updated"): Observable<CollectionIndexRecord> {
+        return this.http.put<CollectionIndexRecord>(`${this.baseUrl}/collection-indexes/${index.collection_index.id}`, index).pipe(
+            tap(this.handleSuccess(successMessage)),
+            catchError(this.handleError_single<CollectionIndexRecord>())
+        )
+    }
+
     /**
      * Fetch all collection indexes
      * @param {number} limit optional, number to retrieve
@@ -45,9 +58,7 @@ export class RestApiConnectorService extends ApiConnector {
      * @param {string} id the ID of the collection index to delete
      */
     public deleteCollectionIndex(id: string) {
-        let url = `${this.baseUrl}/collection-indexes/${id}`
-        console.log(url);
-        return this.http.delete(url).pipe(
+        return this.http.delete(`${this.baseUrl}/collection-indexes/${id}`).pipe(
             tap(this.handleSuccess("collection index removed")),
             catchError(this.handleError_single())
         )

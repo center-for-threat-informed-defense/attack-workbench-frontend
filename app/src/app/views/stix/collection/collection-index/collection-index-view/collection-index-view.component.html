@@ -1,7 +1,7 @@
 <div class="collection-index-view grid spacing-6">
     <div class="row" *ngIf="config.show_title">
         <div class="col center">
-            <h1>{{config.index.name}}</h1>
+            <h1>{{config.index.collection_index.name}}</h1>
         </div>
     </div>
     <div class="row">
@@ -9,7 +9,7 @@
             <app-timestamp-property [config]="{
                 'mode': 'view',
                 'humanize': true,
-                'object': config.index,
+                'object': config.index.collection_index,
                 'field': 'created'
             }"></app-timestamp-property>
         </div>
@@ -17,7 +17,7 @@
             <app-timestamp-property [config]="{
                 'mode': 'view',
                 'humanize': true,
-                'object': config.index,
+                'object': config.index.collection_index,
                 'field': 'modified'
             }"></app-timestamp-property>
         </div>
@@ -26,7 +26,7 @@
         <div class="col">
             <div class="labelled-box">
                 <div class="content">
-                    {{config.index.description}}
+                    {{config.index.collection_index.description}}
                 </div>
                 <label>description</label>
             </div>
@@ -40,7 +40,7 @@
     <div class="row">
         <div class="col">
             <mat-accordion>
-                <mat-expansion-panel *ngFor="let collectionRef of config.index.collections" class="mat-elevation-z0">
+                <mat-expansion-panel *ngFor="let collectionRef of config.index.collection_index.collections" class="mat-elevation-z0">
                     <mat-expansion-panel-header>
                         <mat-panel-title>
                             <b>{{collectionRef.name}}</b>
@@ -60,11 +60,11 @@
                     </div>
                     <div class="collection-section versions">
                         <mat-action-list>
-                            <mat-list-item [class.clickable]="showActions" class="subscription-action" *ngIf="collectionRef.subscribed && showActions">
+                            <mat-list-item class="subscription-action clickable" *ngIf="collectionRef.subscribed && showActions" (click)="unsubscribe(collectionRef)">
                                 <mat-icon mat-list-icon aria-label="subscribed" class="text-success">check_circle_outline</mat-icon> 
                                 <div mat-line>subscribed</div>
                             </mat-list-item>
-                            <mat-list-item [class.clickable]="showActions" class="subscription-action" *ngIf="!collectionRef.subscribed && showActions">
+                            <mat-list-item class="subscription-action clickable" *ngIf="!collectionRef.subscribed && showActions" (click)="subscribe(collectionRef)">
                                 <mat-icon mat-list-icon aria-label="subscribed">sync</mat-icon>
                                 <div mat-line>subscribe</div>
                             </mat-list-item>

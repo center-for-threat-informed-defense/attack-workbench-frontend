@@ -17,8 +17,8 @@
                 </mat-expansion-panel-header>
     
                 <app-collection-index-view [config]="{
-                    'index': index.collection_index
-                }" (onDelete)="refreshIndexes()"></app-collection-index-view>
+                    'index': index
+                }" (onCollectionsModified)="refreshIndexes()"></app-collection-index-view>
     
             </mat-expansion-panel>
         </mat-accordion>
