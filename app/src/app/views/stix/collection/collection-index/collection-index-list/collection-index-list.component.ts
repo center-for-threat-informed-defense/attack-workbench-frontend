@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
-import { CollectionIndex, CollectionIndexRecord, exampleCollectionIndexes} from 'src/app/classes/collection-index';
+import { CollectionIndex} from 'src/app/classes/collection-index';
 import * as moment from 'moment';
 import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/rest-api-connector.service';
 import { Observable } from 'rxjs';
@@ -11,11 +11,10 @@ import { Observable } from 'rxjs';
   encapsulation: ViewEncapsulation.None
 })
 export class CollectionIndexListComponent implements OnInit {
-    // public collectionIndexes: CollectionIndex[] = [exampleCollectionIndex]
-    public get exampleCollectionIndexes() { return exampleCollectionIndexes; }
+
     constructor(private restAPIConnector: RestApiConnectorService) { }
     
-    public collectionIndexes$: Observable<CollectionIndexRecord[]>;
+    public collectionIndexes$: Observable<CollectionIndex[]>;
 
     ngOnInit(): void {
         this.refreshIndexes();

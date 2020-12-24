@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Observable } from 'rxjs';
 import { tap, catchError } from 'rxjs/operators';
-import { CollectionIndexRecord } from 'src/app/classes/collection-index';
+import { CollectionIndex } from 'src/app/classes/collection-index';
 import { environment } from "../../../../environments/environment";
 import { ApiConnector } from '../api-connector';
 
@@ -20,10 +20,10 @@ export class RestApiConnectorService extends ApiConnector {
      * @param {CollectionIndexRecord} index record to write
      * @returns {Observable<CollectionIndexRecord>} posted index if successful
      */
-    public postCollectionIndex(index: CollectionIndexRecord): Observable<CollectionIndexRecord> {
-        return this.http.post<CollectionIndexRecord>(`${this.baseUrl}/collection-indexes`, index).pipe(
+    public postCollectionIndex(index: CollectionIndex): Observable<CollectionIndex> {
+        return this.http.post<CollectionIndex>(`${this.baseUrl}/collection-indexes`, index).pipe(
             tap(this.handleSuccess("collection index added")),
-            catchError(this.handleError_single<CollectionIndexRecord>())
+            catchError(this.handleError_single<CollectionIndex>())
         )
     }
 
@@ -33,10 +33,10 @@ export class RestApiConnectorService extends ApiConnector {
      * @param {string} [successMessage="collection index updated"] message to show to the user in the snackbar on success
      * @returns {Observable<CollectionIndexRecord>} the updated record
      */
-    public putCollectionIndex(index: CollectionIndexRecord, successMessage: string = "collection index updated"): Observable<CollectionIndexRecord> {
-        return this.http.put<CollectionIndexRecord>(`${this.baseUrl}/collection-indexes/${index.collection_index.id}`, index).pipe(
+    public putCollectionIndex(index: CollectionIndex, successMessage: string = "collection index updated"): Observable<CollectionIndex> {
+        return this.http.put<CollectionIndex>(`${this.baseUrl}/collection-indexes/${index.collection_index.id}`, index).pipe(
             tap(this.handleSuccess(successMessage)),
-            catchError(this.handleError_single<CollectionIndexRecord>())
+            catchError(this.handleError_single<CollectionIndex>())
         )
     }
 
@@ -46,10 +46,10 @@ export class RestApiConnectorService extends ApiConnector {
      * @param {number} offset optional, number to skip
      * @returns {Observable<CollectionIndexRecord>} collection indexes
      */
-    public getCollectionIndexes(limit?: number, offset?: number): Observable<CollectionIndexRecord[]> {
-        return this.http.get<CollectionIndexRecord[]>(`${this.baseUrl}/collection-indexes`).pipe(
+    public getCollectionIndexes(limit?: number, offset?: number): Observable<CollectionIndex[]> {
+        return this.http.get<CollectionIndex[]>(`${this.baseUrl}/collection-indexes`).pipe(
             tap(_ => console.log("retrieved collection indexes")), // on success, trigger the success notification   
-            catchError(this.handleError_array<CollectionIndexRecord[]>([])) // on error, trigger the error notification and continue operation without crashing (returns empty item)
+            catchError(this.handleError_array<CollectionIndex[]>([])) // on error, trigger the error notification and continue operation without crashing (returns empty item)
         )
     }
 

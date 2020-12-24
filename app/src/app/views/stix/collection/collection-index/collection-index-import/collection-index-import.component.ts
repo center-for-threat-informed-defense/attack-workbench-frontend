@@ -41,12 +41,7 @@ export class CollectionIndexImportComponent implements OnInit {
      * @memberof CollectionIndexImportComponent
      */
     public saveIndex(): void {
-        this.restAPIConnector.postCollectionIndex({
-            collection_index: this.index,
-            workspace: {
-                remote_url: this.url
-            }
-        }).subscribe(result => {
+        this.restAPIConnector.postCollectionIndex(this.index).subscribe(result => {
             this.stepper.next();
         })
     }

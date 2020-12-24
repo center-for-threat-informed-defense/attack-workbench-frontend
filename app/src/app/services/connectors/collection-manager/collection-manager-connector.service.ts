@@ -2,7 +2,7 @@ import { HttpClient, HttpHeaders, HttpParameterCodec, HttpParams } from '@angula
 import { Injectable } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Observable } from 'rxjs';
-import { catchError, tap } from 'rxjs/operators';
+import { catchError, map, tap } from 'rxjs/operators';
 import { CollectionIndex } from 'src/app/classes/collection-index';
 import { environment } from "../../../../environments/environment";
 import { ApiConnector } from '../api-connector';
@@ -22,8 +22,12 @@ export class CollectionManagerConnectorService extends ApiConnector {
      */
     public getRemoteIndex(url: string): Observable<CollectionIndex> {
         let params = new HttpParams({encoder: new CustomEncoder()}).set("url", url);
-        return this.http.get<CollectionIndex>(`${this.baseUrl}/collection-indexes/remote`, {params}).pipe( 
-            tap(_ => console.log("downloaded index at", url)), // on success, trigger the success notification   
+        return this.http.get(`${this.baseUrl}/collection-indexes/remote`, {params}).pipe( 
+            tap(_ => console.log("downloaded index at", url)), // on success, trigger the success notification
+            map(index => { return {
+                "collection_index": index,
+                "workspace": { remote_url: url }
+            } as CollectionIndex }),
             catchError(this.handleError_single<CollectionIndex>()) // on error, trigger the error notification and continue operation without crashing (returns empty item)
         )
     }
