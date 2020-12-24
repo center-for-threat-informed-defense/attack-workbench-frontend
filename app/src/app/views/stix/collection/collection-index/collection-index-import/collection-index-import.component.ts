@@ -19,7 +19,7 @@ export class CollectionIndexImportComponent implements OnInit {
     ngOnInit(): void {
     }
 
-    public url: string = "localhost:8082/collection-index.json";
+    public url: string = "";
 
     public index: CollectionIndex = null;
 

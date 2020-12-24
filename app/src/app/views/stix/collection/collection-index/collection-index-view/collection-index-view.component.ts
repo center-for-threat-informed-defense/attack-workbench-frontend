@@ -1,5 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Output, ViewEncapsulation } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { CollectionIndex } from 'src/app/classes/collection-index';
+import { ConfirmationDialogComponent } from 'src/app/components/confirmation-dialog/confirmation-dialog.component';
 import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/rest-api-connector.service';
 
 @Component({
@@ -12,7 +14,7 @@ export class CollectionIndexViewComponent implements OnInit {
     @Input() config: CollectionIndexViewConfig;
     @Output() onDelete = new EventEmitter();
 
-    constructor(private restAPIConnector: RestApiConnectorService) { }
+    constructor(private restAPIConnector: RestApiConnectorService, private dialog: MatDialog) { }
 
     ngOnInit(): void {
     }
@@ -22,10 +24,20 @@ export class CollectionIndexViewComponent implements OnInit {
     }
 
     public removeIndex() {
-        // remove this collection index
-        this.restAPIConnector.deleteCollectionIndex(this.config.index.id).subscribe(() => {
-            this.onDelete.emit();
+        // confirm that the user actually wants to do this
+        let prompt = this.dialog.open(ConfirmationDialogComponent, {
+            maxWidth: "35em",
+            data: { 
+                message: "Are you sure you want to remove the collection index?",
+                yes_suffix: "delete it"
+            }
         });
+        prompt.afterClosed().subscribe(result => {
+            // if they clicked yes, delete the index
+            if (result) this.restAPIConnector.deleteCollectionIndex(this.config.index.id).subscribe(() => {
+                this.onDelete.emit();
+            });
+        })
     }
 
 
