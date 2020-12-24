@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output, ViewEncapsulation } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { CollectionIndex, CollectionIndexRecord, CollectionReference } from 'src/app/classes/collection-index';
+import { CollectionIndex, CollectionReference } from 'src/app/classes/collection-index';
 import { ConfirmationDialogComponent } from 'src/app/components/confirmation-dialog/confirmation-dialog.component';
 import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/rest-api-connector.service';
 
@@ -101,7 +101,7 @@ export class CollectionIndexViewComponent implements OnInit {
 }
 export interface CollectionIndexViewConfig {
     // the index to show
-    index: CollectionIndexRecord;
+    index: CollectionIndex;
     // default false. If true, show the collection title in the component
     show_title: boolean;
     // default true. If false, hides subscribe actions from the component
