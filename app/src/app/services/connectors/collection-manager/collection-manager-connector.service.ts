@@ -18,13 +18,13 @@ export class CollectionManagerConnectorService extends ApiConnector {
     /**
      * Given a URL, retrieve the collection index at the URL
      * @param {string} url the URL of the collection index
-     * @returns {CollectionIndex} the collection index at the URL
+     * @returns {Observable<CollectionIndex>} the collection index at the URL
      */
     public getRemoteIndex(url: string): Observable<CollectionIndex> {
-        let params  = new HttpParams({encoder: new CustomEncoder()}).set("url", url);
+        let params = new HttpParams({encoder: new CustomEncoder()}).set("url", url);
         return this.http.get<CollectionIndex>(`${this.baseUrl}/collection-indexes/remote`, {params}).pipe( 
             tap(_ => console.log("downloaded index at", url)), // on success, trigger the success notification   
-            catchError(this.handleError<CollectionIndex>()) // on error, trigger the error notification and continue operation without crashing (returns empty item)
+            catchError(this.handleError_single<CollectionIndex>()) // on error, trigger the error notification and continue operation without crashing (returns empty item)
         )
     }
 }

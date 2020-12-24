@@ -54,6 +54,19 @@ export class CollectionIndex {
     }
 }
 
+export interface CollectionIndexRecord {
+    collection_index: CollectionIndex,
+    workspace: {
+        remote_url: string, //url of the index
+        update_policy: {
+            automatic: boolean, //if true, automatically fetch updates
+            interval: number, //seconds between refreshes
+            last_retrieval: Date,
+            subscriptions: string[] // stix IDs of collection-references
+        }
+    }
+}
+
 // mock collection index data
 let exampleCollectionIndexes = [new CollectionIndex({
     "id": "bb8c95c0-4e8f-491e-a3c9-8b4207e43041",

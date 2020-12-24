@@ -5,13 +5,22 @@ export abstract class ApiConnector {
     private theSnackbar: MatSnackBar; //note: constructor in super must import snackbar
     constructor(snackbar: MatSnackBar) { this.theSnackbar = snackbar; }
 
-    protected handleError<T>() {
+    protected handleError_single<T>() {
         return (error: any): Observable<T> => {
             console.error(error);
             this.snack(error.error, "warn");
             return new Observable<T>();
         }
     }
+
+    protected handleError_array<T>(defaultValue?: T) {
+        return (error: any): Observable<T> => {
+            console.error(error);
+            this.snack(error.error, "warn");
+            return of(defaultValue as T);
+        }
+    }
+
     protected handleSuccess() {
         return (success: any) => {
             console.log(success);
