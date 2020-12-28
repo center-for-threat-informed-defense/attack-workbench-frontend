@@ -51,6 +51,7 @@ import { ToolbarComponent } from './components/toolbar/toolbar.component';
 import { SubheadingComponent } from './components/subheading/subheading.component';
 import { ConfirmationDialogComponent } from "./components/confirmation-dialog/confirmation-dialog.component";
 import { EmptyListMarkerComponent } from "./components/empty-list-marker/empty-list-marker.component";
+import { MarkdownViewDialogComponent } from "./components/markdown-view-dialog/markdown-view-dialog.component";
 
 // STIX components
 import { StixListComponent } from './components/stix/stix-list/stix-list.component';
@@ -131,6 +132,7 @@ import { RelationshipViewComponent } from "./views/stix/relationship/relationshi
     SubheadingComponent,
     ConfirmationDialogComponent,
     EmptyListMarkerComponent,
+    MarkdownViewDialogComponent,
     
     StixListComponent,
 
