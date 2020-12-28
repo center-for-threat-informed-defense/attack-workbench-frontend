@@ -34,6 +34,7 @@ import { MatRadioModule } from '@angular/material/radio';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatDialogModule } from '@angular/material/dialog';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 // other library imports
 import { BreadcrumbModule } from "angular-crumbs";
@@ -48,6 +49,9 @@ import { ResourcesDrawerComponent } from './components/resources-drawer/resource
 import { LoadingOverlayComponent } from './components/loading-overlay/loading-overlay.component';
 import { ToolbarComponent } from './components/toolbar/toolbar.component';
 import { SubheadingComponent } from './components/subheading/subheading.component';
+import { ConfirmationDialogComponent } from "./components/confirmation-dialog/confirmation-dialog.component";
+import { EmptyListMarkerComponent } from "./components/empty-list-marker/empty-list-marker.component";
+import { MarkdownViewDialogComponent } from "./components/markdown-view-dialog/markdown-view-dialog.component";
 
 // STIX components
 import { StixListComponent } from './components/stix/stix-list/stix-list.component';
@@ -88,8 +92,12 @@ import { StixPageComponent } from "./views/stix/stix-page/stix-page.component"
 
 import { CollectionListComponent } from './views/stix/collection/collection-list/collection-list.component';
 import { CollectionViewComponent } from './views/stix/collection/collection-view/collection-view.component';
-import { CollectionImportComponent } from './views/stix/collection/collection-import/collection-import.component';
-import { CollectionExportComponent } from './views/stix/collection/collection-export/collection-export.component';
+import { CollectionManagerComponent } from "./views/stix/collection/collection-manager/collection-manager.component";
+import { CollectionIndexListComponent } from "./views/stix/collection/collection-index/collection-index-list/collection-index-list.component";
+import { CollectionIndexViewComponent } from "./views/stix/collection/collection-index/collection-index-view/collection-index-view.component";
+// import { CollectionImportComponent } from './views/stix/collection/collection-import/collection-import.component';
+// import { CollectionExportComponent } from './views/stix/collection/collection-export/collection-export.component';
+import { CollectionIndexImportComponent } from "./views/stix/collection/collection-index/collection-index-import/collection-index-import.component";
 
 import { GroupViewComponent } from './views/stix/group/group-view/group-view.component';
 import { GroupListComponent } from './views/stix/group/group-list/group-list.component';
@@ -122,6 +130,9 @@ import { RelationshipViewComponent } from "./views/stix/relationship/relationshi
     ToolbarComponent,
     ResourcesDrawerComponent,
     SubheadingComponent,
+    ConfirmationDialogComponent,
+    EmptyListMarkerComponent,
+    MarkdownViewDialogComponent,
     
     StixListComponent,
 
@@ -153,8 +164,12 @@ import { RelationshipViewComponent } from "./views/stix/relationship/relationshi
     
     CollectionListComponent,
     CollectionViewComponent,
-    CollectionImportComponent,
-    CollectionExportComponent,
+    CollectionManagerComponent,
+    CollectionIndexListComponent,
+    CollectionIndexViewComponent,
+    CollectionIndexImportComponent,
+    // CollectionImportComponent,
+    // CollectionExportComponent,
     
     RelationshipViewComponent,
 
@@ -223,7 +238,8 @@ import { RelationshipViewComponent } from "./views/stix/relationship/relationshi
     MatProgressSpinnerModule,
     MatMenuModule,
     MatDialogModule,
-    
+    MatSnackBarModule,
+
     OverlayModule
   ],
   exports: [
@@ -250,6 +266,7 @@ import { RelationshipViewComponent } from "./views/stix/relationship/relationshi
     MatProgressSpinnerModule,
     MatMenuModule,
     MatDialogModule,
+    MatSnackBarModule,
 
     OverlayModule
   ],

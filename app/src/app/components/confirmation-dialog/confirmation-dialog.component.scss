@@ -1,0 +1,8 @@
+.confirmation-dialog {
+    .buttons {
+        text-align: center;
+        button + button {
+            margin-left: 10px;
+        }
+    }
+}
