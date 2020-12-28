@@ -1,7 +1,8 @@
 import { Component, EventEmitter, Input, OnInit, Output, ViewEncapsulation } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { CollectionIndex, CollectionReference } from 'src/app/classes/collection-index';
+import { CollectionIndex, CollectionReference, CollectionVersion } from 'src/app/classes/collection-index';
 import { ConfirmationDialogComponent } from 'src/app/components/confirmation-dialog/confirmation-dialog.component';
+import { MarkdownViewDialogComponent } from 'src/app/components/markdown-view-dialog/markdown-view-dialog.component';
 import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/rest-api-connector.service';
 
 @Component({
@@ -21,6 +22,15 @@ export class CollectionIndexViewComponent implements OnInit {
 
     public get showActions(): boolean {
         return !this.config.hasOwnProperty("show_actions") || this.config.show_actions;
+    }
+
+    public showReleaseNotes(version: CollectionVersion, collection: CollectionReference) {
+        this.dialog.open(MarkdownViewDialogComponent, {
+            data: {
+                markdown: version.release_notes,
+                title: `${collection.name} v${version.version.toString()} Release Notes`
+            }
+        })
     }
 
     /**

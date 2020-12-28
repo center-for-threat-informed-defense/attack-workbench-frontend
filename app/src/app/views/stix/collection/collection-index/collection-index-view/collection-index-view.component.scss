@@ -7,9 +7,31 @@
         }
         
     }
-    .subscription-action {
-        .dark & { border-bottom: 1px solid border-color(dark); }
-        .light & { border-bottom: 1px solid border-color(light); }
+
+    .version-list {
+        .subscription-action {
+            .dark & { border-bottom: 1px solid border-color(dark); }
+            .light & { border-bottom: 1px solid border-color(light); }
+        }
+        .row {
+            min-height: 48px;
+        }
+        .col {
+            padding: 5px;
+            justify-content: center;
+            mat-icon {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+            }
+        }
+        .clickable {
+            cursor: pointer;
+            &:hover { 
+                .dark & { background: color-alternate(dark); }
+                .light & { background: color-alternate(light); }
+            }
+        }
     }
 
     .mat-expansion-panel {
