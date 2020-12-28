@@ -15,6 +15,9 @@
             // grow children to fit
             flex-direction: column;
             >* { flex: 1 0; }
+            &.center {
+                text-align: center;
+            }
         }
     }
 }

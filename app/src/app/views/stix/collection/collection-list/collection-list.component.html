@@ -1,14 +1,1 @@
-<div class="list-page">
-    <div class="list-page-header">
-        <h1>collections</h1>
-        <div class="button-group">
-            <a mat-stroked-button routerLink="import">
-                <mat-icon>get_app</mat-icon> <span class="text-label">import a collection</span>
-            </a>
-            <a mat-stroked-button routerLink="new">
-                <mat-icon>add</mat-icon> <span class="text-label">new collection</span>
-            </a>
-        </div>
-    </div>
-    <app-stix-list [stixObjects]="collections" [config]="{type: 'collection', 'showLinks': true}"></app-stix-list>
-</div>
+<app-stix-list [stixObjects]="collections" [config]="{type: 'collection', 'showLinks': true}"></app-stix-list>
