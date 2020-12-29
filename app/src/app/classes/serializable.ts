@@ -2,6 +2,7 @@
  * Objects which are serializable to the REST API implement this class
  */
 export abstract class Serializable {
+    public static typeName: "foo";
     /**
      *  Transform the current object into a raw object for sending to the back-end, stripping any unnecessary fields
      * @abstract
@@ -11,7 +12,7 @@ export abstract class Serializable {
     /**
      * Parse the object from the record returned from the back-end
      * @abstract
-     * @param {*} rep the raw object to parse
+     * @param {*} raw the raw object to parse
      */
-    public abstract deserialize(rep: any);
+    public abstract deserialize(raw: any);
 }
