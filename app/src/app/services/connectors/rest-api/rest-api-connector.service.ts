@@ -58,7 +58,7 @@ export class RestApiConnectorService extends ApiConnector {
      * @param {AttackType} attackType the type to get
      * @returns getter function
      */
-    private getStixObjectsFactory<T>(attackType: AttackType) {
+    private getStixObjectsFactory<T extends StixObject>(attackType: AttackType) {
         let attackClass = attackTypeToClass[attackType];
         let plural = attackTypeToPlural[attackType]
         return function<P extends T>(limit?: number, offset?: number, state?: string, revoked?: boolean, deprecated?: boolean): Observable<P[]> {
@@ -83,7 +83,7 @@ export class RestApiConnectorService extends ApiConnector {
      * @param {boolean} [deprecated] if true, get deprecated objects
      * @returns {Observable<Technique[]>} observable of retrieved objects
      */
-    public get getAllTechniques() { return this.getStixObjectsFactory<Technique>("technique") }
+    public get getAllTechniques() { return this.getStixObjectsFactory<Technique>("technique"); }
     /**
      * Get all tactics
      * @param {number} [limit] the number of tactics to retrieve
@@ -93,7 +93,7 @@ export class RestApiConnectorService extends ApiConnector {
      * @param {boolean} [deprecated] if true, get deprecated objects
      * @returns {Observable<Tactic[]>} observable of retrieved objects
      */
-    public get getAllTactics() { return this.getStixObjectsFactory<Tactic>("tactic") }
+    public get getAllTactics() { return this.getStixObjectsFactory<Tactic>("tactic"); }
     /**
      * Get all groups
      * @param {number} [limit] the number of groups to retrieve
@@ -103,7 +103,7 @@ export class RestApiConnectorService extends ApiConnector {
      * @param {boolean} [deprecated] if true, get deprecated objects
      * @returns {Observable<Group[]>} observable of retrieved objects
      */
-    public get getAllGroups() { return this.getStixObjectsFactory<Group>("group") }
+    public get getAllGroups() { return this.getStixObjectsFactory<Group>("group"); }
     /**
      * Get all software
      * @param {number} [limit] the number of software to retrieve
@@ -113,7 +113,7 @@ export class RestApiConnectorService extends ApiConnector {
      * @param {boolean} [deprecated] if true, get deprecated objects
      * @returns {Observable<Software[]>} observable of retrieved objects
      */
-    public get getAllSoftware() { return this.getStixObjectsFactory<Software>("software") }
+    public get getAllSoftware() { return this.getStixObjectsFactory<Software>("software"); }
     /**
      * Get all mitigations
      * @param {number} [limit] the number of mitigations to retrieve
@@ -123,7 +123,7 @@ export class RestApiConnectorService extends ApiConnector {
      * @param {boolean} [deprecated] if true, get deprecated objects
      * @returns {Observable<Mitigation[]>} observable of retrieved objects
      */
-    public get getAllMitigations() { return this.getStixObjectsFactory<Mitigation>("mitigation") }
+    public get getAllMitigations() { return this.getStixObjectsFactory<Mitigation>("mitigation"); }
     /**
      * Get all matrices
      * @param {number} [limit] the number of matrices to retrieve
@@ -133,7 +133,7 @@ export class RestApiConnectorService extends ApiConnector {
      * @param {boolean} [deprecated] if true, get deprecated objects
      * @returns {Observable<Matrix[]>} observable of retrieved objects
      */
-    public get getAllMatrices() { return this.getStixObjectsFactory<Matrix>("matrix") }
+    public get getAllMatrices() { return this.getStixObjectsFactory<Matrix>("matrix"); }
 
     /**
      * Factory to create a new STIX get by ID function
@@ -141,7 +141,7 @@ export class RestApiConnectorService extends ApiConnector {
      * @param {AttackType} attackType the type to get
      * @returns getter function
      */
-    private getStixObjectFactory<T>(attackType: AttackType) {
+    private getStixObjectFactory<T extends StixObject>(attackType: AttackType) {
         let attackClass = attackTypeToClass[attackType];
         let plural = attackTypeToPlural[attackType]
         return function<P extends T>(id: string, modified?: Date): Observable<P> {
@@ -163,73 +163,221 @@ export class RestApiConnectorService extends ApiConnector {
      * @param {Date} [modified] if specified, get the version modified at the given date
      * @returns {Observable<Technique>} the object with the given ID and modified date
      */
-    public get getTechnique() { return this.getStixObjectFactory<Technique>("technique") }
+    public get getTechnique() { return this.getStixObjectFactory<Technique>("technique"); }
     /**
      * Get a single tactic by STIX ID
      * @param {string} id the object STIX ID
      * @param {Date} [modified] if specified, get the version modified at the given date
      * @returns {Observable<Tactic>} the object with the given ID and modified date
      */
-    public get getTactic() { return this.getStixObjectFactory<Tactic>("tactic") }
+    public get getTactic() { return this.getStixObjectFactory<Tactic>("tactic"); }
     /**
      * Get a single group by STIX ID
      * @param {string} id the object STIX ID
      * @param {Date} [modified] if specified, get the version modified at the given date
      * @returns {Observable<Group>} the object with the given ID and modified date
      */
-    public get getGroup() { return this.getStixObjectFactory<Group>("group") }
+    public get getGroup() { return this.getStixObjectFactory<Group>("group"); }
     /**
      * Get a single software by STIX ID
      * @param {string} id the object STIX ID
      * @param {Date} [modified] if specified, get the version modified at the given date
      * @returns {Observable<Software>} the object with the given ID and modified date
      */
-    public get getSoftware() { return this.getStixObjectFactory<Software>("software") }
+    public get getSoftware() { return this.getStixObjectFactory<Software>("software"); }
     /**
      * Get a single mitigation by STIX ID
      * @param {string} id the object STIX ID
      * @param {Date} [modified] if specified, get the version modified at the given date
      * @returns {Observable<Mitigation>} the object with the given ID and modified date
      */
-    public get getMitigation() { return this.getStixObjectFactory<Mitigation>("mitigation") }
+    public get getMitigation() { return this.getStixObjectFactory<Mitigation>("mitigation"); }
     /**
      * Get a single matrix by STIX ID
      * @param {string} id the object STIX ID
      * @param {Date} [modified] if specified, get the version modified at the given date
      * @returns {Observable<Matrix>} the object with the given ID and modified date
      */
-    public get getMatrix() { return this.getStixObjectFactory<Matrix>("matrix") }
+    public get getMatrix() { return this.getStixObjectFactory<Matrix>("matrix"); }
 
-    // private getStixObjectFactory(attackType: AttackType): function {}
-    // private postStixObjectFactory(attackType: AttackType): function {}
-    // private putStixObjectFactory(attackType: AttackType): function {}
-    // private deleteStixObjectFactory(attackType: AttackType): function {}
-    
+    /**
+     * Factory to create a new STIX object creator (POST) function
+     * @template T the type to create
+     * @param {AttackType} attackType tehe type to create
+     * @returns creator (POST) function
+     */
+    private postStixObjectFactory<T extends StixObject>(attackType: AttackType) {
+        let attackClass = attackTypeToClass[attackType];
+        let plural = attackTypeToPlural[attackType];
+        return function<P extends T>(object: P): Observable<P> {
+            let url = `${this.baseUrl}/${plural}`;
+            return this.http.post(url, object, {headers: this.headers}).pipe(
+                tap(this.handleSuccess(`${attackType} created`)),
+                map(result => {
+                    let x = result as any;
+                    return new attackClass(x);
+                }),
+                catchError(this.handleError_single())
+            )
+        }
+    }
 
-    // public getStixObjects<T extends StixObject>(attackType: AttackType, limit?: number, offset?: number, state?: string, revoked?: boolean, deprecated?: boolean): Observable<T[]> {
-    //     let url = `${this.baseUrl}/${attackTypeToPlural[attackType]}`;
-    // }
+    /**
+     * POST (create) a new technique
+     * @param {Technique} object the object to create
+     * @returns {Observable<Technique>} the created object
+     */
+    public get postTechnique() { return this.postStixObjectFactory<Technique>("technique"); }
+    /**
+     * POST (create) a new tactic
+     * @param {Tactic} object the object to create
+     * @returns {Observable<Tactic>} the created object
+     */
+    public get postTactic() { return this.postStixObjectFactory<Tactic>("tactic"); }
+    /**
+     * POST (create) a new group
+     * @param {Group} object the object to create
+     * @returns {Observable<Group>} the created object
+     */
+    public get postGroup() { return this.postStixObjectFactory<Group>("group"); }
+    /**
+     * POST (create) a new software
+     * @param {Software} object the object to create
+     * @returns {Observable<Software>} the created object
+     */
+    public get postSoftware() { return this.postStixObjectFactory<Software>("software"); }
+    /**
+     * POST (create) a new mitigation
+     * @param {Mitigation} object the object to create
+     * @returns {Observable<Mitigation>} the created object
+     */
+    public get postMitigation() { return this.postStixObjectFactory<Mitigation>("mitigation"); }
+    /**
+     * POST (create) a new matrix
+     * @param {Matrix} object the object to create
+     * @returns {Observable<Matrix>} the created object
+     */
+    public get postMatrix() { return this.postStixObjectFactory<Matrix>("matrix"); }
 
-    
-    // public getStixObject<T extends StixObject>(attackType: AttackType, id: string, modified?: Date): Observable<T> {
-    //     let url = `${this.baseUrl}/${attackTypeToPlural[attackType]}/${id}`;
-    //     if (modified) url += `/modified/${modified}`;
-    // }
+    /**
+     * Factory to create a new STIX put (update) function
+     * @template T the type to put
+     * @param {AttackType} attackType the type to put
+     * @returns put function
+     */
+    private putStixObjectFactory<T extends StixObject>(attackType: AttackType) {
+        let attackClass = attackTypeToClass[attackType];
+        let plural = attackTypeToPlural[attackType];
+        return function<P extends T>(object: T, modified?: Date): Observable<P> {
+            if (!modified) modified = object.modified; //infer modified from STIX object modified date
+            let url = `${this.baseUrl}/${plural}/${object.stixID}/modified/${modified}`;
+            return this.http.put(url, object, {headers: this.headers}).pipe(
+                tap(this.handleSuccess(`updated ${attackType}`)),
+                map(result => {
+                    let x = result as any;
+                    return new attackClass(x);
+                }),
+                catchError(this.handleError_single())
+            )
+        }
+    }
 
-    // public postStixObject<T extends StixObject>(object: T): Observable<T> {
-    //     let url = `${this.baseUrl}/${attackTypeToPlural[object.attackType]}/${object.stixID}`;
+    /**
+     * PUT (update) a technique
+     * @param {Technique} object the object to update
+     * @param {Date} [modified] optional, the modified date to overwrite. If omitted, uses the modified field of the object
+     * @returns {Observable<Technique>} the updated object
+     */
+    public get putTechnique() { return this.putStixObjectFactory<Technique>("technique"); }
+    /**
+     * PUT (update) a tactic
+     * @param {Tactic} object the object to update
+     * @param {Date} [modified] optional, the modified date to overwrite. If omitted, uses the modified field of the object
+     * @returns {Observable<Tactic>} the updated object
+     */
+    public get putTactic() { return this.putStixObjectFactory<Tactic>("tactic"); }
+    /**
+     * PUT (update) a group
+     * @param {Group} object the object to update
+     * @param {Date} [modified] optional, the modified date to overwrite. If omitted, uses the modified field of the object
+     * @returns {Observable<Group>} the updated object
+     */
+    public get putGroup() { return this.putStixObjectFactory<Group>("group"); }
+    /**
+     * PUT (update) a software
+     * @param {Software} object the object to update
+     * @param {Date} [modified] optional, the modified date to overwrite. If omitted, uses the modified field of the object
+     * @returns {Observable<Software>} the updated object
+     */
+    public get putSoftware() { return this.putStixObjectFactory<Software>("software"); }
+    /**
+     * PUT (update) a mitigation
+     * @param {Mitigation} object the object to update
+     * @param {Date} [modified] optional, the modified date to overwrite. If omitted, uses the modified field of the object
+     * @returns {Observable<Mitigation>} the updated object
+     */
+    public get putMitigation() { return this.putStixObjectFactory<Mitigation>("mitigation"); }
+    /**
+     * PUT (update) a matrix
+     * @param {Matrix} object the object to update
+     * @param {Date} [modified] optional, the modified date to overwrite. If omitted, uses the modified field of the object
+     * @returns {Observable<Matrix>} the updated object
+     */
+    public get putMatrix() { return this.postStixObjectFactory<Matrix>("matrix"); }
 
-    // }
+    private deleteStixObjectFactory(attackType: AttackType) {
+        let plural = attackTypeToPlural[attackType];
+        return function(id: string, modified: Date): Observable<{}> {
+            let url = `${this.baseUrl}/${plural}/${id}/modified/${modified}`;
+            return this.http.delete(url).pipe(
+                tap(this.handleSuccess(`${attackType} deleted`)),
+                catchError(this.handleError_single())
+            );
+        }
+    }
 
-    // public putStixObject<T extends StixObject>(object: T, modified?: Date): Observable<T> {
-    //     let url = `${this.baseUrl}/${attackTypeToPlural[object.attackType]}/${object.stixID}`;
-    //     if (modified) url += `/modified/${modified}`;
-    // }
-
-    // public deleteStixObject<T extends StixObject>(attackType: AttackType, id: string, modified?: Date): void {
-    //     let url = `${this.baseUrl}/${attackTypeToPlural[attackType]}/${id}`;
-    //     if (modified) url += `/modified/${modified}`;
-    // }
+    /**
+     * DELETE a technique
+     * @param {string} id the STIX ID of the object to delete
+     * @param {Date} modified the modified date of the version to delete
+     * @returns {Observable<{}>} observable of the response body
+     */
+    public get deleteTechnique() { return this.deleteStixObjectFactory("technique"); }
+    /**
+     * DELETE a tactic
+     * @param {string} id the STIX ID of the object to delete
+     * @param {Date} modified the modified date of the version to delete
+     * @returns {Observable<{}>} observable of the response body
+     */
+    public get deleteTactic() { return this.deleteStixObjectFactory("tactic"); }
+    /**
+     * DELETE a group
+     * @param {string} id the STIX ID of the object to delete
+     * @param {Date} modified the modified date of the version to delete
+     * @returns {Observable<{}>} observable of the response body
+     */
+    public get deleteGroup() { return this.deleteStixObjectFactory("group"); }
+    /**
+     * DELETE a software
+     * @param {string} id the STIX ID of the object to delete
+     * @param {Date} modified the modified date of the version to delete
+     * @returns {Observable<{}>} observable of the response body
+     */
+    public get deleteSoftware() { return this.deleteStixObjectFactory("software"); }
+    /**
+     * DELETE a mitigation
+     * @param {string} id the STIX ID of the object to delete
+     * @param {Date} modified the modified date of the version to delete
+     * @returns {Observable<{}>} observable of the response body
+     */
+    public get deleteMitigation() { return this.deleteStixObjectFactory("mitigation"); }
+    /**
+     * DELETE a matrix
+     * @param {string} id the STIX ID of the object to delete
+     * @param {Date} modified The modified date of the version to delete
+     * @returns {Observable<{}>} observable of the response body
+     */
+    public get deleteMatrix() { return this.deleteStixObjectFactory("matrix"); }
 
 
     //    ___ ___  _    _    ___ ___ _____ ___ ___  _  _      ___ _  _ ___  _____  __       _   ___ ___ ___ 
@@ -284,7 +432,7 @@ export class RestApiConnectorService extends ApiConnector {
      * Delete the given collection index
      * @param {string} id the ID of the collection index to delete
      */
-    public deleteCollectionIndex(id: string) {
+    public deleteCollectionIndex(id: string): Observable<{}> {
         return this.http.delete(`${this.baseUrl}/collection-indexes/${id}`).pipe(
             tap(this.handleSuccess("collection index removed")),
             catchError(this.handleError_single())
