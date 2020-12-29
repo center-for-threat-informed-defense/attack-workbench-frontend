@@ -1,4 +1,4 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Observable } from 'rxjs';
@@ -16,7 +16,9 @@ import { Technique } from 'src/app/classes/stix/technique';
 import { environment } from "../../../../environments/environment";
 import { ApiConnector } from '../api-connector';
 
+//attack types
 type AttackType = "collection" | "group" | "matrix" | "mitigation" | "software" | "tactic" | "technique" | "relationship";
+// pluralize AttackType
 const attackTypeToPlural = {
     "technique": "techniques",
     "tactic": "tactics",
@@ -27,6 +29,7 @@ const attackTypeToPlural = {
     "collection": "collections",
     "relationship": "relationships"
 }
+// transform AttackType to the relevant class
 const attackTypeToClass = {
     "technique": Technique,
     "tactic": Tactic,
@@ -37,6 +40,7 @@ const attackTypeToClass = {
     "collection": Collection,
     "relationship": Relationship
 }
+
 @Injectable({
     providedIn: 'root'
 })
@@ -62,8 +66,17 @@ export class RestApiConnectorService extends ApiConnector {
         let attackClass = attackTypeToClass[attackType];
         let plural = attackTypeToPlural[attackType]
         return function<P extends T>(limit?: number, offset?: number, state?: string, revoked?: boolean, deprecated?: boolean): Observable<P[]> {
+            // parse params into query string
+            let query = new HttpParams();
+            if (limit) query = query.set("limit", limit.toString());
+            if (offset) query = query.set("offset", offset.toString());
+            if (state) query = query.set("state", state);
+            if (revoked) query = query.set("revoked", revoked ? "true" : "false");
+            if (revoked) query = query.set("deprecated", deprecated ? "true" : "false");
+            // get URL
             let url = `${this.baseUrl}/${plural}`;
-            return this.http.get(url, {headers: this.headers}).pipe(
+            // perform the request
+            return this.http.get(url, {headers: this.headers, params: query}).pipe(
                 tap(_ => console.log(`retrieved ${plural}`)), // on success, trigger the success notification
                 map(results => { 
                     let x = results as Array<any>;
