@@ -15,22 +15,22 @@
         justify-content: center !important;
     }
 
-    h2, p { margin-top: 0; }
-
-    .learn-block {
-        padding: 10px 20px 0 10px;
+    
+    .learn-block, h2 {
+        padding: 10px 20px;
     }
-
-
+    
     .explore-label {
-        margin-bottom: 0;
         .dark & { border-bottom: 1px solid border-color(dark); }
         .light & { border-bottom: 1px solid border-color(light); }
     }
     
     .explore-link, .explore-label {
         padding: 10px 20px;
+        margin-bottom: 0;
     }
+    p { margin-top: 0; }
+    h2 {margin: 0; }
 
     .explore-link {
         @include button-slide-left(primary);
