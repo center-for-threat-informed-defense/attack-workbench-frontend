@@ -31,8 +31,8 @@
             </div>
         </div>
         <div class="col border-left">
-            <div class="explore-links">
-                <div class="explore-link button-slide-left" *ngFor="let stixRoute of routes" [routerLink]="stixRoute.path">
+            <div class="explore-links grow-to-row">
+                <div class="explore-link grow-to-row button-slide-left" *ngFor="let stixRoute of routes" [routerLink]="stixRoute.path">
                     <span class="text-label">{{stixRoute.data.breadcrumb}}</span>
                 </div>
             </div>

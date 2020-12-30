@@ -25,6 +25,7 @@
 
     .explore-link {
         @include button-slide-left(primary);
+        justify-content: center;
         // .dark & { @include button-slide-left(spark-yellow); }
         // .light & { @include button-slide-left(primary); }
     }
