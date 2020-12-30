@@ -192,7 +192,12 @@ export class StixListComponent implements OnInit {
                     break;
                 case "technique_minimal":
                     this.addColumn("name", "name", "plain", true, ["name"]);
-                    this.addColumn("description", "description", "descriptive", false);
+                    this.addColumn("platforms", "platforms", "list");
+                    this.tableDetail = [{
+                        "field": "description",
+                        "display": "descriptive"
+                    }]
+                    this.addColumn("version", "version", "version");
                     break;
                 case "relationship":
                     this.addColumn("source name", "source_name", "plain", false, ["name", "relationship-left"]);
