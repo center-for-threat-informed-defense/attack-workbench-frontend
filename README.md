@@ -27,7 +27,14 @@ For more documentation, please see the `docs` folder. The docs folder is also av
 1. Run `ng build` within the `app` directory
 2. Copy files from the `app/dist` directory
 
+IF you're building the app for production, use `ng build --prod which will use the production environment instead of the development environment. See [Modifying the environment](#modifying-the-environment) for more information.
 
+### Modifying the environment
+The ATT&CK Workbench Frontend is configured to connect to the Collection Manager and REST API running under their default configurations. If those applications are configured to run on different ports, or if the application is to be hosted for access on multiple machines, the environment must be edited to reflect their URLs and ports.
+
+These environment properties can be edited under `src/environments`:
+- `src/environments/environment.ts` is the development environment with configurations for when it is hosted on a local machine or is being actively developed. This is the default environment file used when building the application.
+- `src/environments/environment.prod.ts` is the production environment for deployment inside of an organization or in cases where the user is not developing the application. When the application is built for production deployments (`ng build --prod`) this environment file is used.
 
 ## Notice 
 

@@ -9,20 +9,26 @@ import * as moment from 'moment';
 })
 export class TimestampViewComponent implements OnInit {
     @Input() public config: TimestampPropertyConfig;
+
+    private _humanized: string = null;
     
     /**
      *get the formatted timestamp with relative date
      */
     public get humanized(): string {
-        let now = moment();
-        let then = moment(this.config.object[this.config.field]);
-        let difference = moment.duration(then.diff(now));
-        if (difference.asWeeks() > -1) {
-            // date is in last week, display humanized date
-            return difference.humanize(true); // show with suffix, eg "a week ago" instead of "a week"
-        } else {
-            // date is older, display absolute date
-            return then.format('D MMMM YYYY');
+        if (this._humanized) return this._humanized;
+        else {
+            let now = moment();
+            let then = moment(this.config.object[this.config.field]);
+            let difference = moment.duration(then.diff(now));
+            if (difference.asWeeks() > -1) {
+                // date is in last week, display humanized date
+                this._humanized = difference.humanize(true); // show with suffix, eg "a week ago" instead of "a week"
+            } else {
+                // date is older, display absolute date
+                this._humanized = then.format('D MMMM YYYY');
+            }
+            return this._humanized;
         }
     }
 
