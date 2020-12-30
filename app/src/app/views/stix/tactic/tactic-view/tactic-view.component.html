@@ -8,14 +8,22 @@
     <div class="row">
         <div class="col">
             <!-- ATT&CK ID -->
-            <app-attackid-property [config]="{
+            <app-attackid-property class="grow-to-row" [config]="{
                 mode: editing? 'edit' : 'view',
                 object: tactic
             }"></app-attackid-property>
         </div>
         <div class="col">
+            <!-- DOMAIN -->
+            <app-list-property class="grow-to-row" [config]="{
+                mode: 'view',
+                object: tactic,
+                field: 'domains'
+            }"></app-list-property>
+        </div>
+        <div class="col">
             <!-- VERSION NUMBER -->
-            <app-version-property [config]="{
+            <app-version-property class="grow-to-row" [config]="{
                 mode: editing? 'edit' : 'view',
                 object: tactic
             }"></app-version-property>
@@ -33,6 +41,16 @@
                 label: 'description'
             }"></app-descriptive-property>
         </div>
+    </div>
+
+    <!-- only show relationships if configured to show them -->
+    <div *ngIf="config.showRelationships || !config.hasOwnProperty('showRelationships')">
+        <div class="row">
+            <div class="col">
+                <h2 class="section-header">Techniques</h2>
+            </div>
+        </div>
+        <app-stix-list [stixObjects]="techniques" [config]="{'type': 'technique', 'showLinks': true}"></app-stix-list>
     </div>
 
 </div>
