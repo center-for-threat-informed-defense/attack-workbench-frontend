@@ -1,4 +1,4 @@
-<div class="alias-view" *ngIf="!config.mode || config.mode == 'view'">
+<div class="alias-view grow-to-row" *ngIf="!config.mode || config.mode == 'view'">
     <div [ngClass]="{'showMore' : showMore, 'content': true}">
         <ul class="list-view" [class.wrap]="wrap" [matTooltip]="config.object[config.field].join(', ')" [matTooltipDisabled]="wrap" matTooltipPosition="above">
             <li class="list-item" *ngFor="let value of inlineCitations">

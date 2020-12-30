@@ -35,7 +35,7 @@ export class GroupViewComponent extends StixViewPage implements OnInit {
         {
             "url": "https://attack.mitre.org/groups/G0049", 
             "source_name": "mitre-attack", 
-            "external_id": "G0049"
+            "external_id": "G0049 ea gae geagaegaegaemg eafjawe dfaefjeag eagjaeig aeg aegjsg ojgwerafhaweghag eaighuawhuiegh gge ag gweg wege wgewg wegwegwe"
         }, 
         {
             "source_name": "OilRig", 
