@@ -2,12 +2,12 @@ import { Component, Input, OnInit } from '@angular/core';
 import { StixObject } from 'src/app/classes/stix/stix-object';
 
 @Component({
-  selector: 'app-association-property',
-  templateUrl: './association-property.component.html',
-  styleUrls: ['./association-property.component.scss']
+  selector: 'app-alias-property',
+  templateUrl: './alias-property.component.html',
+  styleUrls: ['./alias-property.component.scss']
 })
-export class AssociationPropertyComponent implements OnInit {
-  @Input() public config: AssociationPropertyConfig;
+export class AliasPropertyComponent implements OnInit {
+  @Input() public config: AliasPropertyConfig;
 
   constructor() { }
 
@@ -16,18 +16,18 @@ export class AssociationPropertyComponent implements OnInit {
 
 }
 
-export interface AssociationPropertyConfig {
+export interface AliasPropertyConfig {
   /* What is the current mode? Default: 'view
-   *    view: viewing the association property
-   *    edit: editing the association property
+   *    view: viewing the alias property
+   *    edit: editing the alias property
    *    diff: displaying the diff between two STIX objects. If this mode is selected, two StixObjects must be specified in the objects field
    */
   mode?: "view" | "edit" | "diff";
-  /* The object to show the association of
+  /* The object to show the alias of
    * Note: if mode is diff, pass an array of two objects to diff
    */
   object: StixObject | [StixObject, StixObject];
-  /* the field of the object(s) to visualize as a association
+  /* the field of the object(s) to visualize as a alias
    */
   field?: string;
   /* referencesField; references field. 

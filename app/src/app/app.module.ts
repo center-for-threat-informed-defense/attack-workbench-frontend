@@ -110,9 +110,9 @@ import { TechniqueViewComponent } from './views/stix/technique/technique-view/te
 import { TechniqueListComponent } from './views/stix/technique/technique-list/technique-list.component';
 
 import { RelationshipViewComponent } from "./views/stix/relationship/relationship-view/relationship-view.component";
-import { AssociationPropertyComponent } from './components/stix/association-property/association-property.component';
-import { AssociationViewComponent } from './components/stix/association-property/association-view/association-view.component';
-import { AssociationEditComponent } from './components/stix/association-property/association-edit/association-edit.component';
+import { AliasPropertyComponent } from './components/stix/alias-property/alias-property.component';
+import { AliasViewComponent } from './components/stix/alias-property/alias-view/alias-view.component';
+import { AliasEditComponent } from './components/stix/alias-property/alias-edit/alias-edit.component';
 
 
 @NgModule({
@@ -178,9 +178,9 @@ import { AssociationEditComponent } from './components/stix/association-property
 
     TechniqueListComponent,
     TechniqueViewComponent,
-    AssociationPropertyComponent,
-    AssociationViewComponent,
-    AssociationEditComponent
+    AliasPropertyComponent,
+    AliasViewComponent,
+    AliasEditComponent
   ],
   imports: [
     BreadcrumbModule,

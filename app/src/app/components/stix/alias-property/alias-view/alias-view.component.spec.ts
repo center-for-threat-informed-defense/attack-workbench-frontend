@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { AssociationEditComponent } from './association-edit.component';
+import { AliasViewComponent } from './alias-view.component';
 
-describe('AssociationEditComponent', () => {
-  let component: AssociationEditComponent;
-  let fixture: ComponentFixture<AssociationEditComponent>;
+describe('AliasViewComponent', () => {
+  let component: AliasViewComponent;
+  let fixture: ComponentFixture<AliasViewComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ AssociationEditComponent ]
+      declarations: [ AliasViewComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(AssociationEditComponent);
+    fixture = TestBed.createComponent(AliasViewComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

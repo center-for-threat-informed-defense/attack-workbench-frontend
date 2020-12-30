@@ -1,14 +1,14 @@
 import { Component, Input, OnInit, ViewEncapsulation } from '@angular/core';
-import { AssociationPropertyConfig } from '../association-property.component';
+import { AliasPropertyConfig } from '../alias-property.component';
 
 @Component({
-  selector: 'app-association-view',
-  templateUrl: './association-view.component.html',
-  styleUrls: ['./association-view.component.scss'],
+  selector: 'app-alias-view',
+  templateUrl: './alias-view.component.html',
+  styleUrls: ['./alias-view.component.scss'],
   encapsulation: ViewEncapsulation.None
 })
-export class AssociationViewComponent implements OnInit {
-  @Input() public config: AssociationPropertyConfig;
+export class AliasViewComponent implements OnInit {
+  @Input() public config: AliasPropertyConfig;
 
   private reReference = /\(Citation: (.*?)\)/gmu;
 
@@ -21,17 +21,17 @@ export class AssociationViewComponent implements OnInit {
   }
 
   /**
-   * return list of associations with inline citations
+   * return list of aliass with inline citations
    */
   public get inlineCitations() {
     if (this.config.referencesField) {
       let value : string;
-      let associationArray : Array<string> = [];
+      let aliasArray : Array<string> = [];
 
       let arraySize = this.config.object[this.config.field].length;
       for (value of this.config.object[this.config.field]) {
 
-        let association = value;
+        let alias = value;
 
           if (this.config.object[this.config.referencesField].hasValue(value)) {
             // Get citations from description
@@ -45,23 +45,23 @@ export class AssociationViewComponent implements OnInit {
                 referencesStr = referencesStr + this.getReferenceStr(referenceNames[i], referenceNamesFromDescr[i]);
               }
             }
-            association = association + referencesStr;
+            alias = alias + referencesStr;
           }
 
           // Add ',' if it is not the last iteration
           if (--arraySize){
-            association = association + ","
+            alias = alias + ","
           }
 
-          associationArray.push(association);
+          aliasArray.push(alias);
       }
-      return associationArray
+      return aliasArray
     }
     return this.config[this.config.field]
   }
 
   /**
-   * return list of associations with descriptive text
+   * return list of aliass with descriptive text
    */
   public get description() : Array<[string, string]> {
     if (this.config.referencesField) {
