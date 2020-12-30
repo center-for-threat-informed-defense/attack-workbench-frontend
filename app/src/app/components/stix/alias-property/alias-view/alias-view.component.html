@@ -13,21 +13,19 @@
     <label>{{config.label}}</label>
 
     <div *ngIf="showMore && includeMoreSection()" @detailExpand class="description-box">
-        <div class="content">
-            <div class="descriptions">
-                <table>
-                    <tr *ngFor="let value of description">
-                        <td>
-                            <strong>
-                                {{ value[0] }}
-                            </strong>
-                        </td>
-                        <td class="descr">
-                            <markdown [data]="value[1]"></markdown>
-                        </td>
-                    </tr>
-                </table>
-            </div>
+        <div class="descriptions">
+            <table>
+                <tr *ngFor="let value of description">
+                    <td>
+                        <strong>
+                            {{ value[0] }}
+                        </strong>
+                    </td>
+                    <td class="descr">
+                        <markdown [data]="value[1]"></markdown>
+                    </td>
+                </tr>
+            </table>
         </div>
     </div>
 </div>
