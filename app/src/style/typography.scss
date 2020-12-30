@@ -47,12 +47,23 @@
     h2, h3 { @extend .subheading; }
     h4 { @extend .subsubheading; }
 
-    a:not(.mat-button):not(.mat-stroked-button) {
+    a:not(.external-link):not(.mat-button):not(.mat-stroked-button) {
         color: inherit;
         text-decoration: none;
         transition: all 0.2s ease;
         border-bottom: 2px solid color(balanced-blue);
         &:hover {
+            color: color(balanced-blue);
+        }
+    }
+
+    a.external-link {
+        border-bottom: none;
+        color: color(link);
+        transition: none;
+        text-decoration: none;
+        &:hover {
+            border-bottom: 2px solid color(link);
             color: color(balanced-blue);
         }
     }

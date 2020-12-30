@@ -20,27 +20,6 @@
         width: 100%;
         font-size: 16px;
 
-        > .left-div {
-            display: flex;
-            padding: 16px 12px;
-            width: 90%; 
-            float:left;
-            border-right: solid 1px;
-            border-color: inherit;
-        }
-    
-        > .right-div {
-            display: flex;
-            height: 100%;
-            width: 10%; 
-            float:right;
-            justify-content:center;
-        }
-
-        > .right-div:hover {
-            cursor: pointer;
-        }
-
         & + label {
             @extend .text-label;
             position: absolute;
