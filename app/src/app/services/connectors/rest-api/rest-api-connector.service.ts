@@ -73,9 +73,8 @@ export class RestApiConnectorService extends ApiConnector {
             if (state) query = query.set("state", state);
             if (revoked) query = query.set("revoked", revoked ? "true" : "false");
             if (revoked) query = query.set("deprecated", deprecated ? "true" : "false");
-            // get URL
-            let url = `${this.baseUrl}/${plural}`;
             // perform the request
+            let url = `${this.baseUrl}/${plural}`;
             return this.http.get(url, {headers: this.headers, params: query}).pipe(
                 tap(_ => console.log(`retrieved ${plural}`)), // on success, trigger the success notification
                 map(results => { 

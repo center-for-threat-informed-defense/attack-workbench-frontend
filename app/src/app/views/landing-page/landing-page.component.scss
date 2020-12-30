@@ -1,1 +1,17 @@
 @import "../../../style/globals";
+.landing-page {
+    max-width: 66em;
+    margin: 0 auto;
+    .nav-list {
+        padding-left: 0;
+        list-style: none;
+        columns: 2;
+        li {
+            text-align: center;
+            min-height: 18px;
+        }
+    }
+    .collections-wrapper {
+        justify-content: center !important;
+    }
+}
