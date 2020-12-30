@@ -67,6 +67,9 @@
             // justify-self: end;
             // margin-left: auto;
             padding: 16px 12px;
+            align-self: stretch; //fill parent
+            display: flex; //center contents
+            align-items: center;
         }
     }
 }
