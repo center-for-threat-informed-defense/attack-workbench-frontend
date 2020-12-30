@@ -38,8 +38,11 @@ export class ExternalReferences extends Serializable {
         for (let [key, value] of this._externalReferences) {
             // Add to map if it has a description
             if(value.description){
-                this._externalReferencesIndex.set(key, index);
-                index += 1;
+                // Do not include if description has (Citation: *)
+                if(!value.description.includes("(Citation:")) {
+                    this._externalReferencesIndex.set(key, index);
+                    index += 1;
+                }
             }
         }
     }
@@ -54,6 +57,31 @@ export class ExternalReferences extends Serializable {
             return this._externalReferencesIndex.get(sourceName);
         }
         throw new Error(`could not find source name "${sourceName}"`);
+    }
+
+    /**
+     * Return if value exists in external references
+     * @param sourceName source name of reference
+     */
+    public hasValue(sourceName: string) : boolean {
+        if (this._externalReferences.get(sourceName)) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Return description of reference
+     * @param sourceName source name of reference
+     */
+    public getDescription(sourceName: string) : string {
+        if (this._externalReferences.get(sourceName)) {
+            let source = this._externalReferences.get(sourceName)
+            if (source["description"]) {
+                return source["description"];
+            }
+        }
+        return "";
     }
 
     /**

@@ -1,0 +1,33 @@
+<div class="alias-view grow-to-row" *ngIf="!config.mode || config.mode == 'view'">
+    <div [ngClass]="{'showMore' : showMore, 'content': true}">
+        <ul class="list-view" [class.wrap]="wrap" [matTooltip]="config.object[config.field].join(', ')" [matTooltipDisabled]="wrap" matTooltipPosition="above">
+            <li class="list-item" *ngFor="let value of inlineCitations">
+                <markdown [data]="value"></markdown>
+            </li>
+        </ul>
+        <div *ngIf="includeMoreSection()" @detailExpand class="suffix centered clickable" (click)="toggleMore()">
+            <mat-icon *ngIf="!showMore">keyboard_arrow_down</mat-icon>
+            <mat-icon *ngIf="showMore">keyboard_arrow_up</mat-icon>
+        </div>
+    </div>
+    <label>{{config.label}}</label>
+
+    <div *ngIf="showMore && includeMoreSection()" @detailExpand class="description-box">
+        <div class="descriptions">
+            <table>
+                <tr *ngFor="let value of description">
+                    <td>
+                        <strong>
+                            {{ value[0] }}
+                        </strong>
+                    </td>
+                    <td class="descr">
+                        <markdown [data]="value[1]"></markdown>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>
+
+

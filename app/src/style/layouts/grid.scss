@@ -14,10 +14,9 @@
             }
             // grow children to fit
             flex-direction: column;
-            >* { flex: 1 0; }
             &.center {
                 text-align: center;
-            }
+             }
         }
     }
 }
@@ -30,4 +29,10 @@
             @include grid($spacing);
         }
     }
+}
+
+.grow-to-row {
+    flex: 1 0; 
+    display: flex;
+    flex-direction: column;
 }
