@@ -2,12 +2,7 @@
 @import "colors";
 @import "fonts";
 
-.superheading { //block outline letters
-    -webkit-text-stroke-width: 1.75px;
-    -webkit-text-stroke-color: color(primary);
-    // .light & { -webkit-text-stroke-color: color(primary); }
-    // .dark & {  -webkit-text-stroke-color: color(spark-yellow); }
-    color: transparent;
+.superheading { //super big display text
     font-size: 60px;
     letter-spacing: 2pt;
     text-transform: uppercase;
