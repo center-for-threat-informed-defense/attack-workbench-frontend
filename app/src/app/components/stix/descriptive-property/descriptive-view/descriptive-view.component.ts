@@ -87,6 +87,10 @@ export class DescriptiveViewComponent implements OnInit {
 
     let displayStr : string = this.config.object[this.config.field];
 
+    if (!displayStr){
+      return displayStr
+    }
+
     // Check if it is only the first paragraph
     if (this.config.firstParagraphOnly) {
       displayStr = this.truncateToFirstParagraph(displayStr);
