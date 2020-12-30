@@ -118,6 +118,9 @@ import { TechniqueViewComponent } from './views/stix/technique/technique-view/te
 import { TechniqueListComponent } from './views/stix/technique/technique-list/technique-list.component';
 
 import { RelationshipViewComponent } from "./views/stix/relationship/relationship-view/relationship-view.component";
+import { AliasPropertyComponent } from './components/stix/alias-property/alias-property.component';
+import { AliasViewComponent } from './components/stix/alias-property/alias-view/alias-view.component';
+import { AliasEditComponent } from './components/stix/alias-property/alias-edit/alias-edit.component';
 
 
 @NgModule({
@@ -190,6 +193,9 @@ import { RelationshipViewComponent } from "./views/stix/relationship/relationshi
 
     TechniqueListComponent,
     TechniqueViewComponent,
+    AliasPropertyComponent,
+    AliasViewComponent,
+    AliasEditComponent
   ],
   imports: [
     BreadcrumbModule,
