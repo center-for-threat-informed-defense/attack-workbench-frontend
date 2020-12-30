@@ -190,6 +190,10 @@ export class StixListComponent implements OnInit {
                     this.addColumn("modified","modified", "timestamp");
                     this.addColumn("created", "created", "timestamp");
                     break;
+                case "technique_minimal":
+                    this.addColumn("name", "name", "plain", true, ["name"]);
+                    this.addColumn("description", "description", "descriptive", false);
+                    break;
                 case "relationship":
                     this.addColumn("source name", "source_name", "plain", false, ["name", "relationship-left"]);
                     this.addColumn("type", "relationship_type", "plain", false, ["text-deemphasis", "relationship-joiner"]);
@@ -262,7 +266,7 @@ export class StixListComponent implements OnInit {
 }
 
 //allowed types for StixListConfig
-type type_attacktype = "collection" | "group" | "matrix" | "mitigation" | "software" | "tactic" | "technique" | "relationship";
+type type_attacktype = "collection" | "group" | "matrix" | "mitigation" | "software" | "tactic" | "technique" | "relationship" | "technique_minimal";
 type type_domain = "enterprise-attack" | "mobile-attack";
 type type_status = "status.wip" | "status.awaiting-review" | "status.reviewed";
 type selection_types = "one" | "many"
