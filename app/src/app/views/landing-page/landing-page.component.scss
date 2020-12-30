@@ -1,6 +1,6 @@
 @import "../../../style/globals";
 .landing-page {
-    max-width: 66em;
+    max-width: 50em;
     margin: 0 auto;
     .nav-list {
         padding-left: 0;
@@ -13,5 +13,32 @@
     }
     .collections-wrapper {
         justify-content: center !important;
+    }
+
+    h2, p { margin-top: 0; }
+
+    .learn-block {
+        padding: 10px 20px 0 10px;
+    }
+
+
+    .explore-label {
+        margin-bottom: 0;
+        .dark & { border-bottom: 1px solid border-color(dark); }
+        .light & { border-bottom: 1px solid border-color(light); }
+    }
+    
+    .explore-link, .explore-label {
+        padding: 10px 20px;
+    }
+
+    .explore-link {
+        @include button-slide-left(primary);
+        // .dark & { @include button-slide-left(spark-yellow); }
+        // .light & { @include button-slide-left(primary); }
+    }
+    .col.border-left {
+        .dark & { border-left: 1px solid border-color(dark); }
+        .light & { border-left: 1px solid border-color(light); }
     }
 }

@@ -1,63 +1,35 @@
-<div class="landing-page grid spacing-12">
+<div class="landing-page grid">
     <div class="row">
         <div class="col">
-            <h1 class="section-header">ATT&CK Workbench</h1>
+            <h1 class="superheading">ATT&CK Workbench</h1>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col"></div>
+        <div class="col border-left">
+            <h2 class="explore-label">Explore</h2>
         </div>
     </div>
     <div class="row">
         <div class="col">
-            <p>
-                MITRE ATT&CK&reg; is a globally-accessible knowledge base of adversary tactics and techniques based on real-world observations.
-            </p>
-            <p>
-                ATT&CK Workbench is a tool designed to containerize the ATT&CK knowledge base, making ATT&CK easier to use and extend throughout the community. 
-                This application is your own customized instance of the knowledge base where you can explore, extend, and annotate ATT&CK data. 
-            </p>
-            <!-- <p>
-                <a routerLink="/docs/usage">Visit the help page</a> to Learn more about the application and how to use it.
-            </p> -->
-            <div class="grid spacing-6">
-                <div class="row">
-                    <div class="column center">
-                        <button mat-button [matMenuTriggerFor]="exploreMenu">
-                            <h3>Explore</h3>
-                        </button>
-                        <mat-menu #exploreMenu="matMenu">
-                            <button mat-menu-item *ngFor="let stixRoute of routes" [routerLink]="stixRoute.path">
-                                {{stixRoute.data.breadcrumb}}
-                            </button>
-                        </mat-menu>
-                    </div>
-                    <div class="column center">
-                        <button mat-button [matMenuTriggerFor]="learnMenu">
-                            <h3>Learn</h3>
-                        </button>
-                        <mat-menu #learnMenu="matMenu">
-                            <button mat-menu-item>
-                                how to use this application
-                            </button>
-                            <button mat-menu-item>
-                                MITRE ATT&CK
-                            </button>
-                            <button mat-menu-item>
-                                collections
-                            </button>
-                        </mat-menu>
+            <div class="learn-block">
+                <p>
+                    MITRE ATT&CK&reg; is a globally-accessible knowledge base of adversary tactics and techniques based on real-world observations.
+                </p>
+                <p>
+                    ATT&CK Workbench is a tool designed to containerize the ATT&CK knowledge base, making ATT&CK easier to use and extend throughout the community. 
+                    This application is your own customized instance of the knowledge base where you can explore, extend, and annotate ATT&CK data. 
+                </p>
+            </div>
+        </div>
+        <div class="col border-left">
+            <div>
+                <div class="explore-links">
+                    <div class="explore-link button-slide-left" *ngFor="let stixRoute of routes" [routerLink]="stixRoute.path">
+                        <span class="text-label">{{stixRoute.data.breadcrumb}}</span>
                     </div>
                 </div>
-
             </div>
-            <ul class="nav-list">
-                <li >
-                    
-                </li>
-            </ul>
-        </div>
-        <div class="col labelled-box">
-            <div class="content collections-wrapper">
-                <app-collection-list></app-collection-list>
-            </div>
-            <label>collections</label>
         </div>
     </div>
 </div>
