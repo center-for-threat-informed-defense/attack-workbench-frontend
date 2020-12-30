@@ -1,10 +1,9 @@
 // https://github.com/angular/components/issues/12246#issuecomment-470307438
 .extended-fab-button {
     width: unset;
-    padding: 0 26px;
-    border-radius: 29px;
-  
-    .mat-icon {
-        margin-right: 10px;
+    padding: 0 20px;
+    border-radius: 20px;
+    * + *  {
+        margin-left: 10px;
     }
   }
