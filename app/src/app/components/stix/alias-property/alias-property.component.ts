@@ -39,4 +39,8 @@ export interface AliasPropertyConfig {
   * A tooltip will provide the full value.
   */
   wrap?: boolean
+  /* label; label for labelled box
+   * Required when using view mode
+   */
+  label?: string;
 }

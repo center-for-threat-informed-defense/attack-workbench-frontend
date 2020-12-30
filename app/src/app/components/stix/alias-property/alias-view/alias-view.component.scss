@@ -3,12 +3,18 @@
 .alias-view {
     @extend .labelled-box;
 
-    > .content {
-        padding: 0px;
-    }
-
     > .showMore {
         border-radius: 4px 4px 0px 0px;
+    }
+
+    .centered {
+        display: flex;
+        justify-content: center;
+        align-content: center;
+    }
+
+    .clickable {
+        cursor: pointer;
     }
 
     ul.list-view {
@@ -43,24 +49,11 @@
         }
     }
 
-    .one-div {
-        padding: 16px 12px;
-    }
-
     .descr {
         padding: 10px;
     }
 
     markdown {
-        a.external-link {
-            border-bottom: none;
-            color: color(link);
-            transition: none;
-            &:hover {
-                border-bottom: 2px solid color(link);
-            }
-        }
-
         p {
             padding: 0;
             margin: 0;
