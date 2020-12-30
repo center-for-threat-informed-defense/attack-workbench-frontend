@@ -2,22 +2,13 @@
 .landing-page {
     max-width: 50em;
     margin: 0 auto;
-    .nav-list {
-        padding-left: 0;
-        list-style: none;
-        columns: 2;
-        li {
-            text-align: center;
-            min-height: 18px;
-        }
-    }
-    .collections-wrapper {
-        justify-content: center !important;
-    }
+    
+    .learnmore { text-align: center; }
 
     
     .learn-block, h2 {
         padding: 10px 20px;
+        text-align: justify;
     }
     
     .explore-label {
@@ -29,7 +20,7 @@
         padding: 10px 20px;
         margin-bottom: 0;
     }
-    p { margin-top: 0; }
+    p, h1 { margin-top: 0; }
     h2 {margin: 0; }
 
     .explore-link {
