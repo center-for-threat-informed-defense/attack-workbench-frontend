@@ -1,11 +1,24 @@
 import { Component, Input, OnInit, ViewEncapsulation } from '@angular/core';
 import { AliasPropertyConfig } from '../alias-property.component';
+import {animate, style, transition, trigger} from '@angular/animations';
+
 
 @Component({
   selector: 'app-alias-view',
   templateUrl: './alias-view.component.html',
   styleUrls: ['./alias-view.component.scss'],
-  encapsulation: ViewEncapsulation.None
+  encapsulation: ViewEncapsulation.None,
+  animations: [
+    trigger("detailExpand", [
+        transition(":enter", [
+            style({ height: '0px', minHeight: '0px'}),
+            animate("100ms cubic-bezier(0.4, 0.0, 0.2, 1)", style({height: '*'}))
+        ]),
+        transition(':leave', [
+            animate('100ms cubic-bezier(0.4, 0.0, 0.2, 1)', style({ height: '0px', minHeight: '0px' }))
+        ])
+    ])
+  ]
 })
 export class AliasViewComponent implements OnInit {
   @Input() public config: AliasPropertyConfig;

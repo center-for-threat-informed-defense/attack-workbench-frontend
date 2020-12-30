@@ -1,24 +1,18 @@
 <div class="alias-view" *ngIf="!config.mode || config.mode == 'view'">
     <div [ngClass]="{'showMore' : showMore, 'content': true}">
-        <div [ngClass]="{'left-div' : includeMoreSection(), 'one-div': !includeMoreSection()}">
-            <ul class="list-view" [class.wrap]="wrap" [matTooltip]="config.object[config.field].join(', ')" [matTooltipDisabled]="wrap" matTooltipPosition="above">
-                <li class="list-item" *ngFor="let value of inlineCitations">
-                    <markdown [data]="value"></markdown>
-                </li>
-            </ul>
-        </div>
-        <div *ngIf="includeMoreSection()" [ngClass]="{'right-div' : includeMoreSection()}" (click)="toggleMore()">
-            <button *ngIf="!showMore" [disableRipple]="true" mat-icon-button>
-                <mat-icon>keyboard_arrow_down</mat-icon>
-            </button>
-            <button *ngIf="showMore" [disableRipple]="true" mat-icon-button>
-                <mat-icon>keyboard_arrow_up</mat-icon>
-            </button>
+        <ul class="list-view" [class.wrap]="wrap" [matTooltip]="config.object[config.field].join(', ')" [matTooltipDisabled]="wrap" matTooltipPosition="above">
+            <li class="list-item" *ngFor="let value of inlineCitations">
+                <markdown [data]="value"></markdown>
+            </li>
+        </ul>
+        <div *ngIf="includeMoreSection()" @detailExpand class="suffix centered clickable" (click)="toggleMore()">
+            <mat-icon *ngIf="!showMore">keyboard_arrow_down</mat-icon>
+            <mat-icon *ngIf="showMore">keyboard_arrow_up</mat-icon>
         </div>
     </div>
-    <label>{{config.field}}</label>
+    <label>{{config.label}}</label>
 
-    <div *ngIf="showMore && includeMoreSection()" class="description-box">
+    <div *ngIf="showMore && includeMoreSection()" @detailExpand class="description-box">
         <div class="content">
             <div class="descriptions">
                 <table>
