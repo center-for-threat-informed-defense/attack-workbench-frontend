@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Tactic } from 'src/app/classes/stix/tactic';
+import { Technique } from 'src/app/classes/stix/technique';
+import { TechniqueService } from 'src/app/services/stix/technique/technique.service';
 import { StixViewPage } from '../../stix-view-page';
 
 @Component({
@@ -11,6 +13,7 @@ import { StixViewPage } from '../../stix-view-page';
 export class TacticViewComponent extends StixViewPage implements OnInit {
   
   public editing: boolean = false;
+  public techniques: Technique[] = [];
 
   public tactic: Tactic = new Tactic({
     "created": "2018-10-17T00:14:20.652Z",
@@ -41,7 +44,7 @@ export class TacticViewComponent extends StixViewPage implements OnInit {
     ]
   })
 
-  constructor(private route: ActivatedRoute) { 
+  constructor(private route: ActivatedRoute, private techniqueService: TechniqueService) { 
     super()
   }
 
@@ -49,6 +52,7 @@ export class TacticViewComponent extends StixViewPage implements OnInit {
     this.route.queryParams.subscribe(params => {
       this.editing = params["editing"];
     });
+    this.techniques = this.techniqueService.getAll();
   }
 
 }
