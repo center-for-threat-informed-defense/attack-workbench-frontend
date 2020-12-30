@@ -2,13 +2,11 @@
 @import "colors";
 @import "fonts";
 
-.superheading { //block outline letters
-    -webkit-text-stroke-width: 1.5px;
-    -webkit-text-stroke-color: color(primary);
-    color: transparent;
+.superheading { //super big display text
     font-size: 60px;
     letter-spacing: 2pt;
     text-transform: uppercase;
+    text-align: center;
 }
 .heading {
     font-family: Poppins,Arial,sans-serif;

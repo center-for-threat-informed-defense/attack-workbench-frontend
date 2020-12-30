@@ -83,7 +83,7 @@ export class CollectionIndexViewComponent implements OnInit {
                 // set in object
                 this.config.index.workspace.update_policy.subscriptions = Array.from(subscribedCollections)
                 // PUT result to backend
-                this.restAPIConnector.putCollectionIndex(this.config.index, `subscribed to ${collectionRef.name}`).subscribe(() => {
+                this.restAPIConnector.putCollectionIndex(this.config.index, `unsubscribed from ${collectionRef.name}`).subscribe(() => {
                     this.onCollectionsModified.emit()
                 });
             }
