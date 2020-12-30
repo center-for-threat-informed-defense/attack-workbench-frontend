@@ -10,7 +10,10 @@
     }
 
     &.align-right {
-        float: right;
+        align-items: flex-end;
+    }
+    &.align-center {
+        align-items: center;
     }
 }
 

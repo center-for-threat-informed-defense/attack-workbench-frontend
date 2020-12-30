@@ -4,27 +4,6 @@
 @import '~@angular/material/theming';
 @include mat-core();
 
-
-
-$warn: mat-palette($mat-red);
-
-
-// .light {
-//     $primary-light: mat-palette(to-material-map(primary), 50, 100, 200);
-//     $accent-light: mat-palette(to-material-map(secondary), 50, 100, 200);
-//     $foreground-light: mat-palette(to-material-map(tertiary), 50, 100, 200);
-//     @include angular-material-theme(mat-light-theme($primary-light, $accent-light, $warn));
-// }
-// .dark {
-//     $primary-dark: mat-palette(to-material-map(tertiary), 50, 100, 200);
-//     $accent-dark: mat-palette(to-material-map(primary), 50, 100, 200);
-//     $foreground-light: mat-palette(to-material-map(tertiary), 50, 100, 200);
-
-//     @include angular-material-theme(mat-dark-theme($primary-dark, $accent-dark, $warn));
-// }
-
-
-
 ::-webkit-scrollbar {
     width: 8px;
     padding: 1px;
@@ -42,7 +21,7 @@ $warn: mat-palette($mat-red);
         accent: mat-palette(to-material-map(secondary), 50, 100, 200),
         foreground: mat-palette(to-material-map(dark), 50, 100, 200),
         background: mat-palette(to-material-map(light), 50, 100, 200),
-        warn: $warn,
+        warn: mat-palette(to-material-map(warn)),
         is-dark: false
     ));
     background: color(light);
@@ -52,6 +31,7 @@ $warn: mat-palette($mat-red);
         &:hover { background: rgba(on-color(light), 0.25); }
     }
     scrollbar-color: rgba(on-color(light), 0.15) transparent; //firefox scrollbar styles
+    hr { border: none; border-bottom: 1px solid border-color(light); }
 }
 .dark {
     @include angular-material-theme((
@@ -59,7 +39,7 @@ $warn: mat-palette($mat-red);
         accent: mat-palette(to-material-map(secondary), 50, 100, 200),
         foreground: mat-palette(to-material-map(light), 50, 100, 200),
         background: mat-palette(to-material-map(dark), 50, 100, 200),
-        warn: $warn,
+        warn: mat-palette(to-material-map(warn)),
         is-dark: true
     ));
     background: color(dark);
@@ -69,6 +49,7 @@ $warn: mat-palette($mat-red);
         &:hover { background: rgba(on-color(dark), 0.25); }
     }
     scrollbar-color: rgba(on-color(dark), 0.15) transparent; //firefox scrollbar styles
+    hr { border: none; border-bottom: 1px solid border-color(dark); }
 }
 
 $tooltip-color: color-alternate(dark, 4);
@@ -99,6 +80,29 @@ $tooltip-color: color-alternate(dark, 4);
     &.light .mat-dialog-container {
         background: color(light);
         color: on-color(light);
+    }
+    
+    &.light .mat-snack-bar-container {
+        background: color(light);
+        color: on-color(light);
+    }
+    &.dark .mat-snack-bar-container {
+        background: color(dark);
+        color: on-color(dark);
+    }
+    .mat-snack-bar-container.success {
+        background: color(success);
+        color: on-color(success);
+        button {
+            color: on-color(success)
+        }
+    }
+    .mat-snack-bar-container.warn {
+        background: color(warn);
+        color: on-color(warn);
+        button {
+            color: on-color(warn)
+        }
     }
 }
 //patch popover style
@@ -141,6 +145,10 @@ $tooltip-color: color-alternate(dark, 4);
     }
 }
 
+.mat-step-icon:not(.mat-step-icon-selected):not(.mat-step-icon-state-edit) {
+    .dark & { color: on-color(dark); }
+    .light & { color: on-color(light); }
+}
 /* You can add global styles to this file, and also import other style files */
 html, body { height: 100%; }
 body { 

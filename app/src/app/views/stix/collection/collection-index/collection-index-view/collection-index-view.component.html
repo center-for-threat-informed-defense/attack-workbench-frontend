@@ -1,0 +1,134 @@
+<div class="collection-index-view grid spacing-6">
+    <div class="row" *ngIf="config.show_title">
+        <div class="col center">
+            <h1>{{config.index.collection_index.name}}</h1>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <app-timestamp-property [config]="{
+                'mode': 'view',
+                'humanize': true,
+                'object': config.index.collection_index,
+                'field': 'created'
+            }"></app-timestamp-property>
+        </div>
+        <div class="col">
+            <app-timestamp-property [config]="{
+                'mode': 'view',
+                'humanize': true,
+                'object': config.index.collection_index,
+                'field': 'modified'
+            }"></app-timestamp-property>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <div class="labelled-box">
+                <div class="content">
+                    {{config.index.collection_index.description}}
+                </div>
+                <label>description</label>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <h2 class="section-header">collections</h2>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <mat-accordion>
+                <mat-expansion-panel *ngFor="let collectionRef of config.index.collection_index.collections" class="mat-elevation-z0">
+                    <mat-expansion-panel-header>
+                        <mat-panel-title>
+                            <b>{{collectionRef.name}}</b>
+                        </mat-panel-title>
+                        <mat-panel-description>
+                            {{collectionRef.versions.length}} versions, last updated&nbsp;<app-timestamp-view [config]="{
+                                'mode': 'view',
+                                'humanize': true,
+                                'object': collectionRef,
+                                'field': 'lastModified'
+                            }"></app-timestamp-view>
+                        </mat-panel-description>
+                    </mat-expansion-panel-header>
+                    <div class="collection-section description">
+                        {{collectionRef.description}}
+                    </div>
+                    <div class="collection-section versions">
+                        <div class="grid version-list">
+                            <div class="row subscription-action clickable" *ngIf="collectionRef.subscribed && showActions" (click)="unsubscribe(collectionRef)">
+                                <div class="col narrow">
+                                    <mat-icon aria-label="subscribed" class="text-success">check_circle_outline</mat-icon> 
+                                </div>
+                                <div class="col">subscribed</div>
+                            </div>
+                            <div class="row subscription-action clickable" *ngIf="!collectionRef.subscribed && showActions" (click)="subscribe(collectionRef)">
+                                <div class="col narrow">
+                                    <mat-icon aria-label="subscribe">sync</mat-icon>
+                                </div>
+                                <div class="col">subscribe</div>
+                            </div>
+                            <div class="row" *ngFor="let version of collectionRef.versions">
+                                <div class="col narrow clickable" *ngIf="showActions">
+                                    <mat-icon *ngIf="version.downloaded"  class="text-success">done</mat-icon>
+                                    <mat-icon *ngIf="!version.downloaded">get_app</mat-icon>
+                                </div>
+                                <div class="col">
+                                    <div>
+                                        <b>{{version.version}}</b>
+                                    </div>
+                                    <div>
+                                        modified&nbsp;<app-timestamp-view [config]="{
+                                            'mode': 'view',
+                                            'humanize': true,
+                                            'object': version,
+                                            'field': 'modified'
+                                        }"></app-timestamp-view>
+                                    </div>
+                                </div>
+                                <div matTooltip="view release notes" class="col narrow clickable" *ngIf="showActions && version.release_notes" (click)="showReleaseNotes(version, collectionRef)">
+                                    <mat-icon>description</mat-icon>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- <mat-action-list>
+                            <mat-list-item class="subscription-action clickable" *ngIf="collectionRef.subscribed && showActions" (click)="unsubscribe(collectionRef)">
+                                <mat-icon mat-list-icon aria-label="subscribed" class="text-success">check_circle_outline</mat-icon> 
+                                <div mat-line>subscribed</div>
+                            </mat-list-item>
+                            <mat-list-item class="subscription-action clickable" *ngIf="!collectionRef.subscribed && showActions" (click)="subscribe(collectionRef)">
+                                <mat-icon mat-list-icon aria-label="subscribe">sync</mat-icon>
+                                <div mat-line>subscribe</div>
+                            </mat-list-item>
+                            <mat-list-item [class.clickable]="showActions" *ngFor="let version of collectionRef.versions">
+                                <mat-icon mat-list-icon class="text-success" *ngIf="version.downloaded && showActions">done</mat-icon>
+                                <mat-icon mat-list-icon *ngIf="!version.downloaded && showActions">get_app</mat-icon>
+                                <div mat-line>
+                                    <b>{{version.version}}</b>
+                                </div>
+                                <div mat-line>
+                                    modified&nbsp;<app-timestamp-view [config]="{
+                                        'mode': 'view',
+                                        'humanize': true,
+                                        'object': version,
+                                        'field': 'modified'
+                                    }"></app-timestamp-view>
+                                </div>
+                                <mat-icon mat-list-icon>folder</mat-icon>
+                            </mat-list-item>
+                        </mat-action-list> -->
+                    </div>
+                </mat-expansion-panel>
+            </mat-accordion>
+        </div>
+    </div>
+    <div class="row" *ngIf="showActions">
+        <div class="col center removeActions">
+            <button mat-button (click)="removeIndex()">remove index</button>
+        </div>
+    </div>
+</div>
