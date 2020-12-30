@@ -1,0 +1,37 @@
+@import "../../../../../../style/globals";
+.collection-index-list {
+    // .collection-index {
+    //     .light & {
+    //         @include mat-elevation(8);
+    //     }
+    //     .dark & {
+    //         border-radius: 4px;
+    //         border: 1px solid border-color(dark);
+    //     }
+    // }
+    .mat-expansion-panel {
+        .dark &.mat-expanded { border: 1px solid border-color(dark); }
+        .light &.mat-expanded { border: 1px solid border-color(light); }
+        // .dark & { border: 1px solid border-color(dark); }
+        // .light & { border: 1px solid border-color(light); }
+        &:not(:first-child):not(.mat-expanded) { border-top-width: 0px }
+        &.mat-expanded + .mat-expansion-panel {
+            border-top-width: 1px;
+        }
+        .mat-expansion-panel-header-title, .mat-expansion-panel-header-description {
+            flex-basis: 0;
+            align-items: center;
+        }
+        .mat-expansion-panel-header-title { }
+        .mat-expansion-panel-header-description {
+            justify-content: flex-start;
+        }
+    }
+    .mat-list-item.clickable {
+        &:hover { 
+            .dark & { background: color-alternate(dark); }
+            .light & { background: color-alternate(light); }
+        }
+
+    }
+}

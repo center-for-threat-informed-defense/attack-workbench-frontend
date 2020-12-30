@@ -18,7 +18,10 @@
 
     breadcrumb {
         .breadcrumb {
-            @extend .subsubheading;
+            // @extend .subsubheading;
+            // @extend .text-label;
+            font-weight: 400;
+            font-size: 18px;
             display: inline-block;
             & + .breadcrumb {
                 &:before {

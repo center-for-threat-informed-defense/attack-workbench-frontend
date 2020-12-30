@@ -1,15 +1,2 @@
 @import "../../../../../style/globals";
 @import '~@angular/material/theming';
-
-.descriptive-view {
-    markdown {
-        a.external-link {
-            border-bottom: none;
-            color: color(link);
-            transition: none;
-            &:hover {
-                border-bottom: 2px solid color(link);
-            }
-        }
-    }
-}
