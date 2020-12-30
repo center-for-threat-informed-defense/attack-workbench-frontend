@@ -1,12 +1,14 @@
+import { Serializable } from './serializable';
 import { VersionNumber } from './version-number';
 // https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/blob/develop/docs/collections.md#collection-version-properties
-export class CollectionVersion {
+export class CollectionVersion extends Serializable  {
     public version: VersionNumber;
     public modified: Date;
     public url: string;
     public taxii_url: string;
     public release_notes: string;
     constructor(raw?: any) {
+        super();
         if (raw) this.deserialize(raw);
     }
 
@@ -37,7 +39,7 @@ export class CollectionVersion {
     }
 }
 // https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/blob/develop/docs/collections.md#collection-reference-properties
-export class CollectionReference {
+export class CollectionReference extends Serializable  {
     public id: string;
     public name: string;
     public description: string;
@@ -46,6 +48,7 @@ export class CollectionReference {
     public subscribed: boolean; //TODO how does this get determined
     public get lastModified(): Date { return this.versions[0].modified; }
     constructor(raw?: any) {
+        super();
         if (raw) this.deserialize(raw);
     }
     /**
@@ -75,7 +78,7 @@ export class CollectionReference {
     }
 }
 // https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/blob/develop/docs/collections.md#collection-index-properties
-export class CollectionIndex {
+export class CollectionIndex extends Serializable {
     public collection_index: {
         id: string,
         name: string,
@@ -94,6 +97,7 @@ export class CollectionIndex {
         }
     };
     constructor(raw?: any) {
+        super();
         if (raw) this.deserialize(raw);
     }
     /**

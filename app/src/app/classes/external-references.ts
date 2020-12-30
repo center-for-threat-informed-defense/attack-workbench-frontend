@@ -1,4 +1,6 @@
-export class ExternalReferences {
+import { Serializable } from "./serializable";
+
+export class ExternalReferences extends Serializable {
     private _externalReferences : Map<string, ExternalReference> = new Map();
     private _externalReferencesIndex : Map<string, number> = new Map();
 
@@ -127,7 +129,25 @@ export class ExternalReferences {
      * optional @param references external references list from collection
      */
     constructor(references?) {
-        this.externalReferences = references;
+        super();
+        if (references) this.deserialize(references);
+    }
+
+    /**
+     *  Transform the current object into a raw object for sending to the back-end, stripping any unnecessary fields
+     * @abstract
+     * @returns {*} the raw object to send
+     */
+    public serialize(): any {
+        return {}; //TODO
+    }
+    /**
+     * Parse the object from the record returned from the back-end
+     * @abstract
+     * @param {*} raw the raw object to parse
+     */
+    public deserialize(raw: any) {
+        this.externalReferences = raw;
     }
 }
 

@@ -1,25 +1,41 @@
-<div>
-    <h1 class="superheading">Welcome to ATT&CK Workbench</h1>
-    <h1>Below are some typography and layout examples!</h1>
-    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut sit amet lorem tincidunt, tincidunt enim eu, venenatis velit. In hac habitasse platea dictumst. Nunc ut ante at erat dictum euismod. Suspendisse varius placerat hendrerit. Integer sit amet sodales erat, et imperdiet quam. Aenean imperdiet ipsum a ipsum porta rutrum. Nulla auctor, leo vitae pretium congue, erat nulla pretium nisi, sed porttitor tellus sem sit amet risus. Pellentesque sit amet porta odio. Praesent faucibus enim ac urna mollis gravida. Donec porta interdum tempus. Cras lobortis est vel viverra malesuada. Praesent nec magna eu turpis congue interdum ac id elit.</p>
-    <h2>Subheading</h2>
-    <h3>Sub-sub-heading</h3>
-    <h4>Sub-sub-sub-heading</h4>
-    <div class="labelled-box">
-        <div class="content">
-            <p>
-                This is a labelled box. I can use it to beautify key-value pairs such as "platforms: windows." The code for this box is:
-            </p>
-            <pre><code>&lt;div class="labelled-box"&gt;
-    &lt;div class="content"&gt;
-        content goes here. Note: label MUST come after content
-    &lt;/div&gt;
-    &lt;label>label goes here&lt;/label&gt;
-&lt;/div&gt;</code></pre>
+<div class="landing-page grid">
+    <div class="row">
+        <div class="col">
+            <h1 class="superheading">ATT&CK Workbench</h1>
         </div>
-        <label>this is a label</label>
     </div>
-    <p>
-        This is text used for labels and some other controls: <span class="text-label">some text</span>.
-    </p>
+    <div class="row">
+        <div class="col">
+            <!-- <h2>About</h2> -->
+        </div>
+        <div class="col border-left">
+            <h2 class="explore-label">Explore</h2>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <div class="learn-block">
+                <p>
+                    MITRE ATT&CK&reg; is a globally-accessible knowledge base of adversary tactics and techniques based on real-world observations.
+                </p>
+                <p>
+                    ATT&CK Workbench is a tool designed to containerize the ATT&CK knowledge base, making ATT&CK easier to use and extend throughout the community. 
+                    This application is your own customized instance of the knowledge base where you can explore, extend, and annotate ATT&CK data. 
+                </p>
+                <div class="learnmore">
+                    <button mat-mini-fab class="extended-fab-button" color="primary" routerLink="/docs/usage">
+                        <span class="text-label">learn more</span>
+                        <mat-icon aria-label="help">help_outline</mat-icon>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="col border-left">
+            <div class="explore-links grow-to-row">
+                <div class="explore-link grow-to-row button-slide-left" *ngFor="let stixRoute of routes" [routerLink]="stixRoute.path">
+                    <span class="text-label">{{stixRoute.data.breadcrumb}}</span>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
