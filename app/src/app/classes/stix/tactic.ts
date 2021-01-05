@@ -11,7 +11,7 @@ export class Tactic extends StixObject {
         if (sdo) {
             this.name = sdo["stix"].name;
             this.description = sdo["stix"].description;
-            this.attackID = sdo["stix"].external_references.length > 0 ? sdo["stix"].external_references[0].external_id : "no ID";
+            this.attackID = sdo["stix"].external_references.length > 0 ? sdo["stix"].external_references[0].external_id : "";
             this.domains = sdo["workspace"].domains;
         }
     }
