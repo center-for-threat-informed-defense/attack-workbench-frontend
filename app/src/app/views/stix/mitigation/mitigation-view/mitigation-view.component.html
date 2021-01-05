@@ -14,6 +14,14 @@
             }"></app-attackid-property>
         </div>
         <div class="col">
+            <!-- DOMAIN -->
+            <app-list-property class="grow-to-row" [config]="{
+                mode: 'view',
+                object: mitigation,
+                field: 'domains'
+            }"></app-list-property>
+        </div>
+        <div class="col">
             <!-- VERSION NUMBER -->
             <app-version-property class="grow-to-row" [config]="{
                 mode: editing? 'edit' : 'view',
