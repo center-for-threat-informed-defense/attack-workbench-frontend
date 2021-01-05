@@ -2,7 +2,7 @@ import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Observable } from 'rxjs';
-import { tap, catchError, map } from 'rxjs/operators';
+import { tap, catchError, map, share } from 'rxjs/operators';
 import { CollectionIndex } from 'src/app/classes/collection-index';
 import { Collection } from 'src/app/classes/stix/collection';
 import { Group } from 'src/app/classes/stix/group';
@@ -47,7 +47,6 @@ const attackTypeToClass = {
 export class RestApiConnectorService extends ApiConnector {
     private get baseUrl(): string { return `${environment.integrations.rest_api.url}:${environment.integrations.rest_api.port}/api`; }
     private headers: HttpHeaders = new HttpHeaders({ 'Content-Type': 'application/json' });
-
     constructor(private http: HttpClient, private snackbar: MatSnackBar) { super(snackbar); }
 
     //   ___ _____ _____  __       _   ___ ___ ___ 
@@ -81,6 +80,7 @@ export class RestApiConnectorService extends ApiConnector {
                     let x = results as Array<any>;
                     return x.map(raw => new attackClass(raw));
                 }),
+                share(), //multicast so that multiple subscribers don't trigger the call twice
                 catchError(this.handleError_array([])) // on error, trigger the error notification and continue operation without crashing (returns empty item)
             )
         }
@@ -160,11 +160,16 @@ export class RestApiConnectorService extends ApiConnector {
             let url = `${this.baseUrl}/${plural}/${id}`;
             if (modified) url += `/modified/${modified}`;
             return this.http.get(url, {headers: this.headers}).pipe(
-                tap(_ => console.log(`retrieved ${plural}`)), // on success, trigger the success notification
+                tap(result => console.log(`retrieved ${attackType}`, result)), // on success, trigger the success notification
                 map(result => { 
                     let x = result as any;
-                    return new attackClass(x);
+                    if (Array.isArray(result) && result.length == 0) { 
+                        console.warn("empty result")
+                        return []; 
+                    }
+                    return x.map(y => new attackClass(y));
                 }),
+                share(), //multicast so that multiple subscribers don't trigger the call twice
                 catchError(this.handleError_single()) // on error, trigger the error notification and continue operation without crashing (returns empty item)
             )
         }
@@ -229,6 +234,7 @@ export class RestApiConnectorService extends ApiConnector {
                     let x = result as any;
                     return new attackClass(x);
                 }),
+                share(), //multicast so that multiple subscribers don't trigger the call twice
                 catchError(this.handleError_single())
             )
         }
@@ -289,6 +295,7 @@ export class RestApiConnectorService extends ApiConnector {
                     let x = result as any;
                     return new attackClass(x);
                 }),
+                share(), //multicast so that multiple subscribers don't trigger the call twice
                 catchError(this.handleError_single())
             )
         }
@@ -343,6 +350,7 @@ export class RestApiConnectorService extends ApiConnector {
             let url = `${this.baseUrl}/${plural}/${id}/modified/${modified}`;
             return this.http.delete(url).pipe(
                 tap(this.handleSuccess(`${attackType} deleted`)),
+                share(), //multicast so that multiple subscribers don't trigger the call twice
                 catchError(this.handleError_single())
             );
         }
