@@ -23,13 +23,11 @@
     </div>
     <div class="row">
         <div class="col">
-            <!-- this can't be edited and therefore doesn't need to be a basic property -->
-            <div class="labelled-box grow-to-row">
-                <div class="content">
-                    Malware
-                </div>
-                <label>type</label>
-            </div>
+            <!-- TYPE -->
+            <app-type-property class="grow-to-row" [config]="{
+                mode: editing? 'edit' : 'view',
+                object: software
+            }"></app-type-property>
         </div>
         <div class="col">
             <!-- PLATFORMS -->
@@ -38,6 +36,26 @@
                 object: software,
                 field: 'platforms'
             }"></app-list-property>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <!-- CONTRIBUTORS -->
+            <app-list-property class="grow-to-row" [config]="{
+                mode: 'view',
+                object: software,
+                field: 'contributors'
+            }"></app-list-property>
+        </div>
+        <div class="col">
+            <!-- SOFTWARE ALIASES -->
+            <app-alias-property class="grow-to-row" [config]="{
+                mode: 'view',
+                object: software,
+                field: 'aliases',
+                referencesField: 'external_references',
+                label: 'Associated Software'
+            }"></app-alias-property>
         </div>
     </div>
     <div class="row">
