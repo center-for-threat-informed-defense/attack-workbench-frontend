@@ -7,12 +7,12 @@ export class Tactic extends StixObject {
     public domains: string[];
 
     constructor(sdo?: any) {
-        super(sdo, "x-mitre-tactic");
+        super(sdo["stix"], "x-mitre-tactic");
         if (sdo) {
-            this.name = sdo.name;
-            this.description = sdo.description;
-            this.attackID = sdo.external_references[0].external_id;
-            this.domains = sdo.x_mitre_domains;
+            this.name = sdo["stix"].name;
+            this.description = sdo["stix"].description;
+            this.attackID = sdo["stix"].external_references.length > 0 ? sdo["stix"].external_references[0].external_id : "no ID";
+            this.domains = sdo["workspace"].domains;
         }
     }
 }

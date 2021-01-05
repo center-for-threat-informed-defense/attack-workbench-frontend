@@ -1,6 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
+import { BreadcrumbService } from 'angular-crumbs';
+import { Observable } from 'rxjs';
 import { Software } from 'src/app/classes/stix/software';
+import { StixObject } from 'src/app/classes/stix/stix-object';
+import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/rest-api-connector.service';
 import { StixViewConfig } from '../stix-view-page';
 
 @Component({
@@ -9,56 +13,12 @@ import { StixViewConfig } from '../stix-view-page';
   styleUrls: ['./stix-page.component.scss']
 })
 export class StixPageComponent implements OnInit {
-    public config: StixViewConfig = {
-        "mode": "view",
-        "object": new Software("malware", {
-            "created": "2019-10-11T16:13:19.588Z",
-            "modified": "2020-11-10T12:34:22.990Z",
-            "labels": [
-                "malware"
-            ],
-            "type": "malware",
-            "id": "malware--065196de-d7e8-4888-acfb-b2134022ba1b",
-            "name": "RDFSNIFFER",
-            "description": "[RDFSNIFFER](https://attack.mitre.org/software/S0416) is a module loaded by [BOOSTWRITE](https://attack.mitre.org/software/S0415) which allows an attacker to monitor and tamper with legitimate connections made via an application designed to provide visibility and system management capabilities to remote IT techs.(Citation: FireEye FIN7 Oct 2019)",
-            "created_by_ref": "identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5",
-            "object_marking_refs": [
-                "marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168"
-            ],
-            "external_references": [
-                {
-                    "external_id": "S0416",
-                    "source_name": "mitre-attack",
-                    "url": "https://attack.mitre.org/software/S0416"
-                },
-                {
-                    "source_name": "FireEye FIN7 Oct 2019",
-                    "url": "https://www.fireeye.com/blog/threat-research/2019/10/mahalo-fin7-responding-to-new-tools-and-techniques.html",
-                    "description": "Carr, N, et all. (2019, October 10). Mahalo FIN7: Responding to the Criminal Operators New Tools and Techniques. Retrieved October 11, 2019."
-                },
-                {
-                    "source_name": "FireEye FIN7 Oct 2018",
-                    "description": "Zarr, N, et all. (2019, October 10). Mahalo FIN7: Responding to the Criminal Operators New Tools and Techniques. Retrieved October 11, 2019."
-                },
-                {
-                    "source_name": "FireEye FIN7 Oct 2017",
-                    "url": "https://www.fireeye.com/blog/threat-research/2019/10/mahalo-fin7-responding-to-new-tools-and-techniques.html",
-                    "description": "Barr, N, et all. (2019, October 10). Mahalo FIN7: Responding to the Criminal Operators New Tools and Techniques. Retrieved October 11, 2019."
-                },
-                {
-                    "source_name": "FireEye FIN7 Oct 2016",
-                    "url": "https://www.fireeye.com/blog/threat-research/2019/10/mahalo-fin7-responding-to-new-tools-and-techniques.html",
-                    "description": "Farr, N, et all. (2019, October 10). Mahalo FIN7: Responding to the Criminal Operators New Tools and Techniques. Retrieved October 11, 2019."
-                }
-            ],
-            "x_mitre_platforms": [
-                "Windows", "macOS", "Linux", "AWS", "Large Dogs", "Pencils", "Norway", "Combat Wombats"
-            ],
-            "x_mitre_aliases": [
-                "RDFSNIFFER"
-            ],
-            "x_mitre_version": "1.0"
-        }), //todo initialize this from the backend
+    public objects$: Observable<StixObject>;
+    public buildConfig(objects: StixObject) {
+        return {
+            "mode": "view",
+            "object": objects[0]
+        }
     }
 
     public get stixType() { // TODO this should come from the retrieved STIX object
@@ -70,25 +30,42 @@ export class StixPageComponent implements OnInit {
         else if (this.router.url.includes("tactic")) return "x-mitre-tactic";
         else if (this.router.url.includes("technique")) return "attack-pattern";
         else if (this.router.url.includes("collection")) return "x-mitre-collection";
-
     }
 
-    constructor(private router: Router) { }
+    constructor(private router: Router, private route: ActivatedRoute, private restAPIConnectorService: RestApiConnectorService, private breadcrumbService: BreadcrumbService) { }
 
     ngOnInit(): void {
-        // this.backendService.get(this.objectID).subscribe((object) => { // TODO what is backendService
-        //     this.object = object;
-        //     this.breadcrumbService.changeBreadcrumb(this.route.snapshot, this.object.name);
-        // });
-        // if (this.diffObjectID) {
-        //     this.backendService.get(this.diffObjectID).subscribe((diffObject) => {
-        //         this.diffObject = diffObject; 
-        //     })
+        // console.log(this.router.url.split("/"));
+        let objectType = this.router.url.split("/")[1];
+        let objectStixID = this.route.snapshot.params["id"];
+        // console.log(objectType, objectStixID);
+        // let accessors = {
+        //     "software":   this.restAPIConnectorService.getSoftware,
+        //     // "relationship": this.restAPIConnectorService.getSoftware(objectStixID);
+        //     "group":      this.restAPIConnectorService.getGroup,
+        //     "matrix":     this.restAPIConnectorService.getMatrix,
+        //     "mitigation": this.restAPIConnectorService.getMitigation,
+        //     "tactic":     this.restAPIConnectorService.getTactic,
+        //     "technique":  this.restAPIConnectorService.getTechnique
         // }
-        
-        // this.route.queryParams.subscribe(params => {
-        //     this.editing = params["editing"];
-        // });
+        if (objectType == "software") this.objects$ = this.restAPIConnectorService.getSoftware(objectStixID);
+        if (objectType == "group") this.objects$ = this.restAPIConnectorService.getGroup(objectStixID);
+        if (objectType == "matrix") this.objects$ = this.restAPIConnectorService.getMatrix(objectStixID);
+        if (objectType == "mitigation") this.objects$ = this.restAPIConnectorService.getMitigation(objectStixID);
+        if (objectType == "tactic") this.objects$ = this.restAPIConnectorService.getTactic(objectStixID);
+        if (objectType == "technique") this.objects$ = this.restAPIConnectorService.getTechnique(objectStixID);
+        this.objects$.subscribe(result => {this.updateBreadcrumbs(result)});
+    }
+    private updateBreadcrumbs(result) {
+        if (result.length == 0) {
+            this.breadcrumbService.changeBreadcrumb(this.route.snapshot, "error")
+        } else {
+            if ("name" in result[0]) {
+                this.breadcrumbService.changeBreadcrumb(this.route.snapshot, result[0].name)
+            } else {
+                this.breadcrumbService.changeBreadcrumb(this.route.snapshot, `unnamed ${this.objectType}`)
+            }
+        }
     }
 }
 

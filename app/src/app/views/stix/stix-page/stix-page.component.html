@@ -1,11 +1,22 @@
 <div class="stix-page-wrapper">
-    <app-relationship-view *ngIf="stixType == 'relationship'" [config]="config"></app-relationship-view>
-    <app-group-view *ngIf="stixType == 'intrusion-set'" [config]="config"></app-group-view>
-    <!-- TODO also for malware -->
-    <app-software-view *ngIf="stixType == 'tool'" [config]="config"></app-software-view>
-    <app-matrix-view *ngIf="stixType == 'x-mitre-matrix'" [config]="config"></app-matrix-view>
-    <app-mitigation-view *ngIf="stixType == 'course-of-action'" [config]="config"></app-mitigation-view>
-    <app-technique-view *ngIf="stixType == 'attack-pattern'" [config]="config"></app-technique-view>
-    <app-tactic-view *ngIf="stixType == 'x-mitre-tactic'" [config]="config"></app-tactic-view>
-    <app-collection-view *ngIf="stixType == 'x-mitre-collection'" [config]="config"></app-collection-view>
+    <div *ngIf="(objects$ | async) as objects else loading">
+        <div class="nothing-here" *ngIf="objects.length == 0 else showObject">
+            <h1 class="text-deemphasis"><span class="shrug">¯\_(ツ)_/¯</span> Nothing here</h1>
+        </div>
+        <ng-template #showObject>
+            <app-relationship-view *ngIf="stixType == 'relationship'" [config]="buildConfig(objects)"></app-relationship-view>
+            <app-group-view *ngIf="stixType == 'intrusion-set'" [config]="buildConfig(objects)"></app-group-view>
+            <!-- TODO also for malware -->
+            <app-software-view *ngIf="stixType == 'tool'" [config]="buildConfig(objects)"></app-software-view>
+            <app-matrix-view *ngIf="stixType == 'x-mitre-matrix'" [config]="buildConfig(objects)"></app-matrix-view>
+            <app-mitigation-view *ngIf="stixType == 'course-of-action'" [config]="buildConfig(objects)"></app-mitigation-view>
+            <app-technique-view *ngIf="stixType == 'attack-pattern'" [config]="buildConfig(objects)"></app-technique-view>
+            <app-tactic-view *ngIf="stixType == 'x-mitre-tactic'" [config]="buildConfig(objects)"></app-tactic-view>
+            <app-collection-view *ngIf="stixType == 'x-mitre-collection'" [config]="buildConfig(objects)"></app-collection-view>
+        </ng-template>
+
+    </div>
+    <ng-template #loading>
+        <app-loading-overlay></app-loading-overlay>
+    </ng-template>
 </div>
