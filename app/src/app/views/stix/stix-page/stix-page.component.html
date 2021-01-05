@@ -4,15 +4,14 @@
             <h1 class="text-deemphasis"><span class="shrug">¯\_(ツ)_/¯</span> Nothing here</h1>
         </div>
         <ng-template #showObject>
-            <app-relationship-view *ngIf="stixType == 'relationship'" [config]="buildConfig(objects)"></app-relationship-view>
-            <app-group-view *ngIf="stixType == 'intrusion-set'" [config]="buildConfig(objects)"></app-group-view>
-            <!-- TODO also for malware -->
-            <app-software-view *ngIf="stixType == 'tool'" [config]="buildConfig(objects)"></app-software-view>
-            <app-matrix-view *ngIf="stixType == 'x-mitre-matrix'" [config]="buildConfig(objects)"></app-matrix-view>
-            <app-mitigation-view *ngIf="stixType == 'course-of-action'" [config]="buildConfig(objects)"></app-mitigation-view>
-            <app-technique-view *ngIf="stixType == 'attack-pattern'" [config]="buildConfig(objects)"></app-technique-view>
-            <app-tactic-view *ngIf="stixType == 'x-mitre-tactic'" [config]="buildConfig(objects)"></app-tactic-view>
-            <app-collection-view *ngIf="stixType == 'x-mitre-collection'" [config]="buildConfig(objects)"></app-collection-view>
+            <app-relationship-view *ngIf="objects[0].attackType == 'relationship'" [config]="buildConfig(objects)"></app-relationship-view>
+            <app-group-view *ngIf="objects[0].attackType == 'relationship'" [config]="buildConfig(objects)"></app-group-view>
+            <app-software-view *ngIf="objects[0].attackType == 'software'" [config]="buildConfig(objects)"></app-software-view>
+            <app-matrix-view *ngIf="objects[0].attackType == 'matrix'" [config]="buildConfig(objects)"></app-matrix-view>
+            <app-mitigation-view *ngIf="objects[0].attackType == 'mitigation'" [config]="buildConfig(objects)"></app-mitigation-view>
+            <app-technique-view *ngIf="objects[0].attackType == 'technique'"  [config]="buildConfig(objects)"></app-technique-view>
+            <app-tactic-view *ngIf="objects[0].attackType == 'tactic'" [config]="buildConfig(objects)"></app-tactic-view>
+            <app-collection-view *ngIf="objects[0].attackType == 'collection'" [config]="buildConfig(objects)"></app-collection-view>
         </ng-template>
 
     </div>
