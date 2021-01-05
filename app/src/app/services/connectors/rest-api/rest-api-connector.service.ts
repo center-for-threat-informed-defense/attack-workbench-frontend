@@ -80,8 +80,8 @@ export class RestApiConnectorService extends ApiConnector {
                     let x = results as Array<any>;
                     return x.map(raw => new attackClass(raw));
                 }),
-                share(), //multicast so that multiple subscribers don't trigger the call twice
-                catchError(this.handleError_array([])) // on error, trigger the error notification and continue operation without crashing (returns empty item)
+                catchError(this.handleError_array([])), // on error, trigger the error notification and continue operation without crashing (returns empty item)
+                share() // multicast so that multiple subscribers don't trigger the call twice. THIS MUST BE THE LAST LINE OF THE PIPE
             )
         }
     }
@@ -169,8 +169,8 @@ export class RestApiConnectorService extends ApiConnector {
                     }
                     return x.map(y => new attackClass(y));
                 }),
-                share(), //multicast so that multiple subscribers don't trigger the call twice
-                catchError(this.handleError_single()) // on error, trigger the error notification and continue operation without crashing (returns empty item)
+                catchError(this.handleError_array([])), // on error, trigger the error notification and continue operation without crashing (returns empty item)
+                share() // multicast so that multiple subscribers don't trigger the call twice. THIS MUST BE THE LAST LINE OF THE PIPE
             )
         }
     }
@@ -234,8 +234,8 @@ export class RestApiConnectorService extends ApiConnector {
                     let x = result as any;
                     return new attackClass(x);
                 }),
-                share(), //multicast so that multiple subscribers don't trigger the call twice
-                catchError(this.handleError_single())
+                catchError(this.handleError_single()),
+                share() // multicast so that multiple subscribers don't trigger the call twice. THIS MUST BE THE LAST LINE OF THE PIPE
             )
         }
     }
@@ -295,8 +295,8 @@ export class RestApiConnectorService extends ApiConnector {
                     let x = result as any;
                     return new attackClass(x);
                 }),
-                share(), //multicast so that multiple subscribers don't trigger the call twice
-                catchError(this.handleError_single())
+                catchError(this.handleError_single()),
+                share() // multicast so that multiple subscribers don't trigger the call twice. THIS MUST BE THE LAST LINE OF THE PIPE
             )
         }
     }
@@ -350,8 +350,8 @@ export class RestApiConnectorService extends ApiConnector {
             let url = `${this.baseUrl}/${plural}/${id}/modified/${modified}`;
             return this.http.delete(url).pipe(
                 tap(this.handleSuccess(`${attackType} deleted`)),
-                share(), //multicast so that multiple subscribers don't trigger the call twice
-                catchError(this.handleError_single())
+                catchError(this.handleError_single()),
+                share() // multicast so that multiple subscribers don't trigger the call twice. THIS MUST BE THE LAST LINE OF THE PIPE
             );
         }
     }
