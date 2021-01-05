@@ -27,7 +27,7 @@ export class TacticService extends StixService {
         this.http.get(this.domainData['enterprise']).subscribe(data => {
             let tactics = data['objects'].filter((o) => o.type === 'x-mitre-tactic');
             for(let tactic of tactics) {
-                let t = new Tactic(tactic);
+                let t = new Tactic({"stix": tactic, "workspace": {"domains":[]}});
                 if(!this.tactics.some(o => o.stixID === t.stixID) ) {
                     this.tactics.push(t);
                 }
