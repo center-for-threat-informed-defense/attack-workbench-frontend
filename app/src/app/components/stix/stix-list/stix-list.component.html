@@ -1,5 +1,5 @@
 <div class="stix-list">
-    <div class="table-container" *ngIf="stixObjects.length > 0; else loading" @fadeIn>
+    <div class="table-container">
         <!-- -------- -->
         <!-- CONTROLS -->
         <!-- -------- -->
@@ -23,9 +23,10 @@
         <!-- ----- -->
         <!-- TABLE -->
         <!-- ----- -->
-        <div class="scroll-container">
-            <table mat-table multiTemplateDataRows matSort
-                   [dataSource]="stixObjects" >
+        <div class="scroll-container" *ngIf="(objects$ | async) as objects else loading" @fadeIn>
+            <table mat-table multiTemplateDataRows matSort 
+                   *ngIf="objects.length > 0 else noObjects"
+                   [dataSource]="objects" >
                 <!-- column definitions -->
                 <ng-container matColumnDef="{{column}}" *ngFor="let column of tableColumns" [sticky]="tableColumns_settings.get(column)['sticky']">
                     <th mat-header-cell mat-sort-header *matHeaderCellDef class="nowrap"> {{tableColumns_settings.get(column)["label"]}} </th>
@@ -110,13 +111,16 @@
                 </tr>
                 <tr mat-row *matRowDef="let row; columns: ['expandedDetail']" class="detail-row"></tr>
             </table>
+            <ng-template #noObjects>
+                <app-empty-list-marker (onCheckAgain)="applyControls()"></app-empty-list-marker>
+            </ng-template>
         </div>
+        <ng-template #loading>
+            <app-loading-overlay *ngIf="!objects"></app-loading-overlay>
+        </ng-template>
         <!-- ---------- -->
         <!-- PAGINATION -->
         <!-- ---------- -->
-        <mat-paginator [length]="resultsLength" [pageSize]="30"></mat-paginator>
+        <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
     </div>
-    <ng-template #loading>
-        <app-loading-overlay></app-loading-overlay>
-    </ng-template>
 </div>

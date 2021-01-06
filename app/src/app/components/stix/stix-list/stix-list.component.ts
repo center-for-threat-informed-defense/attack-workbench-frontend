@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit, Input, ViewEncapsulation, ViewChild, AfterViewInit } from '@angular/core';
 import { StixObject } from 'src/app/classes/stix/stix-object';
 import { CollectionService } from 'src/app/services/stix/collection/collection.service';
 import {animate, state, style, transition, trigger} from '@angular/animations';
@@ -10,6 +10,8 @@ import { SelectionModel } from '@angular/cdk/collections';
 import { StixDialogComponent } from '../../../views/stix/stix-dialog/stix-dialog.component';
 
 import { MatDialog } from '@angular/material/dialog';
+import { Observable } from 'rxjs';
+import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/rest-api-connector.service';
 
 @Component({
     selector: 'app-stix-list',
@@ -34,12 +36,15 @@ import { MatDialog } from '@angular/material/dialog';
         ])
     ]
 })
-export class StixListComponent implements OnInit {
+export class StixListComponent implements AfterViewInit {
 
 
-    @Input() public stixObjects: StixObject[]; //TODO get rid of this in favor of stix list cards loading using filters
+    // @Input() public stixObjects: StixObject[]; //TODO get rid of this in favor of stix list cards loading using filters
     @Input() public config: StixListConfig = {};
+    @ViewChild(MatPaginator) paginator: MatPaginator;
 
+    //objects to render;
+    public objects$: Observable<StixObject[]>;
     //view mode
     public mode: string = "cards";
     //options provided to the user for grouping and filtering
@@ -133,13 +138,13 @@ export class StixListComponent implements OnInit {
         {"value": "status.revoked", "label": "revoked"}
     ]
 
-    constructor(private collectionService: CollectionService, public dialog: MatDialog) {}
+    constructor(private collectionService: CollectionService, public dialog: MatDialog, private restAPIConnectorService: RestApiConnectorService) {}
 
-    ngOnInit() {
+    ngAfterViewInit() {
         this.filterOptions = []
          // parse the config
-         let controls_before = [] // control columns which occur before the main columns
-         let controls_after = []; // control columns which occur after the main columns
+        let controls_before = [] // control columns which occur before the main columns
+        let controls_after = []; // control columns which occur after the main columns
         if ("type" in this.config) { 
             this.filter.push("type." + this.config.type); 
             // set columns according to type
@@ -258,6 +263,38 @@ export class StixListComponent implements OnInit {
         })
         //     if (this.groupBy.length == 0) this.groupBy = ["status"];
         // }
+        this.applyControls();
+    }
+
+    /**
+     * Apply all controls and fetch objects from the back-end if configured
+     */
+    public applyControls() {
+        if ("stixObjects" in this.config) {
+            // // set max length for paginator
+            // this.paginator.length = this.config.stixObjects.length;
+            // // filter on STIX objects specified in the config
+            // let filtered = this.config.stixObjects;
+
+            // // filter to only ones within the correct index range
+            // let startIndex = this.paginator.pageIndex * this.paginator.pageSize
+            // let endIndex = startIndex + this.paginator.pageSize;
+            // console.log(filtered, this.config.stixObjects);
+            // filtered = filtered.slice(startIndex, endIndex);
+            // console.log(startIndex, endIndex)
+
+            // this.objects = filtered;
+            // console.log(this.objects);
+            // console.log(this.paginator);
+        } else {
+            // fetch objects from backend
+            if (this.config.type == "software") this.objects$ = this.restAPIConnectorService.getAllSoftware();
+            else if (this.config.type == "group") this.objects$ = this.restAPIConnectorService.getAllGroups();
+            else if (this.config.type == "matrix") this.objects$ = this.restAPIConnectorService.getAllMatrices();
+            else if (this.config.type == "mitigation") this.objects$ = this.restAPIConnectorService.getAllMitigations();
+            else if (this.config.type == "tactic") this.objects$ = this.restAPIConnectorService.getAllTactics();
+            else if (this.config.type == "technique") this.objects$ = this.restAPIConnectorService.getAllTechniques();
+        }
     }
 }
 
@@ -267,6 +304,8 @@ type type_domain = "enterprise-attack" | "mobile-attack";
 type type_status = "status.wip" | "status.awaiting-review" | "status.reviewed";
 type selection_types = "one" | "many"
 export interface StixListConfig {
+    /* if specified, shows the given STIX objects in the table instead of loading from the back-end based on other configurations. */
+    stixObjects?: Observable<StixObject[]>;
     /** STIX ID; force the list to show relationships with the given object */
     relatedTo?: string;
     /** force the list to show only this type */
