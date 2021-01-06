@@ -75,7 +75,7 @@ export class RestApiConnectorService extends ApiConnector {
             // perform the request
             let url = `${this.baseUrl}/${plural}`;
             return this.http.get(url, {headers: this.headers, params: query}).pipe(
-                tap(_ => console.log(`retrieved ${plural}`)), // on success, trigger the success notification
+                tap(results => console.log(`retrieved ${plural}`, results)), // on success, trigger the success notification
                 map(results => { 
                     let x = results as Array<any>;
                     return x.map(raw => new attackClass(raw));

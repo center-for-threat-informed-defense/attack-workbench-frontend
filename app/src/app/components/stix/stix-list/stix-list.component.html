@@ -121,6 +121,6 @@
         <!-- ---------- -->
         <!-- PAGINATION -->
         <!-- ---------- -->
-        <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
+        <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" (page)="applyControls()" [length]="1000"></mat-paginator>
     </div>
 </div>

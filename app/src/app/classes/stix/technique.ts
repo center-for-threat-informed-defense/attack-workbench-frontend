@@ -6,11 +6,11 @@ export class Technique extends StixObject {
     public platforms: string[];
 
     constructor(sdo?: any) {
-        super(sdo);
+        super(sdo["stix"]);
         if (sdo) {
-            this.name = sdo.name;
-            this.description = sdo.description;
-            this.platforms = sdo["x_mitre_platforms"];
+            this.name = sdo["stix"].name;
+            this.description = sdo["stix"].description;
+            this.platforms = sdo["stix"]["x_mitre_platforms"];
         }
     }
 }

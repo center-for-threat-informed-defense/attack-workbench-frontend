@@ -36,7 +36,7 @@ import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/re
         ])
     ]
 })
-export class StixListComponent implements AfterViewInit {
+export class StixListComponent implements OnInit, AfterViewInit {
 
 
     // @Input() public stixObjects: StixObject[]; //TODO get rid of this in favor of stix list cards loading using filters
@@ -48,7 +48,7 @@ export class StixListComponent implements AfterViewInit {
     //view mode
     public mode: string = "cards";
     //options provided to the user for grouping and filtering
-    public filterOptions: FilterGroup[];
+    public filterOptions: FilterGroup[] = [];
     //current grouping and filtering selections
     public filter: string[] = [];
     public groupBy: string[] = [];
@@ -139,10 +139,9 @@ export class StixListComponent implements AfterViewInit {
     ]
 
     constructor(private collectionService: CollectionService, public dialog: MatDialog, private restAPIConnectorService: RestApiConnectorService) {}
-
-    ngAfterViewInit() {
+    ngOnInit() {
         this.filterOptions = []
-         // parse the config
+        // parse the config
         let controls_before = [] // control columns which occur before the main columns
         let controls_after = []; // control columns which occur after the main columns
         if ("type" in this.config) { 
@@ -261,8 +260,8 @@ export class StixListComponent implements AfterViewInit {
             "disabled": "status" in this.config,
             "values": this.statuses
         })
-        //     if (this.groupBy.length == 0) this.groupBy = ["status"];
-        // }
+    }
+    ngAfterViewInit() {
         this.applyControls();
     }
 
@@ -288,12 +287,14 @@ export class StixListComponent implements AfterViewInit {
             // console.log(this.paginator);
         } else {
             // fetch objects from backend
-            if (this.config.type == "software") this.objects$ = this.restAPIConnectorService.getAllSoftware();
-            else if (this.config.type == "group") this.objects$ = this.restAPIConnectorService.getAllGroups();
-            else if (this.config.type == "matrix") this.objects$ = this.restAPIConnectorService.getAllMatrices();
-            else if (this.config.type == "mitigation") this.objects$ = this.restAPIConnectorService.getAllMitigations();
-            else if (this.config.type == "tactic") this.objects$ = this.restAPIConnectorService.getAllTactics();
-            else if (this.config.type == "technique") this.objects$ = this.restAPIConnectorService.getAllTechniques();
+            let limit = this.paginator.pageSize;
+            let offset = this.paginator.pageIndex * this.paginator.pageSize;
+            if (this.config.type == "software") this.objects$ = this.restAPIConnectorService.getAllSoftware(); //TODO add limit and offset once back-end supports it
+            else if (this.config.type == "group") this.objects$ = this.restAPIConnectorService.getAllGroups(); //TODO add limit and offset once back-end supports it
+            else if (this.config.type == "matrix") this.objects$ = this.restAPIConnectorService.getAllMatrices(); //TODO add limit and offset once back-end supports it
+            else if (this.config.type == "mitigation") this.objects$ = this.restAPIConnectorService.getAllMitigations(); //TODO add limit and offset once back-end supports it
+            else if (this.config.type == "tactic") this.objects$ = this.restAPIConnectorService.getAllTactics(); //TODO add limit and offset once back-end supports it
+            else if (this.config.type == "technique") this.objects$ = this.restAPIConnectorService.getAllTechniques(limit, offset);
         }
     }
 }
