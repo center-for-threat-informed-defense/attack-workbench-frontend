@@ -33,11 +33,11 @@ export class StixPageComponent implements OnInit {
         let objectType = this.router.url.split("/")[1];
         let objectStixID = this.route.snapshot.params["id"];
         if (objectType == "software") this.objects$ = this.restAPIConnectorService.getSoftware(objectStixID);
-        if (objectType == "group") this.objects$ = this.restAPIConnectorService.getGroup(objectStixID);
-        if (objectType == "matrix") this.objects$ = this.restAPIConnectorService.getMatrix(objectStixID);
-        if (objectType == "mitigation") this.objects$ = this.restAPIConnectorService.getMitigation(objectStixID);
-        if (objectType == "tactic") this.objects$ = this.restAPIConnectorService.getTactic(objectStixID);
-        if (objectType == "technique") this.objects$ = this.restAPIConnectorService.getTechnique(objectStixID);
+        else if (objectType == "group") this.objects$ = this.restAPIConnectorService.getGroup(objectStixID);
+        else if (objectType == "matrix") this.objects$ = this.restAPIConnectorService.getMatrix(objectStixID);
+        else if (objectType == "mitigation") this.objects$ = this.restAPIConnectorService.getMitigation(objectStixID);
+        else if (objectType == "tactic") this.objects$ = this.restAPIConnectorService.getTactic(objectStixID);
+        else if (objectType == "technique") this.objects$ = this.restAPIConnectorService.getTechnique(objectStixID);
         this.objects$.subscribe(result => {this.updateBreadcrumbs(result, objectType)});
     }
     private updateBreadcrumbs(result, objectType) {
