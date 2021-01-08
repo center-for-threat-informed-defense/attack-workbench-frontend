@@ -33,6 +33,9 @@ export class SoftwareViewComponent extends StixViewPage implements OnInit {
         "object_marking_refs": [
             "marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168"
         ],
+        "x_mitre_contributors": [
+            "Hugh Hughman",
+        ], 
         "external_references": [
             {
                 "external_id": "S0416",
@@ -63,7 +66,8 @@ export class SoftwareViewComponent extends StixViewPage implements OnInit {
             "Windows", "macOS", "Linux", "AWS", "Large Dogs", "Pencils", "Norway", "Combat Wombats"
         ],
         "x_mitre_aliases": [
-            "RDFSNIFFER"
+            "RDFSNIFFER",
+            "Royal Penguins"
         ],
         "x_mitre_version": "1.0"
     })
