@@ -12,6 +12,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { NgModule } from '@angular/core';
 import { environment } from "../environments/environment"
 import { CollectionImportComponent } from "./views/stix/collection/collection-import/collection-import-workflow/collection-import.component";
+import { CollectionIndexImportComponent } from "./views/stix/collection/collection-index/collection-index-import/collection-index-import.component";
 
 const stixRoutes: Routes = [{
     path: 'matrix',
@@ -197,16 +198,28 @@ if (environment.integrations.collection_manager.enabled) {
             },
             component: CollectionManagerComponent
         }, {
-            path: "import",
+            path: "import-collection",
             data: {
-                breadcrumb: "import"
+                breadcrumb: "import collection"
+            },
+            children: [{
+                path: '',
+                data: {
+                    breadcrumb: 'import a collection'
+                },
+                component: CollectionImportComponent
+            }]
+        }, {
+            path: "import-index",
+            data: {
+                breadcrumb: "add a collection index"
             },
             children: [{
                 path: '',
                 data: {
                     breadcrumb: 'import'
                 },
-                component: CollectionImportComponent
+                component: CollectionIndexImportComponent
             }]
         }]
     })

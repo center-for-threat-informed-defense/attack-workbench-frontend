@@ -1,5 +1,8 @@
 @import "../../../../../../style/globals";
 .collection-index-import {
+    width: 45em;
+    max-width: 100%;
+    margin: 0 auto;
     // mat-toolbar { @extend %toolbar; }
     mat-form-field {
         width: 100%;
@@ -12,7 +15,9 @@
     }
     .action-bar {
         margin-top: 24px;
-        text-align: center;
+        &.center {
+            text-align: center;
+        }
         button + button {
             margin-left: 10px;
         }

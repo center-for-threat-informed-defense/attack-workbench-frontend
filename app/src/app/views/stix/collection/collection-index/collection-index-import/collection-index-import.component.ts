@@ -1,5 +1,4 @@
 import { Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
-import { MatDialogRef } from '@angular/material/dialog';
 import { MatStepper } from '@angular/material/stepper';
 import { CollectionIndex } from 'src/app/classes/collection-index';
 import { CollectionManagerConnectorService } from 'src/app/services/connectors/collection-manager/collection-manager-connector.service';
@@ -14,7 +13,7 @@ import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/re
 export class CollectionIndexImportComponent implements OnInit {
     @ViewChild(MatStepper) public stepper: MatStepper;
 
-    constructor(public dialogRef: MatDialogRef<CollectionIndexImportComponent>, private collectionManagerConnector: CollectionManagerConnectorService, private restAPIConnector: RestApiConnectorService) { }
+    constructor(private collectionManagerConnector: CollectionManagerConnectorService, private restAPIConnector: RestApiConnectorService) { }
 
     ngOnInit(): void {
     }
