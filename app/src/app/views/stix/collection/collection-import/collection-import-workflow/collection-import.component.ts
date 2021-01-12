@@ -1,10 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { FormGroup, FormBuilder, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-collection-import',
   templateUrl: './collection-import.component.html',
-  styleUrls: ['./collection-import.component.scss']
+  styleUrls: ['./collection-import.component.scss'],
+  encapsulation: ViewEncapsulation.None
 })
 export class CollectionImportComponent implements OnInit {
 
