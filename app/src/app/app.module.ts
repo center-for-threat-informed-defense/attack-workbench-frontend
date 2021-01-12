@@ -90,14 +90,16 @@ import { LandingPageComponent } from './views/landing-page/landing-page.componen
 import { StixDialogComponent } from "./views/stix/stix-dialog/stix-dialog.component"
 import { StixPageComponent } from "./views/stix/stix-page/stix-page.component"
 
-import { CollectionListComponent } from './views/stix/collection/collection-list/collection-list.component';
-import { CollectionViewComponent } from './views/stix/collection/collection-view/collection-view.component';
 import { CollectionManagerComponent } from "./views/stix/collection/collection-manager/collection-manager.component";
+
 import { CollectionIndexListComponent } from "./views/stix/collection/collection-index/collection-index-list/collection-index-list.component";
 import { CollectionIndexViewComponent } from "./views/stix/collection/collection-index/collection-index-view/collection-index-view.component";
-// import { CollectionImportComponent } from './views/stix/collection/collection-import/collection-import.component';
-// import { CollectionExportComponent } from './views/stix/collection/collection-export/collection-export.component';
 import { CollectionIndexImportComponent } from "./views/stix/collection/collection-index/collection-index-import/collection-index-import.component";
+
+import { CollectionListComponent } from './views/stix/collection/collection-list/collection-list.component';
+import { CollectionViewComponent } from './views/stix/collection/collection-view/collection-view.component';
+import { CollectionImportComponent } from './views/stix/collection/collection-import/collection-import-workflow/collection-import.component';
+// import { CollectionExportComponent } from './views/stix/collection/collection-export/collection-export.component';
 
 import { GroupViewComponent } from './views/stix/group/group-view/group-view.component';
 import { GroupListComponent } from './views/stix/group/group-list/group-list.component';
@@ -171,7 +173,7 @@ import { AliasEditComponent } from './components/stix/alias-property/alias-edit/
     CollectionIndexListComponent,
     CollectionIndexViewComponent,
     CollectionIndexImportComponent,
-    // CollectionImportComponent,
+    CollectionImportComponent,
     // CollectionExportComponent,
     
     RelationshipViewComponent,

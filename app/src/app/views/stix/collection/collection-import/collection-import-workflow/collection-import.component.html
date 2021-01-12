@@ -1,5 +1,5 @@
 <div class="collection-import">
-    <mat-horizontal-stepper linear>
+    <mat-vertical-stepper linear>
         <mat-step label="specify collection" [stepControl]="collectionInfo">
             <form [formGroup]="collectionInfo">
                 <div class="form-row collectionInfo">
@@ -28,5 +28,5 @@
         <mat-step label="import">
             TODO import button
         </mat-step>
-    </mat-horizontal-stepper>
+    </mat-vertical-stepper>
 </div>
