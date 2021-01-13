@@ -16,7 +16,9 @@ export class MatrixViewComponent extends StixViewPage implements OnInit {
   public editing: boolean = false;
 
   //tactics to render;
-  public tactics$: Observable<StixObject[]>;
+  public all_tactics$: Observable<StixObject[]>;
+
+  public tactics : Array<StixObject> = [];
 
   public matrix: Matrix = new Matrix({
     "created_by_ref": "identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5", 
@@ -50,15 +52,38 @@ export class MatrixViewComponent extends StixViewPage implements OnInit {
     "description": "The full ATT&CK Matrix includes techniques spanning Windows, Mac, and Linux platforms and can be used to navigate through the knowledge base."
   })
 
+  // Get tactics for matrix
+  public getTactics() {
+
+    if ("tactic_refs" in this.matrix) {
+      this.all_tactics$.subscribe(all_tactics => {
+        // Iterate by tactic_refs to preserve order
+        for (let tactic_id of this.matrix.tactic_refs) {
+          // Search for tactic until found
+          for (let tactic of all_tactics) {
+            // Add if stixId matches
+            if (tactic.stixID == tactic_id) {
+              this.tactics.push(tactic);
+              break;
+            }
+          }
+        }
+      });
+    }
+  }
+
   constructor(private route: ActivatedRoute, private restAPIConnectorService: RestApiConnectorService) { 
     super();
-    this.tactics$ = this.restAPIConnectorService.getAllTactics(); //TODO add limit and offset once back-end supports it
+    this.all_tactics$ = this.restAPIConnectorService.getAllTactics(); //TODO add limit and offset once back-end supports it
   }
 
   ngOnInit() {
     this.route.queryParams.subscribe(params => {
         this.editing = params["editing"];
     });
+
+    // Get tactics
+    this.getTactics();
   }
 
 }
