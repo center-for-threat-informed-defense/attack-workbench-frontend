@@ -19,13 +19,14 @@ export class OrderedListPropertyComponent implements OnInit {
 
 export interface OrderedListPropertyConfig {
   /* What is the current mode? Default: 'view
-   *    view: viewing the list property
-   *    edit: editing the list property
-   *    diff: displaying the diff between two STIX objects. If this mode is selected, two StixObjects must be specified in the objects field
+   *    view: viewing the ordered list property
+   *    edit: editing the ordered list property
    */
   mode?: "view" | "edit";
-  /* The object to show the field of
-   * Note: if mode is diff, pass an array of two objects to diff
+  /*  Array of objects that will be used to display ordered list
    */
   objects: Array<StixObject>;
+  /* Field from object to be displayed 
+  */
+  field: string;
 }

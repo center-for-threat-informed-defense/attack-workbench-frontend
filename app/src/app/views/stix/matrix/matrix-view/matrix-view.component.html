@@ -43,7 +43,8 @@
         <!-- TACTICS -->
         <app-ordered-list-property class="grow-to-row" [config]="{
             mode: editing? 'edit' : 'view',
-            objects: tactics
+            objects: tactics,
+            field: 'name'
         }"></app-ordered-list-property>
     </div>
 </div>
