@@ -3,7 +3,7 @@
 
 .ordered-list-property {
 
-    .example-list {
+    .list {
         max-width: 60em;
         width: inherit;
         border: 1px solid;
@@ -17,7 +17,7 @@
         .dark &  { border-color: border-color(dark); }
     }
       
-    .example-box {
+    .box {
         padding: 20px 10px;
         border-bottom: solid 1px;
         color: inherit;
@@ -32,7 +32,7 @@
         font-size: 14px;
     }
       
-    .example-box:last-child {
+    .box:last-child {
         border: none;
     }
 
