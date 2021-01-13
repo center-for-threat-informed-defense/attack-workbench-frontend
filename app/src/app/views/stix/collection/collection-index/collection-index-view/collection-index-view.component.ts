@@ -1,5 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Output, ViewEncapsulation } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { Router } from '@angular/router';
+import { Subscription } from 'rxjs';
 import { CollectionIndex, CollectionReference, CollectionVersion } from 'src/app/classes/collection-index';
 import { ConfirmationDialogComponent } from 'src/app/components/confirmation-dialog/confirmation-dialog.component';
 import { MarkdownViewDialogComponent } from 'src/app/components/markdown-view-dialog/markdown-view-dialog.component';
@@ -15,7 +17,7 @@ export class CollectionIndexViewComponent implements OnInit {
     @Input() config: CollectionIndexViewConfig;
     @Output() onCollectionsModified = new EventEmitter();
 
-    constructor(private restAPIConnector: RestApiConnectorService, private dialog: MatDialog) { }
+    constructor(private restAPIConnector: RestApiConnectorService, private dialog: MatDialog, private router: Router) { }
 
     ngOnInit(): void {
     }
@@ -101,10 +103,22 @@ export class CollectionIndexViewComponent implements OnInit {
         });
         prompt.afterClosed().subscribe(result => {
             // if they clicked yes, delete the index
-            if (result) this.restAPIConnector.deleteCollectionIndex(this.config.index.collection_index.id).subscribe(() => {
-                this.onCollectionsModified.emit();
-            });
+            if (result) {
+                let subscription = this.restAPIConnector.deleteCollectionIndex(this.config.index.collection_index.id).subscribe({
+                    next: () => { this.onCollectionsModified.emit(); },
+                    complete: () => { subscription.unsubscribe(); } //prevent memory leaks
+                });
+            }
         })
+    }
+
+    public onVersionClick(version: CollectionVersion) {
+        // view prior import
+        // if (version.downloaded) {
+            // TODO
+        // }
+        // trigger download
+        this.router.navigate(["/collection/import-collection"], {queryParams: { "url": encodeURIComponent(version.url) }})
     }
 
 

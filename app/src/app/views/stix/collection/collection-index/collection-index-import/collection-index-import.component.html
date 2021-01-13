@@ -1,4 +1,4 @@
-<div class="collection-index-import">
+<div class="collection-index-import import-workflow">
     <!-- <mat-toolbar>
         <div class="spacer"></div>
         <button mat-button class="control" mat-dialog-close><mat-icon aria-label="close">close</mat-icon></button>
@@ -7,14 +7,14 @@
         <mat-step label="specify index">
             <mat-form-field class="url" appearance="outline">
                 <mat-label>specify a URL</mat-label>
-                <input matInput [(ngModel)]="url" (keyup.enter)="url.length > 0 ? downloadIndex() : null">
+                <input matInput [(ngModel)]="url" (keyup.enter)="url.length > 0 ? previewIndex() : null">
                 <mat-icon matSuffix>cloud_download</mat-icon>
             </mat-form-field>
             <div class="action-bar">
                 <!-- <button mat-button routerLink="/collection">
                     <span class="text-label">cancel</span>
                 </button> -->
-                <button mat-raised-button color="primary" (click)="downloadIndex()" *ngIf="url.length > 0">
+                <button mat-raised-button color="primary" (click)="previewIndex()" *ngIf="url.length > 0">
                     <span class="text-label">preview</span>
                 </button>
             </div>

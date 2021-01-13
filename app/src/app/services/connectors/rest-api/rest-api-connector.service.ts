@@ -399,6 +399,31 @@ export class RestApiConnectorService extends ApiConnector {
      */
     public get deleteMatrix() { return this.deleteStixObjectFactory("matrix"); }
 
+    //    ___ ___  _    _    ___ ___ _____ ___ ___  _  _     _   ___ ___ ___ 
+    //   / __/ _ \| |  | |  | __/ __|_   _|_ _/ _ \| \| |   /_\ | _ \_ _/ __|
+    //  | (_| (_) | |__| |__| _| (__  | |  | | (_) | .` |  / _ \|  _/| |\__ \
+    //   \___\___/|____|____|___\___| |_| |___\___/|_|\_| /_/ \_\_| |___|___/
+    //                                                                       
+
+    /**
+     * POST a collection bundle (including a collection SDO and the objects to which it refers) to the back-end
+     * @param {*} collectionBundle the STIX bundle to write
+     * @param {boolean} [preview] if true, preview the results of the import without actually committing the import
+     * @returns {Observable<Collection>} collection object marking the results of the import
+     */
+    public postCollectionBundle(collectionBundle: any, preview: boolean = false): Observable<Collection> {
+        return this.http.post(`${this.baseUrl}/collection-bundles`, collectionBundle, {headers: this.headers}).pipe(
+            tap(result => {
+                if (preview) this.handleSuccess("imported collection")
+                else console.log("previewed collection import", result)
+            }),
+            map(result => { 
+                return new Collection(result); 
+            }),
+            catchError(this.handleError_single<Collection>()),
+            share()
+        )
+    }
 
     //    ___ ___  _    _    ___ ___ _____ ___ ___  _  _      ___ _  _ ___  _____  __       _   ___ ___ ___ 
     //   / __/ _ \| |  | |  | __/ __|_   _|_ _/ _ \| \| |    |_ _| \| |   \| __\ \/ /      /_\ | _ \_ _/ __|

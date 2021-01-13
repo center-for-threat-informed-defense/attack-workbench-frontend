@@ -1,5 +1,6 @@
 import { Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { MatStepper } from '@angular/material/stepper';
+import { Subscription } from 'rxjs';
 import { CollectionIndex } from 'src/app/classes/collection-index';
 import { CollectionManagerConnectorService } from 'src/app/services/connectors/collection-manager/collection-manager-connector.service';
 import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/rest-api-connector.service';
@@ -25,13 +26,16 @@ export class CollectionIndexImportComponent implements OnInit {
     /**
      * download the collection index at this.url and move to the next step in the stepper
      */
-    public downloadIndex(): void {
-        console.log("trigger download");
+    public previewIndex(): void {
+        // console.log("trigger download");
         // TODO interact with collection manager to trigger download process
-        this.collectionManagerConnector.getRemoteIndex(this.url).subscribe((index) => {
-            console.log("done");
-            this.index = index;
-            this.stepper.next();
+        let subscription = this.collectionManagerConnector.getRemoteIndex(this.url).subscribe({
+            next: (index) => {
+                console.log("done");
+                this.index = index;
+                this.stepper.next();
+            },
+            complete: () => { subscription.unsubscribe(); } //prevent memory leaks
         })
     }
     /**
@@ -40,8 +44,11 @@ export class CollectionIndexImportComponent implements OnInit {
      * @memberof CollectionIndexImportComponent
      */
     public saveIndex(): void {
-        this.restAPIConnector.postCollectionIndex(this.index).subscribe(result => {
-            this.stepper.next();
+        let subscription = this.restAPIConnector.postCollectionIndex(this.index).subscribe({
+            next: (result) => {
+                this.stepper.next();
+            },
+            complete: () => { subscription.unsubscribe(); } // prevent memory leaks
         })
     }
 
