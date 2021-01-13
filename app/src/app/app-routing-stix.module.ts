@@ -200,17 +200,17 @@ if (environment.integrations.collection_manager.enabled) {
         }, {
             path: "import-collection",
             data: {
-                breadcrumb: "import collection"
+                breadcrumb: "import a collection"
             },
             children: [{
                 path: '',
                 data: {
-                    breadcrumb: 'import a collection'
+                    breadcrumb: 'import'
                 },
                 component: CollectionImportComponent
             }]
         }, {
-            path: "import-index",
+            path: "import-collection-index",
             data: {
                 breadcrumb: "add a collection index"
             },

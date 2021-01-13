@@ -72,7 +72,7 @@
                                 <div class="col">subscribe</div>
                             </div>
                             <div class="row" *ngFor="let version of collectionRef.versions">
-                                <div class="col narrow clickable" *ngIf="showActions">
+                                <div class="col narrow clickable" *ngIf="showActions" (click)="onVersionClick(version)">
                                     <mat-icon *ngIf="version.downloaded"  class="text-success">done</mat-icon>
                                     <mat-icon *ngIf="!version.downloaded">get_app</mat-icon>
                                 </div>
