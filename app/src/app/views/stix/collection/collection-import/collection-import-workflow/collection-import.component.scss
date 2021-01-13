@@ -1,5 +1,9 @@
 @import "../../../../../../style/globals";
-
+.collection-import {
+    .mat-expansion-panel {
+        @include expansion-panel(True);
+    }
+}
 // .collection-import {
 //     width: 45em;
 //     max-width: 100%;

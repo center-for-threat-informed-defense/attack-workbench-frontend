@@ -15,13 +15,13 @@ export class Relationship extends StixObject {
     constructor(sdo?: any) {
         super(sdo, "relationship");
         if (sdo) {
-            this.source_ref = sdo.source_ref;
-            this.target_ref = sdo.target_ref;
-            this.relationship_type = sdo.relationship_type;
-            this.description = sdo.description;
+            this.source_ref = sdo.stix.source_ref;
+            this.target_ref = sdo.stix.target_ref;
+            this.relationship_type = sdo.stix.relationship_type;
+            this.description = sdo.stix.description;
             // THIS IS NOT PART OF THE SPEC, AND IS A PLACEHOLDER
-            if (sdo.source_name) this.source_name = sdo.source_name;
-            if (sdo.target_name) this.target_name = sdo.target_name;
+            if (sdo.workspace.source_name) this.source_name = sdo.stix.source_name;
+            if (sdo.workspace.target_name) this.target_name = sdo.stix.target_name;
         }
     }
 
