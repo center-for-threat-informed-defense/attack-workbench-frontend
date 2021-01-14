@@ -21,82 +21,9 @@
             <p>
                 Review the contents of the collection. Deselect objects you don't want to import. Objects which have no changes compared to your local knowledge base such as those previously imported are not displayed.
             </p>
-            <mat-accordion>
-                <mat-expansion-panel *ngFor="let attackType of ['matrix', 'technique', 'tactic', 'mitigation', 'group', 'software', 'relationship']" class="mat-elevation-z0" [disabled]="object_import_categories[attackType].object_count == 0" [class.disabled]="object_import_categories[attackType].object_count == 0">
-                    <mat-expansion-panel-header>
-                        <mat-panel-title>
-                            {{attackType}} ({{object_import_categories[attackType].object_count}})
-                        </mat-panel-title>
-                        <!-- <mat-panel-description>
-                            {{object_import_categories[attackType].object_count}} objects
-                        </mat-panel-description> -->
-                    </mat-expansion-panel-header>
-                    <ng-template matExpansionPanelContent>
-                        <mat-accordion>
-                            <mat-expansion-panel class="mat-elevation-z0" [disabled]="object_import_categories[attackType].additions.length == 0" [class.disabled]="object_import_categories[attackType].additions.length == 0">
-                                <mat-expansion-panel-header>
-                                    <mat-panel-title>
-                                        Additions ({{object_import_categories[attackType].additions.length}})
-                                    </mat-panel-title>
-                                    <mat-panel-description>
-                                        New objects
-                                    </mat-panel-description>
-                                </mat-expansion-panel-header>
-                            </mat-expansion-panel>
-                            <mat-expansion-panel class="mat-elevation-z0" [disabled]="object_import_categories[attackType].changes.length == 0" [class.disabled]="object_import_categories[attackType].changes.length == 0">
-                                <mat-expansion-panel-header>
-                                    <mat-panel-title>
-                                        Changes ({{object_import_categories[attackType].changes.length}})
-                                    </mat-panel-title>
-                                    <mat-panel-description>
-                                        Updated objects
-                                    </mat-panel-description>
-                                </mat-expansion-panel-header>
-                            </mat-expansion-panel>
-                            <mat-expansion-panel class="mat-elevation-z0" [disabled]="object_import_categories[attackType].minor_changes.length == 0" [class.disabled]="object_import_categories[attackType].minor_changes.length == 0">
-                                <mat-expansion-panel-header>
-                                    <mat-panel-title>
-                                        Patches ({{object_import_categories[attackType].minor_changes.length}})
-                                    </mat-panel-title>
-                                    <mat-panel-description>
-                                        Objects with minor updates
-                                    </mat-panel-description>
-                                </mat-expansion-panel-header>
-                            </mat-expansion-panel>
-                            <mat-expansion-panel class="mat-elevation-z0" [disabled]="object_import_categories[attackType].revocations.length == 0" [class.disabled]="object_import_categories[attackType].revocations.length == 0">
-                                <mat-expansion-panel-header>
-                                    <mat-panel-title>
-                                        Revocations ({{object_import_categories[attackType].revocations.length}})
-                                    </mat-panel-title>
-                                    <mat-panel-description>
-                                        Objects which have been replaced by other objects
-                                    </mat-panel-description>
-                                </mat-expansion-panel-header>
-                            </mat-expansion-panel>
-                            <mat-expansion-panel class="mat-elevation-z0" [disabled]="object_import_categories[attackType].deprecations.length == 0" [class.disabled]="object_import_categories[attackType].deprecations.length == 0">
-                                <mat-expansion-panel-header>
-                                    <mat-panel-title>
-                                        Deprecations ({{object_import_categories[attackType].deprecations.length}})
-                                    </mat-panel-title>
-                                    <mat-panel-description>
-                                        Objects removed from the dataset
-                                    </mat-panel-description>
-                                </mat-expansion-panel-header>
-                            </mat-expansion-panel>
-                            <mat-expansion-panel class="mat-elevation-z0" [disabled]="object_import_categories[attackType].supersedes_collection_changes.length + object_import_categories[attackType].supersedes_user_edits.length == 0" [class.disabled]="object_import_categories[attackType].supersedes_collection_changes.length + object_import_categories[attackType].supersedes_user_edits.length == 0">
-                                <mat-expansion-panel-header>
-                                    <mat-panel-title>
-                                        Import conflicts ({{object_import_categories[attackType].supersedes_collection_changes.length + object_import_categories[attackType].supersedes_user_edits.length}})
-                                    </mat-panel-title>
-                                    <mat-panel-description>
-                                        Conflicts with local edits
-                                    </mat-panel-description>
-                                </mat-expansion-panel-header>
-                            </mat-expansion-panel>
-                        </mat-accordion>
-                    </ng-template>
-                </mat-expansion-panel>
-            </mat-accordion>
+            <app-collection-import-summary [config]="{
+                object_import_categories: object_import_categories
+            }"></app-collection-import-summary>
 
         </mat-step>
         <mat-step label="import">

@@ -52,6 +52,7 @@ import { SubheadingComponent } from './components/subheading/subheading.componen
 import { ConfirmationDialogComponent } from "./components/confirmation-dialog/confirmation-dialog.component";
 import { EmptyListMarkerComponent } from "./components/empty-list-marker/empty-list-marker.component";
 import { MarkdownViewDialogComponent } from "./components/markdown-view-dialog/markdown-view-dialog.component";
+import { CollectionImportSummaryComponent } from "./components/collection-import-summary/collection-import-summary.component";
 
 // STIX components
 import { StixListComponent } from './components/stix/stix-list/stix-list.component';
@@ -138,6 +139,7 @@ import { AliasEditComponent } from './components/stix/alias-property/alias-edit/
     ConfirmationDialogComponent,
     EmptyListMarkerComponent,
     MarkdownViewDialogComponent,
+    CollectionImportSummaryComponent,
     
     StixListComponent,
 
