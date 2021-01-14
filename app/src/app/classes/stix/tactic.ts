@@ -12,7 +12,7 @@ export class Tactic extends StixObject {
             this.name = sdo["stix"].name;
             this.description = sdo["stix"].description;
             this.attackID = sdo["stix"].external_references.length > 0 ? sdo["stix"].external_references[0].external_id : "";
-            if ("domains" in sdo["workspace"]) this.domains = sdo["workspace"].domains;
+            this.domains = "domains" in sdo["workspace"] ? sdo["workspace"].domains : [];
         }
     }
 }

@@ -20,7 +20,9 @@
                         <ng-template matExpansionPanelContent>
                             <app-stix-list [config]="{
                                 'select': 'many',
-                                'type': attackType
+                                'clickBehavior': 'dialog',
+                                'type': attackType,
+                                'stixObjects': config.object_import_categories[attackType].additions
                             }"></app-stix-list>
                         </ng-template>
                     </mat-expansion-panel>
@@ -36,14 +38,16 @@
                         <ng-template matExpansionPanelContent>
                             <app-stix-list [config]="{
                                 'select': 'many',
-                                'type': attackType
+                                'clickBehavior': 'dialog',
+                                'type': attackType,
+                                'stixObjects': config.object_import_categories[attackType].changes
                             }"></app-stix-list>
                         </ng-template>
                     </mat-expansion-panel>
                     <mat-expansion-panel class="mat-elevation-z0" [disabled]="config.object_import_categories[attackType].minor_changes.length == 0" [class.disabled]="config.object_import_categories[attackType].minor_changes.length == 0">
                         <mat-expansion-panel-header>
                             <mat-panel-title>
-                                Patches ({{config.object_import_categories[attackType].minor_changes.length}})
+                                Minor Changes ({{config.object_import_categories[attackType].minor_changes.length}})
                             </mat-panel-title>
                             <mat-panel-description>
                                 Objects with minor updates
@@ -52,7 +56,9 @@
                         <ng-template matExpansionPanelContent>
                             <app-stix-list [config]="{
                                 'select': 'many',
-                                'type': attackType
+                                'clickBehavior': 'dialog',
+                                'type': attackType,
+                                'stixObjects': config.object_import_categories[attackType].minor_changes
                             }"></app-stix-list>
                         </ng-template>
                     </mat-expansion-panel>
@@ -68,7 +74,9 @@
                         <ng-template matExpansionPanelContent>
                             <app-stix-list [config]="{
                                 'select': 'many',
-                                'type': attackType
+                                'clickBehavior': 'dialog',
+                                'type': attackType,
+                                'stixObjects': config.object_import_categories[attackType].revocations
                             }"></app-stix-list>
                         </ng-template>
                     </mat-expansion-panel>
@@ -84,7 +92,9 @@
                         <ng-template matExpansionPanelContent>
                             <app-stix-list [config]="{
                                 'select': 'many',
-                                'type': attackType
+                                'clickBehavior': 'dialog',
+                                'type': attackType,
+                                'stixObjects': config.object_import_categories[attackType].deprecations
                             }"></app-stix-list>
                         </ng-template>
                     </mat-expansion-panel>
@@ -98,10 +108,7 @@
                             </mat-panel-description>
                         </mat-expansion-panel-header>
                         <ng-template matExpansionPanelContent>
-                            <app-stix-list [config]="{
-                                'select': 'many',
-                                'type': attackType
-                            }"></app-stix-list>
+                            You should never see this because we don't detect conflicts/supersedes yet
                         </ng-template>
                     </mat-expansion-panel>
                 </mat-accordion>

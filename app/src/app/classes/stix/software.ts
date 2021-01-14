@@ -8,7 +8,7 @@ export class Software extends StixObject {
     public attackID: string;
 
     constructor(type: type_software, sdo?: any) {
-        super(sdo, type);
+        super(sdo["stix"], type);
         if (sdo) {
             this.name = sdo.stix.name;
             this.description = sdo.stix.description;
