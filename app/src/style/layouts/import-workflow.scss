@@ -16,11 +16,11 @@
             font-size: 16px;
         }
     }
+    .center {
+        text-align: center;
+    }
     .action-bar {
-        margin-top: 24px;
-        &.center {
-            text-align: center;
-        }
+        &:not(.no-margin) { margin-top: 24px; }
         button + button {
             margin-left: 10px;
         }
