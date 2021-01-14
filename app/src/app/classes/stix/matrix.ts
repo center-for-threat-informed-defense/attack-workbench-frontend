@@ -4,7 +4,7 @@ export class Matrix extends StixObject {
     public name: string;
     public description: string;
     public attackID: string;
-    public tactic_refs: Array<string>;
+    public tactic_refs: string[];
 
     constructor(sdo?: any) {
         super(sdo, "x-mitre-matrix");
