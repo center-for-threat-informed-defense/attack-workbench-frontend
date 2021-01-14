@@ -229,7 +229,7 @@ export class StixListComponent implements OnInit, AfterViewInit {
 
         }
         // this.tableColumns_controls = Array.from(this.tableColumns); // shallow copy
-        if ("select" in this.config) {
+        if ("select" in this.config && this.config.select != "disabled") {
             this.selection = new SelectionModel<string>(this.config.select == "many");
             controls_before.unshift("select") // add select column to view
         }
@@ -303,10 +303,10 @@ export class StixListComponent implements OnInit, AfterViewInit {
 type type_attacktype = "collection" | "group" | "matrix" | "mitigation" | "software" | "tactic" | "technique" | "relationship";
 type type_domain = "enterprise-attack" | "mobile-attack";
 type type_status = "status.wip" | "status.awaiting-review" | "status.reviewed";
-type selection_types = "one" | "many"
+type selection_types = "one" | "many" | "disabled"
 export interface StixListConfig {
     /* if specified, shows the given STIX objects in the table instead of loading from the back-end based on other configurations. */
-    stixObjects?: Observable<StixObject[]>;
+    stixObjects?: Observable<StixObject[]> | StixObject[];
     /** STIX ID; force the list to show relationships with the given object */
     relatedTo?: string;
     /** force the list to show only this type */
@@ -318,6 +318,7 @@ export interface StixListConfig {
     /** can the user select in this list? allowed options:
      *     "one": user can select a single element at a time
      *     "many": user can select as many elements as they want
+     *     "disabled": do not allow selection (the same as omitting the config field)
      */
     select?: selection_types;
 }
