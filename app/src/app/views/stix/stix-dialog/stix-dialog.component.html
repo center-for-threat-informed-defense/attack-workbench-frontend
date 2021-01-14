@@ -5,7 +5,7 @@
                 <mat-toolbar>
                     <button mat-button mat-dialog-close class="control" matTooltip="close"><mat-icon aria-label="close">close</mat-icon></button>
                     <div class="spacer"></div>
-                    <button mat-button class="control" matTooltip="view sidebar" (click)="toggleSidebar()"><mat-icon aria-label="open sidebar">view_sidebar</mat-icon></button>
+                    <button *ngIf="config.sidebarControl != 'disable'" mat-button class="control" matTooltip="view sidebar" (click)="toggleSidebar()"><mat-icon aria-label="open sidebar">view_sidebar</mat-icon></button>
                 </mat-toolbar>
                 <div class="view-page-wrapper">
                     <!-- TODO clean this up -->

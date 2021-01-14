@@ -10,7 +10,7 @@ export class Technique extends StixObject {
         if (sdo) {
             this.name = sdo["stix"].name;
             this.description = sdo["stix"].description;
-            this.platforms = sdo["stix"]["x_mitre_platforms"];
+            this.platforms = sdo["stix"]["x_mitre_platforms"] ? sdo["stix"]["x_mitre_platforms"] : [];
         }
     }
 }

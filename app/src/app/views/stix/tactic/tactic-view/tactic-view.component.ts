@@ -13,7 +13,7 @@ import { StixViewPage } from '../../stix-view-page';
 export class TacticViewComponent extends StixViewPage implements OnInit {
   
   public editing: boolean = false;
-  public techniques: Technique[] = [];
+//   public techniques: Technique[] = [];
   public get tactic() { return this.config.object as Tactic; }
 
 //   public tactic: Tactic = new Tactic({
@@ -45,7 +45,7 @@ export class TacticViewComponent extends StixViewPage implements OnInit {
 //     ]
 //   })
 
-  constructor(private route: ActivatedRoute, private techniqueService: TechniqueService) { 
+  constructor(private route: ActivatedRoute) { 
     super()
   }
 
@@ -53,7 +53,7 @@ export class TacticViewComponent extends StixViewPage implements OnInit {
     this.route.queryParams.subscribe(params => {
       this.editing = params["editing"];
     });
-    this.techniques = this.techniqueService.getAll();
+    // this.techniques = this.techniqueService.getAll();
   }
 
 }

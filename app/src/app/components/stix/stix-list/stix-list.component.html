@@ -10,7 +10,7 @@
                     <input matInput [(ngModel)]="query">
                 </mat-form-field>
     
-                <mat-form-field appearance="fill">
+                <mat-form-field appearance="fill" *ngIf="config.showFilters">
                     <mat-label>filters</mat-label>
                     <mat-select multiple [(ngModel)]="filter">
                         <mat-optgroup *ngFor="let group of filterOptions" [label]="group.name" [disabled]="group.disabled">
@@ -121,6 +121,6 @@
         <!-- ---------- -->
         <!-- PAGINATION -->
         <!-- ---------- -->
-        <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" (page)="applyControls()" [length]="1000"></mat-paginator>
+        <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" (page)="applyControls()" [length]="totalObjectCount"></mat-paginator>
     </div>
 </div>

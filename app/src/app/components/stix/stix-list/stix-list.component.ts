@@ -10,7 +10,7 @@ import { SelectionModel } from '@angular/cdk/collections';
 import { StixDialogComponent } from '../../../views/stix/stix-dialog/stix-dialog.component';
 
 import { MatDialog } from '@angular/material/dialog';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/rest-api-connector.service';
 
 @Component({
@@ -45,6 +45,7 @@ export class StixListComponent implements OnInit, AfterViewInit {
 
     //objects to render;
     public objects$: Observable<StixObject[]>;
+    public totalObjectCount: number = 1000;
     //view mode
     public mode: string = "cards";
     //options provided to the user for grouping and filtering
@@ -98,11 +99,12 @@ export class StixListComponent implements OnInit, AfterViewInit {
      * @param {StixObject} object of the row that was clicked
      */
     public onRowClick(element: StixObject) {
-        if (element.type == "relationship") { //open modal
+        if (this.config.clickBehavior && this.config.clickBehavior == "dialog") { //open modal
             this.dialog.open(StixDialogComponent, {
                 data: {
                     object: element,
                     editable: true,
+                    sidebarControl: "disable"
                 },
                 maxHeight: "75vh"
             });
@@ -260,9 +262,13 @@ export class StixListComponent implements OnInit, AfterViewInit {
             "disabled": "status" in this.config,
             "values": this.statuses
         })
+        if ("stixObjects" in this.config && !(this.config.stixObjects instanceof Observable)) {
+            this.totalObjectCount = this.config.stixObjects.length;
+            this.applyControls();
+        }
     }
     ngAfterViewInit() {
-        this.applyControls();
+        if (!("stixObjects" in this.config)) this.applyControls();
     }
 
     /**
@@ -270,21 +276,27 @@ export class StixListComponent implements OnInit, AfterViewInit {
      */
     public applyControls() {
         if ("stixObjects" in this.config) {
-            // // set max length for paginator
-            // this.paginator.length = this.config.stixObjects.length;
-            // // filter on STIX objects specified in the config
-            // let filtered = this.config.stixObjects;
-
-            // // filter to only ones within the correct index range
-            // let startIndex = this.paginator.pageIndex * this.paginator.pageSize
-            // let endIndex = startIndex + this.paginator.pageSize;
-            // console.log(filtered, this.config.stixObjects);
-            // filtered = filtered.slice(startIndex, endIndex);
-            // console.log(startIndex, endIndex)
-
-            // this.objects = filtered;
-            // console.log(this.objects);
-            // console.log(this.paginator);
+            if (this.config.stixObjects instanceof Observable) {
+                // pull objects out of observable
+            } else {
+                // no need to pull objects out of observable
+                
+                // set max length for paginator
+                // this.paginator.length = this.config.stixObjects.length;
+                // filter on STIX objects specified in the config
+                let filtered = this.config.stixObjects;
+    
+                // filter to only ones within the correct index range
+                let startIndex = this.paginator? this.paginator.pageIndex * this.paginator.pageSize : 0
+                let endIndex = this.paginator? startIndex + this.paginator.pageSize : 5;
+                // console.log(filtered, this.config.stixObjects);
+                filtered = filtered.slice(startIndex, endIndex);
+                // console.log(startIndex, endIndex)
+                this.objects$ = of(filtered);
+                // this.objects$ = of(filtered);
+                // console.log(this.objects$);
+                // console.log(this.paginator);
+            }
         } else {
             // fetch objects from backend
             let limit = this.paginator.pageSize;
@@ -321,6 +333,19 @@ export interface StixListConfig {
      *     "disabled": do not allow selection (the same as omitting the config field)
      */
     select?: selection_types;
+    /**
+     * If provided, use this selection model of STIX IDs for tracking selection
+     * Only relevant if 'select' is also enabled
+     */
+    selectionModel?: SelectionModel<string>;
+    /** default true, if false hides the filter dropdown menu */
+    showFilters?: boolean;
+    /**
+     * How should the table act when the row is clicked? default "expand"
+     *     "expand": expand the row to show additional detail
+     *     "dialog": open a dialog with the full object definition
+     */
+    clickBehavior?: "expand" | "dialog"
 }
 
 export interface FilterValue {
