@@ -2,6 +2,7 @@
 @import '~@angular/material/theming';
 .stix-list {
     .controls {
+        // &, .input-group, .input-group .mat-form-field { min-height: 60px; }
         .input-group {
             font-size: 16px;
             width: 100%;
@@ -146,6 +147,7 @@
                             }
                         }
                         .controls {
+                            // min-height: 60px;
                             a { // links to pages in detail column
                                 @extend .text-label;
                                 text-align: right;

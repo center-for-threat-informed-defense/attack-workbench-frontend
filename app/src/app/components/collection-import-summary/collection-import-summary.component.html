@@ -5,9 +5,6 @@
                 <mat-panel-title>
                     {{attackType}} ({{config.object_import_categories[attackType].object_count}})
                 </mat-panel-title>
-                <!-- <mat-panel-description>
-                    {{config.object_import_categories[attackType].object_count}} objects
-                </mat-panel-description> -->
             </mat-expansion-panel-header>
             <ng-template matExpansionPanelContent>
                 <mat-accordion>
@@ -20,6 +17,12 @@
                                 New objects
                             </mat-panel-description>
                         </mat-expansion-panel-header>
+                        <ng-template matExpansionPanelContent>
+                            <app-stix-list [config]="{
+                                'select': 'many',
+                                'type': attackType
+                            }"></app-stix-list>
+                        </ng-template>
                     </mat-expansion-panel>
                     <mat-expansion-panel class="mat-elevation-z0" [disabled]="config.object_import_categories[attackType].changes.length == 0" [class.disabled]="config.object_import_categories[attackType].changes.length == 0">
                         <mat-expansion-panel-header>
@@ -30,6 +33,12 @@
                                 Updated objects
                             </mat-panel-description>
                         </mat-expansion-panel-header>
+                        <ng-template matExpansionPanelContent>
+                            <app-stix-list [config]="{
+                                'select': 'many',
+                                'type': attackType
+                            }"></app-stix-list>
+                        </ng-template>
                     </mat-expansion-panel>
                     <mat-expansion-panel class="mat-elevation-z0" [disabled]="config.object_import_categories[attackType].minor_changes.length == 0" [class.disabled]="config.object_import_categories[attackType].minor_changes.length == 0">
                         <mat-expansion-panel-header>
@@ -40,6 +49,12 @@
                                 Objects with minor updates
                             </mat-panel-description>
                         </mat-expansion-panel-header>
+                        <ng-template matExpansionPanelContent>
+                            <app-stix-list [config]="{
+                                'select': 'many',
+                                'type': attackType
+                            }"></app-stix-list>
+                        </ng-template>
                     </mat-expansion-panel>
                     <mat-expansion-panel class="mat-elevation-z0" [disabled]="config.object_import_categories[attackType].revocations.length == 0" [class.disabled]="config.object_import_categories[attackType].revocations.length == 0">
                         <mat-expansion-panel-header>
@@ -50,6 +65,12 @@
                                 Objects which have been replaced by other objects
                             </mat-panel-description>
                         </mat-expansion-panel-header>
+                        <ng-template matExpansionPanelContent>
+                            <app-stix-list [config]="{
+                                'select': 'many',
+                                'type': attackType
+                            }"></app-stix-list>
+                        </ng-template>
                     </mat-expansion-panel>
                     <mat-expansion-panel class="mat-elevation-z0" [disabled]="config.object_import_categories[attackType].deprecations.length == 0" [class.disabled]="config.object_import_categories[attackType].deprecations.length == 0">
                         <mat-expansion-panel-header>
@@ -60,6 +81,12 @@
                                 Objects removed from the dataset
                             </mat-panel-description>
                         </mat-expansion-panel-header>
+                        <ng-template matExpansionPanelContent>
+                            <app-stix-list [config]="{
+                                'select': 'many',
+                                'type': attackType
+                            }"></app-stix-list>
+                        </ng-template>
                     </mat-expansion-panel>
                     <mat-expansion-panel class="mat-elevation-z0" [disabled]="config.object_import_categories[attackType].supersedes_collection_changes.length + config.object_import_categories[attackType].supersedes_user_edits.length == 0" [class.disabled]="config.object_import_categories[attackType].supersedes_collection_changes.length + config.object_import_categories[attackType].supersedes_user_edits.length == 0">
                         <mat-expansion-panel-header>
@@ -70,6 +97,12 @@
                                 Conflicts with local edits
                             </mat-panel-description>
                         </mat-expansion-panel-header>
+                        <ng-template matExpansionPanelContent>
+                            <app-stix-list [config]="{
+                                'select': 'many',
+                                'type': attackType
+                            }"></app-stix-list>
+                        </ng-template>
                     </mat-expansion-panel>
                 </mat-accordion>
             </ng-template>

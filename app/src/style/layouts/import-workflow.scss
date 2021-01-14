@@ -3,7 +3,7 @@
     max-width: 100%;
     margin: 0 auto;
     // mat-toolbar { @extend %toolbar; }
-    mat-form-field {
+    mat-form-field.fullwidth {
         width: 100%;
         .mat-form-field-wrapper {
             padding-bottom: 0px;
