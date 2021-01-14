@@ -93,10 +93,34 @@ export class TechniqueViewComponent extends StixViewPage implements OnInit {
         "description": "Adversaries may modify visual content available internally or externally to an enterprise network. Reasons for Defacement include delivering messaging, intimidation, or claiming (possibly false) credit for an intrusion. \n\n### Internal\nAn adversary may deface systems internal to an organization in an attempt to intimidate or mislead users. This may take the form of modifications to internal websites, or directly to user systems with the replacement of the desktop wallpaper.(Citation: Novetta Blockbuster) Disturbing or offensive images may be used as a part of Defacement in order to cause user discomfort, or to pressure compliance with accompanying messages. While internally defacing systems exposes an adversary's presence, it often takes place after other intrusion goals have been accomplished.(Citation: Novetta Blockbuster Destructive Malware)\n\n### External \nWebsites are a common victim of defacement; often targeted by adversary and hacktivist groups in order to push a political message or spread propaganda.(Citation: FireEye Cyber Threats to Media Industries)(Citation: Kevin Mandia Statement to US Senate Committee on Intelligence)(Citation: Anonymous Hackers Deface Russian Govt Site) Defacement may be used as a catalyst to trigger events, or as a response to actions taken by an organization or government. Similarly, website defacement may also be used as setup, or a precursor, for future attacks such as [Drive-by Compromise](https://attack.mitre.org/techniques/T1189).(Citation: Trend Micro Deep Dive Into Defacement)\n"
     })
 
-    public subtechniques: Relationship[] = [];
-    public mitigations: Relationship[] = [];
-    public groups: Relationship[] = [];
-    public software: Relationship[] = [];
+    public subtechniques: Relationship[];
+    public mitigations: Relationship[] = [
+        new Relationship(
+            {
+                "created_by_ref": "identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5", 
+                "x_mitre_domains": [
+                    "enterprise"
+                ], 
+                "created": "2017-05-31T21:33:27.026Z", 
+                "x_mitre_collections": [
+                    "x_mitre_collection--11c94726-c9dd-4660-b5f1-f8169e2604e1"
+                ], 
+                "spec_version": "2.1", 
+                "modified": "2019-07-24T14:13:23.722Z", 
+                "target_ref": "attack-pattern--5909f20f-3c39-4795-be06-ef1ea40d350b", 
+                "object_marking_refs": [
+                    "marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168"
+                ], 
+                "relationship_type": "mitigates", 
+                "x_mitre_version": "1.0", 
+                "type": "relationship", 
+                "id": "relationship--483a70b9-eae9-4d5f-925c-95c2dd7b9fa5", 
+                "source_ref": "course-of-action--beb45abb-11e8-4aef-9778-1f9ac249784f"
+            }
+        )
+    ];
+    public groups: Relationship[];
+    public software: Relationship[];
 
     constructor(private route: ActivatedRoute) {
         super();
