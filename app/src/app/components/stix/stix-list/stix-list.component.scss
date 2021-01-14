@@ -99,6 +99,10 @@
                 .width-limited-lg { min-width: 30em; max-width: 60em; }
                 .width-limited-md { min-width: 15em; max-width: 30em; }
                 .width-limited-sm { min-width: 10em; max-width: 20em; }
+
+                .name {
+                    @extend .width-limited-md;
+                }
         
                 tr.element-row:not(.expanded):hover {
                     .light & td { background: color-alternate(light); }

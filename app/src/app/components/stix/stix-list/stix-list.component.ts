@@ -232,7 +232,11 @@ export class StixListComponent implements OnInit, AfterViewInit {
         }
         // this.tableColumns_controls = Array.from(this.tableColumns); // shallow copy
         if ("select" in this.config && this.config.select != "disabled") {
-            this.selection = new SelectionModel<string>(this.config.select == "many");
+            if ("selectionModel" in this.config) {
+                this.selection = this.config.selectionModel;
+            } else {
+                this.selection = new SelectionModel<string>(this.config.select == "many");
+            }
             controls_before.unshift("select") // add select column to view
         }
         this.tableColumns_controls = controls_before.concat(this.tableColumns, controls_after);
@@ -335,7 +339,7 @@ export interface StixListConfig {
     select?: selection_types;
     /**
      * If provided, use this selection model of STIX IDs for tracking selection
-     * Only relevant if 'select' is also enabled
+     * Only relevant if 'select' is also enabled. Also, will cause problems if multiple constructor pram is set according to 'select'.
      */
     selectionModel?: SelectionModel<string>;
     /** default true, if false hides the filter dropdown menu */

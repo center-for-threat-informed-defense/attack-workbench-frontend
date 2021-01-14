@@ -22,8 +22,19 @@
                 Review the contents of the collection. Deselect objects you don't want to import. Objects which have no changes compared to your local knowledge base such as those previously imported are not displayed.
             </p>
             <app-collection-import-summary [config]="{
-                object_import_categories: object_import_categories
+                'object_import_categories': object_import_categories,
+                'select': select
             }"></app-collection-import-summary>
+            <ul *ngIf="select">
+                <li>
+                    Total objects queued for import: {{select.selected.length}}/{{changed_ids.length}}
+                </li>
+                <li>
+                    Total objects that already exist in your knowledge base: {{unchanged_ids.length}}
+                </li>
+            </ul>
+            <p>
+            </p>
 
         </mat-step>
         <mat-step label="import">

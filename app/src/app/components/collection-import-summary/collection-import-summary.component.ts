@@ -1,3 +1,4 @@
+import { SelectionModel } from '@angular/cdk/collections';
 import { Component, Input, OnInit, ViewEncapsulation } from '@angular/core';
 import { CollectionImportCategories } from 'src/app/classes/stix/collection';
 import { Group } from 'src/app/classes/stix/group';
@@ -33,5 +34,6 @@ export interface CollectionImportSummaryConfig {
         mitigation: CollectionImportCategories<Mitigation>,
         matrix: CollectionImportCategories<Matrix>,
         group: CollectionImportCategories<Group>
-    }
+    };
+    select?: SelectionModel<string>;
 }
