@@ -11,6 +11,10 @@
     }
     .mat-vertical-stepper-header {
         pointer-events: none;
+        .mat-step-label { 
+            @extend .heading; 
+            font-size: 16px;
+        }
     }
     .action-bar {
         margin-top: 24px;

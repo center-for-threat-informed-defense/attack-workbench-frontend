@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, ViewEncapsulation } from '@angular/core';
 import { CollectionImportCategories } from 'src/app/classes/stix/collection';
 import { Group } from 'src/app/classes/stix/group';
 import { Matrix } from 'src/app/classes/stix/matrix';
@@ -11,7 +11,8 @@ import { Technique } from 'src/app/classes/stix/technique';
 @Component({
   selector: 'app-collection-import-summary',
   templateUrl: './collection-import-summary.component.html',
-  styleUrls: ['./collection-import-summary.component.scss']
+  styleUrls: ['./collection-import-summary.component.scss'],
+  encapsulation: ViewEncapsulation.None
 })
 export class CollectionImportSummaryComponent implements OnInit {
     @Input() config: CollectionImportSummaryConfig;
