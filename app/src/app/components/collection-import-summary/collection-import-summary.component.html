@@ -20,6 +20,7 @@
                         <ng-template matExpansionPanelContent>
                             <app-stix-list [config]="{
                                 'select': 'many',
+                                'selectionModel': config.select,
                                 'clickBehavior': 'dialog',
                                 'type': attackType,
                                 'stixObjects': config.object_import_categories[attackType].additions
@@ -38,6 +39,7 @@
                         <ng-template matExpansionPanelContent>
                             <app-stix-list [config]="{
                                 'select': 'many',
+                                'selectionModel': config.select,
                                 'clickBehavior': 'dialog',
                                 'type': attackType,
                                 'stixObjects': config.object_import_categories[attackType].changes
@@ -56,6 +58,7 @@
                         <ng-template matExpansionPanelContent>
                             <app-stix-list [config]="{
                                 'select': 'many',
+                                'selectionModel': config.select,
                                 'clickBehavior': 'dialog',
                                 'type': attackType,
                                 'stixObjects': config.object_import_categories[attackType].minor_changes
@@ -74,6 +77,7 @@
                         <ng-template matExpansionPanelContent>
                             <app-stix-list [config]="{
                                 'select': 'many',
+                                'selectionModel': config.select,
                                 'clickBehavior': 'dialog',
                                 'type': attackType,
                                 'stixObjects': config.object_import_categories[attackType].revocations
@@ -92,6 +96,7 @@
                         <ng-template matExpansionPanelContent>
                             <app-stix-list [config]="{
                                 'select': 'many',
+                                'selectionModel': config.select,
                                 'clickBehavior': 'dialog',
                                 'type': attackType,
                                 'stixObjects': config.object_import_categories[attackType].deprecations

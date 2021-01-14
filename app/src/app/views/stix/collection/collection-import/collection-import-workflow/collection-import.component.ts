@@ -1,3 +1,4 @@
+import { SelectionModel } from '@angular/cdk/collections';
 import { HttpClient } from '@angular/common/http';
 import { Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -24,6 +25,12 @@ export class CollectionImportComponent implements OnInit {
 
     public url: string = "";
     public loading_preview: boolean = false;
+    public select: SelectionModel<string>;
+    // ids of objects which have changed (object-version not already in knowledge base)
+    public changed_ids: string[] = [];
+    // ids of objects which have nto changed (object-version not already in knowledge base)
+    public unchanged_ids: string[] = [];
+
 
     public object_import_categories = {
         technique:    new CollectionImportCategories<Technique>(),
@@ -74,12 +81,21 @@ export class CollectionImportComponent implements OnInit {
 
     public parsePreview(collectionBundle: any, preview: Collection) {
         let idToCategory = {};
+
         for (let category in preview.import_categories) {
             for (let stixId of preview.import_categories[category]) idToCategory[stixId] = category;
         }
         // console.log(idToCategory);
         for (let object of collectionBundle.objects) {
             // look up the category for the object
+            if (!(object.id in idToCategory)) {
+                // does not belong to a change category
+                this.unchanged_ids.push(object.id);
+                continue;
+            }
+            // track that this object has changed
+            this.changed_ids.push(object.id); 
+            // determine the change category
             let category = idToCategory[object.id];
             // wrap the object as if it came from the back-end
             let raw = {stix: object, workspace: {}};
@@ -109,6 +125,8 @@ export class CollectionImportComponent implements OnInit {
                 break;
             }
         }
+        // set up selection
+        this.select =  new SelectionModel(true, this.changed_ids);
         console.log("4. done")
         
         this.stepper.next();
