@@ -96,47 +96,55 @@
     <!-- show relationships if configured to show them -->
     <div *ngIf="config.showRelationships || !config.hasOwnProperty('showRelationships')">
         <!-- SUBTECHNIQUES -->
-        <div class="row">
-            <div class="col">
-                <h2 class="section-header">Sub-techniques</h2>
+        <div *ngIf="subtechniques">
+            <div class="row">
+                <div class="col">
+                    <h2 class="section-header">Sub-techniques</h2>
+                </div>
             </div>
-        </div>
-        <div class="row">
-            <div class="col">
-                <app-stix-list [config]="{'type': 'relationship', 'stixObjects': subtechniques}"></app-stix-list>
+            <div class="row">
+                <div class="col">
+                    <app-stix-list [config]="{'type': 'relationship', 'stixObjects': subtechniques}"></app-stix-list>
+                </div>
             </div>
         </div>
         <!-- MITIGATIONS -->
-        <div class="row">
-            <div class="col">
-                <h2 class="section-header">Mitigations</h2>
+        <div *ngIf="mitigations">
+            <div class="row">
+                <div class="col">
+                    <h2 class="section-header">Mitigations</h2>
+                </div>
             </div>
-        </div>
-        <div class="row">
-            <div class="col">
-                <app-stix-list [config]="{'type': 'relationship', 'stixObjects': mitigations}"></app-stix-list>
+            <div class="row">
+                <div class="col">
+                    <app-stix-list [config]="{'type': 'relationship', 'stixObjects': mitigations}"></app-stix-list>
+                </div>
             </div>
         </div>
         <!-- GROUPS -->
-        <div class="row">
-            <div class="col">
-                <h2 class="section-header">Associated Groups</h2>
+        <div *ngIf="groups">
+            <div class="row">
+                <div class="col">
+                    <h2 class="section-header">Associated Groups</h2>
+                </div>
             </div>
-        </div>
-        <div class="row">
-            <div class="col">
-                <app-stix-list [config]="{'type': 'relationship', 'stixObjects': groups}"></app-stix-list>
+            <div class="row">
+                <div class="col">
+                    <app-stix-list [config]="{'type': 'relationship', 'stixObjects': groups}"></app-stix-list>
+                </div>
             </div>
         </div>
         <!-- SOFTWARE -->
-        <div class="row">
-            <div class="col">
-                <h2 class="section-header">Associated Software</h2>
+        <div *ngIf="software">
+            <div class="row">
+                <div class="col">
+                    <h2 class="section-header">Associated Software</h2>
+                </div>
             </div>
-        </div>
-        <div class="row">
-            <div class="col">
-                <app-stix-list [config]="{'type': 'relationship', 'stixObjects': software}"></app-stix-list>
+            <div class="row">
+                <div class="col">
+                    <app-stix-list [config]="{'type': 'relationship', 'stixObjects': software}"></app-stix-list>
+                </div>
             </div>
         </div>
     </div>
@@ -148,11 +156,11 @@
     <div class="row">
         <div class="col">
             <!-- EXTERNAL REFERENCES -->
-            <app-external-references-property [config]="{
+            <!-- <app-external-references-property [config]="{
                 mode: 'view',
                 object: technique,
                 referencesField: technique.external_references
-            }"></app-external-references-property>
+            }"></app-external-references-property> -->
         </div>
     </div>
 </div>
