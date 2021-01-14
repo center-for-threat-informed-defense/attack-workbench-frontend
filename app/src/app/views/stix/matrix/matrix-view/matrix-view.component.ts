@@ -15,9 +15,6 @@ export class MatrixViewComponent extends StixViewPage implements OnInit {
 
   public editing: boolean = false;
 
-  //tactics to render;
-  public all_tactics$: Observable<StixObject[]>;
-
   public tactics : Array<StixObject> = [];
 
   public matrix: Matrix = new Matrix({
@@ -53,28 +50,18 @@ export class MatrixViewComponent extends StixViewPage implements OnInit {
   })
 
   // Get tactics for matrix
-  public getTactics() {
+  private getTactics(tactics_map) {
 
     if ("tactic_refs" in this.matrix) {
-      this.all_tactics$.subscribe(all_tactics => {
-        // Iterate by tactic_refs to preserve order
-        for (let tactic_id of this.matrix.tactic_refs) {
-          // Search for tactic until found
-          for (let tactic of all_tactics) {
-            // Add if stixId matches
-            if (tactic.stixID == tactic_id) {
-              this.tactics.push(tactic);
-              break;
-            }
-          }
-        }
-      });
+      for (let tactic_id of this.matrix.tactic_refs) {
+        // Add tactic if it is found in the map
+        if (tactics_map.get(tactic_id)) this.tactics.push(tactics_map.get(tactic_id))
+      }
     }
   }
 
   constructor(private route: ActivatedRoute, private restAPIConnectorService: RestApiConnectorService) { 
     super();
-    this.all_tactics$ = this.restAPIConnectorService.getAllTactics(); //TODO add limit and offset once back-end supports it
   }
 
   ngOnInit() {
@@ -82,8 +69,19 @@ export class MatrixViewComponent extends StixViewPage implements OnInit {
         this.editing = params["editing"];
     });
 
-    // Get tactics
-    this.getTactics();
+    let subscription = this.restAPIConnectorService.getAllTactics().subscribe({
+      next: (all_tactics) => {
+        let tactics_map : Map<string, StixObject> = new Map();
+        // Create map by stix id
+        for (let tactic of all_tactics){
+          tactics_map.set(tactic.stixID, tactic);
+        }
+
+        this.getTactics(tactics_map);
+      },
+      complete: () => { subscription.unsubscribe(); } //prevent memory leaks
+    })
+
   }
 
 }
