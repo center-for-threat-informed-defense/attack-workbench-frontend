@@ -25,14 +25,29 @@
                 'object_import_categories': object_import_categories,
                 'select': select
             }"></app-collection-import-summary>
-            <ul *ngIf="select">
+            <div *ngIf="select" class="center">
+                <p class="text-deemphasis">
+                    Importing {{select.selected.length}}/{{changed_ids.length}} objects
+                </p>
+                <div class="action-bar nomargin">
+                    <button mat-stroked-button (click)="selectAll()">select all</button>
+                    <button mat-stroked-button (click)="deselectAll()">deselect all</button>
+                </div>
+                <div class="action-bar">
+                    <button mat-mini-fab class="extended-fab-button"  color="primary">
+                        <mat-icon aria-label="add">save_alt</mat-icon>
+                        <span class="text-label">Import</span>
+                    </button>
+                </div>
+            </div>
+            <!-- <ul *ngIf="select">
                 <li>
                     Total objects queued for import: {{select.selected.length}}/{{changed_ids.length}}
                 </li>
                 <li>
                     Total objects that already exist in your knowledge base: {{unchanged_ids.length}}
                 </li>
-            </ul>
+            </ul> -->
             <p>
             </p>
 

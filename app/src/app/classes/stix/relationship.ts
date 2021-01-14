@@ -20,8 +20,8 @@ export class Relationship extends StixObject {
             this.relationship_type = sdo.stix.relationship_type;
             this.description = sdo.stix.description;
             // THIS IS NOT PART OF THE SPEC, AND IS A PLACEHOLDER
-            if (sdo.workspace.source_name) this.source_name = sdo.stix.source_name;
-            if (sdo.workspace.target_name) this.target_name = sdo.stix.target_name;
+            if (sdo.workspace.source_name) this.source_name = sdo.workspace.source_name;
+            if (sdo.workspace.target_name) this.target_name = sdo.workspace.target_name;
         }
     }
 

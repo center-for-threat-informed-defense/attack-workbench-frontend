@@ -80,11 +80,19 @@ export class CollectionImportComponent implements OnInit {
     }
 
     public parsePreview(collectionBundle: any, preview: Collection) {
+        
+        //build ID to category lookup
         let idToCategory = {};
 
         for (let category in preview.import_categories) {
             for (let stixId of preview.import_categories[category]) idToCategory[stixId] = category;
         }
+        //build ID to name lookup
+        let idToName = {};
+        for (let object of collectionBundle.objects) {
+            if ("name" in object) idToName[object.id] = object.name
+        }
+
         // console.log(idToCategory);
         for (let object of collectionBundle.objects) {
             // look up the category for the object
@@ -112,6 +120,8 @@ export class CollectionImportComponent implements OnInit {
                     this.object_import_categories.software[category].push(new Software(object.type, raw))
                 break;
                 case "relationship": //relationship
+                    raw.workspace["source_name"] = raw.stix.source_ref in idToName? idToName[raw.stix.source_ref] : "unknown object"
+                    raw.workspace["target_name"] = raw.stix.target_ref in idToName? idToName[raw.stix.target_ref] : "unknown object"
                     this.object_import_categories.relationship[category].push(new Relationship(raw))
                 break;
                 case "course-of-action": //mitigation
@@ -132,6 +142,20 @@ export class CollectionImportComponent implements OnInit {
         this.stepper.next();
 
         this.loading_preview = false;
+    }
+
+    /**
+     * Select all objects for import
+     */
+    public selectAll() {
+        for (let id of this.changed_ids) this.select.select(id);
+    }
+    
+    /**
+     * deselect all objects for import
+     */
+    public deselectAll() {
+        this.select.clear()
     }
 
 }
