@@ -13,7 +13,7 @@ export class Relationship extends StixObject {
     public readonly relationship_type: string;
     public description: string;
     constructor(sdo?: any) {
-        super(sdo, "relationship");
+        super(sdo["stix"], "relationship");
         if (sdo) {
             this.source_ref = sdo.stix.source_ref;
             this.target_ref = sdo.stix.target_ref;

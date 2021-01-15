@@ -1,5 +1,6 @@
 @import "../../../../../../style/globals";
 .collection-import {
+    p.nomargin { margin-top: 0; }
     .mat-expansion-panel {
         @include expansion-panel(True);
     }

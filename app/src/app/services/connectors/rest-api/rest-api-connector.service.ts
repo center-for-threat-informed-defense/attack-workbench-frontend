@@ -412,10 +412,14 @@ export class RestApiConnectorService extends ApiConnector {
      * @returns {Observable<Collection>} collection object marking the results of the import
      */
     public postCollectionBundle(collectionBundle: any, preview: boolean = false): Observable<Collection> {
-        return this.http.post(`${this.baseUrl}/collection-bundles`, collectionBundle, {headers: this.headers}).pipe(
+        // add query params for preview
+        let query = new HttpParams();
+        if (preview) query = query.set("checkOnly", "true");
+        // perform the request
+        return this.http.post(`${this.baseUrl}/collection-bundles`, collectionBundle, {headers: this.headers, params: query}).pipe(
             tap(result => {
-                if (preview) this.handleSuccess("imported collection")
-                else console.log("previewed collection import", result)
+                if (preview) console.log("previewed collection import", result);
+                else this.handleSuccess("imported collection")(result);
             }),
             map(result => { 
                 return new Collection(result); 

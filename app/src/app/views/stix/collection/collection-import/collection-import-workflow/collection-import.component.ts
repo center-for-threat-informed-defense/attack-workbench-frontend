@@ -1,6 +1,7 @@
 import { SelectionModel } from '@angular/cdk/collections';
 import { HttpClient } from '@angular/common/http';
 import { Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatStepper } from '@angular/material/stepper';
 import { ActivatedRoute } from '@angular/router';
@@ -12,6 +13,7 @@ import { Relationship } from 'src/app/classes/stix/relationship';
 import { Software } from 'src/app/classes/stix/software';
 import { Tactic } from 'src/app/classes/stix/tactic';
 import { Technique } from 'src/app/classes/stix/technique';
+import { ConfirmationDialogComponent } from 'src/app/components/confirmation-dialog/confirmation-dialog.component';
 import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/rest-api-connector.service';
 
 @Component({
@@ -24,13 +26,14 @@ export class CollectionImportComponent implements OnInit {
     @ViewChild(MatStepper) public stepper: MatStepper;
 
     public url: string = "";
-    public loading_preview: boolean = false;
+    public loadingStep1: boolean = false;
+    public loadingStep2: boolean = false;
     public select: SelectionModel<string>;
     // ids of objects which have changed (object-version not already in knowledge base)
     public changed_ids: string[] = [];
     // ids of objects which have nto changed (object-version not already in knowledge base)
     public unchanged_ids: string[] = [];
-
+    public collectionBundle: any;
 
     public object_import_categories = {
         technique:    new CollectionImportCategories<Technique>(),
@@ -42,7 +45,7 @@ export class CollectionImportComponent implements OnInit {
         group:        new CollectionImportCategories<Group>()
     }
 
-    constructor(public route: ActivatedRoute, public http: HttpClient, public snackbar: MatSnackBar, public restAPIConnectorService: RestApiConnectorService) { }
+    constructor(public route: ActivatedRoute, public http: HttpClient, public snackbar: MatSnackBar, public restAPIConnectorService: RestApiConnectorService, private dialog: MatDialog) { }
 
     ngOnInit() {
         if (this.route.snapshot.queryParams["url"]) {
@@ -55,7 +58,7 @@ export class CollectionImportComponent implements OnInit {
     public previewCollection() {
         console.log("previewing collection:");
         console.log("1. fetching raw collection bundle")
-        this.loading_preview = true;
+        this.loadingStep1 = true;
         let subscription_getBundle = this.http.get(this.url).subscribe({ //get the raw collection bundle from the endpoint
             next: (collectionBundle) => {
                 console.log("2. posting bundle to backend to get changelog preview")
@@ -80,6 +83,7 @@ export class CollectionImportComponent implements OnInit {
     }
 
     public parsePreview(collectionBundle: any, preview: Collection) {
+        this.collectionBundle = collectionBundle; //save for later
         
         //build ID to category lookup
         let idToCategory = {};
@@ -140,8 +144,6 @@ export class CollectionImportComponent implements OnInit {
         console.log("4. done")
         
         this.stepper.next();
-
-        this.loading_preview = false;
     }
 
     /**
@@ -156,6 +158,48 @@ export class CollectionImportComponent implements OnInit {
      */
     public deselectAll() {
         this.select.clear()
+    }
+
+    /**
+     * Perform the import of the collection
+     */
+    public import() {
+        let prompt = this.dialog.open(ConfirmationDialogComponent, {
+            maxWidth: "25em",
+            data: {
+                message: `Are you sure you want to import ${this.select.selected.length} objects? ${this.unchanged_ids.length} objects in this collection have no changes compared to your local workbench.`,
+                yes_suffix: "import the collection"
+            }
+        })
+        let promptSubscription = prompt.afterClosed().subscribe({
+            next: (result) => {
+                if (result) {
+                    // filter bundle for objects that were not selected
+                    console.log("saving collection")
+                    this.loadingStep2 = true;
+                    setTimeout(() => { //make sure the loading icon renders before the parsing/writing
+                        let newBundle = JSON.parse(JSON.stringify(this.collectionBundle)); //deep copy
+                        let objects = []
+                        // filter objects to selected or unchanged
+                        for (let object of newBundle.objects) {
+                            if (this.unchanged_ids.includes(object.id) || this.select.selected.includes(object.id)) {
+                                // object is selected or unchanged
+                                objects.push(object);
+                            }
+                        }
+                        newBundle.objects = objects;
+                        let subscription = this.restAPIConnectorService.postCollectionBundle(newBundle, false).subscribe({
+                            next: () => { 
+                                this.stepper.next(); 
+                            },
+                            complete: () => { subscription.unsubscribe(); } //prevent memory leaks
+                        })
+                    })
+                }
+            },
+            complete: () => { promptSubscription.unsubscribe() } //prevent memory leaks
+        })
+
     }
 
 }

@@ -101,14 +101,17 @@ export class CollectionIndexViewComponent implements OnInit {
                 yes_suffix: "delete it"
             }
         });
-        prompt.afterClosed().subscribe(result => {
-            // if they clicked yes, delete the index
-            if (result) {
-                let subscription = this.restAPIConnector.deleteCollectionIndex(this.config.index.collection_index.id).subscribe({
-                    next: () => { this.onCollectionsModified.emit(); },
-                    complete: () => { subscription.unsubscribe(); } //prevent memory leaks
-                });
-            }
+        let promptSubscription = prompt.afterClosed().subscribe({
+            next: result => {
+                // if they clicked yes, delete the index
+                if (result) {
+                    let subscription = this.restAPIConnector.deleteCollectionIndex(this.config.index.collection_index.id).subscribe({
+                        next: () => { this.onCollectionsModified.emit(); },
+                        complete: () => { subscription.unsubscribe(); } //prevent memory leaks
+                    });
+                }
+            },
+            complete: () => { promptSubscription.unsubscribe() } //prevent memory leaks
         })
     }
 
