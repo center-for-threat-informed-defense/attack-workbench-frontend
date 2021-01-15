@@ -9,14 +9,14 @@ export class Technique extends StixObject {
     public domains: string[];
     public platforms: string[];
     public detection: string;
-    public dataSources: string[];
-    public systemRequirements: string;
-    public tacticTypes: string;
-    public permissionsRequired: string[]
-    public defenseBypassed: string[];
+    public data_sources: string[];
+    public system_requirements: string[];
+    public tactic_type: string[];
+    public permissions_required: string[]
+    public defense_bypassed: string[];
 
-    public isSubtechnique: boolean;
-    public remoteSupport: boolean;
+    public is_subtechnique: boolean;
+    public remote_support: boolean;
 
     /**
      * Initialize Technique object
@@ -81,31 +81,31 @@ export class Technique extends StixObject {
             else console.error("TypeError: platforms field is not a string array.");
         }
         if ("x_mitre_data_sources" in sdo) {
-            if (isStringArray(sdo.x_mitre_data_sources)) this.dataSources = sdo.x_mitre_data_sources;
+            if (isStringArray(sdo.x_mitre_data_sources)) this.data_sources = sdo.x_mitre_data_sources;
             else console.error("TypeError: data sources field is not a string array.");
         }
         if ("x_mitre_system_requirements" in sdo) {
-            if (typeof(sdo.x_mitre_system_requirements) === "string") this.systemRequirements = sdo.x_mitre_system_requirements;
-            else console.error("TypeError: system requirements field is not a string:", sdo.x_mitre_system_requirements, "(", typeof(sdo.x_mitre_system_requirements),")");
+            if (isStringArray(sdo.x_mitre_system_requirements)) this.system_requirements = sdo.x_mitre_system_requirements;
+            else console.error("TypeError: system requirements field is not a string array.");
         }
-        if ("x_mitre_tactic_types" in sdo) {
-            if (typeof(sdo.x_mitre_tactic_types) === "string") this.tacticTypes = sdo.x_mitre_tactic_types;
-            else console.error("TypeError: tactic types field is not a string:", sdo.x_mitre_tactic_types, "(", typeof(sdo.x_mitre_tactic_types),")");
+        if ("x_mitre_tactic_type" in sdo) {
+            if (isStringArray(sdo.x_mitre_tactic_type)) this.tactic_type = sdo.x_mitre_tactic_type;
+            else console.error("TypeError: tactic types field is not a string array.");
         }
         if ("x_mitre_permissions_required" in sdo) {
-            if (isStringArray(sdo.x_mitre_permissions_required)) this.permissionsRequired = sdo.x_mitre_permissions_required;
+            if (isStringArray(sdo.x_mitre_permissions_required)) this.permissions_required = sdo.x_mitre_permissions_required;
             else console.error("TypeError: permissions required field is not a string array.");
         }
         if ("x_mitre_defense_bypassed" in sdo) {
-            if (isStringArray(sdo.x_mitre_defense_bypassed)) this.defenseBypassed = sdo.x_mitre_defense_bypassed;
+            if (isStringArray(sdo.x_mitre_defense_bypassed)) this.defense_bypassed = sdo.x_mitre_defense_bypassed;
             else console.error("TypeError: defense bypassed field is not a string array.");
         }
         if ("x_mitre_is_subtechnique" in sdo) {
-            if (typeof(sdo.x_mitre_is_subtechnique) === "boolean") this.isSubtechnique = sdo.x_mitre_is_subtechnique;
+            if (typeof(sdo.x_mitre_is_subtechnique) === "boolean") this.is_subtechnique = sdo.x_mitre_is_subtechnique;
             else console.error("TypeError: is subtechnique field is not a boolean:", sdo.x_mitre_is_subtechnique, "(", typeof(sdo.x_mitre_is_subtechnique),")")
         }
         if ("x_mitre_remote_support" in sdo) {
-            if (typeof(sdo.x_mitre_remote_support) === "boolean") this.isSubtechnique = sdo.x_mitre_remote_support;
+            if (typeof(sdo.x_mitre_remote_support) === "boolean") this.remote_support = sdo.x_mitre_remote_support;
             else console.error("TypeError: remote support field is not a boolean:", sdo.x_mitre_remote_support, "(", typeof(sdo.x_mitre_remote_support),")")
         }
     }
