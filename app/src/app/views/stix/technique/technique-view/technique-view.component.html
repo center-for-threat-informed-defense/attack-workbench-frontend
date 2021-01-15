@@ -27,7 +27,7 @@
             <div class="labelled-box grow-to-row">
                 <!-- TYPE -->
                 <div class="content">
-                    {{technique.isSubtechnique ? "Sub-technique": "Technique"}}
+                    {{technique.is_subtechnique ? "Sub-technique": "Technique"}}
                 </div>
                 <label>type</label>
             </div>
@@ -54,46 +54,87 @@
             }"></app-descriptive-property>
         </div>
     </div>
-    <div class="row">
+    <!-- DOMAIN SPECIFIC FIELDS -->
+    <div *ngIf="technique.domains" class="row">
         <div class="col">
-            <!-- DOMAINS -->
             <app-list-property class="grow-to-row" [config]="{
                 mode: 'view',
                 object: technique,
                 field: 'domains'
             }"></app-list-property>
         </div>
+        <div class="col arrow">
+            <mat-icon>arrow_forward</mat-icon>
+        </div>
         <div class="col">
-            <!-- DOMAIN SPECIFIC FIELDS -->
+            <!-- DATA SOURCES -->
+            <div *ngIf="technique.data_sources" class="row">
+                <app-list-property class="grow-to-row" [config]="{
+                    mode: 'view',
+                    object: technique,
+                    field: 'data_sources'
+                }"></app-list-property>
+            </div>
+            <!-- SYSTEM REQUIREMENTS -->
+            <div *ngIf="technique.system_requirements" class="row">
+                <app-list-property class="grow-to-row" [config]="{
+                    mode: 'view',
+                    object: technique,
+                    field: 'system_requirements'
+                }"></app-list-property>
+            </div>
+            <!-- TACTIC TYPES -->
+            <div *ngIf="technique.tactic_type" class="row">
+                <app-list-property class="grow-to-row" [config]="{
+                    mode: 'view',
+                    object: technique,
+                    field: 'tactic_type'
+                }"></app-list-property>
+            </div>
         </div>
     </div>
-    <div class="row">
+    <!-- TACTIC SPECIFIC FIELDS -->
+    <div *ngIf="technique.tactics" class="row">
         <div class="col">
-            <!-- TACTICS -->
             <app-list-property class="grow-to-row" [config]="{
                 mode: 'view',
                 object: technique,
                 field: 'tactics'
             }"></app-list-property>
         </div>
+        <div class="col arrow">
+            <mat-icon>arrow_forward</mat-icon>
+        </div>
         <div class="col">
-            <!-- TACTIC SPECIFIC FIELDS -->
+            <!-- PERMISSIONS REQUIRED -->
+            <div *ngIf="technique.permissions_required" class="row">
+                <app-list-property class="grow-to-row" [config]="{
+                    mode: 'view',
+                    object: technique,
+                    field: 'permissions_required'
+                }"></app-list-property>
+            </div>
+            <!-- DEFENSE BYPASSED -->
+            <div *ngIf="technique.defense_bypassed" class="row">
+                <app-list-property class="grow-to-row" [config]="{
+                    mode: 'view',
+                    object: technique,
+                    field: 'defense_bypassed'
+                }"></app-list-property>
+            </div>
+            <!-- REMOTE SUPPORT -->
+            <div *ngIf="technique.remote_support !== undefined" class="row">
+                <div class="labelled-box grow-to-row">
+                    <div class="content no-label">
+                        <mat-checkbox [checked]="technique.remote_support" disabled>
+                            Remote Support?
+                        </mat-checkbox>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
-    <div class="row">
-        <div class="col">
-            <!-- DETECTION -->
-            <app-descriptive-property [config]="{
-                mode: 'view',
-                object: technique,
-                field: 'detection',
-                firstParagraphOnly: false, 
-                referencesField: technique.external_references,
-                label: 'detection'
-            }"></app-descriptive-property>
-        </div>
-    </div>
-    <!-- show relationships if configured to show them -->
+    <!-- RELATIONSHIPS -->
     <div *ngIf="config.showRelationships || !config.hasOwnProperty('showRelationships')">
         <!-- SUBTECHNIQUES -->
         <div *ngIf="subtechniques">
@@ -156,11 +197,11 @@
     <div class="row">
         <div class="col">
             <!-- EXTERNAL REFERENCES -->
-            <!-- <app-external-references-property [config]="{
+            <app-external-references-property [config]="{
                 mode: 'view',
                 object: technique,
                 referencesField: technique.external_references
-            }"></app-external-references-property> -->
+            }"></app-external-references-property>
         </div>
     </div>
 </div>
