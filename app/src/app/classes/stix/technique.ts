@@ -13,4 +13,6 @@ export class Technique extends StixObject {
             this.platforms = sdo["stix"]["x_mitre_platforms"] ? sdo["stix"]["x_mitre_platforms"] : [];
         }
     }
+    public serialize(): any {}
+    public deserialize(raw: any) {}
 }

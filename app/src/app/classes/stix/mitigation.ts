@@ -13,4 +13,6 @@ export class Mitigation extends StixObject {
             if (sdo["stix"].external_references.length > 0) this.attackID = sdo["stix"].external_references[0].external_id;
         }
     }
+    public serialize(): any {}
+    public deserialize(raw: any) {}
 }
