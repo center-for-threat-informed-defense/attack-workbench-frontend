@@ -7,7 +7,7 @@
             <div class="input-group">
                 <mat-form-field class="search" appearance="fill">
                     <mat-label>search</mat-label>
-                    <input matInput [(ngModel)]="query">
+                    <input matInput #search>
                 </mat-form-field>
     
                 <mat-form-field appearance="fill" *ngIf="config.showFilters">

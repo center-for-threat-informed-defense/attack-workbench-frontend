@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, ViewEncapsulation, ViewChild, AfterViewInit } from '@angular/core';
+import { Component, OnInit, Input, ViewEncapsulation, ViewChild, AfterViewInit, ElementRef } from '@angular/core';
 import { StixObject } from 'src/app/classes/stix/stix-object';
 import {animate, style, transition, trigger} from '@angular/animations';
 import {MatSort} from '@angular/material/sort';
@@ -8,8 +8,9 @@ import { SelectionModel } from '@angular/cdk/collections';
 import { StixDialogComponent } from '../../../views/stix/stix-dialog/stix-dialog.component';
 
 import { MatDialog } from '@angular/material/dialog';
-import { Observable, of } from 'rxjs';
+import { fromEvent, Observable, of } from 'rxjs';
 import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/rest-api-connector.service';
+import { debounceTime, distinctUntilChanged, filter, tap } from 'rxjs/operators';
 
 @Component({
     selector: 'app-stix-list',
@@ -40,6 +41,7 @@ export class StixListComponent implements OnInit, AfterViewInit {
     // @Input() public stixObjects: StixObject[]; //TODO get rid of this in favor of stix list cards loading using filters
     @Input() public config: StixListConfig = {};
     @ViewChild(MatPaginator) paginator: MatPaginator;
+    @ViewChild('search') search: ElementRef;
     // @ViewChild(MatSort) public sort: MatSort;
 
     //objects to render;
@@ -53,7 +55,6 @@ export class StixListComponent implements OnInit, AfterViewInit {
     public filter: string[] = [];
     public groupBy: string[] = [];
     // search query
-    public query: string = "";
 
     // TABLE STUFF
     public tableColumns: string[] = [];
@@ -237,12 +238,44 @@ export class StixListComponent implements OnInit, AfterViewInit {
     ngAfterViewInit() {
         // get objects from backend if data is not from config
         if (!("stixObjects" in this.config)) this.applyControls();
+        fromEvent(this.search.nativeElement, 'keyup').pipe(
+            filter(Boolean),
+            debounceTime(150),
+            distinctUntilChanged(),
+            tap(_ => { 
+                if (this.paginator) this.paginator.pageIndex = 0;
+                this.applyControls();
+            })
+        ).subscribe()
+    }
+
+
+    /**
+     * Filter the given objects to those which include the query. Searches all string and string[] properties
+     * @template T the input type
+     * @param {string} query
+     * @param {T[]} objects
+     * @returns {T[]}
+     * @memberof StixListComponent
+     */
+    private filterObjects<T>(query: string, objects: T[]): T[] {
+        return objects.filter(obj => {
+            return Object.keys(obj).some(key => {
+                if (typeof obj[key] === 'string') return obj[key].toLowerCase().includes(query.toLowerCase())
+                else if (Array.isArray(obj[key])) {
+                    return obj[key].some(val => {
+                        if (typeof(val === 'string')) return val.toLowerCase().includes(query.toLowerCase());
+                    })
+                }
+            })
+        })
     }
 
     /**
      * Apply all controls and fetch objects from the back-end if configured
      */
     public applyControls() {
+        let searchString = this.search? this.search.nativeElement.value : "";
         if ("stixObjects" in this.config) {
             if (this.config.stixObjects instanceof Observable) {
                 // pull objects out of observable
@@ -253,12 +286,15 @@ export class StixListComponent implements OnInit, AfterViewInit {
                 // this.paginator.length = this.config.stixObjects.length;
                 // filter on STIX objects specified in the config
                 let filtered = this.config.stixObjects;
+                filtered = this.filterObjects(searchString, filtered); 
+                if (this.paginator) this.totalObjectCount = filtered.length;
     
                 // filter to only ones within the correct index range
                 let startIndex = this.paginator? this.paginator.pageIndex * this.paginator.pageSize : 0
                 let endIndex = this.paginator? startIndex + this.paginator.pageSize : 5;
                 // console.log(filtered, this.config.stixObjects);
                 filtered = filtered.slice(startIndex, endIndex);
+                // filter to objects matching searchString
                 // console.log(startIndex, endIndex)
                 this.objects$ = of(filtered);
                 // this.objects$ = of(filtered);
