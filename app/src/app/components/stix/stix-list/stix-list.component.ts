@@ -312,6 +312,7 @@ export class StixListComponent implements OnInit, AfterViewInit {
             else if (this.config.type == "mitigation") this.objects$ = this.restAPIConnectorService.getAllMitigations(); //TODO add limit and offset once back-end supports it
             else if (this.config.type == "tactic") this.objects$ = this.restAPIConnectorService.getAllTactics(); //TODO add limit and offset once back-end supports it
             else if (this.config.type == "technique") this.objects$ = this.restAPIConnectorService.getAllTechniques(limit, offset);
+            else if (this.config.type == "collection") this.objects$ = this.restAPIConnectorService.getAllCollections();
         }
     }
 }
