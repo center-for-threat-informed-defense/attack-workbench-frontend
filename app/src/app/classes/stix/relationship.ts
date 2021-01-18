@@ -24,6 +24,8 @@ export class Relationship extends StixObject {
             if (sdo.target_name) this.target_name = sdo.target_name;
         }
     }
+    public deserialize(raw: any) {}
+    public serialize(): any {}
 
     
     /**

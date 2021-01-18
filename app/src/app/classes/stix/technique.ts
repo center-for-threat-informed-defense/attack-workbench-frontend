@@ -23,11 +23,13 @@ export class Technique extends StixObject {
      * @param sdo the STIX domain object to initialize data from
      */
     constructor(sdo?: any) {
-        super(sdo, "attack-pattern");
+        super(sdo.stix, "attack-pattern");
         if (sdo) {
             this.deserialize(sdo);
         }
     }
+
+    public serialize(): any {}
 
     /**
      * Parse the object from the record returned from the back-end
@@ -35,7 +37,7 @@ export class Technique extends StixObject {
      * @param {*} raw the raw object to parse
      */
     public deserialize(raw: any) {
-        let sdo = raw;
+        let sdo = raw.stix;
 
         let isStringArray = function(arr): boolean {
             for (let i = 0; i < arr.length; i++) {
