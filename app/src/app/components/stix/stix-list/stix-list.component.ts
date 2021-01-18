@@ -132,63 +132,66 @@ export class StixListComponent implements OnInit, AfterViewInit {
             // set columns according to type
             switch(this.config.type) {
                 case "collection":
+                    this.addColumn("name", "name", "plain", true, ["name"]);
+                    this.addColumn("version", "version", "version");
+                    this.addColumn("imported", "imported", "timestamp");
+                    this.addColumn("released", "modified", "timestamp");
+                    this.tableDetail = [{
+                        "field": "description",
+                        "display": "descriptive"
+                    }]
+                    break;
                 case "matrix":
                 case "tactic":
                 case "mitigation":
                     this.addColumn("name", "name", "plain", true, ["name"]);
+                    this.addColumn("version", "version", "version");
+                    this.addColumn("modified","modified", "timestamp");
+                    this.addColumn("created", "created", "timestamp");
                     this.tableDetail = [{
                         "field": "description",
                         "display": "descriptive"
                     }]
-                    this.addColumn("version", "version", "version");
-                    this.addColumn("modified","modified", "timestamp");
-                    this.addColumn("created", "created", "timestamp");
                     break;
                 case "group":
                     this.addColumn("name", "name", "plain", true, ["name"]);
                     this.addColumn("aliases", "aliases", "list");
+                    this.addColumn("version", "version", "version");
+                    this.addColumn("modified","modified", "timestamp");
+                    this.addColumn("created", "created", "timestamp");
                     this.tableDetail = [{
                         "field": "description",
                         "display": "descriptive"
                     }]
-                    this.addColumn("version", "version", "version");
-                    this.addColumn("modified","modified", "timestamp");
-                    this.addColumn("created", "created", "timestamp");
                     break;
                 case "software":
                     this.addColumn("name", "name", "plain", true, ["name"]);
                     this.addColumn("type", "type", "plain");
+                    this.addColumn("version", "version", "version");
+                    this.addColumn("modified","modified", "timestamp");
+                    this.addColumn("created", "created", "timestamp");
                     this.tableDetail = [{
                         "field": "description",
                         "display": "descriptive"
                     }]
-                    this.addColumn("version", "version", "version");
-                    this.addColumn("modified","modified", "timestamp");
-                    this.addColumn("created", "created", "timestamp");
                     break;
                 case "technique":
                     this.addColumn("name", "name", "plain", true, ["name"]);
                     this.addColumn("platforms", "platforms", "list");
+                    this.addColumn("version", "version", "version");
+                    this.addColumn("modified","modified", "timestamp");
+                    this.addColumn("created", "created", "timestamp");
                     this.tableDetail = [{
                         "field": "description",
                         "display": "descriptive"
                     }]
-                    this.addColumn("version", "version", "version");
-                    this.addColumn("modified","modified", "timestamp");
-                    this.addColumn("created", "created", "timestamp");
                     break;
                 case "relationship":
                     this.addColumn("source name", "source_name", "plain", false, ["name", "relationship-left"]);
                     this.addColumn("type", "relationship_type", "plain", false, ["text-deemphasis", "relationship-joiner"]);
                     this.addColumn("target name", "target_name", "plain", false, ["name", "relationship-right"]);
-                    // this.addColumn("relationship", "", "relationship_name", false);
-
                     this.addColumn("description", "description", "descriptive", false);
-                    // this.tableDetail = [{
-                    //     "field": "description",
-                    //     "display": "descriptive"
-                    // }]
-                    controls_after.push("open-link")
+                    // controls_after.push("open-link")
                     break;
                 default:
                     this.addColumn("type", "attacktype", "plain");
@@ -205,14 +208,16 @@ export class StixListComponent implements OnInit, AfterViewInit {
             })
             this.groupBy = ["type"];
         }
+        
+        
         if ("relatedTo" in this.config) {
-
+            
         } 
         if ("query" in this.config) {
-
+            
         }
+        //controls cols setup
         //selection setup
-        // this.tableColumns_controls = Array.from(this.tableColumns); // shallow copy
         if ("select" in this.config && this.config.select != "disabled") {
             if ("selectionModel" in this.config) {
                 this.selection = this.config.selectionModel;
@@ -220,6 +225,10 @@ export class StixListComponent implements OnInit, AfterViewInit {
                 this.selection = new SelectionModel<string>(this.config.select == "many");
             }
             controls_before.unshift("select") // add select column to view
+        }
+        // open-link icon setup
+        if (this.config.clickBehavior && this.config.clickBehavior == "dialog") {
+            controls_after.push("open-link")
         }
         this.tableColumns_controls = controls_before.concat(this.tableColumns, controls_after);
         // filter setup
