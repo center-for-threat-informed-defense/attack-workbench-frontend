@@ -14,10 +14,15 @@ export class CollectionImportCategories<T> {
     additions: T[] = []; //new objects that didn't exist locally prior to the import
     changes: T[] = []; //changes to objects that already existed locally
     minor_changes: T[] = []; //objects which are changed without version number increments
+    duplicates: T[] = []; //objects with the same STIX ID and modified date as the contents of the knowledge base
+
     deprecations: T[] = []; //objects that are now deprecated but weren't before
     revocations: T[] = []; //objects which are now revoked but weren't before
+    
+    out_of_date: T[] = []; //object with the same STIX ID exists with a newer modified date, but it was modified by the same identity and is therefore not a supersede
     supersedes_collection_changes: T[] = []; //objects which have a conflict where user edits supersede the collection object-version
     supersedes_user_edits: T[] = []; //objects which have a conflict where they overwrite user changes
+    errors: T[] = []; //an error occurred while looking up existing objects with the same stixId, probably shouldn't ever occur unless something has gone really wrong
     
     /**
      * get the number of objects recorded in the categories
@@ -25,11 +30,16 @@ export class CollectionImportCategories<T> {
     public get object_count() { 
         return this.additions.length +
                this.changes.length +
-               this.deprecations.length +
                this.minor_changes.length +
+               this.duplicates.length + 
+
+               this.deprecations.length +
                this.revocations.length +
+
+               this.out_of_date.length +
                this.supersedes_collection_changes.length +
-               this.supersedes_user_edits.length;
+               this.supersedes_user_edits.length +
+               this.errors.length;
     }
 }
 
@@ -70,10 +80,10 @@ export class Collection extends StixObject {
         this.imported = new Date(raw.workspace.imported);
         this.import_categories = raw.workspace.import_categories;
         // randomly assign objects to different categories
-        let categories = Object.keys(this.import_categories);
-        for (let vr of this.contents) {
-            let category = categories[ categories.length * Math.random() << 0];
-            this.import_categories[category].push(vr.object_ref)
-        }
+        // let categories = Object.keys(this.import_categories);
+        // for (let vr of this.contents) {
+        //     let category = categories[ categories.length * Math.random() << 0];
+        //     this.import_categories[category].push(vr.object_ref)
+        // }
     }
 }

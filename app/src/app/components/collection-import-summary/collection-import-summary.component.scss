@@ -1,5 +1,15 @@
+@import "../../../style/globals";
 .collection-import-summary {
-    .mat-expansion-panel-header-title {
-        text-transform: capitalize;
+    .mat-expansion-panel {
+        .mat-expansion-panel-header-title {
+            text-transform: capitalize;
+        }
+
+        &.warn:not(.disabled) .mat-expansion-panel-header-title {
+            color: color(warn);
+        }
+    }
+    p:first-child {
+        margin-top: 0;
     }
 }
