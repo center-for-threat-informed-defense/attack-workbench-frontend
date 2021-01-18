@@ -129,13 +129,13 @@ export class CollectionImportComponent implements OnInit {
                     this.object_import_categories.relationship[category].push(new Relationship(raw))
                 break;
                 case "course-of-action": //mitigation
-                    // this.object_import_categories.mitigation[category].push(new Mitigation(raw))
+                    this.object_import_categories.mitigation[category].push(new Mitigation(raw))
                 break;
                 case "x-mitre-matrix": //matrix
-                    // this.object_import_categories.matrix[category].push(new Matrix(raw))
+                    this.object_import_categories.matrix[category].push(new Matrix(raw))
                 break;
                 case "intrusion-set": //group
-                    // this.object_import_categories.group[category].push(new Group(raw))
+                    this.object_import_categories.group[category].push(new Group(raw))
                 break;
             }
         }
@@ -167,7 +167,7 @@ export class CollectionImportComponent implements OnInit {
         let prompt = this.dialog.open(ConfirmationDialogComponent, {
             maxWidth: "25em",
             data: {
-                message: `Are you sure you want to import ${this.select.selected.length} objects? ${this.unchanged_ids.length} objects in this collection have no changes compared to your local workbench.`,
+                message: `Are you sure you want to import ${this.select.selected.length} objects?`,
                 yes_suffix: "import the collection"
             }
         })
@@ -199,7 +199,6 @@ export class CollectionImportComponent implements OnInit {
             },
             complete: () => { promptSubscription.unsubscribe() } //prevent memory leaks
         })
-
     }
 
 }
