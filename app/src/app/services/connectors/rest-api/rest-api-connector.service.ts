@@ -149,6 +149,16 @@ export class RestApiConnectorService extends ApiConnector {
      * @returns {Observable<Matrix[]>} observable of retrieved objects
      */
     public get getAllMatrices() { return this.getStixObjectsFactory<Matrix>("matrix"); }
+    /**
+     * Get all collections
+     * @param {number} [limit] the number of collections to retrieve
+     * @param {number} [offset] the number of collections to skip
+     * @param {string} [state] if specified, only get objects with this state
+     * @param {boolean} [revoked] if true, get revoked objects
+     * @param {boolean} [deprecated] if true, get deprecated objects
+     * @returns {Observable<Matrix[]>} observable of retrieved objects
+     */
+    public get getAllCollections() { return this.getStixObjectsFactory<Collection>("collection"); }
 
     /**
      * Factory to create a new STIX get by ID function
@@ -222,6 +232,13 @@ export class RestApiConnectorService extends ApiConnector {
      * @returns {Observable<Matrix>} the object with the given ID and modified date
      */
     public get getMatrix() { return this.getStixObjectFactory<Matrix>("matrix"); }
+    /**
+     * Get a single collection by STIX ID
+     * @param {string} id the object STIX ID
+     * @param {Date} [modified] if specified, get the version modified at the given date
+     * @returns {Observable<Matrix>} the object with the given ID and modified date
+     */
+    public get getCollection() { return this.getStixObjectFactory<Collection>("collection"); }
 
     /**
      * Factory to create a new STIX object creator (POST) function
@@ -406,7 +423,13 @@ export class RestApiConnectorService extends ApiConnector {
      * @returns {Observable<{}>} observable of the response body
      */
     public get deleteMatrix() { return this.deleteStixObjectFactory("matrix"); }
-
+    /**
+     * DELETE a collection
+     * @param {string} id the STIX ID of the object to delete
+     * @param {Date} modified The modified date of the version to delete
+     * @returns {Observable<{}>} observable of the response body
+     */
+    public get deleteCollection() { return this.deleteStixObjectFactory("collection"); }
     //    ___ ___  _    _    ___ ___ _____ ___ ___  _  _     _   ___ ___ ___ 
     //   / __/ _ \| |  | |  | __/ __|_   _|_ _/ _ \| \| |   /_\ | _ \_ _/ __|
     //  | (_| (_) | |__| |__| _| (__  | |  | | (_) | .` |  / _ \|  _/| |\__ \
