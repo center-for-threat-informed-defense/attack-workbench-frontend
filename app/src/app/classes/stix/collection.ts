@@ -20,6 +20,8 @@ export class Collection extends StixObject {
             this.description = sdo.description;
             this.contents = sdo.x_mitre_contents.map(vr => new VersionReference(vr))
         }
-        
     }
+
+    public deserialize(raw: any) {}
+    public serialize(): any {}
 }

@@ -13,6 +13,8 @@ export class Matrix extends StixObject {
         }
     }
 
+    public serialize(): any {}
+
     /**
      * Parse the object from the record returned from the back-end
      * @abstract
