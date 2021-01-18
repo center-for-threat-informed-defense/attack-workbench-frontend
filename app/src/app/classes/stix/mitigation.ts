@@ -6,11 +6,11 @@ export class Mitigation extends StixObject {
     public attackID: string;
 
     constructor(sdo?: any) {
-        super(sdo, "course-of-action");
+        super(sdo["stix"], "course-of-action");
         if (sdo) {
-            this.name = sdo.name;
-            this.description = sdo.description;
-            this.attackID = sdo.external_references[0].external_id;
+            this.name = sdo["stix"].name;
+            this.description = sdo["stix"].description;
+            if (sdo["stix"].external_references.length > 0) this.attackID = sdo["stix"].external_references[0].external_id;
         }
     }
 }
