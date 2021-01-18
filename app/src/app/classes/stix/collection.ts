@@ -62,7 +62,7 @@ export class Collection extends StixObject {
     public import_categories: CollectionImportCategories<string>;
 
     constructor(sdo?: any) {
-        super(sdo, "x-mitre-collection");
+        super(sdo["stix"], "x-mitre-collection");
         if (sdo) {
             this.deserialize(sdo);
         }
