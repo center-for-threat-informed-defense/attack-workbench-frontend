@@ -18,4 +18,6 @@ export class Group extends StixObject {
             this.contributors = sdo.stix.x_mitre_contributors;
         }
     }
+    public serialize(): any {}
+    public deserialize(raw: any) {}
 }

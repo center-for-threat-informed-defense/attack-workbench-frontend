@@ -9,7 +9,7 @@ import { StixDialogComponent } from '../../../views/stix/stix-dialog/stix-dialog
 
 import { MatDialog } from '@angular/material/dialog';
 import { fromEvent, Observable, of } from 'rxjs';
-import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/rest-api-connector.service';
+import { Paginated, RestApiConnectorService } from 'src/app/services/connectors/rest-api/rest-api-connector.service';
 import { debounceTime, distinctUntilChanged, filter, tap } from 'rxjs/operators';
 
 @Component({
@@ -46,7 +46,8 @@ export class StixListComponent implements OnInit, AfterViewInit {
 
     //objects to render;
     public objects$: Observable<StixObject[]>;
-    public totalObjectCount: number = 1000;
+    public data$: Observable<Paginated>;
+    public totalObjectCount: number = 0;
     //view mode
     public mode: string = "cards";
     //options provided to the user for grouping and filtering
@@ -298,7 +299,7 @@ export class StixListComponent implements OnInit, AfterViewInit {
                 let filtered = this.config.stixObjects;
                 filtered = this.filterObjects(searchString, filtered); 
                 if (this.paginator) this.totalObjectCount = filtered.length;
-    
+                
                 // filter to only ones within the correct index range
                 let startIndex = this.paginator? this.paginator.pageIndex * this.paginator.pageSize : 0
                 let endIndex = this.paginator? startIndex + this.paginator.pageSize : 5;
@@ -306,22 +307,33 @@ export class StixListComponent implements OnInit, AfterViewInit {
                 filtered = filtered.slice(startIndex, endIndex);
                 // filter to objects matching searchString
                 // console.log(startIndex, endIndex)
-                this.objects$ = of(filtered);
+                this.data$ = of({
+                    data: filtered,
+                    pagination: {
+                        total: this.config.stixObjects.length,
+                        offset: startIndex,
+                        limit: this.paginator? this.paginator.pageSize : 0
+                    }
+                });
                 // this.objects$ = of(filtered);
                 // console.log(this.objects$);
                 // console.log(this.paginator);
             }
         } else {
             // fetch objects from backend
-            let limit = this.paginator.pageSize;
-            let offset = this.paginator.pageIndex * this.paginator.pageSize;
-            if (this.config.type == "software") this.objects$ = this.restAPIConnectorService.getAllSoftware(); //TODO add limit and offset once back-end supports it
-            else if (this.config.type == "group") this.objects$ = this.restAPIConnectorService.getAllGroups(); //TODO add limit and offset once back-end supports it
-            else if (this.config.type == "matrix") this.objects$ = this.restAPIConnectorService.getAllMatrices(); //TODO add limit and offset once back-end supports it
-            else if (this.config.type == "mitigation") this.objects$ = this.restAPIConnectorService.getAllMitigations(); //TODO add limit and offset once back-end supports it
-            else if (this.config.type == "tactic") this.objects$ = this.restAPIConnectorService.getAllTactics(); //TODO add limit and offset once back-end supports it
-            else if (this.config.type == "technique") this.objects$ = this.restAPIConnectorService.getAllTechniques(limit, offset);
-            else if (this.config.type == "collection") this.objects$ = this.restAPIConnectorService.getAllCollections();
+            let limit = this.paginator? this.paginator.pageSize : 5;
+            let offset = this.paginator? this.paginator.pageIndex * limit : 0;
+            if (this.config.type == "software") this.data$ = this.restAPIConnectorService.getAllSoftware(limit, offset); //TODO add limit and offset once back-end supports it
+            else if (this.config.type == "group") this.data$ = this.restAPIConnectorService.getAllGroups(limit, offset); //TODO add limit and offset once back-end supports it
+            else if (this.config.type == "matrix") this.data$ = this.restAPIConnectorService.getAllMatrices(limit, offset); //TODO add limit and offset once back-end supports it
+            else if (this.config.type == "mitigation") this.data$ = this.restAPIConnectorService.getAllMitigations(limit, offset); //TODO add limit and offset once back-end supports it
+            else if (this.config.type == "tactic") this.data$ = this.restAPIConnectorService.getAllTactics(limit, offset); //TODO add limit and offset once back-end supports it
+            else if (this.config.type == "technique") this.data$ = this.restAPIConnectorService.getAllTechniques(limit, offset);
+            else if (this.config.type == "collection") this.data$ = this.restAPIConnectorService.getAllCollections(limit, offset);
+            let subscription = this.data$.subscribe({
+                next: (data) => { this.totalObjectCount = data.pagination.total; },
+                complete: () => { subscription.unsubscribe() }
+            })
         }
     }
 }
