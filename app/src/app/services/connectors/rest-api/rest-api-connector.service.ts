@@ -78,7 +78,10 @@ export class RestApiConnectorService extends ApiConnector {
                 tap(results => console.log(`retrieved ${plural}`, results)), // on success, trigger the success notification
                 map(results => { 
                     let x = results as Array<any>;
-                    return x.map(raw => new attackClass(raw));
+                    return x.map(y => {
+                        if (y.stix.type == "malware" || y.stix.type == "tool") return new Software(y.stix.type, y);
+                        else return new attackClass(y);
+                    });
                 }),
                 catchError(this.handleError_array([])), // on error, trigger the error notification and continue operation without crashing (returns empty item)
                 share() // multicast so that multiple subscribers don't trigger the call twice. THIS MUST BE THE LAST LINE OF THE PIPE
@@ -167,7 +170,10 @@ export class RestApiConnectorService extends ApiConnector {
                         console.warn("empty result")
                         return []; 
                     }
-                    return x.map(y => new attackClass(y));
+                    return x.map(y => {
+                        if (y.stix.type == "malware" || y.stix.type == "tool") return new Software(y.stix.type, y);
+                        else return new attackClass(y);
+                    });
                 }),
                 catchError(this.handleError_array([])), // on error, trigger the error notification and continue operation without crashing (returns empty item)
                 share() // multicast so that multiple subscribers don't trigger the call twice. THIS MUST BE THE LAST LINE OF THE PIPE
@@ -232,7 +238,8 @@ export class RestApiConnectorService extends ApiConnector {
                 tap(this.handleSuccess(`${attackType} created`)),
                 map(result => {
                     let x = result as any;
-                    return new attackClass(x);
+                    if (x.stix.type == "malware" || x.stix.type == "tool") return new Software(x.stix.type, x);
+                    else return new attackClass(x);
                 }),
                 catchError(this.handleError_single()),
                 share() // multicast so that multiple subscribers don't trigger the call twice. THIS MUST BE THE LAST LINE OF THE PIPE
@@ -293,7 +300,8 @@ export class RestApiConnectorService extends ApiConnector {
                 tap(this.handleSuccess(`updated ${attackType}`)),
                 map(result => {
                     let x = result as any;
-                    return new attackClass(x);
+                    if (x.stix.type == "malware" || x.stix.type == "tool") return new Software(x.stix.type, x);
+                    else return new attackClass(x);
                 }),
                 catchError(this.handleError_single()),
                 share() // multicast so that multiple subscribers don't trigger the call twice. THIS MUST BE THE LAST LINE OF THE PIPE

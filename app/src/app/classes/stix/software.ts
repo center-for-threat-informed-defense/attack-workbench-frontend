@@ -13,7 +13,7 @@ export class Software extends StixObject {
             this.name = sdo.stix.name;
             this.description = sdo.stix.description;
             this.platforms = sdo.stix.x_mitre_platforms;
-            this.attackID = sdo.stix.external_references[0].external_id;
+            if (sdo.stix.external_references.length > 0) this.attackID = sdo.stix.external_references[0].external_id;
         }
     }
 }
