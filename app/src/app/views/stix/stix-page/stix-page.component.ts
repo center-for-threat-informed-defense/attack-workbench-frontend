@@ -38,7 +38,11 @@ export class StixPageComponent implements OnInit {
         else if (objectType == "mitigation") this.objects$ = this.restAPIConnectorService.getMitigation(objectStixID);
         else if (objectType == "tactic") this.objects$ = this.restAPIConnectorService.getTactic(objectStixID);
         else if (objectType == "technique") this.objects$ = this.restAPIConnectorService.getTechnique(objectStixID);
-        this.objects$.subscribe(result => {this.updateBreadcrumbs(result, objectType)});
+        else if (objectType == "collection") this.objects$ = this.restAPIConnectorService.getCollection(objectStixID);
+        let  subscription = this.objects$.subscribe({
+            next: result => {this.updateBreadcrumbs(result, objectType)},
+            complete: () => { subscription.unsubscribe() }
+        });
     }
     private updateBreadcrumbs(result, objectType) {
         if (result.length == 0) {
