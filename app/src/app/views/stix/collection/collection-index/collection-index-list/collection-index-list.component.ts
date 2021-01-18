@@ -15,9 +15,18 @@ export class CollectionIndexListComponent implements OnInit {
     constructor(private restAPIConnector: RestApiConnectorService) { }
     
     public collectionIndexes$: Observable<CollectionIndex[]>;
+    public subscribed_collections = [];
 
     ngOnInit(): void {
         this.refreshIndexes();
+        let subscription = this.restAPIConnector.getAllCollections().subscribe({
+            next: (results) => {
+                for (let collection of results) {
+                    this.subscribed_collections.push(`${collection.stixID}@${collection.modified}`)
+                }
+            },
+            complete: () => { subscription.unsubscribe() }
+        })
     }
 
     public refreshIndexes() {

@@ -35,6 +35,14 @@ export class CollectionIndexViewComponent implements OnInit {
         })
     }
 
+    public versionDownloaded(version: CollectionVersion, ref: CollectionReference): boolean {
+        let result = this.config.subscribed_collections.some(subscribed => {
+            let matcher = `${ref.id}@${version.modified}`;
+            return matcher == subscribed;
+        });
+        return result;
+    }
+
     /**
      * Subscribe to the given collection reference
      * @param {CollectionReference} collectionRef
@@ -115,13 +123,12 @@ export class CollectionIndexViewComponent implements OnInit {
         })
     }
 
-    public onVersionClick(version: CollectionVersion) {
-        // view prior import
-        // if (version.downloaded) {
-            // TODO
-        // }
-        // trigger download
-        this.router.navigate(["/collection/import-collection"], {queryParams: { "url": encodeURIComponent(version.url) }})
+    public onVersionClick(version: CollectionVersion, ref: CollectionReference) {
+        if (this.versionDownloaded(version, ref)) { //view prior import
+            this.router.navigate([`/collection/${ref.id}`]);
+        } else { // go to download page
+            this.router.navigate(["/collection/import-collection"], {queryParams: { "url": encodeURIComponent(version.url) }})
+        }
     }
 
 
@@ -129,6 +136,9 @@ export class CollectionIndexViewComponent implements OnInit {
 export interface CollectionIndexViewConfig {
     // the index to show
     index: CollectionIndex;
+    // "id@modified" for every subscribed collection. 
+    // Used to determine if the given collection versions have been imported already
+    subscribed_collections: any[];
     // default false. If true, show the collection title in the component
     show_title: boolean;
     // default true. If false, hides subscribe actions from the component
