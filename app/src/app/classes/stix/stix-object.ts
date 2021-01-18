@@ -39,7 +39,7 @@ export abstract class StixObject extends Serializable {
     constructor(sdo?: any, type?: string) {
         super();
         if (sdo) {
-            this.deserialize(sdo);
+            this.base_deserialize(sdo);
         } else {
             // create new SDO
             this.stixID = type + "--" + uuid();
@@ -67,7 +67,7 @@ export abstract class StixObject extends Serializable {
      * @abstract
      * @returns {*} the raw object to send
      */
-    public serialize(): any {
+    public base_serialize(): any {
         return {
             "type": this.type,
             "id": this.stixID,
@@ -85,7 +85,7 @@ export abstract class StixObject extends Serializable {
      * @abstract
      * @param {*} raw the raw object to parse
      */
-    public deserialize(raw: any) {
+    public base_deserialize(raw: any) {
         let sdo = raw;
         // initialize common fields from SDO
         this.stixID = sdo.id;

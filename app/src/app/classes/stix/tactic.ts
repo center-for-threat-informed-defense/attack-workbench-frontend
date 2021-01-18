@@ -15,4 +15,6 @@ export class Tactic extends StixObject {
             this.domains = sdo["workspace"].domains;
         }
     }
+    public deserialize(raw: any) {}
+    public serialize(): any {}
 }
