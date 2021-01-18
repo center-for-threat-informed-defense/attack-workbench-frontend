@@ -1,14 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { Title } from '@angular/platform-browser';
 import { ActivatedRoute } from '@angular/router';
 import { BreadcrumbService } from 'angular-crumbs';
-import { Group } from 'src/app/classes/stix/group';
 import { Relationship } from 'src/app/classes/stix/relationship';
 import { Software } from 'src/app/classes/stix/software';
-import { Technique } from 'src/app/classes/stix/technique';
-import { GroupService } from 'src/app/services/stix/group/group.service';
-import { SoftwareService } from 'src/app/services/stix/software/software.service';
-import { TechniqueService } from 'src/app/services/stix/technique/technique.service';
 import { StixViewPage } from '../../stix-view-page';
 
 @Component({
