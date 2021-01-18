@@ -1,10 +1,8 @@
 import { Component, OnInit, Input, ViewEncapsulation, ViewChild, AfterViewInit } from '@angular/core';
 import { StixObject } from 'src/app/classes/stix/stix-object';
-import { CollectionService } from 'src/app/services/stix/collection/collection.service';
-import {animate, state, style, transition, trigger} from '@angular/animations';
+import {animate, style, transition, trigger} from '@angular/animations';
 import {MatSort} from '@angular/material/sort';
 import {MatPaginator} from '@angular/material/paginator';
-import { RouterModule } from '@angular/router';
 
 import { SelectionModel } from '@angular/cdk/collections';
 import { StixDialogComponent } from '../../../views/stix/stix-dialog/stix-dialog.component';
@@ -42,6 +40,7 @@ export class StixListComponent implements OnInit, AfterViewInit {
     // @Input() public stixObjects: StixObject[]; //TODO get rid of this in favor of stix list cards loading using filters
     @Input() public config: StixListConfig = {};
     @ViewChild(MatPaginator) paginator: MatPaginator;
+    // @ViewChild(MatSort) public sort: MatSort;
 
     //objects to render;
     public objects$: Observable<StixObject[]>;
@@ -62,24 +61,9 @@ export class StixListComponent implements OnInit, AfterViewInit {
     public tableColumns_settings: Map<string, any> = new Map<string, any>(); // property to display for each displayProperty
     public tableDetail: any[];
     public expandedElement: StixObject | null;
-    // @ViewChild(MatSort) public sort: MatSort;
-    // @ViewChild(MatPaginator) public paginator: MatPaginator;
 
     // Selection stuff
     public selection: SelectionModel<string>;
-    /** Whether the number of selected elements matches the total number of rows. */
-    // public isAllSelected() {
-    //     const numSelected = this.selection.selected.length;
-    //     const numRows = this.stixObjects.length;
-    //     return numSelected == numRows;
-    // }
-    
-    // /** Selects all rows if they are not all selected; otherwise clear selection. */
-    // public selectAll() {
-    //     this.isAllSelected() ?
-    //         this.selection.clear() :
-    //         this.stixObjects.forEach(row => this.selection.select(row.stixID));
-    // }
 
     /**
      * Add a column to the table
@@ -114,10 +98,6 @@ export class StixListComponent implements OnInit, AfterViewInit {
     }
     
 
-
-
-
-
     //all possible each type of filter/groupBy
     private types: FilterValue[] = [
         {"value": "type.group", "label": "group"},
@@ -140,7 +120,7 @@ export class StixListComponent implements OnInit, AfterViewInit {
         {"value": "status.revoked", "label": "revoked"}
     ]
 
-    constructor(private collectionService: CollectionService, public dialog: MatDialog, private restAPIConnectorService: RestApiConnectorService) {}
+    constructor(public dialog: MatDialog, private restAPIConnectorService: RestApiConnectorService) {}
     ngOnInit() {
         this.filterOptions = []
         // parse the config
@@ -230,6 +210,7 @@ export class StixListComponent implements OnInit, AfterViewInit {
         if ("query" in this.config) {
 
         }
+        //selection setup
         // this.tableColumns_controls = Array.from(this.tableColumns); // shallow copy
         if ("select" in this.config && this.config.select != "disabled") {
             if ("selectionModel" in this.config) {
@@ -240,38 +221,21 @@ export class StixListComponent implements OnInit, AfterViewInit {
             controls_before.unshift("select") // add select column to view
         }
         this.tableColumns_controls = controls_before.concat(this.tableColumns, controls_after);
-
-        // if ("domain" in this.config) { this.filter.push("domain." + this.config.domain); }
-        // else {
-        // this.filterOptions.push({
-        //     "name": "domain", //TODO dynamic domain values
-        //     "disabled": "domain" in this.config,
-        //     "values": this.domains
-        // })
-        //     if (this.groupBy.length == 0) this.groupBy = ["domain"];
-        // }
-        // if ("collection" in this.config) { this.filter.push("collection." + this.config.collection); }
-        // else {
-        //     this.filterOptions.push({
-        //         "name": "collection", //TODO dynamic collection list
-        //         "disabled": "collection" in this.config,
-        //         "values": this.collections
-        //     })
-        //     if (this.groupBy.length == 0) this.groupBy = ["collection"];
-        // }
-        // if ("status" in this.config) { this.filter.push("status." + this.config.status); }
-        // else {
+        // filter setup
         this.filterOptions.push({
             "name": "status",
             "disabled": "status" in this.config,
             "values": this.statuses
         })
+        // get data from config (if we are not connecting to back-end)
         if ("stixObjects" in this.config && !(this.config.stixObjects instanceof Observable)) {
             this.totalObjectCount = this.config.stixObjects.length;
             this.applyControls();
         }
     }
+
     ngAfterViewInit() {
+        // get objects from backend if data is not from config
         if (!("stixObjects" in this.config)) this.applyControls();
     }
 
@@ -317,8 +281,6 @@ export class StixListComponent implements OnInit, AfterViewInit {
 
 //allowed types for StixListConfig
 type type_attacktype = "collection" | "group" | "matrix" | "mitigation" | "software" | "tactic" | "technique" | "relationship";
-type type_domain = "enterprise-attack" | "mobile-attack";
-type type_status = "status.wip" | "status.awaiting-review" | "status.reviewed";
 type selection_types = "one" | "many" | "disabled"
 export interface StixListConfig {
     /* if specified, shows the given STIX objects in the table instead of loading from the back-end based on other configurations. */

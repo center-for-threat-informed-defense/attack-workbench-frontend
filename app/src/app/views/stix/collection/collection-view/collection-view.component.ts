@@ -1,9 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { Observable } from 'rxjs';
-import { switchMap } from 'rxjs/operators';
-import { ParamMap, ActivatedRoute } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { Collection } from 'src/app/classes/stix/collection';
-import { CollectionService } from 'src/app/services/stix/collection/collection.service';
 
 @Component({
   selector: 'app-collection-view',
@@ -14,13 +11,8 @@ export class CollectionViewComponent implements OnInit {
     
     public collection: Collection;
 
-    constructor(private route: ActivatedRoute, private collectionService: CollectionService) { }
+    constructor(private route: ActivatedRoute) { }
 
-    ngOnInit() {
-        let id = this.route.snapshot.paramMap.get("id");
-        console.log(id);
-        this.collection = this.collectionService.get(id, true);
-        console.log(this.collection);
-    }
+    ngOnInit() {}
 
 }

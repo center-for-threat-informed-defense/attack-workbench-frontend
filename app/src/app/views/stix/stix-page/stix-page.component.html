@@ -5,7 +5,7 @@
         </div>
         <ng-template #showObject>
             <app-relationship-view *ngIf="objects[0].attackType == 'relationship'" [config]="buildConfig(objects)"></app-relationship-view>
-            <app-group-view *ngIf="objects[0].attackType == 'relationship'" [config]="buildConfig(objects)"></app-group-view>
+            <app-group-view *ngIf="objects[0].attackType == 'group'" [config]="buildConfig(objects)"></app-group-view>
             <app-software-view *ngIf="objects[0].attackType == 'software'" [config]="buildConfig(objects)"></app-software-view>
             <app-matrix-view *ngIf="objects[0].attackType == 'matrix'" [config]="buildConfig(objects)"></app-matrix-view>
             <app-mitigation-view *ngIf="objects[0].attackType == 'mitigation'" [config]="buildConfig(objects)"></app-mitigation-view>
