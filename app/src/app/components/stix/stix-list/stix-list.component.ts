@@ -238,9 +238,10 @@ export class StixListComponent implements OnInit, AfterViewInit {
     ngAfterViewInit() {
         // get objects from backend if data is not from config
         if (!("stixObjects" in this.config)) this.applyControls();
+        // set up listener to search input
         fromEvent(this.search.nativeElement, 'keyup').pipe(
             filter(Boolean),
-            debounceTime(150),
+            debounceTime(250),
             distinctUntilChanged(),
             tap(_ => { 
                 if (this.paginator) this.paginator.pageIndex = 0;
