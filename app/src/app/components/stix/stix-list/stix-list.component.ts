@@ -133,7 +133,7 @@ export class StixListComponent implements OnInit, AfterViewInit {
             switch(this.config.type) {
                 case "collection":
                     this.addColumn("name", "name", "plain", true, ["name"]);
-                    this.addColumn("version", "version", "version");
+                    this.addColumn("highest version", "version", "version");
                     this.addColumn("imported", "imported", "timestamp");
                     this.addColumn("released", "modified", "timestamp");
                     this.tableDetail = [{
