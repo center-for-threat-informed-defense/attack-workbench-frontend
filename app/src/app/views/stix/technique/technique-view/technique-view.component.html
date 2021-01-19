@@ -55,7 +55,7 @@
         </div>
     </div>
     <!-- DOMAIN SPECIFIC FIELDS -->
-    <div *ngIf="technique.domains" class="row">
+    <div *ngIf="technique.domains.length > 0" class="row">
         <div class="col">
             <app-list-property class="grow-to-row" [config]="{
                 mode: 'view',
@@ -96,7 +96,7 @@
         </div>
     </div>
     <!-- TACTIC SPECIFIC FIELDS -->
-    <div *ngIf="technique.tactics" class="row">
+    <div *ngIf="technique.tactics.length > 0" class="row">
         <div class="col">
             <app-list-property class="grow-to-row" [config]="{
                 mode: 'view',
