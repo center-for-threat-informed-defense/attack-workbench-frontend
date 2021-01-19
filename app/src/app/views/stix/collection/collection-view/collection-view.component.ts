@@ -37,6 +37,55 @@ export class CollectionViewComponent extends StixViewPage implements OnInit {
                 group:        new CollectionImportCategories<Group>()
             }
 
+            //build category lookup
+            let idToCategory = {};
+            for (let category in collection.import_categories) {
+                for (let stixId of collection.import_categories[category]) idToCategory[stixId] = category;
+            }
+
+            //build ID to name lookup
+            let idToName = {};
+            for (let object of collection.stix_contents) {
+                let x = object as any;
+                if (object.type != "relationship") idToName[object.stixID] = x.name;
+            }
+            //parse objects into categories
+            for (let object of collection.stix_contents) {
+                if (!(object.stixID in idToCategory)) {
+                    // does not belong to a change category
+                    continue;
+                }
+                let category = idToCategory[object.stixID];
+                switch (object.type) {
+                    case "attack-pattern": //technique
+                        categories.technique[category].push(object);
+                    break;
+                    case "x-mitre-tactic": //tactic
+                        categories.tactic[category].push(object);
+                    break;
+                    case "malware": //software
+                    case "tool": 
+                        categories.software[category].push(object);
+                    break;
+                    case "relationship": //relationship
+                        let x = object as Relationship;
+                        x.source_name = x.source_ref in idToName? idToName[x.source_ref] : "unknown object";
+                        x.target_name = x.target_ref in idToName? idToName[x.target_ref] : "unknown object";
+                        categories.relationship[category].push(object);
+                    break;
+                    case "course-of-action": //mitigation
+                        categories.mitigation[category].push(object);
+                    break;
+                    case "x-mitre-matrix": //matrix
+                        categories.matrix[category].push(object);
+                    break;
+                    case "intrusion-set": //group
+                        categories.group[category].push(object);
+                    break;
+                }
+            }
+
+
 
             this.collection_import_categories.push(categories);
         }
