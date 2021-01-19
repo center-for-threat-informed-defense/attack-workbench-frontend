@@ -90,13 +90,27 @@ export class RestApiConnectorService extends ApiConnector {
                 tap(results => console.log(`retrieved ${plural}`, results)), // on success, trigger the success notification
                 map(results => { 
                     let response = results as any;
-                    let data = response.data as Array<any>;
-                    data = data.map(y => {
-                        if (y.stix.type == "malware" || y.stix.type == "tool") return new Software(y.stix.type, y);
-                        else return new attackClass(y);
-                    });
-                    response.data = data;
-                    return response;
+                    if (limit || offset) { // returned a paginated
+                        let data = response.data as Array<any>;
+                        data = data.map(y => {
+                            if (y.stix.type == "malware" || y.stix.type == "tool") return new Software(y.stix.type, y);
+                            else return new attackClass(y);
+                        });
+                        response.data = data;
+                        return response;
+                    } else { //returned a stixObject[]
+                        return {
+                            pagination: { 
+                                total: response.length,
+                                limit: -1,
+                                offset: -1
+                            },
+                            data: response.map(y => {
+                                if (y.stix.type == "malware" || y.stix.type == "tool") return new Software(y.stix.type, y);
+                                else return new attackClass(y);
+                            })
+                        }
+                    }
                 }),
                 catchError(this.handleError_array([])), // on error, trigger the error notification and continue operation without crashing (returns empty item)
                 share() // multicast so that multiple subscribers don't trigger the call twice. THIS MUST BE THE LAST LINE OF THE PIPE

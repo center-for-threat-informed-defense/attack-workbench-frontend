@@ -3,6 +3,7 @@ import { CollectionIndex} from 'src/app/classes/collection-index';
 import * as moment from 'moment';
 import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/rest-api-connector.service';
 import { Observable } from 'rxjs';
+import { StixObject } from 'src/app/classes/stix/stix-object';
 
 @Component({
   selector: 'app-collection-index-list',
@@ -21,7 +22,7 @@ export class CollectionIndexListComponent implements OnInit {
         this.refreshIndexes();
         let subscription = this.restAPIConnector.getAllCollections().subscribe({
             next: (results) => {
-                for (let collection of results) {
+                for (let collection of results.data) {
                     this.subscribed_collections.push(`${collection.stixID}@${collection.modified}`)
                 }
             },
