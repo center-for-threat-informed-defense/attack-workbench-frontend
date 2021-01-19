@@ -22,7 +22,7 @@ export class MatrixService extends StixService {
         this.http.get(this.domainData['enterprise']).subscribe(data => {
             let matrices = data['objects'].filter((o) => o.type === 'x-mitre-matrix');
             for(let matrix of matrices) {
-                let m = new Matrix(matrix);
+                let m = new Matrix({"stix": matrix, "workspace": {"domains":[]}});
                 if(!this.matrices.some(o => o.stixID === m.stixID) ) {
                     this.matrices.push(m);
                 }
