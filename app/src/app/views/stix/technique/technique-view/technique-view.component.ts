@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Technique } from 'src/app/classes/stix/technique';
 import { StixViewPage } from '../../stix-view-page';
@@ -8,7 +8,8 @@ import { Tactic } from 'src/app/classes/stix/tactic';
 @Component({
   selector: 'app-technique-view',
   templateUrl: './technique-view.component.html',
-  styleUrls: ['./technique-view.component.scss']
+  styleUrls: ['./technique-view.component.scss'],
+  encapsulation: ViewEncapsulation.None
 })
 export class TechniqueViewComponent extends StixViewPage implements OnInit {
 
