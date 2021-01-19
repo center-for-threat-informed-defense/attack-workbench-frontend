@@ -107,12 +107,15 @@ export class CollectionIndex extends Serializable {
     public deserialize(raw: any) {
         if (raw.collection_index) {
             this.collection_index = raw.collection_index;
-            this.collection_index.collections = this.collection_index.collections.map(rawRef => {
-                let ref = new CollectionReference();
-                ref.deserialize(rawRef);
-                ref.subscribed = raw.workspace.update_policy.subscriptions.includes(ref.id);
-                return ref;
-            });
+
+            if (this.collection_index.collections) {
+                this.collection_index.collections = this.collection_index.collections.map(rawRef => {
+                    let ref = new CollectionReference();
+                    ref.deserialize(rawRef);
+                    ref.subscribed = raw.workspace.update_policy.subscriptions.includes(ref.id);
+                    return ref;
+                });
+            } else { console.error("Error: collections field does not exist in collection index."); }
         }
         if (raw.workspace) this.workspace = raw.workspace;
     }
@@ -127,5 +130,13 @@ export class CollectionIndex extends Serializable {
         }
         representation.collection_index.collections = representation.collection_index.collections.map(ref =>  ref.serialize())
         return representation;
+    }
+
+    /**
+     * Check the current object is a valid collection index
+     */
+    public valid(): boolean {
+        return ( this.collection_index.id && this.collection_index.name && this.collection_index.name.length > 0 &&
+                 this.collection_index.created && this.collection_index.modified && this.collection_index.collections !== undefined );
     }
 }

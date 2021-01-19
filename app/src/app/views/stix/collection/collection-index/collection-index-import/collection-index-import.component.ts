@@ -4,6 +4,7 @@ import { MatStepper } from '@angular/material/stepper';
 import { CollectionIndex } from 'src/app/classes/collection-index';
 import { CollectionManagerConnectorService } from 'src/app/services/connectors/collection-manager/collection-manager-connector.service';
 import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/rest-api-connector.service';
+import { MatSnackBar } from "@angular/material/snack-bar";
 
 @Component({
   selector: 'app-collection-index-import',
@@ -14,7 +15,10 @@ import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/re
 export class CollectionIndexImportComponent implements OnInit {
     @ViewChild(MatStepper) public stepper: MatStepper;
 
-    constructor(public dialogRef: MatDialogRef<CollectionIndexImportComponent>, private collectionManagerConnector: CollectionManagerConnectorService, private restAPIConnector: RestApiConnectorService) { }
+    constructor(public dialogRef: MatDialogRef<CollectionIndexImportComponent>, 
+                private collectionManagerConnector: CollectionManagerConnectorService, 
+                private restAPIConnector: RestApiConnectorService, 
+                private snackbar: MatSnackBar) { }
 
     ngOnInit(): void {
     }
@@ -31,8 +35,9 @@ export class CollectionIndexImportComponent implements OnInit {
         // TODO interact with collection manager to trigger download process
         this.collectionManagerConnector.getRemoteIndex(this.url).subscribe((index) => {
             console.log("done");
-            this.index = index;
-            this.stepper.next();
+            this.index = new CollectionIndex(index);
+            if (this.index.valid()) { this.stepper.next(); }
+            else { this.error("Invalid collection index.") } //show snackbar
         })
     }
     /**
@@ -46,4 +51,15 @@ export class CollectionIndexImportComponent implements OnInit {
         })
     }
 
+    /**
+     * Show error message
+     * @param {msg} message the error message to show
+     */
+    public error(msg: string): void {
+        console.error(msg);
+        this.snackbar.open(msg, "dismiss", {
+            duration: 2000,
+            panelClass: "warn"
+        })
+    }
 }
