@@ -47,10 +47,30 @@ export class VersionReference {
     public object_ref: string;
     public object_modified: Date;
     constructor(raw: any) {
-        this.object_ref = raw.object_ref;
-        this.object_modified = new Date(raw.object_modified);
+        if (raw) {
+            this.deserialize(raw);
+        }
     }
-}   
+
+    /**
+     * Parse the object from the record returned from the back-end
+     * @abstract
+     * @param {*} raw the raw object to parse
+     */
+    public deserialize(raw: any) {
+        let sdo = raw;
+
+        if ("object_ref" in sdo) {
+            if (typeof(sdo.object_ref) === "string") this.object_ref = sdo.object_ref;
+            else console.error("TypeError: object_ref field is not a string:", sdo.object_ref, "(",typeof(sdo.object_ref),")")
+        } else this.object_ref = "";
+
+        if ("object_modified" in sdo) {
+            if (typeof(sdo.object_modified) === "string") this.object_modified = new Date(sdo.object_modified);
+            else console.error("TypeError: object_modified field is not a string:", sdo.object_modified, "(",typeof(sdo.object_modified),")")
+        } else this.object_modified = new Date();
+    }
+}
 
 export class Collection extends StixObject {
     public name: string;
@@ -62,25 +82,52 @@ export class Collection extends StixObject {
     public import_categories: CollectionImportCategories<string>;
 
     constructor(sdo?: any) {
-        super(sdo["stix"], "x-mitre-collection");
+        super(sdo, "x-mitre-collection");
         if (sdo) {
             this.deserialize(sdo);
         }
     }
 
-    public serialize() {}
+    public serialize(): any {};
 
+    /**
+     * Parse the object from the record returned from the back-end
+     * @abstract
+     * @param {*} raw the raw object to parse
+     */
     public deserialize(raw: any) {
-        this.name = raw.stix.name;
-        this.description = raw.stix.description;
-        if ("x_mitre_contents" in raw.stix) this.contents = raw.stix.x_mitre_contents.map(vr => new VersionReference(vr))
-        this.imported = new Date(raw.workspace.imported);
-        this.import_categories = raw.workspace.import_categories;
-        // randomly assign objects to different categories
-        // let categories = Object.keys(this.import_categories);
-        // for (let vr of this.contents) {
-        //     let category = categories[ categories.length * Math.random() << 0];
-        //     this.import_categories[category].push(vr.object_ref)
-        // }
+        if ("stix" in raw) {
+            let sdo = raw.stix;
+
+            if ("name" in sdo) {
+                if (typeof(sdo.name) === "string") this.name = sdo.name;
+                else console.error("TypeError: name field is not a string:", sdo.name, "(",typeof(sdo.name),")")
+            } else this.name = "";
+
+            if ("description" in sdo) {
+                if (typeof(sdo.description) === "string") this.description = sdo.description;
+                else console.error("TypeError: description field is not a string:", sdo.description, "(",typeof(sdo.description),")")
+            } else this.description = "";
+
+            if ("x_mitre_contents" in sdo) {            
+                if (typeof(sdo.x_mitre_contents) === "object") this.contents = sdo.x_mitre_contents.map(vr => new VersionReference(vr))
+                else console.error("TypeError: x_mitre_contents field is not an object:", sdo.x_mitre_contents, "(",typeof(sdo.x_mitre_contents),")")
+            }
+        }
+        else console.error("ObjectError: 'stix' field does not exist in object");
+
+        if ("workspace" in raw) {
+            let sdo = raw.workspace;
+
+            if ("imported" in sdo) {
+                if (typeof(sdo.imported) === "string") this.imported = new Date(sdo.imported);
+                else console.error("TypeError: imported field is not a string:", sdo.imported, "(",typeof(sdo.imported),")")
+            } else this.imported = new Date();
+
+            if ("import_categories" in sdo) {
+                if (typeof(sdo.import_categories) === "object") this.import_categories = sdo.import_categories;
+                else console.error("TypeError: import_categories field is not an object:", sdo.import_categories, "(",typeof(sdo.import_categories),")")
+            }
+        }
     }
 }
