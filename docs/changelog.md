@@ -32,8 +32,8 @@
 
 # Changelog
 
-## 19 January, 2021
-### ATT&CK Workbench version 00.01.00
+## 19 January 2021
+### ATT&CK Workbench version 0.1.0
 #### New Features
 - Created object view pages for matrix, technique, tactic, mitigation, group, and software objects.
 - Added the ability to browse and import collection indexes.
