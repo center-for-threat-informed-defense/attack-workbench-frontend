@@ -56,12 +56,12 @@ export class Collection extends StixObject {
             if ("name" in sdo) {
                 if (typeof(sdo.name) === "string") this.name = sdo.name;
                 else console.error("TypeError: name field is not a string:", sdo.name, "(",typeof(sdo.name),")")
-            } this.name = "";
+            } else this.name = "";
 
             if ("description" in sdo) {
                 if (typeof(sdo.description) === "string") this.description = sdo.description;
                 else console.error("TypeError: description field is not a string:", sdo.description, "(",typeof(sdo.description),")")
-            } this.description = "";
+            } else this.description = "";
 
             if ("x_mitre_contents" in sdo) {            
                 if (typeof(sdo.x_mitre_contents) === "object") this.contents = sdo.x_mitre_contents.map(vr => new VersionReference(vr))

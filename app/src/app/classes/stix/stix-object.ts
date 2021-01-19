@@ -98,27 +98,27 @@ export abstract class StixObject extends Serializable {
             if ("type" in sdo) {
                 if (typeof(sdo.type) === "string") this.type = sdo.type;
                 else console.error("TypeError: type field is not a string:", sdo.type, "(",typeof(sdo.type),")")
-            } 
+            }
 
             if ("created" in sdo) {
                 if (typeof(sdo.created) === "string") this.created = new Date(sdo.created);
                 else console.error("TypeError: created field is not a string:", sdo.created, "(",typeof(sdo.created),")")
-            }
+            } else this.created = new Date();
+
             if ("modified" in sdo) {
                 if (typeof(sdo.modified) === "string") this.modified = new Date(sdo.modified);
                 else console.error("TypeError: modified field is not a string:", sdo.modified, "(",typeof(sdo.modified),")")
-            }
+            } else this.modified = new Date();
+
             if ("x_mitre_version" in sdo) {
                 if (typeof(sdo.x_mitre_version) === "string") this.version = new VersionNumber(sdo.x_mitre_version);
                 else console.error("TypeError: x_mitre_version field is not a string:", sdo.x_mitre_version, "(",typeof(sdo.x_mitre_version),")")
-            }
-            else this.version = new VersionNumber("0.1");
+            } else this.version = new VersionNumber("0.1");
     
             if ("external_references" in sdo) {
                 if (typeof(sdo.external_references) === "object")  this.external_references = new ExternalReferences(sdo.external_references);
                 else console.error("TypeError: external_references field is not an object:", sdo.external_references, "(",typeof(sdo.external_references),")")
-            }
-            else  this.external_references = new ExternalReferences();
+            } else this.external_references = new ExternalReferences();
         
             if ("x_mitre_deprecated" in sdo) {
                 if (typeof(sdo.x_mitre_deprecated) === "boolean") this.deprecated = sdo.x_mitre_deprecated;
