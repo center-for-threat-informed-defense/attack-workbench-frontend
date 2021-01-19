@@ -53,9 +53,11 @@ export class Relationship extends StixObject {
                 else console.error("TypeError: description field is not a string:", sdo.description, "(",typeof(sdo.description),")")
             } else this.description = "";
 
+        }
+        if ("workspace" in raw) {
             // THIS IS NOT PART OF THE SPEC, AND IS A PLACEHOLDER
-            if (sdo.workspace.source_name) this.source_name = sdo.workspace.source_name;
-            if (sdo.workspace.target_name) this.target_name = sdo.workspace.target_name;
+            if (raw.workspace.source_name) this.source_name = raw.workspace.source_name;
+            if (raw.workspace.target_name) this.target_name = raw.workspace.target_name;
         }
     }
     
