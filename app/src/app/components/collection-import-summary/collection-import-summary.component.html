@@ -1,0 +1,213 @@
+<div class="collection-import-summary">
+    <mat-accordion>
+        <mat-expansion-panel *ngFor="let attackType of ['matrix', 'technique', 'tactic', 'mitigation', 'group', 'software', 'relationship']" class="mat-elevation-z0" [disabled]="config.object_import_categories[attackType].object_count == 0" [class.disabled]="config.object_import_categories[attackType].object_count == 0">
+            <mat-expansion-panel-header>
+                <mat-panel-title>
+                    {{attackType}} ({{config.object_import_categories[attackType].object_count}})
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+            <ng-template matExpansionPanelContent>
+                <mat-accordion>
+                    <!-- notable changes -->
+                    <mat-expansion-panel class="mat-elevation-z0" [disabled]="config.object_import_categories[attackType].additions.length == 0" [class.disabled]="config.object_import_categories[attackType].additions.length == 0">
+                        <mat-expansion-panel-header>
+                            <mat-panel-title>
+                                Additions ({{config.object_import_categories[attackType].additions.length}})
+                            </mat-panel-title>
+                            <mat-panel-description>
+                                New objects
+                            </mat-panel-description>
+                        </mat-expansion-panel-header>
+                        <ng-template matExpansionPanelContent>
+                            <p>
+                                The following objects do not currently exist in your workbench.
+                            </p>
+                            <app-stix-list [config]="{
+                                'select': config.select? 'many' : 'disabled',
+                                'selectionModel': config.select,
+                                'clickBehavior': 'dialog',
+                                'type': attackType,
+                                'stixObjects': config.object_import_categories[attackType].additions
+                            }"></app-stix-list>
+                        </ng-template>
+                    </mat-expansion-panel>
+                    <mat-expansion-panel class="mat-elevation-z0" [disabled]="config.object_import_categories[attackType].changes.length == 0" [class.disabled]="config.object_import_categories[attackType].changes.length == 0">
+                        <mat-expansion-panel-header>
+                            <mat-panel-title>
+                                Changes ({{config.object_import_categories[attackType].changes.length}})
+                            </mat-panel-title>
+                            <mat-panel-description>
+                                Updated objects
+                            </mat-panel-description>
+                        </mat-expansion-panel-header>
+                        <ng-template matExpansionPanelContent>
+                            <p>
+                                The following objects have major updates such as changes to scope, new reporting, and so forth.
+                            </p>
+                            <app-stix-list [config]="{
+                                'select': config.select? 'many' : 'disabled',
+                                'selectionModel': config.select,
+                                'clickBehavior': 'dialog',
+                                'type': attackType,
+                                'stixObjects': config.object_import_categories[attackType].changes
+                            }"></app-stix-list>
+                        </ng-template>
+                    </mat-expansion-panel>
+                    <mat-expansion-panel class="mat-elevation-z0" [disabled]="config.object_import_categories[attackType].minor_changes.length == 0" [class.disabled]="config.object_import_categories[attackType].minor_changes.length == 0">
+                        <mat-expansion-panel-header>
+                            <mat-panel-title>
+                                Minor Changes ({{config.object_import_categories[attackType].minor_changes.length}})
+                            </mat-panel-title>
+                            <mat-panel-description>
+                                Objects with minor updates
+                            </mat-panel-description>
+                        </mat-expansion-panel-header>
+                        <ng-template matExpansionPanelContent>
+                            <p>
+                                The following objects have minor updates such as typo corrections.
+                            </p>
+                            <app-stix-list [config]="{
+                                'select': config.select? 'many' : 'disabled',
+                                'selectionModel': config.select,
+                                'clickBehavior': 'dialog',
+                                'type': attackType,
+                                'stixObjects': config.object_import_categories[attackType].minor_changes
+                            }"></app-stix-list>
+                        </ng-template>
+                    </mat-expansion-panel>
+                    <!-- removal changes -->
+                    <mat-expansion-panel class="mat-elevation-z0" [disabled]="config.object_import_categories[attackType].revocations.length == 0" [class.disabled]="config.object_import_categories[attackType].revocations.length == 0">
+                        <mat-expansion-panel-header>
+                            <mat-panel-title>
+                                Revocations ({{config.object_import_categories[attackType].revocations.length}})
+                            </mat-panel-title>
+                            <mat-panel-description>
+                                Objects replaced by other objects
+                            </mat-panel-description>
+                        </mat-expansion-panel-header>
+                        <ng-template matExpansionPanelContent>
+                            <p>
+                                The following objects have been replaced by other objects in the workbench.
+                            </p>
+                            <app-stix-list [config]="{
+                                'select': config.select? 'many' : 'disabled',
+                                'selectionModel': config.select,
+                                'clickBehavior': 'dialog',
+                                'type': attackType,
+                                'stixObjects': config.object_import_categories[attackType].revocations
+                            }"></app-stix-list>
+                        </ng-template>
+                    </mat-expansion-panel>
+                    <mat-expansion-panel class="mat-elevation-z0" [disabled]="config.object_import_categories[attackType].deprecations.length == 0" [class.disabled]="config.object_import_categories[attackType].deprecations.length == 0">
+                        <mat-expansion-panel-header>
+                            <mat-panel-title>
+                                Deprecations ({{config.object_import_categories[attackType].deprecations.length}})
+                            </mat-panel-title>
+                            <mat-panel-description>
+                                Objects removed from the dataset
+                            </mat-panel-description>
+                        </mat-expansion-panel-header>
+                        <ng-template matExpansionPanelContent>
+                            <p>
+                                The following objects have been removed from the dataset.
+                            </p>
+                            <app-stix-list [config]="{
+                                'select': config.select? 'many' : 'disabled',
+                                'selectionModel': config.select,
+                                'clickBehavior': 'dialog',
+                                'type': attackType,
+                                'stixObjects': config.object_import_categories[attackType].deprecations
+                            }"></app-stix-list>
+                        </ng-template>
+                    </mat-expansion-panel>
+
+                    <!-- no changes sections -->
+                    <mat-expansion-panel class="mat-elevation-z0" [disabled]="config.object_import_categories[attackType].duplicates.length == 0" [class.disabled]="config.object_import_categories[attackType].duplicates.length == 0">
+                        <mat-expansion-panel-header>
+                            <mat-panel-title>
+                                Duplicates ({{config.object_import_categories[attackType].duplicates.length}})
+                            </mat-panel-title>
+                            <mat-panel-description>
+                                Objects you already have in your workbench
+                            </mat-panel-description>
+                        </mat-expansion-panel-header>
+                        <ng-template matExpansionPanelContent>
+                            <p>
+                                The following objects already exist in your workbench and will not be imported.
+                            </p>
+                            <app-stix-list [config]="{
+                                'clickBehavior': 'dialog',
+                                'type': attackType,
+                                'stixObjects': config.object_import_categories[attackType].duplicates
+                            }"></app-stix-list>
+                        </ng-template>
+                    </mat-expansion-panel>
+                    <mat-expansion-panel class="mat-elevation-z0" [disabled]="config.object_import_categories[attackType].out_of_date.length == 0" [class.disabled]="config.object_import_categories[attackType].out_of_date.length == 0">
+                        <mat-expansion-panel-header>
+                            <mat-panel-title>
+                                Out of date ({{config.object_import_categories[attackType].out_of_date.length}})
+                            </mat-panel-title>
+                            <mat-panel-description>
+                                Objects you have newer versions of
+                            </mat-panel-description>
+                        </mat-expansion-panel-header>
+                        <ng-template matExpansionPanelContent>
+                            <p>
+                                The following objects already exist in your workbench, and the version in the collection is older. 
+                                The version imported in the collection will appear in the version history of the object.
+                            </p>
+                            <app-stix-list [config]="{
+                                'select': config.select? 'many' : 'disabled',
+                                'selectionModel': config.select,
+                                'clickBehavior': 'dialog',
+                                'type': attackType,
+                                'stixObjects': config.object_import_categories[attackType].out_of_date
+                            }"></app-stix-list>
+                        </ng-template>
+                    </mat-expansion-panel>
+
+                    <!-- error changes -->
+                    <mat-expansion-panel class="mat-elevation-z0 warn" *ngIf="config.object_import_categories[attackType].supersedes_collection_changes.length + config.object_import_categories[attackType].supersedes_user_edits.length > 0">
+                        <mat-expansion-panel-header>
+                            <mat-panel-title>
+                                Import conflicts ({{config.object_import_categories[attackType].supersedes_collection_changes.length + config.object_import_categories[attackType].supersedes_user_edits.length}})
+                            </mat-panel-title>
+                            <mat-panel-description>
+                                Conflicts with local edits
+                            </mat-panel-description>
+                        </mat-expansion-panel-header>
+                        <ng-template matExpansionPanelContent>
+                            <p>
+                                You should never see this because we don't detect conflicts/supersedes yet
+                            </p>
+                        </ng-template>
+                    </mat-expansion-panel>
+
+                    <mat-expansion-panel class="mat-elevation-z0 warn" *ngIf="config.object_import_categories[attackType].errors > 0">
+                        <mat-expansion-panel-header>
+                            <mat-panel-title>
+                                Other Errors ({{config.object_import_categories[attackType].errors.length}})
+                            </mat-panel-title>
+                            <mat-panel-description>
+                                Misc Errors
+                            </mat-panel-description>
+                        </mat-expansion-panel-header>
+                        <ng-template matExpansionPanelContent>
+                            <p>
+                                Your workbench encountered errors when determining whether the following objects exist within the workbench already. 
+                            </p>
+                            <app-stix-list [config]="{
+                                'select': config.select? 'many' : 'disabled',
+                                'selectionModel': config.select,
+                                'clickBehavior': 'dialog',
+                                'type': attackType,
+                                'stixObjects': config.object_import_categories[attackType].errors
+                            }"></app-stix-list>
+                        </ng-template>
+                    </mat-expansion-panel>
+
+                </mat-accordion>
+            </ng-template>
+        </mat-expansion-panel>
+    </mat-accordion>
+</div>

@@ -55,7 +55,7 @@
         </div>
     </div>
     <!-- DOMAIN SPECIFIC FIELDS -->
-    <div *ngIf="technique.domains" class="row">
+    <div *ngIf="technique.domains.length > 0" class="row">
         <div class="col">
             <app-list-property class="grow-to-row" [config]="{
                 mode: 'view',
@@ -68,7 +68,7 @@
         </div>
         <div class="col">
             <!-- DATA SOURCES -->
-            <div *ngIf="technique.data_sources" class="row">
+            <div *ngIf="technique.domains.includes('enterprise-attack')" class="row">
                 <app-list-property class="grow-to-row" [config]="{
                     mode: 'view',
                     object: technique,
@@ -77,7 +77,7 @@
                 }"></app-list-property>
             </div>
             <!-- SYSTEM REQUIREMENTS -->
-            <div *ngIf="technique.system_requirements" class="row">
+            <div *ngIf="technique.domains.includes('enterprise-attack')" class="row">
                 <app-list-property class="grow-to-row" [config]="{
                     mode: 'view',
                     object: technique,
@@ -86,7 +86,7 @@
                 }"></app-list-property>
             </div>
             <!-- TACTIC TYPES -->
-            <div *ngIf="technique.tactic_type" class="row">
+            <div *ngIf="technique.domains.includes('mobile-attack')" class="row">
                 <app-list-property class="grow-to-row" [config]="{
                     mode: 'view',
                     object: technique,
@@ -96,7 +96,7 @@
         </div>
     </div>
     <!-- TACTIC SPECIFIC FIELDS -->
-    <div *ngIf="technique.tactics" class="row">
+    <div *ngIf="technique.tactics.length > 0" class="row">
         <div class="col">
             <app-list-property class="grow-to-row" [config]="{
                 mode: 'view',
@@ -104,44 +104,46 @@
                 field: 'tactics'
             }"></app-list-property>
         </div>
-        <div class="col arrow">
-            <mat-icon>arrow_forward</mat-icon>
-        </div>
-        <div class="col">
-            <!-- PERMISSIONS REQUIRED -->
-            <div *ngIf="technique.permissions_required" class="row">
-                <app-list-property class="grow-to-row" [config]="{
-                    mode: 'view',
-                    object: technique,
-                    field: 'permissions_required',
-                    label: 'permissions required'
-                }"></app-list-property>
+        <ng-container *ngIf="technique.tactics.includes('privilege-escalation') || technique.tactics.includes('defense-evasion') || technique.tactics.includes('execution')">
+            <div class="col arrow">
+                <mat-icon>arrow_forward</mat-icon>
             </div>
-            <!-- DEFENSE BYPASSED -->
-            <div *ngIf="technique.defense_bypassed" class="row">
-                <app-list-property class="grow-to-row" [config]="{
-                    mode: 'view',
-                    object: technique,
-                    field: 'defense_bypassed',
-                    label: 'defenses bypassed'
-                }"></app-list-property>
-            </div>
-            <!-- REMOTE SUPPORT -->
-            <div *ngIf="technique.remote_support !== undefined" class="row">
-                <div class="labelled-box grow-to-row">
-                    <div class="content no-label">
-                        <mat-checkbox [checked]="technique.remote_support" disabled>
-                            Remote Support?
-                        </mat-checkbox>
+            <div class="col">
+                <!-- PERMISSIONS REQUIRED -->
+                <div *ngIf="technique.tactics.includes('privilege-escalation')" class="row">
+                    <app-list-property class="grow-to-row" [config]="{
+                        mode: 'view',
+                        object: technique,
+                        field: 'permissions_required',
+                        label: 'permissions required'
+                    }"></app-list-property>
+                </div>
+                <!-- DEFENSE BYPASSED -->
+                <div *ngIf="technique.tactics.includes('defense-evasion')" class="row">
+                    <app-list-property class="grow-to-row" [config]="{
+                        mode: 'view',
+                        object: technique,
+                        field: 'defense_bypassed',
+                        label: 'defenses bypassed'
+                    }"></app-list-property>
+                </div>
+                <!-- REMOTE SUPPORT -->
+                <div *ngIf="technique.tactics.includes('execution')" class="row">
+                    <div class="labelled-box grow-to-row">
+                        <div class="content no-label">
+                            <mat-checkbox [checked]="technique.remote_support" disabled>
+                                Remote Support?
+                            </mat-checkbox>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
+        </ng-container>
     </div>
     <!-- RELATIONSHIPS -->
     <div *ngIf="config.showRelationships || !config.hasOwnProperty('showRelationships')">
         <!-- SUBTECHNIQUES -->
-        <div *ngIf="subtechniques">
+        <div *ngIf="!technique.is_subtechnique">
             <div class="row">
                 <div class="col">
                     <h2 class="section-header">Sub-techniques</h2>
@@ -149,47 +151,45 @@
             </div>
             <div class="row">
                 <div class="col">
-                    <app-stix-list [config]="{'type': 'relationship', 'stixObjects': subtechniques}"></app-stix-list>
+                    <app-stix-list [config]="{
+                        'type': 'relationship', 
+                        'targetRef': technique.stixID,
+                        'relationshipType': 'subtechnique-of',
+                        'clickBehavior': 'dialog'
+                    }"></app-stix-list>
                 </div>
             </div>
         </div>
         <!-- MITIGATIONS -->
-        <div *ngIf="mitigations">
-            <div class="row">
-                <div class="col">
-                    <h2 class="section-header">Mitigations</h2>
-                </div>
+        <div class="row">
+            <div class="col">
+                <h2 class="section-header">Mitigations</h2>
             </div>
-            <div class="row">
-                <div class="col">
-                    <app-stix-list [config]="{'type': 'relationship', 'stixObjects': mitigations}"></app-stix-list>
-                </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <app-stix-list [config]="{
+                    'type': 'relationship',
+                    'targetRef': technique.stixID,
+                    'relationshipType': 'mitigates',
+                    'clickBehavior': 'dialog'
+                }"></app-stix-list>
             </div>
         </div>
         <!-- GROUPS -->
-        <div *ngIf="groups">
-            <div class="row">
-                <div class="col">
-                    <h2 class="section-header">Associated Groups</h2>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col">
-                    <app-stix-list [config]="{'type': 'relationship', 'stixObjects': groups}"></app-stix-list>
-                </div>
+        <div class="row">
+            <div class="col">
+                <h2 class="section-header">Procedure Examples</h2>
             </div>
         </div>
-        <!-- SOFTWARE -->
-        <div *ngIf="software">
-            <div class="row">
-                <div class="col">
-                    <h2 class="section-header">Associated Software</h2>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col">
-                    <app-stix-list [config]="{'type': 'relationship', 'stixObjects': software}"></app-stix-list>
-                </div>
+        <div class="row">
+            <div class="col">
+                <app-stix-list [config]="{
+                    'type': 'relationship',
+                    'targetRef': technique.stixID,
+                    'relationshipType': 'uses',
+                    'clickBehavior': 'dialog'
+                }"></app-stix-list>
             </div>
         </div>
     </div>

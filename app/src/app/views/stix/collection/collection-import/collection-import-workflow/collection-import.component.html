@@ -1,32 +1,59 @@
-<div class="collection-import">
-    <mat-horizontal-stepper linear>
-        <mat-step label="specify collection" [stepControl]="collectionInfo">
-            <form [formGroup]="collectionInfo">
-                <div class="form-row collectionInfo">
-                    <mat-form-field class="url" appearance="outline">
-                        <mat-label>specify a URL</mat-label>
-                        <input matInput formControlName="url">
-                        <mat-icon matSuffix>cloud_download</mat-icon>
-                    </mat-form-field>
-                    <div class="or-marker">
-                        <h3>or</h3>
-                    </div>
-                    <mat-form-field appearance="outline">
-                        <mat-label>upload a file</mat-label>
-                        <ngx-mat-file-input formControlName="upload"></ngx-mat-file-input>
-                        <mat-icon matSuffix>attach_file</mat-icon>
-                    </mat-form-field>
+<div class="collection-import import-workflow">
+    <mat-vertical-stepper linear>
+        <mat-step label="specify collection">
+            <div *ngIf="!loadingStep1 else loadingStep1_marker">
+                <mat-form-field class="url fullwidth" appearance="outline">
+                    <mat-label>specify a URL</mat-label>
+                    <input matInput [(ngModel)]="url" (keyup.enter)="url.length > 0 ? previewCollection() : null">
+                    <mat-icon matSuffix>cloud_download</mat-icon>
+                </mat-form-field>
+                <div class="action-bar">
+                    <button mat-raised-button color="primary" (click)="previewCollection()" *ngIf="url.length > 0">
+                        <span class="text-label">preview</span>
+                    </button>
                 </div>
-                <div class="form-row align-right">
-                    <button mat-stroked-button matStepperNext [disabled]="collectionInfo.hasError('atLeastOne')">next</button>
-                </div>
-            </form>
+            </div>
+            <ng-template #loadingStep1_marker>
+                <app-loading-overlay></app-loading-overlay>
+            </ng-template>
         </mat-step>
         <mat-step label="review contents">
-            TODO review contents
+            <div *ngIf="select && !loadingStep2 else loadingStep2_marker">
+                <p class="nomargin">
+                    Below are the objects of the collection as compared to the current contents of your workbench. Select the objects you want to import into your knowledge base.
+                </p>
+                <app-collection-import-summary [config]="{
+                    'object_import_categories': object_import_categories,
+                    'select': select
+                }"></app-collection-import-summary>
+                <div class="center">
+                    <p class="text-deemphasis">
+                        Importing {{select.selected.length}}/{{changed_ids.length}} objects
+                    </p>
+                    <div class="action-bar nomargin">
+                        <button mat-stroked-button (click)="selectAll()">select all</button>
+                        <button mat-stroked-button (click)="deselectAll()">deselect all</button>
+                    </div>
+                    <div class="action-bar">
+                        <button mat-mini-fab class="extended-fab-button"  color="primary" (click)="import()">
+                            <mat-icon aria-label="add">save_alt</mat-icon>
+                            <span class="text-label">Import</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <ng-template #loadingStep2_marker>
+                <app-loading-overlay></app-loading-overlay>
+            </ng-template>
         </mat-step>
-        <mat-step label="import">
-            TODO import button
+        <mat-step label="done">
+            <div *ngIf="select">
+                <h3>Success!</h3>
+                <p>
+                    The collection has been imported into your workbench. {{select.selected.length}} new objects were added. You can review the results of this import at any time on the <span class="text-label">imported collections</span> section of the collection page.
+                </p>
+                <button mat-raised-button color="primary" routerLink="/collection">back to collections</button>
+            </div>
         </mat-step>
-    </mat-horizontal-stepper>
+    </mat-vertical-stepper>
 </div>

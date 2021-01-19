@@ -63,7 +63,12 @@
         </div>
         <div class="row">
             <div class="col">
-                <app-stix-list  [config]="{'type': 'relationship', 'stixObjects': relationships_techniques}"></app-stix-list>
+                <app-stix-list  [config]="{
+                    'type': 'relationship', 
+                    'sourceRef': group.stixID,
+                    'relationshipType': 'uses',
+                    'clickBehavior': 'dialog'
+                }"></app-stix-list>
             </div>
         </div>
 
@@ -74,7 +79,12 @@
         </div>
         <div class="row">
             <div class="col">
-                <app-stix-list [config]="{'type': 'relationship', 'stixObjects': relationships_software}"></app-stix-list>
+                <app-stix-list [config]="{
+                    'type': 'relationship', 
+                    'sourceRef': group.stixID,
+                    'relationshipType': 'uses',
+                    'clickBehavior': 'dialog'
+                }"></app-stix-list>
             </div>
         </div>
 
