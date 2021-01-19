@@ -198,10 +198,12 @@ export class RestApiConnectorService extends ApiConnector {
     private getStixObjectFactory<T extends StixObject>(attackType: AttackType) {
         let attackClass = attackTypeToClass[attackType];
         let plural = attackTypeToPlural[attackType]
-        return function<P extends T>(id: string, modified?: Date): Observable<P> {
+        return function<P extends T>(id: string, modified?: Date, versions="latest"): Observable<P[]> {
             let url = `${this.baseUrl}/${plural}/${id}`;
             if (modified) url += `/modified/${modified}`;
-            return this.http.get(url, {headers: this.headers}).pipe(
+            let query = new HttpParams();
+            if (versions != "latest") query = query.set("versions", versions)
+            return this.http.get(url, {headers: this.headers, params: query}).pipe(
                 tap(result => console.log(`retrieved ${attackType}`, result)), // on success, trigger the success notification
                 map(result => { 
                     let x = result as any;
@@ -223,6 +225,7 @@ export class RestApiConnectorService extends ApiConnector {
      * Get a single technique by STIX ID
      * @param {string} id the object STIX ID
      * @param {Date} [modified] if specified, get the version modified at the given date
+     * @param {versions} [string] default "latest", if "all" returns all versions of the object instead of just the latest version.
      * @returns {Observable<Technique>} the object with the given ID and modified date
      */
     public get getTechnique() { return this.getStixObjectFactory<Technique>("technique"); }
@@ -230,6 +233,7 @@ export class RestApiConnectorService extends ApiConnector {
      * Get a single tactic by STIX ID
      * @param {string} id the object STIX ID
      * @param {Date} [modified] if specified, get the version modified at the given date
+     * * @param {versions} [string] default "latest", if "all" returns all versions of the object instead of just the latest version.
      * @returns {Observable<Tactic>} the object with the given ID and modified date
      */
     public get getTactic() { return this.getStixObjectFactory<Tactic>("tactic"); }
@@ -237,6 +241,7 @@ export class RestApiConnectorService extends ApiConnector {
      * Get a single group by STIX ID
      * @param {string} id the object STIX ID
      * @param {Date} [modified] if specified, get the version modified at the given date
+     * * @param {versions} [string] default "latest", if "all" returns all versions of the object instead of just the latest version.
      * @returns {Observable<Group>} the object with the given ID and modified date
      */
     public get getGroup() { return this.getStixObjectFactory<Group>("group"); }
@@ -244,6 +249,7 @@ export class RestApiConnectorService extends ApiConnector {
      * Get a single software by STIX ID
      * @param {string} id the object STIX ID
      * @param {Date} [modified] if specified, get the version modified at the given date
+     * @param {versions} [string] default "latest", if "all" returns all versions of the object instead of just the latest version.
      * @returns {Observable<Software>} the object with the given ID and modified date
      */
     public get getSoftware() { return this.getStixObjectFactory<Software>("software"); }
@@ -251,6 +257,7 @@ export class RestApiConnectorService extends ApiConnector {
      * Get a single mitigation by STIX ID
      * @param {string} id the object STIX ID
      * @param {Date} [modified] if specified, get the version modified at the given date
+     * @param {versions} [string] default "latest", if "all" returns all versions of the object instead of just the latest version.
      * @returns {Observable<Mitigation>} the object with the given ID and modified date
      */
     public get getMitigation() { return this.getStixObjectFactory<Mitigation>("mitigation"); }
@@ -258,6 +265,7 @@ export class RestApiConnectorService extends ApiConnector {
      * Get a single matrix by STIX ID
      * @param {string} id the object STIX ID
      * @param {Date} [modified] if specified, get the version modified at the given date
+     * @param {versions} [string] default "latest", if "all" returns all versions of the object instead of just the latest version.
      * @returns {Observable<Matrix>} the object with the given ID and modified date
      */
     public get getMatrix() { return this.getStixObjectFactory<Matrix>("matrix"); }
@@ -265,6 +273,7 @@ export class RestApiConnectorService extends ApiConnector {
      * Get a single collection by STIX ID
      * @param {string} id the object STIX ID
      * @param {Date} [modified] if specified, get the version modified at the given date
+     * @param {versions} [string] default "latest", if "all" returns all versions of the object instead of just the latest version.
      * @returns {Observable<Matrix>} the object with the given ID and modified date
      */
     public get getCollection() { return this.getStixObjectFactory<Collection>("collection"); }

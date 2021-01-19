@@ -11,7 +11,7 @@
             <app-mitigation-view *ngIf="objects[0].attackType == 'mitigation'" [config]="buildConfig(objects)"></app-mitigation-view>
             <app-technique-view *ngIf="objects[0].attackType == 'technique'"  [config]="buildConfig(objects)"></app-technique-view>
             <app-tactic-view *ngIf="objects[0].attackType == 'tactic'" [config]="buildConfig(objects)"></app-tactic-view>
-            <app-collection-view *ngIf="objects[0].attackType == 'collection'" [config]="buildConfig(objects)"></app-collection-view>
+            <app-collection-view *ngIf="objects[0].attackType == 'collection'" [config]="buildConfig(objects, true)"></app-collection-view>
         </ng-template>
 
     </div>

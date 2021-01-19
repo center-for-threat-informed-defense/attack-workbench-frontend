@@ -17,21 +17,29 @@ import { StixViewPage } from '../../stix-view-page';
 })
 export class CollectionViewComponent extends StixViewPage implements OnInit {
     
-    public get collection(): Collection { return this.config.object as Collection; }
-    public object_import_categories = {
-        technique:    new CollectionImportCategories<Technique>(),
-        tactic:       new CollectionImportCategories<Tactic>(),
-        software:     new CollectionImportCategories<Software>(),
-        relationship: new CollectionImportCategories<Relationship>(),
-        mitigation:   new CollectionImportCategories<Mitigation>(),
-        matrix:       new CollectionImportCategories<Matrix>(),
-        group:        new CollectionImportCategories<Group>()
-    }
+    public get collections(): Collection[] { return this.config.object as Collection[]; }
+    public currentCollection: number = 0;
+
+    public collection_import_categories = []
 
     constructor(private route: ActivatedRoute) { super() }
 
     ngOnInit() {
         // parse collection into object_import_categories
+        for (let collection of this.collections) {
+            let categories = {
+                technique:    new CollectionImportCategories<Technique>(),
+                tactic:       new CollectionImportCategories<Tactic>(),
+                software:     new CollectionImportCategories<Software>(),
+                relationship: new CollectionImportCategories<Relationship>(),
+                mitigation:   new CollectionImportCategories<Mitigation>(),
+                matrix:       new CollectionImportCategories<Matrix>(),
+                group:        new CollectionImportCategories<Group>()
+            }
+
+
+            this.collection_import_categories.push(categories);
+        }
     }
 
 }

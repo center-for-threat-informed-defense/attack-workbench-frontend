@@ -1,6 +1,7 @@
 @import "../../../style/globals";
 .collection-import-summary {
     .mat-expansion-panel {
+        @include expansion-panel(true);
         .mat-expansion-panel-header-title {
             text-transform: capitalize;
         }

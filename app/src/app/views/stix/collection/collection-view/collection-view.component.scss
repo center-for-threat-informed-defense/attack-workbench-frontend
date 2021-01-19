@@ -1,6 +1,11 @@
+@import "../../../../../style/globals";
 .collection-view {
-    .version-marker {
-        text-transform: lowercase;
+    .version-select {
+        @extend .heading;
+        text-transform: none;
+        padding: 0px 5px;
+        border-radius: 4px;
+        font-size: 36px;
+        background: transparent;
     }
-    
 }
