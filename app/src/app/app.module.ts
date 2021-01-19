@@ -124,6 +124,9 @@ import { RelationshipViewComponent } from "./views/stix/relationship/relationshi
 import { AliasPropertyComponent } from './components/stix/alias-property/alias-property.component';
 import { AliasViewComponent } from './components/stix/alias-property/alias-view/alias-view.component';
 import { AliasEditComponent } from './components/stix/alias-property/alias-edit/alias-edit.component';
+import { OrderedListPropertyComponent } from './components/stix/ordered-list-property/ordered-list-property.component';
+import { OrderedListViewComponent } from './components/stix/ordered-list-property/ordered-list-view/ordered-list-view.component';
+import { OrderedListEditComponent } from './components/stix/ordered-list-property/ordered-list-edit/ordered-list-edit.component';
 
 
 @NgModule({
@@ -199,7 +202,10 @@ import { AliasEditComponent } from './components/stix/alias-property/alias-edit/
     TechniqueViewComponent,
     AliasPropertyComponent,
     AliasViewComponent,
-    AliasEditComponent
+    AliasEditComponent,
+    OrderedListPropertyComponent,
+    OrderedListViewComponent,
+    OrderedListEditComponent
   ],
   imports: [
     BreadcrumbModule,

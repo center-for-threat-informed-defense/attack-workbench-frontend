@@ -4,6 +4,7 @@ import { Subscription } from 'rxjs';
 import { CollectionIndex } from 'src/app/classes/collection-index';
 import { CollectionManagerConnectorService } from 'src/app/services/connectors/collection-manager/collection-manager-connector.service';
 import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/rest-api-connector.service';
+import { MatSnackBar } from "@angular/material/snack-bar";
 
 @Component({
   selector: 'app-collection-index-import',
@@ -14,7 +15,9 @@ import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/re
 export class CollectionIndexImportComponent implements OnInit {
     @ViewChild(MatStepper) public stepper: MatStepper;
 
-    constructor(private collectionManagerConnector: CollectionManagerConnectorService, private restAPIConnector: RestApiConnectorService) { }
+    constructor(private collectionManagerConnector: CollectionManagerConnectorService, 
+                private restAPIConnector: RestApiConnectorService, 
+                private snackbar: MatSnackBar) { }
 
     ngOnInit(): void {
     }
@@ -32,8 +35,9 @@ export class CollectionIndexImportComponent implements OnInit {
         let subscription = this.collectionManagerConnector.getRemoteIndex(this.url).subscribe({
             next: (index) => {
                 console.log("done");
-                this.index = index;
-                this.stepper.next();
+                this.index = new CollectionIndex(index);
+                if (this.index.valid()) { this.stepper.next(); }
+                else { this.error("Invalid collection index.") } //show snackbar
             },
             complete: () => { subscription.unsubscribe(); } //prevent memory leaks
         })
@@ -41,10 +45,10 @@ export class CollectionIndexImportComponent implements OnInit {
     /**
      * Save the downloaded collection index to the REST API
      *
-     * @memberof CollectionIndexImportComponent
+    * @memberof CollectionIndexImportComponent
      */
     public saveIndex(): void {
-        let subscription = this.restAPIConnector.postCollectionIndex(this.index).subscribe({
+        let subscription = this.restAPIConnector.postCollectionIndex(this.index.serialize()).subscribe({
             next: (result) => {
                 this.stepper.next();
             },
@@ -52,4 +56,15 @@ export class CollectionIndexImportComponent implements OnInit {
         })
     }
 
+    /**
+     * Show error message
+     * @param {msg} message the error message to show
+     */
+    public error(msg: string): void {
+        console.error(msg);
+        this.snackbar.open(msg, "dismiss", {
+            duration: 2000,
+            panelClass: "warn"
+        })
+    }
 }

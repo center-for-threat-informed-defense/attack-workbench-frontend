@@ -66,12 +66,9 @@ export class Collection extends StixObject {
         if (sdo) {
             this.deserialize(sdo);
         }
-        
     }
 
-    public serialize() {
-
-    }
+    public serialize() {}
 
     public deserialize(raw: any) {
         this.name = raw.stix.name;
