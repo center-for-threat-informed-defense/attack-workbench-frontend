@@ -17,7 +17,7 @@ export class Software extends StixObject {
         }
     }
 
-    public serialize() {};
+    public serialize(): any {};
 
     /**
      * Parse the object from the record returned from the back-end
