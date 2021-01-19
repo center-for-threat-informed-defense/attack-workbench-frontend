@@ -58,20 +58,17 @@ export class VersionReference {
      * @param {*} raw the raw object to parse
      */
     public deserialize(raw: any) {
-        if ("stix" in raw) {
-            let sdo = raw.stix;
+        let sdo = raw;
 
-            if ("object_ref" in sdo) {
-                if (typeof(sdo.object_ref) === "string") this.object_ref = sdo.object_ref;
-                else console.error("TypeError: object_ref field is not a string:", sdo.object_ref, "(",typeof(sdo.object_ref),")")
-            } else this.object_ref = "";
+        if ("object_ref" in sdo) {
+            if (typeof(sdo.object_ref) === "string") this.object_ref = sdo.object_ref;
+            else console.error("TypeError: object_ref field is not a string:", sdo.object_ref, "(",typeof(sdo.object_ref),")")
+        } else this.object_ref = "";
 
-            if ("object_modified" in sdo) {
-                if (typeof(sdo.object_modified) === "string") this.object_modified = new Date(sdo.object_modified);
-                else console.error("TypeError: object_modified field is not a string:", sdo.object_modified, "(",typeof(sdo.object_modified),")")
-            } else this.object_modified = new Date();
-        }
-        else console.error("ObjectError: 'stix' field does not exist in object");
+        if ("object_modified" in sdo) {
+            if (typeof(sdo.object_modified) === "string") this.object_modified = new Date(sdo.object_modified);
+            else console.error("TypeError: object_modified field is not a string:", sdo.object_modified, "(",typeof(sdo.object_modified),")")
+        } else this.object_modified = new Date();
     }
 }
 
