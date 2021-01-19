@@ -469,6 +469,59 @@ export class RestApiConnectorService extends ApiConnector {
      * @returns {Observable<{}>} observable of the response body
      */
     public get deleteCollection() { return this.deleteStixObjectFactory("collection"); }
+
+
+    //   ___ ___ _      _ _____ ___ ___  _  _ ___ _  _ ___ ___  ___ 
+    //  | _ \ __| |    /_\_   _|_ _/ _ \| \| / __| || |_ _| _ \/ __|
+    //  |   / _|| |__ / _ \| |  | | (_) | .` \__ \ __ || ||  _/\__ \
+    //  |_|_\___|____/_/ \_\_| |___\___/|_|\_|___/_||_|___|_|  |___/
+    //                                                              
+
+    /**
+     * Get relationships 
+     *
+     * @param {string} [sourceRef] STIX id of referenced object. Only retrieve relationships that reference this object in the source_ref property.
+     * @param {string} [targetRef] STIX id of referenced object. Only retrieve relationships that reference this object in the target_ref property.
+     * @param {string} [relationshipType] Only retrieve relationships that have a matching relationship_type.
+     * @param {number} [limit] The number of relationships to retrieve. 
+     * @param {number} [offset] The number of relationships to skip.
+     * @returns {Observable<Paginated>} paginated data of the relationships
+     * @memberof RestApiConnectorService
+     */
+    public getRelatedTo(sourceRef?: string, targetRef?: string, relationshipType?: string, limit?: number, offset?: number): Observable<Paginated> {
+        let query = new HttpParams();
+        if (sourceRef) query = query.set("sourceRef", sourceRef);
+        if (targetRef) query = query.set("targetRef", targetRef);
+        if (relationshipType) query = query.set("relationshipType", relationshipType);
+        if (limit) query = query.set("limit", limit.toString());
+        if (offset) query = query.set("offset", offset.toString());
+        if (limit || offset) query = query.set("includePagination", "true");
+        let url = `${this.baseUrl}/relationships`
+        return this.http.get(url, {headers:this.headers, params: query}).pipe(
+            tap(results => console.log("retrieved relationships", results)),
+            map(results => {
+                let response = results as any;
+                if (limit || offset) { //returned paginated
+                    let data = response.data as Array<any>;
+                    data = data.map(y => new Relationship(y));
+                    response.data = data;
+                    return response;
+                } else { //returned StixObject[]
+                    return {
+                        pagination: {
+                            total: response.length,
+                            limit: -1,
+                            offset: -1
+                        },
+                        data: response.map(y => new Relationship(y))
+                    }
+                }
+            }),
+            catchError(this.handleError_array([])),
+            share()
+        )
+    }
+
     //    ___ ___  _    _    ___ ___ _____ ___ ___  _  _     _   ___ ___ ___ 
     //   / __/ _ \| |  | |  | __/ __|_   _|_ _/ _ \| \| |   /_\ | _ \_ _/ __|
     //  | (_| (_) | |__| |__| _| (__  | |  | | (_) | .` |  / _ \|  _/| |\__ \

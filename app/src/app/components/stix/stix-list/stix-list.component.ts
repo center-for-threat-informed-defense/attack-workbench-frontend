@@ -330,6 +330,7 @@ export class StixListComponent implements OnInit, AfterViewInit {
             else if (this.config.type == "tactic") this.data$ = this.restAPIConnectorService.getAllTactics(limit, offset); //TODO add limit and offset once back-end supports it
             else if (this.config.type == "technique") this.data$ = this.restAPIConnectorService.getAllTechniques(limit, offset);
             else if (this.config.type == "collection") this.data$ = this.restAPIConnectorService.getAllCollections();
+            else if (this.config.type == "relationship") this.data$ = this.restAPIConnectorService.getRelatedTo(this.config.sourceRef, this.config.targetRef, this.config.relationshipType);
             let subscription = this.data$.subscribe({
                 next: (data) => { this.totalObjectCount = data.pagination.total; },
                 complete: () => { subscription.unsubscribe() }
@@ -344,14 +345,19 @@ type selection_types = "one" | "many" | "disabled"
 export interface StixListConfig {
     /* if specified, shows the given STIX objects in the table instead of loading from the back-end based on other configurations. */
     stixObjects?: Observable<StixObject[]> | StixObject[];
-    /** STIX ID; force the list to show relationships with the given object */
-    relatedTo?: string;
+
+    /** STIX ID;s force the list to show relationships with the given source or target. Use with type=='relationship' */
+    sourceRef?: string;
+    targetRef?: string;
+    /** relationship type to get, use with type=='relationship' */
+    relationshipType?: string;
+
     /** force the list to show only this type */
     type?: type_attacktype;
     /** force the list to show only objects matching this query */
     query?: any;
-    /** show links to view/edit pages for relevant objects? */
-    showLinks?: boolean;
+    
+    
     /** can the user select in this list? allowed options:
      *     "one": user can select a single element at a time
      *     "many": user can select as many elements as they want
@@ -363,6 +369,10 @@ export interface StixListConfig {
      * Only relevant if 'select' is also enabled. Also, will cause problems if multiple constructor pram is set according to 'select'.
      */
     selectionModel?: SelectionModel<string>;
+
+
+    /** show links to view/edit pages for relevant objects? */
+    showLinks?: boolean;
     /** default true, if false hides the filter dropdown menu */
     showFilters?: boolean;
     /**
