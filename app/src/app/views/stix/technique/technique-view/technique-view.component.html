@@ -143,7 +143,7 @@
     <!-- RELATIONSHIPS -->
     <div *ngIf="config.showRelationships || !config.hasOwnProperty('showRelationships')">
         <!-- SUBTECHNIQUES -->
-        <div *ngIf="subtechniques">
+        <div *ngIf="!technique.is_subtechnique">
             <div class="row">
                 <div class="col">
                     <h2 class="section-header">Sub-techniques</h2>
@@ -151,47 +151,45 @@
             </div>
             <div class="row">
                 <div class="col">
-                    <app-stix-list [config]="{'type': 'relationship', 'stixObjects': subtechniques}"></app-stix-list>
+                    <app-stix-list [config]="{
+                        'type': 'relationship', 
+                        'targetRef': technique.stixID,
+                        'relationshipType': 'subtechnique-of',
+                        'clickBehavior': 'dialog'
+                    }"></app-stix-list>
                 </div>
             </div>
         </div>
         <!-- MITIGATIONS -->
-        <div *ngIf="mitigations">
-            <div class="row">
-                <div class="col">
-                    <h2 class="section-header">Mitigations</h2>
-                </div>
+        <div class="row">
+            <div class="col">
+                <h2 class="section-header">Mitigations</h2>
             </div>
-            <div class="row">
-                <div class="col">
-                    <app-stix-list [config]="{'type': 'relationship', 'stixObjects': mitigations}"></app-stix-list>
-                </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <app-stix-list [config]="{
+                    'type': 'relationship',
+                    'targetRef': technique.stixID,
+                    'relationshipType': 'mitigates',
+                    'clickBehavior': 'dialog'
+                }"></app-stix-list>
             </div>
         </div>
         <!-- GROUPS -->
-        <div *ngIf="groups">
-            <div class="row">
-                <div class="col">
-                    <h2 class="section-header">Associated Groups</h2>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col">
-                    <app-stix-list [config]="{'type': 'relationship', 'stixObjects': groups}"></app-stix-list>
-                </div>
+        <div class="row">
+            <div class="col">
+                <h2 class="section-header">Procedure Examples</h2>
             </div>
         </div>
-        <!-- SOFTWARE -->
-        <div *ngIf="software">
-            <div class="row">
-                <div class="col">
-                    <h2 class="section-header">Associated Software</h2>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col">
-                    <app-stix-list [config]="{'type': 'relationship', 'stixObjects': software}"></app-stix-list>
-                </div>
+        <div class="row">
+            <div class="col">
+                <app-stix-list [config]="{
+                    'type': 'relationship',
+                    'targetRef': technique.stixID,
+                    'relationshipType': 'uses',
+                    'clickBehavior': 'dialog'
+                }"></app-stix-list>
             </div>
         </div>
     </div>

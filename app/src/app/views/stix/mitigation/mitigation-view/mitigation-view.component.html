@@ -43,7 +43,12 @@
         </div>
         <div class="row">
             <div class="col">
-                <app-stix-list [config]="{'type': 'relationship', 'stixObjects': relationships}"></app-stix-list>
+                <app-stix-list [config]="{
+                    'type': 'relationship',
+                    'sourceRef': mitigation.stixID,
+                    'relationshipType': 'mitigates',
+                    'clickBehavior': 'dialog'
+                }"></app-stix-list>
             </div>
         </div>
     </div>
