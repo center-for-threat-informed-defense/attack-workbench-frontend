@@ -34,7 +34,7 @@
             }"></app-descriptive-property>
         </div>
     </div>
-    <div *ngIf="config.showRelationships">
+    <div *ngIf="config.showRelationships || !config.hasOwnProperty('showRelationships')">
         <div class="row">
             <div class="col">
                 <h2 class="section-header">TACTICS</h2>
