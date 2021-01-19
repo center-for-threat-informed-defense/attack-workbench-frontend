@@ -196,7 +196,7 @@ if (environment.integrations.collection_manager.enabled) {
             data: {
                 breadcrumb: "list"
             },
-            component: CollectionManagerComponent
+            component: CollectionManagerComponent,
         }, {
             path: "import-collection",
             data: {
@@ -220,6 +220,18 @@ if (environment.integrations.collection_manager.enabled) {
                     breadcrumb: 'import'
                 },
                 component: CollectionIndexImportComponent
+            }]
+        }, {
+            path: ":id",
+            data: {
+                breadcrumb: "loading..."
+            },
+            children: [{
+                path: "",
+                data: {
+                    breadcrumb: "view",
+                },
+                component: StixPageComponent
             }]
         }]
     })
