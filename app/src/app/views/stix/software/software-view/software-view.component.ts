@@ -15,9 +15,6 @@ export class SoftwareViewComponent extends StixViewPage implements OnInit {
 
     public get software(): Software { return this.config.object as Software; }
     
-    public relationships_techniques: Relationship[] = [];
-    public relationships_groups: Relationship[] = [];
-
     constructor(private route: ActivatedRoute, private breadcrumbService: BreadcrumbService) { super() }
 
     ngOnInit() {
