@@ -26,7 +26,7 @@ export class MitigationService extends StixService {
         this.http.get(this.domainData['enterprise']).subscribe(data => {
             let mitigations = data['objects'].filter((o) => o.type === 'course-of-action');
             for(let mitigation of mitigations) {
-                let m = new Mitigation(mitigation);
+                let m = new Mitigation({"stix": mitigation, "workspace": {"domains":[]}});
                 if(!this.mitigations.some(o => o.stixID === m.stixID) ) {
                     this.mitigations.push(m);
                 }

@@ -23,7 +23,7 @@ export class GroupService extends StixService {
         this.http.get(this.domainData['enterprise']).subscribe(data => {
             let groups = data['objects'].filter((o) => o.type === 'intrusion-set');
             for(let group of groups) {
-                let g = new Group(group);
+                let g = new Group({"stix": group, "workspace": {"domains":[]}});
                 if(!this.groups.some(o => o.stixID === g.stixID) ) {
                     this.groups.push(g);
                 }
