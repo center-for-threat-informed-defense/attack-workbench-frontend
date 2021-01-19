@@ -22,7 +22,7 @@ export class TechniqueService extends StixService {
         this.http.get(this.domainData['enterprise']).subscribe(data => {
             let techniques = data['objects'].filter((o) => o.type === 'attack-pattern');
             for(let technique of techniques) {
-                let t = new Technique(technique);
+                let t = new Technique({"stix": technique, "workspace": {"domains":[]}});
                 if(!this.techniques.some(o => o.stixID === t.stixID) ) {
                     this.techniques.push(t);
                 }
