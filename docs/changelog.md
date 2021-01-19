@@ -32,15 +32,15 @@
 
 # Changelog
 
-## 19 JAN 2021
+## 19 January, 2021
 ### ATT&CK Workbench version 00.01.00
 #### New Features
-- Created pages to view and browse matrices, techniques, tactics, mitigations, groups, and software. Searching, filtering, and sorting are supported on these pages.
+- Created pages to view and browse matrices, techniques, tactics, mitigations, groups, and software.
 - Created object view pages for matrix, technique, tactic, mitigation, group, and software objects and their properties.
 - Added the ability to browse and import collection indexes.
-    - Collection indexes can be imported via URL or file upload.
+    - Collection indexes can be imported via URL.
     - A preview of the collection index is shown before confirming the import and is sorted by domain.
 - Added the ability to import, view, and subscribe to collections.
-    - Collections can be imported via URL or file upload.
+    - Collections can be imported via URL.
     - A preview of the collection and its contents is shown before confirming the import. At this step, users can view individual objects and remove specific items for import.
     - Users can view objects that were changed or added in a new version of an imported collection.
