@@ -41,6 +41,15 @@ const attackTypeToClass = {
     "relationship": Relationship
 }
 
+export interface Paginated {
+    data: StixObject[],
+    pagination: {
+        total: number,
+        limit: number,
+        offset: number
+    }
+}
+
 @Injectable({
     providedIn: 'root'
 })
@@ -64,11 +73,14 @@ export class RestApiConnectorService extends ApiConnector {
     private getStixObjectsFactory<T extends StixObject>(attackType: AttackType) {
         let attackClass = attackTypeToClass[attackType];
         let plural = attackTypeToPlural[attackType]
-        return function<P extends T>(limit?: number, offset?: number, state?: string, revoked?: boolean, deprecated?: boolean): Observable<P[]> {
+        return function<P extends T>(limit?: number, offset?: number, state?: string, revoked?: boolean, deprecated?: boolean): Observable<Paginated> {
             // parse params into query string
             let query = new HttpParams();
+            // pagination
             if (limit) query = query.set("limit", limit.toString());
             if (offset) query = query.set("offset", offset.toString());
+            if (limit || offset) query = query.set("includePagination", "true");
+            // other properties
             if (state) query = query.set("state", state);
             if (revoked) query = query.set("revoked", revoked ? "true" : "false");
             if (revoked) query = query.set("deprecated", deprecated ? "true" : "false");
@@ -77,11 +89,14 @@ export class RestApiConnectorService extends ApiConnector {
             return this.http.get(url, {headers: this.headers, params: query}).pipe(
                 tap(results => console.log(`retrieved ${plural}`, results)), // on success, trigger the success notification
                 map(results => { 
-                    let x = results as Array<any>;
-                    return x.map(y => {
+                    let response = results as any;
+                    let data = response.data as Array<any>;
+                    data = data.map(y => {
                         if (y.stix.type == "malware" || y.stix.type == "tool") return new Software(y.stix.type, y);
                         else return new attackClass(y);
                     });
+                    response.data = data;
+                    return response;
                 }),
                 catchError(this.handleError_array([])), // on error, trigger the error notification and continue operation without crashing (returns empty item)
                 share() // multicast so that multiple subscribers don't trigger the call twice. THIS MUST BE THE LAST LINE OF THE PIPE
