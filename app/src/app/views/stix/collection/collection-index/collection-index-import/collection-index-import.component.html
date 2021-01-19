@@ -1,20 +1,20 @@
-<div class="collection-index-import">
+<div class="collection-index-import import-workflow">
     <!-- <mat-toolbar>
         <div class="spacer"></div>
         <button mat-button class="control" mat-dialog-close><mat-icon aria-label="close">close</mat-icon></button>
     </mat-toolbar> -->
     <mat-vertical-stepper linear>
         <mat-step label="specify index">
-            <mat-form-field class="url" appearance="outline">
+            <mat-form-field class="url fullwidth" appearance="outline">
                 <mat-label>specify a URL</mat-label>
-                <input matInput [(ngModel)]="url" (keyup.enter)="url.length > 0 ? downloadIndex() : null">
+                <input matInput [(ngModel)]="url" (keyup.enter)="url.length > 0 ? previewIndex() : null">
                 <mat-icon matSuffix>cloud_download</mat-icon>
             </mat-form-field>
             <div class="action-bar">
-                <button mat-button mat-dialog-close>
+                <!-- <button mat-button routerLink="/collection">
                     <span class="text-label">cancel</span>
-                </button>
-                <button mat-raised-button color="primary" (click)="downloadIndex()" *ngIf="url.length > 0">
+                </button> -->
+                <button mat-raised-button color="primary" (click)="previewIndex()" *ngIf="url.length > 0">
                     <span class="text-label">preview</span>
                 </button>
             </div>
@@ -25,8 +25,8 @@
                 'show_title': true,
                 'show_actions': false
             }"></app-collection-index-view>
-            <div class="action-bar">
-                <button mat-button mat-dialog-close>
+            <div class="action-bar center">
+                <button mat-button routerLink="/collection">
                     <span class="text-label">cancel</span>
                 </button>
                 <button mat-raised-button color="primary" (click)="saveIndex()">
@@ -40,7 +40,7 @@
                 The collection index has been added to your workbench. You can now configure subscriptions within the index using the collection index browser. 
                 Subscribed collections will automatically update when new versions are published by the index maintainer.
             </p>
-            <button mat-stroked-button mat-dialog-close>close</button>
+            <button mat-raised-button color="primary" routerLink="/collection">back to collections</button>
         </mat-step>
     </mat-vertical-stepper>
 </div>

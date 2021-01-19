@@ -7,10 +7,10 @@
             <div class="input-group">
                 <mat-form-field class="search" appearance="fill">
                     <mat-label>search</mat-label>
-                    <input matInput [(ngModel)]="query">
+                    <input matInput #search>
                 </mat-form-field>
     
-                <mat-form-field appearance="fill">
+                <mat-form-field appearance="fill" *ngIf="config.showFilters">
                     <mat-label>filters</mat-label>
                     <mat-select multiple [(ngModel)]="filter">
                         <mat-optgroup *ngFor="let group of filterOptions" [label]="group.name" [disabled]="group.disabled">
@@ -23,10 +23,10 @@
         <!-- ----- -->
         <!-- TABLE -->
         <!-- ----- -->
-        <div class="scroll-container" *ngIf="(objects$ | async) as objects else loading" @fadeIn>
+        <div class="scroll-container" *ngIf="(data$ | async) as data else loading" @fadeIn>
             <table mat-table multiTemplateDataRows matSort 
-                   *ngIf="objects.length > 0 else noObjects"
-                   [dataSource]="objects" >
+                   *ngIf="data.data.length > 0 else noObjects"
+                   [dataSource]="data.data" >
                 <!-- column definitions -->
                 <ng-container matColumnDef="{{column}}" *ngFor="let column of tableColumns" [sticky]="tableColumns_settings.get(column)['sticky']">
                     <th mat-header-cell mat-sort-header *matHeaderCellDef class="nowrap"> {{tableColumns_settings.get(column)["label"]}} </th>
@@ -116,11 +116,11 @@
             </ng-template>
         </div>
         <ng-template #loading>
-            <app-loading-overlay *ngIf="!objects"></app-loading-overlay>
+            <app-loading-overlay *ngIf="!data"></app-loading-overlay>
         </ng-template>
         <!-- ---------- -->
         <!-- PAGINATION -->
         <!-- ---------- -->
-        <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" (page)="applyControls()" [length]="1000"></mat-paginator>
+        <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" (page)="applyControls()" [length]="totalObjectCount"></mat-paginator>
     </div>
 </div>

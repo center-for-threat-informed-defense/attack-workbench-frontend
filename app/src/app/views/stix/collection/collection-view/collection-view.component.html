@@ -1,7 +1,60 @@
-<div class="collection-view">
-    <div *ngIf="collection">
-        <h1>{{collection.name}}</h1>
-        <p>{{collection.description}}</p>
+<div class="collection-view view-page grid spacing-12">
+    <div class="row">
+        <div class="col">
+            <h1>{{collections[currentCollection].name}}&nbsp;<select class="version-select" [(ngModel)]="currentCollection">
+                <option *ngFor="let collection of collections; let i = index" [ngValue]="i">v{{collection.version}}</option>
+            </select></h1>
+        </div>
     </div>
-    <app-loading-overlay *ngIf="!collection"></app-loading-overlay>
+    <div *ngFor="let collection of collections; let i = index" >
+        <div *ngIf="i == currentCollection">
+            <div class="row">
+                <div class="col">
+                    <div class="section-header">
+                        <div class="section-header-section">
+                            Imported <app-timestamp-view [config]="{
+                                mode: 'view',
+                                object: collections[currentCollection],
+                                field: 'imported',
+                                humanize: true
+                            }"></app-timestamp-view>
+                        </div>
+                        <div class="section-header-section">
+                            Released <app-timestamp-view [config]="{
+                                mode: 'view',
+                                object: collections[currentCollection],
+                                field: 'modified',
+                                humanize: true
+                            }"></app-timestamp-view>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <app-descriptive-property [config]="{
+                        mode: 'view',
+                        object: collections[currentCollection],
+                        field: 'description',
+                        firstParagraphOnly: false, 
+                        label: 'description'
+                    }"></app-descriptive-property>
+                </div>
+            </div>
+        
+            <div class="row">
+                <div class="col">
+                    <h2 class="section-header">Changes</h2>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <!-- <p>Below are the contents of the collection, displayed relative to when it was imported.</p> -->
+                    <app-collection-import-summary [config]="{
+                        'object_import_categories': collection_import_categories[currentCollection]
+                    }"></app-collection-import-summary>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>

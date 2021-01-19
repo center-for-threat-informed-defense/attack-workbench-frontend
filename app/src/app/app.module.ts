@@ -52,6 +52,7 @@ import { SubheadingComponent } from './components/subheading/subheading.componen
 import { ConfirmationDialogComponent } from "./components/confirmation-dialog/confirmation-dialog.component";
 import { EmptyListMarkerComponent } from "./components/empty-list-marker/empty-list-marker.component";
 import { MarkdownViewDialogComponent } from "./components/markdown-view-dialog/markdown-view-dialog.component";
+import { CollectionImportSummaryComponent } from "./components/collection-import-summary/collection-import-summary.component";
 
 // STIX components
 import { StixListComponent } from './components/stix/stix-list/stix-list.component';
@@ -90,14 +91,16 @@ import { LandingPageComponent } from './views/landing-page/landing-page.componen
 import { StixDialogComponent } from "./views/stix/stix-dialog/stix-dialog.component"
 import { StixPageComponent } from "./views/stix/stix-page/stix-page.component"
 
-import { CollectionListComponent } from './views/stix/collection/collection-list/collection-list.component';
-import { CollectionViewComponent } from './views/stix/collection/collection-view/collection-view.component';
 import { CollectionManagerComponent } from "./views/stix/collection/collection-manager/collection-manager.component";
+
 import { CollectionIndexListComponent } from "./views/stix/collection/collection-index/collection-index-list/collection-index-list.component";
 import { CollectionIndexViewComponent } from "./views/stix/collection/collection-index/collection-index-view/collection-index-view.component";
-// import { CollectionImportComponent } from './views/stix/collection/collection-import/collection-import.component';
-// import { CollectionExportComponent } from './views/stix/collection/collection-export/collection-export.component';
 import { CollectionIndexImportComponent } from "./views/stix/collection/collection-index/collection-index-import/collection-index-import.component";
+
+import { CollectionListComponent } from './views/stix/collection/collection-list/collection-list.component';
+import { CollectionViewComponent } from './views/stix/collection/collection-view/collection-view.component';
+import { CollectionImportComponent } from './views/stix/collection/collection-import/collection-import-workflow/collection-import.component';
+// import { CollectionExportComponent } from './views/stix/collection/collection-export/collection-export.component';
 
 import { GroupViewComponent } from './views/stix/group/group-view/group-view.component';
 import { GroupListComponent } from './views/stix/group/group-list/group-list.component';
@@ -139,6 +142,7 @@ import { OrderedListEditComponent } from './components/stix/ordered-list-propert
     ConfirmationDialogComponent,
     EmptyListMarkerComponent,
     MarkdownViewDialogComponent,
+    CollectionImportSummaryComponent,
     
     StixListComponent,
 
@@ -174,7 +178,7 @@ import { OrderedListEditComponent } from './components/stix/ordered-list-propert
     CollectionIndexListComponent,
     CollectionIndexViewComponent,
     CollectionIndexImportComponent,
-    // CollectionImportComponent,
+    CollectionImportComponent,
     // CollectionExportComponent,
     
     RelationshipViewComponent,

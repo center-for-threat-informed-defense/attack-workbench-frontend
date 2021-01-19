@@ -41,6 +41,15 @@ const attackTypeToClass = {
     "relationship": Relationship
 }
 
+export interface Paginated {
+    data: StixObject[],
+    pagination: {
+        total: number,
+        limit: number,
+        offset: number
+    }
+}
+
 @Injectable({
     providedIn: 'root'
 })
@@ -64,11 +73,14 @@ export class RestApiConnectorService extends ApiConnector {
     private getStixObjectsFactory<T extends StixObject>(attackType: AttackType) {
         let attackClass = attackTypeToClass[attackType];
         let plural = attackTypeToPlural[attackType]
-        return function<P extends T>(limit?: number, offset?: number, state?: string, revoked?: boolean, deprecated?: boolean): Observable<P[]> {
+        return function<P extends T>(limit?: number, offset?: number, state?: string, revoked?: boolean, deprecated?: boolean): Observable<Paginated> {
             // parse params into query string
             let query = new HttpParams();
+            // pagination
             if (limit) query = query.set("limit", limit.toString());
             if (offset) query = query.set("offset", offset.toString());
+            if (limit || offset) query = query.set("includePagination", "true");
+            // other properties
             if (state) query = query.set("state", state);
             if (revoked) query = query.set("revoked", revoked ? "true" : "false");
             if (revoked) query = query.set("deprecated", deprecated ? "true" : "false");
@@ -77,8 +89,28 @@ export class RestApiConnectorService extends ApiConnector {
             return this.http.get(url, {headers: this.headers, params: query}).pipe(
                 tap(results => console.log(`retrieved ${plural}`, results)), // on success, trigger the success notification
                 map(results => { 
-                    let x = results as Array<any>;
-                    return x.map(raw => new attackClass(raw));
+                    let response = results as any;
+                    if (limit || offset) { // returned a paginated
+                        let data = response.data as Array<any>;
+                        data = data.map(y => {
+                            if (y.stix.type == "malware" || y.stix.type == "tool") return new Software(y.stix.type, y);
+                            else return new attackClass(y);
+                        });
+                        response.data = data;
+                        return response;
+                    } else { //returned a stixObject[]
+                        return {
+                            pagination: { 
+                                total: response.length,
+                                limit: -1,
+                                offset: -1
+                            },
+                            data: response.map(y => {
+                                if (y.stix.type == "malware" || y.stix.type == "tool") return new Software(y.stix.type, y);
+                                else return new attackClass(y);
+                            })
+                        }
+                    }
                 }),
                 catchError(this.handleError_array([])), // on error, trigger the error notification and continue operation without crashing (returns empty item)
                 share() // multicast so that multiple subscribers don't trigger the call twice. THIS MUST BE THE LAST LINE OF THE PIPE
@@ -146,6 +178,16 @@ export class RestApiConnectorService extends ApiConnector {
      * @returns {Observable<Matrix[]>} observable of retrieved objects
      */
     public get getAllMatrices() { return this.getStixObjectsFactory<Matrix>("matrix"); }
+    /**
+     * Get all collections
+     * @param {number} [limit] the number of collections to retrieve
+     * @param {number} [offset] the number of collections to skip
+     * @param {string} [state] if specified, only get objects with this state
+     * @param {boolean} [revoked] if true, get revoked objects
+     * @param {boolean} [deprecated] if true, get deprecated objects
+     * @returns {Observable<Matrix[]>} observable of retrieved objects
+     */
+    public get getAllCollections() { return this.getStixObjectsFactory<Collection>("collection"); }
 
     /**
      * Factory to create a new STIX get by ID function
@@ -156,10 +198,12 @@ export class RestApiConnectorService extends ApiConnector {
     private getStixObjectFactory<T extends StixObject>(attackType: AttackType) {
         let attackClass = attackTypeToClass[attackType];
         let plural = attackTypeToPlural[attackType]
-        return function<P extends T>(id: string, modified?: Date): Observable<P> {
+        return function<P extends T>(id: string, modified?: Date, versions="latest"): Observable<P[]> {
             let url = `${this.baseUrl}/${plural}/${id}`;
             if (modified) url += `/modified/${modified}`;
-            return this.http.get(url, {headers: this.headers}).pipe(
+            let query = new HttpParams();
+            if (versions != "latest") query = query.set("versions", versions)
+            return this.http.get(url, {headers: this.headers, params: query}).pipe(
                 tap(result => console.log(`retrieved ${attackType}`, result)), // on success, trigger the success notification
                 map(result => { 
                     let x = result as any;
@@ -167,7 +211,10 @@ export class RestApiConnectorService extends ApiConnector {
                         console.warn("empty result")
                         return []; 
                     }
-                    return x.map(y => new attackClass(y));
+                    return x.map(y => {
+                        if (y.stix.type == "malware" || y.stix.type == "tool") return new Software(y.stix.type, y);
+                        else return new attackClass(y);
+                    });
                 }),
                 catchError(this.handleError_array([])), // on error, trigger the error notification and continue operation without crashing (returns empty item)
                 share() // multicast so that multiple subscribers don't trigger the call twice. THIS MUST BE THE LAST LINE OF THE PIPE
@@ -178,6 +225,7 @@ export class RestApiConnectorService extends ApiConnector {
      * Get a single technique by STIX ID
      * @param {string} id the object STIX ID
      * @param {Date} [modified] if specified, get the version modified at the given date
+     * @param {versions} [string] default "latest", if "all" returns all versions of the object instead of just the latest version.
      * @returns {Observable<Technique>} the object with the given ID and modified date
      */
     public get getTechnique() { return this.getStixObjectFactory<Technique>("technique"); }
@@ -185,6 +233,7 @@ export class RestApiConnectorService extends ApiConnector {
      * Get a single tactic by STIX ID
      * @param {string} id the object STIX ID
      * @param {Date} [modified] if specified, get the version modified at the given date
+     * * @param {versions} [string] default "latest", if "all" returns all versions of the object instead of just the latest version.
      * @returns {Observable<Tactic>} the object with the given ID and modified date
      */
     public get getTactic() { return this.getStixObjectFactory<Tactic>("tactic"); }
@@ -192,6 +241,7 @@ export class RestApiConnectorService extends ApiConnector {
      * Get a single group by STIX ID
      * @param {string} id the object STIX ID
      * @param {Date} [modified] if specified, get the version modified at the given date
+     * * @param {versions} [string] default "latest", if "all" returns all versions of the object instead of just the latest version.
      * @returns {Observable<Group>} the object with the given ID and modified date
      */
     public get getGroup() { return this.getStixObjectFactory<Group>("group"); }
@@ -199,6 +249,7 @@ export class RestApiConnectorService extends ApiConnector {
      * Get a single software by STIX ID
      * @param {string} id the object STIX ID
      * @param {Date} [modified] if specified, get the version modified at the given date
+     * @param {versions} [string] default "latest", if "all" returns all versions of the object instead of just the latest version.
      * @returns {Observable<Software>} the object with the given ID and modified date
      */
     public get getSoftware() { return this.getStixObjectFactory<Software>("software"); }
@@ -206,6 +257,7 @@ export class RestApiConnectorService extends ApiConnector {
      * Get a single mitigation by STIX ID
      * @param {string} id the object STIX ID
      * @param {Date} [modified] if specified, get the version modified at the given date
+     * @param {versions} [string] default "latest", if "all" returns all versions of the object instead of just the latest version.
      * @returns {Observable<Mitigation>} the object with the given ID and modified date
      */
     public get getMitigation() { return this.getStixObjectFactory<Mitigation>("mitigation"); }
@@ -213,9 +265,18 @@ export class RestApiConnectorService extends ApiConnector {
      * Get a single matrix by STIX ID
      * @param {string} id the object STIX ID
      * @param {Date} [modified] if specified, get the version modified at the given date
+     * @param {versions} [string] default "latest", if "all" returns all versions of the object instead of just the latest version.
      * @returns {Observable<Matrix>} the object with the given ID and modified date
      */
     public get getMatrix() { return this.getStixObjectFactory<Matrix>("matrix"); }
+    /**
+     * Get a single collection by STIX ID
+     * @param {string} id the object STIX ID
+     * @param {Date} [modified] if specified, get the version modified at the given date
+     * @param {versions} [string] default "latest", if "all" returns all versions of the object instead of just the latest version.
+     * @returns {Observable<Matrix>} the object with the given ID and modified date
+     */
+    public get getCollection() { return this.getStixObjectFactory<Collection>("collection"); }
 
     /**
      * Factory to create a new STIX object creator (POST) function
@@ -232,7 +293,8 @@ export class RestApiConnectorService extends ApiConnector {
                 tap(this.handleSuccess(`${attackType} created`)),
                 map(result => {
                     let x = result as any;
-                    return new attackClass(x);
+                    if (x.stix.type == "malware" || x.stix.type == "tool") return new Software(x.stix.type, x);
+                    else return new attackClass(x);
                 }),
                 catchError(this.handleError_single()),
                 share() // multicast so that multiple subscribers don't trigger the call twice. THIS MUST BE THE LAST LINE OF THE PIPE
@@ -293,7 +355,8 @@ export class RestApiConnectorService extends ApiConnector {
                 tap(this.handleSuccess(`updated ${attackType}`)),
                 map(result => {
                     let x = result as any;
-                    return new attackClass(x);
+                    if (x.stix.type == "malware" || x.stix.type == "tool") return new Software(x.stix.type, x);
+                    else return new attackClass(x);
                 }),
                 catchError(this.handleError_single()),
                 share() // multicast so that multiple subscribers don't trigger the call twice. THIS MUST BE THE LAST LINE OF THE PIPE
@@ -398,7 +461,42 @@ export class RestApiConnectorService extends ApiConnector {
      * @returns {Observable<{}>} observable of the response body
      */
     public get deleteMatrix() { return this.deleteStixObjectFactory("matrix"); }
+    /**
+     * DELETE a collection
+     * @param {string} id the STIX ID of the object to delete
+     * @param {Date} modified The modified date of the version to delete
+     * @returns {Observable<{}>} observable of the response body
+     */
+    public get deleteCollection() { return this.deleteStixObjectFactory("collection"); }
+    //    ___ ___  _    _    ___ ___ _____ ___ ___  _  _     _   ___ ___ ___ 
+    //   / __/ _ \| |  | |  | __/ __|_   _|_ _/ _ \| \| |   /_\ | _ \_ _/ __|
+    //  | (_| (_) | |__| |__| _| (__  | |  | | (_) | .` |  / _ \|  _/| |\__ \
+    //   \___\___/|____|____|___\___| |_| |___\___/|_|\_| /_/ \_\_| |___|___/
+    //                                                                       
 
+    /**
+     * POST a collection bundle (including a collection SDO and the objects to which it refers) to the back-end
+     * @param {*} collectionBundle the STIX bundle to write
+     * @param {boolean} [preview] if true, preview the results of the import without actually committing the import
+     * @returns {Observable<Collection>} collection object marking the results of the import
+     */
+    public postCollectionBundle(collectionBundle: any, preview: boolean = false): Observable<Collection> {
+        // add query params for preview
+        let query = new HttpParams();
+        if (preview) query = query.set("checkOnly", "true");
+        // perform the request
+        return this.http.post(`${this.baseUrl}/collection-bundles`, collectionBundle, {headers: this.headers, params: query}).pipe(
+            tap(result => {
+                if (preview) console.log("previewed collection import", result);
+                else this.handleSuccess("imported collection")(result);
+            }),
+            map(result => { 
+                return new Collection(result); 
+            }),
+            catchError(this.handleError_single<Collection>()),
+            share()
+        )
+    }
 
     //    ___ ___  _    _    ___ ___ _____ ___ ___  _  _      ___ _  _ ___  _____  __       _   ___ ___ ___ 
     //   / __/ _ \| |  | |  | __/ __|_   _|_ _/ _ \| \| |    |_ _| \| |   \| __\ \/ /      /_\ | _ \_ _/ __|

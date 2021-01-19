@@ -37,6 +37,8 @@ export class Relationship extends StixObject {
         }
     }
 
+    public serialize() {};
+
     /**
      * Parse the object from the record returned from the back-end
      * @abstract
@@ -52,8 +54,8 @@ export class Relationship extends StixObject {
             } else this.description = "";
 
             // THIS IS NOT PART OF THE SPEC, AND IS A PLACEHOLDER
-            if (sdo.source_name) this.source_name = sdo.source_name;
-            if (sdo.target_name) this.target_name = sdo.target_name;
+            if (sdo.workspace.source_name) this.source_name = sdo.workspace.source_name;
+            if (sdo.workspace.target_name) this.target_name = sdo.workspace.target_name;
         }
     }
     

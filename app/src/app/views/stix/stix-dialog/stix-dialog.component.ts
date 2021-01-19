@@ -20,7 +20,7 @@ export class StixDialogComponent implements OnInit {
             object: this._config.object,
             showRelationships: false,
             editable: this._config.editable,
-            sidebarControl: "events"
+            sidebarControl: this._config.sidebarControl == "disable"? "disable" : "events"
         }
     }
 
