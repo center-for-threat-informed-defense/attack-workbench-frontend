@@ -39,18 +39,21 @@ export class MatrixViewComponent extends StixViewPage implements OnInit {
         this.editing = params["editing"];
     });
 
-    let subscription = this.restAPIConnectorService.getAllTactics().subscribe({
-      next: (all_tactics) => {
-        let tactics_map : Map<string, StixObject> = new Map();
-        // Create map by stix id
-        for (let tactic of all_tactics.data){
-          tactics_map.set(tactic.stixID, tactic);
-        }
+    if (this.config.showRelationships) {
+        let subscription = this.restAPIConnectorService.getAllTactics().subscribe({
+          next: (all_tactics) => {
+            let tactics_map : Map<string, StixObject> = new Map();
+            // Create map by stix id
+            for (let tactic of all_tactics.data){
+              tactics_map.set(tactic.stixID, tactic);
+            }
+    
+            this.getTactics(tactics_map);
+          },
+          complete: () => { subscription.unsubscribe(); } //prevent memory leaks
+        })
+    }
 
-        this.getTactics(tactics_map);
-      },
-      complete: () => { subscription.unsubscribe(); } //prevent memory leaks
-    })
 
   }
 
