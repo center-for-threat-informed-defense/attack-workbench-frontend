@@ -38,8 +38,7 @@ export class MatrixViewComponent extends StixViewPage implements OnInit {
     this.route.queryParams.subscribe(params => {
         this.editing = params["editing"];
     });
-
-    if (this.config.showRelationships) {
+    if (!this.config.hasOwnProperty('showRelationships') || this.config.showRelationships) {
         let subscription = this.restAPIConnectorService.getAllTactics().subscribe({
           next: (all_tactics) => {
             let tactics_map : Map<string, StixObject> = new Map();
