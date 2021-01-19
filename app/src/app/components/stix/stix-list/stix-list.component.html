@@ -23,10 +23,10 @@
         <!-- ----- -->
         <!-- TABLE -->
         <!-- ----- -->
-        <div class="scroll-container" *ngIf="(objects$ | async) as objects else loading" @fadeIn>
+        <div class="scroll-container" *ngIf="(data$ | async) as data else loading" @fadeIn>
             <table mat-table multiTemplateDataRows matSort 
-                   *ngIf="objects.length > 0 else noObjects"
-                   [dataSource]="objects" >
+                   *ngIf="data.data.length > 0 else noObjects"
+                   [dataSource]="data.data" >
                 <!-- column definitions -->
                 <ng-container matColumnDef="{{column}}" *ngFor="let column of tableColumns" [sticky]="tableColumns_settings.get(column)['sticky']">
                     <th mat-header-cell mat-sort-header *matHeaderCellDef class="nowrap"> {{tableColumns_settings.get(column)["label"]}} </th>
@@ -116,7 +116,7 @@
             </ng-template>
         </div>
         <ng-template #loading>
-            <app-loading-overlay *ngIf="!objects"></app-loading-overlay>
+            <app-loading-overlay *ngIf="!data"></app-loading-overlay>
         </ng-template>
         <!-- ---------- -->
         <!-- PAGINATION -->

@@ -11,4 +11,6 @@ export class Matrix extends StixObject {
             this.description = sdo.description;
         }
     }
+    public serialize(): any {}
+    public deserialize(raw: any) {}
 }
