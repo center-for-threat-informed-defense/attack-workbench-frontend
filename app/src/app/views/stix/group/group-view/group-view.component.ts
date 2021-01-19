@@ -12,6 +12,7 @@ import { Relationship } from 'src/app/classes/stix/relationship';
 export class GroupViewComponent extends StixViewPage implements OnInit {
   
   public editing: boolean = false;
+  
   public get group(): Group { return this.config.object as Group; }
 
   public relationships_techniques: Relationship[] = []
