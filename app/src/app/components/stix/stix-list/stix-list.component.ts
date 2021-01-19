@@ -188,9 +188,9 @@ export class StixListComponent implements OnInit, AfterViewInit {
                     }]
                     break;
                 case "relationship":
-                    this.addColumn("source name", "source_name", "plain", false, ["name", "relationship-left"]);
+                    this.addColumn("source name", "source_name", "plain", this.config.targetRef? true : false);// ["name", "relationship-left"]);
                     this.addColumn("type", "relationship_type", "plain", false, ["text-deemphasis", "relationship-joiner"]);
-                    this.addColumn("target name", "target_name", "plain", false, ["name", "relationship-right"]);
+                    this.addColumn("target name", "target_name", "plain", this.config.sourceRef? true : false);// ["name", "relationship-right"]);
                     this.addColumn("description", "description", "descriptive", false);
                     // controls_after.push("open-link")
                     break;
@@ -330,7 +330,7 @@ export class StixListComponent implements OnInit, AfterViewInit {
             else if (this.config.type == "tactic") this.data$ = this.restAPIConnectorService.getAllTactics(limit, offset); //TODO add limit and offset once back-end supports it
             else if (this.config.type == "technique") this.data$ = this.restAPIConnectorService.getAllTechniques(limit, offset);
             else if (this.config.type == "collection") this.data$ = this.restAPIConnectorService.getAllCollections();
-            else if (this.config.type == "relationship") this.data$ = this.restAPIConnectorService.getRelatedTo(this.config.sourceRef, this.config.targetRef, this.config.relationshipType);
+            else if (this.config.type == "relationship") this.data$ = this.restAPIConnectorService.getRelatedTo(this.config.sourceRef, this.config.targetRef, this.config.relationshipType, limit, offset);
             let subscription = this.data$.subscribe({
                 next: (data) => { this.totalObjectCount = data.pagination.total; },
                 complete: () => { subscription.unsubscribe() }

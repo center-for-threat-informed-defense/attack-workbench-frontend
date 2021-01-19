@@ -16,12 +16,6 @@ export class TechniqueViewComponent extends StixViewPage implements OnInit {
 
     public get technique(): Technique { return this.config.object as Technique; }
 
-    public mitigations: Relationship[] = [];
-
-    public subtechniques: Relationship[];
-    public groups: Relationship[];
-    public software: Relationship[];
-
     constructor(private route: ActivatedRoute) {
         super();
     }
