@@ -16,14 +16,4 @@ export class CollectionManagerComponent implements OnInit {
 
     ngOnInit(): void {
     }
-
-    public openIndexImport() {
-        let importer = this.dialog.open(CollectionIndexImportComponent, {
-            maxHeight: "75vh",
-            width: "50em" //45 + 5 for padding
-        });
-        //trigger refresh of indexes after the user closes the importer
-        importer.afterClosed().subscribe(() => this.collectionIndexList.refreshIndexes()); 
-    }
-
 }

@@ -1,26 +1,45 @@
 import { Component, OnInit } from '@angular/core';
-import { Observable } from 'rxjs';
-import { switchMap } from 'rxjs/operators';
-import { ParamMap, ActivatedRoute } from '@angular/router';
-import { Collection } from 'src/app/classes/stix/collection';
-import { CollectionService } from 'src/app/services/stix/collection/collection.service';
+import { ActivatedRoute } from '@angular/router';
+import { Collection, CollectionImportCategories } from 'src/app/classes/stix/collection';
+import { Group } from 'src/app/classes/stix/group';
+import { Matrix } from 'src/app/classes/stix/matrix';
+import { Mitigation } from 'src/app/classes/stix/mitigation';
+import { Relationship } from 'src/app/classes/stix/relationship';
+import { Software } from 'src/app/classes/stix/software';
+import { Tactic } from 'src/app/classes/stix/tactic';
+import { Technique } from 'src/app/classes/stix/technique';
+import { StixViewPage } from '../../stix-view-page';
 
 @Component({
   selector: 'app-collection-view',
   templateUrl: './collection-view.component.html',
   styleUrls: ['./collection-view.component.scss']
 })
-export class CollectionViewComponent implements OnInit {
+export class CollectionViewComponent extends StixViewPage implements OnInit {
     
-    public collection: Collection;
+    public get collections(): Collection[] { return this.config.object as Collection[]; }
+    public currentCollection: number = 0;
 
-    constructor(private route: ActivatedRoute, private collectionService: CollectionService) { }
+    public collection_import_categories = []
+
+    constructor(private route: ActivatedRoute) { super() }
 
     ngOnInit() {
-        let id = this.route.snapshot.paramMap.get("id");
-        console.log(id);
-        this.collection = this.collectionService.get(id, true);
-        console.log(this.collection);
+        // parse collection into object_import_categories
+        for (let collection of this.collections) {
+            let categories = {
+                technique:    new CollectionImportCategories<Technique>(),
+                tactic:       new CollectionImportCategories<Tactic>(),
+                software:     new CollectionImportCategories<Software>(),
+                relationship: new CollectionImportCategories<Relationship>(),
+                mitigation:   new CollectionImportCategories<Mitigation>(),
+                matrix:       new CollectionImportCategories<Matrix>(),
+                group:        new CollectionImportCategories<Group>()
+            }
+
+
+            this.collection_import_categories.push(categories);
+        }
     }
 
 }

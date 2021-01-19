@@ -11,6 +11,8 @@ import { StixPageComponent } from "./views/stix/stix-page/stix-page.component"
 import { RouterModule, Routes } from '@angular/router';
 import { NgModule } from '@angular/core';
 import { environment } from "../environments/environment"
+import { CollectionImportComponent } from "./views/stix/collection/collection-import/collection-import-workflow/collection-import.component";
+import { CollectionIndexImportComponent } from "./views/stix/collection/collection-index/collection-index-import/collection-index-import.component";
 
 const stixRoutes: Routes = [{
     path: 'matrix',
@@ -194,7 +196,43 @@ if (environment.integrations.collection_manager.enabled) {
             data: {
                 breadcrumb: "list"
             },
-            component: CollectionManagerComponent
+            component: CollectionManagerComponent,
+        }, {
+            path: "import-collection",
+            data: {
+                breadcrumb: "import a collection"
+            },
+            children: [{
+                path: '',
+                data: {
+                    breadcrumb: 'import'
+                },
+                component: CollectionImportComponent
+            }]
+        }, {
+            path: "import-collection-index",
+            data: {
+                breadcrumb: "add a collection index"
+            },
+            children: [{
+                path: '',
+                data: {
+                    breadcrumb: 'import'
+                },
+                component: CollectionIndexImportComponent
+            }]
+        }, {
+            path: ":id",
+            data: {
+                breadcrumb: "loading..."
+            },
+            children: [{
+                path: "",
+                data: {
+                    breadcrumb: "view",
+                },
+                component: StixPageComponent
+            }]
         }]
     })
 }

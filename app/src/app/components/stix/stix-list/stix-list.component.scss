@@ -2,6 +2,7 @@
 @import '~@angular/material/theming';
 .stix-list {
     .controls {
+        // &, .input-group, .input-group .mat-form-field { min-height: 60px; }
         .input-group {
             font-size: 16px;
             width: 100%;
@@ -33,13 +34,13 @@
     .table-container {
         max-width: 60em;
         margin: 0 auto;
+        border-radius: 4px;
         .dark & { 
-            border-radius: 4px;
             border: 1px solid border-color(dark);
         }
         .light & {
-            // border: 1px solid border-color(light);
-            @include mat-elevation(8);
+            border: 1px solid border-color(light);
+            // @include mat-elevation(8);
         }
         .scroll-container {
             width: 100%;
@@ -98,6 +99,10 @@
                 .width-limited-lg { min-width: 30em; max-width: 60em; }
                 .width-limited-md { min-width: 15em; max-width: 30em; }
                 .width-limited-sm { min-width: 10em; max-width: 20em; }
+
+                .name {
+                    @extend .width-limited-md;
+                }
         
                 tr.element-row:not(.expanded):hover {
                     .light & td { background: color-alternate(light); }
@@ -146,6 +151,7 @@
                             }
                         }
                         .controls {
+                            // min-height: 60px;
                             a { // links to pages in detail column
                                 @extend .text-label;
                                 text-align: right;

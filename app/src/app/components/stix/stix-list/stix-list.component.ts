@@ -1,17 +1,16 @@
-import { Component, OnInit, Input, ViewEncapsulation, ViewChild, AfterViewInit } from '@angular/core';
+import { Component, OnInit, Input, ViewEncapsulation, ViewChild, AfterViewInit, ElementRef } from '@angular/core';
 import { StixObject } from 'src/app/classes/stix/stix-object';
-import { CollectionService } from 'src/app/services/stix/collection/collection.service';
-import {animate, state, style, transition, trigger} from '@angular/animations';
+import {animate, style, transition, trigger} from '@angular/animations';
 import {MatSort} from '@angular/material/sort';
 import {MatPaginator} from '@angular/material/paginator';
-import { RouterModule } from '@angular/router';
 
 import { SelectionModel } from '@angular/cdk/collections';
 import { StixDialogComponent } from '../../../views/stix/stix-dialog/stix-dialog.component';
 
 import { MatDialog } from '@angular/material/dialog';
-import { Observable } from 'rxjs';
-import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/rest-api-connector.service';
+import { fromEvent, Observable, of } from 'rxjs';
+import { Paginated, RestApiConnectorService } from 'src/app/services/connectors/rest-api/rest-api-connector.service';
+import { debounceTime, distinctUntilChanged, filter, tap } from 'rxjs/operators';
 
 @Component({
     selector: 'app-stix-list',
@@ -42,9 +41,13 @@ export class StixListComponent implements OnInit, AfterViewInit {
     // @Input() public stixObjects: StixObject[]; //TODO get rid of this in favor of stix list cards loading using filters
     @Input() public config: StixListConfig = {};
     @ViewChild(MatPaginator) paginator: MatPaginator;
+    @ViewChild('search') search: ElementRef;
+    // @ViewChild(MatSort) public sort: MatSort;
 
     //objects to render;
     public objects$: Observable<StixObject[]>;
+    public data$: Observable<Paginated>;
+    public totalObjectCount: number = 0;
     //view mode
     public mode: string = "cards";
     //options provided to the user for grouping and filtering
@@ -53,7 +56,6 @@ export class StixListComponent implements OnInit, AfterViewInit {
     public filter: string[] = [];
     public groupBy: string[] = [];
     // search query
-    public query: string = "";
 
     // TABLE STUFF
     public tableColumns: string[] = [];
@@ -61,24 +63,9 @@ export class StixListComponent implements OnInit, AfterViewInit {
     public tableColumns_settings: Map<string, any> = new Map<string, any>(); // property to display for each displayProperty
     public tableDetail: any[];
     public expandedElement: StixObject | null;
-    // @ViewChild(MatSort) public sort: MatSort;
-    // @ViewChild(MatPaginator) public paginator: MatPaginator;
 
     // Selection stuff
     public selection: SelectionModel<string>;
-    /** Whether the number of selected elements matches the total number of rows. */
-    // public isAllSelected() {
-    //     const numSelected = this.selection.selected.length;
-    //     const numRows = this.stixObjects.length;
-    //     return numSelected == numRows;
-    // }
-    
-    // /** Selects all rows if they are not all selected; otherwise clear selection. */
-    // public selectAll() {
-    //     this.isAllSelected() ?
-    //         this.selection.clear() :
-    //         this.stixObjects.forEach(row => this.selection.select(row.stixID));
-    // }
 
     /**
      * Add a column to the table
@@ -98,11 +85,12 @@ export class StixListComponent implements OnInit, AfterViewInit {
      * @param {StixObject} object of the row that was clicked
      */
     public onRowClick(element: StixObject) {
-        if (element.type == "relationship") { //open modal
+        if (this.config.clickBehavior && this.config.clickBehavior == "dialog") { //open modal
             this.dialog.open(StixDialogComponent, {
                 data: {
                     object: element,
                     editable: true,
+                    sidebarControl: "disable"
                 },
                 maxHeight: "75vh"
             });
@@ -111,10 +99,6 @@ export class StixListComponent implements OnInit, AfterViewInit {
         }
     }
     
-
-
-
-
 
     //all possible each type of filter/groupBy
     private types: FilterValue[] = [
@@ -138,7 +122,7 @@ export class StixListComponent implements OnInit, AfterViewInit {
         {"value": "status.revoked", "label": "revoked"}
     ]
 
-    constructor(private collectionService: CollectionService, public dialog: MatDialog, private restAPIConnectorService: RestApiConnectorService) {}
+    constructor(public dialog: MatDialog, private restAPIConnectorService: RestApiConnectorService) {}
     ngOnInit() {
         this.filterOptions = []
         // parse the config
@@ -149,63 +133,66 @@ export class StixListComponent implements OnInit, AfterViewInit {
             // set columns according to type
             switch(this.config.type) {
                 case "collection":
+                    this.addColumn("name", "name", "plain", true, ["name"]);
+                    this.addColumn("highest version", "version", "version");
+                    this.addColumn("imported", "imported", "timestamp");
+                    this.addColumn("released", "modified", "timestamp");
+                    this.tableDetail = [{
+                        "field": "description",
+                        "display": "descriptive"
+                    }]
+                    break;
                 case "matrix":
                 case "tactic":
                 case "mitigation":
                     this.addColumn("name", "name", "plain", true, ["name"]);
+                    this.addColumn("version", "version", "version");
+                    this.addColumn("modified","modified", "timestamp");
+                    this.addColumn("created", "created", "timestamp");
                     this.tableDetail = [{
                         "field": "description",
                         "display": "descriptive"
                     }]
-                    this.addColumn("version", "version", "version");
-                    this.addColumn("modified","modified", "timestamp");
-                    this.addColumn("created", "created", "timestamp");
                     break;
                 case "group":
                     this.addColumn("name", "name", "plain", true, ["name"]);
                     this.addColumn("aliases", "aliases", "list");
+                    this.addColumn("version", "version", "version");
+                    this.addColumn("modified","modified", "timestamp");
+                    this.addColumn("created", "created", "timestamp");
                     this.tableDetail = [{
                         "field": "description",
                         "display": "descriptive"
                     }]
-                    this.addColumn("version", "version", "version");
-                    this.addColumn("modified","modified", "timestamp");
-                    this.addColumn("created", "created", "timestamp");
                     break;
                 case "software":
                     this.addColumn("name", "name", "plain", true, ["name"]);
                     this.addColumn("type", "type", "plain");
+                    this.addColumn("version", "version", "version");
+                    this.addColumn("modified","modified", "timestamp");
+                    this.addColumn("created", "created", "timestamp");
                     this.tableDetail = [{
                         "field": "description",
                         "display": "descriptive"
                     }]
-                    this.addColumn("version", "version", "version");
-                    this.addColumn("modified","modified", "timestamp");
-                    this.addColumn("created", "created", "timestamp");
                     break;
                 case "technique":
                     this.addColumn("name", "name", "plain", true, ["name"]);
                     this.addColumn("platforms", "platforms", "list");
+                    this.addColumn("version", "version", "version");
+                    this.addColumn("modified","modified", "timestamp");
+                    this.addColumn("created", "created", "timestamp");
                     this.tableDetail = [{
                         "field": "description",
                         "display": "descriptive"
                     }]
-                    this.addColumn("version", "version", "version");
-                    this.addColumn("modified","modified", "timestamp");
-                    this.addColumn("created", "created", "timestamp");
                     break;
                 case "relationship":
                     this.addColumn("source name", "source_name", "plain", false, ["name", "relationship-left"]);
                     this.addColumn("type", "relationship_type", "plain", false, ["text-deemphasis", "relationship-joiner"]);
                     this.addColumn("target name", "target_name", "plain", false, ["name", "relationship-right"]);
-                    // this.addColumn("relationship", "", "relationship_name", false);
-
                     this.addColumn("description", "description", "descriptive", false);
-                    // this.tableDetail = [{
-                    //     "field": "description",
-                    //     "display": "descriptive"
-                    // }]
-                    controls_after.push("open-link")
+                    // controls_after.push("open-link")
                     break;
                 default:
                     this.addColumn("type", "attacktype", "plain");
@@ -222,91 +209,141 @@ export class StixListComponent implements OnInit, AfterViewInit {
             })
             this.groupBy = ["type"];
         }
+        
+        
         if ("relatedTo" in this.config) {
-
+            
         } 
         if ("query" in this.config) {
-
+            
         }
-        // this.tableColumns_controls = Array.from(this.tableColumns); // shallow copy
-        if ("select" in this.config) {
-            this.selection = new SelectionModel<string>(this.config.select == "many");
+        //controls cols setup
+        //selection setup
+        if ("select" in this.config && this.config.select != "disabled") {
+            if ("selectionModel" in this.config) {
+                this.selection = this.config.selectionModel;
+            } else {
+                this.selection = new SelectionModel<string>(this.config.select == "many");
+            }
             controls_before.unshift("select") // add select column to view
         }
+        // open-link icon setup
+        if (this.config.clickBehavior && this.config.clickBehavior == "dialog") {
+            controls_after.push("open-link")
+        }
         this.tableColumns_controls = controls_before.concat(this.tableColumns, controls_after);
-
-        // if ("domain" in this.config) { this.filter.push("domain." + this.config.domain); }
-        // else {
-        // this.filterOptions.push({
-        //     "name": "domain", //TODO dynamic domain values
-        //     "disabled": "domain" in this.config,
-        //     "values": this.domains
-        // })
-        //     if (this.groupBy.length == 0) this.groupBy = ["domain"];
-        // }
-        // if ("collection" in this.config) { this.filter.push("collection." + this.config.collection); }
-        // else {
-        //     this.filterOptions.push({
-        //         "name": "collection", //TODO dynamic collection list
-        //         "disabled": "collection" in this.config,
-        //         "values": this.collections
-        //     })
-        //     if (this.groupBy.length == 0) this.groupBy = ["collection"];
-        // }
-        // if ("status" in this.config) { this.filter.push("status." + this.config.status); }
-        // else {
+        // filter setup
         this.filterOptions.push({
             "name": "status",
             "disabled": "status" in this.config,
             "values": this.statuses
         })
+        // get data from config (if we are not connecting to back-end)
+        if ("stixObjects" in this.config && !(this.config.stixObjects instanceof Observable)) {
+            this.totalObjectCount = this.config.stixObjects.length;
+            this.applyControls();
+        }
     }
+
     ngAfterViewInit() {
-        this.applyControls();
+        // get objects from backend if data is not from config
+        if (!("stixObjects" in this.config)) this.applyControls();
+        // set up listener to search input
+        fromEvent(this.search.nativeElement, 'keyup').pipe(
+            filter(Boolean),
+            debounceTime(250),
+            distinctUntilChanged(),
+            tap(_ => { 
+                if (this.paginator) this.paginator.pageIndex = 0;
+                this.applyControls();
+            })
+        ).subscribe()
+    }
+
+
+    /**
+     * Filter the given objects to those which include the query. Searches all string and string[] properties
+     * @template T the input type
+     * @param {string} query
+     * @param {T[]} objects
+     * @returns {T[]}
+     * @memberof StixListComponent
+     */
+    private filterObjects<T>(query: string, objects: T[]): T[] {
+        return objects.filter(obj => {
+            return Object.keys(obj).some(key => {
+                if (typeof obj[key] === 'string') return obj[key].toLowerCase().includes(query.toLowerCase())
+                else if (Array.isArray(obj[key])) {
+                    return obj[key].some(val => {
+                        if (typeof(val === 'string')) return val.toLowerCase().includes(query.toLowerCase());
+                    })
+                }
+            })
+        })
     }
 
     /**
      * Apply all controls and fetch objects from the back-end if configured
      */
     public applyControls() {
+        let searchString = this.search? this.search.nativeElement.value : "";
         if ("stixObjects" in this.config) {
-            // // set max length for paginator
-            // this.paginator.length = this.config.stixObjects.length;
-            // // filter on STIX objects specified in the config
-            // let filtered = this.config.stixObjects;
-
-            // // filter to only ones within the correct index range
-            // let startIndex = this.paginator.pageIndex * this.paginator.pageSize
-            // let endIndex = startIndex + this.paginator.pageSize;
-            // console.log(filtered, this.config.stixObjects);
-            // filtered = filtered.slice(startIndex, endIndex);
-            // console.log(startIndex, endIndex)
-
-            // this.objects = filtered;
-            // console.log(this.objects);
-            // console.log(this.paginator);
+            if (this.config.stixObjects instanceof Observable) {
+                // pull objects out of observable
+            } else {
+                // no need to pull objects out of observable
+                
+                // set max length for paginator
+                // this.paginator.length = this.config.stixObjects.length;
+                // filter on STIX objects specified in the config
+                let filtered = this.config.stixObjects;
+                filtered = this.filterObjects(searchString, filtered); 
+                if (this.paginator) this.totalObjectCount = filtered.length;
+                
+                // filter to only ones within the correct index range
+                let startIndex = this.paginator? this.paginator.pageIndex * this.paginator.pageSize : 0
+                let endIndex = this.paginator? startIndex + this.paginator.pageSize : 5;
+                // console.log(filtered, this.config.stixObjects);
+                filtered = filtered.slice(startIndex, endIndex);
+                // filter to objects matching searchString
+                // console.log(startIndex, endIndex)
+                this.data$ = of({
+                    data: filtered,
+                    pagination: {
+                        total: this.config.stixObjects.length,
+                        offset: startIndex,
+                        limit: this.paginator? this.paginator.pageSize : 0
+                    }
+                });
+                // this.objects$ = of(filtered);
+                // console.log(this.objects$);
+                // console.log(this.paginator);
+            }
         } else {
             // fetch objects from backend
-            let limit = this.paginator.pageSize;
-            let offset = this.paginator.pageIndex * this.paginator.pageSize;
-            if (this.config.type == "software") this.objects$ = this.restAPIConnectorService.getAllSoftware(); //TODO add limit and offset once back-end supports it
-            else if (this.config.type == "group") this.objects$ = this.restAPIConnectorService.getAllGroups(); //TODO add limit and offset once back-end supports it
-            else if (this.config.type == "matrix") this.objects$ = this.restAPIConnectorService.getAllMatrices(); //TODO add limit and offset once back-end supports it
-            else if (this.config.type == "mitigation") this.objects$ = this.restAPIConnectorService.getAllMitigations(); //TODO add limit and offset once back-end supports it
-            else if (this.config.type == "tactic") this.objects$ = this.restAPIConnectorService.getAllTactics(); //TODO add limit and offset once back-end supports it
-            else if (this.config.type == "technique") this.objects$ = this.restAPIConnectorService.getAllTechniques(limit, offset);
+            let limit = this.paginator? this.paginator.pageSize : 5;
+            let offset = this.paginator? this.paginator.pageIndex * limit : 0;
+            if (this.config.type == "software") this.data$ = this.restAPIConnectorService.getAllSoftware(limit, offset); //TODO add limit and offset once back-end supports it
+            else if (this.config.type == "group") this.data$ = this.restAPIConnectorService.getAllGroups(limit, offset); //TODO add limit and offset once back-end supports it
+            else if (this.config.type == "matrix") this.data$ = this.restAPIConnectorService.getAllMatrices(limit, offset); //TODO add limit and offset once back-end supports it
+            else if (this.config.type == "mitigation") this.data$ = this.restAPIConnectorService.getAllMitigations(limit, offset); //TODO add limit and offset once back-end supports it
+            else if (this.config.type == "tactic") this.data$ = this.restAPIConnectorService.getAllTactics(limit, offset); //TODO add limit and offset once back-end supports it
+            else if (this.config.type == "technique") this.data$ = this.restAPIConnectorService.getAllTechniques(limit, offset);
+            else if (this.config.type == "collection") this.data$ = this.restAPIConnectorService.getAllCollections();
+            let subscription = this.data$.subscribe({
+                next: (data) => { this.totalObjectCount = data.pagination.total; },
+                complete: () => { subscription.unsubscribe() }
+            })
         }
     }
 }
 
 //allowed types for StixListConfig
 type type_attacktype = "collection" | "group" | "matrix" | "mitigation" | "software" | "tactic" | "technique" | "relationship";
-type type_domain = "enterprise-attack" | "mobile-attack";
-type type_status = "status.wip" | "status.awaiting-review" | "status.reviewed";
-type selection_types = "one" | "many"
+type selection_types = "one" | "many" | "disabled"
 export interface StixListConfig {
     /* if specified, shows the given STIX objects in the table instead of loading from the back-end based on other configurations. */
-    stixObjects?: Observable<StixObject[]>;
+    stixObjects?: Observable<StixObject[]> | StixObject[];
     /** STIX ID; force the list to show relationships with the given object */
     relatedTo?: string;
     /** force the list to show only this type */
@@ -318,8 +355,22 @@ export interface StixListConfig {
     /** can the user select in this list? allowed options:
      *     "one": user can select a single element at a time
      *     "many": user can select as many elements as they want
+     *     "disabled": do not allow selection (the same as omitting the config field)
      */
     select?: selection_types;
+    /**
+     * If provided, use this selection model of STIX IDs for tracking selection
+     * Only relevant if 'select' is also enabled. Also, will cause problems if multiple constructor pram is set according to 'select'.
+     */
+    selectionModel?: SelectionModel<string>;
+    /** default true, if false hides the filter dropdown menu */
+    showFilters?: boolean;
+    /**
+     * How should the table act when the row is clicked? default "expand"
+     *     "expand": expand the row to show additional detail
+     *     "dialog": open a dialog with the full object definition
+     */
+    clickBehavior?: "expand" | "dialog"
 }
 
 export interface FilterValue {

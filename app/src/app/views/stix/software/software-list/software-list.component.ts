@@ -1,6 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { SoftwareService } from 'src/app/services/stix/software/software.service';
-import { Software } from 'src/app/classes/stix/software';
 
 @Component({
   selector: 'app-software-list',
@@ -9,12 +7,8 @@ import { Software } from 'src/app/classes/stix/software';
 })
 export class SoftwareListComponent implements OnInit {
 
-    public software: Software[] = [];
+    constructor() { }
 
-    constructor(private softwareService: SoftwareService) { }
-
-    ngOnInit() {
-        this.software = this.softwareService.getAll();
-    }
+    ngOnInit() {}
 
 }

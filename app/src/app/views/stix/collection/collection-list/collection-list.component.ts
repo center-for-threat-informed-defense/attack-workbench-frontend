@@ -1,5 +1,4 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
-import { CollectionService } from 'src/app/services/stix/collection/collection.service';
 import { Collection } from 'src/app/classes/stix/collection';
 
 @Component({
@@ -12,10 +11,8 @@ export class CollectionListComponent implements OnInit {
 
     public collections: Collection[] = [];
         
-    constructor(private collectionService: CollectionService) { }
+    constructor() { }
 
-    ngOnInit() {
-        this.collections = this.collectionService.getAll();
-    }
+    ngOnInit() {}
 
 }

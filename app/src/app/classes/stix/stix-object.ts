@@ -67,7 +67,7 @@ export abstract class StixObject extends Serializable {
      * @abstract
      * @returns {*} the raw object to send
      */
-    public serialize(): any {
+    public base_serialize(): any {
         return {
             "type": this.type,
             "id": this.stixID,

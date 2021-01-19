@@ -13,17 +13,18 @@ import { StixViewConfig } from '../stix-view-page';
   styleUrls: ['./stix-page.component.scss']
 })
 export class StixPageComponent implements OnInit {
-    public objects$: Observable<StixObject>;
+    public objects$: Observable<StixObject[]>;
     
     /**
      * Parse an object list and build a config for passing into child components
      * @param {StixObject} objects the objects to display
+     * @oaram {allVersions} return all versions instead of just a single version
      * @returns {StixViewConfig} the built config
      */
-    public buildConfig(objects: StixObject): StixViewConfig {
+    public buildConfig(objects: StixObject[], allVersions: boolean = false): StixViewConfig {
         return {
             "mode": "view",
-            "object": objects[0]
+            "object": allVersions? objects : objects[0] 
         }
     }
 
@@ -38,7 +39,11 @@ export class StixPageComponent implements OnInit {
         else if (objectType == "mitigation") this.objects$ = this.restAPIConnectorService.getMitigation(objectStixID);
         else if (objectType == "tactic") this.objects$ = this.restAPIConnectorService.getTactic(objectStixID);
         else if (objectType == "technique") this.objects$ = this.restAPIConnectorService.getTechnique(objectStixID);
-        this.objects$.subscribe(result => {this.updateBreadcrumbs(result, objectType)});
+        else if (objectType == "collection") this.objects$ = this.restAPIConnectorService.getCollection(objectStixID, null, "all");
+        let  subscription = this.objects$.subscribe({
+            next: result => {this.updateBreadcrumbs(result, objectType)},
+            complete: () => { subscription.unsubscribe() }
+        });
     }
     private updateBreadcrumbs(result, objectType) {
         if (result.length == 0) {
