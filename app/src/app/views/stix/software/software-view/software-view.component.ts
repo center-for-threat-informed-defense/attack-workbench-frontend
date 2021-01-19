@@ -24,9 +24,6 @@ export class SoftwareViewComponent extends StixViewPage implements OnInit {
         this.route.queryParams.subscribe(params => {
             this.editing = params["editing"];
         });
-        // set the breadcrumb to the software name
-        this.breadcrumbService.changeBreadcrumb(this.route.snapshot, this.software.name);
-        // TODO set the page title to the software name using titleService
     }
 
 }
