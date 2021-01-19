@@ -1,5 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Output, ViewEncapsulation } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { Router } from '@angular/router';
+import { Subscription } from 'rxjs';
 import { CollectionIndex, CollectionReference, CollectionVersion } from 'src/app/classes/collection-index';
 import { ConfirmationDialogComponent } from 'src/app/components/confirmation-dialog/confirmation-dialog.component';
 import { MarkdownViewDialogComponent } from 'src/app/components/markdown-view-dialog/markdown-view-dialog.component';
@@ -15,7 +17,7 @@ export class CollectionIndexViewComponent implements OnInit {
     @Input() config: CollectionIndexViewConfig;
     @Output() onCollectionsModified = new EventEmitter();
 
-    constructor(private restAPIConnector: RestApiConnectorService, private dialog: MatDialog) { }
+    constructor(private restAPIConnector: RestApiConnectorService, private dialog: MatDialog, private router: Router) { }
 
     ngOnInit(): void {
     }
@@ -31,6 +33,14 @@ export class CollectionIndexViewComponent implements OnInit {
                 title: `${collection.name} v${version.version.toString()} Release Notes`
             }
         })
+    }
+
+    public versionDownloaded(version: CollectionVersion, ref: CollectionReference): boolean {
+        let result = this.config.subscribed_collections.some(subscribed => {
+            let matcher = `${ref.id}@${version.modified}`;
+            return matcher == subscribed;
+        });
+        return result;
     }
 
     /**
@@ -99,12 +109,26 @@ export class CollectionIndexViewComponent implements OnInit {
                 yes_suffix: "delete it"
             }
         });
-        prompt.afterClosed().subscribe(result => {
-            // if they clicked yes, delete the index
-            if (result) this.restAPIConnector.deleteCollectionIndex(this.config.index.collection_index.id).subscribe(() => {
-                this.onCollectionsModified.emit();
-            });
+        let promptSubscription = prompt.afterClosed().subscribe({
+            next: result => {
+                // if they clicked yes, delete the index
+                if (result) {
+                    let subscription = this.restAPIConnector.deleteCollectionIndex(this.config.index.collection_index.id).subscribe({
+                        next: () => { this.onCollectionsModified.emit(); },
+                        complete: () => { subscription.unsubscribe(); } //prevent memory leaks
+                    });
+                }
+            },
+            complete: () => { promptSubscription.unsubscribe() } //prevent memory leaks
         })
+    }
+
+    public onVersionClick(version: CollectionVersion, ref: CollectionReference) {
+        if (this.versionDownloaded(version, ref)) { //view prior import
+            this.router.navigate([`/collection/${ref.id}`]);
+        } else { // go to download page
+            this.router.navigate(["/collection/import-collection"], {queryParams: { "url": encodeURIComponent(version.url) }})
+        }
     }
 
 
@@ -112,6 +136,9 @@ export class CollectionIndexViewComponent implements OnInit {
 export interface CollectionIndexViewConfig {
     // the index to show
     index: CollectionIndex;
+    // "id@modified" for every subscribed collection. 
+    // Used to determine if the given collection versions have been imported already
+    subscribed_collections: any[];
     // default false. If true, show the collection title in the component
     show_title: boolean;
     // default true. If false, hides subscribe actions from the component

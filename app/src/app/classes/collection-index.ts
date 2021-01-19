@@ -54,7 +54,7 @@ export class CollectionVersion extends Serializable  {
             "modified": this.modified,
             "url": this.url,
             "taxii_url": this.taxii_url,
-            "release_notes": this.release_notes
+            "release_notes": this.release_notes,
         }
     }
 }
@@ -174,7 +174,7 @@ export class CollectionIndex extends Serializable {
                     collection_index.collections = raw.collection_index.collections.map(rawRef => {
                         let ref = new CollectionReference();
                         ref.deserialize(rawRef);
-                        ref.subscribed = raw.workspace.update_policy.subscriptions.includes(ref.id);
+                        if (raw.workspace && "update_policy" in raw.workspace) ref.subscribed = raw.workspace.update_policy.subscriptions.includes(ref.id);
                         return ref;
                     });
                 } else console.error("TypeError: collections field is not an object:", raw.collection_index.collections, "(", typeof(raw.collection_index.collections), ")");

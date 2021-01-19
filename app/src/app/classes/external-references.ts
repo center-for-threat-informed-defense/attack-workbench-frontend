@@ -101,22 +101,23 @@ export class ExternalReferences extends Serializable {
         if (references){
             // Create externalReferences list
             for (let i = 0; i < references.length; i++){
-
-                let description = ""
-                if(references[i].description) {
-                    description = references[i].description;
+                if ("source_name" in references[i]) {
+                    let description = ""
+                    if(references[i].description) {
+                        description = references[i].description;
+                    }
+                    let url = ""
+                    if(references[i].url) {
+                        url = references[i].url;
+                    }
+    
+                    let externalRef : ExternalReference = {
+                        url : url,
+                        description : description
+                    }
+    
+                    this._externalReferences.set(references[i]['source_name'], externalRef);
                 }
-                let url = ""
-                if(references[i].url) {
-                    url = references[i].url;
-                }
-
-                let externalRef : ExternalReference = {
-                    url : url,
-                    description : description
-                }
-
-                this._externalReferences.set(references[i]['source_name'], externalRef);
             }
 
             // Sort references by description and update index map
@@ -147,7 +148,8 @@ export class ExternalReferences extends Serializable {
      * @param {*} raw the raw object to parse
      */
     public deserialize(raw: any) {
-        this.externalReferences = raw;
+        if (typeof(raw) === "object") this.externalReferences = raw;
+        else console.error("TypeError: external_references field is not an object:", raw, "(",typeof(raw),")")
     }
 }
 

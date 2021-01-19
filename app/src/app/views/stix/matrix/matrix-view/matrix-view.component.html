@@ -34,17 +34,19 @@
             }"></app-descriptive-property>
         </div>
     </div>
-    <div class="row">
-        <div class="col">
-            <h2 class="section-header">TACTICS</h2>
+    <div *ngIf="config.showRelationships || !config.hasOwnProperty('showRelationships')">
+        <div class="row">
+            <div class="col">
+                <h2 class="section-header">TACTICS</h2>
+            </div>
         </div>
-    </div>
-    <div class="row">
-        <!-- TACTICS -->
-        <app-ordered-list-property class="grow-to-row" [config]="{
-            mode: editing? 'edit' : 'view',
-            objects: tactics,
-            field: 'name'
-        }"></app-ordered-list-property>
+        <div class="row">
+            <!-- TACTICS -->
+            <app-ordered-list-property class="grow-to-row" [config]="{
+                mode: editing? 'edit' : 'view',
+                objects: tactics,
+                field: 'name'
+            }"></app-ordered-list-property>
+        </div>
     </div>
 </div>

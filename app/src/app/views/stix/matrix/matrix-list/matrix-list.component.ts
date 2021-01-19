@@ -1,6 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { Matrix } from 'src/app/classes/stix/matrix';
-import { MatrixService } from 'src/app/services/stix/matrix/matrix.service';
 
 @Component({
   selector: 'app-matrix-list',
@@ -9,11 +7,7 @@ import { MatrixService } from 'src/app/services/stix/matrix/matrix.service';
 })
 export class MatrixListComponent implements OnInit {
 
-    public matrices: Matrix[] = [];
+    constructor() { }
 
-    constructor(private matrixService: MatrixService) { }
-
-    ngOnInit() {
-        this.matrices = this.matrixService.getAll();
-    }
+    ngOnInit() {}
 }
