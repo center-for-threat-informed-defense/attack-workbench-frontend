@@ -1,4 +1,11 @@
+import { Group } from './group';
+import { Matrix } from './matrix';
+import { Mitigation } from './mitigation';
+import { Relationship } from './relationship';
+import { Software } from './software';
 import { StixObject } from './stix-object';
+import { Tactic } from './tactic';
+import { Technique } from './technique';
 
 /**
  * 
@@ -75,7 +82,8 @@ export class VersionReference {
 export class Collection extends StixObject {
     public name: string;
     public description: string;
-    public contents: VersionReference[] = [];
+    public contents: VersionReference[] = []; //references to the stix objects in the collection
+    public stix_contents: StixObject[] = []; //the actual objects in the collection
     public imported: Date;
      // auto-generated changelog/report about the import
     //  each sub-property is a list of STIX IDs corresponding to objects in the import
@@ -127,6 +135,35 @@ export class Collection extends StixObject {
             if ("import_categories" in sdo) {
                 if (typeof(sdo.import_categories) === "object") this.import_categories = sdo.import_categories;
                 else console.error("TypeError: import_categories field is not an object:", sdo.import_categories, "(",typeof(sdo.import_categories),")")
+            }
+        }
+        if ("contents" in raw) {
+            for (let obj of raw.contents) {
+                // deserialize contents into stix objects
+                switch (obj.stix.type) {
+                    case "attack-pattern": //technique
+                        this.stix_contents.push(new Technique(obj))
+                    break;
+                    case "x-mitre-tactic": //tactic
+                        this.stix_contents.push(new Tactic(obj))
+                    break;
+                    case "malware": //software
+                    case "tool": 
+                        this.stix_contents.push(new Software(obj.type, obj))
+                    break;
+                    case "relationship": //relationship
+                        this.stix_contents.push(new Relationship(obj))
+                    break;
+                    case "course-of-action": //mitigation
+                        this.stix_contents.push(new Mitigation(obj))
+                    break;
+                    case "x-mitre-matrix": //matrix
+                        this.stix_contents.push(new Matrix(obj))
+                    break;
+                    case "intrusion-set": //group
+                        this.stix_contents.push(new Group(obj))
+                    break;
+                }
             }
         }
     }

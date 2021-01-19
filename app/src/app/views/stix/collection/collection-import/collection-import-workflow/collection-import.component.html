@@ -50,10 +50,7 @@
             <div *ngIf="select">
                 <h3>Success!</h3>
                 <p>
-                    The collection has been imported into your workbench. {{select.selected.length}} new objects were added.<span *ngIf="unchanged_ids.length > 0"> {{unchanged_ids.length}} objects from the collection had no changes compared to your local workbench</span>.
-                </p>
-                <p>
-                    You can review the results of this import at any time on the <span class="text-label">imported collections</span> section of the collection page.
+                    The collection has been imported into your workbench. {{select.selected.length}} new objects were added. You can review the results of this import at any time on the <span class="text-label">imported collections</span> section of the collection page.
                 </p>
                 <button mat-raised-button color="primary" routerLink="/collection">back to collections</button>
             </div>

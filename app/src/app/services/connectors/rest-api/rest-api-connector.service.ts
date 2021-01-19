@@ -202,7 +202,8 @@ export class RestApiConnectorService extends ApiConnector {
             let url = `${this.baseUrl}/${plural}/${id}`;
             if (modified) url += `/modified/${modified}`;
             let query = new HttpParams();
-            if (versions != "latest") query = query.set("versions", versions)
+            if (versions != "latest") query = query.set("versions", versions);
+            if (attackType == "collection") query = query.set("retrieveContents", "true");
             return this.http.get(url, {headers: this.headers, params: query}).pipe(
                 tap(result => console.log(`retrieved ${attackType}`, result)), // on success, trigger the success notification
                 map(result => { 

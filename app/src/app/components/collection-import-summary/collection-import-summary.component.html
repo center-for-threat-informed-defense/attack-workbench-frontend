@@ -23,7 +23,7 @@
                                 The following objects do not currently exist in your workbench.
                             </p>
                             <app-stix-list [config]="{
-                                'select': 'many',
+                                'select': config.select? 'many' : 'disabled',
                                 'selectionModel': config.select,
                                 'clickBehavior': 'dialog',
                                 'type': attackType,
@@ -45,7 +45,7 @@
                                 The following objects have major updates such as changes to scope, new reporting, and so forth.
                             </p>
                             <app-stix-list [config]="{
-                                'select': 'many',
+                                'select': config.select? 'many' : 'disabled',
                                 'selectionModel': config.select,
                                 'clickBehavior': 'dialog',
                                 'type': attackType,
@@ -67,7 +67,7 @@
                                 The following objects have minor updates such as typo corrections.
                             </p>
                             <app-stix-list [config]="{
-                                'select': 'many',
+                                'select': config.select? 'many' : 'disabled',
                                 'selectionModel': config.select,
                                 'clickBehavior': 'dialog',
                                 'type': attackType,
@@ -90,7 +90,7 @@
                                 The following objects have been replaced by other objects in the workbench.
                             </p>
                             <app-stix-list [config]="{
-                                'select': 'many',
+                                'select': config.select? 'many' : 'disabled',
                                 'selectionModel': config.select,
                                 'clickBehavior': 'dialog',
                                 'type': attackType,
@@ -112,7 +112,7 @@
                                 The following objects have been removed from the dataset.
                             </p>
                             <app-stix-list [config]="{
-                                'select': 'many',
+                                'select': config.select? 'many' : 'disabled',
                                 'selectionModel': config.select,
                                 'clickBehavior': 'dialog',
                                 'type': attackType,
@@ -157,7 +157,7 @@
                                 The version imported in the collection will appear in the version history of the object.
                             </p>
                             <app-stix-list [config]="{
-                                'select': 'many',
+                                'select': config.select? 'many' : 'disabled',
                                 'selectionModel': config.select,
                                 'clickBehavior': 'dialog',
                                 'type': attackType,
@@ -197,7 +197,7 @@
                                 Your workbench encountered errors when determining whether the following objects exist within the workbench already. 
                             </p>
                             <app-stix-list [config]="{
-                                'select': 'many',
+                                'select': config.select? 'many' : 'disabled',
                                 'selectionModel': config.select,
                                 'clickBehavior': 'dialog',
                                 'type': attackType,
