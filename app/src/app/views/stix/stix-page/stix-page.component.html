@@ -1,0 +1,21 @@
+<div class="stix-page-wrapper">
+    <div *ngIf="(objects$ | async) as objects else loading">
+        <div class="nothing-here" *ngIf="objects.length == 0 else showObject">
+            <h1 class="text-deemphasis"><span class="shrug">¯\_(ツ)_/¯</span> Nothing here</h1>
+        </div>
+        <ng-template #showObject>
+            <app-relationship-view *ngIf="objects[0].attackType == 'relationship'" [config]="buildConfig(objects)"></app-relationship-view>
+            <app-group-view *ngIf="objects[0].attackType == 'group'" [config]="buildConfig(objects)"></app-group-view>
+            <app-software-view *ngIf="objects[0].attackType == 'software'" [config]="buildConfig(objects)"></app-software-view>
+            <app-matrix-view *ngIf="objects[0].attackType == 'matrix'" [config]="buildConfig(objects)"></app-matrix-view>
+            <app-mitigation-view *ngIf="objects[0].attackType == 'mitigation'" [config]="buildConfig(objects)"></app-mitigation-view>
+            <app-technique-view *ngIf="objects[0].attackType == 'technique'"  [config]="buildConfig(objects)"></app-technique-view>
+            <app-tactic-view *ngIf="objects[0].attackType == 'tactic'" [config]="buildConfig(objects)"></app-tactic-view>
+            <app-collection-view *ngIf="objects[0].attackType == 'collection'" [config]="buildConfig(objects, true)"></app-collection-view>
+        </ng-template>
+
+    </div>
+    <ng-template #loading>
+        <app-loading-overlay></app-loading-overlay>
+    </ng-template>
+</div>

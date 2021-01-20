@@ -1,34 +1,18 @@
-import { CollectionListComponent } from './views/stix/collection/collection-list/collection-list.component';
-import { CollectionViewComponent } from './views/stix/collection/collection-view/collection-view.component';
-import { CollectionImportComponent } from './views/stix/collection/collection-import/collection-import.component';
-import { CollectionExportComponent } from './views/stix/collection/collection-export/collection-export.component';
+import { CollectionManagerComponent } from "./views/stix/collection/collection-manager/collection-manager.component"; 
 
-import { GroupViewComponent } from './views/stix/group/group-view/group-view.component';
 import { GroupListComponent } from './views/stix/group/group-list/group-list.component';
-import { GroupEditComponent } from './views/stix/group/group-edit/group-edit.component';
-
-import { MatrixViewComponent } from './views/stix/matrix/matrix-view/matrix-view.component';
-import { MatrixEditComponent } from './views/stix/matrix/matrix-edit/matrix-edit.component';
 import { MatrixListComponent } from './views/stix/matrix/matrix-list/matrix-list.component';
-
 import { MitigationListComponent } from './views/stix/mitigation/mitigation-list/mitigation-list.component';
-import { MitigationViewComponent } from './views/stix/mitigation/mitigation-view/mitigation-view.component';
-import { MitigationEditComponent } from './views/stix/mitigation/mitigation-edit/mitigation-edit.component';
-
-import { SoftwareViewComponent } from './views/stix/software/software-view/software-view.component';
 import { SoftwareListComponent } from './views/stix/software/software-list/software-list.component';
-import { SoftwareEditComponent } from './views/stix/software/software-edit/software-edit.component';
-
-import { TacticViewComponent } from './views/stix/tactic/tactic-view/tactic-view.component';
 import { TacticListComponent } from './views/stix/tactic/tactic-list/tactic-list.component';
-import { TacticEditComponent } from './views/stix/tactic/tactic-edit/tactic-edit.component';
-
-import { TechniqueViewComponent } from './views/stix/technique/technique-view/technique-view.component';
 import { TechniqueListComponent } from './views/stix/technique/technique-list/technique-list.component';
-import { TechniqueEditComponent } from './views/stix/technique/technique-edit/technique-edit.component';
 
+import { StixPageComponent } from "./views/stix/stix-page/stix-page.component"
 import { RouterModule, Routes } from '@angular/router';
 import { NgModule } from '@angular/core';
+import { environment } from "../environments/environment"
+import { CollectionImportComponent } from "./views/stix/collection/collection-import/collection-import-workflow/collection-import.component";
+import { CollectionIndexImportComponent } from "./views/stix/collection/collection-index/collection-index-import/collection-index-import.component";
 
 const stixRoutes: Routes = [{
     path: 'matrix',
@@ -45,21 +29,14 @@ const stixRoutes: Routes = [{
       {
         path: ':id',
         data: {
-          breadcrumb: 'TODO object name'
+          breadcrumb: 'loading...'
         },
         children: [{
             path: '',
             data: {
               breadcrumb: 'view'
             },
-            component: MatrixViewComponent
-          },
-          {
-            path: 'edit',
-            data: {
-              breadcrumb: 'edit'
-            },
-            component: MatrixEditComponent
+            component: StixPageComponent
           }
         ]
       }
@@ -80,21 +57,14 @@ const stixRoutes: Routes = [{
       {
         path: ':id',
         data: {
-          breadcrumb: 'TODO object name'
+          breadcrumb: 'loading...'
         },
         children: [{
             path: '',
             data: {
               breadcrumb: 'view'
             },
-            component: TechniqueViewComponent
-          },
-          {
-            path: 'edit',
-            data: {
-              breadcrumb: 'edit'
-            },
-            component: TechniqueEditComponent
+            component: StixPageComponent
           }
         ]
       }
@@ -115,21 +85,14 @@ const stixRoutes: Routes = [{
       {
         path: ':id',
         data: {
-          breadcrumb: 'TODO object name'
+          breadcrumb: 'loading...'
         },
         children: [{
             path: '',
             data: {
               breadcrumb: 'view'
             },
-            component: TacticViewComponent
-          },
-          {
-            path: 'edit',
-            data: {
-              breadcrumb: 'edit'
-            },
-            component: TacticEditComponent
+            component: StixPageComponent
           }
         ]
       }
@@ -150,21 +113,14 @@ const stixRoutes: Routes = [{
       {
         path: ':id',
         data: {
-          breadcrumb: 'TODO object name'
+          breadcrumb: 'loading...'
         },
         children: [{
             path: '',
             data: {
               breadcrumb: 'view'
             },
-            component: MitigationViewComponent
-          },
-          {
-            path: 'edit',
-            data: {
-              breadcrumb: 'edit'
-            },
-            component: MitigationEditComponent
+            component: StixPageComponent
           }
         ]
       }
@@ -185,21 +141,14 @@ const stixRoutes: Routes = [{
       {
         path: ':id',
         data: {
-          breadcrumb: 'TODO object name'
+          breadcrumb: 'loading...'
         },
         children: [{
             path: '',
             data: {
               breadcrumb: 'view'
             },
-            component: GroupViewComponent
-          },
-          {
-            path: 'edit',
-            data: {
-              breadcrumb: 'edit'
-            },
-            component: GroupEditComponent
+            component: StixPageComponent
           }
         ]
       }
@@ -220,83 +169,73 @@ const stixRoutes: Routes = [{
       {
         path: ':id',
         data: {
-          breadcrumb: 'TODO object name'
+          breadcrumb: 'loading...'
         },
         children: [{
             path: '',
             data: {
               breadcrumb: 'view'
             },
-            component: SoftwareViewComponent
-          },
-          {
-            path: 'edit',
-            data: {
-              breadcrumb: 'edit'
-            },
-            component: SoftwareEditComponent
+            component: StixPageComponent
           }
         ]
       }
     ]
   },
-  {
-    path: 'collection',
-    data: {
-      breadcrumb: 'collections'
-    },
-    children: [{
-        path: "",
+  
+]
+
+if (environment.integrations.collection_manager.enabled) {
+    stixRoutes.push({
+        path: 'collection',
         data: {
-          breadcrumb: "list"
-        },
-        component: CollectionListComponent
-      },
-      {
-        path: "import",
-        data: {
-          breadcrumb: "import"
-        },
-        component: CollectionImportComponent
-      },
-      {
-        path: "new",
-        data: {
-          breadcrumb: "new collection"
-        },
-        component: CollectionExportComponent
-      },
-      {
-        path: ":id",
-        data: {
-          breadcrumb: "TODO collection name"
+            breadcrumb: 'collections'
         },
         children: [{
             path: "",
             data: {
-              breadcrumb: "view"
+                breadcrumb: "list"
             },
-            component: CollectionViewComponent
-          },
-          {
-            path: "update",
+            component: CollectionManagerComponent,
+        }, {
+            path: "import-collection",
             data: {
-              breadcrumb: "update"
+                breadcrumb: "import a collection"
             },
-            component: CollectionImportComponent
-          },
-          {
-            path: "export",
+            children: [{
+                path: '',
+                data: {
+                    breadcrumb: 'import'
+                },
+                component: CollectionImportComponent
+            }]
+        }, {
+            path: "import-collection-index",
             data: {
-              breadcrumb: "export"
+                breadcrumb: "add a collection index"
             },
-            component: CollectionExportComponent
-          }
-        ]
-      }
-    ]
-  }
-]
+            children: [{
+                path: '',
+                data: {
+                    breadcrumb: 'import'
+                },
+                component: CollectionIndexImportComponent
+            }]
+        }, {
+            path: ":id",
+            data: {
+                breadcrumb: "loading..."
+            },
+            children: [{
+                path: "",
+                data: {
+                    breadcrumb: "view",
+                },
+                component: StixPageComponent
+            }]
+        }]
+    })
+}
 
 
 @NgModule({
@@ -310,52 +249,3 @@ const stixRoutes: Routes = [{
 })
 export class AppRoutingStixModule {};
 export { stixRoutes };
-
-
-
-
-// {
-//     path: "collection",
-//     data: {
-//         breadcrumb: "collections"
-//     },
-//     children: [
-//         {
-//             path: "",
-//             data: {
-//                 breadcrumb: "list"
-//             },
-//             component: CollectionListComponent,
-//         },
-//         {
-//             path: ":id",
-//             data: {
-//                 breadcrumb: "view"
-//             },
-//             component: CollectionViewComponent,
-//             children: [
-//                 {
-//                     path: "import",
-//                     data: {
-//                         breadcrumb: "import"
-//                     },
-//                     component: CollectionImportComponent,
-//                 }, 
-//                 {
-//                     path: "export",
-//                     data: {
-//                         breadcrumb: "export"
-//                     },
-//                     component: CollectionExportComponent,
-//                 },
-//             ]
-//         },
-//         {
-//             path: "new",
-//             data: {
-//                 breadcrumb: "new collection"
-//             },
-//             component: CollectionExportComponent
-//         }
-//     ]
-// }

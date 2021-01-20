@@ -1,4 +1,5 @@
-import { Component, OnInit, ViewEncapsulation, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation, Output, EventEmitter, Input } from '@angular/core';
+import { SidebarService } from 'src/app/services/sidebar/sidebar.service';
 
 @Component({
     selector: 'app-resources-drawer',
@@ -8,32 +9,33 @@ import { Component, OnInit, ViewEncapsulation, Output, EventEmitter } from '@ang
 })
 export class ResourcesDrawerComponent implements OnInit {
     @Output() drawerResize = new EventEmitter(); //emit events when the drawer is opened/closed
-    public tabs = [
-        {
-            "name": "search",
-            "label": "search",
-            "icon": "search"
-        },
-        {
-            "name": "tram",
-            "label": "threat reports",
-            "icon": "tram" //alternate icon: assignments
-        },
-        {
-            "name": "saved",
-            "label": "saved items",
-            "icon": "bookmarks"
-        }
-    ]
-    public currentTab: string = "";
+    @Output() onClose = new EventEmitter(); 
+    @Input() useService: boolean = true; //if true, control of this drawer is performed through the sidebar service. Otherwise, events and internal state are used.
+    @Input() showCloseButton: boolean = true;
+    @Input() currentTabOverride: string = "history";
+    
+    public get tabs() { return this.sidebarService.tabs; }
+    public get currentTab(): string {
+        if (this.useService) return this.sidebarService.currentTab;
+        else return this.currentTabOverride;
+    }
+
+    constructor(private sidebarService: SidebarService) { }
 
     public onTabClick(tab: any) {
-        if (this.currentTab == tab.name) this.currentTab = "";
-        else this.currentTab = tab.name;
+        if (this.useService) this.sidebarService.currentTab = tab.name;
+        else this.currentTabOverride = tab.name;
+        // if (this.currentTab == tab.name) this.currentTab = "";
+        // else this.currentTab = tab.name;
         setTimeout(() => this.drawerResize.emit()); // emit after render loop
     }
 
-    constructor() { }
+    public close() {
+        if (this.useService) this.sidebarService.opened = false;
+        else this.onClose.emit();
+    }
+
+
 
     ngOnInit() {
     }

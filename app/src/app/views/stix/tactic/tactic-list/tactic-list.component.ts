@@ -7,9 +7,7 @@ import { Component, OnInit } from '@angular/core';
 })
 export class TacticListComponent implements OnInit {
 
-  constructor() { }
+    constructor() { }
 
-  ngOnInit() {
-  }
-
+    ngOnInit() {}
 }

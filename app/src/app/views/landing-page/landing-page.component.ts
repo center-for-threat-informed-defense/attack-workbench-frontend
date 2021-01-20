@@ -1,4 +1,5 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { stixRoutes } from "../../app-routing-stix.module";
 
 @Component({
   selector: 'app-landing-page',
@@ -7,10 +8,13 @@ import { Component, OnInit, ViewEncapsulation } from '@angular/core';
   encapsulation: ViewEncapsulation.None
 })
 export class LandingPageComponent implements OnInit {
+    
+    public routes: any[] = [];
+    constructor() {
+        this.routes = stixRoutes;
+    }
 
-  constructor() { }
-
-  ngOnInit() {
-  }
+    ngOnInit() {
+    }
 
 }

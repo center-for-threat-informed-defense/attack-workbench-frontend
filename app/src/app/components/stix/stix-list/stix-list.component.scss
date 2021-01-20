@@ -1,60 +1,190 @@
 @import "../../../../style/globals";
-.controls {
-    .input-group {
-        width: 100%;
-        display: flex;
-        flex-direction: row;
-        .search {
-            flex-grow: 1;
-        }
-    }
-}
-
-.list {
-    .tree {
-        .subtree-collapsed {
-            display: none;
-        }
-        ul, li {
-            margin-top: 0;
-            margin-bottom: 0;
-            list-style-type: none;
-        }
-        .node-li { 
+@import '~@angular/material/theming';
+.stix-list {
+    .controls {
+        // &, .input-group, .input-group .mat-form-field { min-height: 60px; }
+        .input-group {
+            font-size: 16px;
             width: 100%;
-            &.expanded { 
-                margin-bottom: 5px;
+            display: flex;
+            flex-direction: row;
+            .search {
+                flex-grow: 1;
             }
+            border-bottom: 1px solid;
+            .light & { border-color: border-color(light); }
+            .dark &  { border-color: border-color(dark); }
         }
-        .node-header { 
-            cursor: pointer; user-select: none;
-            transition: all ease 0.2s;
-            .light & {
-                border-bottom: 1px solid color-alternate(light, 2);
-                &:hover { background: color-alternate(light, 2); }
-            }
-            .dark & {
-                border-bottom: 1px solid color-alternate(secondary, 2);
-                &:hover { background: color-alternate(secondary, 2); }
-            }
+        .mat-form-field-wrapper {
+            // padding-bottom: 0px;
+            margin-bottom: -1.34375em; // remove bottom padding used for hint
         }
-        // .tree-content {
-        //     padding: 40px 40px 0 40px;
-        // }
+        .mat-form-field-flex {
+            padding: 12px 24px 0 24px !important; // override default padding for alignment w/ table
+        }
+        .mat-form-field-label {
+            .light & { color: on-color-deemphasis(light); }
+            .dark &  { color: on-color-deemphasis(dark); }
+        }
+        // .light & { border-color: border-color(light); }
+        // .dark &  { border-color: border-color(dark); }
+        // border-bottom: 1px solid;
+    }
+    
+    .table-container {
+        max-width: 60em;
+        margin: 0 auto;
+        border-radius: 4px;
+        .dark & { 
+            border: 1px solid border-color(dark);
+        }
+        .light & {
+            border: 1px solid border-color(light);
+            // @include mat-elevation(8);
+        }
+        .scroll-container {
+            width: 100%;
+            overflow: auto;
+            max-width: 100%;
+            display: flex;
+            flex-direction: column;
+            table {
+                flex: 1 0 auto;
+                width: 100%;
+                // min-width: 100%;
+                // overflow: auto;
+                // max-width: 100%;
+                // table-layout: fixed;
 
-        .mat-tree > { .mat-tree-node, .mat-nested-tree-node { &:first-child >.node-li>.node-header { 
-            // rounded borders for top level elements
-            border-top-left-radius: 5px;
-            border-top-right-radius: 5px;
-        }}}
-        .mat-tree-node, .mat-nested-tree-node { &:last-child .node-li:not(.expanded) .node-header { 
-            border-bottom-left-radius: 5px;
-            border-bottom-right-radius: 5px;
-        }}
+                .nowrap {
+                    white-space: nowrap;
+                }
+                // .name { 
+                //     @extend .subheading;
+                // }
+
+                // .relationship-left {
+                //     padding-right: 12px;
+                //     text-align: right;
+                // }
+                // .relationship-right {
+                //     // padding-left: 0px;
+                // }
+                // .relationship-joiner {
+                //     padding-left: 12px;
+                //     padding-right: 12px;
+                //     flex-shrink: 1;
+                // }
+
+        
+                th, td { 
+                    .light & { background: color(light); border-color: border-color(light); }
+                    .dark &  { background: color(dark); border-color: border-color(dark); }
+                } 
+                th {
+                    font-size: 20px;
+                    @extend .text-label;
+                    // border-bottom-width: 3px;
+                    // border-bottom-style: double;
+                }
+                // th {
+                //     .light & { color: on-color-deemphasis(light); }
+                //     .dark &  { color: on-color-deemphasis(dark); }
+                // }
+        
+                tr.detail-row {
+                    height: 0;
+                }
+
+                // utilities for forcing different sizes of columns
+                .width-limited-lg { min-width: 30em; max-width: 60em; }
+                .width-limited-md { min-width: 15em; max-width: 30em; }
+                .width-limited-sm { min-width: 10em; max-width: 20em; }
+
+                .name {
+                    @extend .width-limited-md;
+                }
+        
+                tr.element-row:not(.expanded):hover {
+                    .light & td { background: color-alternate(light); }
+                    .dark & td  { background: color-alternate(dark);  }
+                }
+        
+                .mat-cell + .mat-cell, .mat-header-cell + .mat-header-cell {
+                    padding-left: 12px;
+                }
+                // cell with just an icon in it
+                .mat-cell.icon-cell {
+                    width: 24px; //no need for text, icons are 24px wide
+                    .mat-icon { vertical-align: middle; } //vertically center icons
+                }
+        
+                .mat-column-select {
+                    // overflow: initial;
+                    &.many {
+                        width: 28px;
+                    }
+                    &.one {
+                        width: 30px;
+                    }
+                }
+        
+                .element-detail {
+                    overflow: hidden;
+                    display: flex;
+        
+                    .element-description {
+                        padding: 16px 0;
+        
+                        &.columns {
+                            display: flex;
+                            .column {
+                                // display: inline-block;
+                                &.is-narrow {
+                                     flex-shrink: 1;
+                                }
+                                & + .column {
+                                    .light & { border-color: border-color(light); }
+                                    .dark &  { border-color: border-color(dark); }
+                                    border-left: 1px solid;
+                                    padding-left: 16px;
+                                }
+                            }
+                        }
+                        .controls {
+                            // min-height: 60px;
+                            a { // links to pages in detail column
+                                @extend .text-label;
+                                text-align: right;
+                                border-right: none;
+                                border-top-right-radius: 0;
+                                border-bottom-right-radius: 0;
+                                width: 100%;
+                                &:hover {
+                                    .light & { background: color-alternate(light); }
+                                    .dark &  { background: rgba(border-color(dark), 0.25);  }
+                                }
+                            }
+                        }
+                        .description {
+                            display: flex;
+                            align-items: center;
+                            // max-width: 36em;
+                             p:first-child {
+                                 margin-top: 6px;
+                             }
+                             p:last-child {
+                                margin-bottom: 6px;
+                            }
+                        }
+                    }
+                }
+        
+                .element-row td {
+                    border-bottom-width: 0;
+                    cursor: pointer;
+                }
+            }
+        }
     }
-    .tree .node-header, .content-tree, .content-flat {
-        .light & { background: color-alternate(light); }
-        .dark & { background: color-alternate(secondary); }
-    }
-    // .flat {}
 }

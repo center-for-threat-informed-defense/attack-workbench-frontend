@@ -2,11 +2,17 @@
     <mat-toolbar>
         <breadcrumb></breadcrumb>
         <div class="spacer"></div>
-        <div class="controls button-list">
-            <!-- TODO fill icon when bookmarked -->
+        <div class="controls button-list section" *ngIf="editable || editing">
+            <button mat-button class="control" matTooltip="save" [disabled]="!editing" (click)="saveEdits()"><mat-icon aria-label="save">save</mat-icon></button>
+            <button mat-button class="control" matTooltip="edit" [disabled]="editing"  (click)="startEditing()"><mat-icon aria-label="edit">edit</mat-icon></button>
+        </div>
+        <div class="controls button-list section">
+            <button mat-button class="control" matTooltip="back to top" [disabled]="!canScroll" (click)="emitScrollTop()"><mat-icon aria-label="back to top">vertical_align_top</mat-icon></button>
             <button mat-button class="control" matTooltip="toggle theme" (click)="emitToggleTheme()"><mat-icon aria-label="help">invert_colors</mat-icon></button>
-            <button mat-button class="control" matTooltip="view on website"><mat-icon aria-label="view on website">open_in_new</mat-icon></button>
-            <button mat-button class="control" matTooltip="bookmark" ><mat-icon aria-label="bookmark">bookmark_border</mat-icon></button>
+            <button mat-button class="control" matTooltip="view sidebar" (click)="toggleSidebar()"><mat-icon aria-label="sidebar">view_sidebar</mat-icon></button>
+            <!-- <button mat-button class="control" matTooltip="view on website"><mat-icon aria-label="view on website">open_in_new</mat-icon></button> -->
+            <!-- TODO fill icon when bookmarked -->
+            <!-- <button mat-button class="control" matTooltip="bookmark" ><mat-icon aria-label="bookmark">bookmark_border</mat-icon></button> -->
         </div>
     </mat-toolbar>
 </div>

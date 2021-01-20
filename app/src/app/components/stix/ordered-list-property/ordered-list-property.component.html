@@ -1,0 +1,6 @@
+<div class="ordered-list-property">
+    <div *ngIf="!config.mode || config.mode == 'view'">
+        <app-ordered-list-view [config]="config"></app-ordered-list-view>
+    </div>
+    <app-ordered-list-edit *ngIf="config.mode == 'edit'" [config]="config"></app-ordered-list-edit>
+</div>

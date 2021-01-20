@@ -1,11 +1,20 @@
 
-<mat-toolbar color="primary">
+<mat-toolbar class="header">
     <div class="app-title">
         <h1><a routerLink="/">ATT&CK Workbench</a></h1>
     </div>
     <div class="spacer"></div>
-    <div class="links">
+    <div class="links" #linkMenu [ngStyle]="{ 'visibility': showHamburger ? 'hidden' : 'visible'}">
         <button mat-button *ngFor="let stixRoute of routes" [routerLink]="stixRoute.path">{{stixRoute.data.breadcrumb}}</button>
-        <button mat-icon-button  routerLink="/help"><mat-icon aria-label="help">help_outline</mat-icon></button>
+        <button mat-icon-button  routerLink="/docs"><mat-icon aria-label="help">help_outline</mat-icon></button>
+    </div>
+    <div class="hamburger" [ngStyle]="{ 'visibility': showHamburger ? 'visible' : 'hidden'}">
+        <button [matMenuTriggerFor]="navigation" mat-icon-button aria-label="navigation">
+            <mat-icon>menu</mat-icon>
+        </button>
+        <mat-menu #navigation="matMenu" backdropClass="override-light">
+            <button mat-menu-item *ngFor="let stixRoute of routes" [routerLink]="stixRoute.path">{{stixRoute.data.breadcrumb}}</button>
+            <button mat-menu-item  routerLink="/docs">documentation</button>
+        </mat-menu>
     </div>
 </mat-toolbar>

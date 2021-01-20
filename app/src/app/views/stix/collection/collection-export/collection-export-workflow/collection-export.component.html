@@ -1,0 +1,36 @@
+<div class="collection-export">
+    <mat-horizontal-stepper linear>
+        <mat-step label="collection information" [stepControl]="collectionInformation">
+            <form [formGroup]="collectionInformation" class="collectionInfo">
+                <div class="form-row">
+                    <mat-form-field class="name" appearance="outline">
+                        <mat-label>name</mat-label>
+                        <input matInput required formControlName="name">
+                        <mat-error *ngIf="collectionInformation.controls.name.hasError('required')">name is required</mat-error>
+                    </mat-form-field>
+                    <mat-form-field class="version" appearance="outline">
+                        <mat-label>version</mat-label>
+                        <input matInput required formControlName="version">
+                        <mat-error *ngIf="collectionInformation.controls.version.hasError('invalidVersionFormat') || collectionInformation.controls.version.hasError('required')">invalid version number</mat-error>
+                        <mat-error *ngIf="!collectionInformation.controls.version.hasError('invalidVersionFormat') && collectionInformation.controls.version.hasError('versionNotIncremented')">version must be incremented</mat-error>
+                    </mat-form-field>
+                </div>
+                <div class="form-row">
+                    <mat-form-field class="description" appearance="outline">
+                        <mat-label>description</mat-label>
+                        <textarea matInput cdkTextareaAutosize cdkAutosizeMinRows="6" formControlName="description"></textarea>
+                    </mat-form-field>
+                </div>
+                <div class="form-row align-right">
+                    <button mat-stroked-button matStepperNext [disabled]="collectionInformation.invalid">Next</button>
+                </div>
+            </form>
+        </mat-step>
+        <mat-step label="review contents">
+            TODO
+        </mat-step>
+        <mat-step label="export">
+            TODO export button
+        </mat-step>
+    </mat-horizontal-stepper>
+</div>

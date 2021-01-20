@@ -1,0 +1,9 @@
+<div class="attackid-property grow-to-row">
+    <div class="labelled-box grow-to-row" *ngIf="!config.mode || config.mode == 'view'">
+        <div class="content">
+            <app-attackid-view [config]="config"></app-attackid-view>
+        </div>
+        <label>ID</label>
+    </div>
+    <app-attackid-edit *ngIf="config.mode == 'edit'" [config]="config"></app-attackid-edit>
+</div>

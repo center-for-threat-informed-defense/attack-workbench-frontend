@@ -1,0 +1,40 @@
+@import "../../../../style/globals";
+@import '~@angular/material/theming';
+
+.ordered-list-property {
+
+    .list {
+        max-width: 60em;
+        width: inherit;
+        border: 1px solid;
+        min-height: 60px;
+        display: flex;
+        flex-direction: column;
+
+        border-radius: 4px;
+        overflow: hidden;
+        .light & { border-color: border-color(light); }
+        .dark &  { border-color: border-color(dark); }
+    }
+      
+    .box {
+        padding: 20px 10px;
+        border-bottom: solid 1px;
+        color: inherit;
+        .light & { border-color: border-color(light); }
+        .dark &  { border-color: border-color(dark); }
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+        box-sizing: border-box;
+        background: inherit;
+        font-size: 14px;
+    }
+      
+    .box:last-child {
+        border: none;
+    }
+
+}
+

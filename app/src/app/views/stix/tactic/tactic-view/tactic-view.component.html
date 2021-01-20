@@ -1,1 +1,56 @@
-<p>tactic-view works!</p>
+<div class="tactic-view view-page grid spacing-12">
+    <div class="row">
+        <div class="col">
+            <h1>{{tactic.name}}</h1>
+            <app-subheading [config]="config" (onOpenHistory)="openHistory()" (onOpenNotes)="openNotes()"></app-subheading>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <!-- ATT&CK ID -->
+            <app-attackid-property class="grow-to-row" [config]="{
+                mode: editing? 'edit' : 'view',
+                object: tactic
+            }"></app-attackid-property>
+        </div>
+        <div class="col">
+            <!-- DOMAIN -->
+            <app-list-property class="grow-to-row" [config]="{
+                mode: 'view',
+                object: tactic,
+                field: 'domains'
+            }"></app-list-property>
+        </div>
+        <div class="col">
+            <!-- VERSION NUMBER -->
+            <app-version-property class="grow-to-row" [config]="{
+                mode: editing? 'edit' : 'view',
+                object: tactic
+            }"></app-version-property>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <!-- DESCRIPTION -->
+            <app-descriptive-property [config]="{
+                mode: 'view',
+                object: tactic,
+                field: 'description',
+                firstParagraphOnly: false, 
+                referencesField: tactic.external_references,
+                label: 'description'
+            }"></app-descriptive-property>
+        </div>
+    </div>
+
+    <!-- only show relationships if configured to show them -->
+    <!-- <div *ngIf="config.showRelationships || !config.hasOwnProperty('showRelationships')">
+        <div class="row">
+            <div class="col">
+                <h2 class="section-header">Techniques</h2>
+            </div>
+        </div>
+        <app-stix-list [config]="{'type': 'technique', 'showLinks': true}"></app-stix-list>
+    </div> -->
+
+</div>
