@@ -130,9 +130,9 @@ export class CollectionIndex extends Serializable {
         remote_url: string, //url of the index
         update_policy?: {
             automatic: boolean, //if true, automatically fetch updates
-            interval: number, //seconds between refreshes
-            last_retrieval: Date,
-            subscriptions: string[] // stix IDs of collection-references
+            interval?: number, //seconds between refreshes
+            last_retrieval?: Date,
+            subscriptions?: string[] // stix IDs of collection-references
         }
     };
     constructor(raw?: any) {

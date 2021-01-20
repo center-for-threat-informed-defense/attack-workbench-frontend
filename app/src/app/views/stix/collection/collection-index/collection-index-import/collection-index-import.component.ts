@@ -48,7 +48,13 @@ export class CollectionIndexImportComponent implements OnInit {
     * @memberof CollectionIndexImportComponent
      */
     public saveIndex(): void {
-        let subscription = this.restAPIConnector.postCollectionIndex(this.index.serialize()).subscribe({
+        let serialized = this.index.serialize();
+        serialized.workspace.update_policy = { // set up update policy
+            automatic: true,
+            last_retrieval: new Date(),
+            interval: 10,
+        }
+        let subscription = this.restAPIConnector.postCollectionIndex(serialized).subscribe({
             next: (result) => {
                 this.stepper.next();
             },
