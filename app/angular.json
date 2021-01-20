@@ -24,13 +24,20 @@
             "tsConfig": "tsconfig.app.json",
             "aot": true,
             "assets": [
+              { "glob": "**/*", "input": "../docs", "output": "/assets/docs" },
               "src/favicon.ico",
               "src/assets"
             ],
             "styles": [
-              "src/style/theme.scss"
+                "node_modules/prismjs/themes/prism-twilight.css",
+                "node_modules/ngx-smart-popover/scss/popover-content.component.scss",
+                "src/style/theme.scss"
             ],
-            "scripts": []
+            "scripts": [
+                "node_modules/marked/lib/marked.js",
+                "node_modules/prismjs/prism.js",
+                "node_modules/prismjs/components/prism-json.min.js"
+            ]
           },
           "configurations": {
             "production": {

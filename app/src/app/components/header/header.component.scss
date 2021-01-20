@@ -1,11 +1,32 @@
 @import "../../../style/globals";
-.spacer {
-    flex: 1 1 auto;
-}
-.app-title {
-    a {
-        border-bottom-width: 0 !important;
-        &:hover { color: inherit !important; }
-        .dark & { color: color(engenuity-purple) !important; }
+.header {
+    .light & { background: color(primary); color: on-color(primary); }
+    .dark & { background: color(light); }
+    .spacer {
+        flex: 1 1 auto;
+    }
+    .app-title {
+        a {
+            border-bottom-width: 0 !important;
+            .dark &, .dark &:hover { color: color(primary) !important; }
+            .light &, .light &:hover { color: color(light) !important; }
+        }
+    }
+    button {
+        .dark & { color: on-color(light); }
+        font-family: Roboto,Arial,sans-serif;
+        font-weight: 500;
+        text-transform: uppercase;
+        // font-size: .54545rem;
+        // font-weight: 300;
+    }
+    .links {
+        overflow: hidden;
+    }
+    .hamburger {
+        position: relative;
+        width: 0;
+        overflow-x: visible;
+        left: -40px;
     }
 }

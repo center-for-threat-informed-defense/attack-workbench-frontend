@@ -1,0 +1,60 @@
+<div class="stix-dialog">
+    <mat-drawer-container class="stix-dialog-body">
+        <mat-drawer-content>
+            <div class="stix-content">
+                <mat-toolbar>
+                    <button mat-button mat-dialog-close class="control" matTooltip="close"><mat-icon aria-label="close">close</mat-icon></button>
+                    <div class="spacer"></div>
+                    <button *ngIf="config.sidebarControl != 'disable'" mat-button class="control" matTooltip="view sidebar" (click)="toggleSidebar()"><mat-icon aria-label="open sidebar">view_sidebar</mat-icon></button>
+                </mat-toolbar>
+                <div class="view-page-wrapper">
+                    <!-- TODO clean this up -->
+                    <app-relationship-view 
+                                           *ngIf="stixType == 'relationship'" 
+                                           [config]="config"
+                                           (onOpenHistory)="openHistory()"
+                                           (onOpenNotes)="openNotes()">
+                    </app-relationship-view>
+                    <app-group-view        *ngIf="stixType == 'intrusion-set'" 
+                                           [config]="config"
+                                           (onOpenHistory)="openHistory()"
+                                           (onOpenNotes)="openNotes()">
+                    </app-group-view>
+                    <app-software-view     *ngIf="stixType == 'malware' || stixType == 'tool'" 
+                                           [config]="config"
+                                           (onOpenHistory)="openHistory()"
+                                           (onOpenNotes)="openNotes()">
+                    </app-software-view>
+                    <app-matrix-view       *ngIf="stixType == 'x-mitre-matrix'" 
+                                           [config]="config"
+                                           (onOpenHistory)="openHistory()"
+                                           (onOpenNotes)="openNotes()">
+                    </app-matrix-view>
+                    <app-mitigation-view   *ngIf="stixType == 'course-of-action'" 
+                                           [config]="config"
+                                           (onOpenHistory)="openHistory()"
+                                           (onOpenNotes)="openNotes()">
+                    </app-mitigation-view>
+                    <app-technique-view    *ngIf="stixType == 'attack-pattern'" 
+                                           [config]="config"
+                                           (onOpenHistory)="openHistory()"
+                                           (onOpenNotes)="openNotes()">
+                    </app-technique-view>
+                    <app-tactic-view       *ngIf="stixType == 'x-mitre-tactic'" 
+                                           [config]="config"
+                                           (onOpenHistory)="openHistory()"
+                                           (onOpenNotes)="openNotes()">
+                    </app-tactic-view>
+                    <app-collection-view   *ngIf="stixType == 'x-mitre-collection'" 
+                                           [config]="config"
+                                           (onOpenHistory)="openHistory()"
+                                           (onOpenNotes)="openNotes()">
+                    </app-collection-view>
+                </div>
+            </div>
+        </mat-drawer-content>
+        <mat-drawer mode="side" position="end" #sidebar [opened]="sidebarOpened">
+            <app-resources-drawer [useService]="false" [showCloseButton]="false" [currentTabOverride]="currentTab"></app-resources-drawer>
+        </mat-drawer>
+    </mat-drawer-container>
+</div>

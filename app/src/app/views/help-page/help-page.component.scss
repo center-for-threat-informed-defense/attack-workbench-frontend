@@ -1,0 +1,17 @@
+@import "../../../style/globals";
+.help-page {
+    h1:first-child {
+        margin-top: 0;
+    }
+    width: 36em;
+    max-width: 100%;
+    margin: 0 auto;
+    // padding: 0 20%;
+    table {
+        @extend .app-table;
+    }
+
+    pre code {
+        font-size: 14px;
+    }
+}

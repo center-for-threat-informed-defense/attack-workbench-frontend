@@ -1,0 +1,14 @@
+<div class="descriptive-property grow-to-row">
+    <div class="labelled-box grow-to-row" *ngIf="!config.mode || config.mode == 'view'">
+        <div class="content">
+            <app-descriptive-view [config]="config"></app-descriptive-view>
+        </div>
+        <label>{{config.label}}</label>
+    </div>
+    <div *ngIf="config.mode == 'diff'">
+        <app-descriptive-diff [config]="config"></app-descriptive-diff>
+    </div>
+    <div *ngIf="config.mode == 'edit'">
+        <app-descriptive-edit [config]="config"></app-descriptive-edit>
+    </div>
+</div>

@@ -7,9 +7,8 @@ import { Component, OnInit } from '@angular/core';
 })
 export class MitigationListComponent implements OnInit {
 
-  constructor() { }
 
-  ngOnInit() {
-  }
+    constructor() { }
 
+    ngOnInit() {}
 }

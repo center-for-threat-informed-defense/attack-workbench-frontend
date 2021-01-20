@@ -1,0 +1,13 @@
+@import "../../../../../style/globals";
+.technique-view {
+    .col.arrow {
+        max-width: 36px!important;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    .labelled-box .content.no-label{
+        .light & { border-top-color: border-color(light); }
+        .dark & { border-top-color: border-color(dark); }
+    }
+}

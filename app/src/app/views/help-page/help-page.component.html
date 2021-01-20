@@ -1,1 +1,4 @@
-<p>help-page works!</p>
+<div class="help-page">
+    <!-- import usage documentation from markdown according to route config-->
+    <markdown #markdownElement [src]="route.snapshot.data.markdown" (load)="onMarkdownLoad($event)"></markdown>
+</div>

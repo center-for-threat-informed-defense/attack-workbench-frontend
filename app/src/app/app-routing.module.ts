@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { Routes, RouterModule } from '@angular/router';
+import { Routes, RouterModule, ExtraOptions } from '@angular/router';
 import { LandingPageComponent } from './views/landing-page/landing-page.component';
 import { HelpPageComponent } from './views/help-page/help-page.component';
 
@@ -20,11 +20,44 @@ const routes: Routes = [
                 "component": LandingPageComponent,
             },
             {
-                "path": "help",
+                "path": "docs",
                 "data": {
-                    "breadcrumb": "help"
+                    "breadcrumb": "documentation",
                 },
-                "component": HelpPageComponent
+                "children": [
+                    {
+                        "path": "",
+                        "data": {
+                            "breadcrumb": "documentation",
+                            "markdown": "/assets/docs/README.md"
+                        },
+                        "component": HelpPageComponent,
+                    },
+                    {
+                        "path": "usage",
+                        "data": {
+                            "breadcrumb": "usage",
+                            "markdown": "/assets/docs/usage.md"
+                        },
+                        "component": HelpPageComponent,
+                    },
+                    {
+                        "path": "collections",
+                        "data": {
+                            "breadcrumb": "collections",
+                            "markdown": "/assets/docs/collections.md"
+                        },
+                        "component": HelpPageComponent,
+                    },
+                    {
+                        "path": "changelog",
+                        "data": {
+                            "breadcrumb": "changelog",
+                            "markdown": "/assets/docs/changelog.md"
+                        },
+                        "component": HelpPageComponent,
+                    },
+                ]
             },
         ]
     },

@@ -1,1 +1,109 @@
-<p>group-view works!</p>
+<div class="group-view view-page grid spacing-12">
+    <div class="row">
+        <div class="col">
+            <h1>{{group.name}}</h1>
+            <app-subheading [config]="config" (onOpenHistory)="openHistory()" (onOpenNotes)="openNotes()"></app-subheading>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <!-- ATT&CK ID -->
+            <app-attackid-property class="grow-to-row" [config]="{
+                mode: editing? 'edit' : 'view',
+                object: group
+            }"></app-attackid-property>
+        </div>
+        <div class="col">
+            <!-- VERSION NUMBER -->
+            <app-version-property class="grow-to-row" [config]="{
+                mode: editing? 'edit' : 'view',
+                object: group
+            }"></app-version-property>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <!-- CONTRIBUTORS -->
+            <app-list-property class="grow-to-row" [config]="{
+                mode: 'view',
+                object: group,
+                field: 'contributors'
+            }"></app-list-property>
+        </div>
+        <div class="col">
+            <!-- GROUP ALIASES -->
+            <app-alias-property class="grow-to-row" [config]="{
+                mode: 'view',
+                object: group,
+                field: 'aliases',
+                referencesField: 'external_references',
+                label: 'Associated Groups'
+            }"></app-alias-property>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <!-- DESCRIPTION -->
+            <app-descriptive-property [config]="{
+                mode: 'view',
+                object: group,
+                field: 'description',
+                firstParagraphOnly: false, 
+                referencesField: group.external_references,
+                label: 'description'
+            }"></app-descriptive-property>
+        </div>
+    </div>
+    <!-- only show relationships if configured to show them -->
+    <div *ngIf="config.showRelationships || !config.hasOwnProperty('showRelationships')">
+        <div class="row">
+            <div class="col">
+                <h2 class="section-header">Techniques Used</h2>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <app-stix-list  [config]="{
+                    'type': 'relationship', 
+                    'sourceRef': group.stixID,
+                    'targetType': 'technique',
+                    'relationshipType': 'uses',
+                    'clickBehavior': 'dialog'
+                }"></app-stix-list>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col">
+                <h2 class="section-header">Software Used</h2>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <app-stix-list [config]="{
+                    'type': 'relationship', 
+                    'sourceRef': group.stixID,
+                    'targetType': 'software',
+                    'relationshipType': 'uses',
+                    'clickBehavior': 'dialog'
+                }"></app-stix-list>
+            </div>
+        </div>
+
+    </div>
+    <div class="row">
+        <div class="col">
+            <h2 class="section-header">References</h2>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <!-- EXTERNAL REFERENCES -->
+            <app-external-references-property [config]="{
+                mode: 'view',
+                object: group,
+                referencesField: group.external_references
+            }"></app-external-references-property>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,25 @@
+@import "../../../style/globals";
+.app-subheading {
+    
+    // font-size: 16px;
+    display: flex;
+    align-items: center;
+}
+
+.historyPeek {
+    .labelled-box {
+        margin-bottom: 8px;
+    }
+}
+
+// .historyPeek {
+//     .peek-entry {
+//         white-space: nowrap;
+//         .entry-block {
+//             display: inline-block;
+//             & + .entry-block {
+//                 margin-left: 3px; //spaces between blocks
+//             }
+//         }
+//     }
+// }
