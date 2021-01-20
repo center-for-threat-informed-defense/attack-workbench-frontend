@@ -73,7 +73,7 @@ export class RestApiConnectorService extends ApiConnector {
     private getStixObjectsFactory<T extends StixObject>(attackType: AttackType) {
         let attackClass = attackTypeToClass[attackType];
         let plural = attackTypeToPlural[attackType]
-        return function<P extends T>(limit?: number, offset?: number, state?: string, revoked?: boolean, deprecated?: boolean): Observable<Paginated> {
+        return function<P extends T>(limit?: number, offset?: number, state?: string, revoked?: boolean, deprecated?: boolean, versions?: "all" | "latest"): Observable<Paginated> {
             // parse params into query string
             let query = new HttpParams();
             // pagination
@@ -84,6 +84,7 @@ export class RestApiConnectorService extends ApiConnector {
             if (state) query = query.set("state", state);
             if (revoked) query = query.set("revoked", revoked ? "true" : "false");
             if (revoked) query = query.set("deprecated", deprecated ? "true" : "false");
+            if (versions) query = query.set("versions", versions);
             // perform the request
             let url = `${this.baseUrl}/${plural}`;
             return this.http.get(url, {headers: this.headers, params: query}).pipe(
@@ -184,6 +185,7 @@ export class RestApiConnectorService extends ApiConnector {
      * @param {number} [offset] the number of collections to skip
      * @param {string} [state] if specified, only get objects with this state
      * @param {boolean} [revoked] if true, get revoked objects
+     * @param {versions} ["all" | "latest"] if "all", get all versions of the collections. if "latest", only get the latest version of each collection.
      * @param {boolean} [deprecated] if true, get deprecated objects
      * @returns {Observable<Matrix[]>} observable of retrieved objects
      */
