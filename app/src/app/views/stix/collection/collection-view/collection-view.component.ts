@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Collection, CollectionImportCategories } from 'src/app/classes/stix/collection';
 import { Group } from 'src/app/classes/stix/group';
@@ -13,7 +13,8 @@ import { StixViewPage } from '../../stix-view-page';
 @Component({
   selector: 'app-collection-view',
   templateUrl: './collection-view.component.html',
-  styleUrls: ['./collection-view.component.scss']
+  styleUrls: ['./collection-view.component.scss'],
+  encapsulation: ViewEncapsulation.None
 })
 export class CollectionViewComponent extends StixViewPage implements OnInit {
     

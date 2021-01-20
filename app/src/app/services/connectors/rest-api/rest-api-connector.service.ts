@@ -483,16 +483,24 @@ export class RestApiConnectorService extends ApiConnector {
      * @param {string} [sourceRef] STIX id of referenced object. Only retrieve relationships that reference this object in the source_ref property.
      * @param {string} [targetRef] STIX id of referenced object. Only retrieve relationships that reference this object in the target_ref property.
      * @param {string} [relationshipType] Only retrieve relationships that have a matching relationship_type.
+     * @param {string} [sourceType] retrieve objects where the source object is this ATT&CK type
+     * @param {string} [targetType] retrieve objects where the source object is this ATT&CK type
      * @param {number} [limit] The number of relationships to retrieve. 
      * @param {number} [offset] The number of relationships to skip.
      * @returns {Observable<Paginated>} paginated data of the relationships
      * @memberof RestApiConnectorService
      */
-    public getRelatedTo(sourceRef?: string, targetRef?: string, relationshipType?: string, limit?: number, offset?: number): Observable<Paginated> {
+    public getRelatedTo(sourceRef?: string, targetRef?: string, sourceType?: AttackType, targetType?: AttackType, relationshipType?: string, limit?: number, offset?: number): Observable<Paginated> {
         let query = new HttpParams();
+        
         if (sourceRef) query = query.set("sourceRef", sourceRef);
         if (targetRef) query = query.set("targetRef", targetRef);
+
+        if (sourceType) query = query.set("sourceType", sourceType);
+        if (targetType) query = query.set("targetType", targetType);
+
         if (relationshipType) query = query.set("relationshipType", relationshipType);
+
         if (limit) query = query.set("limit", limit.toString());
         if (offset) query = query.set("offset", offset.toString());
         if (limit || offset) query = query.set("includePagination", "true");

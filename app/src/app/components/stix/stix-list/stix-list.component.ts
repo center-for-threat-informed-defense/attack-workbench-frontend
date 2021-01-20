@@ -330,7 +330,7 @@ export class StixListComponent implements OnInit, AfterViewInit {
             else if (this.config.type == "tactic") this.data$ = this.restAPIConnectorService.getAllTactics(limit, offset); //TODO add limit and offset once back-end supports it
             else if (this.config.type == "technique") this.data$ = this.restAPIConnectorService.getAllTechniques(limit, offset);
             else if (this.config.type == "collection") this.data$ = this.restAPIConnectorService.getAllCollections();
-            else if (this.config.type == "relationship") this.data$ = this.restAPIConnectorService.getRelatedTo(this.config.sourceRef, this.config.targetRef, this.config.relationshipType, limit, offset);
+            else if (this.config.type == "relationship") this.data$ = this.restAPIConnectorService.getRelatedTo(this.config.sourceRef, this.config.targetRef, this.config.sourceType, this.config.targetType, this.config.relationshipType);
             let subscription = this.data$.subscribe({
                 next: (data) => { this.totalObjectCount = data.pagination.total; },
                 complete: () => { subscription.unsubscribe() }
@@ -349,6 +349,9 @@ export interface StixListConfig {
     /** STIX ID;s force the list to show relationships with the given source or target. Use with type=='relationship' */
     sourceRef?: string;
     targetRef?: string;
+    /** ATT&CK Types force the list to show relationships only with those types, use with type == 'relationship' */
+    sourceType?: type_attacktype;
+    targetType?: type_attacktype;
     /** relationship type to get, use with type=='relationship' */
     relationshipType?: string;
 
