@@ -124,9 +124,10 @@ export class CollectionImportComponent implements OnInit {
                     this.object_import_categories.software[category].push(new Software(object.type, raw))
                 break;
                 case "relationship": //relationship
-                    raw.workspace["source_name"] = raw.stix.source_ref in idToName? idToName[raw.stix.source_ref] : "unknown object"
-                    raw.workspace["target_name"] = raw.stix.target_ref in idToName? idToName[raw.stix.target_ref] : "unknown object"
-                    this.object_import_categories.relationship[category].push(new Relationship(raw))
+                    let rel = new Relationship(raw)
+                    rel.source_name = raw.stix.source_ref in idToName? idToName[raw.stix.source_ref] : "unknown object"
+                    rel.target_name = raw.stix.target_ref in idToName? idToName[raw.stix.target_ref] : "unknown object"
+                    this.object_import_categories.relationship[category].push(rel)
                 break;
                 case "course-of-action": //mitigation
                     this.object_import_categories.mitigation[category].push(new Mitigation(raw))
