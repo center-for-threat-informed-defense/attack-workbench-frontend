@@ -3,12 +3,10 @@ import {StixObject} from "./stix-object";
 export class Relationship extends StixObject {
 
     public readonly source_ref: string;
-    public source_name: string = "[source name]"; // TODO
-    public source_attackID: string = "[source ID]"; // TODO
+    public source_name: string = "[unknown object]";
 
     public readonly target_ref: string;
-    public target_name: string = "[target name]"; // TODO
-    public target_attackID: string = "[target ID]"; // TODO
+    public target_name: string = "[unknown object]";
     
     public readonly relationship_type: string;
     public description: string;
@@ -54,11 +52,8 @@ export class Relationship extends StixObject {
             } else this.description = "";
 
         }
-        if ("workspace" in raw) {
-            // THIS IS NOT PART OF THE SPEC, AND IS A PLACEHOLDER
-            if (raw.workspace.source_name) this.source_name = raw.workspace.source_name;
-            if (raw.workspace.target_name) this.target_name = raw.workspace.target_name;
-        }
+        if ("source_object" in raw) { this.source_name = raw.source_object.stix.name; }
+        if ("target_object" in raw) { this.target_name = raw.target_object.stix.name; }
     }
     
     /**
