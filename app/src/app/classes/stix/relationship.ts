@@ -35,7 +35,22 @@ export class Relationship extends StixObject {
         }
     }
 
-    public serialize(): any {};
+    /**
+     * Transform the current object into a raw object for sending to the back-end, stripping any unnecessary fields
+     * @abstract
+     * @returns {*} the raw object to send
+     */
+    public serialize(): any {
+        let rep: {[k: string]: any } = {};
+
+        rep.stix = super.base_serialize();
+        rep.stix.description = this.description;
+        rep.stix.relationship_type = this.relationship_type;
+        rep.stix.source_ref = this.source_ref;
+        rep.stix.target_ref = this.target_ref;
+
+        return JSON.stringify(rep);
+    }
 
     /**
      * Parse the object from the record returned from the back-end
