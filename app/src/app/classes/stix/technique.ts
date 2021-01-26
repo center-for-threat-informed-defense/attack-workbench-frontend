@@ -29,7 +29,37 @@ export class Technique extends StixObject {
         }
     }
 
-    public serialize(): any {};
+    /**
+     * Transform the current object into a raw object for sending to the back-end, stripping any unnecessary fields
+     * @abstract
+     * @returns {*} the raw object to send
+     */
+    public serialize(): any {
+        let rep: {[k: string]: any } = {};
+
+        rep.stix = super.base_serialize();
+        rep.stix.name = this.name;
+        rep.stix.description = this.description;
+        rep.stix.x_mitre_domains = this.domains;
+        rep.stix.x_mitre_detection = this.detection;
+        rep.stix.x_mitre_platforms = this.platforms;
+        rep.stix.x_mitre_data_sources = this.data_sources;
+        rep.stix.x_mitre_system_requirements = this.system_requirements;
+        rep.stix.x_mitre_tactic_type = this.tactic_type;
+        rep.stix.x_mitre_permissions_required = this.permissions_required;
+        rep.stix.x_mitre_defense_bypassed = this.defense_bypassed;
+        rep.stix.x_mitre_is_subtechnique = this.is_subtechnique;
+        rep.stix.x_mitre_remote_support = this.remote_support;
+
+        rep.stix.kill_chain_phases = this.tactics.map( (tactic) => {
+            return {
+                "kill_chain_name": "mitre-attack",
+                "phase_name": tactic
+            }
+        });
+
+        return JSON.stringify(rep);
+    }
 
     /**
      * Parse the object from the record returned from the back-end

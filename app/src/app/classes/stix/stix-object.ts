@@ -71,9 +71,9 @@ export abstract class StixObject extends Serializable {
         return {
             "type": this.type,
             "id": this.stixID,
-            "created": this.created,
-            "modified": this.modified,
-            "version": this.version.toString(),
+            "created": this.created.toISOString(),
+            "modified": this.modified.toISOString(),
+            "x_mitre_version": this.version.toString(),
             "external_references": this.external_references.serialize(),
             "x_mitre_deprecated": this.deprecated,
             "revoked": this.revoked
