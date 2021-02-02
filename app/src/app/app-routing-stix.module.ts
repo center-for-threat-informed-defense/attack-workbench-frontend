@@ -34,7 +34,8 @@ const stixRoutes: Routes = [{
         children: [{
             path: '',
             data: {
-              breadcrumb: 'view'
+              breadcrumb: 'view',
+              editable: true
             },
             component: StixPageComponent
           }
@@ -62,7 +63,8 @@ const stixRoutes: Routes = [{
         children: [{
             path: '',
             data: {
-              breadcrumb: 'view'
+              breadcrumb: 'view',
+              editable: true
             },
             component: StixPageComponent
           }
@@ -90,7 +92,8 @@ const stixRoutes: Routes = [{
         children: [{
             path: '',
             data: {
-              breadcrumb: 'view'
+              breadcrumb: 'view',
+              editable: true
             },
             component: StixPageComponent
           }
@@ -118,7 +121,8 @@ const stixRoutes: Routes = [{
         children: [{
             path: '',
             data: {
-              breadcrumb: 'view'
+              breadcrumb: 'view',
+              editable: true
             },
             component: StixPageComponent
           }
@@ -146,7 +150,8 @@ const stixRoutes: Routes = [{
         children: [{
             path: '',
             data: {
-              breadcrumb: 'view'
+              breadcrumb: 'view',
+              editable: true
             },
             component: StixPageComponent
           }
@@ -174,7 +179,8 @@ const stixRoutes: Routes = [{
         children: [{
             path: '',
             data: {
-              breadcrumb: 'view'
+              breadcrumb: 'view',
+              editable: true
             },
             component: StixPageComponent
           }
