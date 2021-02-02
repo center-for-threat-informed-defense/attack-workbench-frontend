@@ -1,18 +1,18 @@
 <div class="save-dialog">
     <mat-action-list>
-        <button mat-list-item>
+        <button mat-list-item (click)="dialogRef.close(nextMajorVersion)">
             <h3 mat-line>save new major version</h3>
             <div mat-line>{{currentVersion}} &#8594; {{nextMajorVersion}}</div>
         </button>
-        <button mat-list-item>
+        <button mat-list-item (click)="dialogRef.close(nextMinorVersion)">
             <h3 mat-line>save new minor version</h3>
             <div mat-line>{{currentVersion}} &#8594; {{nextMinorVersion}}</div>
         </button>
-        <button mat-list-item>
+        <button mat-list-item (click)="dialogRef.close(currentVersion)">
             <h3 mat-line>save without changing version</h3>
             <div mat-line>{{currentVersion}} &#8594; {{currentVersion}}</div>
         </button>
-        <button mat-list-item>
+        <button mat-list-item mat-dialog-close>
             <h3 mat-line>cancel</h3>
             <div mat-line>keep editing</div>
         </button>

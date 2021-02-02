@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BreadcrumbService } from 'angular-crumbs';
@@ -17,10 +17,12 @@ import { StixViewConfig } from '../stix-view-page';
   templateUrl: './stix-page.component.html',
   styleUrls: ['./stix-page.component.scss']
 })
-export class StixPageComponent implements OnInit {
+export class StixPageComponent implements OnInit, OnDestroy {
     public objects$: Observable<StixObject[]>;
     public objects: StixObject[];
     public initialVersion: VersionNumber;
+
+    private saveSubscription;
     
     constructor(private router: Router, 
                 private route: ActivatedRoute, 
@@ -59,7 +61,10 @@ export class StixPageComponent implements OnInit {
         
         let subscription = prompt.afterClosed().subscribe({
             next: (result) => {
-                console.log(result);
+                if (result && typeof(result) == "string") {
+                    console.log("updating version to", result);
+                    this.objects[0].version.version = result;
+                }
             },
             complete: () => { subscription.unsubscribe(); } //prevent memory leaks
         })
@@ -84,10 +89,15 @@ export class StixPageComponent implements OnInit {
             },
             complete: () => { subscription.unsubscribe() }
         });
-        this.editorService.onSave.subscribe({
+        this.saveSubscription = this.editorService.onSave.subscribe({
             next: (event) => this.save()
         });
     }
+
+    ngOnDestroy() {
+        this.saveSubscription.unsubscribe();
+    }
+
     private updateBreadcrumbs(result, objectType) {
         if (result.length == 0) {
             this.breadcrumbService.changeBreadcrumb(this.route.snapshot, "error")
