@@ -57,20 +57,23 @@ export class CollectionIndexViewComponent implements OnInit {
                 yes_suffix: "keep the collection updated"
             }
         });
-        prompt.afterClosed().subscribe(result => {
-            // if they clicked yes, subscribe to the collection
-            if (result) {
-                let subscribedCollections = new Set<string>(this.config.index.workspace.update_policy.subscriptions);
-                let subscriptionID = collectionRef.id; //id to toggle
-                // add subscription
-                subscribedCollections.add(subscriptionID);
-                // set in object
-                this.config.index.workspace.update_policy.subscriptions = Array.from(subscribedCollections)
-                // PUT result to backend
-                this.restAPIConnector.putCollectionIndex(this.config.index, `subscribed to ${collectionRef.name}`).subscribe(() => {
-                    this.onCollectionsModified.emit()
-                });
-            }
+        let subscription = prompt.afterClosed().subscribe({
+            next: (result) => {
+                // if they clicked yes, subscribe to the collection
+                if (result) {
+                    let subscribedCollections = new Set<string>(this.config.index.workspace.update_policy.subscriptions);
+                    let subscriptionID = collectionRef.id; //id to toggle
+                    // add subscription
+                    subscribedCollections.add(subscriptionID);
+                    // set in object
+                    this.config.index.workspace.update_policy.subscriptions = Array.from(subscribedCollections)
+                    // PUT result to backend
+                    this.restAPIConnector.putCollectionIndex(this.config.index, `subscribed to ${collectionRef.name}`).subscribe(() => {
+                        this.onCollectionsModified.emit()
+                    });
+                }
+            },
+            complete: () => { subscription.unsubscribe(); } //prevent memory leaks
         })
     }
 
