@@ -29,9 +29,9 @@ export class Matrix extends StixObject {
         if (this.attackID) {
             let new_ext_ref = {
                 "source_name": "mitre-attack",
-                "external_id": this.attackID,
-                "url": "https://attack.mitre.org/matrices/"
+                "external_id": this.attackID
             }
+            new_ext_ref["url"] = "https://attack.mitre.org/matrices/" + this.attackID.split("-")[0]
             rep.stix.external_references.unshift(new_ext_ref);
         }
 
