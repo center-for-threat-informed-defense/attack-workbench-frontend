@@ -142,9 +142,10 @@ export class StixListComponent implements OnInit, AfterViewInit {
                         "display": "descriptive"
                     }]
                     break;
-                case "matrix":
-                case "tactic":
                 case "mitigation":
+                case "tactic":
+                    this.addColumn("ID", "attackID", "plain");
+                case "matrix":
                     this.addColumn("name", "name", "plain", true, ["name"]);
                     this.addColumn("version", "version", "version");
                     this.addColumn("modified","modified", "timestamp");
@@ -155,6 +156,7 @@ export class StixListComponent implements OnInit, AfterViewInit {
                     }]
                     break;
                 case "group":
+                    this.addColumn("ID", "attackID", "plain");
                     this.addColumn("name", "name", "plain", true, ["name"]);
                     this.addColumn("aliases", "aliases", "list");
                     this.addColumn("version", "version", "version");
@@ -166,6 +168,7 @@ export class StixListComponent implements OnInit, AfterViewInit {
                     }]
                     break;
                 case "software":
+                    this.addColumn("ID", "attackID", "plain");
                     this.addColumn("name", "name", "plain", true, ["name"]);
                     this.addColumn("type", "type", "plain");
                     this.addColumn("version", "version", "version");
@@ -177,6 +180,7 @@ export class StixListComponent implements OnInit, AfterViewInit {
                     }]
                     break;
                 case "technique":
+                    this.addColumn("ID", "attackID", "plain");
                     this.addColumn("name", "name", "plain", true, ["name"]);
                     this.addColumn("platforms", "platforms", "list");
                     this.addColumn("version", "version", "version");
