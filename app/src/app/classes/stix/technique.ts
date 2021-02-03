@@ -51,6 +51,20 @@ export class Technique extends StixObject {
         rep.stix.x_mitre_is_subtechnique = this.is_subtechnique;
         rep.stix.x_mitre_remote_support = this.remote_support;
 
+        if (this.attackID){
+            let new_ext_ref = {
+                "source_name": "mitre-attack",
+                "external_id": this.attackID
+            }
+            if (this.isSubtechnique()) {
+                let divider = this.attackID.split(".");
+                new_ext_ref["url"] = "https://attack.mitre.org/techniques/" + divider[0] + "/" + divider[1];
+            }
+            else new_ext_ref["url"] = "https://attack.mitre.org/techniques/" + this.attackID;
+
+            rep.stix.external_references.unshift(new_ext_ref);
+        }
+
         rep.stix.kill_chain_phases = this.tactics.map( (tactic) => {
             return {
                 "kill_chain_name": "mitre-attack",
@@ -145,5 +159,16 @@ export class Technique extends StixObject {
                 else console.error("TypeError: remote support field is not a boolean:", sdo.x_mitre_remote_support, "(", typeof(sdo.x_mitre_remote_support),")")
             }
         }
+    }
+
+    /**
+     * Verify if the attackID is has the form of a subtechnique
+     * @returns boolean, true if it is a subtechnique
+     */
+    private isSubtechnique() {
+        if (this.attackID.split(".").length == 2) {
+            return true;
+        }
+        return false;
     }
 }
