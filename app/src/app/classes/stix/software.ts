@@ -33,6 +33,15 @@ export class Software extends StixObject {
         rep.stix.x_mitre_platforms = this.platforms;
         rep.stix.x_mitre_contributors = this.contributors;
 
+        if (this.attackID) {
+            let new_ext_ref = {
+                "source_name": "mitre-attack",
+                "external_id": this.attackID,
+                "url": "https://attack.mitre.org/software/" + this.attackID
+            }
+            rep.stix.external_references.unshift(new_ext_ref);
+        }
+
         return JSON.stringify(rep);
     }
 

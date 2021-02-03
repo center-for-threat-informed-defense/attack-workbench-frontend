@@ -29,6 +29,15 @@ export class Group extends StixObject {
         rep.stix.aliases = this.aliases;
         rep.stix.x_mitre_contributors = this.contributors;
 
+        if (this.attackID) {
+            let new_ext_ref = {
+                "source_name": "mitre-attack",
+                "external_id": this.attackID,
+                "url": "https://attack.mitre.org/groups/" + this.attackID
+            }
+            rep.stix.external_references.unshift(new_ext_ref);
+        }
+
         return JSON.stringify(rep);
     }
 

@@ -26,6 +26,15 @@ export class Mitigation extends StixObject {
         rep.stix.description = this.description;
         rep.stix.x_mitre_domains = this.domains;
 
+        if (this.attackID) {
+            let new_ext_ref = {
+                "source_name": "mitre-attack",
+                "external_id": this.attackID,
+                "url": "https://attack.mitre.org/mitigations/" + this.attackID
+            }
+            rep.stix.external_references.unshift(new_ext_ref);
+        }
+
         return JSON.stringify(rep);
     }
 
