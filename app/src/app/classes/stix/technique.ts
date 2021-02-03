@@ -51,7 +51,7 @@ export class Technique extends StixObject {
         rep.stix.x_mitre_is_subtechnique = this.is_subtechnique;
         rep.stix.x_mitre_remote_support = this.remote_support;
 
-        if (this.attackID){
+        if (this.attackID) {
             let new_ext_ref = {
                 "source_name": "mitre-attack",
                 "external_id": this.attackID
