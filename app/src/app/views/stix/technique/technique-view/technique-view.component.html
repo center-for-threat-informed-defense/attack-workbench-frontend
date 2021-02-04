@@ -63,37 +63,40 @@
                 field: 'domains'
             }"></app-list-property>
         </div>
-        <div class="col arrow">
-            <mat-icon>arrow_forward</mat-icon>
-        </div>
-        <div class="col">
-            <!-- DATA SOURCES -->
-            <div *ngIf="technique.domains.includes('enterprise-attack')" class="row">
-                <app-list-property class="grow-to-row" [config]="{
-                    mode: 'view',
-                    object: technique,
-                    field: 'data_sources',
-                    label: 'data sources'
-                }"></app-list-property>
+        <ng-container *ngIf="technique.data_sources.length > 0 || technique.system_requirements.length > 0 || technique.tactic_type.length > 0">
+            <!-- Display only if domain specific fields exist -->
+            <div class="col arrow">
+                <mat-icon>arrow_forward</mat-icon>
             </div>
-            <!-- SYSTEM REQUIREMENTS -->
-            <div *ngIf="technique.domains.includes('enterprise-attack')" class="row">
-                <app-list-property class="grow-to-row" [config]="{
-                    mode: 'view',
-                    object: technique,
-                    field: 'system_requirements',
-                    label: 'system requirements'
-                }"></app-list-property>
+            <div class="col">
+                <!-- DATA SOURCES -->
+                <div *ngIf="technique.domains.includes('enterprise-attack') && technique.data_sources.length > 0" class="row">
+                    <app-list-property class="grow-to-row" [config]="{
+                        mode: 'view',
+                        object: technique,
+                        field: 'data_sources',
+                        label: 'data sources'
+                    }"></app-list-property>
+                </div>
+                <!-- SYSTEM REQUIREMENTS -->
+                <div *ngIf="technique.domains.includes('enterprise-attack') && technique.system_requirements.length > 0" class="row">
+                    <app-list-property class="grow-to-row" [config]="{
+                        mode: 'view',
+                        object: technique,
+                        field: 'system_requirements',
+                        label: 'system requirements'
+                    }"></app-list-property>
+                </div>
+                <!-- TACTIC TYPES -->
+                <div *ngIf="technique.domains.includes('mobile-attack') && technique.tactic_type.length > 0" class="row">
+                    <app-list-property class="grow-to-row" [config]="{
+                        mode: 'view',
+                        object: technique,
+                        field: 'tactic_type'
+                    }"></app-list-property>
+                </div>
             </div>
-            <!-- TACTIC TYPES -->
-            <div *ngIf="technique.domains.includes('mobile-attack')" class="row">
-                <app-list-property class="grow-to-row" [config]="{
-                    mode: 'view',
-                    object: technique,
-                    field: 'tactic_type'
-                }"></app-list-property>
-            </div>
-        </div>
+        </ng-container>
     </div>
     <!-- TACTIC SPECIFIC FIELDS -->
     <div *ngIf="technique.tactics.length > 0" class="row">
@@ -104,13 +107,14 @@
                 field: 'tactics'
             }"></app-list-property>
         </div>
-        <ng-container *ngIf="technique.tactics.includes('privilege-escalation') || technique.tactics.includes('defense-evasion') || technique.tactics.includes('execution')">
+        <ng-container *ngIf="technique.permissions_required.length > 0 || technique.defense_bypassed.length > 0 || technique.tactics.includes('execution')">
+            <!-- Display only if tactic specific fields exist -->
             <div class="col arrow">
                 <mat-icon>arrow_forward</mat-icon>
             </div>
             <div class="col">
                 <!-- PERMISSIONS REQUIRED -->
-                <div *ngIf="technique.tactics.includes('privilege-escalation')" class="row">
+                <div *ngIf="technique.tactics.includes('privilege-escalation') && technique.permissions_required.length > 0" class="row">
                     <app-list-property class="grow-to-row" [config]="{
                         mode: 'view',
                         object: technique,
@@ -119,7 +123,7 @@
                     }"></app-list-property>
                 </div>
                 <!-- DEFENSE BYPASSED -->
-                <div *ngIf="technique.tactics.includes('defense-evasion')" class="row">
+                <div *ngIf="technique.tactics.includes('defense-evasion') && technique.defense_bypassed.length > 0" class="row">
                     <app-list-property class="grow-to-row" [config]="{
                         mode: 'view',
                         object: technique,
