@@ -25,12 +25,5 @@ export class TechniqueViewComponent extends StixViewPage implements OnInit {
         this.route.queryParams.subscribe(params => {
             this.editing = params["editing"];
         });
-
-        // GET RELATIONSHIPS FUNCTIONS NOT YET IMPLEMENTED
-        // this.subtechniques = this.technique.getRelationships('subtechnique-of');
-        // this.mitigations = this.technique.getRelationshipsFrom('course-of-action', 'mitigates');
-        // this.groups = this.technique.getRelationshipsFrom('intrusion-set', 'uses');
-        // this.software = this.technique.getRelationshipsFrom('malware', 'uses').concat(
-        //                 this.technique.getRelationshipsFrom('tool', 'uses'));
     }
 }
