@@ -4,8 +4,8 @@ export class Technique extends StixObject {
     public attackID: string = "";
     public name: string = "";
     public description: string = "";
-    public tactics: string[] = [];
 
+    public kill_chain_phases: any;
     public domains: string[] = [];
     public platforms: string[] = [];
     public detection: string = "";
@@ -17,6 +17,8 @@ export class Technique extends StixObject {
 
     public is_subtechnique: boolean = false;
     public remote_support: boolean = false;
+
+    public get tactics(): string[] { return this.kill_chain_phases.map(tactic => tactic.phase_name); }
 
     /**
      * Initialize Technique object
@@ -43,6 +45,7 @@ export class Technique extends StixObject {
         rep.stix.x_mitre_domains = this.domains;
         rep.stix.x_mitre_detection = this.detection;
         rep.stix.x_mitre_platforms = this.platforms;
+        rep.stix.kill_chain_phases = this.kill_chain_phases;
 
         // domain specific fields
         if (this.domains.includes('ics-attack')) {
@@ -76,13 +79,6 @@ export class Technique extends StixObject {
             rep.stix.external_references.unshift(new_ext_ref);
         }
 
-        rep.stix.kill_chain_phases = this.tactics.map( (tactic) => {
-            return {
-                "kill_chain_name": "mitre-attack",
-                "phase_name": tactic
-            }
-        });
-
         return JSON.stringify(rep);
     }
 
@@ -115,10 +111,10 @@ export class Technique extends StixObject {
 
             if ("kill_chain_phases" in sdo) {
                 if (typeof(sdo.kill_chain_phases) == "object") {
-                    this.tactics = sdo.kill_chain_phases.map(tactic => tactic.phase_name);
+                    this.kill_chain_phases = sdo.kill_chain_phases;
                 }
                 else console.error("TypeError: tactics field is not an object:", sdo.kill_chain_phases, "(", typeof(sdo.kill_chain_phases), ")");
-            } else this.tactics = [];
+            } else this.kill_chain_phases = [];
 
             if ("x_mitre_domains" in sdo) {
                 if (this.isStringArray(sdo.x_mitre_domains)) this.domains = sdo.x_mitre_domains;
