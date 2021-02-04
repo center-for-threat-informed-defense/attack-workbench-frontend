@@ -1,5 +1,6 @@
 import { EventEmitter, Injectable } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
+import { SidebarService } from '../sidebar/sidebar.service';
 
 @Injectable({
   providedIn: 'root'
@@ -10,11 +11,12 @@ export class EditorService {
     public editing: boolean = false;
     public onSave = new EventEmitter();
     
-    constructor(private router: Router, private route: ActivatedRoute) {
+    constructor(private router: Router, private route: ActivatedRoute, private sidebarService: SidebarService) {
         this.router.events.subscribe(event => { 
             if (event instanceof NavigationEnd) { 
                 let editable = this.getEditableFromRoute(this.router.routerState, this.router.routerState.root);
                 this.editable = editable.length > 0 && editable.every(x=>x);
+                this.sidebarService.setEnabled("history", this.editable);
             }
         })
         this.route.queryParams.subscribe(params => {
