@@ -43,13 +43,24 @@ export class Technique extends StixObject {
         rep.stix.x_mitre_domains = this.domains;
         rep.stix.x_mitre_detection = this.detection;
         rep.stix.x_mitre_platforms = this.platforms;
-        rep.stix.x_mitre_data_sources = this.data_sources;
-        rep.stix.x_mitre_system_requirements = this.system_requirements;
-        rep.stix.x_mitre_tactic_type = this.tactic_type;
-        rep.stix.x_mitre_permissions_required = this.permissions_required;
-        rep.stix.x_mitre_defense_bypassed = this.defense_bypassed;
-        rep.stix.x_mitre_is_subtechnique = this.is_subtechnique;
-        rep.stix.x_mitre_remote_support = this.remote_support;
+
+        // domain specific fields
+        if (this.domains.includes('ics-attack')) {
+            rep.stix.x_mitre_data_sources = this.data_sources;
+        }
+        if (this.domains.includes('mobile-attack')) {
+            rep.stix.x_mitre_tactic_type = this.tactic_type;
+        }
+        if (this.domains.includes('enterprise-attack')) {
+            rep.stix.x_mitre_data_sources = this.data_sources;
+            rep.stix.x_mitre_is_subtechnique = this.is_subtechnique;
+            rep.stix.x_mitre_system_requirements = this.system_requirements;
+
+            // tactic specific fields
+            if (this.tactics.includes('privilege-escalation')) rep.stix.x_mitre_permissions_required = this.permissions_required;
+            if (this.tactics.includes('defense-evasion')) rep.stix.x_mitre_defense_bypassed = this.defense_bypassed;
+            if (this.tactics.includes('execution')) rep.stix.x_mitre_remote_support = this.remote_support;
+        }
 
         if (this.attackID) {
             let new_ext_ref = {
@@ -72,6 +83,7 @@ export class Technique extends StixObject {
             }
         });
 
+        console.log("serialized: ", rep)
         return JSON.stringify(rep);
     }
 
@@ -81,6 +93,7 @@ export class Technique extends StixObject {
      * @param {*} raw the raw object to parse
      */
     public deserialize(raw: any) {
+        console.log("raw object: ", raw)
         if ("stix" in raw) {
             let sdo = raw.stix;
 
@@ -159,6 +172,8 @@ export class Technique extends StixObject {
                 else console.error("TypeError: remote support field is not a boolean:", sdo.x_mitre_remote_support, "(", typeof(sdo.x_mitre_remote_support),")")
             }
         }
+
+        this.serialize();
     }
 
     /**
