@@ -192,9 +192,11 @@ export class StixListComponent implements OnInit, AfterViewInit {
                     }]
                     break;
                 case "relationship":
-                    this.addColumn("source name", "source_name", "plain", this.config.targetRef? true : false);// ["name", "relationship-left"]);
+                    this.addColumn("source", "source_ID", "plain", this.config.targetRef? true: false);
+                    this.addColumn("", "source_name", "plain", false, ["relationship-name"]);// ["name", "relationship-left"]);
                     this.addColumn("type", "relationship_type", "plain", false, ["text-deemphasis", "relationship-joiner"]);
-                    this.addColumn("target name", "target_name", "plain", this.config.sourceRef? true : false);// ["name", "relationship-right"]);
+                    this.addColumn("target", "target_ID", "plain", this.config.sourceRef? true: false);
+                    this.addColumn("", "target_name", "plain", false, ["relationship-name"]);// ["name", "relationship-right"]);
                     this.addColumn("description", "description", "descriptive", false);
                     // controls_after.push("open-link")
                     break;
