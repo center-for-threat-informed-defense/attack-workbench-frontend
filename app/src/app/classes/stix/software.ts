@@ -6,7 +6,6 @@ export class Software extends StixObject {
     public description: string;
     public aliases: string[];
     public platforms: string[];
-    public attackID: string;
     public type: string;
     public contributors: string[];
 
@@ -32,15 +31,6 @@ export class Software extends StixObject {
         rep.stix.x_mitre_aliases = this.aliases;
         rep.stix.x_mitre_platforms = this.platforms;
         rep.stix.x_mitre_contributors = this.contributors;
-
-        if (this.attackID) {
-            let new_ext_ref = {
-                "source_name": "mitre-attack",
-                "external_id": this.attackID,
-                "url": "https://attack.mitre.org/software/" + this.attackID
-            }
-            rep.stix.external_references.unshift(new_ext_ref);
-        }
 
         return JSON.stringify(rep);
     }
@@ -68,17 +58,6 @@ export class Software extends StixObject {
                 if (typeof(sdo.type) === "string") this.type = sdo.type;
                 else console.error("TypeError: type field is not a string:", sdo.type, "(",typeof(sdo.type),")")
             } else this.type = "";
-
-            if ("external_references" in sdo) {
-                if (typeof(sdo.external_references) === "object") {
-                    if (sdo.external_references.length > 0) {
-                        if (typeof(sdo.external_references[0].external_id) === "string") this.attackID = sdo.external_references[0].external_id;
-                        else console.error("TypeError: attackID field is not a string:", sdo.external_references[0].external_id, "(",typeof(sdo.external_references[0].external_id),")")
-                    }
-                    else this.attackID = "";
-                }
-                else console.error("ObjectError: external_references is empty or is not an object")
-            } else this.attackID = "";
 
             if ("x_mitre_aliases" in sdo) {
                 if (this.isStringArray(sdo.x_mitre_aliases)) this.aliases = sdo.x_mitre_aliases;
