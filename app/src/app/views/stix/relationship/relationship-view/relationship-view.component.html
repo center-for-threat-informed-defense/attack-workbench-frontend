@@ -6,6 +6,26 @@
         </div>
     </div>
     <div class="row">
+        <!-- SOURCE ID -->
+        <div class="col">
+            <div class="labelled-box grow-to-row">
+                <div class="content">
+                    {{relationship.source_ID}}
+                </div>
+                <label>source id</label>
+            </div>
+        </div>
+        <!-- TARGET ID -->
+        <div class="col">
+            <div class="labelled-box grow-to-row">
+                <div class="content">
+                    {{relationship.target_ID}}
+                </div>
+                <label>target id</label>
+            </div>
+        </div>
+    </div>
+    <div class="row">
         <div class="col">
             <!-- DESCRIPTION -->
             <app-descriptive-property [config]="{
