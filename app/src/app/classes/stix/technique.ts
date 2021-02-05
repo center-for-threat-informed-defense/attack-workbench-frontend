@@ -1,7 +1,6 @@
 import { StixObject } from "./stix-object";
 
 export class Technique extends StixObject {
-    public attackID: string = "";
     public name: string = "";
     public description: string = "";
 
@@ -65,20 +64,6 @@ export class Technique extends StixObject {
             if (this.tactics.includes('execution')) rep.stix.x_mitre_remote_support = this.remote_support;
         }
 
-        if (this.attackID) {
-            let new_ext_ref = {
-                "source_name": "mitre-attack",
-                "external_id": this.attackID
-            }
-            if (this.is_subtechnique) {
-                let divider = this.attackID.split(".");
-                new_ext_ref["url"] = "https://attack.mitre.org/techniques/" + divider[0] + "/" + divider[1];
-            }
-            else new_ext_ref["url"] = "https://attack.mitre.org/techniques/" + this.attackID;
-
-            rep.stix.external_references.unshift(new_ext_ref);
-        }
-
         return JSON.stringify(rep);
     }
 
@@ -90,14 +75,6 @@ export class Technique extends StixObject {
     public deserialize(raw: any) {
         if ("stix" in raw) {
             let sdo = raw.stix;
-
-            if ("external_references" in sdo) {
-                if (sdo.external_references.length > 0){
-                    if (typeof(sdo.external_references[0].external_id) === "string") this.attackID = sdo.external_references[0].external_id;
-                    else console.error("TypeError: attackID field is not a string:", sdo.external_references[0].external_id, "(", typeof(sdo.external_references[0].external_id),")");
-                }
-                else console.error("ObjectError: external references is empty");
-            } else this.attackID = "";
 
             if ("name" in sdo) {
                 if (typeof(sdo.name) === "string") this.name = sdo.name;
