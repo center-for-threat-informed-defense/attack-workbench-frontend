@@ -4,6 +4,7 @@ import { NgModule } from '@angular/core';
 import { AppRoutingModule } from './app-routing.module';
 import { AppRoutingStixModule } from "./app-routing-stix.module"
 import { HttpClient, HttpClientModule } from '@angular/common/http'
+import { DragDropModule } from '@angular/cdk/drag-drop';
 
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -265,6 +266,7 @@ import { TypeEditComponent } from './components/stix/type-property/type-edit/typ
     MatMenuModule,
     MatDialogModule,
     MatSnackBarModule,
+    DragDropModule,
 
     OverlayModule
   ],
@@ -293,6 +295,7 @@ import { TypeEditComponent } from './components/stix/type-property/type-edit/typ
     MatMenuModule,
     MatDialogModule,
     MatSnackBarModule,
+    DragDropModule,
 
     OverlayModule
   ],
