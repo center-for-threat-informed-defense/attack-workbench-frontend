@@ -1,1 +1,3 @@
-<p>ordered-list-edit works!</p>
+<div cdkDropList class="list" (cdkDropListDropped)="drop($event)">
+    <div class="box box-move" *ngFor="let row of array" cdkDrag>{{row}}</div>
+</div>
