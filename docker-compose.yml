@@ -1,0 +1,36 @@
+version: "3.9"
+services:
+  frontend:
+    container_name: attack-workbench-frontend
+    build: .
+    depends_on:
+      - rest-api
+      - collection-manager
+    ports:
+      - "80:80"
+
+  rest-api:
+    container_name: attack-workbench-rest-api
+    build: ../rest-api
+    depends_on:
+      - mongodb
+    ports:
+      - "3000:3000"
+    environment:
+      - DATABASE_URL=mongodb://attack-workbench-database/attack-workspace
+
+  collection-manager:
+    container_name: attack-workbench-collection-manager
+    build: ../collection-manager
+    depends_on:
+      - rest-api
+    ports:
+      - "3001:3001"
+    environment:
+      - WORKBENCH_HOST=http://attack-workbench-rest-api
+
+  mongodb:
+    container_name: attack-workbench-database
+    image: mongo
+    ports:
+      - "27017:27017"
