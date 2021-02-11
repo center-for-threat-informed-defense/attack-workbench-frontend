@@ -45,7 +45,10 @@
             <app-ordered-list-property class="grow-to-row" [config]="{
                 mode: editing? 'edit' : 'view',
                 objects: tactics,
-                field: 'name'
+                globalObjects: all_tactics,
+                object: matrix,
+                field: 'name',
+                listField: 'tactic_refs'
             }"></app-ordered-list-property>
         </div>
     </div>
