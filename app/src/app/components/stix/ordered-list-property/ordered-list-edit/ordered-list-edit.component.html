@@ -1,3 +1,13 @@
-<div cdkDropList class="list" (cdkDropListDropped)="drop($event)">
-    <div class="box box-move" *ngFor="let row of array" cdkDrag>{{row}}</div>
+<div class="button-row">
+    <a class=" " mat-raised-button (click)="addRow()"><i class="material-icons">add</i> ADD</a>
+</div>
+<div *ngIf="config.objects" cdkDropList class="list" (cdkDropListDropped)="drop($event)">
+    <div class="box box-move" *ngFor="let row of list; let i = index trackBy:trackByFunction" cdkDrag>
+        {{row}}
+        <div>
+            <i class="material-icons move-icon" [ngClass]="{'enabled': i > 0}" (click)="moveRow(i, i-1)">arrow_drop_up</i>
+            <i class="material-icons move-icon" [ngClass]="{'enabled': i < list.length - 1}" (click)="moveRow(i, i+1)" >arrow_drop_down</i>
+            <i class="material-icons move-icon enabled" (click)="deleteRow(i)">delete</i>
+        </div>
+    </div>
 </div>

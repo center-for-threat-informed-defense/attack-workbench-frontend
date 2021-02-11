@@ -29,4 +29,13 @@ export interface OrderedListPropertyConfig {
   /* Field from object to be displayed 
   */
   field: string;
+  /* Object
+  */
+  object?: StixObject;
+  /* List field name from object to be displayed 
+  */
+  listField?: string;
+  /* global objects fields to add to object list 
+  */
+  globalObjects? : StixObject[];
 }
