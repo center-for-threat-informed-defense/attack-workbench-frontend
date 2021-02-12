@@ -1,3 +1,5 @@
+import { Observable } from "rxjs";
+import { RestApiConnectorService } from "src/app/services/connectors/rest-api/rest-api-connector.service";
 import {StixObject} from "./stix-object";
 
 type type_software = "malware" | "tool"
@@ -22,9 +24,8 @@ export class Software extends StixObject {
      * @returns {*} the raw object to send
      */
     public serialize(): any {
-        let rep: {[k: string]: any } = {};
-
-        rep.stix = super.base_serialize();
+        let rep = super.base_serialize();
+        
         rep.stix.name = this.name;
         rep.stix.description = this.description;
         rep.stix.type = this.type;
@@ -32,7 +33,7 @@ export class Software extends StixObject {
         rep.stix.x_mitre_platforms = this.platforms;
         rep.stix.x_mitre_contributors = this.contributors;
 
-        return JSON.stringify(rep);
+        return rep;
     }
 
     /**
@@ -74,5 +75,24 @@ export class Software extends StixObject {
                 else console.error("TypeError: x_mitre_contributors is not a string array:", sdo.x_mitre_contributors, "(",typeof(sdo.x_mitre_contributors),")")
             } else this.contributors = [];
         }
+    }
+
+
+    /**
+     * Save the current state of the STIX object in the database. Update the current object from the response
+     * @param new_version [boolean] if false, overwrite the current version of the object. If true, creates a new version.
+     * @param restAPIService [RestApiConnectorService] the service to perform the POST/PUT through
+     * @returns {Observable} of the post
+     */
+    public save(new_version: boolean = true, restAPIService: RestApiConnectorService): Observable<Software> {
+        // TODO POST if the object was just created (doesn't exist in db yet)
+        if (new_version) this.modified = new Date();
+        
+        let postObservable = restAPIService.postSoftware(this);
+        let subscription = postObservable.subscribe({
+            next: (result) => { this.deserialize(result); },
+            complete: () => { subscription.unsubscribe(); }
+        });
+        return postObservable;
     }
 }
