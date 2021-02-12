@@ -1,1 +1,8 @@
-<p>history-timeline works!</p>
+<div>
+    <app-loading-overlay *ngIf="loading; else timeline"></app-loading-overlay>
+    <ng-template #timeline>
+        <div *ngFor="let historyEvent of historyEvents">
+            {{historyEvent.modified}}
+        </div>
+    </ng-template>
+</div>
