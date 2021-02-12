@@ -205,5 +205,6 @@ export class Collection extends StixObject {
      */
     public save(new_version: boolean = true, restAPIService: RestApiConnectorService): Observable<Collection> {
         // TODO
+        return null;
     }
 }
