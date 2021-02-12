@@ -6,7 +6,6 @@ export class Software extends StixObject {
     public description: string;
     public aliases: string[];
     public platforms: string[];
-    public attackID: string;
     public type: string;
     public contributors: string[];
 
@@ -17,7 +16,24 @@ export class Software extends StixObject {
         }
     }
 
-    public serialize(): any {};
+    /**
+     * Transform the current object into a raw object for sending to the back-end, stripping any unnecessary fields
+     * @abstract
+     * @returns {*} the raw object to send
+     */
+    public serialize(): any {
+        let rep: {[k: string]: any } = {};
+
+        rep.stix = super.base_serialize();
+        rep.stix.name = this.name;
+        rep.stix.description = this.description;
+        rep.stix.type = this.type;
+        rep.stix.x_mitre_aliases = this.aliases;
+        rep.stix.x_mitre_platforms = this.platforms;
+        rep.stix.x_mitre_contributors = this.contributors;
+
+        return JSON.stringify(rep);
+    }
 
     /**
      * Parse the object from the record returned from the back-end
@@ -43,20 +59,9 @@ export class Software extends StixObject {
                 else console.error("TypeError: type field is not a string:", sdo.type, "(",typeof(sdo.type),")")
             } else this.type = "";
 
-            if ("external_references" in sdo) {
-                if (typeof(sdo.external_references) === "object") {
-                    if (sdo.external_references.length > 0) {
-                        if (typeof(sdo.external_references[0].external_id) === "string") this.attackID = sdo.external_references[0].external_id;
-                        else console.error("TypeError: attackID field is not a string:", sdo.external_references[0].external_id, "(",typeof(sdo.external_references[0].external_id),")")
-                    }
-                    else this.attackID = "";
-                }
-                else console.error("ObjectError: external_references is empty or is not an object")
-            } else this.attackID = "";
-
-            if ("aliases" in sdo) {
-                if (this.isStringArray(sdo.aliases)) this.aliases = sdo.aliases;
-                else console.error("TypeError: aliases is not a string array:", sdo.aliases, "(",typeof(sdo.aliases),")")
+            if ("x_mitre_aliases" in sdo) {
+                if (this.isStringArray(sdo.x_mitre_aliases)) this.aliases = sdo.x_mitre_aliases;
+                else console.error("TypeError: aliases is not a string array:", sdo.x_mitre_aliases, "(",typeof(sdo.x_mitre_aliases),")")
             } else this.aliases = [];
 
             if ("x_mitre_platforms" in sdo) {

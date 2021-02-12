@@ -1,11 +1,10 @@
 import { StixObject } from "./stix-object";
 
 export class Technique extends StixObject {
-    public attackID: string = "";
     public name: string = "";
     public description: string = "";
-    public tactics: string[] = [];
 
+    public kill_chain_phases: any;
     public domains: string[] = [];
     public platforms: string[] = [];
     public detection: string = "";
@@ -18,6 +17,8 @@ export class Technique extends StixObject {
     public is_subtechnique: boolean = false;
     public remote_support: boolean = false;
 
+    public get tactics(): string[] { return this.kill_chain_phases.map(tactic => tactic.phase_name); }
+
     /**
      * Initialize Technique object
      * @param sdo the STIX domain object to initialize data from
@@ -29,7 +30,42 @@ export class Technique extends StixObject {
         }
     }
 
-    public serialize(): any {};
+    /**
+     * Transform the current object into a raw object for sending to the back-end, stripping any unnecessary fields
+     * @abstract
+     * @returns {*} the raw object to send
+     */
+    public serialize(): any {
+        let rep: {[k: string]: any } = {};
+
+        rep.stix = super.base_serialize();
+        rep.stix.name = this.name;
+        rep.stix.description = this.description;
+        rep.stix.x_mitre_domains = this.domains;
+        rep.stix.x_mitre_detection = this.detection;
+        rep.stix.x_mitre_platforms = this.platforms;
+        rep.stix.kill_chain_phases = this.kill_chain_phases;
+
+        // domain specific fields
+        if (this.domains.includes('ics-attack')) {
+            rep.stix.x_mitre_data_sources = this.data_sources;
+        }
+        if (this.domains.includes('mobile-attack')) {
+            rep.stix.x_mitre_tactic_type = this.tactic_type;
+        }
+        if (this.domains.includes('enterprise-attack')) {
+            rep.stix.x_mitre_data_sources = this.data_sources;
+            rep.stix.x_mitre_is_subtechnique = this.is_subtechnique;
+            rep.stix.x_mitre_system_requirements = this.system_requirements;
+
+            // tactic specific fields
+            if (this.tactics.includes('privilege-escalation')) rep.stix.x_mitre_permissions_required = this.permissions_required;
+            if (this.tactics.includes('defense-evasion')) rep.stix.x_mitre_defense_bypassed = this.defense_bypassed;
+            if (this.tactics.includes('execution')) rep.stix.x_mitre_remote_support = this.remote_support;
+        }
+
+        return JSON.stringify(rep);
+    }
 
     /**
      * Parse the object from the record returned from the back-end
@@ -39,14 +75,6 @@ export class Technique extends StixObject {
     public deserialize(raw: any) {
         if ("stix" in raw) {
             let sdo = raw.stix;
-
-            if ("external_references" in sdo) {
-                if (sdo.external_references.length > 0){
-                    if (typeof(sdo.external_references[0].external_id) === "string") this.attackID = sdo.external_references[0].external_id;
-                    else console.error("TypeError: attackID field is not a string:", sdo.external_references[0].external_id, "(", typeof(sdo.external_references[0].external_id),")");
-                }
-                else console.error("ObjectError: external references is empty");
-            } else this.attackID = "";
 
             if ("name" in sdo) {
                 if (typeof(sdo.name) === "string") this.name = sdo.name;
@@ -60,10 +88,10 @@ export class Technique extends StixObject {
 
             if ("kill_chain_phases" in sdo) {
                 if (typeof(sdo.kill_chain_phases) == "object") {
-                    this.tactics = sdo.kill_chain_phases.map(tactic => tactic.phase_name);
+                    this.kill_chain_phases = sdo.kill_chain_phases;
                 }
                 else console.error("TypeError: tactics field is not an object:", sdo.kill_chain_phases, "(", typeof(sdo.kill_chain_phases), ")");
-            } else this.tactics = [];
+            } else this.kill_chain_phases = [];
 
             if ("x_mitre_domains" in sdo) {
                 if (this.isStringArray(sdo.x_mitre_domains)) this.domains = sdo.x_mitre_domains;
