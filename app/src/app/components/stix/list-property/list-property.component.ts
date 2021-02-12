@@ -36,4 +36,6 @@ export interface ListPropertyConfig {
      * A tooltip will provide the full value.
      */
     wrap?: boolean
+    
+    control?: "any" | "stix" | "select";
 }
