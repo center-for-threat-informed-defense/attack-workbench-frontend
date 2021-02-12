@@ -69,7 +69,10 @@ export class StixPageComponent implements OnInit, OnDestroy {
                 if (result) {
                     // save the object
                     let subscription = this.objects[0].save(true, this.restAPIConnectorService).subscribe({
-                        next: (result) => { /* TODO stop editing and refresh the page */ },
+                        next: (result) => { 
+                            this.editorService.stopEditing();
+                            this.loadObjects();
+                        },
                         complete: () => {subscription.unsubscribe(); }
                     });
                 }
@@ -81,6 +84,17 @@ export class StixPageComponent implements OnInit, OnDestroy {
 
 
     ngOnInit(): void {
+        this.loadObjects();
+        this.saveSubscription = this.editorService.onSave.subscribe({
+            next: (event) => this.save()
+        });
+    }
+
+    /**
+     * Load the objects forthis page from the REST API
+     * @memberof StixPageComponent
+     */
+    private loadObjects(): void {
         let objectType = this.router.url.split("/")[1];
         let objectStixID = this.route.snapshot.params["id"];
         if (objectType == "software") this.objects$ = this.restAPIConnectorService.getSoftware(objectStixID);
@@ -97,9 +111,6 @@ export class StixPageComponent implements OnInit, OnDestroy {
                 this.initialVersion = new VersionNumber(this.objects[0].version.toString());
             },
             complete: () => { subscription.unsubscribe() }
-        });
-        this.saveSubscription = this.editorService.onSave.subscribe({
-            next: (event) => this.save()
         });
     }
 
