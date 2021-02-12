@@ -43,10 +43,8 @@ export class Relationship extends StixObject {
      * @returns {*} the raw object to send
      */
     public serialize(): any {
-        let rep: {[k: string]: any } = {};
-        rep.workspace = {domains: ["test"]};
-
-        rep.stix = super.base_serialize();
+        let rep = super.base_serialize();
+        
         rep.stix.description = this.description;
         rep.stix.relationship_type = this.relationship_type;
         rep.stix.source_ref = this.source_ref;
