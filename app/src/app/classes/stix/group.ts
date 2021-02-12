@@ -1,11 +1,12 @@
 import {StixObject} from "./stix-object";
 import { Relationship } from './relationship';
+import { RestApiConnectorService } from "src/app/services/connectors/rest-api/rest-api-connector.service";
+import { Observable } from "rxjs";
 
 export class Group extends StixObject {
     public name: string = "";
     public description: string = "";
     public aliases: string[] = [];
-    public attackID: string = "";
     public contributors: string[] = [];
 
     constructor(sdo?: any) {
@@ -15,7 +16,21 @@ export class Group extends StixObject {
         }
     }
 
-    public serialize(): any {};
+    /**
+     * Transform the current object into a raw object for sending to the back-end, stripping any unnecessary fields
+     * @abstract
+     * @returns {*} the raw object to send
+     */
+    public serialize(): any {
+        let rep = super.base_serialize();
+        
+        rep.stix.name = this.name;
+        rep.stix.description = this.description;
+        rep.stix.aliases = this.aliases;
+        rep.stix.x_mitre_contributors = this.contributors;
+
+        return rep;
+    }
 
     /**
      * Parse the object from the record returned from the back-end
@@ -35,17 +50,6 @@ export class Group extends StixObject {
                 if (typeof(sdo.description) === "string") this.description = sdo.description;
                 else console.error("TypeError: description field is not a string:", sdo.description, "(",typeof(sdo.description),")")
             } else this.description = "";
-
-            if ("external_references" in sdo) {
-                if (typeof(sdo.external_references) === "object") {
-                    if (sdo.external_references.length > 0) {
-                        if (typeof(sdo.external_references[0].external_id) === "string") this.attackID = sdo.external_references[0].external_id;
-                        else console.error("TypeError: attackID field is not a string:", sdo.external_references[0].external_id, "(",typeof(sdo.external_references[0].external_id),")")
-                    }
-                    else this.attackID = "";
-                }
-                else console.error("ObjectError: external_references is empty or is not an object")
-            } else this.attackID = "";
             
             if ("aliases" in sdo) {
                 if (this.isStringArray(sdo.aliases)) this.aliases = sdo.aliases;
@@ -57,5 +61,23 @@ export class Group extends StixObject {
                 else console.error("TypeError: x_mitre_contributors is not a string array:", sdo.x_mitre_contributors, "(",typeof(sdo.x_mitre_contributors),")")
             } else this.contributors = [];
         }
+    }
+
+    /**
+     * Save the current state of the STIX object in the database. Update the current object from the response
+     * @param new_version [boolean] if false, overwrite the current version of the object. If true, creates a new version.
+     * @param restAPIService [RestApiConnectorService] the service to perform the POST/PUT through
+     * @returns {Observable} of the post
+     */
+    public save(new_version: boolean = true, restAPIService: RestApiConnectorService): Observable<Group> {
+        // TODO PUT if the object was just created (doesn't exist in db yet)
+        if (new_version) this.modified = new Date();
+        
+        let postObservable = restAPIService.postGroup(this);
+        let subscription = postObservable.subscribe({
+            next: (result) => { this.deserialize(result); },
+            complete: () => { subscription.unsubscribe(); }
+        });
+        return postObservable;
     }
 }
