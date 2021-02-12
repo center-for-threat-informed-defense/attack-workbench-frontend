@@ -56,15 +56,24 @@ export class StixPageComponent implements OnInit, OnDestroy {
             this.dialog.open(SaveDialogComponent, { //increment version number save panel
                 // maxWidth: "35em",
                 data: this.objects[0].version
-            }) ;
+            });
 
         
         let subscription = prompt.afterClosed().subscribe({
             next: (result) => {
                 if (result && typeof(result) == "string") {
+                    // increment the version number 
                     console.log("updating version to", result);
                     this.objects[0].version.version = result;
                 }
+                if (result) {
+                    // save the object
+                    let subscription = this.objects[0].save(true, this.restAPIConnectorService).subscribe({
+                        next: (result) => { /* TODO stop editing and refresh the page */ },
+                        complete: () => {subscription.unsubscribe(); }
+                    });
+                }
+
             },
             complete: () => { subscription.unsubscribe(); } //prevent memory leaks
         })

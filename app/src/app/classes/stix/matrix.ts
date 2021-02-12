@@ -1,3 +1,5 @@
+import { Observable } from "rxjs";
+import { RestApiConnectorService } from "src/app/services/connectors/rest-api/rest-api-connector.service";
 import {StixObject} from "./stix-object";
 
 export class Matrix extends StixObject {
@@ -19,13 +21,14 @@ export class Matrix extends StixObject {
      */
     public serialize(): any {
         let rep: {[k: string]: any } = {};
+        rep.workspace = {domains: ["test"]};
 
         rep.stix = super.base_serialize();
         rep.stix.name = this.name;
         rep.stix.description = this.description;
         rep.stix.tactic_refs = this.tactic_refs;
 
-        return JSON.stringify(rep);
+        return rep;
     }
     
     /**
@@ -52,5 +55,23 @@ export class Matrix extends StixObject {
                 else console.error("TypeError: tactic_refs field is not a string array:", sdo.tactic_refs, "(",typeof(sdo.tactic_refs),")")
             } else this.tactic_refs = [];
         }
+    }
+
+    /**
+     * Save the current state of the STIX object in the database. Update the current object from the response
+     * @param new_version [boolean] if false, overwrite the current version of the object. If true, creates a new version.
+     * @param restAPIService [RestApiConnectorService] the service to perform the POST/PUT through
+     * @returns {Observable} of the post
+     */
+    public save(new_version: boolean = true, restAPIService: RestApiConnectorService): Observable<Matrix> {
+        // TODO PUT if the object was just created (doesn't exist in db yet)
+        if (new_version) this.modified = new Date();
+        
+        let postObservable = restAPIService.postMatrix(this);
+        let subscription = postObservable.subscribe({
+            next: (result) => { this.deserialize(result); },
+            complete: () => { subscription.unsubscribe(); }
+        });
+        return postObservable;
     }
 }

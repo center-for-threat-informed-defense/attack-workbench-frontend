@@ -1,3 +1,5 @@
+import { Observable } from 'rxjs';
+import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/rest-api-connector.service';
 import { Group } from './group';
 import { Matrix } from './matrix';
 import { Mitigation } from './mitigation';
@@ -123,7 +125,7 @@ export class Collection extends StixObject {
 
         rep.contents = this.stix_contents.map(stix_objects => stix_objects.serialize());
 
-        return JSON.stringify(rep);
+        return rep;
     }
 
     /**
@@ -194,5 +196,14 @@ export class Collection extends StixObject {
                 }
             }
         }
+    }
+    /**
+     * Save the current state of the STIX object in the database. Update the current object from the response
+     * @param new_version [boolean] if false, overwrite the current version of the object. If true, creates a new version.
+     * @param restAPIService [RestApiConnectorService] the service to perform the POST/PUT through
+     * @returns {Observable} of the post
+     */
+    public save(new_version: boolean = true, restAPIService: RestApiConnectorService): Observable<Collection> {
+        // TODO
     }
 }

@@ -1,3 +1,5 @@
+import { Observable } from "rxjs";
+import { RestApiConnectorService } from "src/app/services/connectors/rest-api/rest-api-connector.service";
 import { StixObject } from "./stix-object";
 
 export class Technique extends StixObject {
@@ -37,6 +39,7 @@ export class Technique extends StixObject {
      */
     public serialize(): any {
         let rep: {[k: string]: any } = {};
+        rep.workspace = {domains: ["test"]};
 
         rep.stix = super.base_serialize();
         rep.stix.name = this.name;
@@ -64,7 +67,7 @@ export class Technique extends StixObject {
             if (this.tactics.includes('execution')) rep.stix.x_mitre_remote_support = this.remote_support;
         }
 
-        return JSON.stringify(rep);
+        return rep;
     }
 
     /**
@@ -143,5 +146,23 @@ export class Technique extends StixObject {
                 else console.error("TypeError: remote support field is not a boolean:", sdo.x_mitre_remote_support, "(", typeof(sdo.x_mitre_remote_support),")")
             }
         }
+    }
+
+    /**
+     * Save the current state of the STIX object in the database. Update the current object from the response
+     * @param new_version [boolean] if false, overwrite the current version of the object. If true, creates a new version.
+     * @param restAPIService [RestApiConnectorService] the service to perform the POST/PUT through
+     * @returns {Observable} of the post
+     */
+    public save(new_version: boolean = true, restAPIService: RestApiConnectorService): Observable<Technique> {
+        // TODO POST if the object was just created (doesn't exist in db yet)
+        if (new_version) this.modified = new Date();
+        
+        let postObservable = restAPIService.postTechnique(this);
+        let subscription = postObservable.subscribe({
+            next: (result) => { this.deserialize(result); },
+            complete: () => { subscription.unsubscribe(); }
+        });
+        return postObservable;
     }
 }
