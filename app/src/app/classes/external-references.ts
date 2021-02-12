@@ -101,7 +101,7 @@ export class ExternalReferences extends Serializable {
         if (references){
             // Create externalReferences list
             for (let i = 0; i < references.length; i++){
-                if ("source_name" in references[i]) {
+                if ("source_name" in references[i] && !("external_id" in references[i])) {
                     let description = ""
                     if(references[i].description) {
                         description = references[i].description;
@@ -139,8 +139,21 @@ export class ExternalReferences extends Serializable {
      * @abstract
      * @returns {*} the raw object to send
      */
-    public serialize(): any {
-        return {}; //TODO
+    public serialize(): Array<{}> {
+
+        let rep: Array<{}> = [];
+
+        for (const [key, value] of this._externalReferences) {
+            let temp = {};
+
+            temp["source_name"] = key;
+            if (value["url"]) temp["url"] = value["url"];
+            if (value["description"]) temp["description"] = value["description"];
+            
+            rep.push(temp);
+        }
+        
+        return rep;
     }
     /**
      * Parse the object from the record returned from the back-end

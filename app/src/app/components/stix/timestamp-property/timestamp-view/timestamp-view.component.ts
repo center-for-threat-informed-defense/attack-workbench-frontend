@@ -36,7 +36,7 @@ export class TimestampViewComponent implements OnInit {
      *get the formatted absolute timestamp with hour/minute
      */
     public get timestamp(): string {
-        return moment(this.config.object[this.config.field]).format('D MMMM YYYY, H:mm A')
+        return moment(this.config.object[this.config.field]).format('D MMMM YYYY, h:mm A')
     }
     
     constructor() { }
