@@ -112,9 +112,8 @@ export class Collection extends StixObject {
      * @returns {*} the raw object to send
      */
     public serialize(): any {
-        let rep: {[k: string]: any } = {};
-
-        rep.stix = super.base_serialize();
+        let rep = super.base_serialize();
+        
         rep.stix.name = this.name;
         rep.stix.description = this.description;
         rep.stix.x_mitre_contents = this.contents.map(vr => vr.serialize());

@@ -6,6 +6,8 @@ import { Serializable } from '../serializable';
 import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/rest-api-connector.service';
 import { Observable } from 'rxjs';
 
+export type workflowStates = "wip" | "awaiting review" | "reviewed"
+
 export abstract class StixObject extends Serializable {
     public stixID: string; // STIX ID
     public type: string;   // STIX type
@@ -51,6 +53,9 @@ export abstract class StixObject extends Serializable {
     public modified: Date; // object modified date
     public version: VersionNumber;  // version number of the object
     public external_references: ExternalReferences;
+    public workflow: {
+        state: workflowStates
+    };
 
     public deprecated: boolean = false; //is object deprecated?
     public revoked: boolean = false;    //is object revoked?
@@ -72,6 +77,9 @@ export abstract class StixObject extends Serializable {
             this.version = new VersionNumber("0.1");
             this.attackID = "";
             this.external_references = new ExternalReferences();
+            this.workflow = {
+                state: "wip"
+            };
         }
         this.attackType = this.typeMap[this.type]
     }
@@ -111,15 +119,20 @@ export abstract class StixObject extends Serializable {
         }
 
         return {
-            "type": this.type,
-            "id": this.stixID,
-            "created": this.created.toISOString(),
-            "modified": this.modified.toISOString(),
-            "x_mitre_version": this.version.toString(),
-            "external_references": serialized_external_references,
-            "x_mitre_deprecated": this.deprecated,
-            "revoked": this.revoked,
-            "spec_version": "2.1"
+            workspace:  {
+                workflow: this.workflow
+            },
+            stix: {
+                "type": this.type,
+                "id": this.stixID,
+                "created": this.created.toISOString(),
+                "modified": this.modified.toISOString(),
+                "x_mitre_version": this.version.toString(),
+                "external_references": serialized_external_references,
+                "x_mitre_deprecated": this.deprecated,
+                "revoked": this.revoked,
+                "spec_version": "2.1"
+            }
         }
     }
 
@@ -185,6 +198,15 @@ export abstract class StixObject extends Serializable {
         }
         else console.error("ObjectError: 'stix' field does not exist in object");
 
+        if ("workspace" in raw) {
+            // parse workspace fields
+            let workspaceData = raw.workspace;
+            if ("workflow" in workspaceData) {
+                if (typeof(workspaceData.workflow) == "object") {
+                    this.workflow = workspaceData.workflow;
+                } else console.error("TypeError: workflow field is not an object")
+            }
+        }
     }
 
     public isStringArray = function(arr): boolean {

@@ -20,10 +20,8 @@ export class Tactic extends StixObject {
      * @returns {*} the raw object to send
      */
     public serialize(): any {
-        let rep: {[k: string]: any } = {};
-        rep.workspace = {domains: ["test"]};
-
-        rep.stix = super.base_serialize();
+        let rep = super.base_serialize();
+        
         rep.stix.name = this.name;
         rep.stix.description = this.description;
         rep.stix.x_mitre_domains = this.domains;
