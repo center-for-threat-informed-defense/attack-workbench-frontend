@@ -11,7 +11,7 @@ services:
 
   rest-api:
     container_name: attack-workbench-rest-api
-    build: ../rest-api
+    build: ../attack-workbench-rest-api
     depends_on:
       - mongodb
     ports:
@@ -21,7 +21,7 @@ services:
 
   collection-manager:
     container_name: attack-workbench-collection-manager
-    build: ../collection-manager
+    build: ../attack-workbench-collection-manager
     depends_on:
       - rest-api
     ports:

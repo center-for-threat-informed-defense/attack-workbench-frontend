@@ -1,11 +1,11 @@
 # Docker Compose Installation
 
-This document describes how to install the ATT&CK Workbench components using Docker Compose.
+This document describes how to install the ATT&CK Workbench components using Docker Compose. This project (ATT&CK Workbench Frontend) includes a `docker-compose.yml` file that configures the Docker Compose installation.
 
-## Project Structure
+## 1. Download required repositories
 
-This project (ATT&CK Workbench Frontend) includes a `docker-compose.yml` file that configures the Docker Compose installation.
-In addition to this project, the ATT&CK Workbench REST API and ATT&CH Workbench Collection Manager projects must be pulled from the github repository.
+In addition to this project, the [ATT&CK Workbench REST API](https://github.com/center-for-threat-informed-defense/attack-workbench-rest-api) and [ATT&CK Workbench Collection Manager](https://github.com/center-for-threat-informed-defense/attack-workbench-collection-manager) projects must be pulled from their github repositories.
+
 These projects must be placed under a common parent directory:
 
 ```
@@ -15,15 +15,29 @@ These projects must be placed under a common parent directory:
     |-- collection-manager
 ```
 
-## Install Process
+To perform all three clones as required (including the clone of this repository), you can use the following commands from your working directory:
+```shell
+# download the front-end repository
+git clone https://github.com/center-for-threat-informed-defense/attack-workbench-frontend.git
+# download the collection manager repository
+git clone https://github.com/center-for-threat-informed-defense/attack-workbench-collection-manager.git
+# download the REST API repository
+git clone https://github.com/center-for-threat-informed-defense/attack-workbench-rest-api.git
+```
 
-1. Navigate to the `frontend` directory (containing the `docker-compose.yml` file)
+## 2. Build docker images
+
+1. Navigate to the `attack-workbench-frontend` directory (containing the `docker-compose.yml` file)
 2. Run the command:
 ```shell
 docker-compose up
 ```
 
 This command will build all of the necessary Docker images and run the corresponding Docker containers.
+
+## 3. Access Docker instance
+
+With the Docker-compose running you can access the ATT&CK workbench application by visiting the URL [localhost](localhost) in your browser.
 
 ### Containers
 
