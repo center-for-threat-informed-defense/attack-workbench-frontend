@@ -1,12 +1,10 @@
 <div class="add-dialog">
     <mat-action-list>
         <H2>Add Row:</H2>
-        <div *ngFor="let row of globalList">
+        <div *ngFor="let row of config.globalObjects">
             <button  mat-list-item (click)="dialogRef.close(row)">
-                <h3 mat-line>Add this row:</h3>
-                <div mat-line>{{row}}</div>
+                <h3 mat-line>Add {{row[config.field]}}</h3>
             </button>
         </div>
-
     </mat-action-list>
 </div>
