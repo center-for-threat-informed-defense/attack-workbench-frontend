@@ -12,8 +12,11 @@ RUN npm install
 # If you are building your code for production
 # RUN npm ci --only=production
 
-# Bundle app source
+# Copy the app source
 COPY ./app .
+
+# Copy the docs--angular looks for them in a sibling directory
+COPY ./docs ../docs
 
 # Build the bundle
 RUN npm run build-prod
