@@ -4,6 +4,7 @@ import {CdkDragDrop, moveItemInArray} from '@angular/cdk/drag-drop';
 import { ConfirmationDialogComponent } from 'src/app/components/confirmation-dialog/confirmation-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
 import { AddDialogComponent } from 'src/app/components/add-dialog/add-dialog.component';
+import { StixObject } from 'src/app/classes/stix/stix-object';
 
 @Component({
   selector: 'app-ordered-list-edit',
@@ -104,22 +105,44 @@ export class OrderedListEditComponent implements OnInit {
     });
   }
 
+  /**
+   *
+   * Add row to the end of ordered list
+   */
   public addRow() {
 
+    let uniqueRows : StixObject[] = [];
 
-    let prompt = this.dialog.open(AddDialogComponent, {
-        maxWidth: "35em",
-        data: this.config.globalObjects
-    }) ;
+    // Check if field of global objects is already in ordered list
+    // TODO: need to be flexible to in page removes plus additions
+    // Need to be able to track changes to ListMap
+    for (let object of this.config.globalObjects) {
+      if (!this.ListMap.get(object[this.config.field])) {
+        uniqueRows.push(object);
+      }
+    }
 
+    if(uniqueRows){
+      let prompt = this.dialog.open(AddDialogComponent, {
+        maxWidth: "70em",
+        maxHeight: "70em",
+        data: {
+          globalObjects: uniqueRows,
+          field: this.config.field
+        }
+      }) ;
 
-    let subscription = prompt.afterClosed().subscribe({
-        next: (result) => {
-            if (result) {
-                console.log("updating version to", result);
-            }
-        },
-        complete: () => { subscription.unsubscribe(); } //prevent memory leaks
-    })
+      let subscription = prompt.afterClosed().subscribe({
+          next: (result) => {
+              if (result) {
+                  console.log("adding: ", result);
+                  this.orderedList.push(result[this.config.field]);
+                  this.updateOrderedList();
+              }
+          },
+          complete: () => { subscription.unsubscribe(); } //prevent memory leaks
+      })
+    }
+
   }
 }
