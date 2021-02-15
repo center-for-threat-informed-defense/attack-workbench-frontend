@@ -10,9 +10,9 @@ These projects must be placed under a common parent directory:
 
 ```
 |-- <common parent directory>
-    |-- frontend
-    |-- rest-api
-    |-- collection-manager
+    |-- attack-workbench-frontend
+    |-- attack-workbench-rest-api
+    |-- attack-workbench-collection-manager
 ```
 
 To perform all three clones as required (including the clone of this repository), you can use the following commands from your working directory:
@@ -37,7 +37,7 @@ This command will build all of the necessary Docker images and run the correspon
 
 ## 3. Access Docker instance
 
-With the Docker-compose running you can access the ATT&CK workbench application by visiting the URL [localhost](localhost) in your browser.
+With the docker-compose running you can access the ATT&CK workbench application by visiting the URL `localhost` in your browser.
 
 ### Containers
 
