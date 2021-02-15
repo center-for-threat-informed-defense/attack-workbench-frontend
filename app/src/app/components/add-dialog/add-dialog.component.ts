@@ -10,10 +10,15 @@ import { StixObject } from 'src/app/classes/stix/stix-object';
 })
 export class AddDialogComponent implements OnInit {
 
-  constructor(public dialogRef: MatDialogRef<AddDialogComponent>, @Inject(MAT_DIALOG_DATA)  public globalList: StixObject[]) {}
+  constructor(public dialogRef: MatDialogRef<AddDialogComponent>, @Inject(MAT_DIALOG_DATA)  public config: AddDialogConfig) {}
 
   ngOnInit(): void {
-    console.log(this.globalList)
+    console.log(this.config.globalObjects);
   }
 
+}
+
+export interface AddDialogConfig {
+  globalObjects: StixObject[]; //Stix Object array
+  field: string; // field for stix objects
 }
