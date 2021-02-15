@@ -38,6 +38,7 @@ export class OrderedListEditComponent implements OnInit {
    */
   public get list(): string[] {
 
+    // Initialize ordered list only when page is loaded
     if (this.orderedList.length === 0){
       for (let object of this.config.objects) {
         this.orderedList.push(object[this.config.field]);
@@ -83,26 +84,50 @@ export class OrderedListEditComponent implements OnInit {
 
   /**
    *
-   * Removes row from ordered list
-   * @param {int} row item to be deleted from list
+   * Removes row from ordered list with index
+   * @param {int} index array index of item to be deleted from list
    */
-  public deleteRow(row) {
+  public deleteRow(index) {
     let prompt = this.dialog.open(ConfirmationDialogComponent, {
           maxWidth: "35em",
           data: { 
-              message: '# Delete ' + this.orderedList[row] + '?',
+              message: '# Delete ' + this.orderedList[index] + '?',
           }
       });
 
     let subscription = prompt.afterClosed().subscribe({
       next: (result) => {
           if (result) {
-            this.orderedList.splice(row, 1);
+            // Remove index of row from map
+            this.removeFromMap(index);
+            // Remove from ordered list by index
+            this.orderedList.splice(index, 1);
+            // Update ordered list
             this.updateOrderedList();
           }
       },
       complete: () => { subscription.unsubscribe(); } //prevent memory leaks
     });
+  }
+
+  /**
+   * Delete index from ordered list map
+   * @param {int} index index of item to be deleted from map
+   */ 
+  private removeFromMap(index) {
+    if(this.ListMap.get(this.orderedList[index])){
+      this.ListMap.delete(this.orderedList[index]);
+    }
+  }
+
+  /**
+   * Add row to ordered list map
+   * @param {int} row item to be added to map
+   */ 
+  private addToMap(row) {
+    if(!this.ListMap.get(row[this.config.field])) {
+      this.ListMap.set(row[this.config.field], row);
+    }
   }
 
   /**
@@ -114,8 +139,6 @@ export class OrderedListEditComponent implements OnInit {
     let uniqueRows : StixObject[] = [];
 
     // Check if field of global objects is already in ordered list
-    // TODO: need to be flexible to in page removes plus additions
-    // Need to be able to track changes to ListMap
     for (let object of this.config.globalObjects) {
       if (!this.ListMap.get(object[this.config.field])) {
         uniqueRows.push(object);
@@ -135,8 +158,11 @@ export class OrderedListEditComponent implements OnInit {
       let subscription = prompt.afterClosed().subscribe({
           next: (result) => {
               if (result) {
-                  console.log("adding: ", result);
+                  // Add result as row to map
+                  this.addToMap(result);
+                  // Add to ordered list
                   this.orderedList.push(result[this.config.field]);
+                  // Update ordered list
                   this.updateOrderedList();
               }
           },
