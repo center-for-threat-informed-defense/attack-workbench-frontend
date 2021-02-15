@@ -12,26 +12,32 @@ export class SidebarService {
         this._currentTab = tab;
         setTimeout(() => this.onTabChange.emit()); //emit after render loop
     }
+    public tabEnabled(tabName: tabOption): boolean {
+        return this.tabs.filter((x) => x.name == tabName)[0].enabled;
+    }
+    public setEnabled(tabName: tabOption, enabled: boolean) {
+        this.tabs.filter((x) => x.name == tabName)[0].enabled = enabled;
+    }
     public readonly tabs: tabDefinition[] = [
         {
             "name": "search",
-            "label": "search",
-            "icon": "search"
+            "icon": "search",
+            "enabled": true
         },
         {
             "name": "citations",
-            "label": "citation finder",
-            "icon": "superscript"
+            "icon": "superscript",
+            "enabled": true
         },
         {
             "name": "history",
-            "label": "versions",
-            "icon": "history"
+            "icon": "history",
+            "enabled": false
         },
         {
             "name": "notes",
-            "label": "notes",
-            "icon": "sticky_note_2_outlined"
+            "icon": "sticky_note_2_outlined",
+            "enabled": true
         }
     ]
     //is the sidebar currently opened?
@@ -54,7 +60,7 @@ export class SidebarService {
 export type tabOption = "search" | "citations" | "history" | "notes";
 
 interface tabDefinition {
-    name: tabOption, // the tab name
-    label: string, //ui for tab in tooltip, etc
-    icon: string //material icon to use for tab
+    name: tabOption; // the tab name
+    icon: string; //material icon to use for tab
+    enabled: boolean; //if false, tab cannot be selected or shown
 }

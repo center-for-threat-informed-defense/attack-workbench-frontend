@@ -20,7 +20,7 @@ export class ResourcesDrawerComponent implements OnInit {
         else return this.currentTabOverride;
     }
 
-    constructor(private sidebarService: SidebarService) { }
+    constructor(public sidebarService: SidebarService) { }
 
     public onTabClick(tab: any) {
         if (this.useService) this.sidebarService.currentTab = tab.name;
