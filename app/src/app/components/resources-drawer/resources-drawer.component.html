@@ -11,7 +11,9 @@
         </ng-container>
     </mat-toolbar>
     <div class="content">
-        <!-- this is a placeholder for the actual content of the sidebar -->
+        <h3 class="tab-title">
+            {{currentTab}}
+        </h3>
         <app-history-timeline *ngIf="currentTab == 'history' && sidebarService.tabEnabled('history')" (drawerResize)="drawerResize.emit()"></app-history-timeline>
     </div>
 </div>
