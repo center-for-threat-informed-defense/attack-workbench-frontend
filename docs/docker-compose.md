@@ -39,7 +39,16 @@ This command will build all of the necessary Docker images and run the correspon
 
 With the docker-compose running you can access the ATT&CK workbench application by visiting the URL `localhost` in your browser.
 
-### Containers
+
+## Updating an existing install
+
+If you have previously built the workbench and want to rebuild based on a newer release of the codebase, the following command can be used to force a rebuild of the data. Before running it, make sure that all three repositories are up-to-date with the head of the branch (typically `develop` or `master`) to ensure that compatibility issues don't occur between the components.
+
+```
+docker-compose up --build
+```
+
+## Containers
 
 When deployed using Docker Compose, an ATT&CK Workbench installation will include four containers:
 * frontend
