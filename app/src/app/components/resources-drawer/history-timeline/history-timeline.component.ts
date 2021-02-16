@@ -57,7 +57,7 @@ export class HistoryTimelineComponent implements OnInit {
         let previousVersion = null;
         for (let objectVersion of objectVersions) {
             let versionChanged = previousVersion && objectVersion.version.compareTo(previousVersion) != 0;
-            let objectCreated = objectVersion.created == objectVersion.modified;
+            let objectCreated = objectVersion.created.getTime() == objectVersion.modified.getTime();
             let objectImported = !objectCreated && !previousVersion;
             let description = objectCreated? `${objectVersion["name"]} was created` : objectImported? `Earliest imported version of ${objectVersion["name"]}` : `${objectVersion["name"]} was edited`
             this.historyEvents.push({
@@ -86,7 +86,8 @@ export class HistoryTimelineComponent implements OnInit {
         for (let relationshipID in stixIDtoRelVersions) {
             let firstVersion = true;
             for (let relationshipVersion of stixIDtoRelVersions[relationshipID]) {
-                let objectCreated = relationshipVersion.created == relationshipVersion.modified;
+                let objectCreated = relationshipVersion.created.getTime() == relationshipVersion.modified.getTime();
+                console.log(relationshipVersion, objectCreated);
                 let objectImported = !objectCreated && firstVersion;
                 let relationshipName = `${relationshipVersion.source_name} ${relationshipVersion.relationship_type} ${relationshipVersion.target_name}`
                 let description = objectCreated? `${relationshipName} was created` : objectImported? `Earliest imported version of ${relationshipName}` : `${relationshipName} was edited`
