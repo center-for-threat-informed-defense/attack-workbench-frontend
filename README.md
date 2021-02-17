@@ -16,6 +16,13 @@ For more documentation, please see the `docs` folder. The docs folder is also av
 - [Node.js](https://nodejs.org/) version `10.13.0` or greater
 
 ## Install and run
+
+### Installing using Docker
+Please refer to our [Docker install instructions](docs/docker-compose.md) for information on installing and deploying the app using Docker.
+
+### Installing dependencies
+This step is necessary for cases where the app is deployed locally through `ng serve` or `ng build`. It can be skipped for installs using docker (above).
+
 1. Navigate to `app`
 2. Run `npm install` to install required packages
 
@@ -27,7 +34,7 @@ For more documentation, please see the `docs` folder. The docs folder is also av
 1. Run `ng build` within the `app` directory
 2. Copy files from the `app/dist` directory
 
-IF you're building the app for production, use `ng build --prod which will use the production environment instead of the development environment. See [Modifying the environment](#modifying-the-environment) for more information.
+If you're building the app for production, use `ng build --prod` which will use the production environment instead of the development environment. See [Modifying the environment](#modifying-the-environment) for more information.
 
 ### Modifying the environment
 The ATT&CK Workbench Frontend is configured to connect to the Collection Manager and REST API running under their default configurations. If those applications are configured to run on different ports, or if the application is to be hosted for access on multiple machines, the environment must be edited to reflect their URLs and ports.

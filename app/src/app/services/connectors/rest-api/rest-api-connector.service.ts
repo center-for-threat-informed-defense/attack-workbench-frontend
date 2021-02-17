@@ -54,15 +54,15 @@ export interface Paginated {
     providedIn: 'root'
 })
 export class RestApiConnectorService extends ApiConnector {
-    private get baseUrl(): string { return `${environment.integrations.rest_api.url}:${environment.integrations.rest_api.port}/api`; }
+    private get baseUrl(): string { return environment.integrations.rest_api.url; }
     private headers: HttpHeaders = new HttpHeaders({ 'Content-Type': 'application/json' });
     constructor(private http: HttpClient, private snackbar: MatSnackBar) { super(snackbar); }
 
-    //   ___ _____ _____  __       _   ___ ___ ___ 
+    //   ___ _____ _____  __       _   ___ ___ ___
     //  / __|_   _|_ _\ \/ /      /_\ | _ \_ _/ __|
     //  \__ \ | |  | | >  <      / _ \|  _/| |\__ \
     //  |___/ |_| |___/_/\_\    /_/ \_\_| |___|___/
-    //                                            
+    //
 
     /**
      * Factory to create a new STIX get-all function
@@ -89,7 +89,7 @@ export class RestApiConnectorService extends ApiConnector {
             let url = `${this.baseUrl}/${plural}`;
             return this.http.get(url, {headers: this.headers, params: query}).pipe(
                 tap(results => console.log(`retrieved ${plural}`, results)), // on success, trigger the success notification
-                map(results => { 
+                map(results => {
                     let response = results as any;
                     if (limit || offset) { // returned a paginated
                         let data = response.data as Array<any>;
@@ -101,7 +101,7 @@ export class RestApiConnectorService extends ApiConnector {
                         return response;
                     } else { //returned a stixObject[]
                         return {
-                            pagination: { 
+                            pagination: {
                                 total: response.length,
                                 limit: -1,
                                 offset: -1
@@ -208,11 +208,11 @@ export class RestApiConnectorService extends ApiConnector {
             if (attackType == "collection") query = query.set("retrieveContents", "true");
             return this.http.get(url, {headers: this.headers, params: query}).pipe(
                 tap(result => console.log(`retrieved ${attackType}`, result)), // on success, trigger the success notification
-                map(result => { 
+                map(result => {
                     let x = result as any;
-                    if (Array.isArray(result) && result.length == 0) { 
+                    if (Array.isArray(result) && result.length == 0) {
                         console.warn("empty result")
-                        return []; 
+                        return [];
                     }
                     return x.map(y => {
                         if (y.stix.type == "malware" || y.stix.type == "tool") return new Software(y.stix.type, y);
@@ -473,28 +473,28 @@ export class RestApiConnectorService extends ApiConnector {
     public get deleteCollection() { return this.deleteStixObjectFactory("collection"); }
 
 
-    //   ___ ___ _      _ _____ ___ ___  _  _ ___ _  _ ___ ___  ___ 
+    //   ___ ___ _      _ _____ ___ ___  _  _ ___ _  _ ___ ___  ___
     //  | _ \ __| |    /_\_   _|_ _/ _ \| \| / __| || |_ _| _ \/ __|
     //  |   / _|| |__ / _ \| |  | | (_) | .` \__ \ __ || ||  _/\__ \
     //  |_|_\___|____/_/ \_\_| |___\___/|_|\_|___/_||_|___|_|  |___/
-    //                                                              
+    //
 
     /**
-     * Get relationships 
+     * Get relationships
      *
      * @param {string} [sourceRef] STIX id of referenced object. Only retrieve relationships that reference this object in the source_ref property.
      * @param {string} [targetRef] STIX id of referenced object. Only retrieve relationships that reference this object in the target_ref property.
      * @param {string} [relationshipType] Only retrieve relationships that have a matching relationship_type.
      * @param {string} [sourceType] retrieve objects where the source object is this ATT&CK type
      * @param {string} [targetType] retrieve objects where the source object is this ATT&CK type
-     * @param {number} [limit] The number of relationships to retrieve. 
+     * @param {number} [limit] The number of relationships to retrieve.
      * @param {number} [offset] The number of relationships to skip.
      * @returns {Observable<Paginated>} paginated data of the relationships
      * @memberof RestApiConnectorService
      */
     public getRelatedTo(sourceRef?: string, targetRef?: string, sourceType?: AttackType, targetType?: AttackType, relationshipType?: string, limit?: number, offset?: number): Observable<Paginated> {
         let query = new HttpParams();
-        
+
         if (sourceRef) query = query.set("sourceRef", sourceRef);
         if (targetRef) query = query.set("targetRef", targetRef);
 
@@ -532,11 +532,11 @@ export class RestApiConnectorService extends ApiConnector {
         )
     }
 
-    //    ___ ___  _    _    ___ ___ _____ ___ ___  _  _     _   ___ ___ ___ 
+    //    ___ ___  _    _    ___ ___ _____ ___ ___  _  _     _   ___ ___ ___
     //   / __/ _ \| |  | |  | __/ __|_   _|_ _/ _ \| \| |   /_\ | _ \_ _/ __|
     //  | (_| (_) | |__| |__| _| (__  | |  | | (_) | .` |  / _ \|  _/| |\__ \
     //   \___\___/|____|____|___\___| |_| |___\___/|_|\_| /_/ \_\_| |___|___/
-    //                                                                       
+    //
 
     /**
      * POST a collection bundle (including a collection SDO and the objects to which it refers) to the back-end
@@ -554,19 +554,19 @@ export class RestApiConnectorService extends ApiConnector {
                 if (preview) console.log("previewed collection import", result);
                 else this.handleSuccess("imported collection")(result);
             }),
-            map(result => { 
-                return new Collection(result); 
+            map(result => {
+                return new Collection(result);
             }),
             catchError(this.handleError_single<Collection>()),
             share()
         )
     }
 
-    //    ___ ___  _    _    ___ ___ _____ ___ ___  _  _      ___ _  _ ___  _____  __       _   ___ ___ ___ 
+    //    ___ ___  _    _    ___ ___ _____ ___ ___  _  _      ___ _  _ ___  _____  __       _   ___ ___ ___
     //   / __/ _ \| |  | |  | __/ __|_   _|_ _/ _ \| \| |    |_ _| \| |   \| __\ \/ /      /_\ | _ \_ _/ __|
     //  | (_| (_) | |__| |__| _| (__  | |  | | (_) | .` |     | || .` | |) | _| >  <      / _ \|  _/| |\__ \
     //   \___\___/|____|____|___\___| |_| |___\___/|_|\_|    |___|_|\_|___/|___/_/\_\    /_/ \_\_| |___|___/
-    //                                                                                                     
+    //
 
     /**
      * Post a new collection index to the back-end
