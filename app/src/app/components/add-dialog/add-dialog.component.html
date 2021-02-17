@@ -1,10 +1,29 @@
 <div class="add-dialog">
-    <mat-action-list>
-        <H2>Add Row:</H2>
-        <div *ngFor="let row of config.globalObjects">
-            <button  mat-list-item (click)="dialogRef.close(row)">
-                <h3 mat-line>Add {{row[config.field]}}</h3>
+    <mat-toolbar>
+        <button mat-button mat-dialog-close class="control" matTooltip="close"><mat-icon aria-label="close">close</mat-icon></button>
+        <div class="spacer"></div>
+    </mat-toolbar>
+    <mat-action-list *ngIf="config.globalObjects.length > 0 else nothing">
+        <app-stix-list [config]="{
+            'select': config.select? 'many' : 'disabled',
+            'selectionModel' : config.select,
+            'type': 'tactic',
+            'clickBehavior': 'dialog',
+            'stixObjects': config.globalObjects
+        }"></app-stix-list>
+        <div class="centered">
+            <button mat-mini-fab class="extended-fab-button" color="primary" (click)="dialogRef.close(true)">
+                <span class="text-label">ADD</span>
             </button>
         </div>
+
     </mat-action-list>
+    <ng-template #nothing>
+        <h3>No available objects to add.</h3>
+        <div class="centered">
+            <button mat-mini-fab class="extended-fab-button" color="primary" (click)="dialogRef.close()">
+                <span class="text-label">Close</span>
+            </button>
+        </div>
+    </ng-template>
 </div>

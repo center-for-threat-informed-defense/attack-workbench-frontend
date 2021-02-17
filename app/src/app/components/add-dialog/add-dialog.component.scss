@@ -13,14 +13,12 @@
     }
 
     overflow-y:scroll;
-	overflow-x:hidden;
-    // th, h3 {
-    //     // text-align: center;
-    // }
-    // .button-row {
-    //     .button {
-    //         display: inline-block;
-    //         margin-right: 10px;
-    //     }
-    // }
+	overflow-x:scroll;
+    max-width: 80vw;
+    max-height: 75vh;
+
+    .centered {
+        text-align: center;
+        padding: 1rem;
+    }
 }
