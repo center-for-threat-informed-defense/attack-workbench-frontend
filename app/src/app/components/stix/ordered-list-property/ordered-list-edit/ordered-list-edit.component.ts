@@ -5,6 +5,8 @@ import { ConfirmationDialogComponent } from 'src/app/components/confirmation-dia
 import { MatDialog } from '@angular/material/dialog';
 import { AddDialogComponent } from 'src/app/components/add-dialog/add-dialog.component';
 import { StixObject } from 'src/app/classes/stix/stix-object';
+import { SelectionModel } from '@angular/cdk/collections';
+import { NONE_TYPE } from '@angular/compiler';
 
 @Component({
   selector: 'app-ordered-list-edit',
@@ -15,6 +17,7 @@ export class OrderedListEditComponent implements OnInit {
   @Input() public config: OrderedListPropertyConfig;
 
   public orderedList : string[] = [];
+  public select: SelectionModel<string>;
   private ListMap : Map<string, any> = new Map();
 
   constructor(private dialog: MatDialog) { }
@@ -91,7 +94,7 @@ export class OrderedListEditComponent implements OnInit {
     let prompt = this.dialog.open(ConfirmationDialogComponent, {
           maxWidth: "35em",
           data: { 
-              message: '# Delete ' + this.orderedList[index] + '?',
+              message: '# Remove ' + this.orderedList[index] + '?',
           }
       });
 
@@ -130,6 +133,20 @@ export class OrderedListEditComponent implements OnInit {
     }
   }
 
+  /** 
+   * Get object from stixID
+   * @param {string} stixID of object
+  */
+  private getObjectFromStixID(stixID) {
+    // Check if field of global objects is already in ordered list
+    for (let object of this.config.globalObjects) {
+      console.log(object);
+      if (object["stixID"] == stixID) return object;
+    }
+
+    return null;
+  }
+
   /**
    *
    * Add row to the end of ordered list
@@ -146,24 +163,36 @@ export class OrderedListEditComponent implements OnInit {
     }
 
     if(uniqueRows){
+      // set up selection
+      this.select = new SelectionModel(true);
+
       let prompt = this.dialog.open(AddDialogComponent, {
         maxWidth: "70em",
         maxHeight: "70em",
         data: {
           globalObjects: uniqueRows,
-          field: this.config.field
+          field: this.config.field,
+          select: this.select
         }
       }) ;
 
       let subscription = prompt.afterClosed().subscribe({
           next: (result) => {
               if (result) {
-                  // Add result as row to map
-                  this.addToMap(result);
-                  // Add to ordered list
-                  this.orderedList.push(result[this.config.field]);
-                  // Update ordered list
-                  this.updateOrderedList();
+                  if (this.select.selected) {
+                    for (let stixID of this.select.selected) {
+                      // get object of stixID
+                      let object = this.getObjectFromStixID(stixID);
+                      if (object) {
+                        // Add result as row to map
+                        this.addToMap(object);
+                        // Add to ordered list
+                        this.orderedList.push(object[this.config.field]);
+                        // Update ordered list
+                        this.updateOrderedList();
+                      }
+                    }
+                  }
               }
           },
           complete: () => { subscription.unsubscribe(); } //prevent memory leaks
