@@ -104,6 +104,10 @@
                 .name {
                     @extend .width-limited-md;
                 }
+                .relationship-name {
+                    min-width: 8em;
+                    max-width: 18em;
+                }
         
                 tr.element-row:not(.expanded):hover {
                     .light & td { background: color-alternate(light); }
