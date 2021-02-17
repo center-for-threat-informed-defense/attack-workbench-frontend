@@ -55,6 +55,7 @@ import { EmptyListMarkerComponent } from "./components/empty-list-marker/empty-l
 import { MarkdownViewDialogComponent } from "./components/markdown-view-dialog/markdown-view-dialog.component";
 import { CollectionImportSummaryComponent } from "./components/collection-import-summary/collection-import-summary.component";
 import { SaveDialogComponent } from "./components/save-dialog/save-dialog.component";
+import { HistoryTimelineComponent } from "./components/resources-drawer/history-timeline/history-timeline.component";
 
 // STIX components
 import { StixListComponent } from './components/stix/stix-list/stix-list.component';
@@ -150,6 +151,7 @@ import { TypeEditComponent } from './components/stix/type-property/type-edit/typ
     MarkdownViewDialogComponent,
     CollectionImportSummaryComponent,
     SaveDialogComponent,
+    HistoryTimelineComponent,
     
     StixListComponent,
 
