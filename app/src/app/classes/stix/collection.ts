@@ -1,3 +1,5 @@
+import { Observable } from 'rxjs';
+import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/rest-api-connector.service';
 import { Group } from './group';
 import { Matrix } from './matrix';
 import { Mitigation } from './mitigation';
@@ -7,10 +9,6 @@ import { StixObject } from './stix-object';
 import { Tactic } from './tactic';
 import { Technique } from './technique';
 
-/**
- * 
- * 
- */
 
 /**
  *auto-generated changelog/report about an import
@@ -60,6 +58,18 @@ export class VersionReference {
     }
 
     /**
+     * Transform the current object into a raw object for sending to the back-end, stripping any unnecessary fields
+     * @abstract
+     * @returns {*} the raw object to send
+     */
+    public serialize(): any {
+        return {
+            "object_ref": this.object_ref,
+            "object_modified": this.object_modified.toISOString()
+        }
+    }
+
+    /**
      * Parse the object from the record returned from the back-end
      * @abstract
      * @param {*} raw the raw object to parse
@@ -96,7 +106,26 @@ export class Collection extends StixObject {
         }
     }
 
-    public serialize(): any {};
+    /**
+     * Transform the current object into a raw object for sending to the back-end, stripping any unnecessary fields
+     * @abstract
+     * @returns {*} the raw object to send
+     */
+    public serialize(): any {
+        let rep = super.base_serialize();
+        
+        rep.stix.name = this.name;
+        rep.stix.description = this.description;
+        rep.stix.x_mitre_contents = this.contents.map(vr => vr.serialize());
+
+        rep.workspace = {};
+        rep.workspace.imported = this.imported.toString();
+        rep.workspace.import_categories = this.import_categories;
+
+        rep.contents = this.stix_contents.map(stix_objects => stix_objects.serialize());
+
+        return rep;
+    }
 
     /**
      * Parse the object from the record returned from the back-end
@@ -166,5 +195,15 @@ export class Collection extends StixObject {
                 }
             }
         }
+    }
+    /**
+     * Save the current state of the STIX object in the database. Update the current object from the response
+     * @param new_version [boolean] if false, overwrite the current version of the object. If true, creates a new version.
+     * @param restAPIService [RestApiConnectorService] the service to perform the POST/PUT through
+     * @returns {Observable} of the post
+     */
+    public save(new_version: boolean = true, restAPIService: RestApiConnectorService): Observable<Collection> {
+        // TODO
+        return null;
     }
 }

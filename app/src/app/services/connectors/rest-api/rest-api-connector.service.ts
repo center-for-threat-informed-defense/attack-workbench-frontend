@@ -57,6 +57,21 @@ export class RestApiConnectorService extends ApiConnector {
     private get baseUrl(): string { return `${environment.integrations.rest_api.url}:${environment.integrations.rest_api.port}/api`; }
     private headers: HttpHeaders = new HttpHeaders({ 'Content-Type': 'application/json' });
     constructor(private http: HttpClient, private snackbar: MatSnackBar) { super(snackbar); }
+    /**
+     * Get the name of a given STIX object
+     */
+    private getObjectName(object: StixObject): string {
+        if (object.type == "relationship") {
+            return `${object["source_name"]} ${object["relationship_type"]} ${object["target_name"]}`
+        } else if ("name" in object) {
+            return object["name"]
+        } else if (object["attackID"]) {
+            return object["attackID"];
+        } else {
+            console.warn("could not determine object name", object)
+            return "unknown object";
+        }
+    }
 
     //   ___ _____ _____  __       _   ___ ___ ___ 
     //  / __|_   _|_ _\ \/ /      /_\ | _ \_ _/ __|
@@ -292,8 +307,8 @@ export class RestApiConnectorService extends ApiConnector {
         let plural = attackTypeToPlural[attackType];
         return function<P extends T>(object: P): Observable<P> {
             let url = `${this.baseUrl}/${plural}`;
-            return this.http.post(url, object, {headers: this.headers}).pipe(
-                tap(this.handleSuccess(`${attackType} created`)),
+            return this.http.post(url, object.serialize(), {headers: this.headers}).pipe(
+                tap(this.handleSuccess(`${this.getObjectName(object)} saved`)),
                 map(result => {
                     let x = result as any;
                     if (x.stix.type == "malware" || x.stix.type == "tool") return new Software(x.stix.type, x);
@@ -341,6 +356,12 @@ export class RestApiConnectorService extends ApiConnector {
      * @returns {Observable<Matrix>} the created object
      */
     public get postMatrix() { return this.postStixObjectFactory<Matrix>("matrix"); }
+    /**
+     * POST (create) a new relationship
+     * @param {Relationship} object the object to create
+     * @returns {Observable<Relationship>} the created object
+     */
+    public get postRelationship() { return this.postStixObjectFactory<Relationship>("relationship"); }
 
     /**
      * Factory to create a new STIX put (update) function
@@ -354,8 +375,8 @@ export class RestApiConnectorService extends ApiConnector {
         return function<P extends T>(object: T, modified?: Date): Observable<P> {
             if (!modified) modified = object.modified; //infer modified from STIX object modified date
             let url = `${this.baseUrl}/${plural}/${object.stixID}/modified/${modified}`;
-            return this.http.put(url, object, {headers: this.headers}).pipe(
-                tap(this.handleSuccess(`updated ${attackType}`)),
+            return this.http.put(url, object.serialize(), {headers: this.headers}).pipe(
+                tap(this.handleSuccess(`${this.getObjectName(object)} saved`)),
                 map(result => {
                     let x = result as any;
                     if (x.stix.type == "malware" || x.stix.type == "tool") return new Software(x.stix.type, x);
@@ -409,6 +430,13 @@ export class RestApiConnectorService extends ApiConnector {
      * @returns {Observable<Matrix>} the updated object
      */
     public get putMatrix() { return this.postStixObjectFactory<Matrix>("matrix"); }
+    /**
+     * PUT (update) a relationship
+     * @param {Relationship} object the object to update
+     * @param {Date} [modified] optional, the modified date to overwrite. If omitted, uses the modified field of the object
+     * @returns {Observable<Relationship>} the updated object
+     */
+    public get putRelationship() { return this.postStixObjectFactory<Relationship>("relationship"); }
 
     private deleteStixObjectFactory(attackType: AttackType) {
         let plural = attackTypeToPlural[attackType];

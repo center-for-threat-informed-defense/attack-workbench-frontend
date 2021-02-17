@@ -3,12 +3,37 @@ import { VersionNumber } from '../version-number';
 import { ExternalReferences } from '../external-references';
 import { v4 as uuid } from 'uuid';
 import { Serializable } from '../serializable';
+import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/rest-api-connector.service';
+import { Observable } from 'rxjs';
+
+export type workflowStates = "wip" | "awaiting review" | "reviewed"
 
 export abstract class StixObject extends Serializable {
     public stixID: string; // STIX ID
     public type: string;   // STIX type
     public attackType: string; // ATT&CK type
-    
+    public attackID: string; // ATT&CK ID
+
+    private typeMap = {
+        "x-mitre-collection": "collection",
+        "attack-pattern": "technique",
+        "malware": "software",
+        "tool": "software",
+        "intrusion-set": "group",
+        "course-of-action": "mitigation",
+        "x-mitre-matrix": "matrix",
+        "x-mitre-tactic": "tactic",
+        "relationship": "relationship"
+    }
+
+    private typeUrlMap = {
+        "technique": "techniques",
+        "software": "software",
+        "group": "groups",
+        "mitigation": "mitigations",
+        "matrix": "matrices",
+        "tactic": "tactics",
+    }
 
     public get routes(): any[] { // route to view the object
         // let baseRoute = "/" + [this.attackType, this.stixID].join("/")
@@ -28,6 +53,9 @@ export abstract class StixObject extends Serializable {
     public modified: Date; // object modified date
     public version: VersionNumber;  // version number of the object
     public external_references: ExternalReferences;
+    public workflow: {
+        state: workflowStates
+    };
 
     public deprecated: boolean = false; //is object deprecated?
     public revoked: boolean = false;    //is object revoked?
@@ -47,19 +75,13 @@ export abstract class StixObject extends Serializable {
             this.created = new Date();
             this.modified = new Date();
             this.version = new VersionNumber("0.1");
-            this.external_references = new ExternalReferences()
+            this.attackID = "";
+            this.external_references = new ExternalReferences();
+            this.workflow = {
+                state: "wip"
+            };
         }
-        this.attackType = {
-            "x-mitre-collection": "collection",
-            "attack-pattern": "technique",
-            "malware": "software",
-            "tool": "software",
-            "intrusion-set": "group",
-            "course-of-action": "mitigation",
-            "x-mitre-matrix": "matrix",
-            "x-mitre-tactic": "tactic",
-            "relationship": "relationship"
-        }[this.type]
+        this.attackType = this.typeMap[this.type]
     }
 
     /**
@@ -68,15 +90,49 @@ export abstract class StixObject extends Serializable {
      * @returns {*} the raw object to send
      */
     public base_serialize(): any {
+
+        let serialized_external_references = this.external_references.serialize();
+
+        // Add attackID for 
+        if (this.attackID && this.typeUrlMap[this.attackType]) {
+            let new_ext_ref = {
+                "source_name": "mitre-attack",
+                "external_id": this.attackID
+            }
+
+            // Add url
+            // TODO: replace url with configuration
+            new_ext_ref["url"] = "https://attack.mitre.org/" + this.typeUrlMap[this.attackType] + "/"
+            
+            let ID = this.attackID;
+
+            // Split attackID if it contains a '.'
+            if (this.attackID.split(".").length == 2) {
+                let divider = this.attackID.split(".");
+                ID = divider[0] + "/" + divider[1];
+            }
+
+            // Add attackID to url
+            new_ext_ref["url"] = new_ext_ref["url"] + ID;
+
+            serialized_external_references.unshift(new_ext_ref);
+        }
+
         return {
-            "type": this.type,
-            "id": this.stixID,
-            "created": this.created,
-            "modified": this.modified,
-            "version": this.version.toString(),
-            "external_references": this.external_references.serialize(),
-            "x_mitre_deprecated": this.deprecated,
-            "revoked": this.revoked
+            workspace:  {
+                workflow: this.workflow
+            },
+            stix: {
+                "type": this.type,
+                "id": this.stixID,
+                "created": this.created.toISOString(),
+                "modified": this.modified.toISOString(),
+                "x_mitre_version": this.version.toString(),
+                "external_references": serialized_external_references,
+                "x_mitre_deprecated": this.deprecated,
+                "revoked": this.revoked,
+                "spec_version": "2.1"
+            }
         }
     }
 
@@ -116,9 +172,20 @@ export abstract class StixObject extends Serializable {
             } else this.version = new VersionNumber("0.1");
     
             if ("external_references" in sdo) {
-                if (typeof(sdo.external_references) === "object")  this.external_references = new ExternalReferences(sdo.external_references);
+                if (typeof(sdo.external_references) === "object") {
+                    this.external_references = new ExternalReferences(sdo.external_references);
+                    if (sdo.external_references.length > 0 && this.type != "relationship") {
+                        if (typeof(sdo.external_references[0].external_id) === "string") this.attackID = sdo.external_references[0].external_id;
+                        else console.error("TypeError: attackID field is not a string:", sdo.external_references[0].external_id, "(",typeof(sdo.external_references[0].external_id),")")
+                    }
+                    else this.attackID = "";
+                }
                 else console.error("TypeError: external_references field is not an object:", sdo.external_references, "(",typeof(sdo.external_references),")")
-            } else this.external_references = new ExternalReferences();
+            } 
+            else {
+                this.external_references = new ExternalReferences();
+                this.attackID = "";
+            }
         
             if ("x_mitre_deprecated" in sdo) {
                 if (typeof(sdo.x_mitre_deprecated) === "boolean") this.deprecated = sdo.x_mitre_deprecated;
@@ -131,6 +198,15 @@ export abstract class StixObject extends Serializable {
         }
         else console.error("ObjectError: 'stix' field does not exist in object");
 
+        if ("workspace" in raw) {
+            // parse workspace fields
+            let workspaceData = raw.workspace;
+            if ("workflow" in workspaceData) {
+                if (typeof(workspaceData.workflow) == "object") {
+                    this.workflow = workspaceData.workflow;
+                } else console.error("TypeError: workflow field is not an object")
+            }
+        }
     }
 
     public isStringArray = function(arr): boolean {
@@ -144,39 +220,10 @@ export abstract class StixObject extends Serializable {
     }
 
     /**
-     * Save the current state of the STIX object in the database
+     * Save the current state of the STIX object in the database. Update the current object from the response
+     * @param new_version [boolean] if false, overwrite the current version of the object. If true, creates a new version.
+     * @param restAPIService [RestApiConnectorService] the service to perform the POST/PUT through
+     * @returns {Observable} of the post
      */
-    public save(): void {
-        //TODO
-    }
-
-
-    /**
-     * Get all relationships with this object
-     * @param relationship_type optional, the relationship type to get. E.g "uses" or "mitigates"
-     * @returns list of relationships
-     */
-    public getRelationships(relationship_type?: string): Relationship[] {
-        return null; //TODO
-    }
-
-    /**
-     * Get relationships from this object to another object
-     * @param target_type the STIX type of the target
-     * @param relationship_type optional, the type of the relationship, e.g "uses" or "mitigates"
-     * @returns list of relationships
-     */
-    public getRelationshipsTo(target_type: string, relationship_type?: string): Relationship[] {
-        return null; //TODO
-    }
-
-    /**
-     * Get relationships from this object to another object
-     * @param source_type the STIX type of the target
-     * @param relationship_type optional, the type of the relationship, e.g "uses" or "mitigates"
-     * @returns list of relationships
-     */
-    public getRelationshipsFrom(source_type: string, relationship_type?: string): Relationship[] {
-        return null; //TODO
-    }
+    abstract save(new_version: boolean, restAPIService: RestApiConnectorService): Observable<StixObject>;
 }
