@@ -1,13 +1,13 @@
 <div class="add-dialog">
-    <mat-toolbar>
-        <button mat-button mat-dialog-close class="control" matTooltip="close"><mat-icon aria-label="close">close</mat-icon></button>
-        <div class="spacer"></div>
-    </mat-toolbar>
     <mat-action-list *ngIf="config.globalObjects.length > 0 else nothing">
+        <mat-toolbar>
+            <button mat-button mat-dialog-close class="control" matTooltip="close"><mat-icon aria-label="close">close</mat-icon></button>
+            <div class="spacer"></div>
+        </mat-toolbar>
         <app-stix-list [config]="{
             'select': config.select? 'many' : 'disabled',
             'selectionModel' : config.select,
-            'type': 'tactic',
+            'type': config.type,
             'clickBehavior': 'dialog',
             'stixObjects': config.globalObjects
         }"></app-stix-list>

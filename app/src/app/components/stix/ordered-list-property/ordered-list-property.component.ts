@@ -38,4 +38,7 @@ export interface OrderedListPropertyConfig {
   /* global objects fields to add to object list 
   */
   globalObjects? : StixObject[];
+  /* type of object list
+  */
+  type? : string;
 }

@@ -172,7 +172,8 @@ export class OrderedListEditComponent implements OnInit {
         data: {
           globalObjects: uniqueRows,
           field: this.config.field,
-          select: this.select
+          select: this.select,
+          type: this.config.type
         }
       }) ;
 
