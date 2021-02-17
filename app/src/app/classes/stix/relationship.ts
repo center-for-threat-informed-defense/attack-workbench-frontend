@@ -1,3 +1,5 @@
+import { Observable } from "rxjs";
+import { RestApiConnectorService } from "src/app/services/connectors/rest-api/rest-api-connector.service";
 import {StixObject} from "./stix-object";
 
 export class Relationship extends StixObject {
@@ -37,7 +39,21 @@ export class Relationship extends StixObject {
         }
     }
 
-    public serialize(): any {};
+    /**
+     * Transform the current object into a raw object for sending to the back-end, stripping any unnecessary fields
+     * @abstract
+     * @returns {*} the raw object to send
+     */
+    public serialize(): any {
+        let rep = super.base_serialize();
+        
+        rep.stix.description = this.description;
+        rep.stix.relationship_type = this.relationship_type;
+        rep.stix.source_ref = this.source_ref;
+        rep.stix.target_ref = this.target_ref;
+
+        return rep;
+    }
 
     /**
      * Parse the object from the record returned from the back-end
@@ -80,17 +96,24 @@ export class Relationship extends StixObject {
             } else this.target_ID = "";
         }
     }
-    
+
+
     /**
-     * Get the source object
+     * Save the current state of the STIX object in the database. Update the current object from the response
+     * @param new_version [boolean] if false, overwrite the current version of the object. If true, creates a new version.
+     * @param restAPIService [RestApiConnectorService] the service to perform the POST/PUT through
+     * @returns {Observable} of the post
      */
-    public getSourceObject(): StixObject {
-        return null;
-    }
-    /**
-     * Get the target object
-     */
-    public getTargetObject(): StixObject {
-        return null;
+    public save(new_version: boolean = true, restAPIService: RestApiConnectorService): Observable<Relationship> {
+        // TODO POST if the object was just created (doesn't exist in db yet)
+        if (new_version) this.modified = new Date();
+        
+        let postObservable = restAPIService.postRelationship(this);
+        let subscription = postObservable.subscribe({
+            next: (result) => { this.deserialize(result); },
+            complete: () => { subscription.unsubscribe(); }
+        });
+        return postObservable;
+        
     }
 }
