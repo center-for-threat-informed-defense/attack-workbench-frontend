@@ -55,6 +55,7 @@ import { MarkdownViewDialogComponent } from "./components/markdown-view-dialog/m
 import { CollectionImportSummaryComponent } from "./components/collection-import-summary/collection-import-summary.component";
 import { SaveDialogComponent } from "./components/save-dialog/save-dialog.component";
 import { HistoryTimelineComponent } from "./components/resources-drawer/history-timeline/history-timeline.component";
+import { MultipleChoiceDialogComponent } from "./components/multiple-choice-dialog/multiple-choice-dialog.component";
 
 // STIX components
 import { StixListComponent } from './components/stix/stix-list/stix-list.component';
@@ -151,6 +152,7 @@ import { TypeEditComponent } from './components/stix/type-property/type-edit/typ
     CollectionImportSummaryComponent,
     SaveDialogComponent,
     HistoryTimelineComponent,
+    MultipleChoiceDialogComponent,
     
     StixListComponent,
 
