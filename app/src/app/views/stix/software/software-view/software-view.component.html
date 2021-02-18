@@ -24,10 +24,12 @@
     <div class="row">
         <div class="col">
             <!-- TYPE -->
-            <app-type-property class="grow-to-row" [config]="{
-                mode: editing? 'edit' : 'view',
-                object: software
-            }"></app-type-property>
+            <div class="labelled-box grow-to-row" matTooltip="this field cannot be edited" [matTooltipDisabled]="!editing">
+                <div class="content capitalize">
+                    {{software.type}}
+                </div>
+                <label>type</label>
+            </div>
         </div>
         <div class="col">
             <!-- PLATFORMS -->

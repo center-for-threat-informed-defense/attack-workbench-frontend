@@ -131,11 +131,6 @@ import { OrderedListPropertyComponent } from './components/stix/ordered-list-pro
 import { OrderedListViewComponent } from './components/stix/ordered-list-property/ordered-list-view/ordered-list-view.component';
 import { OrderedListEditComponent } from './components/stix/ordered-list-property/ordered-list-edit/ordered-list-edit.component';
 
-import { TypePropertyComponent } from './components/stix/type-property/type-property.component';
-import { TypeViewComponent } from './components/stix/type-property/type-view/type-view.component';
-import { TypeEditComponent } from './components/stix/type-property/type-edit/type-edit.component';
-
-
 @NgModule({
   declarations: [
     AppComponent,
@@ -215,11 +210,7 @@ import { TypeEditComponent } from './components/stix/type-property/type-edit/typ
     AliasEditComponent,
     OrderedListPropertyComponent,
     OrderedListViewComponent,
-    OrderedListEditComponent,
-
-    TypePropertyComponent,
-    TypeViewComponent,
-    TypeEditComponent
+    OrderedListEditComponent
   ],
   imports: [
     BreadcrumbModule,
