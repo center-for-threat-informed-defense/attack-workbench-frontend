@@ -7,10 +7,12 @@ export class Relationship extends StixObject {
     public readonly source_ref: string;
     public source_name: string = "[unknown object]";
     public source_ID: string;
+    public source_object: StixObject;
 
     public readonly target_ref: string;
     public target_name: string = "[unknown object]";
     public target_ID: string;
+    public target_object: StixObject;
     
     public readonly relationship_type: string;
     public description: string;
@@ -72,6 +74,7 @@ export class Relationship extends StixObject {
         }
 
         if ("source_object" in raw) {
+            this.source_object = raw.source_object;
             this.source_name = raw.source_object.stix.name;
             
             let src_sdo = raw.source_object.stix;
@@ -84,6 +87,7 @@ export class Relationship extends StixObject {
             } else this.source_ID = "";
         }
         if ("target_object" in raw) {
+            this.target_object = raw.target_object;
             this.target_name = raw.target_object.stix.name;
 
             let tgt_sdo = raw.target_object.stix;

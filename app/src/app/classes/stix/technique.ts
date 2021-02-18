@@ -16,8 +16,11 @@ export class Technique extends StixObject {
     public permissions_required: string[] = [];
     public defense_bypassed: string[] = [];
 
-    public is_subtechnique: boolean = false;
     public remote_support: boolean = false;
+
+    public is_subtechnique: boolean = false;
+    public subTechniques: Technique[] = [];
+    public parentTechnique: Technique= null;
 
     public get tactics(): string[] { return this.kill_chain_phases.map(tactic => tactic.phase_name); }
 
