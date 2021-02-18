@@ -6,7 +6,7 @@ export class Technique extends StixObject {
     public name: string = "";
     public description: string = "";
 
-    public kill_chain_phases: any;
+    public kill_chain_phases: any = [];
     public domains: string[] = [];
     public platforms: string[] = [];
     public detection: string = "";
