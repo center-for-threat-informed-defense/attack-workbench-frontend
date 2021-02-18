@@ -20,7 +20,7 @@ export class Technique extends StixObject {
 
     public is_subtechnique: boolean = false;
     public subTechniques: Technique[] = [];
-    public parentTechnique: Technique= null;
+    public parentTechnique: Technique = null;
 
     public get tactics(): string[] { return this.kill_chain_phases.map(tactic => tactic.phase_name); }
 
