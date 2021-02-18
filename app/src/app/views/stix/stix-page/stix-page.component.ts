@@ -12,6 +12,7 @@ import { Tactic } from 'src/app/classes/stix/tactic';
 import { Technique } from 'src/app/classes/stix/technique';
 import { VersionNumber } from 'src/app/classes/version-number';
 import { ConfirmationDialogComponent } from 'src/app/components/confirmation-dialog/confirmation-dialog.component';
+import { MultipleChoiceDialogComponent } from 'src/app/components/multiple-choice-dialog/multiple-choice-dialog.component';
 import { SaveDialogComponent } from 'src/app/components/save-dialog/save-dialog.component';
 import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/rest-api-connector.service';
 import { EditorService } from 'src/app/services/editor/editor.service';
@@ -119,6 +120,29 @@ export class StixPageComponent implements OnInit, OnDestroy {
                 },
                 complete: () => { subscription.unsubscribe() }
             });
+        } else if (objectType == "software") {
+            // ask the user what sub-type of software they want to create
+            let prompt = this.dialog.open(MultipleChoiceDialogComponent, {
+                maxWidth: "35em",
+                disableClose: true,
+                data: {
+                    title: "Create a malware or a tool?",
+                    choices: [{
+                        label: "malware",
+                        description: "Commercial, custom closed source, or open source software intended to be used for malicious purposes by adversaries."
+                    }, {
+                        label: "tool",
+                        description: "Commercial, open-source, built-in, or publicly available software that could be used by a defender, pen tester, red teamer, or an adversary."
+                    }]
+                }
+            })
+            let subscription = prompt.afterClosed().subscribe({
+                next: (result) => {
+                    this.objects = [new Software(result)]; 
+                    this.initialVersion = new VersionNumber(this.objects[0].version.toString());
+                },
+                complete: () => { subscription.unsubscribe(); }
+            })
         } else {
             // create a new object to edit
             this.objects = [];
@@ -127,8 +151,7 @@ export class StixPageComponent implements OnInit, OnDestroy {
                 objectType == "technique" ? new Technique() :
                 objectType == "tactic" ? new Tactic() :
                 objectType == "mitigation" ? new Mitigation() :
-                objectType == "group" ? new Group():
-                objectType == "software" ? new Software("tool") : null
+                objectType == "group" ? new Group(): null
             );
             this.initialVersion = new VersionNumber(this.objects[0].version.toString());
         };
