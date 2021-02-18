@@ -92,9 +92,9 @@ export class CollectionImportComponent implements OnInit {
             for (let stixId of preview.import_categories[category]) idToCategory[stixId] = category;
         }
         //build ID to name lookup
-        let idToName = {};
+        let idToSdo = {};
         for (let object of collectionBundle.objects) {
-            if ("name" in object) idToName[object.id] = object.name
+            if ("id" in object) idToSdo[object.id] = {stix: object}
         }
 
         // console.log(idToCategory);
@@ -110,7 +110,7 @@ export class CollectionImportComponent implements OnInit {
             // determine the change category
             let category = idToCategory[object.id];
             // wrap the object as if it came from the back-end
-            let raw = {stix: object, workspace: {}};
+            let raw: {[key: string]: any} = {stix: object, workspace: {}};
             // parse the object & add it to the appropriate category for rendering
             switch (object.type) {
                 case "attack-pattern": //technique
@@ -124,9 +124,9 @@ export class CollectionImportComponent implements OnInit {
                     this.object_import_categories.software[category].push(new Software(object.type, raw))
                 break;
                 case "relationship": //relationship
+                    if (object.source_ref in idToSdo) raw.source_object = idToSdo[object.source_ref]
+                    if (object.target_ref in idToSdo) raw.target_object = idToSdo[object.target_ref]
                     let rel = new Relationship(raw)
-                    rel.source_name = raw.stix.source_ref in idToName? idToName[raw.stix.source_ref] : "unknown object"
-                    rel.target_name = raw.stix.target_ref in idToName? idToName[raw.stix.target_ref] : "unknown object"
                     this.object_import_categories.relationship[category].push(rel)
                 break;
                 case "course-of-action": //mitigation
