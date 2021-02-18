@@ -19,7 +19,9 @@ export class Technique extends StixObject {
     public remote_support: boolean = false;
 
     public is_subtechnique: boolean = false;
-    public subTechniques: Technique[] = [];
+    // NOTE: the following two fields will only be populated when this object is fetched using getTechnique().
+    //       they will NOT be populated when fetched using getAllTechniques().
+    public subTechniques: Technique[] = []; 
     public parentTechnique: Technique = null;
 
     public get tactics(): string[] { return this.kill_chain_phases.map(tactic => tactic.phase_name); }
