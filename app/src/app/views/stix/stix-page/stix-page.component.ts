@@ -3,8 +3,13 @@ import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BreadcrumbService } from 'angular-crumbs';
 import { Observable } from 'rxjs';
+import { Group } from 'src/app/classes/stix/group';
+import { Matrix } from 'src/app/classes/stix/matrix';
+import { Mitigation } from 'src/app/classes/stix/mitigation';
 import { Software } from 'src/app/classes/stix/software';
 import { StixObject } from 'src/app/classes/stix/stix-object';
+import { Tactic } from 'src/app/classes/stix/tactic';
+import { Technique } from 'src/app/classes/stix/technique';
 import { VersionNumber } from 'src/app/classes/version-number';
 import { ConfirmationDialogComponent } from 'src/app/components/confirmation-dialog/confirmation-dialog.component';
 import { SaveDialogComponent } from 'src/app/components/save-dialog/save-dialog.component';
@@ -18,7 +23,6 @@ import { StixViewConfig } from '../stix-view-page';
   styleUrls: ['./stix-page.component.scss']
 })
 export class StixPageComponent implements OnInit, OnDestroy {
-    public objects$: Observable<StixObject[]>;
     public objects: StixObject[];
     public initialVersion: VersionNumber;
 
@@ -37,10 +41,10 @@ export class StixPageComponent implements OnInit, OnDestroy {
      * @oaram {allVersions} return all versions instead of just a single version
      * @returns {StixViewConfig} the built config
      */
-    public buildConfig(objects: StixObject[], allVersions: boolean = false): StixViewConfig {
+    public buildConfig(allVersions: boolean = false): StixViewConfig {
         return {
             "mode": "view",
-            "object": allVersions? objects : objects[0] 
+            "object": allVersions? this.objects : this.objects[0] 
         }
     }
 
@@ -97,21 +101,37 @@ export class StixPageComponent implements OnInit, OnDestroy {
     private loadObjects(): void {
         let objectType = this.router.url.split("/")[1];
         let objectStixID = this.route.snapshot.params["id"];
-        if (objectType == "software") this.objects$ = this.restAPIConnectorService.getSoftware(objectStixID);
-        else if (objectType == "group") this.objects$ = this.restAPIConnectorService.getGroup(objectStixID);
-        else if (objectType == "matrix") this.objects$ = this.restAPIConnectorService.getMatrix(objectStixID);
-        else if (objectType == "mitigation") this.objects$ = this.restAPIConnectorService.getMitigation(objectStixID);
-        else if (objectType == "tactic") this.objects$ = this.restAPIConnectorService.getTactic(objectStixID);
-        else if (objectType == "technique") this.objects$ = this.restAPIConnectorService.getTechnique(objectStixID);
-        else if (objectType == "collection") this.objects$ = this.restAPIConnectorService.getCollection(objectStixID, null, "all");
-        let  subscription = this.objects$.subscribe({
-            next: result => {
-                this.updateBreadcrumbs(result, objectType);
-                this.objects = result;
-                this.initialVersion = new VersionNumber(this.objects[0].version.toString());
-            },
-            complete: () => { subscription.unsubscribe() }
-        });
+        if (objectStixID != "new") {
+            // get objects at REST API
+            let objects$: Observable<StixObject[]>;
+            if (objectType == "software") objects$ = this.restAPIConnectorService.getSoftware(objectStixID);
+            else if (objectType == "group") objects$ = this.restAPIConnectorService.getGroup(objectStixID);
+            else if (objectType == "matrix") objects$ = this.restAPIConnectorService.getMatrix(objectStixID);
+            else if (objectType == "mitigation") objects$ = this.restAPIConnectorService.getMitigation(objectStixID);
+            else if (objectType == "tactic") objects$ = this.restAPIConnectorService.getTactic(objectStixID);
+            else if (objectType == "technique") objects$ = this.restAPIConnectorService.getTechnique(objectStixID);
+            else if (objectType == "collection") objects$ = this.restAPIConnectorService.getCollection(objectStixID, null, "all");
+            let  subscription = objects$.subscribe({
+                next: result => {
+                    this.updateBreadcrumbs(result, objectType);
+                    this.objects = result;
+                    this.initialVersion = new VersionNumber(this.objects[0].version.toString());
+                },
+                complete: () => { subscription.unsubscribe() }
+            });
+        } else {
+            // create a new object to edit
+            this.objects = [];
+            this.objects.push(
+                objectType == "matrix" ? new Matrix() :
+                objectType == "technique" ? new Technique() :
+                objectType == "tactic" ? new Tactic() :
+                objectType == "mitigation" ? new Mitigation() :
+                objectType == "group" ? new Group():
+                objectType == "software" ? new Software("tool") : null
+            );
+            this.initialVersion = new VersionNumber(this.objects[0].version.toString());
+        };
     }
 
     ngOnDestroy() {

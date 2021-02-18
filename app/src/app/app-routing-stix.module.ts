@@ -40,6 +40,21 @@ const stixRoutes: Routes = [{
             component: StixPageComponent
           }
         ]
+      },
+      {
+          path: ":new",
+          data: {
+              breadcrumb: "new matrix"
+          },
+          children: [{
+            path: '',
+            data: {
+              breadcrumb: 'view',
+              editable: true
+            },
+            component: StixPageComponent
+          }
+        ]
       }
     ]
   },
