@@ -4,12 +4,11 @@ import {StixObject} from "./stix-object";
 
 type type_software = "malware" | "tool"
 export class Software extends StixObject {
-    public name: string;
-    public description: string;
-    public aliases: string[];
-    public platforms: string[];
-    public type: string;
-    public contributors: string[];
+    public name: string ="";
+    public description: string = "";
+    public aliases: string[] = [];
+    public platforms: string[] = [];
+    public contributors: string[] = [];
 
     constructor(type: type_software, sdo?: any) {
         super(sdo, type);

@@ -3,9 +3,9 @@ import { RestApiConnectorService } from "src/app/services/connectors/rest-api/re
 import {StixObject} from "./stix-object";
 
 export class Mitigation extends StixObject {
-    public name: string;
-    public description: string;
-    public domains: string[];
+    public name: string = "";
+    public description: string = "";
+    public domains: string[] = [];
 
     constructor(sdo?: any) {
         super(sdo, "course-of-action");
