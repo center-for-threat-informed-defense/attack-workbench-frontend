@@ -648,4 +648,25 @@ export class RestApiConnectorService extends ApiConnector {
             catchError(this.handleError_single())
         )
     }
+
+    //   _____   _____ _____ ___ __  __    ___ ___  _  _ ___ ___ ___     _   ___ ___ ___ 
+    //  / __\ \ / / __|_   _| __|  \/  |  / __/ _ \| \| | __|_ _/ __|   /_\ | _ \_ _/ __|
+    //  \__ \\ V /\__ \ | | | _|| |\/| | | (_| (_) | .` | _| | | (_ |  / _ \|  _/| |\__ \
+    //  |___/ |_| |___/ |_| |___|_|  |_|  \___\___/|_|\_|_| |___\___| /_/ \_\_| |___|___/
+    //
+
+    /**
+     * Fetch allowed values for the given ATT&CK type
+     * @param {string} [type] retrieve allowed values where the object type is this ATT&CK type
+     * @returns {Observable<any>} allowed values
+     */
+    public getAllowedValues(type: AttackType): Observable<any> {
+        return this.http.get<any>(`${this.baseUrl}/config/allowed-values`, {headers: this.headers}).pipe(
+            tap(_ => console.log("retrieved allowed values")),
+            map(results => {
+                return results.filter(obj => { return obj.objectType == type });
+            }),
+            catchError(this.handleError_array<string[]>([]))
+        )
+    }                                                                     
 }
