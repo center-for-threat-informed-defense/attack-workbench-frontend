@@ -5,6 +5,8 @@ import { MatChipInputEvent } from '@angular/material/chips';
 import { FormControl } from '@angular/forms';
 import { MatOptionSelectionChange } from '@angular/material/core';
 import { MatDialog } from '@angular/material/dialog';
+import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/rest-api-connector.service';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-list-edit',
@@ -14,29 +16,60 @@ import { MatDialog } from '@angular/material/dialog';
 export class ListEditComponent implements OnInit {
     @Input() public config: ListPropertyConfig;
 
-    readonly separatorKeysCodes: number[] = [ENTER, COMMA];
-    public selectList: string[] = [
-        'Windows',
-        'Linux',
-        'macOS',
-        'AWS',
-        'GCP',
-        'Azure',
-        'SaaS',
-        'Office 365'
-    ]
+    public selectList: string[] = []
     public selectControl: FormControl;
+    public data$: Observable<any>;
 
-    constructor(public dialog: MatDialog) { }
+    readonly separatorKeysCodes: number[] = [ENTER, COMMA];
+    public fieldNameToField = {
+        "platforms": "x_mitre_platform",
+        "tactic_type": "x_mitre_tactic_types"
+    }
+    public validDomains = [
+        "enterprise-attack",
+        "mobile-attack",
+        "ics-attack"
+    ]
+
+    constructor(public dialog: MatDialog, private restAPIConnectorService: RestApiConnectorService) { }
 
     ngOnInit(): void {
-        console.log(this.config.object[this.config.field])
-        if (this.config.control && this.config.control == 'select') {
-            // TODO: this.selectList = ?
-            this.selectControl = new FormControl(this.config.object[this.config.field]);
-        } else if (this.config.control && this.config.control == 'stix') {
-            // TODO: let stixList = ?
+        if (this.config.field == 'platforms' || this.config.field == 'tactic_type') {
+            // fetch allowed values from backend
+            this.data$ = this.restAPIConnectorService.getAllowedValues(this.config.objectType);
+            let subscription = this.data$.subscribe({
+                next: (data) => { this.selectList = this.getAllowedValues(data); },
+                complete: () => { subscription.unsubscribe() }
+            });
+            // initialize form control selection
+            this.selectControl = new FormControl(this.config.object[this.config.field]); 
         }
+        else if (this.config.field == 'domains') {
+            this.selectList = this.validDomains;
+            // initialize form control selection
+            this.selectControl = new FormControl(this.config.object[this.config.field]);
+        }
+    }
+
+    /** Get allowed values for this field */
+    private getAllowedValues(data: any): string[] {
+        let property = data.properties.find(p => {return p.propertyName == this.fieldNameToField[this.config.field]});
+
+        let allowedValues: string[] = [];
+        if ("domains" in this.config.object) {
+            let object = this.config.object as any;
+            property.domains.forEach(domain => {
+                if (object.domains.includes(domain.domainName)) {
+                    allowedValues = allowedValues.concat(domain.allowedValues);
+                }
+            })
+        } 
+        else { // domains not specified on object
+            property.domains.forEach(domain => {
+                allowedValues = allowedValues.concat(domain.allowedValues);
+            });
+        }
+        return allowedValues;
     }
 
     /** Add value to object property list */
@@ -75,5 +108,11 @@ export class ListEditComponent implements OnInit {
             if (event.source.selected) this.config.object[this.config.field].push(event.source.value);
             else this.remove(event.source.value);
         }
+    }
+
+    public openModal(template) {
+        this.dialog.open(template, {
+            width: '250px',
+       });
     }
 }

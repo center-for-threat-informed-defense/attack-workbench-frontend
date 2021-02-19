@@ -664,7 +664,7 @@ export class RestApiConnectorService extends ApiConnector {
         return this.http.get<any>(`${this.baseUrl}/config/allowed-values`, {headers: this.headers}).pipe(
             tap(_ => console.log("retrieved allowed values")),
             map(results => {
-                return results.filter(obj => { return obj.objectType == type });
+                return results.find(obj => { return obj.objectType == type });
             }),
             catchError(this.handleError_array<string[]>([]))
         )

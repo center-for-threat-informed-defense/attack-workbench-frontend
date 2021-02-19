@@ -27,6 +27,7 @@ export interface ListPropertyConfig {
      * Note: if mode is diff, pass an array of two objects to diff
      */
     object: StixObject | [StixObject, StixObject];
+    objectType: "collection" | "group" | "matrix" | "mitigation" | "software" | "tactic" | "technique" | "relationship";
     /* the field of the object(s) to visualize as a list */
     field: string;
     /* if specified, label with this string instead of field */
@@ -36,6 +37,4 @@ export interface ListPropertyConfig {
      * A tooltip will provide the full value.
      */
     wrap?: boolean
-    
-    control?: "any" | "stix" | "select";
 }
