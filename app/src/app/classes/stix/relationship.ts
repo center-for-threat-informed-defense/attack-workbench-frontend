@@ -13,7 +13,6 @@ export class Relationship extends StixObject {
     public target_ID: string;
     
     public readonly relationship_type: string;
-    public description: string;
 
     constructor(sdo?: any) {
         super(sdo, "relationship");
@@ -47,7 +46,6 @@ export class Relationship extends StixObject {
     public serialize(): any {
         let rep = super.base_serialize();
         
-        rep.stix.description = this.description;
         rep.stix.relationship_type = this.relationship_type;
         rep.stix.source_ref = this.source_ref;
         rep.stix.target_ref = this.target_ref;
@@ -61,16 +59,6 @@ export class Relationship extends StixObject {
      * @param {*} raw the raw object to parse
      */
     public deserialize(raw: any) {
-        if ("stix" in raw) {
-            let sdo = raw.stix;
-
-            if ("description" in sdo) {
-                if (typeof(sdo.description) === "string") this.description = sdo.description;
-                else console.error("TypeError: description field is not a string:", sdo.description, "(",typeof(sdo.description),")")
-            } else this.description = "";
-
-        }
-
         if ("source_object" in raw) {
             this.source_name = raw.source_object.stix.name;
             

@@ -13,6 +13,7 @@ export abstract class StixObject extends Serializable {
     public type: string;   // STIX type
     public attackType: string; // ATT&CK type
     public attackID: string; // ATT&CK ID
+    public description: string;
 
     private typeMap = {
         "x-mitre-collection": "collection",
@@ -80,6 +81,7 @@ export abstract class StixObject extends Serializable {
             this.workflow = {
                 state: "wip"
             };
+            this.description = "";
         }
         this.attackType = this.typeMap[this.type]
     }
@@ -131,6 +133,7 @@ export abstract class StixObject extends Serializable {
                 "external_references": serialized_external_references,
                 "x_mitre_deprecated": this.deprecated,
                 "revoked": this.revoked,
+                "description": this.description,
                 "spec_version": "2.1"
             }
         }
@@ -155,6 +158,11 @@ export abstract class StixObject extends Serializable {
                 if (typeof(sdo.type) === "string") this.type = sdo.type;
                 else console.error("TypeError: type field is not a string:", sdo.type, "(",typeof(sdo.type),")")
             }
+
+            if ("description" in sdo) {
+                if (typeof(sdo.description) === "string") this.description = sdo.description;
+                else console.error("TypeError: description field is not a string:", sdo.description, "(",typeof(sdo.description),")")
+            } else this.description = "";
 
             if ("created" in sdo) {
                 if (typeof(sdo.created) === "string") this.created = new Date(sdo.created);

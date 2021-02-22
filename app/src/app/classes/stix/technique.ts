@@ -4,7 +4,6 @@ import { StixObject } from "./stix-object";
 
 export class Technique extends StixObject {
     public name: string = "";
-    public description: string = "";
 
     public kill_chain_phases: any = [];
     public domains: string[] = [];
@@ -41,7 +40,6 @@ export class Technique extends StixObject {
         let rep = super.base_serialize();
         
         rep.stix.name = this.name;
-        rep.stix.description = this.description;
         rep.stix.x_mitre_domains = this.domains;
         rep.stix.x_mitre_detection = this.detection;
         rep.stix.x_mitre_platforms = this.platforms;
@@ -81,11 +79,6 @@ export class Technique extends StixObject {
                 if (typeof(sdo.name) === "string") this.name = sdo.name;
                 else console.error("TypeError: name field is not a string:", sdo.name, "(", typeof(sdo.name),")");
             } else this.name = "";
-
-            if ("description" in sdo) {
-                if (typeof(sdo.description) === "string") this.description = sdo.description;
-                else console.error("TypeError: description field is not a string:", sdo.description, "(", typeof(sdo.description),")");
-            } else this.description = "";
 
             if ("kill_chain_phases" in sdo) {
                 if (typeof(sdo.kill_chain_phases) == "object") {

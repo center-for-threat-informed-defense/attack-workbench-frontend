@@ -5,7 +5,6 @@ import { Observable } from "rxjs";
 
 export class Group extends StixObject {
     public name: string = "";
-    public description: string = "";
     public aliases: string[] = [];
     public contributors: string[] = [];
 
@@ -25,7 +24,6 @@ export class Group extends StixObject {
         let rep = super.base_serialize();
         
         rep.stix.name = this.name;
-        rep.stix.description = this.description;
         rep.stix.aliases = this.aliases;
         rep.stix.x_mitre_contributors = this.contributors;
 
@@ -45,11 +43,6 @@ export class Group extends StixObject {
                 if (typeof(sdo.name) === "string") this.name = sdo.name;
                 else console.error("TypeError: name field is not a string:", sdo.name, "(",typeof(sdo.name),")")
             } else this.name = "";
-
-            if ("description" in sdo) {
-                if (typeof(sdo.description) === "string") this.description = sdo.description;
-                else console.error("TypeError: description field is not a string:", sdo.description, "(",typeof(sdo.description),")")
-            } else this.description = "";
             
             if ("aliases" in sdo) {
                 if (this.isStringArray(sdo.aliases)) this.aliases = sdo.aliases;

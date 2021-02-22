@@ -4,7 +4,6 @@ import {StixObject} from "./stix-object";
 
 export class Mitigation extends StixObject {
     public name: string = "";
-    public description: string = "";
     public domains: string[] = [];
 
     constructor(sdo?: any) {
@@ -23,7 +22,6 @@ export class Mitigation extends StixObject {
         let rep = super.base_serialize();
 
         rep.stix.name = this.name;
-        rep.stix.description = this.description;
         rep.stix.x_mitre_domains = this.domains;
 
         return rep;
@@ -42,11 +40,6 @@ export class Mitigation extends StixObject {
                 if (typeof(sdo.name) === "string") this.name = sdo.name;
                 else console.error("TypeError: name field is not a string:", sdo.name, "(",typeof(sdo.name),")")
             } else this.name = "";
-
-            if ("description" in sdo) {
-                if (typeof(sdo.description) === "string") this.description = sdo.description;
-                else console.error("TypeError: description field is not a string:", sdo.description, "(",typeof(sdo.description),")")
-            } else this.description = "";
             
             if ("x_mitre_domains" in sdo) {
                 if (this.isStringArray(sdo.x_mitre_domains)) this.domains = sdo.x_mitre_domains;

@@ -91,7 +91,6 @@ export class VersionReference {
 
 export class Collection extends StixObject {
     public name: string;
-    public description: string;
     public contents: VersionReference[] = []; //references to the stix objects in the collection
     public stix_contents: StixObject[] = []; //the actual objects in the collection
     public imported: Date;
@@ -115,7 +114,6 @@ export class Collection extends StixObject {
         let rep = super.base_serialize();
         
         rep.stix.name = this.name;
-        rep.stix.description = this.description;
         rep.stix.x_mitre_contents = this.contents.map(vr => vr.serialize());
 
         rep.workspace = {};
@@ -140,11 +138,6 @@ export class Collection extends StixObject {
                 if (typeof(sdo.name) === "string") this.name = sdo.name;
                 else console.error("TypeError: name field is not a string:", sdo.name, "(",typeof(sdo.name),")")
             } else this.name = "";
-
-            if ("description" in sdo) {
-                if (typeof(sdo.description) === "string") this.description = sdo.description;
-                else console.error("TypeError: description field is not a string:", sdo.description, "(",typeof(sdo.description),")")
-            } else this.description = "";
 
             if ("x_mitre_contents" in sdo) {            
                 if (typeof(sdo.x_mitre_contents) === "object") this.contents = sdo.x_mitre_contents.map(vr => new VersionReference(vr))

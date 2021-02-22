@@ -5,7 +5,6 @@ import {StixObject} from "./stix-object";
 type type_software = "malware" | "tool"
 export class Software extends StixObject {
     public name: string ="";
-    public description: string = "";
     public aliases: string[] = [];
     public platforms: string[] = [];
     public contributors: string[] = [];
@@ -26,7 +25,6 @@ export class Software extends StixObject {
         let rep = super.base_serialize();
         
         rep.stix.name = this.name;
-        rep.stix.description = this.description;
         rep.stix.type = this.type;
         rep.stix.x_mitre_aliases = this.aliases;
         rep.stix.x_mitre_platforms = this.platforms;
@@ -48,11 +46,6 @@ export class Software extends StixObject {
                 if (typeof(sdo.name) === "string") this.name = sdo.name;
                 else console.error("TypeError: name field is not a string:", sdo.name, "(",typeof(sdo.name),")")
             } else this.name = "";
-
-            if ("description" in sdo) {
-                if (typeof(sdo.description) === "string") this.description = sdo.description;
-                else console.error("TypeError: description field is not a string:", sdo.description, "(",typeof(sdo.description),")")
-            } else this.description = "";
 
             if ("type" in sdo) {
                 if (typeof(sdo.type) === "string") this.type = sdo.type;
