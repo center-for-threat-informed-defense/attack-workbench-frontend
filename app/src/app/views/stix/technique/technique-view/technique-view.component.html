@@ -1,7 +1,7 @@
 <div class="technique-view view-page grid spacing-12">
     <div class="row">
         <!-- NAME -->
-        <div class="col">
+        <div *ngIf="technique" class="col">
             <h1 *ngIf="technique.is_subtechnique"><a [routerLink]="['/technique', technique.parentTechnique.stixID]">{{technique.parentTechnique.name}}</a>: {{technique.name}}</h1>
             <h1 *ngIf="!technique.is_subtechnique">{{technique.name}}</h1>
             <app-subheading [config]="config" (onOpenHistory)="openHistory()" (onOpenNotes)="openNotes()"></app-subheading>
