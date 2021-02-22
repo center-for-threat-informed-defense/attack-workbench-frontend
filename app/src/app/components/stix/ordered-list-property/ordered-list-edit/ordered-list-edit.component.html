@@ -4,7 +4,7 @@
     </button>
 </div>
 <br>
-<div *ngIf="config.objects" cdkDropList class="list" (cdkDropListDropped)="drop($event)">
+<div *ngIf="config.objectsFromOrderedList" cdkDropList class="list" (cdkDropListDropped)="drop($event)">
     <div class="box box-move" *ngFor="let row of list; let i = index trackBy:trackByFunction" cdkDrag>
         {{row}}
         <div>

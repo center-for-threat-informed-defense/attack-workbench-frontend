@@ -18,7 +18,7 @@ export class AddDialogComponent implements OnInit {
 }
 
 export interface AddDialogConfig {
-  globalObjects: StixObject[]; //Stix Object array
-  field: string; // field for stix objects
-  select?: SelectionModel<string>;
+  selectableObjects: StixObject[]; // Stix Object array of selectable objects not in list
+  type: string; // type to display stix list
+  select: SelectionModel<string>; // selection model to retrieve list of selected object
 }

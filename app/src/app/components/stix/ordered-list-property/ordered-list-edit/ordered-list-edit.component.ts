@@ -18,7 +18,7 @@ export class OrderedListEditComponent implements OnInit {
 
   public orderedList : string[] = [];
   public select: SelectionModel<string>;
-  private ListMap : Map<string, any> = new Map();
+  private listMap : Map<string, StixObject> = new Map(); // Dictionary to quickly find stix objects by the config field
 
   constructor(private dialog: MatDialog) { }
 
@@ -29,7 +29,7 @@ export class OrderedListEditComponent implements OnInit {
    */
   drop(event: CdkDragDrop<string[]>) {
     moveItemInArray(this.orderedList, event.previousIndex, event.currentIndex);
-    this.updateOrderedList();
+    this.applyUpdates();
   }
 
   ngOnInit(): void {
@@ -39,13 +39,13 @@ export class OrderedListEditComponent implements OnInit {
    * 
    * Creates and returns list from object list
    */
-  public get list(): string[] {
+  private get list(): string[] {
 
     // Initialize ordered list only when page is loaded
     if (this.orderedList.length === 0){
-      for (let object of this.config.objects) {
+      for (let object of this.config.objectsFromOrderedList) {
         this.orderedList.push(object[this.config.field]);
-        this.ListMap.set(object[this.config.field], object);
+        this.listMap.set(object[this.config.field], object);
       }
     }
 
@@ -54,15 +54,16 @@ export class OrderedListEditComponent implements OnInit {
 
   /**
    * 
-   * Update object with ordered list.
+   * Apply updates to the object's ordered list.
+   * Will only be saved after user saves through the UI
    */
-  private updateOrderedList() : void {
+  private applyUpdates() : void {
     let tempObjectList : string[] = [];
     for (let row of this.orderedList) {
-      if (this.ListMap.get(row)) tempObjectList.push(this.ListMap.get(row)["stixID"]);
+      if (this.listMap.get(row)) tempObjectList.push(this.listMap.get(row)["stixID"]);
     }
     // Update object and list array
-    this.config.object[this.config.listField] = tempObjectList;
+    this.config.object[this.config.objectOrderedListField] = tempObjectList;
   }
 
   /**
@@ -82,7 +83,7 @@ export class OrderedListEditComponent implements OnInit {
     this.orderedList[from] = toRow;
     this.orderedList[to] = fromRow;
 
-    this.updateOrderedList();
+    this.applyUpdates();
   }
 
   /**
@@ -105,8 +106,8 @@ export class OrderedListEditComponent implements OnInit {
             this.removeFromMap(index);
             // Remove from ordered list by index
             this.orderedList.splice(index, 1);
-            // Update ordered list
-            this.updateOrderedList();
+            // Apply updates to object's ordered list
+            this.applyUpdates();
           }
       },
       complete: () => { subscription.unsubscribe(); } //prevent memory leaks
@@ -118,8 +119,8 @@ export class OrderedListEditComponent implements OnInit {
    * @param {int} index index of item to be deleted from map
    */ 
   private removeFromMap(index) {
-    if(this.ListMap.get(this.orderedList[index])){
-      this.ListMap.delete(this.orderedList[index]);
+    if(this.listMap.get(this.orderedList[index])){
+      this.listMap.delete(this.orderedList[index]);
     }
   }
 
@@ -128,8 +129,8 @@ export class OrderedListEditComponent implements OnInit {
    * @param {int} row item to be added to map
    */ 
   private addToMap(row) {
-    if(!this.ListMap.get(row[this.config.field])) {
-      this.ListMap.set(row[this.config.field], row);
+    if(!this.listMap.get(row[this.config.field])) {
+      this.listMap.set(row[this.config.field], row);
     }
   }
 
@@ -140,7 +141,6 @@ export class OrderedListEditComponent implements OnInit {
   private getObjectFromStixID(stixID) {
     // Check if field of global objects is already in ordered list
     for (let object of this.config.globalObjects) {
-      console.log(object);
       if (object["stixID"] == stixID) return object;
     }
 
@@ -157,7 +157,7 @@ export class OrderedListEditComponent implements OnInit {
 
     // Check if field of global objects is already in ordered list
     for (let object of this.config.globalObjects) {
-      if (!this.ListMap.get(object[this.config.field])) {
+      if (!this.listMap.get(object[this.config.field])) {
         uniqueRows.push(object);
       }
     }
@@ -170,8 +170,7 @@ export class OrderedListEditComponent implements OnInit {
         maxWidth: "70em",
         maxHeight: "70em",
         data: {
-          globalObjects: uniqueRows,
-          field: this.config.field,
+          selectableObjects: uniqueRows,
           select: this.select,
           type: this.config.type
         }
@@ -189,8 +188,8 @@ export class OrderedListEditComponent implements OnInit {
                         this.addToMap(object);
                         // Add to ordered list
                         this.orderedList.push(object[this.config.field]);
-                        // Update ordered list
-                        this.updateOrderedList();
+                        // Apply updates to object's ordered list
+                        this.applyUpdates();
                       }
                     }
                   }
