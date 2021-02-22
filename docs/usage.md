@@ -44,6 +44,12 @@ Collections can be created, or new versions of existing collections drafted, thr
 ## Editing objects
 
 ### Editing Matrices
+
+#### Editing tactics on matrices
+The order of tactics in matrices can be edited through drag and drop, and clicking on the up/down arrows. Tactics that are not currently in the matrix can be added throught the "Add" button. If there are available tactics, not already mapped to a matrix, a multi-select list will appear where the user can add multiple tactics to the edited matrix. Tactics recently added to the matrices will appear at the bottom of the tactic list.
+
+Tactics can also be removed from the list by hitting on the trash bin next to each tactic row. A confirmation to remove the tactic will be appear.
+
 ### Editing Techniques
 ### Editing Tactics
 ### Editing Mitigations
