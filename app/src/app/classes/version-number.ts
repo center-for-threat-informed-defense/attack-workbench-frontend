@@ -86,6 +86,14 @@ export class VersionNumber {
         }
         return 0; //same version
     }
+
+    /**
+     * Is this version number formatted correctly?
+     * @returns {boolean} true if valid
+     */
+    public valid(): boolean {
+        return /^(\d+\.)*\d+$/.test(this.toString());
+    }
 }
 
 /**

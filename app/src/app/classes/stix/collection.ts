@@ -1,5 +1,6 @@
 import { Observable } from 'rxjs';
 import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/rest-api-connector.service';
+import { ValidationData } from '../serializable';
 import { Group } from './group';
 import { Matrix } from './matrix';
 import { Mitigation } from './mitigation';
@@ -189,6 +190,16 @@ export class Collection extends StixObject {
             }
         }
     }
+
+    /**
+     * Validate the current object state and return information on the result of the validation
+     * @param {RestApiConnectorService} restAPIService: the REST API connector through which asynchronous validation can be completed
+     * @returns {Observable<ValidationData>} the validation warnings and errors once validation is complete.
+     */
+    public validate(restAPIService: RestApiConnectorService): Observable<ValidationData> {
+        return this.base_validate(restAPIService);
+    }
+    
     /**
      * Save the current state of the STIX object in the database. Update the current object from the response
      * @param new_version [boolean] if false, overwrite the current version of the object. If true, creates a new version.
