@@ -33,13 +33,7 @@ export class ToolbarComponent implements OnInit {
     }
 
     public saveEdits() {
-        let subscription = this.editorService.currentObjects[0].validate(this.restAPIService).subscribe({
-            next: result => { this.validationData = result; },
-            complete: () => { subscription.unsubscribe(); }
-        })
-        console.log(this.saveValidation);
-        this.saveValidation.show();
-        // this.editorService.onSave.emit();
+        this.editorService.onSave.emit();
     }
     
     // emit a toggle theme event
