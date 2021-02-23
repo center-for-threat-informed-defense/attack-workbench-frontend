@@ -2,6 +2,7 @@ import {StixObject} from "./stix-object";
 import { Relationship } from './relationship';
 import { RestApiConnectorService } from "src/app/services/connectors/rest-api/rest-api-connector.service";
 import { Observable } from "rxjs";
+import { ValidationData } from "../serializable";
 
 export class Group extends StixObject {
     public name: string = "";
@@ -54,6 +55,15 @@ export class Group extends StixObject {
                 else console.error("TypeError: x_mitre_contributors is not a string array:", sdo.x_mitre_contributors, "(",typeof(sdo.x_mitre_contributors),")")
             } else this.contributors = [];
         }
+    }
+
+    /**
+     * Validate the current object state and return information on the result of the validation
+     * @param {RestApiConnectorService} restAPIService: the REST API connector through which asynchronous validation can be completed
+     * @returns {Observable<ValidationData>} the validation warnings and errors once validation is complete.
+     */
+    public validate(restAPIService: RestApiConnectorService): Observable<ValidationData> {
+        return this.base_validate(restAPIService);
     }
 
     /**

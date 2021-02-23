@@ -2,9 +2,10 @@ import { Relationship } from './relationship';
 import { VersionNumber } from '../version-number';
 import { ExternalReferences } from '../external-references';
 import { v4 as uuid } from 'uuid';
-import { Serializable } from '../serializable';
+import { Serializable, ValidationData } from '../serializable';
 import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/rest-api-connector.service';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
+import { map, switchMap } from 'rxjs/operators';
 
 export type workflowStates = "wip" | "awaiting review" | "reviewed"
 
@@ -215,6 +216,70 @@ export abstract class StixObject extends Serializable {
                 } else console.error("TypeError: workflow field is not an object")
             }
         }
+    }
+
+    /**
+     * Validate the current object state and return information on the result of the validation
+     * @abstract
+     * @param {RestApiConnectorService} restAPIService: the REST API connector through which asynchronous validation can be completed
+     * @returns {Observable<ValidationData>} the validation warnings and errors once validation is complete.
+     */
+    public base_validate(restAPIService: RestApiConnectorService): Observable<ValidationData> {
+        let validation = new ValidationData();
+        // TODO: validate description for missing citation and linkByIDs
+        // test version number format
+        if (this.version.valid()) {
+            validation.successes.push({
+                result: "success",
+                displayOnSuccess: false,
+                field: "version",
+                message: "version number is properly formatted"
+            })
+        } else {
+            validation.errors.push({
+                result: "error",
+                field: "version",
+                message: "version number is not formatted properly"
+            })
+        }
+        // check any asynchronous validators
+        return of(validation).pipe(
+            // check if the name is unique if it has a name
+            switchMap(result => {
+                if (!this.hasOwnProperty("name")) {
+                    return of(result);
+                } else {
+                    // check if name is unique, record result in validation, and return validation
+                    let accessor = this.attackType == "collection"? restAPIService.getAllCollections() :
+                                   this.attackType == "group"? restAPIService.getAllGroups() :
+                                   this.attackType == "software"? restAPIService.getAllSoftware() :
+                                   this.attackType == "matrix"? restAPIService.getAllMatrices() :
+                                   this.attackType == "mitigation"? restAPIService.getAllMitigations() :
+                                   this.attackType == "technique"? restAPIService.getAllTechniques() :
+                                   restAPIService.getAllTactics(); 
+                    return accessor.pipe(
+                        map(objects => {
+                            if (objects.data.some(x => x["name"] == this['name'])) {
+                                result.warnings.push({
+                                    "result": "warning",
+                                    "field": "name",
+                                    "message": "name is not unique"
+                                })
+                            } else {
+                                result.successes.push({
+                                    "result": "success",
+                                    "field": "name",
+                                    "message": "name is unique"
+                                })
+                            }
+                            return result;
+                        })
+                    )
+                }
+            })
+            // TODO check if revoked-by exists if revoked?
+        )
+
     }
 
     public isStringArray = function(arr): boolean {

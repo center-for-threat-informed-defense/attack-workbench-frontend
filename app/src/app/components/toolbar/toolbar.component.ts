@@ -1,5 +1,8 @@
-import { Component, OnInit, ViewEncapsulation, Output, EventEmitter, Input } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation, Output, EventEmitter, Input, ViewChild } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
+import { PopoverContentComponent } from 'ngx-smart-popover';
+import { ValidationData } from 'src/app/classes/serializable';
+import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/rest-api-connector.service';
 import { EditorService } from 'src/app/services/editor/editor.service';
 import { SidebarService } from 'src/app/services/sidebar/sidebar.service';
 
@@ -10,16 +13,18 @@ import { SidebarService } from 'src/app/services/sidebar/sidebar.service';
   encapsulation: ViewEncapsulation.None
 })
 export class ToolbarComponent implements OnInit {
+    @Input() public canScroll: boolean;
     @Output() public onToggleTheme = new EventEmitter();
     @Output() public onToggleSidebar = new EventEmitter();
     @Output() public onScrollTop = new EventEmitter();
+    @ViewChild('saveValidation') saveValidation: PopoverContentComponent;
     
-    @Input() public canScroll: boolean;
+    public validationData: ValidationData = null;
 
     public get editing(): boolean { return this.editorService.editing; }
     public get editable(): boolean { return this.editorService.editable; } 
 
-    constructor(private sidebarService: SidebarService, private editorService: EditorService) {}
+    constructor(private sidebarService: SidebarService, private editorService: EditorService, private restAPIService: RestApiConnectorService) {}
 
     ngOnInit() {}
 
@@ -28,7 +33,13 @@ export class ToolbarComponent implements OnInit {
     }
 
     public saveEdits() {
-        this.editorService.onSave.emit();
+        let subscription = this.editorService.currentObjects[0].validate(this.restAPIService).subscribe({
+            next: result => { this.validationData = result; },
+            complete: () => { subscription.unsubscribe(); }
+        })
+        console.log(this.saveValidation);
+        this.saveValidation.show();
+        // this.editorService.onSave.emit();
     }
     
     // emit a toggle theme event
