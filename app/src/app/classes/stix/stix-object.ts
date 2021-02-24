@@ -228,14 +228,7 @@ export abstract class StixObject extends Serializable {
         let validation = new ValidationData();
         // TODO: validate description for missing citation and linkByIDs
         // test version number format
-        if (this.version.valid()) {
-            validation.successes.push({
-                result: "success",
-                displayOnSuccess: false,
-                field: "version",
-                message: "version number is properly formatted"
-            })
-        } else {
+        if (!this.version.valid()) {
             validation.errors.push({
                 result: "error",
                 field: "version",
@@ -246,20 +239,25 @@ export abstract class StixObject extends Serializable {
         return of(validation).pipe(
             // check if the name is unique if it has a name
             switchMap(result => {
-                if (!this.hasOwnProperty("name")) {
-                    return of(result);
-                } else {
-                    // check if name is unique, record result in validation, and return validation
-                    let accessor = this.attackType == "collection"? restAPIService.getAllCollections() :
-                                   this.attackType == "group"? restAPIService.getAllGroups() :
-                                   this.attackType == "software"? restAPIService.getAllSoftware() :
-                                   this.attackType == "matrix"? restAPIService.getAllMatrices() :
-                                   this.attackType == "mitigation"? restAPIService.getAllMitigations() :
-                                   this.attackType == "technique"? restAPIService.getAllTechniques() :
-                                   restAPIService.getAllTactics(); 
-                    return accessor.pipe(
-                        map(objects => {
-                            if (objects.data.some(x => x["name"] == this['name'])) {
+                // check if name & ATT&CK ID is unique, record result in validation, and return validation
+                let accessor = this.attackType == "collection"? restAPIService.getAllCollections() :
+                                this.attackType == "group"? restAPIService.getAllGroups() :
+                                this.attackType == "software"? restAPIService.getAllSoftware() :
+                                this.attackType == "matrix"? restAPIService.getAllMatrices() :
+                                this.attackType == "mitigation"? restAPIService.getAllMitigations() :
+                                this.attackType == "technique"? restAPIService.getAllTechniques() :
+                                restAPIService.getAllTactics(); 
+                return accessor.pipe(
+                    map(objects => {
+                        // check name
+                        if (this.hasOwnProperty("name")) {
+                            if (this["name"] == "") {
+                                result.errors.push({
+                                    "result": "error",
+                                    "field": "name",
+                                    "message": "object has no name"
+                                })
+                            } else if (objects.data.some(x => x["name"].toLowerCase() == this['name'].toLowerCase() && x.stixID != this.stixID)) {
                                 result.warnings.push({
                                     "result": "warning",
                                     "field": "name",
@@ -272,13 +270,29 @@ export abstract class StixObject extends Serializable {
                                     "message": "name is unique"
                                 })
                             }
-                            return result;
-                        })
-                    )
-                }
-            })
+                        }
+                        // check ATT&CK ID
+                        if (this.hasOwnProperty("attackID")) {
+                            if (objects.data.some(x => x.attackID == this.attackID && x.stixID != this.stixID)) {
+                                result.errors.push({
+                                    "result": "error",
+                                    "field": "name",
+                                    "message": "ATT&CK ID is not unique"
+                                })
+                            } else {
+                                result.successes.push({
+                                    "result": "success",
+                                    "field": "name",
+                                    "message": "ATT&CK ID is unique"
+                                })
+                            }
+                        }
+                        return result;
+                    })
+                )
+            }) //end switchmap
             // TODO check if revoked-by exists if revoked?
-        )
+        ) //end pipe
 
     }
 

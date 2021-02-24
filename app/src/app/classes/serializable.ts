@@ -31,11 +31,11 @@ export class ValidationData {
     public successes: ValidationFieldData[] = [];
     public warnings: ValidationFieldData[] = []; 
     public errors: ValidationFieldData[] = [];
+    public info: ValidationFieldData[] = [];
 }
 
 export interface ValidationFieldData {
-    result: "success" | "warning" | "error"; //validation result type
-    displayOnSuccess?: boolean; //default true, if false, don't show this result to a user if it is a success (but do show if it is a failure or warning)
+    result: "success" | "warning" | "error" | "info"; //validation result type
     field: string; //the field that was validated
     message: string; //the validation warning or error message to display to the user.
 }

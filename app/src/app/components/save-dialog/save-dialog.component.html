@@ -1,20 +1,51 @@
-<div class="save-dialog">
-    <mat-action-list>
-        <button mat-list-item (click)="dialogRef.close(nextMajorVersion)">
-            <h3 mat-line>save new major version</h3>
-            <div mat-line>{{currentVersion}} &#8594; {{nextMajorVersion}}</div>
-        </button>
-        <button mat-list-item (click)="dialogRef.close(nextMinorVersion)">
-            <h3 mat-line>save new minor version</h3>
-            <div mat-line>{{currentVersion}} &#8594; {{nextMinorVersion}}</div>
-        </button>
-        <button mat-list-item (click)="dialogRef.close(currentVersion)">
-            <h3 mat-line>save without changing version</h3>
-            <div mat-line>{{currentVersion}} &#8594; {{currentVersion}}</div>
-        </button>
-        <button mat-list-item mat-dialog-close>
-            <h3 mat-line>cancel</h3>
-            <div mat-line>keep editing</div>
-        </button>
-    </mat-action-list>
+<div class="save-dialog grid spacing-16">
+
+    <div class="row">
+        <div class="column validation">
+            <h3>Validation</h3>
+            <div *ngIf="validation else validating">
+                <mat-list class="validation">
+                    <mat-list-item class="validation-item success" *ngFor="let success of validation.successes">
+                        <mat-icon mat-list-icon>check</mat-icon>
+                        <div mat-line>{{success.message}}</div>
+                    </mat-list-item>
+                    <mat-list-item class="validation-item warning" *ngFor="let warning of validation.warnings">
+                        <mat-icon mat-list-icon>warning</mat-icon>
+                        <div mat-line>{{warning.message}}</div>
+                    </mat-list-item>
+                    <mat-list-item class="validation-item error" *ngFor="let error of validation.errors">
+                        <mat-icon mat-list-icon>close</mat-icon>
+                        <div mat-line>{{error.message}}</div>
+                    </mat-list-item>
+                    <mat-list-item class="validation-item info" *ngFor="let info of validation.info">
+                        <mat-icon mat-list-icon>info</mat-icon>
+                        <div mat-line>{{info.message}}</div>
+                    </mat-list-item>
+                </mat-list>
+            </div>
+            <ng-template #validating>
+                <app-loading-overlay></app-loading-overlay>
+            </ng-template>
+        </div>
+        <div class="column narrow version-buttons">
+            <mat-action-list>
+                <button mat-list-item [disabled]="config.versionAlreadyIncremented || !saveEnabled" (click)="saveNextMajorVersion()">
+                    <h3 mat-line>save new major version</h3>
+                    <div mat-line>{{currentVersion}} &#8594; {{nextMajorVersion}}</div>
+                </button>
+                <button mat-list-item [disabled]="config.versionAlreadyIncremented || !saveEnabled" (click)="saveNextMinorVersion()">
+                    <h3 mat-line>save new minor version</h3>
+                    <div mat-line>{{currentVersion}} &#8594; {{nextMinorVersion}}</div>
+                </button>
+                <button mat-list-item [disabled]="!saveEnabled" (click)="saveCurrentVersion()">
+                    <h3 mat-line>save current version</h3>
+                    <div mat-line>{{currentVersion}} &#8594; {{currentVersion}}</div>
+                </button>
+                <button mat-list-item mat-dialog-close>
+                    <h3 mat-line>cancel</h3>
+                    <div mat-line>keep editing</div>
+                </button>
+            </mat-action-list>
+        </div>
+    </div>
 </div>
