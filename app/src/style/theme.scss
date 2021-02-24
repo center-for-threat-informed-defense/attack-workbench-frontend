@@ -134,6 +134,10 @@ $tooltip-color: color-alternate(dark, 4);
     }
 }
 
+.mat-form-field.mat-form-field-invalid {
+    color: color(error);
+}
+
 .mat-select-panel {
     .light & {
         color: on-color(light);
