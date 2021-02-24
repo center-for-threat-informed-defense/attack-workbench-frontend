@@ -84,6 +84,7 @@ import { VersionPropertyComponent } from "./components/stix/version-property/ver
 import { VersionEditComponent } from "./components/stix/version-property/version-edit/version-edit.component";
 import { VersionViewComponent } from "./components/stix/version-property/version-view/version-view.component";
 
+import { NamePropertyComponent } from "./components/stix/name-property/name-property.component";
 // import { RelationshipDialogComponent } from "./components/stix/relationship-dialog/relationship-dialog.component";
 
 // views
@@ -170,6 +171,7 @@ import { OrderedListEditComponent } from './components/stix/ordered-list-propert
     VersionPropertyComponent,
     VersionEditComponent,
     VersionViewComponent,
+    NamePropertyComponent,
     
     LandingPageComponent,
     HelpPageComponent,

@@ -2,7 +2,10 @@
     <div class="row">
         <!-- NAME -->
         <div class="col">
-            <h1>{{technique.name}}</h1>
+            <app-name-property [config]="{
+                mode: editing? 'edit' : 'view',
+                object: technique
+            }"></app-name-property>
             <app-subheading [config]="config" (onOpenHistory)="openHistory()" (onOpenNotes)="openNotes()"></app-subheading>
         </div>
     </div>

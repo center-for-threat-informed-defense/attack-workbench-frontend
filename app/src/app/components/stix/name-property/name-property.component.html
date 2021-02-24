@@ -1,0 +1,11 @@
+<h1>
+    <ng-container *ngIf="config.mode == 'view'; else edit">
+        {{config.object[config.field ? config.field : "name"]}}
+    </ng-container>
+    <ng-template #edit>
+        <mat-form-field class="name-edit" appearance="outline">
+            <mat-label>name</mat-label>
+            <input matInput required [(ngModel)]="config.object[config.field ? config.field : 'name']">
+        </mat-form-field>
+    </ng-template>
+</h1>
