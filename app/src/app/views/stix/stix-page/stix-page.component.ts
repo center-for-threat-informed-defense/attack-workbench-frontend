@@ -63,8 +63,9 @@ export class StixPageComponent implements OnInit, OnDestroy {
         let subscription = prompt.afterClosed().subscribe({
             next: (result) => {
                 if (result) {
-                    this.editorService.stopEditing();
-                    this.loadObjects();
+                    // this.editorService.stopEditing();
+                    this.router.navigate([this.objects[0].attackType, this.objects[0].stixID]);
+                    setTimeout(() => this.loadObjects());
                 }
             },
             complete: () => { subscription.unsubscribe(); } //prevent memory leaks

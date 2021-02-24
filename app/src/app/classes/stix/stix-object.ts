@@ -7,7 +7,7 @@ import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/re
 import { Observable, of } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
 
-export type workflowStates = "wip" | "awaiting review" | "reviewed"
+export type workflowStates = "work-in-progress" | "awaiting-review" | "reviewed"
 
 export abstract class StixObject extends Serializable {
     public stixID: string; // STIX ID
@@ -80,7 +80,7 @@ export abstract class StixObject extends Serializable {
             this.attackID = "";
             this.external_references = new ExternalReferences();
             this.workflow = {
-                state: "wip"
+                state: "work-in-progress"
             };
             this.description = "";
         }
@@ -272,7 +272,7 @@ export abstract class StixObject extends Serializable {
                             }
                         }
                         // check ATT&CK ID
-                        if (this.hasOwnProperty("attackID")) {
+                        if (this.hasOwnProperty("attackID") && this.attackID != "") {
                             if (objects.data.some(x => x.attackID == this.attackID && x.stixID != this.stixID)) {
                                 result.errors.push({
                                     "result": "error",
