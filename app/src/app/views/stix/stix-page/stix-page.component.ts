@@ -51,37 +51,21 @@ export class StixPageComponent implements OnInit, OnDestroy {
 
     private save() {
         let versionChanged = this.objects[0].version.compareTo(this.initialVersion) != 0;
-        let prompt = versionChanged ? //has version been incremented during edits
-            this.dialog.open(ConfirmationDialogComponent, { //already incremented
-                maxWidth: "35em",
-                data: { 
-                    message: `# Save changes?`,
-                }
-            }) :
-            this.dialog.open(SaveDialogComponent, { //increment version number save panel
-                // maxWidth: "35em",
-                data: this.objects[0].version
-            });
+        let prompt = this.dialog.open(SaveDialogComponent, { //increment version number save panel
+            // maxWidth: "35em",
+            data: {
+                object: this.objects[0],
+                versionAlreadyIncremented: versionChanged
+            }
+        });
 
         
         let subscription = prompt.afterClosed().subscribe({
             next: (result) => {
-                if (result && typeof(result) == "string") {
-                    // increment the version number 
-                    console.log("updating version to", result);
-                    this.objects[0].version.version = result;
-                }
                 if (result) {
-                    // save the object
-                    let subscription = this.objects[0].save(true, this.restAPIConnectorService).subscribe({
-                        next: (result) => { 
-                            this.editorService.stopEditing();
-                            this.loadObjects();
-                        },
-                        complete: () => {subscription.unsubscribe(); }
-                    });
+                    this.editorService.stopEditing();
+                    this.loadObjects();
                 }
-
             },
             complete: () => { subscription.unsubscribe(); } //prevent memory leaks
         })
