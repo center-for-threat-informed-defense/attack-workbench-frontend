@@ -1,0 +1,18 @@
+@import "../../../style/globals";
+.mat-list.validation-results {
+    .validation-item .mat-list-item-content {
+        padding-left: 0;
+    }
+    .validation-item.success {
+        color: color(success);
+    }
+    .validation-item.warning {
+        color: color(warn);
+    }
+    .validation-item.error {
+        color: color(error);
+    }
+    .validation-item.info {
+        color: color(info);
+    }
+}
