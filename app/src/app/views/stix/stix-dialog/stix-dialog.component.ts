@@ -1,7 +1,10 @@
 
+import { animate, style, transition, trigger } from '@angular/animations';
 import { Component, Inject, OnInit, ViewEncapsulation } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { ValidationData } from 'src/app/classes/serializable';
 import { StixObject } from 'src/app/classes/stix/stix-object';
+import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/rest-api-connector.service';
 import { SidebarService, tabOption } from 'src/app/services/sidebar/sidebar.service';
 import { StixViewConfig } from '../stix-view-page';
 
@@ -9,11 +12,24 @@ import { StixViewConfig } from '../stix-view-page';
   selector: 'app-stix-dialog',
   templateUrl: './stix-dialog.component.html',
   styleUrls: ['./stix-dialog.component.scss'],
-  encapsulation: ViewEncapsulation.None
+  encapsulation: ViewEncapsulation.None,
+  animations: [
+      trigger("slideIn", [
+          transition(":enter", [
+            style({transform: 'translateY(-100%)'}),
+            animate('200ms ease-in', style({transform: 'translateY(0%)'}))
+          ])
+      ]),
+      trigger("slideOut", [
+          transition(":leave", [
+              animate('200ms ease-in', style({transform: 'translateY(-100%)'}))
+          ])
+      ]),
+  ]
 })
 export class StixDialogComponent implements OnInit {
 
-    constructor(public dialogRef: MatDialogRef<StixDialogComponent>, @Inject(MAT_DIALOG_DATA) public _config: StixViewConfig, public sidebarService: SidebarService) { }
+    constructor(public dialogRef: MatDialogRef<StixDialogComponent>, @Inject(MAT_DIALOG_DATA) public _config: StixViewConfig, public sidebarService: SidebarService, public restApiConnectorService: RestApiConnectorService) { }
     public get config(): StixViewConfig {
         return {
             mode: this.editing? "edit" : "view",
@@ -25,12 +41,36 @@ export class StixDialogComponent implements OnInit {
     }
 
     public editing: boolean = false;
+    public validating: boolean = false;
+    public validation: ValidationData = null;
     public startEditing() {
+        this.dialogRef.disableClose = true;
         this.editing = true;
     }
-    public saveEdits() {
-        // TODO
-        this.editing = false;
+    public validate() {
+        this.validating = true;
+        let object = Array.isArray(this.config.object)? this.config.object[0] : this.config.object;
+        let subscription = object.validate(this.restApiConnectorService).subscribe({
+            next: (result) => { 
+                this.validation = result;
+            },
+            complete: () => { subscription.unsubscribe(); }
+        })
+    }
+    public get saveEnabled() {
+        return this.validation && this.validation.errors.length == 0;
+    }
+    public save() {
+        let object = Array.isArray(this.config.object)? this.config.object[0] : this.config.object;
+        let subscription = object.save(true, this.restApiConnectorService).subscribe({
+            next: (result) => { 
+                this.dialogRef.close(true);
+            },
+            complete: () => { subscription.unsubscribe(); }
+        })
+    }
+    public cancelValidation() {
+        this.validating = false;
     }
 
     public sidebarOpened: boolean = false;

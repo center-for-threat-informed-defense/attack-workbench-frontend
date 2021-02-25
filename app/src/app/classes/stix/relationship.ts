@@ -1,17 +1,18 @@
 import { Observable } from "rxjs";
+import { map } from "rxjs/operators";
 import { RestApiConnectorService } from "src/app/services/connectors/rest-api/rest-api-connector.service";
 import { ValidationData } from "../serializable";
 import {StixObject} from "./stix-object";
 
 export class Relationship extends StixObject {
 
-    public readonly source_ref: string;
+    public source_ref: string;
     public get source_name(): string { return this.source_object? this.source_object.stix.name : "[unknown object]"; }
     public source_ID: string;
     public source_object: any;
     
 
-    public readonly target_ref: string;
+    public target_ref: string;
     public get target_name(): string { return this.target_object? this.target_object.stix.name : "[unknown object]"; }
     public target_ID: string;
     public target_object: any;
@@ -23,9 +24,12 @@ export class Relationship extends StixObject {
      * null if any type is valid or relationship_type is not recognized
      */
     public get valid_source_types(): string[] {
-        if (this.relationship_type == "uses") return ["group", "software"]
-        if (this.relationship_type == "mitigates") return ["mitigation"]
-        if (this.relationship_type == "subtechnique-of") return ["technique"]
+        if (this.relationship_type == "uses") {
+            if (this.target_object && (this.target_object.stix.type == "malware" || this.target_object.stix.type == "tool")) return ["group"];
+            else return ["software", "group"];
+        }
+        if (this.relationship_type == "mitigates") return ["mitigation"];
+        if (this.relationship_type == "subtechnique-of") return ["technique"];
         else return null;
     }
     /**
@@ -33,9 +37,12 @@ export class Relationship extends StixObject {
      * null if any type is valid or relationship_type is not recognized
      */
     public get valid_target_types(): string[] {
-        if (this.relationship_type == "uses") return ["software", "technique"]
-        if (this.relationship_type == "mitigates") return ["technique"]
-        if (this.relationship_type == "subtechnique-of") return ["technique"]
+        if (this.relationship_type == "uses") {
+            if (this.target_object && (this.target_object.stix.type == "malware" || this.target_object.stix.type == "tool")) return ["technique"];
+            else return ["software", "technique"];
+        }
+        if (this.relationship_type == "mitigates") return ["technique"];
+        if (this.relationship_type == "subtechnique-of") return ["technique"];
         else return null;
     }
 
@@ -119,7 +126,30 @@ export class Relationship extends StixObject {
      */
     public validate(restAPIService: RestApiConnectorService): Observable<ValidationData> {
         //TODO verify source and target ref exist
-        return this.base_validate(restAPIService);
+        return this.base_validate(restAPIService).pipe(
+            map(result => {
+                if (!this.source_ref) { result.errors.push({
+                    "field": "source_ref",
+                    "result": "error",
+                    "message": "source object is not specified"
+                })} else { result.successes.push({
+                    "field": "source_ref",
+                    "result": "error",
+                    "message": "source object exists"
+                })}
+
+                if (!this.source_ref) { result.errors.push({
+                    "field": "target_ref",
+                    "result": "error",
+                    "message": "target object is not specified"
+                })} else { result.successes.push({
+                    "field": "target_ref",
+                    "result": "error",
+                    "message": "target object exists"
+                })}
+                return result;
+            })
+        );
     }
 
     /**
@@ -131,6 +161,7 @@ export class Relationship extends StixObject {
     public save(new_version: boolean = true, restAPIService: RestApiConnectorService): Observable<Relationship> {
         // TODO POST if the object was just created (doesn't exist in db yet)
         if (new_version) this.modified = new Date();
+        console.log(new_version, this.serialize());
         
         let postObservable = restAPIService.postRelationship(this);
         let subscription = postObservable.subscribe({
