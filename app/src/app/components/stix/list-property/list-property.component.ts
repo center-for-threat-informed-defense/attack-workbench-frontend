@@ -27,7 +27,8 @@ export interface ListPropertyConfig {
      * Note: if mode is diff, pass an array of two objects to diff
      */
     object: StixObject | [StixObject, StixObject];
-    objectType: "collection" | "group" | "matrix" | "mitigation" | "software" | "tactic" | "technique" | "relationship";
+    /* Edit mode. Default: 'any' */
+    editType?: "select" | "stixList" | "any";
     /* the field of the object(s) to visualize as a list */
     field: string;
     /* if specified, label with this string instead of field */
