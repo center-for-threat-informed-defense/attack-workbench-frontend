@@ -1,0 +1,6 @@
+@import "../../../../../style/globals";
+.relationship-view {
+    .mat-expansion-panel {
+        @include expansion-panel(true);
+    }
+}

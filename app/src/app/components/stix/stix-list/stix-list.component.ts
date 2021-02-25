@@ -89,8 +89,8 @@ export class StixListComponent implements OnInit, AfterViewInit {
             this.dialog.open(StixDialogComponent, {
                 data: {
                     object: element,
-                    editable: true,
-                    sidebarControl: "disable"
+                    editable: this.config.allowEdits,
+                    sidebarControl: this.config.allowEdits? "events" : "disable"
                 },
                 maxHeight: "75vh"
             });
@@ -390,6 +390,11 @@ export interface StixListConfig {
      *     "dialog": open a dialog with the full object definition
      */
     clickBehavior?: "expand" | "dialog"
+    /**
+     * Default false. If true, allows for edits of the objects in the table
+     * when in dialog mode
+     */
+    allowEdits?: boolean;
 }
 
 export interface FilterValue {
