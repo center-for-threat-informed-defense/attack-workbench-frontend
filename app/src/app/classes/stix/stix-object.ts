@@ -213,7 +213,7 @@ export abstract class StixObject extends Serializable {
             if ("workflow" in workspaceData) {
                 if (typeof(workspaceData.workflow) == "object") {
                     this.workflow = workspaceData.workflow;
-                } else console.error("TypeError: workflow field is not an object")
+                } else console.error("TypeError: workflow field is not an object", workspaceData)
             }
         }
     }
