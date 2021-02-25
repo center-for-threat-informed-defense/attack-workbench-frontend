@@ -2,8 +2,7 @@
     <mat-form-field *ngIf="!config.editType || config.editType == 'any'" appearance="outline">
         <mat-label>{{config.label? config.label : config.field}}</mat-label>
         <mat-chip-list #anyChipList>
-            <mat-chip *ngFor="let value of config.object[config.field]" [selectable]="false" [removable]="true" (removed)="remove(value)"
-                class="list-item">
+            <mat-chip *ngFor="let value of config.object[config.field]" [removable]="true" (removed)="remove(value)">
                 {{value}} <mat-icon matChipRemove>cancel</mat-icon>
             </mat-chip>
             <input matInput placeholder="new {{config.label? config.label : config.field }}..."
@@ -28,14 +27,13 @@
         </mat-select>
     </mat-form-field>
 
-    <!-- <mat-form-field *ngIf="config.editType == 'stixList'" appearance="outline" (click)="open()">
+    <mat-form-field *ngIf="config.editType == 'stixList'" appearance="outline">
         <mat-label>{{config.label? config.label : config.field}}</mat-label>
-        <button mat-mini-fab class="view-button" color="primary" (click)="open()"><mat-icon aria-label="add">add</mat-icon></button>
+        <button mat-mini-fab class="add-button" color="primary" (click)="open()"><mat-icon aria-label="add">add</mat-icon></button>
         <mat-chip-list #stixChipList>
-            <mat-chip *ngFor="let value of config.object[config.field]" [selectable]="false" [removable]="true" (removed)="remove(value)"
-                class="list-item">
+            <mat-chip *ngFor="let value of config.object[config.field]" [removable]="true" (removed)="remove(value)">
                 {{value}} <mat-icon matChipRemove>cancel</mat-icon>
             </mat-chip>
         </mat-chip-list>
-    </mat-form-field> -->
+    </mat-form-field>
 </div>

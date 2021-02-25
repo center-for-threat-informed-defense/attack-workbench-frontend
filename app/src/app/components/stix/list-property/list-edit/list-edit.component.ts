@@ -10,6 +10,7 @@ import { Observable } from 'rxjs';
 import { SelectionModel } from '@angular/cdk/collections';
 import { Tactic } from 'src/app/classes/stix/tactic';
 import { StixObject } from 'src/app/classes/stix/stix-object';
+import { AddDialogComponent } from 'src/app/components/add-dialog/add-dialog.component';
 
 @Component({
   selector: 'app-list-edit',
@@ -19,15 +20,17 @@ import { StixObject } from 'src/app/classes/stix/stix-object';
 export class ListEditComponent implements OnInit {
     @Input() public config: ListPropertyConfig;
 
-    // allowed values (select)
+    // allowed values ('select')
     public data$: Observable<any>;
     public allowedValues: string[] = [];
     public selectControl: FormControl;
 
+    // selection model ('stixList')
+    public select: SelectionModel<string>;
+    public type: string;
+    public objects: StixObject[] = [];
 
-    public stixSelect: SelectionModel<string>;
-    public selectedTactics: Tactic[];
-
+    // any value ('any')
     readonly separatorKeysCodes: number[] = [ENTER, COMMA];   
 
     public fieldToStix = {
@@ -65,42 +68,35 @@ export class ListEditComponent implements OnInit {
         else if (this.config.field == 'defense_bypassed') { } //any
         else if (this.config.field == 'system_requirements') { } //any
         else if (this.config.field == 'contributors') { } //any
-        else if (this.config.field == 'tactics') { } //TODO: stixList -> addDialog
+        else if (this.config.field == 'tactics') {
+            this.type = 'tactic';
+            let subscription = this.restAPIConnectorService.getAllTactics().subscribe({
+                next: (tactics) => { 
+                    this.objects = tactics.data;
 
+                    // set selection model with initial values
+                    let selectedTactics = this.shortnameToStixID(tactics.data as Tactic[]);
+                    this.select = new SelectionModel<string>(true, selectedTactics);
+                },
+                complete: () => { subscription.unsubscribe(); }
+            })
+        }
         this.selectControl = new FormControl(this.config.object[this.config.field]);
-
-
-        // else if (this.stixList && this.config.object.attackType == 'tactic') {
-        //     // map this object tactic shortname to its stixID
-        //     let stixIDs = [];
-        //     let tactics: Tactic[];
-        //     let something = this.restAPIConnectorService.getAllTactics();
-        //     let subscription = something.subscribe({
-        //         next: (data) => { 
-        //             stixIDs = this.tacticShortnameToStixID(data.data as Tactic[]);
-        //             this.stixSelect = new SelectionModel<string>(true, stixIDs);
-        //         },
-        //         complete: () => { subscription.unsubscribe() }
-        //     });
-        //     // this.stixSelect = new SelectionModel<string>(true, this.config.object[this.config.field]);
-        // }
     }
 
-    private tacticShortnameToStixID(tactics): String[] {
+    /** Retrieves a list of selected tactic stixIDs */
+    private shortnameToStixID(tactics: Tactic[]): string[] {
         let shortnames = this.config.object[this.config.field];
-
-        this.selectedTactics = tactics.filter(tactic => {
-            return shortnames.includes(tactic.shortname)
-        });
-        return this.selectedTactics.map(tactics => tactics.stixID)
-        // return tactics.filter(tactic => { 
-        //     return shortnames.includes(tactic.shortname);
-        // })
-        // .map(tactic => tactic.stixID);
+        return tactics.filter(tactic => {
+            return shortnames.includes(tactic.shortname) && this.tacticInDomain(tactic);
+        }).map(tactics => tactics.stixID);
     }
     
-    private tacticStixIDToShortname(tacticIDs) {
-        console.log("data", this.data$)
+    /** Retrieves a list of selected tactic shortnames */
+    private stixIDToShortname(tacticID: string): string {
+        let objects = this.objects as Tactic[];
+        let tactic = objects.find(object => object.stixID == tacticID)
+        return tactic.shortname;
     }
 
     /** Get allowed values for this field */
@@ -164,16 +160,47 @@ export class ListEditComponent implements OnInit {
         }
     }
 
+    /** Check if the given tactic is in the same domain as this object */
+    private tacticInDomain(tactic: Tactic) {
+        let object = this.config.object as any;
+        for (let domain of tactic.domains) {
+            if (object.domains.includes(domain)) return true;
+        }
+        return false;
+    }
+
     /** Open stix list selection window */
     public open() {
-        // const dialogRef = this.dialog.open(template, { });
+        // filter objects by domain
+        let selectableObjects = [];
+        if (this.type == 'tactic') {
+            let tactics = this.objects as Tactic[];
+            selectableObjects = tactics.filter(tactic => this.tacticInDomain(tactic));
+        }
 
-        // let subscription = dialogRef.afterClosed().subscribe({
-        //     next: () => {
-        //         let stixIDs = this.stixSelect.selected;
-        //         let shortnames = this.tacticStixIDToShortname(stixIDs);
-        //     },
-        //     complete: () => { if (subscription) subscription.unsubscribe(); } //prevent memory leaks
-        // });
+        let dialogRef = this.dialog.open(AddDialogComponent, {
+            maxWidth: "70em",
+            maxHeight: "70em",
+            data: {
+                selectableObjects: selectableObjects,
+                select: this.select,
+                type: this.type
+            }
+        });
+
+        let selectCopy = new SelectionModel(true, this.select.selected);
+        let subscription = dialogRef.afterClosed().subscribe({
+            next: (result) => {
+                if (result) {
+                    let stixIDs = this.select.selected;
+                    let tacticShortnames = stixIDs.map(id => this.stixIDToShortname(id));
+                    // TODO: update field with new selection
+                    // this.config.object[this.config.field] = tacticShortnames;
+                } else { // user cancel
+                    this.select = selectCopy; // reset selection
+                }
+            },
+            complete: () => { subscription.unsubscribe(); }
+        });
     }
 }
