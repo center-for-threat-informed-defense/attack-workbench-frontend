@@ -35,8 +35,9 @@
         <div class="col">
             <!-- PLATFORMS -->
             <app-list-property class="grow-to-row" [config]="{
-                mode: 'view',
+                mode: editing? 'edit': 'view',
                 object: technique,
+                objectType: 'technique',
                 field: 'platforms'
             }"></app-list-property>
         </div>
@@ -58,8 +59,9 @@
     <div *ngIf="technique.domains.length > 0" class="row">
         <div class="col">
             <app-list-property class="grow-to-row" [config]="{
-                mode: 'view',
+                mode: editing? 'edit': 'view',
                 object: technique,
+                objectType: 'technique',
                 field: 'domains'
             }"></app-list-property>
         </div>
@@ -81,7 +83,7 @@
                 <!-- SYSTEM REQUIREMENTS -->
                 <div *ngIf="technique.domains.includes('enterprise-attack') && technique.system_requirements.length > 0" class="row">
                     <app-list-property class="grow-to-row" [config]="{
-                        mode: 'view',
+                        mode: editing? 'edit': 'view',
                         object: technique,
                         field: 'system_requirements',
                         label: 'system requirements'
@@ -90,7 +92,7 @@
                 <!-- TACTIC TYPES -->
                 <div *ngIf="technique.domains.includes('mobile-attack') && technique.tactic_type.length > 0" class="row">
                     <app-list-property class="grow-to-row" [config]="{
-                        mode: 'view',
+                        mode: editing? 'edit': 'view',
                         object: technique,
                         field: 'tactic_type'
                     }"></app-list-property>
@@ -102,12 +104,14 @@
     <div *ngIf="technique.tactics.length > 0" class="row">
         <div class="col">
             <app-list-property class="grow-to-row" [config]="{
-                mode: 'view',
+                mode: 'edit',
                 object: technique,
-                field: 'tactics'
+                field: 'tactics',
+                attackType: 'tactic'
             }"></app-list-property>
         </div>
-        <ng-container *ngIf="technique.permissions_required.length > 0 || technique.defense_bypassed.length > 0 || technique.tactics.includes('execution')">
+        <ng-container *ngIf="technique.permissions_required.length > 0 || technique.effective_permissions.length > 0 || 
+                             technique.impact_type.length > 0 || technique.defense_bypassed.length > 0 || technique.tactics.includes('execution')">
             <!-- Display only if tactic specific fields exist -->
             <div class="col arrow">
                 <mat-icon>arrow_forward</mat-icon>
@@ -116,16 +120,34 @@
                 <!-- PERMISSIONS REQUIRED -->
                 <div *ngIf="technique.tactics.includes('privilege-escalation') && technique.permissions_required.length > 0" class="row">
                     <app-list-property class="grow-to-row" [config]="{
-                        mode: 'view',
+                        mode: editing? 'edit': 'view',
                         object: technique,
                         field: 'permissions_required',
                         label: 'permissions required'
                     }"></app-list-property>
                 </div>
+                <!-- EFFECTIVE PERMISSIONS -->
+                <div *ngIf="technique.tactics.includes('privilege-escalation') && technique.effective_permissions.length > 0" class="row">
+                    <app-list-property class="grow-to-row" [config]="{
+                        mode: editing? 'edit': 'view',
+                        object: technique,
+                        field: 'effective_permissions',
+                        label: 'effective permissions'
+                    }"></app-list-property>
+                </div>
+                <!-- IMPACT TYPE -->
+                <div *ngIf="technique.tactics.includes('impact') && technique.impact_type.length > 0" class="row">
+                    <app-list-property class="grow-to-row" [config]="{
+                        mode: editing? 'edit': 'view',
+                        object: technique,
+                        field: 'impact_type',
+                        label: 'impact type'
+                    }"></app-list-property>
+                </div>
                 <!-- DEFENSE BYPASSED -->
                 <div *ngIf="technique.tactics.includes('defense-evasion') && technique.defense_bypassed.length > 0" class="row">
                     <app-list-property class="grow-to-row" [config]="{
-                        mode: 'view',
+                        mode: editing? 'edit': 'view',
                         object: technique,
                         field: 'defense_bypassed',
                         label: 'defenses bypassed'
