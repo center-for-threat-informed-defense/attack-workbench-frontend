@@ -38,10 +38,15 @@
                         <ng-template matExpansionPanelContent>
                             <mat-form-field appearance="outline">
                                 <mat-label>source type</mat-label>
-                                <mat-select>
+                                <mat-select (selectionChange)="refresh_lists()" [(ngModel)]="source_type">
                                     <mat-option *ngFor="let objType of relationship.valid_source_types" [value]="objType">{{objType}}</mat-option>
                                 </mat-select>
                             </mat-form-field>
+                            <app-stix-list *ngIf="refresh" #source_select [config]="{
+                                'type': source_type,
+                                'select': 'one',
+                                'selectionModel': selectionModel_source
+                            }"></app-stix-list>
                         </ng-template>
                     </mat-expansion-panel-header>
                 </mat-expansion-panel>
@@ -53,10 +58,15 @@
                         <ng-template matExpansionPanelContent>
                             <mat-form-field appearance="outline">
                                 <mat-label>target type</mat-label>
-                                <mat-select>
+                                <mat-select (selectionChange)="refresh_lists()" [(ngModel)]="target_type">
                                     <mat-option *ngFor="let objType of relationship.valid_target_types" [value]="objType">{{objType}}</mat-option>
                                 </mat-select>
                             </mat-form-field>
+                            <app-stix-list *ngIf="refresh" #target_select [config]="{
+                                'type': target_type,
+                                'select': 'one',
+                                'selectionModel': selectionModel_target
+                            }"></app-stix-list>
                         </ng-template>
                     </mat-expansion-panel-header>
                 </mat-expansion-panel>

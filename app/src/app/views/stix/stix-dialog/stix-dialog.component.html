@@ -1,17 +1,17 @@
 <div class="stix-dialog">
     <mat-drawer-container class="stix-dialog-body">
         <mat-drawer-content>
-            <div class="stix-content">
+            <div class="stix-content" *ngIf="!validating" @slideOut>
                 <mat-toolbar>
                     <button mat-button mat-dialog-close class="control" matTooltip="close"><mat-icon aria-label="close">close</mat-icon></button>
                     <div class="spacer"></div>
                     <ng-container *ngIf="config.editable" >
-                        <button mat-button class="control" matTooltip="validate & save" [disabled]="!editing" (click)="saveEdits()"><mat-icon aria-label="save">save</mat-icon></button>
+                        <button mat-button class="control" matTooltip="validate & save" [disabled]="!editing" (click)="validate()"><mat-icon aria-label="save">save</mat-icon></button>
                         <button mat-button class="control" matTooltip="edit" [disabled]="editing"  (click)="startEditing()"><mat-icon aria-label="edit">edit</mat-icon></button>
                     </ng-container>
                     <button *ngIf="config.sidebarControl != 'disable'" mat-button class="control" matTooltip="view sidebar" (click)="toggleSidebar()"><mat-icon aria-label="open sidebar">view_sidebar</mat-icon></button>
                 </mat-toolbar>
-                <div class="view-page-wrapper">
+                <div class="page-padding">
                     <!-- TODO clean this up -->
                     <app-relationship-view 
                                            *ngIf="stixType == 'relationship'" 
@@ -54,6 +54,23 @@
                                            (onOpenHistory)="openHistory()"
                                            (onOpenNotes)="openNotes()">
                     </app-collection-view>
+                </div>
+            </div>
+            <div class="validation page-padding grid spacing-16" *ngIf="validating" @slideIn>
+                <div class="row">
+                    <div class="column validation">
+                        <h3>Validation</h3>
+                        <div *ngIf="validation else validating">
+                            <app-validation-results [validation]="validation"></app-validation-results>
+                        </div>
+                        <ng-template #validating>
+                            <app-loading-overlay></app-loading-overlay>
+                        </ng-template>
+                    </div>
+                    <div class="column narrow save-buttons">
+                        <button mat-stroked-button [disabled]="!saveEnabled" (click)="save()">save</button>
+                        <button mat-button (click)="cancelValidation()">cancel</button>
+                    </div>
                 </div>
             </div>
         </mat-drawer-content>

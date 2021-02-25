@@ -8,6 +8,18 @@ import { Observable, of } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
 
 export type workflowStates = "work-in-progress" | "awaiting-review" | "reviewed"
+let stixTypeToAttackType = {
+    "x-mitre-collection": "collection",
+    "attack-pattern": "technique",
+    "malware": "software",
+    "tool": "software",
+    "intrusion-set": "group",
+    "course-of-action": "mitigation",
+    "x-mitre-matrix": "matrix",
+    "x-mitre-tactic": "tactic",
+    "relationship": "relationship"
+}
+export {stixTypeToAttackType};
 
 export abstract class StixObject extends Serializable {
     public stixID: string; // STIX ID
@@ -15,18 +27,6 @@ export abstract class StixObject extends Serializable {
     public attackType: string; // ATT&CK type
     public attackID: string; // ATT&CK ID
     public description: string;
-
-    private typeMap = {
-        "x-mitre-collection": "collection",
-        "attack-pattern": "technique",
-        "malware": "software",
-        "tool": "software",
-        "intrusion-set": "group",
-        "course-of-action": "mitigation",
-        "x-mitre-matrix": "matrix",
-        "x-mitre-tactic": "tactic",
-        "relationship": "relationship"
-    }
 
     private typeUrlMap = {
         "technique": "techniques",
@@ -84,7 +84,7 @@ export abstract class StixObject extends Serializable {
             };
             this.description = "";
         }
-        this.attackType = this.typeMap[this.type]
+        this.attackType = stixTypeToAttackType[this.type]
     }
 
     /**
