@@ -1,0 +1,33 @@
+@import "../../../style/globals";
+.add-dialog {
+    .mat-list-item:hover h3 {
+        color: color(primary);
+    }
+    .mat-list-item h3 {
+        @extend .subheading;
+        font-weight: 700 !important;
+    }
+    .mat-list-item + .mat-list-item {
+        .dark & { border-top: 1px solid border-color(dark); }
+        .light & { border-top: 1px solid border-color(light); }
+    }
+
+    max-width: 80vw;
+    max-height: 75vh;
+
+    .centered {
+        text-align: center;
+    }
+
+    .button-padding {
+        padding-top: 24px;
+    }
+
+    .left-button {
+        margin-right: 12px;
+    }
+
+    .right-button {
+        margin-left: 12px;
+    }
+}
