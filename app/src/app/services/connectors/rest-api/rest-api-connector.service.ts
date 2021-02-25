@@ -1,8 +1,8 @@
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { Observable } from 'rxjs';
-import { tap, catchError, map, share } from 'rxjs/operators';
+import { Observable, of } from 'rxjs';
+import { tap, catchError, map, share, switchMap } from 'rxjs/operators';
 import { CollectionIndex } from 'src/app/classes/collection-index';
 import { Collection } from 'src/app/classes/stix/collection';
 import { Group } from 'src/app/classes/stix/group';
@@ -233,6 +233,38 @@ export class RestApiConnectorService extends ApiConnector {
                         if (y.stix.type == "malware" || y.stix.type == "tool") return new Software(y.stix.type, y);
                         else return new attackClass(y);
                     });
+                }),
+                switchMap(result => { // add sub-technique or parent-technique but only if it's a technique
+                    let x = result as any[];
+                    if (x[0].attackType != "technique") return of(result); //don't transform non-techniques
+                    let t = x[0] as Technique;
+                    if (t.is_subtechnique) { //add parent technique
+                        return this.getRelatedTo(t.stixID, null, null, null, "subtechnique-of").pipe( // fetch from REST API
+                            map(rel => { //extract the parent from the relationship
+                                let p = rel as any;
+                                return new Technique(p.data[0].target_object); //transform it to a Technique
+                            }),
+                            map(parent => { //add the parent to the sub-technique
+                                let p = parent as any;
+                                t.parentTechnique = p;
+                                return [t];
+                            }),
+                            tap(result => console.log("fetched parent technique of", result, result[0]["parentTechnique"]))
+                        );
+                    } else { // add subtechniques
+                        return this.getRelatedTo(null, t.stixID, null, null, "subtechnique-of").pipe( // fetch from REST API
+                            map(rel => { //extract the sub-techniques from the relationships
+                                let s = rel as any;
+                                return s.data.map(rel => new Technique(rel.source_object)); //transform them to Techniques
+                            }),
+                            map(subs => { //add the sub-techniques to the parent
+                                let s = subs as any[];
+                                t.subTechniques = s;
+                                return [t];
+                            }),
+                            tap(result => console.log("fetched sub-techniques of", result, result[0]["subTechniques"]))
+                        );
+                    }
                 }),
                 catchError(this.handleError_array([])), // on error, trigger the error notification and continue operation without crashing (returns empty item)
                 share() // multicast so that multiple subscribers don't trigger the call twice. THIS MUST BE THE LAST LINE OF THE PIPE

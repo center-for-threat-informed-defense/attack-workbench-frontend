@@ -44,11 +44,11 @@ export class CollectionViewComponent extends StixViewPage implements OnInit {
                 for (let stixId of collection.import_categories[category]) idToCategory[stixId] = category;
             }
 
-            //build ID to name lookup
-            let idToName = {};
+            //build ID to SDO
+            let idToSdo = {};
             for (let object of collection.stix_contents) {
                 let x = object as any;
-                if (object.type != "relationship") idToName[object.stixID] = x.name;
+                if (object.type != "relationship") idToSdo[object.stixID] = x.serialize();
             }
             //parse objects into categories
             for (let object of collection.stix_contents) {
@@ -70,9 +70,12 @@ export class CollectionViewComponent extends StixViewPage implements OnInit {
                     break;
                     case "relationship": //relationship
                         let x = object as Relationship;
-                        x.source_name = x.source_ref in idToName? idToName[x.source_ref] : "unknown object";
-                        x.target_name = x.target_ref in idToName? idToName[x.target_ref] : "unknown object";
-                        categories.relationship[category].push(object);
+                        // add source and target objects
+                        let serialized = x.serialize();
+                        serialized.workspace.workflow = {};
+                        if (x.source_ref in idToSdo) serialized.source_object = idToSdo[x.source_ref]
+                        if (x.target_ref in idToSdo) serialized.target_object = idToSdo[x.target_ref]
+                        categories.relationship[category].push(new Relationship(serialized));
                     break;
                     case "course-of-action": //mitigation
                         categories.mitigation[category].push(object);
