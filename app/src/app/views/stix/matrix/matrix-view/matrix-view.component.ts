@@ -16,6 +16,7 @@ export class MatrixViewComponent extends StixViewPage implements OnInit {
   public editing: boolean = false;
 
   public tactics : Array<StixObject> = [];
+  public all_tactics : Array<StixObject> = [];
 
   public get matrix(): Matrix { return this.config.object as Matrix; }
 
@@ -46,14 +47,14 @@ export class MatrixViewComponent extends StixViewPage implements OnInit {
             for (let tactic of all_tactics.data){
               tactics_map.set(tactic.stixID, tactic);
             }
+
+            this.all_tactics = all_tactics.data;
     
             this.getTactics(tactics_map);
           },
           complete: () => { subscription.unsubscribe(); } //prevent memory leaks
         })
     }
-
-
   }
 
 }
