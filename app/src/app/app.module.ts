@@ -58,6 +58,7 @@ import { SaveDialogComponent } from "./components/save-dialog/save-dialog.compon
 import { AddDialogComponent } from './components/add-dialog/add-dialog.component';
 import { HistoryTimelineComponent } from "./components/resources-drawer/history-timeline/history-timeline.component";
 import { MultipleChoiceDialogComponent } from "./components/multiple-choice-dialog/multiple-choice-dialog.component";
+import { ValidationResultsComponent } from "./components/validation-results/validation-results.component";
 
 // STIX components
 import { StixListComponent } from './components/stix/stix-list/stix-list.component';
@@ -152,6 +153,7 @@ import { OrderedListEditComponent } from './components/stix/ordered-list-propert
     AddDialogComponent,
     HistoryTimelineComponent,
     MultipleChoiceDialogComponent,
+    ValidationResultsComponent, 
     
     StixListComponent,
 
