@@ -14,6 +14,26 @@ export class Relationship extends StixObject {
     public target_ID: string;
     
     public readonly relationship_type: string;
+    /**
+     * The valid source types according to relationship_type
+     * null if any type is valid or relationship_type is not recognized
+     */
+    public get valid_source_types(): string[] {
+        if (this.relationship_type == "uses") return ["group", "software"]
+        if (this.relationship_type == "mitigates") return ["mitigation"]
+        if (this.relationship_type == "subtechnique-of") return ["technique"]
+        else return null;
+    }
+    /**
+     * The valid source types according to relationship_type
+     * null if any type is valid or relationship_type is not recognized
+     */
+    public get valid_target_types(): string[] {
+        if (this.relationship_type == "uses") return ["software", "technique"]
+        if (this.relationship_type == "mitigates") return ["technique"]
+        if (this.relationship_type == "subtechnique-of") return ["technique"]
+        else return null;
+    }
 
     constructor(sdo?: any) {
         super(sdo, "relationship");

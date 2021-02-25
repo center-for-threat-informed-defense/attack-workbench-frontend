@@ -16,12 +16,21 @@ export class StixDialogComponent implements OnInit {
     constructor(public dialogRef: MatDialogRef<StixDialogComponent>, @Inject(MAT_DIALOG_DATA) public _config: StixViewConfig, public sidebarService: SidebarService) { }
     public get config(): StixViewConfig {
         return {
-            mode: this._config.mode,
+            mode: this.editing? "edit" : "view",
             object: this._config.object,
             showRelationships: false,
             editable: this._config.editable,
             sidebarControl: this._config.sidebarControl == "disable"? "disable" : "events"
         }
+    }
+
+    public editing: boolean = false;
+    public startEditing() {
+        this.editing = true;
+    }
+    public saveEdits() {
+        // TODO
+        this.editing = false;
     }
 
     public sidebarOpened: boolean = false;
