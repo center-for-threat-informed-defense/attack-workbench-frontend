@@ -37,8 +37,8 @@
             <app-list-property class="grow-to-row" [config]="{
                 mode: editing? 'edit': 'view',
                 object: technique,
-                objectType: 'technique',
-                field: 'platforms'
+                field: 'platforms',
+                editType: 'select'
             }"></app-list-property>
         </div>
     </div>
@@ -61,8 +61,8 @@
             <app-list-property class="grow-to-row" [config]="{
                 mode: editing? 'edit': 'view',
                 object: technique,
-                objectType: 'technique',
-                field: 'domains'
+                field: 'domains',
+                editType: 'select'
             }"></app-list-property>
         </div>
         <ng-container *ngIf="technique.data_sources.length > 0 || technique.system_requirements.length > 0 || technique.tactic_type.length > 0">
@@ -86,7 +86,8 @@
                         mode: editing? 'edit': 'view',
                         object: technique,
                         field: 'system_requirements',
-                        label: 'system requirements'
+                        label: 'system requirements',
+                        editType: 'any'
                     }"></app-list-property>
                 </div>
                 <!-- TACTIC TYPES -->
@@ -94,7 +95,8 @@
                     <app-list-property class="grow-to-row" [config]="{
                         mode: editing? 'edit': 'view',
                         object: technique,
-                        field: 'tactic_type'
+                        field: 'tactic_type',
+                        editType: 'select'
                     }"></app-list-property>
                 </div>
             </div>
@@ -107,7 +109,7 @@
                 mode: 'edit',
                 object: technique,
                 field: 'tactics',
-                attackType: 'tactic'
+                editType: 'stixList'
             }"></app-list-property>
         </div>
         <ng-container *ngIf="technique.permissions_required.length > 0 || technique.effective_permissions.length > 0 || 
@@ -123,7 +125,8 @@
                         mode: editing? 'edit': 'view',
                         object: technique,
                         field: 'permissions_required',
-                        label: 'permissions required'
+                        label: 'permissions required',
+                        editType: 'select'
                     }"></app-list-property>
                 </div>
                 <!-- EFFECTIVE PERMISSIONS -->
@@ -132,7 +135,8 @@
                         mode: editing? 'edit': 'view',
                         object: technique,
                         field: 'effective_permissions',
-                        label: 'effective permissions'
+                        label: 'effective permissions',
+                        editType: 'select'
                     }"></app-list-property>
                 </div>
                 <!-- IMPACT TYPE -->
@@ -141,7 +145,8 @@
                         mode: editing? 'edit': 'view',
                         object: technique,
                         field: 'impact_type',
-                        label: 'impact type'
+                        label: 'impact type',
+                        editType: 'select'
                     }"></app-list-property>
                 </div>
                 <!-- DEFENSE BYPASSED -->
@@ -150,7 +155,8 @@
                         mode: editing? 'edit': 'view',
                         object: technique,
                         field: 'defense_bypassed',
-                        label: 'defenses bypassed'
+                        label: 'defenses bypassed',
+                        editType: 'any'
                     }"></app-list-property>
                 </div>
                 <!-- REMOTE SUPPORT -->

@@ -657,15 +657,12 @@ export class RestApiConnectorService extends ApiConnector {
 
     /**
      * Fetch allowed values for the given ATT&CK type
-     * @param {string} [type] retrieve allowed values where the object type is this ATT&CK type
-     * @returns {Observable<any>} allowed values
+     * @returns {Observable<any>} all allowed values
      */
-    public getAllowedValues(type: AttackType): Observable<any> {
+    public getAllAllowedValues(): Observable<any> {
         return this.http.get<any>(`${this.baseUrl}/config/allowed-values`, {headers: this.headers}).pipe(
             tap(_ => console.log("retrieved allowed values")),
-            map(results => {
-                return results.find(obj => { return obj.objectType == type });
-            }),
+            map(result => result as any),
             catchError(this.handleError_array<string[]>([]))
         )
     }                                                                     
