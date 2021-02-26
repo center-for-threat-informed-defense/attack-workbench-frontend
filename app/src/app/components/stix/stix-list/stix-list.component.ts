@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, ViewEncapsulation, ViewChild, AfterViewInit, ElementRef } from '@angular/core';
+import { Component, OnInit, Input, ViewEncapsulation, ViewChild, AfterViewInit, ElementRef, EventEmitter, Output } from '@angular/core';
 import { StixObject } from 'src/app/classes/stix/stix-object';
 import {animate, style, transition, trigger} from '@angular/animations';
 import {MatSort} from '@angular/material/sort';
@@ -86,13 +86,17 @@ export class StixListComponent implements OnInit, AfterViewInit {
      */
     public onRowClick(element: StixObject) {
         if (this.config.clickBehavior && this.config.clickBehavior == "dialog") { //open modal
-            this.dialog.open(StixDialogComponent, {
+            let prompt = this.dialog.open(StixDialogComponent, {
                 data: {
                     object: element,
                     editable: this.config.allowEdits,
                     sidebarControl: this.config.allowEdits? "events" : "disable"
                 },
                 maxHeight: "75vh"
+            })
+            let subscription = prompt.afterClosed().subscribe({
+                next: result => { if (prompt.componentInstance.dirty) this.applyControls(); }, //re-fetch values since an edit occurred
+                complete: () => { subscription.unsubscribe(); }
             });
         } else { //expand
             this.expandedElement = this.expandedElement === element ? null : element;
