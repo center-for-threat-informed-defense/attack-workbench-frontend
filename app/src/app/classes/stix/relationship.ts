@@ -1,5 +1,5 @@
 import { Observable } from "rxjs";
-import { map } from "rxjs/operators";
+import { map, switchMap } from "rxjs/operators";
 import { RestApiConnectorService } from "src/app/services/connectors/rest-api/rest-api-connector.service";
 import { ValidationData } from "../serializable";
 import {StixObject} from "./stix-object";
@@ -178,7 +178,7 @@ export class Relationship extends StixObject {
                 })} else { result.successes.push({
                     "field": "source_ref",
                     "result": "error",
-                    "message": "source object exists"
+                    "message": "source object specified"
                 })}
 
                 if (!this.source_ref) { result.errors.push({
@@ -188,9 +188,38 @@ export class Relationship extends StixObject {
                 })} else { result.successes.push({
                     "field": "target_ref",
                     "result": "error",
-                    "message": "target object exists"
+                    "message": "target object specified"
                 })}
                 return result;
+            }),
+            //check for parallel relationships
+            switchMap(result => {
+                // TODO replace with getAllRelationships once the API is fixed
+                return restAPIService.getAllObjects().pipe(
+                    map(objects => {
+                        let relationships = objects as any[];
+                        if (relationships.find(relationship => { //parallel relationship
+                            return relationship.stix.type == "relationship" &&
+                                   relationship.stix.id != this.stixID && 
+                                   relationship.stix.source_ref == this.source_ref &&
+                                   relationship.stix.target_ref == this.target_ref
+                        })) {
+                            result.errors.push({
+                                "field": "source_ref",
+                                "result": "error",
+                                "message": "a relationship already exists between these objects"
+                            })
+                            return result;
+                        } else {
+                            result.successes.push({
+                                "field": "source_ref",
+                                "result": "success",
+                                "message": "relationship is unique"
+                            })
+                            return result;
+                        }
+                    })
+                )
             })
         );
     }

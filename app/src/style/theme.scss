@@ -138,6 +138,10 @@ $tooltip-color: color-alternate(dark, 4);
     color: color(error);
 }
 
+button.mat-stroked-button:disabled {
+    opacity: 0.5;
+}
+
 .mat-select-panel {
     .light & {
         color: on-color(light);

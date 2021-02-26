@@ -222,6 +222,18 @@ export class RestApiConnectorService extends ApiConnector {
      * @returns {Observable<Matrix[]>} observable of retrieved objects
      */
     public get getAllCollections() { return this.getStixObjectsFactory<Collection>("collection"); }
+    /**
+     * Get all relationships
+     * @param {number} [limit] the number of relationships to retrieve
+     * @param {number} [offset] the number of relationships to skip
+     * @param {string} [state] if specified, only get objects with this state
+     * @param {boolean} [revoked] if true, get revoked objects
+     * @param {versions} ["all" | "latest"] if "all", get all versions of the relationships. if "latest", only get the latest version of each collection.
+     * @param {boolean} [deprecated] if true, get deprecated objects
+     * @param {string[]} [excludeIDs] if specified, excludes these STIX IDs from the result
+     * @returns {Observable<Relationships[]>} observable of retrieved objects
+     */
+    public get getAllRelationships() { return this.getStixObjectsFactory<Relationship>("relationship"); }
 
     /**
      * Get all objects WITHOUT deserializing them to StixObjects
