@@ -61,12 +61,16 @@ export class StixPageComponent implements OnInit, OnDestroy {
         
         let subscription = prompt.afterClosed().subscribe({
             next: (result) => {
-                if (result && typeof(result) == "string") {
-                    // increment the version number 
-                    console.log("updating version to", result);
-                    this.objects[0].version.version = result;
+                if(result && typeof(result) == "string" && result.includes('discard')) {                  // Discard and stop editing
+                    this.editorService.stopEditing();
+                    this.loadObjects();
                 }
-                if (result) {
+                else if(result) {
+                    if (typeof(result) == "string") {
+                        // increment the version number 
+                        console.log("updating version to", result);
+                        this.objects[0].version.version = result;
+                    }
                     // save the object
                     let subscription = this.objects[0].save(true, this.restAPIConnectorService).subscribe({
                         next: (result) => { 
@@ -76,7 +80,6 @@ export class StixPageComponent implements OnInit, OnDestroy {
                         complete: () => {subscription.unsubscribe(); }
                     });
                 }
-
             },
             complete: () => { subscription.unsubscribe(); } //prevent memory leaks
         })
