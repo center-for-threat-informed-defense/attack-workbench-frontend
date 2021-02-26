@@ -38,14 +38,14 @@ export class EditorService {
             }
         });
   
-      let subscription = prompt.afterClosed().subscribe({
-        next: (result) => {
-            if (result) {
-                this.router.navigate([], {queryParams: {}})
-            }
-        },
-        complete: () => { subscription.unsubscribe(); } //prevent memory leaks
-      });
+        let subscription = prompt.afterClosed().subscribe({
+            next: (result) => {
+                if (result) {
+                    this.router.navigate([], {queryParams: {}})
+                }
+            },
+            complete: () => { subscription.unsubscribe(); } //prevent memory leaks
+        });
     }
 
      //https://stackoverflow.com/questions/38644314/changing-the-page-title-using-the-angular-2-new-router/38652281#38652281
