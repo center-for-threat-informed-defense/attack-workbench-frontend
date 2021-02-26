@@ -148,7 +148,7 @@
     <!-- RELATIONSHIPS -->
     <div *ngIf="config.showRelationships || !config.hasOwnProperty('showRelationships')">
         <!-- SUBTECHNIQUES -->
-        <div *ngIf="!technique.is_subtechnique">
+        <div *ngIf="!technique.is_subtechnique; else othersubs">
             <div class="row">
                 <div class="col">
                     <h2 class="section-header">Sub-techniques</h2>
@@ -165,6 +165,24 @@
                 </div>
             </div>
         </div>
+        <ng-template #othersubs>
+            <div class="row">
+                <div class="col">
+                    <h2 class="section-header">Other Sub-techniques of {{technique.parentTechnique.name}}</h2>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <app-stix-list [config]="{
+                        'type': 'relationship', 
+                        'targetRef': technique.parentTechnique.stixID,
+                        'relationshipType': 'subtechnique-of',
+                        'clickBehavior': 'dialog',
+                        'excludeSourceRefs': [technique.stixID]
+                    }"></app-stix-list>
+                </div>
+            </div>
+        </ng-template>
         <!-- MITIGATIONS -->
         <div class="row">
             <div class="col">
