@@ -1,14 +1,14 @@
 @import "../../../../../style/globals";
 @import '~@angular/material/theming';
+
 .list-edit {
     mat-form-field {
         width: 100%;
+    }
 
-        mat-chip {
-            background: color-alternate(light);
-            // .light & { background: color-alternate(light); }
-            // .dark &  { background: color-alternate(dark); }
-        }
+    mat-chip {
+        .light & { background: color-alternate(light); }
+        .dark &  { background: color-alternate(dark); }
     }
 
     .icon {
