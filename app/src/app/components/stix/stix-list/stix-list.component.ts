@@ -336,7 +336,7 @@ export class StixListComponent implements OnInit, AfterViewInit {
             else if (this.config.type == "tactic") this.data$ = this.restAPIConnectorService.getAllTactics(limit, offset, null, null, null, null, this.config.excludeIDs); //TODO add limit and offset once back-end supports it
             else if (this.config.type == "technique") this.data$ = this.restAPIConnectorService.getAllTechniques(limit, offset, null, null, null, null, this.config.excludeIDs);
             else if (this.config.type == "collection") this.data$ = this.restAPIConnectorService.getAllCollections();
-            else if (this.config.type == "relationship") this.data$ = this.restAPIConnectorService.getRelatedTo(this.config.sourceRef, this.config.targetRef, this.config.sourceType, this.config.targetType, this.config.relationshipType, null, null, this.config.excludeSourceRefs, this.config.excludeTargetRefs);
+            else if (this.config.type == "relationship") this.data$ = this.restAPIConnectorService.getRelatedTo(this.config.sourceRef, this.config.targetRef, this.config.sourceType, this.config.targetType, this.config.relationshipType, limit, offset, this.config.excludeSourceRefs, this.config.excludeTargetRefs);
             let subscription = this.data$.subscribe({
                 next: (data) => { this.totalObjectCount = data.pagination.total; },
                 complete: () => { subscription.unsubscribe() }
