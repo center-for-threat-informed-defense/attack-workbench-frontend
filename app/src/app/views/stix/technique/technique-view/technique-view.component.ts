@@ -24,5 +24,4 @@ export class TechniqueViewComponent extends StixViewPage implements OnInit {
             this.editing = params["editing"];
         });
     }
-
 }
