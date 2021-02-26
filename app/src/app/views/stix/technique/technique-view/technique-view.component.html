@@ -106,7 +106,7 @@
     <div *ngIf="technique.tactics.length > 0" class="row">
         <div class="col">
             <app-list-property class="grow-to-row" [config]="{
-                mode: 'edit',
+                mode: editing? 'edit': 'view',
                 object: technique,
                 field: 'tactics',
                 editType: 'stixList'
