@@ -27,13 +27,11 @@
         </mat-select>
     </mat-form-field>
 
-    <mat-form-field *ngIf="config.editType == 'stixList'" appearance="outline">
+    <mat-form-field *ngIf="config.editType == 'stixList'" appearance="outline" (click)="open()">
         <mat-label>{{config.label? config.label : config.field}}</mat-label>
-        <button mat-mini-fab class="add-button" color="primary" (click)="open()"><mat-icon aria-label="add">add</mat-icon></button>
+        <mat-icon aria-hidden="false" aria-label="open" class="icon">open_in_new</mat-icon>
         <mat-chip-list #stixChipList>
-            <mat-chip *ngFor="let value of config.object[config.field]" [removable]="true" (removed)="remove(value)">
-                {{value}} <mat-icon matChipRemove>cancel</mat-icon>
-            </mat-chip>
+            <mat-chip *ngFor="let value of config.object[config.field]" [removable]="false">{{value}}</mat-chip>
         </mat-chip-list>
     </mat-form-field>
 </div>
