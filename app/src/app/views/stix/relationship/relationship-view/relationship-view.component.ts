@@ -1,9 +1,10 @@
 import { SelectionModel } from '@angular/cdk/collections';
-import { Component, Input, OnDestroy, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { Observer } from 'rxjs';
 import { Relationship } from 'src/app/classes/stix/relationship';
 import { stixTypeToAttackType } from 'src/app/classes/stix/stix-object';
 import { StixListComponent } from 'src/app/components/stix/stix-list/stix-list.component';
+import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/rest-api-connector.service';
 import { StixViewPage } from '../../stix-view-page';
 
 @Component({
@@ -32,7 +33,7 @@ export class RelationshipViewComponent extends StixViewPage implements OnInit, O
         })
     }
 
-    constructor() { 
+    constructor(private restApiService: RestApiConnectorService) { 
         super()
     }
 
@@ -41,10 +42,18 @@ export class RelationshipViewComponent extends StixViewPage implements OnInit, O
         if (this.relationship.target_object) this.target_type = stixTypeToAttackType[this.relationship.target_object.stix.type]
         this.selectionModel_source = new SelectionModel(false, [this.relationship.source_ref], true);
         this.selectionModel_target = new SelectionModel(false, [this.relationship.target_ref], true);
-        this.selectionModel_source.changed.subscribe(() => this.relationship.source_ref = this.selectionModel_source.selected[0])
-        this.selectionModel_target.changed.subscribe(() => this.relationship.target_ref = this.selectionModel_target.selected[0])
+        this.selectionModel_source.changed.subscribe(() => { 
+            let subscription = this.relationship.set_source_ref(this.selectionModel_source.selected[0], this.restApiService).subscribe({
+                complete: () => subscription.unsubscribe()
+            }) 
+        });
+        this.selectionModel_target.changed.subscribe(() => { 
+            let subscription = this.relationship.set_target_ref(this.selectionModel_target.selected[0], this.restApiService).subscribe({
+                complete: () => subscription.unsubscribe()
+            }) 
+        });
     }
-    
+
     ngOnDestroy(): void {
         this.selectionModel_source.changed.unsubscribe();
         this.selectionModel_source.changed.unsubscribe();
