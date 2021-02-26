@@ -329,14 +329,14 @@ export class StixListComponent implements OnInit, AfterViewInit {
             // fetch objects from backend
             let limit = this.paginator? this.paginator.pageSize : 5;
             let offset = this.paginator? this.paginator.pageIndex * limit : 0;
-            if (this.config.type == "software") this.data$ = this.restAPIConnectorService.getAllSoftware(limit, offset); //TODO add limit and offset once back-end supports it
-            else if (this.config.type == "group") this.data$ = this.restAPIConnectorService.getAllGroups(limit, offset); //TODO add limit and offset once back-end supports it
-            else if (this.config.type == "matrix") this.data$ = this.restAPIConnectorService.getAllMatrices(limit, offset); //TODO add limit and offset once back-end supports it
-            else if (this.config.type == "mitigation") this.data$ = this.restAPIConnectorService.getAllMitigations(limit, offset); //TODO add limit and offset once back-end supports it
-            else if (this.config.type == "tactic") this.data$ = this.restAPIConnectorService.getAllTactics(limit, offset); //TODO add limit and offset once back-end supports it
-            else if (this.config.type == "technique") this.data$ = this.restAPIConnectorService.getAllTechniques(limit, offset);
+            if (this.config.type == "software") this.data$ = this.restAPIConnectorService.getAllSoftware(limit, offset, null, null, null, null, this.config.excludeIDs); //TODO add limit and offset once back-end supports it
+            else if (this.config.type == "group") this.data$ = this.restAPIConnectorService.getAllGroups(limit, offset, null, null, null, null, this.config.excludeIDs); //TODO add limit and offset once back-end supports it
+            else if (this.config.type == "matrix") this.data$ = this.restAPIConnectorService.getAllMatrices(limit, offset, null, null, null, null, this.config.excludeIDs); //TODO add limit and offset once back-end supports it
+            else if (this.config.type == "mitigation") this.data$ = this.restAPIConnectorService.getAllMitigations(limit, offset, null, null, null, null, this.config.excludeIDs); //TODO add limit and offset once back-end supports it
+            else if (this.config.type == "tactic") this.data$ = this.restAPIConnectorService.getAllTactics(limit, offset, null, null, null, null, this.config.excludeIDs); //TODO add limit and offset once back-end supports it
+            else if (this.config.type == "technique") this.data$ = this.restAPIConnectorService.getAllTechniques(limit, offset, null, null, null, null, this.config.excludeIDs);
             else if (this.config.type == "collection") this.data$ = this.restAPIConnectorService.getAllCollections();
-            else if (this.config.type == "relationship") this.data$ = this.restAPIConnectorService.getRelatedTo(this.config.sourceRef, this.config.targetRef, this.config.sourceType, this.config.targetType, this.config.relationshipType);
+            else if (this.config.type == "relationship") this.data$ = this.restAPIConnectorService.getRelatedTo(this.config.sourceRef, this.config.targetRef, this.config.sourceType, this.config.targetType, this.config.relationshipType, null, null, this.config.excludeSourceRefs, this.config.excludeTargetRefs);
             let subscription = this.data$.subscribe({
                 next: (data) => { this.totalObjectCount = data.pagination.total; },
                 complete: () => { subscription.unsubscribe() }
@@ -389,7 +389,10 @@ export interface StixListConfig {
      *     "expand": expand the row to show additional detail
      *     "dialog": open a dialog with the full object definition
      */
-    clickBehavior?: "expand" | "dialog"
+    clickBehavior?: "expand" | "dialog";
+    excludeIDs?: string[]; //exclude objects with this ID from the list
+    excludeSourceRefs?: string[]; //exclude relationships with this source_ref from the list
+    excludeTargetRefs?: string[]; //exclude relationships with this target_ref from the list
 }
 
 export interface FilterValue {
