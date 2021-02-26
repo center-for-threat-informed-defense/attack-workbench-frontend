@@ -1,7 +1,10 @@
 <div class="grid spacing-12 view-page relationship-view">
     <div class="row">
         <div class="col">
-            <h1>{{relationship.source_name}} <span class="text-deemphasis">{{relationship.relationship_type}}</span> {{relationship.target_name}}</h1>
+            <h1 *ngIf="!relationship.updating_refs; else updatingRefs">{{relationship.source_name}} <span class="text-deemphasis">{{relationship.relationship_type}}</span> {{relationship.target_name}}</h1>
+            <ng-template #updatingRefs>
+                <app-loading-overlay></app-loading-overlay>
+            </ng-template>
             <app-subheading [config]="config" (onOpenHistory)="openHistory()" (onOpenNotes)="openNotes()"></app-subheading>
         </div>
     </div>

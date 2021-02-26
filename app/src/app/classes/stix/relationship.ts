@@ -17,6 +17,7 @@ export class Relationship extends StixObject {
     public target_ID: string;
     public target_object: any;
     
+    public updating_refs: boolean = false; //becomes true while source and target refs are being asynchronously updated.
     
     public readonly relationship_type: string;
     /**
@@ -68,6 +69,48 @@ export class Relationship extends StixObject {
                 this.deserialize(sdo);
             }
         }
+    }
+    
+    /**
+     * set the source ref, and set the source_object and source_id to the new values
+     * @param {string} new_source_ref the new source ref
+     * @param {RestApiConnectorService} restAPIService: the REST API connector through which the source can be fetched
+     * @returns {Observable<Relationship>} of this object after the data has been updated
+     */
+    public set_source_ref(new_source_ref: string, restAPIService: RestApiConnectorService): Observable<Relationship> {
+        this.source_ref = new_source_ref;
+        this.updating_refs = true;
+        return restAPIService.getAllObjects().pipe(
+            map(results => {
+                let x = results as any;
+                let serialized = this.serialize();
+                serialized.source_object = x.find(result => result.stix.id == new_source_ref);
+                this.deserialize(serialized);
+                this.updating_refs = false;
+                return this;
+            })
+        )
+    }
+
+    /**
+     * set the target ref, and set the target_object and target_id to the new values
+     * @param {string} new_target_ref the new target ref
+     * @param {RestApiConnectorService} restAPIService: the REST API connector through which the target can be fetched
+     * @returns {Observable<Relationship>} of this object after the data has been updated
+     */
+    public set_target_ref(new_target_ref: string, restAPIService: RestApiConnectorService): Observable<Relationship> {
+        this.target_ref = new_target_ref;
+        this.updating_refs = true;
+        return restAPIService.getAllObjects().pipe(
+            map(results => {
+                let x = results as any;
+                let serialized = this.serialize();
+                serialized.source_object = x.find(result => result.stix.id == new_target_ref);
+                this.deserialize(serialized);
+                this.updating_refs = false;
+                return this;
+            })
+        )
     }
 
     /**

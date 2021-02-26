@@ -1,5 +1,3 @@
-
-import { animate, style, transition, trigger } from '@angular/animations';
 import { Component, Inject, OnInit, ViewEncapsulation } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ValidationData } from 'src/app/classes/serializable';
@@ -13,19 +11,6 @@ import { StixViewConfig } from '../stix-view-page';
   templateUrl: './stix-dialog.component.html',
   styleUrls: ['./stix-dialog.component.scss'],
   encapsulation: ViewEncapsulation.None,
-  animations: [
-      trigger("slideIn", [
-          transition(":enter", [
-            style({transform: 'translateY(-100%)'}),
-            animate('200ms ease-in', style({transform: 'translateY(0%)'}))
-          ])
-      ]),
-      trigger("slideOut", [
-          transition(":leave", [
-              animate('200ms ease-in', style({transform: 'translateY(-100%)'}))
-          ])
-      ]),
-  ]
 })
 export class StixDialogComponent implements OnInit {
 

@@ -1,7 +1,7 @@
 <div class="stix-dialog">
     <mat-drawer-container class="stix-dialog-body">
         <mat-drawer-content>
-            <div class="stix-content" *ngIf="!validating" @slideOut>
+            <div class="stix-content" *ngIf="!validating">
                 <mat-toolbar>
                     <button mat-button mat-dialog-close class="control" matTooltip="close"><mat-icon aria-label="close">close</mat-icon></button>
                     <div class="spacer"></div>
@@ -56,7 +56,7 @@
                     </app-collection-view>
                 </div>
             </div>
-            <div class="validation page-padding grid spacing-16" *ngIf="validating" @slideIn>
+            <div class="validation page-padding grid spacing-16" *ngIf="validating">
                 <div class="row">
                     <div class="column validation">
                         <h3>Validation</h3>
