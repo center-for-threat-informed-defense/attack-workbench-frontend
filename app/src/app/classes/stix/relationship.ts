@@ -39,7 +39,7 @@ export class Relationship extends StixObject {
      */
     public get valid_target_types(): string[] {
         if (this.relationship_type == "uses") {
-            if (this.target_object && (this.target_object.stix.type == "malware" || this.target_object.stix.type == "tool")) return ["technique"];
+            if (this.source_object && (this.source_object.stix.type == "malware" || this.source_object.stix.type == "tool")) return ["technique"];
             else return ["software", "technique"];
         }
         if (this.relationship_type == "mitigates") return ["technique"];
