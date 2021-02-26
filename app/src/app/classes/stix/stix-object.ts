@@ -276,14 +276,28 @@ export abstract class StixObject extends Serializable {
                             if (objects.data.some(x => x.attackID == this.attackID && x.stixID != this.stixID)) {
                                 result.errors.push({
                                     "result": "error",
-                                    "field": "name",
+                                    "field": "attackID",
                                     "message": "ATT&CK ID is not unique"
                                 })
                             } else {
                                 result.successes.push({
                                     "result": "success",
-                                    "field": "name",
+                                    "field": "attackID",
                                     "message": "ATT&CK ID is unique"
+                                })
+                            }
+                            let attackIDValid = 
+                                this.type == "attack-pattern"? /^T\d{4}(.\d{3})?$/.test(this.attackID) :
+                                this.type == "x-mitre-tactic"? /^TA\d{4}$/.test(this.attackID) :
+                                this.type == "malware" || this.type == "tool"? /^S\d{4}$/.test(this.attackID) :
+                                this.type == "course-of-action"? /^M\\d{4}$/.test(this.attackID) :
+                                this.type == "x-mitre-matrix" ? true :
+                                this.type == "intrusion-set"? /^G\\d{4}$/.test(this.attackID) : false;
+                            if (!attackIDValid) {
+                                result.errors.push({
+                                    "result": "error",
+                                    "field": "attackID",
+                                    "message": "ATT&CK ID is not formatted properly"
                                 })
                             }
                         }
