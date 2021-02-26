@@ -4,6 +4,7 @@ import { NgModule } from '@angular/core';
 import { AppRoutingModule } from './app-routing.module';
 import { AppRoutingStixModule } from "./app-routing-stix.module"
 import { HttpClient, HttpClientModule } from '@angular/common/http'
+import { DragDropModule } from '@angular/cdk/drag-drop';
 
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -54,6 +55,7 @@ import { EmptyListMarkerComponent } from "./components/empty-list-marker/empty-l
 import { MarkdownViewDialogComponent } from "./components/markdown-view-dialog/markdown-view-dialog.component";
 import { CollectionImportSummaryComponent } from "./components/collection-import-summary/collection-import-summary.component";
 import { SaveDialogComponent } from "./components/save-dialog/save-dialog.component";
+import { AddDialogComponent } from './components/add-dialog/add-dialog.component';
 import { HistoryTimelineComponent } from "./components/resources-drawer/history-timeline/history-timeline.component";
 
 // STIX components
@@ -150,6 +152,7 @@ import { TypeEditComponent } from './components/stix/type-property/type-edit/typ
     MarkdownViewDialogComponent,
     CollectionImportSummaryComponent,
     SaveDialogComponent,
+    AddDialogComponent,
     HistoryTimelineComponent,
     
     StixListComponent,
@@ -267,6 +270,7 @@ import { TypeEditComponent } from './components/stix/type-property/type-edit/typ
     MatMenuModule,
     MatDialogModule,
     MatSnackBarModule,
+    DragDropModule,
 
     OverlayModule
   ],
@@ -295,6 +299,7 @@ import { TypeEditComponent } from './components/stix/type-property/type-edit/typ
     MatMenuModule,
     MatDialogModule,
     MatSnackBarModule,
+    DragDropModule,
 
     OverlayModule
   ],
