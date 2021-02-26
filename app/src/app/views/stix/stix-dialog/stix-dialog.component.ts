@@ -28,9 +28,11 @@ export class StixDialogComponent implements OnInit {
     public editing: boolean = false;
     public validating: boolean = false;
     public validation: ValidationData = null;
+    public dirty: boolean = false;
     public startEditing() {
         this.dialogRef.disableClose = true;
         this.editing = true;
+        this.dirty = true;
     }
     public validate() {
         this.validating = true;
@@ -49,13 +51,17 @@ export class StixDialogComponent implements OnInit {
         let object = Array.isArray(this.config.object)? this.config.object[0] : this.config.object;
         let subscription = object.save(true, this.restApiConnectorService).subscribe({
             next: (result) => { 
-                this.dialogRef.close(true);
+                this.dialogRef.close(this.dirty);
             },
             complete: () => { subscription.unsubscribe(); }
         })
     }
     public cancelValidation() {
         this.validating = false;
+    }
+
+    public close() {
+        this.dialogRef.close(this.dirty);
     }
 
     public sidebarOpened: boolean = false;
