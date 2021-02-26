@@ -26,7 +26,25 @@ export class Technique extends StixObject {
     public subTechniques: Technique[] = []; 
     public parentTechnique: Technique = null;
 
+    private killChainMap = {
+        "enterprise-attack": "mitre-attack",
+        "mobile-attack": "mitre-mobile-attack",
+        "ics-attack": "mitre-ics-attack"
+    }
+
     public get tactics(): string[] { return this.kill_chain_phases.map(tactic => tactic.phase_name); }
+    public set tactics(values) {
+        let killChainPhases = [];
+        for (let i in values) {
+            let phaseName = values[i][0];
+            let killChainName = this.killChainMap[values[i][1]];
+            killChainPhases.push({
+                "phase_name": phaseName,
+                "kill_chain_name": killChainName
+            });
+        }
+        this.kill_chain_phases = killChainPhases;
+    }
 
     /**
      * Initialize Technique object

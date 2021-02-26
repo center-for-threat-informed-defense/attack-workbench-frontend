@@ -93,10 +93,10 @@ export class ListEditComponent implements OnInit {
     }
     
     /** Retrieves a list of selected tactic shortnames */
-    private stixIDToShortname(tacticID: string): string {
+    private stixIDToShortname(tacticID: string): string[] {
         let objects = this.objects as Tactic[];
         let tactic = objects.find(object => object.stixID == tacticID)
-        return tactic.shortname;
+        return [tactic.shortname, tactic.domains[0]];
     }
 
     /** Get allowed values for this field */
@@ -171,12 +171,9 @@ export class ListEditComponent implements OnInit {
 
     /** Open stix list selection window */
     public open() {
-        // filter objects by domain
-        let selectableObjects = [];
-        if (this.type == 'tactic') {
-            let tactics = this.objects as Tactic[];
-            selectableObjects = tactics.filter(tactic => this.tacticInDomain(tactic));
-        }
+        // filter tactic objects by domain
+        let tactics = this.objects as Tactic[];
+        let selectableObjects = tactics.filter(tactic => this.tacticInDomain(tactic));
 
         let dialogRef = this.dialog.open(AddDialogComponent, {
             maxWidth: "70em",
@@ -192,10 +189,8 @@ export class ListEditComponent implements OnInit {
         let subscription = dialogRef.afterClosed().subscribe({
             next: (result) => {
                 if (result) {
-                    let stixIDs = this.select.selected;
-                    let tacticShortnames = stixIDs.map(id => this.stixIDToShortname(id));
-                    // TODO: update field with new selection
-                    // this.config.object[this.config.field] = tacticShortnames;
+                    let tacticShortnames = this.select.selected.map(id => this.stixIDToShortname(id));
+                    this.config.object[this.config.field] = tacticShortnames;
                 } else { // user cancel
                     this.select = selectCopy; // reset selection
                 }
