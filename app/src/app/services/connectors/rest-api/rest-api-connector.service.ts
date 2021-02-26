@@ -88,7 +88,7 @@ export class RestApiConnectorService extends ApiConnector {
     private getStixObjectsFactory<T extends StixObject>(attackType: AttackType) {
         let attackClass = attackTypeToClass[attackType];
         let plural = attackTypeToPlural[attackType]
-        return function<P extends T>(limit?: number, offset?: number, state?: string, revoked?: boolean, deprecated?: boolean, versions?: "all" | "latest"): Observable<Paginated> {
+        return function<P extends T>(limit?: number, offset?: number, state?: string, revoked?: boolean, deprecated?: boolean, versions?: "all" | "latest", excludeIDs?: string[]): Observable<Paginated> {
             // parse params into query string
             let query = new HttpParams();
             // pagination
@@ -104,6 +104,17 @@ export class RestApiConnectorService extends ApiConnector {
             let url = `${this.baseUrl}/${plural}`;
             return this.http.get(url, {headers: this.headers, params: query}).pipe(
                 tap(results => console.log(`retrieved ${plural}`, results)), // on success, trigger the success notification
+                map(results => {
+                    if (!excludeIDs) return results; // only filter if param is present
+                    let response = results as any;
+                    if (limit || offset) { // returned a paginated
+                        response.data = response.data.filter((d) => !excludeIDs.includes(d.stix.id)); //remove any matches to excludeIDs
+                        return response;
+                    } else { //returned a stixObject[]
+                        response = response.filter((d) => !excludeIDs.includes(d.stix.id)); //remove any matches to excludeIDs
+                        return response;
+                    }
+                }),
                 map(results => {
                     let response = results as any;
                     if (limit || offset) { // returned a paginated
@@ -141,6 +152,7 @@ export class RestApiConnectorService extends ApiConnector {
      * @param {string} [state] if specified, only get objects with this state
      * @param {boolean} [revoked] if true, get revoked objects
      * @param {boolean} [deprecated] if true, get deprecated objects
+     * @param {string[]} [excludeIDs] if specified, excludes these STIX IDs from the result
      * @returns {Observable<Technique[]>} observable of retrieved objects
      */
     public get getAllTechniques() { return this.getStixObjectsFactory<Technique>("technique"); }
@@ -151,6 +163,7 @@ export class RestApiConnectorService extends ApiConnector {
      * @param {string} [state] if specified, only get objects with this state
      * @param {boolean} [revoked] if true, get revoked objects
      * @param {boolean} [deprecated] if true, get deprecated objects
+     * @param {string[]} [excludeIDs] if specified, excludes these STIX IDs from the result
      * @returns {Observable<Tactic[]>} observable of retrieved objects
      */
     public get getAllTactics() { return this.getStixObjectsFactory<Tactic>("tactic"); }
@@ -161,6 +174,7 @@ export class RestApiConnectorService extends ApiConnector {
      * @param {string} [state] if specified, only get objects with this state
      * @param {boolean} [revoked] if true, get revoked objects
      * @param {boolean} [deprecated] if true, get deprecated objects
+     * @param {string[]} [excludeIDs] if specified, excludes these STIX IDs from the result
      * @returns {Observable<Group[]>} observable of retrieved objects
      */
     public get getAllGroups() { return this.getStixObjectsFactory<Group>("group"); }
@@ -181,6 +195,7 @@ export class RestApiConnectorService extends ApiConnector {
      * @param {string} [state] if specified, only get objects with this state
      * @param {boolean} [revoked] if true, get revoked objects
      * @param {boolean} [deprecated] if true, get deprecated objects
+     * @param {string[]} [excludeIDs] if specified, excludes these STIX IDs from the result
      * @returns {Observable<Mitigation[]>} observable of retrieved objects
      */
     public get getAllMitigations() { return this.getStixObjectsFactory<Mitigation>("mitigation"); }
@@ -191,6 +206,7 @@ export class RestApiConnectorService extends ApiConnector {
      * @param {string} [state] if specified, only get objects with this state
      * @param {boolean} [revoked] if true, get revoked objects
      * @param {boolean} [deprecated] if true, get deprecated objects
+     * @param {string[]} [excludeIDs] if specified, excludes these STIX IDs from the result
      * @returns {Observable<Matrix[]>} observable of retrieved objects
      */
     public get getAllMatrices() { return this.getStixObjectsFactory<Matrix>("matrix"); }
@@ -202,6 +218,7 @@ export class RestApiConnectorService extends ApiConnector {
      * @param {boolean} [revoked] if true, get revoked objects
      * @param {versions} ["all" | "latest"] if "all", get all versions of the collections. if "latest", only get the latest version of each collection.
      * @param {boolean} [deprecated] if true, get deprecated objects
+     * @param {string[]} [excludeIDs] if specified, excludes these STIX IDs from the result
      * @returns {Observable<Matrix[]>} observable of retrieved objects
      */
     public get getAllCollections() { return this.getStixObjectsFactory<Collection>("collection"); }
@@ -577,10 +594,12 @@ export class RestApiConnectorService extends ApiConnector {
      * @param {string} [targetType] retrieve objects where the source object is this ATT&CK type
      * @param {number} [limit] The number of relationships to retrieve.
      * @param {number} [offset] The number of relationships to skip.
+     * @param {string[]} [excludeSourceRefs] if specified, exclude source refs which are found in this array
+     * @param {string[]} [excludeTargetRefs] if specified, exclude target refs which are found in this array
      * @returns {Observable<Paginated>} paginated data of the relationships
      * @memberof RestApiConnectorService
      */
-    public getRelatedTo(sourceRef?: string, targetRef?: string, sourceType?: AttackType, targetType?: AttackType, relationshipType?: string, limit?: number, offset?: number): Observable<Paginated> {
+    public getRelatedTo(sourceRef?: string, targetRef?: string, sourceType?: AttackType, targetType?: AttackType, relationshipType?: string, limit?: number, offset?: number, excludeSourceRefs?: string[], excludeTargetRefs?: string[]): Observable<Paginated> {
         let query = new HttpParams();
 
         if (sourceRef) query = query.set("sourceRef", sourceRef);
@@ -597,6 +616,23 @@ export class RestApiConnectorService extends ApiConnector {
         let url = `${this.baseUrl}/relationships`
         return this.http.get(url, {headers:this.headers, params: query}).pipe(
             tap(results => console.log("retrieved relationships", results)),
+            map(results => {
+                if (!excludeSourceRefs && !excludeTargetRefs) return results; // only filter if params are present
+                let response = results as any;
+                if (limit || offset) { // returned a paginated
+                    let pre_filter = response.data.length;
+                    if (excludeSourceRefs) response.data = response.data.filter((d) => !excludeSourceRefs.includes(d.stix.source_ref))
+                    if (excludeTargetRefs) response.data = response.data.filter((d) => !excludeTargetRefs.includes(d.stix.target_ref))
+                    console.log("filtered", pre_filter - response.data.length, "results by ID")
+                    return response;
+                } else { //returned a stixObject[]
+                    let pre_filter = response.length;
+                    if (excludeSourceRefs) response = response.filter((d) => !excludeSourceRefs.includes(d.stix.source_ref))
+                    if (excludeTargetRefs) response = response.filter((d) => !excludeTargetRefs.includes(d.stix.target_ref))
+                    console.log("filtered", pre_filter - response.length, "results by ID")
+                    return response;
+                }
+            }),
             map(results => {
                 let response = results as any;
                 if (limit || offset) { //returned paginated
