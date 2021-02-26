@@ -16,5 +16,9 @@
             <h3 mat-line>cancel</h3>
             <div mat-line>keep editing</div>
         </button>
+        <button mat-list-item (click)="dialogRef.close('discard')">
+            <h3 mat-line>discard changes</h3>
+            <div mat-line>discard changes and stop editing</div>
+        </button>
     </mat-action-list>
 </div>
