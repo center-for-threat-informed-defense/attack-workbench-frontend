@@ -688,7 +688,7 @@ export class RestApiConnectorService extends ApiConnector {
     //
 
     /**
-     * Fetch allowed values for the given ATT&CK type
+     * Get all allowed values
      * @returns {Observable<any>} all allowed values
      */
     public getAllAllowedValues(): Observable<any> {

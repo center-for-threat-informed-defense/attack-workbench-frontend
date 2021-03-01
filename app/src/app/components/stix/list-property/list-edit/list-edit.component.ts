@@ -21,7 +21,6 @@ export class ListEditComponent implements OnInit {
     @Input() public config: ListPropertyConfig;
 
     // allowed values ('select')
-    public data$: Observable<any>;
     public allowedValues: string[] = [];
     public selectControl: FormControl;
 
@@ -37,34 +36,31 @@ export class ListEditComponent implements OnInit {
         "platforms": "x_mitre_platform",
         "tactic_type": "x_mitre_tactic_types",
         "impact_type": "x_mitre_impact_type",
-        "effective_permissions": "x_mitre_effective_permissions"
+        "effective_permissions": "x_mitre_effective_permissions",
+        "permissions_required": "x_mitre_permissions_required"
     }
     public domains = [
         "enterprise-attack",
         "mobile-attack",
         "ics-attack"
     ]
-    public permissions = [
-        "Administrator",
-        "root",
-        "SYSTEM",
-        "User",
-        "Remote Desktop Users"
-    ]
 
     constructor(public dialog: MatDialog, private restAPIConnectorService: RestApiConnectorService) { }
 
     ngOnInit(): void {
-        if (this.config.field == 'platforms' || this.config.field == 'tactic_type' || this.config.field == 'effective_permissions' || this.config.field == 'impact_type') {
-            this.data$ = this.restAPIConnectorService.getAllAllowedValues();
-            let subscription = this.data$.subscribe({
+        if (this.config.field == 'platforms' 
+         || this.config.field == 'tactic_type' 
+         || this.config.field == 'permissions_required' 
+         || this.config.field == 'effective_permissions' 
+         || this.config.field == 'impact_type') {
+            let data$ = this.restAPIConnectorService.getAllAllowedValues();
+            let subscription = data$.subscribe({
                 next: (data) => { this.allowedValues = this.getAllowedValues(data) },
                 complete: () => { subscription.unsubscribe(); }
             });
             
         }
         else if (this.config.field == 'domains') this.allowedValues = this.domains;
-        else if (this.config.field == 'permissions_required') this.allowedValues = this.permissions;
         else if (this.config.field == 'defense_bypassed') { } //any
         else if (this.config.field == 'system_requirements') { } //any
         else if (this.config.field == 'contributors') { } //any
@@ -170,7 +166,7 @@ export class ListEditComponent implements OnInit {
     }
 
     /** Open stix list selection window */
-    public open() {
+    public openStixList() {
         // filter tactic objects by domain
         let tactics = this.objects as Tactic[];
         let selectableObjects = tactics.filter(tactic => this.tacticInDomain(tactic));
