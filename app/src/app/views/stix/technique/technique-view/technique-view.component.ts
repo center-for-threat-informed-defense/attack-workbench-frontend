@@ -26,4 +26,12 @@ export class TechniqueViewComponent extends StixViewPage implements OnInit {
             this.editing = params["editing"];
         });
     }
+
+    public showDomainField(domain: string, field: string): boolean {
+        return this.technique.domains.includes(domain) && (this.technique[field].length > 0 || this.editing);
+    }
+
+    public showTacticField(tactic: string, field: string): boolean {
+        return this.technique.tactics.includes(tactic) && (this.technique[field].length > 0 || this.editing);
+    }
 }
