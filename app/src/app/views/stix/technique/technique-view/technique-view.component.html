@@ -160,7 +160,7 @@
                         'type': 'relationship', 
                         'targetRef': technique.stixID,
                         'relationshipType': 'subtechnique-of',
-                        'clickBehavior': 'dialog'
+                        'clickBehavior': 'linkToSourceRef'
                     }"></app-stix-list>
                 </div>
             </div>
@@ -177,7 +177,7 @@
                         'type': 'relationship', 
                         'targetRef': technique.parentTechnique.stixID,
                         'relationshipType': 'subtechnique-of',
-                        'clickBehavior': 'dialog',
+                        'clickBehavior': 'linkToSourceRef',
                         'excludeSourceRefs': [technique.stixID]
                     }"></app-stix-list>
                 </div>
