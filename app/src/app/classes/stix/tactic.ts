@@ -6,7 +6,8 @@ export class Tactic extends StixObject {
     public name: string;
     public description: string;
     public domains: string[];
-    public shortname: string;
+
+    public get shortname(): string { return this.name.replace(" ", "-").toLowerCase(); }
 
     constructor(sdo?: any) {
         super(sdo, "x-mitre-tactic");
@@ -54,11 +55,6 @@ export class Tactic extends StixObject {
                 if (this.isStringArray(sdo.x_mitre_domains)) this.domains = sdo.x_mitre_domains;
                 else console.error("TypeError: domains field is not a string array.");
             } else this.domains = [];
-
-            if ("x_mitre_shortname" in sdo) {
-                if (typeof(sdo.x_mitre_shortname) === "string") this.shortname = sdo.x_mitre_shortname;
-                else console.error("TypeError: shortname field is not a string: ", sdo.x_mitre_shortname, "(", typeof(sdo.x_mitre_shortname), ")")
-            } else this.shortname = "";
         }
     }
 
