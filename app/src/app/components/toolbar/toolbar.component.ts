@@ -27,6 +27,10 @@ export class ToolbarComponent implements OnInit {
         this.editorService.startEditing();
     }
 
+    public stopEditing() {
+        this.editorService.stopEditing();
+    }
+
     public saveEdits() {
         this.editorService.onSave.emit();
     }
