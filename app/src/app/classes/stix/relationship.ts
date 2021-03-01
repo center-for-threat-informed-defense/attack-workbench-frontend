@@ -19,7 +19,7 @@ export class Relationship extends StixObject {
     
     public updating_refs: boolean = false; //becomes true while source and target refs are being asynchronously updated.
     
-    public readonly relationship_type: string;
+    public relationship_type: string;
     /**
      * The valid source types according to relationship_type
      * null if any type is valid or relationship_type is not recognized
