@@ -27,7 +27,7 @@
         </mat-select>
     </mat-form-field>
 
-    <mat-form-field *ngIf="config.editType == 'stixList'" appearance="outline" (click)="open()">
+    <mat-form-field class="stix-list" *ngIf="config.editType == 'stixList'" appearance="outline" (click)="openStixList()">
         <mat-label>{{config.label? config.label : config.field}}</mat-label>
         <mat-icon aria-hidden="false" aria-label="open" class="icon">open_in_new</mat-icon>
         <mat-chip-list #stixChipList>

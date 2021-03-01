@@ -91,7 +91,7 @@ export class Technique extends StixObject {
             }
             if (this.tactics.includes('defense-evasion')) rep.stix.x_mitre_defense_bypassed = this.defense_bypassed;
             if (this.tactics.includes('execution')) rep.stix.x_mitre_remote_support = this.remote_support;
-            if (this.tactics.includes('imapct')) rep.stix.x_mitre_impact_type = this.impact_type;
+            if (this.tactics.includes('impact')) rep.stix.x_mitre_impact_type = this.impact_type;
         }
 
         return rep;
