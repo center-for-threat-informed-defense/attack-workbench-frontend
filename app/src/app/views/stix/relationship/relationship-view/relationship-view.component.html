@@ -76,34 +76,36 @@
             </mat-accordion>
         </div>
     </div>
-    <div class="row">
-        <div class="col">
-            <!-- DESCRIPTION -->
-            <app-descriptive-property [config]="{
-                mode: 'view',
-                object: relationship,
-                field: 'description',
-                firstParagraphOnly: false, 
-                referencesField: relationship.external_references,
-                label: 'description'
-            }"></app-descriptive-property>
-        </div>
-    </div>
-    <!-- EXTERNAL REFERENCES -->
-    <div *ngIf="relationship.external_references.list().length > 0">
+    <ng-container *ngIf="relationship.relationship_type != 'subtechnique-of'">
         <div class="row">
             <div class="col">
-                <h2 class="section-header">References</h2>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col">
-                <app-external-references-property [config]="{
+                <!-- DESCRIPTION -->
+                <app-descriptive-property [config]="{
                     mode: 'view',
                     object: relationship,
-                    referencesField: relationship.external_references
-                }"></app-external-references-property>
+                    field: 'description',
+                    firstParagraphOnly: false, 
+                    referencesField: relationship.external_references,
+                    label: 'description'
+                }"></app-descriptive-property>
             </div>
         </div>
-    </div>
+        <!-- EXTERNAL REFERENCES -->
+        <div *ngIf="relationship.external_references.list().length > 0">
+            <div class="row">
+                <div class="col">
+                    <h2 class="section-header">References</h2>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <app-external-references-property [config]="{
+                        mode: 'view',
+                        object: relationship,
+                        referencesField: relationship.external_references
+                    }"></app-external-references-property>
+                </div>
+            </div>
+        </div>
+    </ng-container>
 </div>
