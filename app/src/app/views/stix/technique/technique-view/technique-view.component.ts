@@ -2,8 +2,6 @@ import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Technique } from 'src/app/classes/stix/technique';
 import { StixViewPage } from '../../stix-view-page';
-import { Relationship } from 'src/app/classes/stix/relationship';
-import { Tactic } from 'src/app/classes/stix/tactic';
 
 @Component({
   selector: 'app-technique-view',
