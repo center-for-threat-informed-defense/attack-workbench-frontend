@@ -1,6 +1,7 @@
-<div class="list-edit">
-    <mat-form-field *ngIf="!config.editType || config.editType == 'any'" appearance="outline">
+<div class="list-edit grow-to-row">
+    <mat-form-field *ngIf="!config.editType || config.editType == 'any'" class="grow-to-row" appearance="outline">
         <mat-label>{{config.label? config.label : config.field}}</mat-label>
+        <mat-card-content>
         <mat-chip-list #anyChipList>
             <mat-chip *ngFor="let value of config.object[config.field]" [removable]="true" (removed)="remove(value)">
                 {{value}} <mat-icon matChipRemove>cancel</mat-icon>
@@ -11,9 +12,10 @@
                     [matChipInputAddOnBlur]="true"
                     (matChipInputTokenEnd)="add($event)">
         </mat-chip-list>
+        </mat-card-content>
     </mat-form-field>
     
-    <mat-form-field *ngIf="config.editType == 'select'" appearance="outline">
+    <mat-form-field *ngIf="config.editType == 'select'" class="grow-to-row" appearance="outline">
         <mat-label>{{config.label? config.label : config.field}} </mat-label>
         <mat-select [formControl]="selectControl" multiple>
             <mat-select-trigger>
@@ -27,7 +29,7 @@
         </mat-select>
     </mat-form-field>
 
-    <mat-form-field class="stix-list" *ngIf="config.editType == 'stixList'" appearance="outline" (click)="openStixList()">
+    <mat-form-field class="stix-list" *ngIf="config.editType == 'stixList'" class="grow-to-row" appearance="outline" (click)="openStixList()">
         <mat-label>{{config.label? config.label : config.field}}</mat-label>
         <mat-icon aria-hidden="false" aria-label="open" class="icon">open_in_new</mat-icon>
         <mat-chip-list #stixChipList>
