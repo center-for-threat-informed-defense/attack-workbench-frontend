@@ -171,6 +171,7 @@ export class Relationship extends StixObject {
         //TODO verify source and target ref exist
         return this.base_validate(restAPIService).pipe(
             map(result => {
+                // presence of source-ref
                 if (!this.source_ref) { result.errors.push({
                     "field": "source_ref",
                     "result": "error",
@@ -180,7 +181,7 @@ export class Relationship extends StixObject {
                     "result": "error",
                     "message": "source object specified"
                 })}
-
+                //presence of target ref
                 if (!this.target_ref) { result.errors.push({
                     "field": "target_ref",
                     "result": "error",
@@ -190,6 +191,25 @@ export class Relationship extends StixObject {
                     "result": "error",
                     "message": "target object specified"
                 })}
+                // is this a valid sub-technique-of relationship?
+                if (this.relationship_type == "subtechnique-of") {
+                    console.log(this.source_object, this.target_object)
+                    if (!this.source_object.stix.hasOwnProperty("x_mitre_is_subtechnique") || this.source_object.stix.x_mitre_is_subtechnique == false) {
+                        result.errors.push({
+                            "field": "source_ref",
+                            "result": "error",
+                            "message": "source is not a sub-technique"
+                        })
+                    }
+                    if (this.target_object.stix.x_mitre_is_subtechnique == true) {
+                        result.errors.push({
+                            "field": "target_ref",
+                            "result": "error",
+                            "message": "target is a sub-technique"
+                        })
+                    }
+                } 
+                
                 return result;
             }),
             //check for parallel relationships

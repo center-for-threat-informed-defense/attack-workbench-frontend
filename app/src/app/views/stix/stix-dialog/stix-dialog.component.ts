@@ -35,6 +35,7 @@ export class StixDialogComponent implements OnInit {
         this.dirty = true;
     }
     public validate() {
+        this.validation = null; // reset prior validation if it has been loaded
         this.validating = true;
         let object = Array.isArray(this.config.object)? this.config.object[0] : this.config.object;
         let subscription = object.validate(this.restApiConnectorService).subscribe({
