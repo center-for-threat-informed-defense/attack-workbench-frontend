@@ -2,24 +2,12 @@
 @import '~@angular/material/theming';
 
 .list-edit {
-    mat-form-field {
-        width: 100%;
-    }
+    font-size: 14px;
 
-    mat-chip {
-        .light & { background: color-alternate(light); }
-        .dark &  { background: color-alternate(dark); }
-    }
+    mat-form-field { width: 100%; }
+    input { font-size: 14px; }
 
-    .icon {
-        float: right;
-    }
-
-    input {
-        font-size: 14px;
-    }
-
-    .stix-list {
-        cursor: pointer;
-    }
+    // stix list object selection dialog
+    .icon { float: right; }
+    .stix-list { cursor: pointer; }
 }

@@ -145,6 +145,29 @@ $tooltip-color: color-alternate(dark, 4);
     }
 }
 
+.mat-select-placeholder, .mat-chip-list-wrapper {
+    min-height: 32px;
+}
+
+// style similar to a labelled-box
+.mat-form-field-wrapper {
+    flex: 1 0; 
+    display: flex;
+    flex-direction: column;
+    margin: 0px!important;
+    padding-top: 6px!important;
+    padding-bottom: 0px!important;
+}
+.mat-form-field-flex {
+    flex: 1 0;
+}
+
+.mat-chip.mat-standard-chip {
+    height: auto!important;
+    .light & { background: color-alternate(light); }
+    .dark &  { background: color-alternate(dark); }
+}
+
 .mat-step-icon:not(.mat-step-icon-selected):not(.mat-step-icon-state-edit) {
     .dark & { color: on-color(dark); }
     .light & { color: on-color(light); }
