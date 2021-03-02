@@ -158,7 +158,16 @@
             </div>
             <div class="row">
                 <div class="col">
-                    <app-stix-list [config]="{
+                    <app-add-relationship-button (created)="subTechniquesList.applyControls()" [config]="{
+                        label: 'sub-technique',
+                        relationship_type: 'subtechnique-of',
+                        target_ref: technique.stixID
+                    }"></app-add-relationship-button>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <app-stix-list #subTechniquesList [config]="{
                         'type': 'relationship', 
                         'targetRef': technique.stixID,
                         'relationshipType': 'subtechnique-of',
