@@ -1,10 +1,11 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, ViewEncapsulation } from '@angular/core';
 import { StixObject } from 'src/app/classes/stix/stix-object';
 
 @Component({
   selector: 'app-name-property',
   templateUrl: './name-property.component.html',
-  styleUrls: ['./name-property.component.scss']
+  styleUrls: ['./name-property.component.scss'],
+  encapsulation: ViewEncapsulation.None
 })
 export class NamePropertyComponent implements OnInit {
     @Input() public config: NamePropertyConfig;

@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, NavigationEnd } from '@angular/router';
 import { BreadcrumbService } from 'angular-crumbs';
 import { Observable } from 'rxjs';
 import { Group } from 'src/app/classes/stix/group';
@@ -27,6 +27,7 @@ export class StixPageComponent implements OnInit, OnDestroy {
     public objects: StixObject[];
     public initialVersion: VersionNumber;
 
+    private routerEvents;
     private saveSubscription;
     
     constructor(private router: Router, 
@@ -78,6 +79,13 @@ export class StixPageComponent implements OnInit, OnDestroy {
         this.saveSubscription = this.editorService.onSave.subscribe({
             next: (event) => this.save()
         });
+
+        this.routerEvents = this.router.events.subscribe(event => { 
+            if (event instanceof NavigationEnd) {
+                // Load objects when navigation ends sucessfully
+                this.loadObjects(); 
+            }
+        })
     }
 
     /**
@@ -144,6 +152,7 @@ export class StixPageComponent implements OnInit, OnDestroy {
 
     ngOnDestroy() {
         this.saveSubscription.unsubscribe();
+        this.routerEvents.unsubscribe();
     }
 
     private updateBreadcrumbs(result, objectType) {

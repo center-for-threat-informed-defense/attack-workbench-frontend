@@ -3,6 +3,7 @@ import { StixObject } from 'src/app/classes/stix/stix-object';
 import {animate, style, transition, trigger} from '@angular/animations';
 import {MatSort} from '@angular/material/sort';
 import {MatPaginator} from '@angular/material/paginator';
+import { Router } from '@angular/router';
 
 import { SelectionModel } from '@angular/cdk/collections';
 import { StixDialogComponent } from '../../../views/stix/stix-dialog/stix-dialog.component';
@@ -67,6 +68,19 @@ export class StixListComponent implements OnInit, AfterViewInit {
     // Selection stuff
     public selection: SelectionModel<string>;
 
+    // Type map for redirections
+    private typeMap = {
+        "x-mitre-collection": "collection",
+        "attack-pattern": "technique",
+        "malware": "software",
+        "tool": "software",
+        "intrusion-set": "group",
+        "course-of-action": "mitigation",
+        "x-mitre-matrix": "matrix",
+        "x-mitre-tactic": "tactic",
+        "relationship": "relationship"
+    }
+
     /**
      * Add a column to the table
      * @param {string} label the label to display the field under; column name
@@ -98,7 +112,22 @@ export class StixListComponent implements OnInit, AfterViewInit {
                 next: result => { if (prompt.componentInstance.dirty) this.applyControls(); }, //re-fetch values since an edit occurred
                 complete: () => { subscription.unsubscribe(); }
             });
-        } else { //expand
+        }
+        else if (this.config.clickBehavior && this.config.clickBehavior == "linkToSourceRef") {
+            let source_ref = element['source_ref'];
+            // Get type to navigate from source_ref
+            let type = this.typeMap[source_ref.split('--')[0]];
+
+            this.router.navigateByUrl('/' + type + '/' + source_ref);
+        }
+        else if (this.config.clickBehavior && this.config.clickBehavior == "linkToTargetRef") {
+            let target_ref = element['target_ref'];
+            // Get type to navigate from target_ref
+            let type = this.typeMap[target_ref.split('--')[0]];
+
+            this.router.navigateByUrl('/'+ type + '/' + target_ref);
+        }
+        else { //expand
             this.expandedElement = this.expandedElement === element ? null : element;
         }
     }
@@ -126,7 +155,7 @@ export class StixListComponent implements OnInit, AfterViewInit {
         {"value": "status.revoked", "label": "revoked"}
     ]
 
-    constructor(public dialog: MatDialog, private restAPIConnectorService: RestApiConnectorService) {}
+    constructor(public dialog: MatDialog, private restAPIConnectorService: RestApiConnectorService, private router: Router) {}
     ngOnInit() {
         this.filterOptions = []
         // parse the config
@@ -340,7 +369,7 @@ export class StixListComponent implements OnInit, AfterViewInit {
             else if (this.config.type == "tactic") this.data$ = this.restAPIConnectorService.getAllTactics(limit, offset, null, null, null, null, this.config.excludeIDs); //TODO add limit and offset once back-end supports it
             else if (this.config.type == "technique") this.data$ = this.restAPIConnectorService.getAllTechniques(limit, offset, null, null, null, null, this.config.excludeIDs);
             else if (this.config.type == "collection") this.data$ = this.restAPIConnectorService.getAllCollections();
-            else if (this.config.type == "relationship") this.data$ = this.restAPIConnectorService.getRelatedTo(this.config.sourceRef, this.config.targetRef, this.config.sourceType, this.config.targetType, this.config.relationshipType, null, null, this.config.excludeSourceRefs, this.config.excludeTargetRefs);
+            else if (this.config.type == "relationship") this.data$ = this.restAPIConnectorService.getRelatedTo(this.config.sourceRef, this.config.targetRef, this.config.sourceType, this.config.targetType, this.config.relationshipType, limit, offset, this.config.excludeSourceRefs, this.config.excludeTargetRefs);
             let subscription = this.data$.subscribe({
                 next: (data) => { this.totalObjectCount = data.pagination.total; },
                 complete: () => { subscription.unsubscribe() }
@@ -392,8 +421,10 @@ export interface StixListConfig {
      * How should the table act when the row is clicked? default "expand"
      *     "expand": expand the row to show additional detail
      *     "dialog": open a dialog with the full object definition
+     *     "linkToSourceRef": clicking redirects to the source ref object
+     *     "linkToTargetRef": clicking redirects user to target ref object
      */
-    clickBehavior?: "expand" | "dialog"
+    clickBehavior?: "expand" | "dialog" | "linkToSourceRef" | "linkToTargetRef";
     /**
      * Default false. If true, allows for edits of the objects in the table
      * when in dialog mode
