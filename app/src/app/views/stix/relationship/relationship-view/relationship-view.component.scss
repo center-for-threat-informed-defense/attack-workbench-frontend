@@ -3,4 +3,7 @@
     .mat-expansion-panel {
         @include expansion-panel(true);
     }
+    .type_select {
+        width: 100%;
+    }
 }

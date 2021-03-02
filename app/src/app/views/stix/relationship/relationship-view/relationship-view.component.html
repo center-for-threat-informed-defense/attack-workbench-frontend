@@ -33,19 +33,19 @@
         <!-- edit source/target -->
         <div class="col">
             <mat-accordion>
-                <mat-expansion-panel>
+                <mat-expansion-panel class="mat-elevation-z0">
                     <mat-expansion-panel-header>
                         <mat-panel-title>
                             source object
                         </mat-panel-title>
                         <ng-template matExpansionPanelContent>
-                            <mat-form-field appearance="outline">
+                            <mat-form-field appearance="outline" class="type_select">
                                 <mat-label>source type</mat-label>
                                 <mat-select (selectionChange)="refresh_lists()" [(ngModel)]="source_type">
                                     <mat-option *ngFor="let objType of relationship.valid_source_types" [value]="objType">{{objType}}</mat-option>
                                 </mat-select>
                             </mat-form-field>
-                            <app-stix-list *ngIf="refresh" #source_select [config]="{
+                            <app-stix-list *ngIf="refresh && source_type" #source_select [config]="{
                                 'type': source_type,
                                 'select': 'one',
                                 'selectionModel': selectionModel_source
@@ -53,19 +53,19 @@
                         </ng-template>
                     </mat-expansion-panel-header>
                 </mat-expansion-panel>
-                <mat-expansion-panel>
+                <mat-expansion-panel class="mat-elevation-z0">
                     <mat-expansion-panel-header>
                         <mat-panel-title>
                             target object
                         </mat-panel-title>
                         <ng-template matExpansionPanelContent>
-                            <mat-form-field appearance="outline">
+                            <mat-form-field appearance="outline" class="type_select">
                                 <mat-label>target type</mat-label>
                                 <mat-select (selectionChange)="refresh_lists()" [(ngModel)]="target_type">
                                     <mat-option *ngFor="let objType of relationship.valid_target_types" [value]="objType">{{objType}}</mat-option>
                                 </mat-select>
                             </mat-form-field>
-                            <app-stix-list *ngIf="refresh" #target_select [config]="{
+                            <app-stix-list *ngIf="refresh && target_type" #target_select [config]="{
                                 'type': target_type,
                                 'select': 'one',
                                 'selectionModel': selectionModel_target
