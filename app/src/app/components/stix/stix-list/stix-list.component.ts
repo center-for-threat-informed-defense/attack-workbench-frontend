@@ -230,7 +230,7 @@ export class StixListComponent implements OnInit, AfterViewInit {
                     this.addColumn("type", "relationship_type", "plain", false, ["text-deemphasis", "relationship-joiner"]);
                     this.addColumn("target", "target_ID", "plain");
                     this.addColumn("", "target_name", "plain", this.config.sourceRef? true: false, ["relationship-name"]);// ["name", "relationship-right"]);
-                    this.addColumn("description", "description", "descriptive", false);
+                    if (!(this.config.relationshipType && this.config.relationshipType == "subtechnique-of")) this.addColumn("description", "description", "descriptive", false);
                     // controls_after.push("open-link")
                     break;
                 default:
