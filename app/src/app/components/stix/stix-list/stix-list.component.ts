@@ -3,6 +3,7 @@ import { StixObject } from 'src/app/classes/stix/stix-object';
 import {animate, style, transition, trigger} from '@angular/animations';
 import {MatSort} from '@angular/material/sort';
 import {MatPaginator} from '@angular/material/paginator';
+import { Router } from '@angular/router';
 
 import { SelectionModel } from '@angular/cdk/collections';
 import { StixDialogComponent } from '../../../views/stix/stix-dialog/stix-dialog.component';
@@ -67,6 +68,19 @@ export class StixListComponent implements OnInit, AfterViewInit {
     // Selection stuff
     public selection: SelectionModel<string>;
 
+    // Type map for redirections
+    private typeMap = {
+        "x-mitre-collection": "collection",
+        "attack-pattern": "technique",
+        "malware": "software",
+        "tool": "software",
+        "intrusion-set": "group",
+        "course-of-action": "mitigation",
+        "x-mitre-matrix": "matrix",
+        "x-mitre-tactic": "tactic",
+        "relationship": "relationship"
+    }
+
     /**
      * Add a column to the table
      * @param {string} label the label to display the field under; column name
@@ -94,7 +108,22 @@ export class StixListComponent implements OnInit, AfterViewInit {
                 },
                 maxHeight: "75vh"
             });
-        } else { //expand
+        }
+        else if (this.config.clickBehavior && this.config.clickBehavior == "linkToSourceRef") {
+            let source_ref = element['source_ref'];
+            // Get type to navigate from source_ref
+            let type = this.typeMap[source_ref.split('--')[0]];
+
+            this.router.navigateByUrl('/' + type + '/' + source_ref);
+        }
+        else if (this.config.clickBehavior && this.config.clickBehavior == "linkToTargetRef") {
+            let target_ref = element['target_ref'];
+            // Get type to navigate from target_ref
+            let type = this.typeMap[target_ref.split('--')[0]];
+
+            this.router.navigateByUrl('/'+ type + '/' + target_ref);
+        }
+        else { //expand
             this.expandedElement = this.expandedElement === element ? null : element;
         }
     }
@@ -122,7 +151,7 @@ export class StixListComponent implements OnInit, AfterViewInit {
         {"value": "status.revoked", "label": "revoked"}
     ]
 
-    constructor(public dialog: MatDialog, private restAPIConnectorService: RestApiConnectorService) {}
+    constructor(public dialog: MatDialog, private restAPIConnectorService: RestApiConnectorService, private router: Router) {}
     ngOnInit() {
         this.filterOptions = []
         // parse the config
@@ -388,8 +417,10 @@ export interface StixListConfig {
      * How should the table act when the row is clicked? default "expand"
      *     "expand": expand the row to show additional detail
      *     "dialog": open a dialog with the full object definition
+     *     "linkToSourceRef": clicking redirects to the source ref object
+     *     "linkToTargetRef": clicking redirects user to target ref object
      */
-    clickBehavior?: "expand" | "dialog";
+    clickBehavior?: "expand" | "dialog" | "linkToSourceRef" | "linkToTargetRef";
     excludeIDs?: string[]; //exclude objects with this ID from the list
     excludeSourceRefs?: string[]; //exclude relationships with this source_ref from the list
     excludeTargetRefs?: string[]; //exclude relationships with this target_ref from the list

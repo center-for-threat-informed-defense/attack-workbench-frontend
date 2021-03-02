@@ -1,8 +1,9 @@
 <div class="technique-view view-page grid spacing-12">
     <div class="row">
         <!-- NAME -->
-        <div class="col">
-            <h1>{{technique.name}}</h1>
+        <div *ngIf="technique" class="col">
+            <h1 *ngIf="technique.is_subtechnique"><a [routerLink]="['/technique', technique.parentTechnique.stixID]">{{technique.parentTechnique.name}}</a>: {{technique.name}}</h1>
+            <h1 *ngIf="!technique.is_subtechnique">{{technique.name}}</h1>
             <app-subheading [config]="config" (onOpenHistory)="openHistory()" (onOpenNotes)="openNotes()"></app-subheading>
         </div>
     </div>
@@ -147,7 +148,7 @@
     <!-- RELATIONSHIPS -->
     <div *ngIf="config.showRelationships || !config.hasOwnProperty('showRelationships')">
         <!-- SUBTECHNIQUES -->
-        <div *ngIf="!technique.is_subtechnique">
+        <div *ngIf="!technique.is_subtechnique; else othersubs">
             <div class="row">
                 <div class="col">
                     <h2 class="section-header">Sub-techniques</h2>
@@ -159,11 +160,29 @@
                         'type': 'relationship', 
                         'targetRef': technique.stixID,
                         'relationshipType': 'subtechnique-of',
-                        'clickBehavior': 'dialog'
+                        'clickBehavior': 'linkToSourceRef'
                     }"></app-stix-list>
                 </div>
             </div>
         </div>
+        <ng-template #othersubs>
+            <div class="row">
+                <div class="col">
+                    <h2 class="section-header">Other Sub-techniques of {{technique.parentTechnique.name}}</h2>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <app-stix-list [config]="{
+                        'type': 'relationship', 
+                        'targetRef': technique.parentTechnique.stixID,
+                        'relationshipType': 'subtechnique-of',
+                        'clickBehavior': 'linkToSourceRef',
+                        'excludeSourceRefs': [technique.stixID]
+                    }"></app-stix-list>
+                </div>
+            </div>
+        </ng-template>
         <!-- MITIGATIONS -->
         <div class="row">
             <div class="col">
