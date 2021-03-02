@@ -25,7 +25,9 @@ export class RelationshipViewComponent extends StixViewPage implements OnInit, O
     public selectionModel_target: SelectionModel<string>;
     public selectionModel_target_listener: Observer<any>;
     public refresh: boolean = true;
-    /** refresh the list of source objects if the type changes */
+    /** refresh the list of source objects if the type changes 
+     *  This is bad code and should be done a better way.
+     */
     public refresh_lists() {
         this.refresh = false;
         setTimeout(() => {
@@ -38,10 +40,15 @@ export class RelationshipViewComponent extends StixViewPage implements OnInit, O
     }
 
     ngOnInit(): void {
+        // initialize source/target types if there is a source/target object, or if there is only one possible value
         if (this.relationship.source_object) this.source_type = stixTypeToAttackType[this.relationship.source_object.stix.type]
+        else if (this.relationship.valid_source_types.length == 1) this.source_type = this.relationship.valid_source_types[0];
         if (this.relationship.target_object) this.target_type = stixTypeToAttackType[this.relationship.target_object.stix.type]
+        else if (this.relationship.valid_target_types.length == 1) this.target_type = this.relationship.valid_target_types[0];
+        // initialize selection
         this.selectionModel_source = new SelectionModel(false, [this.relationship.source_ref], true);
         this.selectionModel_target = new SelectionModel(false, [this.relationship.target_ref], true);
+        // update relationship when user selects stuff
         this.selectionModel_source.changed.subscribe(() => { 
             let subscription = this.relationship.set_source_ref(this.selectionModel_source.selected[0], this.restApiService).subscribe({
                 complete: () => subscription.unsubscribe()

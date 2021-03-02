@@ -176,7 +176,16 @@
         </div>
         <div class="row">
             <div class="col">
-                <app-stix-list [config]="{
+                <app-add-relationship-button (created)="mitigatesList.applyControls()" [config]="{
+                    label: 'mitigation',
+                    relationship_type: 'mitigates',
+                    target_ref: technique.stixID
+                }"></app-add-relationship-button>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <app-stix-list #mitigatesList [config]="{
                     'type': 'relationship',
                     'targetRef': technique.stixID,
                     'relationshipType': 'mitigates',
@@ -185,7 +194,7 @@
                 }"></app-stix-list>
             </div>
         </div>
-        <!-- GROUPS -->
+        <!-- procedure examples -->
         <div class="row">
             <div class="col">
                 <h2 class="section-header">Procedure Examples</h2>
@@ -193,7 +202,16 @@
         </div>
         <div class="row">
             <div class="col">
-                <app-stix-list [config]="{
+                <app-add-relationship-button (created)="usesList.applyControls()" [config]="{
+                    label: 'procedure example',
+                    relationship_type: 'uses',
+                    target_ref: technique.stixID
+                }"></app-add-relationship-button>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <app-stix-list #usesList [config]="{
                     'type': 'relationship',
                     'targetRef': technique.stixID,
                     'relationshipType': 'uses',

@@ -105,7 +105,7 @@ export class Relationship extends StixObject {
             map(results => {
                 let x = results as any;
                 let serialized = this.serialize();
-                serialized.source_object = x.find(result => result.stix.id == new_target_ref);
+                serialized.target_object = x.find(result => result.stix.id == new_target_ref);
                 this.deserialize(serialized);
                 this.updating_refs = false;
                 return this;
@@ -181,7 +181,7 @@ export class Relationship extends StixObject {
                     "message": "source object specified"
                 })}
 
-                if (!this.source_ref) { result.errors.push({
+                if (!this.target_ref) { result.errors.push({
                     "field": "target_ref",
                     "result": "error",
                     "message": "target object is not specified"
