@@ -29,10 +29,11 @@
         <div class="col">
             <div class="labelled-box grow-to-row">
                 <!-- TYPE -->
-                <div class="content">
-                    {{technique.is_subtechnique ? "Sub-technique": "Technique"}}
+                <div class="content no-label">
+                    <mat-checkbox [(ngModel)]="technique.is_subtechnique" [disabled]="!editing">
+                        sub-technique?
+                    </mat-checkbox>
                 </div>
-                <label>type</label>
             </div>
         </div>
         <div class="col">
@@ -138,7 +139,7 @@
                 <div *ngIf="technique.tactics.includes('execution')" class="row">
                     <div class="labelled-box grow-to-row">
                         <div class="content no-label">
-                            <mat-checkbox [checked]="technique.remote_support" disabled>
+                            <mat-checkbox [(ngModel)]="technique.remote_support"  [disabled]="!editing">
                                 Remote Support?
                             </mat-checkbox>
                         </div>
@@ -178,23 +179,25 @@
             </div>
         </div>
         <ng-template #othersubs>
-            <div class="row">
-                <div class="col">
-                    <h2 class="section-header">Other Sub-techniques of {{technique.parentTechnique.name}}</h2>
+            <ng-container *ngIf="technique.parentTechnique">
+                <div class="row">
+                    <div class="col">
+                        <h2 class="section-header">Other Sub-techniques of {{technique.parentTechnique.name}}</h2>
+                    </div>
                 </div>
-            </div>
-            <div class="row">
-                <div class="col">
-                    <app-stix-list [config]="{
-                        'type': 'relationship', 
-                        'targetRef': technique.parentTechnique.stixID,
-                        'relationshipType': 'subtechnique-of',
-                        'clickBehavior': 'linkToSourceRef',
-                        'allowEdits': true,
-                        'excludeSourceRefs': [technique.stixID]
-                    }"></app-stix-list>
+                <div class="row">
+                    <div class="col">
+                        <app-stix-list [config]="{
+                            'type': 'relationship', 
+                            'targetRef': technique.parentTechnique.stixID,
+                            'relationshipType': 'subtechnique-of',
+                            'clickBehavior': 'linkToSourceRef',
+                            'allowEdits': true,
+                            'excludeSourceRefs': [technique.stixID]
+                        }"></app-stix-list>
+                    </div>
                 </div>
-            </div>
+            </ng-container>
         </ng-template>
         <!-- MITIGATIONS -->
         <div class="row">

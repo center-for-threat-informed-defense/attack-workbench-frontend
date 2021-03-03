@@ -299,6 +299,7 @@ export class RestApiConnectorService extends ApiConnector {
                         return this.getRelatedTo(t.stixID, null, null, null, "subtechnique-of").pipe( // fetch from REST API
                             map(rel => { //extract the parent from the relationship
                                 let p = rel as any;
+                                if (!p || p.data.length == 0) return null; // no parent technique
                                 return new Technique(p.data[0].target_object); //transform it to a Technique
                             }),
                             map(parent => { //add the parent to the sub-technique

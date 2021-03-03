@@ -1,11 +1,11 @@
 <h1>
     <ng-container *ngIf="config.mode == 'view'; else edit">
-        <span *ngIf="config.object.attackType == 'technique' && config.object.is_subtechnique"><a [routerLink]="['/technique', config.object.parentTechnique.stixID]">{{config.object.parentTechnique.name}}</a>: </span> {{config.object[config.field ? config.field : "name"]}}
+        <span *ngIf="config.object.attackType == 'technique' && config.object.is_subtechnique && config.object.parentTechnique"><a [routerLink]="['/technique', config.object.parentTechnique.stixID]">{{config.object.parentTechnique.name}}</a>: </span> {{config.object[config.field ? config.field : "name"]}}
     </ng-container>
     <ng-template #edit>
         <mat-form-field class="name-edit" appearance="outline">
             <mat-label>name</mat-label>
-            <span *ngIf="config.object.attackType == 'technique' && config.object.is_subtechnique" matPrefix>{{config.object.parentTechnique.name}}: </span>
+            <span *ngIf="config.object.attackType == 'technique' && config.object.is_subtechnique && config.object.parentTechnique" matPrefix>{{config.object.parentTechnique.name}}: </span>
             <input matInput required [(ngModel)]="config.object[config.field ? config.field : 'name']">
         </mat-form-field>
     </ng-template>
