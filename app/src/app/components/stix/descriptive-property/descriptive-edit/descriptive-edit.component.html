@@ -1,1 +1,20 @@
-<p>descriptive-edit works!</p>
+<div class="descriptive-edit grow-to-row" >
+        <mat-tab-group>
+            <mat-tab label="Write">
+                <textarea placeholder="Enter description..." style="max-height: 200px; height: 331px; margin-block-start: 1rem; margin-block-end: 1rem;" matInput required [(ngModel)]="config.object[config.field]">
+                </textarea>
+            </mat-tab>
+            <mat-tab>
+                <ng-template mat-tab-label>
+                    <span (click)="returnFocus()">Preview</span>
+                </ng-template>
+                <!-- View -->
+                <app-descriptive-view [config]="config"></app-descriptive-view>
+            </mat-tab>
+            <!-- <mat-tab>
+                <mat-form-field class="description">
+                    <mat-label>description</mat-label>
+                </mat-form-field>
+            </mat-tab> -->
+        </mat-tab-group>
+</div>
