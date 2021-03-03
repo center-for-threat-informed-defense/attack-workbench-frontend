@@ -50,6 +50,7 @@ export class Technique extends StixObject {
         rep.stix.x_mitre_detection = this.detection;
         rep.stix.x_mitre_platforms = this.platforms;
         rep.stix.kill_chain_phases = this.kill_chain_phases;
+        rep.stix.x_mitre_is_subtechnique = this.is_subtechnique;
 
         // domain specific fields
         if (this.domains.includes('ics-attack')) {
@@ -60,7 +61,6 @@ export class Technique extends StixObject {
         }
         if (this.domains.includes('enterprise-attack')) {
             rep.stix.x_mitre_data_sources = this.data_sources;
-            rep.stix.x_mitre_is_subtechnique = this.is_subtechnique;
             rep.stix.x_mitre_system_requirements = this.system_requirements;
 
             // tactic specific fields
