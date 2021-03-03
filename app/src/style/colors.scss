@@ -97,10 +97,7 @@ $colors: (
     .light & { color: on-color-deemphasis(light); }
 }
 
-.text-success {
-    color: color(success);
-}
-
-.text-warn {
-    color: color(warn);
-}
+.text-success { color: color(success); }
+.text-warn {    color: color(warn); }
+.text-error {   color: color(error); }
+.text-info {    color: color(info); }

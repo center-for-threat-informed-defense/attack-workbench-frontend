@@ -1,9 +1,8 @@
 import { SelectionModel } from '@angular/cdk/collections';
-import { Component, OnDestroy, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
 import { Observer } from 'rxjs';
 import { Relationship } from 'src/app/classes/stix/relationship';
 import { stixTypeToAttackType } from 'src/app/classes/stix/stix-object';
-import { StixListComponent } from 'src/app/components/stix/stix-list/stix-list.component';
 import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/rest-api-connector.service';
 import { StixViewPage } from '../../stix-view-page';
 
@@ -16,8 +15,6 @@ import { StixViewPage } from '../../stix-view-page';
 export class RelationshipViewComponent extends StixViewPage implements OnInit, OnDestroy {
 
     public get relationship() { return this.config.object as Relationship; }
-    @ViewChild('source_select') private source_select: StixListComponent;
-    @ViewChild('target_select') private target_select: StixListComponent;
     public source_type: string;
     public target_type: string;
     public selectionModel_source: SelectionModel<string>;
