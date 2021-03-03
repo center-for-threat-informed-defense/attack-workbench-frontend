@@ -14,7 +14,9 @@ import { StixViewConfig } from '../stix-view-page';
 })
 export class StixDialogComponent implements OnInit {
 
-    constructor(public dialogRef: MatDialogRef<StixDialogComponent>, @Inject(MAT_DIALOG_DATA) public _config: StixViewConfig, public sidebarService: SidebarService, public restApiConnectorService: RestApiConnectorService) { }
+    constructor(public dialogRef: MatDialogRef<StixDialogComponent>, @Inject(MAT_DIALOG_DATA) public _config: StixViewConfig, public sidebarService: SidebarService, public restApiConnectorService: RestApiConnectorService) {
+        if (this._config.mode && this._config.mode == "edit") this.startEditing();
+    }
     public get config(): StixViewConfig {
         return {
             mode: this.editing? "edit" : "view",
