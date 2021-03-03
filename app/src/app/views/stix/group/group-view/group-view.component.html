@@ -63,7 +63,16 @@
         </div>
         <div class="row">
             <div class="col">
-                <app-stix-list  [config]="{
+                <app-add-relationship-button (created)="techniqueList.applyControls()" [config]="{
+                    label: 'technique',
+                    relationship_type: 'uses',
+                    source_ref: group.stixID
+                }"></app-add-relationship-button>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <app-stix-list #techniqueList [config]="{
                     'type': 'relationship', 
                     'sourceRef': group.stixID,
                     'targetType': 'technique',
@@ -81,7 +90,16 @@
         </div>
         <div class="row">
             <div class="col">
-                <app-stix-list [config]="{
+                <app-add-relationship-button (created)="softwareList.applyControls()" [config]="{
+                    label: 'software',
+                    relationship_type: 'uses',
+                    source_ref: group.stixID
+                }"></app-add-relationship-button>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <app-stix-list #softwareList [config]="{
                     'type': 'relationship', 
                     'sourceRef': group.stixID,
                     'targetType': 'software',
