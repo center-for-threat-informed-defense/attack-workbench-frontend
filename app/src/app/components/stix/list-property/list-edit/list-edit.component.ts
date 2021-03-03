@@ -6,7 +6,6 @@ import { FormControl } from '@angular/forms';
 import { MatOptionSelectionChange } from '@angular/material/core';
 import { MatDialog } from '@angular/material/dialog';
 import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/rest-api-connector.service';
-import { Observable } from 'rxjs';
 import { SelectionModel } from '@angular/cdk/collections';
 import { Tactic } from 'src/app/classes/stix/tactic';
 import { StixObject } from 'src/app/classes/stix/stix-object';
