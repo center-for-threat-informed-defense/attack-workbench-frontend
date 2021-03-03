@@ -49,14 +49,14 @@ export class ExternalReferences extends Serializable {
 
     /**
      * Return index of reference to display
-     * throws error if source name is not found
+     * Returns null if not found
      * @param sourceName source name of reference
      */
     public getIndexOfReference(sourceName : string) : number {
         if(this._externalReferencesIndex.get(sourceName)) {
             return this._externalReferencesIndex.get(sourceName);
         }
-        throw new Error(`could not find source name "${sourceName}"`);
+        return null;
     }
 
     /**
