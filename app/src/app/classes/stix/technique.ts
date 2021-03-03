@@ -1,4 +1,5 @@
-import { Observable } from "rxjs";
+import { forkJoin, Observable, of } from "rxjs";
+import { map, switchMap } from "rxjs/operators";
 import { RestApiConnectorService } from "src/app/services/connectors/rest-api/rest-api-connector.service";
 import { ValidationData } from "../serializable";
 import { StixObject } from "./stix-object";
@@ -151,7 +152,28 @@ export class Technique extends StixObject {
      * @returns {Observable<ValidationData>} the validation warnings and errors once validation is complete.
      */
     public validate(restAPIService: RestApiConnectorService): Observable<ValidationData> {
-        return this.base_validate(restAPIService);
+        return this.base_validate(restAPIService).pipe(
+            switchMap(validationResult => {
+                return forkJoin({
+                    sub_of: restAPIService.getRelatedTo(this.stixID, null, null, null, "subtechnique-of"),
+                    super_of: restAPIService.getRelatedTo(null, this.stixID, null, null, "subtechnique-of")
+                }).pipe(
+                    map(relationships => {
+                        if (this.is_subtechnique && relationships.super_of.data.length > 0) validationResult.errors.push({
+                            "field": "is_subtechnique",
+                            "result": "error",
+                            "message": "technique with sub-techniques cannot be converted to sub-technique"
+                        })
+                        if (!this.is_subtechnique && relationships.sub_of.data.length > 0) validationResult.errors.push({
+                            "field": "is_subtechnique",
+                            "result": "error",
+                            "message": "sub-technique with parent cannot be converted to technique"
+                        })
+                        return validationResult;
+                    })
+                )
+            })
+        );
     }
 
     /**
