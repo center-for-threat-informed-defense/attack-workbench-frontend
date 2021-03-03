@@ -148,7 +148,7 @@
         </ng-container>
     </div>
     <!-- RELATIONSHIPS -->
-    <div *ngIf="config.showRelationships || !config.hasOwnProperty('showRelationships')">
+    <div *ngIf="(config.showRelationships || !config.hasOwnProperty('showRelationships')) && !editing">
         <!-- SUBTECHNIQUES -->
         <div *ngIf="!technique.is_subtechnique; else othersubs">
             <div class="row">

@@ -46,7 +46,7 @@
         </div>
     </div>
     <!-- only show relationships if configured to show them -->
-    <div *ngIf="config.showRelationships || !config.hasOwnProperty('showRelationships')">
+    <div *ngIf="(config.showRelationships || !config.hasOwnProperty('showRelationships')) && !editing">
         <div class="row">
             <div class="col">
                 <h2 class="section-header">Techniques Addressed by Mitigation</h2>
