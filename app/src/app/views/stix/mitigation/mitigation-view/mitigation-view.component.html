@@ -1,7 +1,10 @@
 <div class="mitigation-view view-page grid spacing-12">
     <div class="row">
         <div class="col">
-            <h1>{{mitigation.name}}</h1>
+            <app-name-property [config]="{
+                mode: editing? 'edit' : 'view',
+                object: mitigation
+            }"></app-name-property>
             <app-subheading [config]="config" (onOpenHistory)="openHistory()" (onOpenNotes)="openNotes()"></app-subheading>
         </div>
     </div>
