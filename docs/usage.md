@@ -43,6 +43,27 @@ Collections can be created, or new versions of existing collections drafted, thr
 
 ## Editing objects
 
+### Editing ATT&CK IDs
+
+ATT&CK IDs must follow a prescribed format:
+| ATT&CK concept | ID format |
+|:------------|:----------|
+| [Matrix](#matrices)              | `MAxxxx` |
+| [Tactic](#tactics)               | `TAxxxx` |
+| [Technique](#techniques)         | `Txxxx` |
+| [Sub-Technique](#sub-techniques) | `Txxxx.yyy` |
+| [Mitigation](#mitigations)       | `Mxxxx` |
+| [Group](#groups)                 | `Gxxxx`  |
+| [Software](#software)            | `Sxxxx` |
+
+<!-- TODO improve ID namespacing guidance and support -->
+<!-- All IDs _can_ be prefixed with an organization identifier. This allows name-spacing of IDs by the creating organization to prevent ID collisions between data providers creating objects. Organization prefixes:
+- are joined to the ID using a double hyphen
+- can not include any whitespace characters
+- should be lowercase
+
+Examples of IDs with an organization identifier include `acme--T1000`, `octan--G1056`, `xyz-co--M1200`.  -->
+
 ### Editing Matrices
 
 #### Editing tactics on matrices

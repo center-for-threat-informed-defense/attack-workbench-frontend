@@ -286,15 +286,16 @@ export abstract class StixObject extends Serializable {
                                     "message": "ATT&CK ID is unique"
                                 })
                             }
+                            // (\S+--)? is an organization prefix, and should probably be improved when that is made an explicit feature
                             let attackIDValid = 
                                 this.type == "attack-pattern"? 
-                                    this["is_subtechnique"] ? /^T\d{4}(.\d{3})$/.test(this.attackID) : 
-                                                              /^T\d{4}$/.test(this.attackID) :
-                                this.type == "x-mitre-tactic"? /^TA\d{4}$/.test(this.attackID) :
-                                this.type == "malware" || this.type == "tool"? /^S\d{4}$/.test(this.attackID) :
-                                this.type == "course-of-action"? /^M\d{4}$/.test(this.attackID) :
+                                    this["is_subtechnique"] ? /^(\S+--)?T\d{4}.\d{3}$/.test(this.attackID) : 
+                                                              /^(\S+--)?T\d{4}$/.test(this.attackID) :
+                                this.type == "x-mitre-tactic"? /^(\S+--)?TA\d{4}$/.test(this.attackID) :
+                                this.type == "malware" || this.type == "tool"? /^(\S+--)?S\d{4}$/.test(this.attackID) :
+                                this.type == "course-of-action"? /^(\S+--)?M\d{4}$/.test(this.attackID) :
                                 this.type == "x-mitre-matrix" ? true :
-                                this.type == "intrusion-set"? /^G\d{4}$/.test(this.attackID) : false;
+                                this.type == "intrusion-set"? /^(\S+--)?G\d{4}$/.test(this.attackID) : false;
                             if (!attackIDValid) {
                                 result.errors.push({
                                     "result": "error",
