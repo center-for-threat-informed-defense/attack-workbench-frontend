@@ -33,10 +33,10 @@
         <!-- edit source/target -->
         <div class="col">
             <mat-accordion>
-                <mat-expansion-panel class="mat-elevation-z0">
+                <mat-expansion-panel [expanded]="relationship.target_object && !relationship.source_object" class="mat-elevation-z0">
                     <mat-expansion-panel-header>
                         <mat-panel-title>
-                            source object
+                            {{!relationship.source_object? 'select a source object' : relationship.source_name}}
                         </mat-panel-title>
                         <ng-template matExpansionPanelContent>
                             <mat-form-field appearance="outline" class="type_select">
@@ -53,10 +53,10 @@
                         </ng-template>
                     </mat-expansion-panel-header>
                 </mat-expansion-panel>
-                <mat-expansion-panel class="mat-elevation-z0">
+                <mat-expansion-panel [expanded]="relationship.source_object && !relationship.target_object" class="mat-elevation-z0">
                     <mat-expansion-panel-header>
                         <mat-panel-title>
-                            target object
+                            {{!relationship.target_object? 'select a target object' : relationship.target_name}}
                         </mat-panel-title>
                         <ng-template matExpansionPanelContent>
                             <mat-form-field appearance="outline" class="type_select">
