@@ -135,6 +135,7 @@ import { OrderedListEditComponent } from './components/stix/ordered-list-propert
 import { TypePropertyComponent } from './components/stix/type-property/type-property.component';
 import { TypeViewComponent } from './components/stix/type-property/type-view/type-view.component';
 import { TypeEditComponent } from './components/stix/type-property/type-edit/type-edit.component';
+import { NotesEditorComponent } from './components/resources-drawer/notes-editor/notes-editor.component';
 
 
 @NgModule({
@@ -220,7 +221,8 @@ import { TypeEditComponent } from './components/stix/type-property/type-edit/typ
 
     TypePropertyComponent,
     TypeViewComponent,
-    TypeEditComponent
+    TypeEditComponent,
+    NotesEditorComponent
   ],
   imports: [
     BreadcrumbModule,

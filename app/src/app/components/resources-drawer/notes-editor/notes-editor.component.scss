@@ -1,0 +1,24 @@
+@import "../../../../style/globals";
+.notes-editor {
+    .note-editor-toolbar {
+        margin: 1em 0;
+    }
+    .sticky-note {
+        max-width: 18em;
+        padding: 0px;
+        margin-bottom: 12px;
+
+        .title-space {
+            flex: 1 1 auto;
+        }
+        mat-card-header {
+            box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.25);
+            display: flex;
+            align-items: center;
+            .mat-card-title { margin: 0px; }
+        }
+        mat-card-content {
+            padding: 16px;
+        }
+    }
+}

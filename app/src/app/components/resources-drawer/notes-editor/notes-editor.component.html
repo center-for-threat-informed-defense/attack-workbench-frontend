@@ -1,0 +1,23 @@
+<div class="notes-editor">
+    <!-- <app-loading-overlay *ngIf="loading; else timeline"></app-loading-overlay> -->
+    <!-- TODO: note editor toolbar (sorting, add, etc.) -->
+    <div class="note-editor-toolbar"></div>
+    <ng-container *ngFor="let note of notes">
+        <mat-card class="sticky-note" (click)="editing = true;">
+            <mat-card-header>
+                <!-- TODO: if no title (optional) set minimum height for consistency -->
+                <mat-card-title>{{note.title}}</mat-card-title>
+                <div class="title-space"></div>
+                <!-- TODO: ask user to confirm note deletion -->
+                <button mat-button class="control" matTooltip="delete" (click)="deleteNote(note)"><mat-icon aria-label="delete">delete</mat-icon></button>
+            </mat-card-header>
+            <mat-card-content>
+                <markdown *ngIf="!editing" [data]="note.content"></markdown>
+                <!-- TODO: implement edit note to show raw markdown -->
+                <div *ngIf="editing" contenteditable="true" (blur)="onFocusOut()">
+                    {{note.content}}
+                </div>
+            </mat-card-content>
+        </mat-card>
+    </ng-container>
+</div>
