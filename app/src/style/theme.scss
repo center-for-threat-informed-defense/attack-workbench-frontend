@@ -145,6 +145,11 @@ $tooltip-color: color-alternate(dark, 4);
     }
 }
 
+.mat-card .mat-card-header {
+    .light & { background: color-alternate(light); }
+    .dark & { background: color-alternate(dark); }
+}
+
 .mat-step-icon:not(.mat-step-icon-selected):not(.mat-step-icon-state-edit) {
     .dark & { color: on-color(dark); }
     .light & { color: on-color(light); }
