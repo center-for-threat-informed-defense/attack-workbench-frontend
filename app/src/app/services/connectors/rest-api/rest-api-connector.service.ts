@@ -1,7 +1,7 @@
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { Observable, of } from 'rxjs';
+import { Observable, of, ReplaySubject } from 'rxjs';
 import { tap, catchError, map, share, switchMap } from 'rxjs/operators';
 import { CollectionIndex } from 'src/app/classes/collection-index';
 import { Collection } from 'src/app/classes/stix/collection';
@@ -691,11 +691,19 @@ export class RestApiConnectorService extends ApiConnector {
      * Get all allowed values
      * @returns {Observable<any>} all allowed values
      */
+    private allowedValues;
     public getAllAllowedValues(): Observable<any> {
-        return this.http.get<any>(`${this.baseUrl}/config/allowed-values`, {headers: this.headers}).pipe(
+        if (this.allowedValues) { return of(this.allowedValues)}
+
+        const data$ = this.http.get<any>(`${this.baseUrl}/config/allowed-values`, {headers: this.headers}).pipe(
             tap(_ => console.log("retrieved allowed values")),
             map(result => result as any),
             catchError(this.handleError_array<string[]>([]))
-        )
+        );
+        let subscription = data$.subscribe({
+            next: (data) => { this.allowedValues = data; },
+            complete: () => { subscription.unsubscribe(); }
+        });
+        return data$;
     }                                                                     
 }
