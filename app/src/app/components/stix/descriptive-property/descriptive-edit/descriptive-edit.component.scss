@@ -1,2 +1,21 @@
 @import "../../../../../style/globals";
 @import '~@angular/material/theming';
+
+.box {
+    box-sizing: border-box;
+    border: solid 1px; 
+    border-radius: 4px;
+
+    &:hover {
+        border: solid 2px;
+    }
+
+    .padding{
+        padding-left: 1rem;
+        padding-right: 1rem;
+    }
+
+    .fill-space {
+        width: -webkit-fill-available;
+    }
+}

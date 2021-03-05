@@ -8,7 +8,7 @@
     <div *ngIf="config.mode == 'diff'">
         <app-descriptive-diff [config]="config"></app-descriptive-diff>
     </div>
-    <div *ngIf="config.mode == 'edit'">
+    <div class="grow-to-row" *ngIf="config.mode == 'edit'">
         <app-descriptive-edit [config]="config"></app-descriptive-edit>
     </div>
 </div>
