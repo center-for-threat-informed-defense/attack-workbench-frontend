@@ -73,6 +73,16 @@
             }"></app-descriptive-property>
         </div>
     </div>
+    <div class="row">
+        <div class="col">
+            <app-list-property class="grow-to-row" [config]="{
+                mode: editing? 'edit': 'view',
+                object: software,
+                field: 'domains',
+                editType: 'select'
+            }"></app-list-property>
+        </div>
+    </div>
     <!-- only show relationships if configured to show them -->
     <div *ngIf="config.showRelationships || !config.hasOwnProperty('showRelationships')">
         <div class="row">

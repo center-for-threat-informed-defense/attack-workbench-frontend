@@ -10,6 +10,7 @@ export class Software extends StixObject {
     public platforms: string[];
     public type: string;
     public contributors: string[];
+    public domains: string[];
 
     constructor(type: type_software, sdo?: any) {
         super(sdo, type);
@@ -29,6 +30,7 @@ export class Software extends StixObject {
         rep.stix.name = this.name;
         rep.stix.description = this.description;
         rep.stix.type = this.type;
+        rep.stix.x_mitre_domains = this.domains;
         rep.stix.x_mitre_aliases = this.aliases;
         rep.stix.x_mitre_platforms = this.platforms;
         rep.stix.x_mitre_contributors = this.contributors;
@@ -64,6 +66,11 @@ export class Software extends StixObject {
                 if (this.isStringArray(sdo.x_mitre_aliases)) this.aliases = sdo.x_mitre_aliases;
                 else console.error("TypeError: aliases is not a string array:", sdo.x_mitre_aliases, "(",typeof(sdo.x_mitre_aliases),")")
             } else this.aliases = [];
+
+            if ("x_mitre_domains" in sdo) {
+                if (this.isStringArray(sdo.x_mitre_domains)) this.domains = sdo.x_mitre_domains;
+                else console.error("TypeError: domains field is not a string array.");
+            } else this.domains = [];
 
             if ("x_mitre_platforms" in sdo) {
                 if (this.isStringArray(sdo.x_mitre_platforms)) this.platforms = sdo.x_mitre_platforms;
