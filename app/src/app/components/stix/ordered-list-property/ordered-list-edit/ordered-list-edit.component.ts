@@ -64,14 +64,12 @@ export class OrderedListEditComponent implements OnInit {
      * @param {int} to the 2nd index to swap
      */
     public moveRow(from, to) {
-        if (
-        from < 0 ||
-        from > this.list.length - 1 ||
-        to < 0 ||
-        to > this.list.length - 1
-        ) {
-        console.warn('invalid indexes for tactic reorder', from, to);
-        return;
+        if (from < 0 ||
+            from > this.list.length - 1 ||
+            to < 0 ||
+            to > this.list.length - 1) {
+            console.warn('invalid indexes for tactic reorder', from, to);
+            return;
         }
         let fromRow = this.list[from];
         let toRow = this.list[to];
@@ -85,7 +83,6 @@ export class OrderedListEditComponent implements OnInit {
      * @param {int} index array index of item to be deleted from list
      */
     public deleteRow(index) {
-        console.log(this.list[index]);
         let prompt = this.dialog.open(ConfirmationDialogComponent, {
         maxWidth: '35em',
         data: {

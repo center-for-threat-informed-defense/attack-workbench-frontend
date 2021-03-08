@@ -26,7 +26,6 @@ export class OrderedListViewComponent implements OnInit {
             for (let object of this.config.globalObjects) {
                 this._idToLabel.set(object.stixID, object[this.config.field]);
             }
-            console.log(this._idToLabel, this._idToLabel.get(id));
         }
         return this._idToLabel.get(id);
     }
