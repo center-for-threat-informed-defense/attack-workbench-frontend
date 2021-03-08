@@ -65,14 +65,17 @@
                 editType: 'select'
             }"></app-list-property>
         </div>
-        <ng-container *ngIf="showDomainField('enterprise-attack', 'data_sources') || showDomainField('enterprise-attack', 'system_requirements') || showDomainField('mobile-attack', 'tactic_type')">
+        <ng-container *ngIf="showDomainField('enterprise-attack', 'data_sources') 
+                            || showDomainField('ics-attack', 'data_sources') 
+                            || showDomainField('enterprise-attack', 'system_requirements') 
+                            || showDomainField('mobile-attack', 'tactic_type')">
             <!-- Display only if domain specific fields exist or if in 'edit' mode -->
             <div class="col arrow">
                 <mat-icon>arrow_forward</mat-icon>
             </div>
             <div class="col">
                 <!-- DATA SOURCES -->
-                <div *ngIf="showDomainField('enterprise-attack', 'data_sources')" class="row">
+                <div *ngIf="showDomainField('enterprise-attack', 'data_sources') || showDomainField('ics-attack', 'data_sources')" class="row">
                     <app-list-property class="grow-to-row" [config]="{
                         mode: editing? 'edit': 'view',
                         object: technique,
@@ -97,6 +100,7 @@
                         mode: editing? 'edit': 'view',
                         object: technique,
                         field: 'tactic_type',
+                        label: 'tactic type',
                         editType: 'select'
                     }"></app-list-property>
                 </div>
