@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { AfterContentChecked, ChangeDetectorRef, Component, Input, OnInit, ViewEncapsulation } from '@angular/core';
 import { ListPropertyConfig } from '../list-property.component';
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { MatChipInputEvent } from '@angular/material/chips';
@@ -14,22 +14,16 @@ import { AddDialogComponent } from 'src/app/components/add-dialog/add-dialog.com
 @Component({
   selector: 'app-list-edit',
   templateUrl: './list-edit.component.html',
-  styleUrls: ['./list-edit.component.scss']
+  styleUrls: ['./list-edit.component.scss'],
+  encapsulation: ViewEncapsulation.None
 })
-export class ListEditComponent implements OnInit {
+export class ListEditComponent implements OnInit, AfterContentChecked {
     @Input() public config: ListPropertyConfig;
 
-    // allowed values ('select')
-    public allowedValues: string[] = [];
+    // allowed values (editType: 'select')
+    public allAllowedValues: any;
     public selectControl: FormControl;
-
-    // selection model ('stixList')
-    public select: SelectionModel<string>;
-    public type: string;
-    public objects: StixObject[] = [];
-
-    // any value ('any')
-    readonly separatorKeysCodes: number[] = [ENTER, COMMA];   
+    public disabledTooltip: string = "a valid domain must be selected first";
 
     public fieldToStix = {
         "platforms": "x_mitre_platform",
@@ -40,26 +34,38 @@ export class ListEditComponent implements OnInit {
     }
     public domains = [
         "enterprise-attack",
-        "mobile-attack",
+        "mobile-attack", // FIXME: subscription error when selecting this option
         "ics-attack"
     ]
 
-    constructor(public dialog: MatDialog, private restAPIConnectorService: RestApiConnectorService) { }
+    // selection model (editType: 'stixList')
+    public select: SelectionModel<string>;
+    public type: string;
+    public objects: StixObject[] = [];
+
+    // any value (editType: 'any')
+    readonly separatorKeysCodes: number[] = [ENTER, COMMA];   
+
+    constructor(public dialog: MatDialog, private restAPIConnectorService: RestApiConnectorService, private ref: ChangeDetectorRef) { }
 
     ngOnInit(): void {
+        this.selectControl = new FormControl(this.config.object[this.config.field]);
         if (this.config.field == 'platforms' 
          || this.config.field == 'tactic_type' 
          || this.config.field == 'permissions_required' 
          || this.config.field == 'effective_permissions' 
-         || this.config.field == 'impact_type') {
+         || this.config.field == 'impact_type'
+         || this.config.field == 'domains') {
             let data$ = this.restAPIConnectorService.getAllAllowedValues();
             let subscription = data$.subscribe({
-                next: (data) => { this.allowedValues = this.getAllowedValues(data) },
+                next: (data) => {
+                    let stixObject = this.config.object as StixObject;
+                    this.allAllowedValues = data.find(obj => { return obj.objectType == stixObject.attackType; })
+                },
                 complete: () => { subscription.unsubscribe(); }
             });
             
         }
-        else if (this.config.field == 'domains') this.allowedValues = this.domains;
         else if (this.config.field == 'defense_bypassed') { } //any
         else if (this.config.field == 'system_requirements') { } //any
         else if (this.config.field == 'contributors') { } //any
@@ -76,7 +82,10 @@ export class ListEditComponent implements OnInit {
                 complete: () => { subscription.unsubscribe(); }
             })
         }
-        this.selectControl = new FormControl(this.config.object[this.config.field]);
+    }
+
+    ngAfterContentChecked() {
+        this.ref.detectChanges();
     }
 
     /** Retrieves a list of selected tactic stixIDs */
@@ -93,14 +102,15 @@ export class ListEditComponent implements OnInit {
         let tactic = objects.find(object => object.stixID == tacticID)
         return [tactic.shortname, tactic.domains[0]];
     }
-
+    
     /** Get allowed values for this field */
-    private getAllowedValues(data: any): string[] {
-        let stixObject = this.config.object as StixObject;
-        let results = data.find(obj => { return obj.objectType == stixObject.attackType; })
-        let property = results.properties.find(p => {return p.propertyName == this.fieldToStix[this.config.field]});
+    public getAllowedValues(): string[] {
+        if (this.config.field == 'domains') return this.domains;
+        if (!this.allAllowedValues) return ['loading...'] // TODO: indicate loading in UI
 
+        // filter values
         let values: string[] = [];
+        let property = this.allAllowedValues.properties.find(p => {return p.propertyName == this.fieldToStix[this.config.field]});
         if ("domains" in this.config.object) {
             let object = this.config.object as any;
             property.domains.forEach(domain => {
@@ -113,6 +123,16 @@ export class ListEditComponent implements OnInit {
             property.domains.forEach(domain => {
                 values = values.concat(domain.allowedValues);
             });
+        }
+
+        if (!values.length) {
+            // disable field and reset selection
+            this.selectControl.disable();
+            this.selectControl.reset();
+            this.config.object[this.config.field] = [];
+        }
+        else {
+            this.selectControl.enable(); // re-enable field
         }
         return values;
     }
