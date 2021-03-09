@@ -214,7 +214,8 @@ export class ListEditComponent implements OnInit, AfterContentChecked {
             data: {
                 selectableObjects: selectableObjects,
                 select: this.select,
-                type: this.type
+                type: this.type,
+                buttonLabel: "OK"
             }
         });
 
