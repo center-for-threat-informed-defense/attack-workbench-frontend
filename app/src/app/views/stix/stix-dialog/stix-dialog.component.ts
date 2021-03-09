@@ -52,7 +52,7 @@ export class StixDialogComponent implements OnInit {
     }
     public save() {
         let object = Array.isArray(this.config.object)? this.config.object[0] : this.config.object;
-        let subscription = object.save(true, this.restApiConnectorService).subscribe({
+        let subscription = object.save(this.restApiConnectorService).subscribe({
             next: (result) => { 
                 this.dialogRef.close(this.dirty);
             },
