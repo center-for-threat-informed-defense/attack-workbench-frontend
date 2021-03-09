@@ -512,15 +512,17 @@ export class RestApiConnectorService extends ApiConnector {
      *
      * @param {string} [sourceRef] STIX id of referenced object. Only retrieve relationships that reference this object in the source_ref property.
      * @param {string} [targetRef] STIX id of referenced object. Only retrieve relationships that reference this object in the target_ref property.
+     * @param {string} [sourceOrTargetRef] STIX id of referenced object. Only retrieve relationships that reference this object in the target_ref or source_ref property.
      * @param {string} [relationshipType] Only retrieve relationships that have a matching relationship_type.
      * @param {string} [sourceType] retrieve objects where the source object is this ATT&CK type
      * @param {string} [targetType] retrieve objects where the source object is this ATT&CK type
      * @param {number} [limit] The number of relationships to retrieve. 
      * @param {number} [offset] The number of relationships to skip.
+     * @param {"all" | "latest"} [versions] if "all", get all versions of the relationships, otherwise only get the latest versions
      * @returns {Observable<Paginated>} paginated data of the relationships
      * @memberof RestApiConnectorService
      */
-    public getRelatedTo(sourceRef?: string, targetRef?: string, sourceType?: AttackType, targetType?: AttackType, relationshipType?: string, limit?: number, offset?: number): Observable<Paginated> {
+    public getRelatedTo(sourceRef?: string, targetRef?: string, sourceOrTargetRef?: string, sourceType?: AttackType, targetType?: AttackType, relationshipType?: string, limit?: number, offset?: number, versions?: "all" | "latest"): Observable<Paginated> {
         let query = new HttpParams();
         
         if (sourceRef) query = query.set("sourceRef", sourceRef);
@@ -530,6 +532,8 @@ export class RestApiConnectorService extends ApiConnector {
         if (targetType) query = query.set("targetType", targetType);
 
         if (relationshipType) query = query.set("relationshipType", relationshipType);
+        
+        if (versions) query = query.set("versions", versions);
 
         if (limit) query = query.set("limit", limit.toString());
         if (offset) query = query.set("offset", offset.toString());
