@@ -231,15 +231,29 @@ export class Relationship extends StixObject {
                                 "result": "error",
                                 "message": "a relationship already exists between these objects"
                             })
-                            return result;
+                            
                         } else {
                             result.successes.push({
                                 "field": "source_ref",
                                 "result": "success",
                                 "message": "relationship is unique"
                             })
-                            return result;
                         }
+                        // ensure that sub-techniques can't have multiple parent techniques
+                        if (this.relationship_type == "subtechnique-of" && relationships.find(relationship => {
+                            return relationship.stix.type == "relationship" && //relationship
+                                   relationship.stix.id != this.stixID &&  //not the same as the one being saved
+                                   relationship.stix.relationship_type == "subtechnique-of" && // involves sub-techniques
+                                   relationship.stix.source_ref == this.source_ref // involves the same sub-technique as the one for this relationship
+                        })) {
+                            result.errors.push({
+                                "field": "source_ref",
+                                "result": "error",
+                                "message": "sub-technique already has a parent"
+                            })
+                        }
+
+                        return result;
                     })
                 )
             })
