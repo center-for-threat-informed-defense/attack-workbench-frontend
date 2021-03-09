@@ -7,6 +7,11 @@ export class Mitigation extends StixObject {
     public name: string = "";
     public domains: string[] = [];
 
+    protected get attackIDValidator() { return {
+        regex: "M\\d{4}",
+        format: "M####"
+    }}
+
     constructor(sdo?: any) {
         super(sdo, "course-of-action");
         if (sdo) {
