@@ -10,6 +10,7 @@ import { SelectionModel } from '@angular/cdk/collections';
 import { Tactic } from 'src/app/classes/stix/tactic';
 import { StixObject } from 'src/app/classes/stix/stix-object';
 import { AddDialogComponent } from 'src/app/components/add-dialog/add-dialog.component';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-list-edit',
@@ -24,6 +25,10 @@ export class ListEditComponent implements OnInit, AfterContentChecked {
     public allAllowedValues: any;
     public selectControl: FormControl;
     public disabledTooltip: string = "a valid domain must be selected first";
+    public dataLoaded: boolean = false;
+
+    // prevent async issues
+    private sub: Subscription = new Subscription();
 
     public fieldToStix = {
         "platforms": "x_mitre_platform",
@@ -34,7 +39,7 @@ export class ListEditComponent implements OnInit, AfterContentChecked {
     }
     public domains = [
         "enterprise-attack",
-        "mobile-attack", // FIXME: subscription error when selecting this option
+        "mobile-attack",
         "ics-attack"
     ]
 
@@ -56,15 +61,17 @@ export class ListEditComponent implements OnInit, AfterContentChecked {
          || this.config.field == 'effective_permissions' 
          || this.config.field == 'impact_type'
          || this.config.field == 'domains') {
-            let data$ = this.restAPIConnectorService.getAllAllowedValues();
-            let subscription = data$.subscribe({
-                next: (data) => {
-                    let stixObject = this.config.object as StixObject;
-                    this.allAllowedValues = data.find(obj => { return obj.objectType == stixObject.attackType; })
-                },
-                complete: () => { subscription.unsubscribe(); }
-            });
-            
+            if (!this.dataLoaded) {
+                let data$ = this.restAPIConnectorService.getAllAllowedValues();
+                this.sub = data$.subscribe({
+                    next: (data) => {
+                        let stixObject = this.config.object as StixObject;
+                        this.allAllowedValues = data.find(obj => { return obj.objectType == stixObject.attackType; })
+                        this.dataLoaded = true;
+                    },
+                    complete: () => { this.sub.unsubscribe(); }
+                });
+            }
         }
         else if (this.config.field == 'defense_bypassed') { } //any
         else if (this.config.field == 'system_requirements') { } //any
@@ -106,11 +113,22 @@ export class ListEditComponent implements OnInit, AfterContentChecked {
     /** Get allowed values for this field */
     public getAllowedValues(): string[] {
         if (this.config.field == 'domains') return this.domains;
-        if (!this.allAllowedValues) return ['loading...'] // TODO: indicate loading in UI
+        if (!this.dataLoaded) {
+            this.selectControl.disable();
+            return null;
+        };
 
         // filter values
         let values: string[] = [];
         let property = this.allAllowedValues.properties.find(p => {return p.propertyName == this.fieldToStix[this.config.field]});
+        
+        // TODO: 'permissions_required' and 'effective_permissions'
+        //       not yet implemented in REST API
+        if (!property) {
+            this.selectControl.disable();
+            return null;
+        }
+
         if ("domains" in this.config.object) {
             let object = this.config.object as any;
             property.domains.forEach(domain => {
