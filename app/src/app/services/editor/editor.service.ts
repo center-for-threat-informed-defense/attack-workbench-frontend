@@ -12,6 +12,7 @@ export class EditorService {
     public editable: boolean = false;
     public editing: boolean = false;
     public onSave = new EventEmitter();
+    public onEditingStopped = new EventEmitter();
     
     constructor(private router: Router, private route: ActivatedRoute, private sidebarService: SidebarService, private dialog: MatDialog) {
         this.router.events.subscribe(event => { 
@@ -19,6 +20,8 @@ export class EditorService {
                 let editable = this.getEditableFromRoute(this.router.routerState, this.router.routerState.root);
                 this.editable = editable.length > 0 && editable.every(x=>x);
                 this.sidebarService.setEnabled("history", this.editable);
+                this.sidebarService.setEnabled("citations", this.editable);
+                if (!this.editable) this.sidebarService.currentTab = "search";
             }
         })
         this.route.queryParams.subscribe(params => {
@@ -43,6 +46,7 @@ export class EditorService {
                 if (result) {
                     if (!(this.router.url.includes("/new"))) this.router.navigate([], {queryParams: {}})
                     else this.router.navigate([".."], {queryParams: {}})
+                    this.onEditingStopped.emit();
                 }
             },
             complete: () => { subscription.unsubscribe(); } //prevent memory leaks

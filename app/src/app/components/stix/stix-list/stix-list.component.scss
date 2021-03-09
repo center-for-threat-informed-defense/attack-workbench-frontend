@@ -184,9 +184,11 @@
                     }
                 }
         
-                .element-row td {
-                    border-bottom-width: 0;
-                    cursor: pointer;
+                .element-row {
+                    td {
+                        border-bottom-width: 0;
+                    }
+                    &.clickable td { cursor: pointer; }
                 }
             }
         }

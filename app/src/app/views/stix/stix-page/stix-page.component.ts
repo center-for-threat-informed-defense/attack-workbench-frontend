@@ -67,6 +67,7 @@ export class StixPageComponent implements OnInit, OnDestroy {
                     // this.editorService.stopEditing();
                     this.router.navigate([this.objects[0].attackType, this.objects[0].stixID]);
                     setTimeout(() => this.loadObjects());
+                    this.editorService.onEditingStopped.emit();
                 }
             },
             complete: () => { subscription.unsubscribe(); } //prevent memory leaks
@@ -103,7 +104,7 @@ export class StixPageComponent implements OnInit, OnDestroy {
             else if (objectType == "matrix") objects$ = this.restAPIConnectorService.getMatrix(objectStixID);
             else if (objectType == "mitigation") objects$ = this.restAPIConnectorService.getMitigation(objectStixID);
             else if (objectType == "tactic") objects$ = this.restAPIConnectorService.getTactic(objectStixID);
-            else if (objectType == "technique") objects$ = this.restAPIConnectorService.getTechnique(objectStixID);
+            else if (objectType == "technique") objects$ = this.restAPIConnectorService.getTechnique(objectStixID, null, "latest", true);
             else if (objectType == "collection") objects$ = this.restAPIConnectorService.getCollection(objectStixID, null, "all");
             let  subscription = objects$.subscribe({
                 next: result => {

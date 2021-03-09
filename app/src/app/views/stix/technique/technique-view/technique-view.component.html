@@ -6,7 +6,7 @@
                 mode: editing? 'edit' : 'view',
                 object: technique
             }"></app-name-property>
-            <app-subheading [config]="config" (onOpenHistory)="openHistory()" (onOpenNotes)="openNotes()"></app-subheading>
+            <app-subheading *ngIf="!editing" [config]="config" (onOpenHistory)="openHistory()" (onOpenNotes)="openNotes()"></app-subheading>
         </div>
     </div>
     <div class="row">
@@ -173,7 +173,7 @@
                         'targetRef': technique.stixID,
                         'relationshipType': 'subtechnique-of',
                         'allowEdits': true,
-                        'clickBehavior': 'linkToSourceRef'
+                        'clickBehavior': 'none'
                     }"></app-stix-list>
                 </div>
             </div>
@@ -191,7 +191,7 @@
                             'type': 'relationship', 
                             'targetRef': technique.parentTechnique.stixID,
                             'relationshipType': 'subtechnique-of',
-                            'clickBehavior': 'linkToSourceRef',
+                            'clickBehavior': 'none',
                             'allowEdits': true,
                             'excludeSourceRefs': [technique.stixID]
                         }"></app-stix-list>

@@ -194,7 +194,7 @@ export class Relationship extends StixObject {
                     "message": "target object specified"
                 })}
                 // is this a valid sub-technique-of relationship?
-                if (this.relationship_type == "subtechnique-of") {
+                if (this.source_ref && this.target_ref && this.relationship_type == "subtechnique-of") {
                     console.log(this.source_object, this.target_object)
                     if (!this.source_object.stix.hasOwnProperty("x_mitre_is_subtechnique") || this.source_object.stix.x_mitre_is_subtechnique == false) {
                         result.errors.push({
@@ -262,14 +262,11 @@ export class Relationship extends StixObject {
 
     /**
      * Save the current state of the STIX object in the database. Update the current object from the response
-     * @param new_version [boolean] if false, overwrite the current version of the object. If true, creates a new version.
      * @param restAPIService [RestApiConnectorService] the service to perform the POST/PUT through
      * @returns {Observable} of the post
      */
-    public save(new_version: boolean = true, restAPIService: RestApiConnectorService): Observable<Relationship> {
+    public save(restAPIService: RestApiConnectorService): Observable<Relationship> {
         // TODO POST if the object was just created (doesn't exist in db yet)
-        if (new_version) this.modified = new Date();
-        console.log(new_version, this.serialize());
         
         let postObservable = restAPIService.postRelationship(this);
         let subscription = postObservable.subscribe({

@@ -272,7 +272,7 @@ export class RestApiConnectorService extends ApiConnector {
     private getStixObjectFactory<T extends StixObject>(attackType: AttackType) {
         let attackClass = attackTypeToClass[attackType];
         let plural = attackTypeToPlural[attackType]
-        return function<P extends T>(id: string, modified?: Date, versions="latest"): Observable<P[]> {
+        return function<P extends T>(id: string, modified?: Date, versions="latest", includeSubs?: boolean): Observable<P[]> {
             let url = `${this.baseUrl}/${plural}/${id}`;
             if (modified) url += `/modified/${modified}`;
             let query = new HttpParams();
@@ -292,11 +292,12 @@ export class RestApiConnectorService extends ApiConnector {
                     });
                 }),
                 switchMap(result => { // add sub-technique or parent-technique but only if it's a technique
+                    if (!includeSubs) return of(result);
                     let x = result as any[];
                     if (x[0].attackType != "technique") return of(result); //don't transform non-techniques
                     let t = x[0] as Technique;
                     if (t.is_subtechnique) { //add parent technique
-                        return this.getRelatedTo(t.stixID, null, null, null, "subtechnique-of").pipe( // fetch from REST API
+                        return this.getRelatedTo({sourceRef: t.stixID, relationshipType: "subtechnique-of"}).pipe( // fetch from REST API
                             map(rel => { //extract the parent from the relationship
                                 let p = rel as any;
                                 if (!p || p.data.length == 0) return null; // no parent technique
@@ -310,7 +311,7 @@ export class RestApiConnectorService extends ApiConnector {
                             tap(result => console.log("fetched parent technique of", result, result[0]["parentTechnique"]))
                         );
                     } else { // add subtechniques
-                        return this.getRelatedTo(null, t.stixID, null, null, "subtechnique-of").pipe( // fetch from REST API
+                        return this.getRelatedTo({targetRef: t.stixID, relationshipType: "subtechnique-of"}).pipe( // fetch from REST API
                             map(rel => { //extract the sub-techniques from the relationships
                                 let s = rel as any;
                                 return s.data.map(rel => new Technique(rel.source_object)); //transform them to Techniques
@@ -333,7 +334,8 @@ export class RestApiConnectorService extends ApiConnector {
      * Get a single technique by STIX ID
      * @param {string} id the object STIX ID
      * @param {Date} [modified] if specified, get the version modified at the given date
-     * @param {versions} [string] default "latest", if "all" returns all versions of the object instead of just the latest version.
+     * @param {versions} [string] default "latest", if "all" returns all versions of the object instead of just the latest version. Incompatible with includeSubs
+     * @param {includeSubs} [boolean] if true, include sub-techniques/parent-technique attached to the given object. Incompatible with versions="all"
      * @returns {Observable<Technique>} the object with the given ID and modified date
      */
     public get getTechnique() { return this.getStixObjectFactory<Technique>("technique"); }
@@ -598,57 +600,62 @@ export class RestApiConnectorService extends ApiConnector {
     //
 
     /**
-     * Get relationships
+     * Get relationships. Note: pass in args in an object
      *
      * @param {string} [sourceRef] STIX id of referenced object. Only retrieve relationships that reference this object in the source_ref property.
      * @param {string} [targetRef] STIX id of referenced object. Only retrieve relationships that reference this object in the target_ref property.
+     * @param {string} [sourceOrTargetRef] STIX id of referenced object. Only retrieve relationships that reference this object in the target_ref or source_ref property.
      * @param {string} [relationshipType] Only retrieve relationships that have a matching relationship_type.
      * @param {string} [sourceType] retrieve objects where the source object is this ATT&CK type
      * @param {string} [targetType] retrieve objects where the source object is this ATT&CK type
      * @param {number} [limit] The number of relationships to retrieve.
      * @param {number} [offset] The number of relationships to skip.
+     * @param {"all" | "latest"} [versions] if "all", get all versions of the relationships, otherwise only get the latest versions
      * @param {string[]} [excludeSourceRefs] if specified, exclude source refs which are found in this array
      * @param {string[]} [excludeTargetRefs] if specified, exclude target refs which are found in this array
      * @returns {Observable<Paginated>} paginated data of the relationships
-     * @memberof RestApiConnectorService
      */
-    public getRelatedTo(sourceRef?: string, targetRef?: string, sourceType?: AttackType, targetType?: AttackType, relationshipType?: string, limit?: number, offset?: number, excludeSourceRefs?: string[], excludeTargetRefs?: string[]): Observable<Paginated> {
+    public getRelatedTo(args: {sourceRef?: string, targetRef?: string, sourceOrTargetRef?: string, sourceType?: AttackType, targetType?: AttackType, relationshipType?: string, excludeSourceRefs?: string[], excludeTargetRefs?: string[], limit?: number, offset?: number, versions?: "all" | "latest"}): Observable<Paginated> {
         let query = new HttpParams();
 
-        if (sourceRef) query = query.set("sourceRef", sourceRef);
-        if (targetRef) query = query.set("targetRef", targetRef);
+        if (args.sourceRef) query = query.set("sourceRef", args.sourceRef);
+        if (args.targetRef) query = query.set("targetRef", args.targetRef);
 
-        if (sourceType) query = query.set("sourceType", sourceType);
-        if (targetType) query = query.set("targetType", targetType);
+        if (args.sourceType) query = query.set("sourceType", args.sourceType);
+        if (args.targetType) query = query.set("targetType", args.targetType);
 
-        if (relationshipType) query = query.set("relationshipType", relationshipType);
+        if (args.sourceOrTargetRef) query = query.set("sourceOrTargetRef", args.sourceOrTargetRef);
 
-        if (limit) query = query.set("limit", limit.toString());
-        if (offset) query = query.set("offset", offset.toString());
-        if (limit || offset) query = query.set("includePagination", "true");
+        if (args.relationshipType) query = query.set("relationshipType", args.relationshipType);
+        
+        if (args.versions) query = query.set("versions", args.versions);
+
+        if (args.limit) query = query.set("limit", args.limit.toString());
+        if (args.offset) query = query.set("offset", args.offset.toString());
+        if (args.limit || args.offset) query = query.set("includePagination", "true");
         let url = `${this.baseUrl}/relationships`
         return this.http.get(url, {headers:this.headers, params: query}).pipe(
             tap(results => console.log("retrieved relationships", results)),
             map(results => {
-                if (!excludeSourceRefs && !excludeTargetRefs) return results; // only filter if params are present
+                if (!args.excludeSourceRefs && !args.excludeTargetRefs) return results; // only filter if params are present
                 let response = results as any;
-                if (limit || offset) { // returned a paginated
+                if (args.limit || args.offset) { // returned a paginated
                     let pre_filter = response.data.length;
-                    if (excludeSourceRefs) response.data = response.data.filter((d) => !excludeSourceRefs.includes(d.stix.source_ref))
-                    if (excludeTargetRefs) response.data = response.data.filter((d) => !excludeTargetRefs.includes(d.stix.target_ref))
+                    if (args.excludeSourceRefs) response.data = response.data.filter((d) => !args.excludeSourceRefs.includes(d.stix.source_ref))
+                    if (args.excludeTargetRefs) response.data = response.data.filter((d) => !args.excludeTargetRefs.includes(d.stix.target_ref))
                     console.log("filtered", pre_filter - response.data.length, "results by ID")
                     return response;
                 } else { //returned a stixObject[]
                     let pre_filter = response.length;
-                    if (excludeSourceRefs) response = response.filter((d) => !excludeSourceRefs.includes(d.stix.source_ref))
-                    if (excludeTargetRefs) response = response.filter((d) => !excludeTargetRefs.includes(d.stix.target_ref))
+                    if (args.excludeSourceRefs) response = response.filter((d) => !args.excludeSourceRefs.includes(d.stix.source_ref))
+                    if (args.excludeTargetRefs) response = response.filter((d) => !args.excludeTargetRefs.includes(d.stix.target_ref))
                     console.log("filtered", pre_filter - response.length, "results by ID")
                     return response;
                 }
             }),
             map(results => {
                 let response = results as any;
-                if (limit || offset) { //returned paginated
+                if (args.limit || args.offset) { //returned paginated
                     let data = response.data as Array<any>;
                     data = data.map(y => new Relationship(y));
                     response.data = data;

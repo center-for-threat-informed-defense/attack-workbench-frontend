@@ -204,11 +204,10 @@ export class Collection extends StixObject {
     
     /**
      * Save the current state of the STIX object in the database. Update the current object from the response
-     * @param new_version [boolean] if false, overwrite the current version of the object. If true, creates a new version.
      * @param restAPIService [RestApiConnectorService] the service to perform the POST/PUT through
      * @returns {Observable} of the post
      */
-    public save(new_version: boolean = true, restAPIService: RestApiConnectorService): Observable<Collection> {
+    public save(restAPIService: RestApiConnectorService): Observable<Collection> {
         // TODO
         return null;
     }
