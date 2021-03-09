@@ -18,6 +18,14 @@
         .mat-form-field-flex {
             flex: 1 0;
         }
+        .loading {
+            display: flex;
+            align-items: center;
+          }
+          
+        .loading > span {
+            flex: 1;
+        }
     }
     input { font-size: 14px; }
 
