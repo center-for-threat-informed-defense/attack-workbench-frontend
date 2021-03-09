@@ -222,6 +222,46 @@ export class RestApiConnectorService extends ApiConnector {
      * @returns {Observable<Matrix[]>} observable of retrieved objects
      */
     public get getAllCollections() { return this.getStixObjectsFactory<Collection>("collection"); }
+    /**
+     * Get all relationships
+     * @param {number} [limit] the number of relationships to retrieve
+     * @param {number} [offset] the number of relationships to skip
+     * @param {string} [state] if specified, only get objects with this state
+     * @param {boolean} [revoked] if true, get revoked objects
+     * @param {versions} ["all" | "latest"] if "all", get all versions of the relationships. if "latest", only get the latest version of each collection.
+     * @param {boolean} [deprecated] if true, get deprecated objects
+     * @param {string[]} [excludeIDs] if specified, excludes these STIX IDs from the result
+     * @returns {Observable<Relationships[]>} observable of retrieved objects
+     */
+    public get getAllRelationships() { return this.getStixObjectsFactory<Relationship>("relationship"); }
+
+    /**
+     * Get all objects WITHOUT deserializing them to StixObjects
+     * @param {string} [attackID] filter to only include objects with this ATT&CK ID
+     * @param {number} [limit] the number of collections to retrieve
+     * @param {number} [offset] the number of collections to skip
+     * @param {string} [state] if specified, only get objects with this state
+     * @param {boolean} [revoked] if true, get revoked objects
+     * @param {versions} ["all" | "latest"] if "all", get all versions of the collections. if "latest", only get the latest version of each collection.
+     * @param {boolean} [deprecated] if true, get deprecated objects
+     * @returns {Observable<any[]>} observable of retrieved objects
+     */
+    public getAllObjects(attackID?: string, limit?: number, offset?: number, state?: string, revoked?: boolean, deprecated?: boolean) {
+        let query = new HttpParams();
+        // pagination
+        if (limit) query = query.set("limit", limit.toString());
+        if (offset) query = query.set("offset", offset.toString());
+        if (limit || offset) query = query.set("includePagination", "true");
+        // other properties
+        if (state) query = query.set("state", state);
+        if (revoked) query = query.set("revoked", revoked ? "true" : "false");
+        if (revoked) query = query.set("deprecated", deprecated ? "true" : "false");
+        return this.http.get(`${this.baseUrl}/attack-objects`, {headers: this.headers, params: query}).pipe(
+            tap(results => console.log(`retrieved ATT&CK objects`, results)), // on success, trigger the success notification
+            catchError(this.handleError_array([])), // on error, trigger the error notification and continue operation without crashing (returns empty item)
+            share() // multicast so that multiple subscribers don't trigger the call twice. THIS MUST BE THE LAST LINE OF THE PIPE
+        )
+    }
 
     /**
      * Factory to create a new STIX get by ID function
@@ -259,6 +299,7 @@ export class RestApiConnectorService extends ApiConnector {
                         return this.getRelatedTo(t.stixID, null, null, null, "subtechnique-of").pipe( // fetch from REST API
                             map(rel => { //extract the parent from the relationship
                                 let p = rel as any;
+                                if (!p || p.data.length == 0) return null; // no parent technique
                                 return new Technique(p.data[0].target_object); //transform it to a Technique
                             }),
                             map(parent => { //add the parent to the sub-technique

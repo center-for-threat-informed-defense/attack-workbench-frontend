@@ -8,6 +8,7 @@ import { Component, EventEmitter, Input, OnInit, Output, ViewEncapsulation } fro
 })
 export class EmptyListMarkerComponent implements OnInit {
     @Input() public message: string = "Nothing here";
+    @Input() public checkAgain: boolean = true;
     @Output() onCheckAgain = new EventEmitter();
 
     constructor() { }
