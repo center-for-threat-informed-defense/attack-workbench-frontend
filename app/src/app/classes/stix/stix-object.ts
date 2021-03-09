@@ -79,8 +79,8 @@ export abstract class StixObject extends Serializable {
             // create new SDO
             this.stixID = type + "--" + uuid();
             this.type = type;
-            this.created = new Date();
-            this.modified = new Date();
+            // this.created = new Date();
+            // this.modified = new Date();
             this.version = new VersionNumber("0.1");
             this.attackID = "";
             this.external_references = new ExternalReferences();
@@ -133,8 +133,8 @@ export abstract class StixObject extends Serializable {
             stix: {
                 "type": this.type,
                 "id": this.stixID,
-                "created": this.created.toISOString(),
-                "modified": this.modified.toISOString(),
+                "created": this.created? this.created.toISOString() : new Date().toISOString(),
+                "modified": new Date().toISOString(),
                 "x_mitre_version": this.version.toString(),
                 "external_references": serialized_external_references,
                 "x_mitre_deprecated": this.deprecated,
@@ -324,9 +324,8 @@ export abstract class StixObject extends Serializable {
 
     /**
      * Save the current state of the STIX object in the database. Update the current object from the response
-     * @param new_version [boolean] if false, overwrite the current version of the object. If true, creates a new version.
      * @param restAPIService [RestApiConnectorService] the service to perform the POST/PUT through
      * @returns {Observable} of the post
      */
-    abstract save(new_version: boolean, restAPIService: RestApiConnectorService): Observable<StixObject>;
+    abstract save(restAPIService: RestApiConnectorService): Observable<StixObject>;
 }

@@ -3,6 +3,7 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ValidationData } from 'src/app/classes/serializable';
 import { StixObject } from 'src/app/classes/stix/stix-object';
 import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/rest-api-connector.service';
+import { EditorService } from 'src/app/services/editor/editor.service';
 import { SidebarService, tabOption } from 'src/app/services/sidebar/sidebar.service';
 import { StixViewConfig } from '../stix-view-page';
 
@@ -14,7 +15,7 @@ import { StixViewConfig } from '../stix-view-page';
 })
 export class StixDialogComponent implements OnInit {
 
-    constructor(public dialogRef: MatDialogRef<StixDialogComponent>, @Inject(MAT_DIALOG_DATA) public _config: StixViewConfig, public sidebarService: SidebarService, public restApiConnectorService: RestApiConnectorService) {
+    constructor(public dialogRef: MatDialogRef<StixDialogComponent>, @Inject(MAT_DIALOG_DATA) public _config: StixViewConfig, public sidebarService: SidebarService, public restApiConnectorService: RestApiConnectorService, public editorService: EditorService) {
         if (this._config.mode && this._config.mode == "edit") this.startEditing();
     }
     public get config(): StixViewConfig {
@@ -52,9 +53,10 @@ export class StixDialogComponent implements OnInit {
     }
     public save() {
         let object = Array.isArray(this.config.object)? this.config.object[0] : this.config.object;
-        let subscription = object.save(true, this.restApiConnectorService).subscribe({
+        let subscription = object.save(this.restApiConnectorService).subscribe({
             next: (result) => { 
                 this.dialogRef.close(this.dirty);
+                this.editorService.onEditingStopped.emit();
             },
             complete: () => { subscription.unsubscribe(); }
         })

@@ -99,6 +99,7 @@ export class StixListComponent implements OnInit, AfterViewInit {
      * @param {StixObject} object of the row that was clicked
      */
     public onRowClick(element: StixObject) {
+        if (this.config.clickBehavior && this.config.clickBehavior == "none") return;
         if (this.config.clickBehavior && this.config.clickBehavior == "dialog") { //open modal
             let prompt = this.dialog.open(StixDialogComponent, {
                 data: {
@@ -369,7 +370,7 @@ export class StixListComponent implements OnInit, AfterViewInit {
             else if (this.config.type == "tactic") this.data$ = this.restAPIConnectorService.getAllTactics(limit, offset, null, null, null, null, this.config.excludeIDs); //TODO add limit and offset once back-end supports it
             else if (this.config.type == "technique") this.data$ = this.restAPIConnectorService.getAllTechniques(limit, offset, null, null, null, null, this.config.excludeIDs);
             else if (this.config.type == "collection") this.data$ = this.restAPIConnectorService.getAllCollections();
-            else if (this.config.type == "relationship") this.data$ = this.restAPIConnectorService.getRelatedTo(this.config.sourceRef, this.config.targetRef, this.config.sourceType, this.config.targetType, this.config.relationshipType, limit, offset, this.config.excludeSourceRefs, this.config.excludeTargetRefs);
+            else if (this.config.type == "relationship") this.data$ = this.restAPIConnectorService.getRelatedTo({sourceRef: this.config.sourceRef, targetRef: this.config.targetRef, sourceType: this.config.sourceType, targetType: this.config.targetType, relationshipType: this.config.relationshipType,  excludeSourceRefs: this.config.excludeSourceRefs, excludeTargetRefs: this.config.excludeTargetRefs, limit: limit, offset: offset});
             let subscription = this.data$.subscribe({
                 next: (data) => { this.totalObjectCount = data.pagination.total; },
                 complete: () => { subscription.unsubscribe() }
@@ -423,8 +424,9 @@ export interface StixListConfig {
      *     "dialog": open a dialog with the full object definition
      *     "linkToSourceRef": clicking redirects to the source ref object
      *     "linkToTargetRef": clicking redirects user to target ref object
+     *     "none": row is not clickable
      */
-    clickBehavior?: "expand" | "dialog" | "linkToSourceRef" | "linkToTargetRef";
+    clickBehavior?: "expand" | "dialog" | "linkToSourceRef" | "linkToTargetRef" | "none";
     /**
      * Default false. If true, allows for edits of the objects in the table
      * when in dialog mode

@@ -41,6 +41,20 @@ Collections can be created, or new versions of existing collections drafted, thr
 
 ## Viewing objects
 
+### Browsing Object History
+
+Object history can be found in the resources drawer. The history timeline browser allows users to see changes to the object itself as well as changes to any relationships with the object. Clicking an event within the timeline will show what the corresponding object looked like at that moment in time.
+
+- Events within the timeline are color-coded by type:
+    - Purple events correspond to object changes
+    - Blue events correspond to relationship changes
+- Change types are differentiated by icon:
+    - ![Plus](https://raw.githubusercontent.com/google/material-design-icons/master/png/content/add/materialicons/24dp/1x/baseline_add_black_24dp.png) denotes additions, such as the creation of the object itself or the addition of relationships with the object.
+    - ![Pencil](https://raw.githubusercontent.com/google/material-design-icons/master/png/content/create/materialicons/24dp/1x/baseline_create_black_24dp.png) denotes modifications. Modifications to the object that change the version number are marked.
+    - ![Download](https://raw.githubusercontent.com/google/material-design-icons/master/png/file/cloud_download/materialicons/24dp/1x/baseline_cloud_download_black_24dp.png) denotes the first available version of the object, but that earlier versions exist outside of what the user has in their workbench. 
+
+## Adding notes to objects
+
 ## Editing objects
 
 ### Editing ATT&CK IDs
