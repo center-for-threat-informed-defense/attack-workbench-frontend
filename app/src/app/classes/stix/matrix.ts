@@ -61,13 +61,11 @@ export class Matrix extends StixObject {
 
     /**
      * Save the current state of the STIX object in the database. Update the current object from the response
-     * @param new_version [boolean] if false, overwrite the current version of the object. If true, creates a new version.
      * @param restAPIService [RestApiConnectorService] the service to perform the POST/PUT through
      * @returns {Observable} of the post
      */
-    public save(new_version: boolean = true, restAPIService: RestApiConnectorService): Observable<Matrix> {
+    public save(restAPIService: RestApiConnectorService): Observable<Matrix> {
         // TODO PUT if the object was just created (doesn't exist in db yet)
-        if (new_version) this.modified = new Date();
         
         let postObservable = restAPIService.postMatrix(this);
         let subscription = postObservable.subscribe({

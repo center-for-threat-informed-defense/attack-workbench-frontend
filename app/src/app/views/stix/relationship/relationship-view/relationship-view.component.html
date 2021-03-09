@@ -5,7 +5,7 @@
             <ng-template #updatingRefs>
                 <app-loading-overlay></app-loading-overlay>
             </ng-template>
-            <app-subheading [config]="config" (onOpenHistory)="openHistory()" (onOpenNotes)="openNotes()"></app-subheading>
+            <app-subheading *ngIf="!editing" [config]="config" (onOpenHistory)="openHistory()" (onOpenNotes)="openNotes()"></app-subheading>
         </div>
     </div>
     <div class="row" *ngIf="config.mode == 'view'">

@@ -58,7 +58,7 @@ export class SaveDialogComponent implements OnInit {
 
     private save() {
         if (!this.saveEnabled) return;
-        let subscription = this.config.object.save(true, this.restApiConnectorService).subscribe({
+        let subscription = this.config.object.save(this.restApiConnectorService).subscribe({
             next: (result) => { 
                 this.dialogRef.close(true);
             },
