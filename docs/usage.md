@@ -57,7 +57,34 @@ Object history can be found in the resources drawer. The history timeline browse
 
 ## Editing objects
 
+### Editing ATT&CK IDs
+
+ATT&CK IDs must follow a prescribed format:
+| ATT&CK concept | ID format |
+|:------------|:----------|
+| [Matrix](#matrices)              | `MAxxxx` |
+| [Tactic](#tactics)               | `TAxxxx` |
+| [Technique](#techniques)         | `Txxxx` |
+| [Sub-Technique](#sub-techniques) | `Txxxx.yyy` |
+| [Mitigation](#mitigations)       | `Mxxxx` |
+| [Group](#groups)                 | `Gxxxx`  |
+| [Software](#software)            | `Sxxxx` |
+
+<!-- TODO improve ID namespacing guidance and support -->
+<!-- All IDs _can_ be prefixed with an organization identifier. This allows name-spacing of IDs by the creating organization to prevent ID collisions between data providers creating objects. Organization prefixes:
+- are joined to the ID using a double hyphen
+- can not include any whitespace characters
+- should be lowercase
+
+Examples of IDs with an organization identifier include `acme--T1000`, `octan--G1056`, `xyz-co--M1200`.  -->
+
 ### Editing Matrices
+
+#### Editing tactics on matrices
+The order of tactics in matrices can be edited through drag and drop, and clicking on the up/down arrows. Tactics that are not currently in the matrix can be added throught the "Add" button. If there are available tactics, not already mapped to a matrix, a multi-select list will appear where the user can add multiple tactics to the edited matrix. Tactics recently added to the matrices will appear at the bottom of the tactic list.
+
+Tactics can also be removed from the list by hitting on the trash bin next to each tactic row. A confirmation to remove the tactic will be appear.
+
 ### Editing Techniques
 ### Editing Tactics
 ### Editing Mitigations

@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { TypeViewComponent } from './type-view.component';
+import { NamePropertyComponent } from './name-property.component';
 
-describe('TypeViewComponent', () => {
-  let component: TypeViewComponent;
-  let fixture: ComponentFixture<TypeViewComponent>;
+describe('NamePropertyComponent', () => {
+  let component: NamePropertyComponent;
+  let fixture: ComponentFixture<NamePropertyComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ TypeViewComponent ]
+      declarations: [ NamePropertyComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(TypeViewComponent);
+    fixture = TestBed.createComponent(NamePropertyComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

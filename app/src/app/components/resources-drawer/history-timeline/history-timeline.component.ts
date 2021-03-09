@@ -129,6 +129,7 @@ export class HistoryTimelineComponent implements OnInit {
     }
 
     ngOnInit(): void {
+        console.log("loading history")
         this.loading = true;
         let objectType = this.router.url.split("/")[1];
         let objectStixID = this.router.url.split("/")[2];
@@ -142,7 +143,7 @@ export class HistoryTimelineComponent implements OnInit {
         else if (objectType == "technique") objects$ = this.restAPIConnectorService.getTechnique(objectStixID, null, "all");
         else if (objectType == "collection") objects$ = this.restAPIConnectorService.getCollection(objectStixID, null, "all");
         // set up subscribers to get relationships
-        let relationships$ = this.restAPIConnectorService.getRelatedTo(null, null, objectStixID, null, null, null, null, null, "all");
+        let relationships$ = this.restAPIConnectorService.getRelatedTo({sourceOrTargetRef: objectStixID, versions: "all"});
         // join subscribers
         let subscription = forkJoin({
             objectVersions: objects$,

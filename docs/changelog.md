@@ -32,6 +32,14 @@
 
 # Changelog
 
+## 16 February 2021
+### ATT&CK Workbench version 0.1.1
+#### New Features
+- Added Dockerfiles, docker-compose, [and documentation on how to use them](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/tree/master/docs/docker-compose.md). See [attack-workbench-frontend#108](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/108), [attack-workbench-frontend#109](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/109) [attack-workbench-rest-api#14](https://github.com/center-for-threat-informed-defense/attack-workbench-rest-api/issues/14), and [attack-workbench-collection-manager#13](https://github.com/center-for-threat-informed-defense/attack-workbench-collection-manager/issues/13).
+
+#### Fixes
+- Fixed a crash that could occur with specific queries on the REST API. See [attack-workbench-rest-api#28](https://github.com/center-for-threat-informed-defense/attack-workbench-rest-api/issues/28).
+
 ## 19 January 2021
 ### ATT&CK Workbench version 0.1.0
 #### New Features

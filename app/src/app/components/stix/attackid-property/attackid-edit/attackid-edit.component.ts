@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
+import { AttackIDPropertyConfig } from '../attackid-property.component';
 
 @Component({
   selector: 'app-attackid-edit',
@@ -6,6 +7,7 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./attackid-edit.component.scss']
 })
 export class AttackIDEditComponent implements OnInit {
+  @Input() public config: AttackIDPropertyConfig;
 
   constructor() { }
 
