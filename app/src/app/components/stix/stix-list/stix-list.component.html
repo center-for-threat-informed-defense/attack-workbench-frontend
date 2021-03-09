@@ -106,6 +106,7 @@
                 <tr mat-header-row *matHeaderRowDef="tableColumns_controls"></tr>
                 <tr mat-row *matRowDef="let element; columns: tableColumns_controls;"
                     class="element-row"
+                    [class.clickable]="!config.clickBehavior || config.clickBehavior != 'none'"
                     [class.expanded]="expandedElement === element"
                     (click)="onRowClick(element)">
                 </tr>

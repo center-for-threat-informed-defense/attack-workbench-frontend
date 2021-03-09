@@ -99,6 +99,7 @@ export class StixListComponent implements OnInit, AfterViewInit {
      * @param {StixObject} object of the row that was clicked
      */
     public onRowClick(element: StixObject) {
+        if (this.config.clickBehavior && this.config.clickBehavior == "none") return;
         if (this.config.clickBehavior && this.config.clickBehavior == "dialog") { //open modal
             let prompt = this.dialog.open(StixDialogComponent, {
                 data: {
@@ -423,8 +424,9 @@ export interface StixListConfig {
      *     "dialog": open a dialog with the full object definition
      *     "linkToSourceRef": clicking redirects to the source ref object
      *     "linkToTargetRef": clicking redirects user to target ref object
+     *     "none": row is not clickable
      */
-    clickBehavior?: "expand" | "dialog" | "linkToSourceRef" | "linkToTargetRef";
+    clickBehavior?: "expand" | "dialog" | "linkToSourceRef" | "linkToTargetRef" | "none";
     /**
      * Default false. If true, allows for edits of the objects in the table
      * when in dialog mode
