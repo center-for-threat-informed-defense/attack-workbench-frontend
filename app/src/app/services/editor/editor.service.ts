@@ -41,7 +41,8 @@ export class EditorService {
         let subscription = prompt.afterClosed().subscribe({
             next: (result) => {
                 if (result) {
-                    this.router.navigate([], {queryParams: {}})
+                    if (!(this.router.url.includes("/new"))) this.router.navigate([], {queryParams: {}})
+                    else this.router.navigate([".."], {queryParams: {}})
                 }
             },
             complete: () => { subscription.unsubscribe(); } //prevent memory leaks

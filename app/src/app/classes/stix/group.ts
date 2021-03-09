@@ -2,12 +2,17 @@ import {StixObject} from "./stix-object";
 import { Relationship } from './relationship';
 import { RestApiConnectorService } from "src/app/services/connectors/rest-api/rest-api-connector.service";
 import { Observable } from "rxjs";
+import { ValidationData } from "../serializable";
 
 export class Group extends StixObject {
     public name: string = "";
-    public description: string = "";
     public aliases: string[] = [];
     public contributors: string[] = [];
+
+    protected get attackIDValidator() { return {
+        regex: "G\\d{4}",
+        format: "G####"
+    }}
 
     constructor(sdo?: any) {
         super(sdo, "intrusion-set");
@@ -25,7 +30,6 @@ export class Group extends StixObject {
         let rep = super.base_serialize();
         
         rep.stix.name = this.name;
-        rep.stix.description = this.description;
         rep.stix.aliases = this.aliases;
         rep.stix.x_mitre_contributors = this.contributors;
 
@@ -45,11 +49,6 @@ export class Group extends StixObject {
                 if (typeof(sdo.name) === "string") this.name = sdo.name;
                 else console.error("TypeError: name field is not a string:", sdo.name, "(",typeof(sdo.name),")")
             } else this.name = "";
-
-            if ("description" in sdo) {
-                if (typeof(sdo.description) === "string") this.description = sdo.description;
-                else console.error("TypeError: description field is not a string:", sdo.description, "(",typeof(sdo.description),")")
-            } else this.description = "";
             
             if ("aliases" in sdo) {
                 if (this.isStringArray(sdo.aliases)) this.aliases = sdo.aliases;
@@ -61,6 +60,15 @@ export class Group extends StixObject {
                 else console.error("TypeError: x_mitre_contributors is not a string array:", sdo.x_mitre_contributors, "(",typeof(sdo.x_mitre_contributors),")")
             } else this.contributors = [];
         }
+    }
+
+    /**
+     * Validate the current object state and return information on the result of the validation
+     * @param {RestApiConnectorService} restAPIService: the REST API connector through which asynchronous validation can be completed
+     * @returns {Observable<ValidationData>} the validation warnings and errors once validation is complete.
+     */
+    public validate(restAPIService: RestApiConnectorService): Observable<ValidationData> {
+        return this.base_validate(restAPIService);
     }
 
     /**

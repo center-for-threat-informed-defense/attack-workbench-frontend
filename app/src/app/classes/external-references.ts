@@ -1,4 +1,6 @@
-import { Serializable } from "./serializable";
+import { Observable, of } from "rxjs";
+import { RestApiConnectorService } from "../services/connectors/rest-api/rest-api-connector.service";
+import { Serializable, ValidationData } from "./serializable";
 
 export class ExternalReferences extends Serializable {
     private _externalReferences : Map<string, ExternalReference> = new Map();
@@ -163,6 +165,15 @@ export class ExternalReferences extends Serializable {
     public deserialize(raw: any) {
         if (typeof(raw) === "object") this.externalReferences = raw;
         else console.error("TypeError: external_references field is not an object:", raw, "(",typeof(raw),")")
+    }
+
+    /**
+     * Validate the current object state and return information on the result of the validation
+     * @param {RestApiConnectorService} restAPIService: the REST API connector through which asynchronous validation can be completed
+     * @returns {Observable<ValidationData>} the validation warnings and errors once validation is complete.
+     */
+    public validate(restAPIService: RestApiConnectorService): Observable<ValidationData> {
+        return of(new ValidationData()) //TODO
     }
 }
 
