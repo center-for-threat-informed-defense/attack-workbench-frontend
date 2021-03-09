@@ -67,6 +67,7 @@ export class StixPageComponent implements OnInit, OnDestroy {
                     // this.editorService.stopEditing();
                     this.router.navigate([this.objects[0].attackType, this.objects[0].stixID]);
                     setTimeout(() => this.loadObjects());
+                    this.editorService.onEditingStopped.emit();
                 }
             },
             complete: () => { subscription.unsubscribe(); } //prevent memory leaks

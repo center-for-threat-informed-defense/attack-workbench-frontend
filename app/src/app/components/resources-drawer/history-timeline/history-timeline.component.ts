@@ -1,11 +1,12 @@
-import { Component, EventEmitter, OnInit, Output, ViewEncapsulation } from '@angular/core';
+import { Component, EventEmitter, OnDestroy, OnInit, Output, ViewEncapsulation } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
-import { forkJoin } from 'rxjs';
+import { forkJoin, Subscription } from 'rxjs';
 import { Relationship } from 'src/app/classes/stix/relationship';
 import { StixObject } from 'src/app/classes/stix/stix-object';
 import { VersionNumber } from 'src/app/classes/version-number';
 import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/rest-api-connector.service';
+import { EditorService } from 'src/app/services/editor/editor.service';
 import { StixDialogComponent } from 'src/app/views/stix/stix-dialog/stix-dialog.component';
 
 interface HistoryEvent {
@@ -27,7 +28,7 @@ interface HistoryEvent {
   styleUrls: ['./history-timeline.component.scss'],
   encapsulation: ViewEncapsulation.None
 })
-export class HistoryTimelineComponent implements OnInit {
+export class HistoryTimelineComponent implements OnInit, OnDestroy {
 
     public historyEvents: HistoryEvent[];
     public loading: boolean = false;
@@ -35,13 +36,20 @@ export class HistoryTimelineComponent implements OnInit {
     public hoveredHistoryEvent: HistoryEvent = null;
     public showObjectHistory: boolean = true;
     public showRelationshipHistory: boolean = true;
+    public onEditStopSubscription: Subscription;
     
     
 
     constructor(private route: ActivatedRoute, 
                 private router: Router, 
                 private restAPIConnectorService: RestApiConnectorService,
-                private dialog: MatDialog) { }
+                private dialog: MatDialog,
+                private editorService: EditorService) {
+                    
+        this.onEditStopSubscription = this.editorService.onEditingStopped.subscribe({
+            next: () => { this.loadHistory(); }
+        })
+    }
 
     /**
      * transform the object versions into HistoryEvent objects and add them to the HistoryEvents array
@@ -128,11 +136,11 @@ export class HistoryTimelineComponent implements OnInit {
         setTimeout(() => this.drawerResize.emit()); //resize drawers after a render cycle
     }
 
-    ngOnInit(): void {
+    public loadHistory() {
         console.log("loading history")
         this.loading = true;
         let objectType = this.router.url.split("/")[1];
-        let objectStixID = this.router.url.split("/")[2];
+        let objectStixID = this.router.url.split("/")[2].split("?")[0];
         // set up subscribers to get object versions
         let objects$;
         if (objectType == "software") objects$ = this.restAPIConnectorService.getSoftware(objectStixID, null, "all");
@@ -163,6 +171,14 @@ export class HistoryTimelineComponent implements OnInit {
             },
             complete: () => { subscription.unsubscribe() }
         });
+    }
+
+    ngOnInit(): void {
+        this.loadHistory();
+    }
+
+    ngOnDestroy(): void {
+        this.onEditStopSubscription.unsubscribe();
     }
 
 }
