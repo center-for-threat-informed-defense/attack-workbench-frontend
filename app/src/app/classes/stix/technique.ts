@@ -20,6 +20,12 @@ export class Technique extends StixObject {
     public remote_support: boolean = false;
 
     public is_subtechnique: boolean = false;
+    
+    protected get attackIDValidator() { return {
+        regex: this.is_subtechnique? "T\\d{4}\\.\\d{3}" : "T\\d{4}",
+        format: this.is_subtechnique? "T####.###" : "T####"
+    }}
+
     // NOTE: the following two fields will only be populated when this object is fetched using getTechnique().
     //       they will NOT be populated when fetched using getAllTechniques().
     public subTechniques: Technique[] = []; 

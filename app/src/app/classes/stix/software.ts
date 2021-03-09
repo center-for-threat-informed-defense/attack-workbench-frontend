@@ -9,6 +9,11 @@ export class Software extends StixObject {
     public aliases: string[] = [];
     public platforms: string[] = [];
     public contributors: string[] = [];
+    
+    protected get attackIDValidator() { return {
+        regex: "S\\d{4}",
+        format: "S####"
+    }}
 
     constructor(type: type_software, sdo?: any) {
         super(sdo, type);

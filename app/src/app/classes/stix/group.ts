@@ -9,6 +9,11 @@ export class Group extends StixObject {
     public aliases: string[] = [];
     public contributors: string[] = [];
 
+    protected get attackIDValidator() { return {
+        regex: "G\\d{4}",
+        format: "G####"
+    }}
+
     constructor(sdo?: any) {
         super(sdo, "intrusion-set");
         if (sdo) {

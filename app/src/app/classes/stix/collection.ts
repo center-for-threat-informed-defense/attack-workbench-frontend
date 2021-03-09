@@ -98,6 +98,8 @@ export class Collection extends StixObject {
      // auto-generated changelog/report about the import
     //  each sub-property is a list of STIX IDs corresponding to objects in the import
     public import_categories: CollectionImportCategories<string>;
+    
+    protected get attackIDValidator() { return null; } //collections do not have ATT&CK IDs
 
     constructor(sdo?: any) {
         super(sdo, "x-mitre-collection");

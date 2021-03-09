@@ -28,6 +28,11 @@ export abstract class StixObject extends Serializable {
     public attackID: string; // ATT&CK ID
     public description: string;
 
+    protected abstract get attackIDValidator(): {
+        regex: string, // regex to validate the ID
+        format: string // format to display to user
+    };
+
     private typeUrlMap = {
         "technique": "techniques",
         "software": "software",
@@ -287,20 +292,14 @@ export abstract class StixObject extends Serializable {
                                 })
                             }
                             // (\S+--)? is an organization prefix, and should probably be improved when that is made an explicit feature
-                            let attackIDValid = 
-                                this.type == "attack-pattern"? 
-                                    this["is_subtechnique"] ? /^(\S+--)?T\d{4}.\d{3}$/.test(this.attackID) : 
-                                                              /^(\S+--)?T\d{4}$/.test(this.attackID) :
-                                this.type == "x-mitre-tactic"? /^(\S+--)?TA\d{4}$/.test(this.attackID) :
-                                this.type == "malware" || this.type == "tool"? /^(\S+--)?S\d{4}$/.test(this.attackID) :
-                                this.type == "course-of-action"? /^(\S+--)?M\d{4}$/.test(this.attackID) :
-                                this.type == "x-mitre-matrix" ? true :
-                                this.type == "intrusion-set"? /^(\S+--)?G\d{4}$/.test(this.attackID) : false;
+                            let idRegex =  new RegExp("^(\\S+--)?" + this.attackIDValidator.regex + "$");
+                            console.log(idRegex);
+                            let attackIDValid = idRegex.test(this.attackID);
                             if (!attackIDValid) {
                                 result.errors.push({
                                     "result": "error",
                                     "field": "attackID",
-                                    "message": "ATT&CK ID is not formatted properly"
+                                    "message": `ATT&CK ID does not match the format ${this.attackIDValidator.format}`
                                 })
                             }
                         }

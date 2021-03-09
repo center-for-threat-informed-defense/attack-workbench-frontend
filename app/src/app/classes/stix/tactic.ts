@@ -6,6 +6,10 @@ import {StixObject} from "./stix-object";
 export class Tactic extends StixObject {
     public name: string = "";
     public domains: string[] = [];
+    protected get attackIDValidator() { return {
+        regex: "TA\\d{4}",
+        format: "TA####"
+    }}
 
     constructor(sdo?: any) {
         super(sdo, "x-mitre-tactic");

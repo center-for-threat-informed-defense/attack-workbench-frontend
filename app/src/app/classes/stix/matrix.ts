@@ -4,8 +4,13 @@ import { ValidationData } from "../serializable";
 import {StixObject} from "./stix-object";
 
 export class Matrix extends StixObject {
-    public name: string;
-    public tactic_refs: string[];
+    public name: string = "";
+    public tactic_refs: string[] = [];
+    
+    protected get attackIDValidator() { return {
+        regex: ".*",
+        format: "[domain identifier]"
+    }}
 
     constructor(sdo?: any) {
         super(sdo, "x-mitre-matrix");
