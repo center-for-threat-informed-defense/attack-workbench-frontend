@@ -1,7 +1,10 @@
 <div class="matrix-view view-page grid spacing-12">
     <div class="row">
         <div class="col">
-            <h1>{{matrix.name}}</h1>
+            <app-name-property [config]="{
+                mode: editing? 'edit' : 'view',
+                object: matrix
+            }"></app-name-property>
             <app-subheading [config]="config" (onOpenHistory)="openHistory()" (onOpenNotes)="openNotes()"></app-subheading>
         </div>
     </div>
@@ -41,12 +44,20 @@
             </div>
         </div>
         <div class="row">
-            <!-- TACTICS -->
-            <app-ordered-list-property class="grow-to-row" [config]="{
-                mode: editing? 'edit' : 'view',
-                objects: tactics,
-                field: 'name'
-            }"></app-ordered-list-property>
+            <div class="col">
+                <!-- TACTICS -->
+                <app-ordered-list-property *ngIf="all_tactics; else loadingTactics" class="grow-to-row" [config]="{
+                    mode: editing? 'edit' : 'view',
+                    field: 'name',
+                    globalObjects: all_tactics,
+                    object: matrix,
+                    objectOrderedListField: 'tactic_refs',
+                    type: 'tactic'
+                }"></app-ordered-list-property>
+                <ng-template #loadingTactics>
+                    <app-loading-overlay></app-loading-overlay>
+                </ng-template>
+            </div>
         </div>
     </div>
 </div>

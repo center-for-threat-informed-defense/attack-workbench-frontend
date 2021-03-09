@@ -1,38 +1,111 @@
-<div class="grid view-page spacing-12">
+<div class="grid spacing-12 view-page relationship-view">
     <div class="row">
         <div class="col">
-            <h1>{{relationship.source_name}} <span class="text-deemphasis">{{relationship.relationship_type}}</span> {{relationship.target_name}}</h1>
+            <h1 *ngIf="!relationship.updating_refs; else updatingRefs">{{relationship.source_name}} <span class="text-deemphasis">{{relationship.relationship_type}}</span> {{relationship.target_name}}</h1>
+            <ng-template #updatingRefs>
+                <app-loading-overlay></app-loading-overlay>
+            </ng-template>
             <app-subheading [config]="config" (onOpenHistory)="openHistory()" (onOpenNotes)="openNotes()"></app-subheading>
         </div>
     </div>
-    <div class="row">
+    <div class="row" *ngIf="config.mode == 'view'">
+        <!-- view source and target -->
+        <!-- SOURCE ID -->
         <div class="col">
-            <!-- DESCRIPTION -->
-            <app-descriptive-property [config]="{
-                mode: 'view',
-                object: relationship,
-                field: 'description',
-                firstParagraphOnly: false, 
-                referencesField: relationship.external_references,
-                label: 'description'
-            }"></app-descriptive-property>
-        </div>
-    </div>
-    <!-- EXTERNAL REFERENCES -->
-    <div *ngIf="relationship.external_references.list().length > 0">
-        <div class="row">
-            <div class="col">
-                <h2 class="section-header">References</h2>
+            <div class="labelled-box grow-to-row">
+                <div class="content">
+                    {{relationship.source_ID}}
+                </div>
+                <label>source id</label>
             </div>
         </div>
+        <!-- TARGET ID -->
+        <div class="col">
+            <div class="labelled-box grow-to-row">
+                <div class="content">
+                    {{relationship.target_ID}}
+                </div>
+                <label>target id</label>
+            </div>
+        </div>
+    </div>
+    <div class="row" *ngIf="config.mode == 'edit'">
+        <!-- edit source/target -->
+        <div class="col">
+            <mat-accordion>
+                <mat-expansion-panel [expanded]="relationship.target_object && !relationship.source_object" class="mat-elevation-z0">
+                    <mat-expansion-panel-header>
+                        <mat-panel-title>
+                            {{!relationship.source_object? 'select a source object' : relationship.source_name}}
+                        </mat-panel-title>
+                        <ng-template matExpansionPanelContent>
+                            <mat-form-field appearance="outline" class="type_select">
+                                <mat-label>source type</mat-label>
+                                <mat-select (selectionChange)="refresh_lists()" [(ngModel)]="source_type">
+                                    <mat-option *ngFor="let objType of relationship.valid_source_types" [value]="objType">{{objType}}</mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                            <app-stix-list *ngIf="refresh && source_type" #source_select [config]="{
+                                'type': source_type,
+                                'select': 'one',
+                                'selectionModel': selectionModel_source
+                            }"></app-stix-list>
+                        </ng-template>
+                    </mat-expansion-panel-header>
+                </mat-expansion-panel>
+                <mat-expansion-panel [expanded]="relationship.source_object && !relationship.target_object" class="mat-elevation-z0">
+                    <mat-expansion-panel-header>
+                        <mat-panel-title>
+                            {{!relationship.target_object? 'select a target object' : relationship.target_name}}
+                        </mat-panel-title>
+                        <ng-template matExpansionPanelContent>
+                            <mat-form-field appearance="outline" class="type_select">
+                                <mat-label>target type</mat-label>
+                                <mat-select (selectionChange)="refresh_lists()" [(ngModel)]="target_type">
+                                    <mat-option *ngFor="let objType of relationship.valid_target_types" [value]="objType">{{objType}}</mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                            <app-stix-list *ngIf="refresh && target_type" #target_select [config]="{
+                                'type': target_type,
+                                'select': 'one',
+                                'selectionModel': selectionModel_target
+                            }"></app-stix-list>
+                        </ng-template>
+                    </mat-expansion-panel-header>
+                </mat-expansion-panel>
+            </mat-accordion>
+        </div>
+    </div>
+    <ng-container *ngIf="relationship.relationship_type != 'subtechnique-of'">
         <div class="row">
             <div class="col">
-                <app-external-references-property [config]="{
+                <!-- DESCRIPTION -->
+                <app-descriptive-property [config]="{
                     mode: 'view',
                     object: relationship,
-                    referencesField: relationship.external_references
-                }"></app-external-references-property>
+                    field: 'description',
+                    firstParagraphOnly: false, 
+                    referencesField: relationship.external_references,
+                    label: 'description'
+                }"></app-descriptive-property>
             </div>
         </div>
-    </div>
+        <!-- EXTERNAL REFERENCES -->
+        <div *ngIf="relationship.external_references.list().length > 0">
+            <div class="row">
+                <div class="col">
+                    <h2 class="section-header">References</h2>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <app-external-references-property [config]="{
+                        mode: 'view',
+                        object: relationship,
+                        referencesField: relationship.external_references
+                    }"></app-external-references-property>
+                </div>
+            </div>
+        </div>
+    </ng-container>
 </div>

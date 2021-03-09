@@ -11,7 +11,7 @@ import { ApiConnector } from '../api-connector';
     providedIn: 'root'
 })
 export class CollectionManagerConnectorService extends ApiConnector {
-    private get baseUrl(): string { return `${environment.integrations.collection_manager.url}:${environment.integrations.collection_manager.port}/api`; }
+    private get baseUrl(): string { return environment.integrations.collection_manager.url; }
 
     constructor(private http: HttpClient, private snackbar: MatSnackBar) { super(snackbar) }
 
@@ -22,7 +22,7 @@ export class CollectionManagerConnectorService extends ApiConnector {
      */
     public getRemoteIndex(url: string): Observable<CollectionIndex> {
         let params = new HttpParams({encoder: new CustomEncoder()}).set("url", url);
-        return this.http.get(`${this.baseUrl}/collection-indexes/remote`, {params}).pipe( 
+        return this.http.get(`${this.baseUrl}/collection-indexes/remote`, {params}).pipe(
             tap(_ => console.log("downloaded index at", url)), // on success, trigger the success notification
             map(index => { return {
                 "collection_index": index,
@@ -46,5 +46,5 @@ class CustomEncoder implements HttpParameterCodec {
     }
     decodeValue(value: string): string {
         return decodeURIComponent(value);
-    }    
+    }
 }

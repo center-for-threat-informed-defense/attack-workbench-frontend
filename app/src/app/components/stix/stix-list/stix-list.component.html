@@ -59,7 +59,7 @@
                         <mat-radio-button *ngIf="config.select && config.select == 'one'" color="primary" 
                                         (click)="$event.stopPropagation()"
                                         (change)="$event ? selection.toggle(element.stixID) : null"
-                                        [selected]="selection.isSelected(element.stixID)">
+                                        [checked]="selection.isSelected(element.stixID)">
                         </mat-radio-button>
                     </td>
                 </ng-container>

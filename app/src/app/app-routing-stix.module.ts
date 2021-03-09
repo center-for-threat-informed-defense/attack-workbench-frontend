@@ -40,6 +40,20 @@ const stixRoutes: Routes = [{
             component: StixPageComponent
           }
         ]
+      },
+      {
+          path: ":new",
+          data: {
+              breadcrumb: "new matrix"
+          },
+          children: [{
+            path: '',
+            data: {
+              breadcrumb: 'view',
+              editable: true
+            },
+            component: StixPageComponent
+          }]
       }
     ]
   },
@@ -69,6 +83,20 @@ const stixRoutes: Routes = [{
             component: StixPageComponent
           }
         ]
+      },
+      {
+        path: ":new",
+        data: {
+            breadcrumb: "new technique"
+        },
+        children: [{
+          path: '',
+          data: {
+            breadcrumb: 'view',
+            editable: true
+          },
+          component: StixPageComponent
+        }]
       }
     ]
   },
@@ -98,7 +126,22 @@ const stixRoutes: Routes = [{
             component: StixPageComponent
           }
         ]
-      }
+      },
+      {
+        path: ":new",
+        data: {
+            breadcrumb: "new tactic"
+        },
+        children: [{
+          path: '',
+          data: {
+            breadcrumb: 'view',
+            editable: true
+          },
+          component: StixPageComponent
+        }
+      ]
+    }
     ]
   },
   {
@@ -127,7 +170,22 @@ const stixRoutes: Routes = [{
             component: StixPageComponent
           }
         ]
-      }
+      },
+      {
+        path: ":new",
+        data: {
+            breadcrumb: "new mitigation"
+        },
+        children: [{
+          path: '',
+          data: {
+            breadcrumb: 'view',
+            editable: true
+          },
+          component: StixPageComponent
+        }
+      ]
+    }
     ]
   },
   {
@@ -156,7 +214,22 @@ const stixRoutes: Routes = [{
             component: StixPageComponent
           }
         ]
-      }
+      },
+      {
+        path: ":new",
+        data: {
+            breadcrumb: "new group"
+        },
+        children: [{
+          path: '',
+          data: {
+            breadcrumb: 'view',
+            editable: true
+          },
+          component: StixPageComponent
+        }
+      ]
+    }
     ]
   },
   {
@@ -185,7 +258,22 @@ const stixRoutes: Routes = [{
             component: StixPageComponent
           }
         ]
-      }
+      },
+      {
+        path: ":new",
+        data: {
+            breadcrumb: "new software"
+        },
+        children: [{
+          path: '',
+          data: {
+            breadcrumb: 'view',
+            editable: true
+          },
+          component: StixPageComponent
+        }
+      ]
+    }
     ]
   },
   

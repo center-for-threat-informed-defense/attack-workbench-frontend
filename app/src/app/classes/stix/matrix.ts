@@ -1,10 +1,10 @@
 import { Observable } from "rxjs";
 import { RestApiConnectorService } from "src/app/services/connectors/rest-api/rest-api-connector.service";
+import { ValidationData } from "../serializable";
 import {StixObject} from "./stix-object";
 
 export class Matrix extends StixObject {
     public name: string;
-    public description: string;
     public tactic_refs: string[];
 
     constructor(sdo?: any) {
@@ -23,7 +23,6 @@ export class Matrix extends StixObject {
         let rep = super.base_serialize();
 
         rep.stix.name = this.name;
-        rep.stix.description = this.description;
         rep.stix.tactic_refs = this.tactic_refs;
 
         return rep;
@@ -42,17 +41,22 @@ export class Matrix extends StixObject {
                 if (typeof(sdo.name) === "string") this.name = sdo.name;
                 else console.error("TypeError: name field is not a string:", sdo.name, "(",typeof(sdo.name),")")
             } else this.name = "";
-
-            if ("description" in sdo) {
-                if (typeof(sdo.description) === "string") this.description = sdo.description;
-                else console.error("TypeError: description field is not a string:", sdo.description, "(",typeof(sdo.description),")")
-            } else this.description = "";
             
             if ("tactic_refs" in sdo) {
                 if (this.isStringArray(sdo.tactic_refs)) this.tactic_refs = sdo.tactic_refs;
                 else console.error("TypeError: tactic_refs field is not a string array:", sdo.tactic_refs, "(",typeof(sdo.tactic_refs),")")
             } else this.tactic_refs = [];
         }
+    }
+
+    /**
+     * Validate the current object state and return information on the result of the validation
+     * @param {RestApiConnectorService} restAPIService: the REST API connector through which asynchronous validation can be completed
+     * @returns {Observable<ValidationData>} the validation warnings and errors once validation is complete.
+     */
+    public validate(restAPIService: RestApiConnectorService): Observable<ValidationData> {
+        // TODO verify all tactics exist
+        return this.base_validate(restAPIService);
     }
 
     /**

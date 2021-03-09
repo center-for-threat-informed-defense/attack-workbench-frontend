@@ -1,7 +1,10 @@
 <div class="group-view view-page grid spacing-12">
     <div class="row">
         <div class="col">
-            <h1>{{group.name}}</h1>
+            <app-name-property [config]="{
+                mode: editing? 'edit' : 'view',
+                object: group
+            }"></app-name-property>
             <app-subheading [config]="config" (onOpenHistory)="openHistory()" (onOpenNotes)="openNotes()"></app-subheading>
         </div>
     </div>
@@ -55,7 +58,7 @@
         </div>
     </div>
     <!-- only show relationships if configured to show them -->
-    <div *ngIf="config.showRelationships || !config.hasOwnProperty('showRelationships')">
+    <div *ngIf="(config.showRelationships || !config.hasOwnProperty('showRelationships')) && !editing">
         <div class="row">
             <div class="col">
                 <h2 class="section-header">Techniques Used</h2>
@@ -63,12 +66,22 @@
         </div>
         <div class="row">
             <div class="col">
-                <app-stix-list  [config]="{
+                <app-add-relationship-button (created)="techniqueList.applyControls()" [config]="{
+                    label: 'technique',
+                    relationship_type: 'uses',
+                    source_ref: group.stixID
+                }"></app-add-relationship-button>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <app-stix-list #techniqueList [config]="{
                     'type': 'relationship', 
                     'sourceRef': group.stixID,
                     'targetType': 'technique',
                     'relationshipType': 'uses',
-                    'clickBehavior': 'dialog'
+                    'clickBehavior': 'dialog',
+                    'allowEdits': true
                 }"></app-stix-list>
             </div>
         </div>
@@ -80,12 +93,22 @@
         </div>
         <div class="row">
             <div class="col">
-                <app-stix-list [config]="{
+                <app-add-relationship-button (created)="softwareList.applyControls()" [config]="{
+                    label: 'software',
+                    relationship_type: 'uses',
+                    source_ref: group.stixID
+                }"></app-add-relationship-button>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <app-stix-list #softwareList [config]="{
                     'type': 'relationship', 
                     'sourceRef': group.stixID,
                     'targetType': 'software',
                     'relationshipType': 'uses',
-                    'clickBehavior': 'dialog'
+                    'clickBehavior': 'dialog',
+                    'allowEdits': true
                 }"></app-stix-list>
             </div>
         </div>

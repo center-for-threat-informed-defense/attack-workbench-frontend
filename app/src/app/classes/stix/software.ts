@@ -1,15 +1,14 @@
 import { Observable } from "rxjs";
 import { RestApiConnectorService } from "src/app/services/connectors/rest-api/rest-api-connector.service";
+import { ValidationData } from "../serializable";
 import {StixObject} from "./stix-object";
 
 type type_software = "malware" | "tool"
 export class Software extends StixObject {
-    public name: string;
-    public description: string;
-    public aliases: string[];
-    public platforms: string[];
-    public type: string;
-    public contributors: string[];
+    public name: string ="";
+    public aliases: string[] = [];
+    public platforms: string[] = [];
+    public contributors: string[] = [];
 
     constructor(type: type_software, sdo?: any) {
         super(sdo, type);
@@ -27,7 +26,6 @@ export class Software extends StixObject {
         let rep = super.base_serialize();
         
         rep.stix.name = this.name;
-        rep.stix.description = this.description;
         rep.stix.type = this.type;
         rep.stix.x_mitre_aliases = this.aliases;
         rep.stix.x_mitre_platforms = this.platforms;
@@ -49,11 +47,6 @@ export class Software extends StixObject {
                 if (typeof(sdo.name) === "string") this.name = sdo.name;
                 else console.error("TypeError: name field is not a string:", sdo.name, "(",typeof(sdo.name),")")
             } else this.name = "";
-
-            if ("description" in sdo) {
-                if (typeof(sdo.description) === "string") this.description = sdo.description;
-                else console.error("TypeError: description field is not a string:", sdo.description, "(",typeof(sdo.description),")")
-            } else this.description = "";
 
             if ("type" in sdo) {
                 if (typeof(sdo.type) === "string") this.type = sdo.type;
@@ -77,6 +70,14 @@ export class Software extends StixObject {
         }
     }
 
+    /**
+     * Validate the current object state and return information on the result of the validation
+     * @param {RestApiConnectorService} restAPIService: the REST API connector through which asynchronous validation can be completed
+     * @returns {Observable<ValidationData>} the validation warnings and errors once validation is complete.
+     */
+    public validate(restAPIService: RestApiConnectorService): Observable<ValidationData> {
+        return this.base_validate(restAPIService);
+    }
 
     /**
      * Save the current state of the STIX object in the database. Update the current object from the response

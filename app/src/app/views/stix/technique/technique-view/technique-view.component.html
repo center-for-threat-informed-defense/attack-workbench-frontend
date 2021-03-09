@@ -2,7 +2,10 @@
     <div class="row">
         <!-- NAME -->
         <div class="col">
-            <h1>{{technique.name}}</h1>
+            <app-name-property [config]="{
+                mode: editing? 'edit' : 'view',
+                object: technique
+            }"></app-name-property>
             <app-subheading [config]="config" (onOpenHistory)="openHistory()" (onOpenNotes)="openNotes()"></app-subheading>
         </div>
     </div>
@@ -26,10 +29,11 @@
         <div class="col">
             <div class="labelled-box grow-to-row">
                 <!-- TYPE -->
-                <div class="content">
-                    {{technique.is_subtechnique ? "Sub-technique": "Technique"}}
+                <div class="content no-label">
+                    <mat-checkbox [(ngModel)]="technique.is_subtechnique" [disabled]="!editing">
+                        sub-technique?
+                    </mat-checkbox>
                 </div>
-                <label>type</label>
             </div>
         </div>
         <div class="col">
@@ -135,7 +139,7 @@
                 <div *ngIf="technique.tactics.includes('execution')" class="row">
                     <div class="labelled-box grow-to-row">
                         <div class="content no-label">
-                            <mat-checkbox [checked]="technique.remote_support" disabled>
+                            <mat-checkbox [(ngModel)]="technique.remote_support"  [disabled]="!editing">
                                 Remote Support?
                             </mat-checkbox>
                         </div>
@@ -145,9 +149,9 @@
         </ng-container>
     </div>
     <!-- RELATIONSHIPS -->
-    <div *ngIf="config.showRelationships || !config.hasOwnProperty('showRelationships')">
+    <div *ngIf="(config.showRelationships || !config.hasOwnProperty('showRelationships')) && !editing">
         <!-- SUBTECHNIQUES -->
-        <div *ngIf="!technique.is_subtechnique">
+        <div *ngIf="!technique.is_subtechnique; else othersubs">
             <div class="row">
                 <div class="col">
                     <h2 class="section-header">Sub-techniques</h2>
@@ -155,15 +159,46 @@
             </div>
             <div class="row">
                 <div class="col">
-                    <app-stix-list [config]="{
+                    <app-add-relationship-button (created)="subTechniquesList.applyControls()" [config]="{
+                        label: 'sub-technique',
+                        relationship_type: 'subtechnique-of',
+                        target_ref: technique.stixID
+                    }"></app-add-relationship-button>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <app-stix-list #subTechniquesList [config]="{
                         'type': 'relationship', 
                         'targetRef': technique.stixID,
                         'relationshipType': 'subtechnique-of',
-                        'clickBehavior': 'dialog'
+                        'allowEdits': true,
+                        'clickBehavior': 'linkToSourceRef'
                     }"></app-stix-list>
                 </div>
             </div>
         </div>
+        <ng-template #othersubs>
+            <ng-container *ngIf="technique.parentTechnique">
+                <div class="row">
+                    <div class="col">
+                        <h2 class="section-header">Other Sub-techniques of {{technique.parentTechnique.name}}</h2>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <app-stix-list [config]="{
+                            'type': 'relationship', 
+                            'targetRef': technique.parentTechnique.stixID,
+                            'relationshipType': 'subtechnique-of',
+                            'clickBehavior': 'linkToSourceRef',
+                            'allowEdits': true,
+                            'excludeSourceRefs': [technique.stixID]
+                        }"></app-stix-list>
+                    </div>
+                </div>
+            </ng-container>
+        </ng-template>
         <!-- MITIGATIONS -->
         <div class="row">
             <div class="col">
@@ -172,15 +207,25 @@
         </div>
         <div class="row">
             <div class="col">
-                <app-stix-list [config]="{
+                <app-add-relationship-button (created)="mitigatesList.applyControls()" [config]="{
+                    label: 'mitigation',
+                    relationship_type: 'mitigates',
+                    target_ref: technique.stixID
+                }"></app-add-relationship-button>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <app-stix-list #mitigatesList [config]="{
                     'type': 'relationship',
                     'targetRef': technique.stixID,
                     'relationshipType': 'mitigates',
-                    'clickBehavior': 'dialog'
+                    'clickBehavior': 'dialog',
+                    'allowEdits': true
                 }"></app-stix-list>
             </div>
         </div>
-        <!-- GROUPS -->
+        <!-- procedure examples -->
         <div class="row">
             <div class="col">
                 <h2 class="section-header">Procedure Examples</h2>
@@ -188,11 +233,21 @@
         </div>
         <div class="row">
             <div class="col">
-                <app-stix-list [config]="{
+                <app-add-relationship-button (created)="usesList.applyControls()" [config]="{
+                    label: 'procedure example',
+                    relationship_type: 'uses',
+                    target_ref: technique.stixID
+                }"></app-add-relationship-button>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <app-stix-list #usesList [config]="{
                     'type': 'relationship',
                     'targetRef': technique.stixID,
                     'relationshipType': 'uses',
-                    'clickBehavior': 'dialog'
+                    'clickBehavior': 'dialog',
+                    'allowEdits': true
                 }"></app-stix-list>
             </div>
         </div>
