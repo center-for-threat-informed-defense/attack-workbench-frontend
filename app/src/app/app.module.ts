@@ -57,6 +57,7 @@ import { CollectionImportSummaryComponent } from "./components/collection-import
 import { SaveDialogComponent } from "./components/save-dialog/save-dialog.component";
 import { AddDialogComponent } from './components/add-dialog/add-dialog.component';
 import { HistoryTimelineComponent } from "./components/resources-drawer/history-timeline/history-timeline.component";
+import { ReferenceManagerComponent } from "./components/resources-drawer/reference-manager/reference-manager.component";
 import { MultipleChoiceDialogComponent } from "./components/multiple-choice-dialog/multiple-choice-dialog.component";
 import { ValidationResultsComponent } from "./components/validation-results/validation-results.component";
 import { AddRelationshipButtonComponent } from "./components/add-relationship-button/add-relationship-button.component";
@@ -153,6 +154,7 @@ import { OrderedListEditComponent } from './components/stix/ordered-list-propert
     SaveDialogComponent,
     AddDialogComponent,
     HistoryTimelineComponent,
+    ReferenceManagerComponent,
     MultipleChoiceDialogComponent,
     ValidationResultsComponent,
     AddRelationshipButtonComponent,

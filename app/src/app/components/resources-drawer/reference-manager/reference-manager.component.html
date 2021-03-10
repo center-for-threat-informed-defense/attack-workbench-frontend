@@ -1,0 +1,19 @@
+<div>
+    <input matInput placeholder="source_name" [(ngModel)]="newRef.source_name">
+    <input matInput placeholder="description" [(ngModel)]="newRef.description">
+    <input matInput placeholder="url" [(ngModel)]="newRef.url">
+    <button (click)="createReference()">create</button>
+    <hr>
+    <ul *ngIf="(references$ | async) as references; else loading">
+        <li *ngFor="let reference of references.data">
+            {{reference | json}}
+        </li>
+    </ul>
+    <ng-template #loading>
+        <app-loading-overlay></app-loading-overlay>
+    </ng-template>
+    <hr>
+    <input matInput placeholder="source_name" [(ngModel)]="search_source_ref">
+    <button (click)="search()">search</button>
+    {{search_result | json}}
+</div>

@@ -4,6 +4,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { Observable, of } from 'rxjs';
 import { tap, catchError, map, share, switchMap } from 'rxjs/operators';
 import { CollectionIndex } from 'src/app/classes/collection-index';
+import { ExternalReference } from 'src/app/classes/external-references';
 import { Collection } from 'src/app/classes/stix/collection';
 import { Group } from 'src/app/classes/stix/group';
 import { Matrix } from 'src/app/classes/stix/matrix';
@@ -41,8 +42,8 @@ const attackTypeToClass = {
     "relationship": Relationship
 }
 
-export interface Paginated {
-    data: StixObject[],
+export interface Paginated<T> {
+    data: T[],
     pagination: {
         total: number,
         limit: number,
@@ -88,7 +89,7 @@ export class RestApiConnectorService extends ApiConnector {
     private getStixObjectsFactory<T extends StixObject>(attackType: AttackType) {
         let attackClass = attackTypeToClass[attackType];
         let plural = attackTypeToPlural[attackType]
-        return function<P extends T>(limit?: number, offset?: number, state?: string, revoked?: boolean, deprecated?: boolean, versions?: "all" | "latest", excludeIDs?: string[]): Observable<Paginated> {
+        return function<P extends T>(limit?: number, offset?: number, state?: string, revoked?: boolean, deprecated?: boolean, versions?: "all" | "latest", excludeIDs?: string[]): Observable<Paginated<StixObject>> {
             // parse params into query string
             let query = new HttpParams();
             // pagination
@@ -615,7 +616,7 @@ export class RestApiConnectorService extends ApiConnector {
      * @param {string[]} [excludeTargetRefs] if specified, exclude target refs which are found in this array
      * @returns {Observable<Paginated>} paginated data of the relationships
      */
-    public getRelatedTo(args: {sourceRef?: string, targetRef?: string, sourceOrTargetRef?: string, sourceType?: AttackType, targetType?: AttackType, relationshipType?: string, excludeSourceRefs?: string[], excludeTargetRefs?: string[], limit?: number, offset?: number, versions?: "all" | "latest"}): Observable<Paginated> {
+    public getRelatedTo(args: {sourceRef?: string, targetRef?: string, sourceOrTargetRef?: string, sourceType?: AttackType, targetType?: AttackType, relationshipType?: string, excludeSourceRefs?: string[], excludeTargetRefs?: string[], limit?: number, offset?: number, versions?: "all" | "latest"}): Observable<Paginated<StixObject>> {
         let query = new HttpParams();
 
         if (args.sourceRef) query = query.set("sourceRef", args.sourceRef);
@@ -673,6 +674,77 @@ export class RestApiConnectorService extends ApiConnector {
             }),
             catchError(this.handleError_array([])),
             share()
+        )
+    }
+
+    //   ___ ___ ___ ___ ___ ___ _  _  ___ ___ ___ 
+    //  | _ \ __| __| __| _ \ __| \| |/ __| __/ __|
+    //  |   / _|| _|| _||   / _|| .` | (__| _|\__ \
+    //  |_|_\___|_| |___|_|_\___|_|\_|\___|___|___/
+
+    /**
+     * get all external references
+     * @param {number} [limit] the number of references to retrieve
+     * @param {number} [offset] the number of references to skip
+     * @returns {Observable<Paginated>} paginated data for external references
+     */
+    public getAllReferences(limit?: number, offset?: number): Observable<Paginated<ExternalReference>> {
+        let url = `${this.baseUrl}/references`;
+        // parse params into query string
+        let query = new HttpParams();
+        // pagination
+        if (limit) query = query.set("limit", limit.toString());
+        if (offset) query = query.set("offset", offset.toString());
+        /*if (limit || offset) */ query = query.set("includePagination", "true");
+        return this.http.get<Paginated<ExternalReference>>(url, {headers: this.headers, params: query}).pipe(
+            tap(results => console.log("retrieved references", results)),
+            catchError(this.handleError_array<Paginated<ExternalReference>>({data: [], pagination: {total: 0, limit: 0, offset: 0}})), // on error, trigger the error notification and continue operation without crashing (returns empty item)
+            share() // multicast so that multiple subscribers don't trigger the call twice. THIS MUST BE THE LAST LINE OF THE PIPE
+        )
+    }
+
+    /**
+     * Get a single reference by source name
+     * @param {string} source_name the reference's source_name identifier
+     * @returns {Observable<ExternalReference>} the external reference with the given source_name
+     */
+    public getReference(source_name: string): Observable<ExternalReference> {
+        let url = `${this.baseUrl}/references`;
+        // parse params into query string
+        let query = new HttpParams();
+        query = query.set("sourceName", source_name);
+        return this.http.get<ExternalReference>(url, {headers: this.headers, params: query}).pipe(
+            tap(results => console.log("retrieved reference", results)),
+            catchError(this.handleError_single<ExternalReference>()), // on error, trigger the error notification and continue operation without crashing (returns empty item)
+            share() // multicast so that multiple subscribers don't trigger the call twice. THIS MUST BE THE LAST LINE OF THE PIPE
+        )
+    }
+
+    /**
+     * Create an external reference
+     * @param {ExternalReference} reference the reference to create
+     * @returns {Observable<ExternalReference>} the created reference
+     */
+    public postReference(reference: ExternalReference): Observable<ExternalReference> {
+        let url = `${this.baseUrl}/references`;
+        return this.http.post<ExternalReference>(url, reference, {headers: this.headers}).pipe(
+            tap(this.handleSuccess(`${reference.source_name} saved`)),
+            catchError(this.handleError_single<ExternalReference>()), // on error, trigger the error notification and continue operation without crashing (returns empty item)
+            share() // multicast so that multiple subscribers don't trigger the call twice. THIS MUST BE THE LAST LINE OF THE PIPE
+        )
+    }
+
+    /**
+     * Update an external reference
+     * @param {ExternalReference} reference the reference to update
+     * @returns {Observable<ExternalReference>} the updated reference
+     */
+    public putReference(reference: ExternalReference): Observable<ExternalReference> {
+        let url = `${this.baseUrl}/references`;
+        return this.http.put<ExternalReference>(url, reference, {headers: this.headers}).pipe(
+            tap(this.handleSuccess(`${reference.source_name} saved`)),
+            catchError(this.handleError_single<ExternalReference>()), // on error, trigger the error notification and continue operation without crashing (returns empty item)
+            share() // multicast so that multiple subscribers don't trigger the call twice. THIS MUST BE THE LAST LINE OF THE PIPE
         )
     }
 
