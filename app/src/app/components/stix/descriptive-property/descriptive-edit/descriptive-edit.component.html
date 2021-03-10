@@ -6,7 +6,7 @@
                 </textarea>
             </mat-form-field>
         </mat-tab>
-        <mat-tab label="Preview">
+        <mat-tab label="Preview" [disabled]="config.object[config.field].length == 0">
             <div class="preview padding">
                 <app-descriptive-view [config]="config"></app-descriptive-view>
             </div>

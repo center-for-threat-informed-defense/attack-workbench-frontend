@@ -5,6 +5,10 @@
     .mat-tab-header {
         border: 0px;
     }
+    .mat-tab-disabled {
+        .dark & { color: on-color-deemphasis(dark); }
+        .light & { color: on-color-deemphasis(light); }
+    }
     .edit {
         width: 100%;
 
