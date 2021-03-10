@@ -12,9 +12,6 @@ import { ViewChild } from '@angular/core'
 
 export class DescriptiveEditComponent implements OnInit {
     @Input() public config: DescriptivePropertyConfig;
-    @ViewChild('descriptiveFormField') private formField : MatFormField;
-
-    public preview : boolean = false;
 
     constructor() { }
 
