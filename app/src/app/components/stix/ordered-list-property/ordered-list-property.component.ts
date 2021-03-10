@@ -23,9 +23,6 @@ export interface OrderedListPropertyConfig {
    *    edit: editing the ordered list property
    */
   mode?: "view" | "edit";
-  /*  Array of objects that will be used to display ordered list
-   */
-  objectsFromOrderedList: StixObject[];
   /* Field from ordered list objects to be displayed; e.g., 'name'
   */
   field: string;

@@ -2,29 +2,36 @@ import { Relationship } from './relationship';
 import { VersionNumber } from '../version-number';
 import { ExternalReferences } from '../external-references';
 import { v4 as uuid } from 'uuid';
-import { Serializable } from '../serializable';
+import { Serializable, ValidationData } from '../serializable';
 import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/rest-api-connector.service';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
+import { map, switchMap } from 'rxjs/operators';
 
-export type workflowStates = "wip" | "awaiting review" | "reviewed"
+export type workflowStates = "work-in-progress" | "awaiting-review" | "reviewed"
+let stixTypeToAttackType = {
+    "x-mitre-collection": "collection",
+    "attack-pattern": "technique",
+    "malware": "software",
+    "tool": "software",
+    "intrusion-set": "group",
+    "course-of-action": "mitigation",
+    "x-mitre-matrix": "matrix",
+    "x-mitre-tactic": "tactic",
+    "relationship": "relationship"
+}
+export {stixTypeToAttackType};
 
 export abstract class StixObject extends Serializable {
     public stixID: string; // STIX ID
     public type: string;   // STIX type
     public attackType: string; // ATT&CK type
     public attackID: string; // ATT&CK ID
+    public description: string;
 
-    private typeMap = {
-        "x-mitre-collection": "collection",
-        "attack-pattern": "technique",
-        "malware": "software",
-        "tool": "software",
-        "intrusion-set": "group",
-        "course-of-action": "mitigation",
-        "x-mitre-matrix": "matrix",
-        "x-mitre-tactic": "tactic",
-        "relationship": "relationship"
-    }
+    protected abstract get attackIDValidator(): {
+        regex: string, // regex to validate the ID
+        format: string // format to display to user
+    };
 
     private typeUrlMap = {
         "technique": "techniques",
@@ -72,16 +79,17 @@ export abstract class StixObject extends Serializable {
             // create new SDO
             this.stixID = type + "--" + uuid();
             this.type = type;
-            this.created = new Date();
-            this.modified = new Date();
+            // this.created = new Date();
+            // this.modified = new Date();
             this.version = new VersionNumber("0.1");
             this.attackID = "";
             this.external_references = new ExternalReferences();
             this.workflow = {
-                state: "wip"
+                state: "work-in-progress"
             };
+            this.description = "";
         }
-        this.attackType = this.typeMap[this.type]
+        this.attackType = stixTypeToAttackType[this.type]
     }
 
     /**
@@ -125,12 +133,13 @@ export abstract class StixObject extends Serializable {
             stix: {
                 "type": this.type,
                 "id": this.stixID,
-                "created": this.created.toISOString(),
-                "modified": this.modified.toISOString(),
+                "created": this.created? this.created.toISOString() : new Date().toISOString(),
+                "modified": new Date().toISOString(),
                 "x_mitre_version": this.version.toString(),
                 "external_references": serialized_external_references,
                 "x_mitre_deprecated": this.deprecated,
                 "revoked": this.revoked,
+                "description": this.description,
                 "spec_version": "2.1"
             }
         }
@@ -155,6 +164,11 @@ export abstract class StixObject extends Serializable {
                 if (typeof(sdo.type) === "string") this.type = sdo.type;
                 else console.error("TypeError: type field is not a string:", sdo.type, "(",typeof(sdo.type),")")
             }
+
+            if ("description" in sdo) {
+                if (typeof(sdo.description) === "string") this.description = sdo.description;
+                else console.error("TypeError: description field is not a string:", sdo.description, "(",typeof(sdo.description),")")
+            } else this.description = "";
 
             if ("created" in sdo) {
                 if (typeof(sdo.created) === "string") this.created = new Date(sdo.created);
@@ -209,6 +223,95 @@ export abstract class StixObject extends Serializable {
         }
     }
 
+    /**
+     * Validate the current object state and return information on the result of the validation
+     * @abstract
+     * @param {RestApiConnectorService} restAPIService: the REST API connector through which asynchronous validation can be completed
+     * @returns {Observable<ValidationData>} the validation warnings and errors once validation is complete.
+     */
+    public base_validate(restAPIService: RestApiConnectorService): Observable<ValidationData> {
+        let validation = new ValidationData();
+        // TODO: validate description for missing citation and linkByIDs
+        // test version number format
+        if (!this.version.valid()) {
+            validation.errors.push({
+                result: "error",
+                field: "version",
+                message: "version number is not formatted properly"
+            })
+        }
+        // check any asynchronous validators
+        return of(validation).pipe(
+            // check if the name is unique if it has a name
+            switchMap(result => {
+                // check if name & ATT&CK ID is unique, record result in validation, and return validation
+                let accessor = this.attackType == "collection"? restAPIService.getAllCollections() :
+                                this.attackType == "group"? restAPIService.getAllGroups() :
+                                this.attackType == "software"? restAPIService.getAllSoftware() :
+                                this.attackType == "matrix"? restAPIService.getAllMatrices() :
+                                this.attackType == "mitigation"? restAPIService.getAllMitigations() :
+                                this.attackType == "technique"? restAPIService.getAllTechniques() :
+                                restAPIService.getAllTactics(); 
+                return accessor.pipe(
+                    map(objects => {
+                        // check name
+                        if (this.hasOwnProperty("name")) {
+                            if (this["name"] == "") {
+                                result.errors.push({
+                                    "result": "error",
+                                    "field": "name",
+                                    "message": "object has no name"
+                                })
+                            } else if (objects.data.some(x => x["name"].toLowerCase() == this['name'].toLowerCase() && x.stixID != this.stixID)) {
+                                result.warnings.push({
+                                    "result": "warning",
+                                    "field": "name",
+                                    "message": "name is not unique"
+                                })
+                            } else {
+                                result.successes.push({
+                                    "result": "success",
+                                    "field": "name",
+                                    "message": "name is unique"
+                                })
+                            }
+                        }
+                        // check ATT&CK ID
+                        if (this.hasOwnProperty("attackID") && this.attackID != "") {
+                            if (objects.data.some(x => x.attackID == this.attackID && x.stixID != this.stixID)) {
+                                result.errors.push({
+                                    "result": "error",
+                                    "field": "attackID",
+                                    "message": "ATT&CK ID is not unique"
+                                })
+                            } else {
+                                result.successes.push({
+                                    "result": "success",
+                                    "field": "attackID",
+                                    "message": "ATT&CK ID is unique"
+                                })
+                            }
+                            // (\S+--)? is an organization prefix, and should probably be improved when that is made an explicit feature
+                            let idRegex =  new RegExp("^(\\S+--)?" + this.attackIDValidator.regex + "$");
+                            console.log(idRegex);
+                            let attackIDValid = idRegex.test(this.attackID);
+                            if (!attackIDValid) {
+                                result.errors.push({
+                                    "result": "error",
+                                    "field": "attackID",
+                                    "message": `ATT&CK ID does not match the format ${this.attackIDValidator.format}`
+                                })
+                            }
+                        }
+                        return result;
+                    })
+                )
+            }) //end switchmap
+            // TODO check if revoked-by exists if revoked?
+        ) //end pipe
+
+    }
+
     public isStringArray = function(arr): boolean {
         for (let i = 0; i < arr.length; i++) {
             if (typeof(arr[i]) !== "string") {
@@ -221,9 +324,8 @@ export abstract class StixObject extends Serializable {
 
     /**
      * Save the current state of the STIX object in the database. Update the current object from the response
-     * @param new_version [boolean] if false, overwrite the current version of the object. If true, creates a new version.
      * @param restAPIService [RestApiConnectorService] the service to perform the POST/PUT through
      * @returns {Observable} of the post
      */
-    abstract save(new_version: boolean, restAPIService: RestApiConnectorService): Observable<StixObject>;
+    abstract save(restAPIService: RestApiConnectorService): Observable<StixObject>;
 }

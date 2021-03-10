@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { TypeEditComponent } from './type-edit.component';
+import { NamePropertyComponent } from './name-property.component';
 
-describe('TypeEditComponent', () => {
-  let component: TypeEditComponent;
-  let fixture: ComponentFixture<TypeEditComponent>;
+describe('NamePropertyComponent', () => {
+  let component: NamePropertyComponent;
+  let fixture: ComponentFixture<NamePropertyComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ TypeEditComponent ]
+      declarations: [ NamePropertyComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(TypeEditComponent);
+    fixture = TestBed.createComponent(NamePropertyComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

@@ -1,5 +1,6 @@
 import { Observable } from 'rxjs';
 import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/rest-api-connector.service';
+import { ValidationData } from '../serializable';
 import { Group } from './group';
 import { Matrix } from './matrix';
 import { Mitigation } from './mitigation';
@@ -91,13 +92,14 @@ export class VersionReference {
 
 export class Collection extends StixObject {
     public name: string;
-    public description: string;
     public contents: VersionReference[] = []; //references to the stix objects in the collection
     public stix_contents: StixObject[] = []; //the actual objects in the collection
     public imported: Date;
      // auto-generated changelog/report about the import
     //  each sub-property is a list of STIX IDs corresponding to objects in the import
     public import_categories: CollectionImportCategories<string>;
+    
+    protected get attackIDValidator() { return null; } //collections do not have ATT&CK IDs
 
     constructor(sdo?: any) {
         super(sdo, "x-mitre-collection");
@@ -115,7 +117,6 @@ export class Collection extends StixObject {
         let rep = super.base_serialize();
         
         rep.stix.name = this.name;
-        rep.stix.description = this.description;
         rep.stix.x_mitre_contents = this.contents.map(vr => vr.serialize());
 
         rep.workspace = {};
@@ -140,11 +141,6 @@ export class Collection extends StixObject {
                 if (typeof(sdo.name) === "string") this.name = sdo.name;
                 else console.error("TypeError: name field is not a string:", sdo.name, "(",typeof(sdo.name),")")
             } else this.name = "";
-
-            if ("description" in sdo) {
-                if (typeof(sdo.description) === "string") this.description = sdo.description;
-                else console.error("TypeError: description field is not a string:", sdo.description, "(",typeof(sdo.description),")")
-            } else this.description = "";
 
             if ("x_mitre_contents" in sdo) {            
                 if (typeof(sdo.x_mitre_contents) === "object") this.contents = sdo.x_mitre_contents.map(vr => new VersionReference(vr))
@@ -196,13 +192,22 @@ export class Collection extends StixObject {
             }
         }
     }
+
+    /**
+     * Validate the current object state and return information on the result of the validation
+     * @param {RestApiConnectorService} restAPIService: the REST API connector through which asynchronous validation can be completed
+     * @returns {Observable<ValidationData>} the validation warnings and errors once validation is complete.
+     */
+    public validate(restAPIService: RestApiConnectorService): Observable<ValidationData> {
+        return this.base_validate(restAPIService);
+    }
+    
     /**
      * Save the current state of the STIX object in the database. Update the current object from the response
-     * @param new_version [boolean] if false, overwrite the current version of the object. If true, creates a new version.
      * @param restAPIService [RestApiConnectorService] the service to perform the POST/PUT through
      * @returns {Observable} of the post
      */
-    public save(new_version: boolean = true, restAPIService: RestApiConnectorService): Observable<Collection> {
+    public save(restAPIService: RestApiConnectorService): Observable<Collection> {
         // TODO
         return null;
     }

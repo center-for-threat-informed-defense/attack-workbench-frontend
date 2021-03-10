@@ -1,11 +1,15 @@
 import { Observable } from "rxjs";
 import { RestApiConnectorService } from "src/app/services/connectors/rest-api/rest-api-connector.service";
+import { ValidationData } from "../serializable";
 import {StixObject} from "./stix-object";
 
 export class Tactic extends StixObject {
-    public name: string;
-    public description: string;
-    public domains: string[];
+    public name: string = "";
+    public domains: string[] = [];
+    protected get attackIDValidator() { return {
+        regex: "TA\\d{4}",
+        format: "TA####"
+    }}
 
     public get shortname(): string { return this.name.replace(" ", "-").toLowerCase(); }
 
@@ -25,7 +29,6 @@ export class Tactic extends StixObject {
         let rep = super.base_serialize();
         
         rep.stix.name = this.name;
-        rep.stix.description = this.description;
         rep.stix.x_mitre_domains = this.domains;
         rep.stix.x_mitre_shortname = this.shortname;
 
@@ -46,11 +49,6 @@ export class Tactic extends StixObject {
                 else console.error("TypeError: name field is not a string:", sdo.name, "(",typeof(sdo.name),")")
             } else this.name = "";
 
-            if ("description" in sdo) {
-                if (typeof(sdo.description) === "string") this.description = sdo.description;
-                else console.error("TypeError: description field is not a string:", sdo.description, "(",typeof(sdo.description),")")
-            } else this.description = "";
-
             if ("x_mitre_domains" in sdo) {
                 if (this.isStringArray(sdo.x_mitre_domains)) this.domains = sdo.x_mitre_domains;
                 else console.error("TypeError: domains field is not a string array.");
@@ -58,16 +56,22 @@ export class Tactic extends StixObject {
         }
     }
 
+    /**
+     * Validate the current object state and return information on the result of the validation
+     * @param {RestApiConnectorService} restAPIService: the REST API connector through which asynchronous validation can be completed
+     * @returns {Observable<ValidationData>} the validation warnings and errors once validation is complete.
+     */
+    public validate(restAPIService: RestApiConnectorService): Observable<ValidationData> {
+        return this.base_validate(restAPIService);
+    }
 
     /**
      * Save the current state of the STIX object in the database. Update the current object from the response
-     * @param new_version [boolean] if false, overwrite the current version of the object. If true, creates a new version.
      * @param restAPIService [RestApiConnectorService] the service to perform the POST/PUT through
      * @returns {Observable} of the post
      */
-    public save(new_version: boolean = true, restAPIService: RestApiConnectorService): Observable<Tactic> {
+    public save(restAPIService: RestApiConnectorService): Observable<Tactic> {
         // TODO POST if the object was just created (doesn't exist in db yet)
-        if (new_version) this.modified = new Date();
         
         let postObservable = restAPIService.postTactic(this);
         let subscription = postObservable.subscribe({
