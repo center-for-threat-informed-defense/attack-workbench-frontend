@@ -575,6 +575,16 @@ export class RestApiConnectorService extends ApiConnector {
      * @returns {Observable<{}>} observable of the response body
      */
     public get deleteCollection() { return this.deleteStixObjectFactory("collection"); }
+    /**
+     * DELETE a note
+     * @param {string} id the STIX ID of the object to delete
+     */
+    public deleteNote(id: string) {
+        return this.http.delete(`${this.baseUrl}/notes/${id}`).pipe(
+            tap(this.handleSuccess("note removed")),
+            catchError(this.handleError_single())
+        )
+    }
 
 
     //   ___ ___ _      _ _____ ___ ___  _  _ ___ _  _ ___ ___  ___
