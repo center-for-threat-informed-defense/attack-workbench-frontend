@@ -1,13 +1,13 @@
-<div class="descriptive-edit box">
+<div class="descriptive-edit">
     <mat-tab-group>
         <mat-tab label="Write" appearance="standard">
-            <mat-form-field class="fill-space padding borderless">
-                <textarea cdkTextareaAutosize placeholder="Description" matInput required [(ngModel)]="config.object[config.field]">
+            <mat-form-field class="edit" floatLabel="never" appearance="outline">
+                <textarea cdkTextareaAutosize matInput placeholder="Description" [(ngModel)]="config.object[config.field]">
                 </textarea>
             </mat-form-field>
         </mat-tab>
         <mat-tab label="Preview">
-            <div class="padding">
+            <div class="preview padding">
                 <app-descriptive-view [config]="config"></app-descriptive-view>
             </div>
         </mat-tab>
