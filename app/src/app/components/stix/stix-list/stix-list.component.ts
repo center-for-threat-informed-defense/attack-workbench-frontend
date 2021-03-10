@@ -47,7 +47,7 @@ export class StixListComponent implements OnInit, AfterViewInit {
 
     //objects to render;
     public objects$: Observable<StixObject[]>;
-    public data$: Observable<Paginated>;
+    public data$: Observable<Paginated<StixObject>>;
     public totalObjectCount: number = 0;
     //view mode
     public mode: string = "cards";
