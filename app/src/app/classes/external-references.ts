@@ -178,6 +178,8 @@ export class ExternalReferences extends Serializable {
 }
 
 export interface ExternalReference {
+    /** source name of the reference */
+    source_name?: string;
     /** url; url of reference */
     url: string;
     /** description; description of reference */

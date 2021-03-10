@@ -20,8 +20,8 @@ export class EditorService {
                 let editable = this.getEditableFromRoute(this.router.routerState, this.router.routerState.root);
                 this.editable = editable.length > 0 && editable.every(x=>x);
                 this.sidebarService.setEnabled("history", this.editable);
-                this.sidebarService.setEnabled("citations", this.editable);
-                if (!this.editable) this.sidebarService.currentTab = "search";
+                // this.sidebarService.setEnabled("citations", this.editable);
+                if (!this.editable) this.sidebarService.currentTab = "references";
             }
         })
         this.route.queryParams.subscribe(params => {
