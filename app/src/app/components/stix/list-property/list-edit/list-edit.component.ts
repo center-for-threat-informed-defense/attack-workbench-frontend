@@ -82,9 +82,19 @@ export class ListEditComponent implements OnInit, AfterContentChecked {
                 next: (tactics) => { 
                     this.allObjects = tactics.data;
 
+                    // retrieve currently selected tactics
+                    let object = this.config.object as any;
+                    let selectedTactics = this.shortnameToTactic(object.domains);
+                    let selectedTacticIDs = selectedTactics.map(tactic => tactic.stixID);
+
+                    // set up domain & tactic tracking
+                    this.domainState = [];
+                    this.tacticState = [];
+                    object.domains.forEach(domain => this.domainState.push(domain));
+                    selectedTactics.forEach(tactic => this.tacticState.push(tactic));
+
                     // set selection model with initial values
-                    let selectedTactics = this.shortnameToStixID(tactics.data as Tactic[]);
-                    this.select = new SelectionModel<string>(true, selectedTactics);
+                    this.select = new SelectionModel<string>(true, selectedTacticIDs);
                     this.dataLoaded = true;
                 },
                 complete: () => { subscription.unsubscribe(); }
@@ -96,39 +106,59 @@ export class ListEditComponent implements OnInit, AfterContentChecked {
         this.ref.detectChanges();
     }
 
-    /** Retrieves a list of selected tactic stixIDs */
-    private shortnameToStixID(tactics: Tactic[]): string[] {
-        let shortnames = this.config.object[this.config.field];
-        let selectedTactics = shortnames.map(shortname => {
-            let tactic = tactics.find(tactic => {
-                return tactic.shortname == shortname && this.tacticInDomain(tactic)
+    /** Retrieves a list of selected tactics */
+    private shortnameToTactic(domains: string[]): Tactic[] {
+        let allObjects = this.allObjects as Tactic[];
+        let tactics = this.config.object[this.config.field].map(shortname => {
+            let tactic = allObjects.find(tactic => {
+                return tactic.shortname == shortname && this.tacticInDomain(tactic, domains)
             });
-            if (tactic) return tactic.stixID;
+            return tactic;
         })
-        return selectedTactics.filter(tactic => tactic !== undefined);
+        return tactics;
     }
-    
+
     /** Retrieves a list of selected tactic shortnames */
     private stixIDToShortname(tacticID: string): string[] {
-        let objects = this.allObjects as Tactic[];
-        let tactic = objects.find(object => object.stixID == tacticID)
+        let allObjects = this.allObjects as Tactic[];
+        let tactic = allObjects.find(object => object.stixID == tacticID)
         return [tactic.shortname, tactic.domains[0]];
     }
 
     /** Update current stix-list selection on domain change */
+    private domainState: string[];
+    private tacticState: Tactic[];
     public selectedValues(): string[] {
         if (!this.dataLoaded) return null;
 
-        if (this.config.field == 'tactics') {
-            // filter out selected tactics that are not in selected domains
-            let selectedTactics = this.shortnameToStixID(this.allObjects as Tactic[]);
-            let tacticShortnames = selectedTactics.map(id => this.stixIDToShortname(id));
+        let isEqual = function(arr1:string[], arr2:string[]) {
+            return (arr1.length == arr2.length) && arr1.every(function(element, index) {
+                return element === arr2[index]; 
+            });
+        }
 
-            // update object & selection model if selected tactics has changed
-            if (this.config.object[this.config.field] !== tacticShortnames) {
-                this.config.object[this.config.field] = tacticShortnames;
-                this.select.clear()
-                selectedTactics.forEach(tactic => this.select.select(tactic));
+        if (this.config.field == 'tactics') {
+            let object = this.config.object as Tactic;
+            if (!isEqual(this.domainState, object.domains)) {
+                // get selected tactics
+                let selectedTactics = this.tacticState;
+                if (object.domains.length < this.domainState.length) { // a domain was removed
+                    // filter selected tactics with updated domain selection
+                    selectedTactics = selectedTactics.filter(tactic => this.tacticInDomain(tactic));
+                    let selectedTacticIDs = selectedTactics.map(tactic => tactic.stixID);
+                    let tacticShortnames = selectedTacticIDs.map(id => this.stixIDToShortname(id));
+
+                    // udpate object & selection model
+                    this.config.object[this.config.field] = tacticShortnames;
+                    this.select.clear();
+                    selectedTacticIDs.forEach(tactic=>this.select.select(tactic));
+                }
+
+                // reset domain & tactic selection state with a copy of current state
+                this.domainState = [];
+                this.tacticState = [];
+                object.domains.forEach(domain => this.domainState.push(domain));
+                selectedTactics.forEach(tactic => this.tacticState.push(tactic));
             }
         }
         return this.config.object[this.config.field];
@@ -218,9 +248,12 @@ export class ListEditComponent implements OnInit, AfterContentChecked {
     }
 
     /** Check if the given tactic is in the same domain as this object */
-    private tacticInDomain(tactic: Tactic) {
-        let object = this.config.object as any;
-        return tactic.domains.every(domain => object.domains.includes(domain));
+    private tacticInDomain(tactic: Tactic, domains?: string[]) {
+        let object = this.config.object as Tactic;
+        let checkDomains = domains ? domains : object.domains;
+        for (let domain of tactic.domains) {
+            if (checkDomains.includes(domain)) return true;
+        }
     }
 
     /** Open stix list selection window */
@@ -246,6 +279,12 @@ export class ListEditComponent implements OnInit, AfterContentChecked {
                 if (result) {
                     let tacticShortnames = this.select.selected.map(id => this.stixIDToShortname(id));
                     this.config.object[this.config.field] = tacticShortnames;
+
+                    // reset tactic selection state
+                    this.tacticState = [];
+                    let allObjects = this.allObjects as Tactic[];
+                    let tactics = this.select.selected.map(tacticID => allObjects.find(tactic => tactic.stixID == tacticID));
+                    tactics.forEach(tactic => this.tacticState.push(tactic));
                 } else { // user cancel
                     this.select = selectCopy; // reset selection
                 }
