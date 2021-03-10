@@ -134,6 +134,14 @@ $tooltip-color: color-alternate(dark, 4);
     }
 }
 
+.mat-form-field.mat-form-field-invalid, .mat-form-field.ng-invalid {
+    color: color(error);
+}
+
+button.mat-stroked-button:disabled {
+    opacity: 0.5;
+}
+
 .mat-select-panel {
     .light & {
         color: on-color(light);

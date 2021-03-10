@@ -8,7 +8,7 @@ import { SidebarService } from 'src/app/services/sidebar/sidebar.service';
     encapsulation: ViewEncapsulation.None
 })
 export class ResourcesDrawerComponent implements OnInit {
-    @Output() drawerResize = new EventEmitter(); //emit events when the drawer is opened/closed
+    @Output() public drawerResize = new EventEmitter(); //emit events when the drawer is opened/closed
     @Output() onClose = new EventEmitter(); 
     @Input() useService: boolean = true; //if true, control of this drawer is performed through the sidebar service. Otherwise, events and internal state are used.
     @Input() showCloseButton: boolean = true;

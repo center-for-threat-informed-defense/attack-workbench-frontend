@@ -1,1 +1,54 @@
-<p>history-timeline works!</p>
+<div class="history-timeline">
+    <app-loading-overlay *ngIf="loading; else timeline"></app-loading-overlay>
+    <ng-template #timeline>
+        <div class="timeline-controls">
+            <div>
+                <mat-checkbox color="primary" (change)="resizeDrawers()" [(ngModel)]="showObjectHistory">show object history</mat-checkbox>
+            </div>
+            <div>
+                <mat-checkbox class="secondary" (change)="resizeDrawers()" [(ngModel)]="showRelationshipHistory">show relationship history</mat-checkbox>
+            </div>
+        </div>
+        <mat-action-list>
+            <ng-container *ngFor="let historyEvent of historyEvents">
+                <button mat-list-item 
+                        *ngIf="(historyEvent.sdo.type == 'relationship' && showRelationshipHistory) || (historyEvent.sdo.type != 'relationship' && showObjectHistory)"
+                        (click)="preview(historyEvent.sdo)"
+                        
+                        class="history-event"
+                        [class.relationship]="historyEvent.sdo.type == 'relationship'"
+                        [class.object]="historyEvent.sdo.type != 'relationship'"
+                        
+                        [matTooltip]="historyEvent.description" 
+                        matTooltipPosition="left" 
+                        
+                        (mouseover)="hoveredHistoryEvent = historyEvent" 
+                        (mouseout)="hoveredHistoryEvent = null">
+                    <mat-icon mat-list-icon *ngIf="historyEvent == hoveredHistoryEvent; else historyIcon">preview</mat-icon>
+                    <ng-template #historyIcon>
+                        <mat-icon mat-list-icon>{{historyEvent.icon}}</mat-icon>
+                    </ng-template>
+                    <div mat-line>
+                        <span class="name">
+                            {{historyEvent.name}}
+                        </span>
+                        <ng-container *ngIf="historyEvent.sdo.type != 'relationship'">
+                            <span class="text-deemphasis" *ngIf="historyEvent.change_types.versionChanged">
+                                v{{historyEvent.prior_version}} &#8594;
+                            </span>
+                            <span>
+                                v{{historyEvent.sdo.version}}
+                            </span>
+                        </ng-container>
+                    </div>
+                    <div mat-line><app-timestamp-view [config]="{
+                        'mode': 'view',
+                        'humanize': true,
+                        'object': historyEvent.sdo,
+                        'field': 'modified'
+                    }"></app-timestamp-view></div>
+                </button>
+            </ng-container>
+        </mat-action-list>
+    </ng-template>
+</div>

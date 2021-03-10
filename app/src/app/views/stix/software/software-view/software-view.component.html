@@ -1,8 +1,11 @@
 <div class="software-view view-page grid spacing-12">
     <div class="row">
         <div class="col">
-            <h1>{{software.name}}</h1>
-            <app-subheading [config]="config" (onOpenHistory)="openHistory()" (onOpenNotes)="openNotes()"></app-subheading>
+            <app-name-property [config]="{
+                mode: editing? 'edit' : 'view',
+                object: software
+            }"></app-name-property>
+            <app-subheading *ngIf="!editing" [config]="config" (onOpenHistory)="openHistory()" (onOpenNotes)="openNotes()"></app-subheading>
         </div>
     </div>
     <div class="row">
@@ -24,10 +27,12 @@
     <div class="row">
         <div class="col">
             <!-- TYPE -->
-            <app-type-property class="grow-to-row" [config]="{
-                mode: editing? 'edit' : 'view',
-                object: software
-            }"></app-type-property>
+            <div class="labelled-box grow-to-row" matTooltip="this field cannot be edited" [matTooltipDisabled]="!editing">
+                <div class="content capitalize">
+                    {{software.type}}
+                </div>
+                <label>type</label>
+            </div>
         </div>
         <div class="col">
             <!-- PLATFORMS -->
@@ -84,7 +89,7 @@
         </div>
     </div>
     <!-- only show relationships if configured to show them -->
-    <div *ngIf="config.showRelationships || !config.hasOwnProperty('showRelationships')">
+    <div *ngIf="(config.showRelationships || !config.hasOwnProperty('showRelationships')) && !editing">
         <div class="row">
             <div class="col">
                 <h2 class="section-header">Techniques Used</h2>
@@ -92,11 +97,21 @@
         </div>
         <div class="row">
             <div class="col">
-                <app-stix-list [config]="{
+                <app-add-relationship-button (created)="techniquesList.applyControls()" [config]="{
+                    label: 'technique',
+                    relationship_type: 'uses',
+                    source_ref: software.stixID
+                }"></app-add-relationship-button>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <app-stix-list #techniquesList [config]="{
                     'type': 'relationship', 
                     'sourceRef': software.stixID,
                     'relationshipType': 'uses',
-                    'clickBehavior': 'dialog'
+                    'clickBehavior': 'dialog',
+                    'allowEdits': true
                 }"></app-stix-list>
             </div>
         </div>
@@ -107,11 +122,21 @@
         </div>
         <div class="row">
             <div class="col">
-                <app-stix-list [config]="{
+                <app-add-relationship-button (created)="groupList.applyControls()" [config]="{
+                    label: 'group',
+                    relationship_type: 'uses',
+                    target_ref: software.stixID
+                }"></app-add-relationship-button>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <app-stix-list #groupList [config]="{
                     'type': 'relationship', 
                     'targetRef': software.stixID,
                     'relationshipType': 'uses',
-                    'clickBehavior': 'dialog'
+                    'clickBehavior': 'dialog',
+                    'allowEdits': true
                 }"></app-stix-list>
             </div>
         </div>

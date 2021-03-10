@@ -1,4 +1,6 @@
-import { Serializable } from './serializable';
+import { Observable, of } from 'rxjs';
+import { RestApiConnectorService } from '../services/connectors/rest-api/rest-api-connector.service';
+import { Serializable, ValidationData } from './serializable';
 import { VersionNumber } from './version-number';
 // https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/blob/develop/docs/collections.md#collection-version-properties
 export class CollectionVersion extends Serializable  {
@@ -57,6 +59,15 @@ export class CollectionVersion extends Serializable  {
             "release_notes": this.release_notes,
         }
     }
+
+    /**
+     * Validate the current object state and return information on the result of the validation
+     * @param {RestApiConnectorService} restAPIService: the REST API connector through which asynchronous validation can be completed
+     * @returns {Observable<ValidationData>} the validation warnings and errors once validation is complete.
+     */
+    public validate(restAPIService: RestApiConnectorService): Observable<ValidationData> {
+        return of(new ValidationData()) //TODO
+    }
 }
 // https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/blob/develop/docs/collections.md#collection-reference-properties
 export class CollectionReference extends Serializable  {
@@ -114,6 +125,15 @@ export class CollectionReference extends Serializable  {
             "created": this.created,
             "versions": this.versions.map(version => version.serialize())
         }
+    }
+
+    /**
+     * Validate the current object state and return information on the result of the validation
+     * @param {RestApiConnectorService} restAPIService: the REST API connector through which asynchronous validation can be completed
+     * @returns {Observable<ValidationData>} the validation warnings and errors once validation is complete.
+     */
+    public validate(restAPIService: RestApiConnectorService): Observable<ValidationData> {
+        return of(new ValidationData()) //TODO
     }
 }
 // https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/blob/develop/docs/collections.md#collection-index-properties
@@ -227,6 +247,15 @@ export class CollectionIndex extends Serializable {
         }
         representation.collection_index.collections = representation.collection_index.collections.map(ref =>  ref.serialize())
         return representation;
+    }
+
+    /**
+     * Validate the current object state and return information on the result of the validation
+     * @param {RestApiConnectorService} restAPIService: the REST API connector through which asynchronous validation can be completed
+     * @returns {Observable<ValidationData>} the validation warnings and errors once validation is complete.
+     */
+    public validate(restAPIService: RestApiConnectorService): Observable<ValidationData> {
+        return of(new ValidationData()) //TODO
     }
 
     /**

@@ -58,6 +58,9 @@ import { CollectionImportSummaryComponent } from "./components/collection-import
 import { SaveDialogComponent } from "./components/save-dialog/save-dialog.component";
 import { AddDialogComponent } from './components/add-dialog/add-dialog.component';
 import { HistoryTimelineComponent } from "./components/resources-drawer/history-timeline/history-timeline.component";
+import { MultipleChoiceDialogComponent } from "./components/multiple-choice-dialog/multiple-choice-dialog.component";
+import { ValidationResultsComponent } from "./components/validation-results/validation-results.component";
+import { AddRelationshipButtonComponent } from "./components/add-relationship-button/add-relationship-button.component";
 
 // STIX components
 import { StixListComponent } from './components/stix/stix-list/stix-list.component';
@@ -86,6 +89,7 @@ import { VersionPropertyComponent } from "./components/stix/version-property/ver
 import { VersionEditComponent } from "./components/stix/version-property/version-edit/version-edit.component";
 import { VersionViewComponent } from "./components/stix/version-property/version-view/version-view.component";
 
+import { NamePropertyComponent } from "./components/stix/name-property/name-property.component";
 // import { RelationshipDialogComponent } from "./components/stix/relationship-dialog/relationship-dialog.component";
 
 // views
@@ -133,11 +137,6 @@ import { OrderedListPropertyComponent } from './components/stix/ordered-list-pro
 import { OrderedListViewComponent } from './components/stix/ordered-list-property/ordered-list-view/ordered-list-view.component';
 import { OrderedListEditComponent } from './components/stix/ordered-list-property/ordered-list-edit/ordered-list-edit.component';
 
-import { TypePropertyComponent } from './components/stix/type-property/type-property.component';
-import { TypeViewComponent } from './components/stix/type-property/type-view/type-view.component';
-import { TypeEditComponent } from './components/stix/type-property/type-edit/type-edit.component';
-
-
 @NgModule({
   declarations: [
     AppComponent,
@@ -155,6 +154,9 @@ import { TypeEditComponent } from './components/stix/type-property/type-edit/typ
     SaveDialogComponent,
     AddDialogComponent,
     HistoryTimelineComponent,
+    MultipleChoiceDialogComponent,
+    ValidationResultsComponent,
+    AddRelationshipButtonComponent,
     
     StixListComponent,
 
@@ -177,6 +179,7 @@ import { TypeEditComponent } from './components/stix/type-property/type-edit/typ
     VersionPropertyComponent,
     VersionEditComponent,
     VersionViewComponent,
+    NamePropertyComponent,
     
     LandingPageComponent,
     HelpPageComponent,
@@ -217,11 +220,7 @@ import { TypeEditComponent } from './components/stix/type-property/type-edit/typ
     AliasEditComponent,
     OrderedListPropertyComponent,
     OrderedListViewComponent,
-    OrderedListEditComponent,
-
-    TypePropertyComponent,
-    TypeViewComponent,
-    TypeEditComponent
+    OrderedListEditComponent
   ],
   imports: [
     BreadcrumbModule,

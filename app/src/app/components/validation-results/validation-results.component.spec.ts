@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { TypePropertyComponent } from './type-property.component';
+import { ValidationResultsComponent } from './validation-results.component';
 
-describe('TypePropertyComponent', () => {
-  let component: TypePropertyComponent;
-  let fixture: ComponentFixture<TypePropertyComponent>;
+describe('ValidationResultsComponent', () => {
+  let component: ValidationResultsComponent;
+  let fixture: ComponentFixture<ValidationResultsComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ TypePropertyComponent ]
+      declarations: [ ValidationResultsComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(TypePropertyComponent);
+    fixture = TestBed.createComponent(ValidationResultsComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

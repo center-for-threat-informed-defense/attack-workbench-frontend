@@ -11,6 +11,10 @@
             .dark &, .dark &:hover { color: color(primary) !important; }
             .light &, .light &:hover { color: color(light) !important; }
         }
+        .app-version {
+            text-transform: none;
+            font-size: 10px;
+        }
     }
     button {
         .dark & { color: on-color(light); }
