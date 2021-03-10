@@ -32,7 +32,7 @@ export class ListEditComponent implements OnInit, AfterContentChecked {
 
     public fieldToStix = {
         "platforms": "x_mitre_platform",
-        "tactic_type": "x_mitre_tactic_types",
+        "tactic_type": "x_mitre_tactic_type",
         "impact_type": "x_mitre_impact_type",
         "effective_permissions": "x_mitre_effective_permissions",
         "permissions_required": "x_mitre_permissions_required"
@@ -46,7 +46,7 @@ export class ListEditComponent implements OnInit, AfterContentChecked {
     // selection model (editType: 'stixList')
     public select: SelectionModel<string>;
     public type: string;
-    public objects: StixObject[] = [];
+    public allObjects: StixObject[] = [];
 
     // any value (editType: 'any')
     readonly separatorKeysCodes: number[] = [ENTER, COMMA];   
@@ -80,11 +80,12 @@ export class ListEditComponent implements OnInit, AfterContentChecked {
             this.type = 'tactic';
             let subscription = this.restAPIConnectorService.getAllTactics().subscribe({
                 next: (tactics) => { 
-                    this.objects = tactics.data;
+                    this.allObjects = tactics.data;
 
                     // set selection model with initial values
                     let selectedTactics = this.shortnameToStixID(tactics.data as Tactic[]);
                     this.select = new SelectionModel<string>(true, selectedTactics);
+                    this.dataLoaded = true;
                 },
                 complete: () => { subscription.unsubscribe(); }
             })
@@ -98,16 +99,39 @@ export class ListEditComponent implements OnInit, AfterContentChecked {
     /** Retrieves a list of selected tactic stixIDs */
     private shortnameToStixID(tactics: Tactic[]): string[] {
         let shortnames = this.config.object[this.config.field];
-        return tactics.filter(tactic => {
-            return shortnames.includes(tactic.shortname) && this.tacticInDomain(tactic);
-        }).map(tactics => tactics.stixID);
+        let selectedTactics = shortnames.map(shortname => {
+            let tactic = tactics.find(tactic => {
+                return tactic.shortname == shortname && this.tacticInDomain(tactic)
+            });
+            if (tactic) return tactic.stixID;
+        })
+        return selectedTactics.filter(tactic => tactic !== undefined);
     }
     
     /** Retrieves a list of selected tactic shortnames */
     private stixIDToShortname(tacticID: string): string[] {
-        let objects = this.objects as Tactic[];
+        let objects = this.allObjects as Tactic[];
         let tactic = objects.find(object => object.stixID == tacticID)
         return [tactic.shortname, tactic.domains[0]];
+    }
+
+    /** Update current stix-list selection on domain change */
+    public selectedValues(): string[] {
+        if (!this.dataLoaded) return null;
+
+        if (this.config.field == 'tactics') {
+            // filter out selected tactics that are not in selected domains
+            let selectedTactics = this.shortnameToStixID(this.allObjects as Tactic[]);
+            let tacticShortnames = selectedTactics.map(id => this.stixIDToShortname(id));
+
+            // update object & selection model if selected tactics has changed
+            if (this.config.object[this.config.field] !== tacticShortnames) {
+                this.config.object[this.config.field] = tacticShortnames;
+                this.select.clear()
+                selectedTactics.forEach(tactic => this.select.select(tactic));
+            }
+        }
+        return this.config.object[this.config.field];
     }
     
     /** Get allowed values for this field */
@@ -196,16 +220,13 @@ export class ListEditComponent implements OnInit, AfterContentChecked {
     /** Check if the given tactic is in the same domain as this object */
     private tacticInDomain(tactic: Tactic) {
         let object = this.config.object as any;
-        for (let domain of tactic.domains) {
-            if (object.domains.includes(domain)) return true;
-        }
-        return false;
+        return tactic.domains.every(domain => object.domains.includes(domain));
     }
 
     /** Open stix list selection window */
     public openStixList() {
         // filter tactic objects by domain
-        let tactics = this.objects as Tactic[];
+        let tactics = this.allObjects as Tactic[];
         let selectableObjects = tactics.filter(tactic => this.tacticInDomain(tactic));
 
         let dialogRef = this.dialog.open(AddDialogComponent, {

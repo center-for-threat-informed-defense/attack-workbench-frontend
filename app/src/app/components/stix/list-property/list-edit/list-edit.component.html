@@ -38,7 +38,7 @@
         <mat-label>{{config.label? config.label : config.field}}</mat-label>
         <mat-icon aria-hidden="false" aria-label="open" class="icon">open_in_new</mat-icon>
         <mat-chip-list #stixChipList>
-            <mat-chip *ngFor="let value of config.object[config.field]" [removable]="false">{{value}}</mat-chip>
+            <mat-chip *ngFor="let value of selectedValues()" [removable]="false">{{value}}</mat-chip>
         </mat-chip-list>
     </mat-form-field>
 </div>
