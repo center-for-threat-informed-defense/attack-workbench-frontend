@@ -23,6 +23,7 @@
         }
     }
     .preview {
+        min-height: 16px;
         .dark & { border: 1px solid border-color(dark); }
         .light & { border: 1px solid border-color(light); }
         border-bottom-right-radius: 4px;
