@@ -8,7 +8,7 @@
         <div class="controls">
             <mat-form-field appearance="fill" class="fullwidth">
                 <mat-label>search</mat-label>
-                <input matInput>
+                <input matInput #search>
             </mat-form-field>
         </div>
         <div class="references" *ngIf="(references$ | async) as references; else loading">
@@ -29,13 +29,14 @@
                     </div>
                 </div>
             </div>
-            <mat-paginator [length]="references.pagination.total"
-                  [pageSize]="10"
-                  [pageSizeOptions]="[5, 10, 25, 100]">
-            </mat-paginator>
         </div>
         <ng-template #loading>
             <app-loading-overlay></app-loading-overlay>
         </ng-template>
+        <mat-paginator [length]="totalObjectCount"
+                       pageSize="10"
+                       [pageSizeOptions]="[5, 10, 25, 100]"
+                       (page)="applyControls()">
+        </mat-paginator>
     </div>
 </div>

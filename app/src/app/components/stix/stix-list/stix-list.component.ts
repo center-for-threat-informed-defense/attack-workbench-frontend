@@ -361,7 +361,7 @@ export class StixListComponent implements OnInit, AfterViewInit {
             }
         } else {
             // fetch objects from backend
-            let limit = this.paginator? this.paginator.pageSize : 5;
+            let limit = this.paginator? this.paginator.pageSize : 10;
             let offset = this.paginator? this.paginator.pageIndex * limit : 0;
             if (this.config.type == "software") this.data$ = this.restAPIConnectorService.getAllSoftware(limit, offset, null, null, null, null, this.config.excludeIDs); //TODO add limit and offset once back-end supports it
             else if (this.config.type == "group") this.data$ = this.restAPIConnectorService.getAllGroups(limit, offset, null, null, null, null, this.config.excludeIDs); //TODO add limit and offset once back-end supports it

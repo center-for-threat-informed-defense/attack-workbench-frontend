@@ -1,7 +1,9 @@
-import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { MatPaginator } from '@angular/material/paginator';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { Observable } from 'rxjs';
+import { fromEvent, Observable } from 'rxjs';
+import { debounceTime, distinctUntilChanged, filter, tap } from 'rxjs/operators';
 import { ExternalReference } from 'src/app/classes/external-references';
 import { Paginated, RestApiConnectorService } from 'src/app/services/connectors/rest-api/rest-api-connector.service';
 import { ReferenceEditDialogComponent } from './reference-edit-dialog/reference-edit-dialog.component';
@@ -12,33 +14,34 @@ import { ReferenceEditDialogComponent } from './reference-edit-dialog/reference-
   styleUrls: ['./reference-manager.component.scss'],
   encapsulation: ViewEncapsulation.None
 })
-export class ReferenceManagerComponent implements OnInit {
+export class ReferenceManagerComponent implements OnInit, AfterViewInit {
     public newRef: ExternalReference = {
         source_name: "",
         description: "",
         url: ""
     }
-    public search_source_ref = "";
-    public search_result: ExternalReference = null;
+
+    @ViewChild('search') search: ElementRef;
+    @ViewChild(MatPaginator) paginator: MatPaginator;
 
     public references$: Observable<Paginated<ExternalReference>>;
-
+    public totalObjectCount: number = 0;
     
     constructor(private restApiConnector: RestApiConnectorService, public snackbar: MatSnackBar, public dialog: MatDialog) { }
     
-    public createReference() {
-        let subscription = this.restApiConnector.postReference(this.newRef).subscribe({
-            next: (result) => {
-                this.newRef = {
-                    source_name: "",
-                    description: "",
-                    url: ""
-                }
-                this.refreshReferences();
-            },
-            complete: () => { subscription.unsubscribe(); }
-        })
-    }
+    // public createReference() {
+    //     let subscription = this.restApiConnector.postReference(this.newRef).subscribe({
+    //         next: (result) => {
+    //             this.newRef = {
+    //                 source_name: "",
+    //                 description: "",
+    //                 url: ""
+    //             }
+    //             this.refreshReferences();
+    //         },
+    //         complete: () => { subscription.unsubscribe(); }
+    //     })
+    // }
 
     public editReference(reference?: ExternalReference) {
         let ref = this.dialog.open(ReferenceEditDialogComponent, {
@@ -49,7 +52,7 @@ export class ReferenceManagerComponent implements OnInit {
         })
         let subscription = ref.afterClosed().subscribe({
             complete: () => {
-                this.refreshReferences();
+                this.applyControls();
                 subscription.unsubscribe();
             }
         })
@@ -64,19 +67,31 @@ export class ReferenceManagerComponent implements OnInit {
         return `(Citation: ${source_name})`
     }
 
-    public refreshReferences() {
-        this.references$ = this.restApiConnector.getAllReferences();
-    }
-
-    public search() {
-        let subscription = this.restApiConnector.getReference(this.search_source_ref).subscribe({
-            next: (result) => { this.search_result = result; },
-            complete: () => { subscription.unsubscribe(); }
+    public applyControls() {
+        let limit = this.paginator? this.paginator.pageSize : 10;
+        let offset = this.paginator? this.paginator.pageIndex * limit : 0;
+        this.references$ = this.restApiConnector.getAllReferences(limit, offset);
+        let subscription = this.references$.subscribe({
+            next: (data) => { this.totalObjectCount = data.pagination.total; },
+            complete: () => { subscription.unsubscribe() }
         })
     }
 
     ngOnInit(): void {
-        this.refreshReferences();
+        // this.refreshReferences();
+    }
+
+    ngAfterViewInit() {
+        this.applyControls();
+        fromEvent(this.search.nativeElement, 'keyup').pipe(
+            filter(Boolean),
+            debounceTime(250),
+            distinctUntilChanged(),
+            tap(_ => {
+                if (this.paginator) this.paginator.pageIndex = 0;
+                this.applyControls()
+            })
+        ).subscribe()
     }
 
 }
