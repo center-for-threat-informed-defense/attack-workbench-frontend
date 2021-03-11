@@ -1,0 +1,25 @@
+<div class="reference-edit-dialog grid spacing-12">
+    <div class="row">
+        <div class="col">
+            <mat-form-field appearance="outline" class="grow-to-row" >
+                <mat-label>source name</mat-label>
+                <mat-hint>(Citation: {{reference.source_name}})</mat-hint>
+                <input matInput [disabled]="!is_new" [(ngModel)]="reference.source_name">
+            </mat-form-field>
+        </div>
+        <div class="col">
+            <mat-form-field appearance="outline" class="grow-to-row">
+                <mat-label>url</mat-label>
+                <input matInput [(ngModel)]="reference.url">
+            </mat-form-field>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <mat-form-field appearance="outline">
+                <mat-label>citation</mat-label>
+                <input matInput [(ngModel)]="reference.description">
+            </mat-form-field>
+        </div>
+    </div>
+</div>
