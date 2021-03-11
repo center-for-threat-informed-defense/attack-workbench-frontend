@@ -57,6 +57,7 @@ export class NotesEditorComponent implements OnInit {
 
     /** Confirm note deletion */
     public deleteNote(note: Note): void {
+        //TODO: if deleting a new note that hasn't been saved, jsut remove it
         // open confirmation dialog
         let prompt = this.dialog.open(ConfirmationDialogComponent, {
             maxWidth: "35em",
@@ -82,6 +83,7 @@ export class NotesEditorComponent implements OnInit {
     
     /** Save note */
     public saveNote(note: Note): void {
+        // TODO: if save returns an error, keep editing?
         note.editing = false;
         note.save(this.restAPIConnectorService);
     }

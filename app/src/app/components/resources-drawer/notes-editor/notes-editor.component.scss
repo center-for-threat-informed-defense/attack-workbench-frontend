@@ -1,6 +1,10 @@
 @import "../../../../style/globals";
 .notes-editor {
     max-width: 20em;
+
+    .spacer {
+        flex: 1 1 auto;
+    }
     .mat-form-field-infix {
         border-top: 0px;
         padding: 0px;
@@ -14,12 +18,25 @@
             .light & { background: color(primary); color: on-color(primary); }
             .dark & { background: color(light); }
         }
-        .toolbar-space {
-            flex: 1 1 auto;
-        }
         .mat-form-field {
             font-size: 14px;
         }
+    }
+
+    .search-field {
+        padding-right: 12px;
+        .mat-form-field-wrapper {
+            margin-bottom: -1.34375em; // remove bottom padding used for hint
+        }
+        .mat-form-field-label { 
+            .light & { color: on-color-deemphasis(primary); }
+            .dark &  { color: on-color-deemphasis(primary); }
+        }
+    }
+
+    .add-button {
+        padding: 16px;
+        text-align: center;
     }
     .notes-content {
         padding: 16px;
@@ -27,19 +44,14 @@
             padding: 0px;
             margin-bottom: 12px;
 
-            .title-space {
-                flex: 1 1 auto;
-            }
-            mat-card-header {
-                box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.25);
-                display: flex;
-                align-items: center;
-                .mat-card-header-text {
-                    margin: 0 8px;
-                }
-                .mat-form-field {
-                    width: 100%;
-                }
+            .mat-form-field { width: 100%; }
+
+            mat-card-header textarea { margin-top: 12px; }
+            .mat-card-header-text { width: 100%; }
+            .history {
+                font-size: 13px;
+                @extend .text-label;
+                @extend .text-deemphasis;
             }
             mat-card-content {
                 min-height: 58px;

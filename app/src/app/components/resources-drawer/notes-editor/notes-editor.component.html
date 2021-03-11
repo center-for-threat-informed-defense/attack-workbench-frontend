@@ -1,41 +1,55 @@
 <div class="notes-editor">
     <app-loading-overlay *ngIf="loading"></app-loading-overlay>
     <div *ngIf="!loading">
+        <!-- toolbar -->
         <div class="notes-toolbar">
-            <!-- adding/sorting -->
             <mat-toolbar>
-                <!-- <div class="toolbar-space"></div> -->
-                <div class="controls button-list section">
-                    <!-- TODO: implement toolbar button functionalities -->
-                    <button mat-button class="control" matTooltip="add note" (click)="addNote()"><mat-icon aria-label="add">add</mat-icon></button>
-                    <button mat-button class="control" matTooltip="sort by title" (click)="sortTitle()"><mat-icon aria-label="sortTitle">sort_by_alpha</mat-icon></button>
-                    <button mat-button class="control" matTooltip="sort by modified date" (click)="sortDate()"><mat-icon aria-label="sortDate">calendar_today</mat-icon></button>
-                    <!-- TODO: implement ability to search notes? -->
-                    <mat-form-field>
-                        <input matInput>
-                        <mat-icon matSuffix>search</mat-icon>
-                    </mat-form-field>
-                </div>
+                <!-- TODO: implement toolbar button functionalities -->
+                <button mat-button class="control" matTooltip="sort" (click)="sortNote()">
+                    <mat-icon aria-label="sort">sort</mat-icon>
+                </button>
+                <!-- TODO: implement ability to search notes -->
+                <div class="spacer"></div>
+                <mat-form-field class="search-field">
+                    <input matInput placeholder="search">
+                    <mat-icon matSuffix>search</mat-icon>
+                </mat-form-field>
             </mat-toolbar>
         </div>
+
+        <!-- add new note -->
+        <div class="add-button">
+            <button mat-mini-fab class="extended-fab-button" color="primary" (click)="addNote()">
+                <mat-icon>add</mat-icon><span class="text-label">add a note</span>
+            </button>
+        </div>
+
+        <!-- notes -->
         <div class="notes-content">
             <ng-container *ngFor="let note of notes">
                 <mat-card class="sticky-note">
                     <mat-card-header>
                         <!-- title -->
-                        <mat-form-field floatLabel="never" appearance="none">
-                            <textarea matInput cdkTextareaAutosize 
-                                #autosize="cdkTextareaAutosize"
-                                [readonly]="!note.editing"
-                                placeholder="{{note.editing ? 'Title' : ''}}"
-                                [(ngModel)]="note.title"></textarea>
-                        </mat-form-field>
+                        <mat-card-title>
+                            <mat-form-field floatLabel="never" appearance="none">
+                                <textarea matInput cdkTextareaAutosize 
+                                    #autosize="cdkTextareaAutosize"
+                                    [readonly]="!note.editing"
+                                    placeholder="{{note.editing ? 'Title' : ''}}"
+                                    [(ngModel)]="note.title"></textarea>
+                            </mat-form-field>
+                        </mat-card-title>
+                        <!-- history -->
+                        <mat-card-subtitle class="history">
+                                <app-timestamp-view [config]="{object: note, field: 'modified'}"></app-timestamp-view>
+                        </mat-card-subtitle>
                         <!-- note editor buttons -->
                         <button mat-button *ngIf="!note.editing" class="control" matTooltip="edit note" (click)="note.editing=true"><mat-icon aria-label="edit">edit</mat-icon></button>
                         <button mat-button *ngIf="note.editing" class="control" matTooltip="save note" (click)="saveNote(note)"><mat-icon aria-label="save">save</mat-icon></button>
                         <button mat-button class="control" matTooltip="delete note" (click)="deleteNote(note)"><mat-icon aria-label="delete">delete</mat-icon></button>
                     </mat-card-header>
                     <mat-card-content>
+                        <!-- content -->
                         <markdown *ngIf="!note.editing" [data]="note.content"></markdown>
                         <mat-form-field *ngIf="note.editing" class="edit-note" floatLabel="never" appearance="none">
                             <textarea matInput cdkTextareaAutosize #autosize="cdkTextareaAutosize" placeholder="Note" [(ngModel)]="note.content" required></textarea>
@@ -44,6 +58,7 @@
                 </mat-card>
             </ng-container>
         </div>
+        <!-- no notes found -->
         <app-empty-list-marker *ngIf="!notes.length" [checkAgain]="false"></app-empty-list-marker>
     </div>
 </div>
