@@ -36,20 +36,7 @@ export class NotesEditorComponent implements OnInit {
     private parseNotes(notes: Note[]): void {
         this.objectStixID = this.router.url.split("/")[2].split("?")[0];
         this.notes = notes.filter(note => note.object_refs.includes(this.objectStixID));
-        this.notes = [
-            new Note({
-                "stix": {
-                    "content": "Lorem ipsum dolor sit amet, **consectetur** adipiscing elit. Praesent sapien ligula, tincidunt commodo leo quis, aliquam molestie nisl. Vestibulum iaculis purus fringilla, interdum ipsum a.",
-                }
-            }),
-            new Note({
-                "stix": {
-                    "abstract": "Aenean efficitur dictum.",
-                    "content": "Praesent in nisi viverra, efficitur nibh quis, euismod sapien. Quisque consequat sapien ut arcu fringilla cursus. Curabitur tincidunt ut lorem non pretium. Quisque sollicitudin vestibulum fermentum. Aenean interdum mauris iaculis, porttitor nibh id, elementum nibh."
-                }
-            })
-        ]
-        console.log(this.notes)
+        console.log(this.notes);
     }
 
     /**
@@ -63,8 +50,9 @@ export class NotesEditorComponent implements OnInit {
     public addNote(): void {
         let newNote = new Note();
         newNote.object_refs.push(this.objectStixID);
+        // FIXME: open on edit mode
         newNote.editing = true;
-        this.notes.unshift(new Note());
+        this.notes.unshift(newNote);
     }
 
     /** Confirm note deletion */
@@ -85,7 +73,7 @@ export class NotesEditorComponent implements OnInit {
                     if (i >= 0) this.notes.splice(i, 1);
 
                     // delete note
-                    this.restAPIConnectorService.deleteNote(note.stixID);
+                    this.restAPIConnectorService.deleteNote(note.stixID); //FIXME: not currently implemented
                 }
             },
             complete: () => { subscription.unsubscribe(); } //prevent memory leaks

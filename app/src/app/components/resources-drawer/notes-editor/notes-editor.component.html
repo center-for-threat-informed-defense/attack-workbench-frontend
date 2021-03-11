@@ -35,9 +35,8 @@
                     <button mat-button class="control" matTooltip="delete note" (click)="deleteNote(note)"><mat-icon aria-label="delete">delete</mat-icon></button>
                 </mat-card-header>
                 <mat-card-content>
-                    <!-- TODO: match markdown & textarea styles -->
                     <markdown *ngIf="!note.editing" [data]="note.content"></markdown>
-                    <mat-form-field *ngIf="note.editing" floatLabel="never" appearance="none">
+                    <mat-form-field *ngIf="note.editing" class="edit-note" floatLabel="never" appearance="none">
                         <textarea matInput cdkTextareaAutosize #autosize="cdkTextareaAutosize" placeholder="Note" [(ngModel)]="note.content" required></textarea>
                     </mat-form-field>
                 </mat-card-content>
