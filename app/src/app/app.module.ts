@@ -5,6 +5,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppRoutingStixModule } from "./app-routing-stix.module"
 import { HttpClient, HttpClientModule } from '@angular/common/http'
 import { DragDropModule } from '@angular/cdk/drag-drop';
+import { ClipboardModule } from '@angular/cdk/clipboard';
 
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -58,6 +59,7 @@ import { SaveDialogComponent } from "./components/save-dialog/save-dialog.compon
 import { AddDialogComponent } from './components/add-dialog/add-dialog.component';
 import { HistoryTimelineComponent } from "./components/resources-drawer/history-timeline/history-timeline.component";
 import { ReferenceManagerComponent } from "./components/resources-drawer/reference-manager/reference-manager.component";
+import { ReferenceEditDialogComponent } from "./components/resources-drawer/reference-manager/reference-edit-dialog/reference-edit-dialog.component"
 import { MultipleChoiceDialogComponent } from "./components/multiple-choice-dialog/multiple-choice-dialog.component";
 import { ValidationResultsComponent } from "./components/validation-results/validation-results.component";
 import { AddRelationshipButtonComponent } from "./components/add-relationship-button/add-relationship-button.component";
@@ -155,6 +157,7 @@ import { OrderedListEditComponent } from './components/stix/ordered-list-propert
     AddDialogComponent,
     HistoryTimelineComponent,
     ReferenceManagerComponent,
+    ReferenceEditDialogComponent,
     MultipleChoiceDialogComponent,
     ValidationResultsComponent,
     AddRelationshipButtonComponent,
@@ -272,6 +275,7 @@ import { OrderedListEditComponent } from './components/stix/ordered-list-propert
     MatDialogModule,
     MatSnackBarModule,
     DragDropModule,
+    ClipboardModule,
 
     OverlayModule
   ],
@@ -301,6 +305,7 @@ import { OrderedListEditComponent } from './components/stix/ordered-list-propert
     MatDialogModule,
     MatSnackBarModule,
     DragDropModule,
+    ClipboardModule,
 
     OverlayModule
   ],
