@@ -2,7 +2,7 @@
 .resources-drawer {
     display: flex;
     flex-direction: column;
-    max-width: 33vw;
+    width: 33vw;
     height: 100%;
     border-left: 1px solid;
     .dark & { border-color: border-color(dark); }
