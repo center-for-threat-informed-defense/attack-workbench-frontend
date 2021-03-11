@@ -3,6 +3,7 @@
     max-width: 20em;
     .mat-form-field-infix {
         border-top: 0px;
+        padding: 0px;
     }
     .mat-form-field-wrapper {
         padding: 0px;
@@ -21,8 +22,7 @@
         }
     }
     .notes-content {
-        padding: 10px;
-        box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.25);
+        padding: 16px;
         .sticky-note {
             padding: 0px;
             margin-bottom: 12px;
@@ -42,10 +42,19 @@
                 }
             }
             mat-card-content {
+                min-height: 58px;
                 padding: 16px;
                 .mat-form-field {
                     width: 100%;
                 }
+            }
+            .edit-note {
+                display: block;
+                margin-block-start: 1em;
+                margin-block-end: 1em;
+                margin-inline-start: 0px;
+                margin-inline-end: 0px;
+                line-height: 24px;
             }
         }
     }
