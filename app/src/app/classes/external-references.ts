@@ -5,7 +5,7 @@ import { Serializable, ValidationData } from "./serializable";
 export class ExternalReferences extends Serializable {
     private _externalReferences : Map<string, ExternalReference> = new Map();
     private _externalReferencesIndex : Map<string, number> = new Map();
-
+    
     /**
      * return external references list
      */
@@ -93,6 +93,48 @@ export class ExternalReferences extends Serializable {
      */
     public getReference(sourceName : string) : ExternalReference {
         return this._externalReferences.get(sourceName);
+    }
+
+    private addReference(sourceName : string, externalReference : ExternalReference) {
+        this._externalReferences.set(sourceName, externalReference);
+        // Sort references by description and update index map
+        this.sortReferences()
+    }
+
+    /**
+     * checkReferences()
+     * Check if reference exist on object, return true it fond
+     * If does not, check the master list, return true it fond
+     * If it does not exist in the master list, return false if not found
+     */
+    private checkReferences(sourceName : string, restApiConnector) : boolean {
+        let search_result: ExternalReference = null;
+
+        if (this.getReference(sourceName)) return true;
+        let subscription = restApiConnector.getReference(sourceName).subscribe({
+            next: (result) => { 
+                if (result.length){
+                    search_result = result[0];
+                    this.addReference(sourceName, search_result);
+                    return true;
+                }
+            },
+            complete: () => { subscription.unsubscribe(); }
+        })
+
+        // If it reached here then it failed to find
+        return false;
+    }
+
+    public parseCitations(field, restApiConnector, countMissing=false) : void {
+        let reReference = /\(Citation: (.*?)\)/gmu;
+        let citations = field.match(reReference);
+        if(citations){
+            for (let i = 0; i < citations.length; i++) {
+                // Split to get source name from citation
+                this.checkReferences(citations[i].split("(Citation: ")[1].slice(0, -1), restApiConnector);
+            }
+        }
     }
 
     /**
