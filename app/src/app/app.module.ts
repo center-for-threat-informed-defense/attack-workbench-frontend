@@ -24,7 +24,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatStepperModule } from '@angular/material/stepper';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import {MatListModule} from '@angular/material/list';
+import { MatListModule } from '@angular/material/list';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
@@ -36,6 +36,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatChipsModule } from '@angular/material/chips';
 
 // other library imports
 import { BreadcrumbModule } from "angular-crumbs";
@@ -276,8 +277,8 @@ import { NotesEditorComponent } from './components/resources-drawer/notes-editor
     MatMenuModule,
     MatDialogModule,
     MatSnackBarModule,
+    MatChipsModule,
     DragDropModule,
-
     OverlayModule
   ],
   exports: [
