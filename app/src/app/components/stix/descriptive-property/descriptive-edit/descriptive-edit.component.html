@@ -2,7 +2,7 @@
     <mat-tab-group>
         <mat-tab label="Write" appearance="standard">
             <mat-form-field class="edit" floatLabel="never" appearance="outline">
-                <textarea cdkTextareaAutosize matInput placeholder="Description" [(ngModel)]="config.object[config.field]">
+                <textarea cdkTextareaAutosize matInput placeholder="Description" (blur)="config.object['external_references'].parseCitations(config.object[config.field], restApiConnector)" [(ngModel)]="config.object[config.field]">
                 </textarea>
             </mat-form-field>
         </mat-tab>
