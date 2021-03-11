@@ -13,7 +13,12 @@
         display: flex;
         flex-direction: column;
         .reference-list {
-            flex-grow: 1;
+            overflow-y: scroll;
+            // .reference + .reference {
+            //     .dark & { border-top: 1px solid border-color(dark); }
+            //     .light & { border-top: 1px solid border-color(light); }
+            // }
+            // flex-grow: 1;
             .row {
                 min-height: 48px;
             }
@@ -39,6 +44,9 @@
                 display: -webkit-box;
                 -webkit-line-clamp: 2; /* number of lines to show */
                 -webkit-box-orient: vertical;
+            }
+            .text-label {
+                font-size: 13px;
             }
         }
     }
