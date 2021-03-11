@@ -19,9 +19,10 @@
         <div class="col">
             <!-- DOMAIN -->
             <app-list-property class="grow-to-row" [config]="{
-                mode: 'view',
+                mode: editing? 'edit' : 'view',
                 object: mitigation,
-                field: 'domains'
+                field: 'domains',
+                editType: 'select'
             }"></app-list-property>
         </div>
         <div class="col">

@@ -37,9 +37,10 @@
         <div class="col">
             <!-- PLATFORMS -->
             <app-list-property class="grow-to-row" [config]="{
-                mode: 'view',
+                mode: editing? 'edit' : 'view',
                 object: software,
-                field: 'platforms'
+                field: 'platforms',
+                editType: 'select'
             }"></app-list-property>
         </div>
     </div>
@@ -47,9 +48,10 @@
         <div class="col">
             <!-- CONTRIBUTORS -->
             <app-list-property class="grow-to-row" [config]="{
-                mode: 'view',
+                mode: editing? 'edit' : 'view',
                 object: software,
-                field: 'contributors'
+                field: 'contributors',
+                editType: 'any'
             }"></app-list-property>
         </div>
         <div class="col">
@@ -74,6 +76,16 @@
                 referencesField: software.external_references,
                 label: 'description'
             }"></app-descriptive-property>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <app-list-property class="grow-to-row" [config]="{
+                mode: editing? 'edit': 'view',
+                object: software,
+                field: 'domains',
+                editType: 'select'
+            }"></app-list-property>
         </div>
     </div>
     <!-- only show relationships if configured to show them -->
