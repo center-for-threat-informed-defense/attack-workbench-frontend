@@ -1,16 +1,21 @@
 <div class="button-group centered">
     <button mat-mini-fab class="extended-fab-button" color="primary" (click)="addRow()">
-        <mat-icon>add</mat-icon> <span class="text-label">ADD</span>
+        <mat-icon>add</mat-icon> <span class="text-label">ADD a {{config.type}}</span>
     </button>
 </div>
 <br>
-<div *ngIf="config.objectsFromOrderedList" cdkDropList class="list" (cdkDropListDropped)="drop($event)">
-    <div class="box box-move" *ngFor="let row of list; let i = index trackBy:trackByFunction" cdkDrag>
-        {{row}}
-        <div>
-            <i class="material-icons move-icon" [ngClass]="{'enabled': i > 0}" (click)="moveRow(i, i-1)">arrow_drop_up</i>
-            <i class="material-icons move-icon" [ngClass]="{'enabled': i < list.length - 1}" (click)="moveRow(i, i+1)" >arrow_drop_down</i>
-            <i class="material-icons move-icon enabled" (click)="deleteRow(i)">delete</i>
+<div cdkDropList class="list" (cdkDropListDropped)="drop($event)">
+    <ng-container *ngIf="list.length > 0 else nothingHere">
+        <div  class="box box-move" *ngFor="let sdo of list; let i = index" cdkDrag>
+            {{getLabel(sdo)}}
+            <div>
+                <i class="material-icons move-icon" [ngClass]="{'enabled': i > 0}" (click)="moveRow(i, i-1)">arrow_drop_up</i>
+                <i class="material-icons move-icon" [ngClass]="{'enabled': i < list.length - 1}" (click)="moveRow(i, i+1)" >arrow_drop_down</i>
+                <i class="material-icons move-icon enabled" (click)="deleteRow(i)">delete</i>
+            </div>
         </div>
-    </div>
+    </ng-container>
+    <ng-template #nothingHere>
+        <app-empty-list-marker [checkAgain]="false"></app-empty-list-marker>
+    </ng-template>
 </div>

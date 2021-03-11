@@ -83,7 +83,7 @@ export class NotesEditorComponent implements OnInit {
     /** Save note */
     public saveNote(note: Note): void {
         note.editing = false;
-        note.save(true, this.restAPIConnectorService);
+        note.save(this.restAPIConnectorService);
     }
 
     /** TODO: sort by title */

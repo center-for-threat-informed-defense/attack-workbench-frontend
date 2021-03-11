@@ -16,5 +16,6 @@
         </h3>
         <app-history-timeline *ngIf="currentTab == 'history' && sidebarService.tabEnabled('history')" (drawerResize)="drawerResize.emit()"></app-history-timeline>
         <app-notes-editor *ngIf="currentTab == 'notes' && sidebarService.tabEnabled('notes')" (drawerResize)="drawerResize.emit()"></app-notes-editor>
+        <app-reference-manager *ngIf="currentTab == 'references' && sidebarService.tabEnabled('references')" (drawerResize)="drawerResize.emit()"></app-reference-manager>
     </div>
 </div>
