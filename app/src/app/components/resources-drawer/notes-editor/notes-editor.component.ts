@@ -15,8 +15,8 @@ export class NotesEditorComponent implements OnInit {
     @Output() public drawerResize = new EventEmitter();
     
     public loading: boolean = false;
-    public editing: boolean = false;
     public notes: Note[];
+    public objectStixID: string;
 
     constructor(private router: Router, private restAPIConnectorService: RestApiConnectorService, private dialog: MatDialog) { }
 
@@ -34,8 +34,8 @@ export class NotesEditorComponent implements OnInit {
     }
 
     private parseNotes(notes: Note[]): void {
-        let objectStixID = this.router.url.split("/")[2].split("?")[0];
-        this.notes = notes.filter(note => note.object_refs.includes(objectStixID));
+        this.objectStixID = this.router.url.split("/")[2].split("?")[0];
+        this.notes = notes.filter(note => note.object_refs.includes(this.objectStixID));
         this.notes = [
             new Note({
                 "stix": {
@@ -55,12 +55,20 @@ export class NotesEditorComponent implements OnInit {
     /**
      * Resize sidebar drawer to match the new content size
      */
-    public resizeDrawers() {
+    public resizeDrawers(): void {
         setTimeout(() => this.drawerResize.emit());
     }
 
+    /** Add new note */
+    public addNote(): void {
+        let newNote = new Note();
+        newNote.object_refs.push(this.objectStixID);
+        newNote.editing = true;
+        this.notes.unshift(new Note());
+    }
+
     /** Confirm note deletion */
-    public deleteNote(note: Note) {
+    public deleteNote(note: Note): void {
         // open confirmation dialog
         let prompt = this.dialog.open(ConfirmationDialogComponent, {
             maxWidth: "35em",
@@ -72,23 +80,34 @@ export class NotesEditorComponent implements OnInit {
         let subscription = prompt.afterClosed().subscribe({
             next: (result) => {
                 if (result) {
-                    console.log("TODO: implement delete")
-                    // this.restAPIConnectorService.deleteNote(note.stixID);
+                    // remove note from list
+                    let i = this.notes.indexOf(note);
+                    if (i >= 0) this.notes.splice(i, 1);
+
+                    // delete note
+                    this.restAPIConnectorService.deleteNote(note.stixID);
                 }
             },
             complete: () => { subscription.unsubscribe(); } //prevent memory leaks
         });
     }
-
-    /** TODO: implement on focus change (i.e. no longer editing) */
-    onFocusOut(){
-        // console.log(event)
-        this.editing = false;
-        // this.focusout.emit(event)
+    
+    /** Save note */
+    public saveNote(note: Note): void {
+        note.editing = false;
+        note.save(true, this.restAPIConnectorService);
     }
 
-    /** TODO: implement edit note */
-    editChange() {
-        this.editing = !this.editing;
+    /** TODO: sort by title */
+    public sortTitle() {
+
+    }
+    /** TODO: sort by modified date */
+    public sortDate() {
+
+    }
+    /** TODO: search notes */
+    public search() {
+
     }
 }

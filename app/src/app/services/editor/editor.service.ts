@@ -20,6 +20,7 @@ export class EditorService {
                 this.editable = editable.length > 0 && editable.every(x=>x);
                 this.sidebarService.setEnabled("history", this.editable);
                 this.sidebarService.setEnabled("citations", this.editable);
+                this.sidebarService.setEnabled("notes", this.editable);
                 if (!this.editable) this.sidebarService.currentTab = "search";
             }
         })

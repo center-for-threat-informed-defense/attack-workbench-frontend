@@ -3,9 +3,10 @@ import { RestApiConnectorService } from "src/app/services/connectors/rest-api/re
 import { StixObject } from "./stix-object";
 
 export class Note extends StixObject {
-    public title: string;
-    public content: string;
-    public object_refs: string[];
+    public title: string = "";
+    public content: string = "";
+    public object_refs: string[] = [];
+    public editing: boolean = false;
 
     constructor(sdo?: any) {
         super(sdo, "note");
@@ -39,7 +40,7 @@ export class Note extends StixObject {
             if ("abstract" in sdo) {
                 if (typeof(sdo.abstract) === "string") this.title = sdo.abstract;
                 else console.error("TypeError: abstract field is not a string:", sdo.abstract, "(",typeof(sdo.abstract),")")
-            }
+            } else this.title = "";
 
             if ("content" in sdo) {
                 if (typeof(sdo.content) === "string") this.content = sdo.content;
