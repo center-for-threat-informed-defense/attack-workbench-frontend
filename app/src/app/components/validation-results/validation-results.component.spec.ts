@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { TypeEditComponent } from './type-edit.component';
+import { ValidationResultsComponent } from './validation-results.component';
 
-describe('TypeEditComponent', () => {
-  let component: TypeEditComponent;
-  let fixture: ComponentFixture<TypeEditComponent>;
+describe('ValidationResultsComponent', () => {
+  let component: ValidationResultsComponent;
+  let fixture: ComponentFixture<ValidationResultsComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ TypeEditComponent ]
+      declarations: [ ValidationResultsComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(TypeEditComponent);
+    fixture = TestBed.createComponent(ValidationResultsComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

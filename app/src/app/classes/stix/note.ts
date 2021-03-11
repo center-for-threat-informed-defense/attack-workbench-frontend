@@ -1,5 +1,6 @@
 import { Observable } from "rxjs";
 import { RestApiConnectorService } from "src/app/services/connectors/rest-api/rest-api-connector.service";
+import { ValidationData } from "../serializable";
 import { StixObject } from "./stix-object";
 
 export class Note extends StixObject {
@@ -7,6 +8,8 @@ export class Note extends StixObject {
     public content: string = "";
     public object_refs: string[] = [];
     public editing: boolean = false;
+
+    protected get attackIDValidator() { return null; } // notes have no ATT&CK ID
 
     constructor(sdo?: any) {
         super(sdo, "note");
@@ -55,14 +58,22 @@ export class Note extends StixObject {
     }
 
     /**
+     * Validate the current object state and return information on the result of the validation
+     * @param {RestApiConnectorService} restAPIService: the REST API connector through which asynchronous validation can be completed
+     * @returns {Observable<ValidationData>} the validation warnings and errors once validation is complete.
+     */
+    public validate(restAPIService: RestApiConnectorService): Observable<ValidationData> {
+        return this.base_validate(restAPIService);
+    }
+
+    /**
      * Save the current state of the STIX object in the database. Update the current object from the response
      * @param new_version [boolean] if false, overwrite the current version of the object. If true, creates a new version.
      * @param restAPIService [RestApiConnectorService] the service to perform the POST/PUT through
      * @returns {Observable} of the post
      */
-    public save(new_version: boolean = true, restAPIService: RestApiConnectorService): Observable<Note> {
+    public save(restAPIService: RestApiConnectorService): Observable<Note> {
         // TODO PUT if the object was just created (doesn't exist in db yet)
-        if (new_version) this.modified = new Date();
         
         let postObservable = restAPIService.postNote(this);
         let subscription = postObservable.subscribe({

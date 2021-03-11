@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, ViewEncapsulation, ViewChild, AfterViewInit, ElementRef } from '@angular/core';
+import { Component, OnInit, Input, ViewEncapsulation, ViewChild, AfterViewInit, ElementRef, EventEmitter, Output } from '@angular/core';
 import { StixObject } from 'src/app/classes/stix/stix-object';
 import {animate, style, transition, trigger} from '@angular/animations';
 import {MatSort} from '@angular/material/sort';
@@ -47,7 +47,7 @@ export class StixListComponent implements OnInit, AfterViewInit {
 
     //objects to render;
     public objects$: Observable<StixObject[]>;
-    public data$: Observable<Paginated>;
+    public data$: Observable<Paginated<StixObject>>;
     public totalObjectCount: number = 0;
     //view mode
     public mode: string = "cards";
@@ -99,14 +99,19 @@ export class StixListComponent implements OnInit, AfterViewInit {
      * @param {StixObject} object of the row that was clicked
      */
     public onRowClick(element: StixObject) {
+        if (this.config.clickBehavior && this.config.clickBehavior == "none") return;
         if (this.config.clickBehavior && this.config.clickBehavior == "dialog") { //open modal
-            this.dialog.open(StixDialogComponent, {
+            let prompt = this.dialog.open(StixDialogComponent, {
                 data: {
                     object: element,
-                    editable: true,
-                    sidebarControl: "disable"
+                    editable: this.config.allowEdits,
+                    sidebarControl: this.config.allowEdits? "events" : "disable"
                 },
                 maxHeight: "75vh"
+            })
+            let subscription = prompt.afterClosed().subscribe({
+                next: result => { if (prompt.componentInstance.dirty) this.applyControls(); }, //re-fetch values since an edit occurred
+                complete: () => { subscription.unsubscribe(); }
             });
         }
         else if (this.config.clickBehavior && this.config.clickBehavior == "linkToSourceRef") {
@@ -226,7 +231,7 @@ export class StixListComponent implements OnInit, AfterViewInit {
                     this.addColumn("type", "relationship_type", "plain", false, ["text-deemphasis", "relationship-joiner"]);
                     this.addColumn("target", "target_ID", "plain");
                     this.addColumn("", "target_name", "plain", this.config.sourceRef? true: false, ["relationship-name"]);// ["name", "relationship-right"]);
-                    this.addColumn("description", "description", "descriptive", false);
+                    if (!(this.config.relationshipType && this.config.relationshipType == "subtechnique-of")) this.addColumn("description", "description", "descriptive", false);
                     // controls_after.push("open-link")
                     break;
                 default:
@@ -365,7 +370,7 @@ export class StixListComponent implements OnInit, AfterViewInit {
             else if (this.config.type == "tactic") this.data$ = this.restAPIConnectorService.getAllTactics(limit, offset, null, null, null, null, this.config.excludeIDs); //TODO add limit and offset once back-end supports it
             else if (this.config.type == "technique") this.data$ = this.restAPIConnectorService.getAllTechniques(limit, offset, null, null, null, null, this.config.excludeIDs);
             else if (this.config.type == "collection") this.data$ = this.restAPIConnectorService.getAllCollections();
-            else if (this.config.type == "relationship") this.data$ = this.restAPIConnectorService.getRelatedTo(this.config.sourceRef, this.config.targetRef, this.config.sourceType, this.config.targetType, this.config.relationshipType, limit, offset, this.config.excludeSourceRefs, this.config.excludeTargetRefs);
+            else if (this.config.type == "relationship") this.data$ = this.restAPIConnectorService.getRelatedTo({sourceRef: this.config.sourceRef, targetRef: this.config.targetRef, sourceType: this.config.sourceType, targetType: this.config.targetType, relationshipType: this.config.relationshipType,  excludeSourceRefs: this.config.excludeSourceRefs, excludeTargetRefs: this.config.excludeTargetRefs, limit: limit, offset: offset});
             let subscription = this.data$.subscribe({
                 next: (data) => { this.totalObjectCount = data.pagination.total; },
                 complete: () => { subscription.unsubscribe() }
@@ -419,8 +424,15 @@ export interface StixListConfig {
      *     "dialog": open a dialog with the full object definition
      *     "linkToSourceRef": clicking redirects to the source ref object
      *     "linkToTargetRef": clicking redirects user to target ref object
+     *     "none": row is not clickable
      */
-    clickBehavior?: "expand" | "dialog" | "linkToSourceRef" | "linkToTargetRef";
+    clickBehavior?: "expand" | "dialog" | "linkToSourceRef" | "linkToTargetRef" | "none";
+    /**
+     * Default false. If true, allows for edits of the objects in the table
+     * when in dialog mode
+     */
+    allowEdits?: boolean;
+    
     excludeIDs?: string[]; //exclude objects with this ID from the list
     excludeSourceRefs?: string[]; //exclude relationships with this source_ref from the list
     excludeTargetRefs?: string[]; //exclude relationships with this target_ref from the list

@@ -1,12 +1,13 @@
-import { Observable } from "rxjs";
+import { forkJoin, Observable, of } from "rxjs";
+import { map, switchMap } from "rxjs/operators";
 import { RestApiConnectorService } from "src/app/services/connectors/rest-api/rest-api-connector.service";
+import { ValidationData } from "../serializable";
 import { StixObject } from "./stix-object";
 
 export class Technique extends StixObject {
     public name: string = "";
-    public description: string = "";
 
-    public kill_chain_phases: any;
+    public kill_chain_phases: any = [];
     public domains: string[] = [];
     public platforms: string[] = [];
     public detection: string = "";
@@ -19,6 +20,12 @@ export class Technique extends StixObject {
     public remote_support: boolean = false;
 
     public is_subtechnique: boolean = false;
+    
+    protected get attackIDValidator() { return {
+        regex: this.is_subtechnique? "T\\d{4}\\.\\d{3}" : "T\\d{4}",
+        format: this.is_subtechnique? "T####.###" : "T####"
+    }}
+
     // NOTE: the following two fields will only be populated when this object is fetched using getTechnique().
     //       they will NOT be populated when fetched using getAllTechniques().
     public subTechniques: Technique[] = []; 
@@ -46,11 +53,11 @@ export class Technique extends StixObject {
         let rep = super.base_serialize();
         
         rep.stix.name = this.name;
-        rep.stix.description = this.description;
         rep.stix.x_mitre_domains = this.domains;
         rep.stix.x_mitre_detection = this.detection;
         rep.stix.x_mitre_platforms = this.platforms;
         rep.stix.kill_chain_phases = this.kill_chain_phases;
+        rep.stix.x_mitre_is_subtechnique = this.is_subtechnique;
 
         // domain specific fields
         if (this.domains.includes('ics-attack')) {
@@ -61,7 +68,6 @@ export class Technique extends StixObject {
         }
         if (this.domains.includes('enterprise-attack')) {
             rep.stix.x_mitre_data_sources = this.data_sources;
-            rep.stix.x_mitre_is_subtechnique = this.is_subtechnique;
             rep.stix.x_mitre_system_requirements = this.system_requirements;
 
             // tactic specific fields
@@ -86,11 +92,6 @@ export class Technique extends StixObject {
                 if (typeof(sdo.name) === "string") this.name = sdo.name;
                 else console.error("TypeError: name field is not a string:", sdo.name, "(", typeof(sdo.name),")");
             } else this.name = "";
-
-            if ("description" in sdo) {
-                if (typeof(sdo.description) === "string") this.description = sdo.description;
-                else console.error("TypeError: description field is not a string:", sdo.description, "(", typeof(sdo.description),")");
-            } else this.description = "";
 
             if ("kill_chain_phases" in sdo) {
                 if (typeof(sdo.kill_chain_phases) == "object") {
@@ -152,15 +153,43 @@ export class Technique extends StixObject {
     }
 
     /**
+     * Validate the current object state and return information on the result of the validation
+     * @param {RestApiConnectorService} restAPIService: the REST API connector through which asynchronous validation can be completed
+     * @returns {Observable<ValidationData>} the validation warnings and errors once validation is complete.
+     */
+    public validate(restAPIService: RestApiConnectorService): Observable<ValidationData> {
+        return this.base_validate(restAPIService).pipe(
+            switchMap(validationResult => {
+                return forkJoin({
+                    sub_of: restAPIService.getRelatedTo({sourceRef: this.stixID, relationshipType: "subtechnique-of"}),
+                    super_of: restAPIService.getRelatedTo({targetRef: this.stixID, relationshipType: "subtechnique-of"})
+                }).pipe(
+                    map(relationships => {
+                        if (this.is_subtechnique && relationships.super_of.data.length > 0) validationResult.errors.push({
+                            "field": "is_subtechnique",
+                            "result": "error",
+                            "message": "technique with sub-techniques cannot be converted to sub-technique"
+                        })
+                        if (!this.is_subtechnique && relationships.sub_of.data.length > 0) validationResult.errors.push({
+                            "field": "is_subtechnique",
+                            "result": "error",
+                            "message": "sub-technique with parent cannot be converted to technique"
+                        })
+                        return validationResult;
+                    })
+                )
+            })
+        );
+    }
+
+    /**
      * Save the current state of the STIX object in the database. Update the current object from the response
-     * @param new_version [boolean] if false, overwrite the current version of the object. If true, creates a new version.
      * @param restAPIService [RestApiConnectorService] the service to perform the POST/PUT through
      * @returns {Observable} of the post
      */
-    public save(new_version: boolean = true, restAPIService: RestApiConnectorService): Observable<Technique> {
+    public save(restAPIService: RestApiConnectorService): Observable<Technique> {
         // TODO POST if the object was just created (doesn't exist in db yet)
-        if (new_version) this.modified = new Date();
-        
+                
         let postObservable = restAPIService.postTechnique(this);
         let subscription = postObservable.subscribe({
             next: (result) => { this.deserialize(result); },

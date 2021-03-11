@@ -1,0 +1,12 @@
+@import "../../../../../style/globals";
+.relationship-view {
+    .mat-expansion-panel {
+        @include expansion-panel(true);
+    }
+    .type_select {
+        width: 100%;
+    }
+    h1 {
+        font-size: 24px;
+    }
+}

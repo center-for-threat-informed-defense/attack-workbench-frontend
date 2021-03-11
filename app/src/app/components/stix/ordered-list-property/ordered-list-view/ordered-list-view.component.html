@@ -1,3 +1,8 @@
 <div class="list">
-    <div class="box" *ngFor="let object of config.objectsFromOrderedList">{{object[this.config.field]}}</div>
+    <div *ngIf="list.length > 0 else nothingHere">
+        <div class="box" *ngFor="let sdo of list">{{getLabel(sdo)}}</div>
+    </div>
+    <ng-template #nothingHere>
+        <app-empty-list-marker [checkAgain]="false"></app-empty-list-marker>
+    </ng-template>
 </div>
