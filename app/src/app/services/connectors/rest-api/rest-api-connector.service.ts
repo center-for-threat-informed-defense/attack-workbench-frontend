@@ -1,7 +1,7 @@
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { Observable, of } from 'rxjs';
+import { Observable, of, ReplaySubject } from 'rxjs';
 import { tap, catchError, map, share, switchMap } from 'rxjs/operators';
 import { CollectionIndex } from 'src/app/classes/collection-index';
 import { ExternalReference } from 'src/app/classes/external-references';
@@ -875,4 +875,30 @@ export class RestApiConnectorService extends ApiConnector {
             catchError(this.handleError_single())
         )
     }
+
+    //   _____   _____ _____ ___ __  __    ___ ___  _  _ ___ ___ ___     _   ___ ___ ___ 
+    //  / __\ \ / / __|_   _| __|  \/  |  / __/ _ \| \| | __|_ _/ __|   /_\ | _ \_ _/ __|
+    //  \__ \\ V /\__ \ | | | _|| |\/| | | (_| (_) | .` | _| | | (_ |  / _ \|  _/| |\__ \
+    //  |___/ |_| |___/ |_| |___|_|  |_|  \___\___/|_|\_|_| |___\___| /_/ \_\_| |___|___/
+    //
+
+    /**
+     * Get all allowed values
+     * @returns {Observable<any>} all allowed values
+     */
+    private allowedValues;
+    public getAllAllowedValues(): Observable<any> {
+        if (this.allowedValues) { return of(this.allowedValues)}
+
+        const data$ = this.http.get<any>(`${this.baseUrl}/config/allowed-values`, {headers: this.headers}).pipe(
+            tap(_ => console.log("retrieved allowed values")),
+            map(result => result as any),
+            catchError(this.handleError_array<string[]>([]))
+        );
+        let subscription = data$.subscribe({
+            next: (data) => { this.allowedValues = data; },
+            complete: () => { subscription.unsubscribe(); }
+        });
+        return data$;
+    }                                                                     
 }

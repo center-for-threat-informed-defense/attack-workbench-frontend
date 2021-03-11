@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Technique } from 'src/app/classes/stix/technique';
 import { StixViewPage } from '../../stix-view-page';
@@ -15,7 +15,7 @@ export class TechniqueViewComponent extends StixViewPage implements OnInit {
 
     public get technique(): Technique { return this.config.object as Technique; }
 
-    constructor(private route: ActivatedRoute) {
+    constructor(private route: ActivatedRoute, private ref: ChangeDetectorRef) {
         super();
     }
 
@@ -23,5 +23,17 @@ export class TechniqueViewComponent extends StixViewPage implements OnInit {
         this.route.queryParams.subscribe(params => {
             this.editing = params["editing"];
         });
+    }
+
+    ngAfterContentChecked() {
+        this.ref.detectChanges();
+    }
+
+    public showDomainField(domain: string, field: string): boolean {
+        return this.technique.domains.includes(domain) && (this.technique[field].length > 0 || this.editing);
+    }
+
+    public showTacticField(tactic: string, field: string): boolean {
+        return this.technique.tactics.includes(tactic) && (this.technique[field].length > 0 || this.editing);
     }
 }

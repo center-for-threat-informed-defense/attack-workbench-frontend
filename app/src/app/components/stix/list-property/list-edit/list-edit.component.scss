@@ -1,0 +1,39 @@
+@import "../../../../../style/globals";
+@import '~@angular/material/theming';
+
+.list-edit {
+    // font-size: 14px;
+    input, mat-chip { font-size: 14px; }
+    mat-form-field { 
+        width: 100%; 
+        .mat-form-field-wrapper {
+            flex: 1 0; 
+            display: flex;
+            flex-direction: column;
+            margin: 0px!important;
+            padding-top: 6px!important;
+            padding-bottom: 0px!important;
+            :active, :focus { outline: none; }
+        }
+        .mat-form-field-flex {
+            flex: 1 0;
+        }
+        .loading {
+            display: flex;
+            align-items: center;
+          }
+          
+        .loading > span {
+            flex: 1;
+        }
+    }
+    input { font-size: 14px; }
+
+    .mat-select-placeholder, .mat-chip-list-wrapper, .mat-select-trigger {
+        min-height: 32px;
+    }
+    
+    // stix list object selection dialog
+    .icon { float: right; }
+    .stix-select { cursor: pointer; }
+}
