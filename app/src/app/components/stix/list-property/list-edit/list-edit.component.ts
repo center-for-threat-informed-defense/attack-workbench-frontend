@@ -175,10 +175,7 @@ export class ListEditComponent implements OnInit, AfterContentChecked {
         // filter values
         let values: string[] = [];
         let property = this.allAllowedValues.properties.find(p => {return p.propertyName == this.fieldToStix[this.config.field]});
-        
-        // TODO: 'permissions_required' and 'effective_permissions'
-        //       not yet implemented in REST API
-        if (!property) {
+        if (!property) { // property not found
             this.selectControl.disable();
             return null;
         }
