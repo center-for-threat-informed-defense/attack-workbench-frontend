@@ -1,25 +1,21 @@
 <div class="reference-edit-dialog grid spacing-12">
-    <div class="row">
-        <div class="col">
-            <mat-form-field appearance="outline" class="grow-to-row" >
-                <mat-label>source name</mat-label>
-                <mat-hint>(Citation: {{reference.source_name}})</mat-hint>
-                <input matInput [disabled]="!is_new" [(ngModel)]="reference.source_name">
-            </mat-form-field>
-        </div>
-        <div class="col">
-            <mat-form-field appearance="outline" class="grow-to-row">
-                <mat-label>url</mat-label>
-                <input matInput [(ngModel)]="reference.url">
-            </mat-form-field>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col">
-            <mat-form-field appearance="outline">
-                <mat-label>citation</mat-label>
-                <input matInput [(ngModel)]="reference.description">
-            </mat-form-field>
-        </div>
+    <mat-form-field appearance="outline" class="grow-to-row" >
+        <mat-label>source name</mat-label>
+        <mat-hint>In-text citation, (Citation: {{reference.source_name}})</mat-hint>
+        <input matInput required [disabled]="!is_new" [(ngModel)]="reference.source_name">
+    </mat-form-field>
+    <mat-form-field appearance="outline">
+        <mat-label>citation</mat-label>
+        <mat-hint>Full citation text</mat-hint>
+        <input matInput required [(ngModel)]="reference.description">
+    </mat-form-field>
+    <mat-form-field appearance="outline" class="grow-to-row">
+        <mat-label>url</mat-label>
+        <mat-hint>Link to the primary source</mat-hint>
+        <input matInput [(ngModel)]="reference.url">
+    </mat-form-field>
+    <div class="buttons">
+        <button mat-button matDialogClose>cancel</button>
+        <button mat-stroked-button [disabled]="!reference.source_name || !reference.description" (click)="save()">save</button>
     </div>
 </div>

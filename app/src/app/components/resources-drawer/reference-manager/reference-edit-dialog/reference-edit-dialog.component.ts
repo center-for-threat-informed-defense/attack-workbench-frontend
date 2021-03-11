@@ -15,7 +15,7 @@ export class ReferenceEditDialogComponent implements OnInit {
     constructor(public dialogRef: MatDialogRef<ReferenceEditDialogComponent>, @Inject(MAT_DIALOG_DATA) public config: ReferenceEditConfig, public restApiConnectorService: RestApiConnectorService) {
         if (this.config.reference) {
             this.is_new = false;
-            this.reference = this.config.reference;
+            this.reference = JSON.parse(JSON.stringify(this.config.reference)); //deep copy
         }
         else {
             this.is_new = true;
@@ -29,6 +29,16 @@ export class ReferenceEditDialogComponent implements OnInit {
 
     ngOnInit(): void {
     } 
+
+    public save() {
+        let api = this.is_new? this.restApiConnectorService.postReference(this.reference) : this.restApiConnectorService.putReference(this.reference);
+        let subscription = api.subscribe({
+            complete: () => { 
+                subscription.unsubscribe();
+                this.dialogRef.close();
+            }
+        });
+    }
 
 }
 

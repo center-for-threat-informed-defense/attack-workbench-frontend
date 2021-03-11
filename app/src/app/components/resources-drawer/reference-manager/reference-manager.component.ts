@@ -41,10 +41,16 @@ export class ReferenceManagerComponent implements OnInit {
     }
 
     public editReference(reference?: ExternalReference) {
-        this.dialog.open(ReferenceEditDialogComponent, {
+        let ref = this.dialog.open(ReferenceEditDialogComponent, {
             maxHeight: "75vh",
             data: {
                 reference: reference
+            }
+        })
+        let subscription = ref.afterClosed().subscribe({
+            complete: () => {
+                this.refreshReferences();
+                subscription.unsubscribe();
             }
         })
     }

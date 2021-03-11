@@ -18,7 +18,8 @@
                 </div>
                 <div class="col">
                     <div class="description">
-                        <a class="external-link" [href]="reference.url" target="_blank" [matTooltip]="reference.description" matTooltipPosition="above">{{reference.description}}</a>
+                        <span *ngIf="!reference.url" [matTooltip]="reference.description" matTooltipPosition="above">{{reference.description}}</span>
+                        <a *ngIf="reference.url" class="external-link" [href]="reference.url" target="_blank" [matTooltip]="reference.description" matTooltipPosition="above">{{reference.description}}</a>
                     </div>
                     <div class="text-label lowercase">{{reference.source_name}}</div>
                 </div>
