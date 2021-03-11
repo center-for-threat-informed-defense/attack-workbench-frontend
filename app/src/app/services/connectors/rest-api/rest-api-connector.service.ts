@@ -66,8 +66,10 @@ export class RestApiConnectorService extends ApiConnector {
     private getObjectName(object: StixObject): string {
         if (object.type == "relationship") {
             return `${object["source_name"]} ${object["relationship_type"]} ${object["target_name"]}`
+        } else if (object.type == "note") {
+            return object["title"];
         } else if ("name" in object) {
-            return object["name"]
+            return object["name"];
         } else if (object["attackID"]) {
             return object["attackID"];
         } else {

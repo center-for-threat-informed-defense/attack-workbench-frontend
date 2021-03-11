@@ -1,24 +1,52 @@
 @import "../../../../style/globals";
 .notes-editor {
-    .note-editor-toolbar {
-        margin: 1em 0;
+    max-width: 20em;
+    .mat-form-field-infix {
+        border-top: 0px;
     }
-    .sticky-note {
-        max-width: 18em;
+    .mat-form-field-wrapper {
         padding: 0px;
-        margin-bottom: 12px;
-
-        .title-space {
+    }
+    .notes-toolbar {
+        margin-top: 1em;
+        mat-toolbar {
+            .light & { background: color(primary); color: on-color(primary); }
+            .dark & { background: color(light); }
+        }
+        .toolbar-space {
             flex: 1 1 auto;
         }
-        mat-card-header {
-            box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.25);
-            display: flex;
-            align-items: center;
-            .mat-card-title { margin: 0px; }
+        .mat-form-field {
+            font-size: 14px;
         }
-        mat-card-content {
-            padding: 16px;
+    }
+    .notes-content {
+        padding: 10px;
+        box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.25);
+        .sticky-note {
+            padding: 0px;
+            margin-bottom: 12px;
+
+            .title-space {
+                flex: 1 1 auto;
+            }
+            mat-card-header {
+                box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.25);
+                display: flex;
+                align-items: center;
+                .mat-card-header-text {
+                    margin: 0 8px;
+                }
+                .mat-form-field {
+                    width: 100%;
+                }
+            }
+            mat-card-content {
+                padding: 16px;
+                .mat-form-field {
+                    width: 100%;
+                }
+            }
         }
     }
 }
