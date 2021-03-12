@@ -1,5 +1,6 @@
 import { Component, Inject, OnInit, ViewEncapsulation } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { forkJoin } from 'rxjs';
 import { ExternalReference } from 'src/app/classes/external-references';
 import { Relationship } from 'src/app/classes/stix/relationship';
 import { StixObject } from 'src/app/classes/stix/stix-object';
@@ -69,13 +70,42 @@ export class ReferenceEditDialogComponent implements OnInit {
             complete: () => { subscription.unsubscribe(); }
         })
     }
+
     /**
      * Apply patches and save the reference
      */
     public patch() {
-
+        let saves = []
+        saves.push(this.restApiConnectorService.putReference(this.reference));
+        for (let object of this.patch_objects) {
+            let raw = object.external_references.serialize();
+            for (let reference of raw) {
+                if (reference.source_name == this.reference.source_name) {
+                    reference.url = this.reference.url;
+                    reference.description = this.reference.description
+                }
+            }
+            object.external_references.deserialize(raw);
+            saves.push(object.save(this.restApiConnectorService));
+        }
+        for (let relationship of this.patch_relationships) {
+            let raw = relationship.external_references.serialize();
+            raw = raw.map(x => {
+                if (x.source_name == this.reference.source_name) return this.reference;
+                else return x;
+            })
+            relationship.external_references.deserialize(raw);
+            saves.push(relationship.save(this.restApiConnectorService));
+        }
+        this.stage = 3;
+        let subscription = forkJoin(saves).subscribe({
+            complete: () => { subscription.unsubscribe(); this.dialogRef.close(); }
+        })
     }
 
+    /**
+     * Save the reference without patching objects using the reference
+     */
     public save() {
         let api = this.is_new? this.restApiConnectorService.postReference(this.reference) : this.restApiConnectorService.putReference(this.reference);
         let subscription = api.subscribe({
