@@ -1,12 +1,20 @@
 <div class="notes-editor">
     <!-- toolbar -->
+    <!-- TODO: add border around toolbar -->
     <div class="notes-toolbar">
         <mat-toolbar>
-            <!-- TODO: implement sort dropdown/functionality -->
-            <button mat-button class="control" matTooltip="sort" (click)="sortNote()">
+            <!-- sorting options -->
+            <button mat-button class="control" matTooltip="sorting options" (click)="sortingDropdown.open()">
                 <mat-icon aria-label="sort">sort</mat-icon>
+                <mat-select #sortingDropdown>
+                    <mat-option (click)="sortTitle(true)"><mat-radio-button>Sort alphabetically by title (ascending)</mat-radio-button></mat-option>
+                    <mat-option (click)="sortTitle()"><mat-radio-button>Sort alphabetically by title (descending)</mat-radio-button></mat-option>
+                    <mat-option (click)="sortDate(true)"><mat-radio-button>Sort by date (oldest to newest)</mat-radio-button></mat-option>
+                    <mat-option (click)="sortDate()"><mat-radio-button>Sort by date (newest to oldest)</mat-radio-button></mat-option>
+                </mat-select>
             </button>
             <div class="spacer"></div>
+            <!-- search field -->
             <mat-form-field class="search-field" floatLabel="never">
                 <input matInput placeholder="search" #search>
                 <mat-icon matSuffix>search</mat-icon>
@@ -49,12 +57,13 @@
                     <!-- content -->
                     <markdown *ngIf="!note.editing" [data]="note.content"></markdown>
                     <mat-form-field *ngIf="note.editing" class="edit-note" floatLabel="never" appearance="none">
-                        <textarea matInput cdkTextareaAutosize #autosize="cdkTextareaAutosize" placeholder="Note" [(ngModel)]="note.content" required></textarea>
+                        <textarea matInput required cdkTextareaAutosize [(ngModel)]="note.content" placeholder="Note"></textarea>
                     </mat-form-field>
                 </mat-card-content>
             </mat-card>
         </ng-container>
     </div>
+    
     <!-- no notes found -->
     <app-empty-list-marker *ngIf="!loading && !notes.length" [checkAgain]="false"></app-empty-list-marker>
     <!-- loading -->
