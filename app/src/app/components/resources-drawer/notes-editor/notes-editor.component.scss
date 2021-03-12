@@ -15,8 +15,10 @@
     .notes-toolbar {
         margin-top: 1em;
         mat-toolbar {
+            @extend %toolbar;
+            border-radius: 4px;
             .light & { background: color(primary); color: on-color(primary); }
-            .dark & { background: color(light); }
+            .dark & { background: color(primary); color: on-color(primary); }
         }
         .mat-form-field {
             font-size: 14px;
@@ -40,7 +42,6 @@
         padding: 16px;
         text-align: center;
     }
-    // TODO: card elevation is hard to see in dark theme
     .notes-content {
         padding-top: 16px;
         .sticky-note {
@@ -48,7 +49,11 @@
             margin-bottom: 12px;
 
             .mat-form-field { width: 100%; }
-
+            .dark & {
+                box-shadow: none!important;
+                border: solid 1px; 
+                border-color: border-color(dark);
+            }
             mat-card-header textarea { margin-top: 12px; }
             .mat-card-header-text { width: 100%; }
             .history {
