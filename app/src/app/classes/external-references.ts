@@ -141,7 +141,7 @@ export class ExternalReferences extends Serializable {
      * @abstract
      * @returns {*} the raw object to send
      */
-    public serialize(): Array<{}> {
+    public serialize(): ExternalReference[] {
 
         let rep: Array<{}> = [];
 
