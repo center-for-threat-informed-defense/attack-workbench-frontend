@@ -109,12 +109,15 @@ export class NotesEditorComponent implements OnInit, AfterViewInit {
         note.save(this.restAPIConnectorService);
     }
 
-    /** TODO: sort by title */
-    public sortTitle() {
-
+    /** Sort notes alphabetically by title */
+    public sortTitle(ascending?: boolean): void {
+        if (ascending) this.notes.sort((a, b) => a.title.localeCompare(b.title));
+        else this.notes.sort((a, b) => b.title.localeCompare(a.title));
     }
-    /** TODO: sort by modified date */
-    public sortDate() {
 
+    /** Sort notes by date */
+    public sortDate(ascending?: boolean): void {
+        if (ascending) this.notes.sort((a, b) => a.modified.getTime() - b.modified.getTime());
+        else this.notes.sort((a, b) => b.modified.getTime() - a.modified.getTime());
     }
 }
