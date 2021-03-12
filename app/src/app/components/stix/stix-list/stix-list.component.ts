@@ -235,11 +235,10 @@ export class StixListComponent implements OnInit, AfterViewInit {
                     // controls_after.push("open-link")
                     break;
                 default:
-                    this.addColumn("type", "attacktype", "plain");
+                    this.addColumn("type", "attackType", "plain");
                     this.addColumn("modified","modified", "timestamp");
                     this.addColumn("created", "created", "timestamp");
             }
-
         }
         else {
             this.filterOptions.push({
@@ -248,6 +247,11 @@ export class StixListComponent implements OnInit, AfterViewInit {
                 "values": this.types
             })
             this.groupBy = ["type"];
+            this.addColumn("type", "attackType", "plain");
+            this.addColumn("ID", "attackID", "plain", false);
+            this.addColumn("name", "name", "plain", true, ["name"]);
+            this.addColumn("modified","modified", "timestamp");
+            this.addColumn("created", "created", "timestamp");
         }
         
         
@@ -342,7 +346,7 @@ export class StixListComponent implements OnInit, AfterViewInit {
                 
                 // filter to only ones within the correct index range
                 let startIndex = this.paginator? this.paginator.pageIndex * this.paginator.pageSize : 0
-                let endIndex = this.paginator? startIndex + this.paginator.pageSize : 5;
+                let endIndex = this.paginator? startIndex + this.paginator.pageSize : 10;
                 // console.log(filtered, this.config.stixObjects);
                 filtered = filtered.slice(startIndex, endIndex);
                 // filter to objects matching searchString
