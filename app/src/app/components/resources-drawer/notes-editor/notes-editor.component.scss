@@ -38,8 +38,9 @@
         padding: 16px;
         text-align: center;
     }
+    // TODO: card elevation is hard to see in dark theme
     .notes-content {
-        padding: 16px;
+        padding-top: 16px;
         .sticky-note {
             padding: 0px;
             margin-bottom: 12px;
