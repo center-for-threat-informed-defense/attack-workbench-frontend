@@ -725,15 +725,17 @@ export class RestApiConnectorService extends ApiConnector {
      * get all external references
      * @param {number} [limit] the number of references to retrieve
      * @param {number} [offset] the number of references to skip
+     * @param {string} [search] Only return references where the provided search text occurs in the description or url. The search is case-insensitive.
      * @returns {Observable<Paginated>} paginated data for external references
      */
-    public getAllReferences(limit?: number, offset?: number): Observable<Paginated<ExternalReference>> {
+    public getAllReferences(limit?: number, offset?: number, search?: string): Observable<Paginated<ExternalReference>> {
         let url = `${this.baseUrl}/references`;
         // parse params into query string
         let query = new HttpParams();
         // pagination
         if (limit) query = query.set("limit", limit.toString());
         if (offset) query = query.set("offset", offset.toString());
+        if (search) query = query.set("search", encodeURIComponent(search));
         /*if (limit || offset) */ query = query.set("includePagination", "true");
         return this.http.get<Paginated<ExternalReference>>(url, {headers: this.headers, params: query}).pipe(
             tap(results => console.log("retrieved references", results)),

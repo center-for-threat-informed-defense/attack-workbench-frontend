@@ -68,10 +68,10 @@ export class ReferenceManagerComponent implements OnInit, AfterViewInit {
         return `(Citation: ${source_name})`
     }
 
-    public applyControls() {
+    public applyControls(search?: string) {
         let limit = this.paginator? this.paginator.pageSize : 10;
         let offset = this.paginator? this.paginator.pageIndex * limit : 0;
-        this.references$ = this.restApiConnector.getAllReferences(limit, offset);
+        this.references$ = this.restApiConnector.getAllReferences(limit, offset, search);
         let subscription = this.references$.subscribe({
             next: (data) => { this.totalObjectCount = data.pagination.total; },
             complete: () => { subscription.unsubscribe() }
@@ -90,7 +90,9 @@ export class ReferenceManagerComponent implements OnInit, AfterViewInit {
             distinctUntilChanged(),
             tap(_ => {
                 if (this.paginator) this.paginator.pageIndex = 0;
-                this.applyControls()
+                let el = _ as any;
+                let query = el.target.value? el.target.value : null;
+                this.applyControls(query)
             })
         ).subscribe()
     }
