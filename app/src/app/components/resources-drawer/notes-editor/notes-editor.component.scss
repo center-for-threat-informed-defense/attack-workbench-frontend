@@ -49,6 +49,9 @@
             padding: 0px;
             margin-bottom: 12px;
 
+            button.mat-button-disabled {
+                opacity: 0.5;
+            }
             .mat-form-field { width: 100%; }
             .mat-form-field-underline { display: none; }
             .dark & {
