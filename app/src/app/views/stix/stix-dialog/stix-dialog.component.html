@@ -75,7 +75,8 @@
             </div>
         </mat-drawer-content>
         <mat-drawer mode="side" position="end" #sidebar [opened]="sidebarOpened">
-            <app-resources-drawer [useService]="false" [showCloseButton]="false" [currentTabOverride]="currentTab"></app-resources-drawer>
+            <h3 class="references-label">References</h3>
+            <app-reference-manager [editable]="false"></app-reference-manager>
         </mat-drawer>
     </mat-drawer-container>
 </div>
