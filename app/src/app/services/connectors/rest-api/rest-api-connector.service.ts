@@ -563,7 +563,8 @@ export class RestApiConnectorService extends ApiConnector {
     private deleteStixObjectFactory(attackType: AttackType) {
         let plural = attackTypeToPlural[attackType];
         return function(id: string, modified: Date): Observable<{}> {
-            let url = `${this.baseUrl}/${plural}/${id}/modified/${modified}`;
+            let modifiedStix = modified.toISOString();
+            let url = `${this.baseUrl}/${plural}/${id}/modified/${modifiedStix}`;
             return this.http.delete(url).pipe(
                 tap(this.handleSuccess(`${attackType} deleted`)),
                 catchError(this.handleError_single()),
@@ -624,13 +625,10 @@ export class RestApiConnectorService extends ApiConnector {
     /**
      * DELETE a note
      * @param {string} id the STIX ID of the object to delete
+     * @param {Date} modified The modified date of the version to delete
+     * @returns {Observable<{}>} observable of the response body
      */
-    public deleteNote(id: string) {
-        return this.http.delete(`${this.baseUrl}/notes/${id}`).pipe(
-            tap(this.handleSuccess("note removed")),
-            catchError(this.handleError_single())
-        )
-    }
+    public get deleteNote() { return this.deleteStixObjectFactory("note"); }
 
 
     //   ___ ___ _      _ _____ ___ ___  _  _ ___ _  _ ___ ___  ___
