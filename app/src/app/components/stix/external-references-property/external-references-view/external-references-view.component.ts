@@ -21,7 +21,7 @@ export class ExternalReferencesViewComponent implements OnInit {
    * section
    */
   public get display(): Array<[number, ExternalReference]> {
-    return this.config.referencesField.list();;
+    return this.config.referencesField.list();
   }
 
 }

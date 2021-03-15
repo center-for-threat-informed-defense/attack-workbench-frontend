@@ -81,6 +81,9 @@ export class Software extends StixObject {
      * @returns {Observable<ValidationData>} the validation warnings and errors once validation is complete.
      */
     public validate(restAPIService: RestApiConnectorService): Observable<ValidationData> {
+        // Parse alias references
+        this.external_references.parseCitationsFromAliases(this.aliases, restAPIService, true);
+        
         return this.base_validate(restAPIService);
     }
 
