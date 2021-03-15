@@ -232,6 +232,30 @@ export abstract class StixObject extends Serializable {
     public base_validate(restAPIService: RestApiConnectorService): Observable<ValidationData> {
         let validation = new ValidationData();
         // TODO: validate description for missing citation and linkByIDs
+        
+        // parse description for external references
+        this.external_references.parseCitations(this.description, restAPIService, true);
+
+        // Check for references that cannot be rendered and delete or add any other reference used or not used
+        let missingReferencesStr = this.external_references.getMissingReferencesAndRemoveUnusedReferencesStr();
+        if (missingReferencesStr) {
+            validation.errors.push({
+                result: "error",
+                field: "external references",
+                message: missingReferencesStr
+            })
+        }
+
+        // Check for broken citations
+        let brokenCitationsStr = this.external_references.getBrokenCitationsStr();
+        if (brokenCitationsStr) {
+            validation.errors.push({
+                result: "error",
+                field: "external references",
+                message: brokenCitationsStr
+            })
+        }
+
         // test version number format
         if (!this.version.valid()) {
             validation.errors.push({
@@ -293,7 +317,6 @@ export abstract class StixObject extends Serializable {
                             }
                             // (\S+--)? is an organization prefix, and should probably be improved when that is made an explicit feature
                             let idRegex =  new RegExp("^(\\S+--)?" + this.attackIDValidator.regex + "$");
-                            console.log(idRegex);
                             let attackIDValid = idRegex.test(this.attackID);
                             if (!attackIDValid) {
                                 result.errors.push({

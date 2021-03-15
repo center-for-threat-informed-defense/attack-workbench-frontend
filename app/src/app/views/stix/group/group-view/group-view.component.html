@@ -48,12 +48,12 @@
         <div class="col">
             <!-- DESCRIPTION -->
             <app-descriptive-property [config]="{
-                mode: 'view',
+                mode: editing? 'edit' : 'view',
                 object: group,
                 field: 'description',
                 firstParagraphOnly: false, 
                 referencesField: group.external_references,
-                label: 'description'
+                label: 'Description'
             }"></app-descriptive-property>
         </div>
     </div>

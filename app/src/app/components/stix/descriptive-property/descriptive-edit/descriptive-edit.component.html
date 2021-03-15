@@ -2,12 +2,14 @@
     <mat-tab-group>
         <mat-tab label="Write" appearance="standard">
             <mat-form-field class="edit" floatLabel="never" appearance="outline">
-                <textarea cdkTextareaAutosize matInput placeholder="Description" (blur)="config.object['external_references'].parseCitations(config.object[config.field], restApiConnector)" [(ngModel)]="config.object[config.field]">
+                <h3>{{config.label}}</h3>
+                <textarea cdkTextareaAutosize matInput placeholder="{{config.label}}" (blur)="config.object['external_references'].parseCitations(config.object[config.field], restApiConnector)" [(ngModel)]="config.object[config.field]">
                 </textarea>
             </mat-form-field>
         </mat-tab>
         <mat-tab label="Preview" [disabled]="config.object[config.field].length == 0">
             <div class="preview padding">
+                <h3>{{config.label}}</h3>
                 <app-descriptive-view [config]="config"></app-descriptive-view>
             </div>
         </mat-tab>
