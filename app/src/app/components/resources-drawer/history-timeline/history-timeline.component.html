@@ -3,10 +3,10 @@
     <ng-template #timeline>
         <div class="timeline-controls">
             <div>
-                <mat-checkbox color="primary" (change)="resizeDrawers()" [(ngModel)]="showObjectHistory">show object history</mat-checkbox>
+                <mat-checkbox color="primary" [(ngModel)]="showObjectHistory">show object history</mat-checkbox>
             </div>
             <div>
-                <mat-checkbox class="secondary" (change)="resizeDrawers()" [(ngModel)]="showRelationshipHistory">show relationship history</mat-checkbox>
+                <mat-checkbox class="secondary" [(ngModel)]="showRelationshipHistory">show relationship history</mat-checkbox>
             </div>
         </div>
         <mat-action-list>

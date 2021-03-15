@@ -42,6 +42,19 @@ const attackTypeToClass = {
     "relationship": Relationship
 }
 
+// transform AttackType to the relevant class
+const stixTypeToClass = {
+    "attack-pattern": Technique,
+    "x-mitre-tactic": Tactic,
+    "intrusion-set": Group,
+    "tool": Software,
+    "malware": Software,
+    "course-of-action": Mitigation,
+    "x-mitre-matrix": Matrix,
+    "x-mitre-collection": Collection,
+    "relationship": Relationship
+}
+
 export interface Paginated<T> {
     data: T[],
     pagination: {
@@ -237,7 +250,7 @@ export class RestApiConnectorService extends ApiConnector {
     public get getAllRelationships() { return this.getStixObjectsFactory<Relationship>("relationship"); }
 
     /**
-     * Get all objects WITHOUT deserializing them to StixObjects
+     * Get all objects; objects will not be deserialized to STIX objects unless the parameter is used
      * @param {string} [attackID] filter to only include objects with this ATT&CK ID
      * @param {number} [limit] the number of collections to retrieve
      * @param {number} [offset] the number of collections to skip
@@ -245,9 +258,10 @@ export class RestApiConnectorService extends ApiConnector {
      * @param {boolean} [revoked] if true, get revoked objects
      * @param {versions} ["all" | "latest"] if "all", get all versions of the collections. if "latest", only get the latest version of each collection.
      * @param {boolean} [deprecated] if true, get deprecated objects
+     * @param {boolean} [deserialize] if true, deserialize objects to full STIX objects
      * @returns {Observable<any[]>} observable of retrieved objects
      */
-    public getAllObjects(attackID?: string, limit?: number, offset?: number, state?: string, revoked?: boolean, deprecated?: boolean) {
+    public getAllObjects(attackID?: string, limit?: number, offset?: number, state?: string, revoked?: boolean, deprecated?: boolean, deserialize?: boolean) {
         let query = new HttpParams();
         // pagination
         if (limit) query = query.set("limit", limit.toString());
@@ -259,6 +273,31 @@ export class RestApiConnectorService extends ApiConnector {
         if (revoked) query = query.set("deprecated", deprecated ? "true" : "false");
         return this.http.get(`${this.baseUrl}/attack-objects`, {headers: this.headers, params: query}).pipe(
             tap(results => console.log(`retrieved ATT&CK objects`, results)), // on success, trigger the success notification
+            map(results => {
+                if (!deserialize) return results; //skip deserialization if param not added
+                let response = results as any;
+                if (limit || offset) { // returned a paginated
+                    let data = response.data as Array<any>;
+                    data = data.map(y => {
+                        if (y.stix.type == "malware" || y.stix.type == "tool") return new Software(y.stix.type, y);
+                        else return new stixTypeToClass[y.stix.type](y);
+                    });
+                    response.data = data;
+                    return response;
+                } else { //returned a stixObject[]
+                    return {
+                        pagination: {
+                            total: response.length,
+                            limit: -1,
+                            offset: -1
+                        },
+                        data: response.map(y => {
+                            if (y.stix.type == "malware" || y.stix.type == "tool") return new Software(y.stix.type, y);
+                            else return new stixTypeToClass[y.stix.type](y);
+                        })
+                    }
+                }
+            }),
             catchError(this.handleError_array([])), // on error, trigger the error notification and continue operation without crashing (returns empty item)
             share() // multicast so that multiple subscribers don't trigger the call twice. THIS MUST BE THE LAST LINE OF THE PIPE
         )
@@ -686,15 +725,17 @@ export class RestApiConnectorService extends ApiConnector {
      * get all external references
      * @param {number} [limit] the number of references to retrieve
      * @param {number} [offset] the number of references to skip
+     * @param {string} [search] Only return references where the provided search text occurs in the description or url. The search is case-insensitive.
      * @returns {Observable<Paginated>} paginated data for external references
      */
-    public getAllReferences(limit?: number, offset?: number): Observable<Paginated<ExternalReference>> {
+    public getAllReferences(limit?: number, offset?: number, search?: string): Observable<Paginated<ExternalReference>> {
         let url = `${this.baseUrl}/references`;
         // parse params into query string
         let query = new HttpParams();
         // pagination
         if (limit) query = query.set("limit", limit.toString());
         if (offset) query = query.set("offset", offset.toString());
+        if (search) query = query.set("search", encodeURIComponent(search));
         /*if (limit || offset) */ query = query.set("includePagination", "true");
         return this.http.get<Paginated<ExternalReference>>(url, {headers: this.headers, params: query}).pipe(
             tap(results => console.log("retrieved references", results)),
