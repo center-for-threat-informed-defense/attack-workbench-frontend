@@ -116,7 +116,7 @@ export class ExternalReferences extends Serializable {
      * Check if reference exists
      * @param sourceName source name string of references
      * @param restApiConnector RestApiConnectorService] the service to get references
-     * @returns true if references is found in object or directive, false if not
+     * @returns true if references is found in object or global external reference list, false if not
      */
     private checkReferences(sourceName : string, restApiConnector) : boolean {
         let search_result: ExternalReference = null;
@@ -138,7 +138,7 @@ export class ExternalReferences extends Serializable {
     }
 
     /**
-     * Parses field for citations
+     * Parses field for references
      * @param field 
      * @param restApiConnector 
      * @param validateReferencesAndCitations 
