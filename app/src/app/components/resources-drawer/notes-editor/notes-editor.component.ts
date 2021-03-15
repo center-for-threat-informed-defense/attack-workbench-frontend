@@ -56,17 +56,9 @@ export class NotesEditorComponent implements OnInit, AfterViewInit {
                 }
 
                 this.loading = false;
-                this.resizeDrawers();
             },
             complete: () => { subscription.unsubscribe() }
         });
-    }
-
-    /**
-     * Resize sidebar drawer to match the new content size
-     */
-    public resizeDrawers(): void {
-        setTimeout(() => this.drawerResize.emit());
     }
 
     /** Add new note */
