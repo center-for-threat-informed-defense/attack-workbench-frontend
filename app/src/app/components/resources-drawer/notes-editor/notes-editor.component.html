@@ -1,16 +1,15 @@
 <div class="notes-editor">
     <!-- toolbar -->
-    <!-- TODO: add border around toolbar -->
     <div class="notes-toolbar">
         <mat-toolbar>
             <!-- sorting options -->
             <button mat-button class="control" matTooltip="sorting options" (click)="sortingDropdown.open()">
                 <mat-icon aria-label="sort">sort</mat-icon>
                 <mat-select #sortingDropdown>
-                    <mat-option (click)="sortTitle(true)"><mat-radio-button>Sort alphabetically by title (ascending)</mat-radio-button></mat-option>
-                    <mat-option (click)="sortTitle()"><mat-radio-button>Sort alphabetically by title (descending)</mat-radio-button></mat-option>
-                    <mat-option (click)="sortDate(true)"><mat-radio-button>Sort by date (oldest to newest)</mat-radio-button></mat-option>
-                    <mat-option (click)="sortDate()"><mat-radio-button>Sort by date (newest to oldest)</mat-radio-button></mat-option>
+                    <mat-option (click)="sortTitle(true)">Sort alphabetically by title (ascending)</mat-option>
+                    <mat-option (click)="sortTitle()">Sort alphabetically by title (descending)</mat-option>
+                    <mat-option (click)="sortDate(true)">Sort by date (oldest to newest)</mat-option>
+                    <mat-option (click)="sortDate()">Sort by date (newest to oldest)</mat-option>
                 </mat-select>
             </button>
             <div class="spacer"></div>
@@ -56,8 +55,9 @@
                 <mat-card-content>
                     <!-- content -->
                     <markdown *ngIf="!note.editing" [data]="note.content"></markdown>
-                    <mat-form-field *ngIf="note.editing" class="edit-note" floatLabel="never" appearance="none">
+                    <mat-form-field *ngIf="note.editing" class="edit-note" floatLabel="never">
                         <textarea matInput required cdkTextareaAutosize [(ngModel)]="note.content" placeholder="Note"></textarea>
+                        <mat-error>note content is required</mat-error>
                     </mat-form-field>
                 </mat-card-content>
             </mat-card>
