@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, Input, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -21,6 +21,7 @@ export class ReferenceManagerComponent implements OnInit, AfterViewInit {
         url: ""
     }
 
+    @Input() editable: boolean = true;
     @ViewChild('search') search: ElementRef;
     @ViewChild(MatPaginator) paginator: MatPaginator;
 
