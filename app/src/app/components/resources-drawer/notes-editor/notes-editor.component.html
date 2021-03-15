@@ -57,7 +57,6 @@
                     <markdown *ngIf="!note.editing" [data]="note.content"></markdown>
                     <mat-form-field *ngIf="note.editing" class="edit-note" floatLabel="never">
                         <textarea matInput required cdkTextareaAutosize [(ngModel)]="note.content" placeholder="Note"></textarea>
-                        <mat-error>note content is required</mat-error>
                     </mat-form-field>
                 </mat-card-content>
             </mat-card>

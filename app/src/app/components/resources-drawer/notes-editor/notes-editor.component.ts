@@ -103,10 +103,8 @@ export class NotesEditorComponent implements OnInit, AfterViewInit {
 
     /** Save note */
     public saveNote(note: Note): void {
-        if (note.content) {
-            note.save(this.restAPIConnectorService);
-            note.editing = false;
-        }
+        note.save(this.restAPIConnectorService);
+        note.editing = false;
     }
 
     /** Sort notes alphabetically by title */
