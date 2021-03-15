@@ -1,4 +1,5 @@
 @import "../../../../style/globals";
+// TODO: cleanup file
 .notes-editor {
     max-width: 20em;
 
@@ -49,6 +50,7 @@
             margin-bottom: 12px;
 
             .mat-form-field { width: 100%; }
+            .mat-form-field-underline { display: none; }
             .dark & {
                 box-shadow: none!important;
                 border: solid 1px; 
@@ -75,6 +77,10 @@
                 margin-inline-start: 0px;
                 margin-inline-end: 0px;
                 line-height: 24px;
+                
+                .mat-form-field-wrapper {
+                    padding-bottom: 0px;
+                }
             }
         }
     }

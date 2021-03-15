@@ -93,20 +93,20 @@ export class NotesEditorComponent implements OnInit, AfterViewInit {
                     // remove note from list
                     let i = this.notes.indexOf(note);
                     if (i >= 0) this.notes.splice(i, 1);
-
-                    // delete note, TODO: not currently implemented
-                    // this.restAPIConnectorService.deleteNote(note.stixID);
+                    
+                    this.restAPIConnectorService.deleteNote(note.stixID); //TODO
                 }
             },
             complete: () => { subscription.unsubscribe(); } //prevent memory leaks
         });
     }
-    
+
     /** Save note */
     public saveNote(note: Note): void {
-        // TODO: if save returns an error, keep editing?
-        note.editing = false;
-        note.save(this.restAPIConnectorService);
+        if (note.content) {
+            note.save(this.restAPIConnectorService);
+            note.editing = false;
+        }
     }
 
     /** Sort notes alphabetically by title */
