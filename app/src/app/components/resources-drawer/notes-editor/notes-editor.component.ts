@@ -1,4 +1,5 @@
 import { AfterViewInit, Component, ElementRef, EventEmitter, OnInit, Output, ViewChild, ViewEncapsulation } from '@angular/core';
+import { FormControl } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { fromEvent } from 'rxjs';
@@ -20,12 +21,14 @@ export class NotesEditorComponent implements OnInit, AfterViewInit {
     public loading: boolean = false;
     public notes: Note[] = [];
     public objectStixID: string;
+    public selected: FormControl;
 
     constructor(private router: Router, private restAPIConnectorService: RestApiConnectorService, private dialog: MatDialog) { }
 
     ngOnInit(): void {
         this.loading = true;
         this.objectStixID = this.router.url.split("/")[2].split("?")[0];
+        this.selected = new FormControl();
         this.parseNotes();
     }
 
@@ -53,6 +56,13 @@ export class NotesEditorComponent implements OnInit, AfterViewInit {
                     this.notes = this.notes.filter(note => {
                         return note.title.toLowerCase().includes(query) || note.content.toLowerCase().includes(query);
                     })
+                }
+
+                if (this.selected && this.selected.value) { // retain sorting selection
+                    if (this.selected.value == 'title-ascending') this.sortTitle(true);
+                    else if (this.selected.value == 'title-descending') this.sortTitle();
+                    else if (this.selected.value == 'date-ascending') this.sortDate(true);
+                    else if (this.selected.value == 'date-descending') this.sortDate();
                 }
 
                 this.loading = false;
