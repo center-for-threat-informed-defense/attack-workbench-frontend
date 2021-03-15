@@ -86,7 +86,7 @@ export class NotesEditorComponent implements OnInit, AfterViewInit {
                     let i = this.notes.indexOf(note);
                     if (i >= 0) this.notes.splice(i, 1);
                     
-                    this.restAPIConnectorService.deleteNote(note.stixID); //TODO
+                    note.delete(this.restAPIConnectorService);
                 }
             },
             complete: () => { subscription.unsubscribe(); } //prevent memory leaks
@@ -97,6 +97,7 @@ export class NotesEditorComponent implements OnInit, AfterViewInit {
     public saveNote(note: Note): void {
         note.save(this.restAPIConnectorService);
         note.editing = false;
+        this.parseNotes();
     }
 
     /** Sort notes alphabetically by title */
