@@ -34,8 +34,21 @@
 
     .sticky-note {
         padding: 0px;
-        margin-bottom: 12px;
+        margin-top: 12px;
         button.mat-button-disabled { opacity: 0.5; }
+
+        &.edit-outline {
+            box-shadow: 0px 2px 1px -1px color(primary),
+                        0px 1px 1px 0px color(primary), 
+                        0px 1px 3px 0px color(primary);
+        }
+
+        ::placeholder {
+            color:  rgba(0, 0, 0);
+            opacity: 1;
+        }
+        :-ms-input-placeholder { color: rgba(0, 0, 0); }
+        ::-ms-input-placeholder { color: rgba(0, 0, 0); }
 
         // replace dark theme box-shadow with a border
         .dark & {
@@ -53,7 +66,6 @@
             .history {
                 font-size: 13px;
                 @extend .text-label;
-                @extend .text-deemphasis;
             }
         }
 
