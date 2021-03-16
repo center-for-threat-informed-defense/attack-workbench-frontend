@@ -21,7 +21,7 @@ export class ExternalReferences extends Serializable {
         let externalRefList : Array<[number, ExternalReference]> = [];
 
         for (let [key, value] of this._externalReferencesIndex) {
-            externalRefList.push([value, this.getReference(key)]);
+            if (this.getReference(key)) externalRefList.push([value, this.getReference(key)]);
         }
 
         return externalRefList;
@@ -288,7 +288,9 @@ export class ExternalReferences extends Serializable {
 
         // Update external references with used references
         this._externalReferences = temp_externalReferences;
-
+        // Sort references by description and update index map
+        this.sortReferences()
+        
         // Build missing references string
         let missingReferencesStr = ""
         
