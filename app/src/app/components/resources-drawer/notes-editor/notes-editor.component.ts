@@ -1,6 +1,7 @@
 import { AfterViewInit, Component, ElementRef, EventEmitter, OnInit, Output, ViewChild, ViewEncapsulation } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { fromEvent } from 'rxjs';
 import { debounceTime, distinctUntilChanged, filter, tap } from 'rxjs/operators';
@@ -23,7 +24,7 @@ export class NotesEditorComponent implements OnInit, AfterViewInit {
     public objectStixID: string;
     public selected: FormControl;
 
-    constructor(private router: Router, private restAPIConnectorService: RestApiConnectorService, private dialog: MatDialog) { }
+    constructor(private router: Router, private restAPIConnectorService: RestApiConnectorService, private dialog: MatDialog, private snackbar: MatSnackBar) { }
 
     ngOnInit(): void {
         this.loading = true;
@@ -72,12 +73,31 @@ export class NotesEditorComponent implements OnInit, AfterViewInit {
         });
     }
 
+    /** Limit editing to one note at a time */
+    public startEditing(note: Note): void {
+        if (!this.isEditing() || note.editing) note.editing = true;
+        else this.snack();
+    }
+
+    /** Check if editing a note */
+    public isEditing(): boolean {
+        return this.notes.filter((note) => note.editing).length > 0;
+    }
+
     /** Add new note */
     public addNote(): void {
         let newNote = new Note();
         newNote.object_refs.push(this.objectStixID);
-        newNote.editing = true;
-        this.notes.unshift(newNote);
+        if (!this.isEditing()) {
+            newNote.editing = true;
+            this.notes.unshift(newNote);
+
+            // set focus to title
+            window.setTimeout(function () { 
+                document.getElementById('noteTitle').focus(); 
+            }, 0);
+        }
+        else this.snack();
     }
 
     /** Confirm note deletion */
@@ -97,7 +117,9 @@ export class NotesEditorComponent implements OnInit, AfterViewInit {
                     let i = this.notes.indexOf(note);
                     if (i >= 0) this.notes.splice(i, 1);
                     
-                    note.delete(this.restAPIConnectorService);
+                    if (note.modified) {
+                        note.delete(this.restAPIConnectorService);
+                    } // else note has not been saved to database
                 }
             },
             complete: () => { subscription.unsubscribe(); } //prevent memory leaks
@@ -123,5 +145,13 @@ export class NotesEditorComponent implements OnInit, AfterViewInit {
     public sortDate(ascending?: boolean): void {
         if (ascending) this.notes.sort((a, b) => a.modified.getTime() - b.modified.getTime());
         else this.notes.sort((a, b) => b.modified.getTime() - a.modified.getTime());
+    }
+
+    /** Display snackbar warning message */
+    private snack(): void {
+        this.snackbar.open("Only one note can be edited at a time. Please save your changes before editing another note.", "dismiss", {
+            duration: 3000,
+            panelClass: "warn"
+        })
     }
 }
