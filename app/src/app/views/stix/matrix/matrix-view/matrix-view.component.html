@@ -60,4 +60,21 @@
             </div>
         </div>
     </div>
+    <!-- EXTERNAL REFERENCES -->
+    <div *ngIf="matrix.external_references.list().length > 0">
+        <div class="row">
+            <div class="col">
+                <h2 class="section-header">References</h2>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <app-external-references-property [config]="{
+                    mode: 'view',
+                    object: matrix,
+                    referencesField: matrix.external_references
+                }"></app-external-references-property>
+            </div>
+        </div>
+    </div>
 </div>
