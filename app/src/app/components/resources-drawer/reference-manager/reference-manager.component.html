@@ -1,0 +1,42 @@
+<div class="references-manager">
+    <div class="add-container" *ngIf="editable">
+        <button mat-mini-fab class="extended-fab-button" color="primary" (click)="editReference()">
+            <mat-icon>add</mat-icon> <span class="text-label">add a reference</span>
+        </button>
+    </div>
+    <div class="references-container">
+        <div class="controls">
+            <mat-form-field appearance="fill" class="fullwidth">
+                <mat-label>search</mat-label>
+                <input matInput #search>
+            </mat-form-field>
+        </div>
+        <div class="references" *ngIf="(references$ | async) as references; else loading">
+            <div class="reference-list grid">
+                <div class="reference row" *ngFor="let reference of references.data">
+                    <div class="col narrow clickable" [cdkCopyToClipboard]="getCitation(reference.source_name)" (click)="snackbar.open('Citation copied to clipboard', null, {duration: 500})">
+                        <mat-icon>content_copy</mat-icon>
+                    </div>
+                    <div class="col">
+                        <div class="description">
+                            <span *ngIf="!reference.url" [matTooltip]="reference.description" matTooltipPosition="above">{{reference.description}}</span>
+                            <a *ngIf="reference.url" class="external-link" [href]="reference.url" target="_blank" [matTooltip]="reference.description" matTooltipPosition="above">{{reference.description}}</a>
+                        </div>
+                        <div class="text-label lowercase">{{reference.source_name}}</div>
+                    </div>
+                    <div class="col narrow clickable" *ngIf="editable" (click)="editReference(reference)">
+                        <mat-icon>edit</mat-icon>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <ng-template #loading>
+            <app-loading-overlay></app-loading-overlay>
+        </ng-template>
+        <mat-paginator [length]="totalObjectCount"
+                       pageSize="10"
+                       [pageSizeOptions]="[5, 10, 25, 100]"
+                       (page)="applyControls()">
+        </mat-paginator>
+    </div>
+</div>

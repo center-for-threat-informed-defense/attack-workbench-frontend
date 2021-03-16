@@ -51,14 +51,14 @@ export class ExternalReferences extends Serializable {
 
     /**
      * Return index of reference to display
-     * throws error if source name is not found
+     * Returns null if not found
      * @param sourceName source name of reference
      */
     public getIndexOfReference(sourceName : string) : number {
         if(this._externalReferencesIndex.get(sourceName)) {
             return this._externalReferencesIndex.get(sourceName);
         }
-        throw new Error(`could not find source name "${sourceName}"`);
+        return null;
     }
 
     /**
@@ -141,7 +141,7 @@ export class ExternalReferences extends Serializable {
      * @abstract
      * @returns {*} the raw object to send
      */
-    public serialize(): Array<{}> {
+    public serialize(): ExternalReference[] {
 
         let rep: Array<{}> = [];
 
@@ -178,8 +178,10 @@ export class ExternalReferences extends Serializable {
 }
 
 export interface ExternalReference {
+    /** source name of the reference */
+    source_name?: string;
     /** url; url of reference */
-    url: string;
+    url?: string;
     /** description; description of reference */
-    description: string;
+    description?: string;
 }

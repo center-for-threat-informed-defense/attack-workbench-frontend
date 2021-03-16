@@ -32,7 +32,6 @@ export class HistoryTimelineComponent implements OnInit, OnDestroy {
 
     public historyEvents: HistoryEvent[];
     public loading: boolean = false;
-    @Output() public drawerResize = new EventEmitter();
     public hoveredHistoryEvent: HistoryEvent = null;
     public showObjectHistory: boolean = true;
     public showRelationshipHistory: boolean = true;
@@ -128,14 +127,6 @@ export class HistoryTimelineComponent implements OnInit, OnDestroy {
         });
     }
 
-    /**
-     * Call this to force the sidebar drawer to resize 
-     * to match the new content size
-     */
-    public resizeDrawers() {
-        setTimeout(() => this.drawerResize.emit()); //resize drawers after a render cycle
-    }
-
     public loadHistory() {
         console.log("loading history")
         this.loading = true;
@@ -167,7 +158,6 @@ export class HistoryTimelineComponent implements OnInit, OnDestroy {
                 this.loading = false;
                 // console.log(this.historyEvents);
                 // this.historyLoaded.emit()
-                this.resizeDrawers();
             },
             complete: () => { subscription.unsubscribe() }
         });
