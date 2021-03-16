@@ -57,7 +57,7 @@
         <div class="col">
             <!-- SOFTWARE ALIASES -->
             <app-alias-property class="grow-to-row" [config]="{
-                mode: 'view',
+                mode: editing? 'edit' : 'view',
                 object: software,
                 field: 'aliases',
                 referencesField: 'external_references',
