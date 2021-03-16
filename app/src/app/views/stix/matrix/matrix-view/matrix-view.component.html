@@ -28,12 +28,12 @@
         <div class="col">
             <!-- DESCRIPTION -->
             <app-descriptive-property class="grow-to-row" [config]="{
-                mode: 'view',
+                mode: editing? 'edit' : 'view',
                 object: matrix,
                 field: 'description',
                 firstParagraphOnly: false, 
                 referencesField: matrix.external_references,
-                label: 'description'
+                label: 'Description'
             }"></app-descriptive-property>
         </div>
     </div>

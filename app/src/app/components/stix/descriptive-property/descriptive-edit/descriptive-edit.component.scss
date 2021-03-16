@@ -37,4 +37,16 @@
         :first-child { margin-top: 0px; }
         :last-child { margin-bottom: 0px; }
     }
+
+    .vertical-centered {
+        display:flex; 
+        align-items:center;
+    }
+
+    .info-icon {
+        font-size: 18px; 
+        display:flex; 
+        align-items:center; 
+        justify-content:center;
+    }
 }

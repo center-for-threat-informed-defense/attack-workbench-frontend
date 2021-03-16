@@ -36,12 +36,12 @@
         <div class="col">
             <!-- DESCRIPTION -->
             <app-descriptive-property [config]="{
-                mode: 'view',
+                mode: editing? 'edit' : 'view',
                 object: mitigation,
                 field: 'description',
                 firstParagraphOnly: false, 
                 referencesField: mitigation.external_references,
-                label: 'description'
+                label: 'Description'
             }"></app-descriptive-property>
         </div>
     </div>

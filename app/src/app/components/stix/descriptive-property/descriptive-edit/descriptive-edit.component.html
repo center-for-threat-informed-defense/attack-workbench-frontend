@@ -2,7 +2,10 @@
     <mat-tab-group>
         <mat-tab label="Write" appearance="standard">
             <mat-form-field class="edit" floatLabel="never" appearance="outline">
-                <h3>{{config.label}}</h3>
+                <div class="vertical-centered">
+                    <h3>{{config.label}}</h3>
+                    <mat-icon class="info-icon" matTooltip="citations supported" aria-label="info">info</mat-icon>
+                </div>
                 <textarea cdkTextareaAutosize matInput placeholder="{{config.label}}" (blur)="config.object['external_references'].parseCitations(config.object[config.field], restApiConnector)" [(ngModel)]="config.object[config.field]">
                 </textarea>
             </mat-form-field>
