@@ -37,7 +37,7 @@
         <div class="col">
             <!-- GROUP ALIASES -->
             <app-alias-property class="grow-to-row" [config]="{
-                mode: 'view',
+                mode: editing? 'edit' : 'view',
                 object: group,
                 field: 'aliases',
                 referencesField: 'external_references',

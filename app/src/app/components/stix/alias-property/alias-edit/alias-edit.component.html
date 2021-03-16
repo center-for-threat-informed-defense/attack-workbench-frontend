@@ -1,1 +1,10 @@
-<p>alias-edit works!</p>
+<div class="alias-edit labelled-box">
+    <div class="content">
+        <mat-chip-list>
+            <mat-chip *ngFor="let value of config.object[config.field]" [removable]="true" (removed)="removeAlias(value)" (click)="editAlias(value)">
+                {{value}} <mat-icon matChipRemove>cancel</mat-icon>
+            </mat-chip>
+        </mat-chip-list>
+    </div>
+    <label>{{config.label}}</label>
+</div>
