@@ -35,6 +35,7 @@
     .sticky-note {
         padding: 0px;
         margin-top: 12px;
+        cursor: pointer;
         button.mat-button-disabled { opacity: 0.5; }
 
         &.edit-outline {
@@ -44,15 +45,17 @@
         }
 
         ::placeholder {
-            color:  rgba(0, 0, 0);
+            .light & { color: on-color(light); }
+            .dark &  { color: on-color(dark); }
             opacity: 1;
         }
-        :-ms-input-placeholder { color: rgba(0, 0, 0); }
-        ::-ms-input-placeholder { color: rgba(0, 0, 0); }
 
         // replace dark theme box-shadow with a border
         .dark & {
-            box-shadow: none!important;
+            &.edit-outline {
+                border-color: border-color(primary)
+            }
+            box-shadow: none;
             border: solid 1px; 
             border-color: border-color(dark);
         }
