@@ -63,7 +63,8 @@ export class NotesEditorComponent implements OnInit, AfterViewInit {
                     else if (this.selected.value == 'title-descending') this.sortTitle();
                     else if (this.selected.value == 'date-ascending') this.sortDate(true);
                     else if (this.selected.value == 'date-descending') this.sortDate();
-                }
+                } 
+                else this.sortDate();
 
                 this.loading = false;
             },
@@ -105,9 +106,11 @@ export class NotesEditorComponent implements OnInit, AfterViewInit {
 
     /** Save note */
     public saveNote(note: Note): void {
-        note.save(this.restAPIConnectorService);
-        note.editing = false;
-        this.parseNotes();
+        if (note.content) {
+            note.save(this.restAPIConnectorService);
+            note.editing = false;
+            this.parseNotes();
+        }
     }
 
     /** Sort notes alphabetically by title */
