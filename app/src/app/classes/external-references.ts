@@ -100,6 +100,8 @@ export class ExternalReferences extends Serializable {
      * @param references list of references
      */
     public set externalReferences(references: any) {
+        this._externalReferences = new Map();
+        this._externalReferencesIndex = new Map();
         if (references){
             // Create externalReferences list
             for (let i = 0; i < references.length; i++){
