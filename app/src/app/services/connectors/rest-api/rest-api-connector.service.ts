@@ -1,9 +1,10 @@
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { Observable, of } from 'rxjs';
+import { Observable, of, ReplaySubject } from 'rxjs';
 import { tap, catchError, map, share, switchMap } from 'rxjs/operators';
 import { CollectionIndex } from 'src/app/classes/collection-index';
+import { ExternalReference } from 'src/app/classes/external-references';
 import { Collection } from 'src/app/classes/stix/collection';
 import { Group } from 'src/app/classes/stix/group';
 import { Matrix } from 'src/app/classes/stix/matrix';
@@ -41,8 +42,21 @@ const attackTypeToClass = {
     "relationship": Relationship
 }
 
-export interface Paginated {
-    data: StixObject[],
+// transform AttackType to the relevant class
+const stixTypeToClass = {
+    "attack-pattern": Technique,
+    "x-mitre-tactic": Tactic,
+    "intrusion-set": Group,
+    "tool": Software,
+    "malware": Software,
+    "course-of-action": Mitigation,
+    "x-mitre-matrix": Matrix,
+    "x-mitre-collection": Collection,
+    "relationship": Relationship
+}
+
+export interface Paginated<T> {
+    data: T[],
     pagination: {
         total: number,
         limit: number,
@@ -88,7 +102,7 @@ export class RestApiConnectorService extends ApiConnector {
     private getStixObjectsFactory<T extends StixObject>(attackType: AttackType) {
         let attackClass = attackTypeToClass[attackType];
         let plural = attackTypeToPlural[attackType]
-        return function<P extends T>(limit?: number, offset?: number, state?: string, revoked?: boolean, deprecated?: boolean, versions?: "all" | "latest", excludeIDs?: string[]): Observable<Paginated> {
+        return function<P extends T>(limit?: number, offset?: number, state?: string, revoked?: boolean, deprecated?: boolean, versions?: "all" | "latest", excludeIDs?: string[]): Observable<Paginated<StixObject>> {
             // parse params into query string
             let query = new HttpParams();
             // pagination
@@ -236,7 +250,7 @@ export class RestApiConnectorService extends ApiConnector {
     public get getAllRelationships() { return this.getStixObjectsFactory<Relationship>("relationship"); }
 
     /**
-     * Get all objects WITHOUT deserializing them to StixObjects
+     * Get all objects; objects will not be deserialized to STIX objects unless the parameter is used
      * @param {string} [attackID] filter to only include objects with this ATT&CK ID
      * @param {number} [limit] the number of collections to retrieve
      * @param {number} [offset] the number of collections to skip
@@ -244,9 +258,10 @@ export class RestApiConnectorService extends ApiConnector {
      * @param {boolean} [revoked] if true, get revoked objects
      * @param {versions} ["all" | "latest"] if "all", get all versions of the collections. if "latest", only get the latest version of each collection.
      * @param {boolean} [deprecated] if true, get deprecated objects
+     * @param {boolean} [deserialize] if true, deserialize objects to full STIX objects
      * @returns {Observable<any[]>} observable of retrieved objects
      */
-    public getAllObjects(attackID?: string, limit?: number, offset?: number, state?: string, revoked?: boolean, deprecated?: boolean) {
+    public getAllObjects(attackID?: string, limit?: number, offset?: number, state?: string, revoked?: boolean, deprecated?: boolean, deserialize?: boolean) {
         let query = new HttpParams();
         // pagination
         if (limit) query = query.set("limit", limit.toString());
@@ -258,6 +273,31 @@ export class RestApiConnectorService extends ApiConnector {
         if (revoked) query = query.set("deprecated", deprecated ? "true" : "false");
         return this.http.get(`${this.baseUrl}/attack-objects`, {headers: this.headers, params: query}).pipe(
             tap(results => console.log(`retrieved ATT&CK objects`, results)), // on success, trigger the success notification
+            map(results => {
+                if (!deserialize) return results; //skip deserialization if param not added
+                let response = results as any;
+                if (limit || offset) { // returned a paginated
+                    let data = response.data as Array<any>;
+                    data = data.map(y => {
+                        if (y.stix.type == "malware" || y.stix.type == "tool") return new Software(y.stix.type, y);
+                        else return new stixTypeToClass[y.stix.type](y);
+                    });
+                    response.data = data;
+                    return response;
+                } else { //returned a stixObject[]
+                    return {
+                        pagination: {
+                            total: response.length,
+                            limit: -1,
+                            offset: -1
+                        },
+                        data: response.map(y => {
+                            if (y.stix.type == "malware" || y.stix.type == "tool") return new Software(y.stix.type, y);
+                            else return new stixTypeToClass[y.stix.type](y);
+                        })
+                    }
+                }
+            }),
             catchError(this.handleError_array([])), // on error, trigger the error notification and continue operation without crashing (returns empty item)
             share() // multicast so that multiple subscribers don't trigger the call twice. THIS MUST BE THE LAST LINE OF THE PIPE
         )
@@ -615,7 +655,7 @@ export class RestApiConnectorService extends ApiConnector {
      * @param {string[]} [excludeTargetRefs] if specified, exclude target refs which are found in this array
      * @returns {Observable<Paginated>} paginated data of the relationships
      */
-    public getRelatedTo(args: {sourceRef?: string, targetRef?: string, sourceOrTargetRef?: string, sourceType?: AttackType, targetType?: AttackType, relationshipType?: string, excludeSourceRefs?: string[], excludeTargetRefs?: string[], limit?: number, offset?: number, versions?: "all" | "latest"}): Observable<Paginated> {
+    public getRelatedTo(args: {sourceRef?: string, targetRef?: string, sourceOrTargetRef?: string, sourceType?: AttackType, targetType?: AttackType, relationshipType?: string, excludeSourceRefs?: string[], excludeTargetRefs?: string[], limit?: number, offset?: number, versions?: "all" | "latest"}): Observable<Paginated<StixObject>> {
         let query = new HttpParams();
 
         if (args.sourceRef) query = query.set("sourceRef", args.sourceRef);
@@ -673,6 +713,79 @@ export class RestApiConnectorService extends ApiConnector {
             }),
             catchError(this.handleError_array([])),
             share()
+        )
+    }
+
+    //   ___ ___ ___ ___ ___ ___ _  _  ___ ___ ___ 
+    //  | _ \ __| __| __| _ \ __| \| |/ __| __/ __|
+    //  |   / _|| _|| _||   / _|| .` | (__| _|\__ \
+    //  |_|_\___|_| |___|_|_\___|_|\_|\___|___|___/
+
+    /**
+     * get all external references
+     * @param {number} [limit] the number of references to retrieve
+     * @param {number} [offset] the number of references to skip
+     * @param {string} [search] Only return references where the provided search text occurs in the description or url. The search is case-insensitive.
+     * @returns {Observable<Paginated>} paginated data for external references
+     */
+    public getAllReferences(limit?: number, offset?: number, search?: string): Observable<Paginated<ExternalReference>> {
+        let url = `${this.baseUrl}/references`;
+        // parse params into query string
+        let query = new HttpParams();
+        // pagination
+        if (limit) query = query.set("limit", limit.toString());
+        if (offset) query = query.set("offset", offset.toString());
+        if (search) query = query.set("search", encodeURIComponent(search));
+        /*if (limit || offset) */ query = query.set("includePagination", "true");
+        return this.http.get<Paginated<ExternalReference>>(url, {headers: this.headers, params: query}).pipe(
+            tap(results => console.log("retrieved references", results)),
+            catchError(this.handleError_array<Paginated<ExternalReference>>({data: [], pagination: {total: 0, limit: 0, offset: 0}})), // on error, trigger the error notification and continue operation without crashing (returns empty item)
+            share() // multicast so that multiple subscribers don't trigger the call twice. THIS MUST BE THE LAST LINE OF THE PIPE
+        )
+    }
+
+    /**
+     * Get a single reference by source name
+     * @param {string} source_name the reference's source_name identifier
+     * @returns {Observable<ExternalReference>} the external reference with the given source_name
+     */
+    public getReference(source_name: string): Observable<ExternalReference> {
+        let url = `${this.baseUrl}/references`;
+        // parse params into query string
+        let query = new HttpParams();
+        query = query.set("sourceName", source_name);
+        return this.http.get<ExternalReference>(url, {headers: this.headers, params: query}).pipe(
+            tap(results => console.log("retrieved reference", results)),
+            catchError(this.handleError_single<ExternalReference>()), // on error, trigger the error notification and continue operation without crashing (returns empty item)
+            share() // multicast so that multiple subscribers don't trigger the call twice. THIS MUST BE THE LAST LINE OF THE PIPE
+        )
+    }
+
+    /**
+     * Create an external reference
+     * @param {ExternalReference} reference the reference to create
+     * @returns {Observable<ExternalReference>} the created reference
+     */
+    public postReference(reference: ExternalReference): Observable<ExternalReference> {
+        let url = `${this.baseUrl}/references`;
+        return this.http.post<ExternalReference>(url, reference, {headers: this.headers}).pipe(
+            tap(this.handleSuccess(`${reference.source_name} saved`)),
+            catchError(this.handleError_single<ExternalReference>()), // on error, trigger the error notification and continue operation without crashing (returns empty item)
+            share() // multicast so that multiple subscribers don't trigger the call twice. THIS MUST BE THE LAST LINE OF THE PIPE
+        )
+    }
+
+    /**
+     * Update an external reference
+     * @param {ExternalReference} reference the reference to update
+     * @returns {Observable<ExternalReference>} the updated reference
+     */
+    public putReference(reference: ExternalReference): Observable<ExternalReference> {
+        let url = `${this.baseUrl}/references`;
+        return this.http.put<ExternalReference>(url, reference, {headers: this.headers}).pipe(
+            tap(this.handleSuccess(`${reference.source_name} saved`)),
+            catchError(this.handleError_single<ExternalReference>()), // on error, trigger the error notification and continue operation without crashing (returns empty item)
+            share() // multicast so that multiple subscribers don't trigger the call twice. THIS MUST BE THE LAST LINE OF THE PIPE
         )
     }
 
@@ -764,4 +877,30 @@ export class RestApiConnectorService extends ApiConnector {
             catchError(this.handleError_single())
         )
     }
+
+    //   _____   _____ _____ ___ __  __    ___ ___  _  _ ___ ___ ___     _   ___ ___ ___ 
+    //  / __\ \ / / __|_   _| __|  \/  |  / __/ _ \| \| | __|_ _/ __|   /_\ | _ \_ _/ __|
+    //  \__ \\ V /\__ \ | | | _|| |\/| | | (_| (_) | .` | _| | | (_ |  / _ \|  _/| |\__ \
+    //  |___/ |_| |___/ |_| |___|_|  |_|  \___\___/|_|\_|_| |___\___| /_/ \_\_| |___|___/
+    //
+
+    /**
+     * Get all allowed values
+     * @returns {Observable<any>} all allowed values
+     */
+    private allowedValues;
+    public getAllAllowedValues(): Observable<any> {
+        if (this.allowedValues) { return of(this.allowedValues)}
+
+        const data$ = this.http.get<any>(`${this.baseUrl}/config/allowed-values`, {headers: this.headers}).pipe(
+            tap(_ => console.log("retrieved allowed values")),
+            map(result => result as any),
+            catchError(this.handleError_array<string[]>([]))
+        );
+        let subscription = data$.subscribe({
+            next: (data) => { this.allowedValues = data; },
+            complete: () => { subscription.unsubscribe(); }
+        });
+        return data$;
+    }                                                                     
 }

@@ -11,6 +11,8 @@ export class Tactic extends StixObject {
         format: "TA####"
     }}
 
+    public get shortname(): string { return this.name.replace(" ", "-").toLowerCase(); }
+
     constructor(sdo?: any) {
         super(sdo, "x-mitre-tactic");
         if (sdo) {
@@ -28,6 +30,7 @@ export class Tactic extends StixObject {
         
         rep.stix.name = this.name;
         rep.stix.x_mitre_domains = this.domains;
+        rep.stix.x_mitre_shortname = this.shortname;
 
         return rep;
     }

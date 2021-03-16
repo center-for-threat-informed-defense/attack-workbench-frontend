@@ -5,5 +5,5 @@
         </div>
         <label>{{config.label? config.label : config.field}}</label>
     </div>
-    <app-list-edit *ngIf="config.mode == 'edit'" [config]="config"></app-list-edit>
+    <app-list-edit *ngIf="config.mode == 'edit'" class="grow-to-row" [config]="config"></app-list-edit>
 </div>

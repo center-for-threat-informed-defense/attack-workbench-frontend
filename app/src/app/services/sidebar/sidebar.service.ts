@@ -5,7 +5,7 @@ import { EventEmitter, Injectable } from '@angular/core';
 })
 export class SidebarService {
     // sidebar tab settings
-    private _currentTab: tabOption = "search"
+    private _currentTab: tabOption = "references"
     public onTabChange = new EventEmitter();
     public get currentTab(): tabOption { return this._currentTab; }
     public set currentTab(tab: tabOption) {
@@ -19,13 +19,13 @@ export class SidebarService {
         this.tabs.filter((x) => x.name == tabName)[0].enabled = enabled;
     }
     public readonly tabs: tabDefinition[] = [
+        // {
+        //     "name": "search",
+        //     "icon": "search",
+        //     "enabled": true
+        // },
         {
-            "name": "search",
-            "icon": "search",
-            "enabled": true
-        },
-        {
-            "name": "citations",
+            "name": "references",
             "icon": "superscript",
             "enabled": true
         },
@@ -57,7 +57,7 @@ export class SidebarService {
 
     constructor() { }
 }
-export type tabOption = "search" | "citations" | "history" | "notes";
+export type tabOption = "search" | "references" | "history" | "notes";
 
 interface tabDefinition {
     name: tabOption; // the tab name
