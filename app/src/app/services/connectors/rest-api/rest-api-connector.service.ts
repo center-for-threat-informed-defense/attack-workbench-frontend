@@ -1,7 +1,7 @@
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { Observable, of, ReplaySubject } from 'rxjs';
+import { forkJoin, Observable, of, ReplaySubject } from 'rxjs';
 import { tap, catchError, map, share, switchMap } from 'rxjs/operators';
 import { CollectionIndex } from 'src/app/classes/collection-index';
 import { ExternalReference } from 'src/app/classes/external-references';
@@ -401,9 +401,17 @@ export class RestApiConnectorService extends ApiConnector {
      * @param {string} id the object STIX ID
      * @param {Date} [modified] if specified, get the version modified at the given date
      * @param {versions} [string] default "latest", if "all" returns all versions of the object instead of just the latest version.
-     * @returns {Observable<Matrix>} the object with the given ID and modified date
+     * @returns {Observable<Collection>} the object with the given ID and modified date
      */
     public get getCollection() { return this.getStixObjectFactory<Collection>("collection"); }
+    /**
+     * Get a single note by STIX ID
+     * @param {string} id the object STIX ID
+     * @param {Date} [modified] if specified, get the version modified at the given date
+     * @param {versions} [string] default "latest", if "all" returns all versions of the object instead of just the latest version.
+     * @returns {Observable<Note>} the object with the given ID and modified date
+     */
+    public get getNote() { return this.getStixObjectFactory<Note>("note"); }
 
     /**
      * Factory to create a new STIX object creator (POST) function
@@ -629,6 +637,18 @@ export class RestApiConnectorService extends ApiConnector {
      * @returns {Observable<{}>} observable of the response body
      */
     public get deleteNote() { return this.deleteStixObjectFactory("note"); }
+    /**
+     * DELETE all versions of a note
+     * @param {string} id the STIX ID of the object to delete
+     */
+    public deleteAllNoteVersions(id: string) {
+        return this.getNote(id, null, "all").pipe(
+            switchMap((notes) => {
+                let delete_fns = notes.map((note) => this.deleteNote(id, note.modified))
+                return forkJoin(delete_fns)
+            })
+        )
+    }
 
 
     //   ___ ___ _      _ _____ ___ ___  _  _ ___ _  _ ___ ___  ___
