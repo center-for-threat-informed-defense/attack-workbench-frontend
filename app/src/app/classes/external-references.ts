@@ -124,8 +124,9 @@ export class ExternalReferences extends Serializable {
         if (this.getReference(sourceName)) return of(true);
         return restApiConnector.getReference(sourceName).pipe(
             map((result) => {
-                if (result) {
-                    this.addReference(sourceName, result);
+                let x = result as any[];
+                if (x.length > 0) {
+                    this.addReference(sourceName, x[0]);
                     return true;
                 }
                 return false;
