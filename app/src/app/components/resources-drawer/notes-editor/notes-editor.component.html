@@ -7,11 +7,11 @@
             <!-- sorting options -->
             <button mat-button class="control" matTooltip="sorting options" (click)="sortingDropdown.open()">
                 <mat-icon aria-label="sort">sort</mat-icon>
-                <mat-select [formControl]="selected" appearance="fill" #sortingDropdown>
-                    <mat-option value="title-ascending" (click)="sortTitle(true)"><mat-radio-button>Sort alphabetically by title (ascending)</mat-radio-button></mat-option>
-                    <mat-option value="title-descending" (click)="sortTitle()"><mat-radio-button>Sort alphabetically by title (descending)</mat-radio-button></mat-option>
-                    <mat-option value="date-ascending" (click)="sortDate(true)"><mat-radio-button>Sort by date (oldest to newest)</mat-radio-button></mat-option>
-                    <mat-option value="date-descending" (click)="sortDate()"><mat-radio-button>Sort by date (newest to oldest)</mat-radio-button></mat-option>
+                <mat-select [formControl]="selected" #sortingDropdown>
+                    <mat-option value="title-ascending" (click)="sortTitle(true)">Sort alphabetically by title (ascending)</mat-option>
+                    <mat-option value="title-descending" (click)="sortTitle()">Sort alphabetically by title (descending)</mat-option>
+                    <mat-option value="date-ascending" (click)="sortDate(true)">Sort by date (oldest to newest)</mat-option>
+                    <mat-option value="date-descending" (click)="sortDate()">Sort by date (newest to oldest)</mat-option>
                 </mat-select>
             </button>
             <div class="spacer"></div>
@@ -26,7 +26,7 @@
     <!-- notes -->
     <div class="notes-content">
         <ng-container *ngFor="let note of notes">
-            <mat-card (click)="startEditing(note)" [ngClass]="{'sticky-note': true, 'edit-outline': note.editing}">
+            <mat-card (click)="startEditing(note)" class="sticky-note" [class.edit-outline]="note.editing">
                 <mat-card-header>
                     <!-- title -->
                     <mat-card-title>

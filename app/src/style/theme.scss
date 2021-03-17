@@ -104,6 +104,13 @@ $tooltip-color: color-alternate(dark, 4);
             color: on-color(warn)
         }
     }
+
+    &.light .mat-select-panel .mat-option.mat-active {
+        background: color-alternate(light, 1.5);
+    }
+    &.dark .mat-select-panel .mat-option.mat-active {
+        background: color-alternate(dark, 1.5);
+    }
 }
 //patch popover style
 .popover {
