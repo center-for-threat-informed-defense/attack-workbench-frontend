@@ -28,9 +28,10 @@
         <div class="col">
             <!-- CONTRIBUTORS -->
             <app-list-property class="grow-to-row" [config]="{
-                mode: 'view',
+                mode: editing? 'edit' : 'view',
                 object: group,
-                field: 'contributors'
+                field: 'contributors',
+                editType: 'any'
             }"></app-list-property>
         </div>
         <div class="col">

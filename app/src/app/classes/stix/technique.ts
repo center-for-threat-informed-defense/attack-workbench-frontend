@@ -16,6 +16,8 @@ export class Technique extends StixObject {
     public tactic_type: string[] = [];
     public permissions_required: string[] = [];
     public defense_bypassed: string[] = [];
+    public effective_permissions: string[] = [];
+    public impact_type: string[] = [];
 
     public remote_support: boolean = false;
 
@@ -31,7 +33,25 @@ export class Technique extends StixObject {
     public subTechniques: Technique[] = []; 
     public parentTechnique: Technique = null;
 
+    private killChainMap = {
+        "enterprise-attack": "mitre-attack",
+        "mobile-attack": "mitre-mobile-attack",
+        "ics-attack": "mitre-ics-attack"
+    }
+
     public get tactics(): string[] { return this.kill_chain_phases.map(tactic => tactic.phase_name); }
+    public set tactics(values) {
+        let killChainPhases = [];
+        for (let i in values) {
+            let phaseName = values[i][0];
+            let killChainName = this.killChainMap[values[i][1]];
+            killChainPhases.push({
+                "phase_name": phaseName,
+                "kill_chain_name": killChainName
+            });
+        }
+        this.kill_chain_phases = killChainPhases;
+    }
 
     /**
      * Initialize Technique object
@@ -71,9 +91,13 @@ export class Technique extends StixObject {
             rep.stix.x_mitre_system_requirements = this.system_requirements;
 
             // tactic specific fields
-            if (this.tactics.includes('privilege-escalation')) rep.stix.x_mitre_permissions_required = this.permissions_required;
+            if (this.tactics.includes('privilege-escalation')) {
+                rep.stix.x_mitre_permissions_required = this.permissions_required;
+                rep.stix.x_mitre_effective_permissions = this.effective_permissions;
+            }
             if (this.tactics.includes('defense-evasion')) rep.stix.x_mitre_defense_bypassed = this.defense_bypassed;
             if (this.tactics.includes('execution')) rep.stix.x_mitre_remote_support = this.remote_support;
+            if (this.tactics.includes('impact')) rep.stix.x_mitre_impact_type = this.impact_type;
         }
 
         return rep;
@@ -148,6 +172,16 @@ export class Technique extends StixObject {
             if ("x_mitre_remote_support" in sdo) {
                 if (typeof(sdo.x_mitre_remote_support) === "boolean") this.remote_support = sdo.x_mitre_remote_support;
                 else console.error("TypeError: remote support field is not a boolean:", sdo.x_mitre_remote_support, "(", typeof(sdo.x_mitre_remote_support),")")
+            }
+
+            if ("x_mitre_impact_type" in sdo) {
+                if (this.isStringArray(sdo.x_mitre_impact_type)) this.impact_type = sdo.x_mitre_impact_type;
+                else console.error("TypeError: impact type field is not a string array.");
+            }
+
+            if ("x_mitre_effective_permissions" in sdo) {
+                if (this.isStringArray(sdo.x_mitre_effective_permissions)) this.effective_permissions = sdo.x_mitre_effective_permissions;
+                else console.error("TypeError: effective permissions field is not a string array.");
             }
         }
     }
