@@ -5,6 +5,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppRoutingStixModule } from "./app-routing-stix.module"
 import { HttpClient, HttpClientModule } from '@angular/common/http'
 import { DragDropModule } from '@angular/cdk/drag-drop';
+import { ClipboardModule } from '@angular/cdk/clipboard';
 
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -24,7 +25,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatStepperModule } from '@angular/material/stepper';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import {MatListModule} from '@angular/material/list';
+import { MatListModule } from '@angular/material/list';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
@@ -36,6 +37,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatChipsModule } from '@angular/material/chips';
 
 // other library imports
 import { BreadcrumbModule } from "angular-crumbs";
@@ -58,6 +60,7 @@ import { SaveDialogComponent } from "./components/save-dialog/save-dialog.compon
 import { AddDialogComponent } from './components/add-dialog/add-dialog.component';
 import { HistoryTimelineComponent } from "./components/resources-drawer/history-timeline/history-timeline.component";
 import { ReferenceManagerComponent } from "./components/resources-drawer/reference-manager/reference-manager.component";
+import { ReferenceEditDialogComponent } from "./components/resources-drawer/reference-manager/reference-edit-dialog/reference-edit-dialog.component"
 import { MultipleChoiceDialogComponent } from "./components/multiple-choice-dialog/multiple-choice-dialog.component";
 import { ValidationResultsComponent } from "./components/validation-results/validation-results.component";
 import { AddRelationshipButtonComponent } from "./components/add-relationship-button/add-relationship-button.component";
@@ -155,6 +158,7 @@ import { OrderedListEditComponent } from './components/stix/ordered-list-propert
     AddDialogComponent,
     HistoryTimelineComponent,
     ReferenceManagerComponent,
+    ReferenceEditDialogComponent,
     MultipleChoiceDialogComponent,
     ValidationResultsComponent,
     AddRelationshipButtonComponent,
@@ -271,7 +275,9 @@ import { OrderedListEditComponent } from './components/stix/ordered-list-propert
     MatMenuModule,
     MatDialogModule,
     MatSnackBarModule,
+    MatChipsModule,
     DragDropModule,
+    ClipboardModule,
 
     OverlayModule
   ],
@@ -301,6 +307,7 @@ import { OrderedListEditComponent } from './components/stix/ordered-list-propert
     MatDialogModule,
     MatSnackBarModule,
     DragDropModule,
+    ClipboardModule,
 
     OverlayModule
   ],

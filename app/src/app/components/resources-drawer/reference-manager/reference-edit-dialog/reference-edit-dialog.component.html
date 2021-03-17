@@ -1,0 +1,66 @@
+<div class="reference-edit-dialog">
+    <div *ngIf="stage == 0" class="stage edit">
+        <h1>Reference Editor</h1>
+        <mat-form-field appearance="outline">
+            <mat-label>source name</mat-label>
+            <mat-hint>In-text citation, (Citation: {{reference.source_name}})</mat-hint>
+            <input matInput required [disabled]="!is_new" [(ngModel)]="reference.source_name">
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+            <mat-label>citation</mat-label>
+            <mat-hint>Full citation text</mat-hint>
+            <input matInput required [(ngModel)]="reference.description">
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+            <mat-label>url</mat-label>
+            <mat-hint>Link to the primary source</mat-hint>
+            <input matInput [(ngModel)]="reference.url">
+        </mat-form-field>
+        <div class="buttons">
+            <button mat-button matDialogClose>cancel</button>
+            <button mat-stroked-button [disabled]="!reference.source_name || !reference.description" (click)="next()">{{is_new ? 'save' : 'next'}}</button>
+        </div>
+    </div>
+    <div *ngIf="stage == 1" class="stage parsing">
+        <h1>Determining required knowledge base patches...</h1>
+        <app-loading-overlay></app-loading-overlay>
+    </div>
+    <div *ngIf="stage == 2" class="stage reviewing">
+        <h1>Required Patches</h1>
+        <ng-container *ngIf="patch_objects.length == 0 && patch_relationships == 0; else patches">
+            <mat-list>
+                <mat-list-item >
+                    <mat-icon matListIcon class="text-success">check</mat-icon>
+                    <p matLine class="text-success">No objects in the knowledge base use this reference.</p>
+                </mat-list-item>
+            </mat-list>
+        </ng-container>
+        <ng-template #patches>
+            <p>The following objects include the edited reference and will be updated automatically.</p>
+            <ng-container *ngIf="patch_objects.length > 0">
+                <h3>Objects</h3>
+                <app-stix-list [config]="{
+                    stixObjects: patch_objects,
+                    clickBehavior: 'none'
+                }"></app-stix-list>
+            </ng-container>
+            <ng-container *ngIf="patch_relationships.length > 0">
+                <h3>Relationships</h3>
+                <app-stix-list [config]="{
+                    stixObjects: patch_relationships,
+                    type: 'relationship',
+                    clickBehavior: 'none'
+                }"></app-stix-list>
+            </ng-container>
+        </ng-template>
+        <div class="buttons">
+            <button mat-button matDialogClose>cancel</button>
+            <button mat-stroked-button *ngIf="patch_objects.length > 0 || patch_relationships > 0" (click)="patch()">apply patches and save</button>
+            <button mat-stroked-button *ngIf="patch_objects.length == 0 && patch_relationships == 0" (click)="save()">save</button>
+        </div>
+    </div>
+    <div *ngIf="stage == 3" class="stage patching">
+        <h1>Patching references...</h1>
+        <app-loading-overlay></app-loading-overlay>
+    </div>
+</div>
