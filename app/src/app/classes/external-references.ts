@@ -201,12 +201,13 @@ export class ExternalReferences extends Serializable {
     public parseCitationsFromAliases(aliases : string[], restApiConnector : RestApiConnectorService): Observable<CitationParseResult> {
         // Parse citations from the alias descriptions stored in external references
         let api_calls = [];
+        let result = new CitationParseResult();
         for (let i = 0; i < aliases.length; i++) {
             if (this._externalReferences.get(aliases[i])) {
+                result.usedCitations.add(aliases[i]);
                 api_calls.push(this.parseCitations(this._externalReferences.get(aliases[i]).description, restApiConnector));
             }
         }
-        let result = new CitationParseResult();
         if (api_calls.length == 0) return of(result);
         else return forkJoin(api_calls).pipe( // get citation errors for each alias
             map((api_results) => {
@@ -308,8 +309,12 @@ export class ExternalReferences extends Serializable {
             if (this._externalReferences.get(sourceName)) temp_externalReferences.set(sourceName, this._externalReferences.get(sourceName));
         }
 
+        
+        let pre_delete_keys = Array.from(this._externalReferences.keys());
         // Update external references with used references
         this._externalReferences = temp_externalReferences;
+        let post_delete_keys = Array.from(this._externalReferences.keys());
+        console.log("removed unused references", pre_delete_keys.filter((x) => !post_delete_keys.includes(x)))
         // Sort references by description and update index map
         this.sortReferences()
     }
