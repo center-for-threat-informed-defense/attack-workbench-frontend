@@ -29,7 +29,7 @@ export class NotesEditorComponent implements OnInit, AfterViewInit {
     ngOnInit(): void {
         this.loading = true;
         this.objectStixID = this.router.url.split("/")[2].split("?")[0];
-        this.selected = new FormControl();
+        this.selected = new FormControl('date-descending');
         this.parseNotes();
     }
 
