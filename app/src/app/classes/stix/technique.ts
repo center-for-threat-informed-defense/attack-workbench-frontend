@@ -158,9 +158,6 @@ export class Technique extends StixObject {
      * @returns {Observable<ValidationData>} the validation warnings and errors once validation is complete.
      */
     public validate(restAPIService: RestApiConnectorService): Observable<ValidationData> {
-        // parse detection for external references
-        this.external_references.parseCitations(this.detection, restAPIService, true);
-
         return this.base_validate(restAPIService).pipe(
             switchMap(validationResult => {
                 return forkJoin({
