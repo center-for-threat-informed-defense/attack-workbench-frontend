@@ -23,7 +23,7 @@ export interface ExternalReferencesPropertyConfig {
    *    edit: editing the descriptive property
    *    diff: displaying the diff between two STIX objects. If this mode is selected, two StixObjects must be specified in the objects field
    */
-  mode?: "view" | "diff";
+  mode?: "view" | "diff" | "edit";
   /* The object to show the descriptive field of
    * Note: if mode is diff, pass an array of two objects to diff
    */

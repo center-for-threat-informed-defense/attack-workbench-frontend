@@ -125,7 +125,7 @@
         <div class="row">
             <div class="col">
                 <app-external-references-property [config]="{
-                    mode: 'view',
+                    mode: editing? 'edit': 'view',
                     object: group,
                     referencesField: group.external_references
                 }"></app-external-references-property>

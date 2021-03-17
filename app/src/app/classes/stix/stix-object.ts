@@ -188,7 +188,7 @@ export abstract class StixObject extends Serializable {
             if ("external_references" in sdo) {
                 if (typeof(sdo.external_references) === "object") {
                     this.external_references = new ExternalReferences(sdo.external_references);
-                    if (sdo.external_references.length > 0 && this.type != "relationship") {
+                    if (sdo.external_references.length > 0 && this.type != "relationship" && sdo.external_references[0].hasOwnProperty("external_id")) {
                         if (typeof(sdo.external_references[0].external_id) === "string") this.attackID = sdo.external_references[0].external_id;
                         else console.error("TypeError: attackID field is not a string:", sdo.external_references[0].external_id, "(",typeof(sdo.external_references[0].external_id),")")
                     }
