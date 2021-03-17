@@ -636,20 +636,13 @@ export class RestApiConnectorService extends ApiConnector {
      * @param {Date} modified The modified date of the version to delete
      * @returns {Observable<{}>} observable of the response body
      */
-    public get deleteNote() { return this.deleteStixObjectFactory("note"); }
-    /**
-     * DELETE all versions of a note
-     * @param {string} id the STIX ID of the object to delete
-     */
-    public deleteAllNoteVersions(id: string) {
-        return this.getNote(id, null, "all").pipe(
-            switchMap((notes) => {
-                let delete_fns = notes.map((note) => this.deleteNote(id, note.modified))
-                return forkJoin(delete_fns)
-            })
+    public deleteNote(id: string) {
+        return this.http.delete(`${this.baseUrl}/notes/${id}`).pipe(
+            tap(this.handleSuccess("note removed")),
+            catchError(this.handleError_single()),
+            share()
         )
     }
-
 
     //   ___ ___ _      _ _____ ___ ___  _  _ ___ _  _ ___ ___  ___
     //  | _ \ __| |    /_\_   _|_ _/ _ \| \| / __| || |_ _| _ \/ __|
