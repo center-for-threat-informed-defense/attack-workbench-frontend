@@ -22,9 +22,11 @@ export abstract class Serializable {
      * Validate the current object state and return information on the result of the validation
      * @abstract
      * @param {RestApiConnectorService} restAPIService: the REST API connector through which asynchronous validation can be completed
+     * @param {any} [options] extra validation options for more complex validations
      * @returns {Observable<ValidationData>} the validation warnings and errors once validation is complete.
      */
-    public abstract validate(restAPIService: RestApiConnectorService): Observable<ValidationData>;
+    public abstract validate(restAPIService: RestApiConnectorService, options?: any): Observable<ValidationData>;
+
 }
 
 export class ValidationData {
@@ -32,6 +34,13 @@ export class ValidationData {
     public warnings: ValidationFieldData[] = []; 
     public errors: ValidationFieldData[] = [];
     public info: ValidationFieldData[] = [];
+
+    public merge(that: ValidationData) {
+        this.successes = this.successes.concat(that.successes);
+        this.warnings = this.warnings.concat(that.warnings);
+        this.errors = this.errors.concat(that.errors);
+        this.info = this.info.concat(that.info);
+    }
 }
 
 export interface ValidationFieldData {

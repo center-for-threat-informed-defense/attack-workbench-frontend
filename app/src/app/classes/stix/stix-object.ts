@@ -231,30 +231,6 @@ export abstract class StixObject extends Serializable {
      */
     public base_validate(restAPIService: RestApiConnectorService): Observable<ValidationData> {
         let validation = new ValidationData();
-        // TODO: validate description for missing citation and linkByIDs
-        
-        // parse description for external references
-        this.external_references.parseCitations(this.description, restAPIService, true);
-
-        // Check for references that cannot be rendered and delete or add any other reference used or not used
-        let missingReferencesStr = this.external_references.getMissingReferencesAndRemoveUnusedReferencesStr();
-        if (missingReferencesStr) {
-            validation.errors.push({
-                result: "error",
-                field: "external references",
-                message: missingReferencesStr
-            })
-        }
-
-        // Check for broken citations
-        let brokenCitationsStr = this.external_references.getBrokenCitationsStr();
-        if (brokenCitationsStr) {
-            validation.errors.push({
-                result: "error",
-                field: "external references",
-                message: brokenCitationsStr
-            })
-        }
 
         // test version number format
         if (!this.version.valid()) {
@@ -329,7 +305,21 @@ export abstract class StixObject extends Serializable {
                         return result;
                     })
                 )
-            }) //end switchmap
+            }), //end switchmap
+            // validate external references
+            switchMap(result => {
+                // build list of fields to validate external references on according to ATT&CK type
+                let refs_fields = ["description"];
+                if (this.attackType == "software" || this.attackType == "group") refs_fields.push("aliases");
+                if (this.attackType == "technique") refs_fields.push("detection");
+
+                return this.external_references.validate(restAPIService, {object: this, fields: refs_fields}).pipe(
+                    map(refs_result => {
+                        result.merge(refs_result);
+                        return result;
+                    })
+                )
+            })
             // TODO check if revoked-by exists if revoked?
         ) //end pipe
 

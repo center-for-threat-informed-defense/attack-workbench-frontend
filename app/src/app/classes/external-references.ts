@@ -1,6 +1,8 @@
-import { Observable, of } from "rxjs";
+import { forkJoin, Observable, of } from "rxjs";
+import { map } from "rxjs/operators";
 import { RestApiConnectorService } from "../services/connectors/rest-api/rest-api-connector.service";
 import { Serializable, ValidationData } from "./serializable";
+import { StixObject } from "./stix/stix-object";
 
 export class ExternalReferences extends Serializable {
     private _externalReferences : Map<string, ExternalReference> = new Map();
@@ -112,74 +114,80 @@ export class ExternalReferences extends Serializable {
     }
 
     /**
-     * checkReferences()
-     * Check if reference exists
-     * @param sourceName source name string of references
-     * @param restApiConnector RestApiConnectorService] the service to get references
-     * @returns true if references is found in object or global external reference list, false if not
+     * Check if the reference is on the object, and add it if it is not.
+     * Returns an observable that is true if the reference exists or has been added, and false if it couldn't be added
+     * @param {string} sourceName  source name string of references
+     * @param {RestApiConnectorService} restApiConnector the service to get references
+     * @returns {Observable<boolean>} true if references is found in object or global external reference list, false if not
      */
-    private checkReferences(sourceName : string, restApiConnector) : boolean {
-        let search_result: ExternalReference = null;
-
-        if (this.getReference(sourceName)) return true;
-        let subscription = restApiConnector.getReference(sourceName).subscribe({
-            next: (result) => { 
-                if (result.length){
-                    search_result = result[0];
-                    this.addReference(sourceName, search_result);
+    private checkAndAddReference(sourceName : string, restApiConnector: RestApiConnectorService): Observable<boolean> {
+        if (this.getReference(sourceName)) return of(true);
+        return restApiConnector.getReference(sourceName).pipe(
+            map((result) => {
+                if (result) {
+                    this.addReference(sourceName, result);
                     return true;
                 }
-            },
-            complete: () => { subscription.unsubscribe(); }
-        })
-
-        // If it reached here then it failed to find
-        return false;
+                return false;
+            })
+        );
     }
 
     /**
-     * Parses field for references
-     * @param field 
-     * @param restApiConnector 
+     * Parses value for references
+     * @param value the value to match citations within
+     * @param restApiConnector to connect to the REST API
      * @param validateReferencesAndCitations 
      */
-    public parseCitations(field: string, restApiConnector: RestApiConnectorService, validateReferencesAndCitations=false) : void {
+    public parseCitations(value: string, restApiConnector: RestApiConnectorService): Observable<CitationParseResult> {
+        console.log("parsing citations in", value);
         let reReference = /\(Citation: (.*?)\)/gmu;
-        let citations = field.match(reReference);
+        let citations = value.match(reReference);
+        let result = new CitationParseResult({
+            brokenCitations: this.validateBrokenCitations(value, [/\(Citation:([^ ].*?)\)/gmu, /\(citation:(.*?)\)/gmu])
+        })
+
         if (citations) {
+            // build lookup api map
+            let api_map = {};
             for (let i = 0; i < citations.length; i++) {
                 // Split to get source name from citation
                 let sourceName = citations[i].split("(Citation: ")[1].slice(0, -1);
-                if (validateReferencesAndCitations) {
-                    if (!this.checkReferences(sourceName, restApiConnector)) if (this.missingReferences.indexOf(sourceName) == -1) this.missingReferences.push(sourceName);
-                    if (this.usedReferences.indexOf(sourceName) == -1) this.usedReferences.push(sourceName);
-                }
-                else this.checkReferences(sourceName, restApiConnector);
+                api_map[sourceName] = this.checkAndAddReference(sourceName, restApiConnector);
             }
-        }
-
-        // Extra validation for broken citations such as (Citation:xyz) and (citation: xyz)
-        if (validateReferencesAndCitations) {
-            // Check citations missing space between (Citation: xyz) like (Citation:xyz)
-            this.validateBrokenCitations(field, /\(Citation:([^ ].*?)\)/gmu);
-
-            // Check citations with wrong capitalization like (citation: xyz), will also pick up (citation:xyz)
-            this.validateBrokenCitations(field, /\(citation:(.*?)\)/gmu);
+            // check/add each citation
+            return forkJoin(api_map).pipe(
+                map((api_results) => {
+                    let citation_results = api_results as any;
+                    for (let key of Object.keys(citation_results)) {
+                        // was the result able to be found/added?
+                        if (citation_results[key]) result.usedCitations.add(key)
+                        else result.missingCitations.add(key)
+                    }
+                    return result;
+                })
+            )
+        } else {
+            return of(result);
         }
     }
 
     /**
      * validate given field for broken citation found by regular expression
      * @param field descriptive field that may contain citation
-     * @param regEx regular expression
+     * @param {regex[]} regExes regular expression
      */
-    private validateBrokenCitations(field, regEx) : void {
-        let brokenReferences = field.match(regEx);
-        if (brokenReferences) {
-            for (let i = 0; i < brokenReferences.length; i++) {
-                if (this.usedReferences.indexOf(brokenReferences[i]) == -1) this.brokenCitations.push(brokenReferences[i]);
+    private validateBrokenCitations(field, regExes): Set<string> {
+        let result = new Set<string>();
+        for (let regex of regExes) {
+            let brokenReferences = field.match(regex);
+            if (brokenReferences) {
+                for (let i = 0; i < brokenReferences.length; i++) {
+                    result.add(brokenReferences[i]);
+                }
             }
         }
+        return result;
     }
 
     /**
@@ -189,14 +197,25 @@ export class ExternalReferences extends Serializable {
      * @param restApiConnector
      * @param validateReferencesAndCitations? Optional param to validate references and citations
      */
-    public parseCitationsFromAliases(aliases : string[], restApiConnector : RestApiConnectorService, validateReferencesAndCitations=false) : void {
+    public parseCitationsFromAliases(aliases : string[], restApiConnector : RestApiConnectorService): Observable<CitationParseResult> {
         // Parse citations from the alias descriptions stored in external references
+        let api_calls = [];
         for (let i = 0; i < aliases.length; i++) {
             if (this._externalReferences.get(aliases[i])) {
-                this.parseCitations(this._externalReferences.get(aliases[i]).description, restApiConnector, validateReferencesAndCitations)
-                if (validateReferencesAndCitations) if (this.usedReferences.indexOf(aliases[i]) == -1) this.usedReferences.push(aliases[i]);
+                api_calls.push(this.parseCitations(this._externalReferences.get(aliases[i]).description, restApiConnector));
             }
         }
+        let result = new CitationParseResult();
+        if (api_calls.length == 0) return of(result);
+        else return forkJoin(api_calls).pipe( // get citation errors for each alias
+            map((api_results) => {
+                let citation_results = api_results as any;
+                for (let citation_result of citation_results) { //merge into master list
+                    result.merge(citation_result);
+                }
+                return result; //return master list
+            })
+        )
     }
 
     /**
@@ -272,17 +291,17 @@ export class ExternalReferences extends Serializable {
     }
 
     /**
-     * Get missing external references and
-     * Remove external references that are not used
-     * @returns {string} return string of missing references that were not found in object or directive list
+     * Remove references which do not have the source name
+     *
+     * @param {string[]} usedSourceNames the source names that are used on the object; all other source names will be removed
+     * @memberof ExternalReferences
      */
-     public getMissingReferencesAndRemoveUnusedReferencesStr(): string {
-
+    public removeUnusedReferences(usedSourceNames: string[]) {
         // Create temp external references map from used references
         // Resulting map will remove unused references
         let temp_externalReferences : Map<string, ExternalReference> = new Map();
-        for (let i = 0; i < this.usedReferences.length; i++) {
-            let sourceName = this.usedReferences[i];
+        for (let i = 0; i < usedSourceNames.length; i++) {
+            let sourceName = usedSourceNames[i];
             if (this._externalReferences.get(sourceName)) temp_externalReferences.set(sourceName, this._externalReferences.get(sourceName));
         }
 
@@ -290,54 +309,62 @@ export class ExternalReferences extends Serializable {
         this._externalReferences = temp_externalReferences;
         // Sort references by description and update index map
         this.sortReferences()
-        
-        // Build missing references string
-        let missingReferencesStr = ""
-        
-        if (this.missingReferences.length) {
-            if (this.missingReferences.length == 1) missingReferencesStr += "Cannot find missing reference: ";
-            else missingReferencesStr += "Cannot find missing references: ";
-
-            missingReferencesStr += this.missingReferences.join(", ");
-        }
-        
-        // Reset usedRefences and missingReferences
-        this.usedReferences = [];
-        this.missingReferences = [];
-
-        // Return missing references to warn the user
-        return missingReferencesStr;
     }
-
-    /**
-     * getBrokenCitationsStr
-     * @returns {string} return string of broken citations such as missing space or wrong capitalization
-     */
-     public getBrokenCitationsStr(): string {
-        // Build string of references missing space string
-        let brokenCitationsStr = ""
-
-        // “Citation(s) […] do(es) not match format (Citation: source name)” for missing spaces and capitalization issues
-        if (this.brokenCitations.length) {
-            if (this.brokenCitations.length == 1) {
-                brokenCitationsStr += "Citation " + this.brokenCitations[0] + " does not match format (Citation: source name)"
-            }
-            else brokenCitationsStr += "Citations " + this.brokenCitations.join(", ") + " do not match format (Citation: source name)"
-        }
-        
-        // Reset brokenCitations
-        this.brokenCitations = [];
-
-        // Return broken citations to warn the user
-        return brokenCitationsStr;
-     }
 
     /*
      * Validate the current object state and return information on the result of the validation
+     * Also removes unused external references.
      * @returns {Observable<ValidationData>} the validation warnings and errors once validation is complete.
      */
-    public validate(restAPIService: RestApiConnectorService): Observable<ValidationData> {
-        return of(new ValidationData()) //TODO
+    public validate(restAPIService: RestApiConnectorService, options: {fields: string[], object: StixObject}): Observable<ValidationData> {
+        let result = new ValidationData();
+        let parse_apis = [];
+        for (let field of options.fields) {
+            if (!Object.keys(options.object)) continue; //object does not implement the field
+            if (field == "aliases") parse_apis.push(this.parseCitationsFromAliases(options.object[field], restAPIService))
+            else parse_apis.push(this.parseCitations(options.object[field], restAPIService));
+        }
+        return forkJoin(parse_apis).pipe(
+            map(api_results => {
+                let parse_results = api_results as CitationParseResult[];
+                let citationResult = new CitationParseResult();
+                for (let parse_result of parse_results) {
+                    citationResult.merge(parse_result); //merge all results into a single object
+                }
+                // use merged object to remove unused citations
+                this.removeUnusedReferences(Array.from(citationResult.usedCitations));
+
+                // add to validation result
+
+                // broken citations
+                let brokenCitations = Array.from(citationResult.brokenCitations);
+                if (brokenCitations.length == 1) result.errors.push({
+                    result: "error",
+                    field: "external_references", //TODO set this to the actual field to improve warnings
+                    message: `Citation ${brokenCitations[0]} does not match format (Citation: source name)`
+                }) 
+                else if (brokenCitations.length > 1) result.errors.push({
+                    result: "error",
+                    field: "external_references", //TODO set this to the actual field to improve warnings
+                    message: `Citations ${brokenCitations.join(", ")} do not match format (Citation: source name)`
+                })
+
+                //missing citations
+                let missingCitations = Array.from(citationResult.missingCitations);
+                if (missingCitations.length == 1) result.errors.push({
+                    result: "error",
+                    field: "external_references", //TODO set this to the actual field to improve warnings
+                    message: `Cannot find reference: ${missingCitations[0]} `
+                }) 
+                else if (missingCitations.length > 1) result.errors.push({
+                    result: "error",
+                    field: "external_references", //TODO set this to the actual field to improve warnings
+                    message: `Cannot find references: ${missingCitations.join(", ")}`
+                })
+                //return the result
+                return result;
+            })
+        )
     }
 }
 
@@ -348,4 +375,32 @@ export interface ExternalReference {
     url: string;
     /** description; description of reference */
     description: string;
+}
+
+/**
+ * The results of parsing citations in a single field
+ */
+export class CitationParseResult {
+    //list of reference source names which have been used in this field
+    public usedCitations: Set<string> = new Set();
+    //citations that could not be found
+    public missingCitations: Set<string> = new Set();
+    // list of broken references detected in the field
+    public brokenCitations: Set<string> = new Set(); 
+
+    constructor(initData?: {usedCitations?: Set<string>, missingCitations?: Set<string>, brokenCitations: Set<string>}) {
+        if (initData && initData.usedCitations) this.usedCitations = initData.usedCitations;
+        if (initData && initData.missingCitations) this.missingCitations = initData.missingCitations;
+        if (initData && initData.brokenCitations) this.brokenCitations = initData.brokenCitations;
+    }
+
+    /**
+     * Merge results from another CitationParseResult into this object
+     * @param {CitationParseResult} that results from other object
+     */
+    public merge(that: CitationParseResult) {
+        this.usedCitations = new Set([...this.usedCitations, ...that.usedCitations]);
+        this.missingCitations = new Set([...this.missingCitations, ...that.missingCitations]);
+        this.brokenCitations = new Set([...this.brokenCitations, ...that.brokenCitations]);
+    }
 }
