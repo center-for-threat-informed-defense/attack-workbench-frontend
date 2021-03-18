@@ -1,0 +1,16 @@
+<div class="alias-edit-dialog">
+    <h1 *ngIf="is_new">Add an alias</h1>
+    <h1 *ngIf="!is_new">Edit an Alias</h1>
+    <mat-form-field appearance="outline">
+        <mat-label>alias name</mat-label>
+        <input matInput required [disabled]="!is_new" [(ngModel)]="config.aliasName">
+    </mat-form-field>
+    <mat-form-field appearance="outline">
+        <mat-label>alias description or citation</mat-label>
+        <input matInput [(ngModel)]="aliasDescription">
+    </mat-form-field>
+    <div class="buttons">
+        <button mat-button matDialogClose>cancel</button>
+        <button mat-stroked-button [disabled]="config.aliasName.length < 1" (click)="setAlias()">confirm</button>
+    </div>
+</div>

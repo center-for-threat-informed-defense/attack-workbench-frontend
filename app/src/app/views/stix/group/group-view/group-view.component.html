@@ -37,7 +37,7 @@
         <div class="col">
             <!-- GROUP ALIASES -->
             <app-alias-property class="grow-to-row" [config]="{
-                mode: 'view',
+                mode: editing? 'edit' : 'view',
                 object: group,
                 field: 'aliases',
                 referencesField: 'external_references',
@@ -49,12 +49,12 @@
         <div class="col">
             <!-- DESCRIPTION -->
             <app-descriptive-property [config]="{
-                mode: 'view',
+                mode: editing? 'edit' : 'view',
                 object: group,
                 field: 'description',
                 firstParagraphOnly: false, 
                 referencesField: group.external_references,
-                label: 'description'
+                label: 'Description'
             }"></app-descriptive-property>
         </div>
     </div>
@@ -125,7 +125,7 @@
         <div class="row">
             <div class="col">
                 <app-external-references-property [config]="{
-                    mode: 'view',
+                    mode: editing? 'edit': 'view',
                     object: group,
                     referencesField: group.external_references
                 }"></app-external-references-property>

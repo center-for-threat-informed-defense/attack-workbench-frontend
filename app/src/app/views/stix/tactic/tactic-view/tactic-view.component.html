@@ -37,12 +37,12 @@
         <div class="col">
             <!-- DESCRIPTION -->
             <app-descriptive-property [config]="{
-                mode: 'view',
+                mode: editing? 'edit' : 'view',
                 object: tactic,
                 field: 'description',
                 firstParagraphOnly: false, 
                 referencesField: tactic.external_references,
-                label: 'description'
+                label: 'Description'
             }"></app-descriptive-property>
         </div>
     </div>
@@ -56,5 +56,21 @@
         </div>
         <app-stix-list [config]="{'type': 'technique', 'showLinks': true}"></app-stix-list>
     </div> -->
-
+    <!-- EXTERNAL REFERENCES -->
+    <div *ngIf="tactic.external_references.list().length > 0">
+        <div class="row">
+            <div class="col">
+                <h2 class="section-header">References</h2>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <app-external-references-property [config]="{
+                    mode: editing? 'edit': 'view',
+                    object: tactic,
+                    referencesField: tactic.external_references
+                }"></app-external-references-property>
+            </div>
+        </div>
+    </div>
 </div>

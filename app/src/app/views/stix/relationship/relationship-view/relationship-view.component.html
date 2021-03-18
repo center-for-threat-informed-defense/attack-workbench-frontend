@@ -81,12 +81,12 @@
             <div class="col">
                 <!-- DESCRIPTION -->
                 <app-descriptive-property [config]="{
-                    mode: 'view',
+                    mode: config.mode == 'edit' ? 'edit' : 'view',
                     object: relationship,
                     field: 'description',
                     firstParagraphOnly: false, 
                     referencesField: relationship.external_references,
-                    label: 'description'
+                    label: 'Description'
                 }"></app-descriptive-property>
             </div>
         </div>
@@ -100,7 +100,7 @@
             <div class="row">
                 <div class="col">
                     <app-external-references-property [config]="{
-                        mode: 'view',
+                        mode: editing? 'edit': 'view',
                         object: relationship,
                         referencesField: relationship.external_references
                     }"></app-external-references-property>

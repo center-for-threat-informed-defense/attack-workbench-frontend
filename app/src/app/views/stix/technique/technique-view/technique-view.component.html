@@ -55,7 +55,7 @@
                 field: 'description',
                 firstParagraphOnly: false, 
                 referencesField: technique.external_references,
-                label: 'description'
+                label: 'Description'
             }"></app-descriptive-property>
         </div>
     </div>
@@ -181,6 +181,19 @@
             </div>
         </ng-container>
     </div>
+    <div class="row">
+        <div class="col">
+            <!-- DETECTION -->
+            <app-descriptive-property [config]="{
+                mode: editing? 'edit' : 'view',
+                object: technique,
+                field: 'detection',
+                firstParagraphOnly: false, 
+                referencesField: technique.external_references,
+                label: 'Detection'
+            }"></app-descriptive-property>
+        </div>
+    </div>
     <!-- RELATIONSHIPS -->
     <div *ngIf="(config.showRelationships || !config.hasOwnProperty('showRelationships')) && !editing">
         <!-- SUBTECHNIQUES -->
@@ -295,7 +308,7 @@
         <div class="row">
             <div class="col">
                 <app-external-references-property [config]="{
-                    mode: 'view',
+                    mode: editing? 'edit': 'view',
                     object: technique,
                     referencesField: technique.external_references
                 }"></app-external-references-property>

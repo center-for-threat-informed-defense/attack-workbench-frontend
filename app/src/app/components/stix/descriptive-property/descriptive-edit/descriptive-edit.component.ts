@@ -1,7 +1,7 @@
 import { Component, OnInit, Input, ChangeDetectorRef, ViewEncapsulation } from '@angular/core';
 import { DescriptivePropertyConfig } from '../descriptive-property.component';
-import { MatFormField, MatFormFieldControl } from '@angular/material/form-field';
-import { ViewChild } from '@angular/core'
+import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/rest-api-connector.service';
+import { FormControl } from '@angular/forms';
 
 @Component({
   selector: 'app-descriptive-edit',
@@ -12,9 +12,20 @@ import { ViewChild } from '@angular/core'
 
 export class DescriptiveEditComponent implements OnInit {
     @Input() public config: DescriptivePropertyConfig;
-
-    constructor() { }
+    public parsingCitations: boolean = false;
+    constructor(public restApiConnector: RestApiConnectorService) { }
 
     ngOnInit(): void {
+    }
+
+    parseCitations() {
+        this.parsingCitations = true;
+        let subscription = this.config.object['external_references'].parseCitations(this.config.object[this.config.field], this.restApiConnector).subscribe({
+            next: (result) => {
+                this.parsingCitations = false;
+                // subscription.unsubscribe(); 
+            },
+            // complete: () => { subscription.unsubscribe();  } //TODO why doesn't this work in this case?
+        })
     }
 }

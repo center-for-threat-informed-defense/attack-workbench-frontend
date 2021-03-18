@@ -195,7 +195,6 @@ export class Relationship extends StixObject {
                 })}
                 // is this a valid sub-technique-of relationship?
                 if (this.source_ref && this.target_ref && this.relationship_type == "subtechnique-of") {
-                    console.log(this.source_object, this.target_object)
                     if (!this.source_object.stix.hasOwnProperty("x_mitre_is_subtechnique") || this.source_object.stix.x_mitre_is_subtechnique == false) {
                         result.errors.push({
                             "field": "source_ref",

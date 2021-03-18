@@ -57,7 +57,7 @@
         <div class="col">
             <!-- SOFTWARE ALIASES -->
             <app-alias-property class="grow-to-row" [config]="{
-                mode: 'view',
+                mode: editing? 'edit' : 'view',
                 object: software,
                 field: 'aliases',
                 referencesField: 'external_references',
@@ -69,12 +69,12 @@
         <div class="col">
             <!-- DESCRIPTION -->
             <app-descriptive-property [config]="{
-                mode: 'view',
+                mode: editing? 'edit' : 'view',
                 object: software,
                 field: 'description',
                 firstParagraphOnly: false, 
                 referencesField: software.external_references,
-                label: 'description'
+                label: 'Description'
             }"></app-descriptive-property>
         </div>
     </div>
@@ -151,7 +151,7 @@
         <div class="row">
             <div class="col">
                 <app-external-references-property [config]="{
-                    mode: 'view',
+                    mode: editing? 'edit': 'view',
                     object: software,
                     referencesField: software.external_references
                 }"></app-external-references-property>

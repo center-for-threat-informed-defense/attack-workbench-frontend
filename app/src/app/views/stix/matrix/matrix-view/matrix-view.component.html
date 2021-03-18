@@ -28,12 +28,12 @@
         <div class="col">
             <!-- DESCRIPTION -->
             <app-descriptive-property class="grow-to-row" [config]="{
-                mode: 'view',
+                mode: editing? 'edit' : 'view',
                 object: matrix,
                 field: 'description',
                 firstParagraphOnly: false, 
                 referencesField: matrix.external_references,
-                label: 'description'
+                label: 'Description'
             }"></app-descriptive-property>
         </div>
     </div>
@@ -57,6 +57,23 @@
                 <ng-template #loadingTactics>
                     <app-loading-overlay></app-loading-overlay>
                 </ng-template>
+            </div>
+        </div>
+    </div>
+    <!-- EXTERNAL REFERENCES -->
+    <div *ngIf="matrix.external_references.list().length > 0">
+        <div class="row">
+            <div class="col">
+                <h2 class="section-header">References</h2>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <app-external-references-property [config]="{
+                    mode: editing? 'edit': 'view',
+                    object: matrix,
+                    referencesField: matrix.external_references
+                }"></app-external-references-property>
             </div>
         </div>
     </div>

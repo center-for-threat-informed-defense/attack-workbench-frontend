@@ -188,7 +188,7 @@ export abstract class StixObject extends Serializable {
             if ("external_references" in sdo) {
                 if (typeof(sdo.external_references) === "object") {
                     this.external_references = new ExternalReferences(sdo.external_references);
-                    if (sdo.external_references.length > 0 && this.type != "relationship") {
+                    if (sdo.external_references.length > 0 && this.type != "relationship" && sdo.external_references[0].hasOwnProperty("external_id")) {
                         if (typeof(sdo.external_references[0].external_id) === "string") this.attackID = sdo.external_references[0].external_id;
                         else console.error("TypeError: attackID field is not a string:", sdo.external_references[0].external_id, "(",typeof(sdo.external_references[0].external_id),")")
                     }
@@ -231,7 +231,7 @@ export abstract class StixObject extends Serializable {
      */
     public base_validate(restAPIService: RestApiConnectorService): Observable<ValidationData> {
         let validation = new ValidationData();
-        // TODO: validate description for missing citation and linkByIDs
+
         // test version number format
         if (!this.version.valid()) {
             validation.errors.push({
@@ -293,7 +293,6 @@ export abstract class StixObject extends Serializable {
                             }
                             // (\S+--)? is an organization prefix, and should probably be improved when that is made an explicit feature
                             let idRegex =  new RegExp("^(\\S+--)?" + this.attackIDValidator.regex + "$");
-                            console.log(idRegex);
                             let attackIDValid = idRegex.test(this.attackID);
                             if (!attackIDValid) {
                                 result.errors.push({
@@ -306,7 +305,21 @@ export abstract class StixObject extends Serializable {
                         return result;
                     })
                 )
-            }) //end switchmap
+            }), //end switchmap
+            // validate external references
+            switchMap(result => {
+                // build list of fields to validate external references on according to ATT&CK type
+                let refs_fields = ["description"];
+                if (this.attackType == "software" || this.attackType == "group") refs_fields.push("aliases");
+                if (this.attackType == "technique") refs_fields.push("detection");
+
+                return this.external_references.validate(restAPIService, {object: this, fields: refs_fields}).pipe(
+                    map(refs_result => {
+                        result.merge(refs_result);
+                        return result;
+                    })
+                )
+            })
             // TODO check if revoked-by exists if revoked?
         ) //end pipe
 

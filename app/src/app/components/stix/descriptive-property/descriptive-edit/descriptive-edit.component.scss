@@ -24,6 +24,7 @@
         }
         .mat-form-field-infix {
             border-top: 5px solid transparent;
+            padding-top: 0px;
         }
     }
     .preview {
@@ -35,5 +36,17 @@
         padding: 16px 12px;
         :first-child { margin-top: 0px; }
         :last-child { margin-bottom: 0px; }
+    }
+
+    .vertical-centered {
+        display:flex; 
+        align-items:center;
+    }
+
+    .info-icon {
+        font-size: 18px; 
+        display:flex; 
+        align-items:center; 
+        justify-content:center;
     }
 }

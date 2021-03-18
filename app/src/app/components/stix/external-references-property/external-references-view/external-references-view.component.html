@@ -4,10 +4,10 @@
             <ol [class.twocol]="display.length > 1">
                 <li *ngFor="let ref of display; index as i" value="{{i+1}}" [ngClass]="{'external-link': ref[1].url}" >
                     <span>
-                        <a *ngIf="ref[1].url"class="external-link" rel="nofollow" href="{{ref[1].url}}" target="_blank">
+                        <a *ngIf="ref[1].url && ref[1].description"class="external-link" rel="nofollow" href="{{ref[1].url}}" target="_blank">
                             {{ref[1].description}}
                         </a>
-                        <div *ngIf="!ref[1].url">
+                        <div *ngIf="!ref[1].url && ref[1].description">
                             {{ref[1].description}}
                         </div>
                     </span>
