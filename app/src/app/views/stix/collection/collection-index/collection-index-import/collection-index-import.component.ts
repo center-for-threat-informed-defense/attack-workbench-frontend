@@ -30,11 +30,9 @@ export class CollectionIndexImportComponent implements OnInit {
      * download the collection index at this.url and move to the next step in the stepper
      */
     public previewIndex(): void {
-        // console.log("trigger download");
         // TODO interact with collection manager to trigger download process
         let subscription = this.collectionManagerConnector.getRemoteIndex(this.url).subscribe({
             next: (index) => {
-                console.log("done");
                 this.index = new CollectionIndex(index);
                 if (this.index.valid()) { this.stepper.next(); }
                 else { this.error("Invalid collection index.") } //show snackbar

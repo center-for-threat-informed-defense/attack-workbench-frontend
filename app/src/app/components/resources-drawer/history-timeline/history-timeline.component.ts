@@ -93,7 +93,6 @@ export class HistoryTimelineComponent implements OnInit, OnDestroy {
             let firstVersion = true;
             for (let relationshipVersion of stixIDtoRelVersions[relationshipID]) {
                 let objectCreated = relationshipVersion.created.getTime() == relationshipVersion.modified.getTime();
-                console.log(relationshipVersion, objectCreated);
                 let objectImported = !objectCreated && firstVersion;
                 let relationshipName = `${relationshipVersion.source_name} ${relationshipVersion.relationship_type} ${relationshipVersion.target_name}`
                 let description = objectCreated? `${relationshipName} was created` : objectImported? `Earliest imported version of ${relationshipName}` : `${relationshipName} was edited`
@@ -128,7 +127,6 @@ export class HistoryTimelineComponent implements OnInit, OnDestroy {
     }
 
     public loadHistory() {
-        console.log("loading history")
         this.loading = true;
         let objectType = this.router.url.split("/")[1];
         let objectStixID = this.router.url.split("/")[2].split("?")[0];
@@ -150,14 +148,7 @@ export class HistoryTimelineComponent implements OnInit, OnDestroy {
         }).subscribe({
             next: (result) => {
                 this.parseHistory(result.objectVersions as StixObject[], result.relationships.data as Relationship[]);
-                // let versions = []
-                // versions = versions.concat(result.objectVersions);
-                // versions = versions.concat(result.relationshipsTo.data);
-                // versions = versions.concat(result.relationshipsFrom.data);
-                // this.historyEvents = versions.sort((a,b) => (b.modified as any) - (a.modified as any));
                 this.loading = false;
-                // console.log(this.historyEvents);
-                // this.historyLoaded.emit()
             },
             complete: () => { subscription.unsubscribe() }
         });
