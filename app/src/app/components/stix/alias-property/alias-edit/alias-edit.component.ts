@@ -29,25 +29,22 @@ export class AliasEditComponent implements OnInit {
         })
         let subscription = ref.afterClosed().subscribe({
             complete: () => {
-                console.log("updated alias")
                 subscription.unsubscribe();
             }
         })
     }
 
     public removeAlias(aliasName: string) {
-        console.log("removing alias", aliasName);
         let obj = this.config.object as StixObject;
         // remove from alias field
         obj[this.config.field] = obj[this.config.field].filter((x) => x != aliasName)
         // remove external reference citation
         let references = obj.external_references.serialize();
         references = references.filter((ref) => {
-            if (ref.source_name == aliasName) { console.log("removing ref", ref); return false };
+            if (ref.source_name == aliasName) { return false };
             return true;
         });
         obj.external_references.deserialize(references);
-        console.log(obj.external_references);
     }
 
 }

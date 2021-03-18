@@ -141,7 +141,6 @@ export class ExternalReferences extends Serializable {
      * @param validateReferencesAndCitations 
      */
     public parseCitations(value: string, restApiConnector: RestApiConnectorService): Observable<CitationParseResult> {
-        console.log("parsing citations in", value);
         let reReference = /\(Citation: (.*?)\)/gmu;
         let citations = value.match(reReference);
         let result = new CitationParseResult({

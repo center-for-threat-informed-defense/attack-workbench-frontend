@@ -22,7 +22,6 @@ export class DescriptiveEditComponent implements OnInit {
         this.parsingCitations = true;
         let subscription = this.config.object['external_references'].parseCitations(this.config.object[this.config.field], this.restApiConnector).subscribe({
             next: (result) => {
-                console.log("result returned", result);
                 this.parsingCitations = false;
                 // subscription.unsubscribe(); 
             },
