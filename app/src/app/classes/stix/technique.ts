@@ -53,6 +53,24 @@ export class Technique extends StixObject {
         this.kill_chain_phases = killChainPhases;
     }
 
+    public capec_ids: string[] = [];
+    public mtc_ids: string[] = [];
+
+    private mtcUrlMap = {
+        "APP": "application-threats",
+        "AUT": "authentication-threats",
+        "CEL": "cellular-threats",
+        "ECO": "ecosystem-threats",
+        "EMM": "emm-threats",
+        "GPS": "gps-threats",
+        "LPN": "lan-pan-threats",
+        "PAY": "payment-threats",
+        "PHY": "physical-threats",
+        "PRI": "privacy-threats",
+        "STA": "stack-threats",
+        "SPC": "supply-chain-threats"
+    }
+
     /**
      * Initialize Technique object
      * @param sdo the STIX domain object to initialize data from
@@ -100,6 +118,31 @@ export class Technique extends StixObject {
             if (this.tactics.includes('impact')) rep.stix.x_mitre_impact_type = this.impact_type;
         }
 
+        // mtc & capec ids
+        if (rep.stix.external_references) {
+            if (this.domains.includes('mobile-attack')) {
+                if (this.mtc_ids.length) {
+                    for (let id of this.mtc_ids) {
+                        let temp = {}
+                        temp["url"] = "https://pages.nist.gov/mobile-threat-catalogue/" + this.mtcUrlMap[id.split('-')[0]] + "/" + id + ".html";
+                        temp["source_name"] = "NIST Mobile Threat Catalogue";
+                        temp["external_id"] = id;
+                        rep.stix.external_references.push(temp);
+                    }
+                }
+            }
+            if (this.domains.includes('enterprise-attack')) {
+                if (this.capec_ids.length) {
+                    for (let id of this.capec_ids) {
+                        let temp = {}
+                        temp["url"] = "https://capec.mitre.org/data/definitions/" + id.split('-')[1] + ".html";
+                        temp["source_name"] = "capec";
+                        temp["external_id"] = id;
+                        rep.stix.external_references.push(temp);
+                    }
+                }
+            }
+        }
         return rep;
     }
 
@@ -183,6 +226,21 @@ export class Technique extends StixObject {
                 if (this.isStringArray(sdo.x_mitre_effective_permissions)) this.effective_permissions = sdo.x_mitre_effective_permissions;
                 else console.error("TypeError: effective permissions field is not a string array.");
             }
+
+            if ("external_references" in sdo) {
+                if (typeof(sdo.external_references) === "object") {
+                    for (let i = 0; i < sdo.external_references.length; i++){
+                        if ("source_name" in sdo.external_references[i] && "external_id" in sdo.external_references[i]) {
+                            if (typeof(sdo.external_references[i].external_id === "string")) {
+                                if (sdo.external_references[i].source_name == "capec") this.capec_ids.push(sdo.external_references[i].external_id);
+                                else if (sdo.external_references[i].source_name == "NIST Mobile Threat Catalogue") this.mtc_ids.push(sdo.external_references[i].external_id);
+                            }
+                            else console.error("TypeError: external ID field is not a string: ", sdo.external_references[i].external_id, "(", typeof(sdo.external_references[i].external_id, ")"));
+                        }
+                    }
+                }
+                else console.error("TypeError: external_references field is not an object:", sdo.external_references, "(",typeof(sdo.external_references),")")
+            }
         }
     }
 
@@ -193,6 +251,26 @@ export class Technique extends StixObject {
      */
     public validate(restAPIService: RestApiConnectorService): Observable<ValidationData> {
         return this.base_validate(restAPIService).pipe(
+            map(result => {
+                // check CAPEC IDs
+                let malformed_capec = this.capec_ids.filter(capec => !/^CAPEC-\d+$/.test(capec))
+                if (malformed_capec.length > 0) result.errors.push({
+                    "field": "external_references",
+                    "result": "error",
+                    "message": `CAPEC ID${malformed_capec.length > 1? 's' : ''} ${malformed_capec.join(", ")} do${malformed_capec.length == 1? 'es' : ''} not match format CAPEC-###`
+                })
+                
+                // check MTC IDs
+                let mtc_regex = new RegExp(`^(${Object.keys(this.mtcUrlMap).join("|")})-\\d+$`)
+                let malformed_mtc = this.mtc_ids.filter(mtc => !mtc_regex.test(mtc));
+                if (malformed_mtc.length > 0) result.errors.push({
+                    "field": "external_references",
+                    "result": "error",
+                    "message": `MTC ID${malformed_mtc.length > 1? 's' : ''} ${malformed_mtc.join(", ")} do${malformed_mtc.length == 1? 'es' : ''} not match format [Threat Category]-###`
+                })
+
+                return result;
+            }),
             switchMap(validationResult => {
                 return forkJoin({
                     sub_of: restAPIService.getRelatedTo({sourceRef: this.stixID, relationshipType: "subtechnique-of"}),

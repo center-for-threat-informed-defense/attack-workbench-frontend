@@ -46,6 +46,29 @@
             }"></app-list-property>
         </div>
     </div>
+    <!-- ADDITIONAL IDs -->
+    <div *ngIf="technique.capec_ids.length || (editing && technique.domains.includes('enterprise-attack'))" class="row">
+        <div class="col">
+            <app-list-property class="grow-to-row" [config]="{
+                mode: editing? 'edit': 'view',
+                object: technique,
+                field: 'capec_ids',
+                label: 'CAPEC IDs',
+                editType: 'any'
+            }"></app-list-property>
+        </div>
+    </div>
+    <div *ngIf="technique.mtc_ids.length || (editing && technique.domains.includes('mobile-attack'))" class="row">
+        <div class="col">
+            <app-list-property class="grow-to-row" [config]="{
+                mode: editing? 'edit': 'view',
+                object: technique,
+                field: 'mtc_ids',
+                label: 'MTC IDs',
+                editType: 'any'
+            }"></app-list-property>
+        </div>
+    </div>
     <div class="row">
         <div class="col">
             <!-- DESCRIPTION -->
