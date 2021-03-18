@@ -56,16 +56,12 @@ export class CollectionImportComponent implements OnInit {
     }
 
     public previewCollection() {
-        console.log("previewing collection:");
-        console.log("1. fetching raw collection bundle")
         this.loadingStep1 = true;
         let subscription_getBundle = this.http.get(this.url).subscribe({ //get the raw collection bundle from the endpoint
             next: (collectionBundle) => {
-                console.log("2. posting bundle to backend to get changelog preview")
                 // send the collection bundle to the backend
                 let subscription_preview = this.restAPIConnectorService.postCollectionBundle(collectionBundle, true).subscribe({
                     next: (preview_results) => {
-                        console.log("3. parsing preview")
                         this.parsePreview(collectionBundle, preview_results)
                     },
                     complete: () => { subscription_preview.unsubscribe() }
@@ -97,7 +93,6 @@ export class CollectionImportComponent implements OnInit {
             if ("id" in object) idToSdo[object.id] = {stix: object}
         }
 
-        // console.log(idToCategory);
         for (let object of collectionBundle.objects) {
             // look up the category for the object
             if (!(object.id in idToCategory)) {
@@ -142,7 +137,6 @@ export class CollectionImportComponent implements OnInit {
         }
         // set up selection
         this.select =  new SelectionModel(true, this.changed_ids);
-        console.log("4. done")
         
         this.stepper.next();
     }
@@ -176,7 +170,6 @@ export class CollectionImportComponent implements OnInit {
             next: (result) => {
                 if (result) {
                     // filter bundle for objects that were not selected
-                    console.log("saving collection")
                     this.loadingStep2 = true;
                     setTimeout(() => { //make sure the loading icon renders before the parsing/writing
                         let newBundle = JSON.parse(JSON.stringify(this.collectionBundle)); //deep copy

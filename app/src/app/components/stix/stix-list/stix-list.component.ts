@@ -347,10 +347,8 @@ export class StixListComponent implements OnInit, AfterViewInit {
                 // filter to only ones within the correct index range
                 let startIndex = this.paginator? this.paginator.pageIndex * this.paginator.pageSize : 0
                 let endIndex = this.paginator? startIndex + this.paginator.pageSize : 10;
-                // console.log(filtered, this.config.stixObjects);
                 filtered = filtered.slice(startIndex, endIndex);
                 // filter to objects matching searchString
-                // console.log(startIndex, endIndex)
                 this.data$ = of({
                     data: filtered,
                     pagination: {
@@ -360,8 +358,6 @@ export class StixListComponent implements OnInit, AfterViewInit {
                     }
                 });
                 // this.objects$ = of(filtered);
-                // console.log(this.objects$);
-                // console.log(this.paginator);
             }
         } else {
             // fetch objects from backend
