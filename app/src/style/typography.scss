@@ -41,8 +41,7 @@
     line-height: 1.5;
 
     h1 { @extend .heading; }
-    h2, h3 { @extend .subheading; }
-    h4 { @extend .subsubheading; }
+    h2, h3, h4 { @extend .subheading; }
 
     a:not(.external-link):not(.mat-button):not(.mat-stroked-button) {
         color: inherit;
