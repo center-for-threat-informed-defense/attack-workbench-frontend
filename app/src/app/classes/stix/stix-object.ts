@@ -40,6 +40,7 @@ export abstract class StixObject extends Serializable {
         "mitigation": "mitigations",
         "matrix": "matrices",
         "tactic": "tactics",
+        "note": "notes"
     }
 
     public get routes(): any[] { // route to view the object

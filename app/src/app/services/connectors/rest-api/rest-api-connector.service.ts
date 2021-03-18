@@ -1,7 +1,7 @@
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { Observable, of, ReplaySubject } from 'rxjs';
+import { forkJoin, Observable, of, ReplaySubject } from 'rxjs';
 import { tap, catchError, map, share, switchMap } from 'rxjs/operators';
 import { CollectionIndex } from 'src/app/classes/collection-index';
 import { ExternalReference } from 'src/app/classes/external-references';
@@ -9,6 +9,7 @@ import { Collection } from 'src/app/classes/stix/collection';
 import { Group } from 'src/app/classes/stix/group';
 import { Matrix } from 'src/app/classes/stix/matrix';
 import { Mitigation } from 'src/app/classes/stix/mitigation';
+import { Note } from 'src/app/classes/stix/note';
 import { Relationship } from 'src/app/classes/stix/relationship';
 import { Software } from 'src/app/classes/stix/software';
 import { StixObject } from 'src/app/classes/stix/stix-object';
@@ -18,7 +19,7 @@ import { environment } from "../../../../environments/environment";
 import { ApiConnector } from '../api-connector';
 
 //attack types
-type AttackType = "collection" | "group" | "matrix" | "mitigation" | "software" | "tactic" | "technique" | "relationship";
+type AttackType = "collection" | "group" | "matrix" | "mitigation" | "software" | "tactic" | "technique" | "relationship" | "note";
 // pluralize AttackType
 const attackTypeToPlural = {
     "technique": "techniques",
@@ -28,7 +29,8 @@ const attackTypeToPlural = {
     "mitigation": "mitigations",
     "matrix": "matrices",
     "collection": "collections",
-    "relationship": "relationships"
+    "relationship": "relationships",
+    "note": "notes"
 }
 // transform AttackType to the relevant class
 const attackTypeToClass = {
@@ -39,7 +41,8 @@ const attackTypeToClass = {
     "mitigation": Mitigation,
     "matrix": Matrix,
     "collection": Collection,
-    "relationship": Relationship
+    "relationship": Relationship,
+    "note": Note
 }
 
 // transform AttackType to the relevant class
@@ -77,8 +80,10 @@ export class RestApiConnectorService extends ApiConnector {
     private getObjectName(object: StixObject): string {
         if (object.type == "relationship") {
             return `${object["source_name"]} ${object["relationship_type"]} ${object["target_name"]}`
+        } else if (object.type == "note") {
+            return object["title"];
         } else if ("name" in object) {
-            return object["name"]
+            return object["name"];
         } else if (object["attackID"]) {
             return object["attackID"];
         } else {
@@ -236,6 +241,17 @@ export class RestApiConnectorService extends ApiConnector {
      * @returns {Observable<Matrix[]>} observable of retrieved objects
      */
     public get getAllCollections() { return this.getStixObjectsFactory<Collection>("collection"); }
+    /**
+     * Get all notes
+     * @param {number} [limit] the number of notes to retrieve
+     * @param {number} [offset] the number of notes to skip
+     * @param {string} [state] if specified, only get objects with this state
+     * @param {boolean} [revoked] if true, get revoked objects
+     * @param {boolean} [deprecated] if true, get deprecated objects
+     * @param {string[]} [excludeIDs] if specified, excludes these STIX IDs from the result
+     * @returns {Observable<Matrix[]>} observable of retrieved objects
+     */
+    public get getAllNotes() { return this.getStixObjectsFactory<Note>("note"); }
     /**
      * Get all relationships
      * @param {number} [limit] the number of relationships to retrieve
@@ -424,9 +440,17 @@ export class RestApiConnectorService extends ApiConnector {
      * @param {string} id the object STIX ID
      * @param {Date} [modified] if specified, get the version modified at the given date
      * @param {versions} [string] default "latest", if "all" returns all versions of the object instead of just the latest version.
-     * @returns {Observable<Matrix>} the object with the given ID and modified date
+     * @returns {Observable<Collection>} the object with the given ID and modified date
      */
     public get getCollection() { return this.getStixObjectFactory<Collection>("collection"); }
+    /**
+     * Get a single note by STIX ID
+     * @param {string} id the object STIX ID
+     * @param {Date} [modified] if specified, get the version modified at the given date
+     * @param {versions} [string] default "latest", if "all" returns all versions of the object instead of just the latest version.
+     * @returns {Observable<Note>} the object with the given ID and modified date
+     */
+    public get getNote() { return this.getStixObjectFactory<Note>("note"); }
 
     /**
      * Factory to create a new STIX object creator (POST) function
@@ -494,6 +518,12 @@ export class RestApiConnectorService extends ApiConnector {
      * @returns {Observable<Relationship>} the created object
      */
     public get postRelationship() { return this.postStixObjectFactory<Relationship>("relationship"); }
+    /**
+     * POST (create) a new note
+     * @param {Note} object the object to create
+     * @returns {Observable<Note>} the created object
+     */
+    public get postNote() { return this.postStixObjectFactory<Note>("note"); }
 
     /**
      * Factory to create a new STIX put (update) function
@@ -569,11 +599,19 @@ export class RestApiConnectorService extends ApiConnector {
      * @returns {Observable<Relationship>} the updated object
      */
     public get putRelationship() { return this.postStixObjectFactory<Relationship>("relationship"); }
+    /**
+     * PUT (update) a note
+     * @param {Note} object the object to update
+     * @param {Date} [modified] optional, the modified date to overwrite. If omitted, uses the modified field of the object
+     * @returns {Observable<Note>} the updated object
+     */
+    public get putNote() { return this.postStixObjectFactory<Note>("note"); }
 
     private deleteStixObjectFactory(attackType: AttackType) {
         let plural = attackTypeToPlural[attackType];
         return function(id: string, modified: Date): Observable<{}> {
-            let url = `${this.baseUrl}/${plural}/${id}/modified/${modified}`;
+            let modifiedStix = modified.toISOString();
+            let url = `${this.baseUrl}/${plural}/${id}/modified/${modifiedStix}`;
             return this.http.delete(url).pipe(
                 tap(this.handleSuccess(`${attackType} deleted`)),
                 catchError(this.handleError_single()),
@@ -631,7 +669,19 @@ export class RestApiConnectorService extends ApiConnector {
      * @returns {Observable<{}>} observable of the response body
      */
     public get deleteCollection() { return this.deleteStixObjectFactory("collection"); }
-
+    /**
+     * DELETE a note
+     * @param {string} id the STIX ID of the object to delete
+     * @param {Date} modified The modified date of the version to delete
+     * @returns {Observable<{}>} observable of the response body
+     */
+    public deleteNote(id: string) {
+        return this.http.delete(`${this.baseUrl}/notes/${id}`).pipe(
+            tap(this.handleSuccess("note removed")),
+            catchError(this.handleError_single()),
+            share()
+        )
+    }
 
     //   ___ ___ _      _ _____ ___ ___  _  _ ___ _  _ ___ ___  ___
     //  | _ \ __| |    /_\_   _|_ _/ _ \| \| / __| || |_ _| _ \/ __|

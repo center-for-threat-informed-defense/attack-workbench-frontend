@@ -104,6 +104,13 @@ $tooltip-color: color-alternate(dark, 4);
             color: on-color(warn)
         }
     }
+
+    &.light .mat-select-panel .mat-option.mat-active {
+        background: color-alternate(light, 2.5);
+    }
+    &.dark .mat-select-panel .mat-option.mat-active {
+        background: color-alternate(dark, 2.5);
+    }
 }
 //patch popover style
 .popover {
@@ -151,6 +158,11 @@ button.mat-stroked-button:disabled {
         color: on-color-alternate(dark);
         background: color-alternate(dark);
     }
+}
+
+.mat-card .mat-card-header {
+    .light & { background: color-alternate(light); }
+    .dark & { background: color-alternate(dark); }
 }
 
 .mat-chip.mat-standard-chip {
