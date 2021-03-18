@@ -141,6 +141,9 @@ import { OrderedListPropertyComponent } from './components/stix/ordered-list-pro
 import { OrderedListViewComponent } from './components/stix/ordered-list-property/ordered-list-view/ordered-list-view.component';
 import { OrderedListEditComponent } from './components/stix/ordered-list-property/ordered-list-edit/ordered-list-edit.component';
 
+import { NotesEditorComponent } from './components/resources-drawer/notes-editor/notes-editor.component';
+
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -227,7 +230,9 @@ import { OrderedListEditComponent } from './components/stix/ordered-list-propert
     AliasEditDialogComponent,
     OrderedListPropertyComponent,
     OrderedListViewComponent,
-    OrderedListEditComponent
+    OrderedListEditComponent,
+
+    NotesEditorComponent
   ],
   imports: [
     BreadcrumbModule,
