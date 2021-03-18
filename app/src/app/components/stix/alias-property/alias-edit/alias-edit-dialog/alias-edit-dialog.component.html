@@ -11,6 +11,6 @@
     </mat-form-field>
     <div class="buttons">
         <button mat-button matDialogClose>cancel</button>
-        <button mat-stroked-button (click)="setAlias()">confirm</button>
+        <button mat-stroked-button [disabled]="config.aliasName.length < 1" (click)="setAlias()">confirm</button>
     </div>
 </div>
