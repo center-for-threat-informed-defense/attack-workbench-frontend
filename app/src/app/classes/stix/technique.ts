@@ -251,6 +251,26 @@ export class Technique extends StixObject {
      */
     public validate(restAPIService: RestApiConnectorService): Observable<ValidationData> {
         return this.base_validate(restAPIService).pipe(
+            map(result => {
+                // check CAPEC IDs
+                let malformed_capec = this.capec_ids.filter(capec => !/^CAPEC-\d+$/.test(capec))
+                if (malformed_capec.length > 0) result.errors.push({
+                    "field": "external_references",
+                    "result": "error",
+                    "message": `CAPEC ID${malformed_capec.length > 1? 's' : ''} ${malformed_capec.join(", ")} do${malformed_capec.length == 1? 'es' : ''} not match format CAPEC-###`
+                })
+                
+                // check MTC IDs
+                let mtc_regex = new RegExp(`^(${Object.keys(this.mtcUrlMap).join("|")})-\\d+$`)
+                let malformed_mtc = this.mtc_ids.filter(mtc => !mtc_regex.test(mtc));
+                if (malformed_mtc.length > 0) result.errors.push({
+                    "field": "external_references",
+                    "result": "error",
+                    "message": `MTC ID${malformed_mtc.length > 1? 's' : ''} ${malformed_mtc.join(", ")} do${malformed_mtc.length == 1? 'es' : ''} not match format [Threat Category]-###`
+                })
+
+                return result;
+            }),
             switchMap(validationResult => {
                 return forkJoin({
                     sub_of: restAPIService.getRelatedTo({sourceRef: this.stixID, relationshipType: "subtechnique-of"}),
