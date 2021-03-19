@@ -20,7 +20,7 @@ export class CollectionIndexListComponent implements OnInit {
 
     ngOnInit(): void {
         this.refreshIndexes();
-        let subscription = this.restAPIConnector.getAllCollections(null, null, null, null, null, "all").subscribe({
+        let subscription = this.restAPIConnector.getAllCollections({versions: "all"}).subscribe({
             next: (results) => {
                 for (let collection of results.data) {
                     this.subscribed_collections.push(`${collection.stixID}@${collection.modified}`)

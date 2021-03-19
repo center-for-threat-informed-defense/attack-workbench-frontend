@@ -4,6 +4,8 @@ import { NgModule } from '@angular/core';
 import { AppRoutingModule } from './app-routing.module';
 import { AppRoutingStixModule } from "./app-routing-stix.module"
 import { HttpClient, HttpClientModule } from '@angular/common/http'
+import { DragDropModule } from '@angular/cdk/drag-drop';
+import { ClipboardModule } from '@angular/cdk/clipboard';
 
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -23,7 +25,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatStepperModule } from '@angular/material/stepper';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import {MatListModule} from '@angular/material/list';
+import { MatListModule } from '@angular/material/list';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
@@ -35,6 +37,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatChipsModule } from '@angular/material/chips';
 
 // other library imports
 import { BreadcrumbModule } from "angular-crumbs";
@@ -53,6 +56,14 @@ import { ConfirmationDialogComponent } from "./components/confirmation-dialog/co
 import { EmptyListMarkerComponent } from "./components/empty-list-marker/empty-list-marker.component";
 import { MarkdownViewDialogComponent } from "./components/markdown-view-dialog/markdown-view-dialog.component";
 import { CollectionImportSummaryComponent } from "./components/collection-import-summary/collection-import-summary.component";
+import { SaveDialogComponent } from "./components/save-dialog/save-dialog.component";
+import { AddDialogComponent } from './components/add-dialog/add-dialog.component';
+import { HistoryTimelineComponent } from "./components/resources-drawer/history-timeline/history-timeline.component";
+import { ReferenceManagerComponent } from "./components/resources-drawer/reference-manager/reference-manager.component";
+import { ReferenceEditDialogComponent } from "./components/resources-drawer/reference-manager/reference-edit-dialog/reference-edit-dialog.component"
+import { MultipleChoiceDialogComponent } from "./components/multiple-choice-dialog/multiple-choice-dialog.component";
+import { ValidationResultsComponent } from "./components/validation-results/validation-results.component";
+import { AddRelationshipButtonComponent } from "./components/add-relationship-button/add-relationship-button.component";
 
 // STIX components
 import { StixListComponent } from './components/stix/stix-list/stix-list.component';
@@ -81,6 +92,7 @@ import { VersionPropertyComponent } from "./components/stix/version-property/ver
 import { VersionEditComponent } from "./components/stix/version-property/version-edit/version-edit.component";
 import { VersionViewComponent } from "./components/stix/version-property/version-view/version-view.component";
 
+import { NamePropertyComponent } from "./components/stix/name-property/name-property.component";
 // import { RelationshipDialogComponent } from "./components/stix/relationship-dialog/relationship-dialog.component";
 
 // views
@@ -124,13 +136,12 @@ import { RelationshipViewComponent } from "./views/stix/relationship/relationshi
 import { AliasPropertyComponent } from './components/stix/alias-property/alias-property.component';
 import { AliasViewComponent } from './components/stix/alias-property/alias-view/alias-view.component';
 import { AliasEditComponent } from './components/stix/alias-property/alias-edit/alias-edit.component';
+import { AliasEditDialogComponent } from "./components/stix/alias-property/alias-edit/alias-edit-dialog/alias-edit-dialog.component";
 import { OrderedListPropertyComponent } from './components/stix/ordered-list-property/ordered-list-property.component';
 import { OrderedListViewComponent } from './components/stix/ordered-list-property/ordered-list-view/ordered-list-view.component';
 import { OrderedListEditComponent } from './components/stix/ordered-list-property/ordered-list-edit/ordered-list-edit.component';
 
-import { TypePropertyComponent } from './components/stix/type-property/type-property.component';
-import { TypeViewComponent } from './components/stix/type-property/type-view/type-view.component';
-import { TypeEditComponent } from './components/stix/type-property/type-edit/type-edit.component';
+import { NotesEditorComponent } from './components/resources-drawer/notes-editor/notes-editor.component';
 
 
 @NgModule({
@@ -147,6 +158,14 @@ import { TypeEditComponent } from './components/stix/type-property/type-edit/typ
     EmptyListMarkerComponent,
     MarkdownViewDialogComponent,
     CollectionImportSummaryComponent,
+    SaveDialogComponent,
+    AddDialogComponent,
+    HistoryTimelineComponent,
+    ReferenceManagerComponent,
+    ReferenceEditDialogComponent,
+    MultipleChoiceDialogComponent,
+    ValidationResultsComponent,
+    AddRelationshipButtonComponent,
     
     StixListComponent,
 
@@ -169,6 +188,7 @@ import { TypeEditComponent } from './components/stix/type-property/type-edit/typ
     VersionPropertyComponent,
     VersionEditComponent,
     VersionViewComponent,
+    NamePropertyComponent,
     
     LandingPageComponent,
     HelpPageComponent,
@@ -207,13 +227,12 @@ import { TypeEditComponent } from './components/stix/type-property/type-edit/typ
     AliasPropertyComponent,
     AliasViewComponent,
     AliasEditComponent,
+    AliasEditDialogComponent,
     OrderedListPropertyComponent,
     OrderedListViewComponent,
     OrderedListEditComponent,
 
-    TypePropertyComponent,
-    TypeViewComponent,
-    TypeEditComponent
+    NotesEditorComponent
   ],
   imports: [
     BreadcrumbModule,
@@ -263,6 +282,9 @@ import { TypeEditComponent } from './components/stix/type-property/type-edit/typ
     MatMenuModule,
     MatDialogModule,
     MatSnackBarModule,
+    MatChipsModule,
+    DragDropModule,
+    ClipboardModule,
 
     OverlayModule
   ],
@@ -291,6 +313,8 @@ import { TypeEditComponent } from './components/stix/type-property/type-edit/typ
     MatMenuModule,
     MatDialogModule,
     MatSnackBarModule,
+    DragDropModule,
+    ClipboardModule,
 
     OverlayModule
   ],

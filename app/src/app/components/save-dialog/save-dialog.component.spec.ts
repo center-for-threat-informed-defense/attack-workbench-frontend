@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { TypeViewComponent } from './type-view.component';
+import { SaveDialogComponent } from './save-dialog.component';
 
-describe('TypeViewComponent', () => {
-  let component: TypeViewComponent;
-  let fixture: ComponentFixture<TypeViewComponent>;
+describe('SaveDialogComponent', () => {
+  let component: SaveDialogComponent;
+  let fixture: ComponentFixture<SaveDialogComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ TypeViewComponent ]
+      declarations: [ SaveDialogComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(TypeViewComponent);
+    fixture = TestBed.createComponent(SaveDialogComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

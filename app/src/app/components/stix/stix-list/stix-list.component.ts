@@ -1,14 +1,15 @@
-import { Component, OnInit, Input, ViewEncapsulation, ViewChild, AfterViewInit, ElementRef } from '@angular/core';
+import { Component, OnInit, Input, ViewEncapsulation, ViewChild, AfterViewInit, ElementRef, EventEmitter, Output, OnDestroy } from '@angular/core';
 import { StixObject } from 'src/app/classes/stix/stix-object';
 import {animate, style, transition, trigger} from '@angular/animations';
 import {MatSort} from '@angular/material/sort';
 import {MatPaginator} from '@angular/material/paginator';
+import { Router } from '@angular/router';
 
 import { SelectionModel } from '@angular/cdk/collections';
 import { StixDialogComponent } from '../../../views/stix/stix-dialog/stix-dialog.component';
 
 import { MatDialog } from '@angular/material/dialog';
-import { fromEvent, Observable, of } from 'rxjs';
+import { fromEvent, Observable, of, Subscription } from 'rxjs';
 import { Paginated, RestApiConnectorService } from 'src/app/services/connectors/rest-api/rest-api-connector.service';
 import { debounceTime, distinctUntilChanged, filter, tap } from 'rxjs/operators';
 
@@ -35,18 +36,20 @@ import { debounceTime, distinctUntilChanged, filter, tap } from 'rxjs/operators'
         ])
     ]
 })
-export class StixListComponent implements OnInit, AfterViewInit {
+export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
 
 
     // @Input() public stixObjects: StixObject[]; //TODO get rid of this in favor of stix list cards loading using filters
     @Input() public config: StixListConfig = {};
     @ViewChild(MatPaginator) paginator: MatPaginator;
     @ViewChild('search') search: ElementRef;
+    public searchQuery: string = "";
+    private searchSubscription: Subscription;
     // @ViewChild(MatSort) public sort: MatSort;
 
     //objects to render;
     public objects$: Observable<StixObject[]>;
-    public data$: Observable<Paginated>;
+    public data$: Observable<Paginated<StixObject>>;
     public totalObjectCount: number = 0;
     //view mode
     public mode: string = "cards";
@@ -67,6 +70,19 @@ export class StixListComponent implements OnInit, AfterViewInit {
     // Selection stuff
     public selection: SelectionModel<string>;
 
+    // Type map for redirections
+    private typeMap = {
+        "x-mitre-collection": "collection",
+        "attack-pattern": "technique",
+        "malware": "software",
+        "tool": "software",
+        "intrusion-set": "group",
+        "course-of-action": "mitigation",
+        "x-mitre-matrix": "matrix",
+        "x-mitre-tactic": "tactic",
+        "relationship": "relationship"
+    }
+
     /**
      * Add a column to the table
      * @param {string} label the label to display the field under; column name
@@ -85,51 +101,72 @@ export class StixListComponent implements OnInit, AfterViewInit {
      * @param {StixObject} object of the row that was clicked
      */
     public onRowClick(element: StixObject) {
+        if (this.config.clickBehavior && this.config.clickBehavior == "none") return;
         if (this.config.clickBehavior && this.config.clickBehavior == "dialog") { //open modal
-            this.dialog.open(StixDialogComponent, {
+            let prompt = this.dialog.open(StixDialogComponent, {
                 data: {
                     object: element,
-                    editable: true,
-                    sidebarControl: "disable"
+                    editable: this.config.allowEdits,
+                    sidebarControl: this.config.allowEdits? "events" : "disable"
                 },
                 maxHeight: "75vh"
+            })
+            let subscription = prompt.afterClosed().subscribe({
+                next: result => { if (prompt.componentInstance.dirty) this.applyControls(); }, //re-fetch values since an edit occurred
+                complete: () => { subscription.unsubscribe(); }
             });
-        } else { //expand
+        }
+        else if (this.config.clickBehavior && this.config.clickBehavior == "linkToSourceRef") {
+            let source_ref = element['source_ref'];
+            // Get type to navigate from source_ref
+            let type = this.typeMap[source_ref.split('--')[0]];
+
+            this.router.navigateByUrl('/' + type + '/' + source_ref);
+        }
+        else if (this.config.clickBehavior && this.config.clickBehavior == "linkToTargetRef") {
+            let target_ref = element['target_ref'];
+            // Get type to navigate from target_ref
+            let type = this.typeMap[target_ref.split('--')[0]];
+
+            this.router.navigateByUrl('/'+ type + '/' + target_ref);
+        }
+        else { //expand
             this.expandedElement = this.expandedElement === element ? null : element;
         }
     }
     
 
     //all possible each type of filter/groupBy
-    private types: FilterValue[] = [
-        {"value": "type.group", "label": "group"},
-        {"value": "type.matrix", "label": "matrix"},
-        {"value": "type.mitigation", "label": "mitigation"},
-        {"value": "type.software", "label": "software"},
-        {"value": "type.tactic", "label": "tactic"},
-        {"value": "type.technique", "label": "technique"},
-    ]
-    private domains: FilterValue[] = [
-        {"value": "domain.enterprise-attack", "label": "enterprise"},
-        {"value": "domain.mobile-attack", "label": "mobile"}
-    ]
-    private collections: FilterValue[];
+    // private types: FilterValue[] = [
+    //     {"value": "type.group", "label": "group", "disabled": false},
+    //     {"value": "type.matrix", "label": "matrix", "disabled": false},
+    //     {"value": "type.mitigation", "label": "mitigation", "disabled": false},
+    //     {"value": "type.software", "label": "software", "disabled": false},
+    //     {"value": "type.tactic", "label": "tactic", "disabled": false},
+    //     {"value": "type.technique", "label": "technique", "disabled": false},
+    // ]
+    // private domains: FilterValue[] = [
+    //     {"value": "domain.enterprise-attack", "label": "enterprise", "disabled": false},
+    //     {"value": "domain.mobile-attack", "label": "mobile", "disabled": false}
+    // ]
     private statuses: FilterValue[] = [
-        {"value": "status.wip", "label": "work in progress"},
-        {"value": "status.awaiting-review", "label": "awaiting review"},
-        {"value": "status.reviewed", "label": "reviewed"},
-        {"value": "status.deprecated", "label": "deprecated"},
-        {"value": "status.revoked", "label": "revoked"}
+        {"value": "status.work-in-progress", "label": "show only work in progress", "disabled": false},
+        {"value": "status.awaiting-review", "label": "show only awaiting review", "disabled": false},
+        {"value": "status.reviewed", "label": "show only reviewed", "disabled": false}
+    ]
+    private states: FilterValue[] = [
+        {"value": "state.deprecated", "label": "include deprecated", "disabled": false},
+        {"value": "state.revoked", "label": "include revoked", "disabled": false}
     ]
 
-    constructor(public dialog: MatDialog, private restAPIConnectorService: RestApiConnectorService) {}
+    constructor(public dialog: MatDialog, private restAPIConnectorService: RestApiConnectorService, private router: Router) {}
     ngOnInit() {
         this.filterOptions = []
         // parse the config
         let controls_before = [] // control columns which occur before the main columns
         let controls_after = []; // control columns which occur after the main columns
         if ("type" in this.config) { 
-            this.filter.push("type." + this.config.type); 
+            // this.filter.push("type." + this.config.type); 
             // set columns according to type
             switch(this.config.type) {
                 case "collection":
@@ -142,9 +179,10 @@ export class StixListComponent implements OnInit, AfterViewInit {
                         "display": "descriptive"
                     }]
                     break;
-                case "matrix":
-                case "tactic":
                 case "mitigation":
+                case "tactic":
+                    this.addColumn("ID", "attackID", "plain", false);
+                case "matrix":
                     this.addColumn("name", "name", "plain", true, ["name"]);
                     this.addColumn("version", "version", "version");
                     this.addColumn("modified","modified", "timestamp");
@@ -155,6 +193,7 @@ export class StixListComponent implements OnInit, AfterViewInit {
                     }]
                     break;
                 case "group":
+                    this.addColumn("ID", "attackID", "plain", false);
                     this.addColumn("name", "name", "plain", true, ["name"]);
                     this.addColumn("aliases", "aliases", "list");
                     this.addColumn("version", "version", "version");
@@ -166,6 +205,7 @@ export class StixListComponent implements OnInit, AfterViewInit {
                     }]
                     break;
                 case "software":
+                    this.addColumn("ID", "attackID", "plain", false);
                     this.addColumn("name", "name", "plain", true, ["name"]);
                     this.addColumn("type", "type", "plain");
                     this.addColumn("version", "version", "version");
@@ -177,6 +217,7 @@ export class StixListComponent implements OnInit, AfterViewInit {
                     }]
                     break;
                 case "technique":
+                    this.addColumn("ID", "attackID", "plain", false);
                     this.addColumn("name", "name", "plain", true, ["name"]);
                     this.addColumn("platforms", "platforms", "list");
                     this.addColumn("version", "version", "version");
@@ -188,26 +229,32 @@ export class StixListComponent implements OnInit, AfterViewInit {
                     }]
                     break;
                 case "relationship":
-                    this.addColumn("source name", "source_name", "plain", this.config.targetRef? true : false);// ["name", "relationship-left"]);
+                    this.addColumn("source", "source_ID", "plain");
+                    this.addColumn("", "source_name", "plain", this.config.targetRef? true: false, ["relationship-name"]);// ["name", "relationship-left"]);
                     this.addColumn("type", "relationship_type", "plain", false, ["text-deemphasis", "relationship-joiner"]);
-                    this.addColumn("target name", "target_name", "plain", this.config.sourceRef? true : false);// ["name", "relationship-right"]);
-                    this.addColumn("description", "description", "descriptive", false);
+                    this.addColumn("target", "target_ID", "plain");
+                    this.addColumn("", "target_name", "plain", this.config.sourceRef? true: false, ["relationship-name"]);// ["name", "relationship-right"]);
+                    if (!(this.config.relationshipType && this.config.relationshipType == "subtechnique-of")) this.addColumn("description", "description", "descriptive", false);
                     // controls_after.push("open-link")
                     break;
                 default:
-                    this.addColumn("type", "attacktype", "plain");
+                    this.addColumn("type", "attackType", "plain");
                     this.addColumn("modified","modified", "timestamp");
                     this.addColumn("created", "created", "timestamp");
             }
-
         }
         else {
-            this.filterOptions.push({
-                "name": "type", //TODO make more extensible to additional types
-                "disabled": "type" in this.config,
-                "values": this.types
-            })
+            // this.filterOptions.push({
+            //     "name": "type", //TODO make more extensible to additional types
+            //     "disabled": "type" in this.config,
+            //     "values": this.types
+            // })
             this.groupBy = ["type"];
+            this.addColumn("type", "attackType", "plain");
+            this.addColumn("ID", "attackID", "plain", false);
+            this.addColumn("name", "name", "plain", true, ["name"]);
+            this.addColumn("modified","modified", "timestamp");
+            this.addColumn("created", "created", "timestamp");
         }
         
         
@@ -234,9 +281,14 @@ export class StixListComponent implements OnInit, AfterViewInit {
         this.tableColumns_controls = controls_before.concat(this.tableColumns, controls_after);
         // filter setup
         this.filterOptions.push({
-            "name": "status",
+            "name": "workflow status",
             "disabled": "status" in this.config,
             "values": this.statuses
+        })
+        this.filterOptions.push({
+            "name": "state",
+            "disabled": "status" in this.config,
+            "values": this.states
         })
         // get data from config (if we are not connecting to back-end)
         if ("stixObjects" in this.config && !(this.config.stixObjects instanceof Observable)) {
@@ -249,15 +301,17 @@ export class StixListComponent implements OnInit, AfterViewInit {
         // get objects from backend if data is not from config
         if (!("stixObjects" in this.config)) this.applyControls();
         // set up listener to search input
-        fromEvent(this.search.nativeElement, 'keyup').pipe(
-            filter(Boolean),
-            debounceTime(250),
-            distinctUntilChanged(),
-            tap(_ => { 
-                if (this.paginator) this.paginator.pageIndex = 0;
-                this.applyControls();
-            })
-        ).subscribe()
+        if (this.config.type && this.config.type != "relationship") {
+            this.searchSubscription = fromEvent(this.search.nativeElement, 'keyup').pipe(
+                filter(Boolean),
+                debounceTime(250),
+                distinctUntilChanged(),
+                tap(_ => { 
+                    if (this.paginator) this.paginator.pageIndex = 0;
+                    this.applyControls();
+                })
+            ).subscribe()
+        }
     }
 
 
@@ -286,7 +340,6 @@ export class StixListComponent implements OnInit, AfterViewInit {
      * Apply all controls and fetch objects from the back-end if configured
      */
     public applyControls() {
-        let searchString = this.search? this.search.nativeElement.value : "";
         if ("stixObjects" in this.config) {
             if (this.config.stixObjects instanceof Observable) {
                 // pull objects out of observable
@@ -297,16 +350,14 @@ export class StixListComponent implements OnInit, AfterViewInit {
                 // this.paginator.length = this.config.stixObjects.length;
                 // filter on STIX objects specified in the config
                 let filtered = this.config.stixObjects;
-                filtered = this.filterObjects(searchString, filtered); 
+                // filter to objects matching searchString
+                filtered = this.filterObjects(this.searchQuery, filtered); 
                 if (this.paginator) this.totalObjectCount = filtered.length;
                 
                 // filter to only ones within the correct index range
                 let startIndex = this.paginator? this.paginator.pageIndex * this.paginator.pageSize : 0
-                let endIndex = this.paginator? startIndex + this.paginator.pageSize : 5;
-                // console.log(filtered, this.config.stixObjects);
+                let endIndex = this.paginator? startIndex + this.paginator.pageSize : 10;
                 filtered = filtered.slice(startIndex, endIndex);
-                // filter to objects matching searchString
-                // console.log(startIndex, endIndex)
                 this.data$ = of({
                     data: filtered,
                     pagination: {
@@ -316,26 +367,58 @@ export class StixListComponent implements OnInit, AfterViewInit {
                     }
                 });
                 // this.objects$ = of(filtered);
-                // console.log(this.objects$);
-                // console.log(this.paginator);
             }
         } else {
             // fetch objects from backend
-            let limit = this.paginator? this.paginator.pageSize : 5;
+            let limit = this.paginator? this.paginator.pageSize : 10;
             let offset = this.paginator? this.paginator.pageIndex * limit : 0;
-            if (this.config.type == "software") this.data$ = this.restAPIConnectorService.getAllSoftware(limit, offset); //TODO add limit and offset once back-end supports it
-            else if (this.config.type == "group") this.data$ = this.restAPIConnectorService.getAllGroups(limit, offset); //TODO add limit and offset once back-end supports it
-            else if (this.config.type == "matrix") this.data$ = this.restAPIConnectorService.getAllMatrices(limit, offset); //TODO add limit and offset once back-end supports it
-            else if (this.config.type == "mitigation") this.data$ = this.restAPIConnectorService.getAllMitigations(limit, offset); //TODO add limit and offset once back-end supports it
-            else if (this.config.type == "tactic") this.data$ = this.restAPIConnectorService.getAllTactics(limit, offset); //TODO add limit and offset once back-end supports it
-            else if (this.config.type == "technique") this.data$ = this.restAPIConnectorService.getAllTechniques(limit, offset);
-            else if (this.config.type == "collection") this.data$ = this.restAPIConnectorService.getAllCollections();
-            else if (this.config.type == "relationship") this.data$ = this.restAPIConnectorService.getRelatedTo(this.config.sourceRef, this.config.targetRef, this.config.sourceType, this.config.targetType, this.config.relationshipType);
+            let deprecated = this.filter.includes("state.deprecated");
+            let revoked = this.filter.includes("state.revoked");
+            let state = this.filter.find((x) => x.startsWith("status."));
+            if (state) {
+                state = state.split("status.")[1];
+                // disable other states
+                for (let group of this.filterOptions) {
+                    for (let option of group.values) {
+                        if (option.value.startsWith("status.") && !option.value.endsWith(state)) option.disabled = true;
+                    }
+                }
+            } else {
+                // enable all states
+                for (let group of this.filterOptions) {
+                    for (let option of group.values) {
+                        if (option.value.startsWith("status.")) option.disabled = false;
+                    }
+                }
+            }
+            
+            let options = {
+                limit: limit, 
+                offset: offset, 
+                excludeIDs: this.config.excludeIDs, 
+                search: this.searchQuery, 
+                state: state, 
+                includeRevoked: revoked, 
+                includeDeprecated: deprecated
+            }
+
+            if (this.config.type == "software") this.data$ = this.restAPIConnectorService.getAllSoftware(options);
+            else if (this.config.type == "group") this.data$ = this.restAPIConnectorService.getAllGroups(options);
+            else if (this.config.type == "matrix") this.data$ = this.restAPIConnectorService.getAllMatrices(options);
+            else if (this.config.type == "mitigation") this.data$ = this.restAPIConnectorService.getAllMitigations(options);
+            else if (this.config.type == "tactic") this.data$ = this.restAPIConnectorService.getAllTactics(options);
+            else if (this.config.type == "technique") this.data$ = this.restAPIConnectorService.getAllTechniques(options);
+            else if (this.config.type == "collection") this.data$ = this.restAPIConnectorService.getAllCollections({search: this.searchQuery});
+            else if (this.config.type == "relationship") this.data$ = this.restAPIConnectorService.getRelatedTo({sourceRef: this.config.sourceRef, targetRef: this.config.targetRef, sourceType: this.config.sourceType, targetType: this.config.targetType, relationshipType: this.config.relationshipType,  excludeSourceRefs: this.config.excludeSourceRefs, excludeTargetRefs: this.config.excludeTargetRefs, limit: limit, offset: offset});
             let subscription = this.data$.subscribe({
                 next: (data) => { this.totalObjectCount = data.pagination.total; },
                 complete: () => { subscription.unsubscribe() }
             })
         }
+    }
+
+    public ngOnDestroy() {
+        if (this.searchSubscription) this.searchSubscription.unsubscribe();
     }
 }
 
@@ -382,13 +465,26 @@ export interface StixListConfig {
      * How should the table act when the row is clicked? default "expand"
      *     "expand": expand the row to show additional detail
      *     "dialog": open a dialog with the full object definition
+     *     "linkToSourceRef": clicking redirects to the source ref object
+     *     "linkToTargetRef": clicking redirects user to target ref object
+     *     "none": row is not clickable
      */
-    clickBehavior?: "expand" | "dialog"
+    clickBehavior?: "expand" | "dialog" | "linkToSourceRef" | "linkToTargetRef" | "none";
+    /**
+     * Default false. If true, allows for edits of the objects in the table
+     * when in dialog mode
+     */
+    allowEdits?: boolean;
+    
+    excludeIDs?: string[]; //exclude objects with this ID from the list
+    excludeSourceRefs?: string[]; //exclude relationships with this source_ref from the list
+    excludeTargetRefs?: string[]; //exclude relationships with this target_ref from the list
 }
 
 export interface FilterValue {
     value: string;
     label: string;
+    disabled: boolean;
 }
 export interface FilterGroup {
     disabled?: boolean; //is the entire group disabled

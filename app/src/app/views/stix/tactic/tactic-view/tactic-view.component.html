@@ -1,8 +1,11 @@
 <div class="tactic-view view-page grid spacing-12">
     <div class="row">
         <div class="col">
-            <h1>{{tactic.name}}</h1>
-            <app-subheading [config]="config" (onOpenHistory)="openHistory()" (onOpenNotes)="openNotes()"></app-subheading>
+            <app-name-property [config]="{
+                mode: editing? 'edit' : 'view',
+                object: tactic
+            }"></app-name-property>
+            <app-subheading *ngIf="!editing" [config]="config" (onOpenHistory)="openHistory()" (onOpenNotes)="openNotes()"></app-subheading>
         </div>
     </div>
     <div class="row">
@@ -16,9 +19,10 @@
         <div class="col">
             <!-- DOMAIN -->
             <app-list-property class="grow-to-row" [config]="{
-                mode: 'view',
+                mode: editing? 'edit' : 'view',
                 object: tactic,
-                field: 'domains'
+                field: 'domains',
+                editType: 'select'
             }"></app-list-property>
         </div>
         <div class="col">
@@ -33,12 +37,12 @@
         <div class="col">
             <!-- DESCRIPTION -->
             <app-descriptive-property [config]="{
-                mode: 'view',
+                mode: editing? 'edit' : 'view',
                 object: tactic,
                 field: 'description',
                 firstParagraphOnly: false, 
                 referencesField: tactic.external_references,
-                label: 'description'
+                label: 'Description'
             }"></app-descriptive-property>
         </div>
     </div>
@@ -52,5 +56,21 @@
         </div>
         <app-stix-list [config]="{'type': 'technique', 'showLinks': true}"></app-stix-list>
     </div> -->
-
+    <!-- EXTERNAL REFERENCES -->
+    <div *ngIf="tactic.external_references.list().length > 0">
+        <div class="row">
+            <div class="col">
+                <h2 class="section-header">References</h2>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <app-external-references-property [config]="{
+                    mode: editing? 'edit': 'view',
+                    object: tactic,
+                    referencesField: tactic.external_references
+                }"></app-external-references-property>
+            </div>
+        </div>
+    </div>
 </div>

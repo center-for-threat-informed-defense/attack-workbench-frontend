@@ -104,6 +104,13 @@ $tooltip-color: color-alternate(dark, 4);
             color: on-color(warn)
         }
     }
+
+    &.light .mat-select-panel .mat-option.mat-active {
+        background: color-alternate(light, 2.5);
+    }
+    &.dark .mat-select-panel .mat-option.mat-active {
+        background: color-alternate(dark, 2.5);
+    }
 }
 //patch popover style
 .popover {
@@ -134,6 +141,14 @@ $tooltip-color: color-alternate(dark, 4);
     }
 }
 
+.mat-form-field.mat-form-field-invalid, .mat-form-field.ng-invalid {
+    color: color(error);
+}
+
+button.mat-stroked-button:disabled {
+    opacity: 0.5;
+}
+
 .mat-select-panel {
     .light & {
         color: on-color(light);
@@ -143,6 +158,17 @@ $tooltip-color: color-alternate(dark, 4);
         color: on-color-alternate(dark);
         background: color-alternate(dark);
     }
+}
+
+.mat-card .mat-card-header {
+    .light & { background: color-alternate(light); }
+    .dark & { background: color-alternate(dark); }
+}
+
+.mat-chip.mat-standard-chip {
+    height: auto!important;
+    .light & { background: color-alternate(light); }
+    .dark &  { background: color-alternate(dark); }
 }
 
 .mat-step-icon:not(.mat-step-icon-selected):not(.mat-step-icon-state-edit) {

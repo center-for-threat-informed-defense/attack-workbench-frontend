@@ -1,5 +1,9 @@
-import { Component, OnInit, ViewEncapsulation, Output, EventEmitter, Input } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation, Output, EventEmitter, Input, ViewChild } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
+import { PopoverContentComponent } from 'ngx-smart-popover';
+import { ValidationData } from 'src/app/classes/serializable';
+import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/rest-api-connector.service';
+import { EditorService } from 'src/app/services/editor/editor.service';
 import { SidebarService } from 'src/app/services/sidebar/sidebar.service';
 
 @Component({
@@ -9,29 +13,31 @@ import { SidebarService } from 'src/app/services/sidebar/sidebar.service';
   encapsulation: ViewEncapsulation.None
 })
 export class ToolbarComponent implements OnInit {
+    @Input() public canScroll: boolean;
     @Output() public onToggleTheme = new EventEmitter();
     @Output() public onToggleSidebar = new EventEmitter();
     @Output() public onScrollTop = new EventEmitter();
+    @ViewChild('saveValidation') saveValidation: PopoverContentComponent;
     
-    @Input() public canScroll: boolean;
+    public validationData: ValidationData = null;
 
-    public editing: boolean = false;
-    public editable: boolean = false; //todo pull this from router config or something
+    public get editing(): boolean { return this.editorService.editing; }
+    public get editable(): boolean { return this.editorService.editable; } 
 
-    constructor(private router: Router, private route: ActivatedRoute, private sidebarService: SidebarService) {}
+    constructor(private sidebarService: SidebarService, private editorService: EditorService, private restAPIService: RestApiConnectorService) {}
 
-    ngOnInit() {
-        this.route.queryParams.subscribe(params => {
-            this.editing = params["editing"];
-        });
-    }
+    ngOnInit() {}
 
     public startEditing() {
-        this.router.navigate([], {queryParams: { editing: true }})
+        this.editorService.startEditing();
+    }
+
+    public stopEditing() {
+        this.editorService.stopEditing();
     }
 
     public saveEdits() {
-        this.router.navigate([], {queryParams: {}})
+        this.editorService.onSave.emit();
     }
     
     // emit a toggle theme event

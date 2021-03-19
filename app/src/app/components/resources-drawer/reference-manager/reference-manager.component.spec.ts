@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { TypePropertyComponent } from './type-property.component';
+import { ReferenceManagerComponent } from './reference-manager.component';
 
-describe('TypePropertyComponent', () => {
-  let component: TypePropertyComponent;
-  let fixture: ComponentFixture<TypePropertyComponent>;
+describe('ReferenceManagerComponent', () => {
+  let component: ReferenceManagerComponent;
+  let fixture: ComponentFixture<ReferenceManagerComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ TypePropertyComponent ]
+      declarations: [ ReferenceManagerComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(TypePropertyComponent);
+    fixture = TestBed.createComponent(ReferenceManagerComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

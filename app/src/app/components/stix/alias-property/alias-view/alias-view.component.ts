@@ -95,8 +95,8 @@ export class AliasViewComponent implements OnInit {
                 referenceNames[i] = referenceNamesFromDescr[i].split("(Citation: ")[1].slice(0, -1);
                 displayStr = this.replaceCitationHTML(displayStr, referenceNames[i], referenceNamesFromDescr[i]);
               }
-              descriptionArray.push([value, displayStr]);
             }
+            if (this.hasDescriptiveProperty(displayStr, referenceNamesFromDescr)) descriptionArray.push([value, displayStr]);
           }
       }
       return descriptionArray
@@ -133,6 +133,7 @@ export class AliasViewComponent implements OnInit {
    * @param completeReferences list of complete reference names
    */
   private hasDescriptiveProperty(displayStr: string, completeReferences: Array<string>) : boolean {
+    if (!completeReferences && displayStr) return true;
     let displayStrCopy = displayStr;
 
     // Remove citations from string
@@ -191,7 +192,7 @@ export class AliasViewComponent implements OnInit {
         let displayStr = this.config.object[this.config.referencesField].getDescription(value);
         let referenceNamesFromDescr : Array<string> = this.getReferencesFromDescription(displayStr);
 
-        if(referenceNamesFromDescr && this.hasDescriptiveProperty(displayStr, referenceNamesFromDescr)){
+        if(this.hasDescriptiveProperty(displayStr, referenceNamesFromDescr)){
           return true;
         }
       }

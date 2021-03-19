@@ -1,7 +1,9 @@
 import { ValidatorFn, AbstractControl } from '@angular/forms';
 
 export class VersionNumber {
-    private version = [];
+    private _version = [];
+    public get version(): string { return this.toString() }
+    public set version(v: string) { this._version = v.split("."); }
 
     /**
      * Construct a new version number object
@@ -9,14 +11,42 @@ export class VersionNumber {
      */
     constructor(version: string) {
         // TODO check string against regex
-        this.version = version.split(".");
+        this.version = version;
     }
 
     /**
      * Get the version number as a string
      */
     public toString(): string {
-        return this.version.join(".");
+        return this._version.join(".");
+    }
+
+    /**
+     * Return a new VersionNumber which has the next major version
+     * @returns {VersionNumber} the next major version
+     */
+    public nextMajorVersion(): VersionNumber {
+        let clone = JSON.parse(JSON.stringify(this._version));
+        clone[0] = parseInt(clone[0]) + 1;
+        clone[0] = clone[0].toString();
+        for (let i = 1; i < clone.length; i++) clone[i] = 0; //zero out subsequent indexes
+        return new VersionNumber(clone.join("."))
+    }
+
+    /**
+     * Return a new VersionNumber which has the next major version
+     * @returns {VersionNumber} the next major version
+     */
+    public nextMinorVersion(): VersionNumber {
+        if (this.granularity < 2) {
+            console.error(`cannot increment minor version of ${this.toString()}`)
+            return this; //cannot increment
+        }
+        let clone = JSON.parse(JSON.stringify(this._version));
+        clone[1] = parseInt(clone[1]) + 1;
+        clone[1] = clone[1].toString();
+        for (let i = 2; i < clone.length; i++) clone[i] = 0; //zero out subsequent indexes
+        return new VersionNumber(clone.join("."))
     }
 
     /**
@@ -26,7 +56,7 @@ export class VersionNumber {
      * @returns {number} the level of granularity
      */
     public get granularity(): number {
-        return this.version.length;
+        return this._version.length;
     }
 
     /**
@@ -35,7 +65,7 @@ export class VersionNumber {
      */
     public getSubVersion(index: number) {
         if (index > this.granularity || index < 0) throw "cannot fetch sub-version, index out of bounds";
-        return this.version[index];
+        return this._version[index];
     }
 
     /**
@@ -54,6 +84,15 @@ export class VersionNumber {
             if (this.getSubVersion(i) == that.getSubVersion(i)) continue;
             return this.getSubVersion(i) - that.getSubVersion(i);
         }
+        return 0; //same version
+    }
+
+    /**
+     * Is this version number formatted correctly?
+     * @returns {boolean} true if valid
+     */
+    public valid(): boolean {
+        return /^(\d+\.)*\d+$/.test(this.toString());
     }
 }
 

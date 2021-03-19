@@ -1,13 +1,15 @@
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { Observable } from 'rxjs';
-import { tap, catchError, map, share } from 'rxjs/operators';
+import { forkJoin, Observable, of, ReplaySubject } from 'rxjs';
+import { tap, catchError, map, share, switchMap } from 'rxjs/operators';
 import { CollectionIndex } from 'src/app/classes/collection-index';
+import { ExternalReference } from 'src/app/classes/external-references';
 import { Collection } from 'src/app/classes/stix/collection';
 import { Group } from 'src/app/classes/stix/group';
 import { Matrix } from 'src/app/classes/stix/matrix';
 import { Mitigation } from 'src/app/classes/stix/mitigation';
+import { Note } from 'src/app/classes/stix/note';
 import { Relationship } from 'src/app/classes/stix/relationship';
 import { Software } from 'src/app/classes/stix/software';
 import { StixObject } from 'src/app/classes/stix/stix-object';
@@ -17,7 +19,7 @@ import { environment } from "../../../../environments/environment";
 import { ApiConnector } from '../api-connector';
 
 //attack types
-type AttackType = "collection" | "group" | "matrix" | "mitigation" | "software" | "tactic" | "technique" | "relationship";
+type AttackType = "collection" | "group" | "matrix" | "mitigation" | "software" | "tactic" | "technique" | "relationship" | "note";
 // pluralize AttackType
 const attackTypeToPlural = {
     "technique": "techniques",
@@ -27,7 +29,8 @@ const attackTypeToPlural = {
     "mitigation": "mitigations",
     "matrix": "matrices",
     "collection": "collections",
-    "relationship": "relationships"
+    "relationship": "relationships",
+    "note": "notes"
 }
 // transform AttackType to the relevant class
 const attackTypeToClass = {
@@ -38,11 +41,25 @@ const attackTypeToClass = {
     "mitigation": Mitigation,
     "matrix": Matrix,
     "collection": Collection,
+    "relationship": Relationship,
+    "note": Note
+}
+
+// transform AttackType to the relevant class
+const stixTypeToClass = {
+    "attack-pattern": Technique,
+    "x-mitre-tactic": Tactic,
+    "intrusion-set": Group,
+    "tool": Software,
+    "malware": Software,
+    "course-of-action": Mitigation,
+    "x-mitre-matrix": Matrix,
+    "x-mitre-collection": Collection,
     "relationship": Relationship
 }
 
-export interface Paginated {
-    data: StixObject[],
+export interface Paginated<T> {
+    data: T[],
     pagination: {
         total: number,
         limit: number,
@@ -57,6 +74,23 @@ export class RestApiConnectorService extends ApiConnector {
     private get baseUrl(): string { return environment.integrations.rest_api.url; }
     private headers: HttpHeaders = new HttpHeaders({ 'Content-Type': 'application/json' });
     constructor(private http: HttpClient, private snackbar: MatSnackBar) { super(snackbar); }
+    /**
+     * Get the name of a given STIX object
+     */
+    private getObjectName(object: StixObject): string {
+        if (object.type == "relationship") {
+            return `${object["source_name"]} ${object["relationship_type"]} ${object["target_name"]}`
+        } else if (object.type == "note") {
+            return object["title"];
+        } else if ("name" in object) {
+            return object["name"];
+        } else if (object["attackID"]) {
+            return object["attackID"];
+        } else {
+            console.warn("could not determine object name", object)
+            return "unknown object";
+        }
+    }
 
     //   ___ _____ _____  __       _   ___ ___ ___
     //  / __|_   _|_ _\ \/ /      /_\ | _ \_ _/ __|
@@ -73,25 +107,37 @@ export class RestApiConnectorService extends ApiConnector {
     private getStixObjectsFactory<T extends StixObject>(attackType: AttackType) {
         let attackClass = attackTypeToClass[attackType];
         let plural = attackTypeToPlural[attackType]
-        return function<P extends T>(limit?: number, offset?: number, state?: string, revoked?: boolean, deprecated?: boolean, versions?: "all" | "latest"): Observable<Paginated> {
+        return function<P extends T>(options?: { limit?: number, offset?: number, state?: string, revoked?: boolean, deprecated?: boolean, versions?: "all" | "latest", excludeIDs?: string[], search?: string }): Observable<Paginated<StixObject>> {
             // parse params into query string
             let query = new HttpParams();
             // pagination
-            if (limit) query = query.set("limit", limit.toString());
-            if (offset) query = query.set("offset", offset.toString());
-            if (limit || offset) query = query.set("includePagination", "true");
+            if (options && options.limit) query = query.set("limit", options.limit.toString());
+            if (options && options.offset) query = query.set("offset", options.offset.toString());
+            if (options && (options.limit || options.offset)) query = query.set("includePagination", "true");
             // other properties
-            if (state) query = query.set("state", state);
-            if (revoked) query = query.set("revoked", revoked ? "true" : "false");
-            if (revoked) query = query.set("deprecated", deprecated ? "true" : "false");
-            if (versions) query = query.set("versions", versions);
+            if (options && options.state) query = query.set("state", options.state);
+            if (options && options.revoked) query = query.set("revoked", options.revoked ? "true" : "false");
+            if (options && options.revoked) query = query.set("deprecated", options.deprecated ? "true" : "false");
+            if (options && options.versions) query = query.set("versions", options.versions);
+            if (options && options.search) query = query.set("search", encodeURIComponent(options.search));
             // perform the request
             let url = `${this.baseUrl}/${plural}`;
             return this.http.get(url, {headers: this.headers, params: query}).pipe(
                 tap(results => console.log(`retrieved ${plural}`, results)), // on success, trigger the success notification
                 map(results => {
+                    if (!options || !options.excludeIDs) return results; // only filter if param is present
                     let response = results as any;
-                    if (limit || offset) { // returned a paginated
+                    if (options && (options.limit || options.offset)) { // returned a paginated
+                        response.data = response.data.filter((d) => !options.excludeIDs.includes(d.stix.id)); //remove any matches to excludeIDs
+                        return response;
+                    } else { //returned a stixObject[]
+                        response = response.filter((d) => !options.excludeIDs.includes(d.stix.id)); //remove any matches to excludeIDs
+                        return response;
+                    }
+                }),
+                map(results => {
+                    let response = results as any;
+                    if (options && (options.limit || options.offset)) { // returned a paginated
                         let data = response.data as Array<any>;
                         data = data.map(y => {
                             if (y.stix.type == "malware" || y.stix.type == "tool") return new Software(y.stix.type, y);
@@ -126,6 +172,7 @@ export class RestApiConnectorService extends ApiConnector {
      * @param {string} [state] if specified, only get objects with this state
      * @param {boolean} [revoked] if true, get revoked objects
      * @param {boolean} [deprecated] if true, get deprecated objects
+     * @param {string[]} [excludeIDs] if specified, excludes these STIX IDs from the result
      * @returns {Observable<Technique[]>} observable of retrieved objects
      */
     public get getAllTechniques() { return this.getStixObjectsFactory<Technique>("technique"); }
@@ -136,6 +183,7 @@ export class RestApiConnectorService extends ApiConnector {
      * @param {string} [state] if specified, only get objects with this state
      * @param {boolean} [revoked] if true, get revoked objects
      * @param {boolean} [deprecated] if true, get deprecated objects
+     * @param {string[]} [excludeIDs] if specified, excludes these STIX IDs from the result
      * @returns {Observable<Tactic[]>} observable of retrieved objects
      */
     public get getAllTactics() { return this.getStixObjectsFactory<Tactic>("tactic"); }
@@ -146,6 +194,7 @@ export class RestApiConnectorService extends ApiConnector {
      * @param {string} [state] if specified, only get objects with this state
      * @param {boolean} [revoked] if true, get revoked objects
      * @param {boolean} [deprecated] if true, get deprecated objects
+     * @param {string[]} [excludeIDs] if specified, excludes these STIX IDs from the result
      * @returns {Observable<Group[]>} observable of retrieved objects
      */
     public get getAllGroups() { return this.getStixObjectsFactory<Group>("group"); }
@@ -166,6 +215,7 @@ export class RestApiConnectorService extends ApiConnector {
      * @param {string} [state] if specified, only get objects with this state
      * @param {boolean} [revoked] if true, get revoked objects
      * @param {boolean} [deprecated] if true, get deprecated objects
+     * @param {string[]} [excludeIDs] if specified, excludes these STIX IDs from the result
      * @returns {Observable<Mitigation[]>} observable of retrieved objects
      */
     public get getAllMitigations() { return this.getStixObjectsFactory<Mitigation>("mitigation"); }
@@ -176,6 +226,7 @@ export class RestApiConnectorService extends ApiConnector {
      * @param {string} [state] if specified, only get objects with this state
      * @param {boolean} [revoked] if true, get revoked objects
      * @param {boolean} [deprecated] if true, get deprecated objects
+     * @param {string[]} [excludeIDs] if specified, excludes these STIX IDs from the result
      * @returns {Observable<Matrix[]>} observable of retrieved objects
      */
     public get getAllMatrices() { return this.getStixObjectsFactory<Matrix>("matrix"); }
@@ -187,9 +238,87 @@ export class RestApiConnectorService extends ApiConnector {
      * @param {boolean} [revoked] if true, get revoked objects
      * @param {versions} ["all" | "latest"] if "all", get all versions of the collections. if "latest", only get the latest version of each collection.
      * @param {boolean} [deprecated] if true, get deprecated objects
+     * @param {string[]} [excludeIDs] if specified, excludes these STIX IDs from the result
      * @returns {Observable<Matrix[]>} observable of retrieved objects
      */
     public get getAllCollections() { return this.getStixObjectsFactory<Collection>("collection"); }
+    /**
+     * Get all notes
+     * @param {number} [limit] the number of notes to retrieve
+     * @param {number} [offset] the number of notes to skip
+     * @param {string} [state] if specified, only get objects with this state
+     * @param {boolean} [revoked] if true, get revoked objects
+     * @param {boolean} [deprecated] if true, get deprecated objects
+     * @param {string[]} [excludeIDs] if specified, excludes these STIX IDs from the result
+     * @returns {Observable<Matrix[]>} observable of retrieved objects
+     */
+    public get getAllNotes() { return this.getStixObjectsFactory<Note>("note"); }
+    /**
+     * Get all relationships
+     * @param {number} [limit] the number of relationships to retrieve
+     * @param {number} [offset] the number of relationships to skip
+     * @param {string} [state] if specified, only get objects with this state
+     * @param {boolean} [revoked] if true, get revoked objects
+     * @param {versions} ["all" | "latest"] if "all", get all versions of the relationships. if "latest", only get the latest version of each collection.
+     * @param {boolean} [deprecated] if true, get deprecated objects
+     * @param {string[]} [excludeIDs] if specified, excludes these STIX IDs from the result
+     * @returns {Observable<Relationships[]>} observable of retrieved objects
+     */
+    public get getAllRelationships() { return this.getStixObjectsFactory<Relationship>("relationship"); }
+
+    /**
+     * Get all objects; objects will not be deserialized to STIX objects unless the parameter is used
+     * @param {string} [attackID] filter to only include objects with this ATT&CK ID
+     * @param {number} [limit] the number of collections to retrieve
+     * @param {number} [offset] the number of collections to skip
+     * @param {string} [state] if specified, only get objects with this state
+     * @param {boolean} [revoked] if true, get revoked objects
+     * @param {versions} ["all" | "latest"] if "all", get all versions of the collections. if "latest", only get the latest version of each collection.
+     * @param {boolean} [deprecated] if true, get deprecated objects
+     * @param {boolean} [deserialize] if true, deserialize objects to full STIX objects
+     * @returns {Observable<any[]>} observable of retrieved objects
+     */
+    public getAllObjects(attackID?: string, limit?: number, offset?: number, state?: string, revoked?: boolean, deprecated?: boolean, deserialize?: boolean) {
+        let query = new HttpParams();
+        // pagination
+        if (limit) query = query.set("limit", limit.toString());
+        if (offset) query = query.set("offset", offset.toString());
+        if (limit || offset) query = query.set("includePagination", "true");
+        // other properties
+        if (state) query = query.set("state", state);
+        if (revoked) query = query.set("revoked", revoked ? "true" : "false");
+        if (revoked) query = query.set("deprecated", deprecated ? "true" : "false");
+        return this.http.get(`${this.baseUrl}/attack-objects`, {headers: this.headers, params: query}).pipe(
+            tap(results => console.log(`retrieved ATT&CK objects`, results)), // on success, trigger the success notification
+            map(results => {
+                if (!deserialize) return results; //skip deserialization if param not added
+                let response = results as any;
+                if (limit || offset) { // returned a paginated
+                    let data = response.data as Array<any>;
+                    data = data.map(y => {
+                        if (y.stix.type == "malware" || y.stix.type == "tool") return new Software(y.stix.type, y);
+                        else return new stixTypeToClass[y.stix.type](y);
+                    });
+                    response.data = data;
+                    return response;
+                } else { //returned a stixObject[]
+                    return {
+                        pagination: {
+                            total: response.length,
+                            limit: -1,
+                            offset: -1
+                        },
+                        data: response.map(y => {
+                            if (y.stix.type == "malware" || y.stix.type == "tool") return new Software(y.stix.type, y);
+                            else return new stixTypeToClass[y.stix.type](y);
+                        })
+                    }
+                }
+            }),
+            catchError(this.handleError_array([])), // on error, trigger the error notification and continue operation without crashing (returns empty item)
+            share() // multicast so that multiple subscribers don't trigger the call twice. THIS MUST BE THE LAST LINE OF THE PIPE
+        )
+    }
 
     /**
      * Factory to create a new STIX get by ID function
@@ -200,7 +329,7 @@ export class RestApiConnectorService extends ApiConnector {
     private getStixObjectFactory<T extends StixObject>(attackType: AttackType) {
         let attackClass = attackTypeToClass[attackType];
         let plural = attackTypeToPlural[attackType]
-        return function<P extends T>(id: string, modified?: Date, versions="latest"): Observable<P[]> {
+        return function<P extends T>(id: string, modified?: Date, versions="latest", includeSubs?: boolean): Observable<P[]> {
             let url = `${this.baseUrl}/${plural}/${id}`;
             if (modified) url += `/modified/${modified}`;
             let query = new HttpParams();
@@ -219,6 +348,40 @@ export class RestApiConnectorService extends ApiConnector {
                         else return new attackClass(y);
                     });
                 }),
+                switchMap(result => { // add sub-technique or parent-technique but only if it's a technique
+                    if (!includeSubs) return of(result);
+                    let x = result as any[];
+                    if (x[0].attackType != "technique") return of(result); //don't transform non-techniques
+                    let t = x[0] as Technique;
+                    if (t.is_subtechnique) { //add parent technique
+                        return this.getRelatedTo({sourceRef: t.stixID, relationshipType: "subtechnique-of"}).pipe( // fetch from REST API
+                            map(rel => { //extract the parent from the relationship
+                                let p = rel as any;
+                                if (!p || p.data.length == 0) return null; // no parent technique
+                                return new Technique(p.data[0].target_object); //transform it to a Technique
+                            }),
+                            map(parent => { //add the parent to the sub-technique
+                                let p = parent as any;
+                                t.parentTechnique = p;
+                                return [t];
+                            }),
+                            tap(result => console.log("fetched parent technique of", result, result[0]["parentTechnique"]))
+                        );
+                    } else { // add subtechniques
+                        return this.getRelatedTo({targetRef: t.stixID, relationshipType: "subtechnique-of"}).pipe( // fetch from REST API
+                            map(rel => { //extract the sub-techniques from the relationships
+                                let s = rel as any;
+                                return s.data.map(rel => new Technique(rel.source_object)); //transform them to Techniques
+                            }),
+                            map(subs => { //add the sub-techniques to the parent
+                                let s = subs as any[];
+                                t.subTechniques = s;
+                                return [t];
+                            }),
+                            tap(result => console.log("fetched sub-techniques of", result, result[0]["subTechniques"]))
+                        );
+                    }
+                }),
                 catchError(this.handleError_array([])), // on error, trigger the error notification and continue operation without crashing (returns empty item)
                 share() // multicast so that multiple subscribers don't trigger the call twice. THIS MUST BE THE LAST LINE OF THE PIPE
             )
@@ -228,7 +391,8 @@ export class RestApiConnectorService extends ApiConnector {
      * Get a single technique by STIX ID
      * @param {string} id the object STIX ID
      * @param {Date} [modified] if specified, get the version modified at the given date
-     * @param {versions} [string] default "latest", if "all" returns all versions of the object instead of just the latest version.
+     * @param {versions} [string] default "latest", if "all" returns all versions of the object instead of just the latest version. Incompatible with includeSubs
+     * @param {includeSubs} [boolean] if true, include sub-techniques/parent-technique attached to the given object. Incompatible with versions="all"
      * @returns {Observable<Technique>} the object with the given ID and modified date
      */
     public get getTechnique() { return this.getStixObjectFactory<Technique>("technique"); }
@@ -277,9 +441,17 @@ export class RestApiConnectorService extends ApiConnector {
      * @param {string} id the object STIX ID
      * @param {Date} [modified] if specified, get the version modified at the given date
      * @param {versions} [string] default "latest", if "all" returns all versions of the object instead of just the latest version.
-     * @returns {Observable<Matrix>} the object with the given ID and modified date
+     * @returns {Observable<Collection>} the object with the given ID and modified date
      */
     public get getCollection() { return this.getStixObjectFactory<Collection>("collection"); }
+    /**
+     * Get a single note by STIX ID
+     * @param {string} id the object STIX ID
+     * @param {Date} [modified] if specified, get the version modified at the given date
+     * @param {versions} [string] default "latest", if "all" returns all versions of the object instead of just the latest version.
+     * @returns {Observable<Note>} the object with the given ID and modified date
+     */
+    public get getNote() { return this.getStixObjectFactory<Note>("note"); }
 
     /**
      * Factory to create a new STIX object creator (POST) function
@@ -292,8 +464,8 @@ export class RestApiConnectorService extends ApiConnector {
         let plural = attackTypeToPlural[attackType];
         return function<P extends T>(object: P): Observable<P> {
             let url = `${this.baseUrl}/${plural}`;
-            return this.http.post(url, object, {headers: this.headers}).pipe(
-                tap(this.handleSuccess(`${attackType} created`)),
+            return this.http.post(url, object.serialize(), {headers: this.headers}).pipe(
+                tap(this.handleSuccess(`${this.getObjectName(object)} saved`)),
                 map(result => {
                     let x = result as any;
                     if (x.stix.type == "malware" || x.stix.type == "tool") return new Software(x.stix.type, x);
@@ -341,6 +513,18 @@ export class RestApiConnectorService extends ApiConnector {
      * @returns {Observable<Matrix>} the created object
      */
     public get postMatrix() { return this.postStixObjectFactory<Matrix>("matrix"); }
+    /**
+     * POST (create) a new relationship
+     * @param {Relationship} object the object to create
+     * @returns {Observable<Relationship>} the created object
+     */
+    public get postRelationship() { return this.postStixObjectFactory<Relationship>("relationship"); }
+    /**
+     * POST (create) a new note
+     * @param {Note} object the object to create
+     * @returns {Observable<Note>} the created object
+     */
+    public get postNote() { return this.postStixObjectFactory<Note>("note"); }
 
     /**
      * Factory to create a new STIX put (update) function
@@ -354,8 +538,8 @@ export class RestApiConnectorService extends ApiConnector {
         return function<P extends T>(object: T, modified?: Date): Observable<P> {
             if (!modified) modified = object.modified; //infer modified from STIX object modified date
             let url = `${this.baseUrl}/${plural}/${object.stixID}/modified/${modified}`;
-            return this.http.put(url, object, {headers: this.headers}).pipe(
-                tap(this.handleSuccess(`updated ${attackType}`)),
+            return this.http.put(url, object.serialize(), {headers: this.headers}).pipe(
+                tap(this.handleSuccess(`${this.getObjectName(object)} saved`)),
                 map(result => {
                     let x = result as any;
                     if (x.stix.type == "malware" || x.stix.type == "tool") return new Software(x.stix.type, x);
@@ -408,12 +592,27 @@ export class RestApiConnectorService extends ApiConnector {
      * @param {Date} [modified] optional, the modified date to overwrite. If omitted, uses the modified field of the object
      * @returns {Observable<Matrix>} the updated object
      */
-    public get putMatrix() { return this.postStixObjectFactory<Matrix>("matrix"); }
+    public get putMatrix() { return this.putStixObjectFactory<Matrix>("matrix"); }
+    /**
+     * PUT (update) a relationship
+     * @param {Relationship} object the object to update
+     * @param {Date} [modified] optional, the modified date to overwrite. If omitted, uses the modified field of the object
+     * @returns {Observable<Relationship>} the updated object
+     */
+    public get putRelationship() { return this.putStixObjectFactory<Relationship>("relationship"); }
+    /**
+     * PUT (update) a note
+     * @param {Note} object the object to update
+     * @param {Date} [modified] optional, the modified date to overwrite. If omitted, uses the modified field of the object
+     * @returns {Observable<Note>} the updated object
+     */
+    public get putNote() { return this.putStixObjectFactory<Note>("note"); }
 
     private deleteStixObjectFactory(attackType: AttackType) {
         let plural = attackTypeToPlural[attackType];
         return function(id: string, modified: Date): Observable<{}> {
-            let url = `${this.baseUrl}/${plural}/${id}/modified/${modified}`;
+            let modifiedStix = modified.toISOString();
+            let url = `${this.baseUrl}/${plural}/${id}/modified/${modifiedStix}`;
             return this.http.delete(url).pipe(
                 tap(this.handleSuccess(`${attackType} deleted`)),
                 catchError(this.handleError_single()),
@@ -471,7 +670,19 @@ export class RestApiConnectorService extends ApiConnector {
      * @returns {Observable<{}>} observable of the response body
      */
     public get deleteCollection() { return this.deleteStixObjectFactory("collection"); }
-
+    /**
+     * DELETE a note
+     * @param {string} id the STIX ID of the object to delete
+     * @param {Date} modified The modified date of the version to delete
+     * @returns {Observable<{}>} observable of the response body
+     */
+    public deleteNote(id: string) {
+        return this.http.delete(`${this.baseUrl}/notes/${id}`).pipe(
+            tap(this.handleSuccess("note removed")),
+            catchError(this.handleError_single()),
+            share()
+        )
+    }
 
     //   ___ ___ _      _ _____ ___ ___  _  _ ___ _  _ ___ ___  ___
     //  | _ \ __| |    /_\_   _|_ _/ _ \| \| / __| || |_ _| _ \/ __|
@@ -480,38 +691,62 @@ export class RestApiConnectorService extends ApiConnector {
     //
 
     /**
-     * Get relationships
+     * Get relationships. Note: pass in args in an object
      *
      * @param {string} [sourceRef] STIX id of referenced object. Only retrieve relationships that reference this object in the source_ref property.
      * @param {string} [targetRef] STIX id of referenced object. Only retrieve relationships that reference this object in the target_ref property.
+     * @param {string} [sourceOrTargetRef] STIX id of referenced object. Only retrieve relationships that reference this object in the target_ref or source_ref property.
      * @param {string} [relationshipType] Only retrieve relationships that have a matching relationship_type.
      * @param {string} [sourceType] retrieve objects where the source object is this ATT&CK type
      * @param {string} [targetType] retrieve objects where the source object is this ATT&CK type
      * @param {number} [limit] The number of relationships to retrieve.
      * @param {number} [offset] The number of relationships to skip.
+     * @param {"all" | "latest"} [versions] if "all", get all versions of the relationships, otherwise only get the latest versions
+     * @param {string[]} [excludeSourceRefs] if specified, exclude source refs which are found in this array
+     * @param {string[]} [excludeTargetRefs] if specified, exclude target refs which are found in this array
      * @returns {Observable<Paginated>} paginated data of the relationships
-     * @memberof RestApiConnectorService
      */
-    public getRelatedTo(sourceRef?: string, targetRef?: string, sourceType?: AttackType, targetType?: AttackType, relationshipType?: string, limit?: number, offset?: number): Observable<Paginated> {
+    public getRelatedTo(args: {sourceRef?: string, targetRef?: string, sourceOrTargetRef?: string, sourceType?: AttackType, targetType?: AttackType, relationshipType?: string, excludeSourceRefs?: string[], excludeTargetRefs?: string[], limit?: number, offset?: number, versions?: "all" | "latest"}): Observable<Paginated<StixObject>> {
         let query = new HttpParams();
 
-        if (sourceRef) query = query.set("sourceRef", sourceRef);
-        if (targetRef) query = query.set("targetRef", targetRef);
+        if (args.sourceRef) query = query.set("sourceRef", args.sourceRef);
+        if (args.targetRef) query = query.set("targetRef", args.targetRef);
 
-        if (sourceType) query = query.set("sourceType", sourceType);
-        if (targetType) query = query.set("targetType", targetType);
+        if (args.sourceType) query = query.set("sourceType", args.sourceType);
+        if (args.targetType) query = query.set("targetType", args.targetType);
 
-        if (relationshipType) query = query.set("relationshipType", relationshipType);
+        if (args.sourceOrTargetRef) query = query.set("sourceOrTargetRef", args.sourceOrTargetRef);
 
-        if (limit) query = query.set("limit", limit.toString());
-        if (offset) query = query.set("offset", offset.toString());
-        if (limit || offset) query = query.set("includePagination", "true");
+        if (args.relationshipType) query = query.set("relationshipType", args.relationshipType);
+        
+        if (args.versions) query = query.set("versions", args.versions);
+
+        if (args.limit) query = query.set("limit", args.limit.toString());
+        if (args.offset) query = query.set("offset", args.offset.toString());
+        if (args.limit || args.offset) query = query.set("includePagination", "true");
         let url = `${this.baseUrl}/relationships`
         return this.http.get(url, {headers:this.headers, params: query}).pipe(
             tap(results => console.log("retrieved relationships", results)),
             map(results => {
+                if (!args.excludeSourceRefs && !args.excludeTargetRefs) return results; // only filter if params are present
                 let response = results as any;
-                if (limit || offset) { //returned paginated
+                if (args.limit || args.offset) { // returned a paginated
+                    let pre_filter = response.data.length;
+                    if (args.excludeSourceRefs) response.data = response.data.filter((d) => !args.excludeSourceRefs.includes(d.stix.source_ref))
+                    if (args.excludeTargetRefs) response.data = response.data.filter((d) => !args.excludeTargetRefs.includes(d.stix.target_ref))
+                    console.log("filtered", pre_filter - response.data.length, "results by ID")
+                    return response;
+                } else { //returned a stixObject[]
+                    let pre_filter = response.length;
+                    if (args.excludeSourceRefs) response = response.filter((d) => !args.excludeSourceRefs.includes(d.stix.source_ref))
+                    if (args.excludeTargetRefs) response = response.filter((d) => !args.excludeTargetRefs.includes(d.stix.target_ref))
+                    console.log("filtered", pre_filter - response.length, "results by ID")
+                    return response;
+                }
+            }),
+            map(results => {
+                let response = results as any;
+                if (args.limit || args.offset) { //returned paginated
                     let data = response.data as Array<any>;
                     data = data.map(y => new Relationship(y));
                     response.data = data;
@@ -529,6 +764,79 @@ export class RestApiConnectorService extends ApiConnector {
             }),
             catchError(this.handleError_array([])),
             share()
+        )
+    }
+
+    //   ___ ___ ___ ___ ___ ___ _  _  ___ ___ ___ 
+    //  | _ \ __| __| __| _ \ __| \| |/ __| __/ __|
+    //  |   / _|| _|| _||   / _|| .` | (__| _|\__ \
+    //  |_|_\___|_| |___|_|_\___|_|\_|\___|___|___/
+
+    /**
+     * get all external references
+     * @param {number} [limit] the number of references to retrieve
+     * @param {number} [offset] the number of references to skip
+     * @param {string} [search] Only return references where the provided search text occurs in the description or url. The search is case-insensitive.
+     * @returns {Observable<Paginated>} paginated data for external references
+     */
+    public getAllReferences(limit?: number, offset?: number, search?: string): Observable<Paginated<ExternalReference>> {
+        let url = `${this.baseUrl}/references`;
+        // parse params into query string
+        let query = new HttpParams();
+        // pagination
+        if (limit) query = query.set("limit", limit.toString());
+        if (offset) query = query.set("offset", offset.toString());
+        if (search) query = query.set("search", encodeURIComponent(search));
+        /*if (limit || offset) */ query = query.set("includePagination", "true");
+        return this.http.get<Paginated<ExternalReference>>(url, {headers: this.headers, params: query}).pipe(
+            tap(results => console.log("retrieved references", results)),
+            catchError(this.handleError_array<Paginated<ExternalReference>>({data: [], pagination: {total: 0, limit: 0, offset: 0}})), // on error, trigger the error notification and continue operation without crashing (returns empty item)
+            share() // multicast so that multiple subscribers don't trigger the call twice. THIS MUST BE THE LAST LINE OF THE PIPE
+        )
+    }
+
+    /**
+     * Get a single reference by source name
+     * @param {string} source_name the reference's source_name identifier
+     * @returns {Observable<ExternalReference>} the external reference with the given source_name
+     */
+    public getReference(source_name: string): Observable<ExternalReference> {
+        let url = `${this.baseUrl}/references`;
+        // parse params into query string
+        let query = new HttpParams();
+        query = query.set("sourceName", source_name);
+        return this.http.get<ExternalReference>(url, {headers: this.headers, params: query}).pipe(
+            tap(results => console.log("retrieved reference", results)),
+            catchError(this.handleError_single<ExternalReference>()), // on error, trigger the error notification and continue operation without crashing (returns empty item)
+            share() // multicast so that multiple subscribers don't trigger the call twice. THIS MUST BE THE LAST LINE OF THE PIPE
+        )
+    }
+
+    /**
+     * Create an external reference
+     * @param {ExternalReference} reference the reference to create
+     * @returns {Observable<ExternalReference>} the created reference
+     */
+    public postReference(reference: ExternalReference): Observable<ExternalReference> {
+        let url = `${this.baseUrl}/references`;
+        return this.http.post<ExternalReference>(url, reference, {headers: this.headers}).pipe(
+            tap(this.handleSuccess(`${reference.source_name} saved`)),
+            catchError(this.handleError_single<ExternalReference>()), // on error, trigger the error notification and continue operation without crashing (returns empty item)
+            share() // multicast so that multiple subscribers don't trigger the call twice. THIS MUST BE THE LAST LINE OF THE PIPE
+        )
+    }
+
+    /**
+     * Update an external reference
+     * @param {ExternalReference} reference the reference to update
+     * @returns {Observable<ExternalReference>} the updated reference
+     */
+    public putReference(reference: ExternalReference): Observable<ExternalReference> {
+        let url = `${this.baseUrl}/references`;
+        return this.http.put<ExternalReference>(url, reference, {headers: this.headers}).pipe(
+            tap(this.handleSuccess(`${reference.source_name} saved`)),
+            catchError(this.handleError_single<ExternalReference>()), // on error, trigger the error notification and continue operation without crashing (returns empty item)
+            share() // multicast so that multiple subscribers don't trigger the call twice. THIS MUST BE THE LAST LINE OF THE PIPE
         )
     }
 
@@ -620,4 +928,30 @@ export class RestApiConnectorService extends ApiConnector {
             catchError(this.handleError_single())
         )
     }
+
+    //   _____   _____ _____ ___ __  __    ___ ___  _  _ ___ ___ ___     _   ___ ___ ___ 
+    //  / __\ \ / / __|_   _| __|  \/  |  / __/ _ \| \| | __|_ _/ __|   /_\ | _ \_ _/ __|
+    //  \__ \\ V /\__ \ | | | _|| |\/| | | (_| (_) | .` | _| | | (_ |  / _ \|  _/| |\__ \
+    //  |___/ |_| |___/ |_| |___|_|  |_|  \___\___/|_|\_|_| |___\___| /_/ \_\_| |___|___/
+    //
+
+    /**
+     * Get all allowed values
+     * @returns {Observable<any>} all allowed values
+     */
+    private allowedValues;
+    public getAllAllowedValues(): Observable<any> {
+        if (this.allowedValues) { return of(this.allowedValues)}
+
+        const data$ = this.http.get<any>(`${this.baseUrl}/config/allowed-values`, {headers: this.headers}).pipe(
+            tap(_ => console.log("retrieved allowed values")),
+            map(result => result as any),
+            catchError(this.handleError_array<string[]>([]))
+        );
+        let subscription = data$.subscribe({
+            next: (data) => { this.allowedValues = data; },
+            complete: () => { subscription.unsubscribe(); }
+        });
+        return data$;
+    }                                                                     
 }

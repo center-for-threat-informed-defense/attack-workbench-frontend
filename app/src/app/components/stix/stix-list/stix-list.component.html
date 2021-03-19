@@ -3,18 +3,19 @@
         <!-- -------- -->
         <!-- CONTROLS -->
         <!-- -------- -->
-        <div class="controls">
+        <div class="controls" *ngIf="!(config.type && config.type == 'relationship')">
             <div class="input-group">
                 <mat-form-field class="search" appearance="fill">
                     <mat-label>search</mat-label>
-                    <input matInput #search>
+                    <input matInput #search [(ngModel)]="searchQuery">
                 </mat-form-field>
     
-                <mat-form-field appearance="fill" *ngIf="config.showFilters">
-                    <mat-label>filters</mat-label>
-                    <mat-select multiple [(ngModel)]="filter">
+                <!-- don't show options for collections or if loading data not from REST API -->
+                <mat-form-field appearance="fill" *ngIf="!(config.type && config.type == 'collection') && !(config.hasOwnProperty('stixObjects'))">
+                    <mat-label>options</mat-label>
+                    <mat-select multiple [(ngModel)]="filter" (selectionChange)="applyControls()">
                         <mat-optgroup *ngFor="let group of filterOptions" [label]="group.name" [disabled]="group.disabled">
-                            <mat-option *ngFor="let filter of group.values" [value]="filter.value">{{filter.label}}</mat-option>
+                            <mat-option *ngFor="let filter of group.values" [value]="filter.value" [disabled]="filter.disabled">{{filter.label}}</mat-option>
                         </mat-optgroup>
                     </mat-select>
                 </mat-form-field>
@@ -59,7 +60,7 @@
                         <mat-radio-button *ngIf="config.select && config.select == 'one'" color="primary" 
                                         (click)="$event.stopPropagation()"
                                         (change)="$event ? selection.toggle(element.stixID) : null"
-                                        [selected]="selection.isSelected(element.stixID)">
+                                        [checked]="selection.isSelected(element.stixID)">
                         </mat-radio-button>
                     </td>
                 </ng-container>
@@ -106,6 +107,7 @@
                 <tr mat-header-row *matHeaderRowDef="tableColumns_controls"></tr>
                 <tr mat-row *matRowDef="let element; columns: tableColumns_controls;"
                     class="element-row"
+                    [class.clickable]="!config.clickBehavior || config.clickBehavior != 'none'"
                     [class.expanded]="expandedElement === element"
                     (click)="onRowClick(element)">
                 </tr>
@@ -121,6 +123,6 @@
         <!-- ---------- -->
         <!-- PAGINATION -->
         <!-- ---------- -->
-        <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" (page)="applyControls()" [length]="totalObjectCount"></mat-paginator>
+        <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" pageSize="10" (page)="applyControls()" [length]="totalObjectCount"></mat-paginator>
     </div>
 </div>

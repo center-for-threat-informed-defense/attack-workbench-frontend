@@ -1,8 +1,11 @@
 <div class="group-view view-page grid spacing-12">
     <div class="row">
         <div class="col">
-            <h1>{{group.name}}</h1>
-            <app-subheading [config]="config" (onOpenHistory)="openHistory()" (onOpenNotes)="openNotes()"></app-subheading>
+            <app-name-property [config]="{
+                mode: editing? 'edit' : 'view',
+                object: group
+            }"></app-name-property>
+            <app-subheading *ngIf="!editing" [config]="config" (onOpenHistory)="openHistory()" (onOpenNotes)="openNotes()"></app-subheading>
         </div>
     </div>
     <div class="row">
@@ -25,15 +28,16 @@
         <div class="col">
             <!-- CONTRIBUTORS -->
             <app-list-property class="grow-to-row" [config]="{
-                mode: 'view',
+                mode: editing? 'edit' : 'view',
                 object: group,
-                field: 'contributors'
+                field: 'contributors',
+                editType: 'any'
             }"></app-list-property>
         </div>
         <div class="col">
             <!-- GROUP ALIASES -->
             <app-alias-property class="grow-to-row" [config]="{
-                mode: 'view',
+                mode: editing? 'edit' : 'view',
                 object: group,
                 field: 'aliases',
                 referencesField: 'external_references',
@@ -45,17 +49,17 @@
         <div class="col">
             <!-- DESCRIPTION -->
             <app-descriptive-property [config]="{
-                mode: 'view',
+                mode: editing? 'edit' : 'view',
                 object: group,
                 field: 'description',
                 firstParagraphOnly: false, 
                 referencesField: group.external_references,
-                label: 'description'
+                label: 'Description'
             }"></app-descriptive-property>
         </div>
     </div>
     <!-- only show relationships if configured to show them -->
-    <div *ngIf="config.showRelationships || !config.hasOwnProperty('showRelationships')">
+    <div *ngIf="(config.showRelationships || !config.hasOwnProperty('showRelationships')) && !editing">
         <div class="row">
             <div class="col">
                 <h2 class="section-header">Techniques Used</h2>
@@ -63,12 +67,22 @@
         </div>
         <div class="row">
             <div class="col">
-                <app-stix-list  [config]="{
+                <app-add-relationship-button (created)="techniqueList.applyControls()" [config]="{
+                    label: 'technique',
+                    relationship_type: 'uses',
+                    source_ref: group.stixID
+                }"></app-add-relationship-button>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <app-stix-list #techniqueList [config]="{
                     'type': 'relationship', 
                     'sourceRef': group.stixID,
                     'targetType': 'technique',
                     'relationshipType': 'uses',
-                    'clickBehavior': 'dialog'
+                    'clickBehavior': 'dialog',
+                    'allowEdits': true
                 }"></app-stix-list>
             </div>
         </div>
@@ -80,30 +94,42 @@
         </div>
         <div class="row">
             <div class="col">
-                <app-stix-list [config]="{
+                <app-add-relationship-button (created)="softwareList.applyControls()" [config]="{
+                    label: 'software',
+                    relationship_type: 'uses',
+                    source_ref: group.stixID
+                }"></app-add-relationship-button>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <app-stix-list #softwareList [config]="{
                     'type': 'relationship', 
                     'sourceRef': group.stixID,
                     'targetType': 'software',
                     'relationshipType': 'uses',
-                    'clickBehavior': 'dialog'
+                    'clickBehavior': 'dialog',
+                    'allowEdits': true
                 }"></app-stix-list>
             </div>
         </div>
 
     </div>
-    <div class="row">
-        <div class="col">
-            <h2 class="section-header">References</h2>
+    <!-- EXTERNAL REFERENCES -->
+    <div *ngIf="group.external_references.list().length > 0">
+        <div class="row">
+            <div class="col">
+                <h2 class="section-header">References</h2>
+            </div>
         </div>
-    </div>
-    <div class="row">
-        <div class="col">
-            <!-- EXTERNAL REFERENCES -->
-            <app-external-references-property [config]="{
-                mode: 'view',
-                object: group,
-                referencesField: group.external_references
-            }"></app-external-references-property>
+        <div class="row">
+            <div class="col">
+                <app-external-references-property [config]="{
+                    mode: editing? 'edit': 'view',
+                    object: group,
+                    referencesField: group.external_references
+                }"></app-external-references-property>
+            </div>
         </div>
     </div>
 </div>
