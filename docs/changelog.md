@@ -34,7 +34,7 @@
 ## 19 March 2021
 
 ### ATT&CK Workbench version 0.2.0
-#### New Features
+#### New Features in 0.2.0
 - Added support for MTC and CAPEC IDs. See [frontend#124](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/124).
 - Added ability to create and edit objects. See [frontend#44](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/44) and [frontend#145](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/145).
     - Added ability to edit group/software aliases. See [frontend#118](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/118).
@@ -50,27 +50,27 @@
     - Added automatic detection of citations on descriptions and aliases. See [frontend#115](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/115).
     - Added references manager tool. See [frontend#115](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/115) and [frontend#133](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/133).
 
-#### Improvements
+#### Improvements in 0.2.0
 - Lists of objects can now be searched and filtered. See [frontend#128](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/128) and [frontend#127](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/127).
 - Lists of objects now display ATT&CK IDs when relevant. See [frontend#119](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/119).
 - When viewing an object, fields which have no value(s) will now be hidden. See [frontend#120](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/120).
 - Improved display of sub-techniques. See [frontend#125](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/125).
 - Layout and formatting improvements to [USAGE](/docs/usage.md) document
 
-#### Fixes
+#### Fixes in 0.2.0
 - Fixed broken pagination on relationship tables. See [frontend#126](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/126).
 
 ## 16 February 2021
 ### ATT&CK Workbench version 0.1.1
-#### New Features
+#### New Features in 0.1.1
 - Added Dockerfiles, docker-compose, [and documentation on how to use them](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/tree/master/docs/docker-compose.md). See [frontend#108](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/108), [frontend#109](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/109) [rest-api#14](https://github.com/center-for-threat-informed-defense/attack-workbench-rest-api/issues/14), and [collection-manager#13](https://github.com/center-for-threat-informed-defense/attack-workbench-collection-manager/issues/13).
 
-#### Fixes
+#### Fixes in 0.1.1
 - Fixed a crash that could occur with specific queries on the REST API. See [rest-api#28](https://github.com/center-for-threat-informed-defense/attack-workbench-rest-api/issues/28).
 
 ## 19 January 2021
 ### ATT&CK Workbench version 0.1.0
-#### New Features
+#### New Features in 0.1.0
 - Created object view pages for matrix, technique, tactic, mitigation, group, and software objects.
 - Added the ability to browse and import collection indexes.
     - Collection indexes can be imported via URL.
