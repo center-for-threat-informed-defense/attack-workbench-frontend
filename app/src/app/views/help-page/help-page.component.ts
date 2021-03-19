@@ -1,3 +1,4 @@
+import { ViewportScroller } from '@angular/common';
 import { Component, OnInit, ViewEncapsulation, ViewChild, Renderer2 } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MarkdownComponent, MarkdownService } from 'ngx-markdown';
@@ -12,25 +13,31 @@ const isAbsolute = new RegExp('(?:^[a-z][a-z0-9+.-]*:|\/\/)', 'i');
 })
 export class HelpPageComponent implements OnInit {
     private listenObj: any;
-    @ViewChild('markdownElement', {static: false})
-    private markdownElement: MarkdownComponent;
+    @ViewChild('markdownElement', {static: false}) private markdownElement: MarkdownComponent;
+    public headingAnchors: MarkdownHeadingAnchor[] = [];
 
     constructor(private markdownService: MarkdownService, 
                 private router: Router, 
                 private renderer: Renderer2,
-                public route: ActivatedRoute) {} 
+                public route: ActivatedRoute,
+                private viewportScroller: ViewportScroller) {} 
 
     ngOnInit() {
         // extend default markdown renderer with additional bells and whistles
         // add anchor link to headers rendered HTML
-        // this.markdownService.renderer.heading = (text: string, level: number) => {
-        //     const escapedText = text.toLowerCase().replace(/[^\w]+/g, '-');
-        //     return '<h' + level + '>' +
-        //                 '<a name="' + escapedText + '" class="anchor" href="#' + escapedText + '">' +
-        //                     '<span class="header-link"></span>' +
-        //                 '</a>' + text +
-        //            '</h' + level + '>';
-        // }
+        let self = this;
+        let counters = [];
+        this.markdownService.renderer.heading = (text: string, level: number) => {
+            const escapedText = text.toLowerCase().replace(/[^\w]+/g, '-');
+            if (level != 1) self.headingAnchors.push({
+                level: level,
+                anchor: escapedText,
+                label: text.replace("&amp;", "&")
+            });
+            return '<h' + level + ' class="' + escapedText + '">' +
+                        text +
+                   '</h' + level + '>';
+        }
         
         // remove .md from the end of the link if it's an absolute link to this project
         this.markdownService.renderer.link = (href: string, title: string, text: string) => {
@@ -61,4 +68,15 @@ export class HelpPageComponent implements OnInit {
         }
     }
 
+    public scrollTo(anchor) {
+        let element = document.querySelector("." + anchor);
+        if (element) element.scrollIntoView({behavior: 'smooth', block: 'start', inline: 'nearest'});
+    }
+
+}
+
+interface MarkdownHeadingAnchor {
+    level: number,
+    anchor: string,
+    label: string
 }

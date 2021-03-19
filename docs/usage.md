@@ -1,9 +1,12 @@
-<!-- This document shows up in-app as the root help page document -->
 # ATT&CK Workbench Usage Documentation
 
-ATT&CK Workbench is a tool designed to containerize the MITRE ATT&CK&reg; knowledge base, making ATT&CK easier to use and extend throughout the community. Our goal is to enable users of ATT&CK to easily instantiate their own copy of the ATT&CK knowledge base and provide the tools, infrastructure, and documentation to allow those organizations to both extend ATT&CK for their own needs and easily contribute to the ATT&CK knowledge base when appropriate.
+The ATT&CK workbench is a tool intended to allow the ATT&CK community to *explore*, *create*, *annotate* and *share* extensions of ATT&CK. 
 
-## Collections
+## Exploring ATT&CK
+
+When first instantiated, the ATT&CK Workbench will not include any data. You can use the application to build a custom dataset, or import data from a data provider such as ATT&CK using the collections browser.
+
+### Managing Collections
 
 Accessing and sharing ATT&CK knowledge is realized through _collections_. A collection is a set of related ATT&CK objects; collections may be used represent specific releases of a dataset such as "Enterprise ATT&CK v7.2", or any other set of objects one may want to share with someone else. 
 
@@ -15,86 +18,324 @@ Objects may exist in multiple collections simultaneously, and objects can exist 
 
 You can read more about the technical specifications for a collection, such as the STIX representation of a collection object, in our [collections](/docs/collections.md) document.
 
-### Importing a collection
+#### Adding a collection index
+
+Collection indexes can be added from the collections page. To add a collection index, specify the URL at which the index is found. The application will then provide a preview of the index for you to review before you save.
+
+Once saved, the workbench will periodically check for updates to the collection index at the original URL it was loaded from. Thus can data providers update subscribers by updating their collection index with new collections.
+
+#### Subscribing to a Collection
+
+Once a collection index has been added, you can subscribe to a collection listed within the index. Once subscribed, two things will happen:
+1. The most recent version of that collection will be downloaded automatically (this may take a few moments depending on the size of the collection)
+2. When the collection index updates, any new versions of subscribed collections will be downloaded, keeping you stay up-to-date with releases of subscribed collections as the data provider updates their index.
+
+Older versions of subscribed collections will not be automatically downloaded. If you want to access older versions (to peruse object history for instance) you can manually download them by clicking the "download" button next to the version. This will bring you into the "import collection" workflow described below.
+
+#### Manually Importing a collection
+
 There are multiple means through which a collection can be imported. The "import collection" workflow provides the means through which a collection can be specified, its contents reviewed, and then incorporated to the local knowledge base instance.
 
-#### 1. Indicate the collection
+##### 1. Indicate the collection
+
 Users can import the collection in several different ways:
-- *Import from URL*: In cases where the collection has been hosted on the internet, the user may specify the URL which the application can download the collection from.
-- *Upload from file*: Users can also upload a STIX bundle representing the collection.
+- *Import from URL*: In cases where the collection has been hosted on the internet, the user may specify the URL of a collection STIX bundle for the application to download.
+<!-- - *Upload from file*: Users can also upload a STIX bundle representing the collection. -->
 - *Import from collection index*: The user can choose to import collections listed by attached _collection indexes_, which are essentially lists of collections on the internet.
 
-#### 2. Review contents
+##### 2. Review contents
+
 In this step, the user should review the contents of the collection being imported. The review step is provided to ensure that users have control over the contents of their local knowledge base. Users can choose to only import specific objects from the collection if they so choose, or likewise exclude certain objects from the import. 
 
-#### 3. Incorporate into knowledge base
+While previewing an import the list of contents will be organized by object type, and then by change type. The change types are as follows:
+- *Additions*: Additions; objects which were not previously in the knowledge base.
+- *Changes*: Updated objects; Objects with major updates such as changes to scope, new reporting, and so forth.
+- *Minor changes*: Objects with minor updates such as typo corrections.
+- *Revocations*: Objects that have been replaced by other objects.
+- *Deprecations*: Objects that have been removed from the dataset.
+- *Duplicates*: Objects that already exist in the workbench and have no changes.  
+- *Out of date*: Objects which are outdated by more recent edits in your knowledge base. These objects already exist in your workbench, and the version in the collection is older. The version imported in the collection will appear in the version history of the object.
+
+The following error change types may appear when there are conflicts importing a collection:
+- *Import conflicts*: Object supersedes local edits, and the user should merge their changes with the new object content.
+- *Other Errors*: The workbench encountered errors when determining whether the following objects exist within the workbench already.
+
+After importing a collection, users can review the results of the import from the collection page. The collection review UI reflects the changes that occurred at the time of the import.
+
+##### 3. Incorporate into knowledge base
+
 After selecting the objects to import, the application will automatically integrate them into the knowledge base. 
 
 In cases where objects being imported already exist in the knowledge base, the imported object will appear as a new _version_ of that object. 
 - If it was edited more recently than the copy already in the knowledge base, it will appear as the most recent version (supersede the version already in the knowledge base). 
 - If it was edited less recently than the copy already in the knowledge base, it will appear as a _previous version_ of the object (superseded by the version already in the knowledge base).
 
-In both cases, the user may need to manually merge the two versions to prevent the incoming knowledge, or knowledge created by the user, from being lost. Such version conflicts will be indicated in the import summary page.
+In both cases, the user may need to manually merge the two versions to prevent the incoming knowledge, or knowledge created by the user, from being lost. 
 
-### Exporting a collection
-Collections can be created, or new versions of existing collections drafted, through the "export collection" workflow. 
+### Browsing the knowledge base
 
-## Viewing objects
+Once you have imported or created data, you can browse the knowledge base using the simple interface provided. For each object type (excepting relationships) a master list of all objects is provided to find the data you want to explore. Clicking on an entry in that list will preview the description of the object, and provide a link to view the full definition. 
 
-### Browsing Object History
+On the view page for a specific object you can also see relationships the object has with other objects in the knowledge base. Clicking on a relationship in the table will open a dialog window with more information about the relationship, such as the modified date and external references.
 
-Object history can be found in the resources drawer. The history timeline browser allows users to see changes to the object itself as well as changes to any relationships with the object. Clicking an event within the timeline will show what the corresponding object looked like at that moment in time.
+#### Object Lists
+
+Most object lists include pagination, which improves performance of the application by only loading a few objects at a time. The controls in the bottom of the list provides controls for changing the page size and moving between pages.
+
+Most object lists also support searching and filtering. The search input above such lists will match text within object names and descriptions. The options dropdown menu allows you to filter the data. Available filters include:
+- Workflow status: quality control workflow status as discussed in the quality control workflows section below.
+- State: by default, revoked and deprecated objects are not shown in lists as they are considered removed from the knowledge base. Enabling them in this menu will allow them to appear in the list.
+
+#### Reviewing Object History
+
+Object history can be found in the resources drawer, accessible through the icon on the right of the application toolbar. The history tool can only be accessed on an object page.
+
+The history timeline browser allows users to see the revision history of an object itself as well as that of any relationships with the object. Clicking an event within the timeline will show what the corresponding object looked like at that moment in time.
 
 - Events within the timeline are color-coded by type:
     - Purple events correspond to object changes
     - Blue events correspond to relationship changes
-- Change types are differentiated by icon:
-    - ![Plus](https://raw.githubusercontent.com/google/material-design-icons/master/png/content/add/materialicons/24dp/1x/baseline_add_black_24dp.png) denotes additions, such as the creation of the object itself or the addition of relationships with the object.
-    - ![Pencil](https://raw.githubusercontent.com/google/material-design-icons/master/png/content/create/materialicons/24dp/1x/baseline_create_black_24dp.png) denotes modifications. Modifications to the object that change the version number are marked.
-    - ![Download](https://raw.githubusercontent.com/google/material-design-icons/master/png/file/cloud_download/materialicons/24dp/1x/baseline_cloud_download_black_24dp.png) denotes the first available version of the object, but that earlier versions exist outside of what the user has in their workbench. 
+- Events within the timeline are also differentiated by type, denoted by tooltip and icon:
+    - A plus symbol denotes additions, such as the creation of the object itself or the addition of relationships with the object.
+    - A pencil symbol denotes modifications. Modifications to the object that change the version number have additional markings.
+    - A download icon denotes the first available version of the object, but that earlier versions exist outside of what the user has in their workbench. This occurs when an object has been imported from a collection.
 
-## Adding notes to objects
+## Creating Extensions of ATT&CK
 
-## Editing objects
+Objects imported from collections can be modified, or new objects created. The processes for these are documented in the sections below.
 
-### Editing ATT&CK IDs
+### Quality Control Workflows
+
+The ATT&CK Workbench provides optional quality control workflows to assist in the creation of ATT&CK data. Objects are marked with a "workflow status," reflecting their place in the quality control pipeline:
+- *work in progress*: this object is being actively developed.
+- *awaiting review*: this object is awaiting the review within your organization.
+- *reviewed*: this object has passed the quality control checks of a reviewer.
+
+Object lists can be filtered to show only objects within a specific state to enable reviewers to find the objects awaiting their review, or editors to find objects still in development.
+
+The quality control workflow is intended to be generic in order to support the quality control needs of users and organizations. It will be up to you and/or your organization to decide the review process itself or whether to use the built-in quality control workflows at all.
+
+### Validating Changes
+
+When saving an object, the application will validate the data to ensure the new data has no issues. There are four types of messages that can be shown in the validation window:
+- *Successes*, which let you know that things are as they should be. This will tell you that your object has a unique name and ATT&CK ID, and other important messages.
+- *Warnings*, which tell you that you might want to make a correction, but don't prevent you from saving altogether. Name conflicts for instance are a warning: nothing will break if there's a conflict, but it should still be avoided if possible. 
+- *Errors*, which tell you that you can't save until you've fixed the mistake. ATT&CK ID conflicts, malformed version numbers and duplicate relationships are examples of validation errors.
+- *Info*, which convey other information about your changes. Letting you know that you've already incremented the version number (and shouldn't/can't use the automatic version-increment buttons) is an example of an info message.
+
+Once you have reviewed the validation feedback you can proceed to save the object unless errors are present which must be corrected first. If you want to make changes as the result of validation warnings or errors, you can simply click cancel to continue editing.
+
+### Version Numbers
+
+All objects (Excepting relationships) support version numbers. Version numbers can have any level of granularity (e.g `2.1`, `2.1.1`, `2.1.0.5`), but it is recommended to use at least 2 levels of granularity, formatted as `major.minor`:
+   - *major* updates include revisions to object scope.
+   - *minor* updates include additions to reporting and content that do not change the overall scope of the object.
+   <!-- - An optional third level of granularity, *patch* updates include fixes in the object content such as typo corrections. -->
+
+When saving an object, the validation window will prompt you to increment the version number you haven't already edited the version field. We recommend data providers be careful when incrementing versions so as to avoid double-increments between their releases.
+
+### Rich Text Formatting
+
+Some fields of objects support additional formatting features.
+
+#### Markdown
+
+Fields which show a "preview" tab when editing (all descriptions and the detection field found on techniques) allow markdown to be used to format the text. The ATT&CK Workbench uses the [GitHub-Flavored Markdown (GFM)](https://github.github.com/gfm/) syntax, though applications consuming ATT&CK data may not support this extension to the [commonMark](https://commonmark.org/) spec. The preview tab allows the the field formatting to be checked while it is being updated.
+
+#### Citations
+
+Description, detection, and alias-description* fields allow for in-text citations, used to reference a primary source relevant to the prior sentence or paragraph. When viewing an object, citations are rendered as a citation marker (e.x: <sup>[1]</sup> ) corresponding to an entry in the external references section of the object page.
+
+Citations are formatted within the text as `(Citation: source name)`, which corresponds to the source name of a reference. This will get compiled to a citation marker with hyperlink when rendered, and the relevant reference added to the references section of the object when it is saved.
+
+The **Reference Manager Tool** can be used to add, edit, and find references. The reference manager can be found in the resources drawer by clicking the icon on the far right of the toolbar, and contains a list of all references on all objects, as well as references you've created to add to objects later. 
+
+- When a collection is imported, all references will be added to the master list in the sidebar.
+- Once a reference has been created, you cannot change the source name.
+- If you edit the description or URL on an existing reference, any objects which cite this reference will automatically be updated with the adjusted data. The interface will notify you of which objects contain the updated reference. This patch will show up as a change within object history, but will not change the object version number.
+- You can use the "copy" button on a reference in the list to quickly copy the in-text citation string to your clipboard to paste into a description or alias.
+
+_\* Unlike other descriptions, alias descriptions do not support markdown and typically only contain citations without other text._
+
+### ATT&CK IDs
 
 ATT&CK IDs must follow a prescribed format:
-| ATT&CK concept | ID format |
+
+| Object Type | ID Format |
 |:------------|:----------|
-| [Matrix](#matrices)              | `MAxxxx` |
-| [Tactic](#tactics)               | `TAxxxx` |
-| [Technique](#techniques)         | `Txxxx` |
-| [Sub-Technique](#sub-techniques) | `Txxxx.yyy` |
-| [Mitigation](#mitigations)       | `Mxxxx` |
-| [Group](#groups)                 | `Gxxxx`  |
-| [Software](#software)            | `Sxxxx` |
+| Matrix           | (domain identifier)* |
+| Tactic           | `TAxxxx` |
+| Technique        | `Txxxx` |
+| Sub-Technique   |  `Txxxx.yyy` |
+| Mitigation       | `Mxxxx` |
+| Group            | `Gxxxx`  |
+| Software         | `Sxxxx` |
 
-<!-- TODO improve ID namespacing guidance and support -->
-<!-- All IDs _can_ be prefixed with an organization identifier. This allows name-spacing of IDs by the creating organization to prevent ID collisions between data providers creating objects. Organization prefixes:
-- are joined to the ID using a double hyphen
-- can not include any whitespace characters
-- should be lowercase
+_\* Domain identifiers for Matrices are described in the section for editing matrices._
 
-Examples of IDs with an organization identifier include `acme--T1000`, `octan--G1056`, `xyz-co--M1200`.  -->
+### Creating Objects
 
-### Editing Matrices
+Object creation follows the same approach as object editing. Objects can be created from the object list pages by clicking the "add" button above the object list. When creating an object, required fields will be marked with an asterisk and must be filled before the object can be created.
 
-#### Editing tactics on matrices
-The order of tactics in matrices can be edited through drag and drop, and clicking on the up/down arrows. Tactics that are not currently in the matrix can be added throught the "Add" button. If there are available tactics, not already mapped to a matrix, a multi-select list will appear where the user can add multiple tactics to the edited matrix. Tactics recently added to the matrices will appear at the bottom of the tactic list.
+Objects are initially created in the "work in progress" workflow state.
 
-Tactics can also be removed from the list by hitting on the trash bin next to each tactic row. A confirmation to remove the tactic will be appear.
+#### Creating Relationships
 
-### Editing Techniques
-### Editing Tactics
-### Editing Mitigations
-### Editing Software
-### Editing Domains
+Relationships connecting two objects (e.g procedure examples, associated groups) can be created from object pages themselves by clicking the "add" button above the relevant relationship table. The source and target objects _must_ be selected before the relationship can be created. The remainder of the creation process otherwise follows the standard process for editing relationships.
 
-### Managing Citations
+Relationship source/target objects can be changed after the relationship has been created, but the type of the relationship cannot (e.g a `mitigates` relationship cannot be converted to a `uses` relationship).
+
+### Editing Objects
+
+Any object in the knowledge base can be edited, even those imported from collections. Clicking the "edit" button in the toolbar, or the "edit" link in an object list, will bring you to the edit interface for the object. While editing an object, relationships cannot be viewed or created since they are saved independently of the objects they connect.
+
+#### Editing Matrices
+
+Matrices share the typical fields on objects, including a description supporting markdown and citations. Unlike other object types, their IDs serve as identifier for their domain:
+
+| Domain | ID |
+|:------------|:----------|
+| Enterprise     | enterprise-attack |
+| Mobile           | mobile-attack |
+| ICS           | ics-attack |
+
+Multiple matrices _can_ exist for a domain (e.x _Device Access_ and _Network-Based Effects_ in the Mobile domain), and matrices of the same domain share IDs.
+
+##### Editing tactics on matrices
+
+The order of tactics in matrices can be added, ordered, and removed. Tactic ordering can be completed by using the mouse to drag and drop the entire row or by clicking on the up/down arrows. Tactics recently added to the matrix will appear at the bottom of the tactic list.
+
+##### Matrix Relationships
+
+Matrices do not have any associated relationships.
+
+#### Editing Techniques
+
+Techniques represent "how" an adversary achieves a tactical goal by performing an action. For example, an adversary may dump credentials to achieve credential access.
+
+Like all objects, techniques support descriptions with markdown and citation support. The detection field also supports markdown and citations. Additionally, techniques list relevant platforms according to their domain. After a domain has been selected, the user may select the relevant platforms from the dropdown menu.
+
+##### Sub-techniques
+
+Sub-techniques are a more specific description of the adversarial behavior used to achieve a goal. Techniques and sub-techniques are both represented in the techniques section of the application, with sub-techniques nested beneath their parent technique in the "Sub-techniques" section of the page. A technique can be converted to a sub-technique by checking the "sub-technique?" box in the edit interface, after which point parent (non-sub-techniques) techniques can create relationships with them.
+
+##### Domain/Tactic Specific Fields
+
+The set of fields available to edit on a technique differs according to the domains and tactics of the technique. Domain specific fields are displayed in the same row as the domain field, and tactic specific fields are displayed in the same row as the tactics field.
+
+| Field | Domains | Tactics? |  Description |
+|:------|:--------|:---------|:-------------|
+| Data Sources | Enterprise, ICS | (All Tactics) | Sources of information that may be used to identify the action or result of the action being performed. |
+| sub-technique? | Enterprise | (All Tactics) | Is this object a sub-technique? This cannot be changed for sub-techniques with assigned parents, or for parent-techniques with assigned sub-techniques. |
+| System Requirements | Enterprise | (All Tactics) | Additional information on requirements the adversary needs to meet or about the state of the system (software, patch level, etc.) that may be required for the technique to work. |
+| Permissions Required | Enterprise | Privilege Escalation | The lowest level of permissions the adversary is required to be operating within to perform the technique on a system. |
+| Effective Permissions | Enterprise | Privilege Escalation | The level of permissions the adversary will attain by performing the technique. | 
+| Defenses Bypassed | Enterprise | Defense Evasion | List of defensive tools, methodologies, or processes the technique can bypass. |
+| Remote Support | Enterprise | Execution | Can the technique can be used to execute something on a remote system? |
+| Impact Type | Enterprise | Impact | Denotes if the technique can be used for integrity or availability attacks. |
+| CAPEC IDs | Enterprise | (All Tactics) | [CAPEC](https://capec.mitre.org/) IDs associated with the technique. Must follow the format `CAPEC-###`. |
+| MTC IDs | Mobile | (All Tactics) | NIST [Mobile Threat Catalogue](https://pages.nist.gov/mobile-threat-catalogue/) IDs associated with the technique. Must follow the format `[Threat Category]-###`. |
+| Tactic Type | Mobile | (All Tactics) | "Post-Adversary Device Access", "Pre-Adversary Device Access", or "Without Adversary Device Access". |
 
 
+##### Technique Relationships
 
-## Further reading
-- [Philosophy Paper](https://attack.mitre.org/docs/ATTACK_Design_and_Philosophy_March_2020.pdf): This whitepaper provides an in-depth look at why ATT&CK was created, how it is updated and maintained, and common community uses.
-- [MITRE/CTI USAGE](https://github.com/mitre/cti/blob/master/USAGE.md): This document details the STIX representation of the ATT&CK knowledge base and provides examples of how to work with ATT&CK data programmatically.
+| Relationship Section                       | Description |
+|:-----|:----|
+| Sub-techniques / Other Sub-techniques      | Sub-techniques of the technique if it is a parent technique, or other sub-techniques of the parent | is a sub-technique.
+| Mitigations                                | Mitigations that apply to this technique |
+| Procedure Examples                         | Groups and software that use this technique |
+
+
+#### Editing Tactics
+
+Tactics represent the "why" of an ATT&CK technique or sub-technique. It is the adversary's tactical goal: the reason for performing an action. For example, an adversary may want to achieve credential access. 
+
+Tactics support the standard set of fields, including a description supporting citations and markdown formatting. Tactics must be assigned to a domain before techniques can be assigned to them. The assignment of techniques to tactics can only be done on the techniques page.
+##### Tactic Relationships
+
+Tactics do not have any associated relationships.
+#### Editing Mitigations
+
+Mitigations represent security concepts and classes of technologies that can be used to prevent a technique or sub-technique from being successfully executed. They support the standard set of fields and must be assigned to a domain. 
+
+A special mitigation published within the Enterprise domain, "Do Not Mitigate," should be used to mark any techniques which should not be mitigated.
+##### Mitigation Relationships
+
+| Relationship Section                    | Description |
+|:-----|:----|
+| Techniques Addressed by Mitigation      | Techniques the mitigation addresses / mitigates. |
+
+#### Editing Groups
+
+Groups are sets of related intrusion activity that are tracked by a common name in the security community. Overlaps between names based on publicly reported associations are tracked using "Associated Groups" (also known as "Aliases").
+
+Groups support the standard set of fields as well as the "Associated Groups" field. Each associated group is tracked using a name and description. The alias description is typically used to hold a set of citations, though plain-text can also be entered alongside citations if additional context is necessary. Alias names cannot be changed after they are added, but the description can be changed by clicking on the entry in the associated groups list.
+
+##### Group Relationships
+
+| Relationship Section                    | Description |
+|:-----|:----|
+| Techniques Used      | Techniques used by the group. Note that this should not include indirect usages through software, which should be expressed by mapping to the software itself. |
+| Software Used      | Software used by the group |
+#### Editing Software
+
+Software is a generic term for custom or commercial code, operating system utilities, open-source software, or other tools used to conduct behavior modeled in ATT&CK. Some instances of software have multiple names associated with the same instance due to various organizations tracking the same set of software by different names. The team makes a best effort to track overlaps between names based on publicly reported associations, which are designated as “Associated Software” on each page (also known as "Aliases").
+
+Software support the standard set of fields as well as the "Associated Software" field. Each associated software is tracked using a name and description. The alias description is typically used to hold a set of citations, though plain-text can also be entered alongside citations if additional context is necessary. Alias names cannot be changed after they are added, but the description can be changed by clicking on the entry in the associated groups list.
+
+##### Types of Software 
+
+Two types of software exist, _malware_ and _tool_:
+- *malware*: commercial, custom closed source, or open source software intended to be used for malicious purposes by adversaries.
+- *tool*: commercial, open-source, built-in, or publicly available software that could be used by a defender, pen tester, red teamer, or an adversary.
+
+The software type must be selected when creating it and due to limitations of the data model cannot be changed after the software is created. If the type must be changed, create a new object of the other type and _revoke_ the old object with the replacing object.
+
+##### Software Relationships
+
+| Relationship Section                    | Description |
+|:-----|:----|
+| Techniques Used      | Techniques used by the group |
+| Associated Groups    | Groups that use this software |
+
+#### Editing Relationships
+
+Relationships map objects to other objects. Relationships have types, sources, and targets. The source and targets define the objects connected by the relationship, and the type is a verb describing the nature of their relationship. 
+
+
+| Relationship Type | Valid Source Types | Valid Target Types |
+|:-----|:----|:---|
+| uses              | Group, Software*  | Software*, Technique |
+| mitigates         | Mitigation       | Technique |
+| subtechnique-of   | Technique        | Technique |
+
+_\* Relationships cannot be created between two software._
+
+Relationships are edited within a dialog window accessed by clicking on the relationship row in the relevant table its source or target object. Then, in the dialog window, you can click the edit button in the dialog toolbar.
+
+The source and target objects can be changed after the relationship has been created, but the relationship type cannot. Thus could a procedure example be remapped to a new technique based off updated reporting or adjustments to technique scope, for example.
+
+Relationships also have a description to provide additional context or to hold citations of relevant reporting. Like all descriptions, those on relationships support both citations and markdown formatting. Relationships between sub-techniques and techniques however are purely structural and do not support descriptions.
+
+
+## Annotating ATT&CK data
+
+Annotations allow users to add additional information about an object in the dataset without extending it directly. This is useful for a number of reasons, most notably that incoming updates from a data provider won't overwrite notes but _can_ conflict with local changes to the object itself. 
+
+Uses of notes include but are not limited to:
+- Sharing informal knowledge within an organization (e.g "This mitigation might be useful to protect us from _X_")
+- Recording potential knowledge (e.g "TODO: verify whether the mention in threat report _X_ is actually this technique")
+- Enabling collaboration in development workflows (e.g "Marcie, make sure to update the platforms once you finish determining the technique scope")
+
+Annotations in the ATT&CK Workbench are implemented through _notes_. Typically notes are not published outside of a workbench instance, and are intended to be local knowledge. Note are associated directly with objects within the knowledge base, and cannot exist without an attached object.
+
+### Creating Notes
+
+The Note Editor is found within the resources drawer accessible through the button on the far right of the toolbar. The note editor is only available when on the page for an object, and created notes will only be visible within that page. Notes within the editor can be sorted by modified date or alphabetically by title.
+
+Note have titles and descriptions, both of which must be filled in order to save the note. The description field supports markdown. Once saved, a note can be edited by clicking on it in the note editor.
+
+## Sharing your Extensions
+
+Section on publishing collections TODO
