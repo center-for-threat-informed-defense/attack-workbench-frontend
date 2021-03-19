@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, ViewEncapsulation, ViewChild, AfterViewInit, ElementRef, EventEmitter, Output } from '@angular/core';
+import { Component, OnInit, Input, ViewEncapsulation, ViewChild, AfterViewInit, ElementRef, EventEmitter, Output, OnDestroy } from '@angular/core';
 import { StixObject } from 'src/app/classes/stix/stix-object';
 import {animate, style, transition, trigger} from '@angular/animations';
 import {MatSort} from '@angular/material/sort';
@@ -9,7 +9,7 @@ import { SelectionModel } from '@angular/cdk/collections';
 import { StixDialogComponent } from '../../../views/stix/stix-dialog/stix-dialog.component';
 
 import { MatDialog } from '@angular/material/dialog';
-import { fromEvent, Observable, of } from 'rxjs';
+import { fromEvent, Observable, of, Subscription } from 'rxjs';
 import { Paginated, RestApiConnectorService } from 'src/app/services/connectors/rest-api/rest-api-connector.service';
 import { debounceTime, distinctUntilChanged, filter, tap } from 'rxjs/operators';
 
@@ -36,7 +36,7 @@ import { debounceTime, distinctUntilChanged, filter, tap } from 'rxjs/operators'
         ])
     ]
 })
-export class StixListComponent implements OnInit, AfterViewInit {
+export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
 
 
     // @Input() public stixObjects: StixObject[]; //TODO get rid of this in favor of stix list cards loading using filters
@@ -44,6 +44,7 @@ export class StixListComponent implements OnInit, AfterViewInit {
     @ViewChild(MatPaginator) paginator: MatPaginator;
     @ViewChild('search') search: ElementRef;
     public searchQuery: string = "";
+    private searchSubscription: Subscription;
     // @ViewChild(MatSort) public sort: MatSort;
 
     //objects to render;
@@ -136,25 +137,26 @@ export class StixListComponent implements OnInit, AfterViewInit {
     
 
     //all possible each type of filter/groupBy
-    private types: FilterValue[] = [
-        {"value": "type.group", "label": "group"},
-        {"value": "type.matrix", "label": "matrix"},
-        {"value": "type.mitigation", "label": "mitigation"},
-        {"value": "type.software", "label": "software"},
-        {"value": "type.tactic", "label": "tactic"},
-        {"value": "type.technique", "label": "technique"},
-    ]
-    private domains: FilterValue[] = [
-        {"value": "domain.enterprise-attack", "label": "enterprise"},
-        {"value": "domain.mobile-attack", "label": "mobile"}
-    ]
-    private collections: FilterValue[];
+    // private types: FilterValue[] = [
+    //     {"value": "type.group", "label": "group", "disabled": false},
+    //     {"value": "type.matrix", "label": "matrix", "disabled": false},
+    //     {"value": "type.mitigation", "label": "mitigation", "disabled": false},
+    //     {"value": "type.software", "label": "software", "disabled": false},
+    //     {"value": "type.tactic", "label": "tactic", "disabled": false},
+    //     {"value": "type.technique", "label": "technique", "disabled": false},
+    // ]
+    // private domains: FilterValue[] = [
+    //     {"value": "domain.enterprise-attack", "label": "enterprise", "disabled": false},
+    //     {"value": "domain.mobile-attack", "label": "mobile", "disabled": false}
+    // ]
     private statuses: FilterValue[] = [
-        {"value": "status.wip", "label": "work in progress"},
-        {"value": "status.awaiting-review", "label": "awaiting review"},
-        {"value": "status.reviewed", "label": "reviewed"},
-        {"value": "status.deprecated", "label": "deprecated"},
-        {"value": "status.revoked", "label": "revoked"}
+        {"value": "status.work-in-progress", "label": "show only work in progress", "disabled": false},
+        {"value": "status.awaiting-review", "label": "show only awaiting review", "disabled": false},
+        {"value": "status.reviewed", "label": "show only reviewed", "disabled": false}
+    ]
+    private states: FilterValue[] = [
+        {"value": "state.deprecated", "label": "include deprecated", "disabled": false},
+        {"value": "state.revoked", "label": "include revoked", "disabled": false}
     ]
 
     constructor(public dialog: MatDialog, private restAPIConnectorService: RestApiConnectorService, private router: Router) {}
@@ -164,7 +166,7 @@ export class StixListComponent implements OnInit, AfterViewInit {
         let controls_before = [] // control columns which occur before the main columns
         let controls_after = []; // control columns which occur after the main columns
         if ("type" in this.config) { 
-            this.filter.push("type." + this.config.type); 
+            // this.filter.push("type." + this.config.type); 
             // set columns according to type
             switch(this.config.type) {
                 case "collection":
@@ -242,11 +244,11 @@ export class StixListComponent implements OnInit, AfterViewInit {
             }
         }
         else {
-            this.filterOptions.push({
-                "name": "type", //TODO make more extensible to additional types
-                "disabled": "type" in this.config,
-                "values": this.types
-            })
+            // this.filterOptions.push({
+            //     "name": "type", //TODO make more extensible to additional types
+            //     "disabled": "type" in this.config,
+            //     "values": this.types
+            // })
             this.groupBy = ["type"];
             this.addColumn("type", "attackType", "plain");
             this.addColumn("ID", "attackID", "plain", false);
@@ -279,9 +281,14 @@ export class StixListComponent implements OnInit, AfterViewInit {
         this.tableColumns_controls = controls_before.concat(this.tableColumns, controls_after);
         // filter setup
         this.filterOptions.push({
-            "name": "status",
+            "name": "workflow status",
             "disabled": "status" in this.config,
             "values": this.statuses
+        })
+        this.filterOptions.push({
+            "name": "state",
+            "disabled": "status" in this.config,
+            "values": this.states
         })
         // get data from config (if we are not connecting to back-end)
         if ("stixObjects" in this.config && !(this.config.stixObjects instanceof Observable)) {
@@ -294,15 +301,17 @@ export class StixListComponent implements OnInit, AfterViewInit {
         // get objects from backend if data is not from config
         if (!("stixObjects" in this.config)) this.applyControls();
         // set up listener to search input
-        fromEvent(this.search.nativeElement, 'keyup').pipe(
-            filter(Boolean),
-            debounceTime(250),
-            distinctUntilChanged(),
-            tap(_ => { 
-                if (this.paginator) this.paginator.pageIndex = 0;
-                this.applyControls();
-            })
-        ).subscribe()
+        if (this.config.type && this.config.type != "relationship") {
+            this.searchSubscription = fromEvent(this.search.nativeElement, 'keyup').pipe(
+                filter(Boolean),
+                debounceTime(250),
+                distinctUntilChanged(),
+                tap(_ => { 
+                    if (this.paginator) this.paginator.pageIndex = 0;
+                    this.applyControls();
+                })
+            ).subscribe()
+        }
     }
 
 
@@ -331,7 +340,6 @@ export class StixListComponent implements OnInit, AfterViewInit {
      * Apply all controls and fetch objects from the back-end if configured
      */
     public applyControls() {
-        let searchString = this.search? this.search.nativeElement.value : "";
         if ("stixObjects" in this.config) {
             if (this.config.stixObjects instanceof Observable) {
                 // pull objects out of observable
@@ -342,14 +350,14 @@ export class StixListComponent implements OnInit, AfterViewInit {
                 // this.paginator.length = this.config.stixObjects.length;
                 // filter on STIX objects specified in the config
                 let filtered = this.config.stixObjects;
-                filtered = this.filterObjects(searchString, filtered); 
+                // filter to objects matching searchString
+                filtered = this.filterObjects(this.searchQuery, filtered); 
                 if (this.paginator) this.totalObjectCount = filtered.length;
                 
                 // filter to only ones within the correct index range
                 let startIndex = this.paginator? this.paginator.pageIndex * this.paginator.pageSize : 0
                 let endIndex = this.paginator? startIndex + this.paginator.pageSize : 10;
                 filtered = filtered.slice(startIndex, endIndex);
-                // filter to objects matching searchString
                 this.data$ = of({
                     data: filtered,
                     pagination: {
@@ -364,12 +372,42 @@ export class StixListComponent implements OnInit, AfterViewInit {
             // fetch objects from backend
             let limit = this.paginator? this.paginator.pageSize : 10;
             let offset = this.paginator? this.paginator.pageIndex * limit : 0;
-            if (this.config.type == "software") this.data$ = this.restAPIConnectorService.getAllSoftware({limit: limit, offset: offset, excludeIDs: this.config.excludeIDs, search: this.searchQuery}); //TODO add limit and offset once back-end supports it
-            else if (this.config.type == "group") this.data$ = this.restAPIConnectorService.getAllGroups({limit: limit, offset: offset, excludeIDs: this.config.excludeIDs, search: this.searchQuery}); //TODO add limit and offset once back-end supports it
-            else if (this.config.type == "matrix") this.data$ = this.restAPIConnectorService.getAllMatrices({limit: limit, offset: offset, excludeIDs: this.config.excludeIDs, search: this.searchQuery}); //TODO add limit and offset once back-end supports it
-            else if (this.config.type == "mitigation") this.data$ = this.restAPIConnectorService.getAllMitigations({limit: limit, offset: offset, excludeIDs: this.config.excludeIDs, search: this.searchQuery}); //TODO add limit and offset once back-end supports it
-            else if (this.config.type == "tactic") this.data$ = this.restAPIConnectorService.getAllTactics({limit: limit, offset: offset, excludeIDs: this.config.excludeIDs, search: this.searchQuery}); //TODO add limit and offset once back-end supports it
-            else if (this.config.type == "technique") this.data$ = this.restAPIConnectorService.getAllTechniques({limit: limit, offset: offset, excludeIDs: this.config.excludeIDs, search: this.searchQuery});
+            let deprecated = this.filter.includes("state.deprecated");
+            let revoked = this.filter.includes("state.revoked");
+            let state = this.filter.find((x) => x.startsWith("status."));
+            if (state) {
+                state = state.split("status.")[1];
+                // disable other states
+                for (let group of this.filterOptions) {
+                    for (let option of group.values) {
+                        if (option.value.startsWith("status.") && !option.value.endsWith(state)) option.disabled = true;
+                    }
+                }
+            } else {
+                // enable all states
+                for (let group of this.filterOptions) {
+                    for (let option of group.values) {
+                        if (option.value.startsWith("status.")) option.disabled = false;
+                    }
+                }
+            }
+            
+            let options = {
+                limit: limit, 
+                offset: offset, 
+                excludeIDs: this.config.excludeIDs, 
+                search: this.searchQuery, 
+                state: state, 
+                includeRevoked: revoked, 
+                includeDeprecated: deprecated
+            }
+
+            if (this.config.type == "software") this.data$ = this.restAPIConnectorService.getAllSoftware(options);
+            else if (this.config.type == "group") this.data$ = this.restAPIConnectorService.getAllGroups(options);
+            else if (this.config.type == "matrix") this.data$ = this.restAPIConnectorService.getAllMatrices(options);
+            else if (this.config.type == "mitigation") this.data$ = this.restAPIConnectorService.getAllMitigations(options);
+            else if (this.config.type == "tactic") this.data$ = this.restAPIConnectorService.getAllTactics(options);
+            else if (this.config.type == "technique") this.data$ = this.restAPIConnectorService.getAllTechniques(options);
             else if (this.config.type == "collection") this.data$ = this.restAPIConnectorService.getAllCollections({search: this.searchQuery});
             else if (this.config.type == "relationship") this.data$ = this.restAPIConnectorService.getRelatedTo({sourceRef: this.config.sourceRef, targetRef: this.config.targetRef, sourceType: this.config.sourceType, targetType: this.config.targetType, relationshipType: this.config.relationshipType,  excludeSourceRefs: this.config.excludeSourceRefs, excludeTargetRefs: this.config.excludeTargetRefs, limit: limit, offset: offset});
             let subscription = this.data$.subscribe({
@@ -377,6 +415,10 @@ export class StixListComponent implements OnInit, AfterViewInit {
                 complete: () => { subscription.unsubscribe() }
             })
         }
+    }
+
+    public ngOnDestroy() {
+        if (this.searchSubscription) this.searchSubscription.unsubscribe();
     }
 }
 
@@ -442,6 +484,7 @@ export interface StixListConfig {
 export interface FilterValue {
     value: string;
     label: string;
+    disabled: boolean;
 }
 export interface FilterGroup {
     disabled?: boolean; //is the entire group disabled
