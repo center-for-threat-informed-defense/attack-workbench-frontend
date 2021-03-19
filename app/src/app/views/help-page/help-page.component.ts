@@ -26,9 +26,10 @@ export class HelpPageComponent implements OnInit {
         // extend default markdown renderer with additional bells and whistles
         // add anchor link to headers rendered HTML
         let self = this;
+        let counters = [];
         this.markdownService.renderer.heading = (text: string, level: number) => {
             const escapedText = text.toLowerCase().replace(/[^\w]+/g, '-');
-            self.headingAnchors.push({
+            if (level != 1) self.headingAnchors.push({
                 level: level,
                 anchor: escapedText,
                 label: text.replace("&amp;", "&")

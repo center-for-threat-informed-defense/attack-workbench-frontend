@@ -42,6 +42,7 @@
 
     h1 { @extend .heading; }
     h2, h3, h4 { @extend .subheading; }
+    h5, h6 { font-size: 18px; }
 
     a:not(.external-link):not(.mat-button):not(.mat-stroked-button) {
         color: inherit;

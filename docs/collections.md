@@ -1,4 +1,8 @@
-# Collections
+# Collections and Collection Indexes
+
+This document describes the format and usage of _collections_ and _collection indexes_, which are used for distribution of ATT&CK data from data providers to data consumers.
+
+## Collections
 A _collection_ is a set of related ATT&CK objects; collections may be used represent specific releases of a dataset such as "Enterprise ATT&CK v7.2", or any other set of objects one may want to share with someone else. 
 
 Collections are meant to be shared. Collections can be shared as STIX bundles, uploaded to the internet, sent through email, or hosted on a [TAXII server](https://oasis-open.github.io/cti-documentation/taxii/intro.html). 
@@ -9,7 +13,7 @@ Typically collections are not modified after they are published. Subsequent rele
 
 Collections by design reference a specific version of each object they contain. Conceptually, the object as a whole is not part of the collection; the collection instead contains the object as it was recorded at a specific moment in time. Oftentimes sequential versions of a collection will include updated versions of the contained objects in addition to new objects. This can be used to track the evolution of a dataset over time.
 
-## Collection Properties
+### Collection Properties
 Collections are represented in STIX using the `x-mitre-collection` type, described below. This collection defining object should typically be provided alongside the contents of the collection within a STIX bundle or TAXII collection.
 
 | Property Name | Data Type | Details |
@@ -26,7 +30,7 @@ Collections are represented in STIX using the `x-mitre-collection` type, describ
 | **object_marking_refs** (required) | `list` of type `identifier` | Specifies a list of **id** properties of `marking-definition` objects that apply to this object. Typically used for copyright statements. |
 | **x_mitre_contents** (required) | `list` of type _object version reference_ | Specifies the objects contained within the collection. See the _object version reference_ type below.  |
 
-## Object Version Reference Properties
+### Object Version Reference Properties
 Object version references are used to refer to a specific version of a STIX object. They do this by combining a STIX ID of the object with the modified timestamp of the given version.
 
 | Property Name | Data Type | Details |
@@ -35,7 +39,7 @@ Object version references are used to refer to a specific version of a STIX obje
 | **object_modified** (required) | `timestamp` | The modified time of referenced object. It _MUST_ be an exact for the `modified` time of the STIX object being referenced. |
 
 
-## Collection Example
+### Collection Example
 ```json
 {
     "id": "x-mitre-collection--23320f4-22ad-8467-3b73-ed0c869a12838",
@@ -83,12 +87,12 @@ Object version references are used to refer to a specific version of a STIX obje
 }
 ```
 
-# Collection Indexes
+## Collection Indexes
 
 Collections may be referenced by _collection indexes_, which are essentially an organized list of collections. Typically, collection indexes only refer to collections created by the organization maintaining the index. The ATT&CK Workbench can subscribe to collections within the index to automatically receive updates when the index itself is updated.
 
 
-## Collection Index Properties
+### Collection Index Properties
 Collection Indexes are plain JSON, _not_ STIX, and therefore _should not_ be included within STIX bundles or on a TAXII server. They instead refer to the STIX bundles or TAXII collections wherein the collections are held.
 
 | Property Name | Data Type | Details |
@@ -100,7 +104,7 @@ Collection Indexes are plain JSON, _not_ STIX, and therefore _should not_ be inc
 | **modified**  (required)| `timestamp` | Represents the time at which the collection index was most recently modified. |
 | **collections** (required) | `list` of type _collection reference_ | See the _collection reference_ data type below. |
 
-## Collection Reference Properties
+### Collection Reference Properties
 Collection References describe to specific collections within a _collection index_.
 
 | Property Name | Data Type | Details |
@@ -111,7 +115,7 @@ Collection References describe to specific collections within a _collection inde
 | **created** (required) | `timestamp` | Represents the time when the collection was created. This property must match the **created** property of the collection to which it refers. All collection versions must have the same `created` time. |
 | **versions** (required) | `list` of type _collection Version_ | Specifies the distinct versions of the given collection. See the _collection version_ data type below. |
 
-## Collection Version Properties
+### Collection Version Properties
 Collection version objects describe specific versions of collections within a _collection reference_.
 
 | Property Name | Data Type | Details |
@@ -122,7 +126,7 @@ Collection version objects describe specific versions of collections within a _c
 | **taxii_url** (optional*) | `string` | Specifies the TAXII URL of the TAXII collection holding the collection. *Either this property or **url** _MUST_ be specified. |
 | **release_notes** (optional) | `string` | Release notes for this version of the collection. |
 
-## Collection Index Example
+### Collection Index Example
 ```json
 {
     "id": "bb8c95c0-4e8f-491e-a3c9-8b4207e43041",
