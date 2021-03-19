@@ -43,6 +43,7 @@ export class StixListComponent implements OnInit, AfterViewInit {
     @Input() public config: StixListConfig = {};
     @ViewChild(MatPaginator) paginator: MatPaginator;
     @ViewChild('search') search: ElementRef;
+    public searchQuery: string = "";
     // @ViewChild(MatSort) public sort: MatSort;
 
     //objects to render;
@@ -363,13 +364,13 @@ export class StixListComponent implements OnInit, AfterViewInit {
             // fetch objects from backend
             let limit = this.paginator? this.paginator.pageSize : 10;
             let offset = this.paginator? this.paginator.pageIndex * limit : 0;
-            if (this.config.type == "software") this.data$ = this.restAPIConnectorService.getAllSoftware(limit, offset, null, null, null, null, this.config.excludeIDs); //TODO add limit and offset once back-end supports it
-            else if (this.config.type == "group") this.data$ = this.restAPIConnectorService.getAllGroups(limit, offset, null, null, null, null, this.config.excludeIDs); //TODO add limit and offset once back-end supports it
-            else if (this.config.type == "matrix") this.data$ = this.restAPIConnectorService.getAllMatrices(limit, offset, null, null, null, null, this.config.excludeIDs); //TODO add limit and offset once back-end supports it
-            else if (this.config.type == "mitigation") this.data$ = this.restAPIConnectorService.getAllMitigations(limit, offset, null, null, null, null, this.config.excludeIDs); //TODO add limit and offset once back-end supports it
-            else if (this.config.type == "tactic") this.data$ = this.restAPIConnectorService.getAllTactics(limit, offset, null, null, null, null, this.config.excludeIDs); //TODO add limit and offset once back-end supports it
-            else if (this.config.type == "technique") this.data$ = this.restAPIConnectorService.getAllTechniques(limit, offset, null, null, null, null, this.config.excludeIDs);
-            else if (this.config.type == "collection") this.data$ = this.restAPIConnectorService.getAllCollections();
+            if (this.config.type == "software") this.data$ = this.restAPIConnectorService.getAllSoftware({limit: limit, offset: offset, excludeIDs: this.config.excludeIDs, search: this.searchQuery}); //TODO add limit and offset once back-end supports it
+            else if (this.config.type == "group") this.data$ = this.restAPIConnectorService.getAllGroups({limit: limit, offset: offset, excludeIDs: this.config.excludeIDs, search: this.searchQuery}); //TODO add limit and offset once back-end supports it
+            else if (this.config.type == "matrix") this.data$ = this.restAPIConnectorService.getAllMatrices({limit: limit, offset: offset, excludeIDs: this.config.excludeIDs, search: this.searchQuery}); //TODO add limit and offset once back-end supports it
+            else if (this.config.type == "mitigation") this.data$ = this.restAPIConnectorService.getAllMitigations({limit: limit, offset: offset, excludeIDs: this.config.excludeIDs, search: this.searchQuery}); //TODO add limit and offset once back-end supports it
+            else if (this.config.type == "tactic") this.data$ = this.restAPIConnectorService.getAllTactics({limit: limit, offset: offset, excludeIDs: this.config.excludeIDs, search: this.searchQuery}); //TODO add limit and offset once back-end supports it
+            else if (this.config.type == "technique") this.data$ = this.restAPIConnectorService.getAllTechniques({limit: limit, offset: offset, excludeIDs: this.config.excludeIDs, search: this.searchQuery});
+            else if (this.config.type == "collection") this.data$ = this.restAPIConnectorService.getAllCollections({search: this.searchQuery});
             else if (this.config.type == "relationship") this.data$ = this.restAPIConnectorService.getRelatedTo({sourceRef: this.config.sourceRef, targetRef: this.config.targetRef, sourceType: this.config.sourceType, targetType: this.config.targetType, relationshipType: this.config.relationshipType,  excludeSourceRefs: this.config.excludeSourceRefs, excludeTargetRefs: this.config.excludeTargetRefs, limit: limit, offset: offset});
             let subscription = this.data$.subscribe({
                 next: (data) => { this.totalObjectCount = data.pagination.total; },

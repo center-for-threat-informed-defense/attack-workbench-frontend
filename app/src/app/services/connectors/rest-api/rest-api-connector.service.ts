@@ -107,36 +107,37 @@ export class RestApiConnectorService extends ApiConnector {
     private getStixObjectsFactory<T extends StixObject>(attackType: AttackType) {
         let attackClass = attackTypeToClass[attackType];
         let plural = attackTypeToPlural[attackType]
-        return function<P extends T>(limit?: number, offset?: number, state?: string, revoked?: boolean, deprecated?: boolean, versions?: "all" | "latest", excludeIDs?: string[]): Observable<Paginated<StixObject>> {
+        return function<P extends T>(options?: { limit?: number, offset?: number, state?: string, revoked?: boolean, deprecated?: boolean, versions?: "all" | "latest", excludeIDs?: string[], search?: string }): Observable<Paginated<StixObject>> {
             // parse params into query string
             let query = new HttpParams();
             // pagination
-            if (limit) query = query.set("limit", limit.toString());
-            if (offset) query = query.set("offset", offset.toString());
-            if (limit || offset) query = query.set("includePagination", "true");
+            if (options && options.limit) query = query.set("limit", options.limit.toString());
+            if (options && options.offset) query = query.set("offset", options.offset.toString());
+            if (options && (options.limit || options.offset)) query = query.set("includePagination", "true");
             // other properties
-            if (state) query = query.set("state", state);
-            if (revoked) query = query.set("revoked", revoked ? "true" : "false");
-            if (revoked) query = query.set("deprecated", deprecated ? "true" : "false");
-            if (versions) query = query.set("versions", versions);
+            if (options && options.state) query = query.set("state", options.state);
+            if (options && options.revoked) query = query.set("revoked", options.revoked ? "true" : "false");
+            if (options && options.revoked) query = query.set("deprecated", options.deprecated ? "true" : "false");
+            if (options && options.versions) query = query.set("versions", options.versions);
+            if (options && options.search) query = query.set("search", encodeURIComponent(options.search));
             // perform the request
             let url = `${this.baseUrl}/${plural}`;
             return this.http.get(url, {headers: this.headers, params: query}).pipe(
                 tap(results => console.log(`retrieved ${plural}`, results)), // on success, trigger the success notification
                 map(results => {
-                    if (!excludeIDs) return results; // only filter if param is present
+                    if (!options || !options.excludeIDs) return results; // only filter if param is present
                     let response = results as any;
-                    if (limit || offset) { // returned a paginated
-                        response.data = response.data.filter((d) => !excludeIDs.includes(d.stix.id)); //remove any matches to excludeIDs
+                    if (options && (options.limit || options.offset)) { // returned a paginated
+                        response.data = response.data.filter((d) => !options.excludeIDs.includes(d.stix.id)); //remove any matches to excludeIDs
                         return response;
                     } else { //returned a stixObject[]
-                        response = response.filter((d) => !excludeIDs.includes(d.stix.id)); //remove any matches to excludeIDs
+                        response = response.filter((d) => !options.excludeIDs.includes(d.stix.id)); //remove any matches to excludeIDs
                         return response;
                     }
                 }),
                 map(results => {
                     let response = results as any;
-                    if (limit || offset) { // returned a paginated
+                    if (options && (options.limit || options.offset)) { // returned a paginated
                         let data = response.data as Array<any>;
                         data = data.map(y => {
                             if (y.stix.type == "malware" || y.stix.type == "tool") return new Software(y.stix.type, y);
@@ -591,21 +592,21 @@ export class RestApiConnectorService extends ApiConnector {
      * @param {Date} [modified] optional, the modified date to overwrite. If omitted, uses the modified field of the object
      * @returns {Observable<Matrix>} the updated object
      */
-    public get putMatrix() { return this.postStixObjectFactory<Matrix>("matrix"); }
+    public get putMatrix() { return this.putStixObjectFactory<Matrix>("matrix"); }
     /**
      * PUT (update) a relationship
      * @param {Relationship} object the object to update
      * @param {Date} [modified] optional, the modified date to overwrite. If omitted, uses the modified field of the object
      * @returns {Observable<Relationship>} the updated object
      */
-    public get putRelationship() { return this.postStixObjectFactory<Relationship>("relationship"); }
+    public get putRelationship() { return this.putStixObjectFactory<Relationship>("relationship"); }
     /**
      * PUT (update) a note
      * @param {Note} object the object to update
      * @param {Date} [modified] optional, the modified date to overwrite. If omitted, uses the modified field of the object
      * @returns {Observable<Note>} the updated object
      */
-    public get putNote() { return this.postStixObjectFactory<Note>("note"); }
+    public get putNote() { return this.putStixObjectFactory<Note>("note"); }
 
     private deleteStixObjectFactory(attackType: AttackType) {
         let plural = attackTypeToPlural[attackType];
