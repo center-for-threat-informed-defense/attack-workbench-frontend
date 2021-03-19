@@ -33,10 +33,15 @@
         padding: 0px 25px 0 0;
         li.toc-heading {
             margin-bottom: 1ex;
-            a { cursor: pointer; }
+            a { 
+                cursor: pointer;
+                border-bottom-color: transparent;
+                &:hover { border-bottom-color: color(link); }
+            }
+            &.level-2 { font-weight: bold; }
             @for $level from 1 through 6 {
                 &.level-#{$level} {
-                    margin-left: #{1.5 * ($level - 1)}ex;
+                    margin-left: #{2 * ($level - 2)}ex;
                 }
             }
         }
