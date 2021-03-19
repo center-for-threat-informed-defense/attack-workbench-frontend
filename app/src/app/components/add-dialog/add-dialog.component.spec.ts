@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { TypeEditComponent } from './type-edit.component';
+import { AddDialogComponent } from './add-dialog.component';
 
-describe('TypeEditComponent', () => {
-  let component: TypeEditComponent;
-  let fixture: ComponentFixture<TypeEditComponent>;
+describe('AddDialogComponent', () => {
+  let component: AddDialogComponent;
+  let fixture: ComponentFixture<AddDialogComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ TypeEditComponent ]
+      declarations: [ AddDialogComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(TypeEditComponent);
+    fixture = TestBed.createComponent(AddDialogComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

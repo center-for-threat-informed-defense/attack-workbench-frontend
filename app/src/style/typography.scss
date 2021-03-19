@@ -31,7 +31,7 @@
     font-family: Roboto Condensed,Arial,sans-serif;
     // font-weight: bold;
     font-size: 16px;
-    text-transform: uppercase;
+    &:not(.lowercase) { text-transform: uppercase; }
 }
 
 %typography {
@@ -41,8 +41,8 @@
     line-height: 1.5;
 
     h1 { @extend .heading; }
-    h2, h3 { @extend .subheading; }
-    h4 { @extend .subsubheading; }
+    h2, h3, h4 { @extend .subheading; }
+    h5, h6 { font-size: 18px; }
 
     a:not(.external-link):not(.mat-button):not(.mat-stroked-button) {
         color: inherit;

@@ -104,6 +104,10 @@
                 .name {
                     @extend .width-limited-md;
                 }
+                .relationship-name {
+                    min-width: 8em;
+                    max-width: 18em;
+                }
         
                 tr.element-row:not(.expanded):hover {
                     .light & td { background: color-alternate(light); }
@@ -180,9 +184,11 @@
                     }
                 }
         
-                .element-row td {
-                    border-bottom-width: 0;
-                    cursor: pointer;
+                .element-row {
+                    td {
+                        border-bottom-width: 0;
+                    }
+                    &.clickable td { cursor: pointer; }
                 }
             }
         }

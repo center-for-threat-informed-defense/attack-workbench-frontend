@@ -1,6 +1,7 @@
 import { AfterViewInit, Component, ElementRef, HostListener, ViewChild, ViewEncapsulation } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { stixRoutes } from "../../app-routing-stix.module";
+import * as app_package from "../../../../package.json";
 @Component({
   selector: 'app-header',
   templateUrl: './header.component.html',
@@ -9,6 +10,7 @@ import { stixRoutes } from "../../app-routing-stix.module";
 })
 export class HeaderComponent implements AfterViewInit {
     public routes: any[];
+    public app_version = app_package["version"];
 
     @ViewChild('linkMenu', {static: false})
     private linkMenu: ElementRef;

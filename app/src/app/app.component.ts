@@ -23,8 +23,6 @@ export class AppComponent implements AfterViewInit {
         } else {
             this.setTheme("light");
         }
-        this.sidebarService.onTabChange.subscribe(() => this.resizeDrawers());
-        this.sidebarService.onOpened.subscribe(() => this.resizeDrawers());
     }
 
     public theme = "light";
@@ -60,13 +58,7 @@ export class AppComponent implements AfterViewInit {
     // scroll to the top of the main content
     public scrollToTop(): void {
         this.scrollRef.nativeElement.scroll({top: 0, behavior: "smooth"});
-    }
-
-    // when the drawer resizes
-    public resizeDrawers(): void {
-        console.log("resizing drawer")
-        this.container.updateContentMargins();
-    }
+    } 
 
     public get sidebarOpened() { return this.sidebarService.opened; }
 }

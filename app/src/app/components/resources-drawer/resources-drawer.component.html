@@ -1,19 +1,21 @@
 <div class="resources-drawer">
     <mat-toolbar>
-        <button *ngFor="let tab of tabs" (click)="onTabClick(tab)"  [matTooltip]="tab.name" mat-button class="control">
-            <mat-icon [attr.aria-label]="tab.label">{{tab.icon}}</mat-icon>
+        <button *ngFor="let tab of tabs" (click)="onTabClick(tab)"  [matTooltip]="tab.name" mat-button class="control" [disabled]="!sidebarService.tabEnabled(tab.name)">
+            <mat-icon [attr.aria-label]="tab.name">{{tab.icon}}</mat-icon>
         </button>
-        <div *ngIf="showCloseButton">
+        <ng-container *ngIf="showCloseButton">
             <div class="spacer"></div>
             <button matTooltip="close sidebar" mat-button class="control" (click)="close()">
                 <mat-icon aria-label="close">close</mat-icon>
             </button>
-        </div>
+        </ng-container>
     </mat-toolbar>
     <div class="content">
-        <!-- this is a placeholder for the actual content of the sidebar -->
-        <div class="center-all heading text-deemphasis">
+        <h1 class="tab-title">
             {{currentTab}}
-        </div>
+        </h1>
+        <app-history-timeline *ngIf="currentTab == 'history' && sidebarService.tabEnabled('history')"></app-history-timeline>
+        <app-reference-manager *ngIf="currentTab == 'references' && sidebarService.tabEnabled('references')"></app-reference-manager>
+        <app-notes-editor *ngIf="currentTab == 'notes' && sidebarService.tabEnabled('notes')"></app-notes-editor>
     </div>
 </div>

@@ -1,0 +1,27 @@
+<div class="add-dialog">
+    <div *ngIf="config.selectableObjects.length > 0 else nothing">
+        <app-stix-list [config]="{
+            'select': config.select? 'many' : 'disabled',
+            'selectionModel' : config.select,
+            'type': config.type,
+            'clickBehavior': 'expand',
+            'stixObjects': config.selectableObjects
+        }"></app-stix-list>
+        <div class="centered button-padding">
+            <button mat-mini-fab class="extended-fab-button left-button" color="primary" (click)="dialogRef.close(true)">
+                <span class="text-label">{{config.buttonLabel? config.buttonLabel : "ADD"}}</span>
+            </button>
+            <button mat-mini-fab class="extended-fab-button right-button" color="primary" (click)="dialogRef.close()">
+                <span class="text-label">Cancel</span>
+            </button>
+        </div>
+    </div>
+    <ng-template #nothing>
+        <h3>No available objects to add.</h3>
+        <div class="centered">
+            <button mat-mini-fab class="extended-fab-button" color="primary" (click)="dialogRef.close()">
+                <span class="text-label">Close</span>
+            </button>
+        </div>
+    </ng-template>
+</div>

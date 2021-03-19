@@ -8,7 +8,6 @@ import { SidebarService } from 'src/app/services/sidebar/sidebar.service';
     encapsulation: ViewEncapsulation.None
 })
 export class ResourcesDrawerComponent implements OnInit {
-    @Output() drawerResize = new EventEmitter(); //emit events when the drawer is opened/closed
     @Output() onClose = new EventEmitter(); 
     @Input() useService: boolean = true; //if true, control of this drawer is performed through the sidebar service. Otherwise, events and internal state are used.
     @Input() showCloseButton: boolean = true;
@@ -20,14 +19,13 @@ export class ResourcesDrawerComponent implements OnInit {
         else return this.currentTabOverride;
     }
 
-    constructor(private sidebarService: SidebarService) { }
+    constructor(public sidebarService: SidebarService) { }
 
     public onTabClick(tab: any) {
         if (this.useService) this.sidebarService.currentTab = tab.name;
         else this.currentTabOverride = tab.name;
         // if (this.currentTab == tab.name) this.currentTab = "";
         // else this.currentTab = tab.name;
-        setTimeout(() => this.drawerResize.emit()); // emit after render loop
     }
 
     public close() {
