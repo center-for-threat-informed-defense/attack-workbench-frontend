@@ -295,7 +295,7 @@ export class RestApiConnectorService extends ApiConnector {
                 let response = results as any;
                 if (limit || offset) { // returned a paginated
                     let data = response.data as Array<any>;
-                    data = data.map(y => {
+                    data = data.filter(y => !["marking-definition", "identity"].includes(y.stix.type)).map(y => {
                         if (y.stix.type == "malware" || y.stix.type == "tool") return new Software(y.stix.type, y);
                         else return new stixTypeToClass[y.stix.type](y);
                     });
@@ -308,7 +308,7 @@ export class RestApiConnectorService extends ApiConnector {
                             limit: -1,
                             offset: -1
                         },
-                        data: response.map(y => {
+                        data: response.filter(y => !["marking-definition", "identity"].includes(y.stix.type)).map(y => {
                             if (y.stix.type == "malware" || y.stix.type == "tool") return new Software(y.stix.type, y);
                             else return new stixTypeToClass[y.stix.type](y);
                         })
