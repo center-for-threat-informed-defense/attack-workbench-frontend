@@ -1,0 +1,9 @@
+<button mat-button class="control" matTooltip="settings"
+    popoverPlacement="bottom" 
+    [popover]="objectStatus"
+    [popoverOnHover]="false">
+    <mat-icon aria-label="settings">settings</mat-icon>
+</button>
+
+<popover-content #objectStatus>
+</popover-content>
