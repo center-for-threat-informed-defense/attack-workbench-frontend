@@ -182,6 +182,16 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
                 case "mitigation":
                 case "tactic":
                     this.addColumn("ID", "attackID", "plain", false);
+                    this.addColumn("name", "name", "plain", true, ["name"]);
+                    this.addColumn("domain", "domains", "list");
+                    this.addColumn("version", "version", "version");
+                    this.addColumn("modified","modified", "timestamp");
+                    this.addColumn("created", "created", "timestamp");
+                    this.tableDetail = [{
+                        "field": "description",
+                        "display": "descriptive"
+                    }]
+                    break;
                 case "matrix":
                     this.addColumn("name", "name", "plain", true, ["name"]);
                     this.addColumn("version", "version", "version");
@@ -208,6 +218,7 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
                     this.addColumn("ID", "attackID", "plain", false);
                     this.addColumn("name", "name", "plain", true, ["name"]);
                     this.addColumn("type", "type", "plain");
+                    this.addColumn("domain", "domains", "list");
                     this.addColumn("version", "version", "version");
                     this.addColumn("modified","modified", "timestamp");
                     this.addColumn("created", "created", "timestamp");
@@ -220,6 +231,7 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
                     this.addColumn("ID", "attackID", "plain", false);
                     this.addColumn("name", "name", "plain", true, ["name"]);
                     this.addColumn("platforms", "platforms", "list");
+                    this.addColumn("domain", "domains", "list");
                     this.addColumn("version", "version", "version");
                     this.addColumn("modified","modified", "timestamp");
                     this.addColumn("created", "created", "timestamp");
