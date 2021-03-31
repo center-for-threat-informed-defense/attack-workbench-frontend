@@ -1,15 +1,35 @@
 @import "../../../../../style/globals";
 .collection-view {
-    .version-select {
-        @extend .heading;
-        text-transform: none;
-        padding: 0px 5px;
-        border-radius: 4px;
-        font-size: 36px;
-        background: transparent;
-        -webkit-appearance:none;
-        cursor: pointer;
-        .dark & { color: on-color(dark); border-color: on-color(dark);}
-        .light & { color: on-color(light); border-color: on-color(light);}
+    .collection-home {
+        h1.name-property { // override name-property styles
+            font-family: Roboto,serif;
+            font-size: 18px;
+            line-height: 1.5;
+            font-weight: normal;
+            letter-spacing: normal;
+            margin: 0;
+            .name-edit { text-align: left; }
+        }
+        .buttons {
+            margin-top: 48px !important;
+        }
     }
+    .col.border-left {
+        margin-left: 24px !important;
+        padding-left: 24px;
+        .dark & { border-left: 1px solid border-color(dark); }
+        .light & { border-left: 1px solid border-color(light); }
+    }
+    // .version-select {
+    //     @extend .heading;
+    //     text-transform: none;
+    //     padding: 0px 5px;
+    //     border-radius: 4px;
+    //     font-size: 36px;
+    //     background: transparent;
+    //     -webkit-appearance:none;
+    //     cursor: pointer;
+    //     .dark & { color: on-color(dark); border-color: on-color(dark);}
+    //     .light & { color: on-color(light); border-color: on-color(light);}
+    // }
 }

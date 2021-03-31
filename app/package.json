@@ -1,6 +1,6 @@
 {
   "name": "attack-workbench-frontend",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "description": "Application for creating and editing ATT&CK-like content.",
   "keywords": [
     "cti",
@@ -10,7 +10,8 @@
     "mitre-corporation",
     "ctid",
     "center-for-threat-informed-defense",
-    "cybersecurity"
+    "cybersecurity",
+    "stix"
   ],
   "license": {
     "type": "Apache-2.0",

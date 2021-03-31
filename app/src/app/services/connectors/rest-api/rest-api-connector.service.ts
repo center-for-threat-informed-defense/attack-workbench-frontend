@@ -343,6 +343,7 @@ export class RestApiConnectorService extends ApiConnector {
                         console.warn("empty result")
                         return [];
                     }
+                    if (!Array.isArray(result)) x = [x];
                     return x.map(y => {
                         if (y.stix.type == "malware" || y.stix.type == "tool") return new Software(y.stix.type, y);
                         else return new attackClass(y);

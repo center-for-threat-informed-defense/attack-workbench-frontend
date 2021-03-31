@@ -316,7 +316,7 @@ if (environment.integrations.collection_manager.enabled) {
                 component: CollectionIndexImportComponent
             }]
         }, {
-            path: ":id",
+            path: ":id/:modified",
             data: {
                 breadcrumb: "loading..."
             },
@@ -324,6 +324,20 @@ if (environment.integrations.collection_manager.enabled) {
                 path: "",
                 data: {
                     breadcrumb: "view",
+                    editable: true
+                },
+                component: StixPageComponent
+            }]
+        }, {
+            path: "new",
+            data: {
+                breadcrumb: "new collection"
+            },
+            children: [{
+                path: '',
+                data: {
+                    breadcrumb: 'new collection',
+                    editable: true
                 },
                 component: StixPageComponent
             }]
