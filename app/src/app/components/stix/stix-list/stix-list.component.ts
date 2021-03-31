@@ -420,7 +420,7 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
             else if (this.config.type == "mitigation") this.data$ = this.restAPIConnectorService.getAllMitigations(options);
             else if (this.config.type == "tactic") this.data$ = this.restAPIConnectorService.getAllTactics(options);
             else if (this.config.type == "technique") this.data$ = this.restAPIConnectorService.getAllTechniques(options);
-            else if (this.config.type == "collection") this.data$ = this.restAPIConnectorService.getAllCollections({search: this.searchQuery});
+            else if (this.config.type == "collection") this.data$ = this.restAPIConnectorService.getAllCollections({search: this.searchQuery, versions: "all"});
             else if (this.config.type == "relationship") this.data$ = this.restAPIConnectorService.getRelatedTo({sourceRef: this.config.sourceRef, targetRef: this.config.targetRef, sourceType: this.config.sourceType, targetType: this.config.targetType, relationshipType: this.config.relationshipType,  excludeSourceRefs: this.config.excludeSourceRefs, excludeTargetRefs: this.config.excludeTargetRefs, limit: limit, offset: offset});
             let subscription = this.data$.subscribe({
                 next: (data) => { this.totalObjectCount = data.pagination.total; },

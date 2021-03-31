@@ -3,6 +3,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router, NavigationEnd } from '@angular/router';
 import { BreadcrumbService } from 'angular-crumbs';
 import { Observable } from 'rxjs';
+import { Collection } from 'src/app/classes/stix/collection';
 import { Group } from 'src/app/classes/stix/group';
 import { Matrix } from 'src/app/classes/stix/matrix';
 import { Mitigation } from 'src/app/classes/stix/mitigation';
@@ -43,10 +44,10 @@ export class StixPageComponent implements OnInit, OnDestroy {
      * @oaram {allVersions} return all versions instead of just a single version
      * @returns {StixViewConfig} the built config
      */
-    public buildConfig(allVersions: boolean = false): StixViewConfig {
+    public buildConfig(): StixViewConfig {
         return {
             "mode": "view",
-            "object": allVersions? this.objects : this.objects[0] 
+            "object": this.objects[0] 
         }
     }
 
@@ -96,6 +97,7 @@ export class StixPageComponent implements OnInit, OnDestroy {
     private loadObjects(): void {
         let objectType = this.router.url.split("/")[1];
         let objectStixID = this.route.snapshot.params["id"];
+        let objectModified = this.route.snapshot.params["modified"];
         if (objectStixID != "new") {
             // get objects at REST API
             let objects$: Observable<StixObject[]>;
@@ -105,7 +107,7 @@ export class StixPageComponent implements OnInit, OnDestroy {
             else if (objectType == "mitigation") objects$ = this.restAPIConnectorService.getMitigation(objectStixID);
             else if (objectType == "tactic") objects$ = this.restAPIConnectorService.getTactic(objectStixID);
             else if (objectType == "technique") objects$ = this.restAPIConnectorService.getTechnique(objectStixID, null, "latest", true);
-            else if (objectType == "collection") objects$ = this.restAPIConnectorService.getCollection(objectStixID, null, "all");
+            else if (objectType == "collection") objects$ = this.restAPIConnectorService.getCollection(objectStixID, objectModified);
             let  subscription = objects$.subscribe({
                 next: result => {
                     this.updateBreadcrumbs(result, objectType);
@@ -134,6 +136,7 @@ export class StixPageComponent implements OnInit, OnDestroy {
                 next: (result) => {
                     this.objects = [new Software(result)]; 
                     this.initialVersion = new VersionNumber(this.objects[0].version.toString());
+                    this.updateBreadcrumbs(this.objects, objectType);
                 },
                 complete: () => { subscription.unsubscribe(); }
             })
@@ -145,9 +148,12 @@ export class StixPageComponent implements OnInit, OnDestroy {
                 objectType == "technique" ? new Technique() :
                 objectType == "tactic" ? new Tactic() :
                 objectType == "mitigation" ? new Mitigation() :
-                objectType == "group" ? new Group(): null
+                objectType == "group" ? new Group():
+                objectType == "collection" ? new Collection() : 
+                null // if not any of the above types
             );
             this.initialVersion = new VersionNumber(this.objects[0].version.toString());
+            this.updateBreadcrumbs(this.objects, objectType);
         };
     }
 
