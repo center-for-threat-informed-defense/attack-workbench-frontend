@@ -143,6 +143,7 @@ import { OrderedListEditComponent } from './components/stix/ordered-list-propert
 
 import { NotesEditorComponent } from './components/resources-drawer/notes-editor/notes-editor.component';
 import { ObjectStatusComponent } from './components/object-status/object-status.component';
+import { WorkflowPropertyComponent } from './components/stix/workflow-property/workflow-property.component';
 
 
 @NgModule({
@@ -234,7 +235,8 @@ import { ObjectStatusComponent } from './components/object-status/object-status.
     OrderedListEditComponent,
 
     NotesEditorComponent,
-    ObjectStatusComponent
+    ObjectStatusComponent,
+    WorkflowPropertyComponent
   ],
   imports: [
     BreadcrumbModule,
