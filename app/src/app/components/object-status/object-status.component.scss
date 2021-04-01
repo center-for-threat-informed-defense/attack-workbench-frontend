@@ -1,3 +1,13 @@
-.workflow-status .mat-form-field-wrapper {
-    padding: 0;
+.workflow-status {
+    .labelled-box {
+        margin-bottom: 8px;
+    }
+
+    .mat-checkbox {
+        padding: 0px 8px;
+    }
+
+    .content {
+        font-weight: normal;
+    }
 }
