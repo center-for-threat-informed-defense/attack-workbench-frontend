@@ -106,12 +106,13 @@ export class StixPageComponent implements OnInit, OnDestroy {
             else if (objectType == "matrix") objects$ = this.restAPIConnectorService.getMatrix(objectStixID);
             else if (objectType == "mitigation") objects$ = this.restAPIConnectorService.getMitigation(objectStixID);
             else if (objectType == "tactic") objects$ = this.restAPIConnectorService.getTactic(objectStixID);
-            else if (objectType == "technique") objects$ = this.restAPIConnectorService.getTechnique(objectStixID, null, "latest", true);
-            else if (objectType == "collection") objects$ = this.restAPIConnectorService.getCollection(objectStixID, objectModified);
+            else if (objectType == "technique") objects$ = this.restAPIConnectorService.getTechnique(objectStixID, null, "latest", true); 
+            else if (objectType == "collection") objects$ = this.restAPIConnectorService.getCollection(objectStixID, null, "all"); //(objectStixID, objectModified)
             let  subscription = objects$.subscribe({
                 next: result => {
                     this.updateBreadcrumbs(result, objectType);
                     this.objects = result;
+                    if (objectModified) this.objects = this.objects.filter(x => x.modified.toISOString() == objectModified); //filter to just the object with that date
                     this.initialVersion = new VersionNumber(this.objects[0].version.toString());
                 },
                 complete: () => { subscription.unsubscribe() }
