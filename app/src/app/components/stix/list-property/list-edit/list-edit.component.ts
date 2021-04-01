@@ -31,7 +31,7 @@ export class ListEditComponent implements OnInit, AfterContentChecked {
     private sub: Subscription = new Subscription();
 
     public fieldToStix = {
-        "platforms": "x_mitre_platform",
+        "platforms": "x_mitre_platforms",
         "tactic_type": "x_mitre_tactic_type",
         "impact_type": "x_mitre_impact_type",
         "effective_permissions": "x_mitre_effective_permissions",
