@@ -1,24 +1,44 @@
 @import "../../../../../style/globals";
 .collection-view {
-    .collection-home {
-        h1.name-property { // override name-property styles
-            font-family: Roboto,serif;
-            font-size: 18px;
-            line-height: 1.5;
-            font-weight: normal;
-            letter-spacing: normal;
-            margin: 0;
-            .name-edit { text-align: left; }
-        }
-        .buttons {
-            margin-top: 48px !important;
-        }
+    .row.width-limited {
+        width: 45em;
+        margin: 0 auto;
+    }
+    h1.name-property { // override name-property styles
+        font-family: Roboto,serif;
+        font-size: 18px;
+        line-height: 1.5;
+        font-weight: normal;
+        letter-spacing: normal;
+        margin: 0;
+        .name-edit { text-align: left; }
+    }
+    .buttons {
+        margin-top: 48px !important;
     }
     .col.border-left {
         margin-left: 24px !important;
         padding-left: 24px;
         .dark & { border-left: 1px solid border-color(dark); }
         .light & { border-left: 1px solid border-color(light); }
+    }
+    .mat-expansion-panel {
+        @include expansion-panel(true);
+        .mat-expansion-panel-header-title {
+            text-transform: capitalize;
+        }
+
+        &.warn:not(.disabled) .mat-expansion-panel-header-title {
+            color: color(warn);
+        }
+    }
+    .changes .col { // stix list doesn't like being in columns, so force column sizes to 50%
+        width: 50%;
+        
+        &:first-child { padding-right: 12px; }
+        &:nth-child(2) { padding-left: 12px; }
+
+        box-sizing: border-box;
     }
     // .version-select {
     //     @extend .heading;

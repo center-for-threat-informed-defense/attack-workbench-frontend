@@ -107,7 +107,7 @@ export class StixPageComponent implements OnInit, OnDestroy {
             else if (objectType == "mitigation") objects$ = this.restAPIConnectorService.getMitigation(objectStixID);
             else if (objectType == "tactic") objects$ = this.restAPIConnectorService.getTactic(objectStixID);
             else if (objectType == "technique") objects$ = this.restAPIConnectorService.getTechnique(objectStixID, null, "latest", true); 
-            else if (objectType == "collection") objects$ = this.restAPIConnectorService.getCollection(objectStixID, null, "all"); //(objectStixID, objectModified)
+            else if (objectType == "collection") objects$ = this.restAPIConnectorService.getCollection(objectStixID, objectModified);
             let  subscription = objects$.subscribe({
                 next: result => {
                     this.updateBreadcrumbs(result, objectType);
