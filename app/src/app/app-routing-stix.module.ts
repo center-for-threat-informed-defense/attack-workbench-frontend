@@ -316,7 +316,7 @@ if (environment.integrations.collection_manager.enabled) {
                 component: CollectionIndexImportComponent
             }]
         }, {
-            path: ":id/:modified",
+            path: ":id/modified/:modified",
             data: {
                 breadcrumb: "loading..."
             },

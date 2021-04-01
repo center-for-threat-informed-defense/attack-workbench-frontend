@@ -114,12 +114,12 @@ export class Collection extends StixObject {
     public get routes(): any {
         let routes: any = [{
             "label": "view",
-            "route": this.modified.toISOString()
+            "route": "modified/" + this.modified.toISOString()
         }]
         if (!this.imported) {
             routes.push({
                 "label": "edit",
-                "route": this.modified.toISOString(),
+                "route": "modified/" + this.modified.toISOString(),
                 "query": {"editing": true}
             })
         }
