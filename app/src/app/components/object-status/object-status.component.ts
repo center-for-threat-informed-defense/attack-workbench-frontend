@@ -127,7 +127,7 @@ export class ObjectStatusComponent implements OnInit {
      */
     private isDeprecatedOrRevoked(object: any) {
         return ('x_mitre_deprecated' in object && object.x_mitre_deprecated)
-                || ('x_mitre_revoked' in object && object.x_mitre.revoked);
+                || ('revoked' in object && object.revoked);
     }
 
     /**
