@@ -53,7 +53,7 @@ While previewing an import the list of contents will be organized by object type
 - *Minor changes*: Objects with minor updates such as typo corrections.
 - *Revocations*: Objects that have been replaced by other objects.
 - *Deprecations*: Objects that have been removed from the dataset.
-- *Duplicates*: Objects that already exist in the workbench and have no changes.  
+- *Unchanged*: Objects that already exist in the workbench and have no changes.  
 - *Out of date*: Objects which are outdated by more recent edits in your knowledge base. These objects already exist in your workbench, and the version in the collection is older. The version imported in the collection will appear in the version history of the object.
 
 The following error change types may appear when there are conflicts importing a collection:
