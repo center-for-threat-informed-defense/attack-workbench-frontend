@@ -91,7 +91,7 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
      * @param {boolean} [sticky] is the column sticky? If true, the column will be static in the X scrolling of the view
      * @param {string[]} [classes] list of css classes to apply to the cell
      */
-    private addColumn(label: string, field: string, display: "version" | "list" | "plain" | "timestamp" | "descriptive" | "relationship_name", sticky?: boolean, classes?: string[]) {
+    private addColumn(label: string, field: string, display: "version" | "list" | "plain" | "timestamp" | "descriptive" | "relationship_name" | "workflow", sticky?: boolean, classes?: string[]) {
         this.tableColumns.push(field);
         this.tableColumns_settings.set(field, {label, display, sticky, classes});
     }
@@ -182,6 +182,7 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
                 case "mitigation":
                 case "tactic":
                     this.addColumn("ID", "attackID", "plain", false);
+                    this.addColumn("", "state", "workflow");
                     this.addColumn("name", "name", "plain", true, ["name"]);
                     this.addColumn("domain", "domains", "list");
                     this.addColumn("version", "version", "version");
@@ -193,6 +194,7 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
                     }]
                     break;
                 case "matrix":
+                    this.addColumn("", "state", "workflow");
                     this.addColumn("name", "name", "plain", true, ["name"]);
                     this.addColumn("version", "version", "version");
                     this.addColumn("modified","modified", "timestamp");
@@ -204,6 +206,7 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
                     break;
                 case "group":
                     this.addColumn("ID", "attackID", "plain", false);
+                    this.addColumn("", "state", "workflow");
                     this.addColumn("name", "name", "plain", true, ["name"]);
                     this.addColumn("aliases", "aliases", "list");
                     this.addColumn("version", "version", "version");
@@ -216,6 +219,7 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
                     break;
                 case "software":
                     this.addColumn("ID", "attackID", "plain", false);
+                    this.addColumn("", "state", "workflow");
                     this.addColumn("name", "name", "plain", true, ["name"]);
                     this.addColumn("type", "type", "plain");
                     this.addColumn("domain", "domains", "list");
@@ -229,6 +233,7 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
                     break;
                 case "technique":
                     this.addColumn("ID", "attackID", "plain", false);
+                    this.addColumn("", "state", "workflow");
                     this.addColumn("name", "name", "plain", true, ["name"]);
                     this.addColumn("platforms", "platforms", "list");
                     this.addColumn("domain", "domains", "list");
