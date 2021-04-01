@@ -139,7 +139,7 @@ export abstract class StixObject extends Serializable {
                 "x_mitre_version": this.version.toString(),
                 "external_references": serialized_external_references,
                 "x_mitre_deprecated": this.deprecated,
-                "revoked": this.revoked,
+                "x_mitre_revoked": this.revoked,
                 "description": this.description,
                 "spec_version": "2.1"
             }
@@ -322,7 +322,7 @@ export abstract class StixObject extends Serializable {
                     })
                 )
             })
-            // TODO check if revoked-by exists if revoked?
+            // TODO: add validator to ensure the revoked-by relationship exists if this object is revoked
         ) //end pipe
 
     }
