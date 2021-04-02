@@ -16,7 +16,7 @@ import { Technique } from './technique';
  * each sub-property is a list of objects corresponding to objects in the import
  * @template T the type to record, typically a string for STIX IDs or a StixObject if the objects are being stratified directly
  */
-export class CollectionImportCategories<T> {
+export class CollectionDiffCategories<T> {
     additions: T[] = []; //new objects that didn't exist locally prior to the import
     changes: T[] = []; //changes to objects that already existed locally
     minor_changes: T[] = []; //objects which are changed without version number increments
@@ -97,7 +97,7 @@ export class Collection extends StixObject {
     public imported: Date; // null if it was not imported
      // auto-generated changelog/report about the import
     //  each sub-property is a list of STIX IDs corresponding to objects in the import
-    public import_categories: CollectionImportCategories<string>;
+    public import_categories: CollectionDiffCategories<string>;
     
     protected get attackIDValidator() { return null; } //collections do not have ATT&CK IDs
 
@@ -209,6 +209,74 @@ export class Collection extends StixObject {
                 }
             }
         }
+    }
+    /**
+     * Compare the two collections and return a set of CollectionDiffCategories for each type of object in the difference
+     * @param {Collection} that
+     * @memberof Collection
+     */
+    public compareTo(that: Collection): { 
+        technique:    CollectionDiffCategories<Technique>,
+        tactic:       CollectionDiffCategories<Tactic>,
+        software:     CollectionDiffCategories<Software>,
+        relationship: CollectionDiffCategories<Relationship>,
+        mitigation:   CollectionDiffCategories<Mitigation>,
+        matrix:       CollectionDiffCategories<Matrix>,
+        group:        CollectionDiffCategories<Group>
+    } {
+        let results = {
+            technique:    new CollectionDiffCategories<Technique>(),
+            tactic:       new CollectionDiffCategories<Tactic>(),
+            software:     new CollectionDiffCategories<Software>(),
+            relationship: new CollectionDiffCategories<Relationship>(),
+            mitigation:   new CollectionDiffCategories<Mitigation>(),
+            matrix:       new CollectionDiffCategories<Matrix>(),
+            group:        new CollectionDiffCategories<Group>()
+        }
+        // build helper lookups to reduce complexity from n^2 to n.
+        let thisStixLookup = new Map<string, StixObject>(this.stix_contents.map(sdo => [sdo.stixID, sdo]))
+        let thatStixLookup = new Map<string, StixObject>(that.stix_contents.map(sdo => [sdo.stixID, sdo]))
+
+        for (let thisVr of this.contents) {
+            let thisAttackObject = thisStixLookup.get(thisVr.object_ref);
+            if (!thisAttackObject) {
+                console.warn("could not find object", thisVr.object_ref, "in collection contents")
+                continue;
+            }
+            if (that.contents.find(thatVr => thisVr.object_ref == thatVr.object_ref)) {
+                // object exists in other collection
+                let thatAttackObject = thatStixLookup.get(thisVr.object_ref);
+                if (!thatAttackObject) {
+                    console.warn("could not find object", thisVr.object_ref, "in collection contents")
+                    continue;
+                }
+                // determine if there was a change, and if so what type it was
+                if (thatAttackObject.modified.toISOString() == thisAttackObject.modified.toISOString()) {
+                    // not a change
+                    results[thisAttackObject.attackType].duplicates.push(thisAttackObject);
+                } else {
+                    // was a change
+                    // check if it was revoked
+                    if (thisAttackObject.revoked && !thatAttackObject.revoked) {
+                        // was revoked in the new and note in old
+                        results[thisAttackObject.attackType].revocations.push(thisAttackObject);
+                    } else if (thisAttackObject.deprecated && !thatAttackObject.deprecated) { 
+                        // was deprecated in new and not in old
+                        results[thisAttackObject.attackType].deprecations.push(thisAttackObject);
+                    } else if (thisAttackObject.version.compareTo(thatAttackObject.version) > 0) {
+                        // version number incremented
+                        results[thisAttackObject.attackType].changes.push(thisAttackObject);
+                    } else {
+                        // minor change
+                        results[thisAttackObject.attackType].minor_changes.push(thisAttackObject);
+                    }
+                } 
+            } else {
+                // object does not exist in other collection, was added
+                results[thisAttackObject.attackType].additions.push(thisAttackObject);
+            }
+        }
+        return results;
     }
 
     /**

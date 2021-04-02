@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Collection, CollectionImportCategories } from 'src/app/classes/stix/collection';
+import { Collection, CollectionDiffCategories } from 'src/app/classes/stix/collection';
 import { Group } from 'src/app/classes/stix/group';
 import { Matrix } from 'src/app/classes/stix/matrix';
 import { Mitigation } from 'src/app/classes/stix/mitigation';
@@ -22,13 +22,13 @@ export class CollectionImportReviewComponent extends StixViewPage implements OnI
     public get collection(): Collection { return this.config.object as Collection; }
 
     public collection_import_categories = {
-        technique:    new CollectionImportCategories<Technique>(),
-        tactic:       new CollectionImportCategories<Tactic>(),
-        software:     new CollectionImportCategories<Software>(),
-        relationship: new CollectionImportCategories<Relationship>(),
-        mitigation:   new CollectionImportCategories<Mitigation>(),
-        matrix:       new CollectionImportCategories<Matrix>(),
-        group:        new CollectionImportCategories<Group>()
+        technique:    new CollectionDiffCategories<Technique>(),
+        tactic:       new CollectionDiffCategories<Tactic>(),
+        software:     new CollectionDiffCategories<Software>(),
+        relationship: new CollectionDiffCategories<Relationship>(),
+        mitigation:   new CollectionDiffCategories<Mitigation>(),
+        matrix:       new CollectionDiffCategories<Matrix>(),
+        group:        new CollectionDiffCategories<Group>()
     }
 
     constructor(private route: ActivatedRoute) { super() }
