@@ -321,8 +321,32 @@ export abstract class StixObject extends Serializable {
                         return result;
                     })
                 )
+            }),
+            // validate 'revoked-by' relationship exists
+            switchMap(result => {
+                if (!this.revoked) return of(result); // do not check for revoked-by relationship
+
+                let accessor = restAPIService.getRelatedTo({sourceRef: this.stixID});
+                return accessor.pipe(
+                    map(objects => {
+                        if (!objects.data.find(relationship => relationship['relationship_type'] == 'revoked-by')) {
+                            result.errors.push({
+                                "result": "error",
+                                "field": "revoked",
+                                "message": "'revoked-by' relationship does not exist"
+                            })
+                        } else {
+                            result.successes.push({
+                                "result": "success",
+                                "field": "revoked",
+                                "message": "'revoked-by' relationship exists"
+                            })
+                        }
+                        return result;
+                    })
+                )
+
             })
-            // TODO: add validator to ensure the revoked-by relationship exists if this object is revoked
         ) //end pipe
 
     }
