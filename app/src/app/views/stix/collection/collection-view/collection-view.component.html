@@ -76,14 +76,14 @@
                                                 <app-stix-list [config]="{
                                                     'clickBehavior': 'dialog',
                                                     'type': attackType,
-                                                    'stixObjects': []
+                                                    'stixObjects': potentialChanges[attackType].additions
                                                 }"></app-stix-list>
                                             </div>
                                             <div class="col">
                                                 <app-stix-list [config]="{
                                                     'clickBehavior': 'dialog',
                                                     'type': attackType,
-                                                    'stixObjects': []
+                                                    'stixObjects': collectionChanges[attackType].additions
                                                 }"></app-stix-list>
                                             </div>
                                         </div>
@@ -113,13 +113,15 @@
                                             <div class="col">
                                                 <app-stix-list [config]="{
                                                     'clickBehavior': 'dialog',
-                                                    'type': attackType
+                                                    'type': attackType,
+                                                    'stixObjects': potentialChanges[attackType].changes
                                                 }"></app-stix-list>
                                             </div>
                                             <div class="col">
                                                 <app-stix-list [config]="{
                                                     'clickBehavior': 'dialog',
-                                                    'type': attackType
+                                                    'type': attackType,
+                                                    'stixObjects': collectionChanges[attackType].changes
                                                 }"></app-stix-list>
                                             </div>
                                         </div>
@@ -150,14 +152,14 @@
                                                 <app-stix-list [config]="{
                                                     'clickBehavior': 'dialog',
                                                     'type': attackType,
-                                                    'stixObjects': []
+                                                    'stixObjects': potentialChanges[attackType].minor_changes
                                                 }"></app-stix-list>
                                             </div>
                                             <div class="col">
                                                 <app-stix-list [config]="{
                                                     'clickBehavior': 'dialog',
                                                     'type': attackType,
-                                                    'stixObjects': []
+                                                    'stixObjects': collectionChanges[attackType].minor_changes
                                                 }"></app-stix-list>
                                             </div>
                                         </div>
@@ -188,14 +190,14 @@
                                                 <app-stix-list [config]="{
                                                     'clickBehavior': 'dialog',
                                                     'type': attackType,
-                                                    'stixObjects': []
+                                                    'stixObjects': potentialChanges[attackType].revocations
                                                 }"></app-stix-list>
                                             </div>
                                             <div class="col">
                                                 <app-stix-list [config]="{
                                                     'clickBehavior': 'dialog',
                                                     'type': attackType,
-                                                    'stixObjects': []
+                                                    'stixObjects': collectionChanges[attackType].revocations
                                                 }"></app-stix-list>
                                             </div>
                                         </div>
@@ -226,14 +228,14 @@
                                                 <app-stix-list [config]="{
                                                     'clickBehavior': 'dialog',
                                                     'type': attackType,
-                                                    'stixObjects': []
+                                                    'stixObjects': potentialChanges[attackType].deprecations
                                                 }"></app-stix-list>
                                             </div>
                                             <div class="col">
                                                 <app-stix-list [config]="{
                                                     'clickBehavior': 'dialog',
                                                     'type': attackType,
-                                                    'stixObjects': []
+                                                    'stixObjects': collectionChanges[attackType].deprecations
                                                 }"></app-stix-list>
                                             </div>
                                         </div>
@@ -253,7 +255,7 @@
                                     <app-stix-list [config]="{
                                         'clickBehavior': 'dialog',
                                         'type': attackType,
-                                        'stixObjects': []
+                                        'stixObjects': collectionChanges[attackType].duplicates
                                     }"></app-stix-list>
                                 </ng-template>
                             </mat-expansion-panel>
