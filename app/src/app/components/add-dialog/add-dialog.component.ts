@@ -22,4 +22,5 @@ export interface AddDialogConfig {
   type: string; // type to display stix list
   select: SelectionModel<string>; // selection model to retrieve list of selected object
   buttonLabel?: string; // optional button label, default "add"
+  title?: string; // dialog text
 }
