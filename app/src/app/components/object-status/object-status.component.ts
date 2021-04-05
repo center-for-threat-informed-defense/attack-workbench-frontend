@@ -81,15 +81,14 @@ export class ObjectStatusComponent implements OnInit {
     }
 
     /**
-     * 
-     * @param event 
+     * Handle the selection for revoking or un-revoking an object
+     * @param event revoke selection
      */
     public revoke(event) {
-        let saves = [];
-
         if (event.checked) { // revoke object
             // prompt for revoking object
-            this.select = new SelectionModel<string>(false);
+            // TODO indicate user is selecting the revoking object
+            this.select = new SelectionModel<string>();
             let revokedDialog = this.dialog.open(AddDialogComponent, {
                 maxWidth: "70em",
                 maxHeight: "70em",
@@ -101,96 +100,27 @@ export class ObjectStatusComponent implements OnInit {
             });
             let revokedSubscription = revokedDialog.afterClosed().subscribe({
                 next: (result) => {
-                    console.log("result? ", result, "object: ", this.object.revoked)
-                    if (result) { // object selected
+                    if (result && this.select.selected.length) { // target object selected
                         let target_id = this.select.selected[0];
-                        
-                        // inform users of relationship changes
-                        // TODO: bug - this isn't shown when un-deprecating relationships
-                        // TODO: move to  undeprecate()?
-                        let confirmationPrompt = this.dialog.open(ConfirmationDialogComponent, {
-                            maxWidth: "35em",
-                            data: { 
-                                message: 'All relationships with this object will be ' + (event.checked ? 'deprecated' : 'undeprecated') + '. Do you want to continue?',
-                            }
-                        });
-
-                        let confirmationSub = confirmationPrompt.afterClosed().subscribe({
-                            next: (result) => {
-                                if (result) {
-                                    this.object.revoked = true;
-                                    saves.push(this.object.save(this.restAPIService));
-            
-                                    // deprecate all relationships with this object
-                                    saves = saves.concat(this.deprecateRelationships());
-            
-                                    // create a new 'revoked-by' relationship
-                                    let revokedRelationship = new Relationship();
-                                    revokedRelationship.relationship_type = "revoked-by";
-                                    revokedRelationship.source_ref = this.object.stixID;
-                                    revokedRelationship.target_ref = target_id;
-            
-                                    //TODO: suppress the snackbar indicating a relationship has been saved
-                                    saves.push(revokedRelationship.save(this.restAPIService));
-                                }
-                            },
-                            complete: () => { confirmationSub.unsubscribe(); }
-                        });
+                        this.deprecateObjects(true, target_id);
+                    } else { // user cancelled or no object selected
+                        this.revoked = false;
                     }
                 },
                 complete: () => { revokedSubscription.unsubscribe(); }
             });
-        } else { // unrevoke object
-            //TODO: show confirmation prompt
-            this.object.revoked = false;
-            saves.push(this.object.save(this.restAPIService));
-            saves = saves.concat(this.undeprecateRelationships());
+        } else { // un-revoke object
+            this.undeprecateObjects(true);
         }
-
-        // TODO: complete save calls
-        // let saveSubscription = forkJoin(saves).subscribe({
-        //     complete: () => {
-        //         saveSubscription.unsubscribe(); 
-        //     }
-        // });
     }
 
     /**
-     * Deprecates or undeprecates an object and its relationships
-     * @param event deprecated selection
+     * Handle the selection for deprecating or un-deprecating an object
+     * @param event deprecate selection
      */
     public deprecate(event) {
-        let saves = [];
-
-        // inform users of relationship changes
-        let confirmationPrompt = this.dialog.open(ConfirmationDialogComponent, {
-            maxWidth: "35em",
-            data: { 
-                message: 'All relationships with this object will be ' + (event.checked ? 'deprecated' : 'undeprecated') + '. Do you want to continue?',
-            }
-        });
-
-        let confirmationSub = confirmationPrompt.afterClosed().subscribe({
-            next: (result) => {
-                if (result) {
-                    // deprecate/undeprecate object
-                    this.object.deprecated = event.checked;
-                    saves.push(this.object.save(this.restAPIService));
-            
-                    // update relationships with the object
-                    if (this.object.deprecated) saves = saves.concat(this.deprecateRelationships());
-                    else saves = saves.concat(this.undeprecateRelationships());
-            
-                    // complete save calls
-                    let saveSubscription = forkJoin(saves).subscribe({
-                        complete: () => {
-                            saveSubscription.unsubscribe(); 
-                        }
-                    });
-                } // else user cancelled
-            },
-            complete: () => { confirmationSub.unsubscribe(); }
-        })
+        if (event.checked) this.deprecateObjects(false);
+        else this.undeprecateObjects(false);
     }
 
     /**
@@ -203,40 +133,112 @@ export class ObjectStatusComponent implements OnInit {
     }
 
     /**
-     * Undeprecates all relationships of this object, 
-     * unless the other relationship object has been revoked or deprecated
+     * Un-deprecates or un-revokes the object and un-deprecates all relationships of this object,
+     * unless the other object has been revoked or deprecated
      */
-    private undeprecateRelationships() {
+    private undeprecateObjects(revoke: boolean) {
         let saves = [];
-        for (let relationship of this.relationships) {
-            if (relationship.deprecated) {
-                let other_obj: any;
-                if (relationship.source_object.stix.id == this.object.stixID) other_obj = relationship.target_object.stix;
-                else other_obj = relationship.source_object.stix;
 
-                // un-deprecate relationship if the other object has not been revoked/deprecated
-                if (!this.isDeprecatedOrRevoked(other_obj)) {
-                    relationship.deprecated = false;
-                    saves.push(relationship.save(this.restAPIService));
-                }
+        // inform users of relationship changes
+        let confirmationPrompt = this.dialog.open(ConfirmationDialogComponent, {
+            maxWidth: "35em",
+            data: { 
+                message: 'All relationships with this object will be un-deprecated. Do you want to continue?',
             }
-        }
-        return saves;
+        });
+
+        let confirmationSub = confirmationPrompt.afterClosed().subscribe({
+            next: (result) => {
+                if (result) {
+                    // deprecate object
+                    if (revoke) this.object.revoked = false;
+                    else this.object.deprecated = false;
+                    saves.push(this.object.save(this.restAPIService));
+            
+                    // update relationships with the object
+                    for (let relationship of this.relationships) {
+                        if (relationship.deprecated) {
+                            let other_obj: any;
+                            if (relationship.source_object.stix.id == this.object.stixID) other_obj = relationship.target_object.stix;
+                            else other_obj = relationship.source_object.stix;
+            
+                            // un-deprecate relationship if the other object has not been revoked/deprecated
+                            if (!this.isDeprecatedOrRevoked(other_obj)) {
+                                relationship.deprecated = false;
+                                saves.push(relationship.save(this.restAPIService));
+                            }
+                        }
+                    }
+                    // complete save calls
+                    let saveSubscription = forkJoin(saves).subscribe({
+                        complete: () => {
+                            saveSubscription.unsubscribe(); 
+                        }
+                    });
+                } else { // user cancelled
+                    if (revoke) this.revoked = true;
+                    else this.deprecated = true;
+                }
+            },
+            complete: () => { confirmationSub.unsubscribe(); }
+        });
     }
 
     /**
-     * Deprecates all relationships of this object
+     * Deprecates or revokes the object and deprecates all relationships of this object
      */
-    private deprecateRelationships() {
+    private deprecateObjects(revoke: boolean, revoked_by_id?:string) {
         let saves = [];
 
-        //FIXME: relationships aren't being saved as deprecated
-        for (let relationship of this.relationships) {
-            if (!relationship.deprecated) {
-                relationship.deprecated = true;
-                saves.push(relationship.save(this.restAPIService));
+        // inform users of relationship changes
+        let confirmationPrompt = this.dialog.open(ConfirmationDialogComponent, {
+            maxWidth: "35em",
+            data: { 
+                message: 'All relationships with this object will be deprecated. Do you want to continue?',
             }
-        }
-        return saves;
+        });
+
+        let confirmationSub = confirmationPrompt.afterClosed().subscribe({
+            next: (result) => {
+                if (result) {
+                    // deprecate object
+                    if (revoke) this.object.revoked = true;
+                    else this.object.deprecated = true;
+                    saves.push(this.object.save(this.restAPIService));
+            
+                    // update relationships with the object
+                    //FIXME relationships aren't being saved as deprecated
+                    for (let relationship of this.relationships) {
+                        if (!relationship.deprecated) {
+                            relationship.deprecated = true;
+
+                            console.log("saving relationships: ", relationship)
+                            saves.push(relationship.save(this.restAPIService));
+                        }
+                    }
+
+                    if (revoked_by_id) {
+                        // create a new 'revoked-by' relationship
+                        let revokedRelationship = new Relationship();
+                        revokedRelationship.relationship_type = "revoked-by";
+                        revokedRelationship.source_ref = this.object.stixID;
+                        revokedRelationship.target_ref = revoked_by_id;
+                        saves.push(revokedRelationship.save(this.restAPIService));
+                    }
+            
+                    // complete save calls
+                    //TODO suppress the snackbar indicating all objects has been saved
+                    let saveSubscription = forkJoin(saves).subscribe({
+                        complete: () => {
+                            saveSubscription.unsubscribe(); 
+                        }
+                    });
+                } else { // user cancelled
+                    if (revoke) this.revoked = false;
+                    else this.deprecated = false;
+                }
+            },
+            complete: () => { confirmationSub.unsubscribe(); }
+        });
     }
 }
