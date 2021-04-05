@@ -34,29 +34,27 @@ export class ObjectStatusComponent implements OnInit {
     ngOnInit(): void {
         this.statusControl = new FormControl();
         
-        // retrieve the object
         let data$: any;
-        if (this.editorService.type == "software") data$ = this.restAPIService.getAllSoftware();
-        else if (this.editorService.type == "group") data$ = this.restAPIService.getAllGroups();
-        else if (this.editorService.type == "matrix") data$ = this.restAPIService.getAllMatrices();
-        else if (this.editorService.type == "mitigation") data$ = this.restAPIService.getAllMitigations();
-        else if (this.editorService.type == "tactic") data$ = this.restAPIService.getAllTactics();
-        else if (this.editorService.type == "technique") data$ = this.restAPIService.getAllTechniques();
+        let options = {
+            includeRevoked: true, 
+            includeDeprecated: true
+        }
+
+        // retrieve object
+        if (this.editorService.type == "software") data$ = this.restAPIService.getAllSoftware(options);
+        else if (this.editorService.type == "group") data$ = this.restAPIService.getAllGroups(options);
+        else if (this.editorService.type == "matrix") data$ = this.restAPIService.getAllMatrices(options);
+        else if (this.editorService.type == "mitigation") data$ = this.restAPIService.getAllMitigations(options);
+        else if (this.editorService.type == "tactic") data$ = this.restAPIService.getAllTactics(options);
+        else if (this.editorService.type == "technique") data$ = this.restAPIService.getAllTechniques(options);
         let objSubscription = data$.subscribe({
             next: (data) => {
                 this.objects = data.data;
-                //TODO: bug - cannot find object if deprecated/revoked?
-                this.object = this.objects.find(object => {
-                    console.log(object.stixID === this.editorService.stixId)
-                    return object.stixID === this.editorService.stixId
-                });
-
-
+                this.object = this.objects.find(object => object.stixID === this.editorService.stixId);
                 if (this.object.workflow && this.object.workflow.state) {
                     this.statusControl.setValue(this.object.workflow.state);
                     this.workflow = this.object.workflow.state;
                 }
-                //TODO: bug - checkmark does not update
                 this.revoked = this.object.revoked;
                 this.deprecated = this.object.deprecated;
             },
@@ -103,20 +101,21 @@ export class ObjectStatusComponent implements OnInit {
             });
             let revokedSubscription = revokedDialog.afterClosed().subscribe({
                 next: (result) => {
+                    console.log("result? ", result, "object: ", this.object.revoked)
                     if (result) { // object selected
                         let target_id = this.select.selected[0];
                         
                         // inform users of relationship changes
                         // TODO: bug - this isn't shown when un-deprecating relationships
                         // TODO: move to  undeprecate()?
-                        let prompt = this.dialog.open(ConfirmationDialogComponent, {
+                        let confirmationPrompt = this.dialog.open(ConfirmationDialogComponent, {
                             maxWidth: "35em",
                             data: { 
                                 message: 'All relationships with this object will be ' + (event.checked ? 'deprecated' : 'undeprecated') + '. Do you want to continue?',
                             }
                         });
 
-                        let promptSub = prompt.afterClosed().subscribe({
+                        let confirmationSub = confirmationPrompt.afterClosed().subscribe({
                             next: (result) => {
                                 if (result) {
                                     this.object.revoked = true;
@@ -131,49 +130,54 @@ export class ObjectStatusComponent implements OnInit {
                                     revokedRelationship.source_ref = this.object.stixID;
                                     revokedRelationship.target_ref = target_id;
             
+                                    //TODO: suppress the snackbar indicating a relationship has been saved
                                     saves.push(revokedRelationship.save(this.restAPIService));
                                 }
-                            }
+                            },
+                            complete: () => { confirmationSub.unsubscribe(); }
                         });
-                    }
-                    else { // cancelled
-                        //TODO: do i need this?
-                        this.object.revoked = false;
                     }
                 },
                 complete: () => { revokedSubscription.unsubscribe(); }
             });
         } else { // unrevoke object
+            //TODO: show confirmation prompt
             this.object.revoked = false;
             saves.push(this.object.save(this.restAPIService));
             saves = saves.concat(this.undeprecateRelationships());
         }
 
         // TODO: complete save calls
-        let subscription = forkJoin(saves).subscribe({
-            complete: () => {
-                subscription.unsubscribe(); 
-            }
-        })
+        // let saveSubscription = forkJoin(saves).subscribe({
+        //     complete: () => {
+        //         saveSubscription.unsubscribe(); 
+        //     }
+        // });
     }
 
+    /**
+     * Deprecates or undeprecates an object and its relationships
+     * @param event deprecated selection
+     */
     public deprecate(event) {
         let saves = [];
 
         // inform users of relationship changes
-        let prompt = this.dialog.open(ConfirmationDialogComponent, {
+        let confirmationPrompt = this.dialog.open(ConfirmationDialogComponent, {
             maxWidth: "35em",
             data: { 
                 message: 'All relationships with this object will be ' + (event.checked ? 'deprecated' : 'undeprecated') + '. Do you want to continue?',
             }
         });
 
-        let subscription = prompt.afterClosed().subscribe({
+        let confirmationSub = confirmationPrompt.afterClosed().subscribe({
             next: (result) => {
                 if (result) {
+                    // deprecate/undeprecate object
                     this.object.deprecated = event.checked;
                     saves.push(this.object.save(this.restAPIService));
             
+                    // update relationships with the object
                     if (this.object.deprecated) saves = saves.concat(this.deprecateRelationships());
                     else saves = saves.concat(this.undeprecateRelationships());
             
@@ -183,9 +187,9 @@ export class ObjectStatusComponent implements OnInit {
                             saveSubscription.unsubscribe(); 
                         }
                     });
-                }
+                } // else user cancelled
             },
-            complete: () => { subscription.unsubscribe(); }
+            complete: () => { confirmationSub.unsubscribe(); }
         })
     }
 
@@ -225,6 +229,8 @@ export class ObjectStatusComponent implements OnInit {
      */
     private deprecateRelationships() {
         let saves = [];
+
+        //FIXME: relationships aren't being saved as deprecated
         for (let relationship of this.relationships) {
             if (!relationship.deprecated) {
                 relationship.deprecated = true;
