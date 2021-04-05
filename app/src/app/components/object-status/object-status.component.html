@@ -19,8 +19,8 @@
 
         <div class="labelled-box">
             <div class="content">
-                <mat-checkbox [checked]="revoked" (change)="revoke($event)">Revoke</mat-checkbox>
-                <mat-checkbox [checked]="deprecated" (change)="deprecate($event)">Deprecate</mat-checkbox>
+                <mat-checkbox [(ngModel)]="revoked" (change)="revoke($event)">Revoke</mat-checkbox>
+                <mat-checkbox [(ngModel)]="deprecated" (change)="deprecate($event)">Deprecate</mat-checkbox>
             </div>
             <label>State</label>
         </div>
