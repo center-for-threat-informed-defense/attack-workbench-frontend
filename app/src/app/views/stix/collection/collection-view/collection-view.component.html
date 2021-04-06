@@ -1,268 +1,298 @@
-<div class="collection-view grid spacing-12">
-    <div class="row width-limited">
-        <div class="col">
-            <!-- things to add to the collection -->
-            <app-name-property class="grow-to-row" [config]="{
-                mode: editing? 'edit' : 'view',
-                object: collection
-            }"></app-name-property>
+<div class="collection-view">
+    <div class="grid spacing-12" *ngIf="!loading else loadingDisplay">
+        <div class="row width-limited">
+            <div class="col">
+                <!-- things to add to the collection -->
+                <app-name-property class="grow-to-row" [config]="{
+                    mode: editing? 'edit' : 'view',
+                    object: collection
+                }"></app-name-property>
+            </div>
+            <div class="col">
+                <!-- VERSION NUMBER -->
+                <app-version-property class="grow-to-row" [config]="{
+                    mode: editing? 'edit' : 'view',
+                    object: collection
+                }"></app-version-property>
+            </div>
         </div>
-        <div class="col">
-            <!-- VERSION NUMBER -->
-            <app-version-property class="grow-to-row" [config]="{
-                mode: editing? 'edit' : 'view',
-                object: collection
-            }"></app-version-property>
+        <div class="row width-limited">
+            <div class="col">
+                <!-- DESCRIPTION -->
+                <app-descriptive-property [config]="{
+                    mode: editing? 'edit' : 'view',
+                    object: collection,
+                    field: 'description',
+                    firstParagraphOnly: false, 
+                    label: 'Description'
+                }"></app-descriptive-property>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <h2 class="section-header">Changes in this release</h2>
+            </div>
+        </div>
+        <!-- LIST BUILDER / DUAL LIST UI -->
+        <!-- <div class="row">
+            <div class="col center">
+                <h4 class="text-label">Objects in Knowledge Base</h4>
+            </div>
+            <div class="col center">
+                <h4 class="text-label">Objects in Collection</h4>
+            </div>
+        </div> !-->
+        <div class="row">
+            <div class="col changes">
+                <mat-accordion>
+                    <mat-expansion-panel *ngFor="let attackType of ['matrix', 'technique', 'tactic', 'mitigation', 'group', 'software', 'relationship']" class="mat-elevation-z0">
+                        <mat-expansion-panel-header>
+                            <mat-panel-title>
+                                <h3>{{attackType}}</h3>
+                            </mat-panel-title>
+                        </mat-expansion-panel-header>
+                        <ng-template matExpansionPanelContent>
+                            <mat-accordion>
+                                <mat-expansion-panel class="mat-elevation-z0">
+                                    <mat-expansion-panel-header>
+                                        <mat-panel-title>
+                                            Additions
+                                        </mat-panel-title>
+                                        <mat-panel-description>
+                                            New objects
+                                        </mat-panel-description>
+                                    </mat-expansion-panel-header>
+                                    <ng-template matExpansionPanelContent>
+                                        <div class="grid spacing-0">
+                                            <div class="row">
+                                                <div class="col center vertical-center">
+                                                    <h4 class="text-label">Objects not in the collection</h4>
+                                                </div>
+                                                <div class="col controls narrow"></div>
+                                                <div class="col center vertical-center">
+                                                    <h4 class="text-label">Objects added in this release</h4>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col">
+                                                    <app-stix-list [config]="{
+                                                        'clickBehavior': 'dialog',
+                                                        'type': attackType,
+                                                        'stixObjects': potentialChanges[attackType].additions
+                                                    }"></app-stix-list>
+                                                </div>
+                                                <div class="col controls narrow">
+                                                    <button mat-icon-button matTooltip="stage all" [disabled]="potentialChanges[attackType].additions.length == 0"><mat-icon aria-label="move all to collection">double_arrow</mat-icon></button>
+                                                    <button mat-icon-button matTooltip="unstage all" [disabled]="collectionChanges[attackType].additions.length == 0"><mat-icon aria-label="move all from collection" class="icon-mirror">double_arrow</mat-icon></button>
+                                                </div>
+                                                <div class="col">
+                                                    <app-stix-list [config]="{
+                                                        'clickBehavior': 'dialog',
+                                                        'type': attackType,
+                                                        'stixObjects': collectionChanges[attackType].additions
+                                                    }"></app-stix-list>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </ng-template>
+                                </mat-expansion-panel>
+                                <mat-expansion-panel class="mat-elevation-z0">
+                                    <mat-expansion-panel-header>
+                                        <mat-panel-title>
+                                            Changes
+                                        </mat-panel-title>
+                                        <mat-panel-description>
+                                            Changed objects
+                                        </mat-panel-description>
+                                    </mat-expansion-panel-header>
+                                    <ng-template matExpansionPanelContent>
+                                        <div class="grid spacing-0">
+                                            <div class="row">
+                                                <div class="col center vertical-center vertical-center">
+                                                    <h4 class="text-label">Newer versions available in the knowledge base</h4>
+                                                </div>
+                                                <div class="col controls narrow"></div>
+                                                <div class="col center vertical-center vertical-center">
+                                                    <h4 class="text-label">Objects updated in this release</h4>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col">
+                                                    <app-stix-list [config]="{
+                                                        'clickBehavior': 'dialog',
+                                                        'type': attackType,
+                                                        'stixObjects': potentialChanges[attackType].changes
+                                                    }"></app-stix-list>
+                                                </div>
+                                                <div class="col controls narrow">
+                                                    <button mat-icon-button matTooltip="stage all" [disabled]="potentialChanges[attackType].changes.length == 0"><mat-icon aria-label="move all to collection">double_arrow</mat-icon></button>
+                                                    <button mat-icon-button matTooltip="unstage all" [disabled]="collectionChanges[attackType].changes.length == 0"><mat-icon aria-label="move all from collection" class="icon-mirror">double_arrow</mat-icon></button>
+                                                </div>
+                                                <div class="col">
+                                                    <app-stix-list [config]="{
+                                                        'clickBehavior': 'dialog',
+                                                        'type': attackType,
+                                                        'stixObjects': collectionChanges[attackType].changes
+                                                    }"></app-stix-list>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </ng-template>
+                                </mat-expansion-panel>
+                                <mat-expansion-panel class="mat-elevation-z0">
+                                    <mat-expansion-panel-header>
+                                        <mat-panel-title>
+                                            Minor Changes
+                                        </mat-panel-title>
+                                        <mat-panel-description>
+                                            Objects with minor changes
+                                        </mat-panel-description>
+                                    </mat-expansion-panel-header>
+                                    <ng-template matExpansionPanelContent>
+                                        <div class="grid spacing-0">
+                                            <div class="row">
+                                                <div class="col center vertical-center vertical-center">
+                                                    <h4 class="text-label">Newer versions available in the knowledge base</h4>
+                                                </div>
+                                                <div class="col controls narrow"></div>
+                                                <div class="col center vertical-center vertical-center">
+                                                    <h4 class="text-label">Objects updated in this release</h4>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col">
+                                                    <app-stix-list [config]="{
+                                                        'clickBehavior': 'dialog',
+                                                        'type': attackType,
+                                                        'stixObjects': potentialChanges[attackType].minor_changes
+                                                    }"></app-stix-list>
+                                                </div>
+                                                <div class="col controls narrow">
+                                                    <button mat-icon-button matTooltip="stage all" [disabled]="potentialChanges[attackType].minor_changes.length == 0"><mat-icon aria-label="move all to collection">double_arrow</mat-icon></button>
+                                                    <button mat-icon-button matTooltip="unstage all" [disabled]="collectionChanges[attackType].minor_changes.length == 0"><mat-icon aria-label="move all from collection" class="icon-mirror">double_arrow</mat-icon></button>
+                                                </div>
+                                                <div class="col">
+                                                    <app-stix-list [config]="{
+                                                        'clickBehavior': 'dialog',
+                                                        'type': attackType,
+                                                        'stixObjects': collectionChanges[attackType].minor_changes
+                                                    }"></app-stix-list>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </ng-template>
+                                </mat-expansion-panel>
+                                <mat-expansion-panel class="mat-elevation-z0">
+                                    <mat-expansion-panel-header>
+                                        <mat-panel-title>
+                                            Revocations
+                                        </mat-panel-title>
+                                        <mat-panel-description>
+                                            Objects replaced by other objects
+                                        </mat-panel-description>
+                                    </mat-expansion-panel-header>
+                                    <ng-template matExpansionPanelContent>
+                                        <div class="grid spacing-0">
+                                            <div class="row">
+                                                <div class="col center vertical-center vertical-center">
+                                                    <h4 class="text-label">Objects revoked in the knowledge base</h4>
+                                                </div>
+                                                <div class="col controls narrow"></div>
+                                                <div class="col center vertical-center vertical-center">
+                                                    <h4 class="text-label">Objects revoked by this release</h4>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col">
+                                                    <app-stix-list [config]="{
+                                                        'clickBehavior': 'dialog',
+                                                        'type': attackType,
+                                                        'stixObjects': potentialChanges[attackType].revocations
+                                                    }"></app-stix-list>
+                                                </div>
+                                                <div class="col controls narrow">
+                                                    <button mat-icon-button matTooltip="stage all" [disabled]="potentialChanges[attackType].revocations.length == 0"><mat-icon aria-label="move all to collection">double_arrow</mat-icon></button>
+                                                    <button mat-icon-button matTooltip="unstage all" [disabled]="collectionChanges[attackType].revocations.length == 0"><mat-icon aria-label="move all from collection" class="icon-mirror">double_arrow</mat-icon></button>
+                                                </div>
+                                                <div class="col">
+                                                    <app-stix-list [config]="{
+                                                        'clickBehavior': 'dialog',
+                                                        'type': attackType,
+                                                        'stixObjects': collectionChanges[attackType].revocations
+                                                    }"></app-stix-list>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </ng-template>
+                                </mat-expansion-panel>
+                                <mat-expansion-panel class="mat-elevation-z0">
+                                    <mat-expansion-panel-header>
+                                        <mat-panel-title>
+                                            Deprecations
+                                        </mat-panel-title>
+                                        <mat-panel-description>
+                                            Objects removed from the collection
+                                        </mat-panel-description>
+                                    </mat-expansion-panel-header>
+                                    <ng-template matExpansionPanelContent>
+                                        <div class="grid spacing-0">
+                                            <div class="row">
+                                                <div class="col center vertical-center vertical-center">
+                                                    <h4 class="text-label">Objects deprecated in the knowledge base</h4>
+                                                </div>
+                                                <div class="col controls narrow"></div>
+                                                <div class="col center vertical-center vertical-center">
+                                                    <h4 class="text-label">Objects deprecated by this release</h4>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col">
+                                                    <app-stix-list [config]="{
+                                                        'clickBehavior': 'dialog',
+                                                        'type': attackType,
+                                                        'stixObjects': potentialChanges[attackType].deprecations
+                                                    }"></app-stix-list>
+                                                </div>
+                                                <div class="col controls narrow">
+                                                    <button mat-icon-button matTooltip="stage all" [disabled]="potentialChanges[attackType].deprecations.length == 0"><mat-icon aria-label="move all to collection">double_arrow</mat-icon></button>
+                                                    <button mat-icon-button matTooltip="unstage all" [disabled]="collectionChanges[attackType].deprecations.length == 0"><mat-icon aria-label="move all from collection" class="icon-mirror">double_arrow</mat-icon></button>
+                                                </div>
+                                                <div class="col">
+                                                    <app-stix-list [config]="{
+                                                        'clickBehavior': 'dialog',
+                                                        'type': attackType,
+                                                        'stixObjects': collectionChanges[attackType].deprecations
+                                                    }"></app-stix-list>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </ng-template>
+                                </mat-expansion-panel>
+                                <mat-expansion-panel class="mat-elevation-z0">
+                                    <mat-expansion-panel-header>
+                                        <mat-panel-title>
+                                            Unchanged
+                                        </mat-panel-title>
+                                        <mat-panel-description>
+                                            Objects that haven't changed since the prior release
+                                        </mat-panel-description>
+                                    </mat-expansion-panel-header>
+                                    <ng-template matExpansionPanelContent>
+                                        <app-stix-list [config]="{
+                                            'clickBehavior': 'dialog',
+                                            'type': attackType,
+                                            'stixObjects': collectionChanges[attackType].duplicates
+                                        }"></app-stix-list>
+                                    </ng-template>
+                                </mat-expansion-panel>
+                            </mat-accordion>
+                        </ng-template>
+                    </mat-expansion-panel>
+                </mat-accordion>
+            </div>
         </div>
     </div>
-    <div class="row width-limited">
-        <div class="col">
-            <!-- DESCRIPTION -->
-            <app-descriptive-property [config]="{
-                mode: editing? 'edit' : 'view',
-                object: collection,
-                field: 'description',
-                firstParagraphOnly: false, 
-                label: 'Description'
-            }"></app-descriptive-property>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col">
-            <h2 class="section-header">Changes in this release</h2>
-        </div>
-    </div>
-    <!-- LIST BUILDER / DUAL LIST UI -->
-    <!-- <div class="row">
-        <div class="col center">
-            <h4 class="text-label">Objects in Knowledge Base</h4>
-        </div>
-        <div class="col center">
-            <h4 class="text-label">Objects in Collection</h4>
-        </div>
-    </div> !-->
-    <div class="row">
-        <div class="col changes">
-            <mat-accordion>
-                <mat-expansion-panel *ngFor="let attackType of ['matrix', 'technique', 'tactic', 'mitigation', 'group', 'software', 'relationship']" class="mat-elevation-z0">
-                    <mat-expansion-panel-header>
-                        <mat-panel-title>
-                            <h3>{{attackType}}</h3>
-                        </mat-panel-title>
-                    </mat-expansion-panel-header>
-                    <ng-template matExpansionPanelContent>
-                        <mat-accordion>
-                            <mat-expansion-panel class="mat-elevation-z0">
-                                <mat-expansion-panel-header>
-                                    <mat-panel-title>
-                                        Additions
-                                    </mat-panel-title>
-                                    <mat-panel-description>
-                                        New objects
-                                    </mat-panel-description>
-                                </mat-expansion-panel-header>
-                                <ng-template matExpansionPanelContent>
-                                    <div class="grid spacing-0">
-                                        <div class="row">
-                                            <div class="col center vertical-center">
-                                                <h4 class="text-label">Objects not in the collection</h4>
-                                            </div>
-                                            <div class="col center vertical-center">
-                                                <h4 class="text-label">Objects added in this release</h4>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col">
-                                                <app-stix-list [config]="{
-                                                    'clickBehavior': 'dialog',
-                                                    'type': attackType,
-                                                    'stixObjects': potentialChanges[attackType].additions
-                                                }"></app-stix-list>
-                                            </div>
-                                            <div class="col">
-                                                <app-stix-list [config]="{
-                                                    'clickBehavior': 'dialog',
-                                                    'type': attackType,
-                                                    'stixObjects': collectionChanges[attackType].additions
-                                                }"></app-stix-list>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </ng-template>
-                            </mat-expansion-panel>
-                            <mat-expansion-panel class="mat-elevation-z0">
-                                <mat-expansion-panel-header>
-                                    <mat-panel-title>
-                                        Changes
-                                    </mat-panel-title>
-                                    <mat-panel-description>
-                                        Changed objects
-                                    </mat-panel-description>
-                                </mat-expansion-panel-header>
-                                <ng-template matExpansionPanelContent>
-                                    <div class="grid spacing-0">
-                                        <div class="row">
-                                            <div class="col center vertical-center vertical-center">
-                                                <h4 class="text-label">Newer versions available in the knowledge base</h4>
-                                            </div>
-                                            <div class="col center vertical-center vertical-center">
-                                                <h4 class="text-label">Objects updated in this release</h4>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col">
-                                                <app-stix-list [config]="{
-                                                    'clickBehavior': 'dialog',
-                                                    'type': attackType,
-                                                    'stixObjects': potentialChanges[attackType].changes
-                                                }"></app-stix-list>
-                                            </div>
-                                            <div class="col">
-                                                <app-stix-list [config]="{
-                                                    'clickBehavior': 'dialog',
-                                                    'type': attackType,
-                                                    'stixObjects': collectionChanges[attackType].changes
-                                                }"></app-stix-list>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </ng-template>
-                            </mat-expansion-panel>
-                            <mat-expansion-panel class="mat-elevation-z0">
-                                <mat-expansion-panel-header>
-                                    <mat-panel-title>
-                                        Minor Changes
-                                    </mat-panel-title>
-                                    <mat-panel-description>
-                                        Objects with minor changes
-                                    </mat-panel-description>
-                                </mat-expansion-panel-header>
-                                <ng-template matExpansionPanelContent>
-                                    <div class="grid spacing-0">
-                                        <div class="row">
-                                            <div class="col center vertical-center vertical-center">
-                                                <h4 class="text-label">Newer versions available in the knowledge base</h4>
-                                            </div>
-                                            <div class="col center vertical-center vertical-center">
-                                                <h4 class="text-label">Objects updated in this release</h4>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col">
-                                                <app-stix-list [config]="{
-                                                    'clickBehavior': 'dialog',
-                                                    'type': attackType,
-                                                    'stixObjects': potentialChanges[attackType].minor_changes
-                                                }"></app-stix-list>
-                                            </div>
-                                            <div class="col">
-                                                <app-stix-list [config]="{
-                                                    'clickBehavior': 'dialog',
-                                                    'type': attackType,
-                                                    'stixObjects': collectionChanges[attackType].minor_changes
-                                                }"></app-stix-list>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </ng-template>
-                            </mat-expansion-panel>
-                            <mat-expansion-panel class="mat-elevation-z0">
-                                <mat-expansion-panel-header>
-                                    <mat-panel-title>
-                                        Revocations
-                                    </mat-panel-title>
-                                    <mat-panel-description>
-                                        Objects replaced by other objects
-                                    </mat-panel-description>
-                                </mat-expansion-panel-header>
-                                <ng-template matExpansionPanelContent>
-                                    <div class="grid spacing-0">
-                                        <div class="row">
-                                            <div class="col center vertical-center vertical-center">
-                                                <h4 class="text-label">Objects revoked in the knowledge base</h4>
-                                            </div>
-                                            <div class="col center vertical-center vertical-center">
-                                                <h4 class="text-label">Objects revoked by this release</h4>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col">
-                                                <app-stix-list [config]="{
-                                                    'clickBehavior': 'dialog',
-                                                    'type': attackType,
-                                                    'stixObjects': potentialChanges[attackType].revocations
-                                                }"></app-stix-list>
-                                            </div>
-                                            <div class="col">
-                                                <app-stix-list [config]="{
-                                                    'clickBehavior': 'dialog',
-                                                    'type': attackType,
-                                                    'stixObjects': collectionChanges[attackType].revocations
-                                                }"></app-stix-list>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </ng-template>
-                            </mat-expansion-panel>
-                            <mat-expansion-panel class="mat-elevation-z0">
-                                <mat-expansion-panel-header>
-                                    <mat-panel-title>
-                                        Deprecations
-                                    </mat-panel-title>
-                                    <mat-panel-description>
-                                        Objects removed from the collection
-                                    </mat-panel-description>
-                                </mat-expansion-panel-header>
-                                <ng-template matExpansionPanelContent>
-                                    <div class="grid spacing-0">
-                                        <div class="row">
-                                            <div class="col center vertical-center vertical-center">
-                                                <h4 class="text-label">Objects deprecated in the knowledge base</h4>
-                                            </div>
-                                            <div class="col center vertical-center vertical-center">
-                                                <h4 class="text-label">Objects deprecated by this release</h4>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col">
-                                                <app-stix-list [config]="{
-                                                    'clickBehavior': 'dialog',
-                                                    'type': attackType,
-                                                    'stixObjects': potentialChanges[attackType].deprecations
-                                                }"></app-stix-list>
-                                            </div>
-                                            <div class="col">
-                                                <app-stix-list [config]="{
-                                                    'clickBehavior': 'dialog',
-                                                    'type': attackType,
-                                                    'stixObjects': collectionChanges[attackType].deprecations
-                                                }"></app-stix-list>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </ng-template>
-                            </mat-expansion-panel>
-                            <mat-expansion-panel class="mat-elevation-z0">
-                                <mat-expansion-panel-header>
-                                    <mat-panel-title>
-                                        Unchanged
-                                    </mat-panel-title>
-                                    <mat-panel-description>
-                                        Objects that haven't changed since the prior release
-                                    </mat-panel-description>
-                                </mat-expansion-panel-header>
-                                <ng-template matExpansionPanelContent>
-                                    <app-stix-list [config]="{
-                                        'clickBehavior': 'dialog',
-                                        'type': attackType,
-                                        'stixObjects': collectionChanges[attackType].duplicates
-                                    }"></app-stix-list>
-                                </ng-template>
-                            </mat-expansion-panel>
-                        </mat-accordion>
-                    </ng-template>
-                </mat-expansion-panel>
-            </mat-accordion>
-        </div>
-    </div>
+    <ng-template #loadingDisplay>
+        <app-loading-overlay [message]="loading"></app-loading-overlay>
+    </ng-template>
 </div>

@@ -19,6 +19,6 @@
 
     </div>
     <ng-template #loading>
-        <app-loading-overlay></app-loading-overlay>
+        <app-loading-overlay [message]="'loading ' + objectType"></app-loading-overlay>
     </ng-template>
 </div>
