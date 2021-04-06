@@ -374,6 +374,12 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
                 let filtered = this.config.stixObjects;
                 // filter to objects matching searchString
                 filtered = this.filterObjects(this.searchQuery, filtered); 
+                // sort
+                filtered = filtered.sort((a, b) => {
+                    let x = a as any;
+                    let y = b as any;
+                    return x.hasOwnProperty("name") && y.hasOwnProperty("name")? x.name.localeCompare(y.name) : x.stixID.localeCompare(y.stixID)
+                })
                 if (this.paginator) this.totalObjectCount = filtered.length;
                 
                 // filter to only ones within the correct index range

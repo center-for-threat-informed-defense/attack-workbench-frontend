@@ -8,8 +8,10 @@ import { Matrix } from 'src/app/classes/stix/matrix';
 import { Mitigation } from 'src/app/classes/stix/mitigation';
 import { Relationship } from 'src/app/classes/stix/relationship';
 import { Software } from 'src/app/classes/stix/software';
+import { StixObject } from 'src/app/classes/stix/stix-object';
 import { Tactic } from 'src/app/classes/stix/tactic';
 import { Technique } from 'src/app/classes/stix/technique';
+import { StixListComponent } from 'src/app/components/stix/stix-list/stix-list.component';
 import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/rest-api-connector.service';
 import { StixViewPage } from '../../stix-view-page';
 
@@ -54,12 +56,16 @@ export class CollectionViewComponent extends StixViewPage implements OnInit {
 
     constructor(private route: ActivatedRoute, private restApiConnector: RestApiConnectorService) { super();  }
 
-    public stageChanges(refs: VersionReference[], fromCategory: changeCategory, toCategory: changeCategory): void {
+    public moveChanges(objects: StixObject[], attackType: string, category: changeCategory, direction: "stage" | "unstage"): void {
+        let ids = new Set(objects.map(x => x.stixID));
+        let from = direction == 'stage'? this.potentialChanges : this.collectionChanges;
+        let to = direction == 'stage'? this.collectionChanges : this.potentialChanges;
 
-    }
-
-    public unstageChanges(refs: VersionReference[], fromCategory: changeCategory, toCategory: changeCategory): void {
-
+        from[attackType][category] = from[attackType][category].filter(x => !ids.has(x.stixID));
+        let to_ids = new Set(to[attackType][category].map(x => x.stixID));
+        for (let object of objects) {
+            if (!to_ids.has(object.stixID)) to[attackType][category].push(object);
+        }
     }
 
     ngOnInit() {
