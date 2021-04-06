@@ -341,7 +341,9 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
                 if (typeof obj[key] === 'string') return obj[key].toLowerCase().includes(query.toLowerCase())
                 else if (Array.isArray(obj[key])) {
                     return obj[key].some(val => {
-                        if (typeof(val === 'string')) return val.toLowerCase().includes(query.toLowerCase());
+                        if (typeof(val) === 'string') {
+                            return val.toLowerCase().includes(query.toLowerCase());
+                        }
                     })
                 }
             })

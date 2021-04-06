@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { forkJoin } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { delay, map, tap } from 'rxjs/operators';
 import { Collection, CollectionDiffCategories, VersionReference } from 'src/app/classes/stix/collection';
 import { Group } from 'src/app/classes/stix/group';
 import { Matrix } from 'src/app/classes/stix/matrix';
@@ -26,6 +26,8 @@ export class CollectionViewComponent extends StixViewPage implements OnInit {
     public knowledgeBaseCollection: Collection;
     public editing: boolean = false;
     public page: string = "home";
+
+    public loading: string = null; // loading message if loading
 
     public potentialChanges = {
         technique:    new CollectionDiffCategories<Technique>(),
@@ -64,6 +66,7 @@ export class CollectionViewComponent extends StixViewPage implements OnInit {
         this.route.queryParams.subscribe(params => {
             this.editing = params["editing"];
         });
+        this.loading = "fetching additional data";
         // fetch previous collection and objects in knowledge base
         let subscription = forkJoin({
             "attackObjects": this.restApiConnector.getAllObjects(null, null, null, null, true, true, false),
@@ -73,7 +76,10 @@ export class CollectionViewComponent extends StixViewPage implements OnInit {
                     return collections.find((collection) => !collection.workflow || !collection.workflow.state || collection.workflow.state as string == "published")
                 })
             )
-        }).subscribe({
+        }).pipe(
+            tap(_ => { this.loading = "Preparing change lists" }),
+            delay(1) // allow render cycle to display loading text
+        ).subscribe({
             next: (result) => {
                 this.collectionChanges = this.collection.compareTo(result.previousRelease);
                 // initialize potentialChanges based off diff of attackObjects vs contents of collection
@@ -85,6 +91,7 @@ export class CollectionViewComponent extends StixViewPage implements OnInit {
                     "contents": result.attackObjects
                 });
                 this.potentialChanges = this.knowledgeBaseCollection.compareTo(this.collection);
+                this.loading = null;
             },
             complete: () => { subscription.unsubscribe(); }
         })

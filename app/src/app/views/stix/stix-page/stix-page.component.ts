@@ -27,7 +27,7 @@ import { StixViewConfig } from '../stix-view-page';
 export class StixPageComponent implements OnInit, OnDestroy {
     public objects: StixObject[];
     public initialVersion: VersionNumber;
-
+    public objectType: string;
     private routerEvents;
     private saveSubscription;
     
@@ -95,29 +95,29 @@ export class StixPageComponent implements OnInit, OnDestroy {
      * @memberof StixPageComponent
      */
     private loadObjects(): void {
-        let objectType = this.router.url.split("/")[1];
+        this.objectType = this.router.url.split("/")[1];
         let objectStixID = this.route.snapshot.params["id"];
         let objectModified = this.route.snapshot.params["modified"];
         if (objectStixID != "new") {
             // get objects at REST API
             let objects$: Observable<StixObject[]>;
-            if (objectType == "software") objects$ = this.restAPIConnectorService.getSoftware(objectStixID);
-            else if (objectType == "group") objects$ = this.restAPIConnectorService.getGroup(objectStixID);
-            else if (objectType == "matrix") objects$ = this.restAPIConnectorService.getMatrix(objectStixID);
-            else if (objectType == "mitigation") objects$ = this.restAPIConnectorService.getMitigation(objectStixID);
-            else if (objectType == "tactic") objects$ = this.restAPIConnectorService.getTactic(objectStixID);
-            else if (objectType == "technique") objects$ = this.restAPIConnectorService.getTechnique(objectStixID, null, "latest", true); 
-            else if (objectType == "collection") objects$ = this.restAPIConnectorService.getCollection(objectStixID, objectModified);
+            if (this.objectType  == "software") objects$ = this.restAPIConnectorService.getSoftware(objectStixID);
+            else if (this.objectType  == "group") objects$ = this.restAPIConnectorService.getGroup(objectStixID);
+            else if (this.objectType  == "matrix") objects$ = this.restAPIConnectorService.getMatrix(objectStixID);
+            else if (this.objectType  == "mitigation") objects$ = this.restAPIConnectorService.getMitigation(objectStixID);
+            else if (this.objectType  == "tactic") objects$ = this.restAPIConnectorService.getTactic(objectStixID);
+            else if (this.objectType  == "technique") objects$ = this.restAPIConnectorService.getTechnique(objectStixID, null, "latest", true); 
+            else if (this.objectType  == "collection") objects$ = this.restAPIConnectorService.getCollection(objectStixID, objectModified);
             let  subscription = objects$.subscribe({
                 next: result => {
-                    this.updateBreadcrumbs(result, objectType);
+                    this.updateBreadcrumbs(result, this.objectType );
                     this.objects = result;
                     if (objectModified) this.objects = this.objects.filter(x => x.modified.toISOString() == objectModified); //filter to just the object with that date
                     this.initialVersion = new VersionNumber(this.objects[0].version.toString());
                 },
                 complete: () => { subscription.unsubscribe() }
             });
-        } else if (objectType == "software") {
+        } else if (this.objectType  == "software") {
             // ask the user what sub-type of software they want to create
             let prompt = this.dialog.open(MultipleChoiceDialogComponent, {
                 maxWidth: "35em",
@@ -137,7 +137,7 @@ export class StixPageComponent implements OnInit, OnDestroy {
                 next: (result) => {
                     this.objects = [new Software(result)]; 
                     this.initialVersion = new VersionNumber(this.objects[0].version.toString());
-                    this.updateBreadcrumbs(this.objects, objectType);
+                    this.updateBreadcrumbs(this.objects, this.objectType);
                 },
                 complete: () => { subscription.unsubscribe(); }
             })
@@ -145,16 +145,16 @@ export class StixPageComponent implements OnInit, OnDestroy {
             // create a new object to edit
             this.objects = [];
             this.objects.push(
-                objectType == "matrix" ? new Matrix() :
-                objectType == "technique" ? new Technique() :
-                objectType == "tactic" ? new Tactic() :
-                objectType == "mitigation" ? new Mitigation() :
-                objectType == "group" ? new Group():
-                objectType == "collection" ? new Collection() : 
+                this.objectType  == "matrix" ? new Matrix() :
+                this.objectType  == "technique" ? new Technique() :
+                this.objectType  == "tactic" ? new Tactic() :
+                this.objectType  == "mitigation" ? new Mitigation() :
+                this.objectType  == "group" ? new Group():
+                this.objectType  == "collection" ? new Collection() : 
                 null // if not any of the above types
             );
             this.initialVersion = new VersionNumber(this.objects[0].version.toString());
-            this.updateBreadcrumbs(this.objects, objectType);
+            this.updateBreadcrumbs(this.objects, this.objectType);
         };
     }
 
