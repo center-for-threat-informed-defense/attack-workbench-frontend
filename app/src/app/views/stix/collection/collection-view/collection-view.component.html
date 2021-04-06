@@ -75,22 +75,44 @@
                                             </div>
                                             <div class="row">
                                                 <div class="col">
-                                                    <app-stix-list [config]="{
+                                                    <app-stix-list #potentialAdditionsRef [config]="{
                                                         'clickBehavior': 'dialog',
                                                         'type': attackType,
-                                                        'stixObjects': potentialChanges[attackType].additions
-                                                    }"></app-stix-list>
+                                                        'stixObjects': potentialChanges[attackType].additions,
+                                                        'rowAction': {
+                                                            'icon': 'keyboard_arrow_right',
+                                                            'tooltip': 'stage addition',
+                                                            'position': 'end'
+                                                        }
+                                                    }"
+                                                    (onRowAction)="moveChanges([$event], attackType, 'additions', 'stage')"></app-stix-list>
                                                 </div>
                                                 <div class="col controls narrow">
-                                                    <button mat-icon-button matTooltip="stage all" [disabled]="potentialChanges[attackType].additions.length == 0"><mat-icon aria-label="move all to collection">double_arrow</mat-icon></button>
-                                                    <button mat-icon-button matTooltip="unstage all" [disabled]="collectionChanges[attackType].additions.length == 0"><mat-icon aria-label="move all from collection" class="icon-mirror">double_arrow</mat-icon></button>
+                                                    <button mat-icon-button 
+                                                            matTooltip="stage all additions" 
+                                                            [disabled]="potentialChanges[attackType].additions.length == 0"
+                                                            (click)="moveChanges(potentialChanges[attackType].additions, attackType, 'additions', 'stage')">
+                                                        <mat-icon aria-label="move all to collection">double_arrow</mat-icon>
+                                                    </button>
+                                                    <button mat-icon-button 
+                                                            matTooltip="unstage all additions" 
+                                                            [disabled]="collectionChanges[attackType].additions.length == 0"
+                                                            (click)="moveChanges(collectionChanges[attackType].additions, attackType, 'additions', 'unstage')">
+                                                        <mat-icon aria-label="move all from collection" class="icon-mirror">double_arrow</mat-icon>
+                                                    </button>
                                                 </div>
                                                 <div class="col">
-                                                    <app-stix-list [config]="{
+                                                    <app-stix-list #collectionAdditionsRef [config]="{
                                                         'clickBehavior': 'dialog',
                                                         'type': attackType,
-                                                        'stixObjects': collectionChanges[attackType].additions
-                                                    }"></app-stix-list>
+                                                        'stixObjects': collectionChanges[attackType].additions,
+                                                        'rowAction': {
+                                                            'icon': 'keyboard_arrow_left',
+                                                            'tooltip': 'unstage addition',
+                                                            'position': 'start'
+                                                        }
+                                                    }"
+                                                    (onRowAction)="moveChanges([$event], attackType, 'additions', 'unstage')"></app-stix-list>
                                                 </div>
                                             </div>
                                         </div>
