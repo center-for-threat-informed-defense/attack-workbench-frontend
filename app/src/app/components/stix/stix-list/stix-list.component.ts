@@ -41,6 +41,7 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
 
     // @Input() public stixObjects: StixObject[]; //TODO get rid of this in favor of stix list cards loading using filters
     @Input() public config: StixListConfig = {};
+    @Output() public onRowAction = new EventEmitter<string>();
     @ViewChild(MatPaginator) paginator: MatPaginator;
     @ViewChild('search') search: ElementRef;
     public searchQuery: string = "";
@@ -100,7 +101,7 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
      * Handles row click events. Open the panel, or open a modal depending on object type
      * @param {StixObject} object of the row that was clicked
      */
-    public onRowClick(element: StixObject) {
+    public rowClick(element: StixObject) {
         if (this.config.clickBehavior && this.config.clickBehavior == "none") return;
         if (this.config.clickBehavior && this.config.clickBehavior == "dialog") { //open modal
             let prompt = this.dialog.open(StixDialogComponent, {
@@ -165,12 +166,13 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
         // parse the config
         let controls_before = [] // control columns which occur before the main columns
         let controls_after = []; // control columns which occur after the main columns
+        let sticky_allowed = !(this.config.rowAction && this.config.rowAction.position == "start");
         if ("type" in this.config) { 
             // this.filter.push("type." + this.config.type); 
             // set columns according to type
             switch(this.config.type) {
                 case "collection":
-                    this.addColumn("name", "name", "plain", true, ["name"]);
+                    this.addColumn("name", "name", "plain", sticky_allowed, ["name"]);
                     this.addColumn("highest version", "version", "version");
                     this.addColumn("imported", "imported", "timestamp");
                     this.addColumn("released", "modified", "timestamp");
@@ -182,7 +184,7 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
                 case "mitigation":
                 case "tactic":
                     this.addColumn("ID", "attackID", "plain", false);
-                    this.addColumn("name", "name", "plain", true, ["name"]);
+                    this.addColumn("name", "name", "plain", sticky_allowed, ["name"]);
                     this.addColumn("domain", "domains", "list");
                     this.addColumn("version", "version", "version");
                     this.addColumn("modified","modified", "timestamp");
@@ -193,7 +195,7 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
                     }]
                     break;
                 case "matrix":
-                    this.addColumn("name", "name", "plain", true, ["name"]);
+                    this.addColumn("name", "name", "plain", sticky_allowed, ["name"]);
                     this.addColumn("version", "version", "version");
                     this.addColumn("modified","modified", "timestamp");
                     this.addColumn("created", "created", "timestamp");
@@ -204,7 +206,7 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
                     break;
                 case "group":
                     this.addColumn("ID", "attackID", "plain", false);
-                    this.addColumn("name", "name", "plain", true, ["name"]);
+                    this.addColumn("name", "name", "plain", sticky_allowed, ["name"]);
                     this.addColumn("aliases", "aliases", "list");
                     this.addColumn("version", "version", "version");
                     this.addColumn("modified","modified", "timestamp");
@@ -216,7 +218,7 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
                     break;
                 case "software":
                     this.addColumn("ID", "attackID", "plain", false);
-                    this.addColumn("name", "name", "plain", true, ["name"]);
+                    this.addColumn("name", "name", "plain", sticky_allowed, ["name"]);
                     this.addColumn("type", "type", "plain");
                     this.addColumn("domain", "domains", "list");
                     this.addColumn("version", "version", "version");
@@ -229,7 +231,7 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
                     break;
                 case "technique":
                     this.addColumn("ID", "attackID", "plain", false);
-                    this.addColumn("name", "name", "plain", true, ["name"]);
+                    this.addColumn("name", "name", "plain", sticky_allowed, ["name"]);
                     this.addColumn("platforms", "platforms", "list");
                     this.addColumn("domain", "domains", "list");
                     this.addColumn("version", "version", "version");
@@ -242,10 +244,10 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
                     break;
                 case "relationship":
                     this.addColumn("source", "source_ID", "plain");
-                    this.addColumn("", "source_name", "plain", this.config.targetRef? true: false, ["relationship-name"]);// ["name", "relationship-left"]);
+                    this.addColumn("", "source_name", "plain", this.config.targetRef? sticky_allowed: false, ["relationship-name"]);// ["name", "relationship-left"]);
                     this.addColumn("type", "relationship_type", "plain", false, ["text-deemphasis", "relationship-joiner"]);
                     this.addColumn("target", "target_ID", "plain");
-                    this.addColumn("", "target_name", "plain", this.config.sourceRef? true: false, ["relationship-name"]);// ["name", "relationship-right"]);
+                    this.addColumn("", "target_name", "plain", this.config.sourceRef? sticky_allowed: false, ["relationship-name"]);// ["name", "relationship-right"]);
                     if (!(this.config.relationshipType && this.config.relationshipType == "subtechnique-of")) this.addColumn("description", "description", "descriptive", false);
                     // controls_after.push("open-link")
                     break;
@@ -289,6 +291,12 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
         // open-link icon setup
         if (this.config.clickBehavior && this.config.clickBehavior == "dialog") {
             controls_after.push("open-link")
+        }
+        // row action setup
+        if (this.config.rowAction) {
+            console.log(this.config.rowAction)
+            if (this.config.rowAction.position == "start") controls_before.push("start-action");
+            else controls_after.push("end-action");
         }
         this.tableColumns_controls = controls_before.concat(this.tableColumns, controls_after);
         // filter setup
@@ -493,6 +501,13 @@ export interface StixListConfig {
     excludeIDs?: string[]; //exclude objects with this ID from the list
     excludeSourceRefs?: string[]; //exclude relationships with this source_ref from the list
     excludeTargetRefs?: string[]; //exclude relationships with this target_ref from the list
+
+    // if specified, adds an action button for each row
+    rowAction?: {
+        icon: string, // material icon for the button
+        tooltip: string, // tooltip or descriptor of action
+        position: "start" | "end" //start: occurs before first column; end: occurs after last column
+    }
 }
 
 export interface FilterValue {
