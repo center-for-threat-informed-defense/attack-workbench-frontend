@@ -122,6 +122,33 @@
                     width: 24px; //no need for text, icons are 24px wide
                     .mat-icon { vertical-align: middle; } //vertically center icons
                 }
+
+                //row action styles
+                .mat-cell.mat-column-end-action, .mat-cell.mat-column-start-action {
+                    cursor: pointer;
+                    .dark & { background: color(dark); }
+                    .light & { background: color(light); }
+                    &:hover {
+                        background: color(primary) !important;
+                        color: on-color(primary);
+                    }
+                }
+
+                .mat-column-start-action {
+                    &.mat-cell {
+                        .light & { outline: 1px solid border-color(light); }
+                        .dark &  { outline: 1px solid border-color(dark); }
+                    }
+                    padding-left: 12px;
+                    padding-right: 12px;
+                }
+                .mat-column-end-action {
+                    &.mat-cell {
+                        .light & { outline: 1px solid border-color(light); }
+                        .dark &  { outline: 1px solid border-color(dark); }
+                    }
+                    padding-right: 12px;
+                }
         
                 .mat-column-select {
                     // overflow: initial;
@@ -183,12 +210,13 @@
                         }
                     }
                 }
+
         
                 .element-row {
                     td {
                         border-bottom-width: 0;
                     }
-                    &.clickable td { cursor: pointer; }
+                    td.clickable { cursor: pointer; }
                 }
             }
         }
