@@ -85,19 +85,19 @@
                                                             'position': 'end'
                                                         }
                                                     }"
-                                                    (onRowAction)="moveChanges([$event], attackType, 'additions', 'stage')"></app-stix-list>
+                                                    (onRowAction)="moveChanges([$event], attackType, 'additions', 'stage', [potentialAdditionsRef, collectionAdditionsRef])"></app-stix-list>
                                                 </div>
                                                 <div class="col controls narrow">
                                                     <button mat-icon-button 
                                                             matTooltip="stage all additions" 
                                                             [disabled]="potentialChanges[attackType].additions.length == 0"
-                                                            (click)="moveChanges(potentialChanges[attackType].additions, attackType, 'additions', 'stage')">
+                                                            (click)="moveChanges(potentialChanges[attackType].additions, attackType, 'additions', 'stage', [potentialAdditionsRef, collectionAdditionsRef])">
                                                         <mat-icon aria-label="move all to collection">double_arrow</mat-icon>
                                                     </button>
                                                     <button mat-icon-button 
                                                             matTooltip="unstage all additions" 
                                                             [disabled]="collectionChanges[attackType].additions.length == 0"
-                                                            (click)="moveChanges(collectionChanges[attackType].additions, attackType, 'additions', 'unstage')">
+                                                            (click)="moveChanges(collectionChanges[attackType].additions, attackType, 'additions', 'unstage', [potentialAdditionsRef, collectionAdditionsRef])">
                                                         <mat-icon aria-label="move all from collection" class="icon-mirror">double_arrow</mat-icon>
                                                     </button>
                                                 </div>
@@ -112,7 +112,7 @@
                                                             'position': 'start'
                                                         }
                                                     }"
-                                                    (onRowAction)="moveChanges([$event], attackType, 'additions', 'unstage')"></app-stix-list>
+                                                    (onRowAction)="moveChanges([$event], attackType, 'additions', 'unstage', [potentialAdditionsRef, collectionAdditionsRef])"></app-stix-list>
                                                 </div>
                                             </div>
                                         </div>

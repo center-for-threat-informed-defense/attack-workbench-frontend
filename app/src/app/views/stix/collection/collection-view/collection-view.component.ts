@@ -56,7 +56,15 @@ export class CollectionViewComponent extends StixViewPage implements OnInit {
 
     constructor(private route: ActivatedRoute, private restApiConnector: RestApiConnectorService) { super();  }
 
-    public moveChanges(objects: StixObject[], attackType: string, category: changeCategory, direction: "stage" | "unstage"): void {
+    /**
+     * Move changes between the potential changes and the collection changes
+     * @param {StixObject[]} objects objects to move
+     * @param {string} attackType attack type of objects
+     * @param {changeCategory} category the category, e.g additions
+     * @param {("stage" | "unstage")} direction stage moves to collectionChanges, unstage moves to potentialChanges
+     * @param {StixListComponent[]} refs list of stix components to trigger redraws of
+     */
+    public moveChanges(objects: StixObject[], attackType: string, category: changeCategory, direction: "stage" | "unstage", refs: StixListComponent[]): void {
         let ids = new Set(objects.map(x => x.stixID));
         let from = direction == 'stage'? this.potentialChanges : this.collectionChanges;
         let to = direction == 'stage'? this.collectionChanges : this.potentialChanges;
@@ -66,6 +74,11 @@ export class CollectionViewComponent extends StixViewPage implements OnInit {
         for (let object of objects) {
             if (!to_ids.has(object.stixID)) to[attackType][category].push(object);
         }
+        setTimeout(() => { //update lists after a render cycle
+            for (let ref of refs) {
+                ref.applyControls();
+            }
+        })
     }
 
     ngOnInit() {
