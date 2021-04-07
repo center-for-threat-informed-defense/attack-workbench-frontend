@@ -45,7 +45,7 @@
         <div class="row">
             <div class="col changes">
                 <mat-accordion>
-                    <mat-expansion-panel *ngFor="let attackType of ['matrix', 'technique', 'tactic', 'mitigation', 'group', 'software', 'relationship']" class="mat-elevation-z0">
+                    <mat-expansion-panel *ngFor="let attackType of ['matrix', 'technique', 'tactic', 'mitigation', 'group', 'software']" class="mat-elevation-z0">
                         <mat-expansion-panel-header>
                             <mat-panel-title>
                                 <h3>{{attackType}}</h3>
@@ -205,22 +205,44 @@
                                             </div>
                                             <div class="row">
                                                 <div class="col">
-                                                    <app-stix-list [config]="{
+                                                    <app-stix-list #potentialMinorChangesRef [config]="{
                                                         'clickBehavior': 'dialog',
                                                         'type': attackType,
-                                                        'stixObjects': potentialChanges[attackType].minor_changes
-                                                    }"></app-stix-list>
+                                                        'stixObjects': potentialChanges[attackType].minor_changes,
+                                                        'rowAction': {
+                                                            'icon': 'keyboard_arrow_right',
+                                                            'tooltip': 'stage minor change',
+                                                            'position': 'end'
+                                                        }
+                                                    }"
+                                                    (onRowAction)="moveChanges([$event], attackType, 'minor_changes', 'stage', [potentialMinorChangesRef, collectionMinorChangesRef])"></app-stix-list>
                                                 </div>
                                                 <div class="col controls narrow">
-                                                    <button mat-icon-button matTooltip="stage all" [disabled]="potentialChanges[attackType].minor_changes.length == 0"><mat-icon aria-label="move all to collection">double_arrow</mat-icon></button>
-                                                    <button mat-icon-button matTooltip="unstage all" [disabled]="collectionChanges[attackType].minor_changes.length == 0"><mat-icon aria-label="move all from collection" class="icon-mirror">double_arrow</mat-icon></button>
+                                                    <button mat-icon-button 
+                                                            matTooltip="stage all minor changes" 
+                                                            [disabled]="potentialChanges[attackType].minor_changes.length == 0"
+                                                            (click)="moveChanges(potentialChanges[attackType].minor_changes, attackType, 'minor_changes', 'stage', [potentialMinorChangesRef, collectionMinorChangesRef])">
+                                                        <mat-icon aria-label="move all to collection">double_arrow</mat-icon>
+                                                    </button>
+                                                    <button mat-icon-button 
+                                                            matTooltip="unstage all minor changes" 
+                                                            [disabled]="collectionChanges[attackType].minor_changes.length == 0"
+                                                            (click)="moveChanges(collectionChanges[attackType].minor_changes, attackType, 'minor_changes', 'unstage', [potentialMinorChangesRef, collectionMinorChangesRef])">
+                                                        <mat-icon aria-label="move all from collection" class="icon-mirror">double_arrow</mat-icon>
+                                                    </button>
                                                 </div>
                                                 <div class="col">
-                                                    <app-stix-list [config]="{
+                                                    <app-stix-list #collectionMinorChangesRef [config]="{
                                                         'clickBehavior': 'dialog',
                                                         'type': attackType,
-                                                        'stixObjects': collectionChanges[attackType].minor_changes
-                                                    }"></app-stix-list>
+                                                        'stixObjects': collectionChanges[attackType].minor_changes,
+                                                        'rowAction': {
+                                                            'icon': 'keyboard_arrow_left',
+                                                            'tooltip': 'unstage minor change',
+                                                            'position': 'start'
+                                                        }
+                                                    }"
+                                                    (onRowAction)="moveChanges([$event], attackType, 'minor_changes', 'unstage', [potentialMinorChangesRef, collectionMinorChangesRef])"></app-stix-list>
                                                 </div>
                                             </div>
                                         </div>
@@ -248,22 +270,44 @@
                                             </div>
                                             <div class="row">
                                                 <div class="col">
-                                                    <app-stix-list [config]="{
+                                                    <app-stix-list #potentialRevocationsRef [config]="{
                                                         'clickBehavior': 'dialog',
                                                         'type': attackType,
-                                                        'stixObjects': potentialChanges[attackType].revocations
-                                                    }"></app-stix-list>
+                                                        'stixObjects': potentialChanges[attackType].revocations,
+                                                        'rowAction': {
+                                                            'icon': 'keyboard_arrow_right',
+                                                            'tooltip': 'stage addition',
+                                                            'position': 'end'
+                                                        }
+                                                    }"
+                                                    (onRowAction)="moveChanges([$event], attackType, 'revocations', 'stage', [potentialRevocationsRef, collectionRevocationsRef])"></app-stix-list>
                                                 </div>
                                                 <div class="col controls narrow">
-                                                    <button mat-icon-button matTooltip="stage all" [disabled]="potentialChanges[attackType].revocations.length == 0"><mat-icon aria-label="move all to collection">double_arrow</mat-icon></button>
-                                                    <button mat-icon-button matTooltip="unstage all" [disabled]="collectionChanges[attackType].revocations.length == 0"><mat-icon aria-label="move all from collection" class="icon-mirror">double_arrow</mat-icon></button>
+                                                    <button mat-icon-button 
+                                                            matTooltip="stage all revocations" 
+                                                            [disabled]="potentialChanges[attackType].revocations.length == 0"
+                                                            (click)="moveChanges(potentialChanges[attackType].revocations, attackType, 'revocations', 'stage', [potentialRevocationsRef, collectionRevocationsRef])">
+                                                        <mat-icon aria-label="move all to collection">double_arrow</mat-icon>
+                                                    </button>
+                                                    <button mat-icon-button 
+                                                            matTooltip="unstage all revocations" 
+                                                            [disabled]="collectionChanges[attackType].revocations.length == 0"
+                                                            (click)="moveChanges(collectionChanges[attackType].revocations, attackType, 'revocations', 'unstage', [potentialRevocationsRef, collectionRevocationsRef])">
+                                                        <mat-icon aria-label="move all from collection" class="icon-mirror">double_arrow</mat-icon>
+                                                    </button>
                                                 </div>
                                                 <div class="col">
-                                                    <app-stix-list [config]="{
+                                                    <app-stix-list #collectionRevocationsRef [config]="{
                                                         'clickBehavior': 'dialog',
                                                         'type': attackType,
-                                                        'stixObjects': collectionChanges[attackType].revocations
-                                                    }"></app-stix-list>
+                                                        'stixObjects': collectionChanges[attackType].revocations,
+                                                        'rowAction': {
+                                                            'icon': 'keyboard_arrow_left',
+                                                            'tooltip': 'unstage addition',
+                                                            'position': 'start'
+                                                        }
+                                                    }"
+                                                    (onRowAction)="moveChanges([$event], attackType, 'revocations', 'unstage', [potentialRevocationsRef, collectionRevocationsRef])"></app-stix-list>
                                                 </div>
                                             </div>
                                         </div>
@@ -291,22 +335,44 @@
                                             </div>
                                             <div class="row">
                                                 <div class="col">
-                                                    <app-stix-list [config]="{
+                                                    <app-stix-list #potentialDeprecationsRef [config]="{
                                                         'clickBehavior': 'dialog',
                                                         'type': attackType,
-                                                        'stixObjects': potentialChanges[attackType].deprecations
-                                                    }"></app-stix-list>
+                                                        'stixObjects': potentialChanges[attackType].deprecations,
+                                                        'rowAction': {
+                                                            'icon': 'keyboard_arrow_right',
+                                                            'tooltip': 'stage deprecation',
+                                                            'position': 'end'
+                                                        }
+                                                    }"
+                                                    (onRowAction)="moveChanges([$event], attackType, 'deprecations', 'stage', [potentialDeprecationsRef, collectionDeprecationsRef])"></app-stix-list>
                                                 </div>
                                                 <div class="col controls narrow">
-                                                    <button mat-icon-button matTooltip="stage all" [disabled]="potentialChanges[attackType].deprecations.length == 0"><mat-icon aria-label="move all to collection">double_arrow</mat-icon></button>
-                                                    <button mat-icon-button matTooltip="unstage all" [disabled]="collectionChanges[attackType].deprecations.length == 0"><mat-icon aria-label="move all from collection" class="icon-mirror">double_arrow</mat-icon></button>
+                                                    <button mat-icon-button 
+                                                            matTooltip="stage all deprecations" 
+                                                            [disabled]="potentialChanges[attackType].deprecations.length == 0"
+                                                            (click)="moveChanges(potentialChanges[attackType].deprecations, attackType, 'deprecations', 'stage', [potentialDeprecationsRef, collectionDeprecationsRef])">
+                                                        <mat-icon aria-label="move all to collection">double_arrow</mat-icon>
+                                                    </button>
+                                                    <button mat-icon-button 
+                                                            matTooltip="unstage all deprecations" 
+                                                            [disabled]="collectionChanges[attackType].deprecations.length == 0"
+                                                            (click)="moveChanges(collectionChanges[attackType].deprecations, attackType, 'deprecations', 'unstage', [potentialDeprecationsRef, collectionDeprecationsRef])">
+                                                        <mat-icon aria-label="move all from collection" class="icon-mirror">double_arrow</mat-icon>
+                                                    </button>
                                                 </div>
                                                 <div class="col">
-                                                    <app-stix-list [config]="{
+                                                    <app-stix-list #collectionDeprecationsRef [config]="{
                                                         'clickBehavior': 'dialog',
                                                         'type': attackType,
-                                                        'stixObjects': collectionChanges[attackType].deprecations
-                                                    }"></app-stix-list>
+                                                        'stixObjects': collectionChanges[attackType].deprecations,
+                                                        'rowAction': {
+                                                            'icon': 'keyboard_arrow_left',
+                                                            'tooltip': 'unstage deprecation',
+                                                            'position': 'start'
+                                                        }
+                                                    }"
+                                                    (onRowAction)="moveChanges([$event], attackType, 'deprecations', 'unstage', [potentialDeprecationsRef, collectionDeprecationsRef])"></app-stix-list>
                                                 </div>
                                             </div>
                                         </div>
@@ -330,6 +396,38 @@
                                     </ng-template>
                                 </mat-expansion-panel>
                             </mat-accordion>
+                        </ng-template>
+                    </mat-expansion-panel>
+                    <mat-expansion-panel  class="mat-elevation-z0">
+                        <mat-expansion-panel-header>
+                            <mat-panel-title>
+                                <h3>Relationship</h3>
+                            </mat-panel-title>
+                        </mat-expansion-panel-header>
+                        <ng-template matExpansionPanelContent>
+                            Relationships included in the collection will be updated automatically when the collection is saved.
+                            <ul>
+                                <li>
+                                    All relationships between objects in the collection will be included at their most recent version.
+                                    <ul>
+                                        <li>
+                                            New relationships between objects already in the collection will be included even if their attached objects did not change.
+                                        </li>
+                                        <li>
+                                            Existing relationships will be updated if newer versions are available even if the objects they are attached to did not change.
+                                        </li>
+                                        <li>
+                                            Updated relationships will exist at the version they existed at when the collection is saved; further updates to relationships after saving will not be included.
+                                        </li>
+                                    </ul>
+                                </li>
+                                <li>
+                                    Relationships will <i>not</i> be included if only one of their attached objects is in the collection.
+                                </li>
+                                <li>
+                                    Relationships conveying revocations will be included only if the revoked version of the object they are attached to is included (staged) in the collection. Objects which have revoked versions <i>not</i> included in the collection won't trigger the inclusion of revoking relationships.
+                                </li>
+                            </ul>
                         </ng-template>
                     </mat-expansion-panel>
                 </mat-accordion>

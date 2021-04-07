@@ -195,7 +195,7 @@ export class CollectionViewComponent extends StixViewPage implements OnInit {
         }
 
         // Deprecation: stage
-        else if (category == "revocations" && direction == "stage") {
+        else if (category == "deprecations" && direction == "stage") {
             // - Remove from potential deprecations
             this.potentialChanges[attackType].remove_objects(objects, "deprecations");
             // - Remove from unchanged
