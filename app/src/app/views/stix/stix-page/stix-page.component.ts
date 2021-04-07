@@ -46,7 +46,7 @@ export class StixPageComponent implements OnInit, OnDestroy {
      */
     public buildConfig(): StixViewConfig {
         return {
-            "mode": "view",
+            "mode": this.editorService.editing? "edit" : "view",
             "object": this.objects[0] 
         }
     }
