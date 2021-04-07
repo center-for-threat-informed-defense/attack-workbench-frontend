@@ -29,7 +29,7 @@ export class ObjectStatusComponent implements OnInit {
     public deprecated: boolean = false;
     public workflow: string;
 
-    constructor(private editorService: EditorService, private restAPIService: RestApiConnectorService, private dialog: MatDialog) { }
+    constructor(public editorService: EditorService, private restAPIService: RestApiConnectorService, private dialog: MatDialog) { }
 
     ngOnInit(): void {
         this.statusControl = new FormControl();
@@ -95,7 +95,9 @@ export class ObjectStatusComponent implements OnInit {
                     selectableObjects: this.objects.filter(object => { return object.stixID !== this.editorService.stixId}),
                     type: this.editorService.type,
                     select: this.select,
-                    title: "Select the revoking object"
+                    selectionType: 'one',
+                    title: "Select the revoking object",
+                    buttonLabel: "revoke"
                 }
             });
             let revokedSubscription = revokedDialog.afterClosed().subscribe({
