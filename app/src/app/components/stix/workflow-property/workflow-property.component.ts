@@ -11,14 +11,15 @@ export class WorkflowPropertyComponent implements OnInit {
     
     public icon: string;
     public color: string;
+    public state: string;
 
     constructor() { }
 
     ngOnInit(): void {
         let workflow = this.config.object['workflow'] ? this.config.object['workflow'] : null;
-        let state = workflow ? workflow[this.config.field] : null;
+        this.state = workflow ? workflow[this.config.field] : null;
 
-        switch (state) {
+        switch (this.state) {
             case "work-in-progress":
                 this.icon = "assignment";
                 this.color = "error";
@@ -36,6 +37,9 @@ export class WorkflowPropertyComponent implements OnInit {
         }
     }
 
+    public stateTooltip() {
+        return this.state.replace(/-/g, " ");
+    }
 }
 
 export interface WorkflowPropertyConfig {
