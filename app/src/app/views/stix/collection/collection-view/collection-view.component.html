@@ -140,22 +140,44 @@
                                             </div>
                                             <div class="row">
                                                 <div class="col">
-                                                    <app-stix-list [config]="{
+                                                    <app-stix-list #potentialChangesRef [config]="{
                                                         'clickBehavior': 'dialog',
                                                         'type': attackType,
-                                                        'stixObjects': potentialChanges[attackType].changes
-                                                    }"></app-stix-list>
+                                                        'stixObjects': potentialChanges[attackType].changes,
+                                                        'rowAction': {
+                                                            'icon': 'keyboard_arrow_right',
+                                                            'tooltip': 'stage change',
+                                                            'position': 'end'
+                                                        }
+                                                    }"
+                                                    (onRowAction)="moveChanges([$event], attackType, 'changes', 'stage', [potentialChangesRef, collectionChangesRef])"></app-stix-list>
                                                 </div>
                                                 <div class="col controls narrow">
-                                                    <button mat-icon-button matTooltip="stage all" [disabled]="potentialChanges[attackType].changes.length == 0"><mat-icon aria-label="move all to collection">double_arrow</mat-icon></button>
-                                                    <button mat-icon-button matTooltip="unstage all" [disabled]="collectionChanges[attackType].changes.length == 0"><mat-icon aria-label="move all from collection" class="icon-mirror">double_arrow</mat-icon></button>
+                                                    <button mat-icon-button 
+                                                            matTooltip="stage all changes" 
+                                                            [disabled]="potentialChanges[attackType].changes.length == 0"
+                                                            (click)="moveChanges(potentialChanges[attackType].changes, attackType, 'changes', 'stage', [potentialChangesRef, collectionChangesRef])">
+                                                            <mat-icon aria-label="move all to collection">double_arrow</mat-icon>
+                                                    </button>
+                                                    <button mat-icon-button 
+                                                            matTooltip="unstage all changes" 
+                                                            [disabled]="collectionChanges[attackType].changes.length == 0"
+                                                            (click)="moveChanges(collectionChanges[attackType].changes, attackType, 'changes', 'unstage', [potentialChangesRef, collectionChangesRef])">
+                                                        <mat-icon aria-label="move all from collection" class="icon-mirror">double_arrow</mat-icon>
+                                                    </button>
                                                 </div>
                                                 <div class="col">
-                                                    <app-stix-list [config]="{
+                                                    <app-stix-list #collectionChangesRef [config]="{
                                                         'clickBehavior': 'dialog',
                                                         'type': attackType,
-                                                        'stixObjects': collectionChanges[attackType].changes
-                                                    }"></app-stix-list>
+                                                        'stixObjects': collectionChanges[attackType].changes,
+                                                        'rowAction': {
+                                                            'icon': 'keyboard_arrow_left',
+                                                            'tooltip': 'unstage change',
+                                                            'position': 'start'
+                                                        }
+                                                    }"
+                                                    (onRowAction)="moveChanges([$event], attackType, 'changes', 'unstage', [potentialChangesRef, collectionChangesRef])"></app-stix-list>
                                                 </div>
                                             </div>
                                         </div>
