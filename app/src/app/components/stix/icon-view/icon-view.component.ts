@@ -11,17 +11,16 @@ export class IconViewComponent implements OnInit {
     
     public icon: string;
     public color: string;
-    public tooltip: string;
+    public state: string;
 
     constructor() { }
 
     ngOnInit(): void {
         if (this.config.field == "workflow") {
             let workflow = this.config.object['workflow'] ? this.config.object['workflow'] : null;
-            let status = workflow ? workflow['state'] : null;
-            this.tooltip = status ? status.replace(/-/g, " ") : null;
+            this.state = workflow ? workflow['state'] : null;
 
-            switch (status) {
+            switch (this.state) {
                 case "work-in-progress":
                     this.icon = "assignment";
                     this.color = "error";
@@ -43,8 +42,8 @@ export class IconViewComponent implements OnInit {
                 this.color = "error";
             }
 
-            if (this.config.object['revoked']) this.tooltip = "revoked";
-            else if (this.config.object['deprecated']) this.tooltip = "deprecated";
+            if (this.config.object['revoked']) this.state = "revoked";
+            else if (this.config.object['deprecated']) this.state = "deprecated";
         }
     }
 }
