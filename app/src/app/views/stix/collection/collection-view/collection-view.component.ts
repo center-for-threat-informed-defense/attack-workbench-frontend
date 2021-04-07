@@ -28,6 +28,7 @@ export class CollectionViewComponent extends StixViewPage implements OnInit {
     public knowledgeBaseCollection: Collection;
     public editing: boolean = false;
     public page: string = "home";
+    public editingReloadToggle: boolean = true;
 
     public loading: string = null; // loading message if loading
 
@@ -230,6 +231,8 @@ export class CollectionViewComponent extends StixViewPage implements OnInit {
     ngOnInit() {
         this.route.queryParams.subscribe(params => {
             this.editing = params["editing"];
+            this.editingReloadToggle = false;
+            setTimeout(() => this.editingReloadToggle = true); //toggle the render reloading after draw has completed
         });
         this.loading = "fetching additional data";
         // fetch previous collection and objects in knowledge base
