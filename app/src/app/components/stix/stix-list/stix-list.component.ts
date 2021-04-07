@@ -181,8 +181,8 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
                     break;
                 case "mitigation":
                 case "tactic":
-                    this.addColumn("ID", "attackID", "plain", false);
                     this.addColumn("", "state", "workflow");
+                    this.addColumn("ID", "attackID", "plain", false);
                     this.addColumn("name", "name", "plain", true, ["name"]);
                     this.addColumn("domain", "domains", "list");
                     this.addColumn("version", "version", "version");
@@ -205,8 +205,8 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
                     }]
                     break;
                 case "group":
-                    this.addColumn("ID", "attackID", "plain", false);
                     this.addColumn("", "state", "workflow");
+                    this.addColumn("ID", "attackID", "plain", false);
                     this.addColumn("name", "name", "plain", true, ["name"]);
                     this.addColumn("aliases", "aliases", "list");
                     this.addColumn("version", "version", "version");
@@ -218,8 +218,8 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
                     }]
                     break;
                 case "software":
-                    this.addColumn("ID", "attackID", "plain", false);
                     this.addColumn("", "state", "workflow");
+                    this.addColumn("ID", "attackID", "plain", false);
                     this.addColumn("name", "name", "plain", true, ["name"]);
                     this.addColumn("type", "type", "plain");
                     this.addColumn("domain", "domains", "list");
@@ -232,8 +232,8 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
                     }]
                     break;
                 case "technique":
-                    this.addColumn("ID", "attackID", "plain", false);
                     this.addColumn("", "state", "workflow");
+                    this.addColumn("ID", "attackID", "plain", false);
                     this.addColumn("name", "name", "plain", true, ["name"]);
                     this.addColumn("platforms", "platforms", "list");
                     this.addColumn("domain", "domains", "list");
@@ -392,6 +392,7 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
             let deprecated = this.filter.includes("state.deprecated");
             let revoked = this.filter.includes("state.revoked");
             let state = this.filter.find((x) => x.startsWith("status."));
+            console.log("filter: ", this.filter)
             if (state) {
                 state = state.split("status.")[1];
                 // disable other states
@@ -418,6 +419,12 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
                 includeRevoked: revoked, 
                 includeDeprecated: deprecated
             }
+
+
+            // let options = {
+            //     includeRevoked: true, 
+            //     includeDeprecated: true
+            // }
 
             if (this.config.type == "software") this.data$ = this.restAPIConnectorService.getAllSoftware(options);
             else if (this.config.type == "group") this.data$ = this.restAPIConnectorService.getAllGroups(options);
