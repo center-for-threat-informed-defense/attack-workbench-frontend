@@ -329,12 +329,15 @@ export class RestApiConnectorService extends ApiConnector {
     private getStixObjectFactory<T extends StixObject>(attackType: AttackType) {
         let attackClass = attackTypeToClass[attackType];
         let plural = attackTypeToPlural[attackType]
-        return function<P extends T>(id: string, modified?: Date, versions="latest", includeSubs?: boolean): Observable<P[]> {
+        return function<P extends T>(id: string, modified?: Date | string, versions="latest", includeSubs?: boolean, retrieveContents?: boolean): Observable<P[]> {
             let url = `${this.baseUrl}/${plural}/${id}`;
-            if (modified) url += `/modified/${modified}`;
+            if (modified) {
+                let modifiedString = typeof(modified) == "string"? modified : modified.toISOString();
+                url += `/modified/${modifiedString}`;
+            }
             let query = new HttpParams();
             if (versions != "latest") query = query.set("versions", versions);
-            if (attackType == "collection") query = query.set("retrieveContents", "true");
+            if (attackType == "collection" && retrieveContents) query = query.set("retrieveContents", "true");
             return this.http.get(url, {headers: this.headers, params: query}).pipe(
                 tap(result => console.log(`retrieved ${attackType}`, result)), // on success, trigger the success notification
                 map(result => {

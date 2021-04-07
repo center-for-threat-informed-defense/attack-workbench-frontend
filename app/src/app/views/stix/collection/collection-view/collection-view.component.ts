@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { forkJoin } from 'rxjs';
-import { delay, map, tap } from 'rxjs/operators';
+import { delay, map, switchMap, tap } from 'rxjs/operators';
 import { Collection, CollectionDiffCategories, VersionReference } from 'src/app/classes/stix/collection';
 import { Group } from 'src/app/classes/stix/group';
 import { Matrix } from 'src/app/classes/stix/matrix';
@@ -89,10 +89,13 @@ export class CollectionViewComponent extends StixViewPage implements OnInit {
         // fetch previous collection and objects in knowledge base
         let subscription = forkJoin({
             "attackObjects": this.restApiConnector.getAllObjects(null, null, null, null, true, true, false),
-            "previousRelease": this.restApiConnector.getCollection(this.collection.stixID, null, "all").pipe(
-                map((collections) => {
+            "previousRelease": this.restApiConnector.getCollection(this.collection.stixID, null, "all", false).pipe(
+                switchMap((collections) => {
                     // get the most recent version which was released for comparison
-                    return collections.find((collection) => !collection.workflow || !collection.workflow.state || collection.workflow.state as string == "published")
+                    let last_version = collections.find((collection) => !collection.workflow || !collection.workflow.state || collection.workflow.state as string == "published")
+                    return this.restApiConnector.getCollection(this.collection.stixID, last_version.modified, "latest", null, true).pipe(
+                        map((full_collection) => full_collection[0])
+                    );
                 })
             )
         }).pipe(
