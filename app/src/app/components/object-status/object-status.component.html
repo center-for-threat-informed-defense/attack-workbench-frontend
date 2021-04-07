@@ -1,7 +1,8 @@
 <button mat-button class="control" matTooltip="settings"
     popoverPlacement="bottom" 
     [popover]="objectStatus"
-    [popoverOnHover]="false">
+    [popoverOnHover]="false"
+    [disabled]="editorService.editing">
     <mat-icon aria-label="settings">settings</mat-icon>
 </button>
 
