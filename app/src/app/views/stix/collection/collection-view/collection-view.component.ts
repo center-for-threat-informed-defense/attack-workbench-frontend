@@ -65,15 +65,161 @@ export class CollectionViewComponent extends StixViewPage implements OnInit {
      * @param {StixListComponent[]} refs list of stix components to trigger redraws of
      */
     public moveChanges(objects: StixObject[], attackType: string, category: changeCategory, direction: "stage" | "unstage", refs: StixListComponent[]): void {
-        let ids = new Set(objects.map(x => x.stixID));
-        let from = direction == 'stage'? this.potentialChanges : this.collectionChanges;
-        let to = direction == 'stage'? this.collectionChanges : this.potentialChanges;
-
-        from[attackType][category] = from[attackType][category].filter(x => !ids.has(x.stixID));
-        let to_ids = new Set(to[attackType][category].map(x => x.stixID));
-        for (let object of objects) {
-            if (!to_ids.has(object.stixID)) to[attackType][category].push(object);
+        // Addition: stage
+        if (category == "additions" && direction == "stage") {
+            // - Remove from potential additions
+            this.potentialChanges[attackType].remove_objects(objects, "additions");
+            // - Add to additions
+            this.collectionChanges[attackType].add_objects(objects, "additions");
         }
+
+        // Addition: unstage
+        else if (category == "additions" && direction == "unstage") {
+            // - Add to potential additions
+            this.potentialChanges[attackType].add_objects(objects, "additions");
+            // - Remove from additions
+            this.collectionChanges[attackType].remove_objects(objects, "additions");
+        }
+
+        // Change: stage
+        else if (category == "changes" && direction == "stage") {
+            // - Remove from potential changes
+            this.potentialChanges[attackType].remove_objects(objects, "changes");
+            // - Remove from unchanged
+            this.collectionChanges[attackType].remove_objects(objects, "duplicates");
+            // remove from minor changes (upgrade type)
+            this.collectionChanges[attackType].remove_objects(objects, "minor_changes");
+            // sort object changes into following overwrite categories
+            let updates = {
+                revocations: [],
+                deprecations: [],
+                changes: []
+            }
+            for (let object of objects) {
+                // - If object present in revocations, update presence in revocations
+                if (this.collectionChanges[attackType].has_object(object, "revocations")) {
+                    updates["revocations"].push(object);
+                }
+                // - Else If object is present in deprecations, update presence in deprecations
+                else if (this.collectionChanges[attackType].has_object(object, "deprecations")) {
+                    updates["deprecations"].push(object);  
+                }
+                // - Else update presence /add in changes
+                else {
+                    updates["changes"].push(object);
+                }
+            }
+            for (let update in updates) {
+                this.collectionChanges[attackType].add_objects(updates[update], update);
+            }
+        }
+
+        // Change: unstage
+        else if (category == "changes" && direction == "unstage") {
+            // - Add to potential changes
+            this.potentialChanges[attackType].add_objects(objects, "changes");
+            // - Add to unchanged
+            this.collectionChanges[attackType].add_objects(objects, "duplicates");
+            // - Remove from changes
+            this.collectionChanges[attackType].remove_objects(objects, "changes");
+        }
+
+        // Minor Change: stage
+        else if (category == "minor_changes" && direction == "stage") {
+            // - Remove from potential minor changes
+            this.potentialChanges[attackType].remove_objects(objects, "minor_changes");
+            // - Remove from unchanged
+            this.collectionChanges[attackType].remove_objects(objects, "duplicates");
+            // sort object changes into following overwrite categories
+            let updates = {
+                revocations: [],
+                deprecations: [],
+                changes: [],
+                minor_changes: []
+            }
+            for (let object of objects) {
+                // - If object present in revocations, update presence in revocations
+                if (this.collectionChanges[attackType].has_object(object, "revocations")) {
+                    updates["revocations"].push(object);
+                }
+                // - Else If object is present in deprecations, update presence in deprecations
+                else if (this.collectionChanges[attackType].has_object(object, "deprecations")) {
+                    updates["deprecations"].push(object);  
+                }
+                // - Else If object present in changes, update presence in changes
+                else if (this.collectionChanges[attackType].has_object(object, "changes")) {
+                    updates["changes"].push(object);  
+                }
+                // - Else update presence /add in minor changes
+                else {
+                    updates["minor_changes"].push(object);  
+                }
+            }
+            for (let update in updates) {
+                this.collectionChanges[attackType].add_objects(updates[update], update);
+            }
+        }
+
+        // Minor Change: unstage
+        else if (category == "minor_changes" && direction == "unstage") {
+            // - Remove from minor changes
+            this.collectionChanges[attackType].remove_objects(objects, "minor_changes");
+            // - Add to potential minor changes
+            this.potentialChanges[attackType].add_objects(objects, "minor_changes");
+            // - Add to unchanged
+            this.collectionChanges[attackType].add_objects(objects, "duplicates");
+        }
+
+        // Revocation: stage
+        else if (category == "revocations" && direction == "stage") {
+            // - Remove from potential revocations
+            this.potentialChanges[attackType].remove_objects(objects, "revocations");
+            // - Remove from unchanged
+            this.collectionChanges[attackType].remove_objects(objects, "duplicates");
+            // - If object present in changes, remove presence from changes
+            this.collectionChanges[attackType].remove_objects(objects, "changes");
+            // - Else If object is present in minor changes, remove presence from minor changes
+            this.collectionChanges[attackType].remove_objects(objects, "minor_changes");
+            // - Add to revocations
+            this.collectionChanges[attackType].add_objects(objects, "revocations");
+        }
+
+        // Revocation: unstage
+        else if (category == "revocations" && direction == "unstage") {
+            // - Remove from revocations
+            this.collectionChanges[attackType].remove_objects(objects, "revocations");
+            // - Add to potential revocations
+            this.potentialChanges[attackType].add_objects(objects, "revocations");
+            // - Add to unchanged
+            this.collectionChanges[attackType].add_objects(objects, "duplicates");
+        }
+
+        // Deprecation: stage
+        else if (category == "revocations" && direction == "stage") {
+            // - Remove from potential deprecations
+            this.potentialChanges[attackType].remove_objects(objects, "deprecations");
+            // - Remove from unchanged
+            this.collectionChanges[attackType].remove_objects(objects, "duplicates");
+            // - If object present in changes, remove presence from changes
+            this.collectionChanges[attackType].remove_objects(objects, "changes");
+            // - Else If object is present in minor changes, remove presence from minor changes
+            this.collectionChanges[attackType].remove_objects(objects, "minor_changes");
+            // - Add to deprecations
+            this.collectionChanges[attackType].add_objects(objects, "deprecations");
+        }
+
+        // Deprecation: unstage
+        else if (category == "deprecations" && direction == "unstage") {
+            // - Remove from deprecations
+            this.collectionChanges[attackType].remove_objects(objects, "deprecations");
+            // - Add to potential deprecations
+            this.potentialChanges[attackType].add_objects(objects, "deprecations");
+            // - Add to unchanged
+            this.collectionChanges[attackType].add_objects(objects, "duplicates");
+
+        }
+
+        // after any update, update the lists
         setTimeout(() => { //update lists after a render cycle
             for (let ref of refs) {
                 ref.applyControls();

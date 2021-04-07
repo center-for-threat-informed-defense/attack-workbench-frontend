@@ -47,6 +47,45 @@ export class CollectionDiffCategories<T> {
                this.supersedes_user_edits.length +
                this.errors.length;
     }
+
+    /**
+     * Add the given objects to the change list
+     * If the objects are already in the list, the new version will overwrite the old
+     * @param {T[]} objects the objects to add/update
+     * @param {string} change_type the change type to add/update within
+     */
+    public add_objects(objects: T[], change_type: string) {
+        // let objects_ids = new Set(objects.map(x=>x.stixID))
+        // remove existing versions of the objects
+        this.remove_objects(objects, change_type);
+        // add updated versions of the objects
+        this[change_type] = this[change_type].concat(objects);
+    }
+
+    /**
+     * Remove the given objects from the change list
+     * Only functions if T is a StixObject
+     * @param {T[]} objects the objects to remove
+     * @param {string} change_type the change type to remove from
+     */
+    public remove_objects(objects: T[], change_type: string) {
+        let sdos = objects as unknown as StixObject[];
+        let objects_ids = new Set(sdos.map(x=>x.stixID))
+        this[change_type] = this[change_type].filter(x => !objects_ids.has(x.stixID))
+    }
+
+    /**
+     * Check if the given object's ID occurs within the change type
+     * Only functions if T is a StixObject
+     * Note: doesn't check if objects are the same, so different versions of the same object would still return true
+     * @param {T} object to check
+     * @param {string} change_type to check
+     * @returns true if the ID occurs on any object within the change type
+     */
+    public has_object(object: T, change_type: string) {
+        let sdo = object as unknown as StixObject;
+        return this[change_type].some(x=>x.stixID == sdo.stixID);
+    }
 }
 
 export class VersionReference {
