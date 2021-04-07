@@ -1,4 +1,5 @@
 @import '../../../../style/globals.scss';
+.icon-view { display: inherit; }
 .mat-icon { vertical-align: middle; }
 .warn { color: color(warn); }
 .error { color: color(error); }
