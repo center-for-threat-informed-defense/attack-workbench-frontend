@@ -1,6 +1,7 @@
 <h1 class="name-property">
     <ng-container *ngIf="config.mode == 'view'; else edit">
         <span *ngIf="config.object.attackType == 'technique' && config.object.is_subtechnique && config.object.parentTechnique">{{config.object.parentTechnique.name}}: </span> {{config.object[config.field ? config.field : "name"]}}
+        <app-icon-view [config]="{object: config.object, field: 'workflow'}"></app-icon-view>
     </ng-container>
     <ng-template #edit>
         <mat-form-field class="name-edit" appearance="outline">
