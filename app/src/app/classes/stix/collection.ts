@@ -240,14 +240,14 @@ export class Collection extends StixObject {
         for (let thisVr of this.contents) {
             let thisAttackObject = thisStixLookup.get(thisVr.object_ref);
             if (!thisAttackObject) {
-                console.warn("could not find object", thisVr.object_ref, "in collection contents")
+                // console.warn("could not find object", thisVr.object_ref, "in collection contents")
                 continue;
             }
             if (that.contents.find(thatVr => thisVr.object_ref == thatVr.object_ref)) {
                 // object exists in other collection
                 let thatAttackObject = thatStixLookup.get(thisVr.object_ref);
                 if (!thatAttackObject) {
-                    console.warn("could not find object", thisVr.object_ref, "in collection contents")
+                    // console.warn("could not find object", thisVr.object_ref, "in collection contents")
                     continue;
                 }
                 // determine if there was a change, and if so what type it was
