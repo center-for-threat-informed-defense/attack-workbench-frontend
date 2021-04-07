@@ -26,7 +26,6 @@ type changeCategory = "additions" | "changes" | "minor_changes" | "revocations" 
 export class CollectionViewComponent extends StixViewPage implements OnInit {
     public get collection(): Collection { return this.config.object as Collection; }
     public knowledgeBaseCollection: Collection;
-    public editing: boolean = false;
     public page: string = "home";
     public editingReloadToggle: boolean = true;
 
@@ -230,9 +229,9 @@ export class CollectionViewComponent extends StixViewPage implements OnInit {
 
     ngOnInit() {
         this.route.queryParams.subscribe(params => {
-            this.editing = params["editing"];
+            //reinitialize stix lists in case editing has changed and they have different configs now
             this.editingReloadToggle = false;
-            setTimeout(() => this.editingReloadToggle = true); //toggle the render reloading after draw has completed
+            setTimeout(() => this.editingReloadToggle = true); 
         });
         this.loading = "fetching additional data";
         // fetch previous collection and objects in knowledge base

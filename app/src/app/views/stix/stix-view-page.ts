@@ -5,6 +5,7 @@ import { StixObject } from 'src/app/classes/stix/stix-object';
 export abstract class StixViewPage {
     //configuration for the view page behavior
     @Input() public config: StixViewConfig;
+    public get editing(): boolean { return this.config.mode == "edit"; }
 
     //outputs to use if config.sidebarControl == "events"
     @Output() public onOpenHistory = new EventEmitter();
