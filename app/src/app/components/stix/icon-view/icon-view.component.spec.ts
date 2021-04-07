@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { WorkflowPropertyComponent } from './workflow-property.component';
+import { IconViewComponent } from './icon-view.component';
 
 describe('WorkflowPropertyComponent', () => {
-  let component: WorkflowPropertyComponent;
-  let fixture: ComponentFixture<WorkflowPropertyComponent>;
+  let component: IconViewComponent;
+  let fixture: ComponentFixture<IconViewComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ WorkflowPropertyComponent ]
+      declarations: [ IconViewComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(WorkflowPropertyComponent);
+    fixture = TestBed.createComponent(IconViewComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
