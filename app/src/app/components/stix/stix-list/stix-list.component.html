@@ -42,8 +42,8 @@
                         <div *ngIf="tableColumns_settings.get(column)['display'] == 'descriptive'">
                             <app-descriptive-view [config]="{'object': element, 'mode': 'view', 'field': column, 'firstParagraphOnly': true}"></app-descriptive-view>
                         </div>
-                        <div *ngIf="tableColumns_settings.get(column)['display'] == 'workflow'">
-                            <app-workflow-property [config]="{object: element, field: column}"></app-workflow-property>
+                        <div *ngIf="tableColumns_settings.get(column)['display'] == 'icon'">
+                            <app-icon-view [config]="{object: element, field: column}"></app-icon-view>
                         </div>
                         <div *ngIf="tableColumns_settings.get(column)['display']  == 'plain'">{{element[column]}}</div>
                     </td>
