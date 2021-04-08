@@ -20,7 +20,7 @@ export class ObjectStatusComponent implements OnInit {
 
     public statusControl: FormControl;
     public select: SelectionModel<string>;
-    public workflows: string[] = ["work-in-progress", "awaiting-review", "reviewed"];
+    public workflows: string[] = ["none", "work-in-progress", "awaiting-review", "reviewed"];
 
     public objects: StixObject[];
     public object: StixObject;
@@ -75,7 +75,8 @@ export class ObjectStatusComponent implements OnInit {
      */
     public workflowChange(event) {
         if (event.isUserInput) {
-            this.object.workflow = {state: event.source.value};
+            if (event.source.value == "none") this.object.workflow = undefined;
+            else this.object.workflow = {state: event.source.value};
             this.object.save(this.restAPIService);
         }
     }
