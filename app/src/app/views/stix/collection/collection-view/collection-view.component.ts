@@ -72,21 +72,27 @@ export class CollectionViewComponent extends StixViewPage implements OnInit {
                 // check for double increments of version numbers
                 
                 // build lookup of STIX ID to version number for new collection
-                let collectionStixIDToVersion = new Map<string, VersionNumber>()
+                let collectionStixIDToObject = new Map<string, StixObject>()
                 for (let attackType in this.collectionChanges) {
                     if (attackType == "relationship") continue;
-                    for (let object of this.collectionChanges[attackType].flatten(false)) collectionStixIDToVersion.set(object.stixID, object.version);
+                    for (let object of this.collectionChanges[attackType].flatten(false)) collectionStixIDToObject.set(object.stixID, object);
                 }
                 // compare to values in old collection
-                for (let object of this.previousRelease.stix_contents) {
-                    if (collectionStixIDToVersion.has(object.stixID)) { //only if was in collection previously
-                        let newVersion = collectionStixIDToVersion.get(object.stixID)
-                        if (newVersion.isDoubleIncrement(object.version)) {
-                            let objectName = object.hasOwnProperty("name")? object["name"] : object.stixID;
+                for (let oldObject of this.previousRelease.stix_contents) {
+                    if (collectionStixIDToObject.has(oldObject.stixID)) { //only if was in collection previously
+                        let newObject = collectionStixIDToObject.get(oldObject.stixID)
+                        let objectName = newObject.hasOwnProperty("name")? newObject["name"] : newObject.stixID;
+                        if (newObject.version.compareTo(oldObject.version) < 0) {
                             results.warnings.push({
                                 result: "warning",
                                 field: "version",
-                                message: `Version number of ${objectName} has incremented twice (v${object.version.toString()} → v${newVersion.toString()})`
+                                message: `Version number of ${objectName} has been decremented (v${oldObject.version.toString()} → v${newObject.version.toString()})`
+                            })
+                        } else if (newObject.version.isDoubleIncrement(oldObject.version)) {
+                            results.warnings.push({
+                                result: "warning",
+                                field: "version",
+                                message: `Version number of ${objectName} has been incremented twice (v${oldObject.version.toString()} → v${newObject.version.toString()})`
                             })
                         }
                     }
