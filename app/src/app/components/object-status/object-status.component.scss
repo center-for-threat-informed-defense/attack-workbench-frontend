@@ -1,13 +1,12 @@
+@import "../../../style/globals";
 .workflow-status {
-    .labelled-box {
-        margin-bottom: 8px;
-    }
+    .mat-form-field { display: flex; }
+    .mat-form-field-wrapper { padding-bottom: 10px; }
 
-    .mat-checkbox {
-        padding: 0px 8px;
-    }
-
-    .content {
+    .status-options {
         font-weight: normal;
+        .mat-checkbox {
+            padding: 0px 8px;
+        }
     }
 }
