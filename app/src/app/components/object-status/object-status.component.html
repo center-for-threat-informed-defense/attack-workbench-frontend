@@ -8,22 +8,17 @@
 
 <popover-content #objectStatus>
     <div class="workflow-status">
-        <div class="labelled-box">
-            <div class="content">
-                <mat-select [formControl]="statusControl">
-                    <mat-option></mat-option>
-                    <mat-option *ngFor="let status of workflows" (onSelectionChange)="workflowChange($event)" [value]="status">{{status}}</mat-option>
-                </mat-select>
-            </div>
-            <label>Workflow Status</label>
-        </div>
+        <mat-form-field class="workflow-status" appearance="outline">
+            <mat-label>Workflow Status</mat-label>
+            <mat-select [formControl]="statusControl">
+                <mat-option></mat-option>
+                <mat-option *ngFor="let status of workflows" (onSelectionChange)="workflowChange($event)" [value]="status">{{status}}</mat-option>
+            </mat-select>
+        </mat-form-field>
 
-        <div class="labelled-box">
-            <div class="content">
-                <mat-checkbox [(ngModel)]="revoked" (change)="revoke($event)">Revoke</mat-checkbox>
-                <mat-checkbox [(ngModel)]="deprecated" (change)="deprecate($event)">Deprecate</mat-checkbox>
-            </div>
-            <label>State</label>
+        <div class="status-options">
+            <mat-checkbox [(ngModel)]="revoked" (change)="revoke($event)" [disabled]="deprecated">Revoke</mat-checkbox>
+            <mat-checkbox [(ngModel)]="deprecated" (change)="deprecate($event)" [disabled]="revoked">Deprecate</mat-checkbox>
         </div>
     </div>
 </popover-content>
