@@ -28,12 +28,15 @@ type changeCategory = "additions" | "changes" | "minor_changes" | "revocations" 
 export class CollectionViewComponent extends StixViewPage implements OnInit {
     public get collection(): Collection { return this.config.object as Collection; }
     public previousRelease: Collection;
+    public attackObjects: any[]; //all objects in the knowledge base, unserialized
     public knowledgeBaseCollection: Collection;
     public editingReloadToggle: boolean = true;
 
     public loading: string = null; // loading message if loading
     public validating: boolean = false;
     public validationData: ValidationData = null;
+
+    public stagedData: VersionReference[] = [];
 
     public potentialChanges = {
         technique:    new CollectionDiffCategories<Technique>(),
@@ -75,7 +78,7 @@ export class CollectionViewComponent extends StixViewPage implements OnInit {
                 let collectionStixIDToObject = new Map<string, StixObject>()
                 for (let attackType in this.collectionChanges) {
                     if (attackType == "relationship") continue;
-                    for (let object of this.collectionChanges[attackType].flatten(false)) collectionStixIDToObject.set(object.stixID, object);
+                    for (let object of this.collectionChanges[attackType].flatten(true)) collectionStixIDToObject.set(object.stixID, object);
                 }
                 // compare to values in old collection
                 for (let oldObject of this.previousRelease.stix_contents) {
@@ -98,7 +101,84 @@ export class CollectionViewComponent extends StixViewPage implements OnInit {
                     }
                 }
 
-                // notify of relationship stats
+                //stage data for saving
+                this.stagedData = [];
+                for (let object of collectionStixIDToObject.values()) {
+                    this.stagedData.push(new VersionReference({
+                        "object_ref": object.stixID,
+                        "object_modified": object.modified.toISOString()
+                    }));
+                }
+                let previousRelationships = new Map<string, StixObject>(this.previousRelease.stix_contents.filter(x => x.type == "relationship").map(x => [x.stixID, x]));
+                // stage relationships for saving and determine stats
+                let relationship_stats = {
+                    "new": 0,
+                    "updated": 0,
+                    "unchanged": 0,
+                    "excluded_one": 0,
+                    "excluded_both": 0
+                }
+                for (let relationship of this.attackObjects.filter(x => x.stix.type == "relationship")) {
+                    let rel_id = relationship.stix.id;
+                    let rel_modified = relationship.stix.modified;
+                    if (collectionStixIDToObject.has(relationship.stix.source_ref) && collectionStixIDToObject.has(relationship.stix.target_ref)) {
+                        // includes the relationship!
+                        this.stagedData.push(new VersionReference({
+                            "object_ref": rel_id,
+                            "object_modified": rel_modified
+                        }));
+                        // track stats
+                        if (previousRelationships.has(rel_id)) {
+                            if ( previousRelationships.get(rel_id).modified.toISOString() != rel_modified) {
+                                // new version/updated 
+                                relationship_stats.updated++;
+                            } else {
+                                //same version
+                                relationship_stats.unchanged++;
+                            }
+                        } else {
+                            //new relationship
+                            relationship_stats.new++;
+                        }
+                    } else {
+                        //missing at least one side
+                        if (collectionStixIDToObject.has(relationship.stix.source_ref) || collectionStixIDToObject.has(relationship.stix.target_ref)) {
+                            // has at least one side
+                            // stats
+                            relationship_stats.excluded_one++;
+                        } else { //missing both sides
+                            relationship_stats.excluded_both++;
+                        }
+                    }
+                }
+
+                // add stats to vaidation
+                results.info.push({
+                    result: "info",
+                    field: "contents",
+                    message: `${relationship_stats.new} new relationships were added in this release`
+                })
+                results.info.push({
+                    result: "info",
+                    field: "contents",
+                    message: `${relationship_stats.updated} relationships were updated in this release`
+                })
+                results.info.push({
+                    result: "info",
+                    field: "contents",
+                    message: `${relationship_stats.unchanged} relationships were unchanged by this release`
+                })
+                results.info.push({
+                    result: "info",
+                    field: "contents",
+                    message: `${relationship_stats.excluded_one} relationships had only one attached object in the collection and were therefore excluded`
+                })
+                results.info.push({
+                    result: "info",
+                    field: "contents",
+                    message: `${relationship_stats.excluded_both} relationships had neither attached objects in the collection and were therefore excluded`
+                })
+                
 
                 //return final results
                 return results;
@@ -309,6 +389,7 @@ export class CollectionViewComponent extends StixViewPage implements OnInit {
         ).subscribe({
             next: (result) => {
                 this.previousRelease = result.previousRelease;
+                this.attackObjects = result.attackObjects;
                 this.collectionChanges = this.collection.compareTo(this.previousRelease);
                 // initialize potentialChanges based off diff of attackObjects vs contents of collection
                 // create a "collection" to represent the entire ATT&CK dataset
