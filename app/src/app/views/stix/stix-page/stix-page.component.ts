@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router, NavigationEnd } from '@angular/router';
 import { BreadcrumbService } from 'angular-crumbs';
@@ -17,6 +17,7 @@ import { MultipleChoiceDialogComponent } from 'src/app/components/multiple-choic
 import { SaveDialogComponent } from 'src/app/components/save-dialog/save-dialog.component';
 import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/rest-api-connector.service';
 import { EditorService } from 'src/app/services/editor/editor.service';
+import { CollectionViewComponent } from '../collection/collection-view/collection-view.component';
 import { StixViewConfig } from '../stix-view-page';
 
 @Component({
@@ -30,6 +31,8 @@ export class StixPageComponent implements OnInit, OnDestroy {
     public objectType: string;
     private routerEvents;
     private saveSubscription;
+
+    @ViewChild(CollectionViewComponent) private collectionViewComponent: CollectionViewComponent;
     
     constructor(private router: Router, 
                 private route: ActivatedRoute, 
@@ -52,27 +55,32 @@ export class StixPageComponent implements OnInit, OnDestroy {
     }
 
     private save() {
-        let versionChanged = this.objects[0].version.compareTo(this.initialVersion) != 0;
-        let prompt = this.dialog.open(SaveDialogComponent, { //increment version number save panel
-            // maxWidth: "35em",
-            data: {
-                object: this.objects[0],
-                versionAlreadyIncremented: versionChanged
-            }
-        });
-
-        
-        let subscription = prompt.afterClosed().subscribe({
-            next: (result) => {
-                if (result) {
-                    // this.editorService.stopEditing();
-                    this.router.navigate([this.objects[0].attackType, this.objects[0].stixID]);
-                    setTimeout(() => this.loadObjects());
-                    this.editorService.onEditingStopped.emit();
+        if (this.objectType == "collection") {
+            // pass into collection property component
+            this.collectionViewComponent.validate();
+        } else {
+            let versionChanged = this.objects[0].version.compareTo(this.initialVersion) != 0;
+            let prompt = this.dialog.open(SaveDialogComponent, { //increment version number save panel
+                // maxWidth: "35em",
+                data: {
+                    object: this.objects[0],
+                    versionAlreadyIncremented: versionChanged
                 }
-            },
-            complete: () => { subscription.unsubscribe(); } //prevent memory leaks
-        })
+            });
+    
+            
+            let subscription = prompt.afterClosed().subscribe({
+                next: (result) => {
+                    if (result) {
+                        // this.editorService.stopEditing();
+                        this.router.navigate([this.objects[0].attackType, this.objects[0].stixID]);
+                        setTimeout(() => this.loadObjects());
+                        this.editorService.onEditingStopped.emit();
+                    }
+                },
+                complete: () => { subscription.unsubscribe(); } //prevent memory leaks
+            })
+        }
     }
 
 

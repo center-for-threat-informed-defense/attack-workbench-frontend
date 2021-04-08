@@ -1,7 +1,8 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { forkJoin } from 'rxjs';
+import { forkJoin, Observable } from 'rxjs';
 import { delay, map, switchMap, tap } from 'rxjs/operators';
+import { ValidationData } from 'src/app/classes/serializable';
 import { Collection, CollectionDiffCategories, VersionReference } from 'src/app/classes/stix/collection';
 import { Group } from 'src/app/classes/stix/group';
 import { Matrix } from 'src/app/classes/stix/matrix';
@@ -11,6 +12,7 @@ import { Software } from 'src/app/classes/stix/software';
 import { StixObject } from 'src/app/classes/stix/stix-object';
 import { Tactic } from 'src/app/classes/stix/tactic';
 import { Technique } from 'src/app/classes/stix/technique';
+import { VersionNumber } from 'src/app/classes/version-number';
 import { StixListComponent } from 'src/app/components/stix/stix-list/stix-list.component';
 import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/rest-api-connector.service';
 import { StixViewPage } from '../../stix-view-page';
@@ -25,11 +27,13 @@ type changeCategory = "additions" | "changes" | "minor_changes" | "revocations" 
 })
 export class CollectionViewComponent extends StixViewPage implements OnInit {
     public get collection(): Collection { return this.config.object as Collection; }
+    public previousRelease: Collection;
     public knowledgeBaseCollection: Collection;
-    public page: string = "home";
     public editingReloadToggle: boolean = true;
 
     public loading: string = null; // loading message if loading
+    public validating: boolean = false;
+    public validationData: ValidationData = null;
 
     public potentialChanges = {
         technique:    new CollectionDiffCategories<Technique>(),
@@ -55,6 +59,53 @@ export class CollectionViewComponent extends StixViewPage implements OnInit {
 
 
     constructor(private route: ActivatedRoute, private restApiConnector: RestApiConnectorService) { super();  }
+
+    /**
+     * Trigger collection save behaviors
+     *
+     * @memberof CollectionViewComponent
+     */
+    public validate() {
+        this.validating = true;
+        let subscription = this.collection.validate(this.restApiConnector).pipe(
+            map(results => { // add extra results here
+                // check for double increments of version numbers
+                
+                // build lookup of STIX ID to version number for new collection
+                let collectionStixIDToVersion = new Map<string, VersionNumber>()
+                for (let attackType in this.collectionChanges) {
+                    if (attackType == "relationship") continue;
+                    for (let object of this.collectionChanges[attackType].flatten(false)) collectionStixIDToVersion.set(object.stixID, object.version);
+                }
+                // compare to values in old collection
+                for (let object of this.previousRelease.stix_contents) {
+                    if (collectionStixIDToVersion.has(object.stixID)) { //only if was in collection previously
+                        let newVersion = collectionStixIDToVersion.get(object.stixID)
+                        if (newVersion.isDoubleIncrement(object.version)) {
+                            let objectName = object.hasOwnProperty("name")? object["name"] : object.stixID;
+                            results.warnings.push({
+                                result: "warning",
+                                field: "version",
+                                message: `Version number of ${objectName} has incremented twice (v${object.version.toString()} → v${newVersion.toString()})`
+                            })
+                        }
+                    }
+                }
+
+                // notify of relationship stats
+
+                //return final results
+                return results;
+            })
+        ).subscribe({
+            next: (results) => this.validationData = results,
+            complete: () => subscription.unsubscribe()
+        })
+    }
+
+    public save() {
+
+    }
 
     /**
      * Move changes between the potential changes and the collection changes
@@ -251,7 +302,8 @@ export class CollectionViewComponent extends StixViewPage implements OnInit {
             delay(1) // allow render cycle to display loading text
         ).subscribe({
             next: (result) => {
-                this.collectionChanges = this.collection.compareTo(result.previousRelease);
+                this.previousRelease = result.previousRelease;
+                this.collectionChanges = this.collection.compareTo(this.previousRelease);
                 // initialize potentialChanges based off diff of attackObjects vs contents of collection
                 // create a "collection" to represent the entire ATT&CK dataset
                 this.knowledgeBaseCollection = new Collection( {

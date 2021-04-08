@@ -86,6 +86,30 @@ export class CollectionDiffCategories<T> {
         let sdo = object as unknown as StixObject;
         return this[change_type].some(x=>x.stixID == sdo.stixID);
     }
+
+    /**
+     * Return all objects from all change types in a flat array
+     * @param {boolean} include_nonchanges if true, include duplicates, out of date, supersedes and errors data, otherwise skips
+     * @returns {T[]} all objects wtihin the change categories
+     * @memberof CollectionDiffCategories
+     */
+    public flatten(include_nonchanges: boolean): T[] {
+        let arrays = [
+            this.additions,
+            this.changes,
+            this.minor_changes,
+            this.deprecations,
+            this.revocations
+        ]
+        if (include_nonchanges) arrays = arrays.concat([
+            this.duplicates,
+            this.out_of_date,
+            this.supersedes_collection_changes,
+            this.supersedes_user_edits,
+            this.errors
+        ])
+        return [].concat(...arrays); //flatten
+    }
 }
 
 export class VersionReference {
