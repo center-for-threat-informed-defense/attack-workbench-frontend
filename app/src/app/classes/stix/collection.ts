@@ -326,8 +326,8 @@ export class Collection extends StixObject {
                     } else if (thisAttackObject.deprecated && !thatAttackObject.deprecated) { 
                         // was deprecated in new and not in old
                         results[thisAttackObject.attackType].deprecations.push(thisAttackObject);
-                    } else if (thisAttackObject.version.compareTo(thatAttackObject.version) > 0) {
-                        // version number incremented
+                    } else if (thisAttackObject.version.compareTo(thatAttackObject.version) != 0) {
+                        // version number incremented/decremented
                         results[thisAttackObject.attackType].changes.push(thisAttackObject);
                     } else {
                         // minor change
