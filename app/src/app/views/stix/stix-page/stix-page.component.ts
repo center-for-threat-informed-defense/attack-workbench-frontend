@@ -106,7 +106,7 @@ export class StixPageComponent implements OnInit, OnDestroy {
         this.objectType = this.router.url.split("/")[1];
         let objectStixID = this.route.snapshot.params["id"];
         let objectModified = this.route.snapshot.params["modified"];
-        if (objectStixID != "new") {
+        if (objectStixID && objectStixID != "new") {
             // get objects at REST API
             let objects$: Observable<StixObject[]>;
             if (this.objectType  == "software") objects$ = this.restAPIConnectorService.getSoftware(objectStixID);

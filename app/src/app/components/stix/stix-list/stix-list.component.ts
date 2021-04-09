@@ -294,7 +294,6 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
         }
         // row action setup
         if (this.config.rowAction) {
-            console.log(this.config.rowAction)
             if (this.config.rowAction.position == "start") controls_before.push("start-action");
             else controls_after.push("end-action");
         }

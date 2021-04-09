@@ -81,22 +81,24 @@ export class CollectionViewComponent extends StixViewPage implements OnInit {
                     for (let object of this.collectionChanges[attackType].flatten(true)) collectionStixIDToObject.set(object.stixID, object);
                 }
                 // compare to values in old collection
-                for (let oldObject of this.previousRelease.stix_contents) {
-                    if (collectionStixIDToObject.has(oldObject.stixID)) { //only if was in collection previously
-                        let newObject = collectionStixIDToObject.get(oldObject.stixID)
-                        let objectName = newObject.hasOwnProperty("name")? newObject["name"] : newObject.stixID;
-                        if (newObject.version.compareTo(oldObject.version) < 0) {
-                            results.warnings.push({
-                                result: "warning",
-                                field: "version",
-                                message: `Version number of ${objectName} has been decremented (v${oldObject.version.toString()} → v${newObject.version.toString()})`
-                            })
-                        } else if (newObject.version.isDoubleIncrement(oldObject.version)) {
-                            results.warnings.push({
-                                result: "warning",
-                                field: "version",
-                                message: `Version number of ${objectName} has been incremented twice (v${oldObject.version.toString()} → v${newObject.version.toString()})`
-                            })
+                if (this.previousRelease) {
+                    for (let oldObject of this.previousRelease.stix_contents) {
+                        if (collectionStixIDToObject.has(oldObject.stixID)) { //only if was in collection previously
+                            let newObject = collectionStixIDToObject.get(oldObject.stixID)
+                            let objectName = newObject.hasOwnProperty("name")? newObject["name"] : newObject.stixID;
+                            if (newObject.version.compareTo(oldObject.version) < 0) {
+                                results.warnings.push({
+                                    result: "warning",
+                                    field: "version",
+                                    message: `Version number of ${objectName} has been decremented (v${oldObject.version.toString()} → v${newObject.version.toString()})`
+                                })
+                            } else if (newObject.version.isDoubleIncrement(oldObject.version)) {
+                                results.warnings.push({
+                                    result: "warning",
+                                    field: "version",
+                                    message: `Version number of ${objectName} has been incremented twice (v${oldObject.version.toString()} → v${newObject.version.toString()})`
+                                })
+                            }
                         }
                     }
                 }
@@ -109,7 +111,8 @@ export class CollectionViewComponent extends StixViewPage implements OnInit {
                         "object_modified": object.modified.toISOString()
                     }));
                 }
-                let previousRelationships = new Map<string, StixObject>(this.previousRelease.stix_contents.filter(x => x.type == "relationship").map(x => [x.stixID, x]));
+                let previousRelationships = this.previousRelease? new Map<string, StixObject>(this.previousRelease.stix_contents.filter(x => x.type == "relationship").map(x => [x.stixID, x]))
+                                                                : new Map<string, StixObject>(); // empty if there was nothing here previously
                 // stage relationships for saving and determine stats
                 let relationship_stats = {
                     "new": 0,
@@ -371,10 +374,13 @@ export class CollectionViewComponent extends StixViewPage implements OnInit {
             setTimeout(() => this.editingReloadToggle = true); 
         });
         this.loading = "fetching additional data";
-        // fetch previous collection and objects in knowledge base
-        let subscription = forkJoin({
-            "attackObjects": this.restApiConnector.getAllObjects(null, null, null, null, true, true, false),
-            "previousRelease": this.restApiConnector.getCollection(this.collection.stixID, null, "all", false).pipe(
+        let apis = {
+            "attackObjects": this.restApiConnector.getAllObjects(null, null, null, null, true, true, false)
+        }
+        // fetch previous version if this was not a new collection
+        let objectStixID = this.route.snapshot.params["id"];
+        if (objectStixID && objectStixID != "new") {
+            apis["previousRelease"] = this.restApiConnector.getCollection(this.collection.stixID, null, "all", false).pipe(
                 switchMap((collections) => {
                     // get the most recent version which was released for comparison
                     let last_version = collections.find((collection) => !collection.workflow || !collection.workflow.state || collection.workflow.state as string == "published")
@@ -383,21 +389,27 @@ export class CollectionViewComponent extends StixViewPage implements OnInit {
                     );
                 })
             )
-        }).pipe(
+        }
+
+        // fetch previous collection and objects in knowledge base
+        let subscription = forkJoin(apis).pipe(
             tap(_ => { this.loading = "Preparing change lists" }),
             delay(1) // allow render cycle to display loading text
         ).subscribe({
             next: (result) => {
-                this.previousRelease = result.previousRelease;
-                this.attackObjects = result.attackObjects;
-                this.collectionChanges = this.collection.compareTo(this.previousRelease);
+                let anyResult = result as any;
+                this.attackObjects = result["attackObjects"];
+                if (anyResult.hasOwnProperty("previousRelease")) {
+                    this.previousRelease = result["previousRelease"];
+                    this.collectionChanges = this.collection.compareTo(this.previousRelease);
+                }
                 // initialize potentialChanges based off diff of attackObjects vs contents of collection
                 // create a "collection" to represent the entire ATT&CK dataset
                 this.knowledgeBaseCollection = new Collection( {
                     "stix": {
-                        "x_mitre_contents": result.attackObjects.filter(x => x.stix.hasOwnProperty("modified") && x.stix.modified).map(x => { return { object_ref: x.stix.id, object_modified: x.stix.modified } })
+                        "x_mitre_contents": this.attackObjects.filter(x => x.stix.hasOwnProperty("modified") && x.stix.modified).map(x => { return { object_ref: x.stix.id, object_modified: x.stix.modified } })
                     },
-                    "contents": result.attackObjects
+                    "contents": this.attackObjects
                 });
                 this.potentialChanges = this.knowledgeBaseCollection.compareTo(this.collection);
                 this.loading = null;

@@ -154,7 +154,7 @@ export class VersionReference {
 }
 
 export class Collection extends StixObject {
-    public name: string;
+    public name: string = "";
     public contents: VersionReference[] = []; //references to the stix objects in the collection
     public stix_contents: StixObject[] = []; //the actual objects in the collection
     public imported: Date; // null if it was not imported
