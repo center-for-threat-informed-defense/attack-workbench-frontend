@@ -8,7 +8,7 @@
             max-width: 100%;
             display: inline-flex;
             &:not(.narrow) { flex: 1 0 0; }
-            &.narrow        { flex: 0 1 0; }
+            // &.narrow        { flex: 0 1 0; }
             &+.col, &+.column {
                 margin-left: #{$spacing}px;
             }
