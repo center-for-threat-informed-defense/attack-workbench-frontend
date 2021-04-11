@@ -12,6 +12,7 @@ import { StixDialogComponent } from 'src/app/views/stix/stix-dialog/stix-dialog.
 interface HistoryEvent {
     change_types: {
         versionChanged: boolean; // did the version number change? corresponds to prior_version
+        stateChanged: boolean; // did the workflow state change?
         objectCreated: boolean; // was the object created?
         objectImported: boolean; // was the object imported for the first time
     }
@@ -20,6 +21,7 @@ interface HistoryEvent {
     description: string; // description of what happened in the event
     sdo: StixObject; // StixObject version corresponding to the event (post-change)
     prior_version?: VersionNumber; // if specified, the version number changed; this field is the prior version number
+    prior_state?: string; // if specified, the workflow state changed; this field is the prior workflow state
 }
 
 @Component({
@@ -61,14 +63,17 @@ export class HistoryTimelineComponent implements OnInit, OnDestroy {
         this.historyEvents = [];
         // build historyEvents for the object itself
         let previousVersion = null;
+        let previousState = null;
         for (let objectVersion of objectVersions) {
             let versionChanged = previousVersion && objectVersion.version.compareTo(previousVersion) != 0;
+            let stateChanged = previousState && objectVersion.workflow ? objectVersion.workflow.state != previousState : false;
             let objectCreated = objectVersion.created.getTime() == objectVersion.modified.getTime();
             let objectImported = !objectCreated && !previousVersion;
             let description = objectCreated? `${objectVersion["name"]} was created` : objectImported? `Earliest imported version of ${objectVersion["name"]}` : `${objectVersion["name"]} was edited`
             this.historyEvents.push({
                 change_types: {
                     versionChanged: versionChanged,
+                    stateChanged: stateChanged,
                     objectImported: objectImported,
                     objectCreated: objectCreated
                 },
@@ -76,9 +81,11 @@ export class HistoryTimelineComponent implements OnInit, OnDestroy {
                 name: objectVersion["name"],
                 description: description,
                 sdo: objectVersion,
-                prior_version: versionChanged? previousVersion : null
+                prior_version: versionChanged? previousVersion : null,
+                prior_state: stateChanged ? previousState : 'unset'
             })
             previousVersion = objectVersion.version;
+            previousState = objectVersion.workflow ? objectVersion.workflow.state : 'unset';
         }
 
         // group relationships by ID
@@ -100,6 +107,7 @@ export class HistoryTimelineComponent implements OnInit, OnDestroy {
                 this.historyEvents.push({
                     change_types: {
                         versionChanged: false,
+                        stateChanged: false,
                         objectImported: objectImported,
                         objectCreated: objectCreated
                     },

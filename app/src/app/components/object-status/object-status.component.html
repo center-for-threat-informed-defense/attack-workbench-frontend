@@ -2,7 +2,8 @@
     popoverPlacement="bottom" 
     [popover]="objectStatus"
     [popoverOnHover]="false"
-    [disabled]="editorService.editing">
+    [disabled]="editorService.editing"
+    (click)="loadData()">
     <mat-icon aria-label="settings">settings</mat-icon>
 </button>
 
