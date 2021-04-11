@@ -26,6 +26,8 @@
             .light & { color: on-color-deemphasis(light); }
             .dark &  { color: on-color-deemphasis(dark); }
         }
+        .mat-checkbox { padding: 12px; }
+        .align-right { justify-content: flex-end ;}
         // .light & { border-color: border-color(light); }
         // .dark &  { border-color: border-color(dark); }
         // border-bottom: 1px solid;

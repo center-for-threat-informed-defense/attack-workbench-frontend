@@ -701,12 +701,13 @@ export class RestApiConnectorService extends ApiConnector {
      * @param {string} [targetType] retrieve objects where the source object is this ATT&CK type
      * @param {number} [limit] The number of relationships to retrieve.
      * @param {number} [offset] The number of relationships to skip.
+     * @param {boolean} [includeDeprecated] if true, include deprecated relationships. 
      * @param {"all" | "latest"} [versions] if "all", get all versions of the relationships, otherwise only get the latest versions
      * @param {string[]} [excludeSourceRefs] if specified, exclude source refs which are found in this array
      * @param {string[]} [excludeTargetRefs] if specified, exclude target refs which are found in this array
      * @returns {Observable<Paginated>} paginated data of the relationships
      */
-    public getRelatedTo(args: {sourceRef?: string, targetRef?: string, sourceOrTargetRef?: string, sourceType?: AttackType, targetType?: AttackType, relationshipType?: string, excludeSourceRefs?: string[], excludeTargetRefs?: string[], limit?: number, offset?: number, versions?: "all" | "latest"}): Observable<Paginated<StixObject>> {
+    public getRelatedTo(args: {sourceRef?: string, targetRef?: string, sourceOrTargetRef?: string, sourceType?: AttackType, targetType?: AttackType, relationshipType?: string, excludeSourceRefs?: string[], excludeTargetRefs?: string[], limit?: number, offset?: number, includeDeprecated?: boolean, versions?: "all" | "latest"}): Observable<Paginated<StixObject>> {
         let query = new HttpParams();
 
         if (args.sourceRef) query = query.set("sourceRef", args.sourceRef);
@@ -718,6 +719,8 @@ export class RestApiConnectorService extends ApiConnector {
         if (args.sourceOrTargetRef) query = query.set("sourceOrTargetRef", args.sourceOrTargetRef);
 
         if (args.relationshipType) query = query.set("relationshipType", args.relationshipType);
+
+        if (args.includeDeprecated) query = query.set("includeDeprecated", args.includeDeprecated ? "true" : "false");
         
         if (args.versions) query = query.set("versions", args.versions);
 
