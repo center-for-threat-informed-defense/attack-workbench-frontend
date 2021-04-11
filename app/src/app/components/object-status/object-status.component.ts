@@ -33,7 +33,10 @@ export class ObjectStatusComponent implements OnInit {
 
     ngOnInit(): void {
         this.statusControl = new FormControl();
-        
+        this.loadData();
+    }
+
+    public loadData() {
         let data$: any;
         let options = {
             includeRevoked: true, 
