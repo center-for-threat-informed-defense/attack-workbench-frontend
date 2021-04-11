@@ -11,7 +11,7 @@
         <mat-form-field class="workflow-status" appearance="outline">
             <mat-label>Workflow Status</mat-label>
             <mat-select [formControl]="statusControl">
-                <mat-option *ngFor="let status of workflows" (onSelectionChange)="workflowChange($event)" [value]="status">{{status}}</mat-option>
+                <mat-option *ngFor="let status of workflows" (onSelectionChange)="workflowChange($event)" [value]="status">{{getLabel(status)}}</mat-option>
             </mat-select>
         </mat-form-field>
 

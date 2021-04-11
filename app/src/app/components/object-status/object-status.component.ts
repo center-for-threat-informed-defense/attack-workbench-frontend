@@ -81,6 +81,10 @@ export class ObjectStatusComponent implements OnInit {
         }
     }
 
+    public getLabel(status: string): string {
+        return status.replace(/-/g, ' ');
+    }
+
     /**
      * Handle the selection for revoking or un-revoking an object
      * @param event revoke selection
