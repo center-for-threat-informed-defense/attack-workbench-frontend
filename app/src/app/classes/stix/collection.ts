@@ -201,10 +201,9 @@ export class Collection extends StixObject {
         rep.stix.x_mitre_contents = this.contents.map(vr => vr.serialize());
 
         rep.workspace = {};
-        rep.workspace.imported = this.imported.toString();
-        rep.workspace.import_categories = this.import_categories;
-
-        rep.contents = this.stix_contents.map(stix_objects => stix_objects.serialize());
+        if (this.imported) rep.workspace.imported = this.imported.toString();
+        if (this.import_categories) rep.workspace.import_categories = this.import_categories;
+        // rep.contents = this.stix_contents.map(stix_objects => stix_objects.serialize());
 
         return rep;
     }
@@ -215,6 +214,7 @@ export class Collection extends StixObject {
      * @param {*} raw the raw object to parse
      */
     public deserialize(raw: any) {
+        console.log(raw);
         if ("stix" in raw) {
             let sdo = raw.stix;
 
@@ -357,7 +357,11 @@ export class Collection extends StixObject {
      * @returns {Observable} of the post
      */
     public save(restAPIService: RestApiConnectorService): Observable<Collection> {
-        // TODO
-        return null;
+        let postObservable = restAPIService.postCollection(this);
+        let subscription = postObservable.subscribe({
+            next: (result) => { this.deserialize(result.serialize()); },
+            complete: () => { subscription.unsubscribe(); }
+        })
+        return postObservable;
     }
 }

@@ -52,6 +52,17 @@
     .loading-display {
         text-align: center;
     }
+
+    .validation { 
+        max-width: 45em;
+        margin: 0 auto;
+        .save-buttons {
+            margin-top: 16px;
+            button + button {
+                margin-left: 16px;
+            }
+        }
+    }
     // .version-select {
     //     @extend .heading;
     //     text-transform: none;

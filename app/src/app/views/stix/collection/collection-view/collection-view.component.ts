@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { forkJoin, Observable } from 'rxjs';
 import { delay, map, switchMap, tap } from 'rxjs/operators';
 import { ValidationData } from 'src/app/classes/serializable';
@@ -15,6 +15,7 @@ import { Technique } from 'src/app/classes/stix/technique';
 import { VersionNumber } from 'src/app/classes/version-number';
 import { StixListComponent } from 'src/app/components/stix/stix-list/stix-list.component';
 import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/rest-api-connector.service';
+import { EditorService } from 'src/app/services/editor/editor.service';
 import { StixViewPage } from '../../stix-view-page';
 
 type changeCategory = "additions" | "changes" | "minor_changes" | "revocations" | "deprecations";
@@ -61,7 +62,7 @@ export class CollectionViewComponent extends StixViewPage implements OnInit {
     public collection_import_categories = [];
 
 
-    constructor(private route: ActivatedRoute, private restApiConnector: RestApiConnectorService) { super();  }
+    constructor(private route: ActivatedRoute, private router: Router, private restApiConnector: RestApiConnectorService, private editor: EditorService) { super();  }
 
     /**
      * Trigger collection save behaviors
@@ -70,6 +71,7 @@ export class CollectionViewComponent extends StixViewPage implements OnInit {
      */
     public validate() {
         this.validating = true;
+        this.validationData = null;
         let subscription = this.collection.validate(this.restApiConnector).pipe(
             map(results => { // add extra results here
                 // check for double increments of version numbers
@@ -182,6 +184,11 @@ export class CollectionViewComponent extends StixViewPage implements OnInit {
                     message: `${relationship_stats.excluded_both} relationships had neither attached objects in the collection and were therefore excluded`
                 })
                 
+                if (this.stagedData.length == 0) results.errors.push({
+                    result: "error",
+                    field: "contents",
+                    message: "collection has no contents"
+                })
 
                 //return final results
                 return results;
@@ -192,9 +199,21 @@ export class CollectionViewComponent extends StixViewPage implements OnInit {
         })
     }
 
+    public get saveEnabled() {
+        return this.validationData && this.validationData.errors.length == 0;
+    }
+
     public save() {
+        this.collection.contents = this.stagedData;
+        let subscription = this.collection.save(this.restApiConnector).subscribe({
+            next: (result) => {
+                this.router.navigate([result.attackType, result.stixID, "modified", result.modified.toISOString()]);
+            },
+            complete: () => { subscription.unsubscribe(); }
+        })
 
     }
+
 
     /**
      * Move changes between the potential changes and the collection changes

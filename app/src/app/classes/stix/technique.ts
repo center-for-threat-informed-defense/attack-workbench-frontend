@@ -304,7 +304,7 @@ export class Technique extends StixObject {
                 
         let postObservable = restAPIService.postTechnique(this);
         let subscription = postObservable.subscribe({
-            next: (result) => { this.deserialize(result); },
+            next: (result) => { this.deserialize(result.serialize()); },
             complete: () => { subscription.unsubscribe(); }
         });
         return postObservable;
