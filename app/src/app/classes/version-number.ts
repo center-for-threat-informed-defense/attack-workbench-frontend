@@ -95,14 +95,14 @@ export class VersionNumber {
      */
     public isDoubleIncrement(that: VersionNumber): boolean {
         // sum up increments of each index
-        let sum = 0;
+        let timesIncremented = 0; //track the number of times it has been incremented
         for (let i = 0; i < Math.max(this.granularity, that.granularity); i++) {
             let thisVersionIndex = this.granularity >= i? this.getSubVersion(i) : 0;
-            let thatVersionIndex = that.granularity >= i? that.getSubVersion(i) : 0;
-            sum += Math.max(0, thisVersionIndex - thatVersionIndex);
-            if (sum > 1) return true;
+            let thatVersionIndex = timesIncremented > 0? 0 : that.granularity >= i? that.getSubVersion(i) : 0; //if it has been incremented at a higher index, expect later indexes to be 0
+            timesIncremented += Math.max(thisVersionIndex - thatVersionIndex, 0);
+            if (timesIncremented > 1) return true;
         }
-        return sum > 1;
+        return timesIncremented > 1;
     }
 
     /**
