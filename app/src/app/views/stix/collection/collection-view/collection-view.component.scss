@@ -63,6 +63,27 @@
             }
         }
     }
+
+    .content.collection-data {
+        code {
+            overflow-x: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+        }
+        .download {
+            cursor: pointer;
+            &:hover { 
+                .dark & { background: color-alternate(dark); }
+                .light & { background: color-alternate(light); }
+            }
+        }
+        .url {
+            cursor: pointer;
+            &:hover {
+                color: color(link);
+            }
+        }
+    }
     // .version-select {
     //     @extend .heading;
     //     text-transform: none;

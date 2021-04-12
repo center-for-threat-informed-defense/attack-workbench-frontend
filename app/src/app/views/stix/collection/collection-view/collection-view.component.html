@@ -36,6 +36,21 @@
                     }"></app-descriptive-property>
                 </div>
             </div>
+            <div class="row width-limited">
+                <div class="col">
+                    <div class="labelled-box">
+                        <div class="content collection-data">
+                            <code class="url" [cdkCopyToClipboard]="collectionDownloadURL" (click)="snackbar.open('copied to clipboard')">
+                                {{collectionDownloadURL}}
+                            </code>
+                            <div class="suffix download" (click)="downloadCollectionBundle()">
+                                <mat-icon aria-label="download">download</mat-icon>
+                            </div>
+                        </div>
+                        <label>Collection Data</label>
+                    </div>
+                </div>
+            </div>
             <div class="row">
                 <div class="col">
                     <h2 class="section-header">Changes in this release</h2>

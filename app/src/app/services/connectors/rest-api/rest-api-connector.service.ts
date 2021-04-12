@@ -880,6 +880,23 @@ export class RestApiConnectorService extends ApiConnector {
         )
     }
 
+    /**
+     * Get a collection bundle
+     * @param {string} id STIX ID of collection
+     * @param {Date} modified modified date of collection
+     * @returns {Observable<any>} collection STIX bundle
+     */
+    public getCollectionBundle(id: string, modified: Date): Observable<any> {
+        let query = new HttpParams();
+        query = query.set("collectionId", id);
+        query = query.set("collectionModified", modified.toISOString());
+        return this.http.get(`${this.baseUrl}/collection-bundles`, {headers: this.headers, params: query}).pipe(
+            tap(results => console.log("retrieved collection bundle")),
+            catchError(this.handleError_array<any>({})),
+            share() //multicast
+        );
+    }
+
     //    ___ ___  _    _    ___ ___ _____ ___ ___  _  _      ___ _  _ ___  _____  __       _   ___ ___ ___
     //   / __/ _ \| |  | |  | __/ __|_   _|_ _/ _ \| \| |    |_ _| \| |   \| __\ \/ /      /_\ | _ \_ _/ __|
     //  | (_| (_) | |__| |__| _| (__  | |  | | (_) | .` |     | || .` | |) | _| >  <      / _ \|  _/| |\__ \
@@ -963,5 +980,76 @@ export class RestApiConnectorService extends ApiConnector {
             complete: () => { subscription.unsubscribe(); }
         });
         return data$;
-    }                                                                     
+    }
+
+    //   ___    ___      __  ___ _____ _____  __    _   ___ ___ ___ 
+    //  | _ \  /_\ \    / / / __|_   _|_ _\ \/ /   /_\ | _ \_ _/ __|
+    //  |   / / _ \ \/\/ /  \__ \ | |  | | >  <   / _ \|  _/| |\__ \
+    //  |_|_\/_/ \_\_/\_/   |___/ |_| |___/_/\_\ /_/ \_\_| |___|___/
+                                                                 
+    /**
+     * Helper function: trigger the download of the given data from the browser
+     * @param data: the data to download. Must be a JSON
+     * @param filename: the name of the file to download
+     */
+     private triggerBrowserDownload(data: any, filename: string) {
+        let url = URL.createObjectURL(new Blob([JSON.stringify(data)], {type: "text/json"}));
+        let downloadLink = document.createElement("a");
+        downloadLink.href = url;
+        downloadLink.download = filename
+        document.body.appendChild(downloadLink);
+        downloadLink.click();
+        document.body.removeChild(downloadLink);
+    }
+
+    /**
+     * Get a stix bundle by domain
+     * @param {string} domain the domain to fetch
+     * @returns {Observable<any>} the raw STIX bundle of the domain
+     */
+    public getStixBundle(domain: string): Observable<any> {
+        let query = new HttpParams();
+        query = query.set("domain", domain);
+        return this.http.get(`${this.baseUrl}/stix-bundles`, {headers: this.headers, params: query}).pipe(
+            tap(results => console.log("retrieved stix bundle")),
+            catchError(this.handleError_array<any>({})),
+            share() //multicast
+        );
+    }
+
+    /**
+     * Download a stix bundle by domain. Triggers browser download UI when complete.
+     * @param {string} domain the domain to download
+     * @param filename: the name of the file to download
+     * @returns {Observable<any>} the observable to watch while download is loading
+     */
+    public downloadStixBundle(domain: string, filename: string): Observable<any> {
+        let getter = this.getStixBundle(domain);
+        let subscription = getter.subscribe({
+            next: (result) => {
+                this.triggerBrowserDownload(result, filename)
+            },
+            complete: () => { subscription.unsubscribe(); }
+        });
+        return getter;
+    }
+
+    /**
+     * Download a collection bundle. Triggers browser download UI when complete.
+     * @param {string} id the STIX ID of the collection
+     * @param {Date} modified the modified date of the collection
+     * @param {string} filename: the name of the file to download
+     * @returns {Observable<any>} the observable to watch while download is loading
+     */
+     public downloadCollectionBundle(id: string, modified: Date, filename: string): Observable<any> {
+        let getter = this.getCollectionBundle(id, modified);
+        let subscription = getter.subscribe({
+            next: (result) => {
+                console.log(result);
+                this.triggerBrowserDownload(result, filename)
+            },
+            complete: () => { subscription.unsubscribe(); }
+        });
+        return getter;
+    }
 }
