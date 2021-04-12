@@ -4,18 +4,16 @@ import { ValidationData } from "../serializable";
 import { StixObject } from "./stix-object";
 
 export class Identity extends StixObject {
-    public name: string;
-    public identity_class: string;
-    public roles?: string[];
-    public contact?: string;
+    public name: string; // identity name
+    public identity_class: string; // type of entity this identity describes
+    public roles?: string[]; // list of roles this identity performs
+    public contact?: string; // contact information for this identity
 
     protected get attackIDValidator() { return null; } // identities do not have an ATT&CK ID
 
     constructor(sdo?: any) {
         super(sdo, "identity");
-        if (sdo) {
-            this.deserialize(sdo);
-        }
+        if (sdo) { this.deserialize(sdo); }
     }
 
     /**
@@ -25,11 +23,12 @@ export class Identity extends StixObject {
      */
     public serialize(): any {
         let rep = super.base_serialize();
+
         rep.stix.name = this.name;
         rep.stix.identity_class = this.identity_class;
-        
         if (this.roles) rep.stix.roles = this.roles;
         if (this.contact) rep.stix.contact_information = this.contact;
+
         return rep;
     }
     
