@@ -1,0 +1,16 @@
+@import "../../../style/globals";
+.workflow-status {
+    .mat-form-field { display: flex; }
+    .mat-form-field-wrapper { padding-bottom: 10px; }
+
+    .status-options {
+        font-weight: normal;
+        .mat-checkbox {
+            padding: 0px 8px;
+        }
+        .mat-checkbox.disabled {
+            .dark & { color: on-color-deemphasis(dark); }
+            .light & { color: on-color-deemphasis(light); }
+        }
+    }
+}

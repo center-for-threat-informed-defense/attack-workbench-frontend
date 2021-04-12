@@ -142,6 +142,8 @@ import { OrderedListViewComponent } from './components/stix/ordered-list-propert
 import { OrderedListEditComponent } from './components/stix/ordered-list-property/ordered-list-edit/ordered-list-edit.component';
 
 import { NotesEditorComponent } from './components/resources-drawer/notes-editor/notes-editor.component';
+import { ObjectStatusComponent } from './components/object-status/object-status.component';
+import { IconViewComponent } from './components/stix/icon-view/icon-view.component';
 
 
 @NgModule({
@@ -189,6 +191,7 @@ import { NotesEditorComponent } from './components/resources-drawer/notes-editor
     VersionEditComponent,
     VersionViewComponent,
     NamePropertyComponent,
+    IconViewComponent,
     
     LandingPageComponent,
     HelpPageComponent,
@@ -232,7 +235,8 @@ import { NotesEditorComponent } from './components/resources-drawer/notes-editor
     OrderedListViewComponent,
     OrderedListEditComponent,
 
-    NotesEditorComponent
+    NotesEditorComponent,
+    ObjectStatusComponent
   ],
   imports: [
     BreadcrumbModule,

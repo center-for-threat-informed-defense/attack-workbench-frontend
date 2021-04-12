@@ -70,6 +70,14 @@ export class StixDialogComponent implements OnInit {
         this.dialogRef.close(this.dirty);
     }
 
+    public deprecateChanged() {
+        let object = Array.isArray(this.config.object)? this.config.object[0] : this.config.object;
+        object.deprecated = !object.deprecated;
+        let subscription = object.save(this.restApiConnectorService).subscribe({
+            complete: () => { subscription.unsubscribe(); }
+        })
+    }
+
     public sidebarOpened: boolean = false;
     public currentTab: tabOption = "history";
     public toggleSidebar() { this.sidebarOpened = !this.sidebarOpened; }
@@ -83,6 +91,9 @@ export class StixDialogComponent implements OnInit {
     }
     public get stixType(): string {
         return Array.isArray(this.config.object)? this.config.object[0].type : (this.config.object as StixObject).type;
+    }
+    public get isDeprecated(): boolean {
+        return Array.isArray(this.config.object)? this.config.object[0].deprecated : (this.config.object as StixObject).deprecated;
     }
   
     ngOnInit(): void {}
