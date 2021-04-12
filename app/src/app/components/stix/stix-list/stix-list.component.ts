@@ -91,7 +91,7 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
      * @param {boolean} [sticky] is the column sticky? If true, the column will be static in the X scrolling of the view
      * @param {string[]} [classes] list of css classes to apply to the cell
      */
-    private addColumn(label: string, field: string, display: "version" | "list" | "plain" | "timestamp" | "descriptive" | "relationship_name", sticky?: boolean, classes?: string[]) {
+    private addColumn(label: string, field: string, display: "version" | "list" | "plain" | "timestamp" | "descriptive" | "relationship_name" | "icon", sticky?: boolean, classes?: string[]) {
         this.tableColumns.push(field);
         this.tableColumns_settings.set(field, {label, display, sticky, classes});
     }
@@ -181,6 +181,8 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
                     break;
                 case "mitigation":
                 case "tactic":
+                    this.addColumn("", "workflow", "icon");
+                    this.addColumn("", "state", "icon");
                     this.addColumn("ID", "attackID", "plain", false);
                     this.addColumn("name", "name", "plain", true, ["name"]);
                     this.addColumn("domain", "domains", "list");
@@ -193,6 +195,8 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
                     }]
                     break;
                 case "matrix":
+                    this.addColumn("", "workflow", "icon");
+                    this.addColumn("", "state", "icon");
                     this.addColumn("name", "name", "plain", true, ["name"]);
                     this.addColumn("version", "version", "version");
                     this.addColumn("modified","modified", "timestamp");
@@ -203,6 +207,8 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
                     }]
                     break;
                 case "group":
+                    this.addColumn("", "workflow", "icon");
+                    this.addColumn("", "state", "icon");
                     this.addColumn("ID", "attackID", "plain", false);
                     this.addColumn("name", "name", "plain", true, ["name"]);
                     this.addColumn("aliases", "aliases", "list");
@@ -215,6 +221,8 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
                     }]
                     break;
                 case "software":
+                    this.addColumn("", "workflow", "icon");
+                    this.addColumn("", "state", "icon");
                     this.addColumn("ID", "attackID", "plain", false);
                     this.addColumn("name", "name", "plain", true, ["name"]);
                     this.addColumn("type", "type", "plain");
@@ -228,6 +236,8 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
                     }]
                     break;
                 case "technique":
+                    this.addColumn("", "workflow", "icon");
+                    this.addColumn("", "state", "icon");
                     this.addColumn("ID", "attackID", "plain", false);
                     this.addColumn("name", "name", "plain", true, ["name"]);
                     this.addColumn("platforms", "platforms", "list");
@@ -241,6 +251,7 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
                     }]
                     break;
                 case "relationship":
+                    this.addColumn("", "state", "icon");
                     this.addColumn("source", "source_ID", "plain");
                     this.addColumn("", "source_name", "plain", this.config.targetRef? true: false, ["relationship-name"]);// ["name", "relationship-left"]);
                     this.addColumn("type", "relationship_type", "plain", false, ["text-deemphasis", "relationship-joiner"]);
@@ -387,6 +398,7 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
             let deprecated = this.filter.includes("state.deprecated");
             let revoked = this.filter.includes("state.revoked");
             let state = this.filter.find((x) => x.startsWith("status."));
+
             if (state) {
                 state = state.split("status.")[1];
                 // disable other states
@@ -421,12 +433,24 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
             else if (this.config.type == "tactic") this.data$ = this.restAPIConnectorService.getAllTactics(options);
             else if (this.config.type == "technique") this.data$ = this.restAPIConnectorService.getAllTechniques(options);
             else if (this.config.type == "collection") this.data$ = this.restAPIConnectorService.getAllCollections({search: this.searchQuery});
-            else if (this.config.type == "relationship") this.data$ = this.restAPIConnectorService.getRelatedTo({sourceRef: this.config.sourceRef, targetRef: this.config.targetRef, sourceType: this.config.sourceType, targetType: this.config.targetType, relationshipType: this.config.relationshipType,  excludeSourceRefs: this.config.excludeSourceRefs, excludeTargetRefs: this.config.excludeTargetRefs, limit: limit, offset: offset});
+            else if (this.config.type == "relationship") this.data$ = this.restAPIConnectorService.getRelatedTo({sourceRef: this.config.sourceRef, targetRef: this.config.targetRef, sourceType: this.config.sourceType, targetType: this.config.targetType, relationshipType: this.config.relationshipType,  excludeSourceRefs: this.config.excludeSourceRefs, excludeTargetRefs: this.config.excludeTargetRefs, limit: limit, offset: offset, includeDeprecated: deprecated});
             let subscription = this.data$.subscribe({
                 next: (data) => { this.totalObjectCount = data.pagination.total; },
                 complete: () => { subscription.unsubscribe() }
             })
         }
+    }
+    
+    public showDeprecated(event) {
+        if (event.checked) {
+            this.filter.push("state.deprecated");
+        } else {
+            let i = this.filter.indexOf("state.deprecated");
+            if (i >= 0) {
+                this.filter.splice(i, 1);
+            }
+        }
+        this.applyControls();
     }
 
     public ngOnDestroy() {
