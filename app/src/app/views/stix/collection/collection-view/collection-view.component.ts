@@ -17,6 +17,8 @@ import { StixListComponent } from 'src/app/components/stix/stix-list/stix-list.c
 import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/rest-api-connector.service';
 import { EditorService } from 'src/app/services/editor/editor.service';
 import { StixViewPage } from '../../stix-view-page';
+import { environment } from "../../../../../environments/environment";
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 type changeCategory = "additions" | "changes" | "minor_changes" | "revocations" | "deprecations";
 
@@ -36,6 +38,10 @@ export class CollectionViewComponent extends StixViewPage implements OnInit {
     public loading: string = null; // loading message if loading
     public validating: boolean = false;
     public validationData: ValidationData = null;
+
+    public get collectionDownloadURL() {
+        return `${environment.integrations.rest_api.url}/collection-bundles/?collectionId=${this.collection.stixID}&collectionModified=${this.collection.modified.toISOString()}`
+    }
 
     public stagedData: VersionReference[] = [];
 
@@ -62,7 +68,7 @@ export class CollectionViewComponent extends StixViewPage implements OnInit {
     public collection_import_categories = [];
 
 
-    constructor(private route: ActivatedRoute, private router: Router, private restApiConnector: RestApiConnectorService, private editor: EditorService) { super();  }
+    constructor(private route: ActivatedRoute, private router: Router, private restApiConnector: RestApiConnectorService, private snackbar: MatSnackBar) { super();  }
 
     /**
      * Trigger collection save behaviors
@@ -211,7 +217,10 @@ export class CollectionViewComponent extends StixViewPage implements OnInit {
             },
             complete: () => { subscription.unsubscribe(); }
         })
+    }
 
+    public downloadCollectionBundle() {
+        this.restApiConnector.downloadCollectionBundle(this.collection.stixID, this.collection.modified, `${this.collection.name.toLowerCase().replace(" ", "-")}-${this.collection.version.toString()}.json`);
     }
 
 
