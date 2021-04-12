@@ -144,6 +144,8 @@ import { OrderedListEditComponent } from './components/stix/ordered-list-propert
 import { NotesEditorComponent } from './components/resources-drawer/notes-editor/notes-editor.component';
 import { ObjectStatusComponent } from './components/object-status/object-status.component';
 import { IconViewComponent } from './components/stix/icon-view/icon-view.component';
+import { IdentityPropertyComponent } from './components/stix/identity-property/identity-property.component';
+import { NgxJdenticonModule } from 'ngx-jdenticon';
 
 
 @NgModule({
@@ -236,7 +238,8 @@ import { IconViewComponent } from './components/stix/icon-view/icon-view.compone
     OrderedListEditComponent,
 
     NotesEditorComponent,
-    ObjectStatusComponent
+    ObjectStatusComponent,
+    IdentityPropertyComponent
   ],
   imports: [
     BreadcrumbModule,
@@ -252,6 +255,7 @@ import { IconViewComponent } from './components/stix/icon-view/icon-view.compone
     //   }
     }),
     PopoverModule,
+    NgxJdenticonModule,
     
     BrowserModule,
 
