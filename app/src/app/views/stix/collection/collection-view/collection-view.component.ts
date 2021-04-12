@@ -80,6 +80,37 @@ export class CollectionViewComponent extends StixViewPage implements OnInit {
         this.validationData = null;
         let subscription = this.collection.validate(this.restApiConnector).pipe(
             map(results => { // add extra results here
+
+                //must have contents
+                if (this.stagedData.length == 0) results.errors.push({
+                    result: "error",
+                    field: "contents",
+                    message: "the collection has no contents"
+                })
+
+                // must have incremented version number compared to prior release
+                if (this.previousRelease) {
+                    if (this.collection.version.compareTo(this.previousRelease.version) <= 0) { 
+                        results.errors.push({
+                            result: "error",
+                            field: "version",
+                            message: "version number of the collection must be incremented from previous release"
+                        }); 
+                    } else if (this.collection.version.isDoubleIncrement(this.previousRelease.version)) {
+                        results.warnings.push({
+                            result: "warning",
+                            field: "version",
+                            message: `version number of the collection has been incremented twice (v${this.previousRelease.version.toString()} → v${this.collection.version.toString()})`
+                        });
+                    } else { 
+                        results.successes.push({
+                            result: "success",
+                            field: "version",
+                            message: "version number of the collection has been incremented from previous release"
+                        })
+                    } 
+                }
+
                 // check for double increments of version numbers
                 
                 // build lookup of STIX ID to version number for new collection
@@ -98,13 +129,13 @@ export class CollectionViewComponent extends StixViewPage implements OnInit {
                                 results.warnings.push({
                                     result: "warning",
                                     field: "version",
-                                    message: `Version number of ${objectName} has been decremented (v${oldObject.version.toString()} → v${newObject.version.toString()})`
+                                    message: `version number of ${objectName} has been decremented (v${oldObject.version.toString()} → v${newObject.version.toString()})`
                                 })
                             } else if (newObject.version.isDoubleIncrement(oldObject.version)) {
                                 results.warnings.push({
                                     result: "warning",
                                     field: "version",
-                                    message: `Version number of ${objectName} has been incremented twice (v${oldObject.version.toString()} → v${newObject.version.toString()})`
+                                    message: `version number of ${objectName} has been incremented twice (v${oldObject.version.toString()} → v${newObject.version.toString()})`
                                 })
                             }
                         }
@@ -190,11 +221,7 @@ export class CollectionViewComponent extends StixViewPage implements OnInit {
                     message: `${relationship_stats.excluded_both} relationships had neither attached objects in the collection and were therefore excluded`
                 })
                 
-                if (this.stagedData.length == 0) results.errors.push({
-                    result: "error",
-                    field: "contents",
-                    message: "collection has no contents"
-                })
+                
 
                 //return final results
                 return results;
