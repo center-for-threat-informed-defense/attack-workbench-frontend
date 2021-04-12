@@ -447,8 +447,12 @@
         </ng-template>
     </div>
     <div *ngIf="validating">
-        <div *ngIf="validationData else loadingValidation">
+        <div *ngIf="validationData else loadingValidation" class="validation">
             <app-validation-results [validation]="validationData"></app-validation-results>
+            <div class="save-buttons">
+                <button mat-button (click)="validating = false">cancel</button>
+                <button mat-stroked-button [disabled]="!saveEnabled" (click)="save()">save</button>
+            </div>
         </div>
         <ng-template #loadingValidation>
             <app-loading-overlay message="validating"></app-loading-overlay>

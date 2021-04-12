@@ -529,6 +529,12 @@ export class RestApiConnectorService extends ApiConnector {
      * @returns {Observable<Note>} the created object
      */
     public get postNote() { return this.postStixObjectFactory<Note>("note"); }
+    /**
+     * POST (create) a new collection
+     * @param {Collection} object the object to create
+     * @returns {Observable<Collection>} the created object
+     */
+    public get postCollection() { return this.postStixObjectFactory<Collection>("collection"); }
 
     /**
      * Factory to create a new STIX put (update) function
