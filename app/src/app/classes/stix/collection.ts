@@ -214,7 +214,6 @@ export class Collection extends StixObject {
      * @param {*} raw the raw object to parse
      */
     public deserialize(raw: any) {
-        console.log(raw);
         if ("stix" in raw) {
             let sdo = raw.stix;
 
