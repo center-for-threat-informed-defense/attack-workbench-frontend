@@ -1,1 +1,6 @@
-<div class="app-timestamp-view">{{config.humanize? humanized : timestamp}}</div>
+<div class="app-timestamp-view">
+    <span>{{config.humanize? humanized : timestamp}}{{config.identityField? ' by' : ''}}</span>
+    <span *ngIf="config.identityField">
+        <app-identity-property [config]="{object: config.object, field: config.identityField}"></app-identity-property>
+    </span>
+</div>

@@ -50,6 +50,9 @@
                         <div *ngIf="tableColumns_settings.get(column)['display'] == 'icon'">
                             <app-icon-view [config]="{object: element, field: column}"></app-icon-view>
                         </div>
+                        <div *ngIf="tableColumns_settings.get(column)['display'] == 'identity'">
+                            <app-identity-property [config]="{object: element, field: column}"></app-identity-property>
+                        </div>
                         <div *ngIf="tableColumns_settings.get(column)['display']  == 'plain'">{{element[column]}}</div>
                     </td>
                 </ng-container>

@@ -139,6 +139,13 @@ $tooltip-color: color-alternate(dark, 4);
         border-top-color: transparent !important;
 
     }
+
+    // override mat-chip styles
+    .mat-chip.mat-standard-chip {
+        height: auto!important;
+        background: color-alternate(dark) !important;
+        color: on-color(dark) !important;
+    }
 }
 
 .mat-form-field.mat-form-field-invalid, .mat-form-field.ng-invalid {
