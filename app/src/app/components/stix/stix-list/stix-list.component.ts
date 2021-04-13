@@ -172,6 +172,17 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
             // set columns according to type
             switch(this.config.type) {
                 case "collection":
+                case "collection-created":
+                    this.addColumn("name", "name", "plain", sticky_allowed, ["name"]);
+                    this.addColumn("version", "version", "version");
+                    this.addColumn("modified", "modified", "timestamp");
+                    this.addColumn("created", "created", "timestamp");
+                    this.tableDetail = [{
+                        "field": "description",
+                        "display": "descriptive"
+                    }]
+                    break;
+                case "collection-imported":
                     this.addColumn("name", "name", "plain", sticky_allowed, ["name"]);
                     this.addColumn("version", "version", "version");
                     this.addColumn("imported", "imported", "timestamp");
@@ -435,7 +446,7 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
             else if (this.config.type == "mitigation") this.data$ = this.restAPIConnectorService.getAllMitigations(options);
             else if (this.config.type == "tactic") this.data$ = this.restAPIConnectorService.getAllTactics(options);
             else if (this.config.type == "technique") this.data$ = this.restAPIConnectorService.getAllTechniques(options);
-            else if (this.config.type == "collection") this.data$ = this.restAPIConnectorService.getAllCollections({search: this.searchQuery, versions: "all"});
+            else if (this.config.type.includes("collection")) this.data$ = this.restAPIConnectorService.getAllCollections({search: this.searchQuery, versions: "all"});
             else if (this.config.type == "relationship") this.data$ = this.restAPIConnectorService.getRelatedTo({sourceRef: this.config.sourceRef, targetRef: this.config.targetRef, sourceType: this.config.sourceType, targetType: this.config.targetType, relationshipType: this.config.relationshipType,  excludeSourceRefs: this.config.excludeSourceRefs, excludeTargetRefs: this.config.excludeTargetRefs, limit: limit, offset: offset});
             let subscription = this.data$.subscribe({
                 next: (data) => { this.totalObjectCount = data.pagination.total; },
@@ -466,7 +477,7 @@ export interface StixListConfig {
     relationshipType?: string;
 
     /** force the list to show only this type */
-    type?: type_attacktype;
+    type?: type_attacktype | "collection-created" | "collection-imported";
     /** force the list to show only objects matching this query */
     query?: any;
     
