@@ -34,8 +34,9 @@ export interface TimestampPropertyConfig {
     /* the field of the object(s) to visualize as a timestamp. Typically "created" or "modified"
      */
     field: string;
+    /* the field of the object to display as the identity ("created_by" or "modified_by") */
+    identityField?: string;
     /* field to display attribution information from. If omitted, does not display attribution.
     */
     attribution?: string;
-    showIdentity: boolean;
 }
