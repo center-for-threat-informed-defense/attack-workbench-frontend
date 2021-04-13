@@ -1,5 +1,8 @@
 import { Component, Input, OnInit, ViewEncapsulation } from '@angular/core';
+import { Relationship } from 'src/app/classes/stix/relationship';
 import { StixObject } from 'src/app/classes/stix/stix-object';
+import { Technique } from 'src/app/classes/stix/technique';
+import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/rest-api-connector.service';
 
 @Component({
   selector: 'app-name-property',
@@ -9,10 +12,25 @@ import { StixObject } from 'src/app/classes/stix/stix-object';
 })
 export class NamePropertyComponent implements OnInit {
     @Input() public config: NamePropertyConfig;
+    public target_obj?: StixObject;
+    public loaded: boolean = false;
 
-    constructor() { }
+    constructor(private restAPIService: RestApiConnectorService) { }
 
     ngOnInit(): void {
+        let object = Array.isArray(this.config.object)? this.config.object[0] : this.config.object;
+        if (object.revoked) {
+            // retrieve revoking object
+            let data$ = this.restAPIService.getRelatedTo({sourceRef: object.stixID, relationshipType: 'revoked-by'});
+            let relSubscription = data$.subscribe({
+                next: (data) => {
+                    let relationship = data.data[0] as Relationship;
+                    this.target_obj = relationship.target_object as Technique;
+                    this.loaded = true;
+                },
+                complete: () => { relSubscription.unsubscribe() }
+            });
+        }
     }
 
 }

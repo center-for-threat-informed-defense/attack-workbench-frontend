@@ -21,6 +21,11 @@
                 </mat-form-field>
             </div>
         </div>
+        <div class="controls" *ngIf="config.type && config.type == 'relationship'">
+            <div class="input-group align-right">
+                <mat-checkbox (change)="showDeprecated($event)">show deprecated</mat-checkbox>
+            </div>
+        </div>
         <!-- ----- -->
         <!-- TABLE -->
         <!-- ----- -->
@@ -42,6 +47,9 @@
                         </div>
                         <div *ngIf="tableColumns_settings.get(column)['display'] == 'descriptive'">
                             <app-descriptive-view [config]="{'object': element, 'mode': 'view', 'field': column, 'firstParagraphOnly': true}"></app-descriptive-view>
+                        </div>
+                        <div *ngIf="tableColumns_settings.get(column)['display'] == 'icon'">
+                            <app-icon-view [config]="{object: element, field: column}"></app-icon-view>
                         </div>
                         <div *ngIf="tableColumns_settings.get(column)['display']  == 'plain'">{{element[column]}}</div>
                     </td>

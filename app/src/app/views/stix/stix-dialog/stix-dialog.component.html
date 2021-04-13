@@ -9,6 +9,9 @@
                         <button mat-button class="control" matTooltip="validate & save" [disabled]="!editing" (click)="validate()"><mat-icon aria-label="save">save</mat-icon></button>
                         <button *ngIf="!editing" mat-button class="control" matTooltip="edit" (click)="startEditing()"><mat-icon aria-label="edit">edit</mat-icon></button>
                         <button *ngIf="editing"  mat-button mat-dialog-close class="control" matTooltip="discard changes and stop editing"><mat-icon aria-label="discard">edit_off</mat-icon></button>
+                        <button *ngIf="stixType == 'relationship'" mat-button matTooltip="{{isDeprecated ? 'undeprecate' : 'deprecate'}}" class="control" [disabled]="editing" (click)="deprecateChanged()">
+                            <mat-icon aria-label="{{isDeprecated ? 'undeprecate': 'deprecate'}}">{{isDeprecated ? 'unarchive' : 'archive'}}</mat-icon>
+                        </button>
                     </ng-container>
                     <button *ngIf="config.sidebarControl != 'disable'" mat-button class="control" matTooltip="view sidebar" (click)="toggleSidebar()"><mat-icon aria-label="open sidebar">view_sidebar</mat-icon></button>
                 </mat-toolbar>
