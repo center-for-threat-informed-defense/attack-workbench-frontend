@@ -145,7 +145,7 @@ import { NotesEditorComponent } from './components/resources-drawer/notes-editor
 import { ObjectStatusComponent } from './components/object-status/object-status.component';
 import { IconViewComponent } from './components/stix/icon-view/icon-view.component';
 import { IdentityPropertyComponent } from './components/stix/identity-property/identity-property.component';
-import { NgxJdenticonModule } from 'ngx-jdenticon';
+import { NgxJdenticonModule, JDENTICON_CONFIG } from 'ngx-jdenticon';
 
 
 @NgModule({
@@ -326,7 +326,22 @@ import { NgxJdenticonModule } from 'ngx-jdenticon';
 
     OverlayModule
   ],
-  providers: [],
+  providers: [
+    {
+        provide: JDENTICON_CONFIG,
+        useValue: {
+          lightness: {
+            color: [0.35, 0.60],
+            grayscale: [0.35, 0.60],
+          },
+          saturation: {
+            color: 0.50,
+            grayscale: 0.50,
+          },
+          backColor: '#0000',
+        },
+      },
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
