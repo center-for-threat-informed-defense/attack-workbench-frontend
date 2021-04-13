@@ -206,9 +206,9 @@ export abstract class StixObject extends Serializable {
                 if (typeof(sdo.x_mitre_deprecated) === "boolean") this.deprecated = sdo.x_mitre_deprecated;
                 else console.error("TypeError: x_mitre_deprecated field is not a boolean:", sdo.x_mitre_deprecated, "(",typeof(sdo.x_mitre_deprecated),")") 
             }
-            if ("x_mitre_revoked" in sdo) {
-                if (typeof(sdo.x_mitre_revoked) === "boolean") this.revoked = sdo.x_mitre_revoked;
-                else console.error("TypeError: x_mitre_revoked field is not a boolean:", sdo.x_mitre_revoked, "(",typeof(sdo.x_mitre_revoked),")") 
+            if ("revoked" in sdo) {
+                if (typeof(sdo.revoked) === "boolean") this.revoked = sdo.revoked;
+                else console.error("TypeError: revoked field is not a boolean:", sdo.revoked, "(",typeof(sdo.revoked),")") 
             }
         }
         else console.error("ObjectError: 'stix' field does not exist in object");
@@ -321,8 +321,32 @@ export abstract class StixObject extends Serializable {
                         return result;
                     })
                 )
+            }),
+            // validate 'revoked-by' relationship exists
+            switchMap(result => {
+                if (!this.revoked) return of(result); // do not check for revoked-by relationship
+
+                let accessor = restAPIService.getRelatedTo({sourceRef: this.stixID});
+                return accessor.pipe(
+                    map(objects => {
+                        if (!objects.data.find(relationship => relationship['relationship_type'] == 'revoked-by')) {
+                            result.errors.push({
+                                "result": "error",
+                                "field": "revoked",
+                                "message": "'revoked-by' relationship does not exist"
+                            })
+                        } else {
+                            result.successes.push({
+                                "result": "success",
+                                "field": "revoked",
+                                "message": "'revoked-by' relationship exists"
+                            })
+                        }
+                        return result;
+                    })
+                )
+
             })
-            // TODO check if revoked-by exists if revoked?
         ) //end pipe
 
     }

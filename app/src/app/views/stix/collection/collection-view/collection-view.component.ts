@@ -81,13 +81,6 @@ export class CollectionViewComponent extends StixViewPage implements OnInit {
         let subscription = this.collection.validate(this.restApiConnector).pipe(
             map(results => { // add extra results here
 
-                //must have contents
-                if (this.stagedData.length == 0) results.errors.push({
-                    result: "error",
-                    field: "contents",
-                    message: "the collection has no contents"
-                })
-
                 // must have incremented version number compared to prior release
                 if (this.previousRelease) {
                     if (this.collection.version.compareTo(this.previousRelease.version) <= 0) { 
@@ -221,7 +214,12 @@ export class CollectionViewComponent extends StixViewPage implements OnInit {
                     message: `${relationship_stats.excluded_both} relationships had neither attached objects in the collection and were therefore excluded`
                 })
                 
-                
+                //must have contents
+                if (this.stagedData.length == 0) results.errors.push({
+                    result: "error",
+                    field: "contents",
+                    message: "the collection has no contents"
+                })
 
                 //return final results
                 return results;
