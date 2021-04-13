@@ -37,5 +37,5 @@ export interface TimestampPropertyConfig {
     /* field to display attribution information from. If omitted, does not display attribution.
     */
     attribution?: string;
-
+    showIdentity: boolean;
 }
