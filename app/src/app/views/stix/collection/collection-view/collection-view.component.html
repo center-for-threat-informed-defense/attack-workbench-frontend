@@ -36,11 +36,11 @@
                     }"></app-descriptive-property>
                 </div>
             </div>
-            <div class="row width-limited">
+            <div class="row width-limited" *ngIf="!editing">
                 <div class="col">
                     <div class="labelled-box">
                         <div class="content collection-data">
-                            <code class="url" [cdkCopyToClipboard]="collectionDownloadURL" (click)="snackbar.open('copied to clipboard')">
+                            <code class="url" [cdkCopyToClipboard]="collectionDownloadURL" (click)="snackbar.open('copied to clipboard', null, {duration: 1000})">
                                 {{collectionDownloadURL}}
                             </code>
                             <div class="suffix download" (click)="downloadCollectionBundle()">
