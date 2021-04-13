@@ -99,6 +99,9 @@ import { NamePropertyComponent } from "./components/stix/name-property/name-prop
 
 import { HelpPageComponent } from './views/help-page/help-page.component';
 import { LandingPageComponent } from './views/landing-page/landing-page.component';
+import { AdminPageComponent } from "./views/admin-page/admin-page.component";
+import { IntegrationsPageComponent } from "./views/admin-page/integrations-page/integrations-page.component";
+import { OrgIdentityPageComponent } from "./views/admin-page/org-identity-page/org-identity-page.component";
 
 import { StixDialogComponent } from "./views/stix/stix-dialog/stix-dialog.component"
 import { StixPageComponent } from "./views/stix/stix-page/stix-page.component"
@@ -195,6 +198,9 @@ import { IconViewComponent } from './components/stix/icon-view/icon-view.compone
     
     LandingPageComponent,
     HelpPageComponent,
+    AdminPageComponent,
+    IntegrationsPageComponent,
+    OrgIdentityPageComponent,
 
     StixDialogComponent,
     StixPageComponent,
