@@ -30,7 +30,6 @@ export class ObjectStatusComponent implements OnInit {
     public deprecated: boolean = false;
     public workflow: string;
     
-    public imported_collection: boolean = false; //is this an imported collection?
     public get disabled(): boolean {
         return this.editorService.editing || this.editorService.type == "collection";
     }
