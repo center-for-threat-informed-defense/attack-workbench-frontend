@@ -29,7 +29,7 @@ export abstract class StixObject extends Serializable {
     public description: string;
 
     public created_by?: any;
-    public modified_by: any;
+    public modified_by?: any;
 
     protected abstract get attackIDValidator(): {
         regex: string, // regex to validate the ID

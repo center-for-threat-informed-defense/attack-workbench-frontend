@@ -11,24 +11,14 @@ import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/re
 export class IdentityPropertyComponent implements OnInit {
     @Input() public config: IdentityPropertyConfig;
 
-    // TODO remove when REST API is complete
-    public identity: Identity = new Identity({
-        stix: {
-            "id": "identity--f3f2-dt2f-324f",
-            "type": "identity",
-            "name": "MITRE",
-            "identity_class": "organization"
-        }
-    })
+    public identity: Identity;
 
-    constructor(private restAPIService: RestApiConnectorService) { }
+    constructor() { }
 
     ngOnInit(): void {
-        // TODO uncomment when REST API is complete
-        // let object = Array.isArray(this.config.object)? this.config.object[0] : this.config.object;
-        // this.identity = object[this.config.field] as Identity;
+        let object = Array.isArray(this.config.object)? this.config.object[0] : this.config.object;
+        if (object[this.config.field]) this.identity = object[this.config.field] as Identity;
     }
-
 }
 
 export interface IdentityPropertyConfig {
