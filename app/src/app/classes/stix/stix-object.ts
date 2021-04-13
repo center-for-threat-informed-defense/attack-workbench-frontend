@@ -28,6 +28,9 @@ export abstract class StixObject extends Serializable {
     public attackID: string; // ATT&CK ID
     public description: string;
 
+    public created_by?: any;
+    public modified_by?: any;
+
     protected abstract get attackIDValidator(): {
         regex: string, // regex to validate the ID
         format: string // format to display to user
@@ -209,6 +212,15 @@ export abstract class StixObject extends Serializable {
             if ("revoked" in sdo) {
                 if (typeof(sdo.revoked) === "boolean") this.revoked = sdo.revoked;
                 else console.error("TypeError: revoked field is not a boolean:", sdo.revoked, "(",typeof(sdo.revoked),")") 
+            }
+
+            if ("created_by_ref" in sdo) {
+                if (typeof(sdo.created_by_ref === "object")) this.created_by = sdo.created_by_ref;
+                else console.error("TypeError: created_by_ref field is not an object:", sdo.created_by_ref, "(", typeof(sdo.created_by_ref), ")");
+            }
+            if ("x_mitre_modified_by_ref" in sdo) {
+                if (typeof(sdo.x_mitre_modified_by_ref === "object")) this.modified_by = sdo.x_mitre_modified_by_ref;
+                else console.error("TypeError: x_mitre_modified_by_ref field is not an object:", sdo.x_mitre_modified_by_ref, "(", typeof(sdo.x_mitre_modified_by_ref), ")");
             }
         }
         else console.error("ObjectError: 'stix' field does not exist in object");

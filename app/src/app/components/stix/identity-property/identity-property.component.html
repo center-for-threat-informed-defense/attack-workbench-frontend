@@ -1,0 +1,8 @@
+<div *ngIf="identity && identity.name" class="identity-property">
+    <mat-chip-list>
+        <mat-chip class="identity">
+            <svg width="24" height="24" [data-jdenticon-value]="identity.name"></svg> 
+            {{identity.name}}
+        </mat-chip>
+    </mat-chip-list>
+</div>
