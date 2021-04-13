@@ -20,12 +20,14 @@
         <app-timestamp-property [config]="{
             mode: 'view',
             object: config.object,
-            field: 'modified'
+            field: 'modified',
+            showIdentity: true
         }"></app-timestamp-property>
         <app-timestamp-property [config]="{
             mode: 'view',
             object: config.object,
-            field: 'created'
+            field: 'created',
+            showIdentity: true
         }"></app-timestamp-property>
     </div>
     <!-- <table class="historyPeek">
