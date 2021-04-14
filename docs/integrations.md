@@ -77,7 +77,7 @@ domains = [
 ]
 ```
 
-Depending on your deployment of the workbench the REST API URL may be different.
+Depending on your deployment of the workbench the REST API URL may be different. See the environment files, `src/environments/`, for the currently configured REST API URL.
 
 ### 3. Build the site
 
@@ -87,4 +87,4 @@ Run `python3 update-attack.py` to build the website using the current workbench 
 
 Copy the files from output to your web server or use `python3 -m http.server [port]` to host for local browsing.
 
-If the data within the workbench changes you will need to rebuild the site by running this command again; for this reason you may want to consider re-running your build and deploy pipeline at regular intervals using `cron` to keep the data synchronized with the contents of the workbench.
+If the data within the workbench changes you will need to rebuild the site (from step 3) again; for this reason you may want to consider re-running your build and deploy pipeline at regular intervals using `cron` to keep the data synchronized with the contents of the workbench.
