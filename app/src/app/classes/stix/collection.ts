@@ -158,6 +158,8 @@ export class Collection extends StixObject {
     public contents: VersionReference[] = []; //references to the stix objects in the collection
     public stix_contents: StixObject[] = []; //the actual objects in the collection
     public imported: Date; // null if it was not imported
+    public released: boolean = false; // was this collection version released?
+
      // auto-generated changelog/report about the import
     //  each sub-property is a list of STIX IDs corresponding to objects in the import
     public import_categories: CollectionDiffCategories<string>;
@@ -235,6 +237,11 @@ export class Collection extends StixObject {
             if ("imported" in sdo) {
                 if (typeof(sdo.imported) === "string") this.imported = new Date(sdo.imported);
                 else console.error("TypeError: imported field is not a string:", sdo.imported, "(",typeof(sdo.imported),")")
+            }
+
+            if ("released" in sdo) {
+                if (typeof(sdo.released) === "boolean") this.released = sdo.released;
+                else console.error("TypeError: released field is not a boolean:", sdo.released, "(",typeof(sdo.released),")")
             }
 
             if ("import_categories" in sdo) {

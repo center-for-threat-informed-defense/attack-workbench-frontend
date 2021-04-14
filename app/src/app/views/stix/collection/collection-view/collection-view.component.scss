@@ -5,13 +5,7 @@
         margin: 0 auto;
     }
     h1.name-property { // override name-property styles
-        font-family: Roboto,serif;
-        font-size: 18px;
-        line-height: 1.5;
-        font-weight: normal;
-        letter-spacing: normal;
-        margin: 0;
-        .name-edit { text-align: left; }
+        text-align: center;
     }
     .buttons {
         margin-top: 48px !important;
