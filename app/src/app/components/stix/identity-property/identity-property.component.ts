@@ -25,6 +25,8 @@ export class IdentityPropertyComponent implements OnInit {
 export interface IdentityPropertyConfig {
     /* The object to show the identity field of */
     object: StixObject | [StixObject, StixObject];
-    /** field; field of object to be displayed */
+    /* Field of object to be displayed */
     field: string;
+    /* Show identity name? If true, display the identity name next to its icon. Defaults to False */
+    displayName?: boolean;
 }

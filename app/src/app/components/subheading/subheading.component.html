@@ -21,13 +21,15 @@
             mode: 'view',
             object: config.object,
             field: 'modified',
-            identityField: 'modified_by'
+            attribution: 'modified_by',
+            displayName: 'true'
         }"></app-timestamp-property>
         <app-timestamp-property [config]="{
             mode: 'view',
             object: config.object,
             field: 'created',
-            identityField: 'created_by'
+            attribution: 'created_by',
+            displayName: 'true'
         }"></app-timestamp-property>
     </div>
     <!-- <table class="historyPeek">

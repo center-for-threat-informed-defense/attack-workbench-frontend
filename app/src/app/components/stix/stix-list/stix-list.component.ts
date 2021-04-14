@@ -188,9 +188,9 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
                     this.addColumn("domain", "domains", "list");
                     this.addColumn("version", "version", "version");
                     this.addColumn("modified","modified", "timestamp");
-                    this.addColumn("modified by", "modified_by", "identity");
+                    this.addColumn("", "modified_by", "identity");
                     this.addColumn("created", "created", "timestamp");
-                    this.addColumn("created by", "created_by", "identity");
+                    this.addColumn("", "created_by", "identity");
                     this.tableDetail = [{
                         "field": "description",
                         "display": "descriptive"
@@ -202,9 +202,9 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
                     this.addColumn("name", "name", "plain", true, ["name"]);
                     this.addColumn("version", "version", "version");
                     this.addColumn("modified","modified", "timestamp");
-                    this.addColumn("modified by", "modified_by", "identity");
+                    this.addColumn("", "modified_by", "identity");
                     this.addColumn("created", "created", "timestamp");
-                    this.addColumn("created by", "created_by", "identity");
+                    this.addColumn("", "created_by", "identity");
                     this.tableDetail = [{
                         "field": "description",
                         "display": "descriptive"
@@ -218,9 +218,9 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
                     this.addColumn("aliases", "aliases", "list");
                     this.addColumn("version", "version", "version");
                     this.addColumn("modified","modified", "timestamp");
-                    this.addColumn("modified by", "modified_by", "identity");
+                    this.addColumn("", "modified_by", "identity");
                     this.addColumn("created", "created", "timestamp");
-                    this.addColumn("created by", "created_by", "identity");
+                    this.addColumn("", "created_by", "identity");
                     this.tableDetail = [{
                         "field": "description",
                         "display": "descriptive"
@@ -235,9 +235,9 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
                     this.addColumn("domain", "domains", "list");
                     this.addColumn("version", "version", "version");
                     this.addColumn("modified","modified", "timestamp");
-                    this.addColumn("modified by", "modified_by", "identity");
+                    this.addColumn("", "modified_by", "identity");
                     this.addColumn("created", "created", "timestamp");
-                    this.addColumn("created by", "created_by", "identity");
+                    this.addColumn("", "created_by", "identity");
                     this.tableDetail = [{
                         "field": "description",
                         "display": "descriptive"
@@ -252,9 +252,9 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
                     this.addColumn("domain", "domains", "list");
                     this.addColumn("version", "version", "version");
                     this.addColumn("modified","modified", "timestamp");
-                    this.addColumn("modified by", "modified_by", "identity");
+                    this.addColumn("", "modified_by", "identity");
                     this.addColumn("created", "created", "timestamp");
-                    this.addColumn("created by", "created_by", "identity");
+                    this.addColumn("", "created_by", "identity");
                     this.tableDetail = [{
                         "field": "description",
                         "display": "descriptive"
@@ -273,9 +273,9 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
                 default:
                     this.addColumn("type", "attackType", "plain");
                     this.addColumn("modified","modified", "timestamp");
-                    this.addColumn("modified by", "modified_by", "identity");
+                    this.addColumn("", "modified_by", "identity");
                     this.addColumn("created", "created", "timestamp");
-                    this.addColumn("created by", "created_by", "identity");
+                    this.addColumn("", "created_by", "identity");
             }
         }
         else {
