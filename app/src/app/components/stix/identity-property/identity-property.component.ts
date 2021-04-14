@@ -29,4 +29,6 @@ export interface IdentityPropertyConfig {
     field: string;
     /* Show identity name? If true, display the identity name next to its icon. Defaults to False */
     displayName?: boolean;
+    /* Field of the timestamp to be displayed. Defaults to none */
+    timeField?: string;
 }
