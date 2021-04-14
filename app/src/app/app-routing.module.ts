@@ -3,7 +3,6 @@ import { Routes, RouterModule, ExtraOptions } from '@angular/router';
 import { LandingPageComponent } from './views/landing-page/landing-page.component';
 import { HelpPageComponent } from './views/help-page/help-page.component';
 import { AdminPageComponent } from './views/admin-page/admin-page.component';
-import { IntegrationsPageComponent } from './views/admin-page/integrations-page/integrations-page.component';
 import { OrgIdentityPageComponent } from './views/admin-page/org-identity-page/org-identity-page.component';
 
 
@@ -34,13 +33,6 @@ const routes: Routes = [
                             "breadcrumb": "admin settings",
                         },
                         "component": AdminPageComponent,
-                    },
-                    {
-                        "path": "integrations",
-                        "data": {
-                            "breadcrumb": "integrations",
-                        },
-                        "component": IntegrationsPageComponent,
                     },
                     {
                         "path": "org-identity",
@@ -87,6 +79,14 @@ const routes: Routes = [
                         "data": {
                             "breadcrumb": "changelog",
                             "markdown": "/assets/docs/changelog.md"
+                        },
+                        "component": HelpPageComponent,
+                    },
+                    {
+                        "path": "integrations",
+                        "data": {
+                            "breadcrumb": "integrations",
+                            "markdown": "/assets/docs/integrations.md"
                         },
                         "component": HelpPageComponent,
                     },

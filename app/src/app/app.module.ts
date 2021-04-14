@@ -100,7 +100,6 @@ import { NamePropertyComponent } from "./components/stix/name-property/name-prop
 import { HelpPageComponent } from './views/help-page/help-page.component';
 import { LandingPageComponent } from './views/landing-page/landing-page.component';
 import { AdminPageComponent } from "./views/admin-page/admin-page.component";
-import { IntegrationsPageComponent } from "./views/admin-page/integrations-page/integrations-page.component";
 import { OrgIdentityPageComponent } from "./views/admin-page/org-identity-page/org-identity-page.component";
 
 import { StixDialogComponent } from "./views/stix/stix-dialog/stix-dialog.component"
@@ -201,7 +200,6 @@ import { NgxJdenticonModule, JDENTICON_CONFIG } from 'ngx-jdenticon';
     LandingPageComponent,
     HelpPageComponent,
     AdminPageComponent,
-    IntegrationsPageComponent,
     OrgIdentityPageComponent,
 
     StixDialogComponent,

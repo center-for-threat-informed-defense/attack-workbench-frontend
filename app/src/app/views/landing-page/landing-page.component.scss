@@ -33,4 +33,8 @@
         .dark & { border-left: 1px solid border-color(dark); }
         .light & { border-left: 1px solid border-color(light); }
     }
+
+    .admin-link {
+        margin-top: 40px;
+    }
 }
