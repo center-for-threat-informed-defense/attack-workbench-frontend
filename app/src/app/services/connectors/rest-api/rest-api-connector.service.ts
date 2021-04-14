@@ -58,7 +58,8 @@ const stixTypeToClass = {
     "course-of-action": Mitigation,
     "x-mitre-matrix": Matrix,
     "x-mitre-collection": Collection,
-    "relationship": Relationship
+    "relationship": Relationship,
+    "identity": Identity
 }
 
 export interface Paginated<T> {
@@ -993,4 +994,42 @@ export class RestApiConnectorService extends ApiConnector {
         });
         return data$;
     }                                                                     
+
+    /**
+     * Get the organization identity
+     * @returns {Observable<Identity>} the organization identity
+     */
+    public getOrganizationIdentity(): Observable<Identity> {
+        return this.http.get(`${this.baseUrl}/config/organization-identity`, {headers: this.headers}).pipe(
+            tap(_ => console.log("retrieved organization identity")),
+            map(result => {
+                return new Identity(result);
+            }),
+            catchError(this.handleError_single<Identity>()),
+            share() //multicast to subscribers
+        )
+    }
+
+    /**
+     * Update the organization identity
+     * @param {Identity} object the identity object to save
+     * @returns {Observable<Identity>} the updated identity
+     * @memberof RestApiConnectorService
+     */
+    public setOrganizationIdentity(object: Identity):  Observable<Identity> {
+        return this.postIdentity(object).pipe( //create/save the identity
+            switchMap((result) => {
+                console.log(result);
+                // set the organization identity to be this identity's ID after it was created/updated
+                return this.http.post(`${this.baseUrl}/config/organization-identity`, {id: result.stixID}, {headers: this.headers}).pipe(
+                    tap(this.handleSuccess("Organization Identity Updated")),
+                    map(_ => {
+                        return new Identity(result);
+                    }),
+                    catchError(this.handleError_single<Identity>()),
+                    share() // multicast so that multiple subscribers don't trigger the call twice. THIS MUST BE THE LAST LINE OF THE PIPE
+                )
+            })
+        )
+    }
 }
