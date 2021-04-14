@@ -3,25 +3,31 @@
 
         <div class="grid spacing-12" *ngIf="!loading else loadingDisplay">
             <div class="row width-limited">
-                <div class="col" *ngIf="editing">
+                <div class="col">
                     <!-- things to add to the collection -->
                     <app-name-property class="grow-to-row" [config]="{
                         mode: editing? 'edit' : 'view',
                         object: collection
                     }"></app-name-property>
                 </div>
-                <div class="col" *ngIf="!editing">
-                    <div class="labelled-box">
-                        <div class="content">{{collection.name}}</div>
-                        <label>name</label>
-                    </div>
-                </div>
+            </div>
+            <div class="row width-limited">
                 <div class="col">
                     <!-- VERSION NUMBER -->
                     <app-version-property class="grow-to-row" [config]="{
                         mode: editing? 'edit' : 'view',
                         object: collection
                     }"></app-version-property>
+                </div>
+                <div class="col">
+                    <div class="labelled-box grow-to-row">
+                        <!-- TYPE -->
+                        <div class="content no-label">
+                            <mat-checkbox [(ngModel)]="collection.released" [disabled]="!editing">
+                                released?
+                            </mat-checkbox>
+                        </div>
+                    </div>
                 </div>
             </div>
             <div class="row width-limited">
