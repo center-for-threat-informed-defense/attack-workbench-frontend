@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, ViewEncapsulation } from '@angular/core';
 import { Identity } from 'src/app/classes/stix/identity';
 import { StixObject } from 'src/app/classes/stix/stix-object';
 import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/rest-api-connector.service';
@@ -6,7 +6,8 @@ import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/re
 @Component({
     selector: 'app-identity-property',
     templateUrl: './identity-property.component.html',
-    styleUrls: ['./identity-property.component.scss']
+    styleUrls: ['./identity-property.component.scss'],
+    encapsulation: ViewEncapsulation.None
 })
 export class IdentityPropertyComponent implements OnInit {
     @Input() public config: IdentityPropertyConfig;
