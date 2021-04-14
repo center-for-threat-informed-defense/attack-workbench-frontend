@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { Identity } from 'src/app/classes/stix/identity';
+import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/rest-api-connector.service';
 
 @Component({
   selector: 'app-org-identity-page',
@@ -6,10 +8,22 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./org-identity-page.component.scss']
 })
 export class OrgIdentityPageComponent implements OnInit {
+    public organizationIdentity: Identity;
 
-  constructor() { }
+    constructor(private restAPIConnector: RestApiConnectorService) { }
 
-  ngOnInit(): void {
-  }
+    ngOnInit(): void {
+        let subscription = this.restAPIConnector.getOrganizationIdentity().subscribe({
+            next: (identity) => this.organizationIdentity = identity,
+            complete: () => subscription.unsubscribe()
+        });
+    }
+
+    saveIdentity() {
+        let subscription = this.restAPIConnector.postIdentity(this.organizationIdentity).subscribe({
+            next: (identity) => this.organizationIdentity = identity,
+            complete: () => subscription.unsubscribe()
+        });
+    }
 
 }

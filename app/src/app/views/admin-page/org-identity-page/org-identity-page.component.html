@@ -15,13 +15,38 @@
             </p>
         </div>
     </div>
-    <div class="row">
-        <div class="col narrow">icon</div>
-        <div class="col">
-            <mat-form-field appearance="outline">
-                <mat-label>organization name</mat-label>
-                <input matInput>
-            </mat-form-field>
+    <div *ngIf="organizationIdentity else loading" class="identity-edit">
+        <hr>
+        <div class="row">
+            <div class="col narrow">
+                <app-identity-property [config]="{
+                    'object': {'identity': organizationIdentity},
+                    'field': 'identity'
+                }"></app-identity-property>
+            </div>
+            <div class="col">
+                <mat-form-field appearance="outline">
+                    <mat-label>organization name</mat-label>
+                    <input matInput required [(ngModel)]="organizationIdentity.name">
+                </mat-form-field>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <mat-form-field appearance="outline">
+                    <mat-label>organization description</mat-label>
+                    <input matInput [(ngModel)]="organizationIdentity.description">
+                    <mat-hint>this field can be left blank if desired</mat-hint>
+                </mat-form-field>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col center">
+                <div>
+                    <button mat-stroked-button (click)="saveIdentity()" class="text-label" [disabled]="organizationIdentity.name.length == 0">save</button>
+                </div>
+            </div>
         </div>
     </div>
+    <ng-template #loading><app-loading-overlay message="loading organization identity"></app-loading-overlay></ng-template>
 </div>
