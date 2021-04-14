@@ -452,9 +452,12 @@ export class CollectionViewComponent extends StixViewPage implements OnInit {
             next: (result) => {
                 let anyResult = result as any;
                 this.attackObjects = result["attackObjects"];
-                if (anyResult.hasOwnProperty("previousRelease")) {
+                //make sure "previous" release wasn't this release
+                if (anyResult.hasOwnProperty("previousRelease") && anyResult["previousRelease"].modified.toISOString() != this.collection.modified.toISOString()) {
                     this.previousRelease = result["previousRelease"];
                     this.collectionChanges = this.collection.compareTo(this.previousRelease);
+                } else  {
+                    this.collectionChanges = this.collection.compareTo(new Collection()); // compare to empty
                 }
                 // initialize potentialChanges based off diff of attackObjects vs contents of collection
                 // create a "collection" to represent the entire ATT&CK dataset
