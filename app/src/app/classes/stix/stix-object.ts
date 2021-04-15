@@ -213,17 +213,21 @@ export abstract class StixObject extends Serializable {
                 if (typeof(sdo.revoked) === "boolean") this.revoked = sdo.revoked;
                 else console.error("TypeError: revoked field is not a boolean:", sdo.revoked, "(",typeof(sdo.revoked),")") 
             }
-
-            if ("created_by_ref" in sdo) {
-                if (typeof(sdo.created_by_ref === "object")) this.created_by = sdo.created_by_ref;
-                else console.error("TypeError: created_by_ref field is not an object:", sdo.created_by_ref, "(", typeof(sdo.created_by_ref), ")");
-            }
-            if ("x_mitre_modified_by_ref" in sdo) {
-                if (typeof(sdo.x_mitre_modified_by_ref === "object")) this.modified_by = sdo.x_mitre_modified_by_ref;
-                else console.error("TypeError: x_mitre_modified_by_ref field is not an object:", sdo.x_mitre_modified_by_ref, "(", typeof(sdo.x_mitre_modified_by_ref), ")");
-            }
         }
         else console.error("ObjectError: 'stix' field does not exist in object");
+
+        if ("created_by_identity" in raw) {
+            let identityData = raw.created_by_identity;
+            if ("stix" in identityData) {
+                this.created_by = identityData.stix;
+            } else console.error("ObjectError: 'stix' field does not exist in created_by_identity object");
+        }
+        if ("modified_by_identity" in raw) {
+            let identityData = raw.modified_by_identity;
+            if ("stix" in identityData) {
+                this.modified_by = identityData.stix;
+            } else console.error("ObjectError: 'stix' field does not exist in modified_by_identity object");
+        }
 
         if ("workspace" in raw) {
             // parse workspace fields
