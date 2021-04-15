@@ -1,8 +1,10 @@
-<div *ngIf="identity && identity.name" class="identity-property">
+<div class="identity-property">
     <mat-chip-list>
         <mat-chip class="identity">
-            <svg width="24" height="24" [data-jdenticon-value]="identity.name" [matTooltip]="identity.name" matTooltipPosition="below"></svg>
-            <span *ngIf="config.displayName">{{identity.name}}</span>
+            <div *ngIf="identity && identity.name">
+                <svg  width="24" height="24" [data-jdenticon-value]="identity.name" [matTooltip]="identity.name" matTooltipPosition="below"></svg>
+                <span *ngIf="config.displayName">{{identity.name}}</span>
+            </div>
             <app-timestamp-view *ngIf="config.timeField" [config]="{object: config.object, field: config.timeField, mode: 'view', humanize: true}"></app-timestamp-view>
         </mat-chip>
     </mat-chip-list>

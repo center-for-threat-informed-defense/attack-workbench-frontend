@@ -5,6 +5,10 @@
     white-space: nowrap;
 }
 .identity {
-    span { padding: 0px 6px; }
+    svg { vertical-align: middle; }
+    span {
+        padding: 0px 6px;
+        vertical-align: middle;
+    }
     &.mat-chip { padding: 6px; }
 }
