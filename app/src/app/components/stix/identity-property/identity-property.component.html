@@ -1,4 +1,4 @@
-<div class="identity-property">
+<div *ngIf="identity || config.timeField" class="identity-property">
     <mat-chip-list>
         <mat-chip class="identity">
             <div *ngIf="identity && identity.name">

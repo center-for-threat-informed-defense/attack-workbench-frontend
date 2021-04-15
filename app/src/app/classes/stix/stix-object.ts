@@ -216,13 +216,13 @@ export abstract class StixObject extends Serializable {
         }
         else console.error("ObjectError: 'stix' field does not exist in object");
 
-        if ("created_by_identity" in raw) {
+        if ("created_by_identity" in raw && raw.created_by_identity) {
             let identityData = raw.created_by_identity;
             if ("stix" in identityData) {
                 this.created_by = identityData.stix;
             } else console.error("ObjectError: 'stix' field does not exist in created_by_identity object");
         }
-        if ("modified_by_identity" in raw) {
+        if ("modified_by_identity" in raw && raw.modified_by_identity) {
             let identityData = raw.modified_by_identity;
             if ("stix" in identityData) {
                 this.modified_by = identityData.stix;
