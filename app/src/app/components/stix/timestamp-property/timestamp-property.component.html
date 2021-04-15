@@ -2,7 +2,7 @@
     <div class="content">
         <app-timestamp-diff *ngIf="config.mode == 'diff'" [config]="config"></app-timestamp-diff>
         <app-timestamp-view *ngIf="config.mode == 'view'" [config]="config"></app-timestamp-view>
-        <div class="suffix" *ngIf="config.attribution">
+        <div class="suffix" *ngIf="config.attribution && config.object[config.attribution]">
             <app-identity-property [config]="{object: config.object, field: config.attribution, displayName: config.displayName}"></app-identity-property>
         </div>
     </div>
