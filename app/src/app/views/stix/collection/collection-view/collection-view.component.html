@@ -9,6 +9,7 @@
                         mode: editing? 'edit' : 'view',
                         object: collection
                     }"></app-name-property>
+                    <app-subheading *ngIf="!editing" [config]="config" (onOpenHistory)="openHistory()" (onOpenNotes)="openNotes()"></app-subheading>
                 </div>
             </div>
             <div class="row width-limited">
