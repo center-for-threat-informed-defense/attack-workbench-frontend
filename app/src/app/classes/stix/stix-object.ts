@@ -27,8 +27,10 @@ export abstract class StixObject extends Serializable {
     public attackType: string; // ATT&CK type
     public attackID: string; // ATT&CK ID
     public description: string;
-
+ 
+    public created_by_ref: string; //embedded relationship
     public created_by?: any;
+    public modified_by_ref: string; //embedded relationship
     public modified_by?: any;
 
     protected abstract get attackIDValidator(): {
@@ -130,22 +132,26 @@ export abstract class StixObject extends Serializable {
             serialized_external_references.unshift(new_ext_ref);
         }
 
+        let stix: any = {
+            "type": this.type,
+            "id": this.stixID,
+            "created": this.created? this.created.toISOString() : new Date().toISOString(),
+            "modified": new Date().toISOString(),
+            "x_mitre_version": this.version.toString(),
+            "external_references": serialized_external_references,
+            "x_mitre_deprecated": this.deprecated,
+            "revoked": this.revoked,
+            "description": this.description,
+            "spec_version": "2.1"
+        }
+        if (this.created_by_ref) stix.created_by_ref = this.created_by_ref;
+        // do not set modified by ref since we don't know who we are, but the REST API knows
+        
         return {
             workspace:  {
                 workflow: this.workflow
             },
-            stix: {
-                "type": this.type,
-                "id": this.stixID,
-                "created": this.created? this.created.toISOString() : new Date().toISOString(),
-                "modified": new Date().toISOString(),
-                "x_mitre_version": this.version.toString(),
-                "external_references": serialized_external_references,
-                "x_mitre_deprecated": this.deprecated,
-                "revoked": this.revoked,
-                "description": this.description,
-                "spec_version": "2.1"
-            }
+            stix: stix
         }
     }
 
@@ -179,10 +185,20 @@ export abstract class StixObject extends Serializable {
                 else console.error("TypeError: created field is not a string:", sdo.created, "(",typeof(sdo.created),")")
             } else this.created = new Date();
 
+            if ("created_by_ref" in sdo) {
+                if (typeof(sdo.created) === "string") this.created_by_ref = sdo.created_by_ref
+                else console.error("TypeError: created_by_Ref field is not a string:", sdo.created_by_ref, "(",typeof(sdo.created_by_ref),")")
+            }
+
             if ("modified" in sdo) {
                 if (typeof(sdo.modified) === "string") this.modified = new Date(sdo.modified);
                 else console.error("TypeError: modified field is not a string:", sdo.modified, "(",typeof(sdo.modified),")")
             } else this.modified = new Date();
+
+            if ("x_mitre_modified_by_ref" in sdo) {
+                if (typeof(sdo.created) === "string") this.modified_by_ref = sdo.x_mitre_modified_by_ref;
+                else console.error("TypeError: x_mitre_modified_by_ref field is not a string:", sdo.x_mitre_modified_by_ref, "(",typeof(sdo.x_mitre_modified_by_ref),")")
+            }
 
             if ("x_mitre_version" in sdo) {
                 if (typeof(sdo.x_mitre_version) === "string") this.version = new VersionNumber(sdo.x_mitre_version);
