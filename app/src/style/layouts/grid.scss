@@ -17,6 +17,9 @@
             &.center {
                 text-align: center;
             }
+            &.vertical-center {
+                justify-content: center;
+            }
         }
     }
 }
