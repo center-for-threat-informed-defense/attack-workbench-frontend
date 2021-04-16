@@ -1,6 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { TimestampPropertyConfig } from '../timestamp-property.component';
-import { Identity } from 'src/app/classes/stix/identity';
 import * as moment from 'moment';
 
 @Component({
@@ -42,19 +41,6 @@ export class TimestampViewComponent implements OnInit {
     
     constructor() { }
 
-    ngOnInit(): void {
-        //TODO remove mock identity
-        let identity: Identity = new Identity({
-            stix: {
-                "id": "identity--f3f2-dt2f-324f",
-                "type": "identity",
-                "name": "MITRE ATT&CK",
-                "identity_class": "organization"
-            }
-        });
-
-        this.config.object['modified_by'] = identity;
-        this.config.object['created_by'] = identity;
-    }
+    ngOnInit(): void { }
 
 }

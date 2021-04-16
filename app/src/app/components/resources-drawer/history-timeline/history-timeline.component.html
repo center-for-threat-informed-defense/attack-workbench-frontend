@@ -51,6 +51,7 @@
                         'object': historyEvent.sdo,
                         'field': 'modified'
                     }"></app-timestamp-view></div>
+                    <app-identity-property class="event-identity" [config]="{object: historyEvent.sdo, field: 'modified_by'}"></app-identity-property>
                 </button>
             </ng-container>
         </mat-action-list>
