@@ -99,6 +99,8 @@ import { NamePropertyComponent } from "./components/stix/name-property/name-prop
 
 import { HelpPageComponent } from './views/help-page/help-page.component';
 import { LandingPageComponent } from './views/landing-page/landing-page.component';
+import { AdminPageComponent } from "./views/admin-page/admin-page.component";
+import { OrgIdentityPageComponent } from "./views/admin-page/org-identity-page/org-identity-page.component";
 
 import { StixDialogComponent } from "./views/stix/stix-dialog/stix-dialog.component"
 import { StixPageComponent } from "./views/stix/stix-page/stix-page.component"
@@ -144,6 +146,8 @@ import { OrderedListEditComponent } from './components/stix/ordered-list-propert
 import { NotesEditorComponent } from './components/resources-drawer/notes-editor/notes-editor.component';
 import { ObjectStatusComponent } from './components/object-status/object-status.component';
 import { IconViewComponent } from './components/stix/icon-view/icon-view.component';
+import { IdentityPropertyComponent } from './components/stix/identity-property/identity-property.component';
+import { NgxJdenticonModule, JDENTICON_CONFIG } from 'ngx-jdenticon';
 
 
 @NgModule({
@@ -195,6 +199,8 @@ import { IconViewComponent } from './components/stix/icon-view/icon-view.compone
     
     LandingPageComponent,
     HelpPageComponent,
+    AdminPageComponent,
+    OrgIdentityPageComponent,
 
     StixDialogComponent,
     StixPageComponent,
@@ -236,7 +242,8 @@ import { IconViewComponent } from './components/stix/icon-view/icon-view.compone
     OrderedListEditComponent,
 
     NotesEditorComponent,
-    ObjectStatusComponent
+    ObjectStatusComponent,
+    IdentityPropertyComponent
   ],
   imports: [
     BreadcrumbModule,
@@ -252,6 +259,7 @@ import { IconViewComponent } from './components/stix/icon-view/icon-view.compone
     //   }
     }),
     PopoverModule,
+    NgxJdenticonModule,
     
     BrowserModule,
 
@@ -322,7 +330,22 @@ import { IconViewComponent } from './components/stix/icon-view/icon-view.compone
 
     OverlayModule
   ],
-  providers: [],
+  providers: [
+    {
+        provide: JDENTICON_CONFIG,
+        useValue: {
+          lightness: {
+            color: [0.35, 0.60],
+            grayscale: [0.35, 0.60],
+          },
+          saturation: {
+            color: 0.50,
+            grayscale: 0.50,
+          },
+          backColor: '#0000',
+        },
+      },
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
