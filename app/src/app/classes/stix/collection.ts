@@ -158,7 +158,7 @@ export class Collection extends StixObject {
     public contents: VersionReference[] = []; //references to the stix objects in the collection
     public stix_contents: StixObject[] = []; //the actual objects in the collection
     public imported: Date; // null if it was not imported
-    public released: boolean = false; // was this collection version released?
+    public release: boolean = false; // was this collection version release?
 
      // auto-generated changelog/report about the import
     //  each sub-property is a list of STIX IDs corresponding to objects in the import
@@ -201,8 +201,12 @@ export class Collection extends StixObject {
         
         rep.stix.name = this.name;
         rep.stix.x_mitre_contents = this.contents.map(vr => vr.serialize());
-
-        rep.workspace = {};
+        // add release marking
+        if (!rep.workspace.hasOwnProperty("workflow") || !rep.workspace.workflow) {
+            rep.workspace.workflow = {};
+        }
+        rep.workspace.workflow.release = this.release;
+        // add import/categories
         if (this.imported) rep.workspace.imported = this.imported.toString();
         if (this.import_categories) rep.workspace.import_categories = this.import_categories;
         // rep.contents = this.stix_contents.map(stix_objects => stix_objects.serialize());
@@ -239,9 +243,9 @@ export class Collection extends StixObject {
                 else console.error("TypeError: imported field is not a string:", sdo.imported, "(",typeof(sdo.imported),")")
             }
 
-            if ("released" in sdo) {
-                if (typeof(sdo.released) === "boolean") this.released = sdo.released;
-                else console.error("TypeError: released field is not a boolean:", sdo.released, "(",typeof(sdo.released),")")
+            if ("workflow" in sdo && "release" in sdo.workflow) {
+                if (typeof(sdo.workflow.release) === "boolean") this.release = sdo.workflow.release;
+                else console.error("TypeError: release field is not a boolean:", sdo.workflow.release, "(",typeof(sdo.workflow.release),")")
             }
 
             if ("import_categories" in sdo) {
