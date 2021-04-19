@@ -17,7 +17,8 @@ let stixTypeToAttackType = {
     "course-of-action": "mitigation",
     "x-mitre-matrix": "matrix",
     "x-mitre-tactic": "tactic",
-    "relationship": "relationship"
+    "relationship": "relationship",
+    "marking-definition": "marking-definition"
 }
 export {stixTypeToAttackType};
 
@@ -33,6 +34,8 @@ export abstract class StixObject extends Serializable {
     public modified_by_ref: string; //embedded relationship
     public modified_by?: any;
 
+    public object_marking_refs: string[] = []; //list of embedded relationships to marking_defs
+
     protected abstract get attackIDValidator(): {
         regex: string, // regex to validate the ID
         format: string // format to display to user
@@ -45,7 +48,8 @@ export abstract class StixObject extends Serializable {
         "mitigation": "mitigations",
         "matrix": "matrices",
         "tactic": "tactics",
-        "note": "notes"
+        "note": "notes",
+        "marking-definition": "marking-definitions"
     }
 
     public get routes(): any[] { // route to view the object
@@ -142,6 +146,7 @@ export abstract class StixObject extends Serializable {
             "x_mitre_deprecated": this.deprecated,
             "revoked": this.revoked,
             "description": this.description,
+            "object_marking_refs": this.object_marking_refs,
             "spec_version": "2.1"
         }
         if (this.created_by_ref) stix.created_by_ref = this.created_by_ref;
@@ -168,6 +173,11 @@ export abstract class StixObject extends Serializable {
             if ("id" in sdo) {
                 if (typeof(sdo.id) === "string") this.stixID = sdo.id;
                 else console.error("TypeError: id field is not a string:", sdo.id, "(",typeof(sdo.id),")")
+            }
+
+            if ("object_marking_refs" in sdo) {
+                if (this.isStringArray(sdo.object_marking_refs)) this.object_marking_refs = sdo.object_marking_refs;
+                else console.error("TypeError, object_marking_refs field is not a string array", this.object_marking_refs, "(", typeof(this.object_marking_refs), ")");
             }
 
             if ("type" in sdo) {

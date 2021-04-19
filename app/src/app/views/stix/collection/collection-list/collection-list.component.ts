@@ -15,10 +15,11 @@ export class CollectionListComponent implements OnInit {
 
     ngOnInit() {
         if (this.config.mode == "imported") {
+            // show imported collections
             this.filteredCollections = this.config.collections.filter(collection => collection.imported);
         } else if (this.config.mode == "created") {
+            // get list of collections that were not imported (were created by the user)
             let createdCollections = this.config.collections.filter(collection => !collection.imported);
-            console.log(createdCollections);
             let idToCollections = new Map<string, Collection[]>();
             for (let collection of createdCollections) {
                 if (idToCollections.has(collection.stixID)) { //update
@@ -29,20 +30,17 @@ export class CollectionListComponent implements OnInit {
                     idToCollections.set(collection.stixID, [collection])
                 }
             }
-            console.log(idToCollections);
             // for each collection, reduce to releases and most recent modified version
             this.filteredCollections = [];
             for (let collectionID of idToCollections.keys()) {
                 let versions = idToCollections.get(collectionID);
-                versions.sort((a,b) => a.modified.toISOString().localeCompare(b.modified.toISOString())); //sort by modified
-                this.filteredCollections = this.filteredCollections.concat(versions.filter(x => x.workflow && x.workflow.state == "reviewed")) // add all reviewed collections
-                console.log(versions[versions.length - 1])
-                if (!versions[versions.length - 1].workflow || versions[versions.length - 1].workflow.state != "reviewed") {
-                    console.log("adding most recent modified version")
+                versions.sort((a,b) => a.modified.toISOString().localeCompare(b.modified.toISOString())); //sort by modified date
+                this.filteredCollections = this.filteredCollections.concat(versions.filter(x => x.released)) // add all released collections
+                if (!versions[versions.length - 1].released) {
+                    // if most recent version is not a release, add it as well
                     this.filteredCollections.push(versions[versions.length - 1]) //push most recently modified version assuming it hasn't been pushed already
                 }
             }
-            console.log(this.filteredCollections)
         }
     }
 

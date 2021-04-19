@@ -8,6 +8,7 @@ import { ExternalReference } from 'src/app/classes/external-references';
 import { Collection } from 'src/app/classes/stix/collection';
 import { Group } from 'src/app/classes/stix/group';
 import { Identity } from 'src/app/classes/stix/identity';
+import { MarkingDefinition } from 'src/app/classes/stix/marking-definition';
 import { Matrix } from 'src/app/classes/stix/matrix';
 import { Mitigation } from 'src/app/classes/stix/mitigation';
 import { Note } from 'src/app/classes/stix/note';
@@ -20,7 +21,7 @@ import { environment } from "../../../../environments/environment";
 import { ApiConnector } from '../api-connector';
 
 //attack types
-type AttackType = "collection" | "group" | "matrix" | "mitigation" | "software" | "tactic" | "technique" | "relationship" | "note" | "identity";
+type AttackType = "collection" | "group" | "matrix" | "mitigation" | "software" | "tactic" | "technique" | "relationship" | "note" | "identity" | "marking-definition";
 // pluralize AttackType
 const attackTypeToPlural = {
     "technique": "techniques",
@@ -32,7 +33,8 @@ const attackTypeToPlural = {
     "collection": "collections",
     "relationship": "relationships",
     "note": "notes",
-    "identity": "identities"
+    "identity": "identities",
+    "marking-definition": "marking-definitions"
 }
 // transform AttackType to the relevant class
 const attackTypeToClass = {
@@ -45,7 +47,8 @@ const attackTypeToClass = {
     "collection": Collection,
     "relationship": Relationship,
     "note": Note,
-    "identity": Identity
+    "identity": Identity,
+    "marking-definition": MarkingDefinition
 }
 
 // transform AttackType to the relevant class
@@ -59,7 +62,8 @@ const stixTypeToClass = {
     "x-mitre-matrix": Matrix,
     "x-mitre-collection": Collection,
     "relationship": Relationship,
-    "identity": Identity
+    "identity": Identity,
+    "marking-definition": MarkingDefinition
 }
 
 export interface Paginated<T> {
@@ -480,6 +484,7 @@ export class RestApiConnectorService extends ApiConnector {
      */
      public get getIdentity() { return this.getStixObjectFactory<Identity>("identity"); }
 
+     public get getMarkingDefinition() { return this.getStixObjectFactory<MarkingDefinition>("marking-definition")}
     /**
      * Factory to create a new STIX object creator (POST) function
      * @template T the type to create
