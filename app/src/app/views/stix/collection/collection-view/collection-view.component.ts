@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { forkJoin, Observable } from 'rxjs';
+import { forkJoin, Observable, of } from 'rxjs';
 import { delay, map, switchMap, tap } from 'rxjs/operators';
 import { ValidationData } from 'src/app/classes/serializable';
 import { Collection, CollectionDiffCategories, VersionReference } from 'src/app/classes/stix/collection';
@@ -80,7 +80,7 @@ export class CollectionViewComponent extends StixViewPage implements OnInit {
         this.validationData = null;
         let subscription = this.collection.validate(this.restApiConnector).pipe(
             map(results => { // add extra results here
-
+                console.log("validating")
                 // must have incremented version number compared to prior release
                 if (this.previousRelease) {
                     if (this.collection.version.compareTo(this.previousRelease.version) <= 0) { 
@@ -135,9 +135,19 @@ export class CollectionViewComponent extends StixViewPage implements OnInit {
                     }
                 }
 
+
+                //list of identities and marking definitions used in the data
+                let identities = new Set<string>();
+                let marking_defs = new Set<string>();
+
                 //stage data for saving
                 this.stagedData = [];
                 for (let object of collectionStixIDToObject.values()) {
+                    // record associated identities/marking defs
+                    if (object.created_by_ref) identities.add(object.created_by_ref);
+                    if (object.modified_by_ref) identities.add(object.modified_by_ref);
+                    for (let marking_ref of object.object_marking_refs) marking_defs.add(marking_ref);
+
                     this.stagedData.push(new VersionReference({
                         "object_ref": object.stixID,
                         "object_modified": object.modified.toISOString()
@@ -147,6 +157,7 @@ export class CollectionViewComponent extends StixViewPage implements OnInit {
                                                                 : new Map<string, StixObject>(); // empty if there was nothing here previously
                 // stage relationships for saving and determine stats
                 let relationship_stats = {
+                    "total_included": 0,
                     "new": 0,
                     "updated": 0,
                     "unchanged": 0,
@@ -156,8 +167,16 @@ export class CollectionViewComponent extends StixViewPage implements OnInit {
                 for (let relationship of this.attackObjects.filter(x => x.stix.type == "relationship")) {
                     let rel_id = relationship.stix.id;
                     let rel_modified = relationship.stix.modified;
+
+                    // record associated identities/marking defs
+                    if (relationship.created_by_ref) identities.add(relationship.stix.created_by_ref);
+                    if (relationship.modified_by_ref) identities.add(relationship.stix.modified_by_ref);
+                    for (let marking_ref of relationship.stix.object_marking_refs) marking_defs.add(marking_ref);
+
                     if (collectionStixIDToObject.has(relationship.stix.source_ref) && collectionStixIDToObject.has(relationship.stix.target_ref)) {
                         // includes the relationship!
+                        relationship_stats.total_included++;
+
                         this.stagedData.push(new VersionReference({
                             "object_ref": rel_id,
                             "object_modified": rel_modified
@@ -191,6 +210,11 @@ export class CollectionViewComponent extends StixViewPage implements OnInit {
                 results.info.push({
                     result: "info",
                     field: "contents",
+                    message: `${relationship_stats.new} total relationships are included in this release`
+                })
+                results.info.push({
+                    result: "info",
+                    field: "contents",
                     message: `${relationship_stats.new} new relationships were added in this release`
                 })
                 results.info.push({
@@ -220,9 +244,51 @@ export class CollectionViewComponent extends StixViewPage implements OnInit {
                     field: "contents",
                     message: "the collection has no contents"
                 })
+                //return validation results and list of misc objects we need to stage
+                return {
+                    results,
+                    identities: Array.from(identities),
+                    marking_defs: Array.from(marking_defs)
+                };
+            }),
+            switchMap((results_and_extras) => { //stage misc objects
+                console.log("staging identities and marking_defs", results_and_extras)
+                let apis = {
+                    identities: results_and_extras.identities.length > 0 ? forkJoin(results_and_extras.identities.map(x => this.restApiConnector.getIdentity(x))): of([]),
+                    marking_defs: results_and_extras.marking_defs.length > 0 ? forkJoin(results_and_extras.marking_defs.map(x => this.restApiConnector.getMarkingDefinition(x))) : of([])
+                }
+                return forkJoin(apis).pipe(
+                    map((results) => {
+                        let any_results = results as any;
+                        console.log(results);
+                        // add resultant identities and marking defs to staged objects
+                        for (let identity of any_results.identities) {
+                            this.stagedData.push(new VersionReference({
+                                "object_ref": identity[0].stixID,
+                                "object_modified": identity[0].modified.toISOString()
+                            }))
+                            results_and_extras.results.info.push({
+                                result: "info",
+                                field: "contents",
+                                message: `includes objects created/edited by ${identity[0].name}`
+                            })
+                        }
+                        for (let marking_def of any_results.marking_defs) {
+                            this.stagedData.push(new VersionReference({
+                                "object_ref": marking_def[0].stixID,
+                                "object_modified": marking_def[0].modified.toISOString()
+                            }))
+                            results_and_extras.results.info.push({
+                                result: "info",
+                                field: "contents",
+                                message: `includes objects marked "${marking_def[0].definition.statement}"`
+                            })
+                        }
 
-                //return final results
-                return results;
+                        // now return the validation results
+                        return results_and_extras.results
+                    })
+                )
             })
         ).subscribe({
             next: (results) => this.validationData = results,
@@ -239,6 +305,7 @@ export class CollectionViewComponent extends StixViewPage implements OnInit {
         let subscription = this.collection.save(this.restApiConnector).subscribe({
             next: (result) => {
                 this.router.navigate([result.attackType, result.stixID, "modified", result.modified.toISOString()]);
+                this.validating = false;
             },
             complete: () => { subscription.unsubscribe(); }
         })
