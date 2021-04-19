@@ -1,4 +1,8 @@
 .app-timestamp-view {
     display: inline-block;
     white-space: nowrap;
+    
+    span {
+        vertical-align: middle;
+    }
 }

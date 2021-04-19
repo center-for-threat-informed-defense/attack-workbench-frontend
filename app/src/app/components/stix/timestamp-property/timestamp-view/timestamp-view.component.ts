@@ -43,8 +43,6 @@ export class TimestampViewComponent implements OnInit {
     
     constructor() { }
 
-    ngOnInit(): void {
-        
-    }
+    ngOnInit(): void { }
 
 }

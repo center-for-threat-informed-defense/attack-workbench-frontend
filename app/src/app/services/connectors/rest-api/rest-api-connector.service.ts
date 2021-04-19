@@ -7,6 +7,7 @@ import { CollectionIndex } from 'src/app/classes/collection-index';
 import { ExternalReference } from 'src/app/classes/external-references';
 import { Collection } from 'src/app/classes/stix/collection';
 import { Group } from 'src/app/classes/stix/group';
+import { Identity } from 'src/app/classes/stix/identity';
 import { Matrix } from 'src/app/classes/stix/matrix';
 import { Mitigation } from 'src/app/classes/stix/mitigation';
 import { Note } from 'src/app/classes/stix/note';
@@ -19,7 +20,7 @@ import { environment } from "../../../../environments/environment";
 import { ApiConnector } from '../api-connector';
 
 //attack types
-type AttackType = "collection" | "group" | "matrix" | "mitigation" | "software" | "tactic" | "technique" | "relationship" | "note";
+type AttackType = "collection" | "group" | "matrix" | "mitigation" | "software" | "tactic" | "technique" | "relationship" | "note" | "identity";
 // pluralize AttackType
 const attackTypeToPlural = {
     "technique": "techniques",
@@ -30,7 +31,8 @@ const attackTypeToPlural = {
     "matrix": "matrices",
     "collection": "collections",
     "relationship": "relationships",
-    "note": "notes"
+    "note": "notes",
+    "identity": "identities"
 }
 // transform AttackType to the relevant class
 const attackTypeToClass = {
@@ -42,7 +44,8 @@ const attackTypeToClass = {
     "matrix": Matrix,
     "collection": Collection,
     "relationship": Relationship,
-    "note": Note
+    "note": Note,
+    "identity": Identity
 }
 
 // transform AttackType to the relevant class
@@ -55,7 +58,8 @@ const stixTypeToClass = {
     "course-of-action": Mitigation,
     "x-mitre-matrix": Matrix,
     "x-mitre-collection": Collection,
-    "relationship": Relationship
+    "relationship": Relationship,
+    "identity": Identity
 }
 
 export interface Paginated<T> {
@@ -239,7 +243,7 @@ export class RestApiConnectorService extends ApiConnector {
      * @param {versions} ["all" | "latest"] if "all", get all versions of the collections. if "latest", only get the latest version of each collection.
      * @param {boolean} [deprecated] if true, get deprecated objects
      * @param {string[]} [excludeIDs] if specified, excludes these STIX IDs from the result
-     * @returns {Observable<Matrix[]>} observable of retrieved objects
+     * @returns {Observable<Collection[]>} observable of retrieved objects
      */
     public get getAllCollections() { return this.getStixObjectsFactory<Collection>("collection"); }
     /**
@@ -250,9 +254,20 @@ export class RestApiConnectorService extends ApiConnector {
      * @param {boolean} [revoked] if true, get revoked objects
      * @param {boolean} [deprecated] if true, get deprecated objects
      * @param {string[]} [excludeIDs] if specified, excludes these STIX IDs from the result
-     * @returns {Observable<Matrix[]>} observable of retrieved objects
+     * @returns {Observable<Note[]>} observable of retrieved objects
      */
     public get getAllNotes() { return this.getStixObjectsFactory<Note>("note"); }
+    /**
+     * Get all identities
+     * @param {number} [limit] the number of identities to retrieve
+     * @param {number} [offset] the number of identities to skip
+     * @param {string} [state] if specified, only get objects with this state
+     * @param {boolean} [revoked] if true, get revoked objects
+     * @param {boolean} [deprecated] if true, get deprecated objects
+     * @param {string[]} [excludeIDs] if specified, excludes these STIX IDs from the result
+     * @returns {Observable<Identity[]>} observable of retrieved objects
+     */
+     public get getAllIdentities() { return this.getStixObjectsFactory<Identity>("identity"); }
     /**
      * Get all relationships
      * @param {number} [limit] the number of relationships to retrieve
@@ -456,6 +471,14 @@ export class RestApiConnectorService extends ApiConnector {
      * @returns {Observable<Note>} the object with the given ID and modified date
      */
     public get getNote() { return this.getStixObjectFactory<Note>("note"); }
+    /**
+     * Get a single identity by STIX ID
+     * @param {string} id the object STIX ID
+     * @param {Date} [modified] if specified, get the version modified at the given date
+     * @param {versions} [string] default "latest", if "all" returns all versions of the object instead of just the latest version.
+     * @returns {Observable<Identity>} the object with the given ID and modified date
+     */
+     public get getIdentity() { return this.getStixObjectFactory<Identity>("identity"); }
 
     /**
      * Factory to create a new STIX object creator (POST) function
@@ -535,6 +558,12 @@ export class RestApiConnectorService extends ApiConnector {
      * @returns {Observable<Collection>} the created object
      */
     public get postCollection() { return this.postStixObjectFactory<Collection>("collection"); }
+    /**
+     * POST (create) a new identity
+     * @param {Identity} object the object to create
+     * @returns {Observable<Identity>} the created object
+     */
+     public get postIdentity() { return this.postStixObjectFactory<Identity>("identity"); }
 
     /**
      * Factory to create a new STIX put (update) function
@@ -617,6 +646,14 @@ export class RestApiConnectorService extends ApiConnector {
      * @returns {Observable<Note>} the updated object
      */
     public get putNote() { return this.putStixObjectFactory<Note>("note"); }
+    /**
+     * PUT (update) an identity
+     * @param {Identity} object the object to update
+     * @param {Date} [modified] optional, the modified date to overwrite. If omitted, uses the modified field of the object
+     * @returns {Observable<Identity>} the updated object
+     */
+    public get putIdentity() { return this.putStixObjectFactory<Identity>("identity"); }
+
 
     private deleteStixObjectFactory(attackType: AttackType) {
         let plural = attackTypeToPlural[attackType];
@@ -985,6 +1022,44 @@ export class RestApiConnectorService extends ApiConnector {
         return data$;
     }
 
+    /**
+     * Get the organization identity
+     * @returns {Observable<Identity>} the organization identity
+     */
+     public getOrganizationIdentity(): Observable<Identity> {
+        return this.http.get(`${this.baseUrl}/config/organization-identity`, {headers: this.headers}).pipe(
+            tap(_ => console.log("retrieved organization identity")),
+            map(result => {
+                return new Identity(result);
+            }),
+            catchError(this.handleError_single<Identity>()),
+            share() //multicast to subscribers
+        )
+    }
+
+    /**
+     * Update the organization identity
+     * @param {Identity} object the identity object to save
+     * @returns {Observable<Identity>} the updated identity
+     * @memberof RestApiConnectorService
+     */
+    public setOrganizationIdentity(object: Identity):  Observable<Identity> {
+        return this.postIdentity(object).pipe( //create/save the identity
+            switchMap((result) => {
+                console.log(result);
+                // set the organization identity to be this identity's ID after it was created/updated
+                return this.http.post(`${this.baseUrl}/config/organization-identity`, {id: result.stixID}, {headers: this.headers}).pipe(
+                    tap(this.handleSuccess("Organization Identity Updated")),
+                    map(_ => {
+                        return new Identity(result);
+                    }),
+                    catchError(this.handleError_single<Identity>()),
+                    share() // multicast so that multiple subscribers don't trigger the call twice. THIS MUST BE THE LAST LINE OF THE PIPE
+                )
+            })
+        )
+    }
+
     //   ___    ___      __  ___ _____ _____  __    _   ___ ___ ___ 
     //  | _ \  /_\ \    / / / __|_   _|_ _\ \/ /   /_\ | _ \_ _/ __|
     //  |   / / _ \ \/\/ /  \__ \ | |  | | >  <   / _ \|  _/| |\__ \
@@ -1054,5 +1129,5 @@ export class RestApiConnectorService extends ApiConnector {
             complete: () => { subscription.unsubscribe(); }
         });
         return getter;
-    }
+    }                                                                     
 }
