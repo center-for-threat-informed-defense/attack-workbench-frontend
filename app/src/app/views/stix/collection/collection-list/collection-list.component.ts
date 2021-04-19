@@ -35,8 +35,8 @@ export class CollectionListComponent implements OnInit {
             for (let collectionID of idToCollections.keys()) {
                 let versions = idToCollections.get(collectionID);
                 versions.sort((a,b) => a.modified.toISOString().localeCompare(b.modified.toISOString())); //sort by modified date
-                this.filteredCollections = this.filteredCollections.concat(versions.filter(x => x.released)) // add all released collections
-                if (!versions[versions.length - 1].released) {
+                this.filteredCollections = this.filteredCollections.concat(versions.filter(x => x.release)) // add all released collections
+                if (!versions[versions.length - 1].release) {
                     // if most recent version is not a release, add it as well
                     this.filteredCollections.push(versions[versions.length - 1]) //push most recently modified version assuming it hasn't been pushed already
                 }

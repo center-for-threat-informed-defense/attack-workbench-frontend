@@ -34,6 +34,7 @@ export class CollectionViewComponent extends StixViewPage implements OnInit {
     public attackObjects: any[]; //all objects in the knowledge base, unserialized
     public knowledgeBaseCollection: Collection;
     public editingReloadToggle: boolean = true;
+    public release: boolean = false;
 
     public loading: string = null; // loading message if loading
     public validating: boolean = false;
@@ -80,8 +81,15 @@ export class CollectionViewComponent extends StixViewPage implements OnInit {
         this.validationData = null;
         let subscription = this.collection.validate(this.restApiConnector).pipe(
             map(results => { // add extra results here
-                console.log("validating")
                 // must have incremented version number compared to prior release
+                if (this.release) {
+                    results.warnings.push({
+                        result: "warning",
+                        field: "released",
+                        message: `this version has been marked as a release. Once a version has been marked as a release, it cannot be un-marked even if you choose not to publish it. This should only be marked as a release if you are sure you intend to publish it.`
+                    })
+                }
+
                 if (this.previousRelease) {
                     if (this.collection.version.compareTo(this.previousRelease.version) <= 0) { 
                         results.errors.push({
@@ -260,7 +268,6 @@ export class CollectionViewComponent extends StixViewPage implements OnInit {
                 return forkJoin(apis).pipe(
                     map((results) => {
                         let any_results = results as any;
-                        console.log(results);
                         // add resultant identities and marking defs to staged objects
                         for (let identity of any_results.identities) {
                             this.stagedData.push(new VersionReference({
@@ -302,6 +309,7 @@ export class CollectionViewComponent extends StixViewPage implements OnInit {
 
     public save() {
         this.collection.contents = this.stagedData;
+        this.collection.release = this.release;
         let subscription = this.collection.save(this.restApiConnector).subscribe({
             next: (result) => {
                 this.router.navigate([result.attackType, result.stixID, "modified", result.modified.toISOString()]);
@@ -488,25 +496,34 @@ export class CollectionViewComponent extends StixViewPage implements OnInit {
     }
 
     ngOnInit() {
+        //set up subscription to route query params to reinitialize stix lists
         this.route.queryParams.subscribe(params => {
             //reinitialize stix lists in case editing has changed and they have different configs now
             this.editingReloadToggle = false;
             setTimeout(() => this.editingReloadToggle = true); 
         });
+
+        // prepare additional data loading
         this.loading = "fetching additional data";
         let apis = {
             "attackObjects": this.restApiConnector.getAllObjects(null, null, null, null, true, true, false)
         }
+
         // fetch previous version if this was not a new collection
         let objectStixID = this.route.snapshot.params["id"];
         if (objectStixID && objectStixID != "new") {
             apis["previousRelease"] = this.restApiConnector.getCollection(this.collection.stixID, null, "all", false).pipe(
                 switchMap((collections) => {
                     // get the most recent version which was released for comparison
-                    let last_version = collections.find((collection) => !collection.workflow || !collection.workflow.state || collection.workflow.state as string == "published")
-                    return this.restApiConnector.getCollection(this.collection.stixID, last_version.modified, "latest", null, true).pipe(
-                        map((full_collection) => full_collection[0])
-                    );
+                    let last_version = collections.find((collection) => collection.release);
+                    if (last_version) {
+                        return this.restApiConnector.getCollection(this.collection.stixID, last_version.modified, "latest", null, true).pipe(
+                            map((full_collection) => full_collection[0])
+                        );
+                    } else {
+                        console.log("no prior release of this collection")
+                        return of(null); //no prior release
+                    }
                 })
             )
         }
@@ -520,7 +537,7 @@ export class CollectionViewComponent extends StixViewPage implements OnInit {
                 let anyResult = result as any;
                 this.attackObjects = result["attackObjects"];
                 //make sure "previous" release wasn't this release
-                if (anyResult.hasOwnProperty("previousRelease") && anyResult["previousRelease"].modified.toISOString() != this.collection.modified.toISOString()) {
+                if (anyResult.hasOwnProperty("previousRelease") && anyResult["previousRelease"]) {
                     this.previousRelease = result["previousRelease"];
                     this.collectionChanges = this.collection.compareTo(this.previousRelease);
                 } else  {

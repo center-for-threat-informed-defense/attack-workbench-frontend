@@ -1,7 +1,7 @@
 @import "../../../../../style/globals";
 .collection-view {
     .row.width-limited {
-        width: 45em;
+        max-width: 45em;
         margin: 0 auto;
     }
     h1.name-property { // override name-property styles
@@ -61,9 +61,9 @@
 
     .content.collection-data {
         code {
-            overflow-x: hidden;
-            white-space: nowrap;
-            text-overflow: ellipsis;
+            // overflow-x: hidden;
+            // white-space: nowrap;
+            // text-overflow: ellipsis;
         }
         .download {
             cursor: pointer;
@@ -78,6 +78,9 @@
                 color: color(link);
             }
         }
+    }
+    .releaseExplanation {
+        max-width: 25em;
     }
     // .version-select {
     //     @extend .heading;
