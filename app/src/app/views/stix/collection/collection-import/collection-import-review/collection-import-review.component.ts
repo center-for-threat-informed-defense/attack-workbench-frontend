@@ -8,6 +8,7 @@ import { Relationship } from 'src/app/classes/stix/relationship';
 import { Software } from 'src/app/classes/stix/software';
 import { Tactic } from 'src/app/classes/stix/tactic';
 import { Technique } from 'src/app/classes/stix/technique';
+import { EditorService } from 'src/app/services/editor/editor.service';
 import { StixViewPage } from '../../../stix-view-page';
 
 @Component({
@@ -31,9 +32,11 @@ export class CollectionImportReviewComponent extends StixViewPage implements OnI
         group:        new CollectionDiffCategories<Group>()
     }
 
-    constructor(private route: ActivatedRoute) { super() }
+    constructor(private route: ActivatedRoute, public editor: EditorService) { super() }
 
     ngOnInit() {
+        // disable editing
+        this.editor.editable = false;
         // parse collection into object_import_categories
         
         //build category lookup
