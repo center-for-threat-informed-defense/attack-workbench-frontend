@@ -22,6 +22,7 @@ export class CollectionListComponent implements OnInit {
             let createdCollections = this.config.collections.filter(collection => !collection.imported);
             let idToCollections = new Map<string, Collection[]>();
             for (let collection of createdCollections) {
+                collection.editable = false; //all but last version of each release are not editable (see below for handing of last version)
                 if (idToCollections.has(collection.stixID)) { //update
                     let values = idToCollections.get(collection.stixID);
                     values.push(collection);
@@ -40,6 +41,7 @@ export class CollectionListComponent implements OnInit {
                     // if most recent version is not a release, add it as well
                     this.filteredCollections.push(versions[versions.length - 1]) //push most recently modified version assuming it hasn't been pushed already
                 }
+                this.filteredCollections[this.filteredCollections.length - 1].editable = true; //last version of each collection is editable
             }
         }
     }

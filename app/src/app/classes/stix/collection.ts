@@ -159,7 +159,7 @@ export class Collection extends StixObject {
     public stix_contents: StixObject[] = []; //the actual objects in the collection
     public imported: Date; // null if it was not imported
     public release: boolean = false; // was this collection version release?
-
+    public editable: boolean = true; //internal field; set to false to disallow editing of this collection
      // auto-generated changelog/report about the import
     //  each sub-property is a list of STIX IDs corresponding to objects in the import
     public import_categories: CollectionDiffCategories<string>;
@@ -181,7 +181,7 @@ export class Collection extends StixObject {
             "label": "view",
             "route": "modified/" + this.modified.toISOString()
         }]
-        if (!this.imported) {
+        if (!this.imported && this.editable) {
             routes.push({
                 "label": "edit",
                 "route": "modified/" + this.modified.toISOString(),

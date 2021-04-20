@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit, QueryList, ViewChildren, ViewEncapsulation } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { forkJoin, Observable, of } from 'rxjs';
 import { delay, map, switchMap, tap } from 'rxjs/operators';
@@ -36,6 +36,8 @@ export class CollectionViewComponent extends StixViewPage implements OnInit {
     public editingReloadToggle: boolean = true;
     public release: boolean = false;
 
+    @ViewChildren(StixListComponent) stixLists: QueryList<StixListComponent>;
+
     public loading: string = null; // loading message if loading
     public validating: boolean = false;
     public validationData: ValidationData = null;
@@ -69,7 +71,7 @@ export class CollectionViewComponent extends StixViewPage implements OnInit {
     public collection_import_categories = [];
 
 
-    constructor(private route: ActivatedRoute, private router: Router, private restApiConnector: RestApiConnectorService, private snackbar: MatSnackBar) { super();  }
+    constructor(private route: ActivatedRoute, private router: Router, private restApiConnector: RestApiConnectorService, private snackbar: MatSnackBar, private editor: EditorService) { super();  }
 
     /**
      * Trigger collection save behaviors
@@ -332,7 +334,7 @@ export class CollectionViewComponent extends StixViewPage implements OnInit {
      * @param {("stage" | "unstage")} direction stage moves to collectionChanges, unstage moves to potentialChanges
      * @param {StixListComponent[]} refs list of stix components to trigger redraws of
      */
-    public moveChanges(objects: StixObject[], attackType: string, category: changeCategory, direction: "stage" | "unstage", refs: StixListComponent[]): void {
+    public moveChanges(objects: StixObject[], attackType: string, category: changeCategory, direction: "stage" | "unstage"): void {
         // Addition: stage
         if (category == "additions" && direction == "stage") {
             // - Remove from potential additions
@@ -487,11 +489,11 @@ export class CollectionViewComponent extends StixViewPage implements OnInit {
 
         }
 
-        // after any update, update the lists
+        // after any update, update the lists since contents may have changed
         setTimeout(() => { //update lists after a render cycle
-            for (let ref of refs) {
-                ref.applyControls();
-            }
+            this.stixLists.forEach(list => {
+                list.applyControls();
+            });
         })
     }
 
@@ -514,6 +516,11 @@ export class CollectionViewComponent extends StixViewPage implements OnInit {
         if (objectStixID && objectStixID != "new") {
             apis["previousRelease"] = this.restApiConnector.getCollection(this.collection.stixID, null, "all", false).pipe(
                 switchMap((collections) => {
+                    // are there newer versions? if so, disable editing
+                    if (collections.some(collection => collection.modified.toISOString() > this.collection.modified.toISOString())) {
+                        this.collection.editable = false; 
+                        this.editor.editable = false;
+                    }
                     // get the most recent version which was released for comparison
                     let last_version = collections.find((collection) => collection.release);
                     if (last_version) {

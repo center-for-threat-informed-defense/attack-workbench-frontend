@@ -123,19 +123,19 @@
                                                                 'position': 'end'
                                                             }
                                                         }"
-                                                        (onRowAction)="moveChanges([$event], attackType, 'additions', 'stage', [potentialAdditionsRef, collectionAdditionsRef])"></app-stix-list>
+                                                        (onRowAction)="moveChanges([$event], attackType, 'additions', 'stage')"></app-stix-list>
                                                     </div>
                                                     <div class="col controls narrow" *ngIf="editing">
                                                         <button mat-icon-button 
                                                                 matTooltip="stage all additions" 
                                                                 [disabled]="potentialChanges[attackType].additions.length == 0"
-                                                                (click)="moveChanges(potentialChanges[attackType].additions, attackType, 'additions', 'stage', [potentialAdditionsRef, collectionAdditionsRef])">
+                                                                (click)="moveChanges(potentialChanges[attackType].additions, attackType, 'additions', 'stage')">
                                                             <mat-icon aria-label="move all to collection">double_arrow</mat-icon>
                                                         </button>
                                                         <button mat-icon-button 
                                                                 matTooltip="unstage all additions" 
                                                                 [disabled]="collectionChanges[attackType].additions.length == 0"
-                                                                (click)="moveChanges(collectionChanges[attackType].additions, attackType, 'additions', 'unstage', [potentialAdditionsRef, collectionAdditionsRef])">
+                                                                (click)="moveChanges(collectionChanges[attackType].additions, attackType, 'additions', 'unstage')">
                                                             <mat-icon aria-label="move all from collection" class="icon-mirror">double_arrow</mat-icon>
                                                         </button>
                                                     </div>
@@ -150,7 +150,7 @@
                                                                 'position': 'start'
                                                             } : null
                                                         }"
-                                                        (onRowAction)="moveChanges([$event], attackType, 'additions', 'unstage', [potentialAdditionsRef, collectionAdditionsRef])"></app-stix-list>
+                                                        (onRowAction)="moveChanges([$event], attackType, 'additions', 'unstage')"></app-stix-list>
                                                     </div>
                                                 </div>
                                             </div>
@@ -188,19 +188,19 @@
                                                                 'position': 'end'
                                                             }
                                                         }"
-                                                        (onRowAction)="moveChanges([$event], attackType, 'changes', 'stage', [potentialChangesRef, collectionChangesRef])"></app-stix-list>
+                                                        (onRowAction)="moveChanges([$event], attackType, 'changes', 'stage')"></app-stix-list>
                                                     </div>
                                                     <div class="col controls narrow" *ngIf="editing">
                                                         <button mat-icon-button 
                                                                 matTooltip="stage all changes" 
                                                                 [disabled]="potentialChanges[attackType].changes.length == 0"
-                                                                (click)="moveChanges(potentialChanges[attackType].changes, attackType, 'changes', 'stage', [potentialChangesRef, collectionChangesRef])">
+                                                                (click)="moveChanges(potentialChanges[attackType].changes, attackType, 'changes', 'stage')">
                                                                 <mat-icon aria-label="move all to collection">double_arrow</mat-icon>
                                                         </button>
                                                         <button mat-icon-button 
                                                                 matTooltip="unstage all changes" 
                                                                 [disabled]="collectionChanges[attackType].changes.length == 0"
-                                                                (click)="moveChanges(collectionChanges[attackType].changes, attackType, 'changes', 'unstage', [potentialChangesRef, collectionChangesRef])">
+                                                                (click)="moveChanges(collectionChanges[attackType].changes, attackType, 'changes', 'unstage')">
                                                             <mat-icon aria-label="move all from collection" class="icon-mirror">double_arrow</mat-icon>
                                                         </button>
                                                     </div>
@@ -215,7 +215,7 @@
                                                                 'position': 'start'
                                                             } : null
                                                         }"
-                                                        (onRowAction)="moveChanges([$event], attackType, 'changes', 'unstage', [potentialChangesRef, collectionChangesRef])"></app-stix-list>
+                                                        (onRowAction)="moveChanges([$event], attackType, 'changes', 'unstage')"></app-stix-list>
                                                     </div>
                                                 </div>
                                             </div>
@@ -253,19 +253,19 @@
                                                                 'position': 'end'
                                                             }
                                                         }"
-                                                        (onRowAction)="moveChanges([$event], attackType, 'minor_changes', 'stage', [potentialMinorChangesRef, collectionMinorChangesRef])"></app-stix-list>
+                                                        (onRowAction)="moveChanges([$event], attackType, 'minor_changes', 'stage')"></app-stix-list>
                                                     </div>
                                                     <div class="col controls narrow" *ngIf="editing">
                                                         <button mat-icon-button 
                                                                 matTooltip="stage all minor changes" 
                                                                 [disabled]="potentialChanges[attackType].minor_changes.length == 0"
-                                                                (click)="moveChanges(potentialChanges[attackType].minor_changes, attackType, 'minor_changes', 'stage', [potentialMinorChangesRef, collectionMinorChangesRef])">
+                                                                (click)="moveChanges(potentialChanges[attackType].minor_changes, attackType, 'minor_changes', 'stage')">
                                                             <mat-icon aria-label="move all to collection">double_arrow</mat-icon>
                                                         </button>
                                                         <button mat-icon-button 
                                                                 matTooltip="unstage all minor changes" 
                                                                 [disabled]="collectionChanges[attackType].minor_changes.length == 0"
-                                                                (click)="moveChanges(collectionChanges[attackType].minor_changes, attackType, 'minor_changes', 'unstage', [potentialMinorChangesRef, collectionMinorChangesRef])">
+                                                                (click)="moveChanges(collectionChanges[attackType].minor_changes, attackType, 'minor_changes', 'unstage')">
                                                             <mat-icon aria-label="move all from collection" class="icon-mirror">double_arrow</mat-icon>
                                                         </button>
                                                     </div>
@@ -280,7 +280,7 @@
                                                                 'position': 'start'
                                                             } : null
                                                         }"
-                                                        (onRowAction)="moveChanges([$event], attackType, 'minor_changes', 'unstage', [potentialMinorChangesRef, collectionMinorChangesRef])"></app-stix-list>
+                                                        (onRowAction)="moveChanges([$event], attackType, 'minor_changes', 'unstage')"></app-stix-list>
                                                     </div>
                                                 </div>
                                             </div>
@@ -318,19 +318,19 @@
                                                                 'position': 'end'
                                                             }
                                                         }"
-                                                        (onRowAction)="moveChanges([$event], attackType, 'revocations', 'stage', [potentialRevocationsRef, collectionRevocationsRef])"></app-stix-list>
+                                                        (onRowAction)="moveChanges([$event], attackType, 'revocations', 'stage')"></app-stix-list>
                                                     </div>
                                                     <div class="col controls narrow" *ngIf="editing">
                                                         <button mat-icon-button 
                                                                 matTooltip="stage all revocations" 
                                                                 [disabled]="potentialChanges[attackType].revocations.length == 0"
-                                                                (click)="moveChanges(potentialChanges[attackType].revocations, attackType, 'revocations', 'stage', [potentialRevocationsRef, collectionRevocationsRef])">
+                                                                (click)="moveChanges(potentialChanges[attackType].revocations, attackType, 'revocations', 'stage')">
                                                             <mat-icon aria-label="move all to collection">double_arrow</mat-icon>
                                                         </button>
                                                         <button mat-icon-button 
                                                                 matTooltip="unstage all revocations" 
                                                                 [disabled]="collectionChanges[attackType].revocations.length == 0"
-                                                                (click)="moveChanges(collectionChanges[attackType].revocations, attackType, 'revocations', 'unstage', [potentialRevocationsRef, collectionRevocationsRef])">
+                                                                (click)="moveChanges(collectionChanges[attackType].revocations, attackType, 'revocations', 'unstage')">
                                                             <mat-icon aria-label="move all from collection" class="icon-mirror">double_arrow</mat-icon>
                                                         </button>
                                                     </div>
@@ -345,7 +345,7 @@
                                                                 'position': 'start'
                                                             } : null
                                                         }"
-                                                        (onRowAction)="moveChanges([$event], attackType, 'revocations', 'unstage', [potentialRevocationsRef, collectionRevocationsRef])"></app-stix-list>
+                                                        (onRowAction)="moveChanges([$event], attackType, 'revocations', 'unstage')"></app-stix-list>
                                                     </div>
                                                 </div>
                                             </div>
@@ -383,19 +383,19 @@
                                                                 'position': 'end'
                                                             }
                                                         }"
-                                                        (onRowAction)="moveChanges([$event], attackType, 'deprecations', 'stage', [potentialDeprecationsRef, collectionDeprecationsRef])"></app-stix-list>
+                                                        (onRowAction)="moveChanges([$event], attackType, 'deprecations', 'stage')"></app-stix-list>
                                                     </div>
                                                     <div class="col controls narrow" *ngIf="editing">
                                                         <button mat-icon-button 
                                                                 matTooltip="stage all deprecations" 
                                                                 [disabled]="potentialChanges[attackType].deprecations.length == 0"
-                                                                (click)="moveChanges(potentialChanges[attackType].deprecations, attackType, 'deprecations', 'stage', [potentialDeprecationsRef, collectionDeprecationsRef])">
+                                                                (click)="moveChanges(potentialChanges[attackType].deprecations, attackType, 'deprecations', 'stage')">
                                                             <mat-icon aria-label="move all to collection">double_arrow</mat-icon>
                                                         </button>
                                                         <button mat-icon-button 
                                                                 matTooltip="unstage all deprecations" 
                                                                 [disabled]="collectionChanges[attackType].deprecations.length == 0"
-                                                                (click)="moveChanges(collectionChanges[attackType].deprecations, attackType, 'deprecations', 'unstage', [potentialDeprecationsRef, collectionDeprecationsRef])">
+                                                                (click)="moveChanges(collectionChanges[attackType].deprecations, attackType, 'deprecations', 'unstage')">
                                                             <mat-icon aria-label="move all from collection" class="icon-mirror">double_arrow</mat-icon>
                                                         </button>
                                                     </div>
@@ -410,7 +410,7 @@
                                                                 'position': 'start'
                                                             } : null
                                                         }"
-                                                        (onRowAction)="moveChanges([$event], attackType, 'deprecations', 'unstage', [potentialDeprecationsRef, collectionDeprecationsRef])"></app-stix-list>
+                                                        (onRowAction)="moveChanges([$event], attackType, 'deprecations', 'unstage')"></app-stix-list>
                                                     </div>
                                                 </div>
                                             </div>

@@ -175,7 +175,7 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
                 case "collection-created":
                     this.addColumn("name", "name", "plain", sticky_allowed, ["name"]);
                     this.addColumn("version", "version", "version");
-                    this.addColumn("released", "release", "plain", null, ["text-label"]);
+                    this.addColumn("released?", "release", "plain", null, ["text-label"]);
                     this.addColumn("modified", "modified", "timestamp");
                     this.addColumn("created", "created", "timestamp");
                     this.tableDetail = [{
