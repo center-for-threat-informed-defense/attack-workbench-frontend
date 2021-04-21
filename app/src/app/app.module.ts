@@ -99,6 +99,8 @@ import { NamePropertyComponent } from "./components/stix/name-property/name-prop
 
 import { HelpPageComponent } from './views/help-page/help-page.component';
 import { LandingPageComponent } from './views/landing-page/landing-page.component';
+import { AdminPageComponent } from "./views/admin-page/admin-page.component";
+import { OrgIdentityPageComponent } from "./views/admin-page/org-identity-page/org-identity-page.component";
 
 import { StixDialogComponent } from "./views/stix/stix-dialog/stix-dialog.component"
 import { StixPageComponent } from "./views/stix/stix-page/stix-page.component"
@@ -108,6 +110,7 @@ import { CollectionManagerComponent } from "./views/stix/collection/collection-m
 import { CollectionIndexListComponent } from "./views/stix/collection/collection-index/collection-index-list/collection-index-list.component";
 import { CollectionIndexViewComponent } from "./views/stix/collection/collection-index/collection-index-view/collection-index-view.component";
 import { CollectionIndexImportComponent } from "./views/stix/collection/collection-index/collection-index-import/collection-index-import.component";
+import { CollectionImportReviewComponent } from "./views/stix/collection/collection-import/collection-import-review/collection-import-review.component";
 
 import { CollectionListComponent } from './views/stix/collection/collection-list/collection-list.component';
 import { CollectionViewComponent } from './views/stix/collection/collection-view/collection-view.component';
@@ -142,6 +145,10 @@ import { OrderedListViewComponent } from './components/stix/ordered-list-propert
 import { OrderedListEditComponent } from './components/stix/ordered-list-property/ordered-list-edit/ordered-list-edit.component';
 
 import { NotesEditorComponent } from './components/resources-drawer/notes-editor/notes-editor.component';
+import { ObjectStatusComponent } from './components/object-status/object-status.component';
+import { IconViewComponent } from './components/stix/icon-view/icon-view.component';
+import { IdentityPropertyComponent } from './components/stix/identity-property/identity-property.component';
+import { NgxJdenticonModule, JDENTICON_CONFIG } from 'ngx-jdenticon';
 
 
 @NgModule({
@@ -189,9 +196,12 @@ import { NotesEditorComponent } from './components/resources-drawer/notes-editor
     VersionEditComponent,
     VersionViewComponent,
     NamePropertyComponent,
+    IconViewComponent,
     
     LandingPageComponent,
     HelpPageComponent,
+    AdminPageComponent,
+    OrgIdentityPageComponent,
 
     StixDialogComponent,
     StixPageComponent,
@@ -203,6 +213,7 @@ import { NotesEditorComponent } from './components/resources-drawer/notes-editor
     CollectionIndexViewComponent,
     CollectionIndexImportComponent,
     CollectionImportComponent,
+    CollectionImportReviewComponent,
     // CollectionExportComponent,
     
     RelationshipViewComponent,
@@ -232,7 +243,9 @@ import { NotesEditorComponent } from './components/resources-drawer/notes-editor
     OrderedListViewComponent,
     OrderedListEditComponent,
 
-    NotesEditorComponent
+    NotesEditorComponent,
+    ObjectStatusComponent,
+    IdentityPropertyComponent
   ],
   imports: [
     BreadcrumbModule,
@@ -248,6 +261,7 @@ import { NotesEditorComponent } from './components/resources-drawer/notes-editor
     //   }
     }),
     PopoverModule,
+    NgxJdenticonModule,
     
     BrowserModule,
 
@@ -318,7 +332,22 @@ import { NotesEditorComponent } from './components/resources-drawer/notes-editor
 
     OverlayModule
   ],
-  providers: [],
+  providers: [
+    {
+        provide: JDENTICON_CONFIG,
+        useValue: {
+          lightness: {
+            color: [0.35, 0.60],
+            grayscale: [0.35, 0.60],
+          },
+          saturation: {
+            color: 0.50,
+            grayscale: 0.50,
+          },
+          backColor: '#0000',
+        },
+      },
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

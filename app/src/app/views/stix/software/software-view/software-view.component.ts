@@ -11,16 +11,16 @@ import { StixViewPage } from '../../stix-view-page';
   styleUrls: ['./software-view.component.scss']
 })
 export class SoftwareViewComponent extends StixViewPage implements OnInit {
-    public editing: boolean = false;
+    // public editing: boolean = false;
 
     public get software(): Software { return this.config.object as Software; }
     
     constructor(private route: ActivatedRoute, private breadcrumbService: BreadcrumbService) { super() }
 
     ngOnInit() {
-        this.route.queryParams.subscribe(params => {
-            this.editing = params["editing"];
-        });
+        // this.route.queryParams.subscribe(params => {
+        //     this.editing = params["editing"];
+        // });
     }
 
 }

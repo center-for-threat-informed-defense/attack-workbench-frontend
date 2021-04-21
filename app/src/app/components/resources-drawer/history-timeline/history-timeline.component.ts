@@ -2,6 +2,7 @@ import { Component, EventEmitter, OnDestroy, OnInit, Output, ViewEncapsulation }
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
 import { forkJoin, Subscription } from 'rxjs';
+import { Collection } from 'src/app/classes/stix/collection';
 import { Relationship } from 'src/app/classes/stix/relationship';
 import { StixObject } from 'src/app/classes/stix/stix-object';
 import { VersionNumber } from 'src/app/classes/version-number';
@@ -12,14 +13,17 @@ import { StixDialogComponent } from 'src/app/views/stix/stix-dialog/stix-dialog.
 interface HistoryEvent {
     change_types: {
         versionChanged: boolean; // did the version number change? corresponds to prior_version
+        stateChanged: boolean; // did the workflow state change?
         objectCreated: boolean; // was the object created?
-        objectImported: boolean; // was the object imported for the first time
+        objectImported: boolean; // was the object imported for the first time,
+        release: boolean; //for collections, was this a release?
     }
     icon: string; // icon representing the change
     name: string; //name of the object being changed
     description: string; // description of what happened in the event
     sdo: StixObject; // StixObject version corresponding to the event (post-change)
     prior_version?: VersionNumber; // if specified, the version number changed; this field is the prior version number
+    prior_state?: string; // if specified, the workflow state changed; this field is the prior workflow state
 }
 
 @Component({
@@ -61,24 +65,31 @@ export class HistoryTimelineComponent implements OnInit, OnDestroy {
         this.historyEvents = [];
         // build historyEvents for the object itself
         let previousVersion = null;
+        let previousState = null;
         for (let objectVersion of objectVersions) {
             let versionChanged = previousVersion && objectVersion.version.compareTo(previousVersion) != 0;
+            let stateChanged = previousState && objectVersion.workflow && objectVersion.workflow.state ? objectVersion.workflow.state != previousState : false;
             let objectCreated = objectVersion.created.getTime() == objectVersion.modified.getTime();
+            let release = objectVersion.attackType == "collection" && (objectVersion as Collection).release;
             let objectImported = !objectCreated && !previousVersion;
             let description = objectCreated? `${objectVersion["name"]} was created` : objectImported? `Earliest imported version of ${objectVersion["name"]}` : `${objectVersion["name"]} was edited`
             this.historyEvents.push({
                 change_types: {
                     versionChanged: versionChanged,
+                    stateChanged: stateChanged,
                     objectImported: objectImported,
-                    objectCreated: objectCreated
+                    objectCreated: objectCreated,
+                    release: release
                 },
                 icon: objectImported? "cloud_download" : objectCreated? "add" : "edit",
                 name: objectVersion["name"],
                 description: description,
                 sdo: objectVersion,
-                prior_version: versionChanged? previousVersion : null
+                prior_version: versionChanged? previousVersion : null,
+                prior_state: stateChanged ? previousState : 'unset'
             })
             previousVersion = objectVersion.version;
+            previousState = objectVersion.workflow ? objectVersion.workflow.state : 'unset';
         }
 
         // group relationships by ID
@@ -100,8 +111,10 @@ export class HistoryTimelineComponent implements OnInit, OnDestroy {
                 this.historyEvents.push({
                     change_types: {
                         versionChanged: false,
+                        stateChanged: false,
                         objectImported: objectImported,
-                        objectCreated: objectCreated
+                        objectCreated: objectCreated,
+                        release: false
                     },
                     icon: objectImported? "cloud_download" : objectCreated? "add" : "edit",
                     name: relationshipName,

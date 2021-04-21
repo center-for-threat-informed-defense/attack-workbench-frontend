@@ -17,7 +17,8 @@ let stixTypeToAttackType = {
     "course-of-action": "mitigation",
     "x-mitre-matrix": "matrix",
     "x-mitre-tactic": "tactic",
-    "relationship": "relationship"
+    "relationship": "relationship",
+    "marking-definition": "marking-definition"
 }
 export {stixTypeToAttackType};
 
@@ -27,6 +28,13 @@ export abstract class StixObject extends Serializable {
     public attackType: string; // ATT&CK type
     public attackID: string; // ATT&CK ID
     public description: string;
+ 
+    public created_by_ref: string; //embedded relationship
+    public created_by?: any;
+    public modified_by_ref: string; //embedded relationship
+    public modified_by?: any;
+
+    public object_marking_refs: string[] = []; //list of embedded relationships to marking_defs
 
     protected abstract get attackIDValidator(): {
         regex: string, // regex to validate the ID
@@ -40,7 +48,8 @@ export abstract class StixObject extends Serializable {
         "mitigation": "mitigations",
         "matrix": "matrices",
         "tactic": "tactics",
-        "note": "notes"
+        "note": "notes",
+        "marking-definition": "marking-definitions"
     }
 
     public get routes(): any[] { // route to view the object
@@ -127,22 +136,27 @@ export abstract class StixObject extends Serializable {
             serialized_external_references.unshift(new_ext_ref);
         }
 
+        let stix: any = {
+            "type": this.type,
+            "id": this.stixID,
+            "created": this.created? this.created.toISOString() : new Date().toISOString(),
+            "modified": new Date().toISOString(),
+            "x_mitre_version": this.version.toString(),
+            "external_references": serialized_external_references,
+            "x_mitre_deprecated": this.deprecated,
+            "revoked": this.revoked,
+            "description": this.description,
+            "object_marking_refs": this.object_marking_refs,
+            "spec_version": "2.1"
+        }
+        if (this.created_by_ref) stix.created_by_ref = this.created_by_ref;
+        // do not set modified by ref since we don't know who we are, but the REST API knows
+        
         return {
             workspace:  {
                 workflow: this.workflow
             },
-            stix: {
-                "type": this.type,
-                "id": this.stixID,
-                "created": this.created? this.created.toISOString() : new Date().toISOString(),
-                "modified": new Date().toISOString(),
-                "x_mitre_version": this.version.toString(),
-                "external_references": serialized_external_references,
-                "x_mitre_deprecated": this.deprecated,
-                "revoked": this.revoked,
-                "description": this.description,
-                "spec_version": "2.1"
-            }
+            stix: stix
         }
     }
 
@@ -161,6 +175,11 @@ export abstract class StixObject extends Serializable {
                 else console.error("TypeError: id field is not a string:", sdo.id, "(",typeof(sdo.id),")")
             }
 
+            if ("object_marking_refs" in sdo) {
+                if (this.isStringArray(sdo.object_marking_refs)) this.object_marking_refs = sdo.object_marking_refs;
+                else console.error("TypeError, object_marking_refs field is not a string array", this.object_marking_refs, "(", typeof(this.object_marking_refs), ")");
+            }
+
             if ("type" in sdo) {
                 if (typeof(sdo.type) === "string") this.type = sdo.type;
                 else console.error("TypeError: type field is not a string:", sdo.type, "(",typeof(sdo.type),")")
@@ -176,10 +195,20 @@ export abstract class StixObject extends Serializable {
                 else console.error("TypeError: created field is not a string:", sdo.created, "(",typeof(sdo.created),")")
             } else this.created = new Date();
 
+            if ("created_by_ref" in sdo) {
+                if (typeof(sdo.created) === "string") this.created_by_ref = sdo.created_by_ref
+                else console.error("TypeError: created_by_Ref field is not a string:", sdo.created_by_ref, "(",typeof(sdo.created_by_ref),")")
+            }
+
             if ("modified" in sdo) {
                 if (typeof(sdo.modified) === "string") this.modified = new Date(sdo.modified);
                 else console.error("TypeError: modified field is not a string:", sdo.modified, "(",typeof(sdo.modified),")")
             } else this.modified = new Date();
+
+            if ("x_mitre_modified_by_ref" in sdo) {
+                if (typeof(sdo.created) === "string") this.modified_by_ref = sdo.x_mitre_modified_by_ref;
+                else console.error("TypeError: x_mitre_modified_by_ref field is not a string:", sdo.x_mitre_modified_by_ref, "(",typeof(sdo.x_mitre_modified_by_ref),")")
+            }
 
             if ("x_mitre_version" in sdo) {
                 if (typeof(sdo.x_mitre_version) === "string") this.version = new VersionNumber(sdo.x_mitre_version);
@@ -206,12 +235,25 @@ export abstract class StixObject extends Serializable {
                 if (typeof(sdo.x_mitre_deprecated) === "boolean") this.deprecated = sdo.x_mitre_deprecated;
                 else console.error("TypeError: x_mitre_deprecated field is not a boolean:", sdo.x_mitre_deprecated, "(",typeof(sdo.x_mitre_deprecated),")") 
             }
-            if ("x_mitre_revoked" in sdo) {
-                if (typeof(sdo.x_mitre_revoked) === "boolean") this.revoked = sdo.x_mitre_revoked;
-                else console.error("TypeError: x_mitre_revoked field is not a boolean:", sdo.x_mitre_revoked, "(",typeof(sdo.x_mitre_revoked),")") 
+            if ("revoked" in sdo) {
+                if (typeof(sdo.revoked) === "boolean") this.revoked = sdo.revoked;
+                else console.error("TypeError: revoked field is not a boolean:", sdo.revoked, "(",typeof(sdo.revoked),")") 
             }
         }
         else console.error("ObjectError: 'stix' field does not exist in object");
+
+        if ("created_by_identity" in raw && raw.created_by_identity) {
+            let identityData = raw.created_by_identity;
+            if ("stix" in identityData) {
+                this.created_by = identityData.stix;
+            } else console.error("ObjectError: 'stix' field does not exist in created_by_identity object");
+        }
+        if ("modified_by_identity" in raw && raw.modified_by_identity) {
+            let identityData = raw.modified_by_identity;
+            if ("stix" in identityData) {
+                this.modified_by = identityData.stix;
+            } else console.error("ObjectError: 'stix' field does not exist in modified_by_identity object");
+        }
 
         if ("workspace" in raw) {
             // parse workspace fields
@@ -321,8 +363,32 @@ export abstract class StixObject extends Serializable {
                         return result;
                     })
                 )
+            }),
+            // validate 'revoked-by' relationship exists
+            switchMap(result => {
+                if (!this.revoked) return of(result); // do not check for revoked-by relationship
+
+                let accessor = restAPIService.getRelatedTo({sourceRef: this.stixID});
+                return accessor.pipe(
+                    map(objects => {
+                        if (!objects.data.find(relationship => relationship['relationship_type'] == 'revoked-by')) {
+                            result.errors.push({
+                                "result": "error",
+                                "field": "revoked",
+                                "message": "'revoked-by' relationship does not exist"
+                            })
+                        } else {
+                            result.successes.push({
+                                "result": "success",
+                                "field": "revoked",
+                                "message": "'revoked-by' relationship exists"
+                            })
+                        }
+                        return result;
+                    })
+                )
+
             })
-            // TODO check if revoked-by exists if revoked?
         ) //end pipe
 
     }

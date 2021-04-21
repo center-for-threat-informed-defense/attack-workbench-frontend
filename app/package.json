@@ -1,6 +1,6 @@
 {
   "name": "attack-workbench-frontend",
-  "version": "0.1.1",
+  "version": "0.3.0",
   "description": "Application for creating and editing ATT&CK-like content.",
   "keywords": [
     "cti",
@@ -10,7 +10,8 @@
     "mitre-corporation",
     "ctid",
     "center-for-threat-informed-defense",
-    "cybersecurity"
+    "cybersecurity",
+    "stix"
   ],
   "license": {
     "type": "Apache-2.0",
@@ -38,7 +39,9 @@
     "@angular/platform-browser-dynamic": "~10.1.1",
     "@angular/router": "~10.1.1",
     "angular-crumbs": "^3.0.1",
+    "jdenticon": "^3.1.0",
     "moment": "^2.29.1",
+    "ngx-jdenticon": "^1.0.4",
     "ngx-markdown": "^10.1.1",
     "ngx-material-file-input": "^2.1.1",
     "ngx-smart-popover": "^1.4.0",

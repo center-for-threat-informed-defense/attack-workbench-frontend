@@ -1,7 +1,7 @@
 <div class="collection-manager">
     <h1>Collections</h1>
     <mat-tab-group dynamicHeight mat-stretch-tabs>
-        <mat-tab label="browse collection indexes">
+        <mat-tab label="collection indexes">
             <ng-template matTabContent>
                 <div class="tab-content">
                     <div class="tab-actions">
@@ -23,7 +23,13 @@
                             <span class="text-label">import a collection</span>
                         </button>
                     </div>
-                    <app-collection-list></app-collection-list>
+                    <app-collection-list *ngIf="collections else loadingImported" [config]="{
+                        mode: 'imported',
+                        collections: collections
+                    }"></app-collection-list>
+                    <ng-template #loadingImported>
+                        <app-loading-overlay></app-loading-overlay>
+                    </ng-template>
                 </div>
             </ng-template>
         </mat-tab>
@@ -31,12 +37,18 @@
             <ng-template matTabContent>
                 <div class="tab-content">
                     <div class="tab-actions">
-                        <button mat-mini-fab class="extended-fab-button" color="primary">
+                        <button mat-mini-fab class="extended-fab-button" color="primary" [routerLink]="['/collection/new']" [queryParams]="{editing: true}">
                             <mat-icon aria-label="edit">edit</mat-icon>
                             <span class="text-label">create a collection</span>
                         </button>
                     </div>
-                    <app-collection-list></app-collection-list>
+                    <app-collection-list *ngIf="collections else loadingCreated" [config]="{
+                        mode: 'created',
+                        collections: collections
+                    }"></app-collection-list>
+                    <ng-template #loadingCreated>
+                        <app-loading-overlay></app-loading-overlay>
+                    </ng-template>
                 </div>
             </ng-template>
         </mat-tab>
