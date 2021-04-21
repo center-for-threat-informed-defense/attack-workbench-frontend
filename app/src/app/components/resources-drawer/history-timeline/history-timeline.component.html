@@ -41,7 +41,7 @@
                             </span>
                             <span *ngIf="historyEvent.change_types.stateChanged">
                                 <span class="text-deemphasis">{{historyEvent.prior_state}} &#8594;</span>
-                                {{historyEvent.sdo.workflow && historyEvent.workflow.state ? historyEvent.sdo.workflow.state : 'unset'}}
+                                {{historyEvent.sdo.workflow && historyEvent.sdo.workflow.state ? historyEvent.sdo.workflow.state : 'unset'}}
                             </span>
                             <span *ngIf="historyEvent.change_types.release">
                                 (release)
