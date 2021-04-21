@@ -449,10 +449,10 @@
                                         All relationships between objects in the collection will be included at their most recent version.
                                         <ul>
                                             <li>
-                                                New relationships between objects already in the collection will be included even if their attached objects did not change.
+                                                New relationships between objects already in the collection will be included even if their attached objects did not change or the changes to said objects were not staged.
                                             </li>
                                             <li>
-                                                Existing relationships will be updated if newer versions are available even if the objects they are attached to did not change.
+                                                Existing relationships will be updated if newer versions are available even if the objects they are attached to did not change or the changes to said objects were not staged.
                                             </li>
                                             <li>
                                                 Updated relationships will exist at the version they existed at when the collection is saved; further updates to relationships after saving will not be included.
@@ -466,6 +466,9 @@
                                         Relationships conveying revocations will be included only if the revoked version of the object they are attached to is included (staged) in the collection. Objects which have revoked versions <i>not</i> included in the collection won't trigger the inclusion of revoking relationships.
                                     </li>
                                 </ul>
+                                <p>
+                                    A summary of the relationships included is provided when saving the relationship.
+                                </p>
                             </ng-template>
                         </mat-expansion-panel>
                     </mat-accordion>
