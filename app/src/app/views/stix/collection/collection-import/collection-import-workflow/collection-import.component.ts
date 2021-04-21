@@ -5,7 +5,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatStepper } from '@angular/material/stepper';
 import { ActivatedRoute } from '@angular/router';
-import { Collection, CollectionImportCategories } from 'src/app/classes/stix/collection';
+import { Collection, CollectionDiffCategories } from 'src/app/classes/stix/collection';
 import { Group } from 'src/app/classes/stix/group';
 import { Matrix } from 'src/app/classes/stix/matrix';
 import { Mitigation } from 'src/app/classes/stix/mitigation';
@@ -36,13 +36,13 @@ export class CollectionImportComponent implements OnInit {
     public collectionBundle: any;
 
     public object_import_categories = {
-        technique:    new CollectionImportCategories<Technique>(),
-        tactic:       new CollectionImportCategories<Tactic>(),
-        software:     new CollectionImportCategories<Software>(),
-        relationship: new CollectionImportCategories<Relationship>(),
-        mitigation:   new CollectionImportCategories<Mitigation>(),
-        matrix:       new CollectionImportCategories<Matrix>(),
-        group:        new CollectionImportCategories<Group>()
+        technique:    new CollectionDiffCategories<Technique>(),
+        tactic:       new CollectionDiffCategories<Tactic>(),
+        software:     new CollectionDiffCategories<Software>(),
+        relationship: new CollectionDiffCategories<Relationship>(),
+        mitigation:   new CollectionDiffCategories<Mitigation>(),
+        matrix:       new CollectionDiffCategories<Matrix>(),
+        group:        new CollectionDiffCategories<Group>()
     }
 
     constructor(public route: ActivatedRoute, public http: HttpClient, public snackbar: MatSnackBar, public restAPIConnectorService: RestApiConnectorService, private dialog: MatDialog) { }

@@ -53,7 +53,7 @@ While previewing an import the list of contents will be organized by object type
 - *Minor changes*: Objects with minor updates such as typo corrections.
 - *Revocations*: Objects that have been replaced by other objects.
 - *Deprecations*: Objects that have been removed from the dataset.
-- *Duplicates*: Objects that already exist in the workbench and have no changes.  
+- *Unchanged*: Objects that already exist in the workbench and have no changes.  
 - *Out of date*: Objects which are outdated by more recent edits in your knowledge base. These objects already exist in your workbench, and the version in the collection is older. The version imported in the collection will appear in the version history of the object.
 
 The following error change types may appear when there are conflicts importing a collection:
@@ -104,14 +104,20 @@ The history timeline browser allows users to see the revision history of an obje
 
 Objects imported from collections can be modified, or new objects created. The processes for these are documented in the sections below.
 
+### Attribution of edits
+
+The workbench will attribute edits to you when you either edit existing objects or create new objects. Edit attribution is shown next to created and modified dates and in the object history timeline. Attribution is represented by an automatically generated icon to easily distinguish different editing/creating organizations; hovering over the icon will display the full organization name. 
+
+Edits you make in the knowledge base are attributed to your _organization identity_, which is unique to your workbench instance. The organization identity can be edited from the admin page accessible from the application homepage; when you first open the application you will be prompted to edit the organization identity to ensure the placeholder identity is not used. Changes to your organization identity will automatically update objects in the knowledge base, but attribution within exported collections will not be automatically affected. 
+
 ### Quality Control Workflows
 
 The ATT&CK Workbench provides optional quality control workflows to assist in the creation of ATT&CK data. Objects are marked with a "workflow status," reflecting their place in the quality control pipeline:
-- *work in progress*: this object is being actively developed.
-- *awaiting review*: this object is awaiting the review within your organization.
-- *reviewed*: this object has passed the quality control checks of a reviewer.
+- *work in progress*: this object is being actively developed. Work in progress objects are marked in the UI using a red document icon.
+- *awaiting review*: this object is awaiting the review within your organization. Awaiting review objects are marked in the UI using an orange person icon.
+- *reviewed*: this object has passed the quality control checks of a reviewer. Reviewed objects are marked using a green checkmark icon.
 
-Object lists can be filtered to show only objects within a specific state to enable reviewers to find the objects awaiting their review, or editors to find objects still in development.
+Object lists can be filtered to show only objects within a specific state to enable reviewers to find the objects awaiting their review, or editors to find objects still in development. You can set the workflow state of an object by clicking on the gear icon in the toolbar while on an object page.
 
 The quality control workflow is intended to be generic in order to support the quality control needs of users and organizations. It will be up to you and/or your organization to decide the review process itself or whether to use the built-in quality control workflows at all.
 
@@ -319,6 +325,15 @@ The source and target objects can be changed after the relationship has been cre
 Relationships also have a description to provide additional context or to hold citations of relevant reporting. Like all descriptions, those on relationships support both citations and markdown formatting. Relationships between sub-techniques and techniques however are purely structural and do not support descriptions.
 
 
+### Revoking and deprecating objects
+
+All objects within the knowledge base can be _revoked_ or _deprecated_. These functionalities allow you to remove irrelevant or outdated objects without deleting them outright since deletions cannot be propagated to data consumers subscribed to your collections. Revoked and deprecated objects are hidden from UIs unless the user explicitly chooses to display them.
+
+- _Revoked_ objects are objects that are replaced by others within the knowledge base. Revoke an object by clicking the gear icon in the toolbar while on an object page and then clicking "revoke." You will then be prompted to select the revoking (replacing) object. Relationships cannot be revoked, only deprecated.
+- _Deprecated_ objects are objects that you want to remove without indicating a replacement. Deprecate an object by clicking the gear icon in the toolbar while on an object page and then clicking "deprecate." We also recommend prepending a paragraph to the object description explaining the reason for the deprecation, although this is optional.
+
+When an object is revoked or deprecated, all relationships attached to the object in question will themselves be deprecated. 
+
 ## Annotating ATT&CK data
 
 Annotations allow users to add additional information about an object in the dataset without extending it directly. This is useful for a number of reasons, most notably that incoming updates from a data provider won't overwrite notes but _can_ conflict with local changes to the object itself. 
@@ -338,4 +353,46 @@ Note have titles and descriptions, both of which must be filled in order to save
 
 ## Sharing your Extensions
 
-Section on publishing collections TODO
+Objects you create can be published in collections. Please see the [collections document](/docs/collections.md) for more information about the representation and intention of collections.
+
+You can create new collections and manage releases from the "my collections" tab of the collections page. This tab will track all published releases of your collections as well as any work in progress releases. Previously published releases cannot be edited, but you can always draft a new release from the most recent version of the collection.
+
+### Staging Changes
+When editing a collection, you can stage changes for each object type. Changes are shown as compared to the previous release of the collection, so if you had previously released "example collection v0.1" your staged and potential changes will be shown against that version. Changes are grouped by type:
+- *Additions*: Objects added in this release.
+- *Changes*: Objects changed by this release where the version number has been incremented.
+- *Minor changes*: Objects changed by this release where the version number has _not_ been incremented.
+- *Revocations*: Objects that have been revoked by this release.
+- *Deprecations*: Objects that have been deprecated by this release.
+- *Unchanged*: Objects that have not changed with this release.
+
+Within each change type, two lists are shown. On the left are _potential changes_, the contents of your knowledge base that you can add to your collection. On the right are the staged changes for the given change section. For instance, for "additions", the left list shows objects not present in the collection at all, and the right list shows objects which have been added in this release. For "changes", the left list shows objects with newer versions available in the knowledge base, and the right list shows staged changes.
+
+You can move objects from the left ("potential") list to the right ("staged") list or vice versa by clicking the button on the left or right of the object row. You can also move the entire contents of the list (e.g staging all group changes) by clicking the double arrow button between the two lists.
+
+Clicking on an object within the list will open a preview dialog to show the contents of the object.
+### Handling Relationships
+
+Unlike other object types, relationships are handled automatically by the system. When a collection is saved, the relationships included are determined automatically according to the other contents of the collection.
+
+ -  All relationships between objects in the collection are included at their most recent version.
+    - New relationships between objects already in the collection are included even if their attached objects did not change or the changes to said objects were not staged.
+    - Existing relationships are updated if newer versions are available even if the objects they are attached to did not change or the changes to said objects were not staged.
+    - New and updated relationships are added at the version they existed at when the collection is saved; further updates to relationships after saving will not be included. 
+ - Relationships are only included if both of their attached objects are in the collection. 
+ - Relationships conveying revocations will be included only if the revoked version of the object they are attached to is included (staged) in the collection. Objects which have revoked versions not included in the collection won't trigger the inclusion of revoking relationships. 
+
+A summary of the relationships included is provided when saving the relationship.
+
+### Marking Releases
+
+After drafting multiple iterations of a new release, it comes time to mark one as the actual version to be released. This can be done prior to saving the collection by checking the "is release version?" checkbox. This has several effects:
+
+- Versions marked as releases will be considered when determining the changes between collection releases. The next version you create after the release will be compared to this prior release when staging changes.
+- Collection releases will show up independently within the collections list. 
+
+These effects will occur even if the collection you marked as release was never published, and you cannot un-mark a collection version as a release. Therefore it is very important to be sure that the version you mark as a release is actually the one you intend to publish.
+
+### Accessing Collection Data
+
+The data from a collection can be accessed as a raw STIX bundle from the collection view page. A hyperlink is provided for use in scripts or tools which are built to pull collections over HTTP, and the download button can also be used to download the collection data as a JSON file. These resources provide the means to publish your collections for other users of the ATT&CK Workbench, whether it be by uploading the JSON to GitHub, mailing a floppy disk, or some other means of data transmission.

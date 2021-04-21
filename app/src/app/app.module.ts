@@ -110,6 +110,7 @@ import { CollectionManagerComponent } from "./views/stix/collection/collection-m
 import { CollectionIndexListComponent } from "./views/stix/collection/collection-index/collection-index-list/collection-index-list.component";
 import { CollectionIndexViewComponent } from "./views/stix/collection/collection-index/collection-index-view/collection-index-view.component";
 import { CollectionIndexImportComponent } from "./views/stix/collection/collection-index/collection-index-import/collection-index-import.component";
+import { CollectionImportReviewComponent } from "./views/stix/collection/collection-import/collection-import-review/collection-import-review.component";
 
 import { CollectionListComponent } from './views/stix/collection/collection-list/collection-list.component';
 import { CollectionViewComponent } from './views/stix/collection/collection-view/collection-view.component';
@@ -212,6 +213,7 @@ import { NgxJdenticonModule, JDENTICON_CONFIG } from 'ngx-jdenticon';
     CollectionIndexViewComponent,
     CollectionIndexImportComponent,
     CollectionImportComponent,
+    CollectionImportReviewComponent,
     // CollectionExportComponent,
     
     RelationshipViewComponent,

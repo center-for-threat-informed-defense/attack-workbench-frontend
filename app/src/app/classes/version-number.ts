@@ -88,6 +88,24 @@ export class VersionNumber {
     }
 
     /**
+     * Check if this version number is more than one increment above the other version number
+     * e.g v1.0 -> v3.0 is true, v1.1 -> v1.6 is true, v1.0 -> v1.2 is true, v1.0 -> 2.1 is true, v1.0 -> v2.0 is false
+     * @param {VersionNumber} that version number to check against
+     * @returns {boolean} true if the version number has incremented at least twice
+     */
+    public isDoubleIncrement(that: VersionNumber): boolean {
+        // sum up increments of each index
+        let timesIncremented = 0; //track the number of times it has been incremented
+        for (let i = 0; i < Math.max(this.granularity, that.granularity); i++) {
+            let thisVersionIndex = this.granularity >= i? this.getSubVersion(i) : 0;
+            let thatVersionIndex = timesIncremented > 0? 0 : that.granularity >= i? that.getSubVersion(i) : 0; //if it has been incremented at a higher index, expect later indexes to be 0
+            timesIncremented += Math.max(thisVersionIndex - thatVersionIndex, 0);
+            if (timesIncremented > 1) return true;
+        }
+        return timesIncremented > 1;
+    }
+
+    /**
      * Is this version number formatted correctly?
      * @returns {boolean} true if valid
      */
