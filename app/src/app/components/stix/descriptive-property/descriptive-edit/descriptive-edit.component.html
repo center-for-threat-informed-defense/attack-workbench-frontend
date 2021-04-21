@@ -4,7 +4,7 @@
             <mat-form-field class="edit" floatLabel="never" appearance="outline">
                 <div class="vertical-centered">
                     <h3>{{config.label}}</h3>
-                    <mat-icon class="info-icon" matTooltip="citations & markdown supported" matTooltipPosition="above" aria-label="info">info_outline</mat-icon>
+                    <mat-icon class="info-icon" [matTooltip]="config.referencesField? 'markdown & citations supported' : 'markdown supported'" matTooltipPosition="above" aria-label="info">info_outline</mat-icon>
                 </div>
                 <textarea cdkTextareaAutosize matInput placeholder="{{config.label}}" (blur)="parseCitations()" [(ngModel)]="config.object[config.field]"></textarea>
             </mat-form-field>

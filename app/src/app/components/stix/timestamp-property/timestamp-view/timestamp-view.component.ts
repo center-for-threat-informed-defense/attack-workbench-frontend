@@ -17,6 +17,7 @@ export class TimestampViewComponent implements OnInit {
      */
     public get humanized(): string {
         if (this._humanized) return this._humanized;
+        else if (!this.config.object.hasOwnProperty(this.config.field)) this._humanized = "";
         else {
             let now = moment();
             let then = moment(this.config.object[this.config.field]);
@@ -28,14 +29,15 @@ export class TimestampViewComponent implements OnInit {
                 // date is older, display absolute date
                 this._humanized = then.format('D MMMM YYYY');
             }
-            return this._humanized;
         }
+        return this._humanized;
     }
 
     /**
      *get the formatted absolute timestamp with hour/minute
      */
     public get timestamp(): string {
+        if (!this.config.object.hasOwnProperty(this.config.field)) return "";
         return moment(this.config.object[this.config.field]).format('D MMMM YYYY, h:mm A')
     }
     

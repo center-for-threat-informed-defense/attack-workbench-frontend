@@ -13,7 +13,7 @@ import { StixObject } from 'src/app/classes/stix/stix-object';
 })
 export class MatrixViewComponent extends StixViewPage implements OnInit {
 
-  public editing: boolean = false;
+//   public editing: boolean = false;
 
   public all_tactics : Array<StixObject>;
 
@@ -24,9 +24,9 @@ export class MatrixViewComponent extends StixViewPage implements OnInit {
   }
 
   ngOnInit() {
-    this.route.queryParams.subscribe(params => {
-        this.editing = params["editing"];
-    });
+    // this.route.queryParams.subscribe(params => {
+    //     this.editing = params["editing"];
+    // });
     if (!this.config.hasOwnProperty('showRelationships') || this.config.showRelationships) {
         let subscription = this.restAPIConnectorService.getAllTactics().subscribe({
           next: (all_tactics) => {

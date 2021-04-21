@@ -1,6 +1,6 @@
 import { SelectionModel } from '@angular/cdk/collections';
 import { Component, Input, OnInit, ViewEncapsulation } from '@angular/core';
-import { CollectionImportCategories } from 'src/app/classes/stix/collection';
+import { CollectionDiffCategories } from 'src/app/classes/stix/collection';
 import { Group } from 'src/app/classes/stix/group';
 import { Matrix } from 'src/app/classes/stix/matrix';
 import { Mitigation } from 'src/app/classes/stix/mitigation';
@@ -27,13 +27,13 @@ export class CollectionImportSummaryComponent implements OnInit {
 
 export interface CollectionImportSummaryConfig {
     object_import_categories: {
-        technique: CollectionImportCategories<Technique>,
-        tactic: CollectionImportCategories<Tactic>,
-        software: CollectionImportCategories<Software>,
-        relationship: CollectionImportCategories<Relationship>,
-        mitigation: CollectionImportCategories<Mitigation>,
-        matrix: CollectionImportCategories<Matrix>,
-        group: CollectionImportCategories<Group>
+        technique: CollectionDiffCategories<Technique>,
+        tactic: CollectionDiffCategories<Tactic>,
+        software: CollectionDiffCategories<Software>,
+        relationship: CollectionDiffCategories<Relationship>,
+        mitigation: CollectionDiffCategories<Mitigation>,
+        matrix: CollectionDiffCategories<Matrix>,
+        group: CollectionDiffCategories<Group>
     };
     select?: SelectionModel<string>;
 }

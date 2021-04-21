@@ -1,21 +1,20 @@
 import {StixObject} from "./stix-object";
 import { Relationship } from './relationship';
 import { RestApiConnectorService } from "src/app/services/connectors/rest-api/rest-api-connector.service";
-import { Observable } from "rxjs";
+import { Observable, of } from "rxjs";
 import { ValidationData } from "../serializable";
 
-export class Group extends StixObject {
+export class MarkingDefinition extends StixObject {
     public name: string = "";
-    public aliases: string[] = [];
-    public contributors: string[] = [];
+    public definition_type: string = ""
+    public definition: {
+        statement: string
+    } = { statement: "" }
 
-    protected get attackIDValidator() { return {
-        regex: "G\\d{4}",
-        format: "G####"
-    }}
+    protected get attackIDValidator() { return null; } //marking-defs do not have ATT&CK IDs
 
     constructor(sdo?: any) {
-        super(sdo, "intrusion-set");
+        super(sdo, "marking-definition");
         if (sdo) {
             this.deserialize(sdo);
         }
@@ -30,8 +29,8 @@ export class Group extends StixObject {
         let rep = super.base_serialize();
         
         rep.stix.name = this.name;
-        rep.stix.aliases = this.aliases;
-        rep.stix.x_mitre_contributors = this.contributors;
+        rep.stix.definition_type = this.definition_type
+        rep.stix.definition = this.definition;
 
         return rep;
     }
@@ -50,15 +49,15 @@ export class Group extends StixObject {
                 else console.error("TypeError: name field is not a string:", sdo.name, "(",typeof(sdo.name),")")
             } else this.name = "";
             
-            if ("aliases" in sdo) {
-                if (this.isStringArray(sdo.aliases)) this.aliases = sdo.aliases;
-                else console.error("TypeError: aliases is not a string array:", sdo.aliases, "(",typeof(sdo.aliases),")")
-            } else this.aliases = [];
+            // TODO improve this with better checking
+            if ("definition" in sdo) {
+                this.definition = sdo.definition;
+            }
 
-            if ("x_mitre_contributors" in sdo) {
-                if (this.isStringArray(sdo.x_mitre_contributors)) this.contributors = sdo.x_mitre_contributors;
-                else console.error("TypeError: x_mitre_contributors is not a string array:", sdo.x_mitre_contributors, "(",typeof(sdo.x_mitre_contributors),")")
-            } else this.contributors = [];
+            if ("definition_type" in sdo) {
+                if (typeof(sdo.definition_type) === "string") this.definition_type = sdo.definition_type;
+                else console.error("TypeError: definition_type is not a string:", sdo.definition_type, "(",typeof(sdo.definition_type),")")
+            } else this.definition_type = "";
         }
     }
 
@@ -76,14 +75,8 @@ export class Group extends StixObject {
      * @param restAPIService [RestApiConnectorService] the service to perform the POST/PUT through
      * @returns {Observable} of the post
      */
-    public save(restAPIService: RestApiConnectorService): Observable<Group> {
-        // TODO PUT if the object was just created (doesn't exist in db yet)
-        
-        let postObservable = restAPIService.postGroup(this);
-        let subscription = postObservable.subscribe({
-            next: (result) => { this.deserialize(result.serialize()); },
-            complete: () => { subscription.unsubscribe(); }
-        });
-        return postObservable;
+    public save(restAPIService: RestApiConnectorService): Observable<MarkingDefinition> {
+        // TODO 
+        return of(this);
     }
 }

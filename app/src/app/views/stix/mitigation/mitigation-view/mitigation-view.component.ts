@@ -11,7 +11,7 @@ import { Relationship } from 'src/app/classes/stix/relationship';
 })
 export class MitigationViewComponent extends StixViewPage implements OnInit {
   
-    public editing: boolean = false;
+    // public editing: boolean = false;
 
     public get mitigation(): Mitigation { return this.config.object as Mitigation; }
 
@@ -22,9 +22,9 @@ export class MitigationViewComponent extends StixViewPage implements OnInit {
     }
 
     ngOnInit() {
-        this.route.queryParams.subscribe(params => {
-            this.editing = params["editing"];
-        });
+        // this.route.queryParams.subscribe(params => {
+        //     this.editing = params["editing"];
+        // });
     }
 
 }

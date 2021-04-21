@@ -11,11 +11,14 @@
             <app-mitigation-view *ngIf="objects[0].attackType == 'mitigation'" [config]="buildConfig()"></app-mitigation-view>
             <app-technique-view *ngIf="objects[0].attackType == 'technique'"  [config]="buildConfig()"></app-technique-view>
             <app-tactic-view *ngIf="objects[0].attackType == 'tactic'" [config]="buildConfig()"></app-tactic-view>
-            <app-collection-view *ngIf="objects[0].attackType == 'collection'" [config]="buildConfig(true)"></app-collection-view>
+            <!-- display import review if collection was imported -->
+            <app-collection-import-review *ngIf="objects[0].attackType == 'collection' && objects[0].hasOwnProperty('imported')" [config]="buildConfig()"></app-collection-import-review>
+            <!-- otherwise show view/edit interface -->
+            <app-collection-view #collectionViewRef *ngIf="objects[0].attackType == 'collection' && !objects[0].hasOwnProperty('imported')" [config]="buildConfig()"></app-collection-view>
         </ng-template>
 
     </div>
     <ng-template #loading>
-        <app-loading-overlay></app-loading-overlay>
+        <app-loading-overlay [message]="'loading ' + objectType"></app-loading-overlay>
     </ng-template>
 </div>

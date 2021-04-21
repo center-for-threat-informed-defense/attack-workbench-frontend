@@ -33,10 +33,11 @@
             <table mat-table multiTemplateDataRows 
                    *ngIf="data.data.length > 0 else noObjects"
                    [dataSource]="data.data" >
+
                 <!-- column definitions -->
                 <ng-container matColumnDef="{{column}}" *ngFor="let column of tableColumns" [sticky]="tableColumns_settings.get(column)['sticky']">
                     <th mat-header-cell *matHeaderCellDef class="nowrap"> {{tableColumns_settings.get(column)["label"]}} </th>
-                    <td mat-cell *matCellDef="let element" [ngClass]="tableColumns_settings.get(column)['classes']">
+                    <td mat-cell *matCellDef="let element" [ngClass]="tableColumns_settings.get(column)['classes']" (click)="rowClick(element)" [class.clickable]="!config.clickBehavior || config.clickBehavior != 'none'">
                         <app-version-view *ngIf="tableColumns_settings.get(column)['display'] == 'version'" [config]="{object: element, field: column}"></app-version-view>
                         <div *ngIf="tableColumns_settings.get(column)['display'] == 'timestamp'">
                             <app-identity-property [config]="{object: element, field: column + '_by' , timeField: column}"></app-identity-property>
@@ -73,8 +74,23 @@
                     </td>
                 </ng-container>
 
+                <!-- row action: before -->
+                <ng-container matColumnDef="start-action" sticky>
+                    <th mat-header-cell *matHeaderCellDef></th> <!--nothing in header-->
+                    <td mat-cell *matCellDef="let element" class="icon-cell" [matTooltip]="config.rowAction.tooltip" (click)="onRowAction.emit(element)">
+                        <mat-icon [aria-label]="config.rowAction.tooltip">{{config.rowAction.icon}}</mat-icon>
+                    </td>
+                </ng-container>
+                <!-- row action: after -->
+                <ng-container matColumnDef="end-action" stickyEnd>
+                    <th mat-header-cell *matHeaderCellDef></th> <!--nothing in header-->
+                    <td mat-cell *matCellDef="let element" class="icon-cell" [matTooltip]="config.rowAction.tooltip" (click)="onRowAction.emit(element)">
+                        <mat-icon [aria-label]="config.rowAction.tooltip">{{config.rowAction.icon}}</mat-icon>
+                    </td>
+                </ng-container>
+
                 <!-- open in new icon column (for relationships) -->
-                <ng-container matColumnDef="open-link">
+                <ng-container matColumnDef="open-link" stickyEnd>
                     <th mat-header-cell *matHeaderCellDef>
                         <!-- nothing in header -->
                     </th>
@@ -115,9 +131,8 @@
                 <tr mat-header-row *matHeaderRowDef="tableColumns_controls"></tr>
                 <tr mat-row *matRowDef="let element; columns: tableColumns_controls;"
                     class="element-row"
-                    [class.clickable]="!config.clickBehavior || config.clickBehavior != 'none'"
                     [class.expanded]="expandedElement === element"
-                    (click)="onRowClick(element)">
+                    >
                 </tr>
                 <tr mat-row *matRowDef="let row; columns: ['expandedDetail']" class="detail-row"></tr>
             </table>

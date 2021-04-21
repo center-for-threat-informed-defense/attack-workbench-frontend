@@ -3,6 +3,7 @@ import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { forkJoin } from 'rxjs';
+import { Collection } from 'src/app/classes/stix/collection';
 import { Relationship } from 'src/app/classes/stix/relationship';
 import { StixObject } from 'src/app/classes/stix/stix-object';
 import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/rest-api-connector.service';
@@ -28,6 +29,10 @@ export class ObjectStatusComponent implements OnInit {
     public revoked: boolean = false;
     public deprecated: boolean = false;
     public workflow: string;
+    
+    public get disabled(): boolean {
+        return this.editorService.editing || this.editorService.type == "collection";
+    }
 
     constructor(public editorService: EditorService, private restAPIService: RestApiConnectorService, private dialog: MatDialog) { }
 
@@ -50,6 +55,7 @@ export class ObjectStatusComponent implements OnInit {
         else if (this.editorService.type == "mitigation") data$ = this.restAPIService.getAllMitigations(options);
         else if (this.editorService.type == "tactic") data$ = this.restAPIService.getAllTactics(options);
         else if (this.editorService.type == "technique") data$ = this.restAPIService.getAllTechniques(options);
+        else if (this.editorService.type == "collection") data$ = this.restAPIService.getAllCollections(options);
         let objSubscription = data$.subscribe({
             next: (data) => {
                 this.objects = data.data;
