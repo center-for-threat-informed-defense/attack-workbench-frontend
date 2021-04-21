@@ -39,6 +39,13 @@
                             <span>
                                 v{{historyEvent.sdo.version}}
                             </span>
+                            <span *ngIf="historyEvent.change_types.stateChanged">
+                                <span class="text-deemphasis">{{historyEvent.prior_state}} &#8594;</span>
+                                {{historyEvent.sdo.workflow && historyEvent.sdo.workflow.state ? historyEvent.sdo.workflow.state : 'unset'}}
+                            </span>
+                            <span *ngIf="historyEvent.change_types.release">
+                                (release)
+                            </span>
                         </ng-container>
                     </div>
                     <div mat-line><app-timestamp-view [config]="{
@@ -47,6 +54,7 @@
                         'object': historyEvent.sdo,
                         'field': 'modified'
                     }"></app-timestamp-view></div>
+                    <app-identity-property class="event-identity" [config]="{object: historyEvent.sdo, field: 'modified_by'}"></app-identity-property>
                 </button>
             </ng-container>
         </mat-action-list>

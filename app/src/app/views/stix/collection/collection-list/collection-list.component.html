@@ -1,1 +1,1 @@
-<app-stix-list [config]="{type: 'collection', 'showLinks': true}"></app-stix-list>
+<app-stix-list [config]="{type: 'collection-' + config.mode, 'showLinks': true, stixObjects: filteredCollections}"></app-stix-list>

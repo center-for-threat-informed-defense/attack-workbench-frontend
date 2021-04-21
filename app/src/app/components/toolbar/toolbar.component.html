@@ -5,7 +5,8 @@
         <div class="controls button-list section" *ngIf="editable || editing">
             <button mat-button class="control" matTooltip="validate & save" [disabled]="!editing" (click)="saveEdits()"><mat-icon aria-label="save">save</mat-icon></button>
             <button *ngIf="!editing" mat-button class="control" matTooltip="edit" (click)="startEditing()"><mat-icon aria-label="edit">edit</mat-icon></button>
-            <button *ngIf="editing" mat-button class="control" matTooltip="discard changes and stop editing" (click)="stopEditing()"><mat-icon aria-label="edit-off">edit_off</mat-icon></button>
+            <button *ngIf="editing" mat-button class="control" matTooltip="discard changes and stop editing" (click)="stopEditing()"><mat-icon aria-label="discard">edit_off</mat-icon></button>
+            <app-object-status></app-object-status>
         </div>
         <div class="controls button-list section">
             <!-- <button mat-button class="control" matTooltip="back to top" [disabled]="!canScroll" (click)="emitScrollTop()"><mat-icon aria-label="back to top">vertical_align_top</mat-icon></button> -->

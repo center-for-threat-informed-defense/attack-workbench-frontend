@@ -1,8 +1,9 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router, NavigationEnd } from '@angular/router';
 import { BreadcrumbService } from 'angular-crumbs';
 import { Observable } from 'rxjs';
+import { Collection } from 'src/app/classes/stix/collection';
 import { Group } from 'src/app/classes/stix/group';
 import { Matrix } from 'src/app/classes/stix/matrix';
 import { Mitigation } from 'src/app/classes/stix/mitigation';
@@ -16,6 +17,7 @@ import { MultipleChoiceDialogComponent } from 'src/app/components/multiple-choic
 import { SaveDialogComponent } from 'src/app/components/save-dialog/save-dialog.component';
 import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/rest-api-connector.service';
 import { EditorService } from 'src/app/services/editor/editor.service';
+import { CollectionViewComponent } from '../collection/collection-view/collection-view.component';
 import { StixViewConfig } from '../stix-view-page';
 
 @Component({
@@ -26,9 +28,11 @@ import { StixViewConfig } from '../stix-view-page';
 export class StixPageComponent implements OnInit, OnDestroy {
     public objects: StixObject[];
     public initialVersion: VersionNumber;
-
+    public objectType: string;
     private routerEvents;
     private saveSubscription;
+
+    @ViewChild(CollectionViewComponent) private collectionViewComponent: CollectionViewComponent;
     
     constructor(private router: Router, 
                 private route: ActivatedRoute, 
@@ -43,35 +47,40 @@ export class StixPageComponent implements OnInit, OnDestroy {
      * @oaram {allVersions} return all versions instead of just a single version
      * @returns {StixViewConfig} the built config
      */
-    public buildConfig(allVersions: boolean = false): StixViewConfig {
+    public buildConfig(): StixViewConfig {
         return {
-            "mode": "view",
-            "object": allVersions? this.objects : this.objects[0] 
+            "mode": this.editorService.editing? "edit" : "view",
+            "object": this.objects[0] 
         }
     }
 
     private save() {
-        let versionChanged = this.objects[0].version.compareTo(this.initialVersion) != 0;
-        let prompt = this.dialog.open(SaveDialogComponent, { //increment version number save panel
-            // maxWidth: "35em",
-            data: {
-                object: this.objects[0],
-                versionAlreadyIncremented: versionChanged
-            }
-        });
-
-        
-        let subscription = prompt.afterClosed().subscribe({
-            next: (result) => {
-                if (result) {
-                    // this.editorService.stopEditing();
-                    this.router.navigate([this.objects[0].attackType, this.objects[0].stixID]);
-                    setTimeout(() => this.loadObjects());
-                    this.editorService.onEditingStopped.emit();
+        if (this.objectType == "collection") {
+            // pass into collection property component
+            this.collectionViewComponent.validate();
+        } else {
+            let versionChanged = this.objects[0].version.compareTo(this.initialVersion) != 0;
+            let prompt = this.dialog.open(SaveDialogComponent, { //increment version number save panel
+                // maxWidth: "35em",
+                data: {
+                    object: this.objects[0],
+                    versionAlreadyIncremented: versionChanged
                 }
-            },
-            complete: () => { subscription.unsubscribe(); } //prevent memory leaks
-        })
+            });
+    
+            
+            let subscription = prompt.afterClosed().subscribe({
+                next: (result) => {
+                    if (result) {
+                        // this.editorService.stopEditing();
+                        this.router.navigate([this.objects[0].attackType, this.objects[0].stixID]);
+                        setTimeout(() => this.loadObjects());
+                        this.editorService.onEditingStopped.emit();
+                    }
+                },
+                complete: () => { subscription.unsubscribe(); } //prevent memory leaks
+            })
+        }
     }
 
 
@@ -94,27 +103,29 @@ export class StixPageComponent implements OnInit, OnDestroy {
      * @memberof StixPageComponent
      */
     private loadObjects(): void {
-        let objectType = this.router.url.split("/")[1];
+        this.objectType = this.router.url.split("/")[1];
         let objectStixID = this.route.snapshot.params["id"];
-        if (objectStixID != "new") {
+        let objectModified = this.route.snapshot.params["modified"];
+        if (objectStixID && objectStixID != "new") {
             // get objects at REST API
             let objects$: Observable<StixObject[]>;
-            if (objectType == "software") objects$ = this.restAPIConnectorService.getSoftware(objectStixID);
-            else if (objectType == "group") objects$ = this.restAPIConnectorService.getGroup(objectStixID);
-            else if (objectType == "matrix") objects$ = this.restAPIConnectorService.getMatrix(objectStixID);
-            else if (objectType == "mitigation") objects$ = this.restAPIConnectorService.getMitigation(objectStixID);
-            else if (objectType == "tactic") objects$ = this.restAPIConnectorService.getTactic(objectStixID);
-            else if (objectType == "technique") objects$ = this.restAPIConnectorService.getTechnique(objectStixID, null, "latest", true);
-            else if (objectType == "collection") objects$ = this.restAPIConnectorService.getCollection(objectStixID, null, "all");
+            if (this.objectType  == "software") objects$ = this.restAPIConnectorService.getSoftware(objectStixID);
+            else if (this.objectType  == "group") objects$ = this.restAPIConnectorService.getGroup(objectStixID);
+            else if (this.objectType  == "matrix") objects$ = this.restAPIConnectorService.getMatrix(objectStixID);
+            else if (this.objectType  == "mitigation") objects$ = this.restAPIConnectorService.getMitigation(objectStixID);
+            else if (this.objectType  == "tactic") objects$ = this.restAPIConnectorService.getTactic(objectStixID);
+            else if (this.objectType  == "technique") objects$ = this.restAPIConnectorService.getTechnique(objectStixID, null, "latest", true); 
+            else if (this.objectType  == "collection") objects$ = this.restAPIConnectorService.getCollection(objectStixID, objectModified, "latest", false, true);
             let  subscription = objects$.subscribe({
                 next: result => {
-                    this.updateBreadcrumbs(result, objectType);
+                    this.updateBreadcrumbs(result, this.objectType );
                     this.objects = result;
+                    if (objectModified) this.objects = this.objects.filter(x => x.modified.toISOString() == objectModified); //filter to just the object with that date
                     this.initialVersion = new VersionNumber(this.objects[0].version.toString());
                 },
                 complete: () => { subscription.unsubscribe() }
             });
-        } else if (objectType == "software") {
+        } else if (this.objectType  == "software") {
             // ask the user what sub-type of software they want to create
             let prompt = this.dialog.open(MultipleChoiceDialogComponent, {
                 maxWidth: "35em",
@@ -134,6 +145,7 @@ export class StixPageComponent implements OnInit, OnDestroy {
                 next: (result) => {
                     this.objects = [new Software(result)]; 
                     this.initialVersion = new VersionNumber(this.objects[0].version.toString());
+                    this.updateBreadcrumbs(this.objects, this.objectType);
                 },
                 complete: () => { subscription.unsubscribe(); }
             })
@@ -141,13 +153,16 @@ export class StixPageComponent implements OnInit, OnDestroy {
             // create a new object to edit
             this.objects = [];
             this.objects.push(
-                objectType == "matrix" ? new Matrix() :
-                objectType == "technique" ? new Technique() :
-                objectType == "tactic" ? new Tactic() :
-                objectType == "mitigation" ? new Mitigation() :
-                objectType == "group" ? new Group(): null
+                this.objectType  == "matrix" ? new Matrix() :
+                this.objectType  == "technique" ? new Technique() :
+                this.objectType  == "tactic" ? new Tactic() :
+                this.objectType  == "mitigation" ? new Mitigation() :
+                this.objectType  == "group" ? new Group():
+                this.objectType  == "collection" ? new Collection() : 
+                null // if not any of the above types
             );
             this.initialVersion = new VersionNumber(this.objects[0].version.toString());
+            this.updateBreadcrumbs(this.objects, this.objectType);
         };
     }
 

@@ -1,15 +1,97 @@
 @import "../../../../../style/globals";
 .collection-view {
-    .version-select {
-        @extend .heading;
-        text-transform: none;
-        padding: 0px 5px;
-        border-radius: 4px;
-        font-size: 36px;
-        background: transparent;
-        -webkit-appearance:none;
-        cursor: pointer;
-        .dark & { color: on-color(dark); border-color: on-color(dark);}
-        .light & { color: on-color(light); border-color: on-color(light);}
+    .row.width-limited {
+        max-width: 45em;
+        margin: 0 auto;
     }
+    h1.name-property { // override name-property styles
+        text-align: center;
+        margin: 0;
+    }
+    .buttons {
+        margin-top: 48px !important;
+    }
+    .col.border-left {
+        margin-left: 24px !important;
+        padding-left: 24px;
+        .dark & { border-left: 1px solid border-color(dark); }
+        .light & { border-left: 1px solid border-color(light); }
+    }
+    .mat-expansion-panel {
+        @include expansion-panel(true);
+        .mat-expansion-panel-header-title {
+            text-transform: capitalize;
+        }
+
+        &.warn:not(.disabled) .mat-expansion-panel-header-title {
+            color: color(warn);
+        }
+    }
+    .changes .col { // stix list doesn't like being in columns, so force column sizes to 50%
+        // max-width: 40%;
+        width: 0;
+        // &:first-child { padding-right: 12px; }
+        // top padding is 48 + 12 to skip search header of stix-list
+        &.controls { padding: 60px 12px 0 12px; width: 64px; }
+
+        box-sizing: border-box;
+    }
+    
+    .icon-mirror {
+        transform: rotate(180deg);
+    }
+
+    button.mat-button-disabled {
+        opacity: 0.5;
+    }
+    .loading-display {
+        text-align: center;
+    }
+
+    .validation { 
+        max-width: 45em;
+        margin: 0 auto;
+        .save-buttons {
+            margin-top: 16px;
+            button + button {
+                margin-left: 16px;
+            }
+        }
+    }
+
+    .content.collection-data {
+        code {
+            // overflow-x: hidden;
+            // white-space: nowrap;
+            // text-overflow: ellipsis;
+        }
+        .download {
+            cursor: pointer;
+            &:hover { 
+                .dark & { background: color-alternate(dark); }
+                .light & { background: color-alternate(light); }
+            }
+        }
+        .url {
+            cursor: pointer;
+            &:hover {
+                color: color(link);
+            }
+        }
+    }
+    .releaseExplanation {
+        max-width: 25em;
+    }
+    // .version-select {
+    //     @extend .heading;
+    //     text-transform: none;
+    //     padding: 0px 5px;
+    //     border-radius: 4px;
+    //     font-size: 36px;
+    //     background: transparent;
+    //     -webkit-appearance:none;
+    //     cursor: pointer;
+    //     .dark & { color: on-color(dark); border-color: on-color(dark);}
+    //     .light & { color: on-color(light); border-color: on-color(light);}
+    // }
 }

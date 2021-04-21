@@ -39,6 +39,7 @@ export class Software extends StixObject {
         rep.stix.x_mitre_aliases = this.aliases;
         rep.stix.x_mitre_platforms = this.platforms;
         rep.stix.x_mitre_contributors = this.contributors;
+        if (this.type == "malware") rep.stix.is_family = true; // add is_family to malware type SDOs
 
         return rep;
     }
@@ -103,7 +104,7 @@ export class Software extends StixObject {
         
         let postObservable = restAPIService.postSoftware(this);
         let subscription = postObservable.subscribe({
-            next: (result) => { this.deserialize(result); },
+            next: (result) => { this.deserialize(result.serialize()); },
             complete: () => { subscription.unsubscribe(); }
         });
         return postObservable;

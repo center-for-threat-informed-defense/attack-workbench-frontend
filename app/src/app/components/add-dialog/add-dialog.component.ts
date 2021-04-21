@@ -21,5 +21,7 @@ export interface AddDialogConfig {
   selectableObjects: StixObject[]; // Stix Object array of selectable objects not in list
   type: string; // type to display stix list
   select: SelectionModel<string>; // selection model to retrieve list of selected object
+  selectionType?: string; // 'many', 'one', or 'disabled'; defaults to 'many' if a selection model is given
   buttonLabel?: string; // optional button label, default "add"
+  title?: string; // dialog text
 }

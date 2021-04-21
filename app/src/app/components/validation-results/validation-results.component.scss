@@ -15,4 +15,10 @@
     .validation-item.info {
         color: color(info);
     }
+    .validation-item .mat-line {
+        //overwrite material's text overflow settings for mat-lines
+        white-space: normal;
+        overflow: auto;
+        text-overflow: unset;
+    }
 }

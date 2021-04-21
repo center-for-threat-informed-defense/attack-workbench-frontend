@@ -11,7 +11,7 @@ import { Relationship } from 'src/app/classes/stix/relationship';
 })
 export class GroupViewComponent extends StixViewPage implements OnInit {
   
-  public editing: boolean = false;
+//   public editing: boolean = false;
   
   public get group(): Group { return this.config.object as Group; }
 
@@ -25,9 +25,9 @@ export class GroupViewComponent extends StixViewPage implements OnInit {
   }
 
   ngOnInit() {
-    this.route.queryParams.subscribe(params => {
-        this.editing = params["editing"];
-    });
+    // this.route.queryParams.subscribe(params => {
+    //     this.editing = params["editing"];
+    // });
   }
 
 }

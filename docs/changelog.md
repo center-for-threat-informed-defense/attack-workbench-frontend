@@ -31,6 +31,20 @@
 <!--    each repo's package.json file's version marking.                -->
 
 # Changelog
+
+## 21 April 2021
+### ATT&CK Workbench version 0.3.0
+#### New Features in 0.3.0
+- Added attribution of edits and tracking of organization identity. See [frontend#61](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/124) and [frontend#182](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/61).
+- Added ability to revoke and deprecate objects. See [frontend#164](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/164).
+- Added tracking of workflow state. See [frontend#3](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/3).
+- Added ability to create and edit collections. See [frontend#4](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/4), [frontend#5](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/5), and [frontend#112](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/112).
+- Added support and documentation for [ATT&CK Navigator](https://github.com/mitre-attack/attack-navigator) integration. See [frontend#153](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/153).
+- Added support and documentation for [ATT&CK Website](https://github.com/mitre-attack/attack-website/) integration. See [frontend#152](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/152).
+
+#### Improvements in 0.3.0
+- Improved display of object domains. See [frontend#166](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/166).
+
 ## 19 March 2021
 
 ### ATT&CK Workbench version 0.2.0
