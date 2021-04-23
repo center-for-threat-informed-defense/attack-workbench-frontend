@@ -32,6 +32,11 @@
 
 # Changelog
 
+### ATT&CK Workbench version 0.4.0
+#### Improvements in 0.4.0
+- Added a favicon. See [frontend#137](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/137).
+- Added dynamic page title to make it easier to distinguish multiple Workbench tabs in the browser. See [frontend#130](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/130).
+
 ## 21 April 2021
 ### ATT&CK Workbench version 0.3.0
 #### New Features in 0.3.0
