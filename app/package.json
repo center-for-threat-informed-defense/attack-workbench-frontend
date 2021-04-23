@@ -1,6 +1,6 @@
 {
   "name": "attack-workbench-frontend",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "description": "Application for creating and editing ATT&CK-like content.",
   "keywords": [
     "cti",

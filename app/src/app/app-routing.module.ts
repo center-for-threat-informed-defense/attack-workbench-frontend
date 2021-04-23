@@ -25,12 +25,14 @@ const routes: Routes = [
                 "path": "admin",
                 "data": {
                     "breadcrumb": "admin settings",
+                    "title": "Admin Settings"
                 },
                 "children": [
                     {
                         "path": "",
                         "data": {
                             "breadcrumb": "admin settings",
+                            "title": "Admin Settings"
                         },
                         "component": AdminPageComponent,
                     },
@@ -38,6 +40,7 @@ const routes: Routes = [
                         "path": "org-identity",
                         "data": {
                             "breadcrumb": "organization identity",
+                            "title": "Organization Identity"
                         },
                         "component": OrgIdentityPageComponent,
                     }
@@ -48,13 +51,15 @@ const routes: Routes = [
                 "path": "docs",
                 "data": {
                     "breadcrumb": "documentation",
+                    "title": "Documentation"
                 },
                 "children": [
                     {
                         "path": "",
                         "data": {
                             "breadcrumb": "documentation",
-                            "markdown": "/assets/docs/README.md"
+                            "markdown": "/assets/docs/README.md",
+                            "title": "Documentation"
                         },
                         "component": HelpPageComponent,
                     },
@@ -62,7 +67,8 @@ const routes: Routes = [
                         "path": "usage",
                         "data": {
                             "breadcrumb": "usage",
-                            "markdown": "/assets/docs/usage.md"
+                            "markdown": "/assets/docs/usage.md",
+                            "title": "Usage"
                         },
                         "component": HelpPageComponent,
                     },
@@ -70,7 +76,8 @@ const routes: Routes = [
                         "path": "collections",
                         "data": {
                             "breadcrumb": "collections",
-                            "markdown": "/assets/docs/collections.md"
+                            "markdown": "/assets/docs/collections.md",
+                            "title": "About Collections"
                         },
                         "component": HelpPageComponent,
                     },
@@ -78,7 +85,8 @@ const routes: Routes = [
                         "path": "changelog",
                         "data": {
                             "breadcrumb": "changelog",
-                            "markdown": "/assets/docs/changelog.md"
+                            "markdown": "/assets/docs/changelog.md",
+                            "title": "Changelog"
                         },
                         "component": HelpPageComponent,
                     },
@@ -86,7 +94,8 @@ const routes: Routes = [
                         "path": "integrations",
                         "data": {
                             "breadcrumb": "integrations",
-                            "markdown": "/assets/docs/integrations.md"
+                            "markdown": "/assets/docs/integrations.md",
+                            "title": "Integrations"
                         },
                         "component": HelpPageComponent,
                     },
