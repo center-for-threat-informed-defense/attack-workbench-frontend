@@ -3,6 +3,7 @@ import { MatDrawerContainer } from '@angular/material/sidenav';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { getCookie, setCookie, hasCookie } from "./util/cookies";
 import { SidebarService } from './services/sidebar/sidebar.service';
+import { TitleService } from './services/title/title.service';
 
 @Component({
   selector: 'app-root',
@@ -17,7 +18,10 @@ export class AppComponent implements AfterViewInit {
     @ViewChild("header", {static: false, read: ElementRef}) private header: ElementRef;
     @ViewChild("scrollRef", {static: false, read: ElementRef}) private scrollRef: ElementRef;
 
-    constructor(private overlayContainer: OverlayContainer, private sidebarService: SidebarService) {
+    
+    constructor(private overlayContainer: OverlayContainer,
+                private sidebarService: SidebarService,
+                private titleService: TitleService) { //note: this isn't used directly, but it MUST be imported to work properly
         if (hasCookie("theme")) {
             this.setTheme(getCookie("theme"))
         } else {
@@ -42,15 +46,15 @@ export class AppComponent implements AfterViewInit {
 
     // header hiding with scroll
     ngAfterViewInit() {
-        this.scrollRef.nativeElement.addEventListener('scroll', (e) => this.scrollEvent(e), true);
+        this.scrollRef.nativeElement.addEventListener('scroll', (e) => this.scrollEvent(), true);
     }
     ngOnDestroy() { 
-        this.scrollRef.nativeElement.removeEventListener('scroll', (e) => this.scrollEvent(e), true);
+        this.scrollRef.nativeElement.removeEventListener('scroll', (e) => this.scrollEvent(), true);
     }
 
     public hiddenHeaderPX: number = 0; //number of px of the header which is hidden
     // when a scroll happens
-    private scrollEvent($event): void {
+    private scrollEvent(): void {
         let headerHeight = this.header.nativeElement.offsetHeight;
         // constrain amount of hidden to bounds, round up because decimal scroll causes flicker
         this.hiddenHeaderPX = Math.floor(Math.min(Math.max(0, this.scrollRef.nativeElement.scrollTop/2), headerHeight)); 
