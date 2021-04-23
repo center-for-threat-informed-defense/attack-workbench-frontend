@@ -22,7 +22,8 @@ const stixRoutes: Routes = [{
     children: [{
         path: '',
         data: {
-          breadcrumb: 'list'
+          breadcrumb: 'list',
+          title: "matrices"
         },
         component: MatrixListComponent
       },
@@ -35,7 +36,8 @@ const stixRoutes: Routes = [{
             path: '',
             data: {
               breadcrumb: 'view',
-              editable: true
+              editable: true,
+              title: "view matrix"
             },
             component: StixPageComponent
           }
@@ -50,7 +52,8 @@ const stixRoutes: Routes = [{
             path: '',
             data: {
               breadcrumb: 'view',
-              editable: true
+              editable: true,
+              title: "new matrix"
             },
             component: StixPageComponent
           }]
@@ -65,7 +68,8 @@ const stixRoutes: Routes = [{
     children: [{
         path: '',
         data: {
-          breadcrumb: 'list'
+          breadcrumb: 'list',
+          title: "techniques"
         },
         component: TechniqueListComponent
       },
@@ -78,7 +82,8 @@ const stixRoutes: Routes = [{
             path: '',
             data: {
               breadcrumb: 'view',
-              editable: true
+              editable: true,
+              title: "view technique"
             },
             component: StixPageComponent
           }
@@ -93,7 +98,8 @@ const stixRoutes: Routes = [{
           path: '',
           data: {
             breadcrumb: 'view',
-            editable: true
+            editable: true,
+            title: "new technique"
           },
           component: StixPageComponent
         }]
@@ -108,7 +114,8 @@ const stixRoutes: Routes = [{
     children: [{
         path: '',
         data: {
-          breadcrumb: 'list'
+          breadcrumb: 'list',
+          title: "tactics"
         },
         component: TacticListComponent
       },
@@ -121,7 +128,8 @@ const stixRoutes: Routes = [{
             path: '',
             data: {
               breadcrumb: 'view',
-              editable: true
+              editable: true,
+              title: "view tactic"
             },
             component: StixPageComponent
           }
@@ -136,7 +144,8 @@ const stixRoutes: Routes = [{
           path: '',
           data: {
             breadcrumb: 'view',
-            editable: true
+            editable: true,
+            title: "new tactic"
           },
           component: StixPageComponent
         }
@@ -152,7 +161,8 @@ const stixRoutes: Routes = [{
     children: [{
         path: '',
         data: {
-          breadcrumb: 'list'
+          breadcrumb: 'list',
+          title: "mitigations"
         },
         component: MitigationListComponent
       },
@@ -165,7 +175,8 @@ const stixRoutes: Routes = [{
             path: '',
             data: {
               breadcrumb: 'view',
-              editable: true
+              editable: true,
+              title: "view mitigation"
             },
             component: StixPageComponent
           }
@@ -180,7 +191,8 @@ const stixRoutes: Routes = [{
           path: '',
           data: {
             breadcrumb: 'view',
-            editable: true
+            editable: true,
+            title: "new mitigation"
           },
           component: StixPageComponent
         }
@@ -196,7 +208,8 @@ const stixRoutes: Routes = [{
     children: [{
         path: '',
         data: {
-          breadcrumb: 'list'
+          breadcrumb: 'list',
+          title: "groups"
         },
         component: GroupListComponent
       },
@@ -209,7 +222,8 @@ const stixRoutes: Routes = [{
             path: '',
             data: {
               breadcrumb: 'view',
-              editable: true
+              editable: true,
+              title: "view group"
             },
             component: StixPageComponent
           }
@@ -224,7 +238,8 @@ const stixRoutes: Routes = [{
           path: '',
           data: {
             breadcrumb: 'view',
-            editable: true
+            editable: true,
+            title: "new group"
           },
           component: StixPageComponent
         }
@@ -240,7 +255,8 @@ const stixRoutes: Routes = [{
     children: [{
         path: '',
         data: {
-          breadcrumb: 'list'
+          breadcrumb: 'list',
+          title: "software"
         },
         component: SoftwareListComponent
       },
@@ -253,7 +269,8 @@ const stixRoutes: Routes = [{
             path: '',
             data: {
               breadcrumb: 'view',
-              editable: true
+              editable: true,
+              title: "view software"
             },
             component: StixPageComponent
           }
@@ -268,7 +285,8 @@ const stixRoutes: Routes = [{
           path: '',
           data: {
             breadcrumb: 'view',
-            editable: true
+            editable: true,
+            title: "new software"
           },
           component: StixPageComponent
         }
@@ -288,30 +306,35 @@ if (environment.integrations.collection_manager.enabled) {
         children: [{
             path: "",
             data: {
-                breadcrumb: "list"
+                breadcrumb: "list",
+                title: "collections"
             },
             component: CollectionManagerComponent,
         }, {
             path: "import-collection",
             data: {
-                breadcrumb: "import a collection"
+                breadcrumb: "import a collection",
+                title: "import collection"
             },
             children: [{
                 path: '',
                 data: {
-                    breadcrumb: 'import'
+                    breadcrumb: 'import',
+                    title: "import collection"
                 },
                 component: CollectionImportComponent
             }]
         }, {
             path: "import-collection-index",
             data: {
-                breadcrumb: "add a collection index"
+                breadcrumb: "add a collection index",
+                title: "add collection index"
             },
             children: [{
                 path: '',
                 data: {
-                    breadcrumb: 'import'
+                    breadcrumb: 'import',
+                    title: "add collection index"
                 },
                 component: CollectionIndexImportComponent
             }]
@@ -324,20 +347,23 @@ if (environment.integrations.collection_manager.enabled) {
                 path: "",
                 data: {
                     breadcrumb: "view",
-                    editable: true
+                    editable: true,
+                    title: "view collection"
                 },
                 component: StixPageComponent
             }]
         }, {
             path: "new",
             data: {
-                breadcrumb: "new collection"
+                breadcrumb: "new collection",
+                title: "new collection"
             },
             children: [{
                 path: '',
                 data: {
                     breadcrumb: 'new collection',
-                    editable: true
+                    editable: true,
+                    title: "new collection"
                 },
                 component: StixPageComponent
             }]
