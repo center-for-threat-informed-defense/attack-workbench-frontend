@@ -5,6 +5,7 @@ import { CollectionIndex } from 'src/app/classes/collection-index';
 import { CollectionManagerConnectorService } from 'src/app/services/connectors/collection-manager/collection-manager-connector.service';
 import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/rest-api-connector.service';
 import { MatSnackBar } from "@angular/material/snack-bar";
+import { environment } from "../../../../../../environments/environment";
 
 @Component({
   selector: 'app-collection-index-import',
@@ -19,10 +20,10 @@ export class CollectionIndexImportComponent implements OnInit {
                 private restAPIConnector: RestApiConnectorService, 
                 private snackbar: MatSnackBar) { }
 
-    ngOnInit(): void {
-    }
+    ngOnInit(): void {}
 
     public url: string = "";
+    public get recommended_indexes() { return environment.recommended_indexes; }
 
     public index: CollectionIndex = null;
 

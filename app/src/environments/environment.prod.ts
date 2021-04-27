@@ -1,5 +1,11 @@
 export const environment = {
     production: true,
+    recommended_indexes: [ //recommended collection indexes shown to user if they have no indexes loaded
+        {
+            "name": "MITRE ATT&CK", //index name
+            "url": "http://localhost:8082/collection-index.json" //index url
+        }
+    ],
     integrations: {
         rest_api: {
             // configuration for the ATT&CK Workbench REST API
