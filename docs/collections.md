@@ -5,7 +5,7 @@ This document describes the format and usage of _collections_ and _collection in
 ## Collections
 A _collection_ is a set of related ATT&CK objects; collections may be used represent specific releases of a dataset such as "Enterprise ATT&CK v7.2", or any other set of objects one may want to share with someone else. 
 
-Collections are meant to be shared. Collections can be shared as STIX bundles, uploaded to the internet, sent through email, or hosted on a [TAXII server](https://oasis-open.github.io/cti-documentation/taxii/intro.html). 
+Collections are meant to be shared. Collections can be shared as STIX bundles, uploaded to the internet, or sent through email. <!-- or hosted on a [TAXII server](https://oasis-open.github.io/cti-documentation/taxii/intro.html). -->
 
 Data providers may opt to describe their published collections through a _collection index_ (detailed below), a data structure designed to provide a machine-readable listing of collections. Collection indexes provide the means through which data consumers can _subscribe_ to updates from a data provider.
 
@@ -123,7 +123,7 @@ Collection version objects describe specific versions of collections within a _c
 | **version** (required) | `string` | Must match the **version** field of the collection being referenced. |
 | **modified** (required) | `timestamp` | Represents the time when the collection version was last modified. This property must match the **modified** property of the collection to which it refers. |
 | **url** (optional*) | `string` | Specifies the URL of the collection STIX bundle holding the collection. *Either this property or **taxii_url** _MUST_ be specified. |
-| **taxii_url** (optional*) | `string` | Specifies the TAXII URL of the TAXII collection holding the collection. *Either this property or **url** _MUST_ be specified. |
+| **taxii_url** (optional*) | `string` | Specifies the TAXII URL of the TAXII collection holding the collection. *Either this property or **url** _MUST_ be specified. The ATT&CK Workbench doesn't currently support loading collections over TAXII. |
 | **release_notes** (optional) | `string` | Release notes for this version of the collection. |
 
 ### Collection Index Example
