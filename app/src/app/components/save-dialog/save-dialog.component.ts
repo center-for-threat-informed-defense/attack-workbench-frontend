@@ -1,4 +1,5 @@
 import { Component, Inject, OnInit, ViewEncapsulation } from '@angular/core';
+import { FormControl, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Observable } from 'rxjs';
 import { ValidationData, ValidationFieldData } from 'src/app/classes/serializable';
@@ -18,6 +19,8 @@ export class SaveDialogComponent implements OnInit {
     public nextMajorVersion: string;
     public nextMinorVersion: string;
     public validation: ValidationData = null;
+    public statusControl: FormControl = new FormControl();
+    public workflows: string[] = ["work-in-progress", "awaiting-review", "reviewed"];
 
     public get saveEnabled() {
         return this.validation && this.validation.errors.length == 0;
@@ -43,15 +46,18 @@ export class SaveDialogComponent implements OnInit {
     }
 
     public saveCurrentVersion() {
+        this.config.object.workflow = {state: this.statusControl.value};
         this.save();
     }
 
     public saveNextMajorVersion() {
+        this.config.object.workflow = {state: this.statusControl.value};
         this.config.object.version = new VersionNumber(this.nextMajorVersion)
         this.save();
     }
 
     public saveNextMinorVersion() {
+        this.config.object.workflow = {state: this.statusControl.value};
         this.config.object.version = new VersionNumber(this.nextMinorVersion)
         this.save();
     }
@@ -66,7 +72,12 @@ export class SaveDialogComponent implements OnInit {
         });
     }
 
+    public getLabel(status: string): string {
+        return status.replace(/-/g, ' ');
+    }
+
     ngOnInit(): void {
+        this.statusControl = new FormControl(this.config.object.workflow ? this.config.object.workflow.state : '');
     }
 
 }
