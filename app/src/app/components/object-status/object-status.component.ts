@@ -28,7 +28,6 @@ export class ObjectStatusComponent implements OnInit {
     public relationships;
     public revoked: boolean = false;
     public deprecated: boolean = false;
-    public workflow: string;
     
     public get disabled(): boolean {
         return this.editorService.editing || this.editorService.type == "collection";
@@ -62,7 +61,6 @@ export class ObjectStatusComponent implements OnInit {
                 this.object = this.objects.find(object => object.stixID === this.editorService.stixId);
                 if (this.object.workflow && this.object.workflow.state) {
                     this.statusControl.setValue(this.object.workflow.state);
-                    this.workflow = this.object.workflow.state;
                 }
                 this.revoked = this.object.revoked;
                 this.deprecated = this.object.deprecated;
@@ -87,6 +85,7 @@ export class ObjectStatusComponent implements OnInit {
             if (event.source.value == "none") this.object.workflow = undefined;
             else this.object.workflow = {state: event.source.value};
             this.object.save(this.restAPIService);
+            window.location.reload();
         }
     }
 
@@ -142,6 +141,7 @@ export class ObjectStatusComponent implements OnInit {
                     relationship.save(this.restAPIService);
                 }
             }
+            window.location.reload();
         }
     }
 
@@ -164,6 +164,7 @@ export class ObjectStatusComponent implements OnInit {
         else {
             this.object.deprecated = false;
             this.object.save(this.restAPIService);
+            window.location.reload();
         }
     }
 
@@ -210,6 +211,7 @@ export class ObjectStatusComponent implements OnInit {
                     let saveSubscription = forkJoin(saves).subscribe({
                         complete: () => { saveSubscription.unsubscribe(); }
                     });
+                    window.location.reload();
                 } else { // user cancelled
                     if (revoked) this.revoked = false;
                     else this.deprecated = false;
