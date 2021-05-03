@@ -76,6 +76,15 @@ export class ObjectStatusComponent implements OnInit {
         });
     }
 
+    private save() {
+        let saveSubscription = this.object.save(this.restAPIService).subscribe({
+            complete: () => {
+                this.editorService.onReload.emit();
+                saveSubscription.unsubscribe();
+            }
+        })
+    }
+
     /**
      * Handle workflow state change
      * @param event workflow state selection
@@ -84,8 +93,7 @@ export class ObjectStatusComponent implements OnInit {
         if (event.isUserInput) {
             if (event.source.value == "none") this.object.workflow = undefined;
             else this.object.workflow = {state: event.source.value};
-            this.object.save(this.restAPIService);
-            window.location.reload();
+            this.save();
         }
     }
 
@@ -125,10 +133,6 @@ export class ObjectStatusComponent implements OnInit {
                 complete: () => { revokedSubscription.unsubscribe(); }
             });
         } else {
-            // un-revoke object
-            this.object.revoked = false;
-            this.object.save(this.restAPIService);
-
             // deprecate the 'revoked-by' relationship
             let revokedRelationships = this.relationships.filter(relationship => relationship.relationship_type == 'revoked-by');
             for (let relationship of revokedRelationships) {
@@ -141,7 +145,9 @@ export class ObjectStatusComponent implements OnInit {
                     relationship.save(this.restAPIService);
                 }
             }
-            window.location.reload();
+            // un-revoke object
+            this.object.revoked = false;
+            this.save();
         }
     }
 
@@ -163,8 +169,7 @@ export class ObjectStatusComponent implements OnInit {
         }
         else {
             this.object.deprecated = false;
-            this.object.save(this.restAPIService);
-            window.location.reload();
+            this.save();
         }
     }
 
@@ -209,9 +214,11 @@ export class ObjectStatusComponent implements OnInit {
             
                     // complete save calls
                     let saveSubscription = forkJoin(saves).subscribe({
-                        complete: () => { saveSubscription.unsubscribe(); }
+                        complete: () => {
+                            this.editorService.onReload.emit();
+                            saveSubscription.unsubscribe();
+                        }
                     });
-                    window.location.reload();
                 } else { // user cancelled
                     if (revoked) this.revoked = false;
                     else this.deprecated = false;
