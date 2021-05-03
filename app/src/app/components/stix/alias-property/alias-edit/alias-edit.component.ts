@@ -12,10 +12,13 @@ import { AliasEditDialogComponent } from './alias-edit-dialog/alias-edit-dialog.
 })
 export class AliasEditComponent implements OnInit {
     @Input() public config: AliasPropertyConfig;
+    public attackType: string;
 
     constructor(public dialog: MatDialog) { }
 
     ngOnInit(): void {
+        let object = Array.isArray(this.config.object)? this.config.object[0] : this.config.object;
+        this.attackType = object.attackType;
     }
 
     public editAlias(aliasName?: string) {

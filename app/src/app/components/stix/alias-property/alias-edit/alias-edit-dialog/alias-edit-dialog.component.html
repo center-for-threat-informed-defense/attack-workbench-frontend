@@ -1,12 +1,12 @@
 <div class="alias-edit-dialog">
-    <h1 *ngIf="is_new">Add an alias</h1>
-    <h1 *ngIf="!is_new">Edit an Alias</h1>
+    <h1 *ngIf="is_new">Add an associated {{config.object.attackType}}</h1>
+    <h1 *ngIf="!is_new">Edit an associated {{config.object.attackType}}</h1>
     <mat-form-field appearance="outline">
-        <mat-label>alias name</mat-label>
+        <mat-label>associated {{config.object.attackType}} name</mat-label>
         <input matInput required [disabled]="!is_new" [(ngModel)]="config.aliasName">
     </mat-form-field>
     <mat-form-field appearance="outline">
-        <mat-label>alias description or citation</mat-label>
+        <mat-label>associated {{config.object.attackType}} description or citation</mat-label>
         <input matInput [(ngModel)]="aliasDescription">
     </mat-form-field>
     <div class="buttons">
