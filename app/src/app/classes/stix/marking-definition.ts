@@ -3,6 +3,7 @@ import { Relationship } from './relationship';
 import { RestApiConnectorService } from "src/app/services/connectors/rest-api/rest-api-connector.service";
 import { Observable, of } from "rxjs";
 import { ValidationData } from "../serializable";
+import { logger } from "../../util/logger";
 
 export class MarkingDefinition extends StixObject {
     public name: string = "";
@@ -46,7 +47,7 @@ export class MarkingDefinition extends StixObject {
 
             if ("name" in sdo) {
                 if (typeof(sdo.name) === "string") this.name = sdo.name;
-                else console.error("TypeError: name field is not a string:", sdo.name, "(",typeof(sdo.name),")")
+                else logger.error("TypeError: name field is not a string:", sdo.name, "(",typeof(sdo.name),")")
             } else this.name = "";
             
             // TODO improve this with better checking
@@ -56,7 +57,7 @@ export class MarkingDefinition extends StixObject {
 
             if ("definition_type" in sdo) {
                 if (typeof(sdo.definition_type) === "string") this.definition_type = sdo.definition_type;
-                else console.error("TypeError: definition_type is not a string:", sdo.definition_type, "(",typeof(sdo.definition_type),")")
+                else logger.error("TypeError: definition_type is not a string:", sdo.definition_type, "(",typeof(sdo.definition_type),")")
             } else this.definition_type = "";
         }
     }

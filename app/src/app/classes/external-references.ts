@@ -3,6 +3,7 @@ import { map } from "rxjs/operators";
 import { RestApiConnectorService } from "../services/connectors/rest-api/rest-api-connector.service";
 import { Serializable, ValidationData } from "./serializable";
 import { StixObject } from "./stix/stix-object";
+import { logger } from "../util/logger";
 
 export class ExternalReferences extends Serializable {
     private _externalReferences : Map<string, ExternalReference> = new Map();
@@ -290,7 +291,7 @@ export class ExternalReferences extends Serializable {
      */
     public deserialize(raw: any) {
         if (typeof(raw) === "object") this.externalReferences = raw;
-        else console.error("TypeError: external_references field is not an object:", raw, "(",typeof(raw),")")
+        else logger.error("TypeError: external_references field is not an object:", raw, "(",typeof(raw),")")
     }
 
     /**
@@ -313,7 +314,7 @@ export class ExternalReferences extends Serializable {
         // Update external references with used references
         this._externalReferences = temp_externalReferences;
         let post_delete_keys = Array.from(this._externalReferences.keys());
-        console.log("removed unused references", pre_delete_keys.filter((x) => !post_delete_keys.includes(x)))
+        logger.log("removed unused references", pre_delete_keys.filter((x) => !post_delete_keys.includes(x)))
         // Sort references by description and update index map
         this.sortReferences()
     }

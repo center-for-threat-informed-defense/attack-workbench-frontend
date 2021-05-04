@@ -6,7 +6,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { AddDialogComponent } from 'src/app/components/add-dialog/add-dialog.component';
 import { StixObject } from 'src/app/classes/stix/stix-object';
 import { SelectionModel } from '@angular/cdk/collections';
-
+import { logger } from "../../../../util/logger";
 @Component({
 selector: 'app-ordered-list-edit',
 templateUrl: './ordered-list-edit.component.html',
@@ -68,7 +68,7 @@ export class OrderedListEditComponent implements OnInit {
             from > this.list.length - 1 ||
             to < 0 ||
             to > this.list.length - 1) {
-            console.warn('invalid indexes for tactic reorder', from, to);
+            logger.warn('invalid indexes for tactic reorder', from, to);
             return;
         }
         let fromRow = this.list[from];
