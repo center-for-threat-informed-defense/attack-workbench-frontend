@@ -3,6 +3,7 @@ import { map, switchMap } from "rxjs/operators";
 import { RestApiConnectorService } from "src/app/services/connectors/rest-api/rest-api-connector.service";
 import { ValidationData } from "../serializable";
 import { StixObject } from "./stix-object";
+import { logger } from "../../util/logger";
 
 export class Technique extends StixObject {
     public name: string = "";
@@ -157,74 +158,74 @@ export class Technique extends StixObject {
 
             if ("name" in sdo) {
                 if (typeof(sdo.name) === "string") this.name = sdo.name;
-                else console.error("TypeError: name field is not a string:", sdo.name, "(", typeof(sdo.name),")");
+                else logger.error("TypeError: name field is not a string:", sdo.name, "(", typeof(sdo.name),")");
             } else this.name = "";
 
             if ("kill_chain_phases" in sdo) {
                 if (typeof(sdo.kill_chain_phases) == "object") {
                     this.kill_chain_phases = sdo.kill_chain_phases;
                 }
-                else console.error("TypeError: tactics field is not an object:", sdo.kill_chain_phases, "(", typeof(sdo.kill_chain_phases), ")");
+                else logger.error("TypeError: tactics field is not an object:", sdo.kill_chain_phases, "(", typeof(sdo.kill_chain_phases), ")");
             } else this.kill_chain_phases = [];
 
             if ("x_mitre_domains" in sdo) {
                 if (this.isStringArray(sdo.x_mitre_domains)) this.domains = sdo.x_mitre_domains;
-                else console.error("TypeError: domains field is not a string array.");
+                else logger.error("TypeError: domains field is not a string array.");
             } else this.domains = [];
 
             if ("x_mitre_detection" in sdo) {
                 if (typeof(sdo.x_mitre_detection) === "string") this.detection = sdo.x_mitre_detection;
-                else console.error("TypeError: detection field is not a string:", sdo.x_mitre_detection, "(", typeof(sdo.x_mitre_detection),")");
+                else logger.error("TypeError: detection field is not a string:", sdo.x_mitre_detection, "(", typeof(sdo.x_mitre_detection),")");
             } else this.detection = "";
 
             if ("x_mitre_platforms" in sdo) {
                 if (this.isStringArray(sdo.x_mitre_platforms)) this.platforms = sdo.x_mitre_platforms;
-                else console.error("TypeError: platforms field is not a string array.");
+                else logger.error("TypeError: platforms field is not a string array.");
             } else this.platforms = [];
 
             if ("x_mitre_data_sources" in sdo) {
                 if (this.isStringArray(sdo.x_mitre_data_sources)) this.data_sources = sdo.x_mitre_data_sources;
-                else console.error("TypeError: data sources field is not a string array.");
+                else logger.error("TypeError: data sources field is not a string array.");
             } else this.data_sources = [];
 
             if ("x_mitre_system_requirements" in sdo) {
                 if (this.isStringArray(sdo.x_mitre_system_requirements)) this.system_requirements = sdo.x_mitre_system_requirements;
-                else console.error("TypeError: system requirements field is not a string array.");
+                else logger.error("TypeError: system requirements field is not a string array.");
             } else this.system_requirements = [];
 
             if ("x_mitre_tactic_type" in sdo) {
                 if (this.isStringArray(sdo.x_mitre_tactic_type)) this.tactic_type = sdo.x_mitre_tactic_type;
-                else console.error("TypeError: tactic types field is not a string array.");
+                else logger.error("TypeError: tactic types field is not a string array.");
             } else this.tactic_type = [];
 
             if ("x_mitre_permissions_required" in sdo) {
                 if (this.isStringArray(sdo.x_mitre_permissions_required)) this.permissions_required = sdo.x_mitre_permissions_required;
-                else console.error("TypeError: permissions required field is not a string array.");
+                else logger.error("TypeError: permissions required field is not a string array.");
             } else this.permissions_required = [];
 
             if ("x_mitre_defense_bypassed" in sdo) {
                 if (this.isStringArray(sdo.x_mitre_defense_bypassed)) this.defense_bypassed = sdo.x_mitre_defense_bypassed;
-                else console.error("TypeError: defense bypassed field is not a string array.");
+                else logger.error("TypeError: defense bypassed field is not a string array.");
             } else this.defense_bypassed = [];
 
             if ("x_mitre_is_subtechnique" in sdo) {
                 if (typeof(sdo.x_mitre_is_subtechnique) === "boolean") this.is_subtechnique = sdo.x_mitre_is_subtechnique;
-                else console.error("TypeError: is subtechnique field is not a boolean:", sdo.x_mitre_is_subtechnique, "(", typeof(sdo.x_mitre_is_subtechnique),")")
+                else logger.error("TypeError: is subtechnique field is not a boolean:", sdo.x_mitre_is_subtechnique, "(", typeof(sdo.x_mitre_is_subtechnique),")")
             }
             
             if ("x_mitre_remote_support" in sdo) {
                 if (typeof(sdo.x_mitre_remote_support) === "boolean") this.remote_support = sdo.x_mitre_remote_support;
-                else console.error("TypeError: remote support field is not a boolean:", sdo.x_mitre_remote_support, "(", typeof(sdo.x_mitre_remote_support),")")
+                else logger.error("TypeError: remote support field is not a boolean:", sdo.x_mitre_remote_support, "(", typeof(sdo.x_mitre_remote_support),")")
             }
 
             if ("x_mitre_impact_type" in sdo) {
                 if (this.isStringArray(sdo.x_mitre_impact_type)) this.impact_type = sdo.x_mitre_impact_type;
-                else console.error("TypeError: impact type field is not a string array.");
+                else logger.error("TypeError: impact type field is not a string array.");
             }
 
             if ("x_mitre_effective_permissions" in sdo) {
                 if (this.isStringArray(sdo.x_mitre_effective_permissions)) this.effective_permissions = sdo.x_mitre_effective_permissions;
-                else console.error("TypeError: effective permissions field is not a string array.");
+                else logger.error("TypeError: effective permissions field is not a string array.");
             }
 
             if ("external_references" in sdo) {
@@ -237,11 +238,11 @@ export class Technique extends StixObject {
                                 if (sdo.external_references[i].source_name == "capec") this.capec_ids.push(sdo.external_references[i].external_id);
                                 else if (sdo.external_references[i].source_name == "NIST Mobile Threat Catalogue") this.mtc_ids.push(sdo.external_references[i].external_id);
                             }
-                            else console.error("TypeError: external ID field is not a string: ", sdo.external_references[i].external_id, "(", typeof(sdo.external_references[i].external_id, ")"));
+                            else logger.error("TypeError: external ID field is not a string: ", sdo.external_references[i].external_id, "(", typeof(sdo.external_references[i].external_id, ")"));
                         }
                     }
                 }
-                else console.error("TypeError: external_references field is not an object:", sdo.external_references, "(",typeof(sdo.external_references),")")
+                else logger.error("TypeError: external_references field is not an object:", sdo.external_references, "(",typeof(sdo.external_references),")")
             }
         }
     }

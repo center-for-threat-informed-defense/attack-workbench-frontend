@@ -1,5 +1,6 @@
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { Observable, of } from "rxjs";
+import { logger } from "../../util/logger";
 
 export abstract class ApiConnector {
     private theSnackbar: MatSnackBar; //note: constructor in super must import snackbar
@@ -7,7 +8,7 @@ export abstract class ApiConnector {
 
     protected handleError_single<T>() {
         return (error: any): Observable<T> => {
-            console.error(error);
+            logger.error(error);
             this.snack(error.error, "warn");
             return new Observable<T>();
         }
@@ -15,7 +16,7 @@ export abstract class ApiConnector {
 
     protected handleError_array<T>(defaultValue?: T) {
         return (error: any): Observable<T> => {
-            console.error(error);
+            logger.error(error);
             this.snack(error.error, "warn");
             return of(defaultValue as T);
         }
@@ -23,7 +24,7 @@ export abstract class ApiConnector {
 
     protected handleSuccess(message: string = "success") {
         return (success: any) => {
-            console.log(message, success);
+            logger.log(message, success);
             this.snack(message, "success");
         }
     }

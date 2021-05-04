@@ -15,6 +15,7 @@ import { Tactic } from 'src/app/classes/stix/tactic';
 import { Technique } from 'src/app/classes/stix/technique';
 import { ConfirmationDialogComponent } from 'src/app/components/confirmation-dialog/confirmation-dialog.component';
 import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/rest-api-connector.service';
+import { logger } from "../../../../../util/logger";
 
 @Component({
   selector: 'app-collection-import',
@@ -68,7 +69,7 @@ export class CollectionImportComponent implements OnInit {
                 })
             },
             error: (err) => {
-                console.error(err)
+                logger.error(err)
                 this.snackbar.open(err.error, "dismiss", {
                     duration: 2000,
                     panelClass: "warn"

@@ -2,6 +2,7 @@ import { Observable } from "rxjs";
 import { RestApiConnectorService } from "src/app/services/connectors/rest-api/rest-api-connector.service";
 import { ValidationData } from "../serializable";
 import {StixObject} from "./stix-object";
+import { logger } from "../../util/logger";
 
 export class Mitigation extends StixObject {
     public name: string = "";
@@ -44,12 +45,12 @@ export class Mitigation extends StixObject {
 
             if ("name" in sdo) {
                 if (typeof(sdo.name) === "string") this.name = sdo.name;
-                else console.error("TypeError: name field is not a string:", sdo.name, "(",typeof(sdo.name),")")
+                else logger.error("TypeError: name field is not a string:", sdo.name, "(",typeof(sdo.name),")")
             } else this.name = "";
             
             if ("x_mitre_domains" in sdo) {
                 if (this.isStringArray(sdo.x_mitre_domains)) this.domains = sdo.x_mitre_domains;
-                else console.error("TypeError: domains field is not a string array.");
+                else logger.error("TypeError: domains field is not a string array.");
             } else this.domains = [];
         }
     }

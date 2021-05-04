@@ -10,6 +10,7 @@ import { Tactic } from 'src/app/classes/stix/tactic';
 import { Technique } from 'src/app/classes/stix/technique';
 import { EditorService } from 'src/app/services/editor/editor.service';
 import { StixViewPage } from '../../../stix-view-page';
+import { logger } from "../../../../../util/logger";
 
 @Component({
     selector: 'app-collection-import-review',
@@ -52,7 +53,6 @@ export class CollectionImportReviewComponent extends StixViewPage implements OnI
             if (object.type != "relationship") idToSdo[object.stixID] = x.serialize();
         }
         //parse objects into categories
-        console.log(this.collection.stix_contents, this.collection);
         for (let object of this.collection.stix_contents) {
             if (!(object.stixID in idToCategory)) {
                 // does not belong to a change category
@@ -90,7 +90,7 @@ export class CollectionImportReviewComponent extends StixViewPage implements OnI
                 break;
             }
         }
-        console.log(this.collection_import_categories);
+        logger.log(this.collection_import_categories);
     }
 
 }

@@ -2,6 +2,8 @@ import { Observable, of } from 'rxjs';
 import { RestApiConnectorService } from '../services/connectors/rest-api/rest-api-connector.service';
 import { Serializable, ValidationData } from './serializable';
 import { VersionNumber } from './version-number';
+import { logger } from "../util/logger";
+
 // https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/blob/develop/docs/collections.md#collection-version-properties
 export class CollectionVersion extends Serializable  {
     public version: VersionNumber;
@@ -23,27 +25,27 @@ export class CollectionVersion extends Serializable  {
 
         if ("version" in version) {
             if (typeof(version.version) === "string") this.version = new VersionNumber(version.version);
-            else console.error("TypeError: version field is not a string:", version.version, "(", typeof(version.version), ")");
+            else logger.error("TypeError: version field is not a string:", version.version, "(", typeof(version.version), ")");
         } else this.version = new VersionNumber("0.1");
 
         if ("modified" in version) {
             if (typeof(version.modified) === "string") this.modified = new Date(version.modified);
-            else console.error("TypeError: modified field is not a string:", version.modified, "(", typeof(version.modified), ")");
+            else logger.error("TypeError: modified field is not a string:", version.modified, "(", typeof(version.modified), ")");
         } else this.modified = new Date();
 
         if ("url" in version) {
             if (typeof(version.url) === "string") this.url = version.url;
-            else console.error("TypeError: url field is not a string:", version.url, "(", typeof(version.url), ")");
+            else logger.error("TypeError: url field is not a string:", version.url, "(", typeof(version.url), ")");
         }
         else if ("taxii_url" in version) {
             if (typeof(version.taxii_url) === "string") this.taxii_url = version.taxii_url;
-            else console.error("TypeError: taxii_url field is not a string:", version.taxii_url, "(", typeof(version.taxii_url), ")"); 
+            else logger.error("TypeError: taxii_url field is not a string:", version.taxii_url, "(", typeof(version.taxii_url), ")"); 
         }
         else throw new Error("error deserializing CollectionVersion: either 'url' or 'taxii_url' must be specified\n" + JSON.stringify(version))
 
         if ("release_notes" in version) {
             if (typeof(version.release_notes) === "string") this.release_notes = version.release_notes;
-            else console.error("TypeError: release_notes field is not a string:", version.release_notes, "(", typeof(version.release_notes), ")");
+            else logger.error("TypeError: release_notes field is not a string:", version.release_notes, "(", typeof(version.release_notes), ")");
         }
     }
     /**
@@ -91,26 +93,26 @@ export class CollectionReference extends Serializable  {
 
         if ("id" in ref) {
             if (typeof(ref.id) === "string") this.id = ref.id;
-            else console.error("TypeError: id field is not a string:", ref.id, "(", typeof(ref.id), ")");
+            else logger.error("TypeError: id field is not a string:", ref.id, "(", typeof(ref.id), ")");
         }
         if ("name" in ref) {
             if (typeof(ref.name) === "string") this.name = ref.name;
-            else console.error("TypeError: name field is not a string:", ref.name, "(", typeof(ref.name), ")");
+            else logger.error("TypeError: name field is not a string:", ref.name, "(", typeof(ref.name), ")");
         }
         if ("description" in ref) {
             if (typeof(ref.description) === "string") this.description = ref.description;
-            else console.error("TypeError: description field is not a string:", ref.description, "(", typeof(ref.description), ")");
+            else logger.error("TypeError: description field is not a string:", ref.description, "(", typeof(ref.description), ")");
         }
         if ("created" in ref) {
             if (typeof(ref.created) === "string") this.created = new Date(ref.created);
-            else console.error("TypeError: created field is not a string:", ref.created, "(", typeof(ref.created), ")");
+            else logger.error("TypeError: created field is not a string:", ref.created, "(", typeof(ref.created), ")");
         } else this.created = new Date();
 
         if ("versions" in ref) {
             if (typeof(ref.versions) === "object") {
                 this.versions = ref.versions.map(version => new CollectionVersion(version));
                 this.versions.sort((a:CollectionVersion,b:CollectionVersion) => b.version.compareTo(a.version)); //sort by modified date
-            } else console.error("TypeError: versions field is not an object:", ref.versions, "(", typeof(ref.versions), ")");
+            } else logger.error("TypeError: versions field is not an object:", ref.versions, "(", typeof(ref.versions), ")");
         }
     }
     /**
@@ -169,24 +171,24 @@ export class CollectionIndex extends Serializable {
 
             if ("id" in raw.collection_index) {
                 if (typeof(raw.collection_index.id) === "string") collection_index.id = raw.collection_index.id;
-                else console.error("TypeError: id field is not a string:", raw.collection_index.id, "(", typeof(raw.collection_index.id), ")");
+                else logger.error("TypeError: id field is not a string:", raw.collection_index.id, "(", typeof(raw.collection_index.id), ")");
             }
             if ("name" in raw.collection_index) {
                 if (typeof(raw.collection_index.name) === "string") collection_index.name = raw.collection_index.name;
-                else console.error("TypeError: name field is not a string:", raw.collection_index.name, "(", typeof(raw.collection_index.name), ")");
+                else logger.error("TypeError: name field is not a string:", raw.collection_index.name, "(", typeof(raw.collection_index.name), ")");
             }
             if ("description" in raw.collection_index) {
                 if (typeof(raw.collection_index.description) === "string") collection_index.description = raw.collection_index.description;
-                else console.error("TypeError: description field is not a string:", raw.collection_index.description, "(", typeof(raw.collection_index.description), ")");
+                else logger.error("TypeError: description field is not a string:", raw.collection_index.description, "(", typeof(raw.collection_index.description), ")");
             }
             if ("created" in raw.collection_index) {
                 if (typeof(raw.collection_index.created) === "string") collection_index.created = new Date(raw.collection_index.created);
-                else console.error("TypeError: created field is not a string:", raw.collection_index.created, "(", typeof(raw.collection_index.created), ")");
+                else logger.error("TypeError: created field is not a string:", raw.collection_index.created, "(", typeof(raw.collection_index.created), ")");
             } else collection_index.created = new Date();
 
             if ("modified" in raw.collection_index) {
                 if (typeof(raw.collection_index.modified) === "string") collection_index.modified = new Date(raw.collection_index.modified);
-                else console.error("TypeError: modified field is not a string:", raw.collection_index.modified, "(", typeof(raw.collection_index.modified), ")");
+                else logger.error("TypeError: modified field is not a string:", raw.collection_index.modified, "(", typeof(raw.collection_index.modified), ")");
             } else collection_index.modified = new Date();
 
             if ("collections" in raw.collection_index) {
@@ -197,7 +199,7 @@ export class CollectionIndex extends Serializable {
                         if (raw.workspace && "update_policy" in raw.workspace) ref.subscribed = raw.workspace.update_policy.subscriptions.includes(ref.id);
                         return ref;
                     });
-                } else console.error("TypeError: collections field is not an object:", raw.collection_index.collections, "(", typeof(raw.collection_index.collections), ")");
+                } else logger.error("TypeError: collections field is not an object:", raw.collection_index.collections, "(", typeof(raw.collection_index.collections), ")");
             }
 
             this.collection_index = collection_index;
@@ -208,7 +210,7 @@ export class CollectionIndex extends Serializable {
 
             if ("remote_url" in raw.workspace) {
                 if (typeof(raw.workspace.remote_url) === "string") workspace.remote_url = raw.workspace.remote_url;
-                else console.error("TypeError: remote_url field is not a string:", raw.workspace.remote_url, "(", typeof(raw.workspace.remote_url), ")");
+                else logger.error("TypeError: remote_url field is not a string:", raw.workspace.remote_url, "(", typeof(raw.workspace.remote_url), ")");
             }
             if ("update_policy" in raw.workspace) {
                 let update_policy = raw.workspace.update_policy;
@@ -216,19 +218,19 @@ export class CollectionIndex extends Serializable {
 
                 if ("automatic" in update_policy) {
                     if (typeof(update_policy.automatic) === "boolean") tmp_policy.automatic = update_policy.automatic;
-                    else console.error("TypeError: automatic field is not a boolean:", update_policy.automatic, "(", typeof(update_policy.automatic), ")");
+                    else logger.error("TypeError: automatic field is not a boolean:", update_policy.automatic, "(", typeof(update_policy.automatic), ")");
                 }
                 if ("interval" in update_policy) {
                     if (typeof(update_policy.interval) === "number") tmp_policy.interval = update_policy.interval;
-                    else console.error("TypeError: interval field is not a number:", update_policy.interval, "(", typeof(update_policy.interval), ")");
+                    else logger.error("TypeError: interval field is not a number:", update_policy.interval, "(", typeof(update_policy.interval), ")");
                 }
                 if ("last_retrieval" in update_policy) {
                     if (typeof(update_policy.last_retrieval) === "string") tmp_policy.last_retrieval = new Date(update_policy.last_retrieval);
-                    else console.error("TypeError: last_retrieval field is not a string:", update_policy.last_retrieval, "(", typeof(update_policy.last_retrieval), ")");
+                    else logger.error("TypeError: last_retrieval field is not a string:", update_policy.last_retrieval, "(", typeof(update_policy.last_retrieval), ")");
                 }
                 if ("subscriptions" in update_policy) {
                     if (typeof(update_policy.subscriptions) === "object") tmp_policy.subscriptions = update_policy.subscriptions;
-                    else console.error("TypeError: subscriptions field is not an object:", update_policy.subscriptions, "(", typeof(update_policy.subscriptions), ")");
+                    else logger.error("TypeError: subscriptions field is not an object:", update_policy.subscriptions, "(", typeof(update_policy.subscriptions), ")");
                 }
                 workspace.update_policy = tmp_policy;
             }

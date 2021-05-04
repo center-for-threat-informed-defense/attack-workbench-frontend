@@ -1,4 +1,5 @@
 import { ValidatorFn, AbstractControl } from '@angular/forms';
+import { logger } from "../util/logger";
 
 export class VersionNumber {
     private _version = [];
@@ -39,7 +40,7 @@ export class VersionNumber {
      */
     public nextMinorVersion(): VersionNumber {
         if (this.granularity < 2) {
-            console.error(`cannot increment minor version of ${this.toString()}`)
+            logger.error(`cannot increment minor version of ${this.toString()}`)
             return this; //cannot increment
         }
         let clone = JSON.parse(JSON.stringify(this._version));

@@ -9,7 +9,7 @@ import { Software } from './software';
 import { StixObject } from './stix-object';
 import { Tactic } from './tactic';
 import { Technique } from './technique';
-
+import { logger } from "../../util/logger";
 
 /**
  *auto-generated changelog/report about an import
@@ -143,12 +143,12 @@ export class VersionReference {
 
         if ("object_ref" in sdo) {
             if (typeof(sdo.object_ref) === "string") this.object_ref = sdo.object_ref;
-            else console.error("TypeError: object_ref field is not a string:", sdo.object_ref, "(",typeof(sdo.object_ref),")")
+            else logger.error("TypeError: object_ref field is not a string:", sdo.object_ref, "(",typeof(sdo.object_ref),")")
         } else this.object_ref = "";
 
         if ("object_modified" in sdo) {
             if (typeof(sdo.object_modified) === "string") this.object_modified = new Date(sdo.object_modified);
-            else console.error("TypeError: object_modified field is not a string:", sdo.object_modified, "(",typeof(sdo.object_modified),")")
+            else logger.error("TypeError: object_modified field is not a string:", sdo.object_modified, "(",typeof(sdo.object_modified),")")
         } else this.object_modified = new Date();
     }
 }
@@ -225,32 +225,32 @@ export class Collection extends StixObject {
 
             if ("name" in sdo) {
                 if (typeof(sdo.name) === "string") this.name = sdo.name;
-                else console.error("TypeError: name field is not a string:", sdo.name, "(",typeof(sdo.name),")")
+                else logger.error("TypeError: name field is not a string:", sdo.name, "(",typeof(sdo.name),")")
             } else this.name = "";
 
             if ("x_mitre_contents" in sdo) {            
                 if (typeof(sdo.x_mitre_contents) === "object") this.contents = sdo.x_mitre_contents.map(vr => new VersionReference(vr))
-                else console.error("TypeError: x_mitre_contents field is not an object:", sdo.x_mitre_contents, "(",typeof(sdo.x_mitre_contents),")")
+                else logger.error("TypeError: x_mitre_contents field is not an object:", sdo.x_mitre_contents, "(",typeof(sdo.x_mitre_contents),")")
             }
         }
-        else console.error("ObjectError: 'stix' field does not exist in object");
+        else logger.error("ObjectError: 'stix' field does not exist in object");
 
         if ("workspace" in raw) {
             let sdo = raw.workspace;
 
             if ("imported" in sdo) {
                 if (typeof(sdo.imported) === "string") this.imported = new Date(sdo.imported);
-                else console.error("TypeError: imported field is not a string:", sdo.imported, "(",typeof(sdo.imported),")")
+                else logger.error("TypeError: imported field is not a string:", sdo.imported, "(",typeof(sdo.imported),")")
             }
 
             if ("workflow" in sdo && "release" in sdo.workflow) {
                 if (typeof(sdo.workflow.release) === "boolean") this.release = sdo.workflow.release;
-                else console.error("TypeError: release field is not a boolean:", sdo.workflow.release, "(",typeof(sdo.workflow.release),")")
+                else logger.error("TypeError: release field is not a boolean:", sdo.workflow.release, "(",typeof(sdo.workflow.release),")")
             }
 
             if ("import_categories" in sdo) {
                 if (typeof(sdo.import_categories) === "object") this.import_categories = sdo.import_categories;
-                else console.error("TypeError: import_categories field is not an object:", sdo.import_categories, "(",typeof(sdo.import_categories),")")
+                else logger.error("TypeError: import_categories field is not an object:", sdo.import_categories, "(",typeof(sdo.import_categories),")")
             }
         }
         if ("contents" in raw) {
@@ -313,14 +313,14 @@ export class Collection extends StixObject {
         for (let thisVr of this.contents) {
             let thisAttackObject = thisStixLookup.get(thisVr.object_ref);
             if (!thisAttackObject) {
-                // console.warn("could not find object", thisVr.object_ref, "in collection contents")
+                // logger.warn("could not find object", thisVr.object_ref, "in collection contents")
                 continue;
             }
             if (that.contents.find(thatVr => thisVr.object_ref == thatVr.object_ref)) {
                 // object exists in other collection
                 let thatAttackObject = thatStixLookup.get(thisVr.object_ref);
                 if (!thatAttackObject) {
-                    // console.warn("could not find object", thisVr.object_ref, "in collection contents")
+                    // logger.warn("could not find object", thisVr.object_ref, "in collection contents")
                     continue;
                 }
                 // determine if there was a change, and if so what type it was
