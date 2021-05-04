@@ -128,7 +128,7 @@ export class CollectionIndexViewComponent implements OnInit {
 
     public onVersionClick(version: CollectionVersion, ref: CollectionReference) {
         if (this.versionDownloaded(version, ref)) { //view prior import
-            this.router.navigate([`/collection/${ref.id}/modified/${ref.lastModified.toISOString()}`]);
+            this.router.navigate([`/collection/${ref.id}/modified/${version.modified.toISOString()}`]);
         } else { // go to download page
             this.router.navigate(["/collection/import-collection"], {queryParams: { "url": encodeURIComponent(version.url) }})
         }
