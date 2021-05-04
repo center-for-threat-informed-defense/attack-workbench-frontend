@@ -229,6 +229,8 @@ export class Technique extends StixObject {
 
             if ("external_references" in sdo) {
                 if (typeof(sdo.external_references) === "object") {
+                    this.capec_ids = [];
+                    this.mtc_ids = [];
                     for (let i = 0; i < sdo.external_references.length; i++){
                         if ("source_name" in sdo.external_references[i] && "external_id" in sdo.external_references[i]) {
                             if (typeof(sdo.external_references[i].external_id === "string")) {
