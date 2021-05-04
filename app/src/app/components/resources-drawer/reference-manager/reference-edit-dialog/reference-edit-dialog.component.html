@@ -18,6 +18,7 @@
                 <mat-form-field appearance="outline">
                     <mat-label>month</mat-label>
                     <mat-select [(ngModel)]="citation.month">
+                        <mat-option></mat-option>
                         <mat-option *ngFor="let month of months" [value]="month">{{month}}</mat-option>
                     </mat-select>
                 </mat-form-field>
