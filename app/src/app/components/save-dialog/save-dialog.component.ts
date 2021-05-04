@@ -46,23 +46,22 @@ export class SaveDialogComponent implements OnInit {
     }
 
     public saveCurrentVersion() {
-        this.config.object.workflow = {state: this.statusControl.value};
         this.save();
     }
 
     public saveNextMajorVersion() {
-        this.config.object.workflow = {state: this.statusControl.value};
         this.config.object.version = new VersionNumber(this.nextMajorVersion)
         this.save();
     }
 
     public saveNextMinorVersion() {
-        this.config.object.workflow = {state: this.statusControl.value};
         this.config.object.version = new VersionNumber(this.nextMinorVersion)
         this.save();
     }
 
     private save() {
+        this.config.object.workflow = this.statusControl.value ? {state: this.statusControl.value} : undefined;
+        
         if (!this.saveEnabled) return;
         let subscription = this.config.object.save(this.restApiConnectorService).subscribe({
             next: (result) => { 

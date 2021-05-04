@@ -32,6 +32,7 @@ export class StixPageComponent implements OnInit, OnDestroy {
     public objectType: string;
     private routerEvents;
     private saveSubscription;
+    private reloadSubscription;
 
     @ViewChild(CollectionViewComponent) private collectionViewComponent: CollectionViewComponent;
     
@@ -90,6 +91,12 @@ export class StixPageComponent implements OnInit, OnDestroy {
         this.loadObjects();
         this.saveSubscription = this.editorService.onSave.subscribe({
             next: (event) => this.save()
+        });
+        this.reloadSubscription = this.editorService.onReload.subscribe({
+            next: (event) => {
+                this.objects = undefined;
+                this.loadObjects();
+            }
         });
 
         this.routerEvents = this.router.events.subscribe(event => { 
@@ -170,6 +177,7 @@ export class StixPageComponent implements OnInit, OnDestroy {
 
     ngOnDestroy() {
         this.saveSubscription.unsubscribe();
+        this.reloadSubscription.unsubscribe();
         this.routerEvents.unsubscribe();
     }
 
