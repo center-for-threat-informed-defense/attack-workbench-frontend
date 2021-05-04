@@ -4,6 +4,8 @@ import { OverlayContainer } from '@angular/cdk/overlay';
 import { getCookie, setCookie, hasCookie } from "./util/cookies";
 import { SidebarService } from './services/sidebar/sidebar.service';
 import { TitleService } from './services/title/title.service';
+import { NGXLogger } from 'ngx-logger';
+import { initLogger } from './util/logger';
 
 @Component({
   selector: 'app-root',
@@ -21,12 +23,15 @@ export class AppComponent implements AfterViewInit {
     
     constructor(private overlayContainer: OverlayContainer,
                 private sidebarService: SidebarService,
-                private titleService: TitleService) { //note: this isn't used directly, but it MUST be imported to work properly
+                private titleService: TitleService,
+                private logger: NGXLogger) { //note: this isn't used directly, but it MUST be imported to work properly
+
         if (hasCookie("theme")) {
             this.setTheme(getCookie("theme"))
         } else {
             this.setTheme("light");
         }
+        initLogger(logger);
     }
 
     public theme = "light";
@@ -36,7 +41,7 @@ export class AppComponent implements AfterViewInit {
     }
     
     public setTheme(theme: string) {
-        console.log("setting theme to", theme)
+        this.logger.log("setting theme to", theme);
         this.theme = theme;
         const overlayContainerClasses = this.overlayContainer.getContainerElement().classList;
         overlayContainerClasses.remove("dark", "light");

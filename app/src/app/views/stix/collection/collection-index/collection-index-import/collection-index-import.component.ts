@@ -6,7 +6,7 @@ import { CollectionManagerConnectorService } from 'src/app/services/connectors/c
 import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/rest-api-connector.service';
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { environment } from "../../../../../../environments/environment";
-
+import { logger } from "../../../../../util/logger";
 @Component({
   selector: 'app-collection-index-import',
   templateUrl: './collection-index-import.component.html',
@@ -66,7 +66,7 @@ export class CollectionIndexImportComponent implements OnInit {
      * @param {msg} message the error message to show
      */
     public error(msg: string): void {
-        console.error(msg);
+        logger.error(msg);
         this.snackbar.open(msg, "dismiss", {
             duration: 2000,
             panelClass: "warn"
