@@ -13,6 +13,7 @@ export class EditorService {
     public editing: boolean = false;
     public onSave = new EventEmitter();
     public onEditingStopped = new EventEmitter();
+    public onReload = new EventEmitter();
     
     public get stixId(): string { return this.router.url.split("/")[2].split("?")[0]; }
     public get type(): string { return this.router.url.split("/")[1]; }
