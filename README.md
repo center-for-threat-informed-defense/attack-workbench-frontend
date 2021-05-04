@@ -13,7 +13,7 @@ For more documentation, please see the `docs` folder. The docs folder is also av
 - [collections](/docs/collections.md): documentation about the collection data type.
 
 ## Requirements
-- [Node.js](https://nodejs.org/) version `10.13.0` or greater
+- [Node.js](https://nodejs.org/) version `14.16.1` or greater
 
 ## Install and run
 
