@@ -1,4 +1,5 @@
 import { Component, Inject, OnInit, ViewEncapsulation } from '@angular/core';
+import { FormControl, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { forkJoin } from 'rxjs';
 import { ExternalReference } from 'src/app/classes/external-references';
@@ -19,6 +20,9 @@ export class ReferenceEditDialogComponent implements OnInit {
     public patch_objects: StixObject[];
     public patch_relationships: Relationship[];
 
+    public months: string[] = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+    public citation: any = {};
+
     constructor(public dialogRef: MatDialogRef<ReferenceEditDialogComponent>, @Inject(MAT_DIALOG_DATA) public config: ReferenceEditConfig, public restApiConnectorService: RestApiConnectorService) {
         if (this.config.reference) {
             this.is_new = false;
@@ -26,6 +30,8 @@ export class ReferenceEditDialogComponent implements OnInit {
         }
         else {
             this.is_new = true;
+            this.citation.day = new FormControl('', [Validators.max(31), Validators.min(1)]);
+            this.citation.year = new FormControl('', [Validators.max(2100), Validators.min(1970)]);
             this.reference = {
                 source_name: "",
                 url: "",
@@ -38,8 +44,27 @@ export class ReferenceEditDialogComponent implements OnInit {
     } 
 
     public next() {
-        if (this.is_new) this.save();
-        else this.parse_patches();
+        if (this.is_new) {
+            this.reference.description = this.getRefDescription();
+            this.save();
+        } else this.parse_patches();
+    }
+
+    public getRefDescription(): string {
+        let description = '';
+        if (this.citation.authors) description = `${this.citation.authors}. `;
+        description += '(';
+        if (this.citation.year.value || this.citation.month || this.citation.day.value) {
+            if (this.citation.year.value) description += `${this.citation.year.value}`;
+            if (this.citation.year.value && this.citation.month) description += ', ';
+            if (this.citation.month) description += this.citation.month;
+            if (this.citation.day.value) description += ` ${this.citation.day.value}`;
+        } else description += 'n.d.';
+        description += ('). ')
+
+        if (this.citation.title) description += `${this.citation.title}. `;
+        if (this.citation.retrieved) description += `Retrieved ${this.months[this.citation.retrieved.getMonth()]} ${this.citation.retrieved.getDate()}, ${this.citation.retrieved.getFullYear()}.`;
+        return description;
     }
 
     public parse_patches() {

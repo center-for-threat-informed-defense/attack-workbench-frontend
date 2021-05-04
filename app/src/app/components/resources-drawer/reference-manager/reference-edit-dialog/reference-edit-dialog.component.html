@@ -1,16 +1,58 @@
 <div class="reference-edit-dialog">
     <div *ngIf="stage == 0" class="stage edit">
         <h1>Reference Editor</h1>
+        <!-- source name -->
         <mat-form-field appearance="outline">
             <mat-label>source name</mat-label>
             <mat-hint>In-text citation, (Citation: {{reference.source_name}})</mat-hint>
             <input matInput required [disabled]="!is_new" [(ngModel)]="reference.source_name">
         </mat-form-field>
-        <mat-form-field appearance="outline">
+        <ng-container *ngIf="is_new">
+            <!-- authors -->
+            <mat-form-field appearance="outline">
+                <mat-label>authors</mat-label>
+                <input matInput required [(ngModel)]="citation.authors">
+            </mat-form-field>
+            <!-- month, day, year -->
+            <div class="reference-date">
+                <mat-form-field appearance="outline">
+                    <mat-label>month</mat-label>
+                    <mat-select [(ngModel)]="citation.month">
+                        <mat-option *ngFor="let month of months" [value]="month">{{month}}</mat-option>
+                    </mat-select>
+                </mat-form-field>
+                <mat-form-field appearance="outline">
+                    <mat-label>day</mat-label>
+                    <mat-error>Please enter a value between 1 and 31.</mat-error>
+                    <input matInput type="number" [formControl]="citation.day">
+                </mat-form-field>
+                <mat-form-field appearance="outline">
+                    <mat-label>year</mat-label>
+                    <input matInput type="number" [formControl]="citation.year">
+                    <mat-error>Please enter a valid year.</mat-error>
+                </mat-form-field>
+            </div>
+            <!-- title -->
+            <mat-form-field appearance="outline">
+                <mat-label>title</mat-label>
+                <input matInput [(ngModel)]="citation.title">
+            </mat-form-field>
+            <!-- retrieved date picker -->
+            <mat-form-field appearance="outline">
+                <mat-label>retrieved</mat-label>
+                <input matInput required [matDatepicker]="datepicker" [(ngModel)]="citation.retrieved">
+                <mat-datepicker-toggle matSuffix [for]="datepicker"></mat-datepicker-toggle>
+                <mat-datepicker #datepicker></mat-datepicker>
+                <mat-hint>Description: {{getRefDescription()}}</mat-hint>
+            </mat-form-field>
+        </ng-container>
+        <!-- description -->
+        <mat-form-field *ngIf="!is_new" appearance="outline">
             <mat-label>citation</mat-label>
             <mat-hint>Full citation text</mat-hint>
             <input matInput required [(ngModel)]="reference.description">
         </mat-form-field>
+        <!-- url -->
         <mat-form-field appearance="outline">
             <mat-label>url</mat-label>
             <mat-hint>Link to the primary source</mat-hint>
@@ -18,7 +60,9 @@
         </mat-form-field>
         <div class="buttons">
             <button mat-button matDialogClose>cancel</button>
-            <button mat-stroked-button [disabled]="!reference.source_name || !reference.description" (click)="next()">{{is_new ? 'save' : 'next'}}</button>
+            <button mat-stroked-button [disabled]="!reference.source_name || (!is_new && !reference.description) || (is_new && (!citation.authors || !citation.retrieved || !citation.year.valid || !citation.day.valid))" (click)="next()">
+                {{is_new ? 'save' : 'next'}}
+            </button>
         </div>
     </div>
     <div *ngIf="stage == 1" class="stage parsing">

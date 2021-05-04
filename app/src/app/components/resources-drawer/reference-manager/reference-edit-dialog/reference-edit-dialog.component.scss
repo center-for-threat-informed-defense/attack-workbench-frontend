@@ -1,5 +1,12 @@
 .reference-edit-dialog {
     min-width: 75vw;
+    .reference-date {
+        display: inline-flex;
+        width: 100%;
+        .mat-form-field:not(:first-child):not(:last-child) {
+            padding: 0px 16px;
+        }
+    }
     .stage.edit .mat-form-field {
         width: 100%;
     }
