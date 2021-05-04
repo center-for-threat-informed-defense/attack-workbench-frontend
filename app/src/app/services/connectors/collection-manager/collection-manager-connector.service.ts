@@ -6,7 +6,7 @@ import { catchError, map, tap } from 'rxjs/operators';
 import { CollectionIndex } from 'src/app/classes/collection-index';
 import { environment } from "../../../../environments/environment";
 import { ApiConnector } from '../api-connector';
-
+import { logger } from "../../../util/logger";
 @Injectable({
     providedIn: 'root'
 })
@@ -23,7 +23,7 @@ export class CollectionManagerConnectorService extends ApiConnector {
     public getRemoteIndex(url: string): Observable<CollectionIndex> {
         let params = new HttpParams({encoder: new CustomEncoder()}).set("url", url);
         return this.http.get(`${this.baseUrl}/collection-indexes/remote`, {params}).pipe(
-            tap(_ => console.log("downloaded index at", url)), // on success, trigger the success notification
+            tap(_ => logger.log("downloaded index at", url)), // on success, trigger the success notification
             map(index => { return {
                 "collection_index": index,
                 "workspace": { remote_url: url }

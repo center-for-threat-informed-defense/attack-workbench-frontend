@@ -19,6 +19,7 @@ import { EditorService } from 'src/app/services/editor/editor.service';
 import { StixViewPage } from '../../stix-view-page';
 import { environment } from "../../../../../environments/environment";
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { logger } from "../../../../util/logger";
 
 type changeCategory = "additions" | "changes" | "minor_changes" | "revocations" | "deprecations";
 
@@ -262,7 +263,7 @@ export class CollectionViewComponent extends StixViewPage implements OnInit {
                 };
             }),
             switchMap((results_and_extras) => { //stage misc objects
-                console.log("staging identities and marking_defs", results_and_extras)
+                logger.log("staging identities and marking_defs", results_and_extras)
                 let apis = {
                     identities: results_and_extras.identities.length > 0 ? forkJoin(results_and_extras.identities.map(x => this.restApiConnector.getIdentity(x))): of([]),
                     marking_defs: results_and_extras.marking_defs.length > 0 ? forkJoin(results_and_extras.marking_defs.map(x => this.restApiConnector.getMarkingDefinition(x))) : of([])
@@ -528,7 +529,7 @@ export class CollectionViewComponent extends StixViewPage implements OnInit {
                             map((full_collection) => full_collection[0])
                         );
                     } else {
-                        console.log("no prior release of this collection")
+                        logger.log("no prior release of this collection")
                         return of(null); //no prior release
                     }
                 })

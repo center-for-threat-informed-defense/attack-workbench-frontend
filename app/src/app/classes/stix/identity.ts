@@ -2,6 +2,7 @@ import { Observable, of } from "rxjs";
 import { RestApiConnectorService } from "src/app/services/connectors/rest-api/rest-api-connector.service";
 import { ValidationData } from "../serializable";
 import { StixObject } from "./stix-object";
+import { logger } from "../../util/logger";
 
 export class Identity extends StixObject {
     public name: string; // identity name
@@ -43,22 +44,22 @@ export class Identity extends StixObject {
 
             if ("name" in sdo) {
                 if (typeof(sdo.name) === "string") this.name = sdo.name;
-                else console.error("TypeError: name field is not a string:", sdo.name, "(" , typeof(sdo.name), ")");
+                else logger.error("TypeError: name field is not a string:", sdo.name, "(" , typeof(sdo.name), ")");
             } else this.name = "";
 
             if ("identity_class" in sdo) {
                 if (typeof(sdo.identity_class) === "string") this.identity_class = sdo.identity_class;
-                else console.error("TypeError: identity_class field is not a string:", sdo.identity_class, "(" , typeof(sdo.identity_class), ")");
+                else logger.error("TypeError: identity_class field is not a string:", sdo.identity_class, "(" , typeof(sdo.identity_class), ")");
             } else this.identity_class = "";
 
             if ("roles" in sdo) {
                 if (this.isStringArray(sdo.roles)) this.roles = sdo.roles;
-                else console.error("TypeError: roles field is not a string array.");
+                else logger.error("TypeError: roles field is not a string array.");
             }
 
             if ("contact_information" in sdo) {
                 if (typeof(sdo.contact_information) === "string") this.contact = sdo.contact_information;
-                else console.error("TypeError: contact_information field is not a string:", sdo.contact_information, "(", typeof(sdo.contact_information), ")");
+                else logger.error("TypeError: contact_information field is not a string:", sdo.contact_information, "(", typeof(sdo.contact_information), ")");
             }
         }
     }

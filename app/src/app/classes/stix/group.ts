@@ -3,6 +3,7 @@ import { Relationship } from './relationship';
 import { RestApiConnectorService } from "src/app/services/connectors/rest-api/rest-api-connector.service";
 import { Observable } from "rxjs";
 import { ValidationData } from "../serializable";
+import { logger } from "../../util/logger";
 
 export class Group extends StixObject {
     public name: string = "";
@@ -47,17 +48,17 @@ export class Group extends StixObject {
 
             if ("name" in sdo) {
                 if (typeof(sdo.name) === "string") this.name = sdo.name;
-                else console.error("TypeError: name field is not a string:", sdo.name, "(",typeof(sdo.name),")")
+                else logger.error("TypeError: name field is not a string:", sdo.name, "(",typeof(sdo.name),")")
             } else this.name = "";
             
             if ("aliases" in sdo) {
                 if (this.isStringArray(sdo.aliases)) this.aliases = sdo.aliases;
-                else console.error("TypeError: aliases is not a string array:", sdo.aliases, "(",typeof(sdo.aliases),")")
+                else logger.error("TypeError: aliases is not a string array:", sdo.aliases, "(",typeof(sdo.aliases),")")
             } else this.aliases = [];
 
             if ("x_mitre_contributors" in sdo) {
                 if (this.isStringArray(sdo.x_mitre_contributors)) this.contributors = sdo.x_mitre_contributors;
-                else console.error("TypeError: x_mitre_contributors is not a string array:", sdo.x_mitre_contributors, "(",typeof(sdo.x_mitre_contributors),")")
+                else logger.error("TypeError: x_mitre_contributors is not a string array:", sdo.x_mitre_contributors, "(",typeof(sdo.x_mitre_contributors),")")
             } else this.contributors = [];
         }
     }

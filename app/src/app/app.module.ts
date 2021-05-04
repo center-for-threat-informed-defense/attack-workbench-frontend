@@ -1,3 +1,5 @@
+import { environment } from 'src/environments/environment';
+import { LoggerModule } from 'ngx-logger';
 //angular imports
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
@@ -259,6 +261,10 @@ import { NgxJdenticonModule, JDENTICON_CONFIG } from 'ngx-jdenticon';
     //       pedantic: true
     //     }
     //   }
+    }),
+    LoggerModule.forRoot({
+        level: environment.log_level,
+        disableConsoleLogging: false
     }),
     PopoverModule,
     NgxJdenticonModule,

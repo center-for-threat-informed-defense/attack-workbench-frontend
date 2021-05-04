@@ -2,6 +2,7 @@ import { Observable } from "rxjs";
 import { RestApiConnectorService } from "src/app/services/connectors/rest-api/rest-api-connector.service";
 import { ValidationData } from "../serializable";
 import { StixObject } from "./stix-object";
+import { logger } from "../../util/logger";
 
 export class Note extends StixObject {
     public title: string = "";
@@ -42,17 +43,17 @@ export class Note extends StixObject {
 
             if ("abstract" in sdo) {
                 if (typeof(sdo.abstract) === "string") this.title = sdo.abstract;
-                else console.error("TypeError: abstract field is not a string:", sdo.abstract, "(",typeof(sdo.abstract),")")
+                else logger.error("TypeError: abstract field is not a string:", sdo.abstract, "(",typeof(sdo.abstract),")")
             } else this.title = "";
 
             if ("content" in sdo) {
                 if (typeof(sdo.content) === "string") this.content = sdo.content;
-                else console.error("TypeError: content field is not a string:", sdo.content, "(",typeof(sdo.content),")")
+                else logger.error("TypeError: content field is not a string:", sdo.content, "(",typeof(sdo.content),")")
             } else this.content = "";
 
             if ("object_refs" in sdo) {
                 if (this.isStringArray(sdo.object_refs)) this.object_refs = sdo.object_refs;
-                else console.error("TypeError: object_refs field is not a string array.");
+                else logger.error("TypeError: object_refs field is not a string array.");
             } else this.object_refs = [];
         }
     }
