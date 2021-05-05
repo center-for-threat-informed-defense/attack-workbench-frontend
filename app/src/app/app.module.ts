@@ -40,6 +40,8 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatChipsModule } from '@angular/material/chips';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatNativeDateModule } from '@angular/material/core';
 
 // other library imports
 import { BreadcrumbModule } from "angular-crumbs";
@@ -303,6 +305,8 @@ import { NgxJdenticonModule, JDENTICON_CONFIG } from 'ngx-jdenticon';
     MatDialogModule,
     MatSnackBarModule,
     MatChipsModule,
+    MatDatepickerModule,
+    MatNativeDateModule,
     DragDropModule,
     ClipboardModule,
 

@@ -111,6 +111,13 @@ $tooltip-color: color-alternate(dark, 4);
     &.dark .mat-select-panel .mat-option.mat-active {
         background: color-alternate(dark, 2.5);
     }
+
+    &.light .mat-datepicker-popup {
+        background: color-alternate(light);
+    }
+    &.dark .mat-datepicker-popup {
+        background: color-alternate(dark);
+    }
 }
 //patch popover style
 .popover {
