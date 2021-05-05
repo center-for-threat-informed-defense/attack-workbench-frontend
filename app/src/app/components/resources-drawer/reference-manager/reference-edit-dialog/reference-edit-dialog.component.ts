@@ -30,8 +30,8 @@ export class ReferenceEditDialogComponent implements OnInit {
         }
         else {
             this.is_new = true;
-            this.citation.day = new FormControl('', [Validators.max(31), Validators.min(1)]);
-            this.citation.year = new FormControl('', [Validators.max(2100), Validators.min(1970)]);
+            this.citation.day = new FormControl(null, [Validators.max(31), Validators.min(1)]);
+            this.citation.year = new FormControl(null, [Validators.max(2100), Validators.min(1970)]);
             this.reference = {
                 source_name: "",
                 url: "",
@@ -48,6 +48,16 @@ export class ReferenceEditDialogComponent implements OnInit {
             this.reference.description = this.getRefDescription();
             this.save();
         } else this.parse_patches();
+    }
+
+    public validDate(): boolean {
+        if (this.is_new) {
+            if (this.citation.day.value && !this.citation.day.valid) return false;
+            if (this.citation.year.value && !this.citation.year.valid) return false;
+            if (this.citation.day.value && !this.citation.month) return false;
+            if (this.citation.month && !this.citation.year.value) return false;
+        }
+        return true;
     }
 
     public getRefDescription(): string {
