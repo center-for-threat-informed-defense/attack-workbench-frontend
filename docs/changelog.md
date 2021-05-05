@@ -39,6 +39,7 @@
 - Added a list of recommended indexes available when adding a collection index. See [frontend#194](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/194).
 - Added ability to set workflow state when objects are saved. See [frontend#184](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/184).
 - Updated occurrences of "aliases" to "associated groups" or "associated software" for consistency across the application. See [frontend#176](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/176).
+- Updated the reference editor to enforce correct formatting when creating a new reference. See [frontend#177](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/177).
 
 ## 21 April 2021
 ### ATT&CK Workbench version 0.3.0
