@@ -11,7 +11,7 @@
                         <input matInput required [disabled]="!is_new" [(ngModel)]="reference.source_name">
                     </mat-form-field>
                 </div>
-                <div class="column">
+                <div class="column narrow vertical-center">
                     <b>In-text citation</b>
                     <span>(Citation: {{reference.source_name}})</span>
                 </div>
@@ -63,11 +63,11 @@
                         <input matInput required [(ngModel)]="reference.description">
                     </mat-form-field>
                 </div>
-                <div class="column" *ngIf="is_new">
+                <div class="column narrow vertical-center" *ngIf="is_new">
                     <b>Full reference text</b>
                     <span>{{getRefDescription()}}</span>
                 </div>
-                <div class="column" *ngIf="!is_new">
+                <div class="column narrow vertical-center" *ngIf="!is_new">
                     <b>Full reference text</b>
                     <span>{{reference.description}}</span>
                 </div>
@@ -80,7 +80,7 @@
                         <input matInput [(ngModel)]="reference.url">
                     </mat-form-field>
                 </div>
-                <div class="column">
+                <div class="column narrow vertical-center">
                     <b>Link to the primary source</b>
                 </div>
             </div>
