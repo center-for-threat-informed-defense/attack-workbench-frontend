@@ -19,12 +19,6 @@
         margin-bottom: 24px;
     }
     .grid {
-        .row:not(:first-child) {
-            padding-top: 22px;
-            margin: 0;
-            .dark & { border-top: 1px solid border-color(dark); }
-            .light & { border-top: 1px solid border-color(light); }
-        }
         .editor {
             max-width: 66% !important;
             min-width: 66% !important;
