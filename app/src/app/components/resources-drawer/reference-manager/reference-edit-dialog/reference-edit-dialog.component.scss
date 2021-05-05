@@ -25,6 +25,16 @@
             .dark & { border-top: 1px solid border-color(dark); }
             .light & { border-top: 1px solid border-color(light); }
         }
-        .column.editor { flex: 3!important; }
+        .editor {
+            max-width: 66% !important;
+            min-width: 66% !important;
+        }
+        .column:not(.editor) { // format the rightmost columns
+            margin-bottom: 24px;
+            padding-left: 16px;
+            .dark & { border-left: 1px solid border-color(dark); }
+            .light & { border-left: 1px solid border-color(light); }
+        }
+        .editor .mat-form-field-infix { width: unset; }
     }
 }
