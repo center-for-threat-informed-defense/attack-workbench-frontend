@@ -17,7 +17,7 @@
             <div class="reference-date">
                 <mat-form-field appearance="outline">
                     <mat-label>month</mat-label>
-                    <mat-select [(ngModel)]="citation.month">
+                    <mat-select [(ngModel)]="citation.month" [required]="citation.day.value !== null">
                         <mat-option></mat-option>
                         <mat-option *ngFor="let month of months" [value]="month">{{month}}</mat-option>
                     </mat-select>
@@ -29,7 +29,7 @@
                 </mat-form-field>
                 <mat-form-field appearance="outline">
                     <mat-label>year</mat-label>
-                    <input matInput type="number" [formControl]="citation.year">
+                    <input matInput type="number" [formControl]="citation.year" [required]="citation.month || citation.day.value !== null">
                     <mat-error>Please enter a valid year.</mat-error>
                 </mat-form-field>
             </div>
@@ -61,7 +61,7 @@
         </mat-form-field>
         <div class="buttons">
             <button mat-button matDialogClose>cancel</button>
-            <button mat-stroked-button [disabled]="!reference.source_name || (!is_new && !reference.description) || (is_new && (!citation.authors || !citation.retrieved || !citation.year.valid || !citation.day.valid))" (click)="next()">
+            <button mat-stroked-button [disabled]="!reference.source_name || (!is_new && !reference.description) || (is_new && (!citation.authors || !citation.retrieved || !validDate()))" (click)="next()">
                 {{is_new ? 'save' : 'next'}}
             </button>
         </div>
