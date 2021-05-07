@@ -1,5 +1,13 @@
+@import "../../../../../style/globals.scss";
 .reference-edit-dialog {
     min-width: 75vw;
+    .reference-date {
+        display: flex;
+        width: 100%;
+        .mat-form-field:not(:first-child):not(:last-child) {
+            padding: 0px 16px;
+        }
+    }
     .stage.edit .mat-form-field {
         width: 100%;
     }
@@ -9,5 +17,18 @@
         }
         margin-top: 24px;
         margin-bottom: 24px;
+    }
+    .grid {
+        .editor {
+            max-width: 66% !important;
+            min-width: 66% !important;
+        }
+        .column:not(.editor) { // format the rightmost columns
+            margin-bottom: 24px;
+            padding-left: 16px;
+            .dark & { border-left: 1px solid border-color(dark); }
+            .light & { border-left: 1px solid border-color(light); }
+        }
+        .editor .mat-form-field-infix { width: unset; }
     }
 }

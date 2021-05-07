@@ -1,3 +1,5 @@
+import { environment } from 'src/environments/environment';
+import { LoggerModule } from 'ngx-logger';
 //angular imports
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
@@ -38,6 +40,8 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatChipsModule } from '@angular/material/chips';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatNativeDateModule } from '@angular/material/core';
 
 // other library imports
 import { BreadcrumbModule } from "angular-crumbs";
@@ -260,6 +264,10 @@ import { NgxJdenticonModule, JDENTICON_CONFIG } from 'ngx-jdenticon';
     //     }
     //   }
     }),
+    LoggerModule.forRoot({
+        level: environment.log_level,
+        disableConsoleLogging: false
+    }),
     PopoverModule,
     NgxJdenticonModule,
     
@@ -297,6 +305,8 @@ import { NgxJdenticonModule, JDENTICON_CONFIG } from 'ngx-jdenticon';
     MatDialogModule,
     MatSnackBarModule,
     MatChipsModule,
+    MatDatepickerModule,
+    MatNativeDateModule,
     DragDropModule,
     ClipboardModule,
 

@@ -6,6 +6,7 @@ import { Serializable, ValidationData } from '../serializable';
 import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/rest-api-connector.service';
 import { Observable, of } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
+import { logger } from "../../util/logger";
 
 export type workflowStates = "work-in-progress" | "awaiting-review" | "reviewed"
 let stixTypeToAttackType = {
@@ -172,47 +173,47 @@ export abstract class StixObject extends Serializable {
             // initialize common fields from SDO stix
             if ("id" in sdo) {
                 if (typeof(sdo.id) === "string") this.stixID = sdo.id;
-                else console.error("TypeError: id field is not a string:", sdo.id, "(",typeof(sdo.id),")")
+                else logger.error("TypeError: id field is not a string:", sdo.id, "(",typeof(sdo.id),")")
             }
 
             if ("object_marking_refs" in sdo) {
                 if (this.isStringArray(sdo.object_marking_refs)) this.object_marking_refs = sdo.object_marking_refs;
-                else console.error("TypeError, object_marking_refs field is not a string array", this.object_marking_refs, "(", typeof(this.object_marking_refs), ")");
+                else logger.error("TypeError, object_marking_refs field is not a string array", this.object_marking_refs, "(", typeof(this.object_marking_refs), ")");
             }
 
             if ("type" in sdo) {
                 if (typeof(sdo.type) === "string") this.type = sdo.type;
-                else console.error("TypeError: type field is not a string:", sdo.type, "(",typeof(sdo.type),")")
+                else logger.error("TypeError: type field is not a string:", sdo.type, "(",typeof(sdo.type),")")
             }
 
             if ("description" in sdo) {
                 if (typeof(sdo.description) === "string") this.description = sdo.description;
-                else console.error("TypeError: description field is not a string:", sdo.description, "(",typeof(sdo.description),")")
+                else logger.error("TypeError: description field is not a string:", sdo.description, "(",typeof(sdo.description),")")
             } else this.description = "";
 
             if ("created" in sdo) {
                 if (typeof(sdo.created) === "string") this.created = new Date(sdo.created);
-                else console.error("TypeError: created field is not a string:", sdo.created, "(",typeof(sdo.created),")")
+                else logger.error("TypeError: created field is not a string:", sdo.created, "(",typeof(sdo.created),")")
             } else this.created = new Date();
 
             if ("created_by_ref" in sdo) {
                 if (typeof(sdo.created) === "string") this.created_by_ref = sdo.created_by_ref
-                else console.error("TypeError: created_by_Ref field is not a string:", sdo.created_by_ref, "(",typeof(sdo.created_by_ref),")")
+                else logger.error("TypeError: created_by_Ref field is not a string:", sdo.created_by_ref, "(",typeof(sdo.created_by_ref),")")
             }
 
             if ("modified" in sdo) {
                 if (typeof(sdo.modified) === "string") this.modified = new Date(sdo.modified);
-                else console.error("TypeError: modified field is not a string:", sdo.modified, "(",typeof(sdo.modified),")")
+                else logger.error("TypeError: modified field is not a string:", sdo.modified, "(",typeof(sdo.modified),")")
             } else this.modified = new Date();
 
             if ("x_mitre_modified_by_ref" in sdo) {
                 if (typeof(sdo.created) === "string") this.modified_by_ref = sdo.x_mitre_modified_by_ref;
-                else console.error("TypeError: x_mitre_modified_by_ref field is not a string:", sdo.x_mitre_modified_by_ref, "(",typeof(sdo.x_mitre_modified_by_ref),")")
+                else logger.error("TypeError: x_mitre_modified_by_ref field is not a string:", sdo.x_mitre_modified_by_ref, "(",typeof(sdo.x_mitre_modified_by_ref),")")
             }
 
             if ("x_mitre_version" in sdo) {
                 if (typeof(sdo.x_mitre_version) === "string") this.version = new VersionNumber(sdo.x_mitre_version);
-                else console.error("TypeError: x_mitre_version field is not a string:", sdo.x_mitre_version, "(",typeof(sdo.x_mitre_version),")")
+                else logger.error("TypeError: x_mitre_version field is not a string:", sdo.x_mitre_version, "(",typeof(sdo.x_mitre_version),")")
             } else this.version = new VersionNumber("0.1");
     
             if ("external_references" in sdo) {
@@ -220,11 +221,11 @@ export abstract class StixObject extends Serializable {
                     this.external_references = new ExternalReferences(sdo.external_references);
                     if (sdo.external_references.length > 0 && this.type != "relationship" && sdo.external_references[0].hasOwnProperty("external_id")) {
                         if (typeof(sdo.external_references[0].external_id) === "string") this.attackID = sdo.external_references[0].external_id;
-                        else console.error("TypeError: attackID field is not a string:", sdo.external_references[0].external_id, "(",typeof(sdo.external_references[0].external_id),")")
+                        else logger.error("TypeError: attackID field is not a string:", sdo.external_references[0].external_id, "(",typeof(sdo.external_references[0].external_id),")")
                     }
                     else this.attackID = "";
                 }
-                else console.error("TypeError: external_references field is not an object:", sdo.external_references, "(",typeof(sdo.external_references),")")
+                else logger.error("TypeError: external_references field is not an object:", sdo.external_references, "(",typeof(sdo.external_references),")")
             } 
             else {
                 this.external_references = new ExternalReferences();
@@ -233,26 +234,26 @@ export abstract class StixObject extends Serializable {
         
             if ("x_mitre_deprecated" in sdo) {
                 if (typeof(sdo.x_mitre_deprecated) === "boolean") this.deprecated = sdo.x_mitre_deprecated;
-                else console.error("TypeError: x_mitre_deprecated field is not a boolean:", sdo.x_mitre_deprecated, "(",typeof(sdo.x_mitre_deprecated),")") 
+                else logger.error("TypeError: x_mitre_deprecated field is not a boolean:", sdo.x_mitre_deprecated, "(",typeof(sdo.x_mitre_deprecated),")") 
             }
             if ("revoked" in sdo) {
                 if (typeof(sdo.revoked) === "boolean") this.revoked = sdo.revoked;
-                else console.error("TypeError: revoked field is not a boolean:", sdo.revoked, "(",typeof(sdo.revoked),")") 
+                else logger.error("TypeError: revoked field is not a boolean:", sdo.revoked, "(",typeof(sdo.revoked),")") 
             }
         }
-        else console.error("ObjectError: 'stix' field does not exist in object");
+        else logger.error("ObjectError: 'stix' field does not exist in object");
 
         if ("created_by_identity" in raw && raw.created_by_identity) {
             let identityData = raw.created_by_identity;
             if ("stix" in identityData) {
                 this.created_by = identityData.stix;
-            } else console.error("ObjectError: 'stix' field does not exist in created_by_identity object");
+            } else logger.error("ObjectError: 'stix' field does not exist in created_by_identity object");
         }
         if ("modified_by_identity" in raw && raw.modified_by_identity) {
             let identityData = raw.modified_by_identity;
             if ("stix" in identityData) {
                 this.modified_by = identityData.stix;
-            } else console.error("ObjectError: 'stix' field does not exist in modified_by_identity object");
+            } else logger.error("ObjectError: 'stix' field does not exist in modified_by_identity object");
         }
 
         if ("workspace" in raw) {
@@ -261,7 +262,7 @@ export abstract class StixObject extends Serializable {
             if ("workflow" in workspaceData) {
                 if (typeof(workspaceData.workflow) == "object") {
                     this.workflow = workspaceData.workflow;
-                } else console.error("TypeError: workflow field is not an object", workspaceData)
+                } else logger.error("TypeError: workflow field is not an object", workspaceData)
             }
         }
     }
@@ -396,7 +397,7 @@ export abstract class StixObject extends Serializable {
     public isStringArray = function(arr): boolean {
         for (let i = 0; i < arr.length; i++) {
             if (typeof(arr[i]) !== "string") {
-                console.error("TypeError:", arr[i], "(",typeof(arr[i]),")", "is not a string")
+                logger.error("TypeError:", arr[i], "(",typeof(arr[i]),")", "is not a string")
                 return false;
             }
         }

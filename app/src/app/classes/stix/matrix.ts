@@ -2,6 +2,7 @@ import { Observable } from "rxjs";
 import { RestApiConnectorService } from "src/app/services/connectors/rest-api/rest-api-connector.service";
 import { ValidationData } from "../serializable";
 import {StixObject} from "./stix-object";
+import { logger } from "../../util/logger";
 
 export class Matrix extends StixObject {
     public name: string = "";
@@ -44,12 +45,12 @@ export class Matrix extends StixObject {
 
             if ("name" in sdo) {
                 if (typeof(sdo.name) === "string") this.name = sdo.name;
-                else console.error("TypeError: name field is not a string:", sdo.name, "(",typeof(sdo.name),")")
+                else logger.error("TypeError: name field is not a string:", sdo.name, "(",typeof(sdo.name),")")
             } else this.name = "";
             
             if ("tactic_refs" in sdo) {
                 if (this.isStringArray(sdo.tactic_refs)) this.tactic_refs = sdo.tactic_refs;
-                else console.error("TypeError: tactic_refs field is not a string array:", sdo.tactic_refs, "(",typeof(sdo.tactic_refs),")")
+                else logger.error("TypeError: tactic_refs field is not a string array:", sdo.tactic_refs, "(",typeof(sdo.tactic_refs),")")
             } else this.tactic_refs = [];
         }
     }
