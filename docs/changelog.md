@@ -32,6 +32,7 @@
 
 # Changelog
 
+## 7 May 2021
 ### ATT&CK Workbench version 0.4.0
 #### Improvements in 0.4.0
 - Added a favicon. See [frontend#137](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/137).
