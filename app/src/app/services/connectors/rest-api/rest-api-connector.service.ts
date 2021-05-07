@@ -19,6 +19,7 @@ import { Tactic } from 'src/app/classes/stix/tactic';
 import { Technique } from 'src/app/classes/stix/technique';
 import { environment } from "../../../../environments/environment";
 import { ApiConnector } from '../api-connector';
+import { logger } from "../../../util/logger";
 
 //attack types
 type AttackType = "collection" | "group" | "matrix" | "mitigation" | "software" | "tactic" | "technique" | "relationship" | "note" | "identity" | "marking-definition";
@@ -95,7 +96,7 @@ export class RestApiConnectorService extends ApiConnector {
         } else if (object["attackID"]) {
             return object["attackID"];
         } else {
-            console.warn("could not determine object name", object)
+            logger.warn("could not determine object name", object)
             return "unknown object";
         }
     }
@@ -131,7 +132,7 @@ export class RestApiConnectorService extends ApiConnector {
             // perform the request
             let url = `${this.baseUrl}/${plural}`;
             return this.http.get(url, {headers: this.headers, params: query}).pipe(
-                tap(results => console.log(`retrieved ${plural}`, results)), // on success, trigger the success notification
+                tap(results => logger.log(`retrieved ${plural}`, results)), // on success, trigger the success notification
                 map(results => {
                     if (!options || !options.excludeIDs) return results; // only filter if param is present
                     let response = results as any;
@@ -308,7 +309,7 @@ export class RestApiConnectorService extends ApiConnector {
         if (revoked) query = query.set("includeRevoked", revoked ? "true" : "false");
         if (deprecated) query = query.set("includeDeprecated", deprecated ? "true" : "false");
         return this.http.get(`${this.baseUrl}/attack-objects`, {headers: this.headers, params: query}).pipe(
-            tap(results => console.log(`retrieved ATT&CK objects`, results)), // on success, trigger the success notification
+            tap(results => logger.log(`retrieved ATT&CK objects`, results)), // on success, trigger the success notification
             map(results => {
                 if (!deserialize) return results; //skip deserialization if param not added
                 let response = results as any;
@@ -358,11 +359,11 @@ export class RestApiConnectorService extends ApiConnector {
             if (versions != "latest") query = query.set("versions", versions);
             if (attackType == "collection" && retrieveContents) query = query.set("retrieveContents", "true");
             return this.http.get(url, {headers: this.headers, params: query}).pipe(
-                tap(result => console.log(`retrieved ${attackType}`, result)), // on success, trigger the success notification
+                tap(result => logger.log(`retrieved ${attackType}`, result)), // on success, trigger the success notification
                 map(result => {
                     let x = result as any;
                     if (Array.isArray(result) && result.length == 0) {
-                        console.warn("empty result")
+                        logger.warn("empty result")
                         return [];
                     }
                     if (!Array.isArray(result)) x = [x];
@@ -388,7 +389,7 @@ export class RestApiConnectorService extends ApiConnector {
                                 t.parentTechnique = p;
                                 return [t];
                             }),
-                            tap(result => console.log("fetched parent technique of", result, result[0]["parentTechnique"]))
+                            tap(result => logger.log("fetched parent technique of", result, result[0]["parentTechnique"]))
                         );
                     } else { // add subtechniques
                         return this.getRelatedTo({targetRef: t.stixID, relationshipType: "subtechnique-of"}).pipe( // fetch from REST API
@@ -401,7 +402,7 @@ export class RestApiConnectorService extends ApiConnector {
                                 t.subTechniques = s;
                                 return [t];
                             }),
-                            tap(result => console.log("fetched sub-techniques of", result, result[0]["subTechniques"]))
+                            tap(result => logger.log("fetched sub-techniques of", result, result[0]["subTechniques"]))
                         );
                     }
                 }),
@@ -781,7 +782,7 @@ export class RestApiConnectorService extends ApiConnector {
         if (args.limit || args.offset) query = query.set("includePagination", "true");
         let url = `${this.baseUrl}/relationships`
         return this.http.get(url, {headers:this.headers, params: query}).pipe(
-            tap(results => console.log("retrieved relationships", results)),
+            tap(results => logger.log("retrieved relationships", results)),
             map(results => {
                 if (!args.excludeSourceRefs && !args.excludeTargetRefs) return results; // only filter if params are present
                 let response = results as any;
@@ -789,13 +790,13 @@ export class RestApiConnectorService extends ApiConnector {
                     let pre_filter = response.data.length;
                     if (args.excludeSourceRefs) response.data = response.data.filter((d) => !args.excludeSourceRefs.includes(d.stix.source_ref))
                     if (args.excludeTargetRefs) response.data = response.data.filter((d) => !args.excludeTargetRefs.includes(d.stix.target_ref))
-                    console.log("filtered", pre_filter - response.data.length, "results by ID")
+                    logger.log("filtered", pre_filter - response.data.length, "results by ID")
                     return response;
                 } else { //returned a stixObject[]
                     let pre_filter = response.length;
                     if (args.excludeSourceRefs) response = response.filter((d) => !args.excludeSourceRefs.includes(d.stix.source_ref))
                     if (args.excludeTargetRefs) response = response.filter((d) => !args.excludeTargetRefs.includes(d.stix.target_ref))
-                    console.log("filtered", pre_filter - response.length, "results by ID")
+                    logger.log("filtered", pre_filter - response.length, "results by ID")
                     return response;
                 }
             }),
@@ -844,7 +845,7 @@ export class RestApiConnectorService extends ApiConnector {
         if (search) query = query.set("search", encodeURIComponent(search));
         /*if (limit || offset) */ query = query.set("includePagination", "true");
         return this.http.get<Paginated<ExternalReference>>(url, {headers: this.headers, params: query}).pipe(
-            tap(results => console.log("retrieved references", results)),
+            tap(results => logger.log("retrieved references", results)),
             catchError(this.handleError_array<Paginated<ExternalReference>>({data: [], pagination: {total: 0, limit: 0, offset: 0}})), // on error, trigger the error notification and continue operation without crashing (returns empty item)
             share() // multicast so that multiple subscribers don't trigger the call twice. THIS MUST BE THE LAST LINE OF THE PIPE
         )
@@ -861,7 +862,7 @@ export class RestApiConnectorService extends ApiConnector {
         let query = new HttpParams();
         query = query.set("sourceName", source_name);
         return this.http.get<ExternalReference>(url, {headers: this.headers, params: query}).pipe(
-            tap(results => console.log("retrieved reference", results)),
+            tap(results => logger.log("retrieved reference", results)),
             catchError(this.handleError_single<ExternalReference>()), // on error, trigger the error notification and continue operation without crashing (returns empty item)
             share() // multicast so that multiple subscribers don't trigger the call twice. THIS MUST BE THE LAST LINE OF THE PIPE
         )
@@ -914,7 +915,7 @@ export class RestApiConnectorService extends ApiConnector {
         // perform the request
         return this.http.post(`${this.baseUrl}/collection-bundles`, collectionBundle, {headers: this.headers, params: query}).pipe(
             tap(result => {
-                if (preview) console.log("previewed collection import", result);
+                if (preview) logger.log("previewed collection import", result);
                 else this.handleSuccess("imported collection")(result);
             }),
             map(result => {
@@ -936,7 +937,7 @@ export class RestApiConnectorService extends ApiConnector {
         query = query.set("collectionId", id);
         query = query.set("collectionModified", modified.toISOString());
         return this.http.get(`${this.baseUrl}/collection-bundles`, {headers: this.headers, params: query}).pipe(
-            tap(results => console.log("retrieved collection bundle")),
+            tap(results => logger.log("retrieved collection bundle")),
             catchError(this.handleError_array<any>({})),
             share() //multicast
         );
@@ -984,7 +985,7 @@ export class RestApiConnectorService extends ApiConnector {
      */
     public getCollectionIndexes(limit?: number, offset?: number): Observable<CollectionIndex[]> {
         return this.http.get<CollectionIndex[]>(`${this.baseUrl}/collection-indexes`, {headers: this.headers}).pipe(
-            tap(_ => console.log("retrieved collection indexes")), // on success, trigger the success notification
+            tap(_ => logger.log("retrieved collection indexes")), // on success, trigger the success notification
             map(results => { return results.map(raw => new CollectionIndex(raw)); }),
             catchError(this.handleError_array<CollectionIndex[]>([])) // on error, trigger the error notification and continue operation without crashing (returns empty item)
         )
@@ -1016,7 +1017,7 @@ export class RestApiConnectorService extends ApiConnector {
         if (this.allowedValues) { return of(this.allowedValues)}
 
         const data$ = this.http.get<any>(`${this.baseUrl}/config/allowed-values`, {headers: this.headers}).pipe(
-            tap(_ => console.log("retrieved allowed values")),
+            tap(_ => logger.log("retrieved allowed values")),
             map(result => result as any),
             catchError(this.handleError_array<string[]>([]))
         );
@@ -1033,7 +1034,7 @@ export class RestApiConnectorService extends ApiConnector {
      */
      public getOrganizationIdentity(): Observable<Identity> {
         return this.http.get(`${this.baseUrl}/config/organization-identity`, {headers: this.headers}).pipe(
-            tap(_ => console.log("retrieved organization identity")),
+            tap(_ => logger.log("retrieved organization identity")),
             map(result => {
                 return new Identity(result);
             }),
@@ -1051,7 +1052,7 @@ export class RestApiConnectorService extends ApiConnector {
     public setOrganizationIdentity(object: Identity):  Observable<Identity> {
         return this.postIdentity(object).pipe( //create/save the identity
             switchMap((result) => {
-                console.log(result);
+                logger.log(result);
                 // set the organization identity to be this identity's ID after it was created/updated
                 return this.http.post(`${this.baseUrl}/config/organization-identity`, {id: result.stixID}, {headers: this.headers}).pipe(
                     tap(this.handleSuccess("Organization Identity Updated")),
@@ -1094,7 +1095,7 @@ export class RestApiConnectorService extends ApiConnector {
         let query = new HttpParams();
         query = query.set("domain", domain);
         return this.http.get(`${this.baseUrl}/stix-bundles`, {headers: this.headers, params: query}).pipe(
-            tap(results => console.log("retrieved stix bundle")),
+            tap(results => logger.log("retrieved stix bundle")),
             catchError(this.handleError_array<any>({})),
             share() //multicast
         );
@@ -1128,7 +1129,7 @@ export class RestApiConnectorService extends ApiConnector {
         let getter = this.getCollectionBundle(id, modified);
         let subscription = getter.subscribe({
             next: (result) => {
-                console.log(result);
+                logger.log(result);
                 this.triggerBrowserDownload(result, filename)
             },
             complete: () => { subscription.unsubscribe(); }

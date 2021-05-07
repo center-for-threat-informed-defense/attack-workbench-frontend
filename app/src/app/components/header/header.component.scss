@@ -7,12 +7,14 @@
     }
     .app-title {
         a {
+            @extend .heading;
             border-bottom-width: 0 !important;
             .dark &, .dark &:hover { color: color(primary) !important; }
             .light &, .light &:hover { color: color(light) !important; }
         }
         .app-version {
             text-transform: none;
+            @extend .text-label;
             font-size: 10px;
         }
     }

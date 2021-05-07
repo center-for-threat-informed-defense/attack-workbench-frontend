@@ -12,6 +12,7 @@ export class IconViewComponent implements OnInit {
     public icon: string;
     public color: string;
     public state: string;
+    public get tooltip(): string { return this.state.replace(/-/g, ' ')}
 
     constructor() { }
 

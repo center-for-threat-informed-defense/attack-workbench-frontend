@@ -17,6 +17,7 @@ import { MultipleChoiceDialogComponent } from 'src/app/components/multiple-choic
 import { SaveDialogComponent } from 'src/app/components/save-dialog/save-dialog.component';
 import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/rest-api-connector.service';
 import { EditorService } from 'src/app/services/editor/editor.service';
+import { TitleService } from 'src/app/services/title/title.service';
 import { CollectionViewComponent } from '../collection/collection-view/collection-view.component';
 import { StixViewConfig } from '../stix-view-page';
 
@@ -31,6 +32,7 @@ export class StixPageComponent implements OnInit, OnDestroy {
     public objectType: string;
     private routerEvents;
     private saveSubscription;
+    private reloadSubscription;
 
     @ViewChild(CollectionViewComponent) private collectionViewComponent: CollectionViewComponent;
     
@@ -39,7 +41,8 @@ export class StixPageComponent implements OnInit, OnDestroy {
                 private restAPIConnectorService: RestApiConnectorService, 
                 private breadcrumbService: BreadcrumbService, 
                 private editorService: EditorService,
-                private dialog: MatDialog) { }
+                private dialog: MatDialog,
+                private titleService: TitleService) { }
     
     /**
      * Parse an object list and build a config for passing into child components
@@ -88,6 +91,12 @@ export class StixPageComponent implements OnInit, OnDestroy {
         this.loadObjects();
         this.saveSubscription = this.editorService.onSave.subscribe({
             next: (event) => this.save()
+        });
+        this.reloadSubscription = this.editorService.onReload.subscribe({
+            next: (event) => {
+                this.objects = undefined;
+                this.loadObjects();
+            }
         });
 
         this.routerEvents = this.router.events.subscribe(event => { 
@@ -168,6 +177,7 @@ export class StixPageComponent implements OnInit, OnDestroy {
 
     ngOnDestroy() {
         this.saveSubscription.unsubscribe();
+        this.reloadSubscription.unsubscribe();
         this.routerEvents.unsubscribe();
     }
 
@@ -177,8 +187,10 @@ export class StixPageComponent implements OnInit, OnDestroy {
         } else {
             if ("name" in result[0] && result[0].name) {
                 this.breadcrumbService.changeBreadcrumb(this.route.snapshot, result[0].name)
+                this.titleService.setTitle(result[0].name, false);
             } else {
-                this.breadcrumbService.changeBreadcrumb(this.route.snapshot, `unnamed ${objectType}`)
+                this.breadcrumbService.changeBreadcrumb(this.route.snapshot, `new ${objectType}`)
+                this.titleService.setTitle(`new ${this.objectType}`);
             }
         }
     }
