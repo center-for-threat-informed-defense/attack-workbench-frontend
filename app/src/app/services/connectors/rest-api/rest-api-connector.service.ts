@@ -168,7 +168,7 @@ export class RestApiConnectorService extends ApiConnector {
                         }
                     }
                 }),
-                catchError(this.handleError_array([])), // on error, trigger the error notification and continue operation without crashing (returns empty item)
+                catchError(this.handleError_continue([])), // on error, trigger the error notification and continue operation without crashing (returns empty item)
                 share() // multicast so that multiple subscribers don't trigger the call twice. THIS MUST BE THE LAST LINE OF THE PIPE
             )
         }
@@ -335,7 +335,7 @@ export class RestApiConnectorService extends ApiConnector {
                     }
                 }
             }),
-            catchError(this.handleError_array([])), // on error, trigger the error notification and continue operation without crashing (returns empty item)
+            catchError(this.handleError_continue([])), // on error, trigger the error notification and continue operation without crashing (returns empty item)
             share() // multicast so that multiple subscribers don't trigger the call twice. THIS MUST BE THE LAST LINE OF THE PIPE
         )
     }
@@ -406,7 +406,7 @@ export class RestApiConnectorService extends ApiConnector {
                         );
                     }
                 }),
-                catchError(this.handleError_array([])), // on error, trigger the error notification and continue operation without crashing (returns empty item)
+                catchError(this.handleError_continue([])), // on error, trigger the error notification and continue operation without crashing (returns empty item)
                 share() // multicast so that multiple subscribers don't trigger the call twice. THIS MUST BE THE LAST LINE OF THE PIPE
             )
         }
@@ -504,7 +504,7 @@ export class RestApiConnectorService extends ApiConnector {
                     if (x.stix.type == "malware" || x.stix.type == "tool") return new Software(x.stix.type, x);
                     else return new attackClass(x);
                 }),
-                catchError(this.handleError_single()),
+                catchError(this.handleError_raise()),
                 share() // multicast so that multiple subscribers don't trigger the call twice. THIS MUST BE THE LAST LINE OF THE PIPE
             )
         }
@@ -590,7 +590,7 @@ export class RestApiConnectorService extends ApiConnector {
                     if (x.stix.type == "malware" || x.stix.type == "tool") return new Software(x.stix.type, x);
                     else return new attackClass(x);
                 }),
-                catchError(this.handleError_single()),
+                catchError(this.handleError_raise()),
                 share() // multicast so that multiple subscribers don't trigger the call twice. THIS MUST BE THE LAST LINE OF THE PIPE
             )
         }
@@ -668,7 +668,7 @@ export class RestApiConnectorService extends ApiConnector {
             let url = `${this.baseUrl}/${plural}/${id}/modified/${modifiedStix}`;
             return this.http.delete(url).pipe(
                 tap(this.handleSuccess(`${attackType} deleted`)),
-                catchError(this.handleError_single()),
+                catchError(this.handleError_raise()),
                 share() // multicast so that multiple subscribers don't trigger the call twice. THIS MUST BE THE LAST LINE OF THE PIPE
             );
         }
@@ -732,7 +732,7 @@ export class RestApiConnectorService extends ApiConnector {
     public deleteNote(id: string) {
         return this.http.delete(`${this.baseUrl}/notes/${id}`).pipe(
             tap(this.handleSuccess("note removed")),
-            catchError(this.handleError_single()),
+            catchError(this.handleError_raise()),
             share()
         )
     }
@@ -818,7 +818,7 @@ export class RestApiConnectorService extends ApiConnector {
                     }
                 }
             }),
-            catchError(this.handleError_array([])),
+            catchError(this.handleError_continue([])),
             share()
         )
     }
@@ -846,7 +846,7 @@ export class RestApiConnectorService extends ApiConnector {
         /*if (limit || offset) */ query = query.set("includePagination", "true");
         return this.http.get<Paginated<ExternalReference>>(url, {headers: this.headers, params: query}).pipe(
             tap(results => logger.log("retrieved references", results)),
-            catchError(this.handleError_array<Paginated<ExternalReference>>({data: [], pagination: {total: 0, limit: 0, offset: 0}})), // on error, trigger the error notification and continue operation without crashing (returns empty item)
+            catchError(this.handleError_continue<Paginated<ExternalReference>>({data: [], pagination: {total: 0, limit: 0, offset: 0}})), // on error, trigger the error notification and continue operation without crashing (returns empty item)
             share() // multicast so that multiple subscribers don't trigger the call twice. THIS MUST BE THE LAST LINE OF THE PIPE
         )
     }
@@ -863,7 +863,7 @@ export class RestApiConnectorService extends ApiConnector {
         query = query.set("sourceName", source_name);
         return this.http.get<ExternalReference>(url, {headers: this.headers, params: query}).pipe(
             tap(results => logger.log("retrieved reference", results)),
-            catchError(this.handleError_single<ExternalReference>()), // on error, trigger the error notification and continue operation without crashing (returns empty item)
+            catchError(this.handleError_continue<ExternalReference>()), // on error, trigger the error notification and continue operation without crashing (returns empty item)
             share() // multicast so that multiple subscribers don't trigger the call twice. THIS MUST BE THE LAST LINE OF THE PIPE
         )
     }
@@ -877,7 +877,7 @@ export class RestApiConnectorService extends ApiConnector {
         let url = `${this.baseUrl}/references`;
         return this.http.post<ExternalReference>(url, reference, {headers: this.headers}).pipe(
             tap(this.handleSuccess(`${reference.source_name} saved`)),
-            catchError(this.handleError_single<ExternalReference>()), // on error, trigger the error notification and continue operation without crashing (returns empty item)
+            catchError(this.handleError_raise<ExternalReference>()), // on error, trigger the error notification and continue operation without crashing (returns empty item)
             share() // multicast so that multiple subscribers don't trigger the call twice. THIS MUST BE THE LAST LINE OF THE PIPE
         )
     }
@@ -891,7 +891,7 @@ export class RestApiConnectorService extends ApiConnector {
         let url = `${this.baseUrl}/references`;
         return this.http.put<ExternalReference>(url, reference, {headers: this.headers}).pipe(
             tap(this.handleSuccess(`${reference.source_name} saved`)),
-            catchError(this.handleError_single<ExternalReference>()), // on error, trigger the error notification and continue operation without crashing (returns empty item)
+            catchError(this.handleError_raise<ExternalReference>()), // on error, trigger the error notification and continue operation without crashing (returns empty item)
             share() // multicast so that multiple subscribers don't trigger the call twice. THIS MUST BE THE LAST LINE OF THE PIPE
         )
     }
@@ -921,7 +921,7 @@ export class RestApiConnectorService extends ApiConnector {
             map(result => {
                 return new Collection(result);
             }),
-            catchError(this.handleError_single<Collection>()),
+            catchError(this.handleError_raise<Collection>()),
             share()
         )
     }
@@ -938,7 +938,7 @@ export class RestApiConnectorService extends ApiConnector {
         query = query.set("collectionModified", modified.toISOString());
         return this.http.get(`${this.baseUrl}/collection-bundles`, {headers: this.headers, params: query}).pipe(
             tap(results => logger.log("retrieved collection bundle")),
-            catchError(this.handleError_array<any>({})),
+            catchError(this.handleError_continue<any>({})),
             share() //multicast
         );
     }
@@ -958,7 +958,7 @@ export class RestApiConnectorService extends ApiConnector {
         return this.http.post<CollectionIndex>(`${this.baseUrl}/collection-indexes`, index, {headers: this.headers}).pipe(
             tap(this.handleSuccess("collection index added")),
             map(result => result as CollectionIndex),
-            catchError(this.handleError_single<CollectionIndex>())
+            catchError(this.handleError_raise<CollectionIndex>())
         )
     }
 
@@ -973,7 +973,7 @@ export class RestApiConnectorService extends ApiConnector {
         return this.http.put<CollectionIndex>(`${this.baseUrl}/collection-indexes/${index.collection_index.id}`, serialized, {headers: this.headers}).pipe(
             tap(this.handleSuccess(successMessage)),
             map(result => new CollectionIndex(result)),
-            catchError(this.handleError_single<CollectionIndex>())
+            catchError(this.handleError_raise<CollectionIndex>())
         )
     }
 
@@ -987,7 +987,7 @@ export class RestApiConnectorService extends ApiConnector {
         return this.http.get<CollectionIndex[]>(`${this.baseUrl}/collection-indexes`, {headers: this.headers}).pipe(
             tap(_ => logger.log("retrieved collection indexes")), // on success, trigger the success notification
             map(results => { return results.map(raw => new CollectionIndex(raw)); }),
-            catchError(this.handleError_array<CollectionIndex[]>([])) // on error, trigger the error notification and continue operation without crashing (returns empty item)
+            catchError(this.handleError_continue<CollectionIndex[]>([])) // on error, trigger the error notification and continue operation without crashing (returns empty item)
         )
     }
 
@@ -998,7 +998,7 @@ export class RestApiConnectorService extends ApiConnector {
     public deleteCollectionIndex(id: string): Observable<{}> {
         return this.http.delete(`${this.baseUrl}/collection-indexes/${id}`).pipe(
             tap(this.handleSuccess("collection index removed")),
-            catchError(this.handleError_single())
+            catchError(this.handleError_raise())
         )
     }
 
@@ -1019,7 +1019,7 @@ export class RestApiConnectorService extends ApiConnector {
         const data$ = this.http.get<any>(`${this.baseUrl}/config/allowed-values`, {headers: this.headers}).pipe(
             tap(_ => logger.log("retrieved allowed values")),
             map(result => result as any),
-            catchError(this.handleError_array<string[]>([]))
+            catchError(this.handleError_continue<string[]>([]))
         );
         let subscription = data$.subscribe({
             next: (data) => { this.allowedValues = data; },
@@ -1038,7 +1038,7 @@ export class RestApiConnectorService extends ApiConnector {
             map(result => {
                 return new Identity(result);
             }),
-            catchError(this.handleError_single<Identity>()),
+            catchError(this.handleError_continue<Identity>()),
             share() //multicast to subscribers
         )
     }
@@ -1059,7 +1059,7 @@ export class RestApiConnectorService extends ApiConnector {
                     map(_ => {
                         return new Identity(result);
                     }),
-                    catchError(this.handleError_single<Identity>()),
+                    catchError(this.handleError_raise<Identity>()),
                     share() // multicast so that multiple subscribers don't trigger the call twice. THIS MUST BE THE LAST LINE OF THE PIPE
                 )
             })
@@ -1096,7 +1096,7 @@ export class RestApiConnectorService extends ApiConnector {
         query = query.set("domain", domain);
         return this.http.get(`${this.baseUrl}/stix-bundles`, {headers: this.headers, params: query}).pipe(
             tap(results => logger.log("retrieved stix bundle")),
-            catchError(this.handleError_array<any>({})),
+            catchError(this.handleError_continue<any>({})),
             share() //multicast
         );
     }
