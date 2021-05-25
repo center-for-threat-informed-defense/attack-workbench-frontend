@@ -130,7 +130,7 @@ export class StixPageComponent implements OnInit, OnDestroy {
                     this.updateBreadcrumbs(result, this.objectType );
                     this.objects = result;
                     if (objectModified) this.objects = this.objects.filter(x => x.modified.toISOString() == objectModified); //filter to just the object with that date
-                    this.initialVersion = new VersionNumber(this.objects[0].version.toString());
+                    if (this.objects.length > 0) this.initialVersion = new VersionNumber(this.objects[0].version.toString());
                 },
                 complete: () => { subscription.unsubscribe() }
             });
@@ -183,7 +183,8 @@ export class StixPageComponent implements OnInit, OnDestroy {
 
     private updateBreadcrumbs(result, objectType) {
         if (result.length == 0) {
-            this.breadcrumbService.changeBreadcrumb(this.route.snapshot, "error")
+            this.breadcrumbService.changeBreadcrumb(this.route.snapshot, "object not found")
+            this.titleService.setTitle("object not found", true);
         } else {
             if ("name" in result[0] && result[0].name) {
                 this.breadcrumbService.changeBreadcrumb(this.route.snapshot, result[0].name)
