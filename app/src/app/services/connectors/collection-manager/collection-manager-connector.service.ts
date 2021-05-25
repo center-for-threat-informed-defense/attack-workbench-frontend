@@ -28,7 +28,7 @@ export class CollectionManagerConnectorService extends ApiConnector {
                 "collection_index": index,
                 "workspace": { remote_url: url }
             } as CollectionIndex }),
-            catchError(this.handleError_single<CollectionIndex>()) // on error, trigger the error notification and continue operation without crashing (returns empty item)
+            catchError(this.handleError_continue<CollectionIndex>()) // on error, trigger the error notification and continue operation without crashing (returns empty item)
         )
     }
 }
