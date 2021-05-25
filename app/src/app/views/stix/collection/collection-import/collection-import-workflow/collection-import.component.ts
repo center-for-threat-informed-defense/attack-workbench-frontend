@@ -5,6 +5,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatStepper } from '@angular/material/stepper';
 import { ActivatedRoute } from '@angular/router';
+import { FileInputComponent } from 'ngx-material-file-input';
 import { Collection, CollectionDiffCategories } from 'src/app/classes/stix/collection';
 import { Group } from 'src/app/classes/stix/group';
 import { Matrix } from 'src/app/classes/stix/matrix';
@@ -25,6 +26,7 @@ import { logger } from "../../../../../util/logger";
 })
 export class CollectionImportComponent implements OnInit {
     @ViewChild(MatStepper) public stepper: MatStepper;
+    @ViewChild(FileInputComponent) public fileInput: FileInputComponent;
 
     public url: string = "";
     public loadingStep1: boolean = false;
@@ -52,34 +54,64 @@ export class CollectionImportComponent implements OnInit {
         if (this.route.snapshot.queryParams["url"]) {
             // get URL
             this.url = decodeURIComponent(this.route.snapshot.queryParams["url"]);
-            this.previewCollection();
+            this.getCollectionFromURL();
         }
     }
 
-    public previewCollection() {
+    public getCollectionFromFile() {
         this.loadingStep1 = true;
-        let subscription_getBundle = this.http.get(this.url).subscribe({ //get the raw collection bundle from the endpoint
-            next: (collectionBundle) => {
-                // send the collection bundle to the backend
-                let subscription_preview = this.restAPIConnectorService.postCollectionBundle(collectionBundle, true).subscribe({
-                    next: (preview_results) => {
-                        this.parsePreview(collectionBundle, preview_results)
-                    },
-                    complete: () => { subscription_preview.unsubscribe() }
-                })
-            },
-            error: (err) => {
-                logger.error(err)
-                this.snackbar.open(err.error, "dismiss", {
+        let reader = new FileReader();
+        reader.onload = (e) => {
+            let str = String(reader.result);
+            try {
+                let collectionBundle = JSON.parse(str);
+                this.previewCollection(collectionBundle);
+            } catch (exception) {
+                this.snackbar.open(exception.message, "dismiss", {
                     duration: 2000,
                     panelClass: "warn"
                 })
+                this.loadingStep1 = false;
+            }
+        }
+        reader.readAsText(this.fileInput.value.files[0]);
+    }
+
+    public getCollectionFromURL() {
+        this.loadingStep1 = true;
+        let subscription_getBundle = this.http.get(this.url).subscribe({ //get the raw collection bundle from the endpoint
+            next: (collectionBundle) => this.previewCollection(collectionBundle),
+            error: (err) => {
+                logger.error(err)
+                this.snackbar.open(err.message, "dismiss", {
+                    duration: 2000,
+                    panelClass: "warn"
+                })
+                this.loadingStep1 = false;
             },
             complete: () => { subscription_getBundle.unsubscribe() } //prevent memory leaks
         })
     }
 
+    public previewCollection(collectionBundle) {
+        // send the collection bundle to the backend
+        let subscription_preview = this.restAPIConnectorService.postCollectionBundle(collectionBundle, true).subscribe({
+            next: (preview_results) => {
+                if (!preview_results) {
+                    this.loadingStep1 = false;  
+                } else {
+                    this.parsePreview(collectionBundle, preview_results)
+                }
+            },
+            error: (err) => {
+                this.loadingStep1 = false;
+            },
+            complete: () => { subscription_preview.unsubscribe() }
+        })
+    }
+
     public parsePreview(collectionBundle: any, preview: Collection) {
+        console.log("enter parsePreview")
         this.collectionBundle = collectionBundle; //save for later
         
         //build ID to category lookup
