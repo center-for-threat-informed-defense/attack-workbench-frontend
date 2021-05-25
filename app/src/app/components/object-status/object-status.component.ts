@@ -46,34 +46,37 @@ export class ObjectStatusComponent implements OnInit {
             includeRevoked: true, 
             includeDeprecated: true
         }
+        if (this.editorService.stixId && this.editorService.stixId != "new") { // don't load if the object doesn't exist yet
+            // retrieve object
+            if (this.editorService.type == "software") data$ = this.restAPIService.getAllSoftware(options);
+            else if (this.editorService.type == "group") data$ = this.restAPIService.getAllGroups(options);
+            else if (this.editorService.type == "matrix") data$ = this.restAPIService.getAllMatrices(options);
+            else if (this.editorService.type == "mitigation") data$ = this.restAPIService.getAllMitigations(options);
+            else if (this.editorService.type == "tactic") data$ = this.restAPIService.getAllTactics(options);
+            else if (this.editorService.type == "technique") data$ = this.restAPIService.getAllTechniques(options);
+            else if (this.editorService.type == "collection") data$ = this.restAPIService.getAllCollections(options);
+            let objSubscription = data$.subscribe({
+                next: (data) => {
+                    this.objects = data.data;
+                    this.object = this.objects.find(object => object.stixID === this.editorService.stixId);
+                    if (this.object) {
+                        if (this.object.workflow && this.object.workflow.state) {
+                            this.statusControl.setValue(this.object.workflow.state);
+                        }
+                        this.revoked = this.object.revoked;
+                        this.deprecated = this.object.deprecated;
+                    }
+                },
+                complete: () => { objSubscription.unsubscribe() }
+            });
 
-        // retrieve object
-        if (this.editorService.type == "software") data$ = this.restAPIService.getAllSoftware(options);
-        else if (this.editorService.type == "group") data$ = this.restAPIService.getAllGroups(options);
-        else if (this.editorService.type == "matrix") data$ = this.restAPIService.getAllMatrices(options);
-        else if (this.editorService.type == "mitigation") data$ = this.restAPIService.getAllMitigations(options);
-        else if (this.editorService.type == "tactic") data$ = this.restAPIService.getAllTactics(options);
-        else if (this.editorService.type == "technique") data$ = this.restAPIService.getAllTechniques(options);
-        else if (this.editorService.type == "collection") data$ = this.restAPIService.getAllCollections(options);
-        let objSubscription = data$.subscribe({
-            next: (data) => {
-                this.objects = data.data;
-                this.object = this.objects.find(object => object.stixID === this.editorService.stixId);
-                if (this.object.workflow && this.object.workflow.state) {
-                    this.statusControl.setValue(this.object.workflow.state);
-                }
-                this.revoked = this.object.revoked;
-                this.deprecated = this.object.deprecated;
-            },
-            complete: () => { objSubscription.unsubscribe() }
-        });
-
-        // retrieve relationships with the object
-        data$ = this.restAPIService.getRelatedTo({sourceOrTargetRef: this.editorService.stixId});
-        let relSubscription = data$.subscribe({
-            next: (data) => { this.relationships = data.data as Relationship[]; },
-            complete: () => { relSubscription.unsubscribe() }
-        });
+            // retrieve relationships with the object
+            data$ = this.restAPIService.getRelatedTo({sourceOrTargetRef: this.editorService.stixId});
+            let relSubscription = data$.subscribe({
+                next: (data) => { this.relationships = data.data as Relationship[]; },
+                complete: () => { relSubscription.unsubscribe() }
+            });
+        }
     }
 
     private save() {
