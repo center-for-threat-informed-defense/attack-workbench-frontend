@@ -3,7 +3,7 @@ import { FormControl, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Observable } from 'rxjs';
 import { ValidationData, ValidationFieldData } from 'src/app/classes/serializable';
-import { StixObject } from 'src/app/classes/stix/stix-object';
+import { StixObject, workflowStates } from 'src/app/classes/stix/stix-object';
 import { VersionNumber } from 'src/app/classes/version-number';
 import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/rest-api-connector.service';
 
@@ -19,7 +19,7 @@ export class SaveDialogComponent implements OnInit {
     public nextMajorVersion: string;
     public nextMinorVersion: string;
     public validation: ValidationData = null;
-    public statusControl: FormControl = new FormControl();
+    public newState: workflowStates = "work-in-progress";
     public workflows: string[] = ["work-in-progress", "awaiting-review", "reviewed"];
 
     public get saveEnabled() {
@@ -60,7 +60,7 @@ export class SaveDialogComponent implements OnInit {
     }
 
     private save() {
-        this.config.object.workflow = this.statusControl.value ? {state: this.statusControl.value} : undefined;
+        this.config.object.workflow = this.newState ? {state: this.newState } : undefined;
         
         if (!this.saveEnabled) return;
         let subscription = this.config.object.save(this.restApiConnectorService).subscribe({
@@ -76,7 +76,7 @@ export class SaveDialogComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        this.statusControl = new FormControl(this.config.object.workflow ? this.config.object.workflow.state : '');
+        this.newState = this.config.object.workflow? this.config.object.workflow.state : "";
     }
 
 }
