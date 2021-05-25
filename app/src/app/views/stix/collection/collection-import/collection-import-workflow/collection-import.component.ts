@@ -111,7 +111,6 @@ export class CollectionImportComponent implements OnInit {
     }
 
     public parsePreview(collectionBundle: any, preview: Collection) {
-        console.log("enter parsePreview")
         this.collectionBundle = collectionBundle; //save for later
         
         //build ID to category lookup
