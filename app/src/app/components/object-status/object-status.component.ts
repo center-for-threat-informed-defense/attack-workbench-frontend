@@ -1,7 +1,8 @@
 import { SelectionModel } from '@angular/cdk/collections';
-import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
+import { PopoverContentComponent } from 'ngx-smart-popover';
 import { forkJoin } from 'rxjs';
 import { Collection } from 'src/app/classes/stix/collection';
 import { Relationship } from 'src/app/classes/stix/relationship';
@@ -19,10 +20,11 @@ import { ConfirmationDialogComponent } from '../confirmation-dialog/confirmation
 })
 export class ObjectStatusComponent implements OnInit {
 
+    public loaded: boolean = false;
     public statusControl: FormControl;
     public select: SelectionModel<string>;
     public workflows: string[] = ["none", "work-in-progress", "awaiting-review", "reviewed"];
-
+    @ViewChild("objectStatus", {static: false}) public popover: PopoverContentComponent;
     public objects: StixObject[];
     public object: StixObject;
     public relationships;
@@ -37,7 +39,7 @@ export class ObjectStatusComponent implements OnInit {
 
     ngOnInit(): void {
         this.statusControl = new FormControl();
-        this.loadData();
+        // this.loadData();
     }
 
     public loadData() {
@@ -73,7 +75,11 @@ export class ObjectStatusComponent implements OnInit {
             // retrieve relationships with the object
             data$ = this.restAPIService.getRelatedTo({sourceOrTargetRef: this.editorService.stixId});
             let relSubscription = data$.subscribe({
-                next: (data) => { this.relationships = data.data as Relationship[]; },
+                next: (data) => { 
+                    this.relationships = data.data as Relationship[]; 
+                    this.loaded = true;
+                    setTimeout(() => this.popover.updatePosition()); //after render cycle update popover position since it has new content
+                },
                 complete: () => { relSubscription.unsubscribe() }
             });
         }
