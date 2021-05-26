@@ -31,7 +31,18 @@
 <!--    each repo's package.json file's version marking.                -->
 
 # Changelog
-
+## Changes staged on develop
+### ATT&CK Workbench version 1.0.0
+#### Improvements in 1.0.0
+- Elimination of initial load times when adding relationships.
+- Improved error messages when importing collections that are too large or malformed. See [frontend#198](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/198).
+- Improved page titles and breadcrumb on "object not found" pages.
+- User can now import collections from file. See [frontend#207](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/207).
+#### Fixes in 1.0.0
+- Fixed vertically misaligned timestamps across several UIs.
+- Fixed missing timestamp on collection version lists within collection indexes.
+- Fixed object status popover showing the wrong status if opened too soon after the page loads. Also improved performance of the status popover code.
+- Collection import UI no longer gets stuck if it runs into a problem fetching/importing/previewing the collection. See [frontend#198](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/198)
 ## 7 May 2021
 ### ATT&CK Workbench version 0.4.0
 #### Improvements in 0.4.0
