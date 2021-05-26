@@ -79,7 +79,7 @@ export class CollectionReference extends Serializable  {
     public created: Date;
     public versions: CollectionVersion[];
     public subscribed: boolean; //TODO how does this get determined
-    public get lastModified(): Date { return this.versions[0].modified; }
+    public lastModified: Date; //must be updated whenever the versions field is updated (get function won't work here)
     constructor(raw?: any) {
         super();
         if (raw) this.deserialize(raw);
@@ -112,6 +112,7 @@ export class CollectionReference extends Serializable  {
             if (typeof(ref.versions) === "object") {
                 this.versions = ref.versions.map(version => new CollectionVersion(version));
                 this.versions.sort((a:CollectionVersion,b:CollectionVersion) => b.version.compareTo(a.version)); //sort by modified date
+                this.lastModified = this.versions[0].modified;
             } else logger.error("TypeError: versions field is not an object:", ref.versions, "(", typeof(ref.versions), ")");
         }
     }

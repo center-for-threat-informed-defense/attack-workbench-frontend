@@ -8,7 +8,7 @@ import { Observable, of } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
 import { logger } from "../../util/logger";
 
-export type workflowStates = "work-in-progress" | "awaiting-review" | "reviewed"
+export type workflowStates = "work-in-progress" | "awaiting-review" | "reviewed" | "";
 let stixTypeToAttackType = {
     "x-mitre-collection": "collection",
     "attack-pattern": "technique",
