@@ -1,4 +1,4 @@
-import { Observable } from "rxjs";
+import { Observable, of } from "rxjs";
 import { map, switchMap } from "rxjs/operators";
 import { RestApiConnectorService } from "src/app/services/connectors/rest-api/rest-api-connector.service";
 import { ValidationData } from "../serializable";
@@ -96,6 +96,20 @@ export class Relationship extends StixObject {
     }
 
     /**
+     * Set the source object
+     * @param {StixObject} new_source_object the object to set
+     * @returns {Observable<Relationship>} of this object after the data has been updated
+     */
+    public set_source_object(new_source_object: StixObject): Observable<Relationship>  {
+        this.updating_refs = true;
+        let serialized = this.serialize();
+        serialized.source_object = new_source_object.serialize();
+        this.deserialize(serialized);
+        this.updating_refs = false;
+        return of(this);
+    }
+
+    /**
      * set the target ref, and set the target_object and target_id to the new values
      * @param {string} new_target_ref the new target ref
      * @param {RestApiConnectorService} restAPIService: the REST API connector through which the target can be fetched
@@ -115,6 +129,20 @@ export class Relationship extends StixObject {
             })
         )
     }
+
+        /**
+     * Set the target object
+     * @param {StixObject} new_target_object the object to set
+     * @returns {Observable<Relationship>} of this object after the data has been updated
+     */
+         public set_target_object(new_target_object: StixObject): Observable<Relationship>  {
+            this.updating_refs = true;
+            let serialized = this.serialize();
+            serialized.target_object = new_target_object.serialize();
+            this.deserialize(serialized);
+            this.updating_refs = false;
+            return of(this);
+        }
 
     /**
      * Transform the current object into a raw object for sending to the back-end, stripping any unnecessary fields
