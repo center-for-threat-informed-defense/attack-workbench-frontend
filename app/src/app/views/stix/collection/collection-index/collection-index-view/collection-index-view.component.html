@@ -46,7 +46,8 @@
                             <b>{{collectionRef.name}}</b>
                         </mat-panel-title>
                         <mat-panel-description>
-                            {{collectionRef.versions.length}} versions, last updated&nbsp;<app-timestamp-view [config]="{
+                            <!-- {{collectionRef.lastModified}} -->
+                            {{collectionRef.versions.length}} versions, last updated&nbsp;<app-timestamp-view *ngIf="collectionRef.versions.length > 0" [config]="{
                                 'mode': 'view',
                                 'humanize': true,
                                 'object': collectionRef,
