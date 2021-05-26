@@ -100,7 +100,7 @@
                 <app-add-relationship-button (created)="techniquesList.applyControls()" [config]="{
                     label: 'technique',
                     relationship_type: 'uses',
-                    source_ref: software.stixID
+                    source_object: software
                 }"></app-add-relationship-button>
             </div>
         </div>
@@ -125,7 +125,7 @@
                 <app-add-relationship-button (created)="groupList.applyControls()" [config]="{
                     label: 'group',
                     relationship_type: 'uses',
-                    target_ref: software.stixID
+                    target_object: software
                 }"></app-add-relationship-button>
             </div>
         </div>

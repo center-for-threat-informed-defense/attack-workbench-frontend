@@ -231,7 +231,7 @@
                     <app-add-relationship-button (created)="subTechniquesList.applyControls()" [config]="{
                         label: 'sub-technique',
                         relationship_type: 'subtechnique-of',
-                        target_ref: technique.stixID
+                        target_object: technique
                     }"></app-add-relationship-button>
                 </div>
             </div>
@@ -279,7 +279,7 @@
                 <app-add-relationship-button (created)="mitigatesList.applyControls()" [config]="{
                     label: 'mitigation',
                     relationship_type: 'mitigates',
-                    target_ref: technique.stixID
+                    target_object: technique
                 }"></app-add-relationship-button>
             </div>
         </div>
@@ -305,7 +305,7 @@
                 <app-add-relationship-button (created)="usesList.applyControls()" [config]="{
                     label: 'procedure example',
                     relationship_type: 'uses',
-                    target_ref: technique.stixID
+                    target_object: technique
                 }"></app-add-relationship-button>
             </div>
         </div>

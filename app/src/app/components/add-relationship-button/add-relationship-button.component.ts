@@ -2,6 +2,7 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { EMPTY, empty, zip } from 'rxjs';
 import { Relationship } from 'src/app/classes/stix/relationship';
+import { StixObject } from 'src/app/classes/stix/stix-object';
 import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/rest-api-connector.service';
 import { StixDialogComponent } from 'src/app/views/stix/stix-dialog/stix-dialog.component';
 
@@ -22,13 +23,14 @@ export class AddRelationshipButtonComponent implements OnInit {
     public createRelationship() {
         let relationship = new Relationship();
         relationship.relationship_type = this.config.relationship_type;
-        let getters = [];
         let initializer = null;
-        if (this.config.source_ref) initializer = relationship.set_source_ref(this.config.source_ref, this.restApiService);
+        if (this.config.source_object) initializer = relationship.set_source_object(this.config.source_object);
+        else if (this.config.source_ref) initializer = relationship.set_source_ref(this.config.source_ref, this.restApiService);
+        else if (this.config.target_object) initializer = relationship.set_target_object(this.config.target_object);
         else if (this.config.target_ref) initializer = relationship.set_target_ref(this.config.target_ref, this.restApiService);
         else initializer = EMPTY;
         this.loading = true;
-        let zip_subscription = initializer.subscribe({
+        var zip_subscription = initializer.subscribe({
             next: () => {
                 this.loading = false;
                 let prompt = this.dialog.open(StixDialogComponent, {
@@ -45,7 +47,7 @@ export class AddRelationshipButtonComponent implements OnInit {
                     complete: () => { subscription.unsubscribe(); }
                 });
             },
-            complete: () => { zip_subscription.unsubscribe(); }
+            complete: () => { if (zip_subscription) zip_subscription.unsubscribe(); } //for some reason zip_subscription doesn't exist if using set_source_object or set_target_object
         })
     }
 
@@ -55,6 +57,8 @@ export interface AddRelationshipButtonConfig {
     // text label to be shown on the button
     label: string;
     relationship_type: string; //relationship type to create
-    source_ref?: string; //initial relationship source ref
+    source_ref?: string; //initial relationship source ref.
+    source_object?: StixObject; //initial relationship source object. Takes precedence over source_ref if both are specified, and is much faster to execute
     target_ref?: string; //initial relationship target ref
+    target_object?: StixObject; //initial relationship target object. Takes precedence over target_ref if both are specified, and is much faster to execute
 }
