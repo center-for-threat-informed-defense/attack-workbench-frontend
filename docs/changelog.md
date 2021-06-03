@@ -38,11 +38,15 @@
 - Improved error messages when importing collections that are too large or malformed. See [frontend#198](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/198).
 - Improved page titles and breadcrumb on "object not found" pages.
 - User can now import collections from file. See [frontend#207](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/207).
+- Collection index update interval is now set in the REST API configuration instead of hardcoded in the frontend. See [frontend#200](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/200).
+
 #### Fixes in 1.0.0
 - Fixed vertically misaligned timestamps across several UIs.
 - Fixed missing timestamp on collection version lists within collection indexes.
 - Fixed object status popover showing the wrong status if opened too soon after the page loads. Also improved performance of the status popover code.
 - Collection import UI no longer gets stuck if it runs into a problem fetching/importing/previewing the collection. See [frontend#198](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/198)
+- Object status popover now closes properly when the user starts editing the object. See [frontend#199](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/199).
+
 ## 7 May 2021
 ### ATT&CK Workbench version 0.4.0
 #### Improvements in 0.4.0
