@@ -7,7 +7,7 @@
     <mat-icon aria-label="settings">settings</mat-icon>
 </button>
 
-<popover-content #objectStatus>
+<popover-content #objectStatus [closeOnClickOutside]="true">
     <div class="workflow-status" *ngIf="loaded else loading">
         <mat-form-field class="workflow-status" appearance="outline">
             <mat-label>Workflow Status</mat-label>
