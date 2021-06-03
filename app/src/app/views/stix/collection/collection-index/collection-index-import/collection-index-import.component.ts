@@ -51,7 +51,7 @@ export class CollectionIndexImportComponent implements OnInit {
         serialized.workspace.update_policy = { // set up update policy
             automatic: true,
             last_retrieval: new Date(),
-            interval: 10,
+            // interval: 10, // allow REST API to define the update interval according to the app config
         }
         let subscription = this.restAPIConnector.postCollectionIndex(serialized).subscribe({
             next: (result) => {
