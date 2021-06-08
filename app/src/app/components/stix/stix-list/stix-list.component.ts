@@ -42,6 +42,7 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
     // @Input() public stixObjects: StixObject[]; //TODO get rid of this in favor of stix list cards loading using filters
     @Input() public config: StixListConfig = {};
     @Output() public onRowAction = new EventEmitter<string>();
+    @Output() public onSelect = new EventEmitter<StixObject>();
     @ViewChild(MatPaginator) paginator: MatPaginator;
     @ViewChild('search') search: ElementRef;
     public searchQuery: string = "";

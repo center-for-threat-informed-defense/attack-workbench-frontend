@@ -34,7 +34,7 @@
 ## Changes staged on develop
 ### ATT&CK Workbench version 1.0.0
 #### Improvements in 1.0.0
-- Elimination of initial load times when adding relationships.
+- Performance improvements when adding, editing, and validating relationships.
 - Improved error messages when importing collections that are too large or malformed. See [frontend#198](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/198).
 - Improved page titles and breadcrumb on "object not found" pages.
 - User can now import collections from file. See [frontend#207](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/207).
