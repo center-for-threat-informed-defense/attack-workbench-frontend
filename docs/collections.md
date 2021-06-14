@@ -17,7 +17,7 @@ A _collection_ is a set of related ATT&CK objects; collections may be used repre
 
 Collections are meant to be shared. Collections can be shared as STIX bundles, uploaded to the internet, or sent through email. <!-- or hosted on a [TAXII server](https://oasis-open.github.io/cti-documentation/taxii/intro.html). -->
 
-Data providers may opt to describe their published collections through a _collection index_ (detailed below), a data structure designed to provide a machine-readable listing of collections. Collection indexes provide the means through which data consumers can _subscribe_ to updates from a data provider.
+Data providers may opt to describe their published collections through a [collection index](#collection-indexes), a data structure designed to provide a machine-readable listing of collections. Collection indexes provide the means through which data consumers can _subscribe_ to updates from a data provider.
 
 Typically collections are not modified after they are published. Subsequent releases of a dataset such as "Enterprise ATT&CK" would be represented by a new _version_ of the collection stored in a separate STIX bundle or TAXII collection; the continuity between releases is conveyed by the _collection index_ object detailed below. 
 
