@@ -1,47 +1,64 @@
 # ATT&CK Workbench Frontend
 
-ATT&CK Workbench is a tool designed to containerize the MITRE ATT&CK&reg; knowledge base, making ATT&CK easier to use and extend throughout the community. Our goal is to enable users of ATT&CK to easily instantiate their own copy of the ATT&CK knowledge base and provide the tools, infrastructure, and documentation to allow those organizations to both extend ATT&CK for their own needs and easily contribute to the ATT&CK knowledge base when appropriate.
+The ATT&CK Workbench is an application allowing users to **explore**, **create**, **annotate**, and **share** extensions of the ATT&CK knowledge base. 
 
-The ATT&CK Workbench application is made up of several repositories:
-- ATT&CK Workbench Frontend: the front-end UI for the ATT&CK Workbench tool.
-- [ATT&CK Workbench Collection Manager](https://github.com/center-for-threat-informed-defense/attack-workbench-collection-manager): REST API and CLI for managing collections.
-- [ATT&CK Workbench REST API](https://github.com/center-for-threat-informed-defense/attack-workbench-rest-api): REST API service for storing, querying and editing ATT&CK objects.
+Organizations or individuals within the ATT&CK community can initialize their own instances of the application to serve as the centerpiece to their own customized instance of the ATT&CK knowledge base, attaching other tools and interfaces as desired. Through the Workbench this local knowledge base can be extended with new or updated techniques, tactics, mitigations groups, and software. Finally, the ATT&CK workbench provides means to share their extensions with the greater ATT&CK community if so desired.
 
-For more documentation, please see the `docs` folder. The docs folder is also available in the in-app help page.
+For more information about the application, please see the `docs` folder. The contents of the docs folder is also available in the in-app help page.
 - [usage](/docs/usage.md): documentation about how to use the ATT&CK Workbench application.
-- [changelog](/docs/changelog.md): documentation about updates to this application.
+- [changelog](/docs/changelog.md): records of updates to this application.
 - [collections](/docs/collections.md): documentation about the collection data type.
+- [integrations](/docs/integrations.md): instructions for integrating other tools with the ATT&CK Workbench.
+
+This repository contains the front-end user interface for the ATT&CK Workbench application, as well as the main documentation regarding its use. The full ATT&CK Workbench application requires additional components to operate fully. See the [install and run](#install-and-run) instructions for more details.
 
 ## Requirements
 - [Node.js](https://nodejs.org/) version `14.16.1` or greater
 
 ## Install and run
 
-### Installing using Docker
-Please refer to our [Docker install instructions](docs/docker-compose.md) for information on installing and deploying the app using Docker.
+The ATT&CK Workbench application is made up of several repositories. For the full application to operate each needs to be running at the same time. The [docker install instructions](docs/docker-compose.md) will install all components and is recommended for most deployments.
+- [ATT&CK Workbench Frontend](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend) (this repository)
+  
+  The front-end user interface for the ATT&CK Workbench tool, and the primary interface through which the knowledge base is accessed.
+- [ATT&CK Workbench REST API](https://github.com/center-for-threat-informed-defense/attack-workbench-rest-api)
 
-### Installing dependencies
+  REST API service for storing, querying and editing ATT&CK objects.
+- [ATT&CK Workbench Collection Manager](https://github.com/center-for-threat-informed-defense/attack-workbench-collection-manager)
+
+  REST API and services for managing collections, collection indexes, and collection subscriptions. 
+  
+  The collection manager is **not** required to be installed to use the ATT&CK Workbench, but is highly recommended. If you opt not to install the collection-manager you will not be able to import or export data from your local knowledge base. If the collection manager is not installed, set `integrations.collection_manager.enabled` to `false` in the front-end environment. See [modifying the environment](#modifying-the-environment) for more details.
+
+The manual install instructions in each repository allow each component to be deployed on separate machines or with customized settings. 
+
+### Installing using Docker
+Please refer to our [Docker install instructions](docs/docker-compose.md) for information on installing and deploying the the full application using Docker. The docker setup is the easiest way to deploy the application.
+
+### Manual Installation
+
+#### Installing dependencies
 This step is necessary for cases where the app is deployed locally through `ng serve` or `ng build`. It can be skipped for installs using docker (above).
 
 1. Navigate to `app`
 2. Run `npm install` to install required packages
 
-### Serve on local machine
+#### Serve on local machine
 1. Run `ng serve` within the `app` directory
 2. Navigate to `localhost:4200` in your browser
 
-### Compile for use elsewhere
+#### Compile for use elsewhere
 1. Run `ng build` within the `app` directory
 2. Copy files from the `app/dist` directory
 
-If you're building the app for production, use `ng build --prod` which will use the production environment instead of the development environment. See [Modifying the environment](#modifying-the-environment) for more information.
+If you're building the app for production, use `ng build --prod` which will use the production environment instead of the development environment. See [modifying the environment](#modifying-the-environment) for more information.
 
-### Modifying the environment
+#### Modifying the environment
 The ATT&CK Workbench Frontend is configured to connect to the Collection Manager and REST API running under their default configurations. If those applications are configured to run on different ports, or if the application is to be hosted for access on multiple machines, the environment must be edited to reflect their URLs and ports.
 
 These environment properties can be edited under `src/environments`:
-- `src/environments/environment.ts` is the development environment with configurations for when it is hosted on a local machine or is being actively developed. This is the default environment file used when building the application.
-- `src/environments/environment.prod.ts` is the production environment for deployment inside of an organization or in cases where the user is not developing the application. When the application is built for production deployments (`ng build --prod`) this environment file is used.
+- [src/environments/environment.ts](app/src/environments/environment.ts) is the development environment with configurations for when it is hosted on a local machine or is being actively developed. This is the default environment file used when building the application.
+- [src/environments/environment.prod.ts](app/src/environments/environment.prod.ts) is the production environment for deployment inside of an organization or in cases where the user is not developing the application. When the application is built for production deployments (`ng build --prod`) this environment file is used.
 
 ## Notice 
 
