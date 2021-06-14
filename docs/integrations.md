@@ -41,7 +41,7 @@ Edit the config file `nav-app/src/assets/config.json` by prepending a new object
 
 ### 3. Serve the application
 
-Follow the [install and run](https://github.com/mitre-attack/attack-navigator#install-and-run) instructions on the ATT&CK Navigator to deploy the application. The Navigator will update its data from the workbench every time it loads, so there is no need to periodically rebuild the application to stay synchronized with Workbench data.
+Follow the [install and run](https://github.com/mitre-attack/attack-navigator#install-and-run) instructions on the ATT&CK Navigator to deploy the application. The Navigator will update its data from the Workbench every time it loads, so there is no need to periodically rebuild the application to stay synchronized with Workbench data.
 
 ## ATT&CK Website
 The [ATT&CK Website](https://github.com/mitre-attack/attack-website) can be configured to display the contents of your local knowledge base. 
@@ -77,14 +77,14 @@ domains = [
 ]
 ```
 
-Depending on your deployment of the workbench the REST API URL may be different. See the environment files, `src/environments/`, for the currently configured REST API URL.
+Depending on your deployment of the Workbench the REST API URL may be different. See the environment files, `src/environments/`, for the currently configured REST API URL.
 
 ### 3. Build the site
 
-Run `python3 update-attack.py` to build the website using the current workbench data. 
+Run `python3 update-attack.py` to build the website using the current Workbench data. 
 
 ### 4. Serve the site
 
 Copy the files from output to your web server or use `python3 -m http.server [port]` to host for local browsing.
 
-If the data within the workbench changes you will need to rebuild the site (from step 3) again; for this reason you may want to consider re-running your build and deploy pipeline at regular intervals using `cron` to keep the data synchronized with the contents of the workbench.
+If the data within the Workbench changes you will need to rebuild the site (from step 3) again; for this reason you may want to consider re-running your build and deploy pipeline at regular intervals using `cron` to keep the data synchronized with the contents of the Workbench.
