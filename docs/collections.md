@@ -1,6 +1,14 @@
 # Collections and Collection Indexes
 
-This document describes the format and usage of _collections_ and _collection indexes_, which are used for distribution of ATT&CK data from data providers to data consumers.
+This document describes the format and usage of [collections](#collections) and [collection indexes](#collection-indexes) which are used for distribution of ATT&CK data from **data providers** to **data consumers**.
+
+- **Data Provider**
+
+  MITRE ATT&CK and other users or organizations publishing or otherwise sharing ATT&CK data. This includes both open-source data and data distributed to a controlled list of data consumers. Users of the ATT&CK Workbench who are publishing collections containing data from their local knowledge base.
+
+- **Data Consumer**
+
+  A user or organization consuming the data from a data provider. Users of the ATT&CK Workbench who are pulling data into their knowledge base.
 
 ATT&CK collections and the ATT&CK collection index can be found on our [attack-stix-data GitHub repository](https://github.com/mitre-attack/attack-stix-data).
 
