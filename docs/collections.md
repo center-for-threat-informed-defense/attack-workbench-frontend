@@ -2,6 +2,8 @@
 
 This document describes the format and usage of _collections_ and _collection indexes_, which are used for distribution of ATT&CK data from data providers to data consumers.
 
+ATT&CK collections and the ATT&CK collection index can be found on our [attack-stix-data GitHub repository](https://github.com/mitre-attack/attack-stix-data).
+
 ## Collections
 A _collection_ is a set of related ATT&CK objects; collections may be used represent specific releases of a dataset such as "Enterprise ATT&CK v7.2", or any other set of objects one may want to share with someone else. 
 
