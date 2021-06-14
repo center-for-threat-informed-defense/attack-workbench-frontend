@@ -2,12 +2,28 @@
 
 The ATT&CK Workbench is an application allowing users to **explore**, **create**, **annotate**, and **share** extensions of the ATT&CK knowledge base. 
 
-Organizations or individuals within the ATT&CK community can initialize their own instances of the application to serve as the centerpiece to their own customized instance of the ATT&CK knowledge base, attaching other tools and interfaces as desired. Through the Workbench this local knowledge base can be extended with new or updated techniques, tactics, mitigations groups, and software. Finally, the ATT&CK workbench provides means to share their extensions with the greater ATT&CK community if so desired.
+Organizations or individuals within the ATT&CK community can initialize their own instance of the application to serve as the centerpiece to their own customized instance of the ATT&CK knowledge base, attaching other tools and interfaces as desired. Through the Workbench this local knowledge base can be extended with new or updated techniques, tactics, mitigations groups, and software. Finally, the ATT&CK workbench provides means to share these extensions with the greater ATT&CK community if so desired.
 
-For more information about the application, please see the `docs` folder. The contents of the docs folder is also available in the in-app help page.
-- [usage](/docs/usage.md): documentation about how to use the ATT&CK Workbench application.
+Importing and exporting data from the ATT&CK Workbench is facilitated through **Collections** and **Collection Indexes**. 
+- [Collections](/docs/collections.md#collections)
+
+  A collection is a set of related ATT&CK objects, and may be used to represent specific releases of a dataset such as “Enterprise ATT&CK v9.0” or any other set of objects one may want to share with someone else.
+
+  Collections for all current and prior ATT&CK releases can be found on our [attack-stix-data GitHub repository](https://github.com/mitre-attack/attack-stix-data).
+- [Collection Indexes](/docs/collections.md#collection-indexes)
+
+  Collection Indexes are organized lists of collections intended to ease their distribution to data consumers. Collection indexes track individual releases of given collections (e.g Enterprise v7, Enterprise v8, Enterprise v9) and allow applications such as the Workbench to check if new releases have been published.
+  
+  The ATT&CK collection index can be found on our [attack-stix-data GitHub repository](https://github.com/mitre-attack/attack-stix-data). The ATT&CK Workbench is pre-configured to recommend this index in the "add a collection index" interface.
+
+More information about collections and collection indexes can be found in the [collections document](docs/collections.md).
+
+---
+
+For more information about the ATT&CK Workbench, please see the [docs](/docs/README.md) folder. The contents of the docs folder is also available in the in-app help page.
+- [usage](/docs/usage.md): documentation about how to use the ATT&CK Workbench application and its full capabilities.
 - [changelog](/docs/changelog.md): records of updates to this application.
-- [collections](/docs/collections.md): documentation about the collection data type.
+- [collections](/docs/collections.md): documentation about the collection and collection index data type.
 - [integrations](/docs/integrations.md): instructions for integrating other tools with the ATT&CK Workbench.
 
 This repository contains the front-end user interface for the ATT&CK Workbench application, as well as the main documentation regarding its use. The full ATT&CK Workbench application requires additional components to operate fully. See the [install and run](#install-and-run) instructions for more details.
