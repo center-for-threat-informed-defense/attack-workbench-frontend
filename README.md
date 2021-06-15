@@ -1,24 +1,8 @@
-# ATT&CK Workbench Frontend
+# ATT&CK® Workbench Frontend
 
 The ATT&CK Workbench is an application allowing users to **explore**, **create**, **annotate**, and **share** extensions of the ATT&CK knowledge base. 
 
 Organizations or individuals within the ATT&CK community can initialize an instance of the application to serve as the centerpiece to their own customized instance of the ATT&CK knowledge base, attaching other tools and interfaces as desired. Through the Workbench this local knowledge base can be extended with new or updated techniques, tactics, mitigations groups, and software. Finally, the ATT&CK Workbench provides means to share these extensions with the greater ATT&CK community if so desired.
-
-Importing and exporting data from the ATT&CK Workbench is facilitated through **Collections** and **Collection Indexes**. 
-- [Collections](/docs/collections.md#collections)
-
-  A collection is a set of related ATT&CK objects, and may be used to represent specific releases of a dataset such as “Enterprise ATT&CK v9.0” or any other set of objects one may want to share with someone else.
-
-  Collections for all current and prior ATT&CK releases can be found on our [attack-stix-data GitHub repository](https://github.com/mitre-attack/attack-stix-data).
-- [Collection Indexes](/docs/collections.md#collection-indexes)
-
-  Collection Indexes are organized lists of collections intended to ease their distribution to data consumers. Collection indexes track individual releases of given collections (e.g Enterprise v7, Enterprise v8, Enterprise v9) and allow applications such as the Workbench to check if new releases have been published.
-  
-  The ATT&CK collection index can be found on our [attack-stix-data GitHub repository](https://github.com/mitre-attack/attack-stix-data). The ATT&CK Workbench is pre-configured to recommend this index in the "add a collection index" interface.
-
-More information about collections and collection indexes can be found in the [collections document](docs/collections.md).
-
----
 
 For more information about the ATT&CK Workbench, please see the [docs](/docs/README.md) folder. The contents of the docs folder is also available in the in-app help page.
 - [usage](/docs/usage.md): documentation about how to use the ATT&CK Workbench application and its full capabilities.
@@ -27,6 +11,23 @@ For more information about the ATT&CK Workbench, please see the [docs](/docs/REA
 - [integrations](/docs/integrations.md): instructions for integrating other tools with the ATT&CK Workbench.
 
 This repository contains an Angular-based web application providing the user interface for the ATT&CK Workbench application, as well as the main documentation regarding its use. The ATT&CK Workbench application requires additional components for full operation. See the [install and run](#install-and-run) instructions for more details about setting up the entire project.
+
+## Collections and Collection Indexes
+
+Importing and exporting data from the ATT&CK Workbench is facilitated through the **Collections** and **Collection Indexes**. These data formats also enable record keeping of ATT&CK versions and extensions.
+- [Collections](/docs/collections.md#collections)
+
+  Collections are sets of related ATT&CK objects, and may be used to represent specific releases of a dataset such as “Enterprise ATT&CK v9.0” or any other set of objects one may want to share with someone else. Collections are represented in STIX 2.1.
+
+  Collections for all current and prior ATT&CK releases can be found on our [attack-stix-data GitHub repository](https://github.com/mitre-attack/attack-stix-data).
+- [Collection Indexes](/docs/collections.md#collection-indexes)
+
+  Collection indexes are organized lists of collections intended to ease their distribution to data consumers. Collection indexes track individual releases of given collections (e.g Enterprise v7, Enterprise v8, Enterprise v9) and allow applications such as the Workbench to check if new releases have been published. Collection Indexes are represented as JSON objects.
+  
+  The ATT&CK collection index can be found on our [attack-stix-data GitHub repository](https://github.com/mitre-attack/attack-stix-data). The ATT&CK Workbench is pre-configured to recommend this index in the "add a collection index" interface.
+
+More information about collections and collection indexes can be found in the [collections document](docs/collections.md).
+
 
 ## Install and run
 
@@ -76,6 +77,28 @@ The ATT&CK Workbench Frontend is configured to connect to the Collection Manager
 These environment properties can be edited under `src/environments`:
 - [src/environments/environment.ts](app/src/environments/environment.ts) is the development environment with configurations for when it is hosted on a local machine or is being actively developed. This is the default environment file used when building the application.
 - [src/environments/environment.prod.ts](app/src/environments/environment.prod.ts) is the production environment for deployment inside of an organization or in cases where the user is not developing the application. When the application is built for production deployments (`ng build --prod`) this environment file is used.
+
+## Related MITRE Work
+
+### STIX
+
+Structured Threat Information Expression (STIX<sup>™</sup>) is a language and serialization format used to exchange cyber threat intelligence (CTI).
+
+STIX enables organizations to share CTI with one another in a consistent and machine readable manner, allowing security communities to better understand what computer-based attacks they are most likely to see and to anticipate and/or respond to those attacks faster and more effectively.
+
+STIX is designed to improve many different capabilities, such as collaborative threat analysis, automated threat exchange, automated detection and response, and more.
+
+https://oasis-open.github.io/cti-documentation/
+### ATT&CK
+
+ATT&CK® is a curated knowledge base and model for cyber adversary behavior, reflecting the various phases of an adversary’s lifecycle and the platforms they are known to target. ATT&CK is useful for understanding security risk against known adversary behavior, for planning security improvements, and verifying defenses work as expected.
+
+https://attack.mitre.org
+### ATT&CK Navigator
+
+The ATT&CK Navigator is a web-based tool for annotating and exploring ATT&CK matrices. It can be used to visualize defensive coverage, red/blue team planning, the frequency of detected techniques, and more. 
+
+https://github.com/mitre-attack/attack-navigator/
 
 ## Notice 
 
