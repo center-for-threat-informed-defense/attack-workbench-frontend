@@ -4,13 +4,15 @@ The ATT&CK Workbench is an application allowing users to **explore**, **create**
 
 Organizations or individuals within the ATT&CK community can initialize an instance of the application to serve as the centerpiece to their own customized instance of the ATT&CK knowledge base, attaching other tools and interfaces as desired. Through the Workbench this local knowledge base can be extended with new or updated techniques, tactics, mitigations groups, and software. Finally, the ATT&CK Workbench provides means to share these extensions with the greater ATT&CK community if so desired.
 
+This repository contains an Angular-based web application providing the user interface for the ATT&CK Workbench application, as well as the main documentation regarding its use. The ATT&CK Workbench application requires additional components for full operation. See the [install and run](#install-and-run) instructions for more details about setting up the entire project.
+
+## Frontend Documentation
+
 For more information about the ATT&CK Workbench, please see the [docs](/docs/README.md) folder. The contents of the docs folder is also available in the in-app help page.
 - [usage](/docs/usage.md): documentation about how to use the ATT&CK Workbench application and its full capabilities.
 - [changelog](/docs/changelog.md): records of updates to this application.
 - [collections](/docs/collections.md): documentation about the collection and collection index data type.
 - [integrations](/docs/integrations.md): instructions for integrating other tools with the ATT&CK Workbench.
-
-This repository contains an Angular-based web application providing the user interface for the ATT&CK Workbench application, as well as the main documentation regarding its use. The ATT&CK Workbench application requires additional components for full operation. See the [install and run](#install-and-run) instructions for more details about setting up the entire project.
 
 ## Collections and Collection Indexes
 
