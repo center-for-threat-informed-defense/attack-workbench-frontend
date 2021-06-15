@@ -6,7 +6,7 @@ Organizations or individuals within the ATT&CK community can initialize an insta
 
 We developed the Workbench with the ATT&CK user community in mind. If MITRE ATT&CK is at the core our organization’s security operations, you actively track threats against ATT&CK, align your defenses to ATT&CK, or plan your security investments based on ATT&CK, the Workbench is for you. The ATT&CK Workbench enables a number of important use cases within the ATT&CK community:
 - **Cyber Threat Intelligence**: Take notes on techniques, groups, and other objects to collaborate within a threat intelligence team. Update your knowledge base with new mappings as soon as new threat reports are released.
-- **Defensive Planning**: Stay up to date with the evolving threat landscape by subscribing your local knowledge base to ATT&CK updates. Fill in gaps in open-source reporting by creating new groups and software.
+- **Defensive Planning**: Stay up to date with the evolving threat landscape by downloading new releases of ATT&CK automatically. Fill in gaps in open-source reporting by creating new groups and software.
 - **Red Teaming**: Track and manage coverage of Red Team engagements the same way you track your ATT&CK coverage.
 - **Collaboration with ATT&CK and the community**: Share your custom datasets with the ATT&CK community and download datasets created by others.
 
