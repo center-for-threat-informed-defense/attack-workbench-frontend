@@ -26,10 +26,7 @@ For more information about the ATT&CK Workbench, please see the [docs](/docs/REA
 - [collections](/docs/collections.md): documentation about the collection and collection index data type.
 - [integrations](/docs/integrations.md): instructions for integrating other tools with the ATT&CK Workbench.
 
-This repository contains the front-end user interface for the ATT&CK Workbench application, as well as the main documentation regarding its use. The full ATT&CK Workbench application requires additional components to operate fully. See the [install and run](#install-and-run) instructions for more details.
-
-## Requirements
-- [Node.js](https://nodejs.org/) version `14.16.1` or greater
+This repository contains an Angular-based web application providing the user interface for the ATT&CK Workbench application, as well as the main documentation regarding its use. The ATT&CK Workbench application requires additional components for full operation. See the [install and run](#install-and-run) instructions for more details about setting up the entire project.
 
 ## Install and run
 
@@ -46,12 +43,16 @@ The ATT&CK Workbench application is made up of several repositories. For the ful
   
   The collection manager is **not** required to be installed to use the ATT&CK Workbench, but is highly recommended. If you opt not to install the collection-manager you will not be able to import or export data from your local knowledge base. If the collection manager is not installed, set `integrations.collection_manager.enabled` to `false` in the front-end environment. See [modifying the environment](#modifying-the-environment) for more details.
 
-The manual install instructions in each repository allow each component to be deployed on separate machines or with customized settings. 
+The manual install instructions in each repository describe how each component to be deployed to a separate machine or with customized settings. 
 
 ### Installing using Docker
 Please refer to our [Docker install instructions](docs/docker-compose.md) for information on installing and deploying the the full application using Docker. The docker setup is the easiest way to deploy the application.
 
 ### Manual Installation
+
+#### Requirements
+
+- [Node.js](https://nodejs.org/) version `14.16.1` or greater
 
 #### Installing dependencies
 This step is necessary for cases where the app is deployed locally through `ng serve` or `ng build`. It can be skipped for installs using docker (above).
