@@ -1,34 +1,35 @@
 # ATT&CK Workbench Usage Documentation
 
-The ATT&CK workbench is a tool intended to allow the ATT&CK community to *explore*, *create*, *annotate* and *share* extensions of ATT&CK. 
+The ATT&CK Workbench is a tool intended to allow the ATT&CK community to *explore*, *create*, *annotate* and *share* extensions of ATT&CK. 
 
 ## Exploring ATT&CK
 
-When first instantiated, the ATT&CK Workbench will not include any data. You can use the application to build a custom dataset, or import data from a data provider such as ATT&CK using the collections browser.
+When first instantiated, the ATT&CK Workbench will not include any data. You can use the application to build a custom dataset, or import data from a data provider such as MITRE using the collections browser.
 
 ### Managing Collections
 
 Accessing and sharing ATT&CK knowledge is realized through _collections_. A collection is a set of related ATT&CK objects; collections may be used represent specific releases of a dataset such as "Enterprise ATT&CK v7.2", or any other set of objects one may want to share with someone else. 
 
-Collections can be created by anyone, not just ATT&CK. The ATT&CK Workbench application includes workflows for both importing and creating new collections. Collections can be shared as STIX bundles, uploaded to the internet, or sent through email. <!-- or hosted on a [TAXII server](https://oasis-open.github.io/cti-documentation/taxii/intro.html). -->
+Collections can be created by anyone, not just MITRE. The ATT&CK Workbench application includes workflows for both importing and creating new collections. Collections can be shared as STIX bundles, uploaded to the internet, or sent through email. <!-- or hosted on a [TAXII server](https://oasis-open.github.io/cti-documentation/taxii/intro.html). -->
 
 Data providers may opt to describe their published collections through a _collection index_ which provides a listing of collections. The ATT&CK Workbench Editor can be configured to subscribe to such indexes to automatically receive updates when they are available, or to allow the user to easily browse the collections listed by an index.
 
 Objects may exist in multiple collections simultaneously, and objects can exist within the editor outside of the context of a collection. Collections exist at the _version_ level of an object: a specific version of the object is tagged with the collection instead of the object as a whole. If a user imports a collection, and then edits an object from that collection (thereby creating a new version of the object), the new version will not exist within that collection.
 
-You can read more about the technical specifications for a collection, such as the STIX representation of a collection object, in our [collections](/docs/collections.md) document.
+You can read more about the technical specifications for a collection, such as the STIX representation of a collection object, in our [collections](/docs/collections.md) document. MITRE's ATT&CK collections and collection index can be found on our [attack-stix-data GitHub repository](https://github.com/mitre-attack/attack-stix-data).
 
 #### Adding a collection index
 
-Collection indexes can be added from the collections page. To add a collection index, specify the URL at which the index is found. The application will then provide a preview of the index for you to review before you save. You can also choose from the provided "recommended collection indexes" to quickly connect your workbench instance to a data provider without having to find the URL yourself.
+Collection indexes can be added from the collections page. To add a collection index, specify the URL at which the index is found. The application will then provide a preview of the index for you to review before you save. You can also choose from the provided "recommended collection indexes" to quickly connect your Workbench instance to a data provider without having to find the URL yourself. The ATT&CK Workbench is pre-configured to recommend the MITRE ATT&CK collection index in the "add a collection index" interface.
 
-Once saved, the workbench will periodically check for updates to the collection index at the original URL it was loaded from. Thus can data providers update subscribers by updating their collection index with new collections.
+Once saved, the Workbench will periodically check for updates to the collection index at the original URL it was loaded from. Thus can data providers update subscribers by updating their collection index with new collections.
+
 
 #### Subscribing to a Collection
 
 Once a collection index has been added, you can subscribe to a collection listed within the index. Once subscribed, two things will happen:
 1. The most recent version of that collection will be downloaded automatically (this may take a few moments depending on the size of the collection)
-2. When the collection index updates, any new versions of subscribed collections will be downloaded, keeping you stay up-to-date with releases of subscribed collections as the data provider updates their index.
+2. When the collection index updates, any new versions of subscribed collections will be downloaded, helping you stay up-to-date with releases of subscribed collections as the data provider updates their index.
 
 Older versions of subscribed collections will not be automatically downloaded. If you want to access older versions (to peruse object history for instance) you can manually download them by clicking the "download" button next to the version. This will bring you into the "import collection" workflow described below.
 
@@ -53,12 +54,12 @@ While previewing an import the list of contents will be organized by object type
 - *Minor changes*: Objects with minor updates such as typo corrections.
 - *Revocations*: Objects that have been replaced by other objects.
 - *Deprecations*: Objects that have been removed from the dataset.
-- *Unchanged*: Objects that already exist in the workbench and have no changes.  
+- *Unchanged*: Objects that already exist in the Workbench and have no changes.  
 - *Out of date*: Objects which are outdated by more recent edits in your knowledge base. These objects already exist in your workbench, and the version in the collection is older. The version imported in the collection will appear in the version history of the object.
 
 The following error change types may appear when there are conflicts importing a collection:
 - *Import conflicts*: Object supersedes local edits, and the user should merge their changes with the new object content.
-- *Other Errors*: The workbench encountered errors when determining whether the following objects exist within the workbench already.
+- *Other Errors*: The Workbench encountered errors when determining whether the following objects exist within the Workbench already.
 
 After importing a collection, users can review the results of the import from the collection page. The collection review UI reflects the changes that occurred at the time of the import.
 
@@ -106,9 +107,9 @@ Objects imported from collections can be modified, or new objects created. The p
 
 ### Attribution of edits
 
-The workbench will attribute edits to you when you either edit existing objects or create new objects. Edit attribution is shown next to created and modified dates and in the object history timeline. Attribution is represented by an automatically generated icon to easily distinguish different editing/creating organizations; hovering over the icon will display the full organization name. 
+The Workbench will attribute edits to you when you either edit existing objects or create new objects. Edit attribution is shown next to created and modified dates and in the object history timeline. Attribution is represented by an automatically generated icon to easily distinguish different editing/creating organizations; hovering over the icon will display the full organization name. 
 
-Edits you make in the knowledge base are attributed to your _organization identity_, which is unique to your workbench instance. The organization identity can be edited from the admin page accessible from the application homepage; when you first open the application you will be prompted to edit the organization identity to ensure the placeholder identity is not used. Changes to your organization identity will automatically update objects in the knowledge base, but attribution within exported collections will not be automatically affected. 
+Edits you make in the knowledge base are attributed to your _organization identity_, which is unique to your Workbench instance. The organization identity can be edited from the admin page accessible from the application homepage; when you first open the application you will be prompted to edit the organization identity to ensure the placeholder identity is not used. Changes to your organization identity will automatically update objects in the knowledge base, but attribution within exported collections will not be automatically affected. 
 
 ### Quality Control Workflows
 
@@ -343,7 +344,7 @@ Uses of notes include but are not limited to:
 - Recording potential knowledge (e.g "TODO: verify whether the mention in threat report _X_ is actually this technique")
 - Enabling collaboration in development workflows (e.g "Marcie, make sure to update the platforms once you finish determining the technique scope")
 
-Annotations in the ATT&CK Workbench are implemented through _notes_. Typically notes are not published outside of a workbench instance, and are intended to be local knowledge. Note are associated directly with objects within the knowledge base, and cannot exist without an attached object.
+Annotations in the ATT&CK Workbench are implemented through _notes_. Typically notes are not published outside of a Workbench instance, and are intended to be local knowledge. Note are associated directly with objects within the knowledge base, and cannot exist without an attached object.
 
 ### Creating Notes
 
