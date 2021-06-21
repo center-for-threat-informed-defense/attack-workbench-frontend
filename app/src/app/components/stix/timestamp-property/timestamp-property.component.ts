@@ -31,7 +31,8 @@ export interface TimestampPropertyConfig {
      * Note: if mode is diff, pass an array of two objects to diff
      */
     object: StixObject | [StixObject, StixObject];
-    /* the field of the object(s) to visualize as a timestamp. Typically "created" or "modified"
+    /* the field of the object(s) to visualize as a timestamp. Typically "created" or "modified". 
+     * Note: will not work with fields that are actually get functions!
      */
     field: string;
     /* field to display attribution information from. If omitted, does not display attribution.

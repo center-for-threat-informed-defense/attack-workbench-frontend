@@ -5,7 +5,7 @@ export const environment = {
     recommended_indexes: [ //recommended collection indexes shown to user if they have no indexes loaded
         {
             "name": "MITRE ATT&CK", //index name
-            "url": "http://localhost:8082/collection-index.json" //index url
+            "url": "https://raw.githubusercontent.com/mitre-attack/attack-stix-data/master/index.json" //index url
         }
     ],
     integrations: {

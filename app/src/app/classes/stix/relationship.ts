@@ -1,4 +1,4 @@
-import { Observable } from "rxjs";
+import { Observable, of } from "rxjs";
 import { map, switchMap } from "rxjs/operators";
 import { RestApiConnectorService } from "src/app/services/connectors/rest-api/rest-api-connector.service";
 import { ValidationData } from "../serializable";
@@ -7,20 +7,20 @@ import { logger } from "../../util/logger";
 
 export class Relationship extends StixObject {
 
-    public source_ref: string;
+    public source_ref: string = "";
     public get source_name(): string { return this.source_object? this.source_object.stix.name : "[unknown object]"; }
-    public source_ID: string;
+    public source_ID: string = "";
     public source_object: any;
     
 
-    public target_ref: string;
+    public target_ref: string = "";
     public get target_name(): string { return this.target_object? this.target_object.stix.name : "[unknown object]"; }
-    public target_ID: string;
+    public target_ID: string = "";
     public target_object: any;
     
     public updating_refs: boolean = false; //becomes true while source and target refs are being asynchronously updated.
     
-    public relationship_type: string;
+    public relationship_type: string = "";
 
     protected get attackIDValidator() { return null; } // relationships have no ATT&CK ID
     /**
@@ -54,21 +54,6 @@ export class Relationship extends StixObject {
         super(sdo, "relationship");
         if (sdo) {
             if ("stix" in sdo) {
-                let sdoStix = sdo.stix;
-
-                // Initialize read only values in constructor
-                if ("source_ref" in sdoStix) {
-                    if (typeof(sdoStix.source_ref) === "string") this.source_ref = sdoStix.source_ref;
-                    else logger.error("TypeError: source_ref field is not a string:", sdoStix.source_ref, "(",typeof(sdoStix.source_ref),")")
-                }
-                if ("target_ref" in sdoStix) {
-                    if (typeof(sdoStix.target_ref) === "string") this.target_ref = sdoStix.target_ref;
-                    else logger.error("TypeError: target_ref field is not a string:", sdoStix.target_ref, "(",typeof(sdoStix.target_ref),")")
-                }
-                if ("relationship_type" in sdoStix) {
-                    if (typeof(sdoStix.relationship_type) === "string") this.relationship_type = sdoStix.relationship_type;
-                    else logger.error("TypeError: relationship_type field is not a string:", sdoStix.relationship_type, "(",typeof(sdoStix.relationship_type),")")
-                }
                 this.deserialize(sdo);
             }
         }
@@ -96,6 +81,21 @@ export class Relationship extends StixObject {
     }
 
     /**
+     * Set the source object
+     * @param {StixObject} new_source_object the object to set
+     * @returns {Observable<Relationship>} of this object after the data has been updated
+     */
+    public set_source_object(new_source_object: StixObject): Observable<Relationship>  {
+        this.updating_refs = true;
+        this.source_ref = new_source_object.stixID;
+        let serialized = this.serialize();
+        serialized.source_object = new_source_object.serialize();
+        this.deserialize(serialized);
+        this.updating_refs = false;
+        return of(this);
+    }
+
+    /**
      * set the target ref, and set the target_object and target_id to the new values
      * @param {string} new_target_ref the new target ref
      * @param {RestApiConnectorService} restAPIService: the REST API connector through which the target can be fetched
@@ -115,6 +115,21 @@ export class Relationship extends StixObject {
             })
         )
     }
+
+        /**
+     * Set the target object
+     * @param {StixObject} new_target_object the object to set
+     * @returns {Observable<Relationship>} of this object after the data has been updated
+     */
+         public set_target_object(new_target_object: StixObject): Observable<Relationship>  {
+            this.updating_refs = true;
+            this.target_ref = new_target_object.stixID;
+            let serialized = this.serialize();
+            serialized.target_object = new_target_object.serialize();
+            this.deserialize(serialized);
+            this.updating_refs = false;
+            return of(this);
+        }
 
     /**
      * Transform the current object into a raw object for sending to the back-end, stripping any unnecessary fields
@@ -137,6 +152,19 @@ export class Relationship extends StixObject {
      * @param {*} raw the raw object to parse
      */
     public deserialize(raw: any) {
+        let sdoStix = raw.stix;
+        if ("source_ref" in sdoStix) {
+            if (typeof(sdoStix.source_ref) === "string") this.source_ref = sdoStix.source_ref;
+            else logger.error("TypeError: source_ref field is not a string:", sdoStix.source_ref, "(",typeof(sdoStix.source_ref),")")
+        }
+        if ("target_ref" in sdoStix) {
+            if (typeof(sdoStix.target_ref) === "string") this.target_ref = sdoStix.target_ref;
+            else logger.error("TypeError: target_ref field is not a string:", sdoStix.target_ref, "(",typeof(sdoStix.target_ref),")")
+        }
+        if ("relationship_type" in sdoStix) {
+            if (typeof(sdoStix.relationship_type) === "string") this.relationship_type = sdoStix.relationship_type;
+            else logger.error("TypeError: relationship_type field is not a string:", sdoStix.relationship_type, "(",typeof(sdoStix.relationship_type),")")
+        }
         if ("source_object" in raw) {
             this.source_object = raw.source_object;
             // this.source_name = raw.source_object.stix.name;
@@ -216,15 +244,14 @@ export class Relationship extends StixObject {
             }),
             //check for parallel relationships
             switchMap(result => {
-                // TODO replace with getAllRelationships once the API is fixed
-                return restAPIService.getAllObjects().pipe(
+                // find all objects connected to the source or target ref
+                return restAPIService.getRelatedTo({sourceRef: this.source_ref, targetRef: this.target_ref}).pipe( 
                     map(objects => {
-                        let relationships = objects as any[];
+                        let relationships = objects.data as Relationship[];
                         if (relationships.find(relationship => { //parallel relationship
-                            return relationship.stix.type == "relationship" &&
-                                   relationship.stix.id != this.stixID && 
-                                   relationship.stix.source_ref == this.source_ref &&
-                                   relationship.stix.target_ref == this.target_ref
+                            return relationship.stixID != this.stixID &&
+                                   relationship.source_ref == this.source_ref &&
+                                   relationship.target_ref == this.target_ref
                         })) {
                             result.errors.push({
                                 "field": "source_ref",
@@ -239,23 +266,25 @@ export class Relationship extends StixObject {
                                 "message": "relationship is unique"
                             })
                         }
-                        // ensure that sub-techniques can't have multiple parent techniques
-                        if (this.relationship_type == "subtechnique-of" && relationships.find(relationship => {
-                            return relationship.stix.type == "relationship" && //relationship
-                                   relationship.stix.id != this.stixID &&  //not the same as the one being saved
-                                   relationship.stix.relationship_type == "subtechnique-of" && // involves sub-techniques
-                                   relationship.stix.source_ref == this.source_ref // involves the same sub-technique as the one for this relationship
-                        })) {
-                            result.errors.push({
-                                "field": "source_ref",
-                                "result": "error",
-                                "message": "sub-technique already has a parent"
-                            })
-                        }
-
                         return result;
                     })
                 )
+            }),
+            switchMap(result => { // check for existing sub-technique-of for targeted technique
+                if (this.relationship_type == "subtechnique-of") {
+                    return restAPIService.getRelatedTo({sourceRef: this.source_ref, relationshipType: "subtechnique-of"}).pipe(
+                        map(objects => {
+                            if (objects.data.length > 0) { //already has a parent
+                                result.errors.push({
+                                    "field": "source_ref",
+                                    "result": "error",
+                                    "message": "sub-technique already has a parent"
+                                })
+                            }
+                            return result;
+                        })
+                    )
+                } else { return of(result); }
             })
         );
     }

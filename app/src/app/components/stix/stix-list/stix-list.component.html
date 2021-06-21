@@ -62,12 +62,12 @@
                     </th>
                     <td mat-cell *matCellDef="let element" [ngClass]="config.select">
                         <mat-checkbox *ngIf="config.select && config.select == 'many'" color="primary" 
-                                      (click)="$event.stopPropagation()"
+                                      (click)="onSelect.emit(element); $event.stopPropagation()"
                                       (change)="$event ? selection.toggle(element.stixID) : null"
                                       [checked]="selection.isSelected(element.stixID)">
                         </mat-checkbox>
                         <mat-radio-button *ngIf="config.select && config.select == 'one'" color="primary" 
-                                        (click)="$event.stopPropagation()"
+                                        (click)="onSelect.emit(element); $event.stopPropagation()"
                                         (change)="$event ? selection.toggle(element.stixID) : null"
                                         [checked]="selection.isSelected(element.stixID)">
                         </mat-radio-button>
