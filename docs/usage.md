@@ -4,23 +4,23 @@ The ATT&CK Workbench is a tool intended to allow the ATT&CK community to *explor
 
 ## Exploring ATT&CK
 
-When first instantiated, the ATT&CK Workbench will not include any data. You can use the application to build a custom dataset, or import data from a data provider such as ATT&CK using the collections browser.
+When first instantiated, the ATT&CK Workbench will not include any data. You can use the application to build a custom dataset, or import data from a data provider such as MITRE using the collections browser.
 
 ### Managing Collections
 
 Accessing and sharing ATT&CK knowledge is realized through _collections_. A collection is a set of related ATT&CK objects; collections may be used represent specific releases of a dataset such as "Enterprise ATT&CK v7.2", or any other set of objects one may want to share with someone else. 
 
-Collections can be created by anyone, not just ATT&CK. The ATT&CK Workbench application includes workflows for both importing and creating new collections. Collections can be shared as STIX bundles, uploaded to the internet, or sent through email. <!-- or hosted on a [TAXII server](https://oasis-open.github.io/cti-documentation/taxii/intro.html). -->
+Collections can be created by anyone, not just MITRE. The ATT&CK Workbench application includes workflows for both importing and creating new collections. Collections can be shared as STIX bundles, uploaded to the internet, or sent through email. <!-- or hosted on a [TAXII server](https://oasis-open.github.io/cti-documentation/taxii/intro.html). -->
 
 Data providers may opt to describe their published collections through a _collection index_ which provides a listing of collections. The ATT&CK Workbench Editor can be configured to subscribe to such indexes to automatically receive updates when they are available, or to allow the user to easily browse the collections listed by an index.
 
 Objects may exist in multiple collections simultaneously, and objects can exist within the editor outside of the context of a collection. Collections exist at the _version_ level of an object: a specific version of the object is tagged with the collection instead of the object as a whole. If a user imports a collection, and then edits an object from that collection (thereby creating a new version of the object), the new version will not exist within that collection.
 
-You can read more about the technical specifications for a collection, such as the STIX representation of a collection object, in our [collections](/docs/collections.md) document. ATT&CK collections and the ATT&CK collection index can be found on our [attack-stix-data GitHub repository](https://github.com/mitre-attack/attack-stix-data).
+You can read more about the technical specifications for a collection, such as the STIX representation of a collection object, in our [collections](/docs/collections.md) document. MITRE's ATT&CK collections and collection index can be found on our [attack-stix-data GitHub repository](https://github.com/mitre-attack/attack-stix-data).
 
 #### Adding a collection index
 
-Collection indexes can be added from the collections page. To add a collection index, specify the URL at which the index is found. The application will then provide a preview of the index for you to review before you save. You can also choose from the provided "recommended collection indexes" to quickly connect your Workbench instance to a data provider without having to find the URL yourself. The ATT&CK Workbench is pre-configured to recommend the ATT&CK collection index in the "add a collection index" interface.
+Collection indexes can be added from the collections page. To add a collection index, specify the URL at which the index is found. The application will then provide a preview of the index for you to review before you save. You can also choose from the provided "recommended collection indexes" to quickly connect your Workbench instance to a data provider without having to find the URL yourself. The ATT&CK Workbench is pre-configured to recommend the MITRE ATT&CK collection index in the "add a collection index" interface.
 
 Once saved, the Workbench will periodically check for updates to the collection index at the original URL it was loaded from. Thus can data providers update subscribers by updating their collection index with new collections.
 
@@ -29,7 +29,7 @@ Once saved, the Workbench will periodically check for updates to the collection 
 
 Once a collection index has been added, you can subscribe to a collection listed within the index. Once subscribed, two things will happen:
 1. The most recent version of that collection will be downloaded automatically (this may take a few moments depending on the size of the collection)
-2. When the collection index updates, any new versions of subscribed collections will be downloaded, keeping you stay up-to-date with releases of subscribed collections as the data provider updates their index.
+2. When the collection index updates, any new versions of subscribed collections will be downloaded, helping you stay up-to-date with releases of subscribed collections as the data provider updates their index.
 
 Older versions of subscribed collections will not be automatically downloaded. If you want to access older versions (to peruse object history for instance) you can manually download them by clicking the "download" button next to the version. This will bring you into the "import collection" workflow described below.
 
