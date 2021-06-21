@@ -99,6 +99,15 @@ const routes: Routes = [
                         },
                         "component": HelpPageComponent,
                     },
+                    {
+                        "path": "contributing",
+                        "data": {
+                            "breadcrumb": "contributing",
+                            "markdown": "/assets/docs/contributing.md",
+                            "title": "Contributing"
+                        },
+                        "component": HelpPageComponent,
+                    },
                 ]
             },
         ]
