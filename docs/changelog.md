@@ -31,7 +31,7 @@
 <!--    each repo's package.json file's version marking.                -->
 
 # Changelog
-## Changes staged on develop
+## 21 June 2021
 ### ATT&CK Workbench version 1.0.0
 #### Improvements in 1.0.0
 - Performance improvements when adding, editing, and validating relationships.
