@@ -24,7 +24,7 @@ Typically collections are not modified after they are published. Subsequent rele
 Collections by design reference a specific version of each object they contain. Conceptually, the object as a whole is not part of the collection; the collection instead contains the object as it was recorded at a specific moment in time. Oftentimes sequential versions of a collection will include updated versions of the contained objects in addition to new objects. This can be used to track the evolution of a dataset over time.
 
 ### Collection Properties
-Collections are represented in STIX using the `x-mitre-collection` type, described below. This collection defining object should typically be provided alongside the contents of the collection within a STIX bundle or TAXII collection.
+Collections are represented in STIX using the `x-mitre-collection` type, described below. This collection object should typically be provided alongside the contents of the collection within a STIX bundle. Only one `x-mitre-collection` object should be included in a given STIX bundle. <!-- or TAXII collection.-->
 
 | Property Name | Data Type | Details |
 |:--------------|:----------|:--------|
@@ -96,6 +96,8 @@ Object version references are used to refer to a specific version of a STIX obje
     ]
 }
 ```
+
+_Note: the collection object above would typically be stored in a STIX bundle alongside the objects it references._
 
 ## Collection Indexes
 
