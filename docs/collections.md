@@ -1,20 +1,30 @@
 # Collections and Collection Indexes
 
-This document describes the format and usage of _collections_ and _collection indexes_, which are used for distribution of ATT&CK data from data providers to data consumers.
+This document describes the format and usage of [collections](#collections) and [collection indexes](#collection-indexes) which are used for distribution of ATT&CK data from **data providers** to **data consumers**.
+
+- **Data Provider**
+
+  MITRE ATT&CK and other users or organizations publishing or otherwise sharing ATT&CK data. This includes both open-source data and data distributed to a controlled list of data consumers. Generally encompasses users of the ATT&CK Workbench who publish collections containing data from their local knowledge base.
+
+- **Data Consumer**
+
+  A user or organization consuming the data from a data provider. Generally encompasses users of the ATT&CK Workbench who are pulling data into their knowledge base.
+
+ATT&CK collections and the ATT&CK collection index can be found on our [attack-stix-data GitHub repository](https://github.com/mitre-attack/attack-stix-data).
 
 ## Collections
 A _collection_ is a set of related ATT&CK objects; collections may be used represent specific releases of a dataset such as "Enterprise ATT&CK v7.2", or any other set of objects one may want to share with someone else. 
 
 Collections are meant to be shared. Collections can be shared as STIX bundles, uploaded to the internet, or sent through email. <!-- or hosted on a [TAXII server](https://oasis-open.github.io/cti-documentation/taxii/intro.html). -->
 
-Data providers may opt to describe their published collections through a _collection index_ (detailed below), a data structure designed to provide a machine-readable listing of collections. Collection indexes provide the means through which data consumers can _subscribe_ to updates from a data provider.
+Data providers may opt to describe their published collections through a [collection index](#collection-indexes), a data structure designed to provide a machine-readable listing of collections. Collection indexes provide the means through which data consumers can _subscribe_ to updates from a data provider.
 
 Typically collections are not modified after they are published. Subsequent releases of a dataset such as "Enterprise ATT&CK" would be represented by a new _version_ of the collection stored in a separate STIX bundle or TAXII collection; the continuity between releases is conveyed by the _collection index_ object detailed below. 
 
 Collections by design reference a specific version of each object they contain. Conceptually, the object as a whole is not part of the collection; the collection instead contains the object as it was recorded at a specific moment in time. Oftentimes sequential versions of a collection will include updated versions of the contained objects in addition to new objects. This can be used to track the evolution of a dataset over time.
 
 ### Collection Properties
-Collections are represented in STIX using the `x-mitre-collection` type, described below. This collection defining object should typically be provided alongside the contents of the collection within a STIX bundle or TAXII collection.
+Collections are represented in STIX using the `x-mitre-collection` type, described below. This collection object should typically be provided alongside the contents of the collection within a STIX bundle. Only one `x-mitre-collection` object should be included in a given STIX bundle. <!-- or TAXII collection.-->
 
 | Property Name | Data Type | Details |
 |:--------------|:----------|:--------|
@@ -86,6 +96,8 @@ Object version references are used to refer to a specific version of a STIX obje
     ]
 }
 ```
+
+_Note: the collection object above would typically be stored in a STIX bundle alongside the objects it references._
 
 ## Collection Indexes
 

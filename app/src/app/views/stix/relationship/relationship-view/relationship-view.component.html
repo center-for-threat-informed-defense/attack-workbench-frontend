@@ -45,10 +45,9 @@
                                     <mat-option *ngFor="let objType of relationship.valid_source_types" [value]="objType">{{objType}}</mat-option>
                                 </mat-select>
                             </mat-form-field>
-                            <app-stix-list *ngIf="refresh && source_type" #source_select [config]="{
+                            <app-stix-list *ngIf="refresh && source_type" #source_select  (onSelect)="setSourceObject($event)" [config]="{
                                 'type': source_type,
-                                'select': 'one',
-                                'selectionModel': selectionModel_source
+                                'select': 'one'
                             }"></app-stix-list>
                         </ng-template>
                     </mat-expansion-panel-header>
@@ -65,10 +64,9 @@
                                     <mat-option *ngFor="let objType of relationship.valid_target_types" [value]="objType">{{objType}}</mat-option>
                                 </mat-select>
                             </mat-form-field>
-                            <app-stix-list *ngIf="refresh && target_type" #target_select [config]="{
+                            <app-stix-list *ngIf="refresh && target_type" #target_select (onSelect)="setTargetObject($event)" [config]="{
                                 'type': target_type,
-                                'select': 'one',
-                                'selectionModel': selectionModel_target
+                                'select': 'one'
                             }"></app-stix-list>
                         </ng-template>
                     </mat-expansion-panel-header>
