@@ -4,11 +4,11 @@ This document describes the format and usage of [collections](#collections) and 
 
 - **Data Provider**
 
-  MITRE ATT&CK and other users or organizations publishing or otherwise sharing ATT&CK data. This includes both open-source data and data distributed to a controlled list of data consumers. Users of the ATT&CK Workbench who are publishing collections containing data from their local knowledge base.
+  MITRE ATT&CK and other users or organizations publishing or otherwise sharing ATT&CK data. This includes both open-source data and data distributed to a controlled list of data consumers. Generally encompasses users of the ATT&CK Workbench who publish collections containing data from their local knowledge base.
 
 - **Data Consumer**
 
-  A user or organization consuming the data from a data provider. Users of the ATT&CK Workbench who are pulling data into their knowledge base.
+  A user or organization consuming the data from a data provider. Generally encompasses users of the ATT&CK Workbench who are pulling data into their knowledge base.
 
 ATT&CK collections and the ATT&CK collection index can be found on our [attack-stix-data GitHub repository](https://github.com/mitre-attack/attack-stix-data).
 
