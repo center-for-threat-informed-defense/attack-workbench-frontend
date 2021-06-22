@@ -1,0 +1,7 @@
+version: "3.9"
+services:
+  collection-manager:
+    volumes:
+      - ${HOST_CERTS_PATH}:/usr/src/app/certs
+    environment:
+      - NODE_EXTRA_CA_CERTS=./certs/${CERTS_FILENAME}
