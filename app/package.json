@@ -1,7 +1,7 @@
 {
   "name": "attack-workbench-frontend",
-  "version": "1.0.0",
-  "description": "Application for creating and editing ATT&CK-like content.",
+  "version": "1.0.1",
+  "description": "An application allowing users to explore, create, annotate, and share extensions of the MITRE ATT&CK® knowledge base. This repository contains an Angular-based web application providing the user interface for the ATT&CK Workbench application.",
   "keywords": [
     "cti",
     "cyber-threat-intelligence",
@@ -26,7 +26,6 @@
     "lint": "ng lint",
     "e2e": "ng e2e"
   },
-  "private": true,
   "dependencies": {
     "@angular/animations": "~10.1.1",
     "@angular/cdk": "^10.2.4",
