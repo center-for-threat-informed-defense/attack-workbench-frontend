@@ -31,6 +31,14 @@
 <!--    each repo's package.json file's version marking.                -->
 
 # Changelog
+## 8 July 2021
+### ATT&CK Workbench version 1.0.1
+#### Improvements in 1.0.1
+- Added a system for configuring the Collection Manager with self-signed certs when using the docker setup. Documentation for this configuration will be improved in a subsequent release.
+
+#### Fixes in 1.0.1
+- Fixed an error encountered when using the `attack-objects` API with large datasets. This error was preventing users from loading the "create a collection" page when Enterprise ATT&CK collections were imported. See [rest-api#87](https://github.com/center-for-threat-informed-defense/attack-workbench-rest-api/issues/87).
+
 ## 21 June 2021
 ### ATT&CK Workbench version 1.0.0
 #### Improvements in 1.0.0
