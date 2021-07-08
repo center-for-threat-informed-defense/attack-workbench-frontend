@@ -1,7 +1,7 @@
 {
   "name": "attack-workbench-frontend",
-  "version": "1.0.0",
-  "description": "Application for creating and editing ATT&CK-like content.",
+  "version": "1.0.1",
+  "description": "An application allowing users to explore, create, annotate, and share extensions of the MITRE ATT&CK® knowledge base.",
   "keywords": [
     "cti",
     "cyber-threat-intelligence",
