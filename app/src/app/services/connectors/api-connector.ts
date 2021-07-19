@@ -17,6 +17,8 @@ export abstract class ApiConnector {
         else if ("message" in error) this.snack(error.message, "warn");
         // otherwise, show the status text
         else if ("statusText" in error) this.snack(error.statusText, "warn");
+        // otherwise show generic error
+        else this.snack("Unknown error, check javascript console for details", "warn");
     }
 
     /**
