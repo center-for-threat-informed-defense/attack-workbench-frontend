@@ -31,6 +31,6 @@ services:
 
   mongodb:
     container_name: attack-workbench-database
-    image: mongo
+    image: mongo:4.4.6
     ports:
       - "27017:27017"
