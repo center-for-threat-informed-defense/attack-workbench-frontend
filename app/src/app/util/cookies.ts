@@ -11,7 +11,7 @@ const setCookie = function(key: string, value: string, expirationDays: number) {
     let d = new Date();
     d.setTime(d.getTime() + (expirationDays*24*60*60*1000));
     let expires = "expires="+ d.toUTCString();
-    document.cookie = key + "=" + value + ";" + expires + ";path=/";
+    document.cookie = key + "=" + value + ";" + expires + ";path=/;SameSite=Strict";
 }
 
 /**
