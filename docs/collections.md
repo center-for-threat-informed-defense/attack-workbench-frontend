@@ -45,8 +45,8 @@ Object version references are used to refer to a specific version of a STIX obje
 
 | Property Name | Data Type | Details |
 |:--------------|:----------|:--------|
-| **object_ref** (required) | `identifier` | The **id** of referenced object. |
-| **object_modified** (required) | `timestamp` | The modified time of referenced object. It _MUST_ be an exact for the `modified` time of the STIX object being referenced. |
+| **object_ref** (required) | `identifier` | The **id** of the referenced object. |
+| **object_modified** (required) | `timestamp` | The modified time of the referenced object. It _MUST_ be an exact match for the `modified` time of the STIX object being referenced. |
 
 
 ### Collection Example

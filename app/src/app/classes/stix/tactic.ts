@@ -12,7 +12,7 @@ export class Tactic extends StixObject {
         format: "TA####"
     }}
 
-    public get shortname(): string { return this.name.replace(" ", "-").toLowerCase(); }
+    public get shortname(): string { return this.name.replace(/ /g, "-").toLowerCase(); }
 
     constructor(sdo?: any) {
         super(sdo, "x-mitre-tactic");
