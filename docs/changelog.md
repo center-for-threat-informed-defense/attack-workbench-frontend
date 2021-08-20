@@ -32,10 +32,12 @@
 
 # Changelog
 ## Changes staged on develop
-### ATT&CK Workbench version 1.1.0
-#### Fixes in 1.1.0
+### ATT&CK Workbench version 1.0.2
+#### Fixes in 1.0.2
 - Error snackbars will now show appropriate messages instead of `[object ProgressEvent]` when communication with the REST API is interrupted or cannot be established. See [frontend#227](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/227).
-
+- Fixed a bug where tactic shortnames were computed incorrectly for tactics with more than one space in the name (E.g `"Command and Control"`). See [frontend#239](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/239).
+    - If you have edited a technique under a tactic with more than one space in the name, remove and re-add the tactic under the technique edit interface to ensure that the tactic reference is formatted properly.
+    - If you have created a tactic with more than one space in the name, save a new version of the tactic and the proper shortname should be saved. You do not need to make any edits when saving the tactic page for the shortname to be fixed.
 
 ## 8 July 2021
 ### ATT&CK Workbench version 1.0.1
