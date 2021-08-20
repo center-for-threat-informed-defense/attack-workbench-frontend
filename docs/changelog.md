@@ -31,7 +31,7 @@
 <!--    each repo's package.json file's version marking.                -->
 
 # Changelog
-## Changes staged on develop
+## 20 August 2021
 ### ATT&CK Workbench version 1.0.2
 #### Fixes in 1.0.2
 - Error snackbars will now show appropriate messages instead of `[object ProgressEvent]` when communication with the REST API is interrupted or cannot be established. See [frontend#227](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/227).
