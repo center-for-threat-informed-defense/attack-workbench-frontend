@@ -1,6 +1,32 @@
 <div class="list-page">
     <div class="list-page-header">
-        <h1>software</h1>
+        <h1 class="with-help-icon">
+            software <mat-icon [popover]="PopoverTag" class="help-icon" aria-label="help">help_outline</mat-icon>
+        </h1>
+
+        <popover-content #PopoverTag 
+                popoverPlacement="bottom"
+                [animation]="true" 
+                [closeOnClickOutside]="true"
+                 >
+            <div class="popover-description">
+                <p>
+                    Software is a generic term for custom or commercial code, operating system utilities, open-source software, or other tools used to conduct behavior modeled in ATT&CK. Some instances of software have multiple names associated with the same instance due to various organizations tracking the same set of software by different names. The team makes a best effort to track overlaps between names based on publicly reported associations, which are designated as “Associated Software” on each page (also known as "Aliases").
+                    <br><br>
+                    Software support the standard set of fields as well as the "Associated Software" field. Each associated software is tracked using a name and description. The alias description is typically used to hold a set of citations, though plain-text can also be entered alongside citations if additional context is necessary. Alias names cannot be changed after they are added, but the description can be changed by clicking on the entry in the associated groups list.
+                    <br><br>
+                    Types of Software:
+                </p>
+                <ul>
+                    <li>
+                        malware: commercial, custom closed source, or open source software intended to be used for malicious purposes by adversaries
+                    </li> 
+                    <li>
+                        tool: commercial, open-source, built-in, or publicly available software that could be used by a defender, pen tester, red teamer, or an adversary
+                    </li>
+                </ul>
+            </div>
+        </popover-content>
         <div class="button-group">
             <button mat-mini-fab class="extended-fab-button" color="primary" [routerLink]="['/software/new']" [queryParams]="{editing: true}">
                 <mat-icon>create</mat-icon> <span class="text-label">create a software</span>
