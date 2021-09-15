@@ -321,8 +321,8 @@ export abstract class StixObject extends Serializable {
                                 })
                             }
                         }
-                        // check ATT&CK ID
-                        if (this.hasOwnProperty("attackID")) {
+                        // check ATT&CK ID and ignore collections
+                        if (this.attackType != "collection" && this.hasOwnProperty("attackID")) {
                             if (this.attackID == "") {
                                 result.warnings.push({
                                     "result": "warning",
