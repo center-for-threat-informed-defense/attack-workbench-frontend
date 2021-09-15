@@ -2,6 +2,8 @@
 
 The ATT&CK Workbench is designed to integrate with a variety of tools. This page provides documentation on how to set up such integrations.
 
+It is a requirement for objects that support ATT&CK IDs to have one assigned. Integrations may not work as intended if ATT&CK IDs are not present from objects that support them such as techniques, tactics, and mitigations.
+
 ## ATT&CK Navigator
 
 The [ATT&CK Navigator](https://github.com/mitre-attack/attack-navigator) can be configured to display the contents of your local knowledge base. 
