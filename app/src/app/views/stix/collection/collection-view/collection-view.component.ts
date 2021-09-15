@@ -20,7 +20,6 @@ import { StixViewPage } from '../../stix-view-page';
 import { environment } from "../../../../../environments/environment";
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { logger } from "../../../../util/logger";
-import { L } from '@angular/cdk/keycodes';
 
 type changeCategory = "additions" | "changes" | "minor_changes" | "revocations" | "deprecations";
 
