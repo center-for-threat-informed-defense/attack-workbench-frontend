@@ -35,7 +35,8 @@ export class ListEditComponent implements OnInit, AfterContentChecked {
         "tactic_type": "x_mitre_tactic_type",
         "impact_type": "x_mitre_impact_type",
         "effective_permissions": "x_mitre_effective_permissions",
-        "permissions_required": "x_mitre_permissions_required"
+        "permissions_required": "x_mitre_permissions_required",
+        "collection_layers": "x_mitre_collection_layers"
     }
     public domains = [
         "enterprise-attack",
@@ -60,7 +61,8 @@ export class ListEditComponent implements OnInit, AfterContentChecked {
          || this.config.field == 'permissions_required' 
          || this.config.field == 'effective_permissions' 
          || this.config.field == 'impact_type'
-         || this.config.field == 'domains') {
+         || this.config.field == 'domains'
+         || this.config.field == 'collection_layers') {
             if (!this.dataLoaded) {
                 let data$ = this.restAPIConnectorService.getAllAllowedValues();
                 this.sub = data$.subscribe({
