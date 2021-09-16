@@ -11,6 +11,7 @@
             <app-mitigation-view *ngIf="objects[0].attackType == 'mitigation'" [config]="buildConfig()"></app-mitigation-view>
             <app-technique-view *ngIf="objects[0].attackType == 'technique'"  [config]="buildConfig()"></app-technique-view>
             <app-tactic-view *ngIf="objects[0].attackType == 'tactic'" [config]="buildConfig()"></app-tactic-view>
+            <app-data-source-view *ngIf="objects[0].attackType == 'data-source'" [config]="buildConfig()"></app-data-source-view>
             <!-- display import review if collection was imported -->
             <app-collection-import-review *ngIf="objects[0].attackType == 'collection' && objects[0].hasOwnProperty('imported')" [config]="buildConfig()"></app-collection-import-review>
             <!-- otherwise show view/edit interface -->

@@ -153,6 +153,8 @@ import { ObjectStatusComponent } from './components/object-status/object-status.
 import { IconViewComponent } from './components/stix/icon-view/icon-view.component';
 import { IdentityPropertyComponent } from './components/stix/identity-property/identity-property.component';
 import { NgxJdenticonModule, JDENTICON_CONFIG } from 'ngx-jdenticon';
+import { DataSourceViewComponent } from './views/stix/data-source/data-source-view/data-source-view.component';
+import { DataSourceListComponent } from './views/stix/data-source/data-source-list/data-source-list.component';
 
 
 @NgModule({
@@ -249,7 +251,9 @@ import { NgxJdenticonModule, JDENTICON_CONFIG } from 'ngx-jdenticon';
 
     NotesEditorComponent,
     ObjectStatusComponent,
-    IdentityPropertyComponent
+    IdentityPropertyComponent,
+    DataSourceViewComponent,
+    DataSourceListComponent
   ],
   imports: [
     BreadcrumbModule,
