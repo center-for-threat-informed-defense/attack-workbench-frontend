@@ -13,6 +13,7 @@ import { NgModule } from '@angular/core';
 import { environment } from "../environments/environment"
 import { CollectionImportComponent } from "./views/stix/collection/collection-import/collection-import-workflow/collection-import.component";
 import { CollectionIndexImportComponent } from "./views/stix/collection/collection-index/collection-index-import/collection-index-import.component";
+import { DataSourceListComponent } from "./views/stix/data-source/data-source-list/data-source-list.component";
 
 const stixRoutes: Routes = [{
     path: 'matrix',
@@ -294,7 +295,54 @@ const stixRoutes: Routes = [{
     }
     ]
   },
-  
+  {
+    path: 'data-source',
+    data: {
+      breadcrumb: 'data sources'
+    },
+    children: [{
+        path: '',
+        data: {
+          breadcrumb: 'list',
+          title: "data sources"
+        },
+        component: DataSourceListComponent
+      },
+      {
+        path: ':id',
+        data: {
+          breadcrumb: 'loading...'
+        },
+        children: [{
+            path: '',
+            data: {
+              breadcrumb: 'view',
+              editable: true,
+              title: "view data source"
+            },
+            component: StixPageComponent
+          }
+        ]
+      },
+      {
+        path: ":new",
+        data: {
+            breadcrumb: "new data source"
+        },
+        children: [{
+          path: '',
+          data: {
+            breadcrumb: 'view',
+            editable: true,
+            title: "new data source"
+          },
+          component: StixPageComponent
+        }
+      ]
+    }
+    ]
+  },
+
 ]
 
 if (environment.integrations.collection_manager.enabled) {
