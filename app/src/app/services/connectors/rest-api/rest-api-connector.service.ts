@@ -20,9 +20,11 @@ import { Technique } from 'src/app/classes/stix/technique';
 import { environment } from "../../../../environments/environment";
 import { ApiConnector } from '../api-connector';
 import { logger } from "../../../util/logger";
+import { DataSource } from 'src/app/classes/stix/data-source';
+import { DataComponent } from 'src/app/classes/stix/data-component';
 
 //attack types
-type AttackType = "collection" | "group" | "matrix" | "mitigation" | "software" | "tactic" | "technique" | "relationship" | "note" | "identity" | "marking-definition";
+type AttackType = "collection" | "group" | "matrix" | "mitigation" | "software" | "tactic" | "technique" | "relationship" | "note" | "identity" | "marking-definition" | "data-source" | "data-component";
 // pluralize AttackType
 const attackTypeToPlural = {
     "technique": "techniques",
@@ -35,7 +37,9 @@ const attackTypeToPlural = {
     "relationship": "relationships",
     "note": "notes",
     "identity": "identities",
-    "marking-definition": "marking-definitions"
+    "marking-definition": "marking-definitions",
+    "data-source": "data-sources",
+    "data-component": "data-components"
 }
 // transform AttackType to the relevant class
 const attackTypeToClass = {
@@ -49,7 +53,9 @@ const attackTypeToClass = {
     "relationship": Relationship,
     "note": Note,
     "identity": Identity,
-    "marking-definition": MarkingDefinition
+    "marking-definition": MarkingDefinition,
+    "data-source": DataSource,
+    "data-component": DataComponent
 }
 
 // transform AttackType to the relevant class
@@ -64,7 +70,9 @@ const stixTypeToClass = {
     "x-mitre-collection": Collection,
     "relationship": Relationship,
     "identity": Identity,
-    "marking-definition": MarkingDefinition
+    "marking-definition": MarkingDefinition,
+    "x-mitre-data-source": DataSource,
+    "x-mitre-data-component": DataComponent
 }
 
 export interface Paginated<T> {
@@ -228,6 +236,17 @@ export class RestApiConnectorService extends ApiConnector {
      * @returns {Observable<Mitigation[]>} observable of retrieved objects
      */
     public get getAllMitigations() { return this.getStixObjectsFactory<Mitigation>("mitigation"); }
+    /**
+     * Get all data sources
+     * @param {number} [limit] the number of data sources to retrieve
+     * @param {number} [offset] the number of data sources to skip
+     * @param {string} [state] if specified, only get objects with this state
+     * @param {boolean} [revoked] if true, get revoked objects
+     * @param {boolean} [deprecated] if true, get deprecated objects
+     * @param {string[]} [excludeIDs] if specified, excludes these STIX IDs from the result
+     * @returns {Observable<DataSource[]>} observable of retrieved objects
+     */
+    public get getAllDataSources() { return this.getStixObjectsFactory<DataSource>("data-source"); }
     /**
      * Get all matrices
      * @param {number} [limit] the number of matrices to retrieve
@@ -453,6 +472,14 @@ export class RestApiConnectorService extends ApiConnector {
      */
     public get getMitigation() { return this.getStixObjectFactory<Mitigation>("mitigation"); }
     /**
+     * Get a single data source by STIX ID
+     * @param {string} id the object STIX ID
+     * @param {Date} [modified] if specified, get the version modified at the given date
+     * @param {versions} [string] default "latest", if "all" returns all versions of the object instead of just the latest version.
+     * @returns {Observable<DataSource>} the object with the given ID and modified date
+     */
+     public get getDataSource() { return this.getStixObjectFactory<DataSource>("data-source"); }
+    /**
      * Get a single matrix by STIX ID
      * @param {string} id the object STIX ID
      * @param {Date} [modified] if specified, get the version modified at the given date
@@ -540,6 +567,18 @@ export class RestApiConnectorService extends ApiConnector {
      * @returns {Observable<Mitigation>} the created object
      */
     public get postMitigation() { return this.postStixObjectFactory<Mitigation>("mitigation"); }
+    /**
+     * POST (create) a new data source
+     * @param {DataSource} object the object to create
+     * @returns {Observable<DataSource>} the created object
+     */
+    public get postDataSource() { return this.postStixObjectFactory<DataSource>("data-source"); }
+    /**
+     * POST (create) a new data component
+     * @param {DataComponent} object the object to create
+     * @returns {Observable<DataComponent>} the created object
+     */
+    public get postDataComponent() { return this.postStixObjectFactory<DataComponent>("data-component"); }
     /**
      * POST (create) a new matrix
      * @param {Matrix} object the object to create
@@ -632,6 +671,13 @@ export class RestApiConnectorService extends ApiConnector {
      */
     public get putMitigation() { return this.putStixObjectFactory<Mitigation>("mitigation"); }
     /**
+     * PUT (update) a data source
+     * @param {DataSource} object the object to update
+     * @param {Date} [modified] optional, the modified date to overwrite. If omitted, uses the modified field of the object
+     * @returns {Observable<DataSource>} the updated object
+     */
+    public get putDataSource() { return this.putStixObjectFactory<DataSource>("data-source"); }
+    /**
      * PUT (update) a matrix
      * @param {Matrix} object the object to update
      * @param {Date} [modified] optional, the modified date to overwrite. If omitted, uses the modified field of the object
@@ -709,6 +755,13 @@ export class RestApiConnectorService extends ApiConnector {
      * @returns {Observable<{}>} observable of the response body
      */
     public get deleteMitigation() { return this.deleteStixObjectFactory("mitigation"); }
+    /**
+     * DELETE a data source
+     * @param {string} id the STIX ID of the object to delete
+     * @param {Date} modified the modified date of the version to delete
+     * @returns {Observable<{}>} observable of the response body
+     */
+    public get deleteDataSource() { return this.deleteStixObjectFactory("data-source"); }
     /**
      * DELETE a matrix
      * @param {string} id the STIX ID of the object to delete
