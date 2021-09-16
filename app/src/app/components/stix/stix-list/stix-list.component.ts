@@ -275,6 +275,30 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
                     if (!(this.config.relationshipType && this.config.relationshipType == "subtechnique-of")) this.addColumn("description", "description", "descriptive", false);
                     // controls_after.push("open-link")
                     break;
+                case "data-source":
+                    this.addColumn("ID", "attackID", "plain", false);
+                    this.addColumn("name", "name", "plain", sticky_allowed, ["name"]);
+                    this.addColumn("platforms", "platforms", "list");
+                    this.addColumn("domain", "domains", "list");
+                    this.addColumn("version", "version", "version");
+                    this.addColumn("modified","modified", "timestamp");
+                    this.addColumn("created", "created", "timestamp");
+                    this.tableDetail = [{
+                        "field": "description",
+                        "display": "descriptive"
+                    }]
+                    break;
+                case "data-component":
+                    this.addColumn("name", "name", "plain", sticky_allowed, ["name"]);
+                    this.addColumn("domain", "domains", "list");
+                    this.addColumn("version", "version", "version");
+                    this.addColumn("modified","modified", "timestamp");
+                    this.addColumn("created", "created", "timestamp");
+                    this.tableDetail = [{
+                        "field": "description",
+                        "display": "descriptive"
+                    }]
+                    break;
                 default:
                     this.addColumn("type", "attackType", "plain");
                     this.addColumn("modified","modified", "timestamp");
@@ -462,6 +486,7 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
             else if (this.config.type == "technique") this.data$ = this.restAPIConnectorService.getAllTechniques(options);
             else if (this.config.type.includes("collection")) this.data$ = this.restAPIConnectorService.getAllCollections({search: this.searchQuery, versions: "all"});
             else if (this.config.type == "relationship") this.data$ = this.restAPIConnectorService.getRelatedTo({sourceRef: this.config.sourceRef, targetRef: this.config.targetRef, sourceType: this.config.sourceType, targetType: this.config.targetType, relationshipType: this.config.relationshipType,  excludeSourceRefs: this.config.excludeSourceRefs, excludeTargetRefs: this.config.excludeTargetRefs, limit: limit, offset: offset, includeDeprecated: deprecated});
+            else if (this.config.type == "data-source") this.data$ = this.restAPIConnectorService.getAllDataSources(options);
             let subscription = this.data$.subscribe({
                 next: (data) => { this.totalObjectCount = data.pagination.total; },
                 complete: () => { subscription.unsubscribe() }
@@ -487,7 +512,7 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
 }
 
 //allowed types for StixListConfig
-type type_attacktype = "collection" | "group" | "matrix" | "mitigation" | "software" | "tactic" | "technique" | "relationship";
+type type_attacktype = "collection" | "group" | "matrix" | "mitigation" | "software" | "tactic" | "technique" | "relationship" | "data-source" | "data-component";
 type selection_types = "one" | "many" | "disabled"
 export interface StixListConfig {
     /* if specified, shows the given STIX objects in the table instead of loading from the back-end based on other configurations. */
