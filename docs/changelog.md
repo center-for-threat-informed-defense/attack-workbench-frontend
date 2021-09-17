@@ -33,6 +33,9 @@
 # Changelog
 ## Changes staged on develop
 ### ATT&CK Workbench version 1.1.0
+#### Improvements in 1.1.0
+- Added validation for missing ATT&CK IDs on objects that support them. Validation for missing ATT&CK IDs was also added when creating a collection. See [frontend#231](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/231).
+
 #### Fixes in 1.1.0
 - Fixed an issue where the navigation header could be inaccessible when navigating within the application or when the page resized due to user input.
 ## 20 August 2021
