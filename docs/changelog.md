@@ -31,10 +31,15 @@
 <!--    each repo's package.json file's version marking.                -->
 
 # Changelog
+
 ## Changes staged on develop
 ### ATT&CK Workbench version 1.1.0
+#### Improvements in 1.1.0
+- Added object type documentation on list pages. See [frontend#221](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/221).
+
 #### Fixes in 1.1.0
 - Fixed an issue where the navigation header could be inaccessible when navigating within the application or when the page resized due to user input.
+
 ## 20 August 2021
 ### ATT&CK Workbench version 1.0.2
 #### Fixes in 1.0.2
