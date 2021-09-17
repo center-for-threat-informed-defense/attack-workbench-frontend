@@ -7,12 +7,27 @@ export abstract class ApiConnector {
     constructor(snackbar: MatSnackBar) { this.theSnackbar = snackbar; }
 
     /**
+     * create an informative snackbar from the error
+     * @param {*} error error to handle
+     */
+    private errorSnack(error: any) {
+        // show error field if it's a string (for some error's it's a string, for some it's an Object)
+        if ("error" in error && typeof(error.error) == "string") this.snack(error.error, "warn");
+        // otherwise, try showing the message
+        else if ("message" in error) this.snack(error.message, "warn");
+        // otherwise, show the status text
+        else if ("statusText" in error) this.snack(error.statusText, "warn");
+        // otherwise show generic error
+        else this.snack("Unknown error, check javascript console for details", "warn");
+    }
+
+    /**
      * Log the error and then raise it to the next level
      */
     protected handleError_raise<T>() {
         return (error: any): Observable<T> => {
             logger.error(error);
-            this.snack(error.error, "warn");
+            this.errorSnack(error);
             return throwError(error);
         }
     }
@@ -23,7 +38,7 @@ export abstract class ApiConnector {
     protected handleError_continue<T>(defaultValue?: T) {
         return (error: any): Observable<T> => {
             logger.error(error);
-            this.snack(error.error, "warn");
+            this.errorSnack(error);
             return of(defaultValue as T);
         }
     }

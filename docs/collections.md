@@ -13,7 +13,7 @@ This document describes the format and usage of [collections](#collections) and 
 ATT&CK collections and the ATT&CK collection index can be found on our [attack-stix-data GitHub repository](https://github.com/mitre-attack/attack-stix-data).
 
 ## Collections
-A _collection_ is a set of related ATT&CK objects; collections may be used represent specific releases of a dataset such as "Enterprise ATT&CK v7.2", or any other set of objects one may want to share with someone else. 
+A _collection_ is a set of related ATT&CK objects; collections may be used to represent specific releases of a dataset such as "Enterprise ATT&CK v7.2", or any other set of objects one may want to share with someone else. 
 
 Collections are meant to be shared. Collections can be shared as STIX bundles, uploaded to the internet, or sent through email. <!-- or hosted on a [TAXII server](https://oasis-open.github.io/cti-documentation/taxii/intro.html). -->
 
@@ -45,8 +45,8 @@ Object version references are used to refer to a specific version of a STIX obje
 
 | Property Name | Data Type | Details |
 |:--------------|:----------|:--------|
-| **object_ref** (required) | `identifier` | The **id** of referenced object. |
-| **object_modified** (required) | `timestamp` | The modified time of referenced object. It _MUST_ be an exact for the `modified` time of the STIX object being referenced. |
+| **object_ref** (required) | `identifier` | The **id** of the referenced object. |
+| **object_modified** (required) | `timestamp` | The modified time of the referenced object. It _MUST_ be an exact match for the `modified` time of the STIX object being referenced. |
 
 
 ### Collection Example

@@ -31,9 +31,30 @@
 <!--    each repo's package.json file's version marking.                -->
 
 # Changelog
+
+## Changes staged on develop
 ### ATT&CK Workbench version 1.1.0
 #### Improvements in 1.1.0
 - Added object type documentation on list pages. See [frontend#221](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/221).
+
+#### Fixes in 1.1.0
+- Fixed an issue where the navigation header could be inaccessible when navigating within the application or when the page resized due to user input.
+
+## 20 August 2021
+### ATT&CK Workbench version 1.0.2
+#### Fixes in 1.0.2
+- Error snackbars will now show appropriate messages instead of `[object ProgressEvent]` when communication with the REST API is interrupted or cannot be established. See [frontend#227](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/227).
+- Fixed a bug where tactic shortnames were computed incorrectly for tactics with more than one space in the name (E.g `"Command and Control"`). See [frontend#239](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/239).
+    - If you have edited a technique under a tactic with more than one space in the name, remove and re-add the tactic under the technique edit interface to ensure that the tactic reference is formatted properly.
+    - If you have created a tactic with more than one space in the name, save a new version of the tactic and the proper shortname should be saved. You do not need to make any edits when saving the tactic page for the shortname to be fixed.
+
+## 8 July 2021
+### ATT&CK Workbench version 1.0.1
+#### Improvements in 1.0.1
+- Added a system for configuring the Collection Manager with self-signed certs when using the docker setup. Documentation for this configuration will be improved in a subsequent release.
+
+#### Fixes in 1.0.1
+- Fixed an error encountered when using the `attack-objects` API with large datasets. This error was preventing users from loading the "create a collection" page when Enterprise ATT&CK collections were imported. See [rest-api#87](https://github.com/center-for-threat-informed-defense/attack-workbench-rest-api/issues/87).
 
 ## 21 June 2021
 ### ATT&CK Workbench version 1.0.0

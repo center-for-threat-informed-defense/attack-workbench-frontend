@@ -51,15 +51,17 @@ export class AppComponent implements AfterViewInit {
 
     // header hiding with scroll
     ngAfterViewInit() {
-        this.scrollRef.nativeElement.addEventListener('scroll', (e) => this.scrollEvent(), true);
+        this.scrollRef.nativeElement.addEventListener('scroll', (e) => this.adjustHeaderPlacement(), true);
+        //to fix rare cases that the page has resized without scroll events triggering, recompute the offset every 5 seconds
+        setInterval(() => this.adjustHeaderPlacement(), 5000); 
     }
     ngOnDestroy() { 
-        this.scrollRef.nativeElement.removeEventListener('scroll', (e) => this.scrollEvent(), true);
+        this.scrollRef.nativeElement.removeEventListener('scroll', (e) => this.adjustHeaderPlacement(), true);
     }
 
     public hiddenHeaderPX: number = 0; //number of px of the header which is hidden
-    // when a scroll happens
-    private scrollEvent(): void {
+    // adjust the header placement
+    private adjustHeaderPlacement(): void {
         let headerHeight = this.header.nativeElement.offsetHeight;
         // constrain amount of hidden to bounds, round up because decimal scroll causes flicker
         this.hiddenHeaderPX = Math.floor(Math.min(Math.max(0, this.scrollRef.nativeElement.scrollTop/2), headerHeight)); 
