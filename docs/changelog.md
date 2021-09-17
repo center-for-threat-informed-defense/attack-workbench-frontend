@@ -31,6 +31,10 @@
 <!--    each repo's package.json file's version marking.                -->
 
 # Changelog
+### ATT&CK Workbench version 1.1.0
+#### Improvements in 1.1.0
+- Added object type documentation on list pages. See [frontend#221](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/221).
+
 ## 21 June 2021
 ### ATT&CK Workbench version 1.0.0
 #### Improvements in 1.0.0
