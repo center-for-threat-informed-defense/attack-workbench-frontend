@@ -155,6 +155,7 @@ import { IdentityPropertyComponent } from './components/stix/identity-property/i
 import { NgxJdenticonModule, JDENTICON_CONFIG } from 'ngx-jdenticon';
 import { DataSourceViewComponent } from './views/stix/data-source/data-source-view/data-source-view.component';
 import { DataSourceListComponent } from './views/stix/data-source/data-source-list/data-source-list.component';
+import { DataComponentViewComponent } from './views/stix/data-component/data-component-view/data-component-view.component';
 
 
 @NgModule({
@@ -253,7 +254,8 @@ import { DataSourceListComponent } from './views/stix/data-source/data-source-li
     ObjectStatusComponent,
     IdentityPropertyComponent,
     DataSourceViewComponent,
-    DataSourceListComponent
+    DataSourceListComponent,
+    DataComponentViewComponent
   ],
   imports: [
     BreadcrumbModule,
