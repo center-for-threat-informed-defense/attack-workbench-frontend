@@ -19,10 +19,11 @@ export class StixDialogComponent implements OnInit {
         if (this._config.mode && this._config.mode == "edit") this.startEditing();
     }
     public get config(): StixViewConfig {
+        let object = Array.isArray(this._config.object)? this._config.object[0] : this._config.object;
         return {
             mode: this.editing? "edit" : "view",
-            object: this._config.object,
-            showRelationships: false,
+            object: object,
+            showRelationships: object.attackType == "data-component" ? true : false,
             editable: this._config.editable,
             sidebarControl: this._config.sidebarControl == "disable"? "disable" : "events"
         }
