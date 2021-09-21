@@ -368,7 +368,7 @@ export class RestApiConnectorService extends ApiConnector {
     private getStixObjectFactory<T extends StixObject>(attackType: AttackType) {
         let attackClass = attackTypeToClass[attackType];
         let plural = attackTypeToPlural[attackType]
-        return function<P extends T>(id: string, modified?: Date | string, versions="latest", includeSubs?: boolean, retrieveContents?: boolean): Observable<P[]> {
+        return function<P extends T>(id: string, modified?: Date | string, versions="latest", includeSubs?: boolean, retrieveContents?: boolean, retrieveDataComponents?: boolean): Observable<P[]> {
             let url = `${this.baseUrl}/${plural}/${id}`;
             if (modified) {
                 let modifiedString = typeof(modified) == "string"? modified : modified.toISOString();
@@ -377,6 +377,7 @@ export class RestApiConnectorService extends ApiConnector {
             let query = new HttpParams();
             if (versions != "latest") query = query.set("versions", versions);
             if (attackType == "collection" && retrieveContents) query = query.set("retrieveContents", "true");
+            if (attackType == "data-source" && retrieveDataComponents) query = query.set("retrieveDataComponents", "true");
             return this.http.get(url, {headers: this.headers, params: query}).pipe(
                 tap(result => logger.log(`retrieved ${attackType}`, result)), // on success, trigger the success notification
                 map(result => {
@@ -476,6 +477,7 @@ export class RestApiConnectorService extends ApiConnector {
      * @param {string} id the object STIX ID
      * @param {Date} [modified] if specified, get the version modified at the given date
      * @param {versions} [string] default "latest", if "all" returns all versions of the object instead of just the latest version.
+     * @param {retrieveDataComponents} [boolean] if true, include data components with a reference to the given object. Incompatible with versions="all"
      * @returns {Observable<DataSource>} the object with the given ID and modified date
      */
      public get getDataSource() { return this.getStixObjectFactory<DataSource>("data-source"); }
