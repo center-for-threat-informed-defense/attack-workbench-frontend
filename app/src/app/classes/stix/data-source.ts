@@ -14,11 +14,6 @@ export class DataSource extends StixObject {
     public domains: string[] = [];
     public data_components: DataComponent[] = [];
 
-    /**
-     * TODO this assumes data sources are returned with a list of their associated 
-     * data component STIX objects
-     */
-
     protected get attackIDValidator() {
         return {
             regex: "DS\\d{4}",
@@ -87,10 +82,10 @@ export class DataSource extends StixObject {
             if ("x_mitre_domains" in sdo) {
                 if (this.isStringArray(sdo.x_mitre_domains)) this.domains = sdo.x_mitre_domains;
                 else logger.error("TypeError: domains field is not a string array.");
-            } else this.domains = ['enterprise-attack'];
+            } else this.domains = ['enterprise-attack']; // default to enterprise
 
             if ("data_components" in sdo) {
-                if (typeof(sdo.data_components) == "object") this.data_components = sdo.data_components; // TODO: parse data components
+                if (typeof(sdo.data_components) == "object") this.data_components = sdo.data_components.map(dc => new DataComponent(dc));
                 else logger.error("TypeError: data components field is not an object:", sdo.data_components, "(", typeof(sdo.data_components), ")");
             } else this.data_components = [];
         }

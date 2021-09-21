@@ -62,7 +62,7 @@ export class DataComponent extends StixObject {
             if ("x_mitre_domains" in sdo) {
                 if (this.isStringArray(sdo.x_mitre_domains)) this.domains = sdo.x_mitre_domains;
                 else logger.error("TypeError: domains field is not a string array.");
-            } else this.domains = [];
+            } else this.domains = ['enterprise-attack']; // default to enterprise
         }
     }
 
