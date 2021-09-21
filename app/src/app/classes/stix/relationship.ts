@@ -34,6 +34,7 @@ export class Relationship extends StixObject {
         }
         if (this.relationship_type == "mitigates") return ["mitigation"];
         if (this.relationship_type == "subtechnique-of") return ["technique"];
+        if (this.relationship_type == "detects") return ["data-component"];
         else return null;
     }
     /**
@@ -47,6 +48,7 @@ export class Relationship extends StixObject {
         }
         if (this.relationship_type == "mitigates") return ["technique"];
         if (this.relationship_type == "subtechnique-of") return ["technique"];
+        if (this.relationship_type == "detects") return ["technique"];
         else return null;
     }
 
