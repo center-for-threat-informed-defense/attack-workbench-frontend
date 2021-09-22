@@ -29,6 +29,16 @@ export class StixDialogComponent implements OnInit {
         }
     }
 
+    public prevObject;
+    public openObject(object: StixObject): void {
+        this.prevObject = this._config.object;
+        this._config.object = object;
+    }
+    public goBack(): void {
+        this._config.object = this.prevObject;
+        this.prevObject = undefined;
+    }
+
     public editing: boolean = false;
     public validating: boolean = false;
     public validation: ValidationData = null;
