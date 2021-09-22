@@ -248,6 +248,17 @@ export class RestApiConnectorService extends ApiConnector {
      */
     public get getAllDataSources() { return this.getStixObjectsFactory<DataSource>("data-source"); }
     /**
+     * Get all data components
+     * @param {number} [limit] the number of data components to retrieve
+     * @param {number} [offset] the number of data components to skip
+     * @param {string} [state] if specified, only get objects with this state
+     * @param {boolean} [revoked] if true, get revoked objects
+     * @param {boolean} [deprecated] if true, get deprecated objects
+     * @param {string[]} [excludeIDs] if specified, excludes these STIX IDs from the result
+     * @returns {Observable<DataComponent[]>} observable of retrieved objects
+     */
+    public get getAllDataComponents() { return this.getStixObjectsFactory<DataComponent>("data-component"); }
+    /**
      * Get all matrices
      * @param {number} [limit] the number of matrices to retrieve
      * @param {number} [offset] the number of matrices to skip
@@ -480,7 +491,15 @@ export class RestApiConnectorService extends ApiConnector {
      * @param {retrieveDataComponents} [boolean] if true, include data components with a reference to the given object. Incompatible with versions="all"
      * @returns {Observable<DataSource>} the object with the given ID and modified date
      */
-     public get getDataSource() { return this.getStixObjectFactory<DataSource>("data-source"); }
+    public get getDataSource() { return this.getStixObjectFactory<DataSource>("data-source"); }
+    /**
+     * Get a single data component by STIX ID
+     * @param {string} id the object STIX ID
+     * @param {Date} [modified] if specified, get the version modified at the given date
+     * @param {versions} [string] default "latest", if "all" returns all versions of the object instead of just the latest version.
+     * @returns {Observable<DataComponent>} the object with the given ID and modified date
+     */
+    public get getDataComponent() { return this.getStixObjectFactory<DataComponent>("data-component"); }
     /**
      * Get a single matrix by STIX ID
      * @param {string} id the object STIX ID
@@ -680,6 +699,13 @@ export class RestApiConnectorService extends ApiConnector {
      */
     public get putDataSource() { return this.putStixObjectFactory<DataSource>("data-source"); }
     /**
+     * PUT (update) a data component
+     * @param {DataComponent} object the object to update
+     * @param {Date} [modified] optional, the modified date to overwrite. If omitted, uses the modified field of the object
+     * @returns {Observable<DataComponent>} the updated object
+     */
+    public get putDataComponent() { return this.putStixObjectFactory<DataComponent>("data-component"); }
+    /**
      * PUT (update) a matrix
      * @param {Matrix} object the object to update
      * @param {Date} [modified] optional, the modified date to overwrite. If omitted, uses the modified field of the object
@@ -764,6 +790,13 @@ export class RestApiConnectorService extends ApiConnector {
      * @returns {Observable<{}>} observable of the response body
      */
     public get deleteDataSource() { return this.deleteStixObjectFactory("data-source"); }
+    /**
+     * DELETE a data component
+     * @param {string} id the STIX ID of the object to delete
+     * @param {Date} modified the modified date of the version to delete
+     * @returns {Observable<{}>} observable of the response body
+     */
+    public get deleteDataComponent() { return this.deleteStixObjectFactory("data-component"); }
     /**
      * DELETE a matrix
      * @param {string} id the STIX ID of the object to delete
