@@ -4,6 +4,7 @@
             <div class="stix-content" *ngIf="!validating">
                 <mat-toolbar>
                     <button mat-button mat-dialog-close class="control" matTooltip="close"><mat-icon aria-label="close">close</mat-icon></button>
+                    <button *ngIf="prevObject" mat-button class="control" matTooltip="back" [disabled]="editing" (click)="goBack()"><mat-icon aria-label="back">arrow_back</mat-icon></button>
                     <div class="spacer"></div>
                     <ng-container *ngIf="config.editable" >
                         <button mat-button class="control" matTooltip="validate & save" [disabled]="!editing" (click)="validate()"><mat-icon aria-label="save">save</mat-icon></button>
@@ -51,7 +52,8 @@
                     <app-data-component-view *ngIf="stixType == 'x-mitre-data-component'"
                                              [config]="config"
                                              (onOpenHistory)="openHistory()"
-                                             (onOpenNotes)="openNotes()">
+                                             (onOpenNotes)="openNotes()"
+                                             (onClickRelationship)="openObject($event)">
                     </app-data-component-view>
                     <app-tactic-view       *ngIf="stixType == 'x-mitre-tactic'" 
                                            [config]="config"

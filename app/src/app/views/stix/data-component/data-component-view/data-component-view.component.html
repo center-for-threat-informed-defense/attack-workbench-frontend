@@ -48,6 +48,31 @@
                 <h2 class="section-header">Techniques Detected</h2>
             </div>
         </div>
+        <div class="row">
+            <div class="col">
+                <app-add-relationship-button (created)="techniquesList.applyControls()" [config]="{
+                    label: 'technique',
+                    relationship_type: 'detects',
+                    source_object: data_component
+                }"></app-add-relationship-button>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <app-stix-list #techniquesList [config]="{
+                    'type': 'relationship',
+                    'sourceRef': data_component.stixID,
+                    'relationshipType': 'detects',
+                    'clickBehavior': 'none',
+                    'rowAction': !editing ? {
+                        'icon': 'open_in_new',
+                        'tooltip': 'view relationship',
+                        'position': 'end'
+                    } : null
+                }"
+                (onRowAction)="viewRelationship($event)"></app-stix-list>
+            </div>
+        </div>
     </div>
     <!-- EXTERNAL REFERENCES -->
     <div *ngIf="data_component.external_references.list().length > 0">

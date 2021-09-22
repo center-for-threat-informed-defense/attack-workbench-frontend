@@ -1,6 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { DataComponent } from 'src/app/classes/stix/data-component';
-import { DataSource } from 'src/app/classes/stix/data-source';
+import { StixObject } from 'src/app/classes/stix/stix-object';
 import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/rest-api-connector.service';
 import { StixViewPage } from '../../stix-view-page';
 
@@ -10,6 +10,8 @@ import { StixViewPage } from '../../stix-view-page';
     styleUrls: ['./data-component-view.component.scss']
 })
 export class DataComponentViewComponent extends StixViewPage implements OnInit {
+    @Output() onClickRelationship = new EventEmitter();
+    
     public get data_component() { return this.config.object as DataComponent; }
 
     constructor(private restAPIConnectorService: RestApiConnectorService) { super(); }
@@ -18,4 +20,7 @@ export class DataComponentViewComponent extends StixViewPage implements OnInit {
         // TODO retrieve parent data source
     }
 
+    public viewRelationship(object: StixObject): void {
+        this.onClickRelationship.emit(object);
+    }
 }
