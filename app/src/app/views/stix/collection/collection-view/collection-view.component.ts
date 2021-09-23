@@ -12,6 +12,8 @@ import { Software } from 'src/app/classes/stix/software';
 import { StixObject } from 'src/app/classes/stix/stix-object';
 import { Tactic } from 'src/app/classes/stix/tactic';
 import { Technique } from 'src/app/classes/stix/technique';
+import { DataSource } from 'src/app/classes/stix/data-source';
+import { DataComponent } from 'src/app/classes/stix/data-component';
 import { VersionNumber } from 'src/app/classes/version-number';
 import { StixListComponent } from 'src/app/components/stix/stix-list/stix-list.component';
 import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/rest-api-connector.service';
@@ -50,23 +52,27 @@ export class CollectionViewComponent extends StixViewPage implements OnInit {
     public stagedData: VersionReference[] = [];
 
     public potentialChanges = {
-        technique:    new CollectionDiffCategories<Technique>(),
-        tactic:       new CollectionDiffCategories<Tactic>(),
-        software:     new CollectionDiffCategories<Software>(),
-        relationship: new CollectionDiffCategories<Relationship>(),
-        mitigation:   new CollectionDiffCategories<Mitigation>(),
-        matrix:       new CollectionDiffCategories<Matrix>(),
-        group:        new CollectionDiffCategories<Group>()
+        technique:      new CollectionDiffCategories<Technique>(),
+        tactic:         new CollectionDiffCategories<Tactic>(),
+        software:       new CollectionDiffCategories<Software>(),
+        relationship:   new CollectionDiffCategories<Relationship>(),
+        mitigation:     new CollectionDiffCategories<Mitigation>(),
+        matrix:         new CollectionDiffCategories<Matrix>(),
+        group:          new CollectionDiffCategories<Group>(),
+        data_source:    new CollectionDiffCategories<DataSource>(),
+        data_component: new CollectionDiffCategories<DataComponent>()
     }
 
     public collectionChanges = {
-        technique:    new CollectionDiffCategories<Technique>(),
-        tactic:       new CollectionDiffCategories<Tactic>(),
-        software:     new CollectionDiffCategories<Software>(),
-        relationship: new CollectionDiffCategories<Relationship>(),
-        mitigation:   new CollectionDiffCategories<Mitigation>(),
-        matrix:       new CollectionDiffCategories<Matrix>(),
-        group:        new CollectionDiffCategories<Group>()
+        technique:      new CollectionDiffCategories<Technique>(),
+        tactic:         new CollectionDiffCategories<Tactic>(),
+        software:       new CollectionDiffCategories<Software>(),
+        relationship:   new CollectionDiffCategories<Relationship>(),
+        mitigation:     new CollectionDiffCategories<Mitigation>(),
+        matrix:         new CollectionDiffCategories<Matrix>(),
+        group:          new CollectionDiffCategories<Group>(),
+        data_source:    new CollectionDiffCategories<DataSource>(),
+        data_component: new CollectionDiffCategories<DataComponent>()
     }
 
     public collection_import_categories = [];
@@ -496,6 +502,10 @@ export class CollectionViewComponent extends StixViewPage implements OnInit {
                 list.applyControls();
             });
         })
+    }
+
+    public format(attackType: string): string {
+        return attackType.replace(/_/g, ' ');
     }
 
     ngOnInit() {

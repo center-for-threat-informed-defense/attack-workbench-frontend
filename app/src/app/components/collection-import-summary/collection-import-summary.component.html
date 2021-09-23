@@ -1,9 +1,9 @@
 <div class="collection-import-summary">
     <mat-accordion>
-        <mat-expansion-panel *ngFor="let attackType of ['matrix', 'technique', 'tactic', 'mitigation', 'group', 'software', 'relationship']" class="mat-elevation-z0" [disabled]="config.object_import_categories[attackType].object_count == 0" [class.disabled]="config.object_import_categories[attackType].object_count == 0">
+        <mat-expansion-panel *ngFor="let attackType of ['matrix', 'technique', 'tactic', 'mitigation', 'group', 'software', 'relationship', 'data_source', 'data_component']" class="mat-elevation-z0" [disabled]="config.object_import_categories[attackType].object_count == 0" [class.disabled]="config.object_import_categories[attackType].object_count == 0">
             <mat-expansion-panel-header>
                 <mat-panel-title>
-                    {{attackType}} ({{config.object_import_categories[attackType].object_count}})
+                    {{format(attackType)}} ({{config.object_import_categories[attackType].object_count}})
                 </mat-panel-title>
             </mat-expansion-panel-header>
             <ng-template matExpansionPanelContent>
