@@ -37,7 +37,7 @@ export class CollectionImportComponent implements OnInit {
     // ids of objects which have nto changed (object-version not already in knowledge base)
     public unchanged_ids: string[] = [];
     public save_errors: string[] = [];
-    public successfully_saved: Set<String> = new Set();
+    public successfully_saved: Set<string> = new Set();
     public collectionBundle: any;
 
     public object_import_categories = {
