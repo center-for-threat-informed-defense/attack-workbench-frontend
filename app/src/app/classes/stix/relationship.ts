@@ -172,7 +172,7 @@ export class Relationship extends StixObject {
             // this.source_name = raw.source_object.stix.name;
             
             let src_sdo = raw.source_object.stix;
-            if ("external_references" in src_sdo) {
+            if ("external_references" in src_sdo && src_sdo["type"] !== "x-mitre-data-component") {
                 if (src_sdo.external_references.length > 0 && src_sdo.external_references[0].hasOwnProperty("external_id")) {
                     if (typeof(src_sdo.external_references[0].external_id) === "string") this.source_ID = src_sdo.external_references[0].external_id;
                     else logger.error("TypeError: attackID field is not a string:", src_sdo.external_references[0].external_id, "(", typeof(src_sdo.external_references[0].external_id), ")");

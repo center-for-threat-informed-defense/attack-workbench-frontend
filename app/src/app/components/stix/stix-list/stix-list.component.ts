@@ -267,8 +267,10 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
                     break;
                 case "relationship":
                     this.addColumn("", "state", "icon");
-                    this.addColumn("source", "source_ID", "plain");
-                    this.addColumn("", "source_name", "plain", this.config.targetRef? sticky_allowed: false, ["relationship-name"]);// ["name", "relationship-left"]);
+                    if (this.config.relationshipType && this.config.relationshipType !== "detects") {
+                        this.addColumn("source", "source_ID", "plain");
+                        this.addColumn("", "source_name", "plain", this.config.targetRef? sticky_allowed: false, ["relationship-name"]);// ["name", "relationship-left"]);
+                    } else this.addColumn("source", "source_name", "plain", this.config.targetRef? sticky_allowed: false, ["relationship-name"]);
                     this.addColumn("type", "relationship_type", "plain", false, ["text-deemphasis", "relationship-joiner"]);
                     this.addColumn("target", "target_ID", "plain");
                     this.addColumn("", "target_name", "plain", this.config.sourceRef? sticky_allowed: false, ["relationship-name"]);// ["name", "relationship-right"]);
