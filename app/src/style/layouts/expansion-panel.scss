@@ -5,7 +5,7 @@
         .dark & { border: 1px solid border-color(dark); }
         .light & { border: 1px solid border-color(light); }
     }
-    &:not(:first-child):not(.mat-expanded) { border-top-width: 0px }
+    &:not(:first-of-type):not(.mat-expanded) { border-top-width: 0px }
     &.mat-expanded + .mat-expansion-panel {
         border-top-width: 1px;
     }
@@ -13,7 +13,6 @@
         flex-basis: 0;
         align-items: center;
     }
-    .mat-expansion-panel-header-title { }
     .mat-expansion-panel-header-description {
         justify-content: flex-start;
     }

@@ -20,6 +20,11 @@
             flex-grow: 1;
         }
     }
+    .error-log {
+        overflow-x: scroll;
+        overflow-y: auto;
+        max-height: 30em;
+    }
 }
 // .collection-import {
 //     width: 45em;
