@@ -7,6 +7,8 @@ import { MatStepper } from '@angular/material/stepper';
 import { ActivatedRoute } from '@angular/router';
 import { FileInputComponent } from 'ngx-material-file-input';
 import { Collection, CollectionDiffCategories } from 'src/app/classes/stix/collection';
+import { DataComponent } from 'src/app/classes/stix/data-component';
+import { DataSource } from 'src/app/classes/stix/data-source';
 import { Group } from 'src/app/classes/stix/group';
 import { Matrix } from 'src/app/classes/stix/matrix';
 import { Mitigation } from 'src/app/classes/stix/mitigation';
@@ -39,13 +41,15 @@ export class CollectionImportComponent implements OnInit {
     public collectionBundle: any;
 
     public object_import_categories = {
-        technique:    new CollectionDiffCategories<Technique>(),
-        tactic:       new CollectionDiffCategories<Tactic>(),
-        software:     new CollectionDiffCategories<Software>(),
-        relationship: new CollectionDiffCategories<Relationship>(),
-        mitigation:   new CollectionDiffCategories<Mitigation>(),
-        matrix:       new CollectionDiffCategories<Matrix>(),
-        group:        new CollectionDiffCategories<Group>()
+        technique:      new CollectionDiffCategories<Technique>(),
+        tactic:         new CollectionDiffCategories<Tactic>(),
+        software:       new CollectionDiffCategories<Software>(),
+        relationship:   new CollectionDiffCategories<Relationship>(),
+        mitigation:     new CollectionDiffCategories<Mitigation>(),
+        matrix:         new CollectionDiffCategories<Matrix>(),
+        group:          new CollectionDiffCategories<Group>(),
+        data_source:    new CollectionDiffCategories<DataSource>(),
+        data_component: new CollectionDiffCategories<DataComponent>()
     }
 
     constructor(public route: ActivatedRoute, public http: HttpClient, public snackbar: MatSnackBar, public restAPIConnectorService: RestApiConnectorService, private dialog: MatDialog) { }
@@ -164,6 +168,12 @@ export class CollectionImportComponent implements OnInit {
                 break;
                 case "intrusion-set": //group
                     this.object_import_categories.group[category].push(new Group(raw))
+                break;
+                case "x-mitre-data-source": // data source
+                    this.object_import_categories.data_source[category].push(new DataSource(raw))
+                break;
+                case "x-mitre-data-component": // data component
+                    this.object_import_categories.data_component[category].push(new DataComponent(raw))
                 break;
             }
         }
