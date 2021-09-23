@@ -1,20 +1,14 @@
 <div class="list-page">
     <div class="list-page-header">
         <h1 class="with-help-icon">
-            groups <mat-icon [popover]="PopoverTag" class="help-icon" aria-label="help">help_outline</mat-icon>
+            groups 
+            <mat-icon class="help-icon" aria-label="help"
+                        popover="Groups are sets of related intrusion activity that are tracked by a common name in the security community. Overlaps between names based on publicly reported associations are tracked using &quot;Associated Groups&quot; (also known as &quot;Aliases&quot;)."
+                        popoverPlacement="bottom"
+                        >
+                help_outline
+            </mat-icon>
         </h1>
-
-        <popover-content #PopoverTag 
-                placement="bottom"
-                [animation]="true" 
-                [closeOnClickOutside]="true"
-                 >
-            <div class="popover-description">
-                <p>
-                    Groups are sets of related intrusion activity that are tracked by a common name in the security community. Overlaps between names based on publicly reported associations are tracked using "Associated Groups" (also known as "Aliases").
-                </p>
-            </div>
-        </popover-content>
 
         <div class="button-group">
             <button mat-mini-fab class="extended-fab-button" color="primary" [routerLink]="['/group/new']" [queryParams]="{editing: true}">
