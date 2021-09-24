@@ -11,10 +11,21 @@
         margin-bottom: 16px;
     }
 
-    .popover-description {
+    popover-content div {
+        text-transform: initial;
+        font-weight: normal;
         width: 30rem;
         text-align: justify;
         text-align-last: left;
         padding: 0px 15px;
+        margin: 0px;
+        display: block;
+        margin-block-start: 1em;
+        margin-block-end: 1em;
+        margin-inline-start: 0px;
+        margin-inline-end: 0px;
+        font-family: Roboto, serif;
+        font-size: 18px;
+        line-height: 1.5;
     }
 }
