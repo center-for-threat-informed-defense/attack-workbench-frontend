@@ -1,20 +1,15 @@
 <div class="list-page">
     <div class="list-page-header">
         <h1 class="with-help-icon">
-            software <mat-icon [popover]="PopoverTag" class="help-icon" aria-label="help">help_outline</mat-icon>
+            software 
+            <mat-icon class="help-icon" aria-label="help"
+                        popover="Software is a generic term for custom or commercial code, operating system utilities, open-source software, or other tools used to conduct behavior modeled in ATT&CK. Some instances of software have multiple names associated with the same instance due to various organizations tracking the same set of software by different names. The team makes a best effort to track overlaps between names based on publicly reported associations, which are designated as &quot;Associated Software&quot; on each page (also known as &quot;Aliases&quot;)."
+                        popoverPlacement="bottom"
+                        >
+                help_outline
+            </mat-icon>
         </h1>
-
-        <popover-content #PopoverTag 
-                placement="bottom"
-                [animation]="true" 
-                [closeOnClickOutside]="true"
-                 >
-            <div class="popover-description">
-                <p>
-                    Software is a generic term for custom or commercial code, operating system utilities, open-source software, or other tools used to conduct behavior modeled in ATT&CK. Some instances of software have multiple names associated with the same instance due to various organizations tracking the same set of software by different names. The team makes a best effort to track overlaps between names based on publicly reported associations, which are designated as “Associated Software” on each page (also known as "Aliases").
-                </p>
-            </div>
-        </popover-content>
+        
         <div class="button-group">
             <button mat-mini-fab class="extended-fab-button" color="primary" [routerLink]="['/software/new']" [queryParams]="{editing: true}">
                 <mat-icon>create</mat-icon> <span class="text-label">create a software</span>
