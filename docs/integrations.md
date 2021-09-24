@@ -2,7 +2,12 @@
 
 The ATT&CK Workbench is designed to integrate with a variety of tools. This page provides documentation on how to set up such integrations.
 
-It is a requirement for objects that support ATT&CK IDs to have one assigned. Integrations may not work as intended if ATT&CK IDs are not present from objects that support them such as techniques, tactics, and mitigations.
+Many ATT&CK Workbench integrations require that specific fields or values are present on your custom STIX data to use it properly. Depending on what data you have some objects may not be shown in integrations. Objects may not show up in integrations if they:
+
+- Support ATT&CK IDs but do not have one assigned
+- Are revoked or deprecated
+- Support platforms or tactics but are not assigned to any
+- Support mappings to techniques but do not feature any mappings
 
 ## ATT&CK Navigator
 
