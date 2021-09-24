@@ -36,6 +36,8 @@ export class CollectionImportComponent implements OnInit {
     public changed_ids: string[] = [];
     // ids of objects which have nto changed (object-version not already in knowledge base)
     public unchanged_ids: string[] = [];
+    public save_errors: string[] = [];
+    public successfully_saved: Set<string> = new Set();
     public collectionBundle: any;
 
     public object_import_categories = {
@@ -215,7 +217,17 @@ export class CollectionImportComponent implements OnInit {
                         }
                         newBundle.objects = objects;
                         let subscription = this.restAPIConnectorService.postCollectionBundle(newBundle, false).subscribe({
-                            next: () => { 
+                            next: (results) => { 
+                                if (results.import_categories.errors.length > 0) {
+                                    logger.warn("Collection import completed with errors:", results.import_categories.errors);
+                                }
+                                this.save_errors = results.import_categories.errors.filter(err => err["error_type"] == "Save error");
+                                let save_error_ids = new Set(this.save_errors.map(err => err['object_ref']));
+                                for (let category in results.import_categories) {
+                                    if (category == "errors") continue;
+                                    for (let id of results.import_categories[category]) if (!save_error_ids.has(id)) this.successfully_saved.add(id);
+                                }
+                                logger.log("Successfully imported the following objects:", Array.from(this.successfully_saved));
                                 this.stepper.next(); 
                             },
                             complete: () => { subscription.unsubscribe(); } //prevent memory leaks
@@ -225,6 +237,13 @@ export class CollectionImportComponent implements OnInit {
             },
             complete: () => { promptSubscription.unsubscribe() } //prevent memory leaks
         })
+    }
+
+    /**
+     * Download a log of errors from the import
+     */
+    public downloadErrorLog() {
+        this.restAPIConnectorService.triggerBrowserDownload(this.save_errors, "import-errors.json")
     }
 
 }

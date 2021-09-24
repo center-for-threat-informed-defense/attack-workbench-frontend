@@ -1076,8 +1076,8 @@ export class RestApiConnectorService extends ApiConnector {
      * @param data: the data to download. Must be a JSON
      * @param filename: the name of the file to download
      */
-     private triggerBrowserDownload(data: any, filename: string) {
-        let url = URL.createObjectURL(new Blob([JSON.stringify(data)], {type: "text/json"}));
+     public triggerBrowserDownload(data: any, filename: string) {
+        let url = URL.createObjectURL(new Blob([JSON.stringify(data, null, 4)], {type: "text/json"}));
         let downloadLink = document.createElement("a");
         downloadLink.href = url;
         downloadLink.download = filename

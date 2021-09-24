@@ -31,13 +31,21 @@
 <!--    each repo's package.json file's version marking.                -->
 
 # Changelog
-## Changes staged on develop
-### ATT&CK Workbench version 1.1.0
-#### Improvements in 1.1.0
-- Added validation for missing ATT&CK IDs on objects that support them. Validation for missing ATT&CK IDs was also added when creating a collection. See [frontend#231](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/231).
 
-#### Fixes in 1.1.0
+## Changes staged on develop
+### ATT&CK Workbench version 1.0.3
+#### Improvements in 1.0.3
+- Added object type documentation on list pages. See [frontend#221](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/221).
+- Improved the visibility of errors in collection imports:
+    - The user will now be provided with a downloadable list of objects that could not be saved (and the reason why) in the event of import errors.
+    - REST API will now log import errors to the console.
+    - Frontend will now log import errors to the console when the application environment is not set to production.
+- Added validation for missing ATT&CK IDs on objects that support them. `StixObject` class now includes boolean field (`supportsAttackID`) that specifies whether they support ATT&CK IDs or not. Inheriting classes must specify this field. Validation for missing ATT&CK IDs was also added when creating a collection. See [frontend#231](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/231).
+
+#### Fixes in 1.0.3
 - Fixed an issue where the navigation header could be inaccessible when navigating within the application or when the page resized due to user input.
+- Frontend will no longer claim objects were imported when they were actually discarded due to import errors such as spec violations.
+- Imported STIX bundles will no longer require (but still allow) the `spec_version` field on the bundle itself. This was causing issues importing collections created by the Workbench. Objects within the bundle still require the `spec_version` field per the STIX 2.1 spec. See [rest-api#103](https://github.com/center-for-threat-informed-defense/attack-workbench-rest-api/issues/103).
 ## 20 August 2021
 ### ATT&CK Workbench version 1.0.2
 #### Fixes in 1.0.2
