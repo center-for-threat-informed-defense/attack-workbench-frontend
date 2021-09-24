@@ -37,6 +37,7 @@ export abstract class StixObject extends Serializable {
 
     public object_marking_refs: string[] = []; //list of embedded relationships to marking_defs
 
+    public abstract readonly supportsAttackID: boolean; // boolean to determine if object supports ATT&CK IDs
     protected abstract get attackIDValidator(): {
         regex: string, // regex to validate the ID
         format: string // format to display to user
@@ -322,7 +323,7 @@ export abstract class StixObject extends Serializable {
                             }
                         }
                         // check ATT&CK ID and ignore collections
-                        if (this.attackType != "collection" && this.hasOwnProperty("attackID")) {
+                        if (this.hasOwnProperty("supportsAttackID") && this.supportsAttackID == true) {
                             if (this.attackID == "") {
                                 result.warnings.push({
                                     "result": "warning",
