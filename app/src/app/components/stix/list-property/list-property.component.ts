@@ -29,6 +29,10 @@ export interface ListPropertyConfig {
     object: StixObject | [StixObject, StixObject];
     /* Edit mode. Default: 'any' */
     editType?: "select" | "stixList" | "any";
+    /* If true, the field will be disabled. Default false if omitted. */
+    disabled?: boolean;
+    /* If true, the field will be required. Default false if omitted. */
+    required?: boolean;
     /* the field of the object(s) to visualize as a list */
     field: string;
     /* if specified, label with this string instead of field */
