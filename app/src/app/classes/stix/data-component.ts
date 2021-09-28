@@ -11,7 +11,7 @@ export class DataComponent extends StixObject {
     public domains: string[] = ['enterprise-attack']; // default to enterprise
     public data_source_ref: string; // stix ID of the data source
 
-    // NOTE: the following field will only be populated when this object is fetched using getTechnique()
+    // NOTE: the following field will only be populated when this object is fetched using getDataComponent()
     public data_source: DataSource = null;
 
     protected get attackIDValidator() { return null; } // data components have no ATT&CK ID
