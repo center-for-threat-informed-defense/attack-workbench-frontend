@@ -7,7 +7,7 @@ import { logger } from "../../util/logger";
 export class DataComponent extends StixObject {
     public name: string = "";
     public description: string = "";
-    public domains: string[] = [];
+    public domains: string[] = ['enterprise-attack']; // default to enterprise
     public data_source_ref: string; // stix ID of the data source
 
     protected get attackIDValidator() { return null; } // data components have no ATT&CK ID

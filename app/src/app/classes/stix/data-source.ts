@@ -2,6 +2,7 @@ import { StixObject } from "./stix-object";
 import { logger } from "../../util/logger";
 import { RestApiConnectorService } from "src/app/services/connectors/rest-api/rest-api-connector.service";
 import { Observable } from "rxjs";
+import { map } from "rxjs/operators";
 import { ValidationData } from "../serializable";
 import { DataComponent } from "./data-component";
 
@@ -11,7 +12,7 @@ export class DataSource extends StixObject {
     public platforms: string[] = [];
     public collection_layers: string[] = [];
     public contributors: string[] = [];
-    public domains: string[] = [];
+    public domains: string[] = ['enterprise-attack']; // default to enterprise
     public data_components: DataComponent[] = [];
 
     protected get attackIDValidator() {
@@ -97,7 +98,32 @@ export class DataSource extends StixObject {
      * @returns {Observable<ValidationData>} the validation warnings and errors once validation is complete.
      */
      public validate(restAPIService: RestApiConnectorService): Observable<ValidationData> {
-        return this.base_validate(restAPIService);
+        return this.base_validate(restAPIService).pipe(
+            map(result => {
+                // check contributors
+                if (!this.contributors.length) result.errors.push({
+                    "field": "contributors",
+                    "result": "error",
+                    "message": "object has no contributors"
+                });
+                // check platforms
+                if (!this.platforms.length) result.errors.push({
+                    "field": "platforms",
+                    "result": "error",
+                    "message": "object has no platforms"
+                });
+
+                // check collection layers
+                if (!this.collection_layers.length) result.errors.push({
+                    "field": "collection_layers",
+                    "result": "error",
+                    "message": "object has no collection layers"
+                });
+
+                return result;
+            }),
+
+        );
     }
 
     /**
