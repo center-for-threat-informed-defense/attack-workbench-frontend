@@ -56,11 +56,27 @@
         </mat-step>
         <mat-step label="done">
             <div *ngIf="select">
-                <h3>Success!</h3>
+                <h3>Success! The collection has been imported into your workbench. </h3>
                 <p>
-                    The collection has been imported into your workbench. {{select.selected.length}} new objects were added. You can review the results of this import at any time on the <span class="text-label">imported collections</span> section of the collection page.
+                    {{successfully_saved.size}} new objects were added. You can review the imported objects at any time on the <span class="text-label">imported collections</span> section of the collection page.
                 </p>
-                <button mat-raised-button color="primary" routerLink="/collection">back to collections</button>
+                <ng-container *ngIf="save_errors.length > 0">
+                    <p>
+                        {{save_errors.length}} objects could not be imported. 
+                    </p>
+                    <mat-expansion-panel>
+                        <mat-expansion-panel-header>
+                            <mat-panel-title>
+                                Import errors
+                            </mat-panel-title>
+                        </mat-expansion-panel-header>
+                        <button mat-stroked-button (click)="downloadErrorLog()"><mat-icon>download</mat-icon> download this list</button>
+                        <code><pre class="error-log">{{save_errors | json}}</pre></code>
+                    </mat-expansion-panel>
+                </ng-container>
+                <p>
+                    <button mat-raised-button color="primary" routerLink="/collection">back to collections</button>
+                </p>
             </div>
         </mat-step>
     </mat-vertical-stepper>
