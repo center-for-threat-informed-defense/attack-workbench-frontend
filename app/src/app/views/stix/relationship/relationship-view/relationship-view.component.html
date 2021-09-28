@@ -11,7 +11,7 @@
     <div class="row" *ngIf="config.mode == 'view'">
         <!-- view source and target -->
         <!-- SOURCE ID -->
-        <div class="col">
+        <div class="col" *ngIf="relationship.source_ID">
             <div class="labelled-box grow-to-row">
                 <div class="content">
                     {{relationship.source_ID}}
