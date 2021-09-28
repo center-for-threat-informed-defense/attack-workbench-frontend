@@ -1,10 +1,11 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { EMPTY, empty, zip } from 'rxjs';
 import { Relationship } from 'src/app/classes/stix/relationship';
 import { StixObject } from 'src/app/classes/stix/stix-object';
 import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/rest-api-connector.service';
 import { StixDialogComponent } from 'src/app/views/stix/stix-dialog/stix-dialog.component';
+import { StixViewConfig } from 'src/app/views/stix/stix-view-page';
 
 @Component({
   selector: 'app-add-relationship-button',
@@ -33,24 +34,32 @@ export class AddRelationshipButtonComponent implements OnInit {
         var zip_subscription = initializer.subscribe({
             next: () => {
                 this.loading = false;
-                let prompt = this.dialog.open(StixDialogComponent, {
-                    data: {
-                        object: relationship,
-                        editable: true,
-                        mode: "edit",
-                        sidebarControl: "events"
-                    },
-                    maxHeight: "75vh"
-                })
-                let subscription = prompt.afterClosed().subscribe({
-                    next: result => { if (prompt.componentInstance.dirty) this.created.emit(); }, //re-fetch values since an edit occurred
-                    complete: () => { subscription.unsubscribe(); }
-                });
+                let config: StixViewConfig = {
+                    object: relationship,
+                    editable: true,
+                    mode: "edit",
+                    sidebarControl: "events"
+                }
+
+                if (this.config.dialog && this.config.dialog.componentInstance) {
+                    // replace current dialog content
+                    this.config.dialog.componentInstance._config = config;
+                    this.config.dialog.componentInstance.startEditing();
+                } else {
+                    // open a new dialog
+                    let prompt = this.dialog.open(StixDialogComponent, {
+                        data: config,
+                        maxHeight: "75vh"
+                    })
+                    let subscription = prompt.afterClosed().subscribe({
+                        next: result => { if (prompt.componentInstance.dirty) this.created.emit(); }, //re-fetch values since an edit occurred
+                        complete: () => { subscription.unsubscribe(); }
+                    });
+                }
             },
             complete: () => { if (zip_subscription) zip_subscription.unsubscribe(); } //for some reason zip_subscription doesn't exist if using set_source_object or set_target_object
         })
     }
-
 }
 
 export interface AddRelationshipButtonConfig {
@@ -61,4 +70,5 @@ export interface AddRelationshipButtonConfig {
     source_object?: StixObject; //initial relationship source object. Takes precedence over source_ref if both are specified, and is much faster to execute
     target_ref?: string; //initial relationship target ref
     target_object?: StixObject; //initial relationship target object. Takes precedence over target_ref if both are specified, and is much faster to execute
+    dialog?: MatDialogRef<StixDialogComponent> //dialog ref; if provided the 'create relationship interface' will replace the current dialog content
 }

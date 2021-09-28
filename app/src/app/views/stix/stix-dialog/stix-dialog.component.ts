@@ -25,7 +25,8 @@ export class StixDialogComponent implements OnInit {
             object: object,
             showRelationships: object.attackType == "data-component" ? true : false,
             editable: this._config.editable,
-            sidebarControl: this._config.sidebarControl == "disable"? "disable" : "events"
+            sidebarControl: this._config.sidebarControl == "disable"? "disable" : "events",
+            dialog: this.dialogRef
         }
     }
 

@@ -53,7 +53,8 @@
                 <app-add-relationship-button (created)="techniquesList.applyControls()" [config]="{
                     label: 'technique',
                     relationship_type: 'detects',
-                    source_object: data_component
+                    source_object: data_component,
+                    dialog: config.dialog? config.dialog : null
                 }"></app-add-relationship-button>
             </div>
         </div>
