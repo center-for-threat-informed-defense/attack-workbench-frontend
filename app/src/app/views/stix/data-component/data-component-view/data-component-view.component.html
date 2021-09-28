@@ -1,10 +1,10 @@
-<div class="data-component-view view-page grid spacing-12">
+<div class="data-component-view view-page grid spacing-12" *ngIf="!loading else loadingDisplay">
     <div class="row">
         <div class="col">
             <app-name-property [config]="{
                 mode: editing? 'edit' : 'view',
                 object: data_component,
-                parent: data_source
+                parent: data_component.data_source
             }"></app-name-property>
             <app-subheading *ngIf="!editing" [config]="config" (onOpenHistory)="openHistory()"
                 (onOpenNotes)="openNotes()"></app-subheading>
@@ -92,3 +92,6 @@
         </div>
     </div>
 </div>
+<ng-template #loadingDisplay>
+    <app-loading-overlay></app-loading-overlay>
+</ng-template>

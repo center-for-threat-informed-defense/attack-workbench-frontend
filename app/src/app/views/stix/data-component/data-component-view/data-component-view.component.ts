@@ -1,6 +1,5 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { DataComponent } from 'src/app/classes/stix/data-component';
-import { DataSource } from 'src/app/classes/stix/data-source';
 import { StixObject } from 'src/app/classes/stix/stix-object';
 import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/rest-api-connector.service';
 import { StixViewPage } from '../../stix-view-page';
@@ -12,21 +11,22 @@ import { StixViewPage } from '../../stix-view-page';
 })
 export class DataComponentViewComponent extends StixViewPage implements OnInit {
     @Output() onClickRelationship = new EventEmitter();
-
-    public get data_component() { return this.config.object as DataComponent; }
-    public data_source: DataSource = null;
+    public loading = false;
+    public data_component: DataComponent;
 
     constructor(private restAPIConnectorService: RestApiConnectorService) { super(); }
 
     ngOnInit(): void {
-        // retrieve parent data source
-        let objects$ = this.restAPIConnectorService.getDataSource(this.data_component.data_source_ref);
+        this.loading = true;
+        let object = Array.isArray(this.config.object)? this.config.object[0] : this.config.object;
+        let objects$ = this.restAPIConnectorService.getDataComponent(object.stixID);
         let subscription = objects$.subscribe({
             next: (result) => {
-                let objects = result as DataSource[];
-                this.data_source = objects[0];
+                let objects = result as DataComponent[];
+                this.data_component = objects[0];
+                this.loading = false;
             },
-            complete: () => { subscription.unsubscribe() }
+            complete: () => { subscription.unsubscribe(); }
         });
     }
 

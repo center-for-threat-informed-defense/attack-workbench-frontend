@@ -3,12 +3,16 @@ import { RestApiConnectorService } from "src/app/services/connectors/rest-api/re
 import { ValidationData } from "../serializable";
 import { StixObject } from "./stix-object";
 import { logger } from "../../util/logger";
+import { DataSource } from "./data-source";
 
 export class DataComponent extends StixObject {
     public name: string = "";
     public description: string = "";
     public domains: string[] = ['enterprise-attack']; // default to enterprise
     public data_source_ref: string; // stix ID of the data source
+
+    // NOTE: the following field will only be populated when this object is fetched using getTechnique()
+    public data_source: DataSource = null;
 
     protected get attackIDValidator() { return null; } // data components have no ATT&CK ID
 

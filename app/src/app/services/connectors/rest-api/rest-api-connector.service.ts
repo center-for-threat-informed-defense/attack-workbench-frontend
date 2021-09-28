@@ -437,6 +437,19 @@ export class RestApiConnectorService extends ApiConnector {
                         );
                     }
                 }),
+                switchMap(result => {
+                    let x = result as any[];
+                    if (x[0].attackType != "data-component") return of(result);
+                    let d = x[0] as DataComponent;
+                    return this.getDataSource(d.data_source_ref).pipe( // fetch data source from REST API
+                        map(data_source => {
+                            let ds = data_source as DataSource[];
+                            d.data_source = ds[0];
+                            return [d];
+                        }),
+                        tap(result => logger.log("fetched data source of", result))
+                    );
+                }),
                 catchError(this.handleError_continue([])), // on error, trigger the error notification and continue operation without crashing (returns empty item)
                 share() // multicast so that multiple subscribers don't trigger the call twice. THIS MUST BE THE LAST LINE OF THE PIPE
             )
