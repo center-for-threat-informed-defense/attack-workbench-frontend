@@ -437,7 +437,7 @@ export class RestApiConnectorService extends ApiConnector {
                         );
                     }
                 }),
-                switchMap(result => {
+                switchMap(result => { // fetch parent data source of data component
                     let x = result as any[];
                     if (x[0].attackType != "data-component") return of(result);
                     let d = x[0] as DataComponent;
