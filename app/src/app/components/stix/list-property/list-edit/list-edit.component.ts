@@ -55,7 +55,7 @@ export class ListEditComponent implements OnInit, AfterContentChecked {
     constructor(public dialog: MatDialog, private restAPIConnectorService: RestApiConnectorService, private ref: ChangeDetectorRef) { }
 
     ngOnInit(): void {
-        this.selectControl = new FormControl(this.config.object[this.config.field]);
+        this.selectControl = new FormControl({value: this.config.object[this.config.field], disabled: this.config.disabled ? this.config.disabled : false});
         if (this.config.field == 'platforms' 
          || this.config.field == 'tactic_type' 
          || this.config.field == 'permissions_required' 
