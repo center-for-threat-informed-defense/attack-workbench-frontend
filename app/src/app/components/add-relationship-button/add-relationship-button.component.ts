@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
-import { EMPTY, empty, zip } from 'rxjs';
+import { EMPTY } from 'rxjs';
 import { Relationship } from 'src/app/classes/stix/relationship';
 import { StixObject } from 'src/app/classes/stix/stix-object';
 import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/rest-api-connector.service';
@@ -25,9 +25,9 @@ export class AddRelationshipButtonComponent implements OnInit {
         let relationship = new Relationship();
         relationship.relationship_type = this.config.relationship_type;
         let initializer = null;
-        if (this.config.source_object) initializer = relationship.set_source_object(this.config.source_object);
+        if (this.config.source_object) initializer = relationship.set_source_object(this.config.source_object, this.restApiService);
         else if (this.config.source_ref) initializer = relationship.set_source_ref(this.config.source_ref, this.restApiService);
-        else if (this.config.target_object) initializer = relationship.set_target_object(this.config.target_object);
+        else if (this.config.target_object) initializer = relationship.set_target_object(this.config.target_object, this.restApiService);
         else if (this.config.target_ref) initializer = relationship.set_target_ref(this.config.target_ref, this.restApiService);
         else initializer = EMPTY;
         this.loading = true;

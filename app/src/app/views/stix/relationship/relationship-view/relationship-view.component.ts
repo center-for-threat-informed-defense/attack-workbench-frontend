@@ -34,20 +34,35 @@ export class RelationshipViewComponent extends StixViewPage implements OnInit {
 
     ngOnInit(): void {
         // initialize source/target types if there is a source/target object, or if there is only one possible value
-        if (this.relationship.source_object) this.source_type = stixTypeToAttackType[this.relationship.source_object.stix.type]
+        if (this.relationship.source_object) {
+            this.source_type = stixTypeToAttackType[this.relationship.source_object.stix.type]
+            // retrieve parent of source object
+            var src_sub = this.relationship.get_parent_object(this.relationship.source_object, this.restApiService).subscribe({
+                next: (res) => { this.relationship.source_parent = res; },
+                complete: () => { if (src_sub) src_sub.unsubscribe(); }
+            });
+        }
         else if (this.relationship.valid_source_types.length == 1) this.source_type = this.relationship.valid_source_types[0];
-        if (this.relationship.target_object) this.target_type = stixTypeToAttackType[this.relationship.target_object.stix.type]
+
+        if (this.relationship.target_object) {
+            this.target_type = stixTypeToAttackType[this.relationship.target_object.stix.type]
+            // retrieve parent of target object
+            var tgt_sub = this.relationship.get_parent_object(this.relationship.target_object, this.restApiService).subscribe({
+                next: (res) => { this.relationship.target_parent = res; },
+                complete: () => { if (tgt_sub) tgt_sub.unsubscribe(); }
+            });
+        }
         else if (this.relationship.valid_target_types.length == 1) this.target_type = this.relationship.valid_target_types[0];
     }
 
     public setSourceObject(object: StixObject) {
-        var subscription = this.relationship.set_source_object(object).subscribe({
+        var subscription = this.relationship.set_source_object(object, this.restApiService).subscribe({
             complete: () => { if (subscription) subscription.unsubscribe() } //subscription doesn't exist for some reason in this case
         }) 
     }
 
     public setTargetObject(object: StixObject) {
-        var subscription = this.relationship.set_target_object(object).subscribe({
+        var subscription = this.relationship.set_target_object(object, this.restApiService).subscribe({
             complete: () => { if (subscription) subscription.unsubscribe() } //subscription doesn't exist for some reason in this case
         }) 
     }
