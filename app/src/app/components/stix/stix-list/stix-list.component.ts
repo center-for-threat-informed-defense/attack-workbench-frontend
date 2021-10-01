@@ -171,7 +171,7 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
         if ("type" in this.config) { 
             // this.filter.push("type." + this.config.type); 
             // set columns according to type
-            switch(this.config.type) {
+            switch(this.config.type.replace(/_/g, '-')) {
                 case "collection":
                 case "collection-created":
                     this.addColumn("name", "name", "plain", sticky_allowed, ["name"]);
