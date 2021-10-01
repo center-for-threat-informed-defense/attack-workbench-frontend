@@ -49,6 +49,11 @@
                                            (onOpenHistory)="openHistory()"
                                            (onOpenNotes)="openNotes()">
                     </app-technique-view>
+                    <app-data-source-view  *ngIf="stixType == 'x-mitre-data-source'"
+                                           [config]="config"
+                                           (onOpenHistory)="openHistory()"
+                                           (onOpenNotes)="openNotes()">
+                    </app-data-source-view>
                     <app-data-component-view *ngIf="stixType == 'x-mitre-data-component'"
                                              [config]="config"
                                              (onOpenHistory)="openHistory()"
