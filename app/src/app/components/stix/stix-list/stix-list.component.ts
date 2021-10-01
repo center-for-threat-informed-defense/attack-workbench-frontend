@@ -43,6 +43,7 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
     @Input() public config: StixListConfig = {};
     @Output() public onRowAction = new EventEmitter<string>();
     @Output() public onSelect = new EventEmitter<StixObject>();
+    @Output() public refresh = new EventEmitter();
     @ViewChild(MatPaginator) paginator: MatPaginator;
     @ViewChild('search') search: ElementRef;
     public searchQuery: string = "";
@@ -114,7 +115,12 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
                 maxHeight: "75vh"
             })
             let subscription = prompt.afterClosed().subscribe({
-                next: result => { if (prompt.componentInstance.dirty) this.applyControls(); }, //re-fetch values since an edit occurred
+                next: result => {
+                    if (prompt.componentInstance.dirty) { //re-fetch values since an edit occurred
+                        this.applyControls();
+                        this.refresh.emit();
+                    }
+                },
                 complete: () => { subscription.unsubscribe(); }
             });
         }
