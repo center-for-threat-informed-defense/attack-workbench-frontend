@@ -85,7 +85,7 @@ export class DataSource extends StixObject {
                 else logger.error("TypeError: domains field is not a string array.");
             } else this.domains = ['enterprise-attack']; // default to enterprise
 
-            if ("data_components" in sdo) {
+            if ("data_components" in sdo) { // TODO parse objects returned from REST API
                 if (typeof(sdo.data_components) == "object") this.data_components = sdo.data_components.map(dc => new DataComponent(dc));
                 else logger.error("TypeError: data components field is not an object:", sdo.data_components, "(", typeof(sdo.data_components), ")");
             } else this.data_components = [];

@@ -62,7 +62,8 @@ export class ListEditComponent implements OnInit, AfterContentChecked {
          || this.config.field == 'effective_permissions' 
          || this.config.field == 'impact_type'
          || this.config.field == 'domains'
-         || this.config.field == 'collection_layers') {
+         || this.config.field == 'collection_layers'
+         || this.config.field == 'data_sources') { // TODO retrieve ics data sources allowed values from REST API
             if (!this.dataLoaded) {
                 let data$ = this.restAPIConnectorService.getAllAllowedValues();
                 this.sub = data$.subscribe({
