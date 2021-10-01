@@ -2,6 +2,10 @@
     <div class="row">
         <div class="col">
             <h1 *ngIf="!relationship.updating_refs; else updatingRefs">{{relationship.source_name}} <span class="text-deemphasis">{{relationship.relationship_type}}</span> {{relationship.target_name}}</h1>
+            <h3 class="status" *ngIf="!relationship.updating_refs; else updatingRefs">
+                <span class="warning-text" *ngIf="config.object['deprecated']">deprecated</span>
+                <span class="warning-text" *ngIf="config.object['revoked'] && loaded">revoked by: {{target_obj.stix.name}}</span>
+            </h3>
             <ng-template #updatingRefs>
                 <app-loading-overlay></app-loading-overlay>
             </ng-template>
