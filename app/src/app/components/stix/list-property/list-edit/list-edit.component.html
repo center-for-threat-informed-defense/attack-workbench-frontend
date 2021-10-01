@@ -26,7 +26,7 @@
             <mat-select-trigger>
                 <mat-chip-list>
                     <mat-chip *ngFor="let value of selectControl.value" [removable]="true" (removed)="removeSelection(value)">
-                        {{value}} <mat-icon matChipRemove>cancel</mat-icon>
+                        {{value}} <mat-icon *ngIf="!config.disabled" matChipRemove>cancel</mat-icon>
                     </mat-chip>
                 </mat-chip-list>
             </mat-select-trigger>

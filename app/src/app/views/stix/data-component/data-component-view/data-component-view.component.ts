@@ -12,22 +12,24 @@ import { StixViewPage } from '../../stix-view-page';
 export class DataComponentViewComponent extends StixViewPage implements OnInit {
     @Output() onClickRelationship = new EventEmitter();
     public loading = false;
-    public data_component: DataComponent;
+    public get data_component(): DataComponent { return this.config.object as DataComponent; }
 
     constructor(private restAPIConnectorService: RestApiConnectorService) { super(); }
 
     ngOnInit(): void {
-        this.loading = true;
-        let object = Array.isArray(this.config.object)? this.config.object[0] : this.config.object;
-        let objects$ = this.restAPIConnectorService.getDataComponent(object.stixID);
-        let subscription = objects$.subscribe({
-            next: (result) => {
-                let objects = result as DataComponent[];
-                this.data_component = objects[0];
-                this.loading = false;
-            },
-            complete: () => { subscription.unsubscribe(); }
-        });
+        if (!this.data_component.data_source) {
+            // fetch parent data source
+            this.loading = true;
+            let objects$ = this.restAPIConnectorService.getDataComponent(this.data_component.stixID);
+            let subscription = objects$.subscribe({
+                next: (result) => {
+                    let objects = result as DataComponent[];
+                    this.data_component.data_source = objects[0].data_source;
+                    this.loading = false;
+                },
+                complete: () => { subscription.unsubscribe(); }
+            });
+        }
     }
 
     public viewRelationship(object: StixObject): void {
