@@ -31,11 +31,25 @@ export class StixDialogComponent implements OnInit {
     }
 
     public prevObject;
-    public openObject(object: StixObject): void {
+    /**
+     * Store the current object being viewed in the dialog and 
+     * replace the content with the given object. Only a single
+     * previous object can be stored and returned to at a time.
+     * @param object the new object to display in the dialog
+     */
+    public changeDialogObject(object: StixObject): void {
         this.prevObject = this._config.object;
         this._config.object = object;
     }
-    public goBack(): void {
+
+    /**
+     * View the previously stored object in the dialog, which
+     * is set in changeDialogObject(). This will stop any validation
+     * or editing on the current object.
+     */
+    public revertToPreviousObject(): void {
+        this.validating = false;
+        this.editing = false;
         this._config.object = this.prevObject;
         this.prevObject = undefined;
     }
@@ -67,9 +81,10 @@ export class StixDialogComponent implements OnInit {
     public save() {
         let object = Array.isArray(this.config.object)? this.config.object[0] : this.config.object;
         let subscription = object.save(this.restApiConnectorService).subscribe({
-            next: (result) => { 
-                this.dialogRef.close(this.dirty);
+            next: (result) => {
                 this.editorService.onEditingStopped.emit();
+                if (this.prevObject) this.revertToPreviousObject();
+                else this.dialogRef.close(this.dirty);
             },
             complete: () => { subscription.unsubscribe(); }
         })
@@ -78,7 +93,14 @@ export class StixDialogComponent implements OnInit {
         this.validating = false;
     }
 
+    public discardChanges() {
+        this.editorService.onEditingStopped.emit();
+        if (this.prevObject) this.revertToPreviousObject();
+        else this.close();
+    }
+
     public close() {
+        if (this.prevObject) this.prevObject = undefined; // unset previous object
         this.dialogRef.close(this.dirty);
     }
 
