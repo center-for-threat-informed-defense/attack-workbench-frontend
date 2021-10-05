@@ -165,26 +165,42 @@ export class Relationship extends StixObject {
      * @returns {Observable<StixObject>} of the parent object
      */
     public get_parent_object(object: any, restAPIService: RestApiConnectorService): Observable<StixObject> {
-        this.updating_refs = true;
         if (object.stix.type == 'attack-pattern' && object.stix.x_mitre_is_subtechnique) {
             return restAPIService.getRelatedTo({sourceRef: object.stix.id, relationshipType: "subtechnique-of"}).pipe( // fetch parent from REST API
                 map(relationship => {
                     let p = relationship as any;
                     if (!p || p.data.length == 0) return null; // no parent technique
-                    this.updating_refs = false;
                     return p.data[0].target_object;
                 })
             );
         } else if (object.stix.type == 'x-mitre-data-component') {
             return restAPIService.getDataSource(object.stix.x_mitre_data_source_ref).pipe( // fetch data source from REST API
                 map(data_sources => {
-                    this.updating_refs = false;
                     return data_sources[0].serialize();
                 })
             );
         }
-        this.updating_refs = false
         return EMPTY;
+    }
+
+    public update_source_parent(restAPIService: RestApiConnectorService): Observable<Relationship> {
+        this.updating_refs = true;
+        var subscription = this.get_parent_object(this.source_object, restAPIService).subscribe({
+            next: (res) => { this.source_parent = res; },
+            complete: () => { if (subscription) subscription.unsubscribe(); }
+        });
+        this.updating_refs = false;
+        return of(this);
+    }
+
+    public update_target_parent(restAPIService: RestApiConnectorService): Observable<Relationship> {
+        this.updating_refs = true;
+        var subscription = this.get_parent_object(this.target_object, restAPIService).subscribe({
+            next: (res) => { this.target_parent = res; },
+            complete: () => { if (subscription) subscription.unsubscribe(); }
+        });
+        this.updating_refs = false;
+        return of(this);
     }
 
     /**
