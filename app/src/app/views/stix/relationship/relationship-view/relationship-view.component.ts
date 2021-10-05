@@ -36,9 +36,7 @@ export class RelationshipViewComponent extends StixViewPage implements OnInit {
         // initialize source/target types if there is a source/target object, or if there is only one possible value
         if (this.relationship.source_object) {
             this.source_type = stixTypeToAttackType[this.relationship.source_object.stix.type]
-            // retrieve parent of source object
-            var src_sub = this.relationship.get_parent_object(this.relationship.source_object, this.restApiService).subscribe({
-                next: (res) => { this.relationship.source_parent = res; },
+            var src_sub = this.relationship.update_source_parent(this.restApiService).subscribe({
                 complete: () => { if (src_sub) src_sub.unsubscribe(); }
             });
         }
@@ -46,9 +44,7 @@ export class RelationshipViewComponent extends StixViewPage implements OnInit {
 
         if (this.relationship.target_object) {
             this.target_type = stixTypeToAttackType[this.relationship.target_object.stix.type]
-            // retrieve parent of target object
-            var tgt_sub = this.relationship.get_parent_object(this.relationship.target_object, this.restApiService).subscribe({
-                next: (res) => { this.relationship.target_parent = res; },
+            var tgt_sub = this.relationship.update_target_parent(this.restApiService).subscribe({
                 complete: () => { if (tgt_sub) tgt_sub.unsubscribe(); }
             });
         }
