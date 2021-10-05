@@ -168,8 +168,8 @@ export class Relationship extends StixObject {
         this.updating_refs = true;
         if (object.stix.type == 'attack-pattern' && object.stix.x_mitre_is_subtechnique) {
             return restAPIService.getRelatedTo({sourceRef: object.stix.id, relationshipType: "subtechnique-of"}).pipe( // fetch parent from REST API
-                map(relationshp => {
-                    let p = relationshp as any;
+                map(relationship => {
+                    let p = relationship as any;
                     if (!p || p.data.length == 0) return null; // no parent technique
                     this.updating_refs = false;
                     return p.data[0].target_object;

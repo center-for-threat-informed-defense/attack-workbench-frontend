@@ -447,7 +447,7 @@ export class RestApiConnectorService extends ApiConnector {
                             d.data_source = ds[0];
                             return [d];
                         }),
-                        tap(result => logger.log("fetched data source of", result))
+                        tap(data_component => logger.log("fetched data source of", data_component))
                     );
                 }),
                 catchError(this.handleError_continue([])), // on error, trigger the error notification and continue operation without crashing (returns empty item)

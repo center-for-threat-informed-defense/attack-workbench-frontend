@@ -98,32 +98,7 @@ export class DataSource extends StixObject {
      * @returns {Observable<ValidationData>} the validation warnings and errors once validation is complete.
      */
      public validate(restAPIService: RestApiConnectorService): Observable<ValidationData> {
-        return this.base_validate(restAPIService).pipe(
-            map(result => {
-                // check contributors
-                if (!this.contributors.length) result.errors.push({
-                    "field": "contributors",
-                    "result": "error",
-                    "message": "object has no contributors"
-                });
-                // check platforms
-                if (!this.platforms.length) result.errors.push({
-                    "field": "platforms",
-                    "result": "error",
-                    "message": "object has no platforms"
-                });
-
-                // check collection layers
-                if (!this.collection_layers.length) result.errors.push({
-                    "field": "collection_layers",
-                    "result": "error",
-                    "message": "object has no collection layers"
-                });
-
-                return result;
-            }),
-
-        );
+        return this.base_validate(restAPIService);
     }
 
     /**
