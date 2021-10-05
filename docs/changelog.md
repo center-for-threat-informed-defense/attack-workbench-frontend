@@ -34,6 +34,10 @@
 
 ## Changes staged on develop
 ### ATT&CK Workbench version 1.0.3
+#### New Features in 1.0.3
+- Created view pages data source and data component objects. See [frontend#66](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/66).
+- Added ability to create and edit data sources and data components. See [frontend#67](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/67).
+
 #### Improvements in 1.0.3
 - Added object type documentation on list pages. See [frontend#221](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/221).
 - Improved the visibility of errors in collection imports:
