@@ -173,10 +173,11 @@ ATT&CK IDs must follow a prescribed format:
 | Matrix           | (domain identifier)* |
 | Tactic           | `TAxxxx` |
 | Technique        | `Txxxx` |
-| Sub-Technique   |  `Txxxx.yyy` |
+| Sub-Technique    |  `Txxxx.yyy` |
 | Mitigation       | `Mxxxx` |
 | Group            | `Gxxxx`  |
 | Software         | `Sxxxx` |
+| Data Source      | `DSxxxx` |
 
 _\* Domain identifiers for Matrices are described in the section for editing matrices._
 
@@ -232,7 +233,7 @@ The set of fields available to edit on a technique differs according to the doma
 
 | Field | Domains | Tactics? |  Description |
 |:------|:--------|:---------|:-------------|
-| Data Sources | Enterprise, ICS | (All Tactics) | Sources of information that may be used to identify the action or result of the action being performed. |
+| Data Sources | ICS | (All Tactics) | Sources of information that may be used to identify the action or result of the action being performed. |
 | sub-technique? | Enterprise | (All Tactics) | Is this object a sub-technique? This cannot be changed for sub-techniques with assigned parents, or for parent-techniques with assigned sub-techniques. |
 | System Requirements | Enterprise | (All Tactics) | Additional information on requirements the adversary needs to meet or about the state of the system (software, patch level, etc.) that may be required for the technique to work. |
 | Permissions Required | Enterprise | Privilege Escalation | The lowest level of permissions the adversary is required to be operating within to perform the technique on a system. |
@@ -252,7 +253,7 @@ The set of fields available to edit on a technique differs according to the doma
 | Sub-techniques / Other Sub-techniques      | Sub-techniques of the technique if it is a parent technique, or other sub-techniques of the parent | is a sub-technique.
 | Mitigations                                | Mitigations that apply to this technique |
 | Procedure Examples                         | Groups and software that use this technique |
-
+| Data Sources                               | Data components that detect this technique |
 
 #### Editing Tactics
 
@@ -306,6 +307,21 @@ The software type must be selected when creating it and due to limitations of th
 | Techniques Used      | Techniques used by the group |
 | Associated Groups    | Groups that use this software |
 
+#### Editing Data Sources
+
+<!-- TODO placeholder for data source/data component info -->
+
+##### Data Source Relationships
+
+| Relationship Section                    | Description |
+|:-----|:----|
+| Data Components      | Data components related to this data source |
+
+##### Data Component Relationships
+
+| Relationship Section                    | Description |
+|:-----|:----|
+| Techniques Detected      | Techniques detected by the data component |
 #### Editing Relationships
 
 Relationships map objects to other objects. Relationships have types, sources, and targets. The source and targets define the objects connected by the relationship, and the type is a verb describing the nature of their relationship. 
@@ -316,6 +332,7 @@ Relationships map objects to other objects. Relationships have types, sources, a
 | uses              | Group, Software*  | Software*, Technique |
 | mitigates         | Mitigation       | Technique |
 | subtechnique-of   | Technique        | Technique |
+| detects           | Data Component   | Technique |
 
 _\* Relationships cannot be created between two software._
 
