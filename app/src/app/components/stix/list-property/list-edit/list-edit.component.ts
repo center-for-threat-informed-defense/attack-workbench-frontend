@@ -2,7 +2,7 @@ import { AfterContentChecked, ChangeDetectorRef, Component, Input, OnInit, ViewE
 import { ListPropertyConfig } from '../list-property.component';
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { MatChipInputEvent } from '@angular/material/chips';
-import { FormControl } from '@angular/forms';
+import { FormControl, Validators } from '@angular/forms';
 import { MatOptionSelectionChange } from '@angular/material/core';
 import { MatDialog } from '@angular/material/dialog';
 import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/rest-api-connector.service';
@@ -50,12 +50,14 @@ export class ListEditComponent implements OnInit, AfterContentChecked {
     public allObjects: StixObject[] = [];
 
     // any value (editType: 'any')
+    public inputControl: FormControl;
     readonly separatorKeysCodes: number[] = [ENTER, COMMA];   
 
     constructor(public dialog: MatDialog, private restAPIConnectorService: RestApiConnectorService, private ref: ChangeDetectorRef) { }
 
     ngOnInit(): void {
         this.selectControl = new FormControl({value: this.config.object[this.config.field], disabled: this.config.disabled ? this.config.disabled : false});
+        this.inputControl = new FormControl(this.config.object[this.config.field], this.config.required ? [Validators.required] : undefined);
         if (this.config.field == 'platforms' 
          || this.config.field == 'tactic_type' 
          || this.config.field == 'permissions_required' 
@@ -213,6 +215,7 @@ export class ListEditComponent implements OnInit, AfterContentChecked {
     public add(event: MatChipInputEvent): void {
         if (event.value && event.value.trim()) {
             this.config.object[this.config.field].push(event.value.trim());
+            this.inputControl.setValue(this.config.object[this.config.field]);
         }
         if (event.input) {
             event.input.value = ''; // reset input value
@@ -225,6 +228,7 @@ export class ListEditComponent implements OnInit, AfterContentChecked {
         if (i >= 0) {
             this.config.object[this.config.field].splice(i, 1);
         }
+        this.inputControl.setValue(this.config.object[this.config.field])
     }
 
     /** Remove selection from via chip cancel button */
