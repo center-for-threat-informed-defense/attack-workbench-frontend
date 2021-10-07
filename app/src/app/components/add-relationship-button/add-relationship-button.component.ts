@@ -41,8 +41,10 @@ export class AddRelationshipButtonComponent implements OnInit {
                     sidebarControl: "events"
                 }
 
+                // if a dialog reference is provided, replace the active
+                // content with the relationship edit interface. This prevents
+                // a new dialog from opening over the current dialog.
                 if (this.config.dialog && this.config.dialog.componentInstance) {
-                    // replace current dialog content
                     this.config.dialog.componentInstance._config = config;
                     this.config.dialog.componentInstance.startEditing();
                 } else {
@@ -70,5 +72,9 @@ export interface AddRelationshipButtonConfig {
     source_object?: StixObject; //initial relationship source object. Takes precedence over source_ref if both are specified, and is much faster to execute
     target_ref?: string; //initial relationship target ref
     target_object?: StixObject; //initial relationship target object. Takes precedence over target_ref if both are specified, and is much faster to execute
-    dialog?: MatDialogRef<StixDialogComponent> //dialog ref; if provided the 'create relationship interface' will replace the current dialog content
+    /**
+     * reference to the current working dialog. This is relevant when adding a new relationship from within the dialog.
+     * If provided, the 'create relationship' interface will replace the dialog content.
+     */
+    dialog?: MatDialogRef<StixDialogComponent>
 }
