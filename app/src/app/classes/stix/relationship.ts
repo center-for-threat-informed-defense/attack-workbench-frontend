@@ -81,12 +81,22 @@ export class Relationship extends StixObject {
                 let serialized = this.serialize();
                 serialized.source_object = x.find(result => result.stix.id == new_source_ref);
                 this.deserialize(serialized);
-                var src_sub = this.get_parent_object(serialized.source_object, restAPIService).subscribe({
-                    next: (res) => { this.source_parent = res; },
-                    complete: () => { if (src_sub) src_sub.unsubscribe(); }
-                });
-                this.updating_refs = false;
                 return this;
+            }),
+            switchMap(relationship => {
+                if (relationship.source_object.stix.x_mitre_is_subtechnique || relationship.source_object.stix.type == 'x-mitre-data-component') {
+                    return this.get_parent_object(relationship.source_object, restAPIService).pipe(
+                        map(res => {
+                            this.source_parent = res;
+                            this.updating_refs = false;
+                            return this;
+                        })
+                    )
+                } else {
+                    this.source_parent = undefined; // source object has no parent
+                    this.updating_refs = false;
+                    return of(this);
+                }
             })
         )
     }
@@ -103,10 +113,17 @@ export class Relationship extends StixObject {
         let serialized = this.serialize();
         serialized.source_object = new_source_object.serialize();
         this.deserialize(serialized);
-        var src_sub = this.get_parent_object(serialized.source_object, restAPIService).subscribe({
-            next: (res) => { this.source_parent = res; },
-            complete: () => { if (src_sub) src_sub.unsubscribe(); }
-        });
+
+        if (this.source_object.stix.x_mitre_is_subtechnique || this.source_object.stix.type == 'x-mitre-data-component') {
+            return this.get_parent_object(this.source_object, restAPIService).pipe(
+                map(result => {
+                    this.source_parent = result;
+                    this.updating_refs = false;
+                    return this;
+                })
+            );
+        } else this.source_parent = undefined; // source object has no parent
+
         this.updating_refs = false;
         return of(this);
     }
@@ -126,12 +143,22 @@ export class Relationship extends StixObject {
                 let serialized = this.serialize();
                 serialized.target_object = x.find(result => result.stix.id == new_target_ref);
                 this.deserialize(serialized);
-                let tgt_sub = this.get_parent_object(serialized.target_object, restAPIService).subscribe({
-                    next: (res) => { this.target_parent = res; },
-                    complete: () => { if (tgt_sub) tgt_sub.unsubscribe(); }
-                });
-                this.updating_refs = false;
                 return this;
+            }),
+            switchMap(relationship => {
+                if (relationship.target_object.stix.x_mitre_is_subtechnique || relationship.target_object.stix.type == 'x-mitre-data-component') {
+                    return this.get_parent_object(relationship.target_object, restAPIService).pipe(
+                        map(res => {
+                            this.target_parent = res;
+                            this.updating_refs = false;
+                            return this;
+                        })
+                    )
+                } else {
+                    this.target_parent = undefined; // target object has no parent
+                    this.updating_refs = false;
+                    return of(this);
+                }
             })
         )
     }
@@ -148,10 +175,17 @@ export class Relationship extends StixObject {
         let serialized = this.serialize();
         serialized.target_object = new_target_object.serialize();
         this.deserialize(serialized);
-        var tgt_sub = this.get_parent_object(serialized.target_object, restAPIService).subscribe({
-            next: (res) => { this.target_parent = res; },
-            complete: () => { if (tgt_sub) tgt_sub.unsubscribe(); }
-        });
+
+        if (this.target_object.stix.x_mitre_is_subtechnique || this.target_object.stix.type == 'x-mitre-data-component') {
+            return this.get_parent_object(this.target_object, restAPIService).pipe(
+                map(result => {
+                    this.target_parent = result;
+                    this.updating_refs = false;
+                    return this;
+                })
+            );
+        } else this.target_parent = undefined; // target object has no parent
+
         this.updating_refs = false;
         return of(this);
     }
@@ -165,22 +199,22 @@ export class Relationship extends StixObject {
      * @returns {Observable<StixObject>} of the parent object
      */
     public get_parent_object(object: any, restAPIService: RestApiConnectorService): Observable<StixObject> {
-        if (object.stix.type == 'attack-pattern' && object.stix.x_mitre_is_subtechnique) {
+        if (object.stix.x_mitre_is_subtechnique) { // sub-technique
             return restAPIService.getRelatedTo({sourceRef: object.stix.id, relationshipType: "subtechnique-of"}).pipe( // fetch parent from REST API
                 map(relationship => {
                     let p = relationship as any;
-                    if (!p || p.data.length == 0) return null; // no parent technique
+                    if (!p || p.data.length == 0) return null; // no parent technique found
                     return p.data[0].target_object;
                 })
             );
-        } else if (object.stix.type == 'x-mitre-data-component') {
+        } else { // data component
             return restAPIService.getDataSource(object.stix.x_mitre_data_source_ref).pipe( // fetch data source from REST API
                 map(data_sources => {
+                    if (!data_sources || data_sources.length == 0) return null; // no data source found
                     return data_sources[0].serialize();
                 })
             );
         }
-        return EMPTY;
     }
 
     public update_source_parent(restAPIService: RestApiConnectorService): Observable<Relationship> {
