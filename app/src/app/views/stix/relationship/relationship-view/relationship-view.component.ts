@@ -36,17 +36,23 @@ export class RelationshipViewComponent extends StixViewPage implements OnInit {
         // initialize source/target types if there is a source/target object, or if there is only one possible value
         if (this.relationship.source_object) {
             this.source_type = stixTypeToAttackType[this.relationship.source_object.stix.type]
-            var src_sub = this.relationship.update_source_parent(this.restApiService).subscribe({
-                complete: () => { if (src_sub) src_sub.unsubscribe(); }
-            });
+            if (this.relationship.source_object.stix.x_mitre_is_subtechnique || this.source_type == 'data-component') {
+                // fetch parent of source object if it is a sub-technique or data component
+                var src_sub = this.relationship.update_source_parent(this.restApiService).subscribe({
+                    complete: () => { if (src_sub) src_sub.unsubscribe(); }
+                });
+            }
         }
         else if (this.relationship.valid_source_types.length == 1) this.source_type = this.relationship.valid_source_types[0];
 
         if (this.relationship.target_object) {
             this.target_type = stixTypeToAttackType[this.relationship.target_object.stix.type]
-            var tgt_sub = this.relationship.update_target_parent(this.restApiService).subscribe({
-                complete: () => { if (tgt_sub) tgt_sub.unsubscribe(); }
-            });
+            if ( (this.relationship.target_object.stix.x_mitre_is_subtechnique || this.target_type == 'data-component') ) {
+                // fetch parent of target object if it is a sub-technique or data component
+                var tgt_sub = this.relationship.update_target_parent(this.restApiService).subscribe({
+                    complete: () => { if (tgt_sub) tgt_sub.unsubscribe(); }
+                });
+            }
         }
         else if (this.relationship.valid_target_types.length == 1) this.target_type = this.relationship.valid_target_types[0];
     }
