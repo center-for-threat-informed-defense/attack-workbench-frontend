@@ -19,7 +19,7 @@ export class DataSourceViewComponent extends StixViewPage implements OnInit {
     constructor(public dialog: MatDialog, private restAPIConnectorService: RestApiConnectorService) { super(); }
 
     ngOnInit(): void {
-        this.getDataComponents();
+        this.data_components = this.data_source.data_components;
     }
 
     public getDataComponents(): void {

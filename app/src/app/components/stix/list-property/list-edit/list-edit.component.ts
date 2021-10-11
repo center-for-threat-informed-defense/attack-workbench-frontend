@@ -36,7 +36,8 @@ export class ListEditComponent implements OnInit, AfterContentChecked {
         "impact_type": "x_mitre_impact_type",
         "effective_permissions": "x_mitre_effective_permissions",
         "permissions_required": "x_mitre_permissions_required",
-        "collection_layers": "x_mitre_collection_layers"
+        "collection_layers": "x_mitre_collection_layers",
+        "data_sources": "x_mitre_data_sources"
     }
     public domains = [
         "enterprise-attack",
@@ -65,7 +66,7 @@ export class ListEditComponent implements OnInit, AfterContentChecked {
          || this.config.field == 'impact_type'
          || this.config.field == 'domains'
          || this.config.field == 'collection_layers'
-         || this.config.field == 'data_sources') { // TODO retrieve ics data sources allowed values from REST API
+         || this.config.field == 'data_sources') {
             if (!this.dataLoaded) {
                 let data$ = this.restAPIConnectorService.getAllAllowedValues();
                 this.sub = data$.subscribe({
