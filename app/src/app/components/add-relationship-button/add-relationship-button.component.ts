@@ -46,6 +46,7 @@ export class AddRelationshipButtonComponent implements OnInit {
                 // a new dialog from opening over the current dialog.
                 if (this.config.dialog && this.config.dialog.componentInstance) {
                     this.config.dialog.componentInstance._config = config;
+                    this.config.dialog.componentInstance.prevObject = this.config.source_object ? this.config.source_object : this.config.target_object;
                     this.config.dialog.componentInstance.startEditing();
                 } else {
                     // open a new dialog

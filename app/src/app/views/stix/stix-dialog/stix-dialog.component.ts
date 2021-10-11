@@ -84,6 +84,10 @@ export class StixDialogComponent implements OnInit {
             next: (result) => {
                 this.editorService.onEditingStopped.emit();
                 if (this.prevObject) this.revertToPreviousObject();
+                else if (object.attackType == 'data-component') { // view data component on save
+                    this.validating = false; 
+                    this.editing = false;
+                }
                 else this.dialogRef.close(this.dirty);
             },
             complete: () => { subscription.unsubscribe(); }
