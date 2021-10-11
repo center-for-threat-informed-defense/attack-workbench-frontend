@@ -50,9 +50,7 @@ export class DataSourceViewComponent extends StixViewPage implements OnInit {
         });
         let subscription = prompt.afterClosed().subscribe({
             next: (result) => {
-                if (result) {
-                    if (prompt.componentInstance.dirty) this.getDataComponents(); //re-fetch values since an edit occurred
-                }
+                if (result) { this.getDataComponents(); } //re-fetch values since an edit occurred
             },
             complete: () => { subscription.unsubscribe(); }
         });
