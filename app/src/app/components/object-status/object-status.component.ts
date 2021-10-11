@@ -201,69 +201,70 @@ export class ObjectStatusComponent implements OnInit {
 
         let confirmationSub = confirmationPrompt.afterClosed().subscribe({
             next: (result) => {
-                if (result) {
-                    // deprecate object
-                    if (revoked) this.object.revoked = true;
-                    else this.object.deprecated = true;
-                    saves.push(this.object.save(this.restAPIService));
-            
-                    // update relationships with the object
-                    for (let relationship of this.relationships) {
-                        if (!relationship.deprecated) {
-                            relationship.deprecated = true;
-                            saves.push(relationship.save(this.restAPIService));
-                        }
-                    }
-
-                    if (this.editorService.type == 'data-source') {
-                        // deprecate related data components
-                        let dataComponents$ = this.restAPIService.getAllDataComponents();
-                        let dcSubscription = dataComponents$.subscribe({
-                            next: (dataComponents) => {
-                                let allDataComponents = dataComponents.data as DataComponent[];
-                                let relDataComponents = allDataComponents.filter(dc => dc.data_source_ref == this.object.stixID);
-                                for (let dataComponent of relDataComponents) {
-                                    dataComponent.deprecated = true;
-                                    saves.push(dataComponent.save(this.restAPIService));
-
-                                    // deprecate relationships with the data component
-                                    let dataComponentRels$ = this.restAPIService.getRelatedTo({sourceOrTargetRef: dataComponent.stixID});
-                                    let relSubscription = dataComponentRels$.subscribe({
-                                        next: (rels) => {
-                                            let relationships = rels.data as Relationship[];
-                                            for (let rel of relationships) {
-                                                rel.deprecated = true;
-                                                saves.push(rel.save(this.restAPIService));
-                                            }
-                                        },
-                                        complete: () => { relSubscription.unsubscribe(); }
-                                    });
-                                }
-                            },
-                            complete: () => { dcSubscription.unsubscribe(); }
-                        });
-                    }
-
-                    if (revoked_by_id) {
-                        // create a new 'revoked-by' relationship
-                        let revokedRelationship = new Relationship();
-                        revokedRelationship.relationship_type = 'revoked-by';
-                        revokedRelationship.source_ref = this.object.stixID;
-                        revokedRelationship.target_ref = revoked_by_id;
-                        saves.push(revokedRelationship.save(this.restAPIService));
-                    }
-            
-                    // complete save calls
-                    let saveSubscription = forkJoin(saves).subscribe({
-                        complete: () => {
-                            this.editorService.onReload.emit();
-                            saveSubscription.unsubscribe();
-                        }
-                    });
-                } else { // user cancelled
+                if (!result) { // user cancelled
                     if (revoked) this.revoked = false;
                     else this.deprecated = false;
+                    return;
                 }
+
+                // deprecate object
+                if (revoked) this.object.revoked = true;
+                else this.object.deprecated = true;
+                saves.push(this.object.save(this.restAPIService));
+        
+                // update relationships with the object
+                for (let relationship of this.relationships) {
+                    if (!relationship.deprecated) {
+                        relationship.deprecated = true;
+                        saves.push(relationship.save(this.restAPIService));
+                    }
+                }
+
+                if (this.editorService.type == 'data-source') {
+                    // deprecate related data components
+                    let dataComponents$ = this.restAPIService.getAllDataComponents();
+                    let dcSubscription = dataComponents$.subscribe({
+                        next: (dataComponents) => {
+                            let allDataComponents = dataComponents.data as DataComponent[];
+                            let relDataComponents = allDataComponents.filter(dc => dc.data_source_ref == this.object.stixID);
+                            for (let dataComponent of relDataComponents) {
+                                dataComponent.deprecated = true;
+                                saves.push(dataComponent.save(this.restAPIService));
+
+                                // deprecate relationships with the data component
+                                let dataComponentRels$ = this.restAPIService.getRelatedTo({sourceOrTargetRef: dataComponent.stixID});
+                                let relSubscription = dataComponentRels$.subscribe({
+                                    next: (rels) => {
+                                        let relationships = rels.data as Relationship[];
+                                        for (let rel of relationships) {
+                                            rel.deprecated = true;
+                                            saves.push(rel.save(this.restAPIService));
+                                        }
+                                    },
+                                    complete: () => { relSubscription.unsubscribe(); }
+                                });
+                            }
+                        },
+                        complete: () => { dcSubscription.unsubscribe(); }
+                    });
+                }
+
+                if (revoked_by_id) {
+                    // create a new 'revoked-by' relationship
+                    let revokedRelationship = new Relationship();
+                    revokedRelationship.relationship_type = 'revoked-by';
+                    revokedRelationship.source_ref = this.object.stixID;
+                    revokedRelationship.target_ref = revoked_by_id;
+                    saves.push(revokedRelationship.save(this.restAPIService));
+                }
+        
+                // complete save calls
+                let saveSubscription = forkJoin(saves).subscribe({
+                    complete: () => {
+                        this.editorService.onReload.emit();
+                        saveSubscription.unsubscribe();
+                    }
+                });
             },
             complete: () => { confirmationSub.unsubscribe(); }
         });

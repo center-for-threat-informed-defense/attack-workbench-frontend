@@ -48,17 +48,18 @@ export class AddRelationshipButtonComponent implements OnInit {
                     this.config.dialog.componentInstance._config = config;
                     this.config.dialog.componentInstance.prevObject = this.config.source_object ? this.config.source_object : this.config.target_object;
                     this.config.dialog.componentInstance.startEditing();
-                } else {
-                    // open a new dialog
-                    let prompt = this.dialog.open(StixDialogComponent, {
-                        data: config,
-                        maxHeight: "75vh"
-                    })
-                    let subscription = prompt.afterClosed().subscribe({
-                        next: result => { if (prompt.componentInstance.dirty) this.created.emit(); }, //re-fetch values since an edit occurred
-                        complete: () => { subscription.unsubscribe(); }
-                    });
+                    return;
                 }
+
+                // open a new dialog
+                let prompt = this.dialog.open(StixDialogComponent, {
+                    data: config,
+                    maxHeight: "75vh"
+                })
+                let subscription = prompt.afterClosed().subscribe({
+                    next: result => { if (prompt.componentInstance.dirty) this.created.emit(); }, //re-fetch values since an edit occurred
+                    complete: () => { subscription.unsubscribe(); }
+                });
             },
             complete: () => { if (zip_subscription) zip_subscription.unsubscribe(); } //for some reason zip_subscription doesn't exist if using set_source_object or set_target_object
         })
