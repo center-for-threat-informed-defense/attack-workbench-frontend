@@ -2,7 +2,6 @@ import { StixObject } from "./stix-object";
 import { logger } from "../../util/logger";
 import { RestApiConnectorService } from "src/app/services/connectors/rest-api/rest-api-connector.service";
 import { Observable } from "rxjs";
-import { map } from "rxjs/operators";
 import { ValidationData } from "../serializable";
 import { DataComponent } from "./data-component";
 
@@ -53,43 +52,44 @@ export class DataSource extends StixObject {
      * @param {*} raw the raw object to parse
      */
      public deserialize(raw: any) {
-        if ("stix" in raw) {
-            let sdo = raw.stix;
-            if ("name" in sdo) {
-                if (typeof(sdo.name) === "string") this.name = sdo.name;
-                else logger.error("TypeError: name field is not a string:", sdo.name, "(",typeof(sdo.name),")")
-            } else this.name = "";
-
-            if ("description" in sdo) {
-                if (typeof(sdo.description) === "string") this.description = sdo.description;
-                else logger.error("TypeError: description field is not a string:", sdo.description, "(",typeof(sdo.description),")")
-            } else this.description = "";
-
-            if ("x_mitre_platforms" in sdo) {
-                if (this.isStringArray(sdo.x_mitre_platforms)) this.platforms = sdo.x_mitre_platforms;
-                else logger.error("TypeError: platforms field is not a string array.")
-            } else this.platforms = [];
-            
-            if ("x_mitre_collection_layers" in sdo) {
-                if (this.isStringArray(sdo.x_mitre_collection_layers)) this.collection_layers = sdo.x_mitre_collection_layers;
-                else logger.error("TypeError: collection layers field is not a string array.");
-            } else this.collection_layers = [];
-
-            if ("x_mitre_contributors" in sdo) {
-                if (this.isStringArray(sdo.x_mitre_contributors)) this.contributors = sdo.x_mitre_contributors;
-                else logger.error("TypeError: x_mitre_contributors is not a string array:", sdo.x_mitre_contributors, "(",typeof(sdo.x_mitre_contributors),")")
-            } else this.contributors = [];
-
-            if ("x_mitre_domains" in sdo) {
-                if (this.isStringArray(sdo.x_mitre_domains)) this.domains = sdo.x_mitre_domains;
-                else logger.error("TypeError: domains field is not a string array.");
-            } else this.domains = ['enterprise-attack']; // default to enterprise
-
-            if ("data_components" in sdo) { // TODO parse objects returned from REST API
-                if (typeof(sdo.data_components) == "object") this.data_components = sdo.data_components.map(dc => new DataComponent(dc));
-                else logger.error("TypeError: data components field is not an object:", sdo.data_components, "(", typeof(sdo.data_components), ")");
-            } else this.data_components = [];
+        if ("dataComponents" in raw) {
+            for (let obj of raw.dataComponents) {
+                this.data_components.push(new DataComponent(obj));
+            }
         }
+
+        if (!("stix" in raw)) return;
+
+        let sdo = raw.stix;
+        if ("name" in sdo) {
+            if (typeof(sdo.name) === "string") this.name = sdo.name;
+            else logger.error("TypeError: name field is not a string:", sdo.name, "(",typeof(sdo.name),")")
+        } else this.name = "";
+
+        if ("description" in sdo) {
+            if (typeof(sdo.description) === "string") this.description = sdo.description;
+            else logger.error("TypeError: description field is not a string:", sdo.description, "(",typeof(sdo.description),")")
+        } else this.description = "";
+
+        if ("x_mitre_platforms" in sdo) {
+            if (this.isStringArray(sdo.x_mitre_platforms)) this.platforms = sdo.x_mitre_platforms;
+            else logger.error("TypeError: platforms field is not a string array.")
+        } else this.platforms = [];
+        
+        if ("x_mitre_collection_layers" in sdo) {
+            if (this.isStringArray(sdo.x_mitre_collection_layers)) this.collection_layers = sdo.x_mitre_collection_layers;
+            else logger.error("TypeError: collection layers field is not a string array.");
+        } else this.collection_layers = [];
+
+        if ("x_mitre_contributors" in sdo) {
+            if (this.isStringArray(sdo.x_mitre_contributors)) this.contributors = sdo.x_mitre_contributors;
+            else logger.error("TypeError: x_mitre_contributors is not a string array:", sdo.x_mitre_contributors, "(",typeof(sdo.x_mitre_contributors),")")
+        } else this.contributors = [];
+
+        if ("x_mitre_domains" in sdo) {
+            if (this.isStringArray(sdo.x_mitre_domains)) this.domains = sdo.x_mitre_domains;
+            else logger.error("TypeError: domains field is not a string array.");
+        } else this.domains = ['enterprise-attack']; // default to enterprise
     }
 
     /**
