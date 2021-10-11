@@ -45,29 +45,29 @@ export class DataComponent extends StixObject {
      * @param {*} raw the raw object to parse
      */
      public deserialize(raw: any) {
-        if ("stix" in raw) {
-            let sdo = raw.stix;
+        if (!("stix" in raw)) return;
 
-            if ("name" in sdo) {
-                if (typeof(sdo.name) === "string") this.name = sdo.name;
-                else logger.error("TypeError: name field is not a string:", sdo.name, "(",typeof(sdo.name),")")
-            } else this.name = "";
+        let sdo = raw.stix;
 
-            if ("description" in sdo) {
-                if (typeof(sdo.description) === "string") this.description = sdo.description;
-                else logger.error("TypeError: description field is not a string:", sdo.description, "(",typeof(sdo.description),")")
-            } else this.description = "";
+        if ("name" in sdo) {
+            if (typeof(sdo.name) === "string") this.name = sdo.name;
+            else logger.error("TypeError: name field is not a string:", sdo.name, "(",typeof(sdo.name),")")
+        } else this.name = "";
 
-            if ("x_mitre_data_source_ref" in sdo) {
-                if (typeof(sdo.x_mitre_data_source_ref) === "string") this.data_source_ref = sdo.x_mitre_data_source_ref;
-                else logger.error("TypeError: data source ref field is not a string:", sdo.x_mitre_data_source_ref, "(",typeof(sdo.x_mitre_data_source_ref),")")
-            } else this.data_source_ref = "";
+        if ("description" in sdo) {
+            if (typeof(sdo.description) === "string") this.description = sdo.description;
+            else logger.error("TypeError: description field is not a string:", sdo.description, "(",typeof(sdo.description),")")
+        } else this.description = "";
 
-            if ("x_mitre_domains" in sdo) {
-                if (this.isStringArray(sdo.x_mitre_domains)) this.domains = sdo.x_mitre_domains;
-                else logger.error("TypeError: domains field is not a string array.");
-            } else this.domains = ['enterprise-attack']; // default to enterprise
-        }
+        if ("x_mitre_data_source_ref" in sdo) {
+            if (typeof(sdo.x_mitre_data_source_ref) === "string") this.data_source_ref = sdo.x_mitre_data_source_ref;
+            else logger.error("TypeError: data source ref field is not a string:", sdo.x_mitre_data_source_ref, "(",typeof(sdo.x_mitre_data_source_ref),")")
+        } else this.data_source_ref = "";
+
+        if ("x_mitre_domains" in sdo) {
+            if (this.isStringArray(sdo.x_mitre_domains)) this.domains = sdo.x_mitre_domains;
+            else logger.error("TypeError: domains field is not a string array.");
+        } else this.domains = ['enterprise-attack']; // default to enterprise
     }
 
     /**

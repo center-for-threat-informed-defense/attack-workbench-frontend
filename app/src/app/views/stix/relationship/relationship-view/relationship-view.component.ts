@@ -1,6 +1,4 @@
-import { SelectionModel } from '@angular/cdk/collections';
-import { Component, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
-import { Observer } from 'rxjs';
+import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { Relationship } from 'src/app/classes/stix/relationship';
 import { StixObject, stixTypeToAttackType } from 'src/app/classes/stix/stix-object';
 import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/rest-api-connector.service';

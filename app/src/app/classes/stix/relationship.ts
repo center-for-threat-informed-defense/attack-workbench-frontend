@@ -1,4 +1,4 @@
-import { Observable, of, EMPTY } from "rxjs";
+import { Observable, of } from "rxjs";
 import { map, switchMap } from "rxjs/operators";
 import { RestApiConnectorService } from "src/app/services/connectors/rest-api/rest-api-connector.service";
 import { ValidationData } from "../serializable";
@@ -202,9 +202,9 @@ export class Relationship extends StixObject {
         if (object.stix.x_mitre_is_subtechnique) { // sub-technique
             return restAPIService.getRelatedTo({sourceRef: object.stix.id, relationshipType: "subtechnique-of"}).pipe( // fetch parent from REST API
                 map(relationship => {
-                    let p = relationship as any;
-                    if (!p || p.data.length == 0) return null; // no parent technique found
-                    return p.data[0].target_object;
+                    if (!relationship || relationship.data.length == 0) return null; // no parent technique found
+                    let p = relationship.data[0] as Relationship;
+                    return p.target_object;
                 })
             );
         } else { // data component

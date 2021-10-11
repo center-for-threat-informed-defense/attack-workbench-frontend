@@ -300,8 +300,8 @@ export abstract class StixObject extends Serializable {
                                 this.attackType == "matrix"? restAPIService.getAllMatrices() :
                                 this.attackType == "mitigation"? restAPIService.getAllMitigations() :
                                 this.attackType == "technique"? restAPIService.getAllTechniques() :
-                                this.attackType == "data-source" ? restAPIService.getAllDataSources() :
-                                this.attackType == "data-component" ? restAPIService.getAllDataComponents() :
+                                this.attackType == "data-source"? restAPIService.getAllDataSources() :
+                                this.attackType == "data-component"? restAPIService.getAllDataComponents() :
                                 restAPIService.getAllTactics(); 
                 return accessor.pipe(
                     map(objects => {
