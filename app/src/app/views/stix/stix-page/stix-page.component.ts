@@ -126,9 +126,7 @@ export class StixPageComponent implements OnInit, OnDestroy {
             else if (this.objectType  == "tactic") objects$ = this.restAPIConnectorService.getTactic(objectStixID);
             else if (this.objectType  == "technique") objects$ = this.restAPIConnectorService.getTechnique(objectStixID, null, "latest", true); 
             else if (this.objectType  == "collection") objects$ = this.restAPIConnectorService.getCollection(objectStixID, objectModified, "latest", false, true);
-            // TODO retrieve data components along with data source object from from REST API
-            // else if (this.objectType  == "data-source") objects$ = this.restAPIConnectorService.getDataSource(objectStixID, null, "latest", false, false, true);
-            else if (this.objectType  == "data-source") objects$ = this.restAPIConnectorService.getDataSource(objectStixID);
+            else if (this.objectType  == "data-source") objects$ = this.restAPIConnectorService.getDataSource(objectStixID, null, "latest", false, false, true);
             else if (this.objectType  == "data-component") objects$ = this.restAPIConnectorService.getDataComponent(objectStixID);
             let  subscription = objects$.subscribe({
                 next: result => {
