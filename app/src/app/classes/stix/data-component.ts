@@ -44,7 +44,7 @@ export class DataComponent extends StixObject {
      * @abstract
      * @param {*} raw the raw object to parse
      */
-     public deserialize(raw: any) {
+    public deserialize(raw: any) {
         if (!("stix" in raw)) return;
 
         let sdo = raw.stix;
@@ -75,7 +75,7 @@ export class DataComponent extends StixObject {
      * @param {RestApiConnectorService} restAPIService: the REST API connector through which asynchronous validation can be completed
      * @returns {Observable<ValidationData>} the validation warnings and errors once validation is complete.
      */
-     public validate(restAPIService: RestApiConnectorService): Observable<ValidationData> {
+    public validate(restAPIService: RestApiConnectorService): Observable<ValidationData> {
         return this.base_validate(restAPIService);
     }
 
@@ -84,7 +84,7 @@ export class DataComponent extends StixObject {
      * @param restAPIService [RestApiConnectorService] the service to perform the POST/PUT through
      * @returns {Observable} of the post
      */
-     public save(restAPIService: RestApiConnectorService): Observable<DataComponent> {
+    public save(restAPIService: RestApiConnectorService): Observable<DataComponent> {
         // TODO POST if the object was just created (doesn't exist in db yet)
                 
         let postObservable = restAPIService.postDataComponent(this);

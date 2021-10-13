@@ -207,7 +207,7 @@ export class ObjectStatusComponent implements OnInit {
                     return;
                 }
 
-                // deprecate object
+                // deprecate or revoke object
                 if (revoked) this.object.revoked = true;
                 else this.object.deprecated = true;
                 saves.push(this.object.save(this.restAPIService));

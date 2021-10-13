@@ -58,7 +58,7 @@ export class ListEditComponent implements OnInit, AfterContentChecked {
 
     ngOnInit(): void {
         this.selectControl = new FormControl({value: this.config.object[this.config.field], disabled: this.config.disabled ? this.config.disabled : false});
-        this.inputControl = new FormControl(this.config.object[this.config.field], this.config.required ? [Validators.required] : undefined);
+        this.inputControl = new FormControl(null, this.config.required ? [Validators.required] : undefined);
         if (this.config.field == 'platforms' 
          || this.config.field == 'tactic_type' 
          || this.config.field == 'permissions_required' 
@@ -72,7 +72,7 @@ export class ListEditComponent implements OnInit, AfterContentChecked {
                 this.sub = data$.subscribe({
                     next: (data) => {
                         let stixObject = this.config.object as StixObject;
-                        this.allAllowedValues = data.find(obj => { return obj.objectType == stixObject.attackType; })
+                        this.allAllowedValues = data.find(obj => { return obj.objectType == stixObject.attackType; });
                         this.dataLoaded = true;
                     },
                     complete: () => { this.sub.unsubscribe(); }
@@ -198,6 +198,11 @@ export class ListEditComponent implements OnInit, AfterContentChecked {
             property.domains.forEach(domain => {
                 values = values.concat(domain.allowedValues);
             });
+        }
+
+        // check for existing data
+        for (let value of this.selectControl.value) {
+            if (!values.includes(value)) values.push(value);
         }
 
         if (!values.length) {
