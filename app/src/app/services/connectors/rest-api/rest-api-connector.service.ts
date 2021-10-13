@@ -945,7 +945,7 @@ export class RestApiConnectorService extends ApiConnector {
                         for(let relationship_result of relationships) {
                             all_results = all_results.concat(relationship_result.data)
                         }
-                        return all_results.concat(dataComponents);;
+                        return all_results.concat(dataComponents);
                     })
                 );
             }),
