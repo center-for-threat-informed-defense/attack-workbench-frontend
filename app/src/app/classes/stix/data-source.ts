@@ -51,7 +51,7 @@ export class DataSource extends StixObject {
      * @abstract
      * @param {*} raw the raw object to parse
      */
-     public deserialize(raw: any) {
+    public deserialize(raw: any) {
         if ("dataComponents" in raw) {
             for (let obj of raw.dataComponents) {
                 this.data_components.push(new DataComponent(obj));
@@ -97,7 +97,7 @@ export class DataSource extends StixObject {
      * @param {RestApiConnectorService} restAPIService: the REST API connector through which asynchronous validation can be completed
      * @returns {Observable<ValidationData>} the validation warnings and errors once validation is complete.
      */
-     public validate(restAPIService: RestApiConnectorService): Observable<ValidationData> {
+    public validate(restAPIService: RestApiConnectorService): Observable<ValidationData> {
         return this.base_validate(restAPIService);
     }
 
@@ -106,7 +106,7 @@ export class DataSource extends StixObject {
      * @param restAPIService [RestApiConnectorService] the service to perform the POST/PUT through
      * @returns {Observable} of the post
      */
-     public save(restAPIService: RestApiConnectorService): Observable<DataSource> {
+    public save(restAPIService: RestApiConnectorService): Observable<DataSource> {
         // TODO POST if the object was just created (doesn't exist in db yet)
                 
         let postObservable = restAPIService.postDataSource(this);

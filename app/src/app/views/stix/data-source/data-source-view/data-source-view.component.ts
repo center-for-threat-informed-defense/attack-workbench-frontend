@@ -46,7 +46,8 @@ export class DataSourceViewComponent extends StixViewPage implements OnInit {
                 editable: true,
                 mode: "edit",
                 sidebarControl: "events"
-            }
+            },
+            maxHeight: "75vh"
         });
         let subscription = prompt.afterClosed().subscribe({
             next: (result) => {
