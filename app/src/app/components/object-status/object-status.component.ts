@@ -3,8 +3,8 @@ import { Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { PopoverContentComponent } from 'ngx-smart-popover';
-import { forkJoin } from 'rxjs';
-import { Collection } from 'src/app/classes/stix/collection';
+import { forkJoin, Observable } from 'rxjs';
+import { map, mergeMap } from 'rxjs/operators';
 import { DataComponent } from 'src/app/classes/stix/data-component';
 import { Relationship } from 'src/app/classes/stix/relationship';
 import { StixObject } from 'src/app/classes/stix/stix-object';
@@ -29,6 +29,7 @@ export class ObjectStatusComponent implements OnInit {
     public objects: StixObject[];
     public object: StixObject;
     public relationships;
+    public dataSourceRelationships: StixObject[];
     public revoked: boolean = false;
     public deprecated: boolean = false;
     
@@ -80,12 +81,46 @@ export class ObjectStatusComponent implements OnInit {
             let relSubscription = data$.subscribe({
                 next: (data) => { 
                     this.relationships = data.data as Relationship[]; 
-                    this.loaded = true;
+                    if (this.editorService.type !== 'data-source') this.loaded = true; // mark as complete if object is not a data source
                     setTimeout(() => this.popover.updatePosition()); //after render cycle update popover position since it has new content
                 },
                 complete: () => { relSubscription.unsubscribe() }
             });
+
+            if (this.editorService.type == 'data-source') {
+                // retrieve related data components & their relationships
+                data$ = this.getDataSourceRelationships();
+                let dataSubscription = data$.subscribe({
+                    next: (results) => {
+                        this.dataSourceRelationships = results;
+                        this.loaded = true;
+                    },
+                    complete: () => { dataSubscription.unsubscribe(); }
+                });
+            }
         }
+    }
+
+    public getDataSourceRelationships(): Observable<StixObject[]> {
+        let dataComponents$ = this.restAPIService.getAllDataComponents();
+        return dataComponents$.pipe(
+            map(result => { 
+                let dataComponents = result.data as DataComponent[];
+                return dataComponents.filter(d => d.data_source_ref == this.editorService.stixId);
+            }),
+            mergeMap(dataComponents => {
+                let relatedTo = dataComponents.map(dc => this.restAPIService.getRelatedTo({sourceOrTargetRef: dc.stixID}));
+                return forkJoin(relatedTo).pipe(
+                    map(relationships => {
+                        let all_results: StixObject[] = [];
+                        for(let relationship_result of relationships) {
+                            all_results = all_results.concat(relationship_result.data)
+                        }
+                        return all_results.concat(dataComponents);;
+                    })
+                );
+            })
+        );
     }
 
     private save() {
@@ -221,32 +256,10 @@ export class ObjectStatusComponent implements OnInit {
                 }
 
                 if (this.editorService.type == 'data-source') {
-                    // deprecate related data components
-                    let dataComponents$ = this.restAPIService.getAllDataComponents();
-                    let dcSubscription = dataComponents$.subscribe({
-                        next: (dataComponents) => {
-                            let allDataComponents = dataComponents.data as DataComponent[];
-                            let relDataComponents = allDataComponents.filter(dc => dc.data_source_ref == this.object.stixID);
-                            for (let dataComponent of relDataComponents) {
-                                dataComponent.deprecated = true;
-                                saves.push(dataComponent.save(this.restAPIService));
-
-                                // deprecate relationships with the data component
-                                let dataComponentRels$ = this.restAPIService.getRelatedTo({sourceOrTargetRef: dataComponent.stixID});
-                                let relSubscription = dataComponentRels$.subscribe({
-                                    next: (rels) => {
-                                        let relationships = rels.data as Relationship[];
-                                        for (let rel of relationships) {
-                                            rel.deprecated = true;
-                                            saves.push(rel.save(this.restAPIService));
-                                        }
-                                    },
-                                    complete: () => { relSubscription.unsubscribe(); }
-                                });
-                            }
-                        },
-                        complete: () => { dcSubscription.unsubscribe(); }
-                    });
+                    for (let obj of this.dataSourceRelationships) {
+                        obj.deprecated = true;
+                        saves.push(obj.save(this.restAPIService));
+                    }
                 }
 
                 if (revoked_by_id) {
