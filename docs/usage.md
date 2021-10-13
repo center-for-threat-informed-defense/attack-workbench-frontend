@@ -309,7 +309,13 @@ The software type must be selected when creating it and due to limitations of th
 
 #### Editing Data Sources
 
-<!-- TODO placeholder for data source/data component info -->
+Data sources represent relevant information that can be collected by sensors or logs to detect adversary behaviors. Data sources
+include data components to provide an additional layer of context and identify the specific properties of a data source
+that are relevant to detecting an ATT&CK technique or sub-technique.
+
+Data sources support the standard set of fields and also define collection layers, which are a description of where the data source may be
+physically collected. After a data component has been added to a data source, the user can create relationships with techniques in the
+data component dialog window.
 
 ##### Data Source Relationships
 
@@ -322,6 +328,7 @@ The software type must be selected when creating it and due to limitations of th
 | Relationship Section                    | Description |
 |:-----|:----|
 | Techniques Detected      | Techniques detected by the data component |
+
 #### Editing Relationships
 
 Relationships map objects to other objects. Relationships have types, sources, and targets. The source and targets define the objects connected by the relationship, and the type is a verb describing the nature of their relationship. 
