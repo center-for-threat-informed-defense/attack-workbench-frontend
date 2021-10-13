@@ -3,9 +3,7 @@ import { Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { PopoverContentComponent } from 'ngx-smart-popover';
-import { forkJoin, Observable } from 'rxjs';
-import { map, mergeMap } from 'rxjs/operators';
-import { DataComponent } from 'src/app/classes/stix/data-component';
+import { forkJoin } from 'rxjs';
 import { Relationship } from 'src/app/classes/stix/relationship';
 import { StixObject } from 'src/app/classes/stix/stix-object';
 import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/rest-api-connector.service';
@@ -28,8 +26,7 @@ export class ObjectStatusComponent implements OnInit {
     @ViewChild("objectStatus", {static: false}) public popover: PopoverContentComponent;
     public objects: StixObject[];
     public object: StixObject;
-    public relationships;
-    public dataSourceRelationships: StixObject[];
+    public relationships = [];
     public revoked: boolean = false;
     public deprecated: boolean = false;
     
@@ -76,51 +73,29 @@ export class ObjectStatusComponent implements OnInit {
                 complete: () => { objSubscription.unsubscribe() }
             });
 
-            // retrieve relationships with the object
-            data$ = this.restAPIService.getRelatedTo({sourceOrTargetRef: this.editorService.stixId});
-            let relSubscription = data$.subscribe({
-                next: (data) => { 
-                    this.relationships = data.data as Relationship[]; 
-                    if (this.editorService.type !== 'data-source') this.loaded = true; // mark as complete if object is not a data source
-                    setTimeout(() => this.popover.updatePosition()); //after render cycle update popover position since it has new content
-                },
-                complete: () => { relSubscription.unsubscribe() }
-            });
-
             if (this.editorService.type == 'data-source') {
                 // retrieve related data components & their relationships
-                data$ = this.getDataSourceRelationships();
+                data$ = this.restAPIService.getAllRelatedToDataSource(this.editorService.stixId);
                 let dataSubscription = data$.subscribe({
                     next: (results) => {
-                        this.dataSourceRelationships = results;
-                        this.loaded = true;
+                        this.relationships = this.relationships.concat(results);
                     },
                     complete: () => { dataSubscription.unsubscribe(); }
                 });
             }
-        }
-    }
 
-    public getDataSourceRelationships(): Observable<StixObject[]> {
-        let dataComponents$ = this.restAPIService.getAllDataComponents();
-        return dataComponents$.pipe(
-            map(result => { 
-                let dataComponents = result.data as DataComponent[];
-                return dataComponents.filter(d => d.data_source_ref == this.editorService.stixId);
-            }),
-            mergeMap(dataComponents => {
-                let relatedTo = dataComponents.map(dc => this.restAPIService.getRelatedTo({sourceOrTargetRef: dc.stixID}));
-                return forkJoin(relatedTo).pipe(
-                    map(relationships => {
-                        let all_results: StixObject[] = [];
-                        for(let relationship_result of relationships) {
-                            all_results = all_results.concat(relationship_result.data)
-                        }
-                        return all_results.concat(dataComponents);;
-                    })
-                );
-            })
-        );
+            // retrieve relationships with the object
+            data$ = this.restAPIService.getRelatedTo({sourceOrTargetRef: this.editorService.stixId});
+            let relSubscription = data$.subscribe({
+                next: (data) => { 
+                    let relationships = data.data as Relationship[]; 
+                    this.relationships = this.relationships.concat(relationships)
+                    this.loaded = true;
+                    setTimeout(() => this.popover.updatePosition()); //after render cycle update popover position since it has new content
+                },
+                complete: () => { relSubscription.unsubscribe() }
+            });
+        }
     }
 
     private save() {
@@ -252,13 +227,6 @@ export class ObjectStatusComponent implements OnInit {
                     if (!relationship.deprecated) {
                         relationship.deprecated = true;
                         saves.push(relationship.save(this.restAPIService));
-                    }
-                }
-
-                if (this.editorService.type == 'data-source') {
-                    for (let obj of this.dataSourceRelationships) {
-                        obj.deprecated = true;
-                        saves.push(obj.save(this.restAPIService));
                     }
                 }
 
