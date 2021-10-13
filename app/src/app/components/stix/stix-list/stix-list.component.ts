@@ -256,34 +256,8 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
                         "display": "descriptive"
                     }]
                     break;
-                case "technique":
-                    this.addColumn("", "workflow", "icon");
-                    this.addColumn("", "state", "icon");
-                    this.addColumn("ID", "attackID", "plain", false);
-                    this.addColumn("name", "name", "plain", sticky_allowed, ["name"]);
-                    this.addColumn("platforms", "platforms", "list");
-                    this.addColumn("domain", "domains", "list");
-                    this.addColumn("version", "version", "version");
-                    this.addColumn("modified","modified", "timestamp");
-                    this.addColumn("created", "created", "timestamp");
-                    this.tableDetail = [{
-                        "field": "description",
-                        "display": "descriptive"
-                    }]
-                    break;
-                case "relationship":
-                    this.addColumn("", "state", "icon");
-                    if (this.config.relationshipType && this.config.relationshipType !== "detects") {
-                        this.addColumn("source", "source_ID", "plain");
-                        this.addColumn("", "source_name", "plain", this.config.targetRef? sticky_allowed: false, ["relationship-name"]);// ["name", "relationship-left"]);
-                    } else this.addColumn("source", "source_name", "plain", this.config.targetRef? sticky_allowed: false, ["relationship-name"]);
-                    this.addColumn("type", "relationship_type", "plain", false, ["text-deemphasis", "relationship-joiner"]);
-                    this.addColumn("target", "target_ID", "plain");
-                    this.addColumn("", "target_name", "plain", this.config.sourceRef? sticky_allowed: false, ["relationship-name"]);// ["name", "relationship-right"]);
-                    if (!(this.config.relationshipType && this.config.relationshipType == "subtechnique-of")) this.addColumn("description", "description", "descriptive", false);
-                    // controls_after.push("open-link")
-                    break;
                 case "data-source":
+                case "technique":
                     this.addColumn("", "workflow", "icon");
                     this.addColumn("", "state", "icon");
                     this.addColumn("ID", "attackID", "plain", false);
@@ -308,6 +282,18 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
                         "field": "description",
                         "display": "descriptive"
                     }]
+                    break;
+                case "relationship":
+                    this.addColumn("", "state", "icon");
+                    if (this.config.relationshipType && this.config.relationshipType !== "detects") {
+                        this.addColumn("source", "source_ID", "plain");
+                        this.addColumn("", "source_name", "plain", this.config.targetRef? sticky_allowed: false, ["relationship-name"]);// ["name", "relationship-left"]);
+                    } else this.addColumn("source", "source_name", "plain", this.config.targetRef? sticky_allowed: false, ["relationship-name"]);
+                    this.addColumn("type", "relationship_type", "plain", false, ["text-deemphasis", "relationship-joiner"]);
+                    this.addColumn("target", "target_ID", "plain");
+                    this.addColumn("", "target_name", "plain", this.config.sourceRef? sticky_allowed: false, ["relationship-name"]);// ["name", "relationship-right"]);
+                    if (!(this.config.relationshipType && this.config.relationshipType == "subtechnique-of")) this.addColumn("description", "description", "descriptive", false);
+                    // controls_after.push("open-link")
                     break;
                 default:
                     this.addColumn("type", "attackType", "plain");
