@@ -1,8 +1,8 @@
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { forkJoin, Observable, of, ReplaySubject } from 'rxjs';
-import { tap, catchError, map, share, switchMap } from 'rxjs/operators';
+import { forkJoin, Observable, of } from 'rxjs';
+import { tap, catchError, map, share, switchMap, mergeMap } from 'rxjs/operators';
 import { CollectionIndex } from 'src/app/classes/collection-index';
 import { ExternalReference } from 'src/app/classes/external-references';
 import { Collection } from 'src/app/classes/stix/collection';
@@ -922,6 +922,36 @@ export class RestApiConnectorService extends ApiConnector {
             catchError(this.handleError_continue([])),
             share()
         )
+    }
+
+    /**
+     * Get all objects related to a data source
+     * @param id the STIX ID of the data source
+     * @returns list of data components related to the data source along with the data components' relationships with techniques
+     */
+    public getAllRelatedToDataSource(id: string): Observable<StixObject[]> {
+        let dataComponents$ = this.getAllDataComponents();
+        return dataComponents$.pipe(
+            map(result => { // get related data component objects
+                let dataComponents = result.data as DataComponent[];
+                return dataComponents.filter(d => d.data_source_ref == id);
+            }),
+            mergeMap(dataComponents => { // get relationships for each data component
+                let relatedTo = dataComponents.map(dc => this.getRelatedTo({sourceOrTargetRef: dc.stixID}));
+                if (!relatedTo.length) return of(dataComponents);
+                return forkJoin(relatedTo).pipe(
+                    map(relationships => {
+                        let all_results: StixObject[] = [];
+                        for(let relationship_result of relationships) {
+                            all_results = all_results.concat(relationship_result.data)
+                        }
+                        return all_results.concat(dataComponents);;
+                    })
+                );
+            }),
+            catchError(this.handleError_continue([])),
+            share()
+        );
     }
 
     //   ___ ___ ___ ___ ___ ___ _  _  ___ ___ ___ 
