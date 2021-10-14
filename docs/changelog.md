@@ -38,12 +38,17 @@
 
 ATT&CK Workbench v1.1.0 includes support for ATT&CK Spec v2.1.0 and coincides with the ATT&CK v10.0 release. Users who do not upgrade to Workbench v1.1.0 may encounter issues with the new ATT&CK data:
 
--   If the user added the ATT&CK collection index prior to the ATT&CK v10.0 release, it may lose track of imported Enterprise collections. These collections can still be found in the "imported collections" tab of the collection manager, but won't be reflected in the collection manager. Collection subscriptions for Enterprise may also be lost.
--   If the user imports ATT&CK v10.0, data sources and data components will not be imported into their local knowledge base. You can re-import the collection after upgrading workbench to v1.1.0 to acquire the data sources and data components even if you had already imported it when running a prior version of Workbench.
+-   If the user added the ATT&CK collection index prior to the ATT&CK v10.0 release, it may lose track of imported Enterprise collections. These collections can still be found in the "imported collections" tab of the collection manager, but won't be reflected in the collection manager. Collection subscriptions for Enterprise may also be lost. Upgrading to ATT&CK Workbench v1.1.0 will fix this issue and restore prior collection subscriptions.
+-   If the user imports ATT&CK v10.0 using ATT&CK Workbench 1.0.X, data sources and data components will not be imported into their local knowledge base. You can re-import the collection after upgrading Workbench to v1.1.0 to acquire the data sources and data components even if you had already imported it when running a prior version of Workbench.
+
+ATT&CK Workbench version 1.1.0 includes improvements to how data is imported which should circumvent the above issues for future releases of ATT&CK.
 
 #### Improvements in 1.1.0
 
 -   Added object type documentation on list pages. See [frontend#221](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/221).
+-   Added support for ATT&CK Spec v2.1.0:
+    -   Added support for data sources and data components, and viewing/editing interfaces for these object types and their relationships with techniques.
+    -   Added support for `x_mitre_attack_spec_version` on all object types.
 -   Improved the flexibility and robustness of collection imports:
     -   Workbench will now check the ATT&CK Spec version of imported data and warn the user if the ATT&CK Spec version is unsupported (e.x if the Workbench instance is too outdated to support the data it is trying to import). The user can choose to bypass this warning.
     -   Workbench can now import the same collection multiple times in case objects in the initial import could not be imported due to an error.
