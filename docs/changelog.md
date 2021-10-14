@@ -33,15 +33,21 @@
 # Changelog
 
 ## Changes staged on develop
-### ATT&CK Workbench version 1.0.3
-#### Improvements in 1.0.3
+### ATT&CK Workbench version 1.1.0
+ATT&CK Workbench v1.1.0 includes support for ATT&CK Spec v2.1.0 and coincides with the ATT&CK v10.0 release. Users who do not upgrade to Workbench v1.1.0 may encounter issues with the new ATT&CK data:
+- If the user added the ATT&CK collection index prior to the ATT&CK v10.0 release, it may lose track of imported Enterprise collections. These collections can still be found in the "imported collections" tab of the collection manager, but won't be reflected in the collection manager. Collection subscriptions for Enterprise may also be lost.
+- If the user imports ATT&CK v10.0, data sources and data components will not be imported into their local knowlegeb 
+
+#### Improvements in 1.1.0
 - Added object type documentation on list pages. See [frontend#221](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/221).
-- Improved the visibility of errors in collection imports:
+- Improved the flexibility and robustness of collection imports:
+    - Workbench will now check the ATT&CK Spec version of imported data and warn the user if the ATT&CK Spec version is unsupported (e.x if the Workbench instance is too outdated to support the data it is trying to import). The user can choose to bypass this warning.
+    - Workbench can now import the same collection multiple times in case objects in the initial import could not be imported due to an error.
+    - Workbench can now import STIX bundles that don't contain a collection object. This is not recommended however since the results of such an import (the list of imported objects) will not be recorded for future reference.
     - The user will now be provided with a downloadable list of objects that could not be saved (and the reason why) in the event of import errors.
     - REST API will now log import errors to the console.
     - Frontend will now log import errors to the console when the application environment is not set to production.
-
-#### Fixes in 1.0.3
+#### Fixes in 1.1.0
 - Fixed an issue where the navigation header could be inaccessible when navigating within the application or when the page resized due to user input.
 - Frontend will no longer claim objects were imported when they were actually discarded due to import errors such as spec violations.
 - Imported STIX bundles will no longer require (but still allow) the `spec_version` field on the bundle itself. This was causing issues importing collections created by the Workbench. Objects within the bundle still require the `spec_version` field per the STIX 2.1 spec. See [rest-api#103](https://github.com/center-for-threat-informed-defense/attack-workbench-rest-api/issues/103).
