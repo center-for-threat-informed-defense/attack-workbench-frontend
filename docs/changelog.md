@@ -32,7 +32,7 @@
 
 # Changelog
 
-## Changes staged on develop
+## 21 October 2021 - Changes staged on develop
 
 ### ATT&CK Workbench version 1.1.0
 
