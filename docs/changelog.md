@@ -47,7 +47,7 @@ ATT&CK Workbench version 1.1.0 includes improvements to how data is imported whi
 
 -   Added object type documentation on list pages. See [frontend#221](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/221).
 -   Added support for ATT&CK Spec v2.1.0:
-    -   Added support for data sources and data components, and viewing/editing interfaces for these object types and their relationships with techniques.
+    -   Added support for data sources and data components, and viewing/editing interfaces for these object types and their relationships with techniques. See [frontend#67](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/67), [frontend#66](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/66).
     -   Added support for `x_mitre_attack_spec_version` on all object types.
 -   Improved the flexibility and robustness of collection imports:
     -   Workbench will now check the ATT&CK Spec version of imported data and warn the user if the ATT&CK Spec version is unsupported (e.x if the Workbench instance is too outdated to support the data it is trying to import). The user can choose to bypass this warning.

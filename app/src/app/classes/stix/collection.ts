@@ -9,6 +9,8 @@ import { Software } from './software';
 import { StixObject } from './stix-object';
 import { Tactic } from './tactic';
 import { Technique } from './technique';
+import { DataSource } from './data-source';
+import { DataComponent } from './data-component';
 import { logger } from "../../util/logger";
 
 /**
@@ -280,6 +282,12 @@ export class Collection extends StixObject {
                     case "intrusion-set": //group
                         this.stix_contents.push(new Group(obj))
                     break;
+                    case "x-mitre-data-source": // data source
+                        this.stix_contents.push(new DataSource(obj))
+                    break;
+                    case "x-mitre-data-component": // data component
+                        this.stix_contents.push(new DataComponent(obj))
+                    break;
                 }
             }
         }
@@ -290,22 +298,26 @@ export class Collection extends StixObject {
      * @memberof Collection
      */
     public compareTo(that: Collection): { 
-        technique:    CollectionDiffCategories<Technique>,
-        tactic:       CollectionDiffCategories<Tactic>,
-        software:     CollectionDiffCategories<Software>,
-        relationship: CollectionDiffCategories<Relationship>,
-        mitigation:   CollectionDiffCategories<Mitigation>,
-        matrix:       CollectionDiffCategories<Matrix>,
-        group:        CollectionDiffCategories<Group>
+        technique:      CollectionDiffCategories<Technique>,
+        tactic:         CollectionDiffCategories<Tactic>,
+        software:       CollectionDiffCategories<Software>,
+        relationship:   CollectionDiffCategories<Relationship>,
+        mitigation:     CollectionDiffCategories<Mitigation>,
+        matrix:         CollectionDiffCategories<Matrix>,
+        group:          CollectionDiffCategories<Group>,
+        data_source:    CollectionDiffCategories<DataSource>,
+        data_component: CollectionDiffCategories<DataComponent>
     } {
         let results = {
-            technique:    new CollectionDiffCategories<Technique>(),
-            tactic:       new CollectionDiffCategories<Tactic>(),
-            software:     new CollectionDiffCategories<Software>(),
-            relationship: new CollectionDiffCategories<Relationship>(),
-            mitigation:   new CollectionDiffCategories<Mitigation>(),
-            matrix:       new CollectionDiffCategories<Matrix>(),
-            group:        new CollectionDiffCategories<Group>()
+            technique:      new CollectionDiffCategories<Technique>(),
+            tactic:         new CollectionDiffCategories<Tactic>(),
+            software:       new CollectionDiffCategories<Software>(),
+            relationship:   new CollectionDiffCategories<Relationship>(),
+            mitigation:     new CollectionDiffCategories<Mitigation>(),
+            matrix:         new CollectionDiffCategories<Matrix>(),
+            group:          new CollectionDiffCategories<Group>(),
+            data_source:    new CollectionDiffCategories<DataSource>(),
+            data_component: new CollectionDiffCategories<DataComponent>()
         }
         // build helper lookups to reduce complexity from n^2 to n.
         let thisStixLookup = new Map<string, StixObject>(this.stix_contents.map(sdo => [sdo.stixID, sdo]))

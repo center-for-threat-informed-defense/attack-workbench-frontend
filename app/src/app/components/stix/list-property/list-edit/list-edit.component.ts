@@ -2,7 +2,7 @@ import { AfterContentChecked, ChangeDetectorRef, Component, Input, OnInit, ViewE
 import { ListPropertyConfig } from '../list-property.component';
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { MatChipInputEvent } from '@angular/material/chips';
-import { FormControl } from '@angular/forms';
+import { FormControl, Validators } from '@angular/forms';
 import { MatOptionSelectionChange } from '@angular/material/core';
 import { MatDialog } from '@angular/material/dialog';
 import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/rest-api-connector.service';
@@ -35,7 +35,9 @@ export class ListEditComponent implements OnInit, AfterContentChecked {
         "tactic_type": "x_mitre_tactic_type",
         "impact_type": "x_mitre_impact_type",
         "effective_permissions": "x_mitre_effective_permissions",
-        "permissions_required": "x_mitre_permissions_required"
+        "permissions_required": "x_mitre_permissions_required",
+        "collection_layers": "x_mitre_collection_layers",
+        "data_sources": "x_mitre_data_sources"
     }
     public domains = [
         "enterprise-attack",
@@ -49,24 +51,28 @@ export class ListEditComponent implements OnInit, AfterContentChecked {
     public allObjects: StixObject[] = [];
 
     // any value (editType: 'any')
+    public inputControl: FormControl;
     readonly separatorKeysCodes: number[] = [ENTER, COMMA];   
 
     constructor(public dialog: MatDialog, private restAPIConnectorService: RestApiConnectorService, private ref: ChangeDetectorRef) { }
 
     ngOnInit(): void {
-        this.selectControl = new FormControl(this.config.object[this.config.field]);
+        this.selectControl = new FormControl({value: this.config.object[this.config.field], disabled: this.config.disabled ? this.config.disabled : false});
+        this.inputControl = new FormControl(null, this.config.required ? [Validators.required] : undefined);
         if (this.config.field == 'platforms' 
          || this.config.field == 'tactic_type' 
          || this.config.field == 'permissions_required' 
          || this.config.field == 'effective_permissions' 
          || this.config.field == 'impact_type'
-         || this.config.field == 'domains') {
+         || this.config.field == 'domains'
+         || this.config.field == 'collection_layers'
+         || this.config.field == 'data_sources') {
             if (!this.dataLoaded) {
                 let data$ = this.restAPIConnectorService.getAllAllowedValues();
                 this.sub = data$.subscribe({
                     next: (data) => {
                         let stixObject = this.config.object as StixObject;
-                        this.allAllowedValues = data.find(obj => { return obj.objectType == stixObject.attackType; })
+                        this.allAllowedValues = data.find(obj => { return obj.objectType == stixObject.attackType; });
                         this.dataLoaded = true;
                     },
                     complete: () => { this.sub.unsubscribe(); }
@@ -194,6 +200,11 @@ export class ListEditComponent implements OnInit, AfterContentChecked {
             });
         }
 
+        // check for existing data
+        for (let value of this.selectControl.value) {
+            if (!values.includes(value)) values.push(value);
+        }
+
         if (!values.length) {
             // disable field and reset selection
             this.selectControl.disable();
@@ -210,6 +221,7 @@ export class ListEditComponent implements OnInit, AfterContentChecked {
     public add(event: MatChipInputEvent): void {
         if (event.value && event.value.trim()) {
             this.config.object[this.config.field].push(event.value.trim());
+            this.inputControl.setValue(this.config.object[this.config.field]);
         }
         if (event.input) {
             event.input.value = ''; // reset input value
@@ -222,6 +234,7 @@ export class ListEditComponent implements OnInit, AfterContentChecked {
         if (i >= 0) {
             this.config.object[this.config.field].splice(i, 1);
         }
+        this.inputControl.setValue(this.config.object[this.config.field])
     }
 
     /** Remove selection from via chip cancel button */

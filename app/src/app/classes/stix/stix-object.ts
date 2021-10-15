@@ -19,7 +19,9 @@ let stixTypeToAttackType = {
     "x-mitre-matrix": "matrix",
     "x-mitre-tactic": "tactic",
     "relationship": "relationship",
-    "marking-definition": "marking-definition"
+    "marking-definition": "marking-definition",
+    "x-mitre-data-source": "data-source",
+    "x-mitre-data-component": "data-component"
 }
 export {stixTypeToAttackType};
 
@@ -51,7 +53,9 @@ export abstract class StixObject extends Serializable {
         "matrix": "matrices",
         "tactic": "tactics",
         "note": "notes",
-        "marking-definition": "marking-definitions"
+        "marking-definition": "marking-definitions",
+        "data-source": "data-sources",
+        "data-component": "data-components"
     }
 
     public get routes(): any[] { // route to view the object
@@ -297,6 +301,8 @@ export abstract class StixObject extends Serializable {
                                 this.attackType == "matrix"? restAPIService.getAllMatrices() :
                                 this.attackType == "mitigation"? restAPIService.getAllMitigations() :
                                 this.attackType == "technique"? restAPIService.getAllTechniques() :
+                                this.attackType == "data-source"? restAPIService.getAllDataSources() :
+                                this.attackType == "data-component"? restAPIService.getAllDataComponents() :
                                 restAPIService.getAllTactics(); 
                 return accessor.pipe(
                     map(objects => {
