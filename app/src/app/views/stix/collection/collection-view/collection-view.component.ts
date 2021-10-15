@@ -153,7 +153,14 @@ export class CollectionViewComponent extends StixViewPage implements OnInit {
 
                 //stage data for saving
                 this.stagedData = [];
+                let missingATTACKIDs = [];
                 for (let object of collectionStixIDToObject.values()) {
+                    // grab name of objects that do not have ATT&CK IDs
+                    if (object.hasOwnProperty("attackID")) {
+                        if (object.attackID == "" && object.hasOwnProperty("name")) {
+                            missingATTACKIDs.push(object["name"]);
+                        }
+                    }
                     // record associated identities/marking defs
                     if (object.created_by_ref) identities.add(object.created_by_ref);
                     if (object.modified_by_ref) identities.add(object.modified_by_ref);
@@ -248,6 +255,21 @@ export class CollectionViewComponent extends StixViewPage implements OnInit {
                     field: "contents",
                     message: `${relationship_stats.excluded_both} relationships had neither attached objects in the collection and were therefore excluded`
                 })
+                // Check for missing ATT&CK ids
+                if (missingATTACKIDs.length != 0) {
+                    let customMessage = "";
+                    if (missingATTACKIDs.length == 1) {
+                        customMessage = `1 object missing ATT&CK ID: ${missingATTACKIDs[0]}`
+                    }
+                    else {
+                        customMessage = `${missingATTACKIDs.length} objects missing ATT&CK IDs: ${missingATTACKIDs}`
+                    }
+                    results.warnings.push({
+                        result: "warning",
+                        field: "attackID",
+                        message: customMessage
+                    })
+                }
                 
                 //must have contents
                 if (this.stagedData.length == 0) results.errors.push({

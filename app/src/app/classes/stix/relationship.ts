@@ -22,6 +22,7 @@ export class Relationship extends StixObject {
     
     public relationship_type: string = "";
 
+    public readonly supportsAttackID = true; // relationships do not have ATT&CK IDs
     protected get attackIDValidator() { return null; } // relationships have no ATT&CK ID
     /**
      * The valid source types according to relationship_type

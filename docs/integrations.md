@@ -2,6 +2,13 @@
 
 The ATT&CK Workbench is designed to integrate with a variety of tools. This page provides documentation on how to set up such integrations.
 
+Many ATT&CK Workbench integrations require that specific fields or values are present on your custom STIX data to use it properly. Depending on what data you have some objects may not be shown in integrations. Objects may not show up in integrations if they:
+
+- Support ATT&CK IDs but do not have one assigned
+- Are revoked or deprecated
+- Support platforms or tactics but are not assigned to any
+- Support mappings to techniques but do not feature any mappings
+
 ## ATT&CK Navigator
 
 The [ATT&CK Navigator](https://github.com/mitre-attack/attack-navigator) can be configured to display the contents of your local knowledge base. 

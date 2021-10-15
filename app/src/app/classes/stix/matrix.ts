@@ -8,6 +8,7 @@ export class Matrix extends StixObject {
     public name: string = "";
     public tactic_refs: string[] = [];
     
+    public readonly supportsAttackID = true;
     protected get attackIDValidator() { return {
         regex: ".*",
         format: "[domain identifier]"
