@@ -10,6 +10,7 @@ export class Note extends StixObject {
     public object_refs: string[] = [];
     public editing: boolean = false;
 
+    public readonly supportsAttackID = false; // notes do not support ATT&CK IDs
     protected get attackIDValidator() { return null; } // notes have no ATT&CK ID
 
     constructor(sdo?: any) {

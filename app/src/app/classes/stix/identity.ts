@@ -10,6 +10,7 @@ export class Identity extends StixObject {
     public roles?: string[]; // list of roles this identity performs
     public contact?: string; // contact information for this identity
 
+    public readonly supportsAttackID = false; // Identity does not support ATT&CK IDs
     protected get attackIDValidator() { return null; } // identities do not have an ATT&CK ID
 
     constructor(sdo?: any) {
