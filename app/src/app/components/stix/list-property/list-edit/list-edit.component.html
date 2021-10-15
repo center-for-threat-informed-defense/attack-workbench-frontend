@@ -2,31 +2,32 @@
     <mat-form-field *ngIf="!config.editType || config.editType == 'any'" class="grow-to-row" appearance="outline">
         <mat-label>{{config.label? config.label : config.field}}</mat-label>
         <mat-card-content>
-        <mat-chip-list #anyChipList>
+        <mat-chip-list #anyChipList [required]="config.required ? config.required : false" [formControl]="inputControl">
             <mat-chip *ngFor="let value of config.object[config.field]" [removable]="true" (removed)="remove(value)">
                 {{value}} <mat-icon matChipRemove>cancel</mat-icon>
             </mat-chip>
             <input matInput placeholder="new {{config.label? config.label : config.field }}..."
+                    [formControl]="inputControl"
                     [matChipInputFor]="anyChipList"
                     [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
                     [matChipInputAddOnBlur]="true"
-                    (matChipInputTokenEnd)="add($event)">
+                    (matChipInputTokenEnd)="add($event)"/>
         </mat-chip-list>
         </mat-card-content>
     </mat-form-field>
 
     <mat-form-field *ngIf="config.editType == 'select'" class="grow-to-row" appearance="outline"
-            [matTooltip]="selectControl.disabled ? 'a valid domain must be selected first' : null">
+            [matTooltip]="selectControl.disabled && !config.disabled ? 'a valid domain must be selected first' : null">
         <mat-label *ngIf="!dataLoaded" class="loading">
             <span>Loading {{config.label? config.label : config.field}}...</span>
             <mat-spinner class="spinner" diameter="20"></mat-spinner>
         </mat-label>
         <mat-label *ngIf="dataLoaded">{{config.label? config.label : config.field}}</mat-label>
-        <mat-select [formControl]="selectControl" multiple>
+        <mat-select [formControl]="selectControl" multiple [required]="config.required ? config.required : false">
             <mat-select-trigger>
                 <mat-chip-list>
                     <mat-chip *ngFor="let value of selectControl.value" [removable]="true" (removed)="removeSelection(value)">
-                        {{value}} <mat-icon matChipRemove>cancel</mat-icon>
+                        {{value}} <mat-icon *ngIf="!config.disabled" matChipRemove>cancel</mat-icon>
                     </mat-chip>
                 </mat-chip-list>
             </mat-select-trigger>

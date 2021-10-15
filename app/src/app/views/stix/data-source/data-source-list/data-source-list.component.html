@@ -1,0 +1,11 @@
+<div class="list-page">
+    <div class="list-page-header">
+        <h1>data sources</h1>
+        <div class="button-group">
+            <button mat-mini-fab class="extended-fab-button" color="primary" [routerLink]="['/data-source/new']" [queryParams]="{editing: true}">
+                <mat-icon>create</mat-icon> <span class="text-label">create a data source</span>
+            </button>
+        </div>
+    </div>
+    <app-stix-list [config]="{type: 'data-source', 'showLinks': true}"></app-stix-list>
+</div>

@@ -46,6 +46,10 @@ export interface NamePropertyConfig {
      * Note: if mode is diff, pass an array of two objects to diff
      */
     object: StixObject | [StixObject, StixObject];
+    /* The parent object. If specified, the object name will be
+     * prefixed with the name of the parent
+     */
+    parent?: StixObject;
     /* the field of the object(s) to visualize as a name
      * If unspecified, uses 'name' field as defined on StixObject
      */

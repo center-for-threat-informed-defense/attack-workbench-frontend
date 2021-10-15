@@ -8,6 +8,8 @@ import { Relationship } from 'src/app/classes/stix/relationship';
 import { Software } from 'src/app/classes/stix/software';
 import { Tactic } from 'src/app/classes/stix/tactic';
 import { Technique } from 'src/app/classes/stix/technique';
+import { DataSource } from 'src/app/classes/stix/data-source';
+import { DataComponent } from 'src/app/classes/stix/data-component';
 import { EditorService } from 'src/app/services/editor/editor.service';
 import { StixViewPage } from '../../../stix-view-page';
 import { logger } from "../../../../../util/logger";
@@ -24,13 +26,15 @@ export class CollectionImportReviewComponent extends StixViewPage implements OnI
     public get collection(): Collection { return this.config.object as Collection; }
 
     public collection_import_categories = {
-        technique:    new CollectionDiffCategories<Technique>(),
-        tactic:       new CollectionDiffCategories<Tactic>(),
-        software:     new CollectionDiffCategories<Software>(),
-        relationship: new CollectionDiffCategories<Relationship>(),
-        mitigation:   new CollectionDiffCategories<Mitigation>(),
-        matrix:       new CollectionDiffCategories<Matrix>(),
-        group:        new CollectionDiffCategories<Group>()
+        technique:      new CollectionDiffCategories<Technique>(),
+        tactic:         new CollectionDiffCategories<Tactic>(),
+        software:       new CollectionDiffCategories<Software>(),
+        relationship:   new CollectionDiffCategories<Relationship>(),
+        mitigation:     new CollectionDiffCategories<Mitigation>(),
+        matrix:         new CollectionDiffCategories<Matrix>(),
+        group:          new CollectionDiffCategories<Group>(),
+        data_source:    new CollectionDiffCategories<DataSource>(),
+        data_component: new CollectionDiffCategories<DataComponent>()
     }
 
     constructor(private route: ActivatedRoute, public editor: EditorService) { super() }
@@ -87,6 +91,12 @@ export class CollectionImportReviewComponent extends StixViewPage implements OnI
                 break;
                 case "intrusion-set": //group
                     this.collection_import_categories.group[category].push(object);
+                break;
+                case "x-mitre-data-source": // data source
+                    this.collection_import_categories.data_source[category].push(object);
+                break;
+                case "x-mitre-data-component": // data component
+                    this.collection_import_categories.data_component[category].push(object);
                 break;
             }
         }
