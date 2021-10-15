@@ -8,6 +8,7 @@ export class Mitigation extends StixObject {
     public name: string = "";
     public domains: string[] = [];
 
+    public readonly supportsAttackID = true;
     protected get attackIDValidator() { return {
         regex: "M\\d{4}",
         format: "M####"
