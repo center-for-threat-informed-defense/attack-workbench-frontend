@@ -14,6 +14,7 @@ export class DataComponent extends StixObject {
     // NOTE: the following field will only be populated when this object is fetched using getDataComponent()
     public data_source: DataSource = null;
 
+    public readonly supportsAttackID = false; // data components do not support ATT&CK IDs
     protected get attackIDValidator() { return null; } // data components have no ATT&CK ID
 
     constructor(sdo?: any) {
