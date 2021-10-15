@@ -218,24 +218,36 @@ export class Relationship extends StixObject {
         }
     }
 
+    /**
+     * Retrieve the parent object of this source object
+     * @param {RestApiConnectorService} restAPIService the REST API connector through which the parent can be fetched
+     * @returns {Observable<Relationship>} of this object after the source parent has been updated
+     */
     public update_source_parent(restAPIService: RestApiConnectorService): Observable<Relationship> {
         this.updating_refs = true;
-        var subscription = this.get_parent_object(this.source_object, restAPIService).subscribe({
-            next: (res) => { this.source_parent = res; },
-            complete: () => { if (subscription) subscription.unsubscribe(); }
-        });
-        this.updating_refs = false;
-        return of(this);
+        return this.get_parent_object(this.source_object, restAPIService).pipe(
+            map(result => {
+                this.source_parent = result;
+                this.updating_refs = false;
+                return this;
+            })
+        );
     }
 
+    /**
+     * Retrieve the parent object of this target object
+     * @param {RestApiConnectorService} restAPIService the REST API connector through which the parent can be fetched
+     * @returns {Observable<Relationship>} of this object after the target parent has been updated
+     */
     public update_target_parent(restAPIService: RestApiConnectorService): Observable<Relationship> {
         this.updating_refs = true;
-        var subscription = this.get_parent_object(this.target_object, restAPIService).subscribe({
-            next: (res) => { this.target_parent = res; },
-            complete: () => { if (subscription) subscription.unsubscribe(); }
-        });
-        this.updating_refs = false;
-        return of(this);
+        return this.get_parent_object(this.target_object, restAPIService).pipe(
+            map(result => {
+                this.target_parent = result;
+                this.updating_refs = false;
+                return this;
+            })
+        )
     }
 
     /**
