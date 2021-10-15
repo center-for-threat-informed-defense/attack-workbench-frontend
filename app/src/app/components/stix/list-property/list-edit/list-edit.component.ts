@@ -201,8 +201,10 @@ export class ListEditComponent implements OnInit, AfterContentChecked {
         }
 
         // check for existing data
-        for (let value of this.selectControl.value) {
-            if (!values.includes(value)) values.push(value);
+        if (this.selectControl.value) {
+            for (let value of this.selectControl.value) {
+                if (!values.includes(value)) values.push(value);
+            }
         }
 
         if (!values.length) {
