@@ -164,6 +164,7 @@ export class Collection extends StixObject {
     //  each sub-property is a list of STIX IDs corresponding to objects in the import
     public import_categories: CollectionDiffCategories<string>;
     
+    public readonly supportsAttackID = false; // collections do not support ATT&CK IDs
     protected get attackIDValidator() { return null; } //collections do not have ATT&CK IDs
 
     constructor(sdo?: any) {

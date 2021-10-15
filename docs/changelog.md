@@ -56,6 +56,7 @@ ATT&CK Workbench version 1.1.0 includes improvements to how data is imported whi
     -   The user will now be provided with a downloadable list of objects that could not be saved (and the reason why) in the event of import errors.
     -   REST API will now log import errors to the console.
     -   Frontend will now log import errors to the console when the application environment is not set to production.
+-   Added validation for missing ATT&CK IDs on objects that support them. The user will now be warned if they neglect to assign an ATT&CK ID to an object which supports it. When exporting a collection, the user will similarly be warned if any contained objects are missing ATT&CK IDs. See [frontend#231](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/231).
 
 #### Fixes in 1.1.0
 

@@ -2,6 +2,13 @@
 
 The ATT&CK Workbench is designed to integrate with a variety of tools. This page provides documentation on how to set up such integrations.
 
+Many ATT&CK Workbench integrations require that specific fields or values are present on your custom STIX data to use it properly. Depending on what data you have some objects may not be shown in integrations. Objects may not show up in integrations if they:
+
+-   Support ATT&CK IDs but do not have one assigned
+-   Are revoked or deprecated
+-   Support platforms or tactics but are not assigned to any
+-   Support mappings to techniques but do not feature any mappings
+
 ## Workbench REST API URLs
 
 Depending on whether you are using the manual install or the docker install, and where Workbench has been deployed, the URLs you will be setting in your integrations will be different.

@@ -12,6 +12,7 @@ export class MarkingDefinition extends StixObject {
         statement: string
     } = { statement: "" }
 
+    public readonly supportsAttackID = false; // marking-defs do not support ATT&CK IDs
     protected get attackIDValidator() { return null; } //marking-defs do not have ATT&CK IDs
 
     constructor(sdo?: any) {
