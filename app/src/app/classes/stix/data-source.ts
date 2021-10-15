@@ -14,6 +14,7 @@ export class DataSource extends StixObject {
     public domains: string[] = ['enterprise-attack']; // default to enterprise
     public data_components: DataComponent[] = [];
 
+    public readonly supportsAttackID = true;
     protected get attackIDValidator() {
         return {
             regex: "DS\\d{4}",
