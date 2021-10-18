@@ -36,6 +36,8 @@ export class CollectionImportComponent implements OnInit {
     public changed_ids: string[] = [];
     // ids of objects which have nto changed (object-version not already in knowledge base)
     public unchanged_ids: string[] = [];
+
+    public import_error: any;
     public save_errors: string[] = [];
     public successfully_saved: Set<string> = new Set();
     public collectionBundle: any;
@@ -107,6 +109,9 @@ export class CollectionImportComponent implements OnInit {
             },
             error: (err) => {
                 this.loadingStep1 = false;
+                if (err.status == "400" && this.canForceImport(err)) {
+                    this.errorPreview(collectionBundle, err.error)
+                }
             },
             complete: () => { subscription_preview.unsubscribe() }
         })
@@ -191,8 +196,9 @@ export class CollectionImportComponent implements OnInit {
 
     /**
      * Perform the import of the collection
+     * @param force if true, force import the collection
      */
-    public import() {
+    public import(force: boolean = false) {
         let prompt = this.dialog.open(ConfirmationDialogComponent, {
             maxWidth: "25em",
             data: {
@@ -207,16 +213,18 @@ export class CollectionImportComponent implements OnInit {
                     this.loadingStep2 = true;
                     setTimeout(() => { //make sure the loading icon renders before the parsing/writing
                         let newBundle = JSON.parse(JSON.stringify(this.collectionBundle)); //deep copy
-                        let objects = []
-                        // filter objects to selected or unchanged
-                        for (let object of newBundle.objects) {
-                            if (this.unchanged_ids.includes(object.id) || this.select.selected.includes(object.id)) {
-                                // object is selected or unchanged
-                                objects.push(object);
+                        if (!force) {
+                            let objects = []
+                            // filter objects to selected or unchanged
+                            for (let object of newBundle.objects) {
+                                if (this.unchanged_ids.includes(object.id) || this.select.selected.includes(object.id)) {
+                                    // object is selected or unchanged
+                                    objects.push(object);
+                                }
                             }
+                            newBundle.objects = objects;
                         }
-                        newBundle.objects = objects;
-                        let subscription = this.restAPIConnectorService.postCollectionBundle(newBundle, false).subscribe({
+                        let subscription = this.restAPIConnectorService.postCollectionBundle(newBundle, false, force).subscribe({
                             next: (results) => { 
                                 if (results.import_categories.errors.length > 0) {
                                     logger.warn("Collection import completed with errors:", results.import_categories.errors);
@@ -237,6 +245,56 @@ export class CollectionImportComponent implements OnInit {
             },
             complete: () => { promptSubscription.unsubscribe() } //prevent memory leaks
         })
+    }
+
+    /**
+     * Determine if the user can force import a collection after the post collection
+     * call fails. Users may force an import when:
+     *   1. the collection bundle is already in the database (user is re-importing the bundle)
+     *   2. the collection bundle has one or more objects with an invalid ATT&CK spec version.
+     * @param error the resulting error from previewing the collection
+     * @returns true if the user can force import the collection; false otherwise
+     */
+    private canForceImport(err: any): boolean {
+        if (!err.error) return false;
+        if (err.error.bundleErrors.duplicateCollection ||
+            err.error.objectErrors.summary.invalidAttackSpecVersionCount) return true;
+        return false;
+    }
+
+    /**
+     * Set up the objects to force import from a collection
+     * @param collectionBundle the collection bundle to import
+     * @param error the resulting error from previewing the collection
+     */
+    public errorPreview(collectionBundle: any, error: any): void {
+        this.import_error = error;
+        this.collectionBundle = collectionBundle; //save for later
+
+        let invalidObjects: string[] = error.objectErrors.errors.map(obj => obj.id);
+        let selected: string[] = [];
+        for (let object of this.collectionBundle.objects) {
+            if ("type" in object && object.type == 'x-mitre-collection') continue;
+            if ("id" in object && !invalidObjects.includes(object.id)) {
+                selected.push(object.id);
+            }
+        }
+        this.select =  new SelectionModel(true, selected);
+        this.stepper.next();
+    }
+
+    /**
+     * Handle user selection on collection import errors
+     * @param force if true, force import the collection
+     */
+    forceImport(force: boolean) {
+        if (force) {
+            // proceed to force import the collection
+            this.import(true);
+        } else {
+            // user cancelled, revert to previous step
+            this.stepper.previous();
+        }
     }
 
     /**

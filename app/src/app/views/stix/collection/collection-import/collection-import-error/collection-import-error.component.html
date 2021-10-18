@@ -1,0 +1,29 @@
+<div class="collection-import-error">
+    <p class="nomargin">
+        <span class="warn">WARNING</span>: the data you are trying to import contains some problems which may affect your knowledge base if you proceed with the import:
+    </p>
+
+    <div class="error-list">
+        <ul>
+            <li *ngIf="duplicateCollection">
+                <span>The bundle has previously been imported. Some objects will not be imported.</span>
+            </li>
+            <li *ngIf="objectSpecVersionViolation > 0">
+                <span>{{objectSpecVersionViolation}} {{objectSpecVersionViolation > 1 ? 'objects use' : 'object uses'}} a newer version of the ATT&CK spec than your Workbench supports and will not be imported. After upgrading Workbench to the latest version you can re-import the data to acquire {{objectSpecVersionViolation > 1 ? 'these objects' : 'this object'}}. </span>
+            </li>
+        </ul>
+    </div>
+
+    <div class="center">
+        <div class="action-bar">
+            <button mat-mini-fab class="extended-fab-button"  color="secondary" (click)="onForceImport.emit(false)">
+                <mat-icon aria-label="add">close</mat-icon>
+                <span class="text-label">Cancel</span>
+            </button>
+            <button mat-mini-fab class="extended-fab-button"  color="primary" (click)="onForceImport.emit(true)">
+                <mat-icon aria-label="add">save_alt</mat-icon>
+                <span class="text-label">Proceed with Import</span>
+            </button>
+        </div>
+    </div>
+</div>
