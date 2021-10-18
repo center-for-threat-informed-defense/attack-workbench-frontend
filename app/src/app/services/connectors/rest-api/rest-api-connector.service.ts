@@ -914,7 +914,6 @@ export class RestApiConnectorService extends ApiConnector {
         let query = new HttpParams();
         if (preview) query = query.set("previewOnly", "true");
         if (force) query = query.set("forceImport", "all");
-        console.log(`${this.baseUrl}/collection-bundles`, this.headers, query)
         // perform the request
         return this.http.post(`${this.baseUrl}/collection-bundles`, collectionBundle, {headers: this.headers, params: query}).pipe(
             tap(result => {
