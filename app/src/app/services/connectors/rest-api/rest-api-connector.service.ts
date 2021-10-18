@@ -906,12 +906,15 @@ export class RestApiConnectorService extends ApiConnector {
      * POST a collection bundle (including a collection SDO and the objects to which it refers) to the back-end
      * @param {*} collectionBundle the STIX bundle to write
      * @param {boolean} [preview] if true, preview the results of the import without actually committing the import
+     * @param {boolean} [force] if true, force import the collection
      * @returns {Observable<Collection>} collection object marking the results of the import
      */
-    public postCollectionBundle(collectionBundle: any, preview: boolean = false): Observable<Collection> {
+    public postCollectionBundle(collectionBundle: any, preview: boolean = false, force: boolean = false): Observable<Collection> {
         // add query params for preview
         let query = new HttpParams();
-        if (preview) query = query.set("checkOnly", "true");
+        if (preview) query = query.set("previewOnly", "true");
+        if (force) query = query.set("forceImport", "all");
+        console.log(`${this.baseUrl}/collection-bundles`, this.headers, query)
         // perform the request
         return this.http.post(`${this.baseUrl}/collection-bundles`, collectionBundle, {headers: this.headers, params: query}).pipe(
             tap(result => {
