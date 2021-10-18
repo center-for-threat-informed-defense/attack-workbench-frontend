@@ -50,10 +50,10 @@
                     </div>
                 </div>
             </div>
-            <ng-template *ngIf="!import_error" #loadingStep2_marker>
-                <app-loading-overlay message="importing collection"></app-loading-overlay>
+            <ng-template #loadingStep2_marker>
+                <app-loading-overlay *ngIf="loadingStep2" message="importing collection"></app-loading-overlay>
             </ng-template>
-            <app-collection-import-error *ngIf="import_error" [error]="import_error" (onForceImport)="forceImport($event)"></app-collection-import-error>
+            <app-collection-import-error *ngIf="import_error && !loadingStep2" [error]="import_error" (onForceImport)="forceImport()" (onCancel)="cancelImport()"></app-collection-import-error>
         </mat-step>
         <mat-step label="done">
             <div *ngIf="select">
