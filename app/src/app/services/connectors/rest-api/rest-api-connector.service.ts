@@ -1,8 +1,8 @@
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { forkJoin, Observable, of, ReplaySubject } from 'rxjs';
-import { tap, catchError, map, share, switchMap } from 'rxjs/operators';
+import { forkJoin, Observable, of } from 'rxjs';
+import { tap, catchError, map, share, switchMap, mergeMap } from 'rxjs/operators';
 import { CollectionIndex } from 'src/app/classes/collection-index';
 import { ExternalReference } from 'src/app/classes/external-references';
 import { Collection } from 'src/app/classes/stix/collection';
@@ -20,9 +20,11 @@ import { Technique } from 'src/app/classes/stix/technique';
 import { environment } from "../../../../environments/environment";
 import { ApiConnector } from '../api-connector';
 import { logger } from "../../../util/logger";
+import { DataSource } from 'src/app/classes/stix/data-source';
+import { DataComponent } from 'src/app/classes/stix/data-component';
 
 //attack types
-type AttackType = "collection" | "group" | "matrix" | "mitigation" | "software" | "tactic" | "technique" | "relationship" | "note" | "identity" | "marking-definition";
+type AttackType = "collection" | "group" | "matrix" | "mitigation" | "software" | "tactic" | "technique" | "relationship" | "note" | "identity" | "marking-definition" | "data-source" | "data-component";
 // pluralize AttackType
 const attackTypeToPlural = {
     "technique": "techniques",
@@ -35,7 +37,9 @@ const attackTypeToPlural = {
     "relationship": "relationships",
     "note": "notes",
     "identity": "identities",
-    "marking-definition": "marking-definitions"
+    "marking-definition": "marking-definitions",
+    "data-source": "data-sources",
+    "data-component": "data-components"
 }
 // transform AttackType to the relevant class
 const attackTypeToClass = {
@@ -49,7 +53,9 @@ const attackTypeToClass = {
     "relationship": Relationship,
     "note": Note,
     "identity": Identity,
-    "marking-definition": MarkingDefinition
+    "marking-definition": MarkingDefinition,
+    "data-source": DataSource,
+    "data-component": DataComponent
 }
 
 // transform AttackType to the relevant class
@@ -64,7 +70,9 @@ const stixTypeToClass = {
     "x-mitre-collection": Collection,
     "relationship": Relationship,
     "identity": Identity,
-    "marking-definition": MarkingDefinition
+    "marking-definition": MarkingDefinition,
+    "x-mitre-data-source": DataSource,
+    "x-mitre-data-component": DataComponent
 }
 
 export interface Paginated<T> {
@@ -229,6 +237,28 @@ export class RestApiConnectorService extends ApiConnector {
      */
     public get getAllMitigations() { return this.getStixObjectsFactory<Mitigation>("mitigation"); }
     /**
+     * Get all data sources
+     * @param {number} [limit] the number of data sources to retrieve
+     * @param {number} [offset] the number of data sources to skip
+     * @param {string} [state] if specified, only get objects with this state
+     * @param {boolean} [revoked] if true, get revoked objects
+     * @param {boolean} [deprecated] if true, get deprecated objects
+     * @param {string[]} [excludeIDs] if specified, excludes these STIX IDs from the result
+     * @returns {Observable<DataSource[]>} observable of retrieved objects
+     */
+    public get getAllDataSources() { return this.getStixObjectsFactory<DataSource>("data-source"); }
+    /**
+     * Get all data components
+     * @param {number} [limit] the number of data components to retrieve
+     * @param {number} [offset] the number of data components to skip
+     * @param {string} [state] if specified, only get objects with this state
+     * @param {boolean} [revoked] if true, get revoked objects
+     * @param {boolean} [deprecated] if true, get deprecated objects
+     * @param {string[]} [excludeIDs] if specified, excludes these STIX IDs from the result
+     * @returns {Observable<DataComponent[]>} observable of retrieved objects
+     */
+    public get getAllDataComponents() { return this.getStixObjectsFactory<DataComponent>("data-component"); }
+    /**
      * Get all matrices
      * @param {number} [limit] the number of matrices to retrieve
      * @param {number} [offset] the number of matrices to skip
@@ -349,7 +379,7 @@ export class RestApiConnectorService extends ApiConnector {
     private getStixObjectFactory<T extends StixObject>(attackType: AttackType) {
         let attackClass = attackTypeToClass[attackType];
         let plural = attackTypeToPlural[attackType]
-        return function<P extends T>(id: string, modified?: Date | string, versions="latest", includeSubs?: boolean, retrieveContents?: boolean): Observable<P[]> {
+        return function<P extends T>(id: string, modified?: Date | string, versions="latest", includeSubs?: boolean, retrieveContents?: boolean, retrieveDataComponents?: boolean): Observable<P[]> {
             let url = `${this.baseUrl}/${plural}/${id}`;
             if (modified) {
                 let modifiedString = typeof(modified) == "string"? modified : modified.toISOString();
@@ -358,6 +388,7 @@ export class RestApiConnectorService extends ApiConnector {
             let query = new HttpParams();
             if (versions != "latest") query = query.set("versions", versions);
             if (attackType == "collection" && retrieveContents) query = query.set("retrieveContents", "true");
+            if (attackType == "data-source" && retrieveDataComponents) query = query.set("retrieveDataComponents", "true");
             return this.http.get(url, {headers: this.headers, params: query}).pipe(
                 tap(result => logger.log(`retrieved ${attackType}`, result)), // on success, trigger the success notification
                 map(result => {
@@ -406,6 +437,19 @@ export class RestApiConnectorService extends ApiConnector {
                         );
                     }
                 }),
+                switchMap(result => { // fetch parent data source of data component
+                    let x = result as any[];
+                    if (x[0].attackType != "data-component") return of(result);
+                    let d = x[0] as DataComponent;
+                    return this.getDataSource(d.data_source_ref).pipe( // fetch data source from REST API
+                        map(data_source => {
+                            let ds = data_source as DataSource[];
+                            d.data_source = ds[0];
+                            return [d];
+                        }),
+                        tap(data_component => logger.log("fetched data source of", data_component))
+                    );
+                }),
                 catchError(this.handleError_continue([])), // on error, trigger the error notification and continue operation without crashing (returns empty item)
                 share() // multicast so that multiple subscribers don't trigger the call twice. THIS MUST BE THE LAST LINE OF THE PIPE
             )
@@ -452,6 +496,23 @@ export class RestApiConnectorService extends ApiConnector {
      * @returns {Observable<Mitigation>} the object with the given ID and modified date
      */
     public get getMitigation() { return this.getStixObjectFactory<Mitigation>("mitigation"); }
+    /**
+     * Get a single data source by STIX ID
+     * @param {string} id the object STIX ID
+     * @param {Date} [modified] if specified, get the version modified at the given date
+     * @param {versions} [string] default "latest", if "all" returns all versions of the object instead of just the latest version.
+     * @param {retrieveDataComponents} [boolean] if true, include data components with a reference to the given object. Incompatible with versions="all"
+     * @returns {Observable<DataSource>} the object with the given ID and modified date
+     */
+    public get getDataSource() { return this.getStixObjectFactory<DataSource>("data-source"); }
+    /**
+     * Get a single data component by STIX ID
+     * @param {string} id the object STIX ID
+     * @param {Date} [modified] if specified, get the version modified at the given date
+     * @param {versions} [string] default "latest", if "all" returns all versions of the object instead of just the latest version.
+     * @returns {Observable<DataComponent>} the object with the given ID and modified date
+     */
+    public get getDataComponent() { return this.getStixObjectFactory<DataComponent>("data-component"); }
     /**
      * Get a single matrix by STIX ID
      * @param {string} id the object STIX ID
@@ -540,6 +601,18 @@ export class RestApiConnectorService extends ApiConnector {
      * @returns {Observable<Mitigation>} the created object
      */
     public get postMitigation() { return this.postStixObjectFactory<Mitigation>("mitigation"); }
+    /**
+     * POST (create) a new data source
+     * @param {DataSource} object the object to create
+     * @returns {Observable<DataSource>} the created object
+     */
+    public get postDataSource() { return this.postStixObjectFactory<DataSource>("data-source"); }
+    /**
+     * POST (create) a new data component
+     * @param {DataComponent} object the object to create
+     * @returns {Observable<DataComponent>} the created object
+     */
+    public get postDataComponent() { return this.postStixObjectFactory<DataComponent>("data-component"); }
     /**
      * POST (create) a new matrix
      * @param {Matrix} object the object to create
@@ -632,6 +705,20 @@ export class RestApiConnectorService extends ApiConnector {
      */
     public get putMitigation() { return this.putStixObjectFactory<Mitigation>("mitigation"); }
     /**
+     * PUT (update) a data source
+     * @param {DataSource} object the object to update
+     * @param {Date} [modified] optional, the modified date to overwrite. If omitted, uses the modified field of the object
+     * @returns {Observable<DataSource>} the updated object
+     */
+    public get putDataSource() { return this.putStixObjectFactory<DataSource>("data-source"); }
+    /**
+     * PUT (update) a data component
+     * @param {DataComponent} object the object to update
+     * @param {Date} [modified] optional, the modified date to overwrite. If omitted, uses the modified field of the object
+     * @returns {Observable<DataComponent>} the updated object
+     */
+    public get putDataComponent() { return this.putStixObjectFactory<DataComponent>("data-component"); }
+    /**
      * PUT (update) a matrix
      * @param {Matrix} object the object to update
      * @param {Date} [modified] optional, the modified date to overwrite. If omitted, uses the modified field of the object
@@ -709,6 +796,20 @@ export class RestApiConnectorService extends ApiConnector {
      * @returns {Observable<{}>} observable of the response body
      */
     public get deleteMitigation() { return this.deleteStixObjectFactory("mitigation"); }
+    /**
+     * DELETE a data source
+     * @param {string} id the STIX ID of the object to delete
+     * @param {Date} modified the modified date of the version to delete
+     * @returns {Observable<{}>} observable of the response body
+     */
+    public get deleteDataSource() { return this.deleteStixObjectFactory("data-source"); }
+    /**
+     * DELETE a data component
+     * @param {string} id the STIX ID of the object to delete
+     * @param {Date} modified the modified date of the version to delete
+     * @returns {Observable<{}>} observable of the response body
+     */
+    public get deleteDataComponent() { return this.deleteStixObjectFactory("data-component"); }
     /**
      * DELETE a matrix
      * @param {string} id the STIX ID of the object to delete
@@ -821,6 +922,36 @@ export class RestApiConnectorService extends ApiConnector {
             catchError(this.handleError_continue([])),
             share()
         )
+    }
+
+    /**
+     * Get all objects related to a data source
+     * @param id the STIX ID of the data source
+     * @returns list of data components related to the data source along with the data components' relationships with techniques
+     */
+    public getAllRelatedToDataSource(id: string): Observable<StixObject[]> {
+        let dataComponents$ = this.getAllDataComponents();
+        return dataComponents$.pipe(
+            map(result => { // get related data component objects
+                let dataComponents = result.data as DataComponent[];
+                return dataComponents.filter(d => d.data_source_ref == id);
+            }),
+            mergeMap(dataComponents => { // get relationships for each data component
+                let relatedTo = dataComponents.map(dc => this.getRelatedTo({sourceOrTargetRef: dc.stixID}));
+                if (!relatedTo.length) return of(dataComponents);
+                return forkJoin(relatedTo).pipe(
+                    map(relationships => {
+                        let all_results: StixObject[] = [];
+                        for(let relationship_result of relationships) {
+                            all_results = all_results.concat(relationship_result.data)
+                        }
+                        return all_results.concat(dataComponents);
+                    })
+                );
+            }),
+            catchError(this.handleError_continue([])),
+            share()
+        );
     }
 
     //   ___ ___ ___ ___ ___ ___ _  _  ___ ___ ___ 

@@ -4,7 +4,8 @@
         <div class="col">
             <app-name-property [config]="{
                 mode: editing? 'edit' : 'view',
-                object: technique
+                object: technique,
+                parent: technique.is_subtechnique && technique.parentTechnique ? technique.parentTechnique : null
             }"></app-name-property>
             <app-subheading *ngIf="!editing" [config]="config" (onOpenHistory)="openHistory()" (onOpenNotes)="openNotes()"></app-subheading>
         </div>
@@ -92,8 +93,7 @@
                 editType: 'select'
             }"></app-list-property>
         </div>
-        <ng-container *ngIf="showDomainField('enterprise-attack', 'data_sources') 
-                            || showDomainField('ics-attack', 'data_sources') 
+        <ng-container *ngIf="showDomainField('ics-attack', 'data_sources') 
                             || showDomainField('enterprise-attack', 'system_requirements') 
                             || showDomainField('mobile-attack', 'tactic_type')">
             <!-- Display only if domain specific fields exist or if in 'edit' mode -->
@@ -101,14 +101,14 @@
                 <mat-icon>arrow_forward</mat-icon>
             </div>
             <div class="col">
-                <!-- DATA SOURCES -->
-                <div *ngIf="showDomainField('enterprise-attack', 'data_sources') || showDomainField('ics-attack', 'data_sources')" class="row">
+                <!-- DATA SOURCES (string array representation) -->
+                <div *ngIf="showDomainField('ics-attack', 'data_sources')" class="row">
                     <app-list-property class="grow-to-row" [config]="{
                         mode: editing? 'edit': 'view',
                         object: technique,
                         field: 'data_sources',
-                        label: 'data sources',
-                        editType: 'any'
+                        label: dataSourcesLabel(),
+                        editType: 'select'
                     }"></app-list-property>
                 </div>
                 <!-- SYSTEM REQUIREMENTS -->
@@ -315,6 +315,32 @@
                     'type': 'relationship',
                     'targetRef': technique.stixID,
                     'relationshipType': 'uses',
+                    'clickBehavior': 'dialog',
+                    'allowEdits': true
+                }"></app-stix-list>
+            </div>
+        </div>
+        <!-- data sources (source/component object representation) -->
+        <div class="row">
+            <div class="col">
+                <h2 class="section-header">Data Sources</h2>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <app-add-relationship-button (created)="detectsList.applyControls()" [config]="{
+                    label: 'data source',
+                    relationship_type: 'detects',
+                    target_object: technique
+                }"></app-add-relationship-button>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <app-stix-list #detectsList [config]="{
+                    'type': 'relationship',
+                    'targetRef': technique.stixID,
+                    'relationshipType': 'detects',
                     'clickBehavior': 'dialog',
                     'allowEdits': true
                 }"></app-stix-list>

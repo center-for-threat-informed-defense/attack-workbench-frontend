@@ -4,7 +4,6 @@ import { FormControl } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { PopoverContentComponent } from 'ngx-smart-popover';
 import { forkJoin } from 'rxjs';
-import { Collection } from 'src/app/classes/stix/collection';
 import { Relationship } from 'src/app/classes/stix/relationship';
 import { StixObject } from 'src/app/classes/stix/stix-object';
 import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/rest-api-connector.service';
@@ -27,7 +26,7 @@ export class ObjectStatusComponent implements OnInit {
     @ViewChild("objectStatus", {static: false}) public popover: PopoverContentComponent;
     public objects: StixObject[];
     public object: StixObject;
-    public relationships;
+    public relationships = [];
     public revoked: boolean = false;
     public deprecated: boolean = false;
     
@@ -57,6 +56,8 @@ export class ObjectStatusComponent implements OnInit {
             else if (this.editorService.type == "tactic") data$ = this.restAPIService.getAllTactics(options);
             else if (this.editorService.type == "technique") data$ = this.restAPIService.getAllTechniques(options);
             else if (this.editorService.type == "collection") data$ = this.restAPIService.getAllCollections(options);
+            else if (this.editorService.type == "data-source") data$ = this.restAPIService.getAllDataSources(options);
+            else if (this.editorService.type == "data-component") data$ = this.restAPIService.getAllDataComponents(options);
             let objSubscription = data$.subscribe({
                 next: (data) => {
                     this.objects = data.data;
@@ -72,11 +73,23 @@ export class ObjectStatusComponent implements OnInit {
                 complete: () => { objSubscription.unsubscribe() }
             });
 
+            if (this.editorService.type == 'data-source') {
+                // retrieve related data components & their relationships
+                data$ = this.restAPIService.getAllRelatedToDataSource(this.editorService.stixId);
+                let dataSubscription = data$.subscribe({
+                    next: (results) => {
+                        this.relationships = this.relationships.concat(results);
+                    },
+                    complete: () => { dataSubscription.unsubscribe(); }
+                });
+            }
+
             // retrieve relationships with the object
             data$ = this.restAPIService.getRelatedTo({sourceOrTargetRef: this.editorService.stixId});
             let relSubscription = data$.subscribe({
                 next: (data) => { 
-                    this.relationships = data.data as Relationship[]; 
+                    let relationships = data.data as Relationship[]; 
+                    this.relationships = this.relationships.concat(relationships)
                     this.loaded = true;
                     setTimeout(() => this.popover.updatePosition()); //after render cycle update popover position since it has new content
                 },
@@ -198,40 +211,41 @@ export class ObjectStatusComponent implements OnInit {
 
         let confirmationSub = confirmationPrompt.afterClosed().subscribe({
             next: (result) => {
-                if (result) {
-                    // deprecate object
-                    if (revoked) this.object.revoked = true;
-                    else this.object.deprecated = true;
-                    saves.push(this.object.save(this.restAPIService));
-            
-                    // update relationships with the object
-                    for (let relationship of this.relationships) {
-                        if (!relationship.deprecated) {
-                            relationship.deprecated = true;
-                            saves.push(relationship.save(this.restAPIService));
-                        }
-                    }
-
-                    if (revoked_by_id) {
-                        // create a new 'revoked-by' relationship
-                        let revokedRelationship = new Relationship();
-                        revokedRelationship.relationship_type = 'revoked-by';
-                        revokedRelationship.source_ref = this.object.stixID;
-                        revokedRelationship.target_ref = revoked_by_id;
-                        saves.push(revokedRelationship.save(this.restAPIService));
-                    }
-            
-                    // complete save calls
-                    let saveSubscription = forkJoin(saves).subscribe({
-                        complete: () => {
-                            this.editorService.onReload.emit();
-                            saveSubscription.unsubscribe();
-                        }
-                    });
-                } else { // user cancelled
+                if (!result) { // user cancelled
                     if (revoked) this.revoked = false;
                     else this.deprecated = false;
+                    return;
                 }
+
+                // deprecate or revoke object
+                if (revoked) this.object.revoked = true;
+                else this.object.deprecated = true;
+                saves.push(this.object.save(this.restAPIService));
+        
+                // update relationships with the object
+                for (let relationship of this.relationships) {
+                    if (!relationship.deprecated) {
+                        relationship.deprecated = true;
+                        saves.push(relationship.save(this.restAPIService));
+                    }
+                }
+
+                if (revoked_by_id) {
+                    // create a new 'revoked-by' relationship
+                    let revokedRelationship = new Relationship();
+                    revokedRelationship.relationship_type = 'revoked-by';
+                    revokedRelationship.source_ref = this.object.stixID;
+                    revokedRelationship.target_ref = revoked_by_id;
+                    saves.push(revokedRelationship.save(this.restAPIService));
+                }
+        
+                // complete save calls
+                let saveSubscription = forkJoin(saves).subscribe({
+                    complete: () => {
+                        this.editorService.onReload.emit();
+                        saveSubscription.unsubscribe();
+                    }
+                });
             },
             complete: () => { confirmationSub.unsubscribe(); }
         });
