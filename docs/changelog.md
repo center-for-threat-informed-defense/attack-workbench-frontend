@@ -40,6 +40,7 @@
     - The user will now be provided with a downloadable list of objects that could not be saved (and the reason why) in the event of import errors.
     - REST API will now log import errors to the console.
     - Frontend will now log import errors to the console when the application environment is not set to production.
+- Allow users to force import a collection if the collection's data format is more recent than the Workbench can support or if the collection bundle already exists in the database. See [frontend#252](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/252).
 
 #### Fixes in 1.0.3
 - Fixed an issue where the navigation header could be inaccessible when navigating within the application or when the page resized due to user input.
