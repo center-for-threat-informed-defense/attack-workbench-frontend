@@ -10,6 +10,7 @@ export class Group extends StixObject {
     public aliases: string[] = [];
     public contributors: string[] = [];
 
+    public readonly supportsAttackID = true;
     protected get attackIDValidator() { return {
         regex: "G\\d{4}",
         format: "G####"

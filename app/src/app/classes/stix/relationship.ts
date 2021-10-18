@@ -2,26 +2,32 @@ import { Observable, of } from "rxjs";
 import { map, switchMap } from "rxjs/operators";
 import { RestApiConnectorService } from "src/app/services/connectors/rest-api/rest-api-connector.service";
 import { ValidationData } from "../serializable";
-import {StixObject} from "./stix-object";
+import { StixObject } from "./stix-object";
 import { logger } from "../../util/logger";
 
 export class Relationship extends StixObject {
 
     public source_ref: string = "";
-    public get source_name(): string { return this.source_object? this.source_object.stix.name : "[unknown object]"; }
+    public get source_name(): string {
+        return `${this.source_parent ? this.source_parent.stix.name + ': ' : ''}${this.source_object ? this.source_object.stix.name : '[unknown object]'}`;
+    }
     public source_ID: string = "";
     public source_object: any;
-    
+    public source_parent: any;
 
     public target_ref: string = "";
-    public get target_name(): string { return this.target_object? this.target_object.stix.name : "[unknown object]"; }
+    public get target_name(): string {
+        return `${this.target_parent ? this.target_parent.stix.name + ': ' : ''}${this.target_object ? this.target_object.stix.name : '[unknown object]'}`;
+    }
     public target_ID: string = "";
     public target_object: any;
+    public target_parent: any;
     
     public updating_refs: boolean = false; //becomes true while source and target refs are being asynchronously updated.
     
     public relationship_type: string = "";
 
+    public readonly supportsAttackID = true; // relationships do not have ATT&CK IDs
     protected get attackIDValidator() { return null; } // relationships have no ATT&CK ID
     /**
      * The valid source types according to relationship_type
@@ -34,6 +40,7 @@ export class Relationship extends StixObject {
         }
         if (this.relationship_type == "mitigates") return ["mitigation"];
         if (this.relationship_type == "subtechnique-of") return ["technique"];
+        if (this.relationship_type == "detects") return ["data-component"];
         else return null;
     }
     /**
@@ -47,6 +54,7 @@ export class Relationship extends StixObject {
         }
         if (this.relationship_type == "mitigates") return ["technique"];
         if (this.relationship_type == "subtechnique-of") return ["technique"];
+        if (this.relationship_type == "detects") return ["technique"];
         else return null;
     }
 
@@ -74,8 +82,22 @@ export class Relationship extends StixObject {
                 let serialized = this.serialize();
                 serialized.source_object = x.find(result => result.stix.id == new_source_ref);
                 this.deserialize(serialized);
-                this.updating_refs = false;
                 return this;
+            }),
+            switchMap(relationship => {
+                if (relationship.source_object.stix.x_mitre_is_subtechnique || relationship.source_object.stix.type == 'x-mitre-data-component') {
+                    return this.get_parent_object(relationship.source_object, restAPIService).pipe(
+                        map(res => {
+                            this.source_parent = res;
+                            this.updating_refs = false;
+                            return this;
+                        })
+                    )
+                } else {
+                    this.source_parent = undefined; // source object has no parent
+                    this.updating_refs = false;
+                    return of(this);
+                }
             })
         )
     }
@@ -83,14 +105,26 @@ export class Relationship extends StixObject {
     /**
      * Set the source object
      * @param {StixObject} new_source_object the object to set
+     * @param {RestApiConnectorService} restAPIService: the REST API connector through which the parent of the source can be fetched
      * @returns {Observable<Relationship>} of this object after the data has been updated
      */
-    public set_source_object(new_source_object: StixObject): Observable<Relationship>  {
+    public set_source_object(new_source_object: StixObject, restAPIService: RestApiConnectorService): Observable<Relationship>  {
         this.updating_refs = true;
         this.source_ref = new_source_object.stixID;
         let serialized = this.serialize();
         serialized.source_object = new_source_object.serialize();
         this.deserialize(serialized);
+
+        if (this.source_object.stix.x_mitre_is_subtechnique || this.source_object.stix.type == 'x-mitre-data-component') {
+            return this.get_parent_object(this.source_object, restAPIService).pipe(
+                map(result => {
+                    this.source_parent = result;
+                    this.updating_refs = false;
+                    return this;
+                })
+            );
+        } else this.source_parent = undefined; // source object has no parent
+
         this.updating_refs = false;
         return of(this);
     }
@@ -110,26 +144,111 @@ export class Relationship extends StixObject {
                 let serialized = this.serialize();
                 serialized.target_object = x.find(result => result.stix.id == new_target_ref);
                 this.deserialize(serialized);
+                return this;
+            }),
+            switchMap(relationship => {
+                if (relationship.target_object.stix.x_mitre_is_subtechnique || relationship.target_object.stix.type == 'x-mitre-data-component') {
+                    return this.get_parent_object(relationship.target_object, restAPIService).pipe(
+                        map(res => {
+                            this.target_parent = res;
+                            this.updating_refs = false;
+                            return this;
+                        })
+                    )
+                } else {
+                    this.target_parent = undefined; // target object has no parent
+                    this.updating_refs = false;
+                    return of(this);
+                }
+            })
+        )
+    }
+
+    /**
+     * Set the target object
+     * @param {StixObject} new_target_object the object to set
+     * @param {RestApiConnectorService} restAPIService: the REST API connector through which the parent of the target can be fetched
+     * @returns {Observable<Relationship>} of this object after the data has been updated
+     */
+    public set_target_object(new_target_object: StixObject, restAPIService: RestApiConnectorService): Observable<Relationship>  {
+        this.updating_refs = true;
+        this.target_ref = new_target_object.stixID;
+        let serialized = this.serialize();
+        serialized.target_object = new_target_object.serialize();
+        this.deserialize(serialized);
+
+        if (this.target_object.stix.x_mitre_is_subtechnique || this.target_object.stix.type == 'x-mitre-data-component') {
+            return this.get_parent_object(this.target_object, restAPIService).pipe(
+                map(result => {
+                    this.target_parent = result;
+                    this.updating_refs = false;
+                    return this;
+                })
+            );
+        } else this.target_parent = undefined; // target object has no parent
+
+        this.updating_refs = false;
+        return of(this);
+    }
+
+    /**
+     * Retrieve parent object from the REST API, if applicable.
+     * Fetches the parent technique of a sub-technique and the parent data source of
+     * a data component.
+     * @param {any} object the raw source or target object
+     * @param {RestApiConnectorService} restAPIService the REST API connector through which the parent can be fetched
+     * @returns {Observable<StixObject>} of the parent object
+     */
+    public get_parent_object(object: any, restAPIService: RestApiConnectorService): Observable<StixObject> {
+        if (object.stix.x_mitre_is_subtechnique) { // sub-technique
+            return restAPIService.getRelatedTo({sourceRef: object.stix.id, relationshipType: "subtechnique-of"}).pipe( // fetch parent from REST API
+                map(relationship => {
+                    if (!relationship || relationship.data.length == 0) return null; // no parent technique found
+                    let p = relationship.data[0] as Relationship;
+                    return p.target_object;
+                })
+            );
+        } else { // data component
+            return restAPIService.getDataSource(object.stix.x_mitre_data_source_ref).pipe( // fetch data source from REST API
+                map(data_sources => {
+                    if (!data_sources || data_sources.length == 0) return null; // no data source found
+                    return data_sources[0].serialize();
+                })
+            );
+        }
+    }
+
+    /**
+     * Retrieve the parent object of this source object
+     * @param {RestApiConnectorService} restAPIService the REST API connector through which the parent can be fetched
+     * @returns {Observable<Relationship>} of this object after the source parent has been updated
+     */
+    public update_source_parent(restAPIService: RestApiConnectorService): Observable<Relationship> {
+        this.updating_refs = true;
+        return this.get_parent_object(this.source_object, restAPIService).pipe(
+            map(result => {
+                this.source_parent = result;
+                this.updating_refs = false;
+                return this;
+            })
+        );
+    }
+
+    /**
+     * Retrieve the parent object of this target object
+     * @param {RestApiConnectorService} restAPIService the REST API connector through which the parent can be fetched
+     * @returns {Observable<Relationship>} of this object after the target parent has been updated
+     */
+    public update_target_parent(restAPIService: RestApiConnectorService): Observable<Relationship> {
+        this.updating_refs = true;
+        return this.get_parent_object(this.target_object, restAPIService).pipe(
+            map(result => {
+                this.target_parent = result;
                 this.updating_refs = false;
                 return this;
             })
         )
     }
-
-        /**
-     * Set the target object
-     * @param {StixObject} new_target_object the object to set
-     * @returns {Observable<Relationship>} of this object after the data has been updated
-     */
-         public set_target_object(new_target_object: StixObject): Observable<Relationship>  {
-            this.updating_refs = true;
-            this.target_ref = new_target_object.stixID;
-            let serialized = this.serialize();
-            serialized.target_object = new_target_object.serialize();
-            this.deserialize(serialized);
-            this.updating_refs = false;
-            return of(this);
-        }
 
     /**
      * Transform the current object into a raw object for sending to the back-end, stripping any unnecessary fields
@@ -199,7 +318,6 @@ export class Relationship extends StixObject {
      * @returns {Observable<ValidationData>} the validation warnings and errors once validation is complete.
      */
     public validate(restAPIService: RestApiConnectorService): Observable<ValidationData> {
-        //TODO verify source and target ref exist
         return this.base_validate(restAPIService).pipe(
             map(result => {
                 // presence of source-ref

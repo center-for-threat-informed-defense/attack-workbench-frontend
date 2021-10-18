@@ -29,6 +29,18 @@ export class TechniqueViewComponent extends StixViewPage implements OnInit {
         this.ref.detectChanges();
     }
 
+    /**
+     * Get label for the data sources field.
+     * Appends 'ics' for clarification if the object is cross-domain
+     */
+    public dataSourcesLabel(): string {
+        let label = 'data sources';
+        if (this.technique.domains.includes('ics-attack') && this.technique.domains.length > 1) {
+            label = 'ics ' + label;
+        }
+        return label;
+    }
+
     public showDomainField(domain: string, field: string): boolean {
         return this.technique.domains.includes(domain) && (this.technique[field].length > 0 || this.editing);
     }

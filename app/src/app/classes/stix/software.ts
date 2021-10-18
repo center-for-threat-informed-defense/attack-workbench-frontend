@@ -14,6 +14,7 @@ export class Software extends StixObject {
     public contributors: string[] = [];
     public domains: string[] = [];
     
+    public readonly supportsAttackID = true;
     protected get attackIDValidator() { return {
         regex: "S\\d{4}",
         format: "S####"
