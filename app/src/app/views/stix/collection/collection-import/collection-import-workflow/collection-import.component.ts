@@ -36,8 +36,10 @@ export class CollectionImportComponent implements OnInit {
     public select: SelectionModel<string>;
     // ids of objects which have changed (object-version not already in knowledge base)
     public changed_ids: string[] = [];
-    // ids of objects which have nto changed (object-version not already in knowledge base)
+    // ids of objects which have not changed (object-version not already in knowledge base)
     public unchanged_ids: string[] = [];
+
+    public import_errors: any;
     public save_errors: string[] = [];
     public successfully_saved: Set<string> = new Set();
     public collectionBundle: any;
@@ -101,19 +103,27 @@ export class CollectionImportComponent implements OnInit {
 
     public previewCollection(collectionBundle) {
         // send the collection bundle to the backend
-        let subscription_preview = this.restAPIConnectorService.postCollectionBundle(collectionBundle, true).subscribe({
+        let subscription_preview = this.restAPIConnectorService.previewCollectionBundle(collectionBundle).subscribe({
             next: (preview_results) => {
-                if (!preview_results) {
-                    this.loadingStep1 = false;  
+                if (preview_results.error) {
+                    // errors occurred when fetching collection preview
+                    this.import_errors = preview_results.error;
+                }
+
+                if (!preview_results.preview) {
+                    // collection bundle cannot be imported, show errors on next step
+                    this.loadingStep1 = false;
+                    this.stepper.next();
                 } else {
-                    this.parsePreview(collectionBundle, preview_results)
+                    // successfully fetched preview
+                    this.parsePreview(collectionBundle, preview_results.preview);
                 }
             },
             error: (err) => {
                 this.loadingStep1 = false;
             },
             complete: () => { subscription_preview.unsubscribe() }
-        })
+        });
     }
 
     public parsePreview(collectionBundle: any, preview: Collection) {
@@ -226,12 +236,13 @@ export class CollectionImportComponent implements OnInit {
                             }
                         }
                         newBundle.objects = objects;
-                        let subscription = this.restAPIConnectorService.postCollectionBundle(newBundle, false).subscribe({
+                        let force = this.import_errors ? true : false; // force import if the collection bundle has errors
+                        let subscription = this.restAPIConnectorService.postCollectionBundle(newBundle, false, force).subscribe({
                             next: (results) => { 
                                 if (results.import_categories.errors.length > 0) {
                                     logger.warn("Collection import completed with errors:", results.import_categories.errors);
                                 }
-                                this.save_errors = results.import_categories.errors.filter(err => err["error_type"] == "Save error");
+                                this.save_errors = results.import_categories.errors;
                                 let save_error_ids = new Set(this.save_errors.map(err => err['object_ref']));
                                 for (let category in results.import_categories) {
                                     if (category == "errors") continue;
@@ -247,6 +258,14 @@ export class CollectionImportComponent implements OnInit {
             },
             complete: () => { promptSubscription.unsubscribe() } //prevent memory leaks
         })
+    }
+
+    /**
+     * Cancel the collection import and revert to previous step
+     */
+    public cancelImport(): void {
+        this.import_errors = undefined;
+        this.stepper.previous();
     }
 
     /**
