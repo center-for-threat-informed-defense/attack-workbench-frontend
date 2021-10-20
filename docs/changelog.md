@@ -52,9 +52,8 @@ ATT&CK Workbench version 1.1.0 includes improvements to how data is imported whi
 -   Improved the flexibility and robustness of collection imports:
     -   Workbench will now check the ATT&CK Spec version of imported data and warn the user if the ATT&CK Spec version is unsupported (e.x if the Workbench instance is too outdated to support the data it is trying to import). The user can choose to bypass this warning.
     -   Workbench can now import the same collection multiple times in case objects in the initial import could not be imported due to an error.
-    -   Workbench can now import STIX bundles that don't contain a collection object. This is not recommended however since the results of such an import (the list of imported objects) will not be recorded for future reference.
     -   The user will now be provided with a downloadable list of objects that could not be saved (and the reason why) in the event of import errors.
-    -   REST API will now log import errors to the console.
+    -   REST API will now log import errors to the console when the application environment is not set to production.
     -   Frontend will now log import errors to the console when the application environment is not set to production.
 -   Added validation for missing ATT&CK IDs on objects that support them. The user will now be warned if they neglect to assign an ATT&CK ID to an object which supports it. When exporting a collection, the user will similarly be warned if any contained objects are missing ATT&CK IDs. See [frontend#231](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/231).
 
