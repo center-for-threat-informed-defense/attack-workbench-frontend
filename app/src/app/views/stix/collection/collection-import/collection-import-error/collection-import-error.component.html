@@ -9,14 +9,8 @@
                 <li *ngIf="duplicateCollection">
                     <span>The collection bundle already exists in the database. Some objects may not be imported.</span>
                 </li>
-                <li *ngIf="duplicateObjects > 0">
-                    <span>{{duplicateObjects}} {{duplicateObjects > 1 ? 'objects are' : 'object is'}} duplicated in the collection bundle and will not be imported.</span>
-                </li>
                 <li *ngIf="objSpecVersionViolations > 0">
                     <span>{{objSpecVersionViolations}} {{objSpecVersionViolations > 1 ? 'objects use' : 'object uses'}} a newer version of the ATT&CK spec than your Workbench supports and will not be imported. After upgrading Workbench to the latest version you can re-import the data to acquire {{objSpecVersionViolations > 1 ? 'these objects' : 'this object'}}. </span>
-                </li>
-                <li *ngIf="objSpecViolations > 0">
-                    <span>{{objSpecViolations}} {{objSpecViolations > 1 ? 'objects have' : 'object has'}} other spec violations and will not be imported.</span>
                 </li>
             </ul>
         </div>
@@ -24,7 +18,7 @@
 
     <ng-container *ngIf="hasErrors">
         <p class="nomargin">
-            <span class="error">ERROR</span>: the data you are trying to import contains errors and may not be imported:
+            <span class="error">ERROR</span>: the data you are trying to import contains errors and cannot be imported:
         </p>
 
         <div class="error-list">
@@ -38,19 +32,18 @@
                 <li *ngIf="badlyFormatted">
                     <span>The collection bundle is improperly formatted.</span>
                 </li>
+                <li *ngIf="duplicateObjects > 0">
+                    <span>The collection bundle contains {{duplicateObjects}} duplicated {{duplicateObjects > 1 ? 'objects' : 'object'}}.</span>
+                </li>
             </ul>
         </div>
     </ng-container>
 
     <div class="center">
         <div class="action-bar">
-            <button mat-mini-fab class="extended-fab-button"  color="secondary" (click)="onCancel.emit()">
+            <button *ngIf="hasErrors" mat-mini-fab class="extended-fab-button" color="primary" (click)="onCancel.emit()">
                 <mat-icon aria-label="add">close</mat-icon>
                 <span class="text-label">Cancel</span>
-            </button>
-            <button *ngIf="!hasErrors" mat-mini-fab class="extended-fab-button"  color="primary" (click)="onForceImport.emit()">
-                <mat-icon aria-label="add">save_alt</mat-icon>
-                <span class="text-label">Proceed with Import</span>
             </button>
         </div>
     </div>
