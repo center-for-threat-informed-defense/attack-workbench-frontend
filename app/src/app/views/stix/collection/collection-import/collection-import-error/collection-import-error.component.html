@@ -1,26 +1,8 @@
 <div class="collection-import-error">
-    <ng-container *ngIf="hasWarnings">
-        <p class="nomargin">
-            <span class="warn">WARNING</span>: the data you are trying to import contains some problems which may affect your knowledge base if you proceed with the import:
-        </p>
-
-        <div class="warning-list">
-            <ul>
-                <li *ngIf="duplicateCollection">
-                    <span>The collection bundle already exists in the database. Some objects may not be imported.</span>
-                </li>
-                <li *ngIf="objSpecVersionViolations > 0">
-                    <span>{{objSpecVersionViolations}} {{objSpecVersionViolations > 1 ? 'objects use' : 'object uses'}} a newer version of the ATT&CK spec than your Workbench supports and will not be imported. After upgrading Workbench to the latest version you can re-import the data to acquire {{objSpecVersionViolations > 1 ? 'these objects' : 'this object'}}. </span>
-                </li>
-            </ul>
-        </div>
-    </ng-container>
-
     <ng-container *ngIf="hasErrors">
         <p class="nomargin">
             <span class="error">ERROR</span>: the data you are trying to import contains errors and cannot be imported:
         </p>
-
         <div class="error-list">
             <ul>
                 <li *ngIf="noCollection">
@@ -34,6 +16,22 @@
                 </li>
                 <li *ngIf="duplicateObjects > 0">
                     <span>The collection bundle contains {{duplicateObjects}} duplicated {{duplicateObjects > 1 ? 'objects' : 'object'}}.</span>
+                </li>
+            </ul>
+        </div>
+    </ng-container>
+
+    <ng-container *ngIf="hasWarnings">
+        <p class="nomargin">
+            <span class="warn">WARNING</span>: the data you are trying to import contains some problems which may affect your knowledge base if you proceed with the import:
+        </p>
+        <div class="warning-list">
+            <ul>
+                <li *ngIf="duplicateCollection">
+                    <span>The collection bundle already exists in the database. Some objects may not be imported.</span>
+                </li>
+                <li *ngIf="objSpecVersionViolations > 0">
+                    <span>{{objSpecVersionViolations}} {{objSpecVersionViolations > 1 ? 'objects use' : 'object uses'}} a newer version of the ATT&CK spec than your Workbench supports and will not be imported. After upgrading Workbench to the latest version you can re-import the data to acquire {{objSpecVersionViolations > 1 ? 'these objects' : 'this object'}}. </span>
                 </li>
             </ul>
         </div>
