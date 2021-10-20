@@ -1037,12 +1037,15 @@ export class RestApiConnectorService extends ApiConnector {
      * POST a collection bundle (including a collection SDO and the objects to which it refers) to the back-end
      * @param {*} collectionBundle the STIX bundle to write
      * @param {boolean} [preview] if true, preview the results of the import without actually committing the import
+     * @param {boolean} [force] if true, force import the collection
+     * @param {boolean} [suppressErrors] if true, suppress the error snackbar
      * @returns {Observable<Collection>} collection object marking the results of the import
      */
-    public postCollectionBundle(collectionBundle: any, preview: boolean = false): Observable<Collection> {
+    public postCollectionBundle(collectionBundle: any, preview: boolean = false, force: boolean = false, suppressErrors: boolean = false): Observable<Collection> {
         // add query params for preview
         let query = new HttpParams();
-        if (preview) query = query.set("checkOnly", "true");
+        if (preview) query = query.set("previewOnly", "true");
+        if (force) query = query.set("forceImport", "all");
         // perform the request
         return this.http.post(`${this.baseUrl}/collection-bundles`, collectionBundle, {headers: this.headers, params: query}).pipe(
             tap(result => {
@@ -1052,9 +1055,62 @@ export class RestApiConnectorService extends ApiConnector {
             map(result => {
                 return new Collection(result);
             }),
-            catchError(this.handleError_raise<Collection>()),
+            catchError(this.handleError_raise<Collection>(!suppressErrors)),
             share()
         )
+    }
+
+    /**
+     * Preview a collection bundle.
+     * POST the collection bundle to the back end to retrieve a preview of the import results. A second POST 
+     * call will occur (with ?forceImport='all') if the first POST call results in an overridable import error.
+     * This is done in order to view the import errors alongside a preview of the import results.
+     * @param collectionBundle the STIX bundle to preview
+     * @returns {Observable<any>} the collection object and any import errors as result of the preview import
+     */
+    public previewCollectionBundle(collectionBundle: any): Observable<any> {
+        // perform preview request
+        return this.postCollectionBundle(collectionBundle, true, false, true).pipe(
+            map(result => {
+                return {error: undefined, preview: result};
+            }),
+            catchError(err => {
+                // check if import can be forced
+                if (this.cannotForceImport(err)) {
+                    return of({error: err.error, preview: undefined});
+                }
+                // force request
+                return this.postCollectionBundle(collectionBundle, true, true, true).pipe(
+                    map(force_result => {
+                        return {error: err.error, preview: force_result};
+                    }),
+                    catchError(this.handleError_raise<Collection>())
+                )
+            }),
+            share()
+        );
+    }
+
+    /**
+     * Determine if the user cannot force import a collection when the post collection call fails.
+     * Users cannot force an import when:
+     *   1. the collection bundle has more than one collection object
+     *   2. the collection bundle does not have a collection object
+     *   3. the collection is badly formatted
+     *   4. the collection contains duplicate objects
+     * @param err the resulting error from previewing the collection
+     * @returns true if the user cannot force import the collection; false otherwise
+     */
+    private cannotForceImport(err: any): boolean {
+        if (err.status == "400") {
+            let bundleErrors = err.error.bundleErrors;
+            let objectErrors = err.error.objectErrors.summary;
+            if (bundleErrors.noCollection || bundleErrors.moreThanOneCollection || bundleErrors.badlyFormattedCollection || objectErrors.duplicateObjectInBundleCount) {
+                return true;
+            }
+            return false;
+        }
+        return true;
     }
 
     /**
