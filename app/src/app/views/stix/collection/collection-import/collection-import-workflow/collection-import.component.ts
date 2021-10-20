@@ -39,7 +39,7 @@ export class CollectionImportComponent implements OnInit {
     // ids of objects which have not changed (object-version not already in knowledge base)
     public unchanged_ids: string[] = [];
 
-    public import_error: any;
+    public import_errors: any;
     public save_errors: string[] = [];
     public successfully_saved: Set<string> = new Set();
     public collectionBundle: any;
@@ -103,22 +103,27 @@ export class CollectionImportComponent implements OnInit {
 
     public previewCollection(collectionBundle) {
         // send the collection bundle to the backend
-        let subscription_preview = this.restAPIConnectorService.postCollectionBundle(collectionBundle, true).subscribe({
+        let subscription_preview = this.restAPIConnectorService.previewCollectionBundle(collectionBundle).subscribe({
             next: (preview_results) => {
-                if (!preview_results) {
-                    this.loadingStep1 = false;  
+                if (preview_results.error) {
+                    // errors occurred when fetching collection preview
+                    this.import_errors = preview_results.error;
+                }
+
+                if (!preview_results.preview) {
+                    // collection bundle cannot be imported, show errors on next step
+                    this.loadingStep1 = false;
+                    this.stepper.next();
                 } else {
-                    this.parsePreview(collectionBundle, preview_results)
+                    // successfully fetched preview
+                    this.parsePreview(collectionBundle, preview_results.preview);
                 }
             },
             error: (err) => {
                 this.loadingStep1 = false;
-                if (err.status == "400") {
-                    this.errorPreview(collectionBundle, err.error)
-                }
             },
             complete: () => { subscription_preview.unsubscribe() }
-        })
+        });
     }
 
     public parsePreview(collectionBundle: any, preview: Collection) {
@@ -206,9 +211,8 @@ export class CollectionImportComponent implements OnInit {
 
     /**
      * Perform the import of the collection
-     * @param force if true, force import the collection
      */
-    public import(force: boolean = false) {
+    public import() {
         let prompt = this.dialog.open(ConfirmationDialogComponent, {
             maxWidth: "25em",
             data: {
@@ -232,6 +236,7 @@ export class CollectionImportComponent implements OnInit {
                             }
                         }
                         newBundle.objects = objects;
+                        let force = this.import_errors ? true : false; // force import if the collection bundle has errors
                         let subscription = this.restAPIConnectorService.postCollectionBundle(newBundle, false, force).subscribe({
                             next: (results) => { 
                                 if (results.import_categories.errors.length > 0) {
@@ -256,36 +261,10 @@ export class CollectionImportComponent implements OnInit {
     }
 
     /**
-     * Set up the objects to force import from a collection
-     * @param collectionBundle the collection bundle to import
-     * @param error the resulting error from previewing the collection
-     */
-    public errorPreview(collectionBundle: any, error: any): void {
-        this.import_error = error;
-        this.collectionBundle = collectionBundle; //save for later
-        let selected: string[] = [];
-        for (let object of this.collectionBundle.objects) {
-            if ("type" in object && object.type == 'x-mitre-collection') {
-                this.unchanged_ids.push(object.id);
-            }
-            else if ("id" in object) selected.push(object.id);
-        }
-        this.select =  new SelectionModel(true, selected);
-        this.stepper.next();
-    }
-
-    /**
-     * Proceed to force import the collection
-     */
-    public forceImport(): void {
-        this.import(true);
-    }
-
-    /**
      * Cancel the collection import and revert to previous step
      */
     public cancelImport(): void {
-        this.import_error = undefined;
+        this.import_errors = undefined;
         this.stepper.previous();
     }
 
