@@ -50,18 +50,21 @@ ATT&CK Workbench version 1.1.0 includes improvements to how data is imported whi
     -   Added support for data sources and data components, and viewing/editing interfaces for these object types and their relationships with techniques. See [frontend#67](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/67), [frontend#66](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/66).
     -   Added support for `x_mitre_attack_spec_version` on all object types.
 -   Improved the flexibility and robustness of collection imports:
-    -   Workbench will now check the ATT&CK Spec version of imported data and warn the user if the ATT&CK Spec version is unsupported (e.x if the Workbench instance is too outdated to support the data it is trying to import). The user can choose to bypass this warning.
+    -   Workbench will now check the ATT&CK Spec version of imported data and warn the user if the ATT&CK Spec version is unsupported (ex. if the Workbench instance is too outdated to support the data it is trying to import). The user can choose to bypass this warning.
     -   Workbench can now import the same collection multiple times in case objects in the initial import could not be imported due to an error.
     -   The user will now be provided with a downloadable list of objects that could not be saved (and the reason why) in the event of import errors.
-    -   REST API will now log import errors to the console when the application environment is not set to production.
+    -   REST API will now log import errors for individual objects to the console when the log level is set to `verbose`.
     -   Frontend will now log import errors to the console when the application environment is not set to production.
 -   Added validation for missing ATT&CK IDs on objects that support them. The user will now be warned if they neglect to assign an ATT&CK ID to an object which supports it. When exporting a collection, the user will similarly be warned if any contained objects are missing ATT&CK IDs. See [frontend#231](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/231).
+-   REST API now supports setting the log level through an environment variable. See [rest-api#108](https://github.com/center-for-threat-informed-defense/attack-workbench-rest-api/issues/108).
+-   REST API no longer sets the `upgrade-insecure-requests` directive of the `Content-Security-Policy` header in responses. This will facilitate the deployment of ATT&CK Workbench in an internal environment without requiring the system to be configured to support HTTPS. See [rest-api#96](https://github.com/center-for-threat-informed-defense/attack-workbench-rest-api/issues/96).
 
 #### Fixes in 1.1.0
 
 -   Fixed an issue where the navigation header could be inaccessible when navigating within the application or when the page resized due to user input.
 -   Frontend will no longer claim objects were imported when they were actually discarded due to import errors such as spec violations.
 -   Imported STIX bundles will no longer require (but still allow) the `spec_version` field on the bundle itself. This was causing issues importing collections created by the Workbench. Objects within the bundle still require the `spec_version` field per the STIX 2.1 spec. See [rest-api#103](https://github.com/center-for-threat-informed-defense/attack-workbench-rest-api/issues/103).
+-   Fixed an issue where the REST API would save references when importing a collection bundle even though the `previewOnly` flag had been set. See [rest-api#120](https://github.com/center-for-threat-informed-defense/attack-workbench-rest-api/issues/120).
 
 ## 20 August 2021
 
