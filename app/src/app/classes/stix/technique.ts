@@ -24,6 +24,7 @@ export class Technique extends StixObject {
 
     public is_subtechnique: boolean = false;
     
+    public readonly supportsAttackID = true;
     protected get attackIDValidator() { return {
         regex: this.is_subtechnique? "T\\d{4}\\.\\d{3}" : "T\\d{4}",
         format: this.is_subtechnique? "T####.###" : "T####"

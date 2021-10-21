@@ -152,6 +152,8 @@ export class HistoryTimelineComponent implements OnInit, OnDestroy {
         else if (objectType == "tactic") objects$ = this.restAPIConnectorService.getTactic(objectStixID, null, "all");
         else if (objectType == "technique") objects$ = this.restAPIConnectorService.getTechnique(objectStixID, null, "all");
         else if (objectType == "collection") objects$ = this.restAPIConnectorService.getCollection(objectStixID, null, "all");
+        else if (objectType == "data-source") objects$ = this.restAPIConnectorService.getDataSource(objectStixID, null, "all");
+        else if (objectType == "data-component") objects$ = this.restAPIConnectorService.getDataComponent(objectStixID, null, "all");
         // set up subscribers to get relationships
         let relationships$ = this.restAPIConnectorService.getRelatedTo({sourceOrTargetRef: objectStixID, versions: "all"});
         // join subscribers
