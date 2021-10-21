@@ -23,11 +23,12 @@ export abstract class ApiConnector {
 
     /**
      * Log the error and then raise it to the next level
+     * @param {boolean} showSnack if true, show the error snackbar
      */
-    protected handleError_raise<T>() {
+    protected handleError_raise<T>(showSnack: boolean = true) {
         return (error: any): Observable<T> => {
             logger.error(error);
-            this.errorSnack(error);
+            if (showSnack) this.errorSnack(error);
             return throwError(error);
         }
     }

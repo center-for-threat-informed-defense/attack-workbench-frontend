@@ -19,7 +19,9 @@ let stixTypeToAttackType = {
     "x-mitre-matrix": "matrix",
     "x-mitre-tactic": "tactic",
     "relationship": "relationship",
-    "marking-definition": "marking-definition"
+    "marking-definition": "marking-definition",
+    "x-mitre-data-source": "data-source",
+    "x-mitre-data-component": "data-component"
 }
 export {stixTypeToAttackType};
 
@@ -37,6 +39,7 @@ export abstract class StixObject extends Serializable {
 
     public object_marking_refs: string[] = []; //list of embedded relationships to marking_defs
 
+    public abstract readonly supportsAttackID: boolean; // boolean to determine if object supports ATT&CK IDs
     protected abstract get attackIDValidator(): {
         regex: string, // regex to validate the ID
         format: string // format to display to user
@@ -50,7 +53,9 @@ export abstract class StixObject extends Serializable {
         "matrix": "matrices",
         "tactic": "tactics",
         "note": "notes",
-        "marking-definition": "marking-definitions"
+        "marking-definition": "marking-definitions",
+        "data-source": "data-sources",
+        "data-component": "data-components"
     }
 
     public get routes(): any[] { // route to view the object
@@ -296,6 +301,8 @@ export abstract class StixObject extends Serializable {
                                 this.attackType == "matrix"? restAPIService.getAllMatrices() :
                                 this.attackType == "mitigation"? restAPIService.getAllMitigations() :
                                 this.attackType == "technique"? restAPIService.getAllTechniques() :
+                                this.attackType == "data-source"? restAPIService.getAllDataSources() :
+                                this.attackType == "data-component"? restAPIService.getAllDataComponents() :
                                 restAPIService.getAllTactics(); 
                 return accessor.pipe(
                     map(objects => {
@@ -321,32 +328,41 @@ export abstract class StixObject extends Serializable {
                                 })
                             }
                         }
-                        // check ATT&CK ID
-                        if (this.hasOwnProperty("attackID") && this.attackID != "") {
-                            if (objects.data.some(x => x.attackID == this.attackID && x.stixID != this.stixID)) {
-                                result.errors.push({
-                                    "result": "error",
+                        // check ATT&CK ID and ignore collections
+                        if (this.hasOwnProperty("supportsAttackID") && this.supportsAttackID == true) {
+                            if (this.attackID == "") {
+                                result.warnings.push({
+                                    "result": "warning",
                                     "field": "attackID",
-                                    "message": "ATT&CK ID is not unique"
-                                })
-                            } else {
-                                result.successes.push({
-                                    "result": "success",
-                                    "field": "attackID",
-                                    "message": "ATT&CK ID is unique"
+                                    "message": "Object does not have ATT&CK ID"
                                 })
                             }
-                            // (\S+--)? is an organization prefix, and should probably be improved when that is made an explicit feature
-                            let idRegex =  new RegExp("^(\\S+--)?" + this.attackIDValidator.regex + "$");
-                            let attackIDValid = idRegex.test(this.attackID);
-                            if (!attackIDValid) {
-                                result.errors.push({
-                                    "result": "error",
-                                    "field": "attackID",
-                                    "message": `ATT&CK ID does not match the format ${this.attackIDValidator.format}`
-                                })
+                            else {
+                                if (objects.data.some(x => x.attackID == this.attackID && x.stixID != this.stixID)) {
+                                    result.errors.push({
+                                        "result": "error",
+                                        "field": "attackID",
+                                        "message": "ATT&CK ID is not unique"
+                                    })
+                                } else {
+                                    result.successes.push({
+                                        "result": "success",
+                                        "field": "attackID",
+                                        "message": "ATT&CK ID is unique"
+                                    })
+                                }
+                                // (\S+--)? is an organization prefix, and should probably be improved when that is made an explicit feature
+                                let idRegex =  new RegExp("^(\\S+--)?" + this.attackIDValidator.regex + "$");
+                                let attackIDValid = idRegex.test(this.attackID);
+                                if (!attackIDValid) {
+                                    result.errors.push({
+                                        "result": "error",
+                                        "field": "attackID",
+                                        "message": `ATT&CK ID does not match the format ${this.attackIDValidator.format}`
+                                    })
+                                }
                             }
-                        }
+                        } 
                         return result;
                     })
                 )

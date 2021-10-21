@@ -1,5 +1,7 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { MatDialogRef } from '@angular/material/dialog';
 import { StixObject } from 'src/app/classes/stix/stix-object';
+import { StixDialogComponent } from './stix-dialog/stix-dialog.component';
 
 @Component({template: ''})
 export abstract class StixViewPage {
@@ -38,4 +40,5 @@ export interface StixViewConfig {
      * if "service", use sidebar.service to control the sidebar
      */
     sidebarControl?: "disable" | "events" | "service"
+    dialog?: MatDialogRef<StixDialogComponent> // reference to the current dialog
 }

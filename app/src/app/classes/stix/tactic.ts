@@ -7,6 +7,8 @@ import { logger } from "../../util/logger";
 export class Tactic extends StixObject {
     public name: string = "";
     public domains: string[] = [];
+    
+    public readonly supportsAttackID = true;
     protected get attackIDValidator() { return {
         regex: "TA\\d{4}",
         format: "TA####"

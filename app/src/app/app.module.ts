@@ -114,11 +114,13 @@ import { CollectionManagerComponent } from "./views/stix/collection/collection-m
 import { CollectionIndexListComponent } from "./views/stix/collection/collection-index/collection-index-list/collection-index-list.component";
 import { CollectionIndexViewComponent } from "./views/stix/collection/collection-index/collection-index-view/collection-index-view.component";
 import { CollectionIndexImportComponent } from "./views/stix/collection/collection-index/collection-index-import/collection-index-import.component";
-import { CollectionImportReviewComponent } from "./views/stix/collection/collection-import/collection-import-review/collection-import-review.component";
 
 import { CollectionListComponent } from './views/stix/collection/collection-list/collection-list.component';
 import { CollectionViewComponent } from './views/stix/collection/collection-view/collection-view.component';
 import { CollectionImportComponent } from './views/stix/collection/collection-import/collection-import-workflow/collection-import.component';
+import { CollectionImportReviewComponent } from "./views/stix/collection/collection-import/collection-import-review/collection-import-review.component";
+import { CollectionImportErrorComponent } from './views/stix/collection/collection-import/collection-import-error/collection-import-error.component';
+
 // import { CollectionExportComponent } from './views/stix/collection/collection-export/collection-export.component';
 
 import { GroupViewComponent } from './views/stix/group/group-view/group-view.component';
@@ -153,6 +155,9 @@ import { ObjectStatusComponent } from './components/object-status/object-status.
 import { IconViewComponent } from './components/stix/icon-view/icon-view.component';
 import { IdentityPropertyComponent } from './components/stix/identity-property/identity-property.component';
 import { NgxJdenticonModule, JDENTICON_CONFIG } from 'ngx-jdenticon';
+import { DataSourceViewComponent } from './views/stix/data-source/data-source-view/data-source-view.component';
+import { DataSourceListComponent } from './views/stix/data-source/data-source-list/data-source-list.component';
+import { DataComponentViewComponent } from './views/stix/data-component/data-component-view/data-component-view.component';
 
 
 @NgModule({
@@ -218,6 +223,7 @@ import { NgxJdenticonModule, JDENTICON_CONFIG } from 'ngx-jdenticon';
     CollectionIndexImportComponent,
     CollectionImportComponent,
     CollectionImportReviewComponent,
+    CollectionImportErrorComponent,
     // CollectionExportComponent,
     
     RelationshipViewComponent,
@@ -249,7 +255,10 @@ import { NgxJdenticonModule, JDENTICON_CONFIG } from 'ngx-jdenticon';
 
     NotesEditorComponent,
     ObjectStatusComponent,
-    IdentityPropertyComponent
+    IdentityPropertyComponent,
+    DataSourceViewComponent,
+    DataSourceListComponent,
+    DataComponentViewComponent
   ],
   imports: [
     BreadcrumbModule,

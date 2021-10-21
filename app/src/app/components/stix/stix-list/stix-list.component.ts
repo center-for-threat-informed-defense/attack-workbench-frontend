@@ -43,6 +43,7 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
     @Input() public config: StixListConfig = {};
     @Output() public onRowAction = new EventEmitter<string>();
     @Output() public onSelect = new EventEmitter<StixObject>();
+    @Output() public refresh = new EventEmitter();
     @ViewChild(MatPaginator) paginator: MatPaginator;
     @ViewChild('search') search: ElementRef;
     public searchQuery: string = "";
@@ -114,7 +115,12 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
                 maxHeight: "75vh"
             })
             let subscription = prompt.afterClosed().subscribe({
-                next: result => { if (prompt.componentInstance.dirty) this.applyControls(); }, //re-fetch values since an edit occurred
+                next: result => {
+                    if (prompt.componentInstance.dirty) { //re-fetch values since an edit occurred
+                        this.applyControls();
+                        this.refresh.emit();
+                    }
+                },
                 complete: () => { subscription.unsubscribe(); }
             });
         }
@@ -171,7 +177,7 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
         if ("type" in this.config) { 
             // this.filter.push("type." + this.config.type); 
             // set columns according to type
-            switch(this.config.type) {
+            switch(this.config.type.replace(/_/g, '-')) {
                 case "collection":
                 case "collection-created":
                     this.addColumn("name", "name", "plain", sticky_allowed, ["name"]);
@@ -250,6 +256,7 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
                         "display": "descriptive"
                     }]
                     break;
+                case "data-source":
                 case "technique":
                     this.addColumn("", "workflow", "icon");
                     this.addColumn("", "state", "icon");
@@ -265,10 +272,23 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
                         "display": "descriptive"
                     }]
                     break;
+                case "data-component":
+                    this.addColumn("name", "name", "plain", sticky_allowed, ["name"]);
+                    this.addColumn("domain", "domains", "list");
+                    this.addColumn("version", "version", "version");
+                    this.addColumn("modified","modified", "timestamp");
+                    this.addColumn("created", "created", "timestamp");
+                    this.tableDetail = [{
+                        "field": "description",
+                        "display": "descriptive"
+                    }]
+                    break;
                 case "relationship":
                     this.addColumn("", "state", "icon");
-                    this.addColumn("source", "source_ID", "plain");
-                    this.addColumn("", "source_name", "plain", this.config.targetRef? sticky_allowed: false, ["relationship-name"]);// ["name", "relationship-left"]);
+                    if (this.config.relationshipType && this.config.relationshipType !== "detects") {
+                        this.addColumn("source", "source_ID", "plain");
+                        this.addColumn("", "source_name", "plain", this.config.targetRef? sticky_allowed: false, ["relationship-name"]);// ["name", "relationship-left"]);
+                    } else this.addColumn("source", "source_name", "plain", this.config.targetRef? sticky_allowed: false, ["relationship-name"]);
                     this.addColumn("type", "relationship_type", "plain", false, ["text-deemphasis", "relationship-joiner"]);
                     this.addColumn("target", "target_ID", "plain");
                     this.addColumn("", "target_name", "plain", this.config.sourceRef? sticky_allowed: false, ["relationship-name"]);// ["name", "relationship-right"]);
@@ -462,6 +482,8 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
             else if (this.config.type == "technique") this.data$ = this.restAPIConnectorService.getAllTechniques(options);
             else if (this.config.type.includes("collection")) this.data$ = this.restAPIConnectorService.getAllCollections({search: this.searchQuery, versions: "all"});
             else if (this.config.type == "relationship") this.data$ = this.restAPIConnectorService.getRelatedTo({sourceRef: this.config.sourceRef, targetRef: this.config.targetRef, sourceType: this.config.sourceType, targetType: this.config.targetType, relationshipType: this.config.relationshipType,  excludeSourceRefs: this.config.excludeSourceRefs, excludeTargetRefs: this.config.excludeTargetRefs, limit: limit, offset: offset, includeDeprecated: deprecated});
+            else if (this.config.type == "data-source") this.data$ = this.restAPIConnectorService.getAllDataSources(options);
+            else if (this.config.type == "data-component") this.data$ = this.restAPIConnectorService.getAllDataComponents(options);
             let subscription = this.data$.subscribe({
                 next: (data) => { this.totalObjectCount = data.pagination.total; },
                 complete: () => { subscription.unsubscribe() }
@@ -487,7 +509,7 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
 }
 
 //allowed types for StixListConfig
-type type_attacktype = "collection" | "group" | "matrix" | "mitigation" | "software" | "tactic" | "technique" | "relationship";
+type type_attacktype = "collection" | "group" | "matrix" | "mitigation" | "software" | "tactic" | "technique" | "relationship" | "data-source" | "data-component";
 type selection_types = "one" | "many" | "disabled"
 export interface StixListConfig {
     /* if specified, shows the given STIX objects in the table instead of loading from the back-end based on other configurations. */

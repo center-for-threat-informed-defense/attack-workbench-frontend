@@ -36,6 +36,7 @@ Collections are represented in STIX using the `x-mitre-collection` type, describ
 | **modified**  (required)| `timestamp` | Represents the time at which the collection was most recently modified. |
 | **x_mitre_version** (required) | `string` | The version of the collection object, which must follow the MAJOR.MINOR.PATCH pattern. |
 | **spec_version** (required) | `string` | The version of the STIX specification used to represent the object. This value MUST be `2.1`.
+| **x_mitre_attack_spec_version** (required) | `string` | The version of the ATT&CK spec used to represent the object. More information on the ATT&CK spec and the current ATT&CK Spec version can be found [on the attack-stix-data GitHub repository](https://github.com/mitre-attack/attack-stix-data/blob/master/USAGE.md).
 | **created_by_ref** (required) | `string` | identifier | Specifies the **id** property of the `identity` object that describes the entity that created this collection. |
 | **object_marking_refs** (required) | `list` of type `identifier` | Specifies a list of **id** properties of `marking-definition` objects that apply to this object. Typically used for copyright statements. |
 | **x_mitre_contents** (required) | `list` of type _object version reference_ | Specifies the objects contained within the collection. See the _object version reference_ type below.  |
@@ -52,9 +53,10 @@ Object version references are used to refer to a specific version of a STIX obje
 ### Collection Example
 ```json
 {
-    "id": "x-mitre-collection--23320f4-22ad-8467-3b73-ed0c869a12838",
+    "id": "x-mitre-collection--402e24b4-436e-4936-b19b-2038648f489",
     "type": "x-mitre-collection",
     "spec_version": "2.1",
+    "x_mitre_attack_spec_version": "2.1.0",
     "name": "Enterprise ATT&CK",
     "x_mitre_version": "6.2",
     "description": "Version 6.2 of the Enterprise ATT&CK dataset",
@@ -148,7 +150,7 @@ Collection version objects describe specific versions of collections within a _c
     "modified": "2019-07-17T20:04:40.297Z",
     "collections": [
         {
-            "id": "x-mitre-collection--23320f4-22ad-8467-3b73-ed0c869a12838",
+            "id": "x-mitre-collection--402e24b4-436e-4936-b19b-2038648f489",
             "name": "Enterprise ATT&CK",
             "description": "The Enterprise domain of the ATT&CK dataset",
             "created": "2019-07-31T00:00:00.000Z",
