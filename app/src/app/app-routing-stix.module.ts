@@ -14,6 +14,7 @@ import { environment } from "../environments/environment"
 import { CollectionImportComponent } from "./views/stix/collection/collection-import/collection-import-workflow/collection-import.component";
 import { CollectionIndexImportComponent } from "./views/stix/collection/collection-index/collection-index-import/collection-index-import.component";
 import { DataSourceListComponent } from "./views/stix/data-source/data-source-list/data-source-list.component";
+import { MarkingDefinitionListComponent } from "./views/stix/marking-definition/marking-definition-list/marking-definition-list.component";
 
 const stixRoutes: Routes = [{
     path: 'matrix',
@@ -342,14 +343,62 @@ const stixRoutes: Routes = [{
     }
     ]
   },
-
+  {
+    path: 'marking-definition',
+    data: {
+      breadcrumb: 'marking definitions',
+      more: true
+    },
+    children: [{
+        path: '',
+        data: {
+          breadcrumb: 'list',
+          title: "marking definitions"
+        },
+        component: MarkingDefinitionListComponent
+      },
+      {
+        path: ':id',
+        data: {
+          breadcrumb: 'loading...'
+        },
+        children: [{
+            path: '',
+            data: {
+              breadcrumb: 'view',
+              editable: true,
+              title: "view marking definition"
+            },
+            component: StixPageComponent
+          }
+        ]
+      },
+      {
+        path: ":new",
+        data: {
+            breadcrumb: "new marking definition"
+        },
+        children: [{
+          path: '',
+          data: {
+            breadcrumb: 'view',
+            editable: true,
+            title: "new marking definition"
+          },
+          component: StixPageComponent
+        }
+      ]
+    }
+    ]
+  }
 ]
 
 if (environment.integrations.collection_manager.enabled) {
     stixRoutes.push({
         path: 'collection',
         data: {
-            breadcrumb: 'collections'
+            breadcrumb: 'collections',
+            more: true
         },
         children: [{
             path: "",
