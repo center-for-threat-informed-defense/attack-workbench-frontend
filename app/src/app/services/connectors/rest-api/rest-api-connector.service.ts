@@ -22,6 +22,7 @@ import { ApiConnector } from '../api-connector';
 import { logger } from "../../../util/logger";
 import { DataSource } from 'src/app/classes/stix/data-source';
 import { DataComponent } from 'src/app/classes/stix/data-component';
+import { UserAccount } from 'src/app/classes/authn/user-account';
 
 //attack types
 type AttackType = "collection" | "group" | "matrix" | "mitigation" | "software" | "tactic" | "technique" | "relationship" | "note" | "identity" | "marking-definition" | "data-source" | "data-component";
@@ -1250,6 +1251,82 @@ export class RestApiConnectorService extends ApiConnector {
                     share() // multicast so that multiple subscribers don't trigger the call twice. THIS MUST BE THE LAST LINE OF THE PIPE
                 )
             })
+        )
+    }
+
+    //   _   _ ___ ___ ___     _   ___ ___ ___  _   _ _  _ _____     _   ___ ___ ___ 
+    //  | | | / __| __| _ \   /_\ / __/ __/ _ \| | | | \| |_   _|   /_\ | _ \_ _/ __|
+    //  | |_| \__ \ _||   /  / _ \ (_| (_| (_) | |_| | .` | | |    / _ \|  _/| |\__ \
+    //   \___/|___/___|_|_\ /_/ \_\___\___\___/ \___/|_|\_| |_|   /_/ \_\_| |___|___/
+
+    /**
+     * Get all user accounts
+     * @param {number} [limit] the number of user accounts to retrieve
+     * @param {number} [offset] the number of user accounts to skip
+     * @param {string} [status] if specified, only get objects with this status
+     * @param {string} [role] if specified, only get objects with this role
+     * @param {string} [search] Only return user accounts where the provided search text occurs in the username or email. The search is case-insensitive.
+     * @returns {Observable<Paginated>} paginated data of the user accounts
+     */
+    public getAllUserAccounts(limit?: number, offset?: number, status?: string, role?: string, search?: string): Observable<Paginated<UserAccount>> {
+        let url = `${this.baseUrl}/user-accounts`;
+        // parse params into query string
+        let query = new HttpParams();
+        // pagination
+        if (limit) query = query.set("limit", limit.toString());
+        if (offset) query = query.set("offset", offset.toString());
+        if (limit || offset) query = query.set("includePagination", "true");
+        // search
+        if (search) query = query.set("search", encodeURIComponent(search));
+        // status/role
+        if (status) query = query.set("status", status);
+        if (role) query = query.set("role", role);
+        return this.http.get<Paginated<UserAccount>>(url, {headers: this.headers, params: query}).pipe(
+            tap(results => logger.log("retrieved user accounts")),
+            catchError(this.handleError_continue<Paginated<UserAccount>>({data: [], pagination: {total: 0, limit: 0, offset:0}})),
+            share() //multicast to subscribers
+        )
+    }
+
+    /**
+     * GET a single user account by ID
+     * @param {string} id the object ID
+     * @returns {Observable<UserAccount>} the object with the given ID
+     */
+    public getUserAccount(id: string): Observable<UserAccount> {
+        let url = `${this.baseUrl}/user-accounts/${id}`;
+        return this.http.get<UserAccount>(url, {headers: this.headers}).pipe(
+            tap(results => logger.log("retrieved user account", results)),
+            catchError(this.handleError_continue<UserAccount>()),
+            share() // multicast to subscribers
+        )
+    }
+
+    /**
+     * POST (create) a new user account
+     * @param {UserAccount} userAccount the object to create
+     * @returns {Observable<UserAccount>} the created object
+     */
+    public postUserAccount(userAccount: UserAccount): Observable<UserAccount> {
+        let url = `${this.baseUrl}/user-accounts/${userAccount.id}`;
+        return this.http.post<UserAccount>(url, userAccount, {headers: this.headers}).pipe(
+            tap(this.handleSuccess(`${userAccount.username} saved`)),
+            catchError(this.handleError_raise<UserAccount>()),
+            share() // multicast to subscribers
+        )
+    }
+
+    /**
+     * PUT (update) a user account
+     * @param {UserAccount} userAccount the object to update
+     * @returns {Observable<UserAccount>} the updated object
+     */
+    public putUserAccount(userAccount: UserAccount): Observable<UserAccount> {
+        let url = `${this.baseUrl}/user-accounts/${userAccount.id}`;
+        return this.http.put<UserAccount>(url, userAccount, {headers: this.headers}).pipe(
+            tap(this.handleSuccess(`${userAccount.username} saved`)),
+            catchError(this.handleError_raise<UserAccount>()),
+            share() // multicast to subscribers
         )
     }
 
