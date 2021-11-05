@@ -282,6 +282,18 @@ export class RestApiConnectorService extends ApiConnector {
      */
     public get getAllCollections() { return this.getStixObjectsFactory<Collection>("collection"); }
     /**
+     * Get all marking definitions
+     * @param {number} [limit] the number of collections to retrieve
+     * @param {number} [offset] the number of collections to skip
+     * @param {string} [state] if specified, only get objects with this state
+     * @param {boolean} [revoked] if true, get revoked objects
+     * @param {versions} ["all" | "latest"] if "all", get all versions of the collections. if "latest", only get the latest version of each collection.
+     * @param {boolean} [deprecated] if true, get deprecated objects
+     * @param {string[]} [excludeIDs] if specified, excludes these STIX IDs from the result
+     * @returns {Observable<Collection[]>} observable of retrieved objects
+     */
+    public get getAllMarkingDefinitions() { return this.getStixObjectsFactory<Collection>("marking-definition"); }
+    /**
      * Get all notes
      * @param {number} [limit] the number of notes to retrieve
      * @param {number} [offset] the number of notes to skip

@@ -8,9 +8,7 @@ import { logger } from "../../util/logger";
 export class MarkingDefinition extends StixObject {
     public name: string = "";
     public definition_type: string = ""
-    public definition: {
-        statement: string
-    } = { statement: "" }
+    public definition_string: string = "";
 
     public readonly supportsAttackID = false; // marking-defs do not support ATT&CK IDs
     protected get attackIDValidator() { return null; } //marking-defs do not have ATT&CK IDs
@@ -32,7 +30,8 @@ export class MarkingDefinition extends StixObject {
         
         rep.stix.name = this.name;
         rep.stix.definition_type = this.definition_type
-        rep.stix.definition = this.definition;
+        rep.stix.definition = {};
+        rep.stix.definition[this.definition_type] = this.definition_string;
 
         return rep;
     }
@@ -50,16 +49,23 @@ export class MarkingDefinition extends StixObject {
                 if (typeof(sdo.name) === "string") this.name = sdo.name;
                 else logger.error("TypeError: name field is not a string:", sdo.name, "(",typeof(sdo.name),")")
             } else this.name = "";
-            
-            // TODO improve this with better checking
-            if ("definition" in sdo) {
-                this.definition = sdo.definition;
-            }
 
             if ("definition_type" in sdo) {
-                if (typeof(sdo.definition_type) === "string") this.definition_type = sdo.definition_type;
+                if (typeof(sdo.definition_type) === "string") {
+                    this.definition_type = sdo.definition_type;
+                    if ("definition" in sdo) {
+                        if (this.definition_type in sdo.definition) {
+                            if (typeof(sdo.definition[this.definition_type]) == "string") 
+                                this.definition_string = sdo.definition[this.definition_type];
+                        }
+                        else logger.error("TypeError: definition_type was not found in definition", sdo.definition_type, "(",(sdo.definition),")") 
+                    }
+                }
                 else logger.error("TypeError: definition_type is not a string:", sdo.definition_type, "(",typeof(sdo.definition_type),")")
-            } else this.definition_type = "";
+            } else {
+                this.definition_type = "";
+                this.definition_string = ""; // requires definition type to get definition string
+            }
         }
     }
 
