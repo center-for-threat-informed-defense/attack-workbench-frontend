@@ -4,6 +4,9 @@ import { LandingPageComponent } from './views/landing-page/landing-page.componen
 import { HelpPageComponent } from './views/help-page/help-page.component';
 import { AdminPageComponent } from './views/admin-page/admin-page.component';
 import { OrgIdentityPageComponent } from './views/admin-page/org-identity-page/org-identity-page.component';
+import { UserAccountsPageComponent } from './views/admin-page/user-accounts-page/user-accounts-page.component';
+import { Role } from './classes/authn/role';
+import { AuthorizationGuard } from './guards/authorization.guard';
 
 
 //see also https://www.npmjs.com/package/angular-crumbs
@@ -23,16 +26,19 @@ const routes: Routes = [
             },
             {
                 "path": "admin",
+                "canActivate": [AuthorizationGuard],
+                "canActivateChild": [AuthorizationGuard],
                 "data": {
                     "breadcrumb": "admin settings",
-                    "title": "Admin Settings"
+                    "title": "Admin Settings",
+                    "roles": [Role.Admin]
                 },
                 "children": [
                     {
                         "path": "",
                         "data": {
                             "breadcrumb": "admin settings",
-                            "title": "Admin Settings"
+                            "title": "Admin Settings",
                         },
                         "component": AdminPageComponent,
                     },
@@ -40,11 +46,18 @@ const routes: Routes = [
                         "path": "org-identity",
                         "data": {
                             "breadcrumb": "organization identity",
-                            "title": "Organization Identity"
+                            "title": "Organization Identity",
                         },
                         "component": OrgIdentityPageComponent,
+                    },
+                    {
+                        "path": "user-accounts",
+                        "data": {
+                            "breadcrumb": "user accounts",
+                            "title": "User Accounts",
+                        },
+                        "component": UserAccountsPageComponent,
                     }
-                    
                 ]
             },
             {
