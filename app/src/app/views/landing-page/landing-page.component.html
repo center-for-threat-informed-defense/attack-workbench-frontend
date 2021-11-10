@@ -32,13 +32,13 @@
         </div>
         <div class="col border-left">
             <div class="explore-links grow-to-row">
-                <div class="explore-link grow-to-row button-slide-left" *ngFor="let stixRoute of routes" [routerLink]="stixRoute.path">
+                <div class="explore-link grow-to-row" [ngClass]="{'button-slide-left' : isLoggedIn, 'disabled': !isLoggedIn}" *ngFor="let stixRoute of routes" [routerLink]="stixRoute.path">
                     <span class="text-label">{{stixRoute.data.breadcrumb}}</span>
                 </div>
             </div>
         </div>
     </div>
-    <div class="row">
+    <div class="row" *ngIf="isAdmin">
         <div class="col center admin-link">
             <div class="text-deemphasis text-label">
                 <a routerLink="/admin">admin</a>

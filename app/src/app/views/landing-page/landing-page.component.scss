@@ -29,6 +29,9 @@
         // .dark & { @include button-slide-left(spark-yellow); }
         // .light & { @include button-slide-left(primary); }
     }
+    .explore-links .disabled {
+        cursor: not-allowed;
+    }
     .col.border-left {
         .dark & { border-left: 1px solid border-color(dark); }
         .light & { border-left: 1px solid border-color(light); }
