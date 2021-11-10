@@ -105,6 +105,7 @@ import { HelpPageComponent } from './views/help-page/help-page.component';
 import { LandingPageComponent } from './views/landing-page/landing-page.component';
 import { AdminPageComponent } from "./views/admin-page/admin-page.component";
 import { OrgIdentityPageComponent } from "./views/admin-page/org-identity-page/org-identity-page.component";
+import { UserAccountsPageComponent } from './views/admin-page/user-accounts-page/user-accounts-page.component';
 
 import { StixDialogComponent } from "./views/stix/stix-dialog/stix-dialog.component"
 import { StixPageComponent } from "./views/stix/stix-page/stix-page.component"
@@ -211,6 +212,7 @@ import { DataComponentViewComponent } from './views/stix/data-component/data-com
     HelpPageComponent,
     AdminPageComponent,
     OrgIdentityPageComponent,
+    UserAccountsPageComponent,
 
     StixDialogComponent,
     StixPageComponent,
