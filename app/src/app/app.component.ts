@@ -6,6 +6,8 @@ import { SidebarService } from './services/sidebar/sidebar.service';
 import { TitleService } from './services/title/title.service';
 import { NGXLogger } from 'ngx-logger';
 import { initLogger } from './util/logger';
+import { AuthenticationService } from './services/connectors/authentication/authentication.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-root',
@@ -23,7 +25,8 @@ export class AppComponent implements AfterViewInit {
     
     constructor(private overlayContainer: OverlayContainer,
                 private sidebarService: SidebarService,
-                private titleService: TitleService,
+                private authenticationService: AuthenticationService,
+                private router: Router,
                 private logger: NGXLogger) { //note: this isn't used directly, but it MUST be imported to work properly
 
         if (hasCookie("theme")) {
@@ -31,7 +34,26 @@ export class AppComponent implements AfterViewInit {
         } else {
             this.setTheme("light");
         }
+        // check user login
+        let authSubscription = this.authenticationService.getSession().subscribe({
+            complete: () => { authSubscription.unsubscribe(); }
+        });
         initLogger(logger);
+    }
+
+    public login(): void {
+        let loginSubscription = this.authenticationService.login().subscribe({
+            complete: () => { loginSubscription.unsubscribe(); }
+        });
+    }
+
+    public logout(): void {
+        let logoutSubscription = this.authenticationService.logout().subscribe({
+            complete: () => {
+                this.router.navigate(['']);
+                logoutSubscription.unsubscribe(); 
+            }
+        })
     }
 
     public theme = "light";

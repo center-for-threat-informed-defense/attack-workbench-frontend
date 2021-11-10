@@ -1,5 +1,5 @@
 <div [class]="'app-root ' + theme">
-    <app-header [style.margin-top]="-hiddenHeaderPX + 'px'" #header></app-header>
+    <app-header (onLogin)="login()" (onLogout)="logout()" [style.margin-top]="-hiddenHeaderPX + 'px'" #header></app-header>
     <mat-drawer-container class="app-body">
         <mat-drawer-content>
             <div class="app-content">
