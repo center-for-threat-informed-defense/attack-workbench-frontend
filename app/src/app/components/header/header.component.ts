@@ -2,6 +2,7 @@ import { AfterViewInit, Component, ElementRef, HostListener, ViewChild, ViewEnca
 import { ActivatedRoute } from '@angular/router';
 import { stixRoutes } from "../../app-routing-stix.module";
 import * as app_package from "../../../../package.json";
+import { AuthenticationService } from 'src/app/services/connectors/authentication/authentication.service';
 @Component({
   selector: 'app-header',
   templateUrl: './header.component.html',
@@ -15,7 +16,7 @@ export class HeaderComponent implements AfterViewInit {
     @ViewChild('linkMenu', {static: false})
     private linkMenu: ElementRef;
 
-    constructor(private route: ActivatedRoute) {
+    constructor(private route: ActivatedRoute, private authenticationService: AuthenticationService) {
         this.routes = stixRoutes;
     }
 
@@ -31,4 +32,17 @@ export class HeaderComponent implements AfterViewInit {
         this.showHamburger = this.linkMenu.nativeElement.offsetWidth < this.linkMenu.nativeElement.scrollWidth;
     }
 
+    public get isLoggedIn(): boolean { return this.authenticationService.isLoggedIn(); }
+
+    public login(): void {
+        let loginSubscription = this.authenticationService.login().subscribe({
+            complete: () => { loginSubscription.unsubscribe(); }
+        });
+    }
+
+    public logout(): void {
+        let logoutSubscription = this.authenticationService.logout().subscribe({
+            complete: () => { logoutSubscription.unsubscribe(); }
+        })
+    }
 }

@@ -5,7 +5,8 @@
     </div>
     <div class="spacer"></div>
     <div class="links" #linkMenu [ngStyle]="{ 'visibility': showHamburger ? 'hidden' : 'visible'}">
-        <button mat-button *ngFor="let stixRoute of routes" [routerLink]="stixRoute.path">{{stixRoute.data.breadcrumb}}</button>
+        <button mat-button *ngFor="let stixRoute of routes" [disabled]="!isLoggedIn" [routerLink]="stixRoute.path">{{stixRoute.data.breadcrumb}}</button>
+        <button mat-button (click)="authenticationService.currentUser ? logout() : login()">{{authenticationService.currentUser ? 'Logout' : 'Login'}}</button>
         <button mat-icon-button  routerLink="/docs"><mat-icon aria-label="help">help_outline</mat-icon></button>
     </div>
     <div class="hamburger" [ngStyle]="{ 'visibility': showHamburger ? 'visible' : 'hidden'}">

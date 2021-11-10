@@ -25,6 +25,11 @@
         text-transform: uppercase;
         // font-size: .54545rem;
         // font-weight: 300;
+        &.mat-button-disabled {
+            cursor: not-allowed;
+            .dark & { color: on-color-deemphasis(dark); }
+            .light & { color: on-color-deemphasis(light); }
+        }
     }
     .links {
         overflow: hidden;
