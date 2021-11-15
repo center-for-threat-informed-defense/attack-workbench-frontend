@@ -84,6 +84,14 @@ import { TimestampPropertyComponent } from "./components/stix/timestamp-property
 import { TimestampViewComponent } from "./components/stix/timestamp-property/timestamp-view/timestamp-view.component";
 import { TimestampDiffComponent } from "./components/stix/timestamp-property/timestamp-diff/timestamp-diff.component";
 
+import { StatementPropertyComponent } from "./components/stix/statement-property/statement-property.component";
+import { StatementViewComponent } from "./components/stix/statement-property/statement-view/statement-view.component";
+import { StatementDiffComponent } from "./components/stix/statement-property/statement-diff/statement-diff.component";
+
+import { TlpPropertyComponent } from "./components/stix/tlp-property/tlp-property.component";
+import { TlpViewComponent } from "./components/stix/tlp-property/tlp-view/tlp-view.component";
+import { TlpDiffComponent } from "./components/stix/tlp-property/tlp-diff/tlp-diff.component";
+
 import { AttackIDPropertyComponent } from "./components/stix/attackid-property/attackid-property.component";
 import { AttackIDEditComponent } from "./components/stix/attackid-property/attackid-edit/attackid-edit.component";
 import { AttackIDViewComponent } from "./components/stix/attackid-property/attackid-view/attackid-view.component";
@@ -195,6 +203,12 @@ import { MarkingDefinitionListComponent } from "./views/stix/marking-definition/
     TimestampPropertyComponent,
     TimestampViewComponent,
     TimestampDiffComponent,
+    StatementPropertyComponent,
+    StatementViewComponent,
+    StatementDiffComponent,
+    TlpPropertyComponent,
+    TlpViewComponent,
+    TlpDiffComponent,
     AttackIDPropertyComponent,
     AttackIDEditComponent,
     AttackIDViewComponent,

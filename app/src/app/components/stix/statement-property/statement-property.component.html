@@ -1,0 +1,6 @@
+<div class="statement-property">
+    <div class="content">
+        <app-statement-diff *ngIf="config.mode == 'diff'" [config]="config"></app-statement-diff>
+        <app-statement-view *ngIf="config.mode == 'view'" [config]="config"></app-statement-view>
+    </div>
+</div>

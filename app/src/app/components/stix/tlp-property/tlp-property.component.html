@@ -1,0 +1,6 @@
+<div class="tlp-property">
+    <div class="content">
+        <app-tlp-diff *ngIf="config.mode == 'diff'" [config]="config"></app-tlp-diff>
+        <app-tlp-view *ngIf="config.mode == 'view'" [config]="config"></app-tlp-view>
+    </div>
+</div>

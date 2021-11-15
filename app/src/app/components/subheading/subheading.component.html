@@ -8,6 +8,19 @@
                 humanize: true
             }"></app-timestamp-view>
         </div>
+        <div class="section-header-section">
+            <app-tlp-property [config]="{
+                mode: 'view',
+                object: config.object
+            }"></app-tlp-property>
+        </div>
+        <div class="section-header-section">
+            <app-statement-property [config]="{
+                mode: 'view',
+                object: config.object
+            }"></app-statement-property>
+        </div>
+
         <!-- <div class="subheading-section" [class.clickable]="config.sidebarControl != 'disable'" (click)="openNotes()">
             12 Notes
         </div> -->

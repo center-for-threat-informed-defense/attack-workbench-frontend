@@ -146,7 +146,6 @@ export abstract class StixObject extends Serializable {
             "type": this.type,
             "id": this.stixID,
             "created": this.created? this.created.toISOString() : new Date().toISOString(),
-            "modified": new Date().toISOString(),
             "x_mitre_version": this.version.toString(),
             "external_references": serialized_external_references,
             "x_mitre_deprecated": this.deprecated,
@@ -155,6 +154,8 @@ export abstract class StixObject extends Serializable {
             "object_marking_refs": this.object_marking_refs,
             "spec_version": "2.1"
         }
+        // Add modified data if type is not marking-definition
+        if (this.type != "marking-definition") stix["modified"] = new Date().toISOString();
         if (this.created_by_ref) stix.created_by_ref = this.created_by_ref;
         // do not set modified by ref since we don't know who we are, but the REST API knows
         
@@ -209,7 +210,8 @@ export abstract class StixObject extends Serializable {
             if ("modified" in sdo) {
                 if (typeof(sdo.modified) === "string") this.modified = new Date(sdo.modified);
                 else logger.error("TypeError: modified field is not a string:", sdo.modified, "(",typeof(sdo.modified),")")
-            } else this.modified = new Date();
+            } 
+            else if ("type" in sdo && sdo.type != "marking-definition") this.modified = new Date();
 
             if ("x_mitre_modified_by_ref" in sdo) {
                 if (typeof(sdo.created) === "string") this.modified_by_ref = sdo.x_mitre_modified_by_ref;

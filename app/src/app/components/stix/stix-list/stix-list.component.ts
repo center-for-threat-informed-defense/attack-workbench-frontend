@@ -297,7 +297,6 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
                     break;
                 case "marking-definition":
                     this.addColumn("definition type", "definition_type", "plain");
-                    this.addColumn("modified","modified", "timestamp");
                     this.addColumn("created", "created", "timestamp");
                     this.tableDetail = [{
                         "field": "definition_string",
