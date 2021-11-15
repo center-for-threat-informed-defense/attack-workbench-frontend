@@ -10,9 +10,8 @@ export class StatementPropertyComponent implements OnInit {
   @Input() public config: StatementPropertyConfig;
 
   constructor() { }
-
-  ngOnInit(): void {
-  }
+  
+  ngOnInit(): void {}
 }
 
 export interface StatementPropertyConfig {

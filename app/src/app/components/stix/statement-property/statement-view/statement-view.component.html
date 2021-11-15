@@ -1,1 +1,8 @@
-<button>+ add statement</button>
+<div *ngIf="(data$ | async)">
+    <div *ngIf="objStatements.length > 0 else noStatements" >
+        <button>{{objStatements.length}} statement(s)</button>
+    </div>
+    <ng-template #noStatements>
+        <button>+ add statement</button>
+    </ng-template>
+</div>
