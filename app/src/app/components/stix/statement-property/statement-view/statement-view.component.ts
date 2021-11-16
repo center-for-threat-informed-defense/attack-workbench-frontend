@@ -3,7 +3,6 @@ import { Paginated, RestApiConnectorService } from '../../../../services/connect
 import { Observable } from 'rxjs';
 import { StixObject } from 'src/app/classes/stix/stix-object';
 import { StatementPropertyConfig } from '../statement-property.component';
-import { NONE_TYPE } from '@angular/compiler';
 
 @Component({
     selector: 'app-statement-view',
@@ -14,7 +13,6 @@ export class StatementViewComponent implements OnInit {
     @Input() public config: StatementPropertyConfig;
 
     private statementsMap = {};
-
     public data$: Observable<Paginated<StixObject>>;
     public markingDefinitions : any;
 
@@ -33,7 +31,14 @@ export class StatementViewComponent implements OnInit {
         return objectStatements;
     }
 
-    public createStatementMap(): any {        
+    public get printStatements(): string {
+        let printStatement = "";
+        let objectStatements = this.objStatements;
+        for (let i of objectStatements) { printStatement += objectStatements[0]["definition_string"] + "; "; } 
+        return printStatement;
+    }
+
+    private createStatementMap(): void {    
         for (let index in this.markingDefinitions.data) {
             if (this.markingDefinitions.data[index]["definition_type"] == "statement") {
                 this.statementsMap[this.markingDefinitions.data[index]["stixID"]] = this.markingDefinitions.data[index];

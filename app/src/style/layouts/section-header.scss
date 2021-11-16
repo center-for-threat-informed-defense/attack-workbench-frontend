@@ -44,12 +44,6 @@
             border-style: solid;
             .dark & { border-color: border-color(dark) }
             .light & { border-color: border-color(light) }
-
-            &:hover {
-                cursor: pointer;
-                .dark &  { border-color: on-color-deemphasis(dark); }
-                .light & { border-color: on-color-deemphasis(light); }
-            }
         }
     }
     

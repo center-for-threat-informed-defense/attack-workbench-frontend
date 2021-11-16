@@ -1,0 +1,11 @@
+<div class="statement-edit" *ngIf="(data$ | async)">
+    <div *ngIf="objStatements.length > 0 else noStatements" >
+        <button *ngIf="objStatements.length == 1" popover="{{printStatements}}"
+        popoverPlacement="bottom" (click)="updateStatements()">1 statement</button>
+        <button *ngIf="objStatements.length > 1" popover="{{printStatements}}"
+        popoverPlacement="bottom" (click)="updateStatements()">{{objStatements.length}} statements</button>
+    </div>
+    <ng-template #noStatements>
+        <button (click)="updateStatements()">+ add statement</button>
+    </ng-template>
+</div>

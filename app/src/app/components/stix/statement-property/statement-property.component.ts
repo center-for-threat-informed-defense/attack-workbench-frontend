@@ -17,9 +17,10 @@ export class StatementPropertyComponent implements OnInit {
 export interface StatementPropertyConfig {
   /* What is the current mode? Default: 'view
    *    view: viewing the statement property
+   *    edit: editing the statement property
    *    diff: displaying the diff between two STIX objects. If this mode is selected, two StixObjects must be specified in the objects field
    */
-  mode?: "view" | "diff";
+  mode?: "view" | "edit" | "diff" ;
   /* The object to show the statement of
    * Note: if mode is diff, pass an array of two objects to diff
    */
