@@ -38,7 +38,7 @@ const routes: Routes = [
                         "path": "",
                         "data": {
                             "breadcrumb": "admin settings",
-                            "title": "Admin Settings",
+                            "title": "Admin Settings"
                         },
                         "component": AdminPageComponent,
                     },
@@ -46,7 +46,7 @@ const routes: Routes = [
                         "path": "org-identity",
                         "data": {
                             "breadcrumb": "organization identity",
-                            "title": "Organization Identity",
+                            "title": "Organization Identity"
                         },
                         "component": OrgIdentityPageComponent,
                     },
@@ -54,7 +54,7 @@ const routes: Routes = [
                         "path": "user-accounts",
                         "data": {
                             "breadcrumb": "user accounts",
-                            "title": "User Accounts",
+                            "title": "User Accounts"
                         },
                         "component": UserAccountsPageComponent,
                     }

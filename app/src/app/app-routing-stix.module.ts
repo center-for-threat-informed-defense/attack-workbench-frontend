@@ -14,334 +14,338 @@ import { environment } from "../environments/environment"
 import { CollectionImportComponent } from "./views/stix/collection/collection-import/collection-import-workflow/collection-import.component";
 import { CollectionIndexImportComponent } from "./views/stix/collection/collection-index/collection-index-import/collection-index-import.component";
 import { DataSourceListComponent } from "./views/stix/data-source/data-source-list/data-source-list.component";
+import { AuthorizationGuard } from "./guards/authorization.guard";
+import { Role } from "./classes/authn/role";
 
 const stixRoutes: Routes = [{
     path: 'matrix',
     data: {
-      breadcrumb: 'matrices'
+        breadcrumb: 'matrices',
     },
     children: [{
         path: '',
+        canActivate: [AuthorizationGuard],
         data: {
-          breadcrumb: 'list',
-          title: "matrices"
+            breadcrumb: 'list',
+            title: "matrices",
+            roles: [Role.Visitor, Role.Editor, Role.Admin]
         },
         component: MatrixListComponent
-      },
-      {
+    },
+    {
         path: ':id',
         data: {
-          breadcrumb: 'loading...'
+            breadcrumb: 'loading...',
         },
         children: [{
             path: '',
             data: {
-              breadcrumb: 'view',
-              editable: true,
-              title: "view matrix"
+                breadcrumb: 'view',
+                editable: true,
+                title: "view matrix",
             },
             component: StixPageComponent
-          }
+        }
         ]
-      },
-      {
-          path: ":new",
-          data: {
-              breadcrumb: "new matrix"
-          },
-          children: [{
+    },
+    {
+        path: ":new",
+        data: {
+            breadcrumb: "new matrix",
+        },
+        children: [{
             path: '',
             data: {
-              breadcrumb: 'view',
-              editable: true,
-              title: "new matrix"
+                breadcrumb: 'view',
+                editable: true,
+                title: "new matrix",
             },
             component: StixPageComponent
-          }]
-      }
+        }]
+    }
     ]
-  },
-  {
+},
+{
     path: 'technique',
     data: {
-      breadcrumb: 'techniques'
+        breadcrumb: 'techniques'
     },
     children: [{
         path: '',
         data: {
-          breadcrumb: 'list',
-          title: "techniques"
+            breadcrumb: 'list',
+            title: "techniques"
         },
         component: TechniqueListComponent
-      },
-      {
+    },
+    {
         path: ':id',
         data: {
-          breadcrumb: 'loading...'
+            breadcrumb: 'loading...'
         },
         children: [{
             path: '',
             data: {
-              breadcrumb: 'view',
-              editable: true,
-              title: "view technique"
+                breadcrumb: 'view',
+                editable: true,
+                title: "view technique"
             },
             component: StixPageComponent
-          }
+        }
         ]
-      },
-      {
+    },
+    {
         path: ":new",
         data: {
             breadcrumb: "new technique"
         },
         children: [{
-          path: '',
-          data: {
-            breadcrumb: 'view',
-            editable: true,
-            title: "new technique"
-          },
-          component: StixPageComponent
+            path: '',
+            data: {
+                breadcrumb: 'view',
+                editable: true,
+                title: "new technique"
+            },
+            component: StixPageComponent
         }]
-      }
+    }
     ]
-  },
-  {
+},
+{
     path: 'tactic',
     data: {
-      breadcrumb: 'tactics'
+        breadcrumb: 'tactics'
     },
     children: [{
         path: '',
         data: {
-          breadcrumb: 'list',
-          title: "tactics"
+            breadcrumb: 'list',
+            title: "tactics"
         },
         component: TacticListComponent
-      },
-      {
+    },
+    {
         path: ':id',
         data: {
-          breadcrumb: 'loading...'
+            breadcrumb: 'loading...'
         },
         children: [{
             path: '',
             data: {
-              breadcrumb: 'view',
-              editable: true,
-              title: "view tactic"
+                breadcrumb: 'view',
+                editable: true,
+                title: "view tactic"
             },
             component: StixPageComponent
-          }
+        }
         ]
-      },
-      {
+    },
+    {
         path: ":new",
         data: {
             breadcrumb: "new tactic"
         },
         children: [{
-          path: '',
-          data: {
-            breadcrumb: 'view',
-            editable: true,
-            title: "new tactic"
-          },
-          component: StixPageComponent
+            path: '',
+            data: {
+                breadcrumb: 'view',
+                editable: true,
+                title: "new tactic"
+            },
+            component: StixPageComponent
         }
-      ]
+        ]
     }
     ]
-  },
-  {
+},
+{
     path: 'mitigation',
     data: {
-      breadcrumb: 'mitigations'
+        breadcrumb: 'mitigations'
     },
     children: [{
         path: '',
         data: {
-          breadcrumb: 'list',
-          title: "mitigations"
+            breadcrumb: 'list',
+            title: "mitigations"
         },
         component: MitigationListComponent
-      },
-      {
+    },
+    {
         path: ':id',
         data: {
-          breadcrumb: 'loading...'
+            breadcrumb: 'loading...'
         },
         children: [{
             path: '',
             data: {
-              breadcrumb: 'view',
-              editable: true,
-              title: "view mitigation"
+                breadcrumb: 'view',
+                editable: true,
+                title: "view mitigation"
             },
             component: StixPageComponent
-          }
+        }
         ]
-      },
-      {
+    },
+    {
         path: ":new",
         data: {
             breadcrumb: "new mitigation"
         },
         children: [{
-          path: '',
-          data: {
-            breadcrumb: 'view',
-            editable: true,
-            title: "new mitigation"
-          },
-          component: StixPageComponent
+            path: '',
+            data: {
+                breadcrumb: 'view',
+                editable: true,
+                title: "new mitigation"
+            },
+            component: StixPageComponent
         }
-      ]
+        ]
     }
     ]
-  },
-  {
+},
+{
     path: 'group',
     data: {
-      breadcrumb: 'groups'
+        breadcrumb: 'groups'
     },
     children: [{
         path: '',
         data: {
-          breadcrumb: 'list',
-          title: "groups"
+            breadcrumb: 'list',
+            title: "groups"
         },
         component: GroupListComponent
-      },
-      {
+    },
+    {
         path: ':id',
         data: {
-          breadcrumb: 'loading...'
+            breadcrumb: 'loading...'
         },
         children: [{
             path: '',
             data: {
-              breadcrumb: 'view',
-              editable: true,
-              title: "view group"
+                breadcrumb: 'view',
+                editable: true,
+                title: "view group"
             },
             component: StixPageComponent
-          }
+        }
         ]
-      },
-      {
+    },
+    {
         path: ":new",
         data: {
             breadcrumb: "new group"
         },
         children: [{
-          path: '',
-          data: {
-            breadcrumb: 'view',
-            editable: true,
-            title: "new group"
-          },
-          component: StixPageComponent
+            path: '',
+            data: {
+                breadcrumb: 'view',
+                editable: true,
+                title: "new group"
+            },
+            component: StixPageComponent
         }
-      ]
+        ]
     }
     ]
-  },
-  {
+},
+{
     path: 'software',
     data: {
-      breadcrumb: 'software'
+        breadcrumb: 'software'
     },
     children: [{
         path: '',
         data: {
-          breadcrumb: 'list',
-          title: "software"
+            breadcrumb: 'list',
+            title: "software"
         },
         component: SoftwareListComponent
-      },
-      {
+    },
+    {
         path: ':id',
         data: {
-          breadcrumb: 'loading...'
+            breadcrumb: 'loading...'
         },
         children: [{
             path: '',
             data: {
-              breadcrumb: 'view',
-              editable: true,
-              title: "view software"
+                breadcrumb: 'view',
+                editable: true,
+                title: "view software"
             },
             component: StixPageComponent
-          }
+        }
         ]
-      },
-      {
+    },
+    {
         path: ":new",
         data: {
             breadcrumb: "new software"
         },
         children: [{
-          path: '',
-          data: {
-            breadcrumb: 'view',
-            editable: true,
-            title: "new software"
-          },
-          component: StixPageComponent
+            path: '',
+            data: {
+                breadcrumb: 'view',
+                editable: true,
+                title: "new software"
+            },
+            component: StixPageComponent
         }
-      ]
+        ]
     }
     ]
-  },
-  {
+},
+{
     path: 'data-source',
     data: {
-      breadcrumb: 'data sources'
+        breadcrumb: 'data sources'
     },
     children: [{
         path: '',
         data: {
-          breadcrumb: 'list',
-          title: "data sources"
+            breadcrumb: 'list',
+            title: "data sources"
         },
         component: DataSourceListComponent
-      },
-      {
+    },
+    {
         path: ':id',
         data: {
-          breadcrumb: 'loading...'
+            breadcrumb: 'loading...'
         },
         children: [{
             path: '',
             data: {
-              breadcrumb: 'view',
-              editable: true,
-              title: "view data source"
+                breadcrumb: 'view',
+                editable: true,
+                title: "view data source"
             },
             component: StixPageComponent
-          }
+        }
         ]
-      },
-      {
+    },
+    {
         path: ":new",
         data: {
             breadcrumb: "new data source"
         },
         children: [{
-          path: '',
-          data: {
-            breadcrumb: 'view',
-            editable: true,
-            title: "new data source"
-          },
-          component: StixPageComponent
+            path: '',
+            data: {
+                breadcrumb: 'view',
+                editable: true,
+                title: "new data source"
+            },
+            component: StixPageComponent
         }
-      ]
+        ]
     }
     ]
-  },
+},
 
 ]
 
@@ -429,5 +433,5 @@ if (environment.integrations.collection_manager.enabled) {
     ],
     providers: [],
 })
-export class AppRoutingStixModule {};
+export class AppRoutingStixModule { };
 export { stixRoutes };
