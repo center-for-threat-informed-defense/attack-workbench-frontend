@@ -6,7 +6,7 @@
     <div class="spacer"></div>
     <div class="links" #linkMenu [ngStyle]="{ 'visibility': showHamburger ? 'hidden' : 'visible'}">
         <button mat-button *ngFor="let stixRoute of routes" [disabled]="!isLoggedIn" [routerLink]="stixRoute.path">{{stixRoute.data.breadcrumb}}</button>
-        <button mat-button (click)="isLoggedIn ? logout() : login()">{{isLoggedIn ? 'Logout' : 'Login'}}</button>
+        <button mat-button (click)="isLoggedIn ? logout() : login()">{{isLoggedIn ? 'logout' : 'login'}}</button>
         <button mat-icon-button  routerLink="/docs"><mat-icon aria-label="help">help_outline</mat-icon></button>
     </div>
     <div class="hamburger" [ngStyle]="{ 'visibility': showHamburger ? 'visible' : 'hidden'}">
@@ -16,6 +16,7 @@
         <mat-menu #navigation="matMenu" backdropClass="override-light">
             <button mat-menu-item *ngFor="let stixRoute of routes" [routerLink]="stixRoute.path">{{stixRoute.data.breadcrumb}}</button>
             <button mat-menu-item  routerLink="/docs">documentation</button>
+            <button mat-menu-item (click)="isLoggedIn ? logout() : login()">{{isLoggedIn ? 'logout': 'login'}}</button>
         </mat-menu>
     </div>
 </mat-toolbar>
