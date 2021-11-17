@@ -1,6 +1,6 @@
 <div class="section-header">
     <div class="app-subheading">
-        <div class="section-header-section" [class.clickable]="config.sidebarControl != 'disable'" (click)="openHistory()" [popover]="historyPeek" popoverPlacement="bottom">
+        <div *ngIf="config.object.hasOwnProperty('modified')" class="section-header-section" [class.clickable]="config.sidebarControl != 'disable'" (click)="openHistory()" [popover]="historyPeek" popoverPlacement="bottom">
             Modified <app-timestamp-view [config]="{
                 mode: 'view',
                 object: config.object,
