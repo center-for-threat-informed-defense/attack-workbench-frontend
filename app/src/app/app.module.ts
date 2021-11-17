@@ -1,11 +1,13 @@
 import { environment } from 'src/environments/environment';
 import { LoggerModule } from 'ngx-logger';
+
 //angular imports
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { AppRoutingModule } from './app-routing.module';
 import { AppRoutingStixModule } from "./app-routing-stix.module"
-import { HttpClient, HttpClientModule } from '@angular/common/http'
+import { HttpClient, HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http'
+import { AuthInterceptor } from './services/helpers/auth.interceptor';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { ClipboardModule } from '@angular/cdk/clipboard';
 
@@ -48,6 +50,7 @@ import { BreadcrumbModule } from "angular-crumbs";
 import { MaterialFileInputModule } from 'ngx-material-file-input';
 import { MarkdownModule } from "ngx-markdown";
 import { PopoverModule } from "ngx-smart-popover";
+import { NgxJdenticonModule, JDENTICON_CONFIG } from 'ngx-jdenticon';
 
 // custom components
 import { HeaderComponent } from './components/header/header.component';
@@ -155,7 +158,6 @@ import { NotesEditorComponent } from './components/resources-drawer/notes-editor
 import { ObjectStatusComponent } from './components/object-status/object-status.component';
 import { IconViewComponent } from './components/stix/icon-view/icon-view.component';
 import { IdentityPropertyComponent } from './components/stix/identity-property/identity-property.component';
-import { NgxJdenticonModule, JDENTICON_CONFIG } from 'ngx-jdenticon';
 import { DataSourceViewComponent } from './views/stix/data-source/data-source-view/data-source-view.component';
 import { DataSourceListComponent } from './views/stix/data-source/data-source-list/data-source-list.component';
 import { DataComponentViewComponent } from './views/stix/data-component/data-component-view/data-component-view.component';
@@ -367,6 +369,11 @@ import { DataComponentViewComponent } from './views/stix/data-component/data-com
           },
           backColor: '#0000',
         },
+      },
+      {
+          provide: HTTP_INTERCEPTORS,
+          useClass: AuthInterceptor,
+          multi: true
       },
   ],
   bootstrap: [AppComponent]

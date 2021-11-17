@@ -1,4 +1,4 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Observable, of } from 'rxjs';
@@ -16,7 +16,6 @@ export class AuthenticationService extends ApiConnector {
     public currentUser: UserAccount;
     public get isLoggedIn(): boolean { return this.currentUser && this.currentUser.status == 'active'; }
     private get baseUrl(): string { return environment.integrations.rest_api.url; }
-    private headers: HttpHeaders = new HttpHeaders({ 'Content-Type': 'application/json' });
 
     constructor(private http: HttpClient, private snackbar: MatSnackBar) { super(snackbar); }
 
@@ -31,7 +30,7 @@ export class AuthenticationService extends ApiConnector {
         return this.getAuthType().pipe(
             concatMap(authnType => {
                 let url = `${this.baseUrl}/authn/${authnType}/login`;
-                return this.http.get(url, {responseType: 'text', withCredentials: true}).pipe( // login endpoint call
+                return this.http.get(url, {responseType: 'text'}).pipe( // login endpoint call
                     concatMap(success => {
                         return this.getSession().pipe(
                             tap(res => logger.log('successfully logged in')),
@@ -49,7 +48,7 @@ export class AuthenticationService extends ApiConnector {
         return this.getAuthType().pipe(
             concatMap(authnType => {
                 let url = `${this.baseUrl}/authn/${authnType}/logout`;
-                return this.http.get(url, {responseType: 'text', withCredentials: true}).pipe(
+                return this.http.get(url, {responseType: 'text'}).pipe(
                     tap(res => logger.log('succesfully logged out')),
                     map(res => {
                         this.currentUser = undefined;
@@ -64,7 +63,7 @@ export class AuthenticationService extends ApiConnector {
 
     public getSession(): Observable<UserAccount> {
         let url = `${this.baseUrl}/session`;
-        return this.http.get<UserAccount>(url, {headers: this.headers, withCredentials: true}).pipe(
+        return this.http.get<UserAccount>(url).pipe(
             map(user => {
                 this.currentUser = new UserAccount(user);
                 return user;
@@ -76,7 +75,7 @@ export class AuthenticationService extends ApiConnector {
 
     public getAuthType(): Observable<string> {
         let url = `${this.baseUrl}/config/authn`;
-        return this.http.get<any>(url, {headers: this.headers}).pipe(
+        return this.http.get<any>(url).pipe(
             map(results => {
                 if (results.mechanisms) {
                     let authnMechanism = results.mechanisms.find(m => m.authnType);
