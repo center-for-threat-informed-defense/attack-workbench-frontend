@@ -53,7 +53,7 @@ export class AppComponent implements AfterViewInit {
                 this.router.navigate(['']);
                 logoutSubscription.unsubscribe(); 
             }
-        })
+        });
     }
 
     public theme = "light";

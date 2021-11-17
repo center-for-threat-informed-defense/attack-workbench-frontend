@@ -21,7 +21,7 @@ export class LandingPageComponent implements OnInit {
     }
 
     public get isAdmin(): boolean { return this.authenticationService.isAuthorized([Role.Admin]); }
-    public get isLoggedIn(): boolean { return this.authenticationService.isLoggedIn(); }
+    public get isLoggedIn(): boolean { return this.authenticationService.isLoggedIn; }
 
     ngOnInit() {
         if (this.authenticationService.isAuthorized([Role.Admin])) {

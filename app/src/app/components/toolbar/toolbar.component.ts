@@ -1,5 +1,4 @@
 import { Component, OnInit, ViewEncapsulation, Output, EventEmitter, Input, ViewChild } from '@angular/core';
-import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { PopoverContentComponent } from 'ngx-smart-popover';
 import { ValidationData } from 'src/app/classes/serializable';
 import { AuthenticationService } from 'src/app/services/connectors/authentication/authentication.service';
@@ -24,7 +23,7 @@ export class ToolbarComponent implements OnInit {
     public get editing(): boolean { return this.editorService.editing; }
     public get editable(): boolean { return this.editorService.editable; }
 
-    public get isLoggedIn(): boolean { return this.authenticationService.isLoggedIn(); }
+    public get isLoggedIn(): boolean { return this.authenticationService.isLoggedIn; }
 
     constructor(private sidebarService: SidebarService, private editorService: EditorService, private authenticationService: AuthenticationService) {}
 

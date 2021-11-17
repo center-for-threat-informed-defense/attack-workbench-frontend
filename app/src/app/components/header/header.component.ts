@@ -33,7 +33,7 @@ export class HeaderComponent implements AfterViewInit {
         this.showHamburger = this.linkMenu.nativeElement.offsetWidth < this.linkMenu.nativeElement.scrollWidth;
     }
 
-    public get isLoggedIn(): boolean { return this.authenticationService.isLoggedIn(); }
+    public get isLoggedIn(): boolean { return this.authenticationService.isLoggedIn; }
 
     public login(): void {
         this.onLogin.emit();
