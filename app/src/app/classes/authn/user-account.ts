@@ -48,7 +48,7 @@ export class UserAccount extends Serializable {
             else logger.error("TypeError: id field is not a string:", raw.name, "(",typeof(raw.name),")");
         } else this.id = "";
 
-        if ("email" in raw) {
+        if ("email" in raw && raw.email !== null) {
             if (typeof(raw.email) === "string") this.email = raw.email;
             else logger.error("TypeError: email field is not a string:", raw.email, "(",typeof(raw.email),")");
         } else this.email = "";
