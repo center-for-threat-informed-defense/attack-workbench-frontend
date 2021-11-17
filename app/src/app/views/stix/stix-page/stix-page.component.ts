@@ -6,6 +6,7 @@ import { Observable } from 'rxjs';
 import { Collection } from 'src/app/classes/stix/collection';
 import { DataSource } from 'src/app/classes/stix/data-source';
 import { Group } from 'src/app/classes/stix/group';
+import { MarkingDefinition } from 'src/app/classes/stix/marking-definition';
 import { Matrix } from 'src/app/classes/stix/matrix';
 import { Mitigation } from 'src/app/classes/stix/mitigation';
 import { Software } from 'src/app/classes/stix/software';
@@ -128,6 +129,7 @@ export class StixPageComponent implements OnInit, OnDestroy {
             else if (this.objectType  == "collection") objects$ = this.restAPIConnectorService.getCollection(objectStixID, objectModified, "latest", false, true);
             else if (this.objectType  == "data-source") objects$ = this.restAPIConnectorService.getDataSource(objectStixID, null, "latest", false, false, true);
             else if (this.objectType  == "data-component") objects$ = this.restAPIConnectorService.getDataComponent(objectStixID);
+            else if (this.objectType  == "marking-definition") objects$ = this.restAPIConnectorService.getMarkingDefinition(objectStixID);
             let  subscription = objects$.subscribe({
                 next: result => {
                     this.updateBreadcrumbs(result, this.objectType );
@@ -172,6 +174,7 @@ export class StixPageComponent implements OnInit, OnDestroy {
                 this.objectType  == "group" ? new Group():
                 this.objectType  == "collection" ? new Collection() : 
                 this.objectType  == "data-source" ? new DataSource() :
+                this.objectType  == "marking-definition" ? new MarkingDefinition() :
                 null // if not any of the above types
             );
             this.initialVersion = new VersionNumber(this.objects[0].version.toString());

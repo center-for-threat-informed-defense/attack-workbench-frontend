@@ -571,6 +571,11 @@ export interface StixListConfig {
      */
     allowEdits?: boolean;
     
+    /**
+     * Default false. If true, edits will be disabled for the object
+     */
+    uneditableObject?: boolean;
+    
     excludeIDs?: string[]; //exclude objects with this ID from the list
     excludeSourceRefs?: string[]; //exclude relationships with this source_ref from the list
     excludeTargetRefs?: string[]; //exclude relationships with this target_ref from the list
