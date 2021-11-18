@@ -15,6 +15,7 @@ import { logger } from "../../../util/logger";
 export class AuthenticationService extends ApiConnector {
     public currentUser: UserAccount;
     public get isLoggedIn(): boolean { return this.currentUser && this.currentUser.status == 'active'; }
+    public get canEdit(): boolean { return this.isAuthorized([Role.Editor, Role.Admin]); }
     private get baseUrl(): string { return environment.integrations.rest_api.url; }
 
     constructor(private http: HttpClient, private snackbar: MatSnackBar) { super(snackbar); }
