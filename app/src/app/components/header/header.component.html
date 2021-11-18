@@ -14,7 +14,7 @@
             <mat-icon>menu</mat-icon>
         </button>
         <mat-menu #navigation="matMenu" backdropClass="override-light">
-            <button mat-menu-item *ngFor="let stixRoute of routes" [routerLink]="stixRoute.path">{{stixRoute.data.breadcrumb}}</button>
+            <button mat-menu-item *ngFor="let stixRoute of routes" [disabled]="!isLoggedIn" [routerLink]="stixRoute.path">{{stixRoute.data.breadcrumb}}</button>
             <button mat-menu-item  routerLink="/docs">documentation</button>
             <button mat-menu-item (click)="isLoggedIn ? logout() : login()">{{isLoggedIn ? 'logout': 'login'}}</button>
         </mat-menu>
