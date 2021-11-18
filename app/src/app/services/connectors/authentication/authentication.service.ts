@@ -18,7 +18,7 @@ export class AuthenticationService extends ApiConnector {
     public get canEdit(): boolean { return this.isAuthorized([Role.Editor, Role.Admin]); }
     private get baseUrl(): string { return environment.integrations.rest_api.url; }
 
-    constructor(private http: HttpClient, private snackbar: MatSnackBar) { super(snackbar); }
+    constructor(private http: HttpClient, snackbar: MatSnackBar) { super(snackbar); }
 
     public isAuthorized(roles: Role[]): boolean {
         // is user logged in?

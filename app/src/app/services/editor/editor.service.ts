@@ -3,6 +3,7 @@ import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { SidebarService } from '../sidebar/sidebar.service';
 import { ConfirmationDialogComponent } from 'src/app/components/confirmation-dialog/confirmation-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
+import { AuthenticationService } from '../connectors/authentication/authentication.service';
 
 @Injectable({
   providedIn: 'root'
@@ -18,19 +19,22 @@ export class EditorService {
     public get stixId(): string { return this.router.url.split("/")[2].split("?")[0]; }
     public get type(): string { return this.router.url.split("/")[1]; }
     
-    constructor(private router: Router, private route: ActivatedRoute, private sidebarService: SidebarService, private dialog: MatDialog) {
+    constructor(private router: Router,
+                private route: ActivatedRoute,
+                private sidebarService: SidebarService,
+                private authenticationService: AuthenticationService,
+                private dialog: MatDialog) {
         this.router.events.subscribe(event => { 
             if (event instanceof NavigationEnd) { 
                 let editable = this.getEditableFromRoute(this.router.routerState, this.router.routerState.root);
-                this.editable = editable.length > 0 && editable.every(x=>x);
+                this.editable = editable.length > 0 && editable.every(x=>x) && this.authenticationService.canEdit;
                 this.sidebarService.setEnabled("history", this.editable);
                 this.sidebarService.setEnabled("notes", this.editable);
-                // this.sidebarService.setEnabled("citations", this.editable);
                 if (!this.editable) this.sidebarService.currentTab = "references";
             }
         })
         this.route.queryParams.subscribe(params => {
-            this.editing = params["editing"];
+            this.editing = params["editing"] && this.authenticationService.canEdit;
         });
     }
 

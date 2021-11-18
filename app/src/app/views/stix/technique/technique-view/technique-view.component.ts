@@ -1,29 +1,22 @@
 import { ChangeDetectorRef, Component, OnInit, ViewEncapsulation } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
 import { Technique } from 'src/app/classes/stix/technique';
+import { AuthenticationService } from 'src/app/services/connectors/authentication/authentication.service';
 import { StixViewPage } from '../../stix-view-page';
 
 @Component({
-  selector: 'app-technique-view',
-  templateUrl: './technique-view.component.html',
-  styleUrls: ['./technique-view.component.scss'],
-  encapsulation: ViewEncapsulation.None
+    selector: 'app-technique-view',
+    templateUrl: './technique-view.component.html',
+    styleUrls: ['./technique-view.component.scss'],
+    encapsulation: ViewEncapsulation.None
 })
 export class TechniqueViewComponent extends StixViewPage implements OnInit {
-
-    // public editing: boolean = false;
-
     public get technique(): Technique { return this.config.object as Technique; }
 
-    constructor(private route: ActivatedRoute, private ref: ChangeDetectorRef) {
-        super();
+    constructor(private ref: ChangeDetectorRef, authenticationService: AuthenticationService) {
+        super(authenticationService);
     }
 
-    ngOnInit() {
-        // this.route.queryParams.subscribe(params => {
-        //     this.editing = params["editing"];
-        // });
-    }
+    ngOnInit() { }
 
     ngAfterContentChecked() {
         this.ref.detectChanges();

@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { AuthenticationService } from 'src/app/services/connectors/authentication/authentication.service';
 
 @Component({
   selector: 'app-matrix-list',
@@ -6,8 +7,9 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./matrix-list.component.scss']
 })
 export class MatrixListComponent implements OnInit {
+    public get canEdit(): boolean { return this.authenticationService.canEdit; }
 
-    constructor() { }
+    constructor(private authenticationService: AuthenticationService) { }
 
     ngOnInit() {}
 }

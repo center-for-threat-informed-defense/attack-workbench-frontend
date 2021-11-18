@@ -1,13 +1,17 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
 import { StixObject } from 'src/app/classes/stix/stix-object';
+import { AuthenticationService } from 'src/app/services/connectors/authentication/authentication.service';
 import { StixDialogComponent } from './stix-dialog/stix-dialog.component';
 
 @Component({template: ''})
 export abstract class StixViewPage {
+    constructor(private authenticationService: AuthenticationService) { }
+
     //configuration for the view page behavior
     @Input() public config: StixViewConfig;
     public get editing(): boolean { return this.config.mode == "edit"; }
+    public get canEdit(): boolean { return this.authenticationService.canEdit; }
 
     //outputs to use if config.sidebarControl == "events"
     @Output() public onOpenHistory = new EventEmitter();

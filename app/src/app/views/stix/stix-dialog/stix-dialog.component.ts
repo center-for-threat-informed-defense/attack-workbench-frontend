@@ -2,30 +2,37 @@ import { Component, Inject, OnInit, ViewEncapsulation } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ValidationData } from 'src/app/classes/serializable';
 import { StixObject } from 'src/app/classes/stix/stix-object';
+import { AuthenticationService } from 'src/app/services/connectors/authentication/authentication.service';
 import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/rest-api-connector.service';
 import { EditorService } from 'src/app/services/editor/editor.service';
 import { SidebarService, tabOption } from 'src/app/services/sidebar/sidebar.service';
 import { StixViewConfig } from '../stix-view-page';
 
 @Component({
-  selector: 'app-stix-dialog',
-  templateUrl: './stix-dialog.component.html',
-  styleUrls: ['./stix-dialog.component.scss'],
-  encapsulation: ViewEncapsulation.None,
+    selector: 'app-stix-dialog',
+    templateUrl: './stix-dialog.component.html',
+    styleUrls: ['./stix-dialog.component.scss'],
+    encapsulation: ViewEncapsulation.None,
 })
 export class StixDialogComponent implements OnInit {
 
-    constructor(public dialogRef: MatDialogRef<StixDialogComponent>, @Inject(MAT_DIALOG_DATA) public _config: StixViewConfig, public sidebarService: SidebarService, public restApiConnectorService: RestApiConnectorService, public editorService: EditorService) {
-        if (this._config.mode && this._config.mode == "edit") this.startEditing();
+    constructor(public dialogRef: MatDialogRef<StixDialogComponent>,
+                @Inject(MAT_DIALOG_DATA) public _config: StixViewConfig,
+                public sidebarService: SidebarService,
+                public restApiConnectorService: RestApiConnectorService,
+                public editorService: EditorService,
+                private authenticationService: AuthenticationService) {
+        if (this._config.mode && this._config.mode == "edit" && this.authenticationService.canEdit) this.startEditing();
     }
+
     public get config(): StixViewConfig {
-        let object = Array.isArray(this._config.object)? this._config.object[0] : this._config.object;
+        let object = Array.isArray(this._config.object) ? this._config.object[0] : this._config.object;
         return {
-            mode: this.editing? "edit" : "view",
+            mode: this.editing && this.authenticationService.canEdit ? "edit" : "view",
             object: object,
             showRelationships: object.attackType == "data-component" ? true : false,
-            editable: this._config.editable,
-            sidebarControl: this._config.sidebarControl == "disable"? "disable" : "events",
+            editable: this._config.editable && this.authenticationService.canEdit,
+            sidebarControl: this._config.sidebarControl == "disable" ? "disable" : "events",
             dialog: this.dialogRef // relevant when adding a new relationship inside of an existing dialog
         }
     }
@@ -67,9 +74,9 @@ export class StixDialogComponent implements OnInit {
         this.sidebarOpened = false;
         this.validation = null; // reset prior validation if it has been loaded
         this.validating = true;
-        let object = Array.isArray(this.config.object)? this.config.object[0] : this.config.object;
+        let object = Array.isArray(this.config.object) ? this.config.object[0] : this.config.object;
         let subscription = object.validate(this.restApiConnectorService).subscribe({
-            next: (result) => { 
+            next: (result) => {
                 this.validation = result;
             },
             complete: () => { subscription.unsubscribe(); }
@@ -79,13 +86,13 @@ export class StixDialogComponent implements OnInit {
         return this.validation && this.validation.errors.length == 0;
     }
     public save() {
-        let object = Array.isArray(this.config.object)? this.config.object[0] : this.config.object;
+        let object = Array.isArray(this.config.object) ? this.config.object[0] : this.config.object;
         let subscription = object.save(this.restApiConnectorService).subscribe({
             next: (result) => {
                 this.editorService.onEditingStopped.emit();
                 if (this.prevObject) this.revertToPreviousObject();
                 else if (object.attackType == 'data-component') { // view data component on save
-                    this.validating = false; 
+                    this.validating = false;
                     this.editing = false;
                 }
                 else this.dialogRef.close(this.dirty);
@@ -109,7 +116,7 @@ export class StixDialogComponent implements OnInit {
     }
 
     public deprecateChanged() {
-        let object = Array.isArray(this.config.object)? this.config.object[0] : this.config.object;
+        let object = Array.isArray(this.config.object) ? this.config.object[0] : this.config.object;
         object.deprecated = !object.deprecated;
         let subscription = object.save(this.restApiConnectorService).subscribe({
             complete: () => { subscription.unsubscribe(); }
@@ -128,11 +135,11 @@ export class StixDialogComponent implements OnInit {
         this.currentTab = "notes";
     }
     public get stixType(): string {
-        return Array.isArray(this.config.object)? this.config.object[0].type : (this.config.object as StixObject).type;
+        return Array.isArray(this.config.object) ? this.config.object[0].type : (this.config.object as StixObject).type;
     }
     public get isDeprecated(): boolean {
-        return Array.isArray(this.config.object)? this.config.object[0].deprecated : (this.config.object as StixObject).deprecated;
+        return Array.isArray(this.config.object) ? this.config.object[0].deprecated : (this.config.object as StixObject).deprecated;
     }
-  
-    ngOnInit(): void {}
+
+    ngOnInit(): void { }
 }

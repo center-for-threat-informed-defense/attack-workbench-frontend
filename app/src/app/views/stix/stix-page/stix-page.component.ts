@@ -13,7 +13,6 @@ import { StixObject } from 'src/app/classes/stix/stix-object';
 import { Tactic } from 'src/app/classes/stix/tactic';
 import { Technique } from 'src/app/classes/stix/technique';
 import { VersionNumber } from 'src/app/classes/version-number';
-import { ConfirmationDialogComponent } from 'src/app/components/confirmation-dialog/confirmation-dialog.component';
 import { MultipleChoiceDialogComponent } from 'src/app/components/multiple-choice-dialog/multiple-choice-dialog.component';
 import { SaveDialogComponent } from 'src/app/components/save-dialog/save-dialog.component';
 import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/rest-api-connector.service';

@@ -1,7 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output, ViewEncapsulation } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
-import { Subscription } from 'rxjs';
 import { CollectionIndex, CollectionReference, CollectionVersion } from 'src/app/classes/collection-index';
 import { ConfirmationDialogComponent } from 'src/app/components/confirmation-dialog/confirmation-dialog.component';
 import { MarkdownViewDialogComponent } from 'src/app/components/markdown-view-dialog/markdown-view-dialog.component';

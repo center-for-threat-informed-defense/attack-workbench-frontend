@@ -5,6 +5,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { fromEvent, Observable } from 'rxjs';
 import { debounceTime, distinctUntilChanged, filter, tap } from 'rxjs/operators';
 import { ExternalReference } from 'src/app/classes/external-references';
+import { AuthenticationService } from 'src/app/services/connectors/authentication/authentication.service';
 import { Paginated, RestApiConnectorService } from 'src/app/services/connectors/rest-api/rest-api-connector.service';
 import { ReferenceEditDialogComponent } from './reference-edit-dialog/reference-edit-dialog.component';
 
@@ -27,22 +28,9 @@ export class ReferenceManagerComponent implements OnInit, AfterViewInit {
 
     public references$: Observable<Paginated<ExternalReference>>;
     public totalObjectCount: number = 0;
+    public get canEdit(): boolean { return this.authenticationService.canEdit; }
     
-    constructor(private restApiConnector: RestApiConnectorService, public snackbar: MatSnackBar, public dialog: MatDialog) { }
-    
-    // public createReference() {
-    //     let subscription = this.restApiConnector.postReference(this.newRef).subscribe({
-    //         next: (result) => {
-    //             this.newRef = {
-    //                 source_name: "",
-    //                 description: "",
-    //                 url: ""
-    //             }
-    //             this.refreshReferences();
-    //         },
-    //         complete: () => { subscription.unsubscribe(); }
-    //     })
-    // }
+    constructor(private restApiConnector: RestApiConnectorService, public snackbar: MatSnackBar, public dialog: MatDialog, private authenticationService: AuthenticationService) { }
 
     public editReference(reference?: ExternalReference) {
         let ref = this.dialog.open(ReferenceEditDialogComponent, {
@@ -78,9 +66,7 @@ export class ReferenceManagerComponent implements OnInit, AfterViewInit {
         })
     }
 
-    ngOnInit(): void {
-        // this.refreshReferences();
-    }
+    ngOnInit(): void { }
 
     ngAfterViewInit() {
         this.applyControls();

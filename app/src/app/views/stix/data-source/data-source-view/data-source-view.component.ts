@@ -5,6 +5,7 @@ import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/re
 import { StixViewPage } from '../../stix-view-page';
 import { MatDialog } from '@angular/material/dialog';
 import { StixDialogComponent } from '../../stix-dialog/stix-dialog.component';
+import { AuthenticationService } from 'src/app/services/connectors/authentication/authentication.service';
 
 @Component({
     selector: 'app-data-source-view',
@@ -16,7 +17,7 @@ export class DataSourceViewComponent extends StixViewPage implements OnInit {
     public data_components: DataComponent[] = [];
     public loading = false;
 
-    constructor(public dialog: MatDialog, private restAPIConnectorService: RestApiConnectorService) { super(); }
+    constructor(public dialog: MatDialog, private restAPIConnectorService: RestApiConnectorService, authenticationService: AuthenticationService) { super(authenticationService); }
 
     ngOnInit(): void {
         this.data_components = this.data_source.data_components;

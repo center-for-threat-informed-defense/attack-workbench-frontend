@@ -22,6 +22,7 @@ import { StixViewPage } from '../../stix-view-page';
 import { environment } from "../../../../../environments/environment";
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { logger } from "../../../../util/logger";
+import { AuthenticationService } from 'src/app/services/connectors/authentication/authentication.service';
 
 type changeCategory = "additions" | "changes" | "minor_changes" | "revocations" | "deprecations";
 
@@ -78,7 +79,14 @@ export class CollectionViewComponent extends StixViewPage implements OnInit {
     public collection_import_categories = [];
 
 
-    constructor(private route: ActivatedRoute, private router: Router, private restApiConnector: RestApiConnectorService, private snackbar: MatSnackBar, private editor: EditorService) { super();  }
+    constructor(private route: ActivatedRoute, 
+                private router: Router, 
+                private restApiConnector: RestApiConnectorService,
+                private snackbar: MatSnackBar,
+                private editor: EditorService,
+                authenticationService: AuthenticationService) {
+        super(authenticationService);
+    }
 
     /**
      * Trigger collection save behaviors

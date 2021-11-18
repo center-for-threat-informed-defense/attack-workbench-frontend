@@ -53,7 +53,7 @@
                 <h2 class="section-header">Techniques Addressed by Mitigation</h2>
             </div>
         </div>
-        <div class="row">
+        <div class="row" *ngIf="canEdit">
             <div class="col">
                 <app-add-relationship-button (created)="mitigatesList.applyControls()" [config]="{
                     label: 'technique',

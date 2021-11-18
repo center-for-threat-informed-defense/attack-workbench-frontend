@@ -10,7 +10,6 @@ export class AuthorizationGuard implements CanActivate, CanActivateChild {
     constructor(private router: Router, private authenticationService: AuthenticationService) {}
 
     public canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
-        console.log(route, state, this.router)
         // check if user is logged in
         if (!this.authenticationService.isLoggedIn) {
             this.router.navigate(['']);

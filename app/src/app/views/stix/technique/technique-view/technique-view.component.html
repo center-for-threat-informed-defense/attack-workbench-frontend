@@ -226,7 +226,7 @@
                     <h2 class="section-header">Sub-techniques</h2>
                 </div>
             </div>
-            <div class="row">
+            <div class="row" *ngIf="canEdit">
                 <div class="col">
                     <app-add-relationship-button (created)="subTechniquesList.applyControls()" [config]="{
                         label: 'sub-technique',
@@ -274,7 +274,7 @@
                 <h2 class="section-header">Mitigations</h2>
             </div>
         </div>
-        <div class="row">
+        <div class="row" *ngIf="canEdit">
             <div class="col">
                 <app-add-relationship-button (created)="mitigatesList.applyControls()" [config]="{
                     label: 'mitigation',
@@ -300,7 +300,7 @@
                 <h2 class="section-header">Procedure Examples</h2>
             </div>
         </div>
-        <div class="row">
+        <div class="row" *ngIf="canEdit">
             <div class="col">
                 <app-add-relationship-button (created)="usesList.applyControls()" [config]="{
                     label: 'procedure example',
@@ -326,7 +326,7 @@
                 <h2 class="section-header">Data Sources</h2>
             </div>
         </div>
-        <div class="row">
+        <div class="row" *ngIf="canEdit">
             <div class="col">
                 <app-add-relationship-button (created)="detectsList.applyControls()" [config]="{
                     label: 'data source',
