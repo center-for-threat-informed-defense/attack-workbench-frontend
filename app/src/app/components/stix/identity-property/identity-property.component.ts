@@ -2,6 +2,8 @@ import { Component, Input, OnInit, ViewEncapsulation } from '@angular/core';
 import { Identity } from 'src/app/classes/stix/identity';
 import { StixObject } from 'src/app/classes/stix/stix-object';
 import { AuthenticationService } from '../../../services/connectors/authentication/authentication.service';
+import { RestApiConnectorService } from '../../../services/connectors/rest-api/rest-api-connector.service';
+import { Subscription } from 'rxjs';
 
 @Component({
     selector: 'app-identity-property',
@@ -13,8 +15,10 @@ export class IdentityPropertyComponent implements OnInit {
     @Input() public config: IdentityPropertyConfig;
 
     public identity: Identity;
+    private userSubscription$: Subscription;
 
-    constructor(private authenticationService: AuthenticationService) { }
+    constructor(private authenticationService: AuthenticationService,
+                private restAPIConnector: RestApiConnectorService) {}
 
     ngOnInit(): void {
         const object = Array.isArray(this.config.object) ? this.config.object[0] : this.config.object;
@@ -24,7 +28,11 @@ export class IdentityPropertyComponent implements OnInit {
         if (this.authenticationService.isLoggedIn && this.config.object &&
             'workflow' in this.config.object && this.config.object.workflow &&
             'created_by_user_account' in this.config.object.workflow) {
-          this.identity.name = this.config.object.workflow.created_by_user_account;
+          const userID = this.config.object.workflow.created_by_user_account;
+          this.userSubscription$ = this.restAPIConnector.getUserAccount(userID).subscribe({
+              next: ( account) => this.identity.name = account.username,
+              complete: () => this.userSubscription$.unsubscribe()
+            });
         }
     }
 }
