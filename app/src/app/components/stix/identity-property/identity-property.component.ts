@@ -26,6 +26,7 @@ export class IdentityPropertyComponent implements OnInit {
           this.identity = object[this.config.field] as Identity;
         }
         if (this.authenticationService.isLoggedIn && this.config.object &&
+            this.config.field.includes('modified') &&
             'workflow' in this.config.object && this.config.object.workflow &&
             'created_by_user_account' in this.config.object.workflow) {
           const userID = this.config.object.workflow.created_by_user_account;
