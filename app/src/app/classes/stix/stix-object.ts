@@ -77,7 +77,8 @@ export abstract class StixObject extends Serializable {
     public version: VersionNumber;  // version number of the object
     public external_references: ExternalReferences;
     public workflow: {
-        state: workflowStates
+        state: workflowStates,
+        created_by_user_account?: string
     };
 
     public deprecated: boolean = false; //is object deprecated?
