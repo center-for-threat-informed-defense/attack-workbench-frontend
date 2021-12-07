@@ -8,6 +8,8 @@ import { environment } from "../../../../environments/environment";
 import { ApiConnector } from '../api-connector';
 import { Role } from 'src/app/classes/authn/role';
 import { logger } from "../../../util/logger";
+import { Router } from '@angular/router';
+import { RestApiConnectorService } from '../rest-api/rest-api-connector.service';
 
 @Injectable({
     providedIn: 'root'
@@ -18,7 +20,7 @@ export class AuthenticationService extends ApiConnector {
     public get canEdit(): boolean { return this.isAuthorized([Role.Editor, Role.Admin]); }
     private get baseUrl(): string { return environment.integrations.rest_api.url; }
 
-    constructor(private http: HttpClient, snackbar: MatSnackBar) { super(snackbar); }
+    constructor(private router: Router, private http: HttpClient, snackbar: MatSnackBar, private restAPIConnector: RestApiConnectorService) { super(snackbar); }
 
     public isAuthorized(roles: Role[]): boolean {
         // is user logged in?
@@ -31,7 +33,7 @@ export class AuthenticationService extends ApiConnector {
         return this.getAuthType().pipe(
             concatMap(authnType => {
                 let url = `${this.baseUrl}/authn/${authnType}/login`;
-                return this.http.get(url, {responseType: 'text'}).pipe( // login endpoint call
+                return this.http.get(url, {responseType: 'text'}).pipe(
                     concatMap(success => {
                         return this.getSession().pipe(
                             tap(res => logger.log('successfully logged in')),
@@ -62,14 +64,18 @@ export class AuthenticationService extends ApiConnector {
         )
     }
 
-    public getSession(): Observable<UserAccount> {
+    public getSession(): Observable<any> {
         let url = `${this.baseUrl}/session`;
-        return this.http.get<UserAccount>(url).pipe(
-            map(user => {
-                this.currentUser = new UserAccount(user);
-                return user;
+        return this.http.get<any>(url).pipe(
+            concatMap(session => { // retrieve user account
+                return this.restAPIConnector.getUserAccount(session.userAccountId).pipe(
+                    map(res => {
+                        this.currentUser = res;
+                        return res;
+                    })
+                );
             }),
-            catchError(err => of(new UserAccount())), // return a default value so that the app can continue
+            catchError(err => of({})), // return a default value so that the app can continue
             share()
         )
     }
