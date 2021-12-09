@@ -1282,7 +1282,6 @@ export class RestApiConnectorService extends ApiConnector {
         if (status) query = query.set("status", status);
         if (role) query = query.set("role", role);
         return this.http.get<Paginated<UserAccount>>(url, {params: query}).pipe(
-            tap(results => logger.log("retrieved user accounts")),
             catchError(this.handleError_continue<Paginated<UserAccount>>({data: [], pagination: {total: 0, limit: 0, offset:0}})),
             share() //multicast to subscribers
         )
@@ -1296,7 +1295,6 @@ export class RestApiConnectorService extends ApiConnector {
     public getUserAccount(id: string): Observable<UserAccount> {
         let url = `${this.baseUrl}/user-accounts/${id}`;
         return this.http.get<UserAccount>(url).pipe(
-            tap(results => logger.log("retrieved user account", results)),
             catchError(this.handleError_continue<UserAccount>()),
             share() // multicast to subscribers
         )
@@ -1310,7 +1308,6 @@ export class RestApiConnectorService extends ApiConnector {
     public postUserAccount(userAccount: UserAccount): Observable<UserAccount> {
         let url = `${this.baseUrl}/user-accounts/${userAccount.id}`;
         return this.http.post<UserAccount>(url, userAccount).pipe(
-            tap(this.handleSuccess(`${userAccount.username} saved`)),
             catchError(this.handleError_raise<UserAccount>()),
             share() // multicast to subscribers
         )
@@ -1324,7 +1321,6 @@ export class RestApiConnectorService extends ApiConnector {
     public putUserAccount(userAccount: UserAccount): Observable<UserAccount> {
         let url = `${this.baseUrl}/user-accounts/${userAccount.id}`;
         return this.http.put<UserAccount>(url, userAccount).pipe(
-            tap(this.handleSuccess(`${userAccount.username} saved`)),
             catchError(this.handleError_raise<UserAccount>()),
             share() // multicast to subscribers
         )
