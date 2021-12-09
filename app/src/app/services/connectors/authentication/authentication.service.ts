@@ -33,14 +33,19 @@ export class AuthenticationService extends ApiConnector {
         return this.getAuthType().pipe(
             concatMap(authnType => {
                 let url = `${this.baseUrl}/authn/${authnType}/login`;
-                return this.http.get(url, {responseType: 'text'}).pipe(
-                    concatMap(success => {
-                        return this.getSession().pipe(
-                            tap(res => logger.log('successfully logged in')),
-                            map(res => { return res; })
-                        );
-                    })
-                );
+                if (authnType == "oidc") {
+                    url += `?destination=${encodeURIComponent(window.location.href)}`;
+                    window.location.href = url;
+                    return of(url);
+                } else {
+                    return this.http.get(url, {responseType: 'text'}).pipe(
+                        concatMap(success => {
+                            return this.getSession().pipe(
+                                map(res => { return res; })
+                            );
+                        })
+                    );
+                }
             }),
             catchError(this.handleError_raise<UserAccount>()),
             share()
