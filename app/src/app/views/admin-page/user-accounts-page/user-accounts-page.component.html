@@ -1,12 +1,61 @@
-<div class="view-page grid spacing-16">
+<div class="user-accounts-page view-page grid spacing-16">
     <div class="row">
         <div class="col">
             <h1>User Accounts</h1>
         </div>
     </div>
-    <div *ngIf="(userAccounts$ | async) as userAccounts else loading" class="user-table">
-        <div *ngFor="let user of userAccounts">
+    <div class="table-container">
+        <!-- -------- -->
+        <!-- CONTROLS -->
+        <!-- -------- -->
+        <div class="controls">
+            <div class="input-group">
+                <mat-form-field class="search" appearance="fill">
+                    <mat-label>search</mat-label>
+                    <input matInput [(ngModel)]="searchQuery">
+                </mat-form-field>
 
+                <mat-form-field appearance="fill">
+                    <mat-label>options</mat-label>
+                    <mat-select multiple [(ngModel)]="filter" (selectionChange)="applyFilters()">
+                        <mat-optgroup [label]="'Role'">
+                            <mat-option *ngFor="let group of filterOptions">{{group}}</mat-option>
+                        </mat-optgroup>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+        </div>
+        <!--            <div class="controls">-->
+        <!--                <div class="input-group align-right" *ngFor="let role in roleOptions">-->
+        <!--                    <mat-checkbox (change)="show(role)">show {{role}} only</mat-checkbox>-->
+        <!--                </div>-->
+        <!--            </div>-->
+
+        <!-- ----- -->
+        <!-- TABLE -->
+        <!-- ----- -->
+        <div class="scroll-container" *ngIf="(userAccounts$ | async) as userAccounts else loading">
+            <table mat-table *ngIf="userAccounts.length > 0" [dataSource]="userAccounts">
+                <ng-container matColumnDef="username">
+                    <th mat-header-cell *matHeaderCellDef>Username</th>
+                    <td mat-cell *matCellDef="let user"> {{user.username}} </td>
+                </ng-container>
+                <ng-container matColumnDef="email">
+                    <th mat-header-cell *matHeaderCellDef>Email</th>
+                    <td mat-cell *matCellDef="let user"> {{user.email}} </td>
+                </ng-container>
+                <ng-container matColumnDef="status">
+                    <th mat-header-cell *matHeaderCellDef>Status</th>
+                    <td mat-cell *matCellDef="let user"> {{user.status}} </td>
+                </ng-container>
+                <ng-container matColumnDef="role">
+                    <th mat-header-cell *matHeaderCellDef>Role</th>
+                    <td mat-cell *matCellDef="let user"> {{user.role}} </td>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="columnsToDisplay"></tr>
+                <tr mat-row *matRowDef="let myRowData; columns: columnsToDisplay" class="element-row"></tr>
+            </table>
         </div>
     </div>
     <ng-template #loading>
