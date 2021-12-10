@@ -40,4 +40,13 @@
         overflow-x: visible;
         left: -40px;
     }
+    .mat-icon-button.account {
+        vertical-align: middle;
+        .dark & { background: color-alternate(dark); }
+        .light & { background: color(light); }
+        svg {
+            height: 24px;
+            width: 24px;
+        }
+    }
 }

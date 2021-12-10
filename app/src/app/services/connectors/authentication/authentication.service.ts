@@ -29,7 +29,7 @@ export class AuthenticationService extends ApiConnector {
         return roles.indexOf(this.currentUser.role) > -1;
     }
 
-    public login(): Observable<UserAccount> {
+    public login(): Observable<any> {
         return this.getAuthType().pipe(
             concatMap(authnType => {
                 let url = `${this.baseUrl}/authn/${authnType}/login`;
