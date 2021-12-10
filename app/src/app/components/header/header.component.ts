@@ -34,6 +34,7 @@ export class HeaderComponent implements AfterViewInit {
     }
 
     public get isLoggedIn(): boolean { return this.authenticationService.isLoggedIn; }
+    public get username() { return this.authenticationService.currentUser.username; }
 
     public login(): void {
         this.onLogin.emit();
