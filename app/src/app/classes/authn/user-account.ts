@@ -76,28 +76,38 @@ export class UserAccount extends Serializable {
      */
     public validate(restAPIService: RestApiConnectorService): Observable<ValidationData> {
         let validation = new ValidationData();
-        return;
 
-        // TODO check any asynchronous validators
-        // return of(validation).pipe(
-        //     // check if the username is unique
-        //     switchMap(result => {
-        //         return restAPIService.getAllUserAccounts().pipe(
-        //             map(userAccounts -> {
-        //                 if (this.hasOwnProperty("username")) {
-        //                     if (this["username"] == "") {
-        //                         result.errors.push({
-        //                             "result": "error",
-        //                             "field": "username",
-        //                             "message": "object has no username"
-        //                         })
-        //                     }
-        //                 }
-        //                 return result
-        //             })
-        //         )
-        //     })
-        // );
+        return of(validation).pipe(
+            // check if username is unique
+            switchMap(result => {
+                return restAPIService.getAllUserAccounts().pipe(
+                    map(users => {
+                        if (this.hasOwnProperty("username")) {
+                            if (this["username"] == "") {
+                                result.errors.push({
+                                    "result": "error",
+                                    "field": "username",
+                                    "message": "user has no username"
+                                })
+                            } else if (users.data.some(x => x["suername"].toLowerCase() == this["username"].toLowerCase() && x.id != this.id)) {
+                                result.errors.push({
+                                    "result": "error",
+                                    "field": "username",
+                                    "message": "username is not unique"
+                                })
+                            } else {
+                                result.successes.push({
+                                    "result": "success",
+                                    "field": "username",
+                                    "message": "username is unique"
+                                })
+                            }
+                        }
+                        return result;
+                    })
+                );
+            }) // end switchmap
+        );
     }
 
     /**
