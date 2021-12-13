@@ -67,7 +67,6 @@ $tooltip-color: color-alternate(dark, 4);
         }
         .mat-menu-item:disabled {
             color: on-color-deemphasis(dark);
-            cursor: not-allowed;
         }
     }
     &.light .mat-menu-panel {
@@ -78,7 +77,6 @@ $tooltip-color: color-alternate(dark, 4);
         }
         .mat-menu-item:disabled {
             color: on-color-deemphasis(light);
-            cursor: not-allowed;
         }
     }
     &.dark .mat-dialog-container {
