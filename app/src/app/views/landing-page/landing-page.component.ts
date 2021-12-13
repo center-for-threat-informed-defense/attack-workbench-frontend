@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { Role } from 'src/app/classes/authn/role';
@@ -13,8 +13,8 @@ import { stixRoutes } from "../../app-routing-stix.module";
   styleUrls: ['./landing-page.component.scss'],
   encapsulation: ViewEncapsulation.None
 })
-export class LandingPageComponent implements OnInit {
-    
+export class LandingPageComponent implements OnInit, OnDestroy {
+    private loginSubscription;
     public routes: any[] = [];
     constructor(private restApiConnector: RestApiConnectorService, private authenticationService: AuthenticationService, private dialog: MatDialog, private router: Router) {
         this.routes = stixRoutes;
@@ -24,6 +24,13 @@ export class LandingPageComponent implements OnInit {
     public get isLoggedIn(): boolean { return this.authenticationService.isLoggedIn; }
 
     ngOnInit() {
+        this.loginSubscription = this.authenticationService.onLogin.subscribe({
+            next: (event) => { this.openOrgIdentityDialog(); }
+        });
+        this.openOrgIdentityDialog();
+    }
+
+    private openOrgIdentityDialog(): void {
         if (this.authenticationService.isAuthorized([Role.Admin])) {
             // bug the admin about editing their organization identity
             let subscription = this.restApiConnector.getOrganizationIdentity().subscribe({
@@ -50,4 +57,7 @@ export class LandingPageComponent implements OnInit {
         }
     }
 
+    ngOnDestroy() {
+        this.loginSubscription.unsubscribe();
+    }
 }
