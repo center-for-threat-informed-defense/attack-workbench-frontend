@@ -57,7 +57,6 @@ export class AuthenticationService extends ApiConnector {
             concatMap(authnType => {
                 let url = `${this.baseUrl}/authn/${authnType}/logout`;
                 return this.http.get(url, {responseType: 'text'}).pipe(
-                    tap(res => logger.log('succesfully logged out')),
                     map(res => {
                         this.currentUser = undefined;
                         return res;
