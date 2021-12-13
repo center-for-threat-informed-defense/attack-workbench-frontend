@@ -42,6 +42,11 @@ export class AppComponent implements AfterViewInit {
         initLogger(logger);
     }
 
+    /**
+     * Check the account status of the logged in user.
+     * If the user's account status is not active, an alert
+     * banner is displayed and the user is logged out.
+     */
     public checkStatus(): void {
         if (this.authenticationService.currentUser) {
             let status = this.authenticationService.currentUser.status;
@@ -52,6 +57,7 @@ export class AppComponent implements AfterViewInit {
         }
     }
 
+    // User log in
     public login(): void {
         let loginSubscription = this.authenticationService.login().subscribe({
             next: (res) => { this.checkStatus(); },
@@ -59,6 +65,7 @@ export class AppComponent implements AfterViewInit {
         });
     }
 
+    // User log out
     public logout(): void {
         let logoutSubscription = this.authenticationService.logout().subscribe({
             complete: () => {

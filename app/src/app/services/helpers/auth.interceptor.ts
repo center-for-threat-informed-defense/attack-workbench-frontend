@@ -14,6 +14,7 @@ export class AuthInterceptor implements HttpInterceptor {
 
     constructor() { }
 
+    // intercept outgoing requests to include headers & credentials
     intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
         request = request.clone({
             headers: this.headers,
