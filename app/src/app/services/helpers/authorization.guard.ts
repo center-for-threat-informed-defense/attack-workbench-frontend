@@ -11,6 +11,7 @@ export class AuthorizationGuard implements CanActivate, CanActivateChild {
 
     constructor(private router: Router, private authenticationService: AuthenticationService) {}
 
+    // determine if user has permissions to activate the requested route
     public canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> {
         return this.authenticationService.getSession().pipe(
             map(_ => {
@@ -35,6 +36,7 @@ export class AuthorizationGuard implements CanActivate, CanActivateChild {
         )
     }
 
+    // determine if user has permissions to activate the requested child route
     public canActivateChild(childRoute: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> {
         return this.canActivate(childRoute, state);
     }

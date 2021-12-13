@@ -22,6 +22,11 @@ export class AuthenticationService extends ApiConnector {
 
     constructor(private router: Router, private http: HttpClient, snackbar: MatSnackBar, private restAPIConnector: RestApiConnectorService) { super(snackbar); }
 
+    /**
+     * Check if user is authnorized
+     * @param roles list of authorized roles
+     * @returns true, if user is logged in and has an authorized role, false otherwise
+     */
     public isAuthorized(roles: Role[]): boolean {
         // is user logged in?
         if (!this.isLoggedIn) return false;
@@ -29,32 +34,46 @@ export class AuthenticationService extends ApiConnector {
         return roles.indexOf(this.currentUser.role) > -1;
     }
 
-    public login(): Observable<any> {
+    /**
+     * User log in sequence
+     * @returns of the logged in user account
+     */
+    public login(): Observable<UserAccount> {
         return this.getAuthType().pipe(
+            // retrieve authentication configuration
             concatMap(authnType => {
                 let url = `${this.baseUrl}/authn/${authnType}/login`;
                 if (authnType == "oidc") {
+                    // oidc login
                     url += `?destination=${encodeURIComponent(window.location.href)}`;
+                    // redirect to OIDC Identity Provider
                     window.location.href = url;
-                    return of(url);
-                } else {
-                    return this.http.get(url, {responseType: 'text'}).pipe(
-                        concatMap(success => {
-                            return this.getSession().pipe(
-                                map(res => {
-                                    this.onLogin.emit();
-                                    return res;
-                                })
-                            );
-                        })
+                    return this.getSession().pipe(
+                        map(res => { return res; })
                     );
                 }
+                // anonymous login
+                return this.http.get(url, {responseType: 'text'}).pipe(
+                    concatMap(success => {
+                        return this.getSession().pipe(
+                            map(res => {
+                                this.onLogin.emit();
+                                return res;
+                            })
+                        );
+                    })
+                );
             }),
             catchError(this.handleError_raise<UserAccount>()),
             share()
         );
     }
 
+    /**
+     * User logout sequence
+     * Note: this does not log the user out of the OIDC Identity Provider
+     * @returns of the log out response
+     */
     public logout(): Observable<any> {
         return this.getAuthType().pipe(
             concatMap(authnType => {
@@ -71,10 +90,17 @@ export class AuthenticationService extends ApiConnector {
         )
     }
 
-    public getSession(): Observable<any> {
+    /**
+     * Get the user account object of the logged in user
+     * @returns the user account object of the logged in user, if logged in,
+     * otherwise return a default value
+     */
+    public getSession(): Observable<UserAccount> {
         let url = `${this.baseUrl}/session`;
+        // retrieve user session object
         return this.http.get<any>(url).pipe(
-            concatMap(session => { // retrieve user account
+            concatMap(session => { 
+                // retrieve user account from session
                 return this.restAPIConnector.getUserAccount(session.userAccountId).pipe(
                     map(res => {
                         this.currentUser = res;
@@ -82,11 +108,15 @@ export class AuthenticationService extends ApiConnector {
                     })
                 );
             }),
-            catchError(err => of({})), // return a default value so that the app can continue
+            catchError(err => { return of(null); }), // return a default value so that the app can continue
             share()
         )
     }
 
+    /**
+     * Get the authentication configuration
+     * @returns the configured user authentication mechanism
+     */
     public getAuthType(): Observable<string> {
         let url = `${this.baseUrl}/config/authn`;
         return this.http.get<any>(url).pipe(
@@ -97,9 +127,9 @@ export class AuthenticationService extends ApiConnector {
                         return authnMechanism.authnType;
                     }
                 }
-                return 'anonymous';
+                else throw "invalid authentication mechanism"; // this should never happen
             }),
-            catchError(this.handleError_continue<string>('anonymous', false)), // default anonymous authentication
+            catchError(this.handleError_raise()),
             share()
         );
     }

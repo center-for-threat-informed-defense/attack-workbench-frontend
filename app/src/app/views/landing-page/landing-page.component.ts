@@ -30,9 +30,9 @@ export class LandingPageComponent implements OnInit, OnDestroy {
         this.openOrgIdentityDialog();
     }
 
+    // bug the admin about editing their organization identity
     private openOrgIdentityDialog(): void {
         if (this.authenticationService.isAuthorized([Role.Admin])) {
-            // bug the admin about editing their organization identity
             let subscription = this.restApiConnector.getOrganizationIdentity().subscribe({
                 next: (identity) => {
                     if (identity.name == "Placeholder Organization Identity") {

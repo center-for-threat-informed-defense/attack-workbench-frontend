@@ -91,6 +91,7 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
             // user not authorized
             return false;
         }
+        // user authorized
         return true;
     }
 

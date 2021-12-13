@@ -12,8 +12,12 @@ import { AuthenticationService } from 'src/app/services/connectors/authenticatio
 export class HeaderComponent implements AfterViewInit {
     public routes: any[];
     public app_version = app_package["version"];
+    
     @Output() public onLogin = new EventEmitter();
     @Output() public onLogout = new EventEmitter();
+    public get isLoggedIn(): boolean { return this.authenticationService.isLoggedIn; }
+    public get username() { return this.authenticationService.currentUser.username; }
+
     @ViewChild('linkMenu', {static: false})
     private linkMenu: ElementRef;
 
@@ -32,9 +36,6 @@ export class HeaderComponent implements AfterViewInit {
          //if the element overflows, show hamburger instead
         this.showHamburger = this.linkMenu.nativeElement.offsetWidth < this.linkMenu.nativeElement.scrollWidth;
     }
-
-    public get isLoggedIn(): boolean { return this.authenticationService.isLoggedIn; }
-    public get username() { return this.authenticationService.currentUser.username; }
 
     public login(): void {
         this.onLogin.emit();
