@@ -22,7 +22,8 @@ export class CollectionManagerConnectorService extends ApiConnector {
      */
     public getRemoteIndex(url: string): Observable<CollectionIndex> {
         let params = new HttpParams({encoder: new CustomEncoder()}).set("url", url);
-        return this.http.get(`${this.baseUrl}/collection-indexes/remote`, {params}).pipe(
+        let headers: HttpHeaders = new HttpHeaders({ 'SkipInterceptor': 'true' });
+        return this.http.get(`${this.baseUrl}/collection-indexes/remote`, {headers: headers, params: params}).pipe(
             tap(_ => logger.log("downloaded index at", url)), // on success, trigger the success notification
             map(index => { return {
                 "collection_index": index,
