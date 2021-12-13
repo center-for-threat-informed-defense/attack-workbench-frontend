@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { EventEmitter, Injectable } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Observable, of } from 'rxjs';
 import { catchError, share, map, concatMap, tap } from 'rxjs/operators';
@@ -7,7 +7,6 @@ import { UserAccount } from 'src/app/classes/authn/user-account';
 import { environment } from "../../../../environments/environment";
 import { ApiConnector } from '../api-connector';
 import { Role } from 'src/app/classes/authn/role';
-import { logger } from "../../../util/logger";
 import { Router } from '@angular/router';
 import { RestApiConnectorService } from '../rest-api/rest-api-connector.service';
 
@@ -19,6 +18,7 @@ export class AuthenticationService extends ApiConnector {
     public get isLoggedIn(): boolean { return this.currentUser && this.currentUser.status == 'active'; }
     public get canEdit(): boolean { return this.isAuthorized([Role.Editor, Role.Admin]); }
     private get baseUrl(): string { return environment.integrations.rest_api.url; }
+    public onLogin = new EventEmitter();
 
     constructor(private router: Router, private http: HttpClient, snackbar: MatSnackBar, private restAPIConnector: RestApiConnectorService) { super(snackbar); }
 
@@ -41,7 +41,10 @@ export class AuthenticationService extends ApiConnector {
                     return this.http.get(url, {responseType: 'text'}).pipe(
                         concatMap(success => {
                             return this.getSession().pipe(
-                                map(res => { return res; })
+                                map(res => {
+                                    this.onLogin.emit();
+                                    return res;
+                                })
                             );
                         })
                     );
