@@ -4,6 +4,10 @@
         <mat-drawer-content>
             <div class="app-content">
                 <app-toolbar (onToggleTheme)="toggleTheme()" (onScrollTop)="scrollToTop()" [canScroll]="hiddenHeaderPX != 0"></app-toolbar>
+                <div *ngIf="alertStatus" class="banner">
+                    <span class="banner-text">Your account is {{alertStatus}}, please contact your Administrator</span>
+                    <button mat-icon-button (click)="alertStatus=''"><mat-icon>close</mat-icon></button>
+                </div>
                 <div class="router-padding" #scrollRef>
                     <router-outlet></router-outlet>
                 </div>
@@ -15,5 +19,4 @@
             </div>
         </mat-drawer>
     </mat-drawer-container>
-    <!-- <app-footer></app-footer> -->
 </div>

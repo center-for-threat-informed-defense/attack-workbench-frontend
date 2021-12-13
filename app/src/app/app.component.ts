@@ -22,7 +22,7 @@ export class AppComponent implements AfterViewInit {
     @ViewChild("header", {static: false, read: ElementRef}) private header: ElementRef;
     @ViewChild("scrollRef", {static: false, read: ElementRef}) private scrollRef: ElementRef;
 
-    
+    public alertStatus;
     constructor(private overlayContainer: OverlayContainer,
                 private sidebarService: SidebarService,
                 private authenticationService: AuthenticationService,
@@ -36,13 +36,25 @@ export class AppComponent implements AfterViewInit {
         }
         // check user login
         let authSubscription = this.authenticationService.getSession().subscribe({
+            next: (res) => { this.checkStatus(); },
             complete: () => { authSubscription.unsubscribe(); }
         });
         initLogger(logger);
     }
 
+    public checkStatus(): void {
+        if (this.authenticationService.currentUser) {
+            let status = this.authenticationService.currentUser.status;
+            if (status != "active") {
+                this.alertStatus = status;
+                this.logout();
+            }
+        }
+    }
+
     public login(): void {
         let loginSubscription = this.authenticationService.login().subscribe({
+            next: (res) => { this.checkStatus(); },
             complete: () => { loginSubscription.unsubscribe(); }
         });
     }
