@@ -1,4 +1,5 @@
-import {StixObject} from "./stix-object";
+import { map, switchMap } from "rxjs/operators";
+import { StixObject } from "./stix-object";
 import { Relationship } from './relationship';
 import { RestApiConnectorService } from "src/app/services/connectors/rest-api/rest-api-connector.service";
 import { Observable, of } from "rxjs";
@@ -75,7 +76,21 @@ export class MarkingDefinition extends StixObject {
      * @returns {Observable<ValidationData>} the validation warnings and errors once validation is complete.
      */
     public validate(restAPIService: RestApiConnectorService): Observable<ValidationData> {
-        return this.base_validate(restAPIService);
+        return this.base_validate(restAPIService).pipe(
+            map(result => {
+                // presence of statement
+                if (!this.definition_string) { result.errors.push({
+                    "field": "definition_string",
+                    "result": "error",
+                    "message": "definition string is not specified"
+                })} else { result.successes.push({
+                    "field": "definition_string",
+                    "result": "error",
+                    "message": "definition string specified"
+                })}
+                return result;
+            }),
+        )
     }
 
     /**
@@ -84,7 +99,11 @@ export class MarkingDefinition extends StixObject {
      * @returns {Observable} of the post
      */
     public save(restAPIService: RestApiConnectorService): Observable<MarkingDefinition> {
-        // TODO 
-        return of(this);
+        let postObservable = restAPIService.postMarkingDefinition(this);
+        let subscription = postObservable.subscribe({
+            next: (result) => { this.deserialize(result.serialize()); },
+            complete: () => { subscription.unsubscribe(); }
+        });
+        return postObservable;
     }
 }

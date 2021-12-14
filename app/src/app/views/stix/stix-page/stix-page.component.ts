@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild, Output, EventEmitter } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router, NavigationEnd } from '@angular/router';
 import { BreadcrumbService } from 'angular-crumbs';
@@ -16,6 +16,7 @@ import { Technique } from 'src/app/classes/stix/technique';
 import { VersionNumber } from 'src/app/classes/version-number';
 import { ConfirmationDialogComponent } from 'src/app/components/confirmation-dialog/confirmation-dialog.component';
 import { MultipleChoiceDialogComponent } from 'src/app/components/multiple-choice-dialog/multiple-choice-dialog.component';
+import { StixDialogComponent } from "src/app/views/stix/stix-dialog/stix-dialog.component";
 import { SaveDialogComponent } from 'src/app/components/save-dialog/save-dialog.component';
 import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/rest-api-connector.service';
 import { EditorService } from 'src/app/services/editor/editor.service';
@@ -35,6 +36,8 @@ export class StixPageComponent implements OnInit, OnDestroy {
     private routerEvents;
     private saveSubscription;
     private reloadSubscription;
+
+    @Output() created = new EventEmitter();
 
     @ViewChild(CollectionViewComponent) private collectionViewComponent: CollectionViewComponent;
     
@@ -63,7 +66,21 @@ export class StixPageComponent implements OnInit, OnDestroy {
         if (this.objectType == "collection") {
             // pass into collection property component
             this.collectionViewComponent.validate();
-        } else {
+        } 
+        else if(this.objectType == "marking-definition") {
+            // open a new dialog
+            let prompt = this.dialog.open(StixDialogComponent, {
+                data: {
+                    object: this.objects[0]
+                },
+                maxHeight: "75vh"
+            })
+            let subscription = prompt.afterClosed().subscribe({
+                next: result => { if (prompt.componentInstance.dirty) this.created.emit(); }, //re-fetch values since an edit occurred
+                complete: () => { subscription.unsubscribe(); }
+            });
+        }
+        else {
             let versionChanged = this.objects[0].version.compareTo(this.initialVersion) != 0;
             let prompt = this.dialog.open(SaveDialogComponent, { //increment version number save panel
                 // maxWidth: "35em",

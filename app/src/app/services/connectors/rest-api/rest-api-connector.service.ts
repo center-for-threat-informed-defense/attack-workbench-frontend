@@ -638,6 +638,12 @@ export class RestApiConnectorService extends ApiConnector {
      */
     public get postRelationship() { return this.postStixObjectFactory<Relationship>("relationship"); }
     /**
+     * POST (create) a new relationship
+     * @param {MarkingDefinition} object the object to create
+     * @returns {Observable<MarkingDefinition>} the created object
+     */
+     public get postMarkingDefinition() { return this.postStixObjectFactory<MarkingDefinition>("marking-definition"); }
+    /**
      * POST (create) a new note
      * @param {Note} object the object to create
      * @returns {Observable<Note>} the created object

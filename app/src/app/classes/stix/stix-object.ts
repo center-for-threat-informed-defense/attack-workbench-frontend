@@ -295,7 +295,8 @@ export abstract class StixObject extends Serializable {
         return of(validation).pipe(
             // check if the name is unique if it has a name
             switchMap(result => {
-                if (this.attackType == "relationship") return of(result); //do not check name or attackID for relationships
+                //do not check name or attackID for relationships or marking definitions
+                if (this.attackType == "relationship" || this.attackType == "marking-definition") return of(result); 
                 // check if name & ATT&CK ID is unique, record result in validation, and return validation
                 let accessor = this.attackType == "collection"? restAPIService.getAllCollections() :
                                 this.attackType == "group"? restAPIService.getAllGroups() :

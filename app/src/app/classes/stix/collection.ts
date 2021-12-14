@@ -12,6 +12,7 @@ import { Technique } from './technique';
 import { DataSource } from './data-source';
 import { DataComponent } from './data-component';
 import { logger } from "../../util/logger";
+import { MarkingDefinition } from './marking-definition';
 
 /**
  *auto-generated changelog/report about an import
@@ -288,6 +289,9 @@ export class Collection extends StixObject {
                     case "x-mitre-data-component": // data component
                         this.stix_contents.push(new DataComponent(obj))
                     break;
+                    case "marking-definition": // marking definition
+                        this.stix_contents.push(new MarkingDefinition(obj))
+                    break;
                 }
             }
         }
@@ -307,6 +311,7 @@ export class Collection extends StixObject {
         group:          CollectionDiffCategories<Group>,
         data_source:    CollectionDiffCategories<DataSource>,
         data_component: CollectionDiffCategories<DataComponent>
+        marking_definition: CollectionDiffCategories<MarkingDefinition>
     } {
         let results = {
             technique:      new CollectionDiffCategories<Technique>(),
@@ -317,7 +322,8 @@ export class Collection extends StixObject {
             matrix:         new CollectionDiffCategories<Matrix>(),
             group:          new CollectionDiffCategories<Group>(),
             data_source:    new CollectionDiffCategories<DataSource>(),
-            data_component: new CollectionDiffCategories<DataComponent>()
+            data_component: new CollectionDiffCategories<DataComponent>(),
+            marking_definition: new CollectionDiffCategories<MarkingDefinition>()
         }
         // build helper lookups to reduce complexity from n^2 to n.
         let thisStixLookup = new Map<string, StixObject>(this.stix_contents.map(sdo => [sdo.stixID, sdo]))
@@ -359,7 +365,7 @@ export class Collection extends StixObject {
                 } 
             } else {
                 // object does not exist in other collection, was added
-                results[thisAttackObject.attackType].additions.push(thisAttackObject);
+                results[thisAttackObject.attackType.replace("-","_")].additions.push(thisAttackObject);
             }
         }
         return results;
