@@ -366,7 +366,7 @@ const stixRoutes: Routes = [{
             path: '',
             data: {
               breadcrumb: 'view',
-              editable: true,
+              editable: false,
               title: "view marking definition"
             },
             component: StixPageComponent
@@ -382,7 +382,7 @@ const stixRoutes: Routes = [{
           path: '',
           data: {
             breadcrumb: 'view',
-            editable: true,
+            editable: false,
             title: "new marking definition"
           },
           component: StixPageComponent

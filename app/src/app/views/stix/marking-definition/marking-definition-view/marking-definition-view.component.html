@@ -1,5 +1,14 @@
-<div class="marking-definition-view view-page grid spacing-12" *ngIf="!loading">
+<div *ngIf="marking_definition" class="marking-definition-view view-page grid spacing-12">
     <div class="row">
+        <div class="col">
+             <!-- TYPE -->
+            <div class="labelled-box grow-to-row" matTooltip="this field cannot be edited" [matTooltipDisabled]="!editing">
+                <div class="content capitalize">
+                    {{marking_definition.definition_type}}
+                </div>
+                <label>type</label>
+            </div>
+        </div>
         <div class="col">
             <!-- DESCRIPTION -->
             <app-descriptive-property [config]="{
@@ -10,15 +19,6 @@
                 referencesField: [],
                 label: 'Statement'
             }"></app-descriptive-property>
-        </div>
-
-        <div class="col">
-            <app-list-property class="grow-to-row" [config]="{
-                mode: editing? 'edit': 'view',
-                object: marking_definition,
-                field: 'type',
-                editType: 'select'
-            }"></app-list-property>
         </div>
     </div>
 </div>

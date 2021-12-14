@@ -298,6 +298,7 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
                 case "marking-definition":
                     this.addColumn("definition type", "definition_type", "plain");
                     this.addColumn("created", "created", "timestamp");
+                    this.addColumn("statement", "definition_string", "descriptive");
                     this.tableDetail = [{
                         "field": "definition_string",
                         "display": "descriptive"
@@ -570,7 +571,7 @@ export interface StixListConfig {
      * when in dialog mode
      */
     allowEdits?: boolean;
-    
+
     /**
      * Default false. If true, edits will be disabled for the object
      */

@@ -7,7 +7,7 @@ import { logger } from "../../util/logger";
 
 export class MarkingDefinition extends StixObject {
     public name: string = "";
-    public definition_type: string = ""
+    public definition_type: string = "statement"; // unless otherwise specified
     public definition_string: string = "";
 
     public readonly supportsAttackID = false; // marking-defs do not support ATT&CK IDs
@@ -29,7 +29,7 @@ export class MarkingDefinition extends StixObject {
         let rep = super.base_serialize();
         
         rep.stix.name = this.name;
-        rep.stix.definition_type = this.definition_type
+        rep.stix.definition_type = this.definition_type;
         rep.stix.definition = {};
         rep.stix.definition[this.definition_type] = this.definition_string;
 
@@ -63,7 +63,7 @@ export class MarkingDefinition extends StixObject {
                 }
                 else logger.error("TypeError: definition_type is not a string:", sdo.definition_type, "(",typeof(sdo.definition_type),")")
             } else {
-                this.definition_type = "";
+                this.definition_type = "statement"; // type will be statement by default
                 this.definition_string = ""; // requires definition type to get definition string
             }
         }

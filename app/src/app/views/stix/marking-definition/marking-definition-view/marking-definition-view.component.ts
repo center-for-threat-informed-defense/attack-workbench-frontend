@@ -11,10 +11,10 @@ import { StixDialogComponent } from '../../stix-dialog/stix-dialog.component';
 })
 export class MarkingDefinitionViewComponent extends StixViewPage implements OnInit {
     public get marking_definition(): MarkingDefinition { return this.config.object as MarkingDefinition; }
-    public loading = false;
 
     constructor(public dialog: MatDialog) { super(); }
 
     ngOnInit(): void {
+        console.log(this.marking_definition);
     }
 }
