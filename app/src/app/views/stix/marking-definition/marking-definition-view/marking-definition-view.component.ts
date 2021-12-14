@@ -15,6 +15,5 @@ export class MarkingDefinitionViewComponent extends StixViewPage implements OnIn
     constructor(public dialog: MatDialog) { super(); }
 
     ngOnInit(): void {
-        console.log(this.marking_definition);
     }
 }
