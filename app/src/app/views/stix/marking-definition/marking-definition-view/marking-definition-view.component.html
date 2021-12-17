@@ -1,5 +1,5 @@
-<div *ngIf="marking_definition" class="marking-definition-view view-page grid spacing-12">
-    <div class="row">
+<div class="marking-definition-view view-page grid spacing-12">
+    <div *ngIf="!validating" class="row">
         <div class="col">
              <!-- TYPE -->
             <div class="labelled-box grow-to-row" matTooltip="this field cannot be edited" [matTooltipDisabled]="!editing">
@@ -20,5 +20,17 @@
                 label: 'Statement'
             }"></app-descriptive-property>
         </div>
+    </div>
+    <div *ngIf="validating">
+        <div *ngIf="validationData else loadingValidation" class="validation">
+            <app-validation-results [validation]="validationData"></app-validation-results>
+            <div class="save-buttons">
+                <button mat-button (click)="validating = false">cancel</button>
+                <button mat-stroked-button [disabled]="!saveEnabled" (click)="save()">save</button>
+            </div>
+        </div>
+        <ng-template #loadingValidation>
+            <app-loading-overlay message="validating"></app-loading-overlay>
+        </ng-template>
     </div>
 </div>

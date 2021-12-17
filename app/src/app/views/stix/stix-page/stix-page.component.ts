@@ -22,6 +22,7 @@ import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/re
 import { EditorService } from 'src/app/services/editor/editor.service';
 import { TitleService } from 'src/app/services/title/title.service';
 import { CollectionViewComponent } from '../collection/collection-view/collection-view.component';
+import { MarkingDefinitionViewComponent } from '../marking-definition/marking-definition-view/marking-definition-view.component';
 import { StixViewConfig } from '../stix-view-page';
 
 @Component({
@@ -40,6 +41,7 @@ export class StixPageComponent implements OnInit, OnDestroy {
     @Output() created = new EventEmitter();
 
     @ViewChild(CollectionViewComponent) private collectionViewComponent: CollectionViewComponent;
+    @ViewChild(MarkingDefinitionViewComponent) private markingDefinitionViewComponent: MarkingDefinitionViewComponent;
     
     constructor(private router: Router, 
                 private route: ActivatedRoute, 
@@ -68,17 +70,8 @@ export class StixPageComponent implements OnInit, OnDestroy {
             this.collectionViewComponent.validate();
         } 
         else if(this.objectType == "marking-definition") {
-            // open a new dialog
-            let prompt = this.dialog.open(StixDialogComponent, {
-                data: {
-                    object: this.objects[0]
-                },
-                maxHeight: "75vh"
-            })
-            let subscription = prompt.afterClosed().subscribe({
-                next: result => { if (prompt.componentInstance.dirty) this.created.emit(); }, //re-fetch values since an edit occurred
-                complete: () => { subscription.unsubscribe(); }
-            });
+            // pass into marking definition property component
+            this.markingDefinitionViewComponent.validate();
         }
         else {
             let versionChanged = this.objects[0].version.compareTo(this.initialVersion) != 0;
