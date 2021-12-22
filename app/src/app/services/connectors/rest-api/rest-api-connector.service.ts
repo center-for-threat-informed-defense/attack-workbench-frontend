@@ -1,4 +1,4 @@
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParameterCodec, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { forkJoin, Observable, of } from 'rxjs';
@@ -1190,6 +1190,26 @@ export class RestApiConnectorService extends ApiConnector {
         )
     }
 
+    /**
+     * Given a URL, retrieve the collection index at the URL
+     * @param {string} url the URL of the collection index
+     * @returns {Observable<CollectionIndex>} the collection index at the URL
+     */
+    public getRemoteIndex(url: string): Observable<CollectionIndex> {
+        console.log("get remote index via rest api")
+        let cmBaseUrl = environment.integrations.collection_manager.url;
+        let params = new HttpParams({encoder: new CustomEncoder()}).set("url", url);
+        let headers: HttpHeaders = new HttpHeaders({ 'SkipInterceptor': 'true' });
+        return this.http.get(`${cmBaseUrl}/collection-indexes/remote`, {headers: headers, params: params}).pipe(
+            tap(_ => logger.log("downloaded index at", url)), // on success, trigger the success notification
+            map(index => { return {
+                "collection_index": index,
+                "workspace": { remote_url: url }
+            } as CollectionIndex }),
+            catchError(this.handleError_continue<CollectionIndex>()) // on error, trigger the error notification and continue operation without crashing (returns empty item)
+        )
+    }
+
     //   _____   _____ _____ ___ __  __    ___ ___  _  _ ___ ___ ___     _   ___ ___ ___ 
     //  / __\ \ / / __|_   _| __|  \/  |  / __/ _ \| \| | __|_ _/ __|   /_\ | _ \_ _/ __|
     //  \__ \\ V /\__ \ | | | _|| |\/| | | (_| (_) | .` | _| | | (_ |  / _ \|  _/| |\__ \
@@ -1396,4 +1416,19 @@ export class RestApiConnectorService extends ApiConnector {
         });
         return getter;
     }                                                                     
+}
+
+class CustomEncoder implements HttpParameterCodec {
+    encodeKey(key: string): string {
+        return encodeURIComponent(key);
+    }
+    encodeValue(value: string): string {
+        return encodeURIComponent(value);
+    }
+    decodeKey(key: string): string {
+        return decodeURIComponent(key);
+    }
+    decodeValue(value: string): string {
+        return decodeURIComponent(value);
+    }
 }
