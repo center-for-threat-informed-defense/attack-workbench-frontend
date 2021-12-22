@@ -1,7 +1,6 @@
 import { Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { MatStepper } from '@angular/material/stepper';
 import { CollectionIndex } from 'src/app/classes/collection-index';
-import { CollectionManagerConnectorService } from 'src/app/services/connectors/collection-manager/collection-manager-connector.service';
 import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/rest-api-connector.service';
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { environment } from "../../../../../../environments/environment";
@@ -15,9 +14,7 @@ import { logger } from "../../../../../util/logger";
 export class CollectionIndexImportComponent implements OnInit {
     @ViewChild(MatStepper) public stepper: MatStepper;
 
-    constructor(private collectionManagerConnector: CollectionManagerConnectorService, 
-                private restAPIConnector: RestApiConnectorService, 
-                private snackbar: MatSnackBar) { }
+    constructor(private restAPIConnector: RestApiConnectorService, private snackbar: MatSnackBar) { }
 
     ngOnInit(): void {}
 
@@ -30,7 +27,7 @@ export class CollectionIndexImportComponent implements OnInit {
      * download the collection index at this.url and move to the next step in the stepper
      */
     public previewIndex(): void {
-        let subscription = this.collectionManagerConnector.getRemoteIndex(this.url).subscribe({
+        let subscription = this.restAPIConnector.getRemoteIndex(this.url).subscribe({
             next: (index) => {
                 if (index) {
                     this.index = new CollectionIndex(index);
