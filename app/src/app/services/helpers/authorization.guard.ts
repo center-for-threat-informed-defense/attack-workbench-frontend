@@ -26,7 +26,7 @@ export class AuthorizationGuard implements CanActivate, CanActivateChild {
                     return false;
                 }
                 // check if route is editable
-                if (route.data.editable && route.queryParams.editing == 'true' && !this.authenticationService.canEdit) {
+                if (route.data.editable && route.queryParams.editing == 'true' && !this.authenticationService.isAuthorized(route.data.editRoles)) {
                     this.router.navigate(['']);
                     return false;
                 }
