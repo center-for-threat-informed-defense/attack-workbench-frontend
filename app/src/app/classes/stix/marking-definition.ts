@@ -77,7 +77,6 @@ export class MarkingDefinition extends StixObject {
      */
     public validate(restAPIService: RestApiConnectorService): Observable<ValidationData> {
         return this.base_validate(restAPIService).pipe(
-            // TODO: Validate that definition_string is unique
             map(result => {
                 // presence of statement
                 if (!this.definition_string) { result.errors.push({
@@ -91,6 +90,27 @@ export class MarkingDefinition extends StixObject {
                 })}
                 return result;
             }),
+            switchMap(result => {
+                // validate that the marking definition is unique
+                return restAPIService.getAllMarkingDefinitions().pipe( 
+                    map(objects => {
+                        if (this.definition_string) {
+                            for (let object of objects.data) {
+                                if ("definition_string" in object) {
+                                    if (object['definition_string'] == this.definition_string) {
+                                        result.errors.push({
+                                            "field": "definition_string",
+                                            "result": "error",
+                                            "message": "marking definition is not unique"
+                                        })
+                                    }
+                                }
+                            }
+                        }
+                        return result;
+                    }
+                ))
+            })
         )
     }
 
