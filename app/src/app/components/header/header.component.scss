@@ -31,7 +31,7 @@
     }
     .links {
         overflow: hidden;
-        padding-right: 12px;
+        &.pad-right { padding-right: 12px; }
     }
     .hamburger {
         position: relative;
