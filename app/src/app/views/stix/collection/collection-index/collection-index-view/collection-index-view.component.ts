@@ -1,9 +1,11 @@
 import { Component, EventEmitter, Input, OnInit, Output, ViewEncapsulation } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
+import { Role } from 'src/app/classes/authn/role';
 import { CollectionIndex, CollectionReference, CollectionVersion } from 'src/app/classes/collection-index';
 import { ConfirmationDialogComponent } from 'src/app/components/confirmation-dialog/confirmation-dialog.component';
 import { MarkdownViewDialogComponent } from 'src/app/components/markdown-view-dialog/markdown-view-dialog.component';
+import { AuthenticationService } from 'src/app/services/connectors/authentication/authentication.service';
 import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/rest-api-connector.service';
 
 @Component({
@@ -15,8 +17,9 @@ import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/re
 export class CollectionIndexViewComponent implements OnInit {
     @Input() config: CollectionIndexViewConfig;
     @Output() onCollectionsModified = new EventEmitter();
+    public get isAdmin(): boolean { return this.authenticationService.isAuthorized([Role.Admin]); }
 
-    constructor(private restAPIConnector: RestApiConnectorService, private dialog: MatDialog, private router: Router) { }
+    constructor(private authenticationService: AuthenticationService, private restAPIConnector: RestApiConnectorService, private dialog: MatDialog, private router: Router) { }
 
     ngOnInit(): void {
     }
