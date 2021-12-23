@@ -85,9 +85,6 @@ import { TimestampViewComponent } from "./components/stix/timestamp-property/tim
 import { TimestampDiffComponent } from "./components/stix/timestamp-property/timestamp-diff/timestamp-diff.component";
 
 import { StatementPropertyComponent } from "./components/stix/statement-property/statement-property.component";
-import { StatementEditComponent } from "./components/stix/statement-property/statement-edit/statement-edit.component";
-import { StatementViewComponent } from "./components/stix/statement-property/statement-view/statement-view.component";
-import { StatementDiffComponent } from "./components/stix/statement-property/statement-diff/statement-diff.component";
 
 import { TlpPropertyComponent } from "./components/stix/tlp-property/tlp-property.component";
 import { TlpViewComponent } from "./components/stix/tlp-property/tlp-view/tlp-view.component";
@@ -207,9 +204,6 @@ import { MarkingDefinitionListComponent } from "./views/stix/marking-definition/
     TimestampViewComponent,
     TimestampDiffComponent,
     StatementPropertyComponent,
-    StatementEditComponent,
-    StatementViewComponent,
-    StatementDiffComponent,
     TlpPropertyComponent,
     TlpViewComponent,
     TlpDiffComponent,

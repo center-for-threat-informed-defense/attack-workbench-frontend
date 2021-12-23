@@ -1,9 +1,0 @@
-<div *ngIf="(data$ | async)">
-    <div *ngIf="objStatements.length > 0 else noStatements" >
-        <button *ngIf="objStatements.length == 1" popover="{{printStatements}}" popoverPlacement="bottom">1 statement</button>
-        <button *ngIf="objStatements.length > 1">{{objStatements.length}} statements</button>
-    </div>
-    <ng-template #noStatements>
-        <button>0 statements</button>
-    </ng-template>
-</div>
