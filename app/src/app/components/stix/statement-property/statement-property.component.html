@@ -22,13 +22,15 @@
             </div>
         
             <popover-content #objectStatus [closeOnClickOutside]="true">
-                <div>
-                    <center>Statements</center>
-                    <ul>
-                        <li *ngFor="let objStatement of objStatements">{{objStatement.definition_string}}</li>
-                    </ul>
-                    <center *ngIf="config.mode == 'edit'">Click to add more statements</center>
+                <div class="labelled-box suffixed">
+                    <div class="content">
+                        <ul>
+                            <li *ngFor="let objStatement of objStatements">{{objStatement.definition_string}}</li>
+                        </ul>
+                    </div>
+                    <label>Statements</label>
                 </div>
+                <center *ngIf="config.mode == 'edit'">Click to update statements</center>
             </popover-content>
         
             <ng-template #noStatements>
