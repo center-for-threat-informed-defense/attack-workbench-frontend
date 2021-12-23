@@ -12,30 +12,25 @@
             <div class="input-group">
                 <mat-form-field class="search" appearance="fill">
                     <mat-label>search</mat-label>
-                    <input matInput [(ngModel)]="searchQuery">
+                    <input matInput (keyup)="applySearch($event.target.value)">
                 </mat-form-field>
 
                 <mat-form-field appearance="fill">
                     <mat-label>options</mat-label>
-                    <mat-select multiple [(ngModel)]="filter" (selectionChange)="applyFilters()">
-                        <mat-optgroup [label]="'Role'">
-                            <mat-option *ngFor="let group of filterOptions">{{group}}</mat-option>
+                    <mat-select multiple (selectionChange)="handleFilterSelection($event)">
+                        <mat-optgroup *ngFor="let group of filterOptions" [label]="group.name">
+                            <mat-option *ngFor="let filter of group.values" [value]="filter.value">{{filter.value}}</mat-option>
                         </mat-optgroup>
                     </mat-select>
                 </mat-form-field>
             </div>
         </div>
-        <!--            <div class="controls">-->
-        <!--                <div class="input-group align-right" *ngFor="let role in roleOptions">-->
-        <!--                    <mat-checkbox (change)="show(role)">show {{role}} only</mat-checkbox>-->
-        <!--                </div>-->
-        <!--            </div>-->
 
         <!-- ----- -->
         <!-- TABLE -->
         <!-- ----- -->
-        <div class="scroll-container" *ngIf="(userAccounts$ | async) as userAccounts else loading">
-            <table mat-table *ngIf="userAccounts.length > 0" [dataSource]="userAccounts">
+        <div class="scroll-container" *ngIf="filteredAccounts else loading">
+            <table mat-table *ngIf="filteredAccounts.length > 0" [dataSource]="filteredAccounts">
                 <ng-container matColumnDef="username">
                     <th mat-header-cell *matHeaderCellDef>Username</th>
                     <td mat-cell *matCellDef="let user"> {{user.username}} </td>
@@ -46,10 +41,17 @@
                 </ng-container>
                 <ng-container matColumnDef="status">
                     <th mat-header-cell *matHeaderCellDef>Status</th>
-                    <td mat-cell *matCellDef="let user"> {{user.status}} </td>
+                    <td mat-cell *matCellDef="let user">
+                        <mat-chip-list>
+                            <mat-chip color="primary" class="role" [ngClass]="user.status === 'active' ? 'active' : (user.status === 'pending' ? 'pending' : '')">
+                                {{user.status}}
+                            </mat-chip>
+                        </mat-chip-list>
+                    </td>
                 </ng-container>
                 <ng-container matColumnDef="role">
                     <th mat-header-cell *matHeaderCellDef>Role</th>
+                    <!-- TODO add admin-only ability to change user roles -->
                     <td mat-cell *matCellDef="let user"> {{user.role}} </td>
                 </ng-container>
 
@@ -57,6 +59,13 @@
                 <tr mat-row *matRowDef="let myRowData; columns: columnsToDisplay" class="element-row"></tr>
             </table>
         </div>
+        <ng-template #loading>
+            <app-loading-overlay *ngIf="!filteredAccounts"></app-loading-overlay>
+        </ng-template>
+        <!-- ---------- -->
+        <!-- PAGINATION -->
+        <!-- ---------- -->
+        <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" pageSize="10" (page)="applyControls()" [length]="totalObjectCount"></mat-paginator>
     </div>
     <ng-template #loading>
         <app-loading-overlay message="loading user accounts"></app-loading-overlay>
