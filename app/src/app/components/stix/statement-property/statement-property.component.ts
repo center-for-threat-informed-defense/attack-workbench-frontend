@@ -2,9 +2,6 @@ import { Component, Input, OnInit, ViewEncapsulation } from '@angular/core';
 import { StixObject } from 'src/app/classes/stix/stix-object';
 import { Paginated, RestApiConnectorService } from '../../../services/connectors/rest-api/rest-api-connector.service';
 import { Observable } from 'rxjs';
-import { MatDialog } from '@angular/material/dialog';
-import { SelectionModel } from '@angular/cdk/collections';
-import { AddDialogComponent } from 'src/app/components/add-dialog/add-dialog.component';
 
 @Component({
   selector: 'app-statement-property',
@@ -15,15 +12,14 @@ import { AddDialogComponent } from 'src/app/components/add-dialog/add-dialog.com
 export class StatementPropertyComponent implements OnInit {
     @Input() public config: StatementPropertyConfig;
 
-    public select: SelectionModel<string>;
-    private statementsMap = {}; // map of marking definitions with STIX id as key to object
     public data$: Observable<Paginated<StixObject>>;
     public markingDefinitions : any;
+    private statementsMap = {}; // map of marking definitions with STIX id as key to object
 
+    // Retrieves statements of current Object
     public get objStatements(): any[] {
         let objectStatements = []
         if (this.config.object["object_marking_refs"]){
-            this.createStatementMap(); // Create Statement map
             let objStatementsStixIdList = this.config.object["object_marking_refs"];
 
             for (let index in objStatementsStixIdList) {
@@ -35,8 +31,8 @@ export class StatementPropertyComponent implements OnInit {
         return objectStatements;
     }
 
-    // Creates map of statements
-    private createStatementMap(): void {    
+    // Creates map of statements on initialization of markingDefinitions
+    private createStatementsMap(): void {    
         for (let index in this.markingDefinitions.data) {
             if (this.markingDefinitions.data[index]["definition_type"] == "statement") {
                 this.statementsMap[this.markingDefinitions.data[index]["stixID"]] = this.markingDefinitions.data[index];
@@ -44,47 +40,7 @@ export class StatementPropertyComponent implements OnInit {
         }
     }
 
-    public updateStatements() {
-        let rows: StixObject[] = this.markingDefinitions.data;
-        let list = [];
-        // set up selection
-        this.select = new SelectionModel(true);
-        let objStatements = this.objStatements;
-        for (let i in objStatements) {
-            this.select.select(objStatements[i]["stixID"]); // Select current statements by default
-        }
-        
-        // If there is already a selection, dialog button label will say UPDATE instead of ADD
-        let buttonLabelStr : string;
-        if (this.select.selected.length > 0) {
-            buttonLabelStr = "UPDATE";
-        } else buttonLabelStr = "ADD";
-
-        let prompt = this.dialog.open(AddDialogComponent, {
-            maxWidth: '70em',
-            maxHeight: '70em',
-            data: {
-            selectableObjects: rows,
-            select: this.select,
-            type: "marking-definition",
-            buttonLabel: buttonLabelStr
-            },
-        });
-
-        let subscription = prompt.afterClosed().subscribe({
-            next: (result) => {
-                if (result && this.select.selected) {
-                    // Set marking refs to selection
-                    this.config.object["object_marking_refs"] = this.select.selected;
-                }
-            },
-            complete: () => {
-                subscription.unsubscribe();
-            }, //prevent memory leaks
-        });
-    }
-
-    constructor(private restAPIConnectorService: RestApiConnectorService, public dialog: MatDialog) { }
+    constructor(private restAPIConnectorService: RestApiConnectorService) { }
 
     ngOnInit(): void {
         let options = {
@@ -95,7 +51,12 @@ export class StatementPropertyComponent implements OnInit {
         }
         this.data$ = this.restAPIConnectorService.getAllMarkingDefinitions(options);
         let subscription = this.data$.subscribe({
-            next: (data) => { if (data) this.markingDefinitions = data;},
+            next: (data) => { 
+              if (data) {
+                this.markingDefinitions = data;
+                this.createStatementsMap(); // create statement map with data
+              }
+            },
             complete: () => { subscription.unsubscribe() }
         })
     }

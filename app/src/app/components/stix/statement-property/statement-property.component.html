@@ -1,46 +1,8 @@
 <div class="statement-property">
     <div class="content">
         <div *ngIf="(data$ | async)">
-            <div [ngClass]="config.mode == 'edit' ? 'statement-edit' : ''" *ngIf="objStatements.length > 0 else noStatements" >
-                <button *ngIf="config.mode == 'view'" popoverPlacement="bottom" 
-                    [popover]="objectStatus"
-                    [popoverOnHover]="true"
-                    [disabled]="disabled"
-                    >
-                    <div *ngIf="objStatements.length == 1">1 statement</div>
-                    <div *ngIf="objStatements.length > 1">{{objStatements.length}} statements</div>
-                </button>
-                <button *ngIf="config.mode == 'edit'" popoverPlacement="bottom" 
-                    [popover]="objectStatus"
-                    [popoverOnHover]="true"
-                    [disabled]="disabled"
-                    (click)="updateStatements()"
-                    >
-                    <div *ngIf="objStatements.length == 1">1 statement</div>
-                    <div *ngIf="objStatements.length > 1">{{objStatements.length}} statements</div>
-                </button>
-            </div>
-        
-            <popover-content #objectStatus [closeOnClickOutside]="true">
-                <div class="labelled-box suffixed">
-                    <div class="content">
-                        <ul>
-                            <li *ngFor="let objStatement of objStatements">{{objStatement.definition_string}}</li>
-                        </ul>
-                    </div>
-                    <label>Statements</label>
-                </div>
-                <center *ngIf="config.mode == 'edit'">Click to update statements</center>
-            </popover-content>
-        
-            <ng-template #noStatements>
-                <div [ngClass]="config.mode == 'edit' ? 'statement-edit' : ''">
-                    <button *ngIf="config.mode == 'view'">
-                        0 statements
-                    </button>
-                    <button *ngIf="config.mode == 'edit'" (click)="updateStatements()">+ add statement</button>
-                </div>
-            </ng-template>
+            <app-statement-view *ngIf="config.mode == 'view'" [config]="config" [markingDefinitions]="markingDefinitions" [objStatements]="objStatements"></app-statement-view>
+            <app-statement-edit *ngIf="config.mode == 'edit'" [config]="config" [markingDefinitions]="markingDefinitions" [objStatements]="objStatements"></app-statement-edit>
         </div>
     </div>
 </div>

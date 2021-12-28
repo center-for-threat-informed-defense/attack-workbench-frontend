@@ -1,15 +1,3 @@
-@import "../../../../style/globals";
-
-.statement-edit {
-    button {
-        &:hover {
-            cursor: pointer;
-            .dark &  { border-color: on-color-deemphasis(dark) !important; }
-            .light & { border-color: on-color-deemphasis(light) !important; }
-        }
-    }
-}
-
 .statement-property {
     ul {
         padding: 0 0.8rem 0 1rem; 
