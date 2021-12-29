@@ -87,7 +87,7 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
         return routes.filter(route => this.canAccess(route));
     }
     private canAccess(route: any) {
-        if (route.label && route.label == 'edit' && !this.authenticationService.canEdit) {
+        if (route.label && route.label == 'edit' && !this.authenticationService.canEdit()) {
             // user not authorized
             return false;
         }

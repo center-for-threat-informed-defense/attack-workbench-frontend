@@ -11,7 +11,7 @@ export abstract class StixViewPage {
     //configuration for the view page behavior
     @Input() public config: StixViewConfig;
     public get editing(): boolean { return this.config.mode == "edit"; }
-    public get canEdit(): boolean { return this.authenticationService.canEdit; }
+    public get canEdit(): boolean { return this.authenticationService.canEdit(); }
 
     //outputs to use if config.sidebarControl == "events"
     @Output() public onOpenHistory = new EventEmitter();

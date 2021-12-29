@@ -6,7 +6,7 @@ import { AuthenticationService } from 'src/app/services/connectors/authenticatio
     templateUrl: './data-source-list.component.html'
 })
 export class DataSourceListComponent {
-    public get canEdit(): boolean { return this.authenticationService.canEdit; }
+    public get canEdit(): boolean { return this.authenticationService.canEdit(); }
     
     constructor(private authenticationService: AuthenticationService) { }
 }

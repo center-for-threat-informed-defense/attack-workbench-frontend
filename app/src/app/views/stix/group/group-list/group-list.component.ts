@@ -7,7 +7,7 @@ import { AuthenticationService } from 'src/app/services/connectors/authenticatio
   styleUrls: ['./group-list.component.scss']
 })
 export class GroupListComponent implements OnInit {
-    public get canEdit(): boolean { return this.authenticationService.canEdit; }
+    public get canEdit(): boolean { return this.authenticationService.canEdit(); }
     
     constructor(private authenticationService: AuthenticationService) { }
 

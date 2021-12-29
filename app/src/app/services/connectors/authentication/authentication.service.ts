@@ -16,14 +16,13 @@ import { RestApiConnectorService } from '../rest-api/rest-api-connector.service'
 export class AuthenticationService extends ApiConnector {
     public currentUser: UserAccount;
     public get isLoggedIn(): boolean { return this.currentUser && this.currentUser.status == 'active'; }
-    public get canEdit(): boolean { return this.isAuthorized([Role.Editor, Role.Admin]); }
     private get baseUrl(): string { return environment.integrations.rest_api.url; }
     public onLogin = new EventEmitter();
 
     constructor(private router: Router, private http: HttpClient, snackbar: MatSnackBar, private restAPIConnector: RestApiConnectorService) { super(snackbar); }
 
     /**
-     * Check if user is authnorized
+     * Check if user is authorized
      * @param roles list of authorized roles
      * @returns true, if user is logged in and has an authorized role, false otherwise
      */
@@ -32,6 +31,19 @@ export class AuthenticationService extends ApiConnector {
         if (!this.isLoggedIn) return false;
         // does user have an authorized role?
         return roles.indexOf(this.currentUser.role) > -1;
+    }
+
+    /**
+     * Check if user is authorized to edit an object
+     * @param route route data used to identify object type
+     * @returns true, if the user can edit the object, false otherwise
+     */
+    public canEdit(route?): boolean {
+        if (route && route.breadcrumb && route.breadcrumb == 'collections') {
+            // restrict collection editing to admin only
+            return this.isAuthorized([Role.Admin]);
+        }
+        return this.isAuthorized([Role.Editor, Role.Admin])
     }
 
     /**

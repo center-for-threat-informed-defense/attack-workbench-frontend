@@ -7,7 +7,7 @@ import { AuthenticationService } from 'src/app/services/connectors/authenticatio
   styleUrls: ['./matrix-list.component.scss']
 })
 export class MatrixListComponent implements OnInit {
-    public get canEdit(): boolean { return this.authenticationService.canEdit; }
+    public get canEdit(): boolean { return this.authenticationService.canEdit(); }
 
     constructor(private authenticationService: AuthenticationService) { }
 

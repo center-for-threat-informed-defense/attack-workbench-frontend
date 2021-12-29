@@ -7,7 +7,7 @@ import { AuthenticationService } from 'src/app/services/connectors/authenticatio
     styleUrls: ['./technique-list.component.scss']
 })
 export class TechniqueListComponent implements OnInit {
-    public get canEdit(): boolean { return this.authenticationService.canEdit; }
+    public get canEdit(): boolean { return this.authenticationService.canEdit(); }
 
     constructor(private authenticationService: AuthenticationService) { }
 
