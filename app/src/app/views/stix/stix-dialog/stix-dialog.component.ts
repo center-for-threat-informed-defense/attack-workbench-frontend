@@ -22,16 +22,16 @@ export class StixDialogComponent implements OnInit {
                 public restApiConnectorService: RestApiConnectorService,
                 public editorService: EditorService,
                 private authenticationService: AuthenticationService) {
-        if (this._config.mode && this._config.mode == "edit" && this.authenticationService.canEdit) this.startEditing();
+        if (this._config.mode && this._config.mode == "edit" && this.authenticationService.canEdit()) this.startEditing();
     }
 
     public get config(): StixViewConfig {
         let object = Array.isArray(this._config.object) ? this._config.object[0] : this._config.object;
         return {
-            mode: this.editing && this.authenticationService.canEdit ? "edit" : "view",
+            mode: this.editing && this.authenticationService.canEdit() ? "edit" : "view",
             object: object,
             showRelationships: object.attackType == "data-component" ? true : false,
-            editable: this._config.editable && this.authenticationService.canEdit,
+            editable: this._config.editable && this.authenticationService.canEdit(),
             sidebarControl: this._config.sidebarControl == "disable" ? "disable" : "events",
             dialog: this.dialogRef // relevant when adding a new relationship inside of an existing dialog
         }
