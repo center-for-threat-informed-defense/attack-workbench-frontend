@@ -28,7 +28,7 @@ export class ReferenceManagerComponent implements OnInit, AfterViewInit {
 
     public references$: Observable<Paginated<ExternalReference>>;
     public totalObjectCount: number = 0;
-    public get canEdit(): boolean { return this.authenticationService.canEdit; }
+    public get canEdit(): boolean { return this.authenticationService.canEdit(); }
     
     constructor(private restApiConnector: RestApiConnectorService, public snackbar: MatSnackBar, public dialog: MatDialog, private authenticationService: AuthenticationService) { }
 

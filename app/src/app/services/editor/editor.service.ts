@@ -27,14 +27,15 @@ export class EditorService {
         this.router.events.subscribe(event => { 
             if (event instanceof NavigationEnd) { 
                 let editable = this.getEditableFromRoute(this.router.routerState, this.router.routerState.root);
-                this.editable = editable.length > 0 && editable.every(x=>x) && this.authenticationService.canEdit;
+                let data = this.route.root.firstChild.snapshot.data;
+                this.editable = editable.length > 0 && editable.every(x=>x) && this.authenticationService.canEdit(data);
                 this.sidebarService.setEnabled("history", this.editable);
                 this.sidebarService.setEnabled("notes", this.editable);
                 if (!this.editable) this.sidebarService.currentTab = "references";
             }
         })
         this.route.queryParams.subscribe(params => {
-            this.editing = params["editing"] && this.authenticationService.canEdit;
+            this.editing = params["editing"] && this.authenticationService.canEdit();
         });
     }
 
