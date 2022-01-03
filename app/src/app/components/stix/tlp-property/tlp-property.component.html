@@ -1,6 +1,6 @@
-<div class="tlp-property">
+<div *ngIf="(data$ | async)" class="tlp-property">
     <div class="content">
-        <app-tlp-diff *ngIf="config.mode == 'diff'" [config]="config"></app-tlp-diff>
-        <app-tlp-view *ngIf="config.mode == 'view'" [config]="config"></app-tlp-view>
+        <app-tlp-view *ngIf="config.mode == 'view'" [config]="config" [markingDefinitions]="markingDefinitions"></app-tlp-view>
+        <app-tlp-edit *ngIf="config.mode == 'edit'" [config]="config" [markingDefinitions]="markingDefinitions"></app-tlp-edit>
     </div>
 </div>

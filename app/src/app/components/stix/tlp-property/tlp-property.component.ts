@@ -1,17 +1,34 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, ViewEncapsulation } from '@angular/core';
 import { StixObject } from 'src/app/classes/stix/stix-object';
+import { Paginated, RestApiConnectorService } from '../../../services/connectors/rest-api/rest-api-connector.service';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-tlp-property',
   templateUrl: './tlp-property.component.html',
-  styleUrls: ['./tlp-property.component.scss']
+  styleUrls: ['./tlp-property.component.scss'],
+  encapsulation: ViewEncapsulation.None
 })
 export class TlpPropertyComponent implements OnInit {
   @Input() public config: TlpPropertyComponentConfig;
 
-  constructor() { }
+  public markingDefinitions : any;
+  public data$: Observable<Paginated<StixObject>>;
+
+  constructor(private restAPIConnectorService: RestApiConnectorService) { }
 
   ngOnInit(): void {
+      let options = {
+          limit: 0, 
+          offset: 0,
+          includeRevoked: false, 
+          includeDeprecated: false
+      }
+      this.data$ = this.restAPIConnectorService.getAllMarkingDefinitions(options);
+      let subscription = this.data$.subscribe({
+          next: (data) => { if (data) this.markingDefinitions = data;},
+          complete: () => { subscription.unsubscribe() }
+      })
   }
 
 }
