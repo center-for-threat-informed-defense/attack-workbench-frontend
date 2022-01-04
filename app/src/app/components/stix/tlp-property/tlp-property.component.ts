@@ -10,12 +10,16 @@ import { Observable } from 'rxjs';
   encapsulation: ViewEncapsulation.None
 })
 export class TlpPropertyComponent implements OnInit {
-  @Input() public config: TlpPropertyComponentConfig;
+  @Input() public config: TlpPropertyConfig;
 
-  public markingDefinitions : any;
+  public tlpMarkingDefinitions : any;
   public data$: Observable<Paginated<StixObject>>;
 
   constructor(private restAPIConnectorService: RestApiConnectorService) { }
+
+  public get tlp(): string {
+    return "none";
+  }
 
   ngOnInit(): void {
       let options = {
@@ -26,14 +30,14 @@ export class TlpPropertyComponent implements OnInit {
       }
       this.data$ = this.restAPIConnectorService.getAllMarkingDefinitions(options);
       let subscription = this.data$.subscribe({
-          next: (data) => { if (data) this.markingDefinitions = data;},
+          next: (data) => { if (data) this.tlpMarkingDefinitions = data;},
           complete: () => { subscription.unsubscribe() }
       })
   }
 
 }
 
-export interface TlpPropertyComponentConfig {
+export interface TlpPropertyConfig {
   /* What is the current mode? Default: 'view
    *    view: viewing the TLP property
    *    diff: displaying the diff between two STIX objects. If this mode is selected, two StixObjects must be specified in the objects field

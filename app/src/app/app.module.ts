@@ -90,6 +90,7 @@ import { StatementEditComponent } from './components/stix/statement-property/sta
 
 import { TlpPropertyComponent } from "./components/stix/tlp-property/tlp-property.component";
 import { TlpViewComponent } from "./components/stix/tlp-property/tlp-view/tlp-view.component";
+import { TlpEditComponent } from "./components/stix/tlp-property/tlp-edit/tlp-edit.component";
 import { TlpDiffComponent } from "./components/stix/tlp-property/tlp-diff/tlp-diff.component";
 
 import { AttackIDPropertyComponent } from "./components/stix/attackid-property/attackid-property.component";
@@ -210,6 +211,7 @@ import { MarkingDefinitionListComponent } from "./views/stix/marking-definition/
     StatementEditComponent,
     TlpPropertyComponent,
     TlpViewComponent,
+    TlpEditComponent,
     TlpDiffComponent,
     AttackIDPropertyComponent,
     AttackIDEditComponent,

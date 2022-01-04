@@ -1,0 +1,7 @@
+<button *ngIf="tlp != 'none' else noStatements" (click)="updateTlpMarking()">
+    <button class="tlp-edit" [ngClass]="tlpClass()">TLP: {{tlp}}</button>
+</button>
+
+<ng-template #noStatements>
+    <button class="tlp-edit" (click)="updateTlpMarking()">+ add tlp marking</button>
+</ng-template>
