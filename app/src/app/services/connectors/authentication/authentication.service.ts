@@ -17,7 +17,7 @@ export class AuthenticationService extends ApiConnector {
     public currentUser: UserAccount;
     public get isLoggedIn(): boolean { return this.currentUser && this.currentUser.status == 'active'; }
     private get baseUrl(): string { return environment.integrations.rest_api.url; }
-    public onLogin = new EventEmitter();
+    public onLogin = new EventEmitter(); // event emitter for admin organization identity pop-up
 
     constructor(private router: Router, private http: HttpClient, snackbar: MatSnackBar, private restAPIConnector: RestApiConnectorService) { super(snackbar); }
 
