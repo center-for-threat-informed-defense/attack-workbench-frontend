@@ -73,9 +73,9 @@
                                 <div class="col">subscribe</div>
                             </div>
                             <div class="row" *ngFor="let version of collectionRef.versions">
-                                <div class="col narrow clickable" *ngIf="showActions && isAdmin" (click)="onVersionClick(version, collectionRef)">
+                                <div class="col narrow" [ngClass]="{'clickable': isAdmin}" *ngIf="showActions" (click)="isAdmin && onVersionClick(version, collectionRef)">
                                     <mat-icon *ngIf="versionDownloaded(version, collectionRef)"  class="text-success">done</mat-icon>
-                                    <mat-icon *ngIf="!versionDownloaded(version, collectionRef)">get_app</mat-icon>
+                                    <mat-icon *ngIf="!versionDownloaded(version, collectionRef) && isAdmin">get_app</mat-icon>
                                 </div>
                                 <div class="col">
                                     <div>
