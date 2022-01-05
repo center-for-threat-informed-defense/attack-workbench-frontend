@@ -145,11 +145,11 @@ import { TacticListComponent } from './views/stix/tactic/tactic-list/tactic-list
 import { TechniqueViewComponent } from './views/stix/technique/technique-view/technique-view.component';
 import { TechniqueListComponent } from './views/stix/technique/technique-list/technique-list.component';
 
-import { RelationshipViewComponent } from "./views/stix/relationship/relationship-view/relationship-view.component";
+import { RelationshipViewComponent } from './views/stix/relationship/relationship-view/relationship-view.component';
 import { AliasPropertyComponent } from './components/stix/alias-property/alias-property.component';
 import { AliasViewComponent } from './components/stix/alias-property/alias-view/alias-view.component';
 import { AliasEditComponent } from './components/stix/alias-property/alias-edit/alias-edit.component';
-import { AliasEditDialogComponent } from "./components/stix/alias-property/alias-edit/alias-edit-dialog/alias-edit-dialog.component";
+import { AliasEditDialogComponent } from './components/stix/alias-property/alias-edit/alias-edit-dialog/alias-edit-dialog.component';
 import { OrderedListPropertyComponent } from './components/stix/ordered-list-property/ordered-list-property.component';
 import { OrderedListViewComponent } from './components/stix/ordered-list-property/ordered-list-view/ordered-list-view.component';
 import { OrderedListEditComponent } from './components/stix/ordered-list-property/ordered-list-edit/ordered-list-edit.component';
@@ -185,7 +185,7 @@ import { DataComponentViewComponent } from './views/stix/data-component/data-com
     MultipleChoiceDialogComponent,
     ValidationResultsComponent,
     AddRelationshipButtonComponent,
-    
+
     StixListComponent,
 
     DescriptivePropertyComponent,
@@ -209,7 +209,7 @@ import { DataComponentViewComponent } from './views/stix/data-component/data-com
     VersionViewComponent,
     NamePropertyComponent,
     IconViewComponent,
-    
+
     LandingPageComponent,
     HelpPageComponent,
     AdminPageComponent,
@@ -218,7 +218,7 @@ import { DataComponentViewComponent } from './views/stix/data-component/data-com
 
     StixDialogComponent,
     StixPageComponent,
-    
+
     CollectionListComponent,
     CollectionViewComponent,
     CollectionManagerComponent,
@@ -229,7 +229,7 @@ import { DataComponentViewComponent } from './views/stix/data-component/data-com
     CollectionImportReviewComponent,
     CollectionImportErrorComponent,
     // CollectionExportComponent,
-    
+
     RelationshipViewComponent,
 
     GroupListComponent,
@@ -268,7 +268,7 @@ import { DataComponentViewComponent } from './views/stix/data-component/data-com
     BreadcrumbModule,
     MaterialFileInputModule,
     MarkdownModule.forRoot({
-      loader: HttpClient, 
+      loader: HttpClient,
     //   toggle this to disable github flavored markdown
     //   markedOptions: {
     //     provide: MarkedOptions,
@@ -283,13 +283,13 @@ import { DataComponentViewComponent } from './views/stix/data-component/data-com
     }),
     PopoverModule,
     NgxJdenticonModule,
-    
+
     BrowserModule,
 
     AppRoutingModule,
     AppRoutingStixModule,
     HttpClientModule,
-    
+
     BrowserAnimationsModule,
 
     MatToolbarModule,

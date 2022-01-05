@@ -74,7 +74,7 @@ export class UserAccountsPageComponent implements OnInit, OnDestroy {
         this.filteredAccounts = this.applyFilters(this.userAccounts);
     }
 
-    public applyFilters(accounts: []) {
+    public applyFilters(accounts): any {
         let filtered = accounts;
         this.selectedFilters.forEach((selectedVal) => {
             let key = this.filterOptions.find((filter) => {
@@ -85,7 +85,7 @@ export class UserAccountsPageComponent implements OnInit, OnDestroy {
             if (key) {
                 key = key.toLowerCase();
                 filtered = Array(accounts).filter((account) => {
-                    return account[key] === selectedVal
+                    return account[key] === selectedVal;
                 });
             }
         });
@@ -93,12 +93,11 @@ export class UserAccountsPageComponent implements OnInit, OnDestroy {
     }
 
     public applySearch(query): void {
-        this.filteredAccounts = this.userAccounts.filter((acc) => {
+        this.filteredAccounts.data = this.userAccounts.data.filter((acc) => {
             return Object.keys(acc).some((key) => {
-                if (acc[key])
                 return acc[key] && acc[key].includes(query);
-            })
-        })
+            });
+        });
         this.filteredAccounts = this.applyFilters(this.filteredAccounts);
     }
 
