@@ -4,6 +4,7 @@ import { UserAccount } from 'src/app/classes/authn/user-account';
 import { Paginated, RestApiConnectorService } from 'src/app/services/connectors/rest-api/rest-api-connector.service';
 import { Role } from '../../../classes/authn/role';
 import { MatPaginator } from '@angular/material/paginator';
+import { AuthenticationService } from '../../../services/connectors/authentication/authentication.service';
 
 @Component({
     selector: 'app-user-accounts-page',
@@ -21,8 +22,9 @@ export class UserAccountsPageComponent implements OnInit, OnDestroy {
     public totalObjectCount = 0;
     public userSubscription: Subscription;
     public selectedFilters: string[];
+    public get isAdmin(): boolean { return this.authenticationService.isAuthorized([Role.Admin]); }
 
-    constructor(private restAPIConnector: RestApiConnectorService) {
+    constructor(private restAPIConnector: RestApiConnectorService, private authenticationService: AuthenticationService) {
         this.columnsToDisplay = ['username', 'email', 'status', 'role'];
         this.filterOptions = [
             {
