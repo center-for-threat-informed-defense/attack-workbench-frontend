@@ -107,4 +107,11 @@ export class UserAccountsPageComponent implements OnInit, OnDestroy {
         const limit = this.paginator ? this.paginator.pageSize : 10;
         const offset = this.paginator ? this.paginator.pageIndex * limit : 0;
     }
+
+    public updateUserRole(userAcc: UserAccount, newRole: string): void {
+        newRole = newRole.charAt(0).toUpperCase() + newRole.slice(1);
+        if (Role[`${newRole}`]) {
+            this.saveUser({...userAcc, role: Role[`${newRole}`]});
+        }
+    }
 }
