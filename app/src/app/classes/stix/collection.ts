@@ -325,11 +325,11 @@ export class Collection extends StixObject {
 
         for (let thisVr of this.contents) {
             let thisAttackObject = thisStixLookup.get(thisVr.object_ref);
-            let attackType = thisAttackObject.attackType.replace(/-/g, '_');
             if (!thisAttackObject) {
                 // logger.warn("could not find object", thisVr.object_ref, "in collection contents")
                 continue;
             }
+            let attackType = thisAttackObject.attackType.replace(/-/g, '_');
             if (that.contents.find(thatVr => thisVr.object_ref == thatVr.object_ref)) {
                 // object exists in other collection
                 let thatAttackObject = thatStixLookup.get(thisVr.object_ref);

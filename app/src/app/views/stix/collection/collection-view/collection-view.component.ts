@@ -170,7 +170,7 @@ export class CollectionViewComponent extends StixViewPage implements OnInit {
                 let missingATTACKIDs = [];
                 for (let object of collectionStixIDToObject.values()) {
                     // grab name of objects that do not have ATT&CK IDs
-                    if (object.hasOwnProperty("attackID")) {
+                    if (object.hasOwnProperty("supportsAttackID") && object.supportsAttackID == true && object.hasOwnProperty("attackID")) {
                         if (object.attackID == "" && object.hasOwnProperty("name")) {
                             missingATTACKIDs.push(object["name"]);
                         }
@@ -309,6 +309,7 @@ export class CollectionViewComponent extends StixViewPage implements OnInit {
                         let any_results = results as any;
                         // add resultant identities and marking defs to staged objects
                         for (let identity of any_results.identities) {
+                            if (!identity[0]) continue; // check if identity exists
                             this.stagedData.push(new VersionReference({
                                 "object_ref": identity[0].stixID,
                                 "object_modified": identity[0].modified.toISOString()
