@@ -68,7 +68,7 @@ export class UserAccountsPageComponent implements OnInit, OnDestroy {
     }
 
     public saveUser(user: UserAccount): void {
-        user.save(this.restAPIConnector);
+        new UserAccount(user).save(this.restAPIConnector);
     }
 
     public handleFilterSelection(selectedFilter): void {
@@ -111,7 +111,14 @@ export class UserAccountsPageComponent implements OnInit, OnDestroy {
     public updateUserRole(userAcc: UserAccount, newRole: string): void {
         newRole = newRole.charAt(0).toUpperCase() + newRole.slice(1);
         if (Role[`${newRole}`]) {
-            this.saveUser({...userAcc, role: Role[`${newRole}`]});
+            const subscription = this.restAPIConnector.getUserAccount(userAcc.id).subscribe({
+                next: (r) => {
+                    const t = r;
+                    t.role = Role[`${newRole}`];
+                    this.saveUser(t);
+                },
+                complete: () => { subscription.unsubscribe(); }
+            });
         }
     }
 }
