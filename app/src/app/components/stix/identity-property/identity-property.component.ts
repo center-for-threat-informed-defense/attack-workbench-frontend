@@ -17,22 +17,23 @@ export class IdentityPropertyComponent implements OnInit {
     public identity: Identity;
     private userSubscription$: Subscription;
 
-    constructor(private authenticationService: AuthenticationService,
-                private restAPIConnector: RestApiConnectorService) {}
+    constructor(private authenticationService: AuthenticationService, private restAPIConnector: RestApiConnectorService) { }
 
     ngOnInit(): void {
         const object = Array.isArray(this.config.object) ? this.config.object[0] : this.config.object;
-        if (object[this.config.field]) {
-          this.identity = object[this.config.field] as Identity;
-        }
-        if (this.authenticationService.isLoggedIn && this.config.object &&
-            this.config.field.includes('modified') &&
-            'workflow' in this.config.object && this.config.object.workflow &&
-            'created_by_user_account' in this.config.object.workflow) {
-          const userID = this.config.object.workflow.created_by_user_account;
-          this.userSubscription$ = this.restAPIConnector.getUserAccount(userID).subscribe({
-              next: ( account) => this.identity.name = account.username,
-              complete: () => this.userSubscription$.unsubscribe()
+
+        if (object[this.config.field]) this.identity = object[this.config.field] as Identity;
+
+        // if logged in, show individual user attribution
+        if (this.authenticationService.isLoggedIn && this.config.field.includes('modified') && 
+            object && 'workflow' in object && object.workflow && 'created_by_user_account' in object.workflow) {
+            const userID = object.workflow.created_by_user_account;
+            this.userSubscription$ = this.restAPIConnector.getUserAccount(userID).subscribe({
+                next: (account) => {
+                    if (!this.identity) this.identity = new Identity();
+                    this.identity.name = account.username;
+                },
+                complete: () => this.userSubscription$.unsubscribe()
             });
         }
     }
