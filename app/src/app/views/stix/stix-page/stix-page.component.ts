@@ -69,16 +69,12 @@ export class StixPageComponent implements OnInit, OnDestroy {
                     versionAlreadyIncremented: versionChanged
                 }
             });
-    
             
             let subscription = prompt.afterClosed().subscribe({
                 next: (result) => {
                     if (result) {
-                        setTimeout(() => {
-                            // reload page
-                            this.router.navigate([this.objects[0].attackType, this.objects[0].stixID]);
-                            this.loadObjects();
-                        }, 500);
+                        this.router.navigate([this.objects[0].attackType, this.objects[0].stixID]);
+                        setTimeout(() => { this.loadObjects() }, 500);
                         this.editorService.onEditingStopped.emit();
                     }
                 },
