@@ -4,7 +4,7 @@
 .user-accounts-page {
   .role {
     &.active { background-color: #66BB6A; }
-    &.pending { background-color: #FFEA00; }
+    &.pending { background-color: #F5D466; color: #1d252c !important; }
   }
 
   .input-group {
