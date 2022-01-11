@@ -78,7 +78,7 @@ export class UserAccountsPageComponent implements OnInit, OnDestroy {
 
     public applyFilters(accounts): any {
         let filtered = accounts;
-        this.selectedFilters.forEach((selectedVal) => {
+        if (this.selectedFilters) this.selectedFilters.forEach((selectedVal) => {
             let key = this.filterOptions.find((filter) => {
                 return filter.values.find((val) => {
                     return val.value === selectedVal;
@@ -95,7 +95,7 @@ export class UserAccountsPageComponent implements OnInit, OnDestroy {
     }
 
     public applySearch(query): void {
-        this.filteredAccounts.data = this.userAccounts.data.filter((acc) => {
+        this.filteredAccounts = this.userAccounts.filter((acc) => {
             return Object.keys(acc).some((key) => {
                 return acc[key] && acc[key].includes(query);
             });
