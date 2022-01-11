@@ -35,11 +35,11 @@ export class AuthenticationService extends ApiConnector {
 
     /**
      * Check if user is authorized to edit an object
-     * @param route route data used to identify object type
+     * @param attackType object type
      * @returns true, if the user can edit the object, false otherwise
      */
-    public canEdit(route?): boolean {
-        if (route && route.breadcrumb && route.breadcrumb == 'collections') {
+    public canEdit(attackType?: string): boolean {
+        if (attackType && attackType.includes('collection')) {
             // restrict collection editing to admin only
             return this.isAuthorized([Role.Admin]);
         }
