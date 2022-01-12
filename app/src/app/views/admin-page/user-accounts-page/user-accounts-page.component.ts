@@ -67,10 +67,6 @@ export class UserAccountsPageComponent implements OnInit, OnDestroy {
         this.userSubscription.unsubscribe();
     }
 
-    public saveUser(user: UserAccount): void {
-        new UserAccount(user).save(this.restAPIConnector);
-    }
-
     public handleFilterSelection(selectedFilter): void {
         this.selectedFilters = selectedFilter.value;
         this.filteredAccounts = this.applyFilters(this.userAccounts);
@@ -113,12 +109,23 @@ export class UserAccountsPageComponent implements OnInit, OnDestroy {
         if (Role[`${newRole}`]) {
             const subscription = this.restAPIConnector.getUserAccount(userAcc.id).subscribe({
                 next: (r) => {
-                    const t = r;
-                    t.role = Role[`${newRole}`];
-                    this.saveUser(t);
+                    const user = r;
+                    user.role = Role[`${newRole}`];
+                    new UserAccount(user).save(this.restAPIConnector);
                 },
                 complete: () => { subscription.unsubscribe(); }
             });
         }
+    }
+
+    public approveUser(userAcc: UserAccount): void {
+        const subscription = this.restAPIConnector.getUserAccount(userAcc.id).subscribe({
+            next: (r) => {
+                const user = r;
+                user.status = 'active';
+                new UserAccount(user).save(this.restAPIConnector);
+            },
+            complete: () => { subscription.unsubscribe(); }
+        });
     }
 }

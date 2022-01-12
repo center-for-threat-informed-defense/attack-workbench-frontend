@@ -7,6 +7,19 @@
     &.pending { background-color: #F5D466; color: #1d252c !important; }
   }
 
+  .approve-button {
+    border: none;
+    cursor: pointer;
+    border-radius: 50px;
+    background-color: transparent;
+    color: color(primary);
+  }
+
+  .approve-button:hover {
+    background-color: color(engenuity-gray);
+    opacity: 0.8;
+  }
+
   .input-group {
     font-size: 16px;
     width: 100%;
@@ -100,35 +113,6 @@
         @extend .text-label;
       }
 
-      tr.detail-row {
-        height: 0;
-      }
-
-      // utilities for forcing different sizes of columns
-      .width-limited-lg {
-        min-width: 30em;
-        max-width: 60em;
-      }
-
-      .width-limited-md {
-        min-width: 15em;
-        max-width: 30em;
-      }
-
-      .width-limited-sm {
-        min-width: 10em;
-        max-width: 20em;
-      }
-
-      .name {
-        @extend .width-limited-md;
-      }
-
-      .relationship-name {
-        min-width: 8em;
-        max-width: 18em;
-      }
-
       tr.element-row:not(.expanded):hover {
         .light & td {
           background: color-alternate(light);
@@ -208,85 +192,6 @@
 
         &.one {
           width: 30px;
-        }
-      }
-
-      .element-detail {
-        overflow: hidden;
-        display: flex;
-
-        .element-description {
-          padding: 16px 0;
-
-          &.columns {
-            display: flex;
-
-            .column {
-              // display: inline-block;
-              &.is-narrow {
-                flex-shrink: 1;
-              }
-
-              & + .column {
-                .light & {
-                  border-color: border-color(light);
-                }
-
-                .dark & {
-                  border-color: border-color(dark);
-                }
-
-                border-left: 1px solid;
-                padding-left: 16px;
-              }
-            }
-          }
-
-          .controls {
-            // min-height: 60px;
-            a { // links to pages in detail column
-              @extend .text-label;
-              text-align: right;
-              border-right: none;
-              border-top-right-radius: 0;
-              border-bottom-right-radius: 0;
-              width: 100%;
-
-              &:hover {
-                .light & {
-                  background: color-alternate(light);
-                }
-
-                .dark & {
-                  background: rgba(border-color(dark), 0.25);
-                }
-              }
-            }
-          }
-
-          .description {
-            display: flex;
-            align-items: center;
-            // max-width: 36em;
-            p:first-child {
-              margin-top: 6px;
-            }
-
-            p:last-child {
-              margin-bottom: 6px;
-            }
-          }
-        }
-      }
-
-
-      .element-row {
-        td {
-          border-bottom-width: 0;
-        }
-
-        td.clickable {
-          cursor: pointer;
         }
       }
     }

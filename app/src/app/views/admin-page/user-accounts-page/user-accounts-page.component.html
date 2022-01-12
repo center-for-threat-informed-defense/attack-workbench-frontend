@@ -46,6 +46,9 @@
                             <mat-chip color="primary" class="role" [ngClass]="user.status === 'active' ? 'active' : (user.status === 'pending' ? 'pending' : '')">
                                 {{user.status}}
                             </mat-chip>
+                            <span *ngIf="isAdmin && user.status === 'pending'">
+                                <button class="approve-button" title="approve user" (click)="approveUser(user)"><span class="material-icons">check</span></button>
+                            </span>
                         </mat-chip-list>
                     </td>
                 </ng-container>
