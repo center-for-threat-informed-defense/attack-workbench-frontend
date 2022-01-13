@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { MarkingDefinition } from 'src/app/classes/stix/marking-definition';
 import { StixViewPage } from '../../stix-view-page';
 import { MatDialog } from '@angular/material/dialog';
@@ -10,7 +10,8 @@ import { map } from 'rxjs/operators';
 @Component({
     selector: 'app-marking-definition-view',
     templateUrl: './marking-definition-view.component.html',
-    styleUrls: ['./marking-definition-view.component.scss']
+    styleUrls: ['./marking-definition-view.component.scss'],
+    encapsulation: ViewEncapsulation.None
 })
 export class MarkingDefinitionViewComponent extends StixViewPage implements OnInit {
     public get marking_definition(): MarkingDefinition { return this.config.object as MarkingDefinition; }

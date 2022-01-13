@@ -36,6 +36,7 @@ export abstract class StixObject extends Serializable {
     public created_by?: any;
     public modified_by_ref: string; //embedded relationship
     public modified_by?: any;
+    public firstInitialized: boolean; // boolean to track if it is a newly created object
 
     public object_marking_refs: string[] = []; //list of embedded relationships to marking_defs
 
@@ -57,6 +58,8 @@ export abstract class StixObject extends Serializable {
         "data-source": "data-sources",
         "data-component": "data-components"
     }
+
+    private defaultMarkingDefinitionsLoaded = false; // avoid overloading of default marking definitions
 
     public get routes(): any[] { // route to view the object
         // let baseRoute = "/" + [this.attackType, this.stixID].join("/")
@@ -91,6 +94,7 @@ export abstract class StixObject extends Serializable {
         super();
         if (sdo) {
             this.base_deserialize(sdo);
+            this.firstInitialized = false;
         } else {
             // create new SDO
             this.stixID = type + "--" + uuid();
@@ -104,6 +108,7 @@ export abstract class StixObject extends Serializable {
                 state: "work-in-progress"
             };
             this.description = "";
+            this.firstInitialized = true;
         }
         this.attackType = stixTypeToAttackType[this.type]
     }
@@ -429,4 +434,21 @@ export abstract class StixObject extends Serializable {
      * @returns {Observable} of the post
      */
     abstract save(restAPIService: RestApiConnectorService): Observable<StixObject>;
+
+    /**
+     * Updates the object's marking definitions with the default the first time an object is created
+     * @param restAPIService [RestApiConnectorService] the service to perform the POST/PUT through
+     */
+    public initializeWithDefaultMarkingDefinitions(restAPIService: RestApiConnectorService) {
+        if ( !this.defaultMarkingDefinitionsLoaded ){
+            let data$ = restAPIService.getDefaultMarkingDefinitions();
+            let sub = data$.subscribe({
+                next: (data) => {
+                    this.object_marking_refs = data;
+                    this.defaultMarkingDefinitionsLoaded = true;
+                },
+                complete: () => { sub.unsubscribe(); }
+            });
+        }
+    }
 }

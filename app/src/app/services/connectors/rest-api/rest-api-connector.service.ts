@@ -1234,6 +1234,21 @@ export class RestApiConnectorService extends ApiConnector {
     }
 
     /**
+     * Get the default marking definitions
+     * @returns {Observable<any>} default marking definitions
+     */
+     public getDefaultMarkingDefinitions(): Observable<any> {
+        return this.http.get(`${this.baseUrl}/config/default-marking-definitions`, {headers: this.headers}).pipe(
+            tap(_ => logger.log("retrieved default marking definitions")),
+            map(result => {
+                return result as any;
+            }),
+            catchError(this.handleError_continue<string[]>()),
+            share() //multicast to subscribers
+        )
+    }
+
+    /**
      * Get the organization identity
      * @returns {Observable<Identity>} the organization identity
      */

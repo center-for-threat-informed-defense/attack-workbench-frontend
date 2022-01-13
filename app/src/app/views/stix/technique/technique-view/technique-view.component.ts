@@ -11,8 +11,6 @@ import { StixViewPage } from '../../stix-view-page';
 })
 export class TechniqueViewComponent extends StixViewPage implements OnInit {
 
-    // public editing: boolean = false;
-
     public get technique(): Technique { return this.config.object as Technique; }
 
     constructor(private route: ActivatedRoute, private ref: ChangeDetectorRef) {
@@ -20,9 +18,6 @@ export class TechniqueViewComponent extends StixViewPage implements OnInit {
     }
 
     ngOnInit() {
-        // this.route.queryParams.subscribe(params => {
-        //     this.editing = params["editing"];
-        // });
     }
 
     ngAfterContentChecked() {

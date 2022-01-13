@@ -3,6 +3,8 @@ import { ActivatedRoute } from '@angular/router';
 import { Group } from 'src/app/classes/stix/group';
 import { StixViewPage } from '../../stix-view-page';
 import { Relationship } from 'src/app/classes/stix/relationship';
+import { StixObject } from 'src/app/classes/stix/stix-object';
+import { RestApiConnectorService } from "src/app/services/connectors/rest-api/rest-api-connector.service";
 
 @Component({
   selector: 'app-group-view',
@@ -13,14 +15,21 @@ export class GroupViewComponent extends StixViewPage implements OnInit {
   
 //   public editing: boolean = false;
   
-  public get group(): Group { return this.config.object as Group; }
+  public get group(): Group {
+    let group = this.config.object as Group;
+    if ( group.firstInitialized ) {
+        group.initializeWithDefaultMarkingDefinitions(this.restApiConnector)
+    }
+
+    return this.config.object as Group; 
+  }
 
   public relationships_techniques: Relationship[] = []
 
   public relationships_software: Relationship[] = []
 
 
-  constructor(private route: ActivatedRoute) { 
+  constructor(private restApiConnector: RestApiConnectorService, private route: ActivatedRoute) { 
     super()
   }
 
