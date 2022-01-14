@@ -5,6 +5,7 @@ import { Paginated, RestApiConnectorService } from 'src/app/services/connectors/
 import { Role } from '../../../classes/authn/role';
 import { MatPaginator } from '@angular/material/paginator';
 import { AuthenticationService } from '../../../services/connectors/authentication/authentication.service';
+import { Status } from '../../../classes/authn/status';
 
 @Component({
     selector: 'app-user-accounts-page',
@@ -29,14 +30,7 @@ export class UserAccountsPageComponent implements OnInit, OnDestroy {
         this.filterOptions = [
             {
                 name: 'Status',
-                values: [
-                    {
-                        value: 'active'
-                    },
-                    {
-                        value: 'pending',
-                    }
-                ]
+                values: Object.values(Status).map((s) => ({value: s}))
             },
             {
                 name: 'Role',
@@ -115,7 +109,7 @@ export class UserAccountsPageComponent implements OnInit, OnDestroy {
         const subscription = this.restAPIConnector.getUserAccount(userAcc.id).subscribe({
             next: (r) => {
                 const user = r;
-                user.status = 'active';
+                user.status = Status.ACTIVE;
                 new UserAccount(user).save(this.restAPIConnector);
             },
             complete: () => { subscription.unsubscribe(); }
