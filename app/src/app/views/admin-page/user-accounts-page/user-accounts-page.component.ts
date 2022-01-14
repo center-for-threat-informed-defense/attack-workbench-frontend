@@ -91,7 +91,7 @@ export class UserAccountsPageComponent implements OnInit, OnDestroy {
     }
 
     public applySearch(query): void {
-        this.filteredAccounts = this.userAccounts.filter((acc) => {
+        this.filteredAccounts = (this.userAccounts as any).filter((acc) => {
             return Object.keys(acc).some((key) => {
                 return acc[key] && acc[key].includes(query);
             });
