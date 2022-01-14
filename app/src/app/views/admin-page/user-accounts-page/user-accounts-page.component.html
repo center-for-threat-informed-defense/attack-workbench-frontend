@@ -55,7 +55,7 @@
                 <ng-container matColumnDef="role">
                     <th scope="col" mat-header-cell *matHeaderCellDef>Role</th>
                     <td mat-cell *matCellDef="let user">
-                        <mat-select *ngIf="isAdmin" [value]="user.role" (selectionChange)="updateUserRole(user, $event.value)">
+                        <mat-select *ngIf="isAdmin" [value]="user.role" (selectionChange)="updateUserRole(user, $event.value)" [(ngModel)]="user.role">
                             <mat-option *ngFor="let role of filterOptions[1].values" [value]="role.value">{{role.value}}</mat-option>
                         </mat-select>
                         <span *ngIf="!isAdmin">

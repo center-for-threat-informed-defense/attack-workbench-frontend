@@ -40,14 +40,7 @@ export class UserAccountsPageComponent implements OnInit, OnDestroy {
             },
             {
                 name: 'Role',
-                values: [
-                    {
-                        value: 'admin'
-                    },
-                    {
-                        value: 'visitor'
-                    }
-                ]
+                values: Object.values(Role).map((r) => ({ value: r }))
             }
         ];
     }
