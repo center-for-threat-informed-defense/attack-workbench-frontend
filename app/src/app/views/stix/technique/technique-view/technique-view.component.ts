@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { AfterContentChecked, ChangeDetectorRef, Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { Technique } from 'src/app/classes/stix/technique';
 import { AuthenticationService } from 'src/app/services/connectors/authentication/authentication.service';
 import { StixViewPage } from '../../stix-view-page';
@@ -9,14 +9,16 @@ import { StixViewPage } from '../../stix-view-page';
     styleUrls: ['./technique-view.component.scss'],
     encapsulation: ViewEncapsulation.None
 })
-export class TechniqueViewComponent extends StixViewPage implements OnInit {
+export class TechniqueViewComponent extends StixViewPage implements OnInit, AfterContentChecked {
     public get technique(): Technique { return this.config.object as Technique; }
 
     constructor(private ref: ChangeDetectorRef, authenticationService: AuthenticationService) {
         super(authenticationService);
     }
 
-    ngOnInit() { }
+    ngOnInit() {
+        // intentionally left blank
+    }
 
     ngAfterContentChecked() {
         this.ref.detectChanges();

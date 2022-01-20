@@ -15,6 +15,8 @@ export class TacticViewComponent extends StixViewPage implements OnInit {
         super(authenticationService);
     }
 
-    ngOnInit() { }
+    ngOnInit() {
+        // intentionally left blank
+    }
 
 }

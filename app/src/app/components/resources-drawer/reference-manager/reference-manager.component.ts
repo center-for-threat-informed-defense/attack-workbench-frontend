@@ -66,7 +66,9 @@ export class ReferenceManagerComponent implements OnInit, AfterViewInit {
         })
     }
 
-    ngOnInit(): void { }
+    ngOnInit() {
+        // intentionally left blank
+    }
 
     ngAfterViewInit() {
         this.applyControls();

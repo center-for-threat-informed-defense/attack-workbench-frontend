@@ -18,5 +18,7 @@ export class GroupViewComponent extends StixViewPage implements OnInit {
         super(authenticationService);
     }
 
-    ngOnInit() { }
+    ngOnInit() {
+        // intentionally left blank
+    }
 }

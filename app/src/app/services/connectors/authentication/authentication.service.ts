@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { EventEmitter, Injectable } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Observable, of } from 'rxjs';
-import { catchError, share, map, concatMap, tap } from 'rxjs/operators';
+import { catchError, share, map, concatMap } from 'rxjs/operators';
 import { UserAccount } from 'src/app/classes/authn/user-account';
 import { environment } from "../../../../environments/environment";
 import { ApiConnector } from '../api-connector';
@@ -139,7 +139,7 @@ export class AuthenticationService extends ApiConnector {
                         return authnMechanism.authnType;
                     }
                 }
-                else throw "invalid authentication mechanism"; // this should never happen
+                else throw new Error("invalid authentication mechanism"); // this should never happen
             }),
             catchError(this.handleError_raise()),
             share()

@@ -18,6 +18,7 @@ export class MitigationViewComponent extends StixViewPage implements OnInit {
         super(authenticationService);
     }
 
-    ngOnInit() { }
-
+    ngOnInit() {
+        // intentionally left blank
+    }
 }

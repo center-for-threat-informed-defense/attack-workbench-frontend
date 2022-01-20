@@ -170,7 +170,7 @@ export class CollectionViewComponent extends StixViewPage implements OnInit {
                 let missingATTACKIDs = [];
                 for (let object of collectionStixIDToObject.values()) {
                     // grab name of objects that do not have ATT&CK IDs
-                    if (object.hasOwnProperty("supportsAttackID") && object.supportsAttackID == true && object.hasOwnProperty("attackID")) {
+                    if (object.hasOwnProperty("supportsAttackID") && object.supportsAttackID && object.hasOwnProperty("attackID")) {
                         if (object.attackID == "" && object.hasOwnProperty("name")) {
                             missingATTACKIDs.push(object["name"]);
                         }
