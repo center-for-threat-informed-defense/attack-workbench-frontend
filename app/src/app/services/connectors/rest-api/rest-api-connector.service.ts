@@ -1288,19 +1288,19 @@ export class RestApiConnectorService extends ApiConnector {
      * @param {string} [search] Only return user accounts where the provided search text occurs in the username or email. The search is case-insensitive.
      * @returns {Observable<Paginated>} paginated data of the user accounts
      */
-    public getAllUserAccounts(limit?: number, offset?: number, status?: string, role?: string, search?: string): Observable<Paginated<UserAccount>> {
+     public getAllUserAccounts(options?: {limit?: number, offset?: number, status?: string, role?: string, search?: string}): Observable<Paginated<UserAccount>> {
         let url = `${this.baseUrl}/user-accounts`;
         // parse params into query string
         let query = new HttpParams();
         // pagination
-        if (limit) query = query.set("limit", limit.toString());
-        if (offset) query = query.set("offset", offset.toString());
-        if (limit || offset) query = query.set("includePagination", "true");
+        if (options && options.limit) query = query.set("limit", options.limit.toString());
+        if (options && options.offset) query = query.set("offset", options.offset.toString());
+        if (options && (options.limit || options.offset)) query = query.set("includePagination", "true");
         // search
-        if (search) query = query.set("search", encodeURIComponent(search));
+        if (options && options.search) query = query.set("search", encodeURIComponent(options.search));
         // status/role
-        if (status) query = query.set("status", status);
-        if (role) query = query.set("role", role);
+        if (options && options.status) query = query.set("status", options.status);
+        if (options && options.role) query = query.set("role", options.role);
         return this.http.get<Paginated<UserAccount>>(url, {params: query}).pipe(
             catchError(this.handleError_continue<Paginated<UserAccount>>({data: [], pagination: {total: 0, limit: 0, offset:0}})),
             share() //multicast to subscribers
