@@ -44,6 +44,7 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
+import { MatBadgeModule } from '@angular/material/badge';
 
 // other library imports
 import { BreadcrumbModule } from "angular-crumbs";
@@ -320,9 +321,10 @@ import { DataComponentViewComponent } from './views/stix/data-component/data-com
     MatChipsModule,
     MatDatepickerModule,
     MatNativeDateModule,
+    MatBadgeModule,
+
     DragDropModule,
     ClipboardModule,
-
     OverlayModule
   ],
   exports: [

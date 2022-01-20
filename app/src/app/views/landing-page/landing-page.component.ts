@@ -15,7 +15,9 @@ import { stixRoutes } from "../../app-routing-stix.module";
 })
 export class LandingPageComponent implements OnInit, OnDestroy {
     private loginSubscription;
+    public pendingUsers = 0;
     public routes: any[] = [];
+
     constructor(private restApiConnector: RestApiConnectorService, private authenticationService: AuthenticationService, private dialog: MatDialog, private router: Router) {
         this.routes = stixRoutes;
     }
@@ -27,6 +29,13 @@ export class LandingPageComponent implements OnInit, OnDestroy {
         this.loginSubscription = this.authenticationService.onLogin.subscribe({
             next: (event) => { this.openOrgIdentityDialog(); }
         });
+        let userSubscription = this.restApiConnector.getAllUserAccounts({status: "pending"}).subscribe({
+            next: (results) => {
+                let users = results as any;
+                this.pendingUsers = users.length;
+            },
+            complete: () => userSubscription.unsubscribe()
+        })
         this.openOrgIdentityDialog();
     }
 

@@ -39,5 +39,9 @@
 
     .admin-link {
         margin-top: 40px;
+        .mat-badge-content.mat-badge-active {
+            color: on-color(pending);
+            background-color: color(pending);
+        }
     }
 }
