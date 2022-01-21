@@ -8,7 +8,7 @@ import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/re
     encapsulation: ViewEncapsulation.None
 })
 export class AdminPageComponent implements OnInit {
-    public pendingUsers = 0;
+    public pendingUsers;
 
     constructor(private restApiConnector: RestApiConnectorService) { }
 
@@ -16,7 +16,7 @@ export class AdminPageComponent implements OnInit {
         let userSubscription = this.restApiConnector.getAllUserAccounts({status: "pending"}).subscribe({
             next: (results) => {
                 let users = results as any;
-                this.pendingUsers = users.length;
+                if (users && users.length) this.pendingUsers = users.length;
             },
             complete: () => userSubscription.unsubscribe()
         })
