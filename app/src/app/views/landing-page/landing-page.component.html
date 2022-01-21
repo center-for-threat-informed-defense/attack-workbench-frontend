@@ -41,7 +41,7 @@
     <div class="row" *ngIf="isAdmin">
         <div class="col center admin-link">
             <div class="text-deemphasis text-label">
-                <a routerLink="/admin">admin</a>
+                <a class="a" routerLink="/admin" [matBadge]="pendingUsers" matBadgeDescription="pending users" matBadgeOverlap="false">admin</a>
             </div>
         </div>
     </div>

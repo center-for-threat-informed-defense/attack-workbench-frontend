@@ -1288,7 +1288,7 @@ export class RestApiConnectorService extends ApiConnector {
      * @param {string} [search] Only return user accounts where the provided search text occurs in the username or email. The search is case-insensitive.
      * @returns {Observable<Paginated>} paginated data of the user accounts
      */
-     public getAllUserAccounts(options?: {limit?: number, offset?: number, status?: string, role?: string, search?: string}): Observable<Paginated<UserAccount>> {
+    public getAllUserAccounts(options?: {limit?: number, offset?: number, status?: string, role?: string, search?: string}): Observable<Paginated<UserAccount>> {
         let url = `${this.baseUrl}/user-accounts`;
         // parse params into query string
         let query = new HttpParams();
