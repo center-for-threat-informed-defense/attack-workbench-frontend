@@ -6,8 +6,6 @@ import { Serializable, ValidationData } from '../serializable';
 import { Role } from './role';
 import { Status } from './status';
 
-
-
 export class UserAccount extends Serializable {
     public id: string;
     public email: string;
@@ -90,7 +88,7 @@ export class UserAccount extends Serializable {
                                     field: 'username',
                                     message: 'user has no username'
                                 });
-                            } else if (users.data.some(x => x.suername.toLowerCase() == this.username.toLowerCase() && x.id != this.id)) {
+                            } else if (users.data.some(x => x.username.toLowerCase() == this.username.toLowerCase() && x.id != this.id)) {
                                 result.errors.push({
                                     result: 'error',
                                     field: 'username',
