@@ -12,9 +12,10 @@ import { AuthenticationService } from 'src/app/services/connectors/authenticatio
 export class HeaderComponent implements AfterViewInit {
     public routes: any[];
     public app_version = app_package["version"];
-    
+
     @Output() public onLogin = new EventEmitter();
     @Output() public onLogout = new EventEmitter();
+    @Output() public onRegister = new EventEmitter();
     public get isLoggedIn(): boolean { return this.authenticationService.isLoggedIn; }
     public get username() { return this.authenticationService.currentUser.username; }
 
@@ -43,5 +44,9 @@ export class HeaderComponent implements AfterViewInit {
 
     public logout(): void {
         this.onLogout.emit();
+    }
+
+    public register(): void {
+        this.onRegister.emit();
     }
 }

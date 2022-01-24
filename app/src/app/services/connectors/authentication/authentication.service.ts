@@ -103,6 +103,30 @@ export class AuthenticationService extends ApiConnector {
     }
 
     /**
+     * User register sequence
+     * @returns of the logged in user account
+     */
+    public register(): Observable<any> {
+        console.log('** register called');
+        return this.getAuthType().pipe(
+            // retrieve authentication configuration
+            concatMap(authnType => {
+                let url = `${this.baseUrl}/authn/${authnType}/register`;
+                if (authnType == "oidc") {
+                    // oidc login
+                    url += `?destination=${encodeURIComponent(window.location.href)}`;
+                    // redirect to OIDC Identity Provider
+                    window.location.href = url;
+                    this.currentUser = undefined;
+                }
+                return [].map(() => ({next: () => true}));
+            }),
+            catchError(this.handleError_raise<UserAccount>()),
+            share()
+        );
+    }
+
+    /**
      * Get the user account object of the logged in user
      * @returns the user account object of the logged in user, if logged in,
      * otherwise return a default value
@@ -111,7 +135,7 @@ export class AuthenticationService extends ApiConnector {
         let url = `${this.baseUrl}/session`;
         // retrieve user session object
         return this.http.get<any>(url).pipe(
-            concatMap(session => { 
+            concatMap(session => {
                 // retrieve user account from session
                 return this.restAPIConnector.getUserAccount(session.userAccountId).pipe(
                     map(res => {

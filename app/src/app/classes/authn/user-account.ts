@@ -115,8 +115,6 @@ export class UserAccount extends Serializable {
      * @returns {Observable} of the post
      */
      public save(restAPIService: RestApiConnectorService): Observable<UserAccount> {
-        // TODO PUT if the object was just created (doesn't exist in db yet)
-
         const putObservable = restAPIService.putUserAccount(this);
         const subscription = putObservable.subscribe({
             next: (result) => { this.deserialize(result.serialize()); },

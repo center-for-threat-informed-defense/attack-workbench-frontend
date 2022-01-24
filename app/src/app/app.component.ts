@@ -59,19 +59,27 @@ export class AppComponent implements AfterViewInit {
 
     // User log in
     public login(): void {
-        let loginSubscription = this.authenticationService.login().subscribe({
-            next: (res) => { this.checkStatus(); },
+        const loginSubscription = this.authenticationService.login().subscribe({
+            next: () => { this.checkStatus(); },
             complete: () => { loginSubscription.unsubscribe(); }
         });
     }
 
     // User log out
     public logout(): void {
-        let logoutSubscription = this.authenticationService.logout().subscribe({
+        const logoutSubscription = this.authenticationService.logout().subscribe({
             complete: () => {
                 this.router.navigate(['']);
-                logoutSubscription.unsubscribe(); 
+                logoutSubscription.unsubscribe();
             }
+        });
+    }
+
+    // User registration
+    public register(): void {
+        const registerSubscription = this.authenticationService.register().subscribe({
+            next: (res) => { this.checkStatus(); },
+            complete: () => { registerSubscription.unsubscribe(); }
         });
     }
 
@@ -80,7 +88,7 @@ export class AppComponent implements AfterViewInit {
     public toggleTheme() {
         this.setTheme(this.theme == "light"? "dark" : "light");
     }
-    
+
     public setTheme(theme: string) {
         this.logger.log("setting theme to", theme);
         this.theme = theme;
@@ -94,9 +102,9 @@ export class AppComponent implements AfterViewInit {
     ngAfterViewInit() {
         this.scrollRef.nativeElement.addEventListener('scroll', (e) => this.adjustHeaderPlacement(), true);
         //to fix rare cases that the page has resized without scroll events triggering, recompute the offset every 5 seconds
-        setInterval(() => this.adjustHeaderPlacement(), 5000); 
+        setInterval(() => this.adjustHeaderPlacement(), 5000);
     }
-    ngOnDestroy() { 
+    ngOnDestroy() {
         this.scrollRef.nativeElement.removeEventListener('scroll', (e) => this.adjustHeaderPlacement(), true);
     }
 
@@ -105,12 +113,12 @@ export class AppComponent implements AfterViewInit {
     private adjustHeaderPlacement(): void {
         let headerHeight = this.header.nativeElement.offsetHeight;
         // constrain amount of hidden to bounds, round up because decimal scroll causes flicker
-        this.hiddenHeaderPX = Math.floor(Math.min(Math.max(0, this.scrollRef.nativeElement.scrollTop/2), headerHeight)); 
+        this.hiddenHeaderPX = Math.floor(Math.min(Math.max(0, this.scrollRef.nativeElement.scrollTop/2), headerHeight));
     }
     // scroll to the top of the main content
     public scrollToTop(): void {
         this.scrollRef.nativeElement.scroll({top: 0, behavior: "smooth"});
-    } 
+    }
 
     public get sidebarOpened() { return this.sidebarService.opened; }
 }
