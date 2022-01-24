@@ -107,7 +107,6 @@ export class AuthenticationService extends ApiConnector {
      * @returns of the logged in user account
      */
     public register(): Observable<any> {
-        console.log('** register called');
         return this.getAuthType().pipe(
             // retrieve authentication configuration
             concatMap(authnType => {
