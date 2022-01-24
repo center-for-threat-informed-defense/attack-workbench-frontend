@@ -121,7 +121,7 @@ export class UserAccount extends Serializable {
 
         const putObservable = restAPIService.putUserAccount(this);
         const subscription = putObservable.subscribe({
-            next: (result) => { this.deserialize(new UserAccount(result).serialize()); },
+            next: (result) => { this.deserialize(result.serialize()); },
             complete: () => { subscription.unsubscribe(); }
         });
         return putObservable;

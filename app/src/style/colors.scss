@@ -33,6 +33,8 @@ $colors: (
     warn: (color: #eb6635, on-color: black),
     error: (color: #e32a4c, on-color: black),
     info: (color: $balanced-blue, on-color: black),
+    // role colors
+    pending: (color: #F5D466, on-color: black)
 );
 
 // accessor helper for $colors. Gets the color of the named pair

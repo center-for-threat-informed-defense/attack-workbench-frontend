@@ -32,7 +32,20 @@
 
 # Changelog
 
-## 21 October 2021 - Changes staged on develop
+## 19 January 2022
+
+### ATT&CK Workbench version 1.2.0
+
+ATT&CK Workbench v1.2.0 supports authentication and authorization for users. The REST API can be configured to use the Anonymous or OpenID Connect (OIDC) authentication mechanisms. See the [authentication documentation](https://github.com/center-for-threat-informed-defense/attack-workbench-rest-api/tree/master/docs/authentication.md#authentication) for more information.
+
+### Improvements in 1.2.0
+
+-   Added authentication and authorization to the Workbench. Only authorized users can access the data of the Workbench instance. Documentation pages may be viewed by unauthenticated users. See [frontend#192](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/192).
+-   Added user login and logout functionality. See [frontend#266](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/266).
+    -   Pending users cannot log in until the Adminstrator has approved their account.
+-   Added support for individual attribution. If a user is logged in, the application will display the individual user who has edited an object in place of the organization-level identity. Individual attribution is not supported when the Workbench instance is set up with anonymous authentication. See [frontend#191](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/191).
+
+## 21 October 2021
 
 ### ATT&CK Workbench version 1.1.0
 

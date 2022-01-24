@@ -15,6 +15,8 @@ export class SoftwareViewComponent extends StixViewPage implements OnInit {
         super(authenticationService);
     }
 
-    ngOnInit() { }
+    ngOnInit() {
+        // intentionally left blank
+    }
 
 }

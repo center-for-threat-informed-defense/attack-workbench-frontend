@@ -1,11 +1,18 @@
-.display-icon .mat-icon {
-    font-size: 48px;
-    width: 48px;
-    height: 48px;
-}
-button {
-    width: 225px;
-    height: 175px;
+@import "../../../style/globals";
+.admin-page {
+    .display-icon .mat-icon {
+        font-size: 48px;
+        width: 48px;
+        height: 48px;
+    }
+    button {
+        width: 225px;
+        height: 175px;
 
-    h2 { white-space: normal; }
+        h2 { white-space: normal; } 
+    }
+    .mat-badge-content.mat-badge-active {
+        color: on-color(pending);
+        background-color: color(pending);
+    }  
 }

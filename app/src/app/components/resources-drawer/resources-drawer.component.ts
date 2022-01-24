@@ -31,6 +31,7 @@ export class ResourcesDrawerComponent implements OnInit {
         else this.onClose.emit();
     }
 
-    ngOnInit() { }
-
+    ngOnInit() {
+        // intentionally left blank
+    }
 }

@@ -1,30 +1,45 @@
-
 <mat-toolbar class="header">
+    <!-- Title & Help -->
     <div class="app-title">
         <h1><a routerLink="/">ATT&CK Workbench&nbsp;<span class="app-version lowercase">v{{app_version}}</span></a></h1>
     </div>
-    <button mat-icon-button routerLink="/docs" matTooltip="help"><mat-icon aria-label="help">help_outline</mat-icon></button>
+    <button mat-icon-button routerLink="/docs" matTooltip="help">
+        <mat-icon aria-label="help">help_outline</mat-icon>
+    </button>
     <div class="spacer"></div>
+
+    <!-- Stix Object Routes -->
     <div class="links" #linkMenu [ngClass]="{'pad-right': isLoggedIn}" [ngStyle]="{'visibility': showHamburger ? 'hidden' : 'visible'}">
-        <button mat-button *ngFor="let stixRoute of routes" [disabled]="!isLoggedIn" [routerLink]="stixRoute.path">{{stixRoute.data.breadcrumb}}</button>
+        <button mat-button *ngFor="let stixRoute of routes" [disabled]="!isLoggedIn" [routerLink]="stixRoute.path">
+            {{stixRoute.data.breadcrumb}}
+        </button>
     </div>
-    <button mat-button *ngIf="!isLoggedIn else account" [ngStyle]="{'visibility': showHamburger ? 'hidden' : 'visible'}" (click)="login()">login</button>
+
+    <!-- Login -->
+    <button mat-button *ngIf="!isLoggedIn else account" [ngStyle]="{'visibility': showHamburger ? 'hidden' : 'visible'}" (click)="login()">
+        login
+    </button>
+
+    <!-- Account Icon -->
     <ng-template #account>
-        <button class="account" mat-icon-button [matMenuTriggerFor]="accountOptions" aria-label="account options">
+        <button class="account" mat-icon-button [matMenuTriggerFor]="showHamburger ? navigation : accountOptions" aria-label="account options">
             <svg [data-jdenticon-value]="username" [matTooltip]="username" matTooltipPosition="below"></svg>
+        </button>
+    </ng-template>
+
+    <!-- Hamburger Dropdown Menus -->
+    <div class="hamburger" [ngStyle]="{'visibility': showHamburger ? 'visible' : 'hidden'}">
+        <button *ngIf="!isLoggedIn" [matMenuTriggerFor]="navigation" mat-icon-button aria-label="navigation">
+            <mat-icon>menu</mat-icon>
         </button>
         <mat-menu #accountOptions="matMenu" backdropClass="override-light">
             <button mat-menu-item routerLink="/docs">documentation</button>
             <button mat-menu-item (click)="logout()">logout</button>
         </mat-menu>
-    </ng-template>
-    <div class="hamburger" [ngStyle]="{'visibility': showHamburger ? 'visible' : 'hidden'}">
-        <button [matMenuTriggerFor]="navigation" mat-icon-button aria-label="navigation">
-            <mat-icon>menu</mat-icon>
-        </button>
         <mat-menu #navigation="matMenu" backdropClass="override-light">
-            <button mat-menu-item *ngFor="let stixRoute of routes" [disabled]="!isLoggedIn" [routerLink]="stixRoute.path">{{stixRoute.data.breadcrumb}}</button>
-            <button mat-menu-item  routerLink="/docs">documentation</button>
+            <button mat-menu-item *ngFor="let stixRoute of routes" [disabled]="!isLoggedIn"
+                [routerLink]="stixRoute.path">{{stixRoute.data.breadcrumb}}</button>
+            <button mat-menu-item routerLink="/docs">documentation</button>
             <button mat-menu-item (click)="isLoggedIn ? logout() : login()">{{isLoggedIn ? 'logout': 'login'}}</button>
         </mat-menu>
     </div>
