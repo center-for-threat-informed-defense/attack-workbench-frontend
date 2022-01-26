@@ -1,21 +1,24 @@
-import { AfterViewInit, Component, ElementRef, EventEmitter, HostListener, Output, ViewChild, ViewEncapsulation } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, EventEmitter, HostListener, OnDestroy, Output, ViewChild, ViewEncapsulation } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { stixRoutes } from "../../app-routing-stix.module";
 import * as app_package from "../../../../package.json";
 import { AuthenticationService } from 'src/app/services/connectors/authentication/authentication.service';
+import { Subscription } from "rxjs";
 @Component({
   selector: 'app-header',
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.scss'],
   encapsulation: ViewEncapsulation.None
 })
-export class HeaderComponent implements AfterViewInit {
+export class HeaderComponent implements AfterViewInit, OnDestroy {
     public routes: any[];
     public app_version = app_package["version"];
 
     @Output() public onLogin = new EventEmitter();
     @Output() public onLogout = new EventEmitter();
     @Output() public onRegister = new EventEmitter();
+    authnTypeSubscription: Subscription;
+    public authnType: string;
     public get isLoggedIn(): boolean { return this.authenticationService.isLoggedIn; }
     public get username() { return this.authenticationService.currentUser.username; }
 
@@ -24,10 +27,17 @@ export class HeaderComponent implements AfterViewInit {
 
     constructor(private route: ActivatedRoute, private authenticationService: AuthenticationService) {
         this.routes = stixRoutes;
+        this.authnTypeSubscription = this.authenticationService.getAuthType().subscribe({
+            next: (v) => { this.authnType = v }
+        })
     }
 
     ngAfterViewInit() {
         setTimeout(() => this.onResize(), 1000); //very hacky workaround: check menu size after 1 second to allow stuff to load
+    }
+
+    ngOnDestroy() {
+        this.authnTypeSubscription.unsubscribe();
     }
 
     public showHamburger: boolean = false;

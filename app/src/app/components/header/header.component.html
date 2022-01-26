@@ -19,7 +19,7 @@
     <button mat-button *ngIf="!isLoggedIn else account" [ngStyle]="{'visibility': showHamburger ? 'hidden' : 'visible'}" (click)="login()">
         login
     </button>
-    <button mat-button *ngIf="!isLoggedIn" [ngStyle]="{'visibility': showHamburger ? 'hidden' : 'visible'}" (click)="register()">register</button>
+    <button mat-button *ngIf="!isLoggedIn && authnType === 'oidc'" [ngStyle]="{'visibility': showHamburger ? 'hidden' : 'visible'}" (click)="register()">register</button>
 
     <!-- Account Icon -->
     <ng-template #account>
@@ -42,7 +42,7 @@
                 [routerLink]="stixRoute.path">{{stixRoute.data.breadcrumb}}</button>
             <button mat-menu-item routerLink="/docs">documentation</button>
             <button mat-menu-item (click)="isLoggedIn ? logout() : login()">{{isLoggedIn ? 'logout': 'login'}}</button>
-            <button mat-menu-item *ngIf="!isLoggedIn" (click)="register()">register</button>
+            <button mat-menu-item *ngIf="!isLoggedIn && authnType === 'oidc'" (click)="register()">register</button>
         </mat-menu>
     </div>
 </mat-toolbar>
