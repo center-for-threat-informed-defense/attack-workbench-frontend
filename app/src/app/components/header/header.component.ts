@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, EventEmitter, HostListener, OnDestroy, Output, ViewChild, ViewEncapsulation } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, EventEmitter, HostListener, Output, ViewChild, ViewEncapsulation } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { stixRoutes } from "../../app-routing-stix.module";
 import * as app_package from "../../../../package.json";
@@ -10,7 +10,7 @@ import { Subscription } from "rxjs";
   styleUrls: ['./header.component.scss'],
   encapsulation: ViewEncapsulation.None
 })
-export class HeaderComponent implements AfterViewInit, OnDestroy {
+export class HeaderComponent implements AfterViewInit {
     public routes: any[];
     public app_version = app_package["version"];
 
@@ -28,16 +28,13 @@ export class HeaderComponent implements AfterViewInit, OnDestroy {
     constructor(private route: ActivatedRoute, private authenticationService: AuthenticationService) {
         this.routes = stixRoutes;
         this.authnTypeSubscription = this.authenticationService.getAuthType().subscribe({
-            next: (v) => { this.authnType = v }
+            next: (v) => { this.authnType = v },
+            complete: () => { this.authnTypeSubscription.unsubscribe(); }
         })
     }
 
     ngAfterViewInit() {
         setTimeout(() => this.onResize(), 1000); //very hacky workaround: check menu size after 1 second to allow stuff to load
-    }
-
-    ngOnDestroy() {
-        this.authnTypeSubscription.unsubscribe();
     }
 
     public showHamburger: boolean = false;
