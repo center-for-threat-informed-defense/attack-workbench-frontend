@@ -114,6 +114,7 @@ import { HelpPageComponent } from './views/help-page/help-page.component';
 import { LandingPageComponent } from './views/landing-page/landing-page.component';
 import { AdminPageComponent } from "./views/admin-page/admin-page.component";
 import { OrgIdentityPageComponent } from "./views/admin-page/org-identity-page/org-identity-page.component";
+import { DefaultMarkingDefinitionsComponent } from './views/admin-page/default-marking-definitions/default-marking-definitions.component';
 
 import { StixDialogComponent } from "./views/stix/stix-dialog/stix-dialog.component"
 import { StixPageComponent } from "./views/stix/stix-page/stix-page.component"
@@ -229,6 +230,7 @@ import { MarkingDefinitionListComponent } from "./views/stix/marking-definition/
     HelpPageComponent,
     AdminPageComponent,
     OrgIdentityPageComponent,
+    DefaultMarkingDefinitionsComponent,
 
     StixDialogComponent,
     StixPageComponent,

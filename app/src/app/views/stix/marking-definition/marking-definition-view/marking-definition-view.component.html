@@ -1,38 +1,26 @@
 <div class="marking-definition-view view-page grid spacing-12">
-    <div *ngIf="!validating">
-        <div class="row">
-            <div class="col">
-                <!-- TYPE -->
-                <div class="labelled-box grow-to-row" matTooltip="this field cannot be edited" [matTooltipDisabled]="!editing">
-                    <div class="content capitalize">
-                        {{marking_definition.definition_type}}
-                    </div>
-                    <label>type</label>
+    <div class="row" *ngIf="!validating">
+        <div class="col">
+            <!-- TYPE -->
+            <div class="labelled-box grow-to-row" matTooltip="this field cannot be edited" [matTooltipDisabled]="!editing">
+                <div class="content capitalize">
+                    {{marking_definition.definition_type}}
                 </div>
-            </div>
-            <div class="col">
-                <div class="labelled-box grow-to-row">
-                    <!-- DEFAULT MARKING DEFINITION -->
-                    <div class="content no-label">
-                        <mat-checkbox [disabled]="!editing">
-                            default marking definition?
-                        </mat-checkbox>
-                    </div>
-                </div>
+                <label>type</label>
             </div>
         </div>
-        <div class="row">
-            <div class="col">
-                <!-- DESCRIPTION -->
-                <app-descriptive-property [config]="{
-                    mode: editing? 'edit' : 'view',
-                    object: marking_definition,
-                    field: 'definition_string',
-                    firstParagraphOnly: false, 
-                    referencesField: [],
-                    label: 'Statement'
-                }"></app-descriptive-property>
-            </div>
+    </div>
+    <div class="row" *ngIf="!validating">
+        <div class="col">
+            <!-- DESCRIPTION -->
+            <app-descriptive-property [config]="{
+                mode: editing? 'edit' : 'view',
+                object: marking_definition,
+                field: 'definition_string',
+                firstParagraphOnly: false, 
+                referencesField: [],
+                label: 'Statement'
+            }"></app-descriptive-property>
         </div>
     </div>
     <div *ngIf="validating">

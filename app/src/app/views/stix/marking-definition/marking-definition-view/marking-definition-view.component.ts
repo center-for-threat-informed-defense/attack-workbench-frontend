@@ -5,7 +5,6 @@ import { MatDialog } from '@angular/material/dialog';
 import { ValidationData } from 'src/app/classes/serializable';
 import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/rest-api-connector.service';
 import { Router } from '@angular/router';
-import { map } from 'rxjs/operators';
 
 @Component({
     selector: 'app-marking-definition-view',

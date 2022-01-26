@@ -1243,7 +1243,18 @@ export class RestApiConnectorService extends ApiConnector {
             map(result => {
                 return result as any;
             }),
-            catchError(this.handleError_continue<string[]>()),
+            catchError(this.handleError_continue<string[]>())
+        )
+    }
+
+    /**
+     * Set the default marking definitions
+     * @returns {Observable<any>} default marking definitions
+     */
+    public postDefaultMarkingDefinitions(defaultMarkingDefs: string[]): Observable<any> {
+        return this.http.post(`${this.baseUrl}/config/default-marking-definitions`, defaultMarkingDefs, {headers: this.headers}).pipe(
+            tap(this.handleSuccess(`saved default marking definitions`)),
+            catchError(this.handleError_raise<string[]>()),
             share() //multicast to subscribers
         )
     }
