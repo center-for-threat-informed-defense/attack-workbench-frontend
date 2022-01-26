@@ -23,6 +23,7 @@ export class UserAccountsPageComponent implements OnInit, OnDestroy {
     public totalObjectCount = 0;
     public userSubscription: Subscription;
     public selectedFilters: string[];
+    public get currentUser(): UserAccount { return this.authenticationService.currentUser; }
     public get isAdmin(): boolean { return this.authenticationService.isAuthorized([Role.Admin]); }
 
     constructor(private restAPIConnector: RestApiConnectorService, private authenticationService: AuthenticationService) {
