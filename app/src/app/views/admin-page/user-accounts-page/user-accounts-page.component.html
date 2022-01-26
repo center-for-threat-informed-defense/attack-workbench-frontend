@@ -42,13 +42,13 @@
                 <ng-container matColumnDef="status">
                     <th scope="col" mat-header-cell *matHeaderCellDef>Status</th>
                     <td mat-cell *matCellDef="let user">
-                        <mat-chip-list>
+                        <mat-select *ngIf="isAdmin && user.id !== currentUser.id" [value]="user.status" (selectionChange)="updateUserStatus(user, $event.value)" [(ngModel)]="user.status">
+                            <mat-option *ngFor="let status of filterOptions[0].values" [value]="status.value">{{status.value}}</mat-option>
+                        </mat-select>
+                        <mat-chip-list *ngIf="!(isAdmin && user.id !== currentUser.id)">
                             <mat-chip color="primary" class="role" [ngClass]="user.status === 'active' ? 'active' : (user.status === 'pending' ? 'pending' : '')">
                                 {{user.status}}
                             </mat-chip>
-                            <span *ngIf="isAdmin && user.status === 'pending'">
-                                <button class="approve-button" title="approve user" (click)="approveUser(user)"><span class="material-icons">check</span></button>
-                            </span>
                         </mat-chip-list>
                     </td>
                 </ng-container>
@@ -58,7 +58,7 @@
                         <mat-select *ngIf="isAdmin && user.id !== currentUser.id" [value]="user.role" (selectionChange)="updateUserRole(user, $event.value)" [(ngModel)]="user.role">
                             <mat-option *ngFor="let role of filterOptions[1].values" [value]="role.value">{{role.value}}</mat-option>
                         </mat-select>
-                        <span *ngIf="isAdmin || user.id === currentUser.id">
+                        <span *ngIf="!(isAdmin && user.id !== currentUser.id)">
                             {{user.role}}
                         </span>
                     </td>

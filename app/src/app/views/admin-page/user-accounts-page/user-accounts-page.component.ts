@@ -13,14 +13,14 @@ import { Status } from '../../../classes/authn/status';
     styleUrls: ['./user-accounts-page.component.scss'],
     encapsulation: ViewEncapsulation.None
 })
-export class UserAccountsPageComponent implements OnInit, OnDestroy {
+export class UserAccountsPageComponent implements OnInit {
     @ViewChild(MatPaginator) paginator: MatPaginator;
     public userAccounts$: Observable<Paginated<UserAccount>>;
-    public userAccounts: Paginated<UserAccount>;
-    public filteredAccounts: Paginated<UserAccount>;
+    public userAccounts: UserAccount[];
+    public filteredAccounts: UserAccount[];
     public columnsToDisplay: string[];
     public filterOptions: any[];
-    public totalObjectCount = 0;
+    public totalObjectCount: number = 0;
     public userSubscription: Subscription;
     public selectedFilters: string[];
     public get currentUser(): UserAccount { return this.authenticationService.currentUser; }
@@ -41,18 +41,16 @@ export class UserAccountsPageComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit(): void {
-        this.userAccounts$ = this.restAPIConnector.getAllUserAccounts();
+        this.userAccounts$ = this.restAPIConnector.getAllUserAccounts({limit: 10});
         this.userSubscription = this.userAccounts$.subscribe({
             next: (data) => {
-                this.userAccounts = data;
-                this.filteredAccounts = data;
-                // this.totalObjectCount = data.pagination.total;
+                this.userAccounts = data.data;
+                this.filteredAccounts = data.data;
+                this.totalObjectCount = this.filteredAccounts.length;
+                this.paginator.pageIndex = 0;
             },
+            complete: () => { this.userSubscription.unsubscribe() }
         });
-    }
-
-    ngOnDestroy(): void {
-        this.userSubscription.unsubscribe();
     }
 
     public handleFilterSelection(selectedFilter): void {
@@ -106,11 +104,12 @@ export class UserAccountsPageComponent implements OnInit, OnDestroy {
         }
     }
 
-    public approveUser(userAcc: UserAccount): void {
+    public updateUserStatus(userAcc: UserAccount, newStatus: string): void {
+        newStatus = newStatus.toUpperCase();
         const subscription = this.restAPIConnector.getUserAccount(userAcc.id).subscribe({
             next: (r) => {
                 const user = r;
-                user.status = Status.ACTIVE;
+                user.status = Status[`${newStatus}`];
                 new UserAccount(user).save(this.restAPIConnector);
             },
             complete: () => { subscription.unsubscribe(); }
