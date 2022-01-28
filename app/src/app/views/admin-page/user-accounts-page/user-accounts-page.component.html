@@ -19,7 +19,7 @@
                     <mat-label>options</mat-label>
                     <mat-select multiple (selectionChange)="handleFilterSelection($event)">
                         <mat-optgroup *ngFor="let group of filterOptions" [label]="group.name">
-                            <mat-option *ngFor="let filter of group.values" [value]="filter.value">{{filter.value}}</mat-option>
+                            <mat-option *ngFor="let filter of group.values" [value]="filter">{{filter}}</mat-option>
                         </mat-optgroup>
                     </mat-select>
                 </mat-form-field>
@@ -43,7 +43,7 @@
                     <th scope="col" mat-header-cell *matHeaderCellDef>Status</th>
                     <td mat-cell *matCellDef="let user">
                         <mat-select *ngIf="isAdmin && user.id !== currentUser.id" [value]="user.status" (selectionChange)="updateUserStatus(user, $event.value)" [(ngModel)]="user.status">
-                            <mat-option *ngFor="let status of filterOptions[0].values" [value]="status.value">{{status.value}}</mat-option>
+                            <mat-option *ngFor="let status of filterOptions[0].values" [value]="status">{{status}}</mat-option>
                         </mat-select>
                         <mat-chip-list *ngIf="!(isAdmin && user.id !== currentUser.id)">
                             <mat-chip color="primary" class="role" [ngClass]="user.status === 'active' ? 'active' : (user.status === 'pending' ? 'pending' : '')">
@@ -56,7 +56,7 @@
                     <th scope="col" mat-header-cell *matHeaderCellDef>Role</th>
                     <td mat-cell *matCellDef="let user">
                         <mat-select *ngIf="isAdmin && user.id !== currentUser.id" [value]="user.role" (selectionChange)="updateUserRole(user, $event.value)" [(ngModel)]="user.role">
-                            <mat-option *ngFor="let role of filterOptions[1].values" [value]="role.value">{{role.value}}</mat-option>
+                            <mat-option *ngFor="let role of filterOptions[1].values" [value]="role">{{role}}</mat-option>
                         </mat-select>
                         <span *ngIf="!(isAdmin && user.id !== currentUser.id)">
                             {{user.role}}

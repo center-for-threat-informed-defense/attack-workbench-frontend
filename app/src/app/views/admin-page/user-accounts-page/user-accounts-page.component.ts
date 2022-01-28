@@ -31,11 +31,11 @@ export class UserAccountsPageComponent implements OnInit {
         this.filterOptions = [
             {
                 name: 'Status',
-                values: Object.values(Status).map((s) => ({value: s}))
+                values: Object.values(Status as {})
             },
             {
                 name: 'Role',
-                values: Object.values(Role).map((r) => ({ value: r }))
+                values: Object.values(Role as {})
             }
         ];
     }
@@ -63,12 +63,12 @@ export class UserAccountsPageComponent implements OnInit {
         if (this.selectedFilters) this.selectedFilters.forEach((selectedVal) => {
             let key = this.filterOptions.find((filter) => {
                 return filter.values.find((val) => {
-                    return val.value === selectedVal;
+                    return val === selectedVal;
                 });
-            })?.name?.toLowerCase();
-            if (key) {
-                key = key.toLowerCase();
-                filtered = Array(accounts).filter((account) => {
+            })
+            if (key && key.name) {
+                key = key.name.toLowerCase();
+                filtered = accounts.filter((account) => {
                     return account[key] === selectedVal;
                 });
             }
