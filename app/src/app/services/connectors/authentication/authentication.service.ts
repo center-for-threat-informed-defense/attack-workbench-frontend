@@ -110,13 +110,18 @@ export class AuthenticationService extends ApiConnector {
         return this.getAuthType().pipe(
             // retrieve authentication configuration
             concatMap(authnType => {
-                let url = `${this.baseUrl}/user-accounts/register`;
-                if (authnType == "oidc") {
+                if (authnType == "oidc" && !this.isLoggedIn) {
+                    let url = `${this.baseUrl}/authn/${authnType}/login`;
                     // oidc login
                     url += `?destination=${encodeURIComponent(window.location.href)}`;
                     // redirect to OIDC Identity Provider
                     window.location.href = url;
-                    this.currentUser = undefined;
+                    return this.http.post(`${this.baseUrl}/user-accounts/register`, {responseType: 'text'}).pipe(
+                        map(res => {
+                            this.currentUser = undefined;
+                            return res;
+                        })
+                    );
                 }
                 return [].map(() => ({next: () => true}));
             }),
