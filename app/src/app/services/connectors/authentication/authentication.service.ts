@@ -110,7 +110,7 @@ export class AuthenticationService extends ApiConnector {
         return this.getAuthType().pipe(
             // retrieve authentication configuration
             concatMap(authnType => {
-                if (authnType == "oidc" && !this.isLoggedIn) {
+                if (authnType == "oidc") {
                     let url = `${this.baseUrl}/authn/${authnType}/login`;
                     // oidc login
                     url += `?destination=${encodeURIComponent(window.location.href)}`;
