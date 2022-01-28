@@ -30,7 +30,7 @@
         <!-- TABLE -->
         <!-- ----- -->
         <div class="scroll-container" *ngIf="filteredAccounts else loading">
-            <table mat-table *ngIf="filteredAccounts.length > 0" [dataSource]="filteredAccounts" aria-label="user accounts table">
+            <table mat-table *ngIf="filteredAccounts.length > 0 else nothingHere" [dataSource]="filteredAccounts" aria-label="user accounts table">
                 <ng-container matColumnDef="username">
                     <th scope="col" mat-header-cell *matHeaderCellDef>Username</th>
                     <td mat-cell *matCellDef="let user"> {{user.username}} </td>
@@ -67,6 +67,9 @@
                 <tr mat-header-row *matHeaderRowDef="columnsToDisplay"></tr>
                 <tr mat-row *matRowDef="let myRowData; columns: columnsToDisplay" class="element-row"></tr>
             </table>
+            <ng-template #nothingHere>
+                <app-empty-list-marker [message]="'Nothing here'" (onCheckAgain)="applyControls()"></app-empty-list-marker>
+            </ng-template>
         </div>
         <ng-template #loading>
             <app-loading-overlay *ngIf="!filteredAccounts"></app-loading-overlay>
