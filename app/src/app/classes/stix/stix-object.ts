@@ -1,10 +1,9 @@
-import { Relationship } from './relationship';
 import { VersionNumber } from '../version-number';
 import { ExternalReferences } from '../external-references';
 import { v4 as uuid } from 'uuid';
 import { Serializable, ValidationData } from '../serializable';
 import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/rest-api-connector.service';
-import { Observable, of } from 'rxjs';
+import { forkJoin, Observable, of } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
 import { logger } from "../../util/logger";
 
@@ -381,6 +380,54 @@ export abstract class StixObject extends Serializable {
                     })
                 )
             }),
+            // validate LinkByIDs
+            switchMap(result => {
+                // build list of fields supporting LinkByIDs
+                let refs_fields = ["description"];
+                if (this.attackType == "technique") refs_fields.push("detection");
+
+                let parse_apis = [];
+                for (let field of refs_fields) {
+                    parse_apis.push(this.parseLinkByIds(this[field], restAPIService));
+                }
+
+                return forkJoin(parse_apis).pipe(
+                    map(api_results => {
+                        let validation_results = api_results as LinkByIdParseResult[];
+                        let linkResult = new LinkByIdParseResult();
+                        for (let validation_result of validation_results) {
+                            linkResult.merge(validation_result); // merge all results to a single object
+                        }
+
+                        // broken links
+                        let brokenLinks = Array.from(linkResult.brokenLinks);
+                        if (brokenLinks.length == 1) result.errors.push({
+                            result: "error",
+                            field: "description",
+                            message: `LinkById ${brokenLinks[0]} does not match format (LinkById: ATT&CK ID)`
+                        });
+                        else if (brokenLinks.length > 1) result.errors.push({
+                            result: "error",
+                            field: "description",
+                            message: `LinkByIds ${brokenLinks.join(", ")} do not match format (LinkById: ATT&CK ID)`
+                        });
+
+                        // missing links
+                        let missingLinks = Array.from(linkResult.missingLinks);
+                        if (missingLinks.length == 1) result.errors.push({
+                            result: "error",
+                            field: "description",
+                            message: `Cannot find linked object: ${missingLinks[0]}`
+                        });
+                        else if (missingLinks.length > 1) result.errors.push({
+                            result: "error",
+                            field: "description",
+                            message: `Cannot find linked objects: ${missingLinks.join(", ")}`
+                        });
+                        return result;
+                    })
+                );
+            }),
             // validate 'revoked-by' relationship exists
             switchMap(result => {
                 if (!this.revoked) return of(result); // do not check for revoked-by relationship
@@ -410,6 +457,68 @@ export abstract class StixObject extends Serializable {
 
     }
 
+    /**
+     * parses given field for linked objects
+     * @param field the field in which to parse LinkByIds
+     */
+    private parseLinkByIds(field: string, restAPIService: RestApiConnectorService): Observable<LinkByIdParseResult> {
+        let reLinkById = /\(LinkById: (.*?)\)/gmu;
+        let links = field.match(reLinkById);
+        let result = new LinkByIdParseResult({
+            brokenLinks: this.validateBrokenLinks(field, [/\(LinkById:([^ ].*?)\)/gmu, /\(LinkByID:(.*?)\)/gmu, /\(linkById:(.*?)\)/gmu])
+        });
+
+        if (!links) return of(result); // no LinkByIds found
+
+        let link_map = {};
+        for (let link of links) {
+            let id = link.split("(LinkById: ")[1].slice(0, -1);
+            link_map[id] = this.findLink(id, restAPIService)
+        }
+
+        return forkJoin(link_map).pipe(
+            map((results) => {
+                let link_results = results as any;
+                for (let key of Object.keys(link_results)) {
+                    // verify whether or not all links were found
+                    if (!link_results[key]) result.missingLinks.add(key);
+                }
+                return result;
+            })
+        );
+    }
+
+    /**
+     * validate the given field for broken LinkByIds found via regex
+     * @param field field that may have LinkByIds
+     * @param {regex[]} regExes regular expressions matching potential invalid tags
+     */
+    private validateBrokenLinks(field: string, regExes): Set<string> {
+        let result = new Set<string>();
+        for (let regex of regExes) {
+            let brokenLinks = field.match(regex);
+            if (brokenLinks) {
+                brokenLinks.forEach(l => result.add(l));
+            }
+        }
+        return result;
+    }
+
+    /**
+     * retrieves the linked object by ID
+     * @param id the ID of the linked object
+     * @param restAPIService service to connect to the REST API
+     */
+    private findLink(id: string, restAPIService: RestApiConnectorService): Observable<boolean> {
+        return restAPIService.getAllObjects(null, null, null, null, true, true, true).pipe(
+            map((result) => {
+                let object = result.data.find(o => o.attackID == id);
+                if (object) return true;
+                return false; // object not found
+            })
+        );
+    }
+
     public isStringArray = function(arr): boolean {
         for (let i = 0; i < arr.length; i++) {
             if (typeof(arr[i]) !== "string") {
@@ -426,4 +535,26 @@ export abstract class StixObject extends Serializable {
      * @returns {Observable} of the post
      */
     abstract save(restAPIService: RestApiConnectorService): Observable<StixObject>;
+}
+
+/**
+ * The results of parsing LinkByIds in a single field
+ */
+ export class LinkByIdParseResult {
+    public missingLinks: Set<string> = new Set(); // LinkByIds that could not be found
+    public brokenLinks: Set<string> = new Set();  // list of broken LinkByIds detected in the field
+
+    constructor(initData?: {missingLinks?: Set<string>, brokenLinks: Set<string>}) {
+        if (initData && initData.missingLinks) this.missingLinks = initData.missingLinks;
+        if (initData && initData.brokenLinks) this.brokenLinks = initData.brokenLinks;
+    }
+
+    /**
+     * Merge results from another LinkByIdParseResult into this object
+     * @param {LinkByIdParseResult} that results from other object
+     */
+    public merge(that: LinkByIdParseResult) {
+        this.missingLinks = new Set([...this.missingLinks, ...that.missingLinks]);
+        this.brokenLinks = new Set([...this.brokenLinks, ...that.brokenLinks]);
+    }
 }
