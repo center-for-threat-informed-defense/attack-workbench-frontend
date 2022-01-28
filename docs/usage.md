@@ -149,6 +149,12 @@ Some fields of objects support additional formatting features.
 
 Fields which show a "preview" tab when editing (all descriptions and the detection field found on techniques) allow markdown to be used to format the text. The ATT&CK Workbench uses the [GitHub-Flavored Markdown (GFM)](https://github.github.com/gfm/) syntax, though applications consuming ATT&CK data may not support this extension to the [commonMark](https://commonmark.org/) spec. The preview tab allows the the field formatting to be checked while it is being updated.
 
+#### LinkByIds
+
+LinkByIds are supported in description and detection fields and are used to reference an ATT&CK object. When viewing an object, LinkByIDs are visualized as a full hyperlink within the field and link to the corresponding object's page in the Workbench. 
+
+LinkByIds are formatted in text as `(LinkById: ATT&CK ID)`, which corresponds to the linked object's ATT&CK ID. When exporting collection and STIX bundles, LinkByIds will be replaced with the equivalent markdown formatted hyperlink to the object's page on the [ATT&CK Website](https://attack.mitre.org/).
+
 #### Citations
 
 Description, detection, and alias-description* fields allow for in-text citations, used to reference a primary source relevant to the prior sentence or paragraph. When viewing an object, citations are rendered as a citation marker (e.x: <sup>[1]</sup> ) corresponding to an entry in the external references section of the object page.
@@ -199,7 +205,7 @@ Any object in the knowledge base can be edited, even those imported from collect
 
 #### Editing Matrices
 
-Matrices share the typical fields on objects, including a description supporting markdown and citations. Unlike other object types, their IDs serve as identifier for their domain:
+Matrices share the typical fields on objects, including a description supporting markdown, LinkByIds, and citations. Unlike other object types, their IDs serve as identifier for their domain:
 
 | Domain | ID |
 |:------------|:----------|
@@ -221,7 +227,7 @@ Matrices do not have any associated relationships.
 
 Techniques represent "how" an adversary achieves a tactical goal by performing an action. For example, an adversary may dump credentials to achieve credential access.
 
-Like all objects, techniques support descriptions with markdown and citation support. The detection field also supports markdown and citations. Additionally, techniques list relevant platforms according to their domain. After a domain has been selected, the user may select the relevant platforms from the dropdown menu.
+Like all objects, techniques support descriptions with markdown, LinkByIds, and citation support. The detection field also supports markdown, LinkByIds, and citations. Additionally, techniques list relevant platforms according to their domain. After a domain has been selected, the user may select the relevant platforms from the dropdown menu.
 
 ##### Sub-techniques
 
@@ -259,7 +265,7 @@ The set of fields available to edit on a technique differs according to the doma
 
 Tactics represent the "why" of an ATT&CK technique or sub-technique. It is the adversary's tactical goal: the reason for performing an action. For example, an adversary may want to achieve credential access. 
 
-Tactics support the standard set of fields, including a description supporting citations and markdown formatting. Tactics must be assigned to a domain before techniques can be assigned to them. The assignment of techniques to tactics can only be done on the techniques page.
+Tactics support the standard set of fields, including a description supporting citations, LinkByIds, and markdown formatting. Tactics must be assigned to a domain before techniques can be assigned to them. The assignment of techniques to tactics can only be done on the techniques page.
 ##### Tactic Relationships
 
 Tactics do not have any associated relationships.
@@ -347,7 +353,7 @@ Relationships are edited within a dialog window accessed by clicking on the rela
 
 The source and target objects can be changed after the relationship has been created, but the relationship type cannot. Thus could a procedure example be remapped to a new technique based off updated reporting or adjustments to technique scope, for example.
 
-Relationships also have a description to provide additional context or to hold citations of relevant reporting. Like all descriptions, those on relationships support both citations and markdown formatting. Relationships between sub-techniques and techniques however are purely structural and do not support descriptions.
+Relationships also have a description to provide additional context or to hold citations of relevant reporting. Like all descriptions, those on relationships support citations, LinkByIds, and markdown formatting. Relationships between sub-techniques and techniques however are purely structural and do not support descriptions.
 
 
 ### Revoking and deprecating objects
