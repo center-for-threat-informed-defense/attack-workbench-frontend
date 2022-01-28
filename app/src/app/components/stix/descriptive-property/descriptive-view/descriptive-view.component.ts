@@ -112,8 +112,6 @@ export class DescriptiveViewComponent implements OnInit {
                 let linkedObj = this.attackObjects.find(obj => obj.attackID == id);
                 if (linkedObj && linkedObj.name) {
                     linkHTML = `<span><a href="${linkedObj.attackType}/${linkedObj.stixID}">${linkedObj.name}</a></span>`;
-                } else { // couldn't find linked object
-
                 }
                 displayStr = displayStr.replace(linkById, linkHTML);
             }
