@@ -68,7 +68,7 @@ export class UserAccountsPageComponent implements OnInit {
             })
             if (key && key.name) {
                 key = key.name.toLowerCase();
-                filtered = accounts.filter((account) => {
+                filtered = filtered.filter((account) => {
                     return account[key] === selectedVal;
                 });
             }
