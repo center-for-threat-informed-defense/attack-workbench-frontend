@@ -18,8 +18,8 @@ export class AuthInterceptor implements HttpInterceptor {
 
     // intercept outgoing requests to include headers & credentials
     intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-        const excludeCredentials = request.headers.get('SkipInterceptor');
-        const newHeaders = excludeCredentials ? request.headers.delete('SkipInterceptor') : this.headers;
+        const excludeCredentials = request.headers.get('ExcludeCredentials');
+        const newHeaders = excludeCredentials ? request.headers.delete('ExcludeCredentials') : this.headers;
         request = request.clone({
             headers: newHeaders,
             withCredentials: excludeCredentials ? false : true

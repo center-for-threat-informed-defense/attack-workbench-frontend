@@ -87,7 +87,7 @@ export class CollectionImportComponent implements OnInit {
 
     public getCollectionFromURL() {
         this.loadingStep1 = true;
-        let headers: HttpHeaders = new HttpHeaders({ 'SkipInterceptor': 'true' });
+        let headers: HttpHeaders = new HttpHeaders({ 'ExcludeCredentials': 'true' });
         let subscription_getBundle = this.http.get(this.url, {headers: headers}).subscribe({ //get the raw collection bundle from the endpoint
             next: (collectionBundle) => this.previewCollection(collectionBundle),
             error: (err) => {
