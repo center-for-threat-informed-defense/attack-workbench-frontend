@@ -25,6 +25,13 @@ const routes: Routes = [
                 "component": LandingPageComponent,
             },
             {
+                "path": "register",
+                "data": {
+                    "breadcrumb": "welcome"
+                },
+                "component": LandingPageComponent,
+            },
+            {
                 "path": "admin",
                 "canActivate": [AuthorizationGuard],
                 "canActivateChild": [AuthorizationGuard],
@@ -125,7 +132,7 @@ const routes: Routes = [
             },
         ]
     },
-    
+
 ];
 
 @NgModule({

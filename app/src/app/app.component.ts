@@ -7,7 +7,7 @@ import { TitleService } from './services/title/title.service';
 import { NGXLogger } from 'ngx-logger';
 import { initLogger } from './util/logger';
 import { AuthenticationService } from './services/connectors/authentication/authentication.service';
-import { Router } from '@angular/router';
+import { NavigationEnd, Router } from '@angular/router';
 
 @Component({
   selector: 'app-root',
@@ -34,6 +34,16 @@ export class AppComponent implements AfterViewInit {
         } else {
             this.setTheme("light");
         }
+
+        const routerSubscription = this.router.events.subscribe((e) => {
+            if (e instanceof NavigationEnd && e.url.includes('register')) {
+                const registerSubscription = this.authenticationService.handleRegisterRedirect().subscribe({
+                    next: (res) => { this.checkStatus(); },
+                    complete: () => { registerSubscription.unsubscribe(); }
+                });
+                routerSubscription.unsubscribe();
+            }
+        });
         // check user login
         let authSubscription = this.authenticationService.getSession().subscribe({
             next: (res) => { this.checkStatus(); },
@@ -77,10 +87,7 @@ export class AppComponent implements AfterViewInit {
 
     // User registration
     public register(): void {
-        const registerSubscription = this.authenticationService.register().subscribe({
-            next: (res) => { this.checkStatus(); },
-            complete: () => { registerSubscription.unsubscribe(); }
-        });
+        this.authenticationService.register();
     }
 
     public theme = "light";
