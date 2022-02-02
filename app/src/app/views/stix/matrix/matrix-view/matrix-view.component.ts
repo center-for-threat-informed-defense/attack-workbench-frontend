@@ -17,7 +17,13 @@ export class MatrixViewComponent extends StixViewPage implements OnInit {
 
   public all_tactics : Array<StixObject>;
 
-  public get matrix(): Matrix { return this.config.object as Matrix; }
+  public get matrix(): Matrix { 
+    let matrix = this.config.object as Matrix;
+    if ( matrix.firstInitialized ) {
+      matrix.initializeWithDefaultMarkingDefinitions(this.restAPIConnectorService)
+    }
+    return this.config.object as Matrix; 
+  }
 
   constructor(private route: ActivatedRoute, private restAPIConnectorService: RestApiConnectorService) { 
     super();

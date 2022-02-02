@@ -1,8 +1,7 @@
 <div class="statement-edit">
-    <button *ngIf="objStatements.length > 0 else noStatements" popoverPlacement="bottom" 
-        [popover]="objectStatus"
-        [popoverOnHover]="true"
-        (click)="updateStatements()"
+    <button #popoverButton *ngIf="objStatements.length > 0 else noStatements" popoverPlacement="bottom" 
+        [popover]="objectStatements"
+        (click)="updateStatements(objectStatements)"
         >
         <div *ngIf="objStatements.length == 1">1 statement</div>
         <div *ngIf="objStatements.length > 1">{{objStatements.length}} statements</div>
@@ -12,15 +11,19 @@
         <button (click)="updateStatements()">+ add statement</button>
     </ng-template>
 
-    <popover-content #objectStatus [closeOnClickOutside]="true">
-        <div class="labelled-box suffixed">
-            <div class="content">
-                <ul>
-                    <li *ngFor="let objStatement of objStatements">{{objStatement.definition_string}}</li>
-                </ul>
+    <popover-content #objectStatements>
+        <div class="grid spacing-16">
+            <div class="row labelled-box suffixed">
+                <div class="content">
+                    <ul>
+                        <li *ngFor="let objStatement of objStatements">{{objStatement.definition_string}}</li>
+                    </ul>
+                </div>
+                <label>Statements</label>
             </div>
-            <label>Statements</label>
+            <div class="row grow-to-row click-open">
+                <p>Click to update statements</p>
+            </div>
         </div>
-        <p>Click to update statements</p>
     </popover-content>
 </div>

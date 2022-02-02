@@ -10,13 +10,13 @@
         </div>
         <div class="section-header-section">
             <app-tlp-property [config]="{
-                mode: editing? 'edit': 'view',
+                mode: config.mode,
                 object: config.object
             }"></app-tlp-property>
         </div>
         <div class="section-header-section">
             <app-statement-property [config]="{
-                mode: editing? 'edit': 'view',
+                mode: config.mode,
                 object: config.object
             }"></app-statement-property>
         </div>

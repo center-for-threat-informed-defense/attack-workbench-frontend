@@ -20,7 +20,7 @@ export class StatementEditComponent implements OnInit {
   public select: SelectionModel<string>;
 
   // Update object statements with Dialog component
-  public updateStatements() {
+  public updateStatements(popover?: any) {
       let rows: StixObject[] = this.markingDefinitions.data;
       // set up selection
       this.select = new SelectionModel(true);
@@ -52,6 +52,7 @@ export class StatementEditComponent implements OnInit {
                   // Set marking refs to selection
                   this.config.object["object_marking_refs"] = this.select.selected;
               }
+              if (popover) setTimeout(() => popover.hide()); // wait for popover to hide
           },
           complete: () => {
               subscription.unsubscribe();
