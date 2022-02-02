@@ -193,9 +193,17 @@ Relationships connecting two objects (e.g procedure examples, associated groups)
 
 Relationship source/target objects can be changed after the relationship has been created, but the type of the relationship cannot (e.g a `mitigates` relationship cannot be converted to a `uses` relationship).
 
+#### Creating Marking Definition Statements
+
+Marking definition statements can be created and assigned to invidual objects. Marking definitions objects are a bit different to other objects because they cannot be edited after creation therefore will not track workflow state for those.
+
+#### Default Marking Definition Statements
+
+Default marking definitions can be set in the admin page. Selected marking definitions will be applied by default to any newly created objects. If you edit an object that does not have the default marking definitions, it will be added automatically on save.
+
 ### Editing Objects
 
-Any object in the knowledge base can be edited, even those imported from collections. Clicking the "edit" button in the toolbar, or the "edit" link in an object list, will bring you to the edit interface for the object. While editing an object, relationships cannot be viewed or created since they are saved independently of the objects they connect.
+Any object in the knowledge base, except for marking definitions, can be edited, even those imported from collections. Clicking the "edit" button in the toolbar, or the "edit" link in an object list, will bring you to the edit interface for the object. While editing an object, relationships cannot be viewed or created since they are saved independently of the objects they connect.
 
 #### Editing Matrices
 
