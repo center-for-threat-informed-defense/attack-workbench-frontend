@@ -13,15 +13,21 @@ import { StatementPropertyConfig } from '../statement-property.component';
 })
 
 export class StatementEditComponent implements OnInit {
-  @Input() public markingDefinitions: any;
+  @Input() public statementsMap: any;
   @Input() public objStatements: any[];
+  @Input() public tlpSTIXid: string;
   @Input() public config: StatementPropertyConfig;
 
   public select: SelectionModel<string>;
 
   // Update object statements with Dialog component
   public updateStatements(popover?: any) {
-      let rows: StixObject[] = this.markingDefinitions.data;
+
+      // Prepare rows
+      let rows: StixObject[] = [];
+      for (let key in this.statementsMap) {
+          rows.push(this.statementsMap[key]);
+      }
       // set up selection
       this.select = new SelectionModel(true);
       let objStatements = this.objStatements;
@@ -51,6 +57,8 @@ export class StatementEditComponent implements OnInit {
               if (result && this.select.selected) {
                   // Set marking refs to selection
                   this.config.object["object_marking_refs"] = this.select.selected;
+                  // re-add tlp
+                  if (this.tlpSTIXid) this.config.object["object_marking_refs"].push(this.tlpSTIXid);
               }
               if (popover) setTimeout(() => popover.hide()); // wait for popover to hide
           },

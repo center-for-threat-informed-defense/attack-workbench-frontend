@@ -12,9 +12,10 @@ import { TlpPropertyConfig } from '../tlp-property.component';
   encapsulation: ViewEncapsulation.None
 })
 export class TlpEditComponent implements OnInit {
-  @Input() public tlpMarkingDefinitions: any;
+  @Input() public tlpMarkingDefinitionsMap: any;
   @Input() public tlp: string;
   @Input() public config: TlpPropertyConfig;
+  @Input() public objStatementsSTIXids: string[];
 
   public select: SelectionModel<string>;
 
@@ -26,15 +27,22 @@ export class TlpEditComponent implements OnInit {
     else return "";
   }
 
-    // Update object statements with Dialog component
-    public updateTlpMarking() {
-      let rows: StixObject[] = this.tlpMarkingDefinitions.data;
+  // Update object statements with Dialog component
+  public updateTlpMarking() {
+      let rows: StixObject[] = [];
+      for (let key in this.tlpMarkingDefinitionsMap) {
+          rows.push(this.tlpMarkingDefinitionsMap[key]);
+      }
+
+      let current_selection = "";
       // set up selection
       this.select = new SelectionModel(true);
-      // let objStatements = this.objStatements;
-      // for (let i in objStatements) {
-      //     this.select.select(objStatements[i]["stixID"]); // Select current statements by default
-      // }
+      for (let key in this.tlpMarkingDefinitionsMap) {
+          if (this.tlpMarkingDefinitionsMap[key]["definition_string"] == this.tlp){
+              this.select.select(this.tlpMarkingDefinitionsMap[key]["stixID"]); // Select current tlp to track in UI
+              current_selection = this.tlpMarkingDefinitionsMap[key]["stixID"]; // save current selection
+          }
+      }
       
       // If there is already a selection, dialog button label will say UPDATE instead of ADD
       let buttonLabelStr : string;
@@ -57,8 +65,22 @@ export class TlpEditComponent implements OnInit {
       let subscription = prompt.afterClosed().subscribe({
           next: (result) => {
               if (result && this.select.selected) {
-                  // Set marking refs to selection
-                  this.config.object["object_marking_refs"] = this.select.selected;
+                  // Check if there are two selections, ignore previous selection
+                  let tlp_selection = this.select.selected;
+                  if (this.select.selected.length > 1){
+                      for (let i = 0; i < this.select.selected.length; i++) {
+                          if (this.select.selected[i] != current_selection) {
+                              tlp_selection = [this.select.selected[i]];
+                          }
+                      }
+                  }
+
+                  // first add statements if they exist
+                  if (this.objStatementsSTIXids) {
+                      this.config.object["object_marking_refs"] = this.objStatementsSTIXids;
+                  }
+                  else this.config.object["object_marking_refs"] = [];
+                  this.config.object["object_marking_refs"].push(tlp_selection[0]); // add tlp selection
               }
           },
           complete: () => {

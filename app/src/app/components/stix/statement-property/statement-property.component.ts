@@ -13,8 +13,8 @@ export class StatementPropertyComponent implements OnInit {
     @Input() public config: StatementPropertyConfig;
 
     public data$: Observable<Paginated<StixObject>>;
-    public markingDefinitions : any;
     private statementsMap = {}; // map of marking definitions with STIX id as key to object
+    private tlpMap = {};
 
     // Retrieves statements of current Object
     public get objStatements(): any[] {
@@ -31,13 +31,18 @@ export class StatementPropertyComponent implements OnInit {
         return objectStatements;
     }
 
-    // Creates map of statements on initialization of markingDefinitions
-    private createStatementsMap(): void {    
-        for (let index in this.markingDefinitions.data) {
-            if (this.markingDefinitions.data[index]["definition_type"] == "statement") {
-                this.statementsMap[this.markingDefinitions.data[index]["stixID"]] = this.markingDefinitions.data[index];
+    // Retrieves tlp marking definition of current Object
+    public get tlpSTIXid(): string {
+        if (this.config.object["object_marking_refs"]){
+            let objStatementsStixIdList = this.config.object["object_marking_refs"];
+
+            for (let index in objStatementsStixIdList) {
+                if (this.tlpMap[objStatementsStixIdList[index]]) {
+                    return objStatementsStixIdList[index];
+                }
             }
         }
+        return "";
     }
 
     constructor(private restAPIConnectorService: RestApiConnectorService) { }
@@ -51,10 +56,18 @@ export class StatementPropertyComponent implements OnInit {
         }
         this.data$ = this.restAPIConnectorService.getAllMarkingDefinitions(options);
         let subscription = this.data$.subscribe({
-            next: (data) => { 
-              if (data) {
-                this.markingDefinitions = data;
-                this.createStatementsMap(); // create statement map with data
+            next: (objects) => { 
+              if (objects) {
+                if ("data" in objects) {
+                    for (let index in objects.data) { // Populate statements map with marking definitions statements
+                        if (objects.data[index]["definition_type"] == "statement") {
+                            this.statementsMap[objects.data[index]["stixID"]] = objects.data[index];
+                        }
+                        if (objects.data[index]["definition_type"] == "tlp") {
+                            this.tlpMap[objects.data[index]["stixID"]] = objects.data[index];
+                        }
+                    }
+                }
               }
             },
             complete: () => { subscription.unsubscribe() }

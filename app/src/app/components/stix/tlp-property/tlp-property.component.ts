@@ -12,13 +12,38 @@ import { Observable } from 'rxjs';
 export class TlpPropertyComponent implements OnInit {
   @Input() public config: TlpPropertyConfig;
 
-  public tlpMarkingDefinitions : any;
+  private tlpMarkingDefinitionsMap = {};
+  private statementsMap = {};
   public data$: Observable<Paginated<StixObject>>;
 
   constructor(private restAPIConnectorService: RestApiConnectorService) { }
 
+  // Retrieves statements of current Object
+  public get objStatementsSTIXids(): any[] {
+      let objStatementsSTIXidList = []
+      if (this.config.object["object_marking_refs"]){
+          let objMarkingDefsStixIdList = this.config.object["object_marking_refs"];
+
+          for (let index in objMarkingDefsStixIdList) {
+              if (this.statementsMap[objMarkingDefsStixIdList[index]]) {
+                objStatementsSTIXidList.push(this.statementsMap[objMarkingDefsStixIdList[index]]["stixID"]);
+              }
+          }
+      }
+      return objStatementsSTIXidList;
+  }
+
   public get tlp(): string {
-    return "none";
+      if (this.config.object["object_marking_refs"]){
+          let objMarkingDefinitionsStixIdList = this.config.object["object_marking_refs"];
+
+          for (let index in objMarkingDefinitionsStixIdList) {
+              if (objMarkingDefinitionsStixIdList[index] in this.tlpMarkingDefinitionsMap) {
+                  return this.tlpMarkingDefinitionsMap[objMarkingDefinitionsStixIdList[index]]["definition_string"];
+              }
+          }
+      }
+      return "none";
   }
 
   ngOnInit(): void {
@@ -30,7 +55,18 @@ export class TlpPropertyComponent implements OnInit {
       }
       this.data$ = this.restAPIConnectorService.getAllMarkingDefinitions(options);
       let subscription = this.data$.subscribe({
-          next: (data) => { if (data) this.tlpMarkingDefinitions = data;},
+          next: (objects) => { 
+              if (objects) {
+                  for (let index in objects.data) { // add tlp marking definitions
+                    if (objects.data[index]["definition_type"] == "tlp") {
+                        this.tlpMarkingDefinitionsMap[objects.data[index]["stixID"]] = objects.data[index];
+                    }
+                    if (objects.data[index]["definition_type"] == "statement") {
+                      this.statementsMap[objects.data[index]["stixID"]] = objects.data[index];
+                  }
+                  }
+              }
+          },
           complete: () => { subscription.unsubscribe() }
       })
   }

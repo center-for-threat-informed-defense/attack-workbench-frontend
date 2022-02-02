@@ -7,7 +7,6 @@ import { Component, Input, OnInit, ViewEncapsulation } from '@angular/core';
   encapsulation: ViewEncapsulation.None
 })
 export class TlpViewComponent implements OnInit {
-  @Input() public tlpMarkingDefinitions: any;
   @Input() public tlp: string;
 
   public tlpClass() : string {

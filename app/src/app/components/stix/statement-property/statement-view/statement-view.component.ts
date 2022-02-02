@@ -7,7 +7,6 @@ import { StatementPropertyConfig } from '../statement-property.component';
   styleUrls: ['./statement-view.component.scss']
 })
 export class StatementViewComponent implements OnInit {
-  @Input() public markingDefinitions: any;
   @Input() public objStatements: any[];
   @Input() public config: StatementPropertyConfig;
 
