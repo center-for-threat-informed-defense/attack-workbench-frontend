@@ -70,7 +70,6 @@ export class TlpEditComponent implements OnInit {
               if (result && this.select.selected) {
                   // Check if there are two selections, ignore previous selection
                   let tlp_selection = this.select.selected;
-                  console.log(this.select.selected);
                   if (this.select.selected.length > 1){
                       for (let i = 0; i < this.select.selected.length; i++) {
                           if (this.select.selected[i] != current_selection) {
