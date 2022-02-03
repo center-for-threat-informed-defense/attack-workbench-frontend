@@ -35,12 +35,25 @@ export class AppComponent implements AfterViewInit {
             this.setTheme("light");
         }
 
-        const routerSubscription = this.router.events.subscribe((e) => {
-            if (e instanceof NavigationEnd && e.url.includes('register')) {
-                const registerSubscription = this.authenticationService.handleRegisterRedirect().subscribe({
-                    next: (res) => { this.checkStatus(); },
-                    complete: () => { registerSubscription.unsubscribe(); }
-                });
+        const routerSubscription = this.router.events.subscribe({
+            next: (e) => {
+                if (e instanceof NavigationEnd && e.url.includes('register')) {
+                    const registerSubscription = this.authenticationService.handleRegisterRedirect().subscribe({
+                        next: () => {
+                            this.checkStatus();
+                        },
+                        complete: () => {
+                            registerSubscription.unsubscribe();
+                        }
+                    });
+                } else {
+                    // check user login
+                    let authSubscription = this.authenticationService.getSession().subscribe({
+                        next: (res) => { this.checkStatus(); },
+                        complete: () => { authSubscription.unsubscribe(); }
+                    });
+                }
+            }, complete: () => {
                 routerSubscription.unsubscribe();
             }
         });
@@ -87,7 +100,11 @@ export class AppComponent implements AfterViewInit {
 
     // User registration
     public register(): void {
-        this.authenticationService.register();
+        const sub = this.authenticationService.register().subscribe({
+            complete: () => {
+                sub.unsubscribe();
+            }
+        });
     }
 
     public theme = "light";

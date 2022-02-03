@@ -130,9 +130,12 @@ export class AuthenticationService extends ApiConnector {
             concatMap(authnType => {
                 if (authnType == "oidc") {
                     return this.http.post(`${this.baseUrl}/user-accounts/register`, {responseType: 'text'}).pipe(
-                        map(res => {
-                            this.currentUser = undefined;
-                            return res;
+                        concatMap(() => {
+                            return this.getSession().pipe(
+                                map((res) => {
+                                    return res;
+                                })
+                            );
                         })
                     );
                 }
