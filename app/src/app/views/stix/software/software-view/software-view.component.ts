@@ -13,10 +13,6 @@ export class SoftwareViewComponent extends StixViewPage implements OnInit {
     // public editing: boolean = false;
 
     public get software(): Software { 
-        let software = this.config.object as Software;
-        if ( software.firstInitialized ) {
-          software.initializeWithDefaultMarkingDefinitions(this.restApiConnector)
-        }
         return this.config.object as Software; 
     }
     
@@ -26,6 +22,10 @@ export class SoftwareViewComponent extends StixViewPage implements OnInit {
         // this.route.queryParams.subscribe(params => {
         //     this.editing = params["editing"];
         // });
+        let software = this.config.object as Software;
+        if ( software.firstInitialized ) {
+            software.initializeWithDefaultMarkingDefinitions(this.restApiConnector);
+        }
     }
 
 }

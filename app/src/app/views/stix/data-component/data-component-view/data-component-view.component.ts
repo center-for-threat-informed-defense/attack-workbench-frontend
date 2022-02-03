@@ -12,10 +12,6 @@ export class DataComponentViewComponent extends StixViewPage implements OnInit {
     @Output() onClickRelationship = new EventEmitter();
     public loading = false;
     public get data_component(): DataComponent {
-        let data_component = this.config.object as DataComponent;
-        if ( data_component.firstInitialized ) {
-            data_component.initializeWithDefaultMarkingDefinitions(this.restAPIConnectorService)
-        }
         return this.config.object as DataComponent; 
     }
 
@@ -34,6 +30,10 @@ export class DataComponentViewComponent extends StixViewPage implements OnInit {
                 },
                 complete: () => { subscription.unsubscribe(); }
             });
+        }
+        let data_component = this.config.object as DataComponent;
+        if ( data_component.firstInitialized ) {
+            data_component.initializeWithDefaultMarkingDefinitions(this.restAPIConnectorService)
         }
     }
 

@@ -13,10 +13,6 @@ import { StixDialogComponent } from '../../stix-dialog/stix-dialog.component';
 })
 export class DataSourceViewComponent extends StixViewPage implements OnInit {
     public get data_source(): DataSource { 
-        let data_source = this.config.object as DataSource;
-        if ( data_source.firstInitialized ) {
-            data_source.initializeWithDefaultMarkingDefinitions(this.restAPIConnectorService)
-        }
         return this.config.object as DataSource; 
     }
 
@@ -27,6 +23,10 @@ export class DataSourceViewComponent extends StixViewPage implements OnInit {
 
     ngOnInit(): void {
         this.data_components = this.data_source.data_components;
+        let data_source = this.config.object as DataSource;
+        if ( data_source.firstInitialized ) {
+            data_source.initializeWithDefaultMarkingDefinitions(this.restAPIConnectorService);
+        }
     }
 
     public getDataComponents(): void {

@@ -440,19 +440,17 @@ export abstract class StixObject extends Serializable {
      * @param restAPIService [RestApiConnectorService] the service to perform the POST/PUT through
      */
     public initializeWithDefaultMarkingDefinitions(restAPIService: RestApiConnectorService) {
-        if ( !this.defaultMarkingDefinitionsLoaded ){
-            let data$ = restAPIService.getDefaultMarkingDefinitions();
-            let sub = data$.subscribe({
-                next: (data) => {
-                    let marking_refs = []
-                    for (let i in data) {
-                        marking_refs.push(data[i].stix.id); // Select current statements by default
-                    }
-                    this.object_marking_refs = marking_refs;
-                    this.defaultMarkingDefinitionsLoaded = true;
-                },
-                complete: () => { sub.unsubscribe(); }
-            });
-        }
+        let data$ = restAPIService.getDefaultMarkingDefinitions();
+        let sub = data$.subscribe({
+            next: (data) => {
+                let marking_refs = []
+                for (let i in data) {
+                    marking_refs.push(data[i].stix.id); // Select current statements by default
+                }
+                this.object_marking_refs = marking_refs;
+                this.defaultMarkingDefinitionsLoaded = true;
+            },
+            complete: () => { sub.unsubscribe(); }
+        });
     }
 }

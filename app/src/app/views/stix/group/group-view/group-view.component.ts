@@ -13,10 +13,6 @@ import { RestApiConnectorService } from "src/app/services/connectors/rest-api/re
 export class GroupViewComponent extends StixViewPage implements OnInit {
   
     public get group(): Group {
-        let group = this.config.object as Group;
-        if ( group.firstInitialized == true ) {
-            group.initializeWithDefaultMarkingDefinitions(this.restApiConnector);
-        }
         return this.config.object as Group; 
     }
 
@@ -28,6 +24,11 @@ export class GroupViewComponent extends StixViewPage implements OnInit {
         super()
     }
 
-    ngOnInit() {}
+    ngOnInit() {
+        let group = this.config.object as Group;
+        if ( group.firstInitialized == true ) {
+            group.initializeWithDefaultMarkingDefinitions(this.restApiConnector);
+        }
+    }
 
 }

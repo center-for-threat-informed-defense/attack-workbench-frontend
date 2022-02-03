@@ -13,10 +13,6 @@ import { RestApiConnectorService } from "src/app/services/connectors/rest-api/re
 export class TechniqueViewComponent extends StixViewPage implements OnInit {
 
     public get technique(): Technique { 
-        let technique = this.config.object as Technique;
-        if ( technique.firstInitialized ) {
-            technique.initializeWithDefaultMarkingDefinitions(this.restApiConnector)
-        }
         return this.config.object as Technique; 
     }
 
@@ -25,6 +21,10 @@ export class TechniqueViewComponent extends StixViewPage implements OnInit {
     }
 
     ngOnInit() {
+        let technique = this.config.object as Technique;
+        if ( technique.firstInitialized ) {
+            technique.initializeWithDefaultMarkingDefinitions(this.restApiConnector);
+        }
     }
 
     ngAfterContentChecked() {

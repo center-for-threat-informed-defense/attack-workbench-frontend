@@ -18,10 +18,6 @@ export class MatrixViewComponent extends StixViewPage implements OnInit {
   public all_tactics : Array<StixObject>;
 
   public get matrix(): Matrix { 
-    let matrix = this.config.object as Matrix;
-    if ( matrix.firstInitialized ) {
-      matrix.initializeWithDefaultMarkingDefinitions(this.restAPIConnectorService)
-    }
     return this.config.object as Matrix; 
   }
 
@@ -30,17 +26,21 @@ export class MatrixViewComponent extends StixViewPage implements OnInit {
   }
 
   ngOnInit() {
-    // this.route.queryParams.subscribe(params => {
-    //     this.editing = params["editing"];
-    // });
-    if (!this.config.hasOwnProperty('showRelationships') || this.config.showRelationships) {
-        let subscription = this.restAPIConnectorService.getAllTactics().subscribe({
-          next: (all_tactics) => {
-            this.all_tactics = all_tactics.data;
-          },
-          complete: () => { subscription.unsubscribe(); } //prevent memory leaks
-        })
-    }
+      // this.route.queryParams.subscribe(params => {
+      //     this.editing = params["editing"];
+      // });
+      if (!this.config.hasOwnProperty('showRelationships') || this.config.showRelationships) {
+          let subscription = this.restAPIConnectorService.getAllTactics().subscribe({
+            next: (all_tactics) => {
+              this.all_tactics = all_tactics.data;
+            },
+            complete: () => { subscription.unsubscribe(); } //prevent memory leaks
+          })
+      }
+      let matrix = this.config.object as Matrix;
+      if ( matrix.firstInitialized ) {
+          matrix.initializeWithDefaultMarkingDefinitions(this.restAPIConnectorService)
+      }
   }
 
 }

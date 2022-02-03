@@ -15,10 +15,6 @@ export class MitigationViewComponent extends StixViewPage implements OnInit {
     // public editing: boolean = false;
 
     public get mitigation(): Mitigation { 
-        let mitigation = this.config.object as Mitigation;
-        if ( mitigation.firstInitialized ) {
-            mitigation.initializeWithDefaultMarkingDefinitions(this.restApiConnector)
-        }
         return this.config.object as Mitigation; 
     }
 
@@ -32,6 +28,10 @@ export class MitigationViewComponent extends StixViewPage implements OnInit {
         // this.route.queryParams.subscribe(params => {
         //     this.editing = params["editing"];
         // });
+        let mitigation = this.config.object as Mitigation;
+        if ( mitigation.firstInitialized ) {
+            mitigation.initializeWithDefaultMarkingDefinitions(this.restApiConnector);
+        }
     }
 
 }

@@ -12,21 +12,21 @@ import { RestApiConnectorService } from "src/app/services/connectors/rest-api/re
 export class TacticViewComponent extends StixViewPage implements OnInit {
   
   public get tactic(): Tactic { 
-      let tactic = this.config.object as Tactic;
-      if ( tactic.firstInitialized ) {
-        tactic.initializeWithDefaultMarkingDefinitions(this.restApiConnector)
-      }
       return this.config.object as Tactic; 
   }
 
   constructor(private restApiConnector: RestApiConnectorService, private route: ActivatedRoute) { 
-    super()
+      super()
   }
 
   ngOnInit() {
-    // this.route.queryParams.subscribe(params => {
-    //   this.editing = params["editing"];
-    // });
+      // this.route.queryParams.subscribe(params => {
+      //   this.editing = params["editing"];
+      // });
+      let tactic = this.config.object as Tactic;
+      if ( tactic.firstInitialized ) {
+          tactic.initializeWithDefaultMarkingDefinitions(this.restApiConnector);
+      }
   }
 
 }
