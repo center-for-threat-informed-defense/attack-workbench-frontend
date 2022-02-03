@@ -83,11 +83,14 @@ export class MarkingDefinition extends StixObject {
                     "field": "definition_string",
                     "result": "error",
                     "message": "definition string is not specified"
-                })} else { result.successes.push({
-                    "field": "definition_string",
-                    "result": "error",
-                    "message": "definition string specified"
-                })}
+                })} else { 
+                    let successmsg = "definition string specified: " + this.definition_string;
+                    result.successes.push({
+                        "field": "definition_string",
+                        "result": "success",
+                        "message": successmsg
+                    })
+                }
                 return result;
             }),
             switchMap(result => {

@@ -5,6 +5,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { ValidationData } from 'src/app/classes/serializable';
 import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/rest-api-connector.service';
 import { Router } from '@angular/router';
+import { ConfirmationDialogComponent } from 'src/app/components/confirmation-dialog/confirmation-dialog.component';
 
 @Component({
     selector: 'app-marking-definition-view',
@@ -48,12 +49,27 @@ export class MarkingDefinitionViewComponent extends StixViewPage implements OnIn
      *
      */
     public save() {
-        let subscription = this.marking_definition.save(this.restApiConnector).subscribe({
+
+        let prompt = this.dialog.open(ConfirmationDialogComponent, {
+            maxWidth: "35em",
+            data: { 
+                message: 'Are you sure you want to save this statement? You cannot modify it after saving',
+            }
+        });
+  
+        let subscription = prompt.afterClosed().subscribe({
             next: (result) => {
-                this.router.navigate([result.attackType, result.stixID]);
-                this.validating = false;
+                if (result) {
+                    let subscription = this.marking_definition.save(this.restApiConnector).subscribe({
+                        next: (result) => {
+                            this.router.navigate([result.attackType, result.stixID]);
+                            this.validating = false;
+                        },
+                        complete: () => { subscription.unsubscribe(); }
+                    })
+                }
             },
-            complete: () => { subscription.unsubscribe(); }
-        })
+            complete: () => { subscription.unsubscribe(); } //prevent memory leaks
+        });
     }
 }
