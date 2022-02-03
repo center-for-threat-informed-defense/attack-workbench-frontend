@@ -44,10 +44,12 @@ export class TlpEditComponent implements OnInit {
           }
       }
       
+      let clearSelection = false;
       // If there is already a selection, dialog button label will say UPDATE instead of ADD
       let buttonLabelStr : string;
       if (this.select.selected.length > 0) {
           buttonLabelStr = "UPDATE";
+          clearSelection = true;
       } else buttonLabelStr = "ADD";
 
       let prompt = this.dialog.open(AddDialogComponent, {
@@ -58,7 +60,8 @@ export class TlpEditComponent implements OnInit {
           selectableObjects: rows,
           select: this.select,
           type: "marking-definition",
-          buttonLabel: buttonLabelStr
+          buttonLabel: buttonLabelStr,
+          clearSelection: clearSelection
           },
       });
 
@@ -67,6 +70,7 @@ export class TlpEditComponent implements OnInit {
               if (result && this.select.selected) {
                   // Check if there are two selections, ignore previous selection
                   let tlp_selection = this.select.selected;
+                  console.log(this.select.selected);
                   if (this.select.selected.length > 1){
                       for (let i = 0; i < this.select.selected.length; i++) {
                           if (this.select.selected[i] != current_selection) {
