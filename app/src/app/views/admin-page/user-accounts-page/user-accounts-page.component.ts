@@ -35,7 +35,7 @@ export class UserAccountsPageComponent implements OnInit {
             },
             {
                 name: 'Role',
-                values: Object.values(Role as {})
+                values: Object.values(Role as {}).filter((r) => r !== 'none')
             }
         ];
     }
