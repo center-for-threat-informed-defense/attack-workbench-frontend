@@ -199,7 +199,11 @@ Marking definition statements can be created and assigned to invidual objects. M
 
 #### Default Marking Definition Statements
 
-Default marking definitions can be set in the admin page. Selected marking definitions will be applied by default to any newly created objects. If you edit an object that does not have the default marking definitions, it will be added automatically on save.
+Default marking definition statments can be set in the admin page. Selected marking definition statements will be applied by default to any newly created objects. If you edit an object that does not have the default marking definitions, it will be added automatically on save.
+
+#### Adding Statements and TLP marking definitions
+
+When creating and/or editing an object, you can add multiple statements and select one of the four standard TLP markings. TLP markings are loaded by the REST API and cannot be created and/or edited from the front end.
 
 ### Editing Objects
 
