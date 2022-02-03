@@ -60,19 +60,10 @@ export class UserAccountsPageComponent implements OnInit {
 
     public applyFilters(accounts): any {
         let filtered = accounts;
-        if (this.selectedFilters) this.selectedFilters.forEach((selectedVal) => {
-            let key = this.filterOptions.find((filter) => {
-                return filter.values.find((val) => {
-                    return val === selectedVal;
-                });
-            })
-            if (key && key.name) {
-                key = key.name.toLowerCase();
-                filtered = filtered.filter((account) => {
-                    return account[key] === selectedVal;
-                });
-            }
-        });
+        if (this.selectedFilters.length > 0) {
+            const filters = this.filterOptions.map((f) => f.name.toLowerCase())
+            filtered = filtered.filter((acc) => filters.map((key) => acc[key]).some((val) => this.selectedFilters.indexOf(val) > -1))
+        }
         return filtered;
     }
 
