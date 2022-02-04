@@ -46,7 +46,7 @@ export class AppComponent implements AfterViewInit {
                             registerSubscription.unsubscribe();
                         }
                     });
-                } else {
+                } else if (e instanceof NavigationEnd) {
                     // check user login
                     let authSubscription = this.authenticationService.getSession().subscribe({
                         next: (res) => { this.checkStatus(); },
