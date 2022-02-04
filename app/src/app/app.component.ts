@@ -57,11 +57,6 @@ export class AppComponent implements AfterViewInit {
                 routerSubscription.unsubscribe();
             }
         });
-        // check user login
-        let authSubscription = this.authenticationService.getSession().subscribe({
-            next: (res) => { this.checkStatus(); },
-            complete: () => { authSubscription.unsubscribe(); }
-        });
         initLogger(logger);
     }
 
