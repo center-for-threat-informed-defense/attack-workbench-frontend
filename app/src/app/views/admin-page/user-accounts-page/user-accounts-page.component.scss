@@ -7,6 +7,11 @@
     &.pending { background-color: #F5D466; color: #1d252c !important; }
   }
 
+  .mat-icon-button.mat-button-disabled {
+    .dark & { color: on-color-deemphasis(dark); }
+    .light & { color: on-color-deemphasis(light); }
+  }
+
   .approve-button {
     border: none;
     cursor: pointer;
