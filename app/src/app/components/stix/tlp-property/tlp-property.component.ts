@@ -16,7 +16,9 @@ export class TlpPropertyComponent implements OnInit {
   private statementsMap = {};
   public data$: Observable<Paginated<StixObject>>;
 
-  constructor(private restAPIConnectorService: RestApiConnectorService) { }
+  constructor(private restAPIConnectorService: RestApiConnectorService) { 
+      // empty constructor
+  }
 
   // Retrieves statements of current Object
   public get objStatementsSTIXids(): any[] {

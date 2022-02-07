@@ -200,26 +200,24 @@ export class StixPageComponent implements OnInit, OnDestroy {
         if (result.length == 0) {
             this.breadcrumbService.changeBreadcrumb(this.route.snapshot, "object not found")
             this.titleService.setTitle("object not found", true);
-        } else {
-            if ("name" in result[0] && result[0].name) {
-                this.breadcrumbService.changeBreadcrumb(this.route.snapshot, result[0].name)
-                this.titleService.setTitle(result[0].name, false);
-            } else {
-                if (objectType == 'marking-definition') {
-                    if ("definition_string" in result[0] && result[0].definition_string){
-                        this.breadcrumbService.changeBreadcrumb(this.route.snapshot, `marking definition`);
-                        this.titleService.setTitle(`Marking Definition`);
-                    }
-                    else {
-                        this.breadcrumbService.changeBreadcrumb(this.route.snapshot, `new ${objectType}`) 
-                        this.titleService.setTitle(`New Marking Definition`);
-                    }
-                }
-                else {
-                    this.breadcrumbService.changeBreadcrumb(this.route.snapshot, `new ${objectType}`)
-                    this.titleService.setTitle(`new ${objectType}`);
-                }
+        } 
+        else if ("name" in result[0] && result[0].name) {
+            this.breadcrumbService.changeBreadcrumb(this.route.snapshot, result[0].name)
+            this.titleService.setTitle(result[0].name, false);
+        } 
+        else if (objectType == 'marking-definition') {
+            if ("definition_string" in result[0] && result[0].definition_string){
+                this.breadcrumbService.changeBreadcrumb(this.route.snapshot, `marking definition`);
+                this.titleService.setTitle(`Marking Definition`);
             }
+            else {
+                this.breadcrumbService.changeBreadcrumb(this.route.snapshot, `new ${objectType}`) 
+                this.titleService.setTitle(`New Marking Definition`);
+            }
+        }
+        else {
+            this.breadcrumbService.changeBreadcrumb(this.route.snapshot, `new ${objectType}`)
+            this.titleService.setTitle(`new ${objectType}`);
         }
     }
 }

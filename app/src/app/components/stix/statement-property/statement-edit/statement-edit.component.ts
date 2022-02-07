@@ -68,8 +68,12 @@ export class StatementEditComponent implements OnInit {
       });
   }
 
-  constructor(public dialog: MatDialog) { }
+  constructor(public dialog: MatDialog) { 
+      // empty constructor
+  }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+      // empty on init
+  }
 
 }

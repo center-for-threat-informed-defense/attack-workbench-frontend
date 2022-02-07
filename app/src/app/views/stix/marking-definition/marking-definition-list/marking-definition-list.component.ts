@@ -5,7 +5,11 @@ import { Component, OnInit } from '@angular/core';
     templateUrl: './marking-definition-list.component.html'
 })
 export class MarkingDefinitionListComponent implements OnInit {
-    constructor() { }
+    constructor() {
+        // empty constructor
+     }
 
-    ngOnInit() {}
+    ngOnInit() {
+        // empty on init
+    }
  }

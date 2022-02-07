@@ -15,8 +15,12 @@ export class StatementViewComponent implements OnInit {
     return true;
   }
 
-  constructor() {}
+  constructor() {
+      // empty constructor
+  }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+      // empty on init
+  }
 
 }
