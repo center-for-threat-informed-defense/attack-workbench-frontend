@@ -38,7 +38,7 @@ export class TlpEditComponent implements OnInit {
       // set up selection
       this.select = new SelectionModel(true);
       for (let key in this.tlpMarkingDefinitionsMap) {
-          if (this.tlpMarkingDefinitionsMap[key]["definition_string"] == this.tlp){
+          if (this.tlpMarkingDefinitionsMap[key]["definition_string"] == this.tlp) {
               this.select.select(this.tlpMarkingDefinitionsMap[key]["stixID"]); // Select current tlp to track in UI
               current_selection = this.tlpMarkingDefinitionsMap[key]["stixID"]; // save current selection
           }
@@ -46,11 +46,11 @@ export class TlpEditComponent implements OnInit {
       
       let clearSelection = false;
       // If there is already a selection, dialog button label will say UPDATE instead of ADD
-      let buttonLabelStr : string;
+      let buttonLabelStr : string = "ADD";
       if (this.select.selected.length > 0) {
           buttonLabelStr = "UPDATE";
           clearSelection = true;
-      } else buttonLabelStr = "ADD";
+      }
 
       let prompt = this.dialog.open(AddDialogComponent, {
           maxWidth: '70em',
@@ -68,17 +68,15 @@ export class TlpEditComponent implements OnInit {
       let subscription = prompt.afterClosed().subscribe({
           next: (result) => {
               if (result && this.select.selected) {
-                  // Check if there are two selections, ignore previous selection
                   let tlp_selection = this.select.selected;
-                  if (this.select.selected.length > 1){
-                      for (let i = 0; i < this.select.selected.length; i++) {
-                          if (this.select.selected[i] != current_selection) {
-                              tlp_selection = [this.select.selected[i]];
-                          }
+                  // Check if there are two selections, ignore previous selection
+                  for (let selection of this.select.selected) {
+                      if (selection != current_selection) {
+                          tlp_selection = [selection];
                       }
                   }
 
-                  // first add statements if they exist
+                  // first add marking definition statements if they exist
                   if (this.objStatementsSTIXids) {
                       this.config.object["object_marking_refs"] = this.objStatementsSTIXids;
                   }
@@ -92,9 +90,8 @@ export class TlpEditComponent implements OnInit {
       });
   }
 
-  constructor(public dialog: MatDialog) { }
+  constructor(public dialog: MatDialog) {}
 
-  ngOnInit(): void {
-  }
+  ngOnInit(): void {}
 
 }

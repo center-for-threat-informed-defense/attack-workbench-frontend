@@ -1241,7 +1241,7 @@ export class RestApiConnectorService extends ApiConnector {
         return this.http.get(`${this.baseUrl}/config/default-marking-definitions`, {headers: this.headers}).pipe(
             tap(_ => logger.log("retrieved default marking definitions")),
             map(result => {
-                return result as any;
+                return result;
             }),
             catchError(this.handleError_continue<string[]>())
         )

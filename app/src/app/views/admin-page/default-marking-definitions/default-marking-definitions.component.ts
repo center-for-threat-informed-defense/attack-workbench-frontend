@@ -28,39 +28,35 @@ export class DefaultMarkingDefinitionsComponent implements OnInit {
         this.data$ = this.restAPIConnectorService.getAllMarkingDefinitions(options);
         let subscription = this.data$.subscribe({
             next: (data) => { 
-              if (data) {
-                this.markingDefinitions = data;
-              }
+              if (data) this.markingDefinitions = data;
             },
             complete: () => { subscription.unsubscribe() }
         })
     }
 
     public updateDefaultMarkingDefs() {
-        let subscription = this.restAPIConnectorService.getDefaultMarkingDefinitions().subscribe({
-            next: (result) => {
+        let subscriptionGet = this.restAPIConnectorService.getDefaultMarkingDefinitions().subscribe({
+            next: (getResult) => {
                 let rows: StixObject[] = [];
                 
                 // only add statements
-                for (let i = 0; i < this.markingDefinitions.data.length; i++) {
-                    if (this.markingDefinitions.data[i]["definition_type"] == "statement") {
-                        rows.push(this.markingDefinitions.data[i]);
+                for (let markingDefinition of this.markingDefinitions.data) {
+                    if (markingDefinition["definition_type"] == "statement") {
+                        rows.push(markingDefinition);
                     }
                 }
                 // set up selection
                 this.select = new SelectionModel(true);
 
-                let currentDefaultMarkingDefs = result;
+                let currentDefaultMarkingDefs = getResult;
                 
                 for (let i in currentDefaultMarkingDefs) {
                     this.select.select(currentDefaultMarkingDefs[i].stix.id); // Select current statements by default
                 }
                 
                 // If there is already a selection, dialog button label will say UPDATE instead of ADD
-                let buttonLabelStr : string;
-                if (this.select.selected.length > 0) {
-                    buttonLabelStr = "UPDATE";
-                } else buttonLabelStr = "ADD";
+                let buttonLabelStr : string = "ADD";
+                if (this.select.selected.length > 0) buttonLabelStr = "UPDATE";
         
                 let prompt = this.dialog.open(AddDialogComponent, {
                     maxWidth: '70em',
@@ -73,22 +69,21 @@ export class DefaultMarkingDefinitionsComponent implements OnInit {
                     },
                 });
         
-                let subscription = prompt.afterClosed().subscribe({
-                    next: (result) => {
-                        if (result && this.select.selected) {
+                let subscriptionPrompt = prompt.afterClosed().subscribe({
+                    next: (promptResult) => {
+                        if (promptResult && this.select.selected) {
                             // Set default marking refs to selection
-                            let subscription = this.restAPIConnectorService.postDefaultMarkingDefinitions(this.select.selected).subscribe({
-                                next: () => {},
-                                complete: () => { subscription.unsubscribe(); } // prevent memory leaks
+                            let subscriptionPost = this.restAPIConnectorService.postDefaultMarkingDefinitions(this.select.selected).subscribe({
+                                complete: () => { subscriptionPost.unsubscribe(); } // prevent memory leaks
                             })
                         }
                     },
                     complete: () => {
-                        subscription.unsubscribe();
+                        subscriptionPrompt.unsubscribe();
                     }, //prevent memory leaks
                 });
             },
-            complete: () => subscription.unsubscribe()
+            complete: () => subscriptionGet.unsubscribe()
         });
     }
 }

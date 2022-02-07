@@ -17,9 +17,8 @@ export class TlpViewComponent implements OnInit {
     else return "";
   }
   
-  constructor() { }
+  constructor() {}
 
-  ngOnInit(): void {
-  }
+  ngOnInit(): void {}
 
 }

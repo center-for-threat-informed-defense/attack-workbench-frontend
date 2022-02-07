@@ -3,8 +3,7 @@ import { StatementPropertyConfig } from '../statement-property.component';
 
 @Component({
   selector: 'app-statement-view',
-  templateUrl: './statement-view.component.html',
-  styleUrls: ['./statement-view.component.scss']
+  templateUrl: './statement-view.component.html'
 })
 export class StatementViewComponent implements OnInit {
   @Input() public objStatements: any[];
@@ -16,9 +15,8 @@ export class StatementViewComponent implements OnInit {
     return true;
   }
 
-  constructor() { }
+  constructor() {}
 
-  ngOnInit(): void {
-  }
+  ngOnInit(): void {}
 
 }

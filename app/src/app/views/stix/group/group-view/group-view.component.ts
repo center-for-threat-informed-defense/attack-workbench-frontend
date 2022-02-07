@@ -26,7 +26,7 @@ export class GroupViewComponent extends StixViewPage implements OnInit {
 
     ngOnInit() {
         let group = this.config.object as Group;
-        if ( group.firstInitialized == true ) {
+        if ( group.firstInitialized ) {
             group.initializeWithDefaultMarkingDefinitions(this.restApiConnector);
         }
     }

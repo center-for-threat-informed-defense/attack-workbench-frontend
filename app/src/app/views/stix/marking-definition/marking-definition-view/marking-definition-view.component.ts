@@ -57,19 +57,19 @@ export class MarkingDefinitionViewComponent extends StixViewPage implements OnIn
             }
         });
   
-        let subscription = prompt.afterClosed().subscribe({
+        let subscriptionPrompt = prompt.afterClosed().subscribe({
             next: (result) => {
                 if (result) {
-                    let subscription = this.marking_definition.save(this.restApiConnector).subscribe({
-                        next: (result) => {
-                            this.router.navigate([result.attackType, result.stixID]);
+                    let subscriptionSave = this.marking_definition.save(this.restApiConnector).subscribe({
+                        next: (saveResult) => {
+                            this.router.navigate([saveResult.attackType, saveResult.stixID]);
                             this.validating = false;
                         },
-                        complete: () => { subscription.unsubscribe(); }
+                        complete: () => { subscriptionSave.unsubscribe(); }
                     })
                 }
             },
-            complete: () => { subscription.unsubscribe(); } //prevent memory leaks
+            complete: () => { subscriptionPrompt.unsubscribe(); } //prevent memory leaks
         });
     }
 }

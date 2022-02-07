@@ -36,10 +36,10 @@ export class StatementEditComponent implements OnInit {
       }
       
       // If there is already a selection, dialog button label will say UPDATE instead of ADD
-      let buttonLabelStr : string;
+      let buttonLabelStr : string = "ADD";
       if (this.select.selected.length > 0) {
           buttonLabelStr = "UPDATE";
-      } else buttonLabelStr = "ADD";
+      }
 
       let prompt = this.dialog.open(AddDialogComponent, {
           maxWidth: '70em',
@@ -52,9 +52,9 @@ export class StatementEditComponent implements OnInit {
           },
       });
 
-      let subscription = prompt.afterClosed().subscribe({
-          next: (result) => {
-              if (result && this.select.selected) {
+      let subscriptionPrompt = prompt.afterClosed().subscribe({
+          next: (promptResult) => {
+              if (promptResult && this.select.selected) {
                   // Set marking refs to selection
                   this.config.object["object_marking_refs"] = this.select.selected;
                   // re-add tlp
@@ -63,14 +63,13 @@ export class StatementEditComponent implements OnInit {
               if (popover) setTimeout(() => popover.hide()); // wait for popover to hide
           },
           complete: () => {
-              subscription.unsubscribe();
+              subscriptionPrompt.unsubscribe();
           }, //prevent memory leaks
       });
   }
 
   constructor(public dialog: MatDialog) { }
 
-  ngOnInit(): void {
-  }
+  ngOnInit(): void {}
 
 }
