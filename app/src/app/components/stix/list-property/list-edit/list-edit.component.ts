@@ -66,8 +66,7 @@ export class ListEditComponent implements OnInit, AfterContentChecked {
          || this.config.field == 'impact_type'
          || this.config.field == 'domains'
          || this.config.field == 'collection_layers'
-         || this.config.field == 'data_sources'
-         || this.config.field == 'type') { //marking def type 
+         || this.config.field == 'data_sources') {
             if (!this.dataLoaded) {
                 let data$ = this.restAPIConnectorService.getAllAllowedValues();
                 this.sub = data$.subscribe({
