@@ -44,6 +44,7 @@ export class AppComponent implements AfterViewInit {
                         },
                         complete: () => {
                             registerSubscription.unsubscribe();
+                            this.router.navigate(['']);
                         }
                     });
                 } else if (e instanceof NavigationEnd) {
