@@ -335,6 +335,7 @@ export class RestApiConnectorService extends ApiConnector {
         if (offset) query = query.set("offset", offset.toString());
         if (limit || offset) query = query.set("includePagination", "true");
         // other properties
+        if (attackID) query = query.set("attackId", attackID);
         if (state) query = query.set("state", state);
         if (revoked) query = query.set("includeRevoked", revoked ? "true" : "false");
         if (deprecated) query = query.set("includeDeprecated", deprecated ? "true" : "false");
