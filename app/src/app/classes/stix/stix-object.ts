@@ -510,9 +510,9 @@ export abstract class StixObject extends Serializable {
      * @param restAPIService service to connect to the REST API
      */
     private findLink(id: string, restAPIService: RestApiConnectorService): Observable<boolean> {
-        return restAPIService.getAllObjects(null, null, null, null, true, true, true).pipe(
+        return restAPIService.getAllObjects(id, null, null, null, true, true, true).pipe(
             map((result) => {
-                let object = result.data.find(o => o.attackID == id);
+                let object = result.data[0];
                 if (object) return true;
                 return false; // object not found
             })
