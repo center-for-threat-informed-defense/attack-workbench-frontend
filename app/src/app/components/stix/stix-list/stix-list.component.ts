@@ -174,6 +174,7 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
         let controls_before = [] // control columns which occur before the main columns
         let controls_after = []; // control columns which occur after the main columns
         let sticky_allowed = !(this.config.rowAction && this.config.rowAction.position == "start");
+        if (!('showFilters' in this.config)) this.config.showFilters = true;
         if ("type" in this.config) { 
             // this.filter.push("type." + this.config.type); 
             // set columns according to type
@@ -538,8 +539,7 @@ export interface StixListConfig {
     type?: type_attacktype | "collection-created" | "collection-imported";
     /** force the list to show only objects matching this query */
     query?: any;
-    
-    
+
     /** can the user select in this list? allowed options:
      *     "one": user can select a single element at a time
      *     "many": user can select as many elements as they want
@@ -551,11 +551,9 @@ export interface StixListConfig {
      * Only relevant if 'select' is also enabled. Also, will cause problems if multiple constructor pram is set according to 'select'.
      */
     selectionModel?: SelectionModel<string>;
-
-
     /** show links to view/edit pages for relevant objects? */
     showLinks?: boolean;
-    /** default true, if false hides the filter dropdown menu */
+    /** default false, if false hides the filter dropdown menu */
     showFilters?: boolean;
     /**
      * How should the table act when the row is clicked? default "expand"
