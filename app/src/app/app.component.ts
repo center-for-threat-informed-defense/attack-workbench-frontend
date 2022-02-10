@@ -44,8 +44,9 @@ export class AppComponent implements AfterViewInit {
                         },
                         complete: () => {
                             registerSubscription.unsubscribe();
-                            this.router.navigate(['']);
                         }
+                    }).add(() => {
+                        this.router.navigate(['']);
                     });
                 } else if (e instanceof NavigationEnd) {
                     // check user login
