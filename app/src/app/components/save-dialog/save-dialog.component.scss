@@ -25,19 +25,15 @@
             margin-bottom: 0px;
         }
     }
-
+    .patch-warning .mat-list-item-content {
+        padding-left: 0 !important;
+    }
+    .validation-item.warning {
+        color: color(warn);
+    }
     .column + .column {
         padding-left: 16px;
         .dark & { border-left: 1px solid border-color(dark); }
         .light & { border-left: 1px solid border-color(light); }
     }
-    // th, h3 {
-    //     // text-align: center;
-    // }
-    // .button-row {
-    //     .button {
-    //         display: inline-block;
-    //         margin-right: 10px;
-    //     }
-    // }
 }
