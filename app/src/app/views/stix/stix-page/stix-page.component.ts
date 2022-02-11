@@ -65,11 +65,10 @@ export class StixPageComponent implements OnInit, OnDestroy {
         } else {
             let versionChanged = this.objects[0].version.compareTo(this.initialVersion) != 0;
             let prompt = this.dialog.open(SaveDialogComponent, { //increment version number save panel
-                // maxWidth: "35em",
                 data: {
                     object: this.objects[0],
                     // patch LinkByIds on other objects if this object's ATT&CK ID has changed
-                    patchLinks: this.objectID && this.objects[0].supportsAttackID && this.objectID != this.objects[0].attackID,
+                    patchID: this.objects[0].supportsAttackID && this.objectID && this.objectID != this.objects[0].attackID ? this.objectID : null,
                     versionAlreadyIncremented: versionChanged
                 }
             });
