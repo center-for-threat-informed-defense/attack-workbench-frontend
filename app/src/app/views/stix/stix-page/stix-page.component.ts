@@ -13,7 +13,6 @@ import { StixObject } from 'src/app/classes/stix/stix-object';
 import { Tactic } from 'src/app/classes/stix/tactic';
 import { Technique } from 'src/app/classes/stix/technique';
 import { VersionNumber } from 'src/app/classes/version-number';
-import { ConfirmationDialogComponent } from 'src/app/components/confirmation-dialog/confirmation-dialog.component';
 import { MultipleChoiceDialogComponent } from 'src/app/components/multiple-choice-dialog/multiple-choice-dialog.component';
 import { SaveDialogComponent } from 'src/app/components/save-dialog/save-dialog.component';
 import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/rest-api-connector.service';
@@ -31,6 +30,7 @@ export class StixPageComponent implements OnInit, OnDestroy {
     public objects: StixObject[];
     public initialVersion: VersionNumber;
     public objectType: string;
+    private objectID: string;
     private routerEvents;
     private saveSubscription;
     private reloadSubscription;
@@ -68,6 +68,8 @@ export class StixPageComponent implements OnInit, OnDestroy {
                 // maxWidth: "35em",
                 data: {
                     object: this.objects[0],
+                    // patch LinkByIds on other objects if this object's ATT&CK ID has changed
+                    patchLinks: this.objectID && this.objects[0].supportsAttackID && this.objectID != this.objects[0].attackID,
                     versionAlreadyIncremented: versionChanged
                 }
             });
@@ -76,7 +78,6 @@ export class StixPageComponent implements OnInit, OnDestroy {
             let subscription = prompt.afterClosed().subscribe({
                 next: (result) => {
                     if (result) {
-                        // this.editorService.stopEditing();
                         this.router.navigate([this.objects[0].attackType, this.objects[0].stixID]);
                         setTimeout(() => this.loadObjects());
                         this.editorService.onEditingStopped.emit();
@@ -134,6 +135,7 @@ export class StixPageComponent implements OnInit, OnDestroy {
                     this.objects = result;
                     if (objectModified) this.objects = this.objects.filter(x => x.modified.toISOString() == objectModified); //filter to just the object with that date
                     if (this.objects.length > 0) this.initialVersion = new VersionNumber(this.objects[0].version.toString());
+                    this.objectID = this.objects[0].supportsAttackID ? this.objects[0].attackID : null;
                 },
                 complete: () => { subscription.unsubscribe() }
             });
