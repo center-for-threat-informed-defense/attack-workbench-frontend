@@ -1,4 +1,6 @@
-import { Component, OnInit, Input, ViewEncapsulation } from '@angular/core';
+import { Component, Input, ViewEncapsulation } from '@angular/core';
+import { forkJoin, Observable, Subscription } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/rest-api-connector.service';
 import { DescriptivePropertyConfig } from '../descriptive-property.component';
 
@@ -8,29 +10,17 @@ import { DescriptivePropertyConfig } from '../descriptive-property.component';
     styleUrls: ['./descriptive-view.component.scss'],
     encapsulation: ViewEncapsulation.None
 })
-export class DescriptiveViewComponent implements OnInit {
+export class DescriptiveViewComponent {
     @Input() public config: DescriptivePropertyConfig;
-
-    constructor(private restApiConnector: RestApiConnectorService) { }
 
     private reReference = /\(Citation: (.*?)\)/gmu;
     private reLinkById = /\(LinkById: (.*?)\)/gmu;
-    private attackObjects: any[] = [];
-    private get hasLinkByIds(): boolean {
-        let links = this.getLinkByIds(this.config.object[this.config.field]);
-        return links && links.length > 0;
-    }
+    private objectLookup = {};
 
-    ngOnInit(): void {
-        if (this.hasLinkByIds) { // retrieve all named objects if field has a LinkById tag
-            const objectSubscription = this.restApiConnector.getAllObjects(null, null, null, null, true, true, true).subscribe({
-                next: (results) => {
-                    this.attackObjects = results.data.filter(obj => obj.hasOwnProperty("name"));
-                },
-                complete: () => { objectSubscription.unsubscribe(); }
-            })
-        }
-    }
+    // prevent async issues
+    private sub: Subscription = new Subscription();
+
+    constructor(private restApiConnector: RestApiConnectorService) { }
 
     private truncateToFirstParagraph(displayStr: string): string {
         return displayStr.split('\n')[0];
@@ -91,32 +81,46 @@ export class DescriptiveViewComponent implements OnInit {
     }
 
     /**
-     * return list of link by IDs from descriptive property
+     * return list of linked IDs from descriptive property
      */
-    private getLinkByIds(displayStr: string): Array<string> {
-        return displayStr.match(this.reLinkById);
+    private getLinkedIds(displayStr: string): Array<string> {
+        let matches = displayStr.match(this.reLinkById);
+        if (!matches) return []; // no LinkByIds found
+        return matches.map(link => link.split("(LinkById: ")[1].slice(0, -1));
     }
 
     /**
-     * replaces LinkById tags with a markdown hyperlink to their
-     * related object
+     * retrieve linked objects from REST API by ID
+     * @param ids list of IDs to retrieve
      */
-    private replaceLinkByIds(displayStr: string): string {
-        let linkByIdRefs = this.getLinkByIds(displayStr);
-
-        // parse LinkByIds
-        if (linkByIdRefs) {
-            let linkHTML: string;
-            for (let linkById of linkByIdRefs) {
-                let id = linkById.split("(LinkById: ")[1].slice(0, -1);
-                let linkedObj = this.attackObjects.find(obj => obj.attackID == id);
-                if (linkedObj && linkedObj.name) {
-                    linkHTML = `<span><a href="${linkedObj.attackType}/${linkedObj.stixID}">${linkedObj.name}</a></span>`;
-                    displayStr = displayStr.replace(linkById, linkHTML);
-                }
-            }
+    private loadLinkedObjects(ids: string[]): Observable<any> {
+        let api_map = {};
+        for (let id of ids) {
+            api_map[id] = this.restApiConnector.getAllObjects(id, null, null, null, true, true, true)
         }
 
+        return forkJoin(api_map).pipe(
+            map((results: any) => {
+                // store retrieved objects in dictionary for quick lookup
+                Object.keys(results).forEach(id => this.objectLookup[id] = results[id].data[0]);
+                return results;
+            })
+        );
+    }
+
+    /**
+     * replace LinkById tags with markdown formatted hyperlink
+     */
+    private replaceLinkByIds(displayStr: string, linkedIDs: string[]): string {
+        for (let id of linkedIDs) {
+            let obj = this.objectLookup[id];
+            if (obj && obj.name) {
+                let rep = `(LinkById: ${obj.attackID})`;
+                let target = this.config.mode == 'edit' ? ` target="_blank"` : ``; // open linked object in new tab when editing
+                let linkHTML = `<span><a href="${obj.attackType}/${obj.stixID}"${target}>${obj.name}</a></span>`;
+                displayStr = displayStr.replace(rep, linkHTML);
+            }
+        }
         return displayStr;
     }
 
@@ -144,7 +148,24 @@ export class DescriptiveViewComponent implements OnInit {
             displayStr = this.removeReferences(displayStr);
         }
 
-        displayStr = this.replaceLinkByIds(displayStr);
+        let loaded = function(ids: string[], lookup: {}) {
+            return ids.every(id => Object.keys(lookup).includes(id));
+        }
+
+        let linkedIDs = this.getLinkedIds(displayStr);
+        if (linkedIDs) {
+            if (loaded(linkedIDs, this.objectLookup)) {
+                displayStr = this.replaceLinkByIds(displayStr, linkedIDs);
+            } else {
+                let missing = linkedIDs.filter(id => Object.keys(this.objectLookup).indexOf(id) < 0);
+                this.sub = this.loadLinkedObjects(missing).subscribe({
+                    next: (results: any) => {
+                        displayStr = this.replaceLinkByIds(displayStr, linkedIDs);
+                    },
+                    complete: () => { this.sub.unsubscribe(); }
+                })
+            }
+        }
 
         return displayStr;
     }
