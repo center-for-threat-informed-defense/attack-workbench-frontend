@@ -1,11 +1,11 @@
 <div [class]="'app-root ' + theme">
-    <app-header (onLogin)="login()" (onLogout)="logout()" [style.margin-top]="-hiddenHeaderPX + 'px'" #header></app-header>
+    <app-header (onLogin)="login()" (onLogout)="logout()" (onRegister)="register()" [style.margin-top]="-hiddenHeaderPX + 'px'" #header></app-header>
     <mat-drawer-container class="app-body">
         <mat-drawer-content>
             <div class="app-content">
                 <app-toolbar (onToggleTheme)="toggleTheme()" (onScrollTop)="scrollToTop()" [canScroll]="hiddenHeaderPX != 0"></app-toolbar>
-                <div *ngIf="alertStatus" class="banner">
-                    <span class="banner-text">Your account is {{alertStatus}}, please contact your Administrator</span>
+                <div *ngIf="alertStatus" class="banner" [ngClass]="(alertStatus === 'pending') ? 'success' : 'warning' ">
+                    <span class="banner-text"><span *ngIf="alertStatus === 'pending'">Registration successful! </span>Your account is {{alertStatus}}, please contact your Administrator</span>
                     <button mat-icon-button (click)="alertStatus=''"><mat-icon>close</mat-icon></button>
                 </div>
                 <div class="router-padding" #scrollRef>

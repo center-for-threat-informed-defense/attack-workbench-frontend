@@ -1,17 +1,16 @@
-import { Observable, of } from "rxjs";
-import { map, switchMap } from "rxjs/operators";
-import { RestApiConnectorService } from "../../services/connectors/rest-api/rest-api-connector.service";
-import { logger } from "../../util/logger";
-import { Serializable, ValidationData } from "../serializable";
-import { Role } from "./role";
-
-export type statusValues = "pending" | "active" | "inactive";
+import { Observable, of } from 'rxjs';
+import { map, switchMap } from 'rxjs/operators';
+import { RestApiConnectorService } from '../../services/connectors/rest-api/rest-api-connector.service';
+import { logger } from '../../util/logger';
+import { Serializable, ValidationData } from '../serializable';
+import { Role } from './role';
+import { Status } from './status';
 
 export class UserAccount extends Serializable {
     public id: string;
     public email: string;
     public username: string;
-    public status: statusValues;
+    public status: Status;
     public role: Role;
 
     /**
@@ -19,7 +18,7 @@ export class UserAccount extends Serializable {
      */
      constructor(raw?: any) {
         super();
-        if (raw) this.deserialize(raw);
+        if (raw) { this.deserialize(raw); }
     }
 
     /**
@@ -29,12 +28,12 @@ export class UserAccount extends Serializable {
      */
     public serialize(): any {
         return {
-            "id": this.id,
-            "email": this.email,
-            "username": this.username,
-            "status": this.status,
-            "role": this.role
-        }
+            id: this.id,
+            email: this.email,
+            username: this.username,
+            status: this.status,
+            role: this.role
+        };
     }
 
     /**
@@ -43,30 +42,30 @@ export class UserAccount extends Serializable {
      * @param {*} raw the raw object to parse
      */
     public deserialize(raw: any) {
-        if ("id" in raw) {
-            if (typeof(raw.id) === "string") this.id = raw.id;
-            else logger.error("TypeError: id field is not a string:", raw.name, "(",typeof(raw.name),")");
-        } else this.id = "";
+        if ('id' in raw) {
+            if (typeof(raw.id) === 'string') { this.id = raw.id; }
+            else { logger.error('TypeError: id field is not a string:', raw.name, '(', typeof(raw.name), ')'); }
+        } else { this.id = ''; }
 
-        if ("email" in raw && raw.email !== null) {
-            if (typeof(raw.email) === "string") this.email = raw.email;
-            else logger.error("TypeError: email field is not a string:", raw.email, "(",typeof(raw.email),")");
-        } else this.email = "";
+        if ('email' in raw && raw.email !== null) {
+            if (typeof(raw.email) === 'string') { this.email = raw.email; }
+            else { logger.error('TypeError: email field is not a string:', raw.email, '(', typeof(raw.email), ')'); }
+        } else { this.email = ''; }
 
-        if ("username" in raw) {
-            if (typeof(raw.username) === "string") this.username = raw.username;
-            else logger.error("TypeError: username field is not a string:", raw.username, "(",typeof(raw.username),")");
-        } else this.username = "";
+        if ('username' in raw) {
+            if (typeof(raw.username) === 'string') { this.username = raw.username; }
+            else { logger.error('TypeError: username field is not a string:', raw.username, '(', typeof(raw.username), ')'); }
+        } else { this.username = ''; }
 
-        if ("status" in raw) {
-            if (typeof(raw.status) === "string") this.status = raw.status;
-            else logger.error("TypeError: status field is not a string:", raw.status, "(",typeof(raw.status),")");
-        } else this.status = "pending";
+        if ('status' in raw) {
+            if (typeof(raw.status) === 'string') { this.status = raw.status; }
+            else { logger.error('TypeError: status field is not a string:', raw.status, '(', typeof(raw.status), ')'); }
+        } else { this.status = Status.PENDING; }
 
-        if ("role" in raw) {
-            if (typeof(raw.role) === "string") this.role = raw.role;
-            else logger.error("TypeError: role field is not a string:", raw.role, "(",typeof(raw.role),")");
-        } else this.role = Role.None;
+        if ('role' in raw) {
+            if (typeof(raw.role) === 'string') { this.role = raw.role; }
+            else { logger.error('TypeError: role field is not a string:', raw.role, '(', typeof(raw.role), ')'); }
+        } else { this.role = Role.None; }
     }
 
     /**
@@ -75,32 +74,32 @@ export class UserAccount extends Serializable {
      * @returns {Observable<ValidationData>} the validation warnings and errors once validation is complete.
      */
     public validate(restAPIService: RestApiConnectorService): Observable<ValidationData> {
-        let validation = new ValidationData();
+        const validation = new ValidationData();
 
         return of(validation).pipe(
             // check if username is unique
             switchMap(result => {
                 return restAPIService.getAllUserAccounts().pipe(
                     map(users => {
-                        if (this.hasOwnProperty("username")) {
-                            if (this["username"] == "") {
+                        if (this.hasOwnProperty('username')) {
+                            if (this.username == '') {
                                 result.errors.push({
-                                    "result": "error",
-                                    "field": "username",
-                                    "message": "user has no username"
-                                })
-                            } else if (users.data.some(x => x["suername"].toLowerCase() == this["username"].toLowerCase() && x.id != this.id)) {
+                                    result: 'error',
+                                    field: 'username',
+                                    message: 'user has no username'
+                                });
+                            } else if (users.data.some(x => x.username.toLowerCase() == this.username.toLowerCase() && x.id != this.id)) {
                                 result.errors.push({
-                                    "result": "error",
-                                    "field": "username",
-                                    "message": "username is not unique"
-                                })
+                                    result: 'error',
+                                    field: 'username',
+                                    message: 'username is not unique'
+                                });
                             } else {
                                 result.successes.push({
-                                    "result": "success",
-                                    "field": "username",
-                                    "message": "username is unique"
-                                })
+                                    result: 'success',
+                                    field: 'username',
+                                    message: 'username is unique'
+                                });
                             }
                         }
                         return result;
@@ -116,11 +115,11 @@ export class UserAccount extends Serializable {
      * @returns {Observable} of the post
      */
      public save(restAPIService: RestApiConnectorService): Observable<UserAccount> {
-        let postObservable = restAPIService.postUserAccount(this);
-        let subscription = postObservable.subscribe({
-            next: (result) => { this.deserialize(result.serialize()); },
+        const putObservable = restAPIService.putUserAccount(this);
+        const subscription = putObservable.subscribe({
+            next: (result) => { this.deserialize(this.serialize()); },
             complete: () => { subscription.unsubscribe(); }
         });
-        return postObservable;
+        return putObservable;
     }
 }
