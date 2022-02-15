@@ -2,6 +2,7 @@ import { Component, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { Role } from 'src/app/classes/authn/role';
+import { Status } from 'src/app/classes/authn/status';
 import { ConfirmationDialogComponent } from 'src/app/components/confirmation-dialog/confirmation-dialog.component';
 import { AuthenticationService } from 'src/app/services/connectors/authentication/authentication.service';
 import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/rest-api-connector.service';
@@ -29,7 +30,7 @@ export class LandingPageComponent implements OnInit, OnDestroy {
         this.loginSubscription = this.authenticationService.onLogin.subscribe({
             next: (event) => { this.openOrgIdentityDialog(); }
         });
-        let userSubscription = this.restApiConnector.getAllUserAccounts({status: "pending"}).subscribe({
+        let userSubscription = this.restApiConnector.getAllUserAccounts({status: Status.PENDING}).subscribe({
             next: (results) => {
                 let users = results as any;
                 if (users && users.length) this.pendingUsers = users.length;

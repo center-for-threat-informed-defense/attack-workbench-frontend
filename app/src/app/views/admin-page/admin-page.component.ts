@@ -1,4 +1,5 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { Status } from 'src/app/classes/authn/status';
 import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/rest-api-connector.service';
 
 @Component({
@@ -13,7 +14,7 @@ export class AdminPageComponent implements OnInit {
     constructor(private restApiConnector: RestApiConnectorService) { }
 
     ngOnInit(): void {
-        let userSubscription = this.restApiConnector.getAllUserAccounts({status: "pending"}).subscribe({
+        let userSubscription = this.restApiConnector.getAllUserAccounts({status: Status.PENDING}).subscribe({
             next: (results) => {
                 let users = results as any;
                 if (users && users.length) this.pendingUsers = users.length;

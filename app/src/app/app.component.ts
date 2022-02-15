@@ -3,7 +3,6 @@ import { MatDrawerContainer } from '@angular/material/sidenav';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { getCookie, setCookie, hasCookie } from "./util/cookies";
 import { SidebarService } from './services/sidebar/sidebar.service';
-import { TitleService } from './services/title/title.service';
 import { NGXLogger } from 'ngx-logger';
 import { initLogger } from './util/logger';
 import { AuthenticationService } from './services/connectors/authentication/authentication.service';
@@ -39,12 +38,7 @@ export class AppComponent implements AfterViewInit {
             next: (e) => {
                 if (e instanceof NavigationEnd && e.url.includes('register')) {
                     const registerSubscription = this.authenticationService.handleRegisterRedirect().subscribe({
-                        next: () => {
-                            this.checkStatus();
-                        },
-                        complete: () => {
-                            registerSubscription.unsubscribe();
-                        }
+                        complete: () => { registerSubscription.unsubscribe(); }
                     }).add(() => {
                         this.router.navigate(['']);
                     });
