@@ -41,13 +41,16 @@ export class UserAccountsPageComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        this.userAccounts$ = this.restAPIConnector.getAllUserAccounts({limit: 10});
+        this.getAccounts()
+    }
+
+    public getAccounts(limit = 10, offset = 0) {
+        this.userAccounts$ = this.restAPIConnector.getAllUserAccounts({limit: limit, offset: offset});
         this.userSubscription = this.userAccounts$.subscribe({
             next: (data) => {
                 this.userAccounts = data.data;
                 this.filteredAccounts = data.data;
-                this.totalObjectCount = this.filteredAccounts.length;
-                this.paginator.pageIndex = 0;
+                this.totalObjectCount = data.pagination.total;
             },
             complete: () => { this.userSubscription.unsubscribe() }
         });
@@ -79,6 +82,7 @@ export class UserAccountsPageComponent implements OnInit {
     public applyControls(search?: string): void {
         const limit = this.paginator ? this.paginator.pageSize : 10;
         const offset = this.paginator ? this.paginator.pageIndex * limit : 0;
+        this.getAccounts(limit, offset)
     }
 
     public updateUserRole(userAcc: UserAccount, newRole: string): void {
