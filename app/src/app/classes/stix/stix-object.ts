@@ -473,7 +473,9 @@ export abstract class StixObject extends Serializable {
         let link_map = {};
         for (let link of links) {
             let id = link.split("(LinkById: ")[1].slice(0, -1);
-            link_map[id] = this.findLink(id, restAPIService)
+            if (!(id in link_map)) {
+                link_map[id] = this.findLink(id, restAPIService);
+            }
         }
 
         return forkJoin(link_map).pipe(
