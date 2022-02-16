@@ -65,7 +65,7 @@ export class UserAccount extends Serializable {
         if ('role' in raw) {
             if (typeof(raw.role) === 'string') { this.role = raw.role; }
             else { logger.error('TypeError: role field is not a string:', raw.role, '(', typeof(raw.role), ')'); }
-        } else { this.role = Role.None; }
+        } else { this.role = Role.NONE; }
     }
 
     /**

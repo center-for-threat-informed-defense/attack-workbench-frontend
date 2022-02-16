@@ -29,7 +29,7 @@ export class UserAccountsPageComponent implements OnInit {
     }
 
     public get isAdmin(): boolean {
-        return this.authenticationService.isAuthorized([Role.Admin]);
+        return this.authenticationService.isAuthorized([Role.ADMIN]);
     }
 
     constructor(private restAPIConnector: RestApiConnectorService, private authenticationService: AuthenticationService) {
@@ -98,7 +98,7 @@ export class UserAccountsPageComponent implements OnInit {
     }
 
     public updateUserRole(userAcc: UserAccount, newRole: string): void {
-        newRole = newRole.charAt(0).toUpperCase() + newRole.slice(1);
+        newRole = newRole.toUpperCase();
         if (Role[`${newRole}`]) {
             const subscription = this.restAPIConnector.getUserAccount(userAcc.id).subscribe({
                 next: (r) => {
@@ -115,15 +115,22 @@ export class UserAccountsPageComponent implements OnInit {
 
     public updateUserStatus(userAcc: UserAccount, newStatus: string): void {
         newStatus = newStatus.toUpperCase();
-        const subscription = this.restAPIConnector.getUserAccount(userAcc.id).subscribe({
-            next: (r) => {
-                const user = r;
-                user.status = Status[`${newStatus}`];
-                new UserAccount(user).save(this.restAPIConnector);
-            },
-            complete: () => {
-                subscription.unsubscribe();
-            }
-        });
+        if (Status[`${newStatus}`]) {
+            const subscription = this.restAPIConnector.getUserAccount(userAcc.id).subscribe({
+                next: (r) => {
+                    const user = r;
+                    user.status = Status[`${newStatus}`];
+                    console.log(user.status)
+                    if (user.status == Status.PENDING || user.status == Status.INACTIVE) {
+                        // set user role to 'none'
+                        user.role = Role.NONE;
+                    }
+                    new UserAccount(user).save(this.restAPIConnector);
+                },
+                complete: () => {
+                    subscription.unsubscribe();
+                }
+            });
+        }
     }
 }

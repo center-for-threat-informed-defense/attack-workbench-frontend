@@ -28,7 +28,7 @@ const stixRoutes: Routes = [{
         data: {
             breadcrumb: 'list',
             title: "matrices",
-            roles: [Role.Visitor, Role.Editor, Role.Admin]
+            roles: [Role.VISITOR, Role.EDITOR, Role.ADMIN]
         },
         component: MatrixListComponent
     },
@@ -43,8 +43,8 @@ const stixRoutes: Routes = [{
                 breadcrumb: 'view',
                 editable: true,
                 title: "view matrix",
-                roles: [Role.Visitor, Role.Editor, Role.Admin],
-                editRoles: [Role.Editor, Role.Admin]
+                roles: [Role.VISITOR, Role.EDITOR, Role.ADMIN],
+                editRoles: [Role.EDITOR, Role.ADMIN]
             },
             component: StixPageComponent
         }
@@ -61,8 +61,8 @@ const stixRoutes: Routes = [{
                 breadcrumb: 'view',
                 editable: true,
                 title: "new matrix",
-                roles: [Role.Editor, Role.Admin],
-                editRoles: [Role.Editor, Role.Admin]
+                roles: [Role.EDITOR, Role.ADMIN],
+                editRoles: [Role.EDITOR, Role.ADMIN]
             },
             component: StixPageComponent
         }]
@@ -80,7 +80,7 @@ const stixRoutes: Routes = [{
         data: {
             breadcrumb: 'list',
             title: "techniques",
-            roles: [Role.Visitor, Role.Editor, Role.Admin]
+            roles: [Role.VISITOR, Role.EDITOR, Role.ADMIN]
         },
         component: TechniqueListComponent
     },
@@ -95,8 +95,8 @@ const stixRoutes: Routes = [{
                 breadcrumb: 'view',
                 editable: true,
                 title: "view technique",
-                roles: [Role.Visitor, Role.Editor, Role.Admin],
-                editRoles: [Role.Editor, Role.Admin]
+                roles: [Role.VISITOR, Role.EDITOR, Role.ADMIN],
+                editRoles: [Role.EDITOR, Role.ADMIN]
             },
             component: StixPageComponent
         }
@@ -113,8 +113,8 @@ const stixRoutes: Routes = [{
                 breadcrumb: 'view',
                 editable: true,
                 title: "new technique",
-                roles: [Role.Editor, Role.Admin],
-                editRoles: [Role.Editor, Role.Admin]
+                roles: [Role.EDITOR, Role.ADMIN],
+                editRoles: [Role.EDITOR, Role.ADMIN]
             },
             component: StixPageComponent
         }]
@@ -132,7 +132,7 @@ const stixRoutes: Routes = [{
         data: {
             breadcrumb: 'list',
             title: "tactics",
-            roles: [Role.Visitor, Role.Editor, Role.Admin]
+            roles: [Role.VISITOR, Role.EDITOR, Role.ADMIN]
         },
         component: TacticListComponent
     },
@@ -147,8 +147,8 @@ const stixRoutes: Routes = [{
                 breadcrumb: 'view',
                 editable: true,
                 title: "view tactic",
-                roles: [Role.Visitor, Role.Editor, Role.Admin],
-                editRoles: [Role.Editor, Role.Admin]
+                roles: [Role.VISITOR, Role.EDITOR, Role.ADMIN],
+                editRoles: [Role.EDITOR, Role.ADMIN]
             },
             component: StixPageComponent
         }
@@ -165,8 +165,8 @@ const stixRoutes: Routes = [{
                 breadcrumb: 'view',
                 editable: true,
                 title: "new tactic",
-                roles: [Role.Editor, Role.Admin],
-                editRoles: [Role.Editor, Role.Admin]
+                roles: [Role.EDITOR, Role.ADMIN],
+                editRoles: [Role.EDITOR, Role.ADMIN]
             },
             component: StixPageComponent
         }
@@ -185,7 +185,7 @@ const stixRoutes: Routes = [{
         data: {
             breadcrumb: 'list',
             title: "mitigations",
-            roles: [Role.Visitor, Role.Editor, Role.Admin]
+            roles: [Role.VISITOR, Role.EDITOR, Role.ADMIN]
         },
         component: MitigationListComponent
     },
@@ -200,8 +200,8 @@ const stixRoutes: Routes = [{
                 breadcrumb: 'view',
                 editable: true,
                 title: "view mitigation",
-                roles: [Role.Visitor, Role.Editor, Role.Admin],
-                editRoles: [Role.Editor, Role.Admin]
+                roles: [Role.VISITOR, Role.EDITOR, Role.ADMIN],
+                editRoles: [Role.EDITOR, Role.ADMIN]
             },
             component: StixPageComponent
         }
@@ -218,8 +218,8 @@ const stixRoutes: Routes = [{
                 breadcrumb: 'view',
                 editable: true,
                 title: "new mitigation",
-                roles: [Role.Editor, Role.Admin],
-                editRoles: [Role.Editor, Role.Admin]
+                roles: [Role.EDITOR, Role.ADMIN],
+                editRoles: [Role.EDITOR, Role.ADMIN]
             },
             component: StixPageComponent
         }
@@ -238,7 +238,7 @@ const stixRoutes: Routes = [{
         data: {
             breadcrumb: 'list',
             title: "groups",
-            roles: [Role.Visitor, Role.Editor, Role.Admin]
+            roles: [Role.VISITOR, Role.EDITOR, Role.ADMIN]
         },
         component: GroupListComponent
     },
@@ -253,8 +253,8 @@ const stixRoutes: Routes = [{
                 breadcrumb: 'view',
                 editable: true,
                 title: "view group",
-                roles: [Role.Visitor, Role.Editor, Role.Admin],
-                editRoles: [Role.Editor, Role.Admin]
+                roles: [Role.VISITOR, Role.EDITOR, Role.ADMIN],
+                editRoles: [Role.EDITOR, Role.ADMIN]
             },
             component: StixPageComponent
         }
@@ -271,8 +271,8 @@ const stixRoutes: Routes = [{
                 breadcrumb: 'view',
                 editable: true,
                 title: "new group",
-                roles: [Role.Editor, Role.Admin],
-                editRoles: [Role.Editor, Role.Admin]
+                roles: [Role.EDITOR, Role.ADMIN],
+                editRoles: [Role.EDITOR, Role.ADMIN]
             },
             component: StixPageComponent
         }
@@ -291,7 +291,7 @@ const stixRoutes: Routes = [{
         data: {
             breadcrumb: 'list',
             title: "software",
-            roles: [Role.Visitor, Role.Editor, Role.Admin]
+            roles: [Role.VISITOR, Role.EDITOR, Role.ADMIN]
         },
         component: SoftwareListComponent
     },
@@ -306,8 +306,8 @@ const stixRoutes: Routes = [{
                 breadcrumb: 'view',
                 editable: true,
                 title: "view software",
-                roles: [Role.Visitor, Role.Editor, Role.Admin],
-                editRoles: [Role.Editor, Role.Admin]
+                roles: [Role.VISITOR, Role.EDITOR, Role.ADMIN],
+                editRoles: [Role.EDITOR, Role.ADMIN]
             },
             component: StixPageComponent
         }
@@ -324,8 +324,8 @@ const stixRoutes: Routes = [{
                 breadcrumb: 'view',
                 editable: true,
                 title: "new software",
-                roles: [Role.Editor, Role.Admin],
-                editRoles: [Role.Editor, Role.Admin]
+                roles: [Role.EDITOR, Role.ADMIN],
+                editRoles: [Role.EDITOR, Role.ADMIN]
             },
             component: StixPageComponent
         }
@@ -344,7 +344,7 @@ const stixRoutes: Routes = [{
         data: {
             breadcrumb: 'list',
             title: "data sources",
-            roles: [Role.Visitor, Role.Editor, Role.Admin]
+            roles: [Role.VISITOR, Role.EDITOR, Role.ADMIN]
         },
         component: DataSourceListComponent
     },
@@ -359,8 +359,8 @@ const stixRoutes: Routes = [{
                 breadcrumb: 'view',
                 editable: true,
                 title: "view data source",
-                roles: [Role.Visitor, Role.Editor, Role.Admin],
-                editRoles: [Role.Editor, Role.Admin]
+                roles: [Role.VISITOR, Role.EDITOR, Role.ADMIN],
+                editRoles: [Role.EDITOR, Role.ADMIN]
             },
             component: StixPageComponent
         }
@@ -377,8 +377,8 @@ const stixRoutes: Routes = [{
                 breadcrumb: 'view',
                 editable: true,
                 title: "new data source",
-                roles: [Role.Editor, Role.Admin],
-                editRoles: [Role.Editor, Role.Admin]
+                roles: [Role.EDITOR, Role.ADMIN],
+                editRoles: [Role.EDITOR, Role.ADMIN]
             },
             component: StixPageComponent
         }
@@ -401,7 +401,7 @@ if (environment.integrations.collection_manager.enabled) {
             data: {
                 breadcrumb: "list",
                 title: "collections",
-                roles: [Role.Visitor, Role.Editor, Role.Admin]
+                roles: [Role.VISITOR, Role.EDITOR, Role.ADMIN]
             },
             component: CollectionManagerComponent,
         }, {
@@ -415,7 +415,7 @@ if (environment.integrations.collection_manager.enabled) {
                 data: {
                     breadcrumb: 'import',
                     title: "import collection",
-                    roles: [Role.Admin]
+                    roles: [Role.ADMIN]
                 },
                 component: CollectionImportComponent
             }]
@@ -430,7 +430,7 @@ if (environment.integrations.collection_manager.enabled) {
                 data: {
                     breadcrumb: 'import',
                     title: "add collection index",
-                    roles: [Role.Admin]
+                    roles: [Role.ADMIN]
                 },
                 component: CollectionIndexImportComponent
             }]
@@ -445,8 +445,8 @@ if (environment.integrations.collection_manager.enabled) {
                     breadcrumb: "view",
                     editable: true,
                     title: "view collection",
-                    roles: [Role.Visitor, Role.Editor, Role.Admin],
-                    editRoles: [Role.Admin]
+                    roles: [Role.VISITOR, Role.EDITOR, Role.ADMIN],
+                    editRoles: [Role.ADMIN]
                 },
                 component: StixPageComponent
             }]
@@ -462,8 +462,8 @@ if (environment.integrations.collection_manager.enabled) {
                     breadcrumb: 'new collection',
                     editable: true,
                     title: "new collection",
-                    roles: [Role.Admin],
-                    editRoles: [Role.Admin]
+                    roles: [Role.ADMIN],
+                    editRoles: [Role.ADMIN]
                 },
                 component: StixPageComponent
             }]

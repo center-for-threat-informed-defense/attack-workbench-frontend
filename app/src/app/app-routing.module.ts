@@ -38,7 +38,7 @@ const routes: Routes = [
                 "data": {
                     "breadcrumb": "admin settings",
                     "title": "Admin Settings",
-                    "roles": [Role.Admin]
+                    "roles": [Role.ADMIN]
                 },
                 "children": [
                     {

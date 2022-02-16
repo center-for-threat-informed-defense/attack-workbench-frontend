@@ -23,7 +23,7 @@ export class LandingPageComponent implements OnInit, OnDestroy {
         this.routes = stixRoutes;
     }
 
-    public get isAdmin(): boolean { return this.authenticationService.isAuthorized([Role.Admin]); }
+    public get isAdmin(): boolean { return this.authenticationService.isAuthorized([Role.ADMIN]); }
     public get isLoggedIn(): boolean { return this.authenticationService.isLoggedIn; }
 
     ngOnInit() {
@@ -42,7 +42,7 @@ export class LandingPageComponent implements OnInit, OnDestroy {
 
     // bug the admin about editing their organization identity
     private openOrgIdentityDialog(): void {
-        if (this.authenticationService.isAuthorized([Role.Admin])) {
+        if (this.authenticationService.isAuthorized([Role.ADMIN])) {
             let subscription = this.restApiConnector.getOrganizationIdentity().subscribe({
                 next: (identity) => {
                     if (identity.name == "Placeholder Organization Identity") {

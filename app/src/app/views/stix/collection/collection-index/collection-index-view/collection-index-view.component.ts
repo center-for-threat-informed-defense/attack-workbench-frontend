@@ -17,7 +17,7 @@ import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/re
 export class CollectionIndexViewComponent implements OnInit {
     @Input() config: CollectionIndexViewConfig;
     @Output() onCollectionsModified = new EventEmitter();
-    public get isAdmin(): boolean { return this.authenticationService.isAuthorized([Role.Admin]); }
+    public get isAdmin(): boolean { return this.authenticationService.isAuthorized([Role.ADMIN]); }
 
     constructor(private authenticationService: AuthenticationService, private restAPIConnector: RestApiConnectorService, private dialog: MatDialog, private router: Router) { }
 

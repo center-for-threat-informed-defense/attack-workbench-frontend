@@ -13,7 +13,7 @@ import { CollectionIndexListComponent } from '../collection-index/collection-ind
 })
 export class CollectionManagerComponent implements OnInit {
     @ViewChild(CollectionIndexListComponent) private collectionIndexList: CollectionIndexListComponent;
-    public get isAdmin(): boolean { return this.authenticationService.isAuthorized([Role.Admin]); }
+    public get isAdmin(): boolean { return this.authenticationService.isAuthorized([Role.ADMIN]); }
 
     public collections: Collection[];
 

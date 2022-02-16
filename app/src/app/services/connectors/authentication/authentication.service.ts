@@ -9,13 +9,14 @@ import { ApiConnector } from '../api-connector';
 import { Role } from 'src/app/classes/authn/role';
 import { Router } from '@angular/router';
 import { RestApiConnectorService } from '../rest-api/rest-api-connector.service';
+import { Status } from 'src/app/classes/authn/status';
 
 @Injectable({
     providedIn: 'root'
 })
 export class AuthenticationService extends ApiConnector {
     public currentUser: UserAccount;
-    public get isLoggedIn(): boolean { return this.currentUser && this.currentUser.status == 'active'; }
+    public get isLoggedIn(): boolean { return this.currentUser && this.currentUser.status == Status.ACTIVE; }
     private get baseUrl(): string { return environment.integrations.rest_api.url; }
     public onLogin = new EventEmitter(); // event emitter for admin organization identity pop-up
 
@@ -41,9 +42,9 @@ export class AuthenticationService extends ApiConnector {
     public canEdit(attackType?: string): boolean {
         if (attackType && attackType.includes('collection')) {
             // restrict collection editing to admin only
-            return this.isAuthorized([Role.Admin]);
+            return this.isAuthorized([Role.ADMIN]);
         }
-        return this.isAuthorized([Role.Editor, Role.Admin])
+        return this.isAuthorized([Role.EDITOR, Role.ADMIN])
     }
 
     /**
