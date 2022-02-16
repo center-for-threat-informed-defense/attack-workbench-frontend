@@ -29,7 +29,7 @@ export class LandingPageComponent implements OnInit, OnDestroy {
         this.loginSubscription = this.authenticationService.onLogin.subscribe({
             next: (event) => { this.openOrgIdentityDialog(); }
         });
-        let userSubscription = this.restApiConnector.getAllUserAccounts({status: "pending"}).subscribe({
+        let userSubscription = this.restApiConnector.getAllUserAccounts({status: ["pending"]}).subscribe({
             next: (results) => {
                 let users = results as any;
                 if (users && users.length) this.pendingUsers = users.length;
@@ -47,7 +47,7 @@ export class LandingPageComponent implements OnInit, OnDestroy {
                     if (identity.name == "Placeholder Organization Identity") {
                         let prompt = this.dialog.open(ConfirmationDialogComponent, {
                             maxWidth: "35em",
-                            data: { 
+                            data: {
                                 message: '### Your organization identity has not yet been set.\n\nYour organization identity is used for attribution of edits you make to objects in the knowledge base and is attached to published collections. Currently, a placeholder is being used.\n\nUpdate your organization identity now?',
                                 yes_suffix: "edit my identity now",
                                 no_suffix: "edit my identity later"

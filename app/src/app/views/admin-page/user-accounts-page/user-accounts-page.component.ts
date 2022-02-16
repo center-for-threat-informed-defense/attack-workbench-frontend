@@ -17,14 +17,20 @@ export class UserAccountsPageComponent implements OnInit {
     @ViewChild(MatPaginator) paginator: MatPaginator;
     public userAccounts$: Observable<Paginated<UserAccount>>;
     public userAccounts: UserAccount[];
-    public filteredAccounts: UserAccount[];
     public columnsToDisplay: string[];
     public filterOptions: any[];
     public totalObjectCount: number = 0;
     public userSubscription: Subscription;
     public selectedFilters: string[];
-    public get currentUser(): UserAccount { return this.authenticationService.currentUser; }
-    public get isAdmin(): boolean { return this.authenticationService.isAuthorized([Role.Admin]); }
+    public searchQuery: '';
+
+    public get currentUser(): UserAccount {
+        return this.authenticationService.currentUser;
+    }
+
+    public get isAdmin(): boolean {
+        return this.authenticationService.isAuthorized([Role.Admin]);
+    }
 
     constructor(private restAPIConnector: RestApiConnectorService, private authenticationService: AuthenticationService) {
         this.columnsToDisplay = ['username', 'email', 'status', 'role'];
@@ -41,48 +47,49 @@ export class UserAccountsPageComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        this.getAccounts()
+        this.getAccounts({limit: 10, offset: 0});
     }
 
-    public getAccounts(limit = 10, offset = 0) {
-        this.userAccounts$ = this.restAPIConnector.getAllUserAccounts({limit: limit, offset: offset});
+    public getAccounts(options: { limit: number, offset: number, status?: string[], role?: string[], search?: string }) {
+        this.userAccounts$ = this.restAPIConnector.getAllUserAccounts(options);
         this.userSubscription = this.userAccounts$.subscribe({
             next: (data) => {
                 this.userAccounts = data.data;
-                this.filteredAccounts = data.data;
                 this.totalObjectCount = data.pagination.total;
             },
-            complete: () => { this.userSubscription.unsubscribe() }
+            complete: () => {
+                this.userSubscription.unsubscribe()
+            }
         });
     }
 
-    public handleFilterSelection(selectedFilter): void {
-        this.selectedFilters = selectedFilter.value;
-        this.filteredAccounts = this.applyFilters(this.userAccounts);
+    public applyFilters(filters, applyControls = false): void {
+        let roleFilters = [];
+        let statusFilters = [];
+        let limit = this.paginator ? this.paginator.pageSize : 10;
+        let offset = this.paginator ? this.paginator.pageIndex * limit : 0;
+        if (!applyControls && this.paginator) this.paginator.pageIndex = 0;
+        this.selectedFilters = filters;
+        filters.forEach((filter) => {
+            if (this.filterOptions[0].values.includes(filter)) { // Status
+                statusFilters.push(filter)
+            } else if (this.filterOptions[1].values.includes(filter)) { // Role
+                roleFilters.push(filter)
+            }
+        })
+        this.getAccounts({limit: limit, offset: offset, status: statusFilters, role: roleFilters});
     }
 
-    public applyFilters(accounts): any {
-        let filtered = accounts;
-        if (this.selectedFilters.length > 0) {
-            const filters = this.filterOptions.map((f) => f.name.toLowerCase())
-            filtered = filtered.filter((acc) => filters.map((key) => acc[key]).some((val) => this.selectedFilters.indexOf(val) > -1))
-        }
-        return filtered;
+    public applySearch(query, applyControls = false): void {
+        let limit = this.paginator ? this.paginator.pageSize : 10;
+        let offset = this.paginator ? this.paginator.pageIndex * limit : 0;
+        if (!applyControls && this.paginator) this.paginator.pageIndex = 0;
+        this.getAccounts({limit: limit, offset: offset, search: query});
     }
 
-    public applySearch(query): void {
-        this.filteredAccounts = (this.userAccounts as any).filter((acc) => {
-            return Object.keys(acc).some((key) => {
-                return acc[key] && acc[key].includes(query);
-            });
-        });
-        this.filteredAccounts = this.applyFilters(this.filteredAccounts);
-    }
-
-    public applyControls(search?: string): void {
-        const limit = this.paginator ? this.paginator.pageSize : 10;
-        const offset = this.paginator ? this.paginator.pageIndex * limit : 0;
-        this.getAccounts(limit, offset)
+    public applyControls(): void {
+        if (this.searchQuery) this.applySearch(this.searchQuery, true);
+        if (this.selectedFilters) this.applyFilters(this.selectedFilters, true);
     }
 
     public updateUserRole(userAcc: UserAccount, newRole: string): void {
@@ -94,7 +101,9 @@ export class UserAccountsPageComponent implements OnInit {
                     user.role = Role[`${newRole}`];
                     new UserAccount(user).save(this.restAPIConnector);
                 },
-                complete: () => { subscription.unsubscribe(); }
+                complete: () => {
+                    subscription.unsubscribe();
+                }
             });
         }
     }
@@ -107,7 +116,9 @@ export class UserAccountsPageComponent implements OnInit {
                 user.status = Status[`${newStatus}`];
                 new UserAccount(user).save(this.restAPIConnector);
             },
-            complete: () => { subscription.unsubscribe(); }
+            complete: () => {
+                subscription.unsubscribe();
+            }
         });
     }
 }
