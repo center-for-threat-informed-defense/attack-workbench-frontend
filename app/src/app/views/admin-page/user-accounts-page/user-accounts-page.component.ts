@@ -67,7 +67,7 @@ export class UserAccountsPageComponent implements OnInit {
         let roleFilters = [];
         let statusFilters = [];
         let limit = this.paginator ? this.paginator.pageSize : 10;
-        let offset = this.paginator ? this.paginator.pageIndex * limit : 0;
+        let offset = this.paginator || applyControls ? this.paginator.pageIndex * limit : 0;
         if (!applyControls && this.paginator) this.paginator.pageIndex = 0;
         this.selectedFilters = filters;
         filters.forEach((filter) => {
@@ -82,7 +82,7 @@ export class UserAccountsPageComponent implements OnInit {
 
     public applySearch(query, applyControls = false): void {
         let limit = this.paginator ? this.paginator.pageSize : 10;
-        let offset = this.paginator ? this.paginator.pageIndex * limit : 0;
+        let offset = this.paginator || applyControls ? this.paginator.pageIndex * limit : 0;
         if (!applyControls && this.paginator) this.paginator.pageIndex = 0;
         this.getAccounts({limit: limit, offset: offset, search: query});
     }
@@ -90,6 +90,11 @@ export class UserAccountsPageComponent implements OnInit {
     public applyControls(): void {
         if (this.searchQuery) this.applySearch(this.searchQuery, true);
         if (this.selectedFilters) this.applyFilters(this.selectedFilters, true);
+        if (!this.searchQuery && !this.selectedFilters) {
+            let limit = this.paginator ? this.paginator.pageSize : 10;
+            let offset = this.paginator ? this.paginator.pageIndex * limit : 0;
+            this.getAccounts({limit: limit, offset: offset});
+        }
     }
 
     public updateUserRole(userAcc: UserAccount, newRole: string): void {
