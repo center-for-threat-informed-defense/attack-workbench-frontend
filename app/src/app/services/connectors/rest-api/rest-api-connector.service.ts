@@ -856,7 +856,7 @@ export class RestApiConnectorService extends ApiConnector {
      * @param {string} [targetType] retrieve objects where the source object is this ATT&CK type
      * @param {number} [limit] The number of relationships to retrieve.
      * @param {number} [offset] The number of relationships to skip.
-     * @param {boolean} [includeDeprecated] if true, include deprecated relationships. 
+     * @param {boolean} [includeDeprecated] if true, include deprecated relationships.
      * @param {"all" | "latest"} [versions] if "all", get all versions of the relationships, otherwise only get the latest versions
      * @param {string[]} [excludeSourceRefs] if specified, exclude source refs which are found in this array
      * @param {string[]} [excludeTargetRefs] if specified, exclude target refs which are found in this array
@@ -876,7 +876,7 @@ export class RestApiConnectorService extends ApiConnector {
         if (args.relationshipType) query = query.set("relationshipType", args.relationshipType);
 
         if (args.includeDeprecated) query = query.set("includeDeprecated", args.includeDeprecated ? "true" : "false");
-        
+
         if (args.versions) query = query.set("versions", args.versions);
 
         if (args.limit) query = query.set("limit", args.limit.toString());
@@ -955,7 +955,7 @@ export class RestApiConnectorService extends ApiConnector {
         );
     }
 
-    //   ___ ___ ___ ___ ___ ___ _  _  ___ ___ ___ 
+    //   ___ ___ ___ ___ ___ ___ _  _  ___ ___ ___
     //  | _ \ __| __| __| _ \ __| \| |/ __| __/ __|
     //  |   / _|| _|| _||   / _|| .` | (__| _|\__ \
     //  |_|_\___|_| |___|_|_\___|_|\_|\___|___|___/
@@ -1063,7 +1063,7 @@ export class RestApiConnectorService extends ApiConnector {
 
     /**
      * Preview a collection bundle.
-     * POST the collection bundle to the back end to retrieve a preview of the import results. A second POST 
+     * POST the collection bundle to the back end to retrieve a preview of the import results. A second POST
      * call will occur (with ?forceImport='all') if the first POST call results in an overridable import error.
      * This is done in order to view the import errors alongside a preview of the import results.
      * @param collectionBundle the STIX bundle to preview
@@ -1210,7 +1210,7 @@ export class RestApiConnectorService extends ApiConnector {
         )
     }
 
-    //   _____   _____ _____ ___ __  __    ___ ___  _  _ ___ ___ ___     _   ___ ___ ___ 
+    //   _____   _____ _____ ___ __  __    ___ ___  _  _ ___ ___ ___     _   ___ ___ ___
     //  / __\ \ / / __|_   _| __|  \/  |  / __/ _ \| \| | __|_ _/ __|   /_\ | _ \_ _/ __|
     //  \__ \\ V /\__ \ | | | _|| |\/| | | (_| (_) | .` | _| | | (_ |  / _ \|  _/| |\__ \
     //  |___/ |_| |___/ |_| |___|_|  |_|  \___\___/|_|\_|_| |___\___| /_/ \_\_| |___|___/
@@ -1274,7 +1274,7 @@ export class RestApiConnectorService extends ApiConnector {
         )
     }
 
-    //   _   _ ___ ___ ___     _   ___ ___ ___  _   _ _  _ _____     _   ___ ___ ___ 
+    //   _   _ ___ ___ ___     _   ___ ___ ___  _   _ _  _ _____     _   ___ ___ ___
     //  | | | / __| __| _ \   /_\ / __/ __/ _ \| | | | \| |_   _|   /_\ | _ \_ _/ __|
     //  | |_| \__ \ _||   /  / _ \ (_| (_| (_) | |_| | .` | | |    / _ \|  _/| |\__ \
     //   \___/|___/___|_|_\ /_/ \_\___\___\___/ \___/|_|\_| |_|   /_/ \_\_| |___|___/
@@ -1288,7 +1288,7 @@ export class RestApiConnectorService extends ApiConnector {
      * @param {string} [search] Only return user accounts where the provided search text occurs in the username or email. The search is case-insensitive.
      * @returns {Observable<Paginated>} paginated data of the user accounts
      */
-    public getAllUserAccounts(options?: {limit?: number, offset?: number, status?: string, role?: string, search?: string}): Observable<Paginated<UserAccount>> {
+    public getAllUserAccounts(options?: {limit?: number, offset?: number, status?: string[], role?: string[], search?: string}): Observable<Paginated<UserAccount>> {
         let url = `${this.baseUrl}/user-accounts`;
         // parse params into query string
         let query = new HttpParams();
@@ -1299,8 +1299,8 @@ export class RestApiConnectorService extends ApiConnector {
         // search
         if (options && options.search) query = query.set("search", encodeURIComponent(options.search));
         // status/role
-        if (options && options.status) query = query.set("status", options.status);
-        if (options && options.role) query = query.set("role", options.role);
+        if (options && options.status) options.status.forEach((status) => query = query.append("status", status));
+        if (options && options.role) options.role.forEach((role) => query = query.append("role", role));
         return this.http.get<Paginated<UserAccount>>(url, {params: query}).pipe(
             catchError(this.handleError_continue<Paginated<UserAccount>>({data: [], pagination: {total: 0, limit: 0, offset:0}})),
             share() //multicast to subscribers
@@ -1346,11 +1346,11 @@ export class RestApiConnectorService extends ApiConnector {
         )
     }
 
-    //   ___    ___      __  ___ _____ _____  __    _   ___ ___ ___ 
+    //   ___    ___      __  ___ _____ _____  __    _   ___ ___ ___
     //  | _ \  /_\ \    / / / __|_   _|_ _\ \/ /   /_\ | _ \_ _/ __|
     //  |   / / _ \ \/\/ /  \__ \ | |  | | >  <   / _ \|  _/| |\__ \
     //  |_|_\/_/ \_\_/\_/   |___/ |_| |___/_/\_\ /_/ \_\_| |___|___/
-                                                                 
+
     /**
      * Helper function: trigger the download of the given data from the browser
      * @param data: the data to download. Must be a JSON
@@ -1415,7 +1415,7 @@ export class RestApiConnectorService extends ApiConnector {
             complete: () => { subscription.unsubscribe(); }
         });
         return getter;
-    }                                                                     
+    }
 }
 
 class CustomEncoder implements HttpParameterCodec {

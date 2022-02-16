@@ -13,7 +13,7 @@ export class AdminPageComponent implements OnInit {
     constructor(private restApiConnector: RestApiConnectorService) { }
 
     ngOnInit(): void {
-        let userSubscription = this.restApiConnector.getAllUserAccounts({status: "pending"}).subscribe({
+        let userSubscription = this.restApiConnector.getAllUserAccounts({status: ["pending"]}).subscribe({
             next: (results) => {
                 let users = results as any;
                 if (users && users.length) this.pendingUsers = users.length;

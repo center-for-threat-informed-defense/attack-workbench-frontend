@@ -12,12 +12,12 @@
             <div class="input-group">
                 <mat-form-field class="search" appearance="fill">
                     <mat-label>search</mat-label>
-                    <input matInput (keyup)="applySearch($event.target.value)">
+                    <input matInput (keyup)="applySearch($event.target.value)" [(ngModel)]="searchQuery">
                 </mat-form-field>
 
                 <mat-form-field appearance="fill">
                     <mat-label>options</mat-label>
-                    <mat-select multiple (selectionChange)="handleFilterSelection($event)">
+                    <mat-select multiple (selectionChange)="applyFilters($event.value)">
                         <mat-optgroup *ngFor="let group of filterOptions" [label]="group.name">
                             <mat-option *ngFor="let filter of group.values" [value]="filter">{{filter}}</mat-option>
                         </mat-optgroup>
@@ -29,8 +29,8 @@
         <!-- ----- -->
         <!-- TABLE -->
         <!-- ----- -->
-        <div class="scroll-container" *ngIf="filteredAccounts else loading">
-            <table mat-table *ngIf="filteredAccounts.length > 0 else nothingHere" [dataSource]="filteredAccounts" aria-label="user accounts table">
+        <div class="scroll-container" *ngIf="userAccounts else loading">
+            <table mat-table *ngIf="userAccounts.length > 0 else nothingHere" [dataSource]="userAccounts" aria-label="user accounts table">
                 <ng-container matColumnDef="username">
                     <th scope="col" mat-header-cell *matHeaderCellDef>Username</th>
                     <td mat-cell *matCellDef="let user"> {{user.username}} </td>
@@ -80,7 +80,7 @@
             </ng-template>
         </div>
         <ng-template #loading>
-            <app-loading-overlay *ngIf="!filteredAccounts"></app-loading-overlay>
+            <app-loading-overlay *ngIf="!userAccounts"></app-loading-overlay>
         </ng-template>
         <!-- ---------- -->
         <!-- PAGINATION -->
