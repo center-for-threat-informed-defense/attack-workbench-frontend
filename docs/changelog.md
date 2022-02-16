@@ -32,7 +32,7 @@
 
 # Changelog
 
-## 19 January 2022
+## 16 February 2022
 
 ### ATT&CK Workbench version 1.2.0
 
