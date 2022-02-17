@@ -49,6 +49,9 @@ export class SaveDialogComponent implements OnInit {
         this.newState = this.config.object.workflow? this.config.object.workflow.state : "";
     }
 
+    /**
+     * Find objects with links to the previous object ATT&CK ID
+     */
     private parse_patches(): void {
         this.stage = 1; // enter patching stage
         let objSubscription = this.restApiConnectorService.getAllObjects(null, null, null, null, null, null, true).subscribe({
@@ -66,29 +69,49 @@ export class SaveDialogComponent implements OnInit {
         })
     }
 
+    /**
+     * Apply LinkById patches and save the object
+     */
     public patch() {
         let saves = [];
-        saves.push(this.config.object.save(this.restApiConnectorService))
+        saves.push(this.config.object.save(this.restApiConnectorService));
         for (let obj of this.patch_objects) {
+            // replace LinkById references with the new ATT&CK ID
             let regex = new RegExp(`\\(LinkById: (${this.config.patchID})\\)`, "gmu");
             obj.description = obj.description.replace(regex, `(LinkById: ${this.config.object.attackID})`);
             if (obj.hasOwnProperty("detection") && obj.detection) {
                 obj.detection = obj.detection.replace(regex, `(LinkById: ${this.config.object.attackID})`);
             }
-            saves.push(obj.save(this.restApiConnectorService))
+            saves.push(obj.save(this.restApiConnectorService));
         }
-        this.stage = 3;
+        this.stage = 3; // enter loading stage until patching is complete
         let saveSubscription = forkJoin(saves).subscribe({
             complete: () => { saveSubscription.unsubscribe(); this.dialogRef.close(true); }
         })
     }
 
+    /**
+     * Save the object with the current version and check for patches
+     */
     public saveCurrentVersion() {
         this.config.object.workflow = this.newState ? {state: this.newState } : undefined;
         if (this.config.patchID) this.parse_patches();
         else this.save();
     }
 
+    /**
+     * Save the object with the next minor version (i.e. 1.0 -> 1.1) and check for patches
+     */
+     public saveNextMinorVersion() {
+        this.config.object.version = new VersionNumber(this.nextMinorVersion);
+        this.config.object.workflow = this.newState ? {state: this.newState } : undefined;
+        if (this.config.patchID) this.parse_patches();
+        else this.save();
+    }
+
+    /**
+     * Save the object with the next major version (i.e. 1.0 -> 2.0) and check for patches
+     */
     public saveNextMajorVersion() {
         this.config.object.version = new VersionNumber(this.nextMajorVersion);
         this.config.object.workflow = this.newState ? {state: this.newState } : undefined;
@@ -96,13 +119,9 @@ export class SaveDialogComponent implements OnInit {
         else this.save();
     }
 
-    public saveNextMinorVersion() {
-        this.config.object.version = new VersionNumber(this.nextMinorVersion);
-        this.config.object.workflow = this.newState ? {state: this.newState } : undefined;
-        if (this.config.patchID) this.parse_patches();
-        else this.save();
-    }
-
+    /**
+     * Save the object without patching other objects
+     */
     private save() {
         if (!this.saveEnabled) return;
         let subscription = this.config.object.save(this.restApiConnectorService).subscribe({

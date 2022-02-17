@@ -29,20 +29,6 @@ export class ReferenceManagerComponent implements OnInit, AfterViewInit {
     public totalObjectCount: number = 0;
     
     constructor(private restApiConnector: RestApiConnectorService, public snackbar: MatSnackBar, public dialog: MatDialog) { }
-    
-    // public createReference() {
-    //     let subscription = this.restApiConnector.postReference(this.newRef).subscribe({
-    //         next: (result) => {
-    //             this.newRef = {
-    //                 source_name: "",
-    //                 description: "",
-    //                 url: ""
-    //             }
-    //             this.refreshReferences();
-    //         },
-    //         complete: () => { subscription.unsubscribe(); }
-    //     })
-    // }
 
     public editReference(reference?: ExternalReference) {
         let ref = this.dialog.open(ReferenceEditDialogComponent, {
@@ -79,7 +65,7 @@ export class ReferenceManagerComponent implements OnInit, AfterViewInit {
     }
 
     ngOnInit(): void {
-        // this.refreshReferences();
+        // intentionally left blank
     }
 
     ngAfterViewInit() {
