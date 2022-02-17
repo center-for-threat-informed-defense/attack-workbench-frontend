@@ -68,7 +68,7 @@ export class StixPageComponent implements OnInit, OnDestroy {
                 data: {
                     object: this.objects[0],
                     // patch LinkByIds on other objects if this object's ATT&CK ID has changed
-                    patchID: this.objects[0].supportsAttackID && this.objectID && this.objectID != this.objects[0].attackID ? this.objectID : null,
+                    patchID: this.objects[0].supportsAttackID && this.objectID && this.objectID != this.objects[0].attackID ? this.objectID : undefined,
                     versionAlreadyIncremented: versionChanged
                 }
             });

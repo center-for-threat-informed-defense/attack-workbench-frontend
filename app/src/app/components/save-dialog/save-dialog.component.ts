@@ -17,6 +17,7 @@ export class SaveDialogComponent implements OnInit {
     public currentVersion: string;
     public nextMajorVersion: string;
     public nextMinorVersion: string;
+    public patch_objects = [];
     public validation: ValidationData = null;
     public newState: workflowStates = "work-in-progress";
     public workflows: string[] = ["work-in-progress", "awaiting-review", "reviewed"];
@@ -48,16 +49,16 @@ export class SaveDialogComponent implements OnInit {
         this.newState = this.config.object.workflow? this.config.object.workflow.state : "";
     }
 
-    public patch_objects: StixObject[] = [];
     private parse_patches(): void {
         this.stage = 1; // enter patching stage
         let objSubscription = this.restApiConnectorService.getAllObjects(null, null, null, null, null, null, true).subscribe({
             next: (results) => {
                 // find objects with a link to the previous ID
-                // TODO find & update links in x_mitre_detection field
                 let objLink = `(LinkById: ${this.config.patchID})`;
                 results.data.forEach(x => {
-                    if (x.description && x.description.indexOf(objLink) !== -1) this.patch_objects.push(x);
+                    if ((x.description && x.description.indexOf(objLink) !== -1) || ("detection" in x && x.detection && x.detection.indexOf(objLink) !== -1)) {
+                            this.patch_objects.push(x);
+                    }
                 });
                 this.stage = 2;
             },
@@ -71,6 +72,9 @@ export class SaveDialogComponent implements OnInit {
         for (let obj of this.patch_objects) {
             let regex = new RegExp(`\\(LinkById: (${this.config.patchID})\\)`, "gmu");
             obj.description = obj.description.replace(regex, `(LinkById: ${this.config.object.attackID})`);
+            if (obj.hasOwnProperty("detection") && obj.detection) {
+                obj.detection = obj.detection.replace(regex, `(LinkById: ${this.config.object.attackID})`);
+            }
             saves.push(obj.save(this.restApiConnectorService))
         }
         this.stage = 3;
@@ -116,6 +120,6 @@ export class SaveDialogComponent implements OnInit {
 
 export interface SaveDialogConfig {
     object: StixObject;
-    patchID: string; // previous object ID to patch in LinkByID tags
+    patchID?: string; // previous object ID to patch in LinkByID tags
     versionAlreadyIncremented: boolean;
 }

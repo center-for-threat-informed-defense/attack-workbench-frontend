@@ -1,50 +1,49 @@
 <div class="save-dialog grid spacing-16">
-        <div *ngIf="stage == 0" class="row">
-            <div class="column validation">
-                <h3>Validation</h3>
-                <div *ngIf="validation else validating">
-                    <app-validation-results [validation]="validation"></app-validation-results>
-                    <mat-list class="patch-warning" *ngIf="config.patchID">
-                        <mat-list-item class="validation-item warning">
-                            <mat-icon mat-list-icon>warning</mat-icon>
-                            <div mat-line>ATT&CK ID changed</div>
-                            <div mat-line>knowledge base patches will be determined in next step</div>
-                        </mat-list-item>
-                    </mat-list>
-                </div>
-                <ng-template #validating>
-                    <app-loading-overlay></app-loading-overlay>
-                </ng-template>
+    <div *ngIf="stage == 0" class="row">
+        <div class="column validation">
+            <h3>Validation</h3>
+            <div *ngIf="validation else validating">
+                <app-validation-results [validation]="validation"></app-validation-results>
+                <mat-list class="patch-warning" *ngIf="config.patchID">
+                    <mat-list-item class="validation-item warning">
+                        <mat-icon mat-list-icon>warning</mat-icon>
+                        <div mat-line>ATT&CK ID changed</div>
+                        <div mat-line>knowledge base patches will be determined in next step</div>
+                    </mat-list-item>
+                </mat-list>
             </div>
-            <div class="column narrow version-buttons">
-                <mat-action-list>
-                    <mat-form-field class="workflow-status" appearance="outline">
-                        <mat-label>mark as...</mat-label>
-                        <mat-select [(ngModel)]="newState" [disabled]="!saveEnabled">
-                            <mat-option></mat-option>
-                            <mat-option *ngFor="let status of workflows" [value]="status">{{getLabel(status)}}</mat-option>
-                        </mat-select>
-                    </mat-form-field>
-                    <button mat-list-item [disabled]="config.versionAlreadyIncremented || !saveEnabled" (click)="saveNextMajorVersion()">
-                        <h3 mat-line>save new major version</h3>
-                        <div mat-line>{{currentVersion}} &#8594; {{nextMajorVersion}}</div>
-                    </button>
-                    <button mat-list-item [disabled]="config.versionAlreadyIncremented || !saveEnabled" (click)="saveNextMinorVersion()">
-                        <h3 mat-line>save new minor version</h3>
-                        <div mat-line>{{currentVersion}} &#8594; {{nextMinorVersion}}</div>
-                    </button>
-                    <button mat-list-item [disabled]="!saveEnabled" (click)="saveCurrentVersion()">
-                        <h3 mat-line>save current version</h3>
-                        <div mat-line>{{currentVersion}} &#8594; {{currentVersion}}</div>
-                    </button>
-                    <button mat-list-item mat-dialog-close>
-                        <h3 mat-line>cancel</h3>
-                        <div mat-line>keep editing</div>
-                    </button>
-                </mat-action-list>
-            </div>
+            <ng-template #validating>
+                <app-loading-overlay></app-loading-overlay>
+            </ng-template>
         </div>
-    <!-- </div> -->
+        <div class="column narrow version-buttons">
+            <mat-action-list>
+                <mat-form-field class="workflow-status" appearance="outline">
+                    <mat-label>mark as...</mat-label>
+                    <mat-select [(ngModel)]="newState" [disabled]="!saveEnabled">
+                        <mat-option></mat-option>
+                        <mat-option *ngFor="let status of workflows" [value]="status">{{getLabel(status)}}</mat-option>
+                    </mat-select>
+                </mat-form-field>
+                <button mat-list-item [disabled]="config.versionAlreadyIncremented || !saveEnabled" (click)="saveNextMajorVersion()">
+                    <h3 mat-line>save new major version</h3>
+                    <div mat-line>{{currentVersion}} &#8594; {{nextMajorVersion}}</div>
+                </button>
+                <button mat-list-item [disabled]="config.versionAlreadyIncremented || !saveEnabled" (click)="saveNextMinorVersion()">
+                    <h3 mat-line>save new minor version</h3>
+                    <div mat-line>{{currentVersion}} &#8594; {{nextMinorVersion}}</div>
+                </button>
+                <button mat-list-item [disabled]="!saveEnabled" (click)="saveCurrentVersion()">
+                    <h3 mat-line>save current version</h3>
+                    <div mat-line>{{currentVersion}} &#8594; {{currentVersion}}</div>
+                </button>
+                <button mat-list-item mat-dialog-close>
+                    <h3 mat-line>cancel</h3>
+                    <div mat-line>keep editing</div>
+                </button>
+            </mat-action-list>
+        </div>
+    </div>
     <div *ngIf="stage == 1" class="stage parsing">
         <h1>Determining required knowledge base patches...</h1>
         <app-loading-overlay></app-loading-overlay>
