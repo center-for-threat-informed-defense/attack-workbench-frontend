@@ -17,15 +17,28 @@ export class OrgSettingsPageComponent implements OnInit {
     constructor(private restAPIConnector: RestApiConnectorService) { }
 
     ngOnInit(): void {
-        let subscription = this.restAPIConnector.getOrganizationIdentity().subscribe({
+        let idSub = this.restAPIConnector.getOrganizationIdentity().subscribe({
             next: (identity) => this.organizationIdentity = identity,
-            complete: () => subscription.unsubscribe()
+            complete: () => idSub.unsubscribe()
         });
+
+        let namespaceSub = this.restAPIConnector.getOrganizationNamespace().subscribe({
+            next: (namespaceSettings) => this.organizationNamespace = namespaceSettings,
+            complete: () => namespaceSub.unsubscribe()
+        })
+
     }
 
     saveIdentity() {
         let subscription = this.restAPIConnector.postIdentity(this.organizationIdentity).subscribe({
             next: (identity) => this.organizationIdentity = identity,
+            complete: () => subscription.unsubscribe()
+        });
+    }
+
+    saveNamespace() {
+        let subscription = this.restAPIConnector.setOrganizationNamespace(this.organizationNamespace).subscribe({
+            next: (namespace) => this.organizationNamespace = namespace,
             complete: () => subscription.unsubscribe()
         });
     }

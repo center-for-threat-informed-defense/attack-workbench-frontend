@@ -1274,6 +1274,39 @@ export class RestApiConnectorService extends ApiConnector {
         )
     }
 
+    /**
+     * Get the organization namespace configurations
+     * @returns {Observable<Identity>} the organization namespace configurations
+     */
+    public getOrganizationNamespace(): Observable<any> {
+        return this.http.get(`${this.baseUrl}/config/organization-namespace`).pipe(
+            tap(_ => logger.log("retrieved organization namespace configurations")),
+            map(result => {
+                return result;
+            }),
+            catchError(this.handleError_continue<any>()),
+            share() //multicast to subscribers
+        )
+    }
+
+    /**
+     * Update the organization namespace config
+     * @param {Namespace} object the namespace object to save
+     * @returns {Observable<Namespace>} the updated identity
+     * @memberof RestApiConnectorService
+     */
+    public setOrganizationNamespace(namespaceSettings: {prefix: string, range: number}):  Observable<any> {
+        return this.http.post(`${this.baseUrl}/config/organization-namespace`, {namespaceSettings}).pipe(
+            // set the organization identity to be this identity's ID after it was created/updated
+            tap(this.handleSuccess("Organization Namespace Updated")),
+            map(_ => {
+                return namespaceSettings;
+            }),
+            catchError(this.handleError_raise<any>()),
+            share() // multicast so that multiple subscribers don't trigger the call twice. THIS MUST BE THE LAST LINE OF THE PIPE
+        );
+    }
+
     //   _   _ ___ ___ ___     _   ___ ___ ___  _   _ _  _ _____     _   ___ ___ ___
     //  | | | / __| __| _ \   /_\ / __/ __/ _ \| | | | \| |_   _|   /_\ | _ \_ _/ __|
     //  | |_| \__ \ _||   /  / _ \ (_| (_| (_) | |_| | .` | | |    / _ \|  _/| |\__ \
