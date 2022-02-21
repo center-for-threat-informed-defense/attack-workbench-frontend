@@ -3,7 +3,7 @@ import { Routes, RouterModule } from '@angular/router';
 import { LandingPageComponent } from './views/landing-page/landing-page.component';
 import { HelpPageComponent } from './views/help-page/help-page.component';
 import { AdminPageComponent } from './views/admin-page/admin-page.component';
-import { OrgIdentityPageComponent } from './views/admin-page/org-identity-page/org-identity-page.component';
+import { OrgSettingsPageComponent } from './views/admin-page/org-settings-page/org-settings-page.component';
 import { UserAccountsPageComponent } from './views/admin-page/user-accounts-page/user-accounts-page.component';
 import { AuthorizationGuard } from './services/helpers/authorization.guard';
 import { Role } from './classes/authn/role';
@@ -50,12 +50,12 @@ const routes: Routes = [
                         "component": AdminPageComponent,
                     },
                     {
-                        "path": "org-identity",
+                        "path": "org-settings",
                         "data": {
-                            "breadcrumb": "organization identity",
-                            "title": "Organization Identity"
+                            "breadcrumb": "organization settings",
+                            "title": "Organization Settings"
                         },
-                        "component": OrgIdentityPageComponent,
+                        "component": OrgSettingsPageComponent,
                     },
                     {
                         "path": "user-accounts",

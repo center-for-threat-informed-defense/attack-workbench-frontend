@@ -3,11 +3,11 @@ import { Identity } from 'src/app/classes/stix/identity';
 import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/rest-api-connector.service';
 
 @Component({
-  selector: 'app-org-identity-page',
-  templateUrl: './org-identity-page.component.html',
-  styleUrls: ['./org-identity-page.component.scss']
+  selector: 'app-org-settings-page',
+  templateUrl: './org-settings-page.component.html',
+  styleUrls: ['./org-settings-page.component.scss']
 })
-export class OrgIdentityPageComponent implements OnInit {
+export class OrgSettingsPageComponent implements OnInit {
     public organizationIdentity: Identity;
 
     constructor(private restAPIConnector: RestApiConnectorService) { }
