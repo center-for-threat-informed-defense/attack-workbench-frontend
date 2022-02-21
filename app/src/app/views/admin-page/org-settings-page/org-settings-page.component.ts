@@ -9,6 +9,10 @@ import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/re
 })
 export class OrgSettingsPageComponent implements OnInit {
     public organizationIdentity: Identity;
+    public organizationNamespace = {
+        prefix: 'This is a placeholder namespace prefix. Please replace it with a prefix.',
+        range: 1000
+    }
 
     constructor(private restAPIConnector: RestApiConnectorService) { }
 
