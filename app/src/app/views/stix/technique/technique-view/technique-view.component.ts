@@ -2,6 +2,7 @@ import { ChangeDetectorRef, Component, OnInit, ViewEncapsulation } from '@angula
 import { ActivatedRoute } from '@angular/router';
 import { Technique } from 'src/app/classes/stix/technique';
 import { StixViewPage } from '../../stix-view-page';
+import { RestApiConnectorService } from "src/app/services/connectors/rest-api/rest-api-connector.service";
 
 @Component({
   selector: 'app-technique-view',
@@ -11,18 +12,19 @@ import { StixViewPage } from '../../stix-view-page';
 })
 export class TechniqueViewComponent extends StixViewPage implements OnInit {
 
-    // public editing: boolean = false;
+    public get technique(): Technique { 
+        return this.config.object as Technique; 
+    }
 
-    public get technique(): Technique { return this.config.object as Technique; }
-
-    constructor(private route: ActivatedRoute, private ref: ChangeDetectorRef) {
+    constructor(private restApiConnector: RestApiConnectorService, private route: ActivatedRoute, private ref: ChangeDetectorRef) {
         super();
     }
 
     ngOnInit() {
-        // this.route.queryParams.subscribe(params => {
-        //     this.editing = params["editing"];
-        // });
+        let technique = this.config.object as Technique;
+        if ( technique.firstInitialized ) {
+            technique.initializeWithDefaultMarkingDefinitions(this.restApiConnector);
+        }
     }
 
     ngAfterContentChecked() {

@@ -4,6 +4,7 @@ import { LandingPageComponent } from './views/landing-page/landing-page.componen
 import { HelpPageComponent } from './views/help-page/help-page.component';
 import { AdminPageComponent } from './views/admin-page/admin-page.component';
 import { OrgIdentityPageComponent } from './views/admin-page/org-identity-page/org-identity-page.component';
+import { DefaultMarkingDefinitionsComponent } from './views/admin-page/default-marking-definitions/default-marking-definitions.component';
 
 
 //see also https://www.npmjs.com/package/angular-crumbs
@@ -43,8 +44,15 @@ const routes: Routes = [
                             "title": "Organization Identity"
                         },
                         "component": OrgIdentityPageComponent,
+                    },
+                    {
+                        "path": "default-marking-definitions",
+                        "data": {
+                            "breadcrumb": "default marking definitions",
+                            "title": "Default Marking Definitions"
+                        },
+                        "component": DefaultMarkingDefinitionsComponent,
                     }
-                    
                 ]
             },
             {

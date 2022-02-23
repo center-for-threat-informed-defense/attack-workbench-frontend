@@ -1,9 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { BreadcrumbService } from 'angular-crumbs';
-import { Relationship } from 'src/app/classes/stix/relationship';
 import { Software } from 'src/app/classes/stix/software';
 import { StixViewPage } from '../../stix-view-page';
+import { RestApiConnectorService } from "src/app/services/connectors/rest-api/rest-api-connector.service";
 
 @Component({
   selector: 'app-software-view',
@@ -13,14 +12,20 @@ import { StixViewPage } from '../../stix-view-page';
 export class SoftwareViewComponent extends StixViewPage implements OnInit {
     // public editing: boolean = false;
 
-    public get software(): Software { return this.config.object as Software; }
+    public get software(): Software { 
+        return this.config.object as Software; 
+    }
     
-    constructor(private route: ActivatedRoute, private breadcrumbService: BreadcrumbService) { super() }
+    constructor(private restApiConnector: RestApiConnectorService, private route: ActivatedRoute) { super() }
 
     ngOnInit() {
         // this.route.queryParams.subscribe(params => {
         //     this.editing = params["editing"];
         // });
+        let software = this.config.object as Software;
+        if ( software.firstInitialized ) {
+            software.initializeWithDefaultMarkingDefinitions(this.restApiConnector);
+        }
     }
 
 }

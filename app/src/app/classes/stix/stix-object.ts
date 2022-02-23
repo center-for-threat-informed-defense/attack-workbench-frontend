@@ -36,6 +36,7 @@ export abstract class StixObject extends Serializable {
     public created_by?: any;
     public modified_by_ref: string; //embedded relationship
     public modified_by?: any;
+    public firstInitialized: boolean; // boolean to track if it is a newly created object
 
     public object_marking_refs: string[] = []; //list of embedded relationships to marking_defs
 
@@ -57,6 +58,8 @@ export abstract class StixObject extends Serializable {
         "data-source": "data-sources",
         "data-component": "data-components"
     }
+
+    private defaultMarkingDefinitionsLoaded = false; // avoid overloading of default marking definitions
 
     public get routes(): any[] { // route to view the object
         // let baseRoute = "/" + [this.attackType, this.stixID].join("/")
@@ -91,6 +94,7 @@ export abstract class StixObject extends Serializable {
         super();
         if (sdo) {
             this.base_deserialize(sdo);
+            this.firstInitialized = false;
         } else {
             // create new SDO
             this.stixID = type + "--" + uuid();
@@ -104,6 +108,7 @@ export abstract class StixObject extends Serializable {
                 state: "work-in-progress"
             };
             this.description = "";
+            this.firstInitialized = true;
         }
         this.attackType = stixTypeToAttackType[this.type]
     }
@@ -146,7 +151,6 @@ export abstract class StixObject extends Serializable {
             "type": this.type,
             "id": this.stixID,
             "created": this.created? this.created.toISOString() : new Date().toISOString(),
-            "modified": new Date().toISOString(),
             "x_mitre_version": this.version.toString(),
             "external_references": serialized_external_references,
             "x_mitre_deprecated": this.deprecated,
@@ -155,6 +159,8 @@ export abstract class StixObject extends Serializable {
             "object_marking_refs": this.object_marking_refs,
             "spec_version": "2.1"
         }
+        // Add modified data if type is not marking-definition
+        if (this.type != "marking-definition") stix["modified"] = new Date().toISOString();
         if (this.created_by_ref) stix.created_by_ref = this.created_by_ref;
         // do not set modified by ref since we don't know who we are, but the REST API knows
         
@@ -209,7 +215,8 @@ export abstract class StixObject extends Serializable {
             if ("modified" in sdo) {
                 if (typeof(sdo.modified) === "string") this.modified = new Date(sdo.modified);
                 else logger.error("TypeError: modified field is not a string:", sdo.modified, "(",typeof(sdo.modified),")")
-            } else this.modified = new Date();
+            } 
+            else if ("type" in sdo && sdo.type != "marking-definition") this.modified = new Date();
 
             if ("x_mitre_modified_by_ref" in sdo) {
                 if (typeof(sdo.created) === "string") this.modified_by_ref = sdo.x_mitre_modified_by_ref;
@@ -293,7 +300,8 @@ export abstract class StixObject extends Serializable {
         return of(validation).pipe(
             // check if the name is unique if it has a name
             switchMap(result => {
-                if (this.attackType == "relationship") return of(result); //do not check name or attackID for relationships
+                //do not check name or attackID for relationships or marking definitions
+                if (this.attackType == "relationship" || this.attackType == "marking-definition") return of(result); 
                 // check if name & ATT&CK ID is unique, record result in validation, and return validation
                 let accessor = this.attackType == "collection"? restAPIService.getAllCollections() :
                                 this.attackType == "group"? restAPIService.getAllGroups() :
@@ -426,4 +434,23 @@ export abstract class StixObject extends Serializable {
      * @returns {Observable} of the post
      */
     abstract save(restAPIService: RestApiConnectorService): Observable<StixObject>;
+
+    /**
+     * Updates the object's marking definitions with the default the first time an object is created
+     * @param restAPIService [RestApiConnectorService] the service to perform the POST/PUT through
+     */
+    public initializeWithDefaultMarkingDefinitions(restAPIService: RestApiConnectorService) {
+        let data$ = restAPIService.getDefaultMarkingDefinitions();
+        let sub = data$.subscribe({
+            next: (data) => {
+                let marking_refs = []
+                for (let i in data) {
+                    marking_refs.push(data[i].stix.id); // Select current statements by default
+                }
+                this.object_marking_refs = marking_refs;
+                this.defaultMarkingDefinitionsLoaded = true;
+            },
+            complete: () => { sub.unsubscribe(); }
+        });
+    }
 }
