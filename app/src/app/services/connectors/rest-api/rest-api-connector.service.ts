@@ -283,6 +283,18 @@ export class RestApiConnectorService extends ApiConnector {
      */
     public get getAllCollections() { return this.getStixObjectsFactory<Collection>("collection"); }
     /**
+     * Get all marking definitions
+     * @param {number} [limit] the number of marking definitions to retrieve
+     * @param {number} [offset] the number of marking definitions to skip
+     * @param {string} [state] if specified, only get objects with this state
+     * @param {boolean} [revoked] if true, get revoked objects
+     * @param {versions} ["all" | "latest"] if "all", get all versions of the marking definitions. if "latest", only get the latest version of each collection.
+     * @param {boolean} [deprecated] if true, get deprecated objects
+     * @param {string[]} [excludeIDs] if specified, excludes these STIX IDs from the result
+     * @returns {Observable<MarkingDefinition[]>} observable of retrieved objects
+     */
+    public get getAllMarkingDefinitions() { return this.getStixObjectsFactory<Collection>("marking-definition"); }
+    /**
      * Get all notes
      * @param {number} [limit] the number of notes to retrieve
      * @param {number} [offset] the number of notes to skip
@@ -546,7 +558,11 @@ export class RestApiConnectorService extends ApiConnector {
      * @returns {Observable<Identity>} the object with the given ID and modified date
      */
      public get getIdentity() { return this.getStixObjectFactory<Identity>("identity"); }
-
+    /**
+     * Get a single marking definition by STIX ID
+     * @param {string} id the object STIX ID
+     * @returns {Observable<MarkingDefinition>} the object with the given ID
+     */
      public get getMarkingDefinition() { return this.getStixObjectFactory<MarkingDefinition>("marking-definition")}
     /**
      * Factory to create a new STIX object creator (POST) function
@@ -626,6 +642,12 @@ export class RestApiConnectorService extends ApiConnector {
      * @returns {Observable<Relationship>} the created object
      */
     public get postRelationship() { return this.postStixObjectFactory<Relationship>("relationship"); }
+    /**
+     * POST (create) a new relationship
+     * @param {MarkingDefinition} object the object to create
+     * @returns {Observable<MarkingDefinition>} the created object
+     */
+     public get postMarkingDefinition() { return this.postStixObjectFactory<MarkingDefinition>("marking-definition"); }
     /**
      * POST (create) a new note
      * @param {Note} object the object to create
@@ -1234,6 +1256,32 @@ export class RestApiConnectorService extends ApiConnector {
             complete: () => { subscription.unsubscribe(); }
         });
         return data$;
+    }
+
+    /**
+     * Get the default marking definitions
+     * @returns {Observable<any>} default marking definitions
+     */
+     public getDefaultMarkingDefinitions(): Observable<any> {
+        return this.http.get(`${this.baseUrl}/config/default-marking-definitions`, {headers: this.headers}).pipe(
+            tap(_ => logger.log("retrieved default marking definitions")),
+            map(result => {
+                return result;
+            }),
+            catchError(this.handleError_continue<string[]>())
+        )
+    }
+
+    /**
+     * Set the default marking definitions
+     * @returns {Observable<any>} default marking definitions
+     */
+    public postDefaultMarkingDefinitions(defaultMarkingDefs: string[]): Observable<any> {
+        return this.http.post(`${this.baseUrl}/config/default-marking-definitions`, defaultMarkingDefs, {headers: this.headers}).pipe(
+            tap(this.handleSuccess(`saved default marking definitions`)),
+            catchError(this.handleError_raise<string[]>()),
+            share() //multicast to subscribers
+        )
     }
 
     /**

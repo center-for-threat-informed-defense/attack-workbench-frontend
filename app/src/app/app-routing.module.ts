@@ -5,6 +5,7 @@ import { HelpPageComponent } from './views/help-page/help-page.component';
 import { AdminPageComponent } from './views/admin-page/admin-page.component';
 import { OrgIdentityPageComponent } from './views/admin-page/org-identity-page/org-identity-page.component';
 import { UserAccountsPageComponent } from './views/admin-page/user-accounts-page/user-accounts-page.component';
+import { DefaultMarkingDefinitionsComponent } from './views/admin-page/default-marking-definitions/default-marking-definitions.component';
 import { AuthorizationGuard } from './services/helpers/authorization.guard';
 import { Role } from './classes/authn/role';
 
@@ -64,6 +65,14 @@ const routes: Routes = [
                             "title": "User Accounts"
                         },
                         "component": UserAccountsPageComponent,
+                    },
+                    {
+                        "path": "default-marking-definitions",
+                        "data": {
+                            "breadcrumb": "default marking definitions",
+                            "title": "Default Marking Definitions"
+                        },
+                        "component": DefaultMarkingDefinitionsComponent,
                     }
                 ]
             },

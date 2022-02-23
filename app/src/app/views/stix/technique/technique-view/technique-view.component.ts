@@ -2,6 +2,7 @@ import { AfterContentChecked, ChangeDetectorRef, Component, OnInit, ViewEncapsul
 import { Technique } from 'src/app/classes/stix/technique';
 import { AuthenticationService } from 'src/app/services/connectors/authentication/authentication.service';
 import { StixViewPage } from '../../stix-view-page';
+import { RestApiConnectorService } from "src/app/services/connectors/rest-api/rest-api-connector.service";
 
 @Component({
     selector: 'app-technique-view',
@@ -12,12 +13,14 @@ import { StixViewPage } from '../../stix-view-page';
 export class TechniqueViewComponent extends StixViewPage implements OnInit, AfterContentChecked {
     public get technique(): Technique { return this.config.object as Technique; }
 
-    constructor(private ref: ChangeDetectorRef, authenticationService: AuthenticationService) {
+    constructor(private ref: ChangeDetectorRef, authenticationService: AuthenticationService, private restApiConnector: RestApiConnectorService) {
         super(authenticationService);
     }
 
     ngOnInit() {
-        // intentionally left blank
+        if (this.technique.firstInitialized) {
+            this.technique.initializeWithDefaultMarkingDefinitions(this.restApiConnector);
+        }
     }
 
     ngAfterContentChecked() {

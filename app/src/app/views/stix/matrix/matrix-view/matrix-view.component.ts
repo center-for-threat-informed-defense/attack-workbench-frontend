@@ -28,6 +28,8 @@ export class MatrixViewComponent extends StixViewPage implements OnInit {
                 complete: () => { subscription.unsubscribe(); } //prevent memory leaks
             })
         }
+        if (this.matrix.firstInitialized) {
+            this.matrix.initializeWithDefaultMarkingDefinitions(this.restAPIConnectorService)
+        }
     }
-
 }
