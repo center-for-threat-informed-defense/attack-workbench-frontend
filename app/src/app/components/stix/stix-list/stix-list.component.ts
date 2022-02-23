@@ -97,7 +97,7 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     private canEdit(route: any) {
-        if (route.label && route.label == 'edit' && this.config.uneditableObject == true) {
+        if (route.label && route.label == 'edit' && this.config.uneditableObject) {
             return false;
         }
         return true;
