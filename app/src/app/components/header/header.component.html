@@ -19,6 +19,7 @@
             <button mat-menu-item *ngFor="let stixRoute of moreRoutes" [disabled]="!isLoggedIn" [routerLink]="stixRoute.path">
                 {{stixRoute.data.breadcrumb}}
             </button>
+            <button mat-menu-item routerLink="/docs">documentation</button>
         </mat-menu>
     </div>
 
@@ -43,7 +44,6 @@
 
         <!-- Account Options Menu -->
         <mat-menu #accountOptions="matMenu" backdropClass="override-light">
-            <button mat-menu-item routerLink="/docs">documentation</button>
             <button mat-menu-item (click)="logout()">logout</button>
         </mat-menu>
 
