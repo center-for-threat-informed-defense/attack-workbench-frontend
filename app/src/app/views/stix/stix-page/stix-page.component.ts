@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild, Output, EventEmitter } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router, NavigationEnd } from '@angular/router';
 import { BreadcrumbService } from 'angular-crumbs';
@@ -6,6 +6,7 @@ import { Observable } from 'rxjs';
 import { Collection } from 'src/app/classes/stix/collection';
 import { DataSource } from 'src/app/classes/stix/data-source';
 import { Group } from 'src/app/classes/stix/group';
+import { MarkingDefinition } from 'src/app/classes/stix/marking-definition';
 import { Matrix } from 'src/app/classes/stix/matrix';
 import { Mitigation } from 'src/app/classes/stix/mitigation';
 import { Software } from 'src/app/classes/stix/software';
@@ -13,13 +14,13 @@ import { StixObject } from 'src/app/classes/stix/stix-object';
 import { Tactic } from 'src/app/classes/stix/tactic';
 import { Technique } from 'src/app/classes/stix/technique';
 import { VersionNumber } from 'src/app/classes/version-number';
-import { ConfirmationDialogComponent } from 'src/app/components/confirmation-dialog/confirmation-dialog.component';
 import { MultipleChoiceDialogComponent } from 'src/app/components/multiple-choice-dialog/multiple-choice-dialog.component';
 import { SaveDialogComponent } from 'src/app/components/save-dialog/save-dialog.component';
 import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/rest-api-connector.service';
 import { EditorService } from 'src/app/services/editor/editor.service';
 import { TitleService } from 'src/app/services/title/title.service';
 import { CollectionViewComponent } from '../collection/collection-view/collection-view.component';
+import { MarkingDefinitionViewComponent } from '../marking-definition/marking-definition-view/marking-definition-view.component';
 import { StixViewConfig } from '../stix-view-page';
 
 @Component({
@@ -35,7 +36,10 @@ export class StixPageComponent implements OnInit, OnDestroy {
     private saveSubscription;
     private reloadSubscription;
 
+    @Output() created = new EventEmitter();
+
     @ViewChild(CollectionViewComponent) private collectionViewComponent: CollectionViewComponent;
+    @ViewChild(MarkingDefinitionViewComponent) private markingDefinitionViewComponent: MarkingDefinitionViewComponent;
     
     constructor(private router: Router, 
                 private route: ActivatedRoute, 
@@ -62,7 +66,12 @@ export class StixPageComponent implements OnInit, OnDestroy {
         if (this.objectType == "collection") {
             // pass into collection property component
             this.collectionViewComponent.validate();
-        } else {
+        } 
+        else if(this.objectType == "marking-definition") {
+            // pass into marking definition property component
+            this.markingDefinitionViewComponent.validate();
+        }
+        else {
             let versionChanged = this.objects[0].version.compareTo(this.initialVersion) != 0;
             let prompt = this.dialog.open(SaveDialogComponent, { //increment version number save panel
                 // maxWidth: "35em",
@@ -128,6 +137,7 @@ export class StixPageComponent implements OnInit, OnDestroy {
             else if (this.objectType  == "collection") objects$ = this.restAPIConnectorService.getCollection(objectStixID, objectModified, "latest", false, true);
             else if (this.objectType  == "data-source") objects$ = this.restAPIConnectorService.getDataSource(objectStixID, null, "latest", false, false, true);
             else if (this.objectType  == "data-component") objects$ = this.restAPIConnectorService.getDataComponent(objectStixID);
+            else if (this.objectType  == "marking-definition") objects$ = this.restAPIConnectorService.getMarkingDefinition(objectStixID);
             let  subscription = objects$.subscribe({
                 next: result => {
                     this.updateBreadcrumbs(result, this.objectType );
@@ -172,6 +182,7 @@ export class StixPageComponent implements OnInit, OnDestroy {
                 this.objectType  == "group" ? new Group():
                 this.objectType  == "collection" ? new Collection() : 
                 this.objectType  == "data-source" ? new DataSource() :
+                this.objectType  == "marking-definition" ? new MarkingDefinition() :
                 null // if not any of the above types
             );
             this.initialVersion = new VersionNumber(this.objects[0].version.toString());
@@ -189,14 +200,24 @@ export class StixPageComponent implements OnInit, OnDestroy {
         if (result.length == 0) {
             this.breadcrumbService.changeBreadcrumb(this.route.snapshot, "object not found")
             this.titleService.setTitle("object not found", true);
-        } else {
-            if ("name" in result[0] && result[0].name) {
-                this.breadcrumbService.changeBreadcrumb(this.route.snapshot, result[0].name)
-                this.titleService.setTitle(result[0].name, false);
-            } else {
-                this.breadcrumbService.changeBreadcrumb(this.route.snapshot, `new ${objectType}`)
-                this.titleService.setTitle(`new ${this.objectType}`);
+        } 
+        else if ("name" in result[0] && result[0].name) {
+            this.breadcrumbService.changeBreadcrumb(this.route.snapshot, result[0].name)
+            this.titleService.setTitle(result[0].name, false);
+        } 
+        else if (objectType == 'marking-definition') {
+            if ("definition_string" in result[0] && result[0].definition_string){
+                this.breadcrumbService.changeBreadcrumb(this.route.snapshot, `marking definition`);
+                this.titleService.setTitle(`Marking Definition`);
             }
+            else {
+                this.breadcrumbService.changeBreadcrumb(this.route.snapshot, `new ${objectType}`) 
+                this.titleService.setTitle(`New Marking Definition`);
+            }
+        }
+        else {
+            this.breadcrumbService.changeBreadcrumb(this.route.snapshot, `new ${objectType}`)
+            this.titleService.setTitle(`new ${objectType}`);
         }
     }
 }

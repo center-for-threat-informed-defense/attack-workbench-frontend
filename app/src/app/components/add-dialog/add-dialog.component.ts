@@ -13,6 +13,11 @@ export class AddDialogComponent implements OnInit {
 
   constructor(public dialogRef: MatDialogRef<AddDialogComponent>, @Inject(MAT_DIALOG_DATA)  public config: AddDialogConfig) {}
 
+  public clearSelections() {
+    this.config.select.clear();
+    this.dialogRef.close(true)
+  }
+
   ngOnInit(): void {}
 
 }
@@ -24,4 +29,5 @@ export interface AddDialogConfig {
   selectionType?: string; // 'many', 'one', or 'disabled'; defaults to 'many' if a selection model is given
   buttonLabel?: string; // optional button label, default "add"
   title?: string; // dialog text
+  clearSelection?: boolean; //boolean to add clear selection button
 }

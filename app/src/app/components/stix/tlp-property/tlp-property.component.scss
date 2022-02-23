@@ -1,0 +1,23 @@
+.tlp-property {
+    button {
+        &.tlp-red {
+            background-color: rgb(255, 0, 51) !important;
+            color: rgb(0,0,0) !important;
+        }
+        
+        &.tlp-amber {
+            background-color: rgb(255, 192, 0) !important;
+            color: rgb(0,0,0) !important;
+        }
+        
+        &.tlp-green {
+            background-color: rgb(51, 255, 0) !important;
+            color: rgb(0,0,0) !important;
+        }
+        
+        &.tlp-white {
+            background-color: rgb(255, 255, 255) !important;
+            color: rgb(0,0,0) !important;
+        }
+    }
+}

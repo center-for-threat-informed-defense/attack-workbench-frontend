@@ -23,7 +23,7 @@
         
         &, div { display: inline-block; }
         & + .section-header-section {
-            margin-left: 3ex;
+            margin-left: 2ex;
         }
         &.clickable {
             cursor: pointer;
@@ -33,6 +33,17 @@
                 .dark &  { border-color: on-color-deemphasis(dark); }
                 .light & { border-color: on-color-deemphasis(light); }
             }
+        }
+
+        button {
+            @extend .text-label;
+            @extend .text-deemphasis;
+            text-transform: uppercase;
+            background: none;
+            border-radius: 10px;
+            border-style: solid;
+            .dark & { border-color: border-color(dark) }
+            .light & { border-color: border-color(light) }
         }
     }
     

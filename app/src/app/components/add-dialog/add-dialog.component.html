@@ -12,6 +12,9 @@
             <button mat-mini-fab class="extended-fab-button left-button" color="primary" (click)="dialogRef.close(true)">
                 <span class="text-label">{{config.buttonLabel? config.buttonLabel : "ADD"}}</span>
             </button>
+            <button *ngIf="config.clearSelection" mat-mini-fab class="extended-fab-button" color="primary" (click)="clearSelections()">
+                <span class="text-label">Clear</span>
+            </button>
             <button mat-mini-fab class="extended-fab-button right-button" color="primary" (click)="dialogRef.close()">
                 <span class="text-label">Cancel</span>
             </button>

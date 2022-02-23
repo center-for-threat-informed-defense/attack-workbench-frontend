@@ -2,6 +2,7 @@ import { Component, EventEmitter, Input, OnInit, Output, ViewEncapsulation } fro
 import { StixObject } from 'src/app/classes/stix/stix-object';
 import { SidebarService } from 'src/app/services/sidebar/sidebar.service';
 import { StixViewConfig } from 'src/app/views/stix/stix-view-page';
+import { EditorService } from 'src/app/services/editor/editor.service';
 
 @Component({
   selector: 'app-subheading',
@@ -13,6 +14,8 @@ export class SubheadingComponent implements OnInit {
     @Input() public config: StixViewConfig;
     @Output() public onOpenHistory = new EventEmitter();
     @Output() public onOpenNotes = new EventEmitter();
+
+    public get editing(): boolean { return this.editorService.editing; }
 
     public openHistory() {
         if (this.config.sidebarControl == "service" || !this.config.hasOwnProperty("sidebarControl")) {
@@ -31,7 +34,7 @@ export class SubheadingComponent implements OnInit {
         }
     }
 
-    constructor(private sidebarService: SidebarService) { }
+    constructor(private sidebarService: SidebarService, private editorService: EditorService) { }
 
     ngOnInit(): void {
     }

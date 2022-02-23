@@ -9,14 +9,18 @@ import * as app_package from "../../../../package.json";
   encapsulation: ViewEncapsulation.None
 })
 export class HeaderComponent implements AfterViewInit {
-    public routes: any[];
+    public allRoutes: any[];
+    public filteredRoutes: any[];
+    public moreRoutes: any[];
     public app_version = app_package["version"];
 
     @ViewChild('linkMenu', {static: false})
     private linkMenu: ElementRef;
 
     constructor(private route: ActivatedRoute) {
-        this.routes = stixRoutes;
+        this.allRoutes = stixRoutes;
+        this.filteredRoutes = stixRoutes.filter( x => x.data.more != true );
+        this.moreRoutes = stixRoutes.filter( x => x.data.more == true );
     }
 
     ngAfterViewInit() {

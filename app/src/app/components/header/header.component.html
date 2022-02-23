@@ -5,7 +5,11 @@
     </div>
     <div class="spacer"></div>
     <div class="links" #linkMenu [ngStyle]="{ 'visibility': showHamburger ? 'hidden' : 'visible'}">
-        <button mat-button *ngFor="let stixRoute of routes" [routerLink]="stixRoute.path">{{stixRoute.data.breadcrumb}}</button>
+        <button mat-button *ngFor="let stixRoute of filteredRoutes" [routerLink]="stixRoute.path">{{stixRoute.data.breadcrumb}}</button>
+        <button mat-button [matMenuTriggerFor]="more" aria-label="more">More</button>
+        <mat-menu #more="matMenu" backdropClass="override-light">
+            <button mat-menu-item *ngFor="let stixRoute of moreRoutes" [routerLink]="stixRoute.path">{{stixRoute.data.breadcrumb}}</button>
+        </mat-menu>
         <button mat-icon-button  routerLink="/docs"><mat-icon aria-label="help">help_outline</mat-icon></button>
     </div>
     <div class="hamburger" [ngStyle]="{ 'visibility': showHamburger ? 'visible' : 'hidden'}">
@@ -13,7 +17,7 @@
             <mat-icon>menu</mat-icon>
         </button>
         <mat-menu #navigation="matMenu" backdropClass="override-light">
-            <button mat-menu-item *ngFor="let stixRoute of routes" [routerLink]="stixRoute.path">{{stixRoute.data.breadcrumb}}</button>
+            <button mat-menu-item *ngFor="let stixRoute of allRoutes" [routerLink]="stixRoute.path">{{stixRoute.data.breadcrumb}}</button>
             <button mat-menu-item  routerLink="/docs">documentation</button>
         </mat-menu>
     </div>

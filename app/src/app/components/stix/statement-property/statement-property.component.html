@@ -1,0 +1,8 @@
+<div class="statement-property">
+    <div class="content">
+        <div *ngIf="(data$ | async)">
+            <app-statement-view *ngIf="config.mode == 'view'" [config]="config" [objStatements]="objStatements"></app-statement-view>
+            <app-statement-edit *ngIf="config.mode == 'edit'" [config]="config" [statementsMap]="statementsMap" [tlpSTIXid]="tlpSTIXid" [objStatements]="objStatements"></app-statement-edit>
+        </div>
+    </div>
+</div>

@@ -313,13 +313,12 @@ export class CollectionViewComponent extends StixViewPage implements OnInit {
                         }
                         for (let marking_def of any_results.marking_defs) {
                             this.stagedData.push(new VersionReference({
-                                "object_ref": marking_def[0].stixID,
-                                "object_modified": marking_def[0].modified.toISOString()
+                                "object_ref": marking_def[0].stixID
                             }))
                             results_and_extras.results.info.push({
                                 result: "info",
                                 field: "contents",
-                                message: `includes objects marked "${marking_def[0].definition.statement}"`
+                                message: `includes objects marked "${marking_def[0].definition_string}"`
                             })
                         }
 

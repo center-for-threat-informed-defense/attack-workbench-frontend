@@ -6,7 +6,10 @@
                 object: data_component,
                 parent: data_component.data_source
             }"></app-name-property>
-            <app-subheading *ngIf="!editing" [config]="config" (onOpenHistory)="openHistory()"
+            <app-subheading [config]="{
+                mode: editing? 'edit' : 'view',
+                object: data_component
+            }" (onOpenHistory)="openHistory()"
                 (onOpenNotes)="openNotes()"></app-subheading>
         </div>
     </div>
