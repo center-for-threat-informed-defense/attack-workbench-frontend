@@ -1263,7 +1263,7 @@ export class RestApiConnectorService extends ApiConnector {
      * @returns {Observable<any>} default marking definitions
      */
      public getDefaultMarkingDefinitions(): Observable<any> {
-        return this.http.get(`${this.baseUrl}/config/default-marking-definitions`, {headers: this.headers}).pipe(
+        return this.http.get(`${this.baseUrl}/config/default-marking-definitions`).pipe(
             tap(_ => logger.log("retrieved default marking definitions")),
             map(result => {
                 return result;
@@ -1277,7 +1277,7 @@ export class RestApiConnectorService extends ApiConnector {
      * @returns {Observable<any>} default marking definitions
      */
     public postDefaultMarkingDefinitions(defaultMarkingDefs: string[]): Observable<any> {
-        return this.http.post(`${this.baseUrl}/config/default-marking-definitions`, defaultMarkingDefs, {headers: this.headers}).pipe(
+        return this.http.post(`${this.baseUrl}/config/default-marking-definitions`, defaultMarkingDefs).pipe(
             tap(this.handleSuccess(`saved default marking definitions`)),
             catchError(this.handleError_raise<string[]>()),
             share() //multicast to subscribers
