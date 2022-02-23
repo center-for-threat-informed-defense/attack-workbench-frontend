@@ -393,6 +393,7 @@ const stixRoutes: Routes = [{
   },
   {
     path: 'marking-definition',
+    canActivateChild: [AuthorizationGuard],
     data: {
       breadcrumb: 'marking definitions',
       more: true
@@ -401,7 +402,8 @@ const stixRoutes: Routes = [{
         path: '',
         data: {
           breadcrumb: 'list',
-          title: "marking definitions"
+          title: "marking definitions",
+          roles: viewRoles
         },
         component: MarkingDefinitionListComponent
       },
@@ -415,7 +417,8 @@ const stixRoutes: Routes = [{
             data: {
               breadcrumb: 'view',
               editable: false,
-              title: "view marking definition"
+              title: "view marking definition",
+              roles: viewRoles
             },
             component: StixPageComponent
           }
@@ -431,7 +434,8 @@ const stixRoutes: Routes = [{
           data: {
             breadcrumb: 'view',
             editable: false,
-            title: "new marking definition"
+            title: "new marking definition",
+            roles: [Role.ADMIN]
           },
           component: StixPageComponent
         }
