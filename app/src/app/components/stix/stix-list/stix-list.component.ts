@@ -1,8 +1,7 @@
 import { Component, OnInit, Input, ViewEncapsulation, ViewChild, AfterViewInit, ElementRef, EventEmitter, Output, OnDestroy } from '@angular/core';
 import { StixObject } from 'src/app/classes/stix/stix-object';
-import {animate, style, transition, trigger} from '@angular/animations';
-import {MatSort} from '@angular/material/sort';
-import {MatPaginator} from '@angular/material/paginator';
+import { animate, style, transition, trigger } from '@angular/animations';
+import { MatPaginator } from '@angular/material/paginator';
 import { Router } from '@angular/router';
 
 import { SelectionModel } from '@angular/cdk/collections';
@@ -12,6 +11,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { fromEvent, Observable, of, Subscription } from 'rxjs';
 import { Paginated, RestApiConnectorService } from 'src/app/services/connectors/rest-api/rest-api-connector.service';
 import { debounceTime, distinctUntilChanged, filter, tap } from 'rxjs/operators';
+import { AuthenticationService } from 'src/app/services/connectors/authentication/authentication.service';
 
 @Component({
     selector: 'app-stix-list',
@@ -37,9 +37,6 @@ import { debounceTime, distinctUntilChanged, filter, tap } from 'rxjs/operators'
     ]
 })
 export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
-
-
-    // @Input() public stixObjects: StixObject[]; //TODO get rid of this in favor of stix list cards loading using filters
     @Input() public config: StixListConfig = {};
     @Output() public onRowAction = new EventEmitter<string>();
     @Output() public onSelect = new EventEmitter<StixObject>();
@@ -48,7 +45,6 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
     @ViewChild('search') search: ElementRef;
     public searchQuery: string = "";
     private searchSubscription: Subscription;
-    // @ViewChild(MatSort) public sort: MatSort;
 
     //objects to render;
     public objects$: Observable<StixObject[]>;
@@ -84,6 +80,27 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
         "x-mitre-matrix": "matrix",
         "x-mitre-tactic": "tactic",
         "relationship": "relationship"
+    }
+
+    // Route authentication
+    public getAccessibleRoutes(attackType: string, routes: any[], ) {
+        return routes.filter(route => this.canAccess(attackType, route) && this.canEdit(route));
+    }
+
+    private canAccess(attackType: string, route: any) {
+        if (route.label && route.label == 'edit' && !this.authenticationService.canEdit(attackType)) {
+            // user not authorized
+            return false;
+        }
+        // user authorized
+        return true;
+    }
+
+    private canEdit(route: any) {
+        if (route.label && route.label == 'edit' && this.config.uneditableObject) {
+            return false;
+        }
+        return true;
     }
 
     /**
@@ -167,7 +184,8 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
         {"value": "state.revoked", "label": "include revoked", "disabled": false}
     ]
 
-    constructor(public dialog: MatDialog, private restAPIConnectorService: RestApiConnectorService, private router: Router) {}
+    constructor(public dialog: MatDialog, private restAPIConnectorService: RestApiConnectorService, private router: Router, private authenticationService: AuthenticationService) {}
+    
     ngOnInit() {
         this.filterOptions = []
         // parse the config

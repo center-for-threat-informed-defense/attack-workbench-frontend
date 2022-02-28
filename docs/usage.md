@@ -195,7 +195,7 @@ Relationship source/target objects can be changed after the relationship has bee
 
 #### Creating Marking Definition Statements
 
-Marking definition statements can be created and assigned to invidual objects. Marking definition objects differ from other objects because they cannot be edited after creation and workflow states are not tracked.
+Marking definition statements can be created and assigned to individual objects. Marking definition objects differ from other objects because they cannot be edited after creation and workflow states are not tracked.
 
 #### Default Marking Definition Statements
 

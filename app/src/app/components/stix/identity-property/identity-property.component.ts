@@ -1,7 +1,9 @@
 import { Component, Input, OnInit, ViewEncapsulation } from '@angular/core';
 import { Identity } from 'src/app/classes/stix/identity';
 import { StixObject } from 'src/app/classes/stix/stix-object';
-import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/rest-api-connector.service';
+import { AuthenticationService } from '../../../services/connectors/authentication/authentication.service';
+import { RestApiConnectorService } from '../../../services/connectors/rest-api/rest-api-connector.service';
+import { Subscription } from 'rxjs';
 
 @Component({
     selector: 'app-identity-property',
@@ -13,12 +15,27 @@ export class IdentityPropertyComponent implements OnInit {
     @Input() public config: IdentityPropertyConfig;
 
     public identity: Identity;
+    private userSubscription$: Subscription;
 
-    constructor() { }
+    constructor(private authenticationService: AuthenticationService, private restAPIConnector: RestApiConnectorService) { }
 
     ngOnInit(): void {
-        let object = Array.isArray(this.config.object)? this.config.object[0] : this.config.object;
+        const object = Array.isArray(this.config.object) ? this.config.object[0] : this.config.object;
+
         if (object[this.config.field]) this.identity = object[this.config.field] as Identity;
+
+        // if logged in, show individual user attribution
+        if (this.authenticationService.isLoggedIn && this.config.field.includes('modified') && 
+            object && 'workflow' in object && object.workflow && 'created_by_user_account' in object.workflow) {
+            const userID = object.workflow.created_by_user_account;
+            this.userSubscription$ = this.restAPIConnector.getUserAccount(userID).subscribe({
+                next: (account) => {
+                    if (!this.identity) this.identity = new Identity();
+                    this.identity.name = account.username;
+                },
+                complete: () => this.userSubscription$.unsubscribe()
+            });
+        }
     }
 }
 

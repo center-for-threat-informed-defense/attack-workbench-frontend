@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { AuthenticationService } from 'src/app/services/connectors/authentication/authentication.service';
 
 @Component({
   selector: 'app-group-list',
@@ -6,7 +7,9 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./group-list.component.scss']
 })
 export class GroupListComponent implements OnInit {
-    constructor() { }
+    public get canEdit(): boolean { return this.authenticationService.canEdit(); }
+    
+    constructor(private authenticationService: AuthenticationService) { }
 
     ngOnInit() {}
 

@@ -65,7 +65,7 @@
                 <h2 class="section-header">Techniques Used</h2>
             </div>
         </div>
-        <div class="row">
+        <div class="row" *ngIf="canEdit">
             <div class="col">
                 <app-add-relationship-button (created)="techniqueList.applyControls()" [config]="{
                     label: 'technique',
@@ -92,7 +92,7 @@
                 <h2 class="section-header">Software Used</h2>
             </div>
         </div>
-        <div class="row">
+        <div class="row" *ngIf="canEdit">
             <div class="col">
                 <app-add-relationship-button (created)="softwareList.applyControls()" [config]="{
                     label: 'software',

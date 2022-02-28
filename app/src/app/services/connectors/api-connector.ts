@@ -35,11 +35,12 @@ export abstract class ApiConnector {
 
     /**
      * Handle the error with logging and return a default value so that the app can continue
+     * @param {boolean} showSnack if true, show the error snackbar
      */
-    protected handleError_continue<T>(defaultValue?: T) {
+    protected handleError_continue<T>(defaultValue?: T, showSnack: boolean = true) {
         return (error: any): Observable<T> => {
             logger.error(error);
-            this.errorSnack(error);
+            if (showSnack) this.errorSnack(error);
             return of(defaultValue as T);
         }
     }

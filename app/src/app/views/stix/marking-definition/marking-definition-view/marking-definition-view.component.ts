@@ -6,6 +6,7 @@ import { ValidationData } from 'src/app/classes/serializable';
 import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/rest-api-connector.service';
 import { Router } from '@angular/router';
 import { ConfirmationDialogComponent } from 'src/app/components/confirmation-dialog/confirmation-dialog.component';
+import { AuthenticationService } from 'src/app/services/connectors/authentication/authentication.service';
 
 @Component({
     selector: 'app-marking-definition-view',
@@ -18,7 +19,9 @@ export class MarkingDefinitionViewComponent extends StixViewPage implements OnIn
     public validating: boolean = false;
     public validationData: ValidationData = null;
 
-    constructor(public dialog: MatDialog, private router: Router, private restApiConnector: RestApiConnectorService) { super(); }
+    constructor(public dialog: MatDialog, private router: Router, private restApiConnector: RestApiConnectorService, authenticationService: AuthenticationService) {
+        super(authenticationService);
+    }
 
     ngOnInit(): void {
         // empty on init

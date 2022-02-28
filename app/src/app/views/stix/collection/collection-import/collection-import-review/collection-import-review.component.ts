@@ -13,6 +13,7 @@ import { DataComponent } from 'src/app/classes/stix/data-component';
 import { EditorService } from 'src/app/services/editor/editor.service';
 import { StixViewPage } from '../../../stix-view-page';
 import { logger } from "../../../../../util/logger";
+import { AuthenticationService } from 'src/app/services/connectors/authentication/authentication.service';
 
 @Component({
     selector: 'app-collection-import-review',
@@ -37,7 +38,7 @@ export class CollectionImportReviewComponent extends StixViewPage implements OnI
         data_component: new CollectionDiffCategories<DataComponent>()
     }
 
-    constructor(private route: ActivatedRoute, public editor: EditorService) { super() }
+    constructor(private route: ActivatedRoute, public editor: EditorService, authenticationService: AuthenticationService) { super(authenticationService) }
 
     ngOnInit() {
         // disable editing

@@ -1,10 +1,11 @@
 import { Component, EventEmitter, Input, OnInit, Output, ViewEncapsulation } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
-import { Subscription } from 'rxjs';
+import { Role } from 'src/app/classes/authn/role';
 import { CollectionIndex, CollectionReference, CollectionVersion } from 'src/app/classes/collection-index';
 import { ConfirmationDialogComponent } from 'src/app/components/confirmation-dialog/confirmation-dialog.component';
 import { MarkdownViewDialogComponent } from 'src/app/components/markdown-view-dialog/markdown-view-dialog.component';
+import { AuthenticationService } from 'src/app/services/connectors/authentication/authentication.service';
 import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/rest-api-connector.service';
 
 @Component({
@@ -16,8 +17,9 @@ import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/re
 export class CollectionIndexViewComponent implements OnInit {
     @Input() config: CollectionIndexViewConfig;
     @Output() onCollectionsModified = new EventEmitter();
+    public get isAdmin(): boolean { return this.authenticationService.isAuthorized([Role.ADMIN]); }
 
-    constructor(private restAPIConnector: RestApiConnectorService, private dialog: MatDialog, private router: Router) { }
+    constructor(private authenticationService: AuthenticationService, private restAPIConnector: RestApiConnectorService, private dialog: MatDialog, private router: Router) { }
 
     ngOnInit(): void {
     }
@@ -130,7 +132,7 @@ export class CollectionIndexViewComponent implements OnInit {
         if (this.versionDownloaded(version, ref)) { //view prior import
             this.router.navigate([`/collection/${ref.id}/modified/${version.modified.toISOString()}`]);
         } else { // go to download page
-            this.router.navigate(["/collection/import-collection"], {queryParams: { "url": encodeURIComponent(version.url) }})
+            if (this.isAdmin) this.router.navigate(["/collection/import-collection"], {queryParams: { "url": encodeURIComponent(version.url) }})
         }
     }
 

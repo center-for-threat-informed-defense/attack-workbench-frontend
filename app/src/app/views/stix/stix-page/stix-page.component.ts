@@ -73,25 +73,22 @@ export class StixPageComponent implements OnInit, OnDestroy {
         }
         else {
             let versionChanged = this.objects[0].version.compareTo(this.initialVersion) != 0;
-            let prompt = this.dialog.open(SaveDialogComponent, { //increment version number save panel
-                // maxWidth: "35em",
+            let prompt = this.dialog.open(SaveDialogComponent, { // increment version number save panel
                 data: {
                     object: this.objects[0],
                     versionAlreadyIncremented: versionChanged
                 }
             });
-    
             
             let subscription = prompt.afterClosed().subscribe({
                 next: (result) => {
                     if (result) {
-                        // this.editorService.stopEditing();
                         this.router.navigate([this.objects[0].attackType, this.objects[0].stixID]);
-                        setTimeout(() => this.loadObjects());
+                        setTimeout(() => { this.loadObjects() }, 500);
                         this.editorService.onEditingStopped.emit();
                     }
                 },
-                complete: () => { subscription.unsubscribe(); } //prevent memory leaks
+                complete: () => { subscription.unsubscribe(); } // prevent memory leaks
             })
         }
     }
