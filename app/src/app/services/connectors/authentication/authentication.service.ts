@@ -83,8 +83,8 @@ export class AuthenticationService extends ApiConnector {
     }
 
     /**
-     * User logout sequence
-     * Note: this does not log the user out of the OIDC Identity Provider
+     * User logout sequence to clear the active login session on the REST API side
+     * Note: this does not log the user out of the organization's SSO Provider
      * @returns of the log out response
      */
     public logout(): Observable<any> {

@@ -32,7 +32,7 @@
 
 # Changelog
 
-## 23 February 2022
+## 28 February 2022
 
 ### ATT&CK Workbench version 1.2.0
 
@@ -44,6 +44,7 @@ ATT&CK Workbench v1.2.0 supports authentication and authorization for users. The
 -   Added user registration and approval. Administrators can approve registrants and set their permission levels on the administrator user accounts page. See [frontend#193](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/193).
 -   Added user login and logout functionality. Pending users cannot log in until the Adminstrator has approved their account. See [frontend#266](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/266).
 -   Added support for individual attribution. If a user is logged in, the application will display the individual user who has edited an object in place of the organization-level identity. Individual attribution is not supported when the Workbench instance is set up with anonymous authentication. See [frontend#191](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/191).
+-   Added support for marking definitions. See [frontend#188](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/188).
 
 ## 21 October 2021
 
