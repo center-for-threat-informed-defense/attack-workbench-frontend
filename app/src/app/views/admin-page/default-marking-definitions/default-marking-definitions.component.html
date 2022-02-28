@@ -27,7 +27,7 @@
                     <popover-content #objectStatements>
                         <div class="grid spacing-16">
                             <div class="row labelled-box suffixed">
-                                <div *ngIf="defaultMarkingDefinitions.length else noMarkingDefinitions" class="content">
+                                <div *ngIf="defaultMarkingDefinitions && defaultMarkingDefinitions.length else noMarkingDefinitions" class="content">
                                     <ul>
                                         <li *ngFor="let object of defaultMarkingDefinitions">{{object.stix.definition.statement}}</li>
                                     </ul>
