@@ -20,19 +20,23 @@
                     <button #popoverButton mat-mini-fab class="extended-fab-button" color="primary" 
                         (click)="updateDefaultMarkingDefs(objectStatements)"
                         popoverPlacement="bottom" 
-                        [popover]="objectStatements"
-                        >
+                        [popover]="objectStatements">
                         <mat-icon>settings</mat-icon> <span class="text-label">update default marking definitions</span>
                     </button>
 
                     <popover-content #objectStatements>
                         <div class="grid spacing-16">
                             <div class="row labelled-box suffixed">
-                                <div class="content">
+                                <div *ngIf="defaultMarkingDefinitions && defaultMarkingDefinitions.length else noMarkingDefinitions" class="content">
                                     <ul>
                                         <li *ngFor="let object of defaultMarkingDefinitions">{{object.stix.definition.statement}}</li>
                                     </ul>
                                 </div>
+                                <ng-template #noMarkingDefinitions>
+                                    <div class="content">
+                                        No default marking definitions have been set
+                                    </div>
+                                </ng-template>
                                 <label>Statements</label>
                             </div>
                         </div>

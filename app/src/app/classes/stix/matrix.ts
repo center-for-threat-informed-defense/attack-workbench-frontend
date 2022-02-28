@@ -1,7 +1,7 @@
 import { Observable } from "rxjs";
 import { RestApiConnectorService } from "src/app/services/connectors/rest-api/rest-api-connector.service";
 import { ValidationData } from "../serializable";
-import {StixObject} from "./stix-object";
+import { StixObject } from "./stix-object";
 import { logger } from "../../util/logger";
 
 export class Matrix extends StixObject {

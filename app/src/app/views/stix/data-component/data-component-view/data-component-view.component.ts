@@ -1,6 +1,7 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { DataComponent } from 'src/app/classes/stix/data-component';
 import { StixObject } from 'src/app/classes/stix/stix-object';
+import { AuthenticationService } from 'src/app/services/connectors/authentication/authentication.service';
 import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/rest-api-connector.service';
 import { StixViewPage } from '../../stix-view-page';
 
@@ -15,7 +16,7 @@ export class DataComponentViewComponent extends StixViewPage implements OnInit {
         return this.config.object as DataComponent; 
     }
 
-    constructor(private restAPIConnectorService: RestApiConnectorService) { super(); }
+    constructor(private restAPIConnectorService: RestApiConnectorService, authenticationService: AuthenticationService) { super(authenticationService); }
 
     ngOnInit(): void {
         if (!this.data_component.data_source) {

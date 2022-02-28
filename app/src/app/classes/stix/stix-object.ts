@@ -80,7 +80,8 @@ export abstract class StixObject extends Serializable {
     public version: VersionNumber;  // version number of the object
     public external_references: ExternalReferences;
     public workflow: {
-        state: workflowStates
+        state: workflowStates,
+        created_by_user_account?: string
     };
 
     public deprecated: boolean = false; //is object deprecated?
@@ -99,14 +100,14 @@ export abstract class StixObject extends Serializable {
             // create new SDO
             this.stixID = type + "--" + uuid();
             this.type = type;
-            // this.created = new Date();
-            // this.modified = new Date();
             this.version = new VersionNumber("0.1");
             this.attackID = "";
             this.external_references = new ExternalReferences();
-            this.workflow = {
-                state: "work-in-progress"
-            };
+            if (this.type !== 'x-mitre-collection') {
+                this.workflow = {
+                    state: "work-in-progress"
+                };
+            }
             this.description = "";
             this.firstInitialized = true;
         }

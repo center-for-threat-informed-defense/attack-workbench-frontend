@@ -1,3 +1,4 @@
+@import "../style/colors.scss";
 .app-root {
     height: 100%;
     display: flex;
@@ -31,8 +32,18 @@
     mat-drawer {
         border-left: none !important;
     }
-    // mat-drawer, mat-drawer-content {
-    //     display: flex;
-    //     flex-direction: column;
-    // }
+    .banner {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border-radius: 4px;
+        margin: 16px auto 0px auto;
+        padding: 6px 0 6px 12px;
+    }
+    .banner.warning {
+        background-color: color(warn);
+    }
+    .banner.success {
+        background-color: color(success);
+    }
 }

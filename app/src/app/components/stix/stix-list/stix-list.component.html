@@ -105,17 +105,11 @@
                         <div class="element-detail" @detailExpand *ngIf="expandedElement === element">
                             <div class="element-description columns">
                                 <div class="column is-narrow controls" *ngIf="config.showLinks">
-                                    <div *ngFor="let route of element.routes">
-                                        <a *ngIf="!(config.uneditableObject == true && route.label.toLowerCase() == 'edit')" class="mat-button" [routerLink]="'/' + [element.attackType, element.stixID, route.route].join('/')" [queryParams]="route.query">
+                                    <div *ngFor="let route of getAccessibleRoutes(element.attackType, element.routes)">
+                                        <a class="mat-button" [routerLink]="'/' + [element.attackType, element.stixID, route.route].join('/')" [queryParams]="route.query">
                                             {{route.label}}
                                         </a>
                                     </div>
-                                    <!-- <button mat-button>        
-                                        view
-                                    </button>
-                                    <button mat-button>
-                                        edit
-                                    </button> -->
                                 </div>
                                 <div class="column description">
                                     <div *ngFor="let property of tableDetail">

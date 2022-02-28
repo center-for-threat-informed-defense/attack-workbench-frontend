@@ -24,8 +24,6 @@ export class ResourcesDrawerComponent implements OnInit {
     public onTabClick(tab: any) {
         if (this.useService) this.sidebarService.currentTab = tab.name;
         else this.currentTabOverride = tab.name;
-        // if (this.currentTab == tab.name) this.currentTab = "";
-        // else this.currentTab = tab.name;
     }
 
     public close() {
@@ -33,9 +31,7 @@ export class ResourcesDrawerComponent implements OnInit {
         else this.onClose.emit();
     }
 
-
-
     ngOnInit() {
+        // intentionally left blank
     }
-
 }

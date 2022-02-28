@@ -22,6 +22,7 @@ import { StixViewPage } from '../../stix-view-page';
 import { environment } from "../../../../../environments/environment";
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { logger } from "../../../../util/logger";
+import { AuthenticationService } from 'src/app/services/connectors/authentication/authentication.service';
 
 type changeCategory = "additions" | "changes" | "minor_changes" | "revocations" | "deprecations";
 
@@ -78,7 +79,14 @@ export class CollectionViewComponent extends StixViewPage implements OnInit {
     public collection_import_categories = [];
 
 
-    constructor(private route: ActivatedRoute, private router: Router, private restApiConnector: RestApiConnectorService, private snackbar: MatSnackBar, private editor: EditorService) { super();  }
+    constructor(private route: ActivatedRoute, 
+                private router: Router, 
+                private restApiConnector: RestApiConnectorService,
+                private snackbar: MatSnackBar,
+                private editor: EditorService,
+                authenticationService: AuthenticationService) {
+        super(authenticationService);
+    }
 
     /**
      * Trigger collection save behaviors
@@ -162,7 +170,7 @@ export class CollectionViewComponent extends StixViewPage implements OnInit {
                 let missingATTACKIDs = [];
                 for (let object of collectionStixIDToObject.values()) {
                     // grab name of objects that do not have ATT&CK IDs
-                    if (object.hasOwnProperty("attackID")) {
+                    if (object.hasOwnProperty("supportsAttackID") && object.supportsAttackID && object.hasOwnProperty("attackID")) {
                         if (object.attackID == "" && object.hasOwnProperty("name")) {
                             missingATTACKIDs.push(object["name"]);
                         }
@@ -301,6 +309,7 @@ export class CollectionViewComponent extends StixViewPage implements OnInit {
                         let any_results = results as any;
                         // add resultant identities and marking defs to staged objects
                         for (let identity of any_results.identities) {
+                            if (!identity[0]) continue; // check if identity exists
                             this.stagedData.push(new VersionReference({
                                 "object_ref": identity[0].stixID,
                                 "object_modified": identity[0].modified.toISOString()
