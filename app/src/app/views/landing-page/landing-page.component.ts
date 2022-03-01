@@ -44,6 +44,7 @@ export class LandingPageComponent implements OnInit, OnDestroy {
         if (this.authenticationService.isAuthorized([Role.ADMIN])) {
             let subscription = this.restApiConnector.getOrganizationIdentity().subscribe({
                 next: (identity) => {
+                    // TODO add popup for editing placeholder namespace prefix?
                     if (identity.name == "Placeholder Organization Identity") {
                         let prompt = this.dialog.open(ConfirmationDialogComponent, {
                             maxWidth: "35em",
@@ -55,7 +56,7 @@ export class LandingPageComponent implements OnInit, OnDestroy {
                         })
                         let prompt_subscription = prompt.afterClosed().subscribe({
                             next: (prompt_result) => {
-                                if (prompt_result) this.router.navigate(["/admin/org-identity"]);
+                                if (prompt_result) this.router.navigate(["/admin/org-settings"]);
                             },
                             complete: () => { prompt_subscription.unsubscribe(); }
                         })
