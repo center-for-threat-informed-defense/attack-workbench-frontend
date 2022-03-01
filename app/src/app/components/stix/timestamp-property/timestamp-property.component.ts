@@ -14,6 +14,12 @@ export class TimestampPropertyComponent implements OnInit {
     ngOnInit(): void {
     }
 
+    /** Check if the object has a workflow identity attached */
+    public hasIdentity(): boolean {
+        return this.config.field.includes('modified') && 
+               this.config.object && 'workflow' in this.config.object && 
+               this.config.object.workflow && 'created_by_user_account' in this.config.object.workflow
+    }
 }
 
 export interface TimestampPropertyConfig {

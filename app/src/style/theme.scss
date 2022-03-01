@@ -65,12 +65,18 @@ $tooltip-color: color-alternate(dark, 4);
         .mat-menu-item:hover {
             background: color-alternate(dark);
         }
+        .mat-menu-item:disabled {
+            color: on-color-deemphasis(dark);
+        }
     }
     &.light .mat-menu-panel {
         background: color(light);
         color: on-color(light);
         .mat-menu-item:hover {
             background: color-alternate(light);
+        }
+        .mat-menu-item:disabled {
+            color: on-color-deemphasis(light);
         }
     }
     &.dark .mat-dialog-container {

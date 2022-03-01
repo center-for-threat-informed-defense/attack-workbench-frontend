@@ -1,9 +1,13 @@
 import { NgModule } from '@angular/core';
-import { Routes, RouterModule, ExtraOptions } from '@angular/router';
+import { Routes, RouterModule } from '@angular/router';
 import { LandingPageComponent } from './views/landing-page/landing-page.component';
 import { HelpPageComponent } from './views/help-page/help-page.component';
 import { AdminPageComponent } from './views/admin-page/admin-page.component';
 import { OrgIdentityPageComponent } from './views/admin-page/org-identity-page/org-identity-page.component';
+import { UserAccountsPageComponent } from './views/admin-page/user-accounts-page/user-accounts-page.component';
+import { DefaultMarkingDefinitionsComponent } from './views/admin-page/default-marking-definitions/default-marking-definitions.component';
+import { AuthorizationGuard } from './services/helpers/authorization.guard';
+import { Role } from './classes/authn/role';
 
 
 //see also https://www.npmjs.com/package/angular-crumbs
@@ -22,10 +26,20 @@ const routes: Routes = [
                 "component": LandingPageComponent,
             },
             {
+                "path": "register",
+                "data": {
+                    "breadcrumb": "welcome"
+                },
+                "component": LandingPageComponent,
+            },
+            {
                 "path": "admin",
+                "canActivate": [AuthorizationGuard],
+                "canActivateChild": [AuthorizationGuard],
                 "data": {
                     "breadcrumb": "admin settings",
-                    "title": "Admin Settings"
+                    "title": "Admin Settings",
+                    "roles": [Role.ADMIN]
                 },
                 "children": [
                     {
@@ -43,8 +57,23 @@ const routes: Routes = [
                             "title": "Organization Identity"
                         },
                         "component": OrgIdentityPageComponent,
+                    },
+                    {
+                        "path": "user-accounts",
+                        "data": {
+                            "breadcrumb": "user accounts",
+                            "title": "User Accounts"
+                        },
+                        "component": UserAccountsPageComponent,
+                    },
+                    {
+                        "path": "default-marking-definitions",
+                        "data": {
+                            "breadcrumb": "default marking definitions",
+                            "title": "Default Marking Definitions"
+                        },
+                        "component": DefaultMarkingDefinitionsComponent,
                     }
-                    
                 ]
             },
             {
@@ -112,7 +141,7 @@ const routes: Routes = [
             },
         ]
     },
-    
+
 ];
 
 @NgModule({

@@ -5,7 +5,7 @@
                 mode: editing? 'edit' : 'view',
                 object: software
             }"></app-name-property>
-            <app-subheading *ngIf="!editing" [config]="config" (onOpenHistory)="openHistory()" (onOpenNotes)="openNotes()"></app-subheading>
+            <app-subheading [config]="config" (onOpenHistory)="openHistory()" (onOpenNotes)="openNotes()"></app-subheading>
         </div>
     </div>
     <div class="row">
@@ -95,7 +95,7 @@
                 <h2 class="section-header">Techniques Used</h2>
             </div>
         </div>
-        <div class="row">
+        <div class="row" *ngIf="canEdit">
             <div class="col">
                 <app-add-relationship-button (created)="techniquesList.applyControls()" [config]="{
                     label: 'technique',
@@ -120,7 +120,7 @@
                 <h2 class="section-header">Associated Groups</h2>
             </div>
         </div>
-        <div class="row">
+        <div class="row" *ngIf="canEdit">
             <div class="col">
                 <app-add-relationship-button (created)="groupList.applyControls()" [config]="{
                     label: 'group',

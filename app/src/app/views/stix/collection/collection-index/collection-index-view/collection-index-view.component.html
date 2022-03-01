@@ -60,26 +60,26 @@
                     </div>
                     <div class="collection-section versions">
                         <div class="grid version-list">
-                            <div class="row subscription-action clickable" *ngIf="collectionRef.subscribed && showActions" (click)="unsubscribe(collectionRef)">
+                            <div class="row subscription-action clickable" *ngIf="collectionRef.subscribed && showActions && isAdmin" (click)="unsubscribe(collectionRef)">
                                 <div class="col narrow">
                                     <mat-icon aria-label="subscribed" class="text-success">check_circle_outline</mat-icon> 
                                 </div>
                                 <div class="col">subscribed</div>
                             </div>
-                            <div class="row subscription-action clickable" *ngIf="!collectionRef.subscribed && showActions" (click)="subscribe(collectionRef)">
+                            <div class="row subscription-action clickable" *ngIf="!collectionRef.subscribed && showActions && isAdmin" (click)="subscribe(collectionRef)">
                                 <div class="col narrow">
                                     <mat-icon aria-label="subscribe">sync</mat-icon>
                                 </div>
                                 <div class="col">subscribe</div>
                             </div>
                             <div class="row" *ngFor="let version of collectionRef.versions">
-                                <div class="col narrow clickable" *ngIf="showActions" (click)="onVersionClick(version, collectionRef)">
+                                <div class="col narrow" [ngClass]="{'clickable': isAdmin}" *ngIf="showActions" (click)="isAdmin && onVersionClick(version, collectionRef)">
                                     <mat-icon *ngIf="versionDownloaded(version, collectionRef)"  class="text-success">done</mat-icon>
-                                    <mat-icon *ngIf="!versionDownloaded(version, collectionRef)">get_app</mat-icon>
+                                    <mat-icon *ngIf="!versionDownloaded(version, collectionRef) && isAdmin">get_app</mat-icon>
                                 </div>
                                 <div class="col">
                                     <div>
-                                        <b>{{version.version}}</b>
+                                        <b>v{{version.version}}</b>
                                     </div>
                                     <div>
                                         released&nbsp;<app-timestamp-view [config]="{
@@ -95,39 +95,12 @@
                                 </div>
                             </div>
                         </div>
-
-                        <!-- <mat-action-list>
-                            <mat-list-item class="subscription-action clickable" *ngIf="collectionRef.subscribed && showActions" (click)="unsubscribe(collectionRef)">
-                                <mat-icon mat-list-icon aria-label="subscribed" class="text-success">check_circle_outline</mat-icon> 
-                                <div mat-line>subscribed</div>
-                            </mat-list-item>
-                            <mat-list-item class="subscription-action clickable" *ngIf="!collectionRef.subscribed && showActions" (click)="subscribe(collectionRef)">
-                                <mat-icon mat-list-icon aria-label="subscribe">sync</mat-icon>
-                                <div mat-line>subscribe</div>
-                            </mat-list-item>
-                            <mat-list-item [class.clickable]="showActions" *ngFor="let version of collectionRef.versions">
-                                <mat-icon mat-list-icon class="text-success" *ngIf="version.downloaded && showActions">done</mat-icon>
-                                <mat-icon mat-list-icon *ngIf="!version.downloaded && showActions">get_app</mat-icon>
-                                <div mat-line>
-                                    <b>{{version.version}}</b>
-                                </div>
-                                <div mat-line>
-                                    modified&nbsp;<app-timestamp-view [config]="{
-                                        'mode': 'view',
-                                        'humanize': true,
-                                        'object': version,
-                                        'field': 'modified'
-                                    }"></app-timestamp-view>
-                                </div>
-                                <mat-icon mat-list-icon>folder</mat-icon>
-                            </mat-list-item>
-                        </mat-action-list> -->
                     </div>
                 </mat-expansion-panel>
             </mat-accordion>
         </div>
     </div>
-    <div class="row" *ngIf="showActions">
+    <div class="row" *ngIf="showActions && isAdmin">
         <div class="col center removeActions">
             <button mat-button (click)="removeIndex()">remove index</button>
         </div>

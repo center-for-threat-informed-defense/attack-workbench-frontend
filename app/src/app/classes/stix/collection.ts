@@ -12,6 +12,7 @@ import { Technique } from './technique';
 import { DataSource } from './data-source';
 import { DataComponent } from './data-component';
 import { logger } from "../../util/logger";
+import { MarkingDefinition } from './marking-definition';
 
 /**
  *auto-generated changelog/report about an import
@@ -288,6 +289,9 @@ export class Collection extends StixObject {
                     case "x-mitre-data-component": // data component
                         this.stix_contents.push(new DataComponent(obj))
                     break;
+                    case "marking-definition": // marking definition
+                        this.stix_contents.push(new MarkingDefinition(obj))
+                    break;
                 }
             }
         }
@@ -307,6 +311,7 @@ export class Collection extends StixObject {
         group:          CollectionDiffCategories<Group>,
         data_source:    CollectionDiffCategories<DataSource>,
         data_component: CollectionDiffCategories<DataComponent>
+        marking_definition: CollectionDiffCategories<MarkingDefinition>
     } {
         let results = {
             technique:      new CollectionDiffCategories<Technique>(),
@@ -317,7 +322,8 @@ export class Collection extends StixObject {
             matrix:         new CollectionDiffCategories<Matrix>(),
             group:          new CollectionDiffCategories<Group>(),
             data_source:    new CollectionDiffCategories<DataSource>(),
-            data_component: new CollectionDiffCategories<DataComponent>()
+            data_component: new CollectionDiffCategories<DataComponent>(),
+            marking_definition: new CollectionDiffCategories<MarkingDefinition>()
         }
         // build helper lookups to reduce complexity from n^2 to n.
         let thisStixLookup = new Map<string, StixObject>(this.stix_contents.map(sdo => [sdo.stixID, sdo]))
@@ -329,6 +335,7 @@ export class Collection extends StixObject {
                 // logger.warn("could not find object", thisVr.object_ref, "in collection contents")
                 continue;
             }
+            let attackType = thisAttackObject.attackType.replace(/-/g, '_');
             if (that.contents.find(thatVr => thisVr.object_ref == thatVr.object_ref)) {
                 // object exists in other collection
                 let thatAttackObject = thatStixLookup.get(thisVr.object_ref);
@@ -339,27 +346,27 @@ export class Collection extends StixObject {
                 // determine if there was a change, and if so what type it was
                 if (thatAttackObject.modified.toISOString() == thisAttackObject.modified.toISOString()) {
                     // not a change
-                    results[thisAttackObject.attackType].duplicates.push(thisAttackObject);
+                    results[attackType].duplicates.push(thisAttackObject);
                 } else {
                     // was a change
                     // check if it was revoked
                     if (thisAttackObject.revoked && !thatAttackObject.revoked) {
                         // was revoked in the new and note in old
-                        results[thisAttackObject.attackType].revocations.push(thisAttackObject);
+                        results[attackType].revocations.push(thisAttackObject);
                     } else if (thisAttackObject.deprecated && !thatAttackObject.deprecated) { 
                         // was deprecated in new and not in old
-                        results[thisAttackObject.attackType].deprecations.push(thisAttackObject);
+                        results[attackType].deprecations.push(thisAttackObject);
                     } else if (thisAttackObject.version.compareTo(thatAttackObject.version) != 0) {
                         // version number incremented/decremented
-                        results[thisAttackObject.attackType].changes.push(thisAttackObject);
+                        results[attackType].changes.push(thisAttackObject);
                     } else {
                         // minor change
-                        results[thisAttackObject.attackType].minor_changes.push(thisAttackObject);
+                        results[attackType].minor_changes.push(thisAttackObject);
                     }
                 } 
             } else {
                 // object does not exist in other collection, was added
-                results[thisAttackObject.attackType].additions.push(thisAttackObject);
+                results[attackType].additions.push(thisAttackObject);
             }
         }
         return results;

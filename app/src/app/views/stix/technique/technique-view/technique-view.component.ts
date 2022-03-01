@@ -1,20 +1,26 @@
-import { AfterContentChecked, ChangeDetectorRef, Component, ViewEncapsulation } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { AfterContentChecked, ChangeDetectorRef, Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { Technique } from 'src/app/classes/stix/technique';
 import { StixViewPage } from '../../stix-view-page';
+import { AuthenticationService } from 'src/app/services/connectors/authentication/authentication.service';
+import { RestApiConnectorService } from "src/app/services/connectors/rest-api/rest-api-connector.service";
 
 @Component({
-  selector: 'app-technique-view',
-  templateUrl: './technique-view.component.html',
-  styleUrls: ['./technique-view.component.scss'],
-  encapsulation: ViewEncapsulation.None
+    selector: 'app-technique-view',
+    templateUrl: './technique-view.component.html',
+    styleUrls: ['./technique-view.component.scss'],
+    encapsulation: ViewEncapsulation.None
 })
-export class TechniqueViewComponent extends StixViewPage implements AfterContentChecked {
-
+export class TechniqueViewComponent extends StixViewPage implements OnInit, AfterContentChecked {
     public get technique(): Technique { return this.config.object as Technique; }
 
-    constructor(private route: ActivatedRoute, private ref: ChangeDetectorRef) {
-        super();
+    constructor(private ref: ChangeDetectorRef, authenticationService: AuthenticationService, private restApiConnector: RestApiConnectorService) {
+        super(authenticationService);
+    }
+
+    ngOnInit() {
+        if (this.technique.firstInitialized) {
+            this.technique.initializeWithDefaultMarkingDefinitions(this.restApiConnector);
+        }
     }
 
     ngAfterContentChecked() {

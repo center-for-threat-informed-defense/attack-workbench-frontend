@@ -1,5 +1,5 @@
 import { SelectionModel } from '@angular/cdk/collections';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -87,7 +87,8 @@ export class CollectionImportComponent implements OnInit {
 
     public getCollectionFromURL() {
         this.loadingStep1 = true;
-        let subscription_getBundle = this.http.get(this.url).subscribe({ //get the raw collection bundle from the endpoint
+        let headers: HttpHeaders = new HttpHeaders({ 'ExcludeCredentials': 'true' });
+        let subscription_getBundle = this.http.get(this.url, {headers: headers}).subscribe({ //get the raw collection bundle from the endpoint
             next: (collectionBundle) => this.previewCollection(collectionBundle),
             error: (err) => {
                 logger.error(err)
