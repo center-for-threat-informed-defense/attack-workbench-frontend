@@ -84,14 +84,22 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
 
     // Route authentication
     public getAccessibleRoutes(attackType: string, routes: any[], ) {
-        return routes.filter(route => this.canAccess(attackType, route));
+        return routes.filter(route => this.canAccess(attackType, route) && this.canEdit(route));
     }
+
     private canAccess(attackType: string, route: any) {
         if (route.label && route.label == 'edit' && !this.authenticationService.canEdit(attackType)) {
             // user not authorized
             return false;
         }
         // user authorized
+        return true;
+    }
+
+    private canEdit(route: any) {
+        if (route.label && route.label == 'edit' && this.config.uneditableObject) {
+            return false;
+        }
         return true;
     }
 
@@ -184,6 +192,7 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
         let controls_before = [] // control columns which occur before the main columns
         let controls_after = []; // control columns which occur after the main columns
         let sticky_allowed = !(this.config.rowAction && this.config.rowAction.position == "start");
+        if (!('showFilters' in this.config)) this.config.showFilters = true;
         if ("type" in this.config) { 
             // this.filter.push("type." + this.config.type); 
             // set columns according to type
@@ -304,6 +313,15 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
                     this.addColumn("", "target_name", "plain", this.config.sourceRef? sticky_allowed: false, ["relationship-name"]);// ["name", "relationship-right"]);
                     if (!(this.config.relationshipType && this.config.relationshipType == "subtechnique-of")) this.addColumn("description", "description", "descriptive", false);
                     // controls_after.push("open-link")
+                    break;
+                case "marking-definition":
+                    this.addColumn("definition type", "definition_type", "plain");
+                    this.addColumn("created", "created", "timestamp");
+                    this.addColumn("definition", "definition_string", "descriptive");
+                    this.tableDetail = [{
+                        "field": "definition_string",
+                        "display": "descriptive"
+                    }]
                     break;
                 default:
                     this.addColumn("type", "attackType", "plain");
@@ -494,6 +512,7 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
             else if (this.config.type == "relationship") this.data$ = this.restAPIConnectorService.getRelatedTo({sourceRef: this.config.sourceRef, targetRef: this.config.targetRef, sourceType: this.config.sourceType, targetType: this.config.targetType, relationshipType: this.config.relationshipType,  excludeSourceRefs: this.config.excludeSourceRefs, excludeTargetRefs: this.config.excludeTargetRefs, limit: limit, offset: offset, includeDeprecated: deprecated});
             else if (this.config.type == "data-source") this.data$ = this.restAPIConnectorService.getAllDataSources(options);
             else if (this.config.type == "data-component") this.data$ = this.restAPIConnectorService.getAllDataComponents(options);
+            else if (this.config.type == "marking-definition") this.data$ = this.restAPIConnectorService.getAllMarkingDefinitions(options);
             let subscription = this.data$.subscribe({
                 next: (data) => { this.totalObjectCount = data.pagination.total; },
                 complete: () => { subscription.unsubscribe() }
@@ -519,7 +538,7 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
 }
 
 //allowed types for StixListConfig
-type type_attacktype = "collection" | "group" | "matrix" | "mitigation" | "software" | "tactic" | "technique" | "relationship" | "data-source" | "data-component";
+type type_attacktype = "collection" | "group" | "matrix" | "mitigation" | "software" | "tactic" | "technique" | "relationship" | "data-source" | "data-component" | "marking-definition";
 type selection_types = "one" | "many" | "disabled"
 export interface StixListConfig {
     /* if specified, shows the given STIX objects in the table instead of loading from the back-end based on other configurations. */
@@ -538,8 +557,7 @@ export interface StixListConfig {
     type?: type_attacktype | "collection-created" | "collection-imported";
     /** force the list to show only objects matching this query */
     query?: any;
-    
-    
+
     /** can the user select in this list? allowed options:
      *     "one": user can select a single element at a time
      *     "many": user can select as many elements as they want
@@ -551,11 +569,9 @@ export interface StixListConfig {
      * Only relevant if 'select' is also enabled. Also, will cause problems if multiple constructor pram is set according to 'select'.
      */
     selectionModel?: SelectionModel<string>;
-
-
     /** show links to view/edit pages for relevant objects? */
     showLinks?: boolean;
-    /** default true, if false hides the filter dropdown menu */
+    /** default false, if false hides the filter dropdown menu */
     showFilters?: boolean;
     /**
      * How should the table act when the row is clicked? default "expand"
@@ -571,6 +587,11 @@ export interface StixListConfig {
      * when in dialog mode
      */
     allowEdits?: boolean;
+
+    /**
+     * Default false. If true, edits will be disabled for the object
+     */
+    uneditableObject?: boolean;
     
     excludeIDs?: string[]; //exclude objects with this ID from the list
     excludeSourceRefs?: string[]; //exclude relationships with this source_ref from the list

@@ -11,7 +11,7 @@
                 </mat-form-field>
     
                 <!-- don't show options for collections or if loading data not from REST API -->
-                <mat-form-field appearance="fill" *ngIf="!(config.type && config.type == 'collection') && !(config.hasOwnProperty('stixObjects'))">
+                <mat-form-field appearance="fill" *ngIf="config.showFilters && !(config.hasOwnProperty('stixObjects'))">
                     <mat-label>options</mat-label>
                     <mat-select multiple [(ngModel)]="filter" (selectionChange)="applyControls()">
                         <mat-optgroup *ngFor="let group of filterOptions" [label]="group.name" [disabled]="group.disabled">
@@ -110,12 +110,6 @@
                                             {{route.label}}
                                         </a>
                                     </div>
-                                    <!-- <button mat-button>        
-                                        view
-                                    </button>
-                                    <button mat-button>
-                                        edit
-                                    </button> -->
                                 </div>
                                 <div class="column description">
                                     <div *ngFor="let property of tableDetail">

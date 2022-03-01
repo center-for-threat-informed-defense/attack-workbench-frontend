@@ -88,6 +88,14 @@ import { TimestampPropertyComponent } from "./components/stix/timestamp-property
 import { TimestampViewComponent } from "./components/stix/timestamp-property/timestamp-view/timestamp-view.component";
 import { TimestampDiffComponent } from "./components/stix/timestamp-property/timestamp-diff/timestamp-diff.component";
 
+import { StatementPropertyComponent } from "./components/stix/statement-property/statement-property.component";
+import { StatementViewComponent } from './components/stix/statement-property/statement-view/statement-view.component';
+import { StatementEditComponent } from './components/stix/statement-property/statement-edit/statement-edit.component';
+
+import { TlpPropertyComponent } from "./components/stix/tlp-property/tlp-property.component";
+import { TlpViewComponent } from "./components/stix/tlp-property/tlp-view/tlp-view.component";
+import { TlpEditComponent } from "./components/stix/tlp-property/tlp-edit/tlp-edit.component";
+
 import { AttackIDPropertyComponent } from "./components/stix/attackid-property/attackid-property.component";
 import { AttackIDEditComponent } from "./components/stix/attackid-property/attackid-edit/attackid-edit.component";
 import { AttackIDViewComponent } from "./components/stix/attackid-property/attackid-view/attackid-view.component";
@@ -108,8 +116,9 @@ import { NamePropertyComponent } from "./components/stix/name-property/name-prop
 import { HelpPageComponent } from './views/help-page/help-page.component';
 import { LandingPageComponent } from './views/landing-page/landing-page.component';
 import { AdminPageComponent } from "./views/admin-page/admin-page.component";
-import { OrgSettingsPageComponent } from "./views/admin-page/org-settings-page/org-settings-page.component";
+import { OrgIdentityPageComponent } from "./views/admin-page/org-identity-page/org-identity-page.component";
 import { UserAccountsPageComponent } from './views/admin-page/user-accounts-page/user-accounts-page.component';
+import { DefaultMarkingDefinitionsComponent } from './views/admin-page/default-marking-definitions/default-marking-definitions.component';
 
 import { StixDialogComponent } from "./views/stix/stix-dialog/stix-dialog.component"
 import { StixPageComponent } from "./views/stix/stix-page/stix-page.component"
@@ -163,6 +172,8 @@ import { DataSourceViewComponent } from './views/stix/data-source/data-source-vi
 import { DataSourceListComponent } from './views/stix/data-source/data-source-list/data-source-list.component';
 import { DataComponentViewComponent } from './views/stix/data-component/data-component-view/data-component-view.component';
 
+import { MarkingDefinitionViewComponent } from "./views/stix/marking-definition/marking-definition-view/marking-definition-view.component";
+import { MarkingDefinitionListComponent } from "./views/stix/marking-definition/marking-definition-list/marking-definition-list.component";
 
 @NgModule({
   declarations: [
@@ -199,6 +210,12 @@ import { DataComponentViewComponent } from './views/stix/data-component/data-com
     TimestampPropertyComponent,
     TimestampViewComponent,
     TimestampDiffComponent,
+    StatementPropertyComponent,
+    StatementViewComponent,
+    StatementEditComponent,
+    TlpPropertyComponent,
+    TlpViewComponent,
+    TlpEditComponent,
     AttackIDPropertyComponent,
     AttackIDEditComponent,
     AttackIDViewComponent,
@@ -214,8 +231,9 @@ import { DataComponentViewComponent } from './views/stix/data-component/data-com
     LandingPageComponent,
     HelpPageComponent,
     AdminPageComponent,
-    OrgSettingsPageComponent,
+    OrgIdentityPageComponent,
     UserAccountsPageComponent,
+    DefaultMarkingDefinitionsComponent,
 
     StixDialogComponent,
     StixPageComponent,
@@ -263,7 +281,9 @@ import { DataComponentViewComponent } from './views/stix/data-component/data-com
     IdentityPropertyComponent,
     DataSourceViewComponent,
     DataSourceListComponent,
-    DataComponentViewComponent
+    DataComponentViewComponent,
+    MarkingDefinitionViewComponent,
+    MarkingDefinitionListComponent
   ],
   imports: [
     BreadcrumbModule,

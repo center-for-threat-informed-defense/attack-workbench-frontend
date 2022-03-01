@@ -7,7 +7,7 @@
                 object: technique,
                 parent: technique.is_subtechnique && technique.parentTechnique ? technique.parentTechnique : null
             }"></app-name-property>
-            <app-subheading *ngIf="!editing" [config]="config" (onOpenHistory)="openHistory()" (onOpenNotes)="openNotes()"></app-subheading>
+            <app-subheading [config]="config" (onOpenHistory)="openHistory()" (onOpenNotes)="openNotes()"></app-subheading>
         </div>
     </div>
     <div class="row">

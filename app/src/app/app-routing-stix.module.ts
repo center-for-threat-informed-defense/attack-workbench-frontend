@@ -1,4 +1,6 @@
-import { CollectionManagerComponent } from "./views/stix/collection/collection-manager/collection-manager.component"; 
+import { CollectionManagerComponent } from "./views/stix/collection/collection-manager/collection-manager.component";
+import { CollectionImportComponent } from "./views/stix/collection/collection-import/collection-import-workflow/collection-import.component";
+import { CollectionIndexImportComponent } from "./views/stix/collection/collection-index/collection-index-import/collection-index-import.component";
 
 import { GroupListComponent } from './views/stix/group/group-list/group-list.component';
 import { MatrixListComponent } from './views/stix/matrix/matrix-list/matrix-list.component';
@@ -6,14 +8,14 @@ import { MitigationListComponent } from './views/stix/mitigation/mitigation-list
 import { SoftwareListComponent } from './views/stix/software/software-list/software-list.component';
 import { TacticListComponent } from './views/stix/tactic/tactic-list/tactic-list.component';
 import { TechniqueListComponent } from './views/stix/technique/technique-list/technique-list.component';
+import { MarkingDefinitionListComponent } from "./views/stix/marking-definition/marking-definition-list/marking-definition-list.component";
+import { DataSourceListComponent } from "./views/stix/data-source/data-source-list/data-source-list.component";
 
-import { StixPageComponent } from "./views/stix/stix-page/stix-page.component"
+import { StixPageComponent } from "./views/stix/stix-page/stix-page.component";
+
 import { RouterModule, Routes } from '@angular/router';
 import { NgModule } from '@angular/core';
 import { environment } from "../environments/environment"
-import { CollectionImportComponent } from "./views/stix/collection/collection-import/collection-import-workflow/collection-import.component";
-import { CollectionIndexImportComponent } from "./views/stix/collection/collection-index/collection-index-import/collection-index-import.component";
-import { DataSourceListComponent } from "./views/stix/data-source/data-source-list/data-source-list.component";
 import { AuthorizationGuard } from "./services/helpers/authorization.guard";
 import { Role } from "./classes/authn/role";
 
@@ -388,8 +390,59 @@ const stixRoutes: Routes = [{
         ]
     }
     ]
-},
-
+  },
+  {
+    path: 'marking-definition',
+    canActivateChild: [AuthorizationGuard],
+    data: {
+      breadcrumb: 'marking definitions',
+      more: true
+    },
+    children: [{
+        path: '',
+        data: {
+          breadcrumb: 'list',
+          title: "marking definitions",
+          roles: viewRoles
+        },
+        component: MarkingDefinitionListComponent
+      },
+      {
+        path: ':id',
+        data: {
+          breadcrumb: 'loading...'
+        },
+        children: [{
+            path: '',
+            data: {
+              breadcrumb: 'view',
+              editable: false,
+              title: "view marking definition",
+              roles: viewRoles
+            },
+            component: StixPageComponent
+          }
+        ]
+      },
+      {
+        path: ":new",
+        data: {
+            breadcrumb: "new marking definition"
+        },
+        children: [{
+          path: '',
+          data: {
+            breadcrumb: 'view',
+            editable: false,
+            title: "new marking definition",
+            roles: [Role.ADMIN]
+          },
+          component: StixPageComponent
+        }
+      ]
+    }
+    ]
+  }
 ]
 
 if (environment.integrations.collection_manager.enabled) {
@@ -397,7 +450,8 @@ if (environment.integrations.collection_manager.enabled) {
         path: 'collection',
         canActivateChild: [AuthorizationGuard],
         data: {
-            breadcrumb: 'collections'
+            breadcrumb: 'collections',
+            more: true
         },
         children: [{
             path: "",

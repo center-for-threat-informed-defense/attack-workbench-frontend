@@ -11,7 +11,9 @@ import { Subscription } from "rxjs";
   encapsulation: ViewEncapsulation.None
 })
 export class HeaderComponent implements AfterViewInit {
-    public routes: any[];
+    public allRoutes: any[];
+    public filteredRoutes: any[];
+    public moreRoutes: any[];
     public app_version = app_package["version"];
 
     @Output() public onLogin = new EventEmitter();
@@ -26,11 +28,14 @@ export class HeaderComponent implements AfterViewInit {
     private linkMenu: ElementRef;
 
     constructor(private route: ActivatedRoute, private authenticationService: AuthenticationService) {
-        this.routes = stixRoutes;
+        this.allRoutes = stixRoutes;
+        this.filteredRoutes = stixRoutes.filter( x => x.data.more != true );
+        this.moreRoutes = stixRoutes.filter( x => x.data.more == true );
+        
         this.authnTypeSubscription = this.authenticationService.getAuthType().subscribe({
             next: (v) => { this.authnType = v },
             complete: () => { this.authnTypeSubscription.unsubscribe(); }
-        })
+        });
     }
 
     ngAfterViewInit() {

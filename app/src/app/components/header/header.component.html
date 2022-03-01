@@ -10,9 +10,17 @@
 
     <!-- Stix Object Routes -->
     <div class="links" #linkMenu [ngClass]="{'pad-right': isLoggedIn}" [ngStyle]="{'visibility': showHamburger ? 'hidden' : 'visible'}">
-        <button mat-button *ngFor="let stixRoute of routes" [disabled]="!isLoggedIn" [routerLink]="stixRoute.path">
+        <button mat-button *ngFor="let stixRoute of filteredRoutes" [disabled]="!isLoggedIn" [routerLink]="stixRoute.path">
             {{stixRoute.data.breadcrumb}}
         </button>
+
+        <button mat-button [matMenuTriggerFor]="more" aria-label="more">More</button>
+        <mat-menu #more="matMenu" backdropClass="override-light">
+            <button mat-menu-item *ngFor="let stixRoute of moreRoutes" [disabled]="!isLoggedIn" [routerLink]="stixRoute.path">
+                {{stixRoute.data.breadcrumb}}
+            </button>
+            <button mat-menu-item routerLink="/docs">documentation</button>
+        </mat-menu>
     </div>
 
     <!-- Login -->
@@ -33,13 +41,17 @@
         <button *ngIf="!isLoggedIn" [matMenuTriggerFor]="navigation" mat-icon-button aria-label="navigation">
             <mat-icon>menu</mat-icon>
         </button>
+
+        <!-- Account Options Menu -->
         <mat-menu #accountOptions="matMenu" backdropClass="override-light">
-            <button mat-menu-item routerLink="/docs">documentation</button>
             <button mat-menu-item (click)="logout()">logout</button>
         </mat-menu>
+
+        <!-- Navigation Menu -->
         <mat-menu #navigation="matMenu" backdropClass="override-light">
-            <button mat-menu-item *ngFor="let stixRoute of routes" [disabled]="!isLoggedIn"
-                [routerLink]="stixRoute.path">{{stixRoute.data.breadcrumb}}</button>
+            <button mat-menu-item *ngFor="let stixRoute of allRoutes" [disabled]="!isLoggedIn" [routerLink]="stixRoute.path">
+                {{stixRoute.data.breadcrumb}}
+            </button>
             <button mat-menu-item routerLink="/docs">documentation</button>
             <button mat-menu-item (click)="isLoggedIn ? logout() : login()">{{isLoggedIn ? 'logout': 'login'}}</button>
             <button mat-menu-item *ngIf="!isLoggedIn && authnType === 'oidc'" (click)="register()">register</button>
