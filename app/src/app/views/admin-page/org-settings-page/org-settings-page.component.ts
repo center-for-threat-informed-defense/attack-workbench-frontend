@@ -11,7 +11,7 @@ export class OrgSettingsPageComponent implements OnInit {
     public organizationIdentity: Identity;
     public organizationNamespace = {
         prefix: 'This is a placeholder namespace prefix. Please replace it with a prefix.',
-        range: 1000
+        range_start: 1000
     }
 
     constructor(private restAPIConnector: RestApiConnectorService) { }
@@ -38,7 +38,7 @@ export class OrgSettingsPageComponent implements OnInit {
 
     saveNamespace() {
         let subscription = this.restAPIConnector.setOrganizationNamespace(this.organizationNamespace).subscribe({
-            next: (namespace) => this.organizationNamespace = namespace,
+            // next: (namespace) => this.organizationNamespace = namespace,
             complete: () => subscription.unsubscribe()
         });
     }
