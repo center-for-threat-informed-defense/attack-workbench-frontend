@@ -1339,9 +1339,9 @@ export class RestApiConnectorService extends ApiConnector {
 
     /**
      * Update the organization namespace config
-     * @param {Namespace} object the namespace object to save
      * @returns {Observable<Namespace>} the updated identity
      * @memberof RestApiConnectorService
+     * @param namespaceSettings the namespace object to save
      */
     public setOrganizationNamespace(namespaceSettings: {prefix: string, range: number}):  Observable<any> {
         return this.http.post(`${this.baseUrl}/config/organization-namespace`, {namespaceSettings}).pipe(
