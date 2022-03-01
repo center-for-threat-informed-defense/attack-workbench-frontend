@@ -22,11 +22,10 @@ export class OrgSettingsPageComponent implements OnInit {
             complete: () => idSub.unsubscribe()
         });
 
-        // TODO ADD namespace call when api is available
-        // let namespaceSub = this.restAPIConnector.getOrganizationNamespace().subscribe({
-        //     next: (namespaceSettings) => this.organizationNamespace = namespaceSettings,
-        //     complete: () => namespaceSub.unsubscribe()
-        // })
+        let namespaceSub = this.restAPIConnector.getOrganizationNamespace().subscribe({
+            next: (namespaceSettings) => this.organizationNamespace = namespaceSettings,
+            complete: () => namespaceSub.unsubscribe()
+        })
 
     }
 
