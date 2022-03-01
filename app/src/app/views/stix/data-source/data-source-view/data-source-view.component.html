@@ -5,7 +5,7 @@
                 mode: editing? 'edit' : 'view',
                 object: data_source
             }"></app-name-property>
-            <app-subheading *ngIf="!editing" [config]="config" (onOpenHistory)="openHistory()" (onOpenNotes)="openNotes()"></app-subheading>
+            <app-subheading [config]="config" (onOpenHistory)="openHistory()" (onOpenNotes)="openNotes()"></app-subheading>
         </div>
     </div>
     <div class="row">
@@ -86,7 +86,7 @@
                 <h2 class="section-header">Data Components</h2>
             </div>
         </div>
-        <div class="row">
+        <div class="row" *ngIf="canEdit">
             <div class="col">
                 <div class="add-button">
                     <button mat-mini-fab class="extended-fab-button" color="primary" (click)="createDataComponent()">

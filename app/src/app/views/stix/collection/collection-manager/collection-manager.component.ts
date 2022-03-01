@@ -1,8 +1,8 @@
 import { Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
+import { Role } from 'src/app/classes/authn/role';
 import { Collection } from 'src/app/classes/stix/collection';
+import { AuthenticationService } from 'src/app/services/connectors/authentication/authentication.service';
 import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/rest-api-connector.service';
-import { CollectionIndexImportComponent } from '../collection-index/collection-index-import/collection-index-import.component';
 import { CollectionIndexListComponent } from '../collection-index/collection-index-list/collection-index-list.component';
 
 @Component({
@@ -13,10 +13,11 @@ import { CollectionIndexListComponent } from '../collection-index/collection-ind
 })
 export class CollectionManagerComponent implements OnInit {
     @ViewChild(CollectionIndexListComponent) private collectionIndexList: CollectionIndexListComponent;
+    public get isAdmin(): boolean { return this.authenticationService.isAuthorized([Role.ADMIN]); }
 
     public collections: Collection[];
 
-    constructor(private restAPIConnector: RestApiConnectorService) { }
+    constructor(private restAPIConnector: RestApiConnectorService, private authenticationService: AuthenticationService) { }
 
     ngOnInit(): void {
         let subscription = this.restAPIConnector.getAllCollections({versions: "all"}).subscribe({

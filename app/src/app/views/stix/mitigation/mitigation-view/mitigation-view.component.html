@@ -5,7 +5,7 @@
                 mode: editing? 'edit' : 'view',
                 object: mitigation
             }"></app-name-property>
-            <app-subheading *ngIf="!editing" [config]="config" (onOpenHistory)="openHistory()" (onOpenNotes)="openNotes()"></app-subheading>
+            <app-subheading [config]="config" (onOpenHistory)="openHistory()" (onOpenNotes)="openNotes()"></app-subheading>
         </div>
     </div>
     <div class="row">
@@ -53,7 +53,7 @@
                 <h2 class="section-header">Techniques Addressed by Mitigation</h2>
             </div>
         </div>
-        <div class="row">
+        <div class="row" *ngIf="canEdit">
             <div class="col">
                 <app-add-relationship-button (created)="mitigatesList.applyControls()" [config]="{
                     label: 'technique',
