@@ -38,7 +38,7 @@ export class OrgSettingsPageComponent implements OnInit {
 
     saveNamespace() {
         let subscription = this.restAPIConnector.setOrganizationNamespace(this.organizationNamespace).subscribe({
-            // next: (namespace) => this.organizationNamespace = namespace,
+            next: (namespace) => this.organizationNamespace = namespace,
             complete: () => subscription.unsubscribe()
         });
     }

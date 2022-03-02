@@ -1344,7 +1344,7 @@ export class RestApiConnectorService extends ApiConnector {
      * @param namespaceSettings the namespace object to save
      */
     public setOrganizationNamespace(namespaceSettings: {prefix: string, range_start: number}):  Observable<any> {
-        return this.http.post(`${this.baseUrl}/config/organization-namespace`, {namespaceSettings}).pipe(
+        return this.http.post(`${this.baseUrl}/config/organization-namespace`, {...namespaceSettings}).pipe(
             // set the organization identity to be this identity's ID after it was created/updated
             tap(this.handleSuccess("Organization Namespace Updated")),
             map(_ => {
