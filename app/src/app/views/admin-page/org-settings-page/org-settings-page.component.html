@@ -70,9 +70,20 @@
         </div>
         <div class="row">
             <div class="col">
-                <p>Assigning a unique namespace will uniquely identify any objects you create and add to or modify in the knowledge base.</p>
-                <p>The namespace prefix will a short term in all upper-case, appended to the beginning of every new object ID.
-                    The namespace range is a 4-digit number that will specify the lower-bound to start generating new object IDs from.</p>
+                <p>
+                    You can optionally configure a namespace for your ATT&CK IDs to prevent conflicts with objects
+                    created by ATT&CK or other organizations and to uniquely identify any objects created by your
+                    organization.
+                </p>
+                <p>
+                    The namespace prefix will appear in upper-case letters and will be prepended to the
+                    ATT&CK ID of newly-created objects. The namespace range is a 4-digit number that specifies the
+                    lower-bound from which to start generating new object IDs.</p>
+                <p>
+                    Your namespace prefix will be shown to anyone who downloads collections that you publish.
+                    Subsequent changes by others to those objects will not modify the prefix. Updates to your
+                    organization namespace prefix will not automatically update the contents of your knowledge base
+                    and will only apply to new objects.</p>
             </div>
         </div>
         <div *ngIf="organizationNamespace else loadingNamespace" class="identity-edit grid spacing-12">
