@@ -81,14 +81,15 @@
                 <div class="col">
                     <mat-form-field appearance="outline">
                         <mat-label>prefix</mat-label>
-                        <input matInput [(ngModel)]="organizationNamespace.prefix">
+                        <input matInput pattern="([A-Za-z]){1,}" (keyup)="organizationNamespace.prefix = $event.target.value.toUpperCase()" [ngModel]="organizationNamespace.prefix">
+                        <mat-hint>prefix must be all upper-case letters only</mat-hint>
                     </mat-form-field>
                 </div>
                 <div class="col">
                     <mat-form-field appearance="outline">
                         <mat-label>range (lower bound)</mat-label>
-                        <input matInput pattern="[0-9]{4}" type="number" placeholder="1000" [(ngModel)]="organizationNamespace.range_start">
-                        <mat-hint>range (lower bound) must be 4 digits; this field can be left blank if desired</mat-hint>
+                        <input matInput pattern="[0-9]{0,4}" type="number" placeholder="1000" (keyup)="organizationNamespace.range_start = $event.target.value || 0" [ngModel]="organizationNamespace.range_start">
+                        <mat-hint>range must be 4 digits; this field can be left blank if desired</mat-hint>
                     </mat-form-field>
                 </div>
             </div>
