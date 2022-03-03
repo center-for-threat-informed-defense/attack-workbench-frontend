@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Identity } from 'src/app/classes/stix/identity';
-import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/rest-api-connector.service';
+import { Namespace, RestApiConnectorService } from 'src/app/services/connectors/rest-api/rest-api-connector.service';
 
 @Component({
   selector: 'app-org-settings-page',
@@ -9,10 +9,7 @@ import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/re
 })
 export class OrgSettingsPageComponent implements OnInit {
     public organizationIdentity: Identity;
-    public organizationNamespace = {
-        prefix: 'This is a placeholder namespace prefix. Please replace it with a prefix.',
-        range_start: 1000
-    }
+    public organizationNamespace: Namespace;
 
     constructor(private restAPIConnector: RestApiConnectorService) { }
 

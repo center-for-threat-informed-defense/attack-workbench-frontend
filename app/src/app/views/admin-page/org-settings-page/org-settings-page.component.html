@@ -25,7 +25,7 @@
                 </p>
             </div>
         </div>
-        <div *ngIf="organizationIdentity else loading" class="identity-edit grid">
+        <div *ngIf="organizationIdentity else loadingIdentity" class="identity-edit grid">
             <hr>
             <div class="row">
                 <div class="col narrow vertical-center identity-icon">
@@ -75,7 +75,7 @@
                     The namespace range is a 4-digit number that will specify the lower-bound to start generating new object IDs from.</p>
             </div>
         </div>
-        <div class="identity-edit grid spacing-12">
+        <div *ngIf="organizationNamespace else loadingNamespace" class="identity-edit grid spacing-12">
             <hr>
             <div class="row">
                 <div class="col">
@@ -103,7 +103,11 @@
             </div>
         </div>
     </div>
-    <ng-template #loading>
+    <ng-template #loadingIdentity>
         <app-loading-overlay message="loading organization identity"></app-loading-overlay>
     </ng-template>
+    <ng-template #loadingNamespace>
+        <app-loading-overlay message="loading organization namespace"></app-loading-overlay>
+    </ng-template>
+
 </div>
