@@ -85,6 +85,11 @@ export interface Paginated<T> {
     }
 }
 
+export interface Namespace {
+    prefix: string,
+    range_start: number
+}
+
 @Injectable({
     providedIn: 'root'
 })
@@ -1324,9 +1329,9 @@ export class RestApiConnectorService extends ApiConnector {
 
     /**
      * Get the organization namespace configurations
-     * @returns {Observable<Identity>} the organization namespace configurations
+     * @returns {Observable<Namespace>} the organization namespace configurations
      */
-    public getOrganizationNamespace(): Observable<any> {
+    public getOrganizationNamespace(): Observable<Namespace> {
         return this.http.get(`${this.baseUrl}/config/organization-namespace`).pipe(
             tap(_ => logger.log("retrieved organization namespace configurations")),
             map(result => {
@@ -1343,7 +1348,7 @@ export class RestApiConnectorService extends ApiConnector {
      * @memberof RestApiConnectorService
      * @param namespaceSettings the namespace object to save
      */
-    public setOrganizationNamespace(namespaceSettings: {prefix: string, range_start: number}):  Observable<any> {
+    public setOrganizationNamespace(namespaceSettings: Namespace):  Observable<Namespace> {
         return this.http.post(`${this.baseUrl}/config/organization-namespace`, {...namespaceSettings}).pipe(
             // set the organization identity to be this identity's ID after it was created/updated
             tap(this.handleSuccess("Organization Namespace Updated")),
