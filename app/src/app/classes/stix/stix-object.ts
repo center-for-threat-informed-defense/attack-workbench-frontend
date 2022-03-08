@@ -93,9 +93,9 @@ export abstract class StixObject extends Serializable {
             map(namespaceSettings => namespaceSettings),
             switchMap(organizationNamespace => {
                 if (organizationNamespace && organizationNamespace.hasOwnProperty('prefix')) {
-                    if (organizationNamespace.prefix) newID += (organizationNamespace.prefix + '-')
-                    if (organizationNamespace.range_start) {
-                        let count = organizationNamespace.range_start;
+                    if (organizationNamespace['prefix']) newID += (organizationNamespace['prefix'] + '-')
+                    if (organizationNamespace['range_start']) {
+                        let count = organizationNamespace['range_start'];
                         let accessor = this.attackType == "group" ? restAPIConnector.getAllGroups() :
                             this.attackType == "mitigation" ? restAPIConnector.getAllMitigations() :
                                 this.attackType == "software" ? restAPIConnector.getAllSoftware() :
@@ -105,18 +105,17 @@ export abstract class StixObject extends Serializable {
                                                 this.attackType == "matrix" ? restAPIConnector.getAllMatrices() : null;
                         if (accessor) {
                             return accessor.pipe(map((objects) => {
-                                objects.data.forEach((x) => {
+                                objects['data'].forEach((x) => {
                                     let split = x.attackID.split('-') // i.e. PLC-G1000 -> ['PLC', 'G1000']
-                                    console.log(' ** split', split)
                                     if (this.attackType != "matrix" && split.length > 1) {
                                         const latest = Number(split[1].replace(/\d+/g, '')) // i.e. G1000 -> 1000
                                         count = count > latest ? count : latest;
                                         count += 1
                                     }
                                 })
-                                if (this.hasOwnProperty('supportsAttackID') && this.supportsAttackID) newID += this.attackIDValidator.format.split('#')[0]
+                                if (this.hasOwnProperty('supportsAttackID') && this['supportsAttackID']) newID += this.attackIDValidator.format.split('#')[0]
                                 if (this.attackType != "matrix") newID += `${count}`
-                                if (this.hasOwnProperty('is_subtechnique') && this.is_subtechnique) newID += '.00'
+                                if (this.hasOwnProperty('is_subtechnique') && this['is_subtechnique']) newID += '.00'
                                 return newID
                             }))
                         }
@@ -142,7 +141,6 @@ export abstract class StixObject extends Serializable {
             this.type = type;
             this.version = new VersionNumber("0.1");
             if (supportsNamespace && restAPIService) {
-                console.log('** ', supportsNamespace)
                 let sub = this.getOrgNamespace(restAPIService).subscribe({
                     next: (val) => {
                         this.attackID = val
@@ -171,7 +169,7 @@ export abstract class StixObject extends Serializable {
 
         let serialized_external_references = this.external_references.serialize();
 
-        // Add attackID for 
+        // Add attackID for
         if (this.attackID && this.typeUrlMap[this.attackType]) {
             let new_ext_ref = {
                 "source_name": "mitre-attack",
