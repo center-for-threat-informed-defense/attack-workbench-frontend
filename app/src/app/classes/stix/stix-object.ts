@@ -406,9 +406,7 @@ export abstract class StixObject extends Serializable {
                                         "message": "ATT&CK ID is unique"
                                     })
                                 }
-                                // TODO fix validation regex test if org prefix is available
-                                // (\S+--)? is an organization prefix, and should probably be improved when that is made an explicit feature
-                                let idRegex = new RegExp("^(\\S+--)?" + this.attackIDValidator.regex + "$");
+                                let idRegex = new RegExp("^([A-Z]+-)?" + this.attackIDValidator.regex + "$");
                                 let attackIDValid = idRegex.test(this.attackID);
                                 if (!attackIDValid) {
                                     result.errors.push({
