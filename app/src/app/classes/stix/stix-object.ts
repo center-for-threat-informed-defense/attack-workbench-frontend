@@ -140,6 +140,7 @@ export abstract class StixObject extends Serializable {
             this.stixID = type + "--" + uuid();
             this.type = type;
             this.version = new VersionNumber("0.1");
+            this.attackID = '(generating ID)';
             if (supportsNamespace && restAPIService) {
                 let sub = this.getOrgNamespace(restAPIService).subscribe({
                     next: (val) => {

@@ -32,6 +32,12 @@
 
 # Changelog
 
+## 8 March 2022
+
+### Changes staged in develop
+
+-   Added namespace feature, which will be automatically generated when creating a new StixObject of a certain type ("group", "mitigation", "software", "tactic", "technique", "data-source", or "matrix")
+
 ## 28 February 2022
 
 ### ATT&CK Workbench version 1.2.0
