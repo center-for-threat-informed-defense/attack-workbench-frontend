@@ -98,11 +98,11 @@ export abstract class StixObject extends Serializable {
                         let count = organizationNamespace['range_start'];
                         let accessor = this.attackType == "group" ? restAPIConnector.getAllGroups() :
                             this.attackType == "mitigation" ? restAPIConnector.getAllMitigations() :
-                                this.attackType == "software" ? restAPIConnector.getAllSoftware() :
-                                    this.attackType == "tactic" ? restAPIConnector.getAllTactics() :
-                                        this.attackType == "technique" ? restAPIConnector.getAllTechniques() :
-                                            this.attackType == "data-source" ? restAPIConnector.getAllDataSources() :
-                                                this.attackType == "matrix" ? restAPIConnector.getAllMatrices() : null;
+                            this.attackType == "software" ? restAPIConnector.getAllSoftware() :
+                            this.attackType == "tactic" ? restAPIConnector.getAllTactics() :
+                            this.attackType == "technique" ? restAPIConnector.getAllTechniques() :
+                            this.attackType == "data-source" ? restAPIConnector.getAllDataSources() :
+                            this.attackType == "matrix" ? restAPIConnector.getAllMatrices() : null;
                         if (accessor) {
                             return accessor.pipe(map((objects) => {
                                 objects['data'].forEach((x) => {
@@ -113,7 +113,7 @@ export abstract class StixObject extends Serializable {
                                         count += 1
                                     }
                                 })
-                                if (this.hasOwnProperty('supportsAttackID') && this['supportsAttackID']) newID += this.attackIDValidator.format.split('#')[0]
+                                if (this.hasOwnProperty('supportsAttackID') && this['supportsAttackID'] && this.attackType != "matrix") newID += this.attackIDValidator.format.split('#')[0]
                                 if (this.attackType != "matrix") newID += `${count}`
                                 if (this.hasOwnProperty('is_subtechnique') && this['is_subtechnique']) newID += '.00'
                                 return newID
