@@ -2,6 +2,6 @@
     <mat-form-field class="attackid" appearance="outline">
         <mat-label>ID</mat-label>
         <input matInput [(ngModel)]="config.object['attackID']">
-        <mat-hint *ngIf="['group', 'mitigation', 'software', 'tactic', 'technique', 'data-source', 'matrix'].includes(config.object.attackType)">ID is generated based on your organization's namespace settings</mat-hint>
+        <mat-hint *ngIf="['group', 'mitigation', 'software', 'tactic', 'technique', 'data-source', 'matrix'].includes(config.object['attackType'])">ID is generated based on your organization's namespace settings</mat-hint>
     </mat-form-field>
 </div>
