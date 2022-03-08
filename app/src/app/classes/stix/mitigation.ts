@@ -14,8 +14,8 @@ export class Mitigation extends StixObject {
         format: "M####"
     }}
 
-    constructor(sdo?: any) {
-        super(sdo, "course-of-action");
+    constructor(sdo?: any, restAPIService?: RestApiConnectorService, supportsNameSpace?: boolean) {
+        super(sdo, "course-of-action", restAPIService, supportsNameSpace);
         if (sdo) {
             this.deserialize(sdo);
         }
@@ -48,7 +48,7 @@ export class Mitigation extends StixObject {
                 if (typeof(sdo.name) === "string") this.name = sdo.name;
                 else logger.error("TypeError: name field is not a string:", sdo.name, "(",typeof(sdo.name),")")
             } else this.name = "";
-            
+
             if ("x_mitre_domains" in sdo) {
                 if (this.isStringArray(sdo.x_mitre_domains)) this.domains = sdo.x_mitre_domains;
                 else logger.error("TypeError: domains field is not a string array.");

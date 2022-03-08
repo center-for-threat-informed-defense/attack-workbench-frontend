@@ -3,8 +3,8 @@ import { VersionNumber } from '../version-number';
 import { ExternalReferences } from '../external-references';
 import { v4 as uuid } from 'uuid';
 import { Serializable, ValidationData } from '../serializable';
-import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/rest-api-connector.service';
-import { Observable, of } from 'rxjs';
+import { Namespace, RestApiConnectorService } from 'src/app/services/connectors/rest-api/rest-api-connector.service';
+import { Observable, of, Subscription } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
 import { logger } from "../../util/logger";
 
@@ -87,11 +87,51 @@ export abstract class StixObject extends Serializable {
     public deprecated: boolean = false; //is object deprecated?
     public revoked: boolean = false;    //is object revoked?
 
+    public getOrgNamespace(restAPIConnector): Observable<any> {
+        let newID = "";
+        return restAPIConnector.getOrganizationNamespace().pipe(
+            map(namespaceSettings => namespaceSettings),
+            switchMap(organizationNamespace => {
+                if (organizationNamespace && organizationNamespace.hasOwnProperty('prefix')) {
+                    if (organizationNamespace.prefix) newID += (organizationNamespace.prefix + '-')
+                    if (organizationNamespace.range_start) {
+                        let count = organizationNamespace.range_start;
+                        let accessor = this.attackType == "group" ? restAPIConnector.getAllGroups() :
+                            this.attackType == "mitigation" ? restAPIConnector.getAllMitigations() :
+                                this.attackType == "software" ? restAPIConnector.getAllSoftware() :
+                                    this.attackType == "tactic" ? restAPIConnector.getAllTactics() :
+                                        this.attackType == "technique" ? restAPIConnector.getAllTechniques() :
+                                            this.attackType == "data-source" ? restAPIConnector.getAllDataSources() :
+                                                this.attackType == "matrix" ? restAPIConnector.getAllMatrices() : null;
+                        if (accessor) {
+                            return accessor.pipe(map((objects) => {
+                                objects.data.forEach((x) => {
+                                    let split = x.attackID.split('-') // i.e. PLC-G1000 -> ['PLC', 'G1000']
+                                    console.log(' ** split', split)
+                                    if (this.attackType != "matrix" && split.length > 1) {
+                                        const latest = Number(split[1].replace(/\d+/g, '')) // i.e. G1000 -> 1000
+                                        count = count > latest ? count : latest;
+                                        count += 1
+                                    }
+                                })
+                                if (this.hasOwnProperty('supportsAttackID') && this.supportsAttackID) newID += this.attackIDValidator.format.split('#')[0]
+                                if (this.attackType != "matrix") newID += `${count}`
+                                if (this.hasOwnProperty('is_subtechnique') && this.is_subtechnique) newID += '.00'
+                                return newID
+                            }))
+                        }
+                    }
+                    return of(newID);
+                } else return of(newID)
+            })
+        )
+    }
+
     /**
      * Initialize the STIX object
      * @param sdo the STIX domain object to initialize data from
      */
-    constructor(sdo?: any, type?: string) {
+    constructor(sdo?: any, type?: string, restAPIService?: RestApiConnectorService, supportsNamespace?: boolean) {
         super();
         if (sdo) {
             this.base_deserialize(sdo);
@@ -101,7 +141,15 @@ export abstract class StixObject extends Serializable {
             this.stixID = type + "--" + uuid();
             this.type = type;
             this.version = new VersionNumber("0.1");
-            this.attackID = "";
+            if (supportsNamespace && restAPIService) {
+                console.log('** ', supportsNamespace)
+                let sub = this.getOrgNamespace(restAPIService).subscribe({
+                    next: (val) => {
+                        this.attackID = val
+                    },
+                    complete: () => sub.unsubscribe()
+                });
+            } else this.attackID = '';
             this.external_references = new ExternalReferences();
             if (this.type !== 'x-mitre-collection') {
                 this.workflow = {
@@ -345,8 +393,7 @@ export abstract class StixObject extends Serializable {
                                     "field": "attackID",
                                     "message": "Object does not have ATT&CK ID"
                                 })
-                            }
-                            else {
+                            } else {
                                 if (objects.data.some(x => x.attackID == this.attackID && x.stixID != this.stixID)) {
                                     result.errors.push({
                                         "result": "error",
@@ -360,8 +407,9 @@ export abstract class StixObject extends Serializable {
                                         "message": "ATT&CK ID is unique"
                                     })
                                 }
+                                // TODO fix validation regex test if org prefix is available
                                 // (\S+--)? is an organization prefix, and should probably be improved when that is made an explicit feature
-                                let idRegex =  new RegExp("^(\\S+--)?" + this.attackIDValidator.regex + "$");
+                                let idRegex = new RegExp("^(\\S+--)?" + this.attackIDValidator.regex + "$");
                                 let attackIDValid = idRegex.test(this.attackID);
                                 if (!attackIDValid) {
                                     result.errors.push({

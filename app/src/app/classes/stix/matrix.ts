@@ -7,15 +7,15 @@ import { logger } from "../../util/logger";
 export class Matrix extends StixObject {
     public name: string = "";
     public tactic_refs: string[] = [];
-    
+
     public readonly supportsAttackID = true;
     protected get attackIDValidator() { return {
         regex: ".*",
         format: "[domain identifier]"
     }}
 
-    constructor(sdo?: any) {
-        super(sdo, "x-mitre-matrix");
+    constructor(sdo?: any, restAPIService?: RestApiConnectorService, supportsNameSpace?: boolean) {
+        super(sdo, "x-mitre-matrix", restAPIService, supportsNameSpace);
         if (sdo) {
             this.deserialize(sdo);
         }
@@ -34,7 +34,7 @@ export class Matrix extends StixObject {
 
         return rep;
     }
-    
+
     /**
      * Parse the object from the record returned from the back-end
      * @abstract
@@ -48,7 +48,7 @@ export class Matrix extends StixObject {
                 if (typeof(sdo.name) === "string") this.name = sdo.name;
                 else logger.error("TypeError: name field is not a string:", sdo.name, "(",typeof(sdo.name),")")
             } else this.name = "";
-            
+
             if ("tactic_refs" in sdo) {
                 if (this.isStringArray(sdo.tactic_refs)) this.tactic_refs = sdo.tactic_refs;
                 else logger.error("TypeError: tactic_refs field is not a string array:", sdo.tactic_refs, "(",typeof(sdo.tactic_refs),")")
@@ -73,7 +73,7 @@ export class Matrix extends StixObject {
      */
     public save(restAPIService: RestApiConnectorService): Observable<Matrix> {
         // TODO PUT if the object was just created (doesn't exist in db yet)
-        
+
         let postObservable = restAPIService.postMatrix(this);
         let subscription = postObservable.subscribe({
             next: (result) => { this.deserialize(result.serialize()); },

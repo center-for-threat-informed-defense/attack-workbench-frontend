@@ -7,7 +7,7 @@ import { logger } from "../../util/logger";
 export class Tactic extends StixObject {
     public name: string = "";
     public domains: string[] = [];
-    
+
     public readonly supportsAttackID = true;
     protected get attackIDValidator() { return {
         regex: "TA\\d{4}",
@@ -16,8 +16,8 @@ export class Tactic extends StixObject {
 
     public get shortname(): string { return this.name.replace(/ /g, "-").toLowerCase(); }
 
-    constructor(sdo?: any) {
-        super(sdo, "x-mitre-tactic");
+    constructor(sdo?: any, restAPIService?: RestApiConnectorService, supportsNameSpace?: boolean) {
+        super(sdo, "x-mitre-tactic", restAPIService, supportsNameSpace);
         if (sdo) {
             this.deserialize(sdo);
         }
@@ -30,7 +30,7 @@ export class Tactic extends StixObject {
      */
     public serialize(): any {
         let rep = super.base_serialize();
-        
+
         rep.stix.name = this.name;
         rep.stix.x_mitre_domains = this.domains;
         rep.stix.x_mitre_shortname = this.shortname;
@@ -75,7 +75,7 @@ export class Tactic extends StixObject {
      */
     public save(restAPIService: RestApiConnectorService): Observable<Tactic> {
         // TODO POST if the object was just created (doesn't exist in db yet)
-        
+
         let postObservable = restAPIService.postTactic(this);
         let subscription = postObservable.subscribe({
             next: (result) => { this.deserialize(result.serialize()); },

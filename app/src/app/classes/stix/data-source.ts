@@ -22,8 +22,8 @@ export class DataSource extends StixObject {
         }
     }
 
-    constructor(sdo?: any) {
-        super(sdo, "x-mitre-data-source");
+    constructor(sdo?: any, restAPIService?: RestApiConnectorService, supportsNameSpace?: boolean) {
+        super(sdo, "x-mitre-data-source", restAPIService, supportsNameSpace);
         if (sdo) {
             this.deserialize(sdo);
         }
@@ -43,7 +43,7 @@ export class DataSource extends StixObject {
         rep.stix.x_mitre_collection_layers = this.collection_layers;
         rep.stix.x_mitre_contributors = this.contributors;
         rep.stix.x_mitre_domains = this.domains;
-        
+
         return rep;
     }
 
@@ -76,7 +76,7 @@ export class DataSource extends StixObject {
             if (this.isStringArray(sdo.x_mitre_platforms)) this.platforms = sdo.x_mitre_platforms;
             else logger.error("TypeError: platforms field is not a string array.")
         } else this.platforms = [];
-        
+
         if ("x_mitre_collection_layers" in sdo) {
             if (this.isStringArray(sdo.x_mitre_collection_layers)) this.collection_layers = sdo.x_mitre_collection_layers;
             else logger.error("TypeError: collection layers field is not a string array.");
@@ -109,7 +109,7 @@ export class DataSource extends StixObject {
      */
     public save(restAPIService: RestApiConnectorService): Observable<DataSource> {
         // TODO POST if the object was just created (doesn't exist in db yet)
-                
+
         let postObservable = restAPIService.postDataSource(this);
         let subscription = postObservable.subscribe({
             next: (result) => { this.deserialize(result.serialize()); },

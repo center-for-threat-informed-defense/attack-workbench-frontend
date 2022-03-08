@@ -77,8 +77,8 @@ export class Technique extends StixObject {
      * Initialize Technique object
      * @param sdo the STIX domain object to initialize data from
      */
-    constructor(sdo?: any) {
-        super(sdo, "attack-pattern");
+    constructor(sdo?: any, restAPIService?: RestApiConnectorService, supportsNameSpace?: boolean) {
+        super(sdo, "attack-pattern", restAPIService, supportsNameSpace);
         if (sdo) {
             this.deserialize(sdo);
         }
