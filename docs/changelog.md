@@ -36,7 +36,7 @@
 
 ### Changes staged in develop
 
--   Added namespace feature, which will be automatically generated when creating a new StixObject of a certain type ("group", "mitigation", "software", "tactic", "technique", "data-source", or "matrix")
+-   Added namespace feature, which will be automatically generated when creating a new StixObject of a certain type ("group", "mitigation", "software", "tactic", "technique", "data-source", or "matrix"). See [frontend#113](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/113) and [frontend#114](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/114).
 
 ## 28 February 2022
 
