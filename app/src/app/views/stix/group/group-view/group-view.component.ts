@@ -23,7 +23,7 @@ export class GroupViewComponent extends StixViewPage implements OnInit {
       if (this.group.firstInitialized) {
         this.group.initializeWithDefaultMarkingDefinitions(this.restApiConnector);
       }
-      if (this.group.supportsNamespace) {
+      if (this.group.supportsNamespace && this.editing) {
         this.group.generateAttackIDWithPrefix(this.restApiConnector);
       }
     }

@@ -23,7 +23,7 @@ export class MitigationViewComponent extends StixViewPage implements OnInit {
         if (this.mitigation.firstInitialized ) {
             this.mitigation.initializeWithDefaultMarkingDefinitions(this.restApiConnector);
         }
-        if (this.mitigation.supportsNamespace) {
+        if (this.mitigation.supportsNamespace && this.editing) {
             this.mitigation.generateAttackIDWithPrefix(this.restApiConnector);
         }
     }

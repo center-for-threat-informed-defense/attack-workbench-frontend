@@ -20,7 +20,7 @@ export class TacticViewComponent extends StixViewPage implements OnInit {
         if (this.tactic.firstInitialized) {
             this.tactic.initializeWithDefaultMarkingDefinitions(this.restApiConnector);
         }
-        if (this.tactic.supportsNamespace) {
+        if (this.tactic.supportsNamespace && this.editing) {
             this.tactic.generateAttackIDWithPrefix(this.restApiConnector);
         }
     }
