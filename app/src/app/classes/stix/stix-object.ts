@@ -88,45 +88,6 @@ export abstract class StixObject extends Serializable {
     public deprecated: boolean = false; //is object deprecated?
     public revoked: boolean = false;    //is object revoked?
 
-    public getOrgNamespace(restAPIConnector): Observable<any> {
-        let newID = "";
-        return restAPIConnector.getOrganizationNamespace().pipe(
-            map(namespaceSettings => namespaceSettings),
-            switchMap(organizationNamespace => {
-                if (organizationNamespace && organizationNamespace.hasOwnProperty('prefix')) {
-                    if (organizationNamespace['prefix']) newID += (organizationNamespace['prefix'] + '-')
-                    if (organizationNamespace['range_start']) {
-                        let count = organizationNamespace['range_start'];
-                        let accessor = this.attackType == "group" ? restAPIConnector.getAllGroups() :
-                            this.attackType == "mitigation" ? restAPIConnector.getAllMitigations() :
-                            this.attackType == "software" ? restAPIConnector.getAllSoftware() :
-                            this.attackType == "tactic" ? restAPIConnector.getAllTactics() :
-                            this.attackType == "technique" ? restAPIConnector.getAllTechniques() :
-                            this.attackType == "data-source" ? restAPIConnector.getAllDataSources() :
-                            this.attackType == "matrix" ? restAPIConnector.getAllMatrices() : null;
-                        if (accessor) {
-                            return accessor.pipe(map((objects) => {
-                                objects['data'].forEach((x) => {
-                                    let split = x.attackID.split('-') // i.e. PLC-G1000 -> ['PLC', 'G1000']
-                                    if (this.attackType != "matrix" && split.length > 1) {
-                                        const latest = Number(split[1].replace(/\d+/g, '')) // i.e. G1000 -> 1000
-                                        count = count > latest ? count : latest;
-                                        count += 1
-                                    }
-                                })
-                                if (this.hasOwnProperty('supportsAttackID') && this['supportsAttackID'] && this.attackType != "matrix") newID += this.attackIDValidator.format.split('#')[0]
-                                if (this.attackType != "matrix") newID += `${count}`
-                                if (this.hasOwnProperty('is_subtechnique') && this['is_subtechnique']) newID += '.00'
-                                return newID
-                            }))
-                        }
-                    }
-                    return of(newID);
-                } else return of(newID)
-            })
-        )
-    }
-
     /**
      * Initialize the STIX object
      * @param sdo the STIX domain object to initialize data from
@@ -495,11 +456,50 @@ export abstract class StixObject extends Serializable {
 
     public generateAttackIDWithPrefix(restAPIService?: RestApiConnectorService) {
       this.attackID = '(generating ID)';
-      let sub = this.getOrgNamespace(restAPIService).subscribe({
+      let sub = this.getOrganizationNamespace(restAPIService).subscribe({
         next: (val) => {
           this.attackID = val
         },
         complete: () => sub.unsubscribe()
       });
+    }
+
+    public getOrganizationNamespace(restAPIConnector): Observable<any> {
+      let newID = "";
+      return restAPIConnector.getOrganizationNamespace().pipe(
+        map(namespaceSettings => namespaceSettings),
+        switchMap(organizationNamespace => {
+          if (organizationNamespace && organizationNamespace.hasOwnProperty('prefix')) {
+            if (organizationNamespace['prefix']) {
+              newID += (organizationNamespace['prefix'] + '-');
+              let count = organizationNamespace['range_start'];
+              let accessor = this.attackType == "group" ? restAPIConnector.getAllGroups() :
+                this.attackType == "mitigation" ? restAPIConnector.getAllMitigations() :
+                this.attackType == "software" ? restAPIConnector.getAllSoftware() :
+                this.attackType == "tactic" ? restAPIConnector.getAllTactics() :
+                this.attackType == "technique" ? restAPIConnector.getAllTechniques() :
+                this.attackType == "data-source" ? restAPIConnector.getAllDataSources() :
+                this.attackType == "matrix" ? restAPIConnector.getAllMatrices() : null;
+              if (accessor) {
+                return accessor.pipe(map((objects) => {
+                  objects['data'].forEach((x) => {
+                    let split = x.attackID.split('-') // i.e. PLC-G1000 -> ['PLC', 'G1000']
+                    if (this.attackType != "matrix" && split.length > 1) {
+                      const latest = Number(split[1].replace(/\d+/g, '')) // i.e. G1000 -> 1000
+                      count = count > latest ? count : latest;
+                      count += 1
+                    }
+                  })
+                  if (this.hasOwnProperty('supportsAttackID') && this['supportsAttackID'] && this.attackType != "matrix") newID += this.attackIDValidator.format.split('#')[0]
+                  if (this.attackType != "matrix") newID += (count > 0 ? count : 1).toString().padStart(4, '0'); // padStart() is unsupported in IE
+                  if (this.hasOwnProperty('is_subtechnique') && this['is_subtechnique']) newID += '.00'
+                  return newID
+                }))
+              }
+            }
+            return of(newID);
+          } else return of(newID)
+        })
+      )
     }
 }
