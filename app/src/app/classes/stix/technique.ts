@@ -25,6 +25,7 @@ export class Technique extends StixObject {
     public is_subtechnique: boolean = false;
     
     public readonly supportsAttackID = true;
+    public readonly supportsNamespace = true;
     protected get attackIDValidator() { return {
         regex: this.is_subtechnique? "T\\d{4}\\.\\d{3}" : "T\\d{4}",
         format: this.is_subtechnique? "T####.###" : "T####"
@@ -77,8 +78,8 @@ export class Technique extends StixObject {
      * Initialize Technique object
      * @param sdo the STIX domain object to initialize data from
      */
-    constructor(sdo?: any, restAPIService?: RestApiConnectorService, supportsNameSpace?: boolean) {
-        super(sdo, "attack-pattern", restAPIService, supportsNameSpace);
+    constructor(sdo?: any) {
+        super(sdo, "attack-pattern");
         if (sdo) {
             this.deserialize(sdo);
         }

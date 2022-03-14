@@ -9,6 +9,7 @@ export class Tactic extends StixObject {
     public domains: string[] = [];
 
     public readonly supportsAttackID = true;
+    public readonly supportsNamespace = true;
     protected get attackIDValidator() { return {
         regex: "TA\\d{4}",
         format: "TA####"
@@ -16,8 +17,8 @@ export class Tactic extends StixObject {
 
     public get shortname(): string { return this.name.replace(/ /g, "-").toLowerCase(); }
 
-    constructor(sdo?: any, restAPIService?: RestApiConnectorService, supportsNameSpace?: boolean) {
-        super(sdo, "x-mitre-tactic", restAPIService, supportsNameSpace);
+    constructor(sdo?: any) {
+        super(sdo, "x-mitre-tactic");
         if (sdo) {
             this.deserialize(sdo);
         }

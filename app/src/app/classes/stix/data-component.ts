@@ -15,6 +15,7 @@ export class DataComponent extends StixObject {
     public data_source: DataSource = null;
 
     public readonly supportsAttackID = false; // data components do not support ATT&CK IDs
+    public readonly supportsNamespace = false;
     protected get attackIDValidator() { return null; } // data components have no ATT&CK ID
 
     constructor(sdo?: any) {

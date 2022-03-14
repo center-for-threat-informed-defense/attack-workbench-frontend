@@ -15,13 +15,14 @@ export class Software extends StixObject {
     public domains: string[] = [];
 
     public readonly supportsAttackID = true;
+    public readonly supportsNamespace = true;
     protected get attackIDValidator() { return {
         regex: "S\\d{4}",
         format: "S####"
     }}
 
-    constructor(type: type_software, sdo?: any, restAPIService?: RestApiConnectorService, supportsNameSpace?: boolean) {
-        super(sdo, type, restAPIService, supportsNameSpace);
+    constructor(type: type_software, sdo?: any) {
+        super(sdo, type);
         if (sdo) {
             this.deserialize(sdo);
         }

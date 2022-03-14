@@ -28,6 +28,9 @@ export class DataSourceViewComponent extends StixViewPage implements OnInit {
         if ( data_source.firstInitialized ) {
             data_source.initializeWithDefaultMarkingDefinitions(this.restAPIConnectorService);
         }
+        if (data_source.supportsNamespace) {
+            data_source.generateAttackIDWithPrefix(this.restAPIConnectorService);
+        }
     }
 
     public getDataComponents(): void {

@@ -11,13 +11,14 @@ export class Group extends StixObject {
     public contributors: string[] = [];
 
     public readonly supportsAttackID = true;
+    public readonly supportsNamespace = true;
     protected get attackIDValidator() { return {
         regex: "G\\d{4}",
         format: "G####"
     }}
 
-    constructor(sdo?: any, restAPIService?: RestApiConnectorService, supportsNameSpace?: boolean) {
-        super(sdo, "intrusion-set", restAPIService, supportsNameSpace);
+    constructor(sdo?: any) {
+        super(sdo, "intrusion-set");
         if (sdo) {
             this.deserialize(sdo);
         }

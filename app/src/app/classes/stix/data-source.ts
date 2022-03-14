@@ -15,6 +15,7 @@ export class DataSource extends StixObject {
     public data_components: DataComponent[] = [];
 
     public readonly supportsAttackID = true;
+    public readonly supportsNamespace = true;
     protected get attackIDValidator() {
         return {
             regex: "DS\\d{4}",
@@ -22,8 +23,8 @@ export class DataSource extends StixObject {
         }
     }
 
-    constructor(sdo?: any, restAPIService?: RestApiConnectorService, supportsNameSpace?: boolean) {
-        super(sdo, "x-mitre-data-source", restAPIService, supportsNameSpace);
+    constructor(sdo?: any) {
+        super(sdo, "x-mitre-data-source");
         if (sdo) {
             this.deserialize(sdo);
         }

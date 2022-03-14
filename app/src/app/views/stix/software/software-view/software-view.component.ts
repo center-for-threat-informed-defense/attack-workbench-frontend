@@ -20,6 +20,9 @@ export class SoftwareViewComponent extends StixViewPage implements OnInit {
         if (this.software.firstInitialized ) {
             this.software.initializeWithDefaultMarkingDefinitions(this.restApiConnector);
         }
+        if (this.software.supportsNamespace) {
+            this.software.generateAttackIDWithPrefix(this.restApiConnector);
+        }
     }
 
 }

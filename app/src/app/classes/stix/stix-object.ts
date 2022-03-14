@@ -41,6 +41,7 @@ export abstract class StixObject extends Serializable {
     public object_marking_refs: string[] = []; //list of embedded relationships to marking_defs
 
     public abstract readonly supportsAttackID: boolean; // boolean to determine if object supports ATT&CK IDs
+    public abstract readonly supportsNamespace: boolean; // boolean to determine if object supports namespacing of ATT&CK ID
     protected abstract get attackIDValidator(): {
         regex: string, // regex to validate the ID
         format: string // format to display to user
@@ -130,7 +131,7 @@ export abstract class StixObject extends Serializable {
      * Initialize the STIX object
      * @param sdo the STIX domain object to initialize data from
      */
-    constructor(sdo?: any, type?: string, restAPIService?: RestApiConnectorService, supportsNamespace?: boolean) {
+    constructor(sdo?: any, type?: string) {
         super();
         if (sdo) {
             this.base_deserialize(sdo);
@@ -140,15 +141,7 @@ export abstract class StixObject extends Serializable {
             this.stixID = type + "--" + uuid();
             this.type = type;
             this.version = new VersionNumber("0.1");
-            this.attackID = '(generating ID)';
-            if (supportsNamespace && restAPIService) {
-                let sub = this.getOrgNamespace(restAPIService).subscribe({
-                    next: (val) => {
-                        this.attackID = val
-                    },
-                    complete: () => sub.unsubscribe()
-                });
-            } else this.attackID = '';
+            this.attackID = '';
             this.external_references = new ExternalReferences();
             if (this.type !== 'x-mitre-collection') {
                 this.workflow = {
@@ -498,5 +491,15 @@ export abstract class StixObject extends Serializable {
             },
             complete: () => { sub.unsubscribe(); }
         });
+    }
+
+    public generateAttackIDWithPrefix(restAPIService?: RestApiConnectorService) {
+      this.attackID = '(generating ID)';
+      let sub = this.getOrgNamespace(restAPIService).subscribe({
+        next: (val) => {
+          this.attackID = val
+        },
+        complete: () => sub.unsubscribe()
+      });
     }
 }

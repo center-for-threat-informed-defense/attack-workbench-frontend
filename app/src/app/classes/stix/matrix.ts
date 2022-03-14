@@ -9,13 +9,14 @@ export class Matrix extends StixObject {
     public tactic_refs: string[] = [];
 
     public readonly supportsAttackID = true;
+    public readonly supportsNamespace = true;
     protected get attackIDValidator() { return {
         regex: ".*",
         format: "[domain identifier]"
     }}
 
-    constructor(sdo?: any, restAPIService?: RestApiConnectorService, supportsNameSpace?: boolean) {
-        super(sdo, "x-mitre-matrix", restAPIService, supportsNameSpace);
+    constructor(sdo?: any) {
+        super(sdo, "x-mitre-matrix");
         if (sdo) {
             this.deserialize(sdo);
         }

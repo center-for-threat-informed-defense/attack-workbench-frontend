@@ -20,8 +20,11 @@ export class GroupViewComponent extends StixViewPage implements OnInit {
     }
 
     ngOnInit() {
-        if (this.group.firstInitialized) {
-            this.group.initializeWithDefaultMarkingDefinitions(this.restApiConnector);
-        }
+      if (this.group.firstInitialized) {
+        this.group.initializeWithDefaultMarkingDefinitions(this.restApiConnector);
+      }
+      if (this.group.supportsNamespace) {
+        this.group.generateAttackIDWithPrefix(this.restApiConnector);
+      }
     }
 }

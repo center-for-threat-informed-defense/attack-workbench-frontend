@@ -9,13 +9,14 @@ export class Mitigation extends StixObject {
     public domains: string[] = [];
 
     public readonly supportsAttackID = true;
+    public readonly supportsNamespace = true;
     protected get attackIDValidator() { return {
         regex: "M\\d{4}",
         format: "M####"
     }}
 
-    constructor(sdo?: any, restAPIService?: RestApiConnectorService, supportsNameSpace?: boolean) {
-        super(sdo, "course-of-action", restAPIService, supportsNameSpace);
+    constructor(sdo?: any) {
+        super(sdo, "course-of-action");
         if (sdo) {
             this.deserialize(sdo);
         }
