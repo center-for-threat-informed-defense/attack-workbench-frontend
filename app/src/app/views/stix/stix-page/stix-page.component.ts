@@ -162,7 +162,7 @@ export class StixPageComponent implements OnInit, OnDestroy {
             })
             let subscription = prompt.afterClosed().subscribe({
                 next: (result) => {
-                    this.objects = [new Software(result, undefined, this.restAPIConnectorService, true)];
+                    this.objects = [new Software(result)];
                     this.initialVersion = new VersionNumber(this.objects[0].version.toString());
                     this.updateBreadcrumbs(this.objects, this.objectType);
                 },
@@ -172,13 +172,13 @@ export class StixPageComponent implements OnInit, OnDestroy {
             // create a new object to edit
             this.objects = [];
             this.objects.push(
-                this.objectType  == 'matrix' ? new Matrix(undefined, this.restAPIConnectorService, true) :
-                this.objectType  == 'technique' ? new Technique(undefined, this.restAPIConnectorService, true) :
-                this.objectType  == 'tactic' ? new Tactic(undefined, this.restAPIConnectorService, true) :
-                this.objectType  == 'mitigation' ? new Mitigation(undefined, this.restAPIConnectorService, true) :
-                this.objectType  == 'group' ? new Group(undefined, this.restAPIConnectorService, true) :
+                this.objectType  == 'matrix' ? new Matrix() :
+                this.objectType  == 'technique' ? new Technique() :
+                this.objectType  == 'tactic' ? new Tactic() :
+                this.objectType  == 'mitigation' ? new Mitigation() :
+                this.objectType  == 'group' ? new Group() :
                 this.objectType  == 'collection' ? new Collection() :
-                this.objectType  == 'data-source' ? new DataSource(undefined, this.restAPIConnectorService, true) :
+                this.objectType  == 'data-source' ? new DataSource() :
                 this.objectType  == 'marking-definition' ? new MarkingDefinition() :
                 null // if not any of the above types
             );
