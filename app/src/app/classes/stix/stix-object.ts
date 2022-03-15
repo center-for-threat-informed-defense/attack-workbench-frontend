@@ -471,32 +471,30 @@ export abstract class StixObject extends Serializable {
         map(namespaceSettings => namespaceSettings),
         switchMap(organizationNamespace => {
           if (organizationNamespace && organizationNamespace.hasOwnProperty('prefix')) {
-            if (organizationNamespace['prefix']) {
-              newID += (organizationNamespace['prefix'] + '-');
+            if (organizationNamespace['prefix']) newID += (organizationNamespace['prefix'] + '-');
               let count = organizationNamespace['range_start'];
-              let accessor = this.attackType == "group" ? restAPIConnector.getAllGroups() :
-                this.attackType == "mitigation" ? restAPIConnector.getAllMitigations() :
-                this.attackType == "software" ? restAPIConnector.getAllSoftware() :
-                this.attackType == "tactic" ? restAPIConnector.getAllTactics() :
-                this.attackType == "technique" ? restAPIConnector.getAllTechniques() :
-                this.attackType == "data-source" ? restAPIConnector.getAllDataSources() :
-                this.attackType == "matrix" ? restAPIConnector.getAllMatrices() : null;
-              if (accessor) {
-                return accessor.pipe(map((objects) => {
-                  objects['data'].forEach((x) => {
-                    let split = x.attackID.split('-') // i.e. PLC-G1000 -> ['PLC', 'G1000']
-                    if (this.attackType != "matrix" && split.length > 1) {
-                      const latest = Number(split[1].replace(/\D+/g, '')) // i.e. G1000 -> 1000
-                      count = count > latest ? count : latest;
-                      count += 1
-                    }
-                  })
-                  if (this.hasOwnProperty('supportsAttackID') && this['supportsAttackID'] && this.attackIDValidator.format.includes('#')) newID += this.attackIDValidator.format.split('#')[0]
-                  if (this.attackType != "matrix") newID += (count > 0 ? count : 1).toString().padStart(4, '0'); // padStart() is unsupported in IE
-                  if (this.hasOwnProperty('is_subtechnique') && this['is_subtechnique']) newID += '.00'
-                  return newID
-                }))
-              }
+            let accessor = this.attackType == "group" ? restAPIConnector.getAllGroups() :
+              this.attackType == "mitigation" ? restAPIConnector.getAllMitigations() :
+              this.attackType == "software" ? restAPIConnector.getAllSoftware() :
+              this.attackType == "tactic" ? restAPIConnector.getAllTactics() :
+              this.attackType == "technique" ? restAPIConnector.getAllTechniques() :
+              this.attackType == "data-source" ? restAPIConnector.getAllDataSources() :
+              this.attackType == "matrix" ? restAPIConnector.getAllMatrices() : null;
+            if (accessor) {
+              return accessor.pipe(map((objects) => {
+                objects['data'].forEach((x) => {
+                  let split = x.attackID.split('-') // i.e. PLC-G1000 -> ['PLC', 'G1000']
+                  if (this.attackType != "matrix" && split.length > 1) {
+                    const latest = Number(split[1].replace(/\D+/g, '')) // i.e. G1000 -> 1000
+                    count = count > latest ? count : latest;
+                    count += 1
+                  }
+                })
+                if (this.hasOwnProperty('supportsAttackID') && this['supportsAttackID'] && this.attackIDValidator.format.includes('#')) newID += this.attackIDValidator.format.split('#')[0]
+                if (this.attackType != "matrix") newID += (count > 0 ? count : 1).toString().padStart(4, '0'); // padStart() is unsupported in IE
+                if (this.hasOwnProperty('is_subtechnique') && this['is_subtechnique']) newID += '.00'
+                return newID
+              }))
             }
             return of(newID);
           } else return of(newID)
