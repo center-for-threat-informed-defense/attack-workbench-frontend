@@ -31,7 +31,7 @@ export abstract class StixObject extends Serializable {
     public attackType: string; // ATT&CK type
     public attackID: string; // ATT&CK ID
     public description: string;
- 
+
     public created_by_ref: string; //embedded relationship
     public created_by?: any;
     public modified_by_ref: string; //embedded relationship
@@ -74,7 +74,7 @@ export abstract class StixObject extends Serializable {
                 "query": {"editing": true}
             }
         ]
-    } 
+    }
 
     public created: Date;  // object created date
     public modified: Date; // object modified date
@@ -134,7 +134,7 @@ export abstract class StixObject extends Serializable {
             // Add url
             // TODO: replace url with configuration
             new_ext_ref["url"] = "https://attack.mitre.org/" + this.typeUrlMap[this.attackType] + "/"
-            
+
             let ID = this.attackID;
 
             // Split attackID if it contains a '.'
@@ -165,7 +165,7 @@ export abstract class StixObject extends Serializable {
         if (this.type != "marking-definition") stix["modified"] = new Date().toISOString();
         if (this.created_by_ref) stix.created_by_ref = this.created_by_ref;
         // do not set modified by ref since we don't know who we are, but the REST API knows
-        
+
         return {
             workspace:  {
                 workflow: this.workflow
@@ -179,7 +179,7 @@ export abstract class StixObject extends Serializable {
      * @abstract
      * @param {*} raw the raw object to parse
      */
-    public base_deserialize(raw: any) {        
+    public base_deserialize(raw: any) {
         if ("stix" in raw) {
             let sdo = raw.stix;
 
@@ -217,7 +217,7 @@ export abstract class StixObject extends Serializable {
             if ("modified" in sdo) {
                 if (typeof(sdo.modified) === "string") this.modified = new Date(sdo.modified);
                 else logger.error("TypeError: modified field is not a string:", sdo.modified, "(",typeof(sdo.modified),")")
-            } 
+            }
             else if ("type" in sdo && sdo.type != "marking-definition") this.modified = new Date();
 
             if ("x_mitre_modified_by_ref" in sdo) {
@@ -229,7 +229,7 @@ export abstract class StixObject extends Serializable {
                 if (typeof(sdo.x_mitre_version) === "string") this.version = new VersionNumber(sdo.x_mitre_version);
                 else logger.error("TypeError: x_mitre_version field is not a string:", sdo.x_mitre_version, "(",typeof(sdo.x_mitre_version),")")
             } else this.version = new VersionNumber("0.1");
-    
+
             if ("external_references" in sdo) {
                 if (typeof(sdo.external_references) === "object") {
                     this.external_references = new ExternalReferences(sdo.external_references);
@@ -240,19 +240,19 @@ export abstract class StixObject extends Serializable {
                     else this.attackID = "";
                 }
                 else logger.error("TypeError: external_references field is not an object:", sdo.external_references, "(",typeof(sdo.external_references),")")
-            } 
+            }
             else {
                 this.external_references = new ExternalReferences();
                 this.attackID = "";
             }
-        
+
             if ("x_mitre_deprecated" in sdo) {
                 if (typeof(sdo.x_mitre_deprecated) === "boolean") this.deprecated = sdo.x_mitre_deprecated;
-                else logger.error("TypeError: x_mitre_deprecated field is not a boolean:", sdo.x_mitre_deprecated, "(",typeof(sdo.x_mitre_deprecated),")") 
+                else logger.error("TypeError: x_mitre_deprecated field is not a boolean:", sdo.x_mitre_deprecated, "(",typeof(sdo.x_mitre_deprecated),")")
             }
             if ("revoked" in sdo) {
                 if (typeof(sdo.revoked) === "boolean") this.revoked = sdo.revoked;
-                else logger.error("TypeError: revoked field is not a boolean:", sdo.revoked, "(",typeof(sdo.revoked),")") 
+                else logger.error("TypeError: revoked field is not a boolean:", sdo.revoked, "(",typeof(sdo.revoked),")")
             }
         }
         else logger.error("ObjectError: 'stix' field does not exist in object");
@@ -303,7 +303,7 @@ export abstract class StixObject extends Serializable {
             // check if the name is unique if it has a name
             switchMap(result => {
                 //do not check name or attackID for relationships or marking definitions
-                if (this.attackType == "relationship" || this.attackType == "marking-definition") return of(result); 
+                if (this.attackType == "relationship" || this.attackType == "marking-definition") return of(result);
                 // check if name & ATT&CK ID is unique, record result in validation, and return validation
                 let accessor = this.attackType == "collection"? restAPIService.getAllCollections() :
                                 this.attackType == "group"? restAPIService.getAllGroups() :
@@ -313,7 +313,7 @@ export abstract class StixObject extends Serializable {
                                 this.attackType == "technique"? restAPIService.getAllTechniques() :
                                 this.attackType == "data-source"? restAPIService.getAllDataSources() :
                                 this.attackType == "data-component"? restAPIService.getAllDataComponents() :
-                                restAPIService.getAllTactics(); 
+                                restAPIService.getAllTactics();
                 return accessor.pipe(
                     map(objects => {
                         // check name
@@ -370,7 +370,7 @@ export abstract class StixObject extends Serializable {
                                     })
                                 }
                             }
-                        } 
+                        }
                         return result;
                     })
                 )
@@ -455,8 +455,9 @@ export abstract class StixObject extends Serializable {
     }
 
     public generateAttackIDWithPrefix(restAPIService?: RestApiConnectorService) {
+      if (!this.firstInitialized) return;
       this.attackID = '(generating ID)';
-      let sub = this.getOrganizationNamespace(restAPIService).subscribe({
+      let sub = this.getNamespaceID(restAPIService).subscribe({
         next: (val) => {
           this.attackID = val
         },
@@ -464,7 +465,7 @@ export abstract class StixObject extends Serializable {
       });
     }
 
-    public getOrganizationNamespace(restAPIConnector): Observable<any> {
+    public getNamespaceID(restAPIConnector): Observable<any> {
       let newID = "";
       return restAPIConnector.getOrganizationNamespace().pipe(
         map(namespaceSettings => namespaceSettings),
@@ -485,12 +486,12 @@ export abstract class StixObject extends Serializable {
                   objects['data'].forEach((x) => {
                     let split = x.attackID.split('-') // i.e. PLC-G1000 -> ['PLC', 'G1000']
                     if (this.attackType != "matrix" && split.length > 1) {
-                      const latest = Number(split[1].replace(/\d+/g, '')) // i.e. G1000 -> 1000
+                      const latest = Number(split[1].replace(/\D+/g, '')) // i.e. G1000 -> 1000
                       count = count > latest ? count : latest;
                       count += 1
                     }
                   })
-                  if (this.hasOwnProperty('supportsAttackID') && this['supportsAttackID'] && this.attackType != "matrix") newID += this.attackIDValidator.format.split('#')[0]
+                  if (this.hasOwnProperty('supportsAttackID') && this['supportsAttackID'] && this.attackIDValidator.format.includes('#')) newID += this.attackIDValidator.format.split('#')[0]
                   if (this.attackType != "matrix") newID += (count > 0 ? count : 1).toString().padStart(4, '0'); // padStart() is unsupported in IE
                   if (this.hasOwnProperty('is_subtechnique') && this['is_subtechnique']) newID += '.00'
                   return newID

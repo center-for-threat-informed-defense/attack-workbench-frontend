@@ -5,10 +5,14 @@
     .attackid {
         .mat-form-field-label {
           text-align: center;
+          margin-left: -3ex;
         }
         .mat-form-field-prefix {
           text-transform: none;
           top: 0 !important;
+        }
+        .mat-form-field-infix {
+          padding-top: 1.4ex;
         }
     }
 }

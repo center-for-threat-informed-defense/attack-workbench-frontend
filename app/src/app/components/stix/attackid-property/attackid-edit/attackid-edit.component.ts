@@ -16,16 +16,21 @@ export class AttackIDEditComponent implements OnInit {
   ngOnInit(): void {}
 
   getPrefix(attackID) {
-    if (attackID.split('-').length > 1) {
-      this.prefix = attackID.split('-')[0]
+    const objectRegex = this.config.object['attackIDValidator']?.format;
+    const typePrefix = objectRegex ? (objectRegex.includes('#') ? objectRegex.split('#')[0] : '') : ''
+    const prefixRegex = new RegExp("^([A-Z]+-)?" + typePrefix);
+    const prefixMatch = attackID.match(prefixRegex);
+
+    if (prefixMatch?.length > 0) {
+      this.prefix = prefixMatch[0];
       return this.prefix;
     }
     return ''
   }
 
   getEditable(attackID) {
-    if (attackID.split('-').length > 1)
-      return attackID.split('-')[1]
+    if (this.prefix && attackID.split(this.prefix).length > 1)
+      return attackID.split(this.prefix)[1]
     return attackID
   }
 }
