@@ -145,7 +145,8 @@
             }"></app-list-property>
         </div>
         <ng-container *ngIf="showTacticField('privilege-escalation', 'permissions_required') || showTacticField('privilege-escalation', 'effective_permissions')
-                            || showTacticField('impact', 'impact_type') || showTacticField('defense-evasion', 'defense_bypassed') || technique.tactics.includes('execution')">
+                            || showTacticField('impact', 'impact_type') || showTacticField('defense-evasion', 'defense_bypassed') || technique.tactics.includes('execution')
+                            || technique.tactics.includes('exfiltration')">
             <!-- Display only if tactic specific fields exist -->
             <div class="col arrow">
                 <mat-icon>arrow_forward</mat-icon>
