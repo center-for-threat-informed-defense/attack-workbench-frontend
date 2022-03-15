@@ -3,6 +3,6 @@
         <mat-label>ID</mat-label>
         <span *ngIf="getPrefix(config.object['attackID'])" matPrefix>{{prefix}}</span>
         <input matInput [ngModel]="getEditable(config.object['attackID'])" (keyup)="config.object['attackID'] = (prefix + $event.target.value)">
-        <mat-hint *ngIf="prefix && ['group', 'mitigation', 'software', 'tactic', 'technique', 'data-source', 'matrix'].includes(config.object['attackType'])">ID is generated based on your organization's namespace settings</mat-hint>
+        <mat-hint *ngIf="config.object['firstInitialized'] && prefix && ['group', 'mitigation', 'software', 'tactic', 'technique', 'data-source', 'matrix'].includes(config.object['attackType'])">ID is generated based on your organization's namespace settings</mat-hint>
     </mat-form-field>
 </div>
