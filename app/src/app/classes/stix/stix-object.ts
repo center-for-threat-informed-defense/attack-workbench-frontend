@@ -3,8 +3,8 @@ import { VersionNumber } from '../version-number';
 import { ExternalReferences } from '../external-references';
 import { v4 as uuid } from 'uuid';
 import { Serializable, ValidationData } from '../serializable';
-import { Namespace, RestApiConnectorService } from 'src/app/services/connectors/rest-api/rest-api-connector.service';
-import { Observable, of, Subscription } from 'rxjs';
+import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/rest-api-connector.service';
+import { Observable, of } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
 import { logger } from "../../util/logger";
 
@@ -473,6 +473,7 @@ export abstract class StixObject extends Serializable {
           if (organizationNamespace && organizationNamespace.hasOwnProperty('prefix')) {
             if (organizationNamespace['prefix']) newID += (organizationNamespace['prefix'] + '-');
               let count = organizationNamespace['range_start'];
+              count = (count > 0 ? count : 1).toString().padStart(4, '0'); // padStart() is unsupported in IE
             let accessor = this.attackType == "group" ? restAPIConnector.getAllGroups() :
               this.attackType == "mitigation" ? restAPIConnector.getAllMitigations() :
               this.attackType == "software" ? restAPIConnector.getAllSoftware() :
@@ -481,15 +482,24 @@ export abstract class StixObject extends Serializable {
               this.attackType == "data-source" ? restAPIConnector.getAllDataSources() :
               this.attackType == "matrix" ? restAPIConnector.getAllMatrices() : null;
             if (accessor) {
+              // Find all other objects that have this prefix and range, and set ID to the most recent and unique ID possible
               return accessor.pipe(map((objects) => {
-                objects['data'].forEach((x) => {
-                  let split = x.attackID.split('-') // i.e. PLC-G1000 -> ['PLC', 'G1000']
-                  if (this.attackType != "matrix" && split.length > 1) {
-                    const latest = Number(split[1].replace(/\D+/g, '')) // i.e. G1000 -> 1000
-                    count = count > latest ? count : latest;
-                    count += 1
-                  }
-                })
+                let typePrefix = this.attackIDValidator.format.includes('#') ? this.attackIDValidator.format.split('#')[0] : '';
+                let substr = organizationNamespace['prefix'] + '-' + typePrefix + count.substr(0,3);
+                let filtered = objects['data'].filter((obj) => obj.attackID.startsWith(substr));
+                  let reg = new RegExp("\\d{4}");
+                filtered = filtered.sort((a, b,) => {
+                    a = a.attackID.match(reg);
+                    b = b.attackID.match(reg);
+                    return a[0] - b[0]
+                });
+
+                let latest = filtered.pop().attackID.match(reg)[0];
+                latest = Number(latest)
+                count = count > latest ? count : latest;
+                count += 1
+
+                // Add prefix, group type prefix, and trailing 0s if subtechnique
                 if (this.hasOwnProperty('supportsAttackID') && this['supportsAttackID'] && this.attackIDValidator.format.includes('#')) newID += this.attackIDValidator.format.split('#')[0]
                 if (this.attackType != "matrix") newID += (count > 0 ? count : 1).toString().padStart(4, '0'); // padStart() is unsupported in IE
                 if (this.hasOwnProperty('is_subtechnique') && this['is_subtechnique']) newID += '.00'

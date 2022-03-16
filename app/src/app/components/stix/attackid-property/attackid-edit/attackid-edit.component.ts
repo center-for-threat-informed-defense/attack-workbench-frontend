@@ -7,17 +7,16 @@ import { AttackIDPropertyConfig } from '../attackid-property.component';
   styleUrls: ['./attackid-edit.component.scss'],
   encapsulation: ViewEncapsulation.None
 })
-export class AttackIDEditComponent implements OnInit {
+export class AttackIDEditComponent {
   @Input() public config: AttackIDPropertyConfig;
   public prefix: string = '';
 
   constructor() {}
 
-  ngOnInit(): void {}
-
   getPrefix(attackID) {
     const objectRegex = this.config.object['attackIDValidator']?.format;
-    const typePrefix = objectRegex ? (objectRegex.includes('#') ? objectRegex.split('#')[0] : '') : ''
+    let typePrefix = '';
+    if (objectRegex.includes('#')) typePrefix = objectRegex.split('#')[0];
     const prefixRegex = new RegExp("^([A-Z]+-)?" + typePrefix);
     const prefixMatch = attackID.match(prefixRegex);
 
