@@ -18,7 +18,7 @@
                 object: technique
             }"></app-attackid-property>
         </div>
-        <div class="col subtechnique-box">
+        <div class="col" [ngClass]="{'no-padding': editing}">
             <div class="labelled-box grow-to-row">
                 <!-- TYPE -->
                 <div class="content no-label">
