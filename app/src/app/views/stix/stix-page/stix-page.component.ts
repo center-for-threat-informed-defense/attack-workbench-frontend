@@ -32,6 +32,7 @@ export class StixPageComponent implements OnInit, OnDestroy {
     public objects: StixObject[];
     public initialVersion: VersionNumber;
     public objectType: string;
+    private objectID: string;
     private routerEvents;
     private saveSubscription;
     private reloadSubscription;
@@ -76,6 +77,8 @@ export class StixPageComponent implements OnInit, OnDestroy {
             let prompt = this.dialog.open(SaveDialogComponent, { // increment version number save panel
                 data: {
                     object: this.objects[0],
+                    // patch LinkByIds on other objects if this object's ATT&CK ID has changed
+                    patchID: this.objects[0].supportsAttackID && this.objectID && this.objectID != this.objects[0].attackID ? this.objectID : undefined,
                     versionAlreadyIncremented: versionChanged
                 }
             });
@@ -141,6 +144,7 @@ export class StixPageComponent implements OnInit, OnDestroy {
                     this.objects = result;
                     if (objectModified) this.objects = this.objects.filter(x => x.modified.toISOString() == objectModified); //filter to just the object with that date
                     if (this.objects.length > 0) this.initialVersion = new VersionNumber(this.objects[0].version.toString());
+                    this.objectID = this.objects[0].supportsAttackID ? this.objects[0].attackID : null;
                 },
                 complete: () => { subscription.unsubscribe() }
             });

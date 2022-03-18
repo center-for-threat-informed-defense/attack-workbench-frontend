@@ -66,7 +66,7 @@ export class ReferenceManagerComponent implements OnInit, AfterViewInit {
         })
     }
 
-    ngOnInit() {
+    ngOnInit(): void {
         // intentionally left blank
     }
 

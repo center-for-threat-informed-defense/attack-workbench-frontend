@@ -1,10 +1,9 @@
-import { Relationship } from './relationship';
 import { VersionNumber } from '../version-number';
 import { ExternalReferences } from '../external-references';
 import { v4 as uuid } from 'uuid';
 import { Serializable, ValidationData } from '../serializable';
 import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/rest-api-connector.service';
-import { Observable, of } from 'rxjs';
+import { forkJoin, Observable, of } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
 import { logger } from "../../util/logger";
 
@@ -23,7 +22,7 @@ let stixTypeToAttackType = {
     "x-mitre-data-source": "data-source",
     "x-mitre-data-component": "data-component"
 }
-export {stixTypeToAttackType};
+export { stixTypeToAttackType };
 
 export abstract class StixObject extends Serializable {
     public stixID: string; // STIX ID
@@ -31,7 +30,7 @@ export abstract class StixObject extends Serializable {
     public attackType: string; // ATT&CK type
     public attackID: string; // ATT&CK ID
     public description: string;
- 
+
     public created_by_ref: string; //embedded relationship
     public created_by?: any;
     public modified_by_ref: string; //embedded relationship
@@ -70,10 +69,10 @@ export abstract class StixObject extends Serializable {
             }, {
                 "label": "edit",
                 "route": "",
-                "query": {"editing": true}
+                "query": { "editing": true }
             }
         ]
-    } 
+    }
 
     public created: Date;  // object created date
     public modified: Date; // object modified date
@@ -133,7 +132,7 @@ export abstract class StixObject extends Serializable {
             // Add url
             // TODO: replace url with configuration
             new_ext_ref["url"] = "https://attack.mitre.org/" + this.typeUrlMap[this.attackType] + "/"
-            
+
             let ID = this.attackID;
 
             // Split attackID if it contains a '.'
@@ -151,7 +150,7 @@ export abstract class StixObject extends Serializable {
         let stix: any = {
             "type": this.type,
             "id": this.stixID,
-            "created": this.created? this.created.toISOString() : new Date().toISOString(),
+            "created": this.created ? this.created.toISOString() : new Date().toISOString(),
             "x_mitre_version": this.version.toString(),
             "external_references": serialized_external_references,
             "x_mitre_deprecated": this.deprecated,
@@ -164,9 +163,9 @@ export abstract class StixObject extends Serializable {
         if (this.type != "marking-definition") stix["modified"] = new Date().toISOString();
         if (this.created_by_ref) stix.created_by_ref = this.created_by_ref;
         // do not set modified by ref since we don't know who we are, but the REST API knows
-        
+
         return {
-            workspace:  {
+            workspace: {
                 workflow: this.workflow
             },
             stix: stix
@@ -178,80 +177,80 @@ export abstract class StixObject extends Serializable {
      * @abstract
      * @param {*} raw the raw object to parse
      */
-    public base_deserialize(raw: any) {        
+    public base_deserialize(raw: any) {
         if ("stix" in raw) {
             let sdo = raw.stix;
 
             // initialize common fields from SDO stix
             if ("id" in sdo) {
-                if (typeof(sdo.id) === "string") this.stixID = sdo.id;
-                else logger.error("TypeError: id field is not a string:", sdo.id, "(",typeof(sdo.id),")")
+                if (typeof (sdo.id) === "string") this.stixID = sdo.id;
+                else logger.error("TypeError: id field is not a string:", sdo.id, "(", typeof (sdo.id), ")")
             }
 
             if ("object_marking_refs" in sdo) {
                 if (this.isStringArray(sdo.object_marking_refs)) this.object_marking_refs = sdo.object_marking_refs;
-                else logger.error("TypeError, object_marking_refs field is not a string array", this.object_marking_refs, "(", typeof(this.object_marking_refs), ")");
+                else logger.error("TypeError, object_marking_refs field is not a string array", this.object_marking_refs, "(", typeof (this.object_marking_refs), ")");
             }
 
             if ("type" in sdo) {
-                if (typeof(sdo.type) === "string") this.type = sdo.type;
-                else logger.error("TypeError: type field is not a string:", sdo.type, "(",typeof(sdo.type),")")
+                if (typeof (sdo.type) === "string") this.type = sdo.type;
+                else logger.error("TypeError: type field is not a string:", sdo.type, "(", typeof (sdo.type), ")")
             }
 
             if ("description" in sdo) {
-                if (typeof(sdo.description) === "string") this.description = sdo.description;
-                else logger.error("TypeError: description field is not a string:", sdo.description, "(",typeof(sdo.description),")")
+                if (typeof (sdo.description) === "string") this.description = sdo.description;
+                else logger.error("TypeError: description field is not a string:", sdo.description, "(", typeof (sdo.description), ")")
             } else this.description = "";
 
             if ("created" in sdo) {
-                if (typeof(sdo.created) === "string") this.created = new Date(sdo.created);
-                else logger.error("TypeError: created field is not a string:", sdo.created, "(",typeof(sdo.created),")")
+                if (typeof (sdo.created) === "string") this.created = new Date(sdo.created);
+                else logger.error("TypeError: created field is not a string:", sdo.created, "(", typeof (sdo.created), ")")
             } else this.created = new Date();
 
             if ("created_by_ref" in sdo) {
-                if (typeof(sdo.created) === "string") this.created_by_ref = sdo.created_by_ref
-                else logger.error("TypeError: created_by_Ref field is not a string:", sdo.created_by_ref, "(",typeof(sdo.created_by_ref),")")
+                if (typeof (sdo.created) === "string") this.created_by_ref = sdo.created_by_ref
+                else logger.error("TypeError: created_by_Ref field is not a string:", sdo.created_by_ref, "(", typeof (sdo.created_by_ref), ")")
             }
 
             if ("modified" in sdo) {
-                if (typeof(sdo.modified) === "string") this.modified = new Date(sdo.modified);
-                else logger.error("TypeError: modified field is not a string:", sdo.modified, "(",typeof(sdo.modified),")")
-            } 
+                if (typeof (sdo.modified) === "string") this.modified = new Date(sdo.modified);
+                else logger.error("TypeError: modified field is not a string:", sdo.modified, "(", typeof (sdo.modified), ")")
+            }
             else if ("type" in sdo && sdo.type != "marking-definition") this.modified = new Date();
 
             if ("x_mitre_modified_by_ref" in sdo) {
-                if (typeof(sdo.created) === "string") this.modified_by_ref = sdo.x_mitre_modified_by_ref;
-                else logger.error("TypeError: x_mitre_modified_by_ref field is not a string:", sdo.x_mitre_modified_by_ref, "(",typeof(sdo.x_mitre_modified_by_ref),")")
+                if (typeof (sdo.created) === "string") this.modified_by_ref = sdo.x_mitre_modified_by_ref;
+                else logger.error("TypeError: x_mitre_modified_by_ref field is not a string:", sdo.x_mitre_modified_by_ref, "(", typeof (sdo.x_mitre_modified_by_ref), ")")
             }
 
             if ("x_mitre_version" in sdo) {
-                if (typeof(sdo.x_mitre_version) === "string") this.version = new VersionNumber(sdo.x_mitre_version);
-                else logger.error("TypeError: x_mitre_version field is not a string:", sdo.x_mitre_version, "(",typeof(sdo.x_mitre_version),")")
+                if (typeof (sdo.x_mitre_version) === "string") this.version = new VersionNumber(sdo.x_mitre_version);
+                else logger.error("TypeError: x_mitre_version field is not a string:", sdo.x_mitre_version, "(", typeof (sdo.x_mitre_version), ")")
             } else this.version = new VersionNumber("0.1");
-    
+
             if ("external_references" in sdo) {
-                if (typeof(sdo.external_references) === "object") {
+                if (typeof (sdo.external_references) === "object") {
                     this.external_references = new ExternalReferences(sdo.external_references);
                     if (sdo.external_references.length > 0 && this.type != "relationship" && sdo.external_references[0].hasOwnProperty("external_id")) {
-                        if (typeof(sdo.external_references[0].external_id) === "string") this.attackID = sdo.external_references[0].external_id;
-                        else logger.error("TypeError: attackID field is not a string:", sdo.external_references[0].external_id, "(",typeof(sdo.external_references[0].external_id),")")
+                        if (typeof (sdo.external_references[0].external_id) === "string") this.attackID = sdo.external_references[0].external_id;
+                        else logger.error("TypeError: attackID field is not a string:", sdo.external_references[0].external_id, "(", typeof (sdo.external_references[0].external_id), ")")
                     }
                     else this.attackID = "";
                 }
-                else logger.error("TypeError: external_references field is not an object:", sdo.external_references, "(",typeof(sdo.external_references),")")
-            } 
+                else logger.error("TypeError: external_references field is not an object:", sdo.external_references, "(", typeof (sdo.external_references), ")")
+            }
             else {
                 this.external_references = new ExternalReferences();
                 this.attackID = "";
             }
-        
+
             if ("x_mitre_deprecated" in sdo) {
-                if (typeof(sdo.x_mitre_deprecated) === "boolean") this.deprecated = sdo.x_mitre_deprecated;
-                else logger.error("TypeError: x_mitre_deprecated field is not a boolean:", sdo.x_mitre_deprecated, "(",typeof(sdo.x_mitre_deprecated),")") 
+                if (typeof (sdo.x_mitre_deprecated) === "boolean") this.deprecated = sdo.x_mitre_deprecated;
+                else logger.error("TypeError: x_mitre_deprecated field is not a boolean:", sdo.x_mitre_deprecated, "(", typeof (sdo.x_mitre_deprecated), ")")
             }
             if ("revoked" in sdo) {
-                if (typeof(sdo.revoked) === "boolean") this.revoked = sdo.revoked;
-                else logger.error("TypeError: revoked field is not a boolean:", sdo.revoked, "(",typeof(sdo.revoked),")") 
+                if (typeof (sdo.revoked) === "boolean") this.revoked = sdo.revoked;
+                else logger.error("TypeError: revoked field is not a boolean:", sdo.revoked, "(", typeof (sdo.revoked), ")")
             }
         }
         else logger.error("ObjectError: 'stix' field does not exist in object");
@@ -273,7 +272,7 @@ export abstract class StixObject extends Serializable {
             // parse workspace fields
             let workspaceData = raw.workspace;
             if ("workflow" in workspaceData) {
-                if (typeof(workspaceData.workflow) == "object") {
+                if (typeof (workspaceData.workflow) == "object") {
                     this.workflow = workspaceData.workflow;
                 } else logger.error("TypeError: workflow field is not an object", workspaceData)
             }
@@ -302,17 +301,17 @@ export abstract class StixObject extends Serializable {
             // check if the name is unique if it has a name
             switchMap(result => {
                 //do not check name or attackID for relationships or marking definitions
-                if (this.attackType == "relationship" || this.attackType == "marking-definition") return of(result); 
+                if (this.attackType == "relationship" || this.attackType == "marking-definition") return of(result);
                 // check if name & ATT&CK ID is unique, record result in validation, and return validation
-                let accessor = this.attackType == "collection"? restAPIService.getAllCollections() :
-                                this.attackType == "group"? restAPIService.getAllGroups() :
-                                this.attackType == "software"? restAPIService.getAllSoftware() :
-                                this.attackType == "matrix"? restAPIService.getAllMatrices() :
-                                this.attackType == "mitigation"? restAPIService.getAllMitigations() :
-                                this.attackType == "technique"? restAPIService.getAllTechniques() :
-                                this.attackType == "data-source"? restAPIService.getAllDataSources() :
-                                this.attackType == "data-component"? restAPIService.getAllDataComponents() :
-                                restAPIService.getAllTactics(); 
+                let accessor = this.attackType == "collection" ? restAPIService.getAllCollections() :
+                    this.attackType == "group" ? restAPIService.getAllGroups() :
+                        this.attackType == "software" ? restAPIService.getAllSoftware() :
+                            this.attackType == "matrix" ? restAPIService.getAllMatrices() :
+                                this.attackType == "mitigation" ? restAPIService.getAllMitigations() :
+                                    this.attackType == "technique" ? restAPIService.getAllTechniques() :
+                                        this.attackType == "data-source" ? restAPIService.getAllDataSources() :
+                                            this.attackType == "data-component" ? restAPIService.getAllDataComponents() :
+                                                restAPIService.getAllTactics();
                 return accessor.pipe(
                     map(objects => {
                         // check name
@@ -361,7 +360,7 @@ export abstract class StixObject extends Serializable {
                                     })
                                 }
                                 // (\S+--)? is an organization prefix, and should probably be improved when that is made an explicit feature
-                                let idRegex =  new RegExp("^(\\S+--)?" + this.attackIDValidator.regex + "$");
+                                let idRegex = new RegExp("^(\\S+--)?" + this.attackIDValidator.regex + "$");
                                 let attackIDValid = idRegex.test(this.attackID);
                                 if (!attackIDValid) {
                                     result.errors.push({
@@ -371,7 +370,7 @@ export abstract class StixObject extends Serializable {
                                     })
                                 }
                             }
-                        } 
+                        }
                         return result;
                     })
                 )
@@ -383,18 +382,66 @@ export abstract class StixObject extends Serializable {
                 if (this.attackType == "software" || this.attackType == "group") refs_fields.push("aliases");
                 if (this.attackType == "technique") refs_fields.push("detection");
 
-                return this.external_references.validate(restAPIService, {object: this, fields: refs_fields}).pipe(
+                return this.external_references.validate(restAPIService, { object: this, fields: refs_fields }).pipe(
                     map(refs_result => {
                         result.merge(refs_result);
                         return result;
                     })
                 )
             }),
+            // validate LinkByIDs
+            switchMap(result => {
+                // build list of fields supporting LinkByIDs
+                let refs_fields = ["description"];
+                if (this.attackType == "technique") refs_fields.push("detection");
+
+                let parse_apis = [];
+                for (let field of refs_fields) {
+                    parse_apis.push(this.parseLinkByIds(this[field], restAPIService));
+                }
+
+                return forkJoin(parse_apis).pipe(
+                    map(api_results => {
+                        let validation_results = api_results as LinkByIdParseResult[];
+                        let linkResult = new LinkByIdParseResult();
+                        for (let validation_result of validation_results) {
+                            linkResult.merge(validation_result); // merge all results to a single object
+                        }
+
+                        // broken links
+                        let brokenLinks = Array.from(linkResult.brokenLinks);
+                        if (brokenLinks.length == 1) result.errors.push({
+                            result: "error",
+                            field: "description",
+                            message: `LinkById ${brokenLinks[0]} does not match format (LinkById: ATT&CK ID)`
+                        });
+                        else if (brokenLinks.length > 1) result.errors.push({
+                            result: "error",
+                            field: "description",
+                            message: `LinkByIds ${brokenLinks.join(", ")} do not match format (LinkById: ATT&CK ID)`
+                        });
+
+                        // missing links
+                        let missingLinks = Array.from(linkResult.missingLinks);
+                        if (missingLinks.length == 1) result.errors.push({
+                            result: "error",
+                            field: "description",
+                            message: `Cannot find linked object: ${missingLinks[0]}`
+                        });
+                        else if (missingLinks.length > 1) result.errors.push({
+                            result: "error",
+                            field: "description",
+                            message: `Cannot find linked objects: ${missingLinks.join(", ")}`
+                        });
+                        return result;
+                    })
+                );
+            }),
             // validate 'revoked-by' relationship exists
             switchMap(result => {
                 if (!this.revoked) return of(result); // do not check for revoked-by relationship
 
-                let accessor = restAPIService.getRelatedTo({sourceRef: this.stixID});
+                let accessor = restAPIService.getRelatedTo({ sourceRef: this.stixID });
                 return accessor.pipe(
                     map(objects => {
                         if (!objects.data.find(relationship => relationship['relationship_type'] == 'revoked-by')) {
@@ -419,10 +466,74 @@ export abstract class StixObject extends Serializable {
 
     }
 
-    public isStringArray = function(arr): boolean {
+    /**
+     * parses given field for linked objects
+     * @param field the field in which to parse LinkByIds
+     */
+    private parseLinkByIds(field: string, restAPIService: RestApiConnectorService): Observable<LinkByIdParseResult> {
+        let reLinkById = /\(LinkById: (.*?)\)/gmu;
+        let links = field.match(reLinkById);
+        let result = new LinkByIdParseResult({
+            brokenLinks: this.validateBrokenLinks(field, [/\(LinkById:([^ ].*?)\)/gmu, /\(LinkByID:(.*?)\)/gmu, /\(linkById:(.*?)\)/gmu])
+        });
+
+        if (!links) return of(result); // no LinkByIds found
+
+        let link_map = {};
+        for (let link of links) {
+            let id = link.split("(LinkById: ")[1].slice(0, -1);
+            if (!(id in link_map)) {
+                link_map[id] = this.findLink(id, restAPIService);
+            }
+        }
+
+        return forkJoin(link_map).pipe(
+            map((results) => {
+                let link_results = results as any;
+                for (let key of Object.keys(link_results)) {
+                    // verify whether or not all links were found
+                    if (!link_results[key]) result.missingLinks.add(key);
+                }
+                return result;
+            })
+        );
+    }
+
+    /**
+     * validate the given field for broken LinkByIds found via regex
+     * @param field field that may have LinkByIds
+     * @param {regex[]} regExes regular expressions matching potential invalid tags
+     */
+    private validateBrokenLinks(field: string, regExes): Set<string> {
+        let result = new Set<string>();
+        for (let regex of regExes) {
+            let brokenLinks = field.match(regex);
+            if (brokenLinks) {
+                brokenLinks.forEach(l => result.add(l));
+            }
+        }
+        return result;
+    }
+
+    /**
+     * retrieves the linked object by ID
+     * @param id the ID of the linked object
+     * @param restAPIService service to connect to the REST API
+     */
+    private findLink(id: string, restAPIService: RestApiConnectorService): Observable<boolean> {
+        return restAPIService.getAllObjects(id, null, null, null, true, true, true).pipe(
+            map((result) => {
+                let object = result.data[0];
+                if (object) return true;
+                return false; // object not found
+            })
+        );
+    }
+
+    public isStringArray = function (arr): boolean {
         for (let i = 0; i < arr.length; i++) {
-            if (typeof(arr[i]) !== "string") {
-                logger.error("TypeError:", arr[i], "(",typeof(arr[i]),")", "is not a string")
+            if (typeof (arr[i]) !== "string") {
+                logger.error("TypeError:", arr[i], "(", typeof (arr[i]), ")", "is not a string")
                 return false;
             }
         }
@@ -453,5 +564,27 @@ export abstract class StixObject extends Serializable {
             },
             complete: () => { sub.unsubscribe(); }
         });
+    }
+}
+
+/**
+ * The results of parsing LinkByIds in a single field
+ */
+export class LinkByIdParseResult {
+    public missingLinks: Set<string> = new Set(); // LinkByIds that could not be found
+    public brokenLinks: Set<string> = new Set();  // list of broken LinkByIds detected in the field
+
+    constructor(initData?: { missingLinks?: Set<string>, brokenLinks: Set<string> }) {
+        if (initData && initData.missingLinks) this.missingLinks = initData.missingLinks;
+        if (initData && initData.brokenLinks) this.brokenLinks = initData.brokenLinks;
+    }
+
+    /**
+     * Merge results from another LinkByIdParseResult into this object
+     * @param {LinkByIdParseResult} that results from other object
+     */
+    public merge(that: LinkByIdParseResult) {
+        this.missingLinks = new Set([...this.missingLinks, ...that.missingLinks]);
+        this.brokenLinks = new Set([...this.brokenLinks, ...that.brokenLinks]);
     }
 }
