@@ -1,3 +1,4 @@
-<div class="descriptive-view" >
-    <markdown [data]="display"></markdown>
+<div class="descriptive-view" *ngIf="!loading">
+    <markdown [data]="preview"></markdown>
 </div>
+<app-loading-overlay *ngIf="loading"></app-loading-overlay>

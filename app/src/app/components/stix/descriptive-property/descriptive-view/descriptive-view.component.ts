@@ -1,4 +1,4 @@
-import { Component, Input, ViewEncapsulation } from '@angular/core';
+import { Component, Input, OnInit, ViewEncapsulation } from '@angular/core';
 import { forkJoin, Observable, Subscription } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/rest-api-connector.service';
@@ -10,17 +10,21 @@ import { DescriptivePropertyConfig } from '../descriptive-property.component';
     styleUrls: ['./descriptive-view.component.scss'],
     encapsulation: ViewEncapsulation.None
 })
-export class DescriptiveViewComponent {
+export class DescriptiveViewComponent implements OnInit {
     @Input() public config: DescriptivePropertyConfig;
+    public preview: string;
+    public loading: boolean = false;
 
     private reReference = /\(Citation: (.*?)\)/gmu;
     private reLinkById = /\(LinkById: (.*?)\)/gmu;
     private objectLookup = {};
-
-    // prevent async issues
-    private sub: Subscription = new Subscription();
+    private sub: Subscription = new Subscription(); // prevent async issues
 
     constructor(private restApiConnector: RestApiConnectorService) { }
+
+    ngOnInit(): void {
+        this.renderPreview();
+    }
 
     private truncateToFirstParagraph(displayStr: string): string {
         return displayStr.split('\n')[0];
@@ -125,48 +129,57 @@ export class DescriptiveViewComponent {
     }
 
     /**
-     * get the descriptive view of of the stix object
+     * Render the descriptive view of of the stix object
      */
-    public get display(): string {
-        let displayStr: string = this.config.object[this.config.field];
+    public renderPreview(): void {
+        this.loading = true;
+        this.preview = this.config.object[this.config.field];
 
-        if (!displayStr) {
-            return displayStr
+        if (!this.preview) { // nothing to render
+            this.loading = false;
+            return;
         }
 
-        // Check if it is only the first paragraph
         if (this.config.firstParagraphOnly) {
-            displayStr = this.truncateToFirstParagraph(displayStr);
+            // Only show the first paragraph
+            this.preview = this.truncateToFirstParagraph(this.preview);
         }
 
         if (this.config.referencesField) {
             // Replace references from references field
-            displayStr = this.replaceReferences(displayStr);
+            this.preview = this.replaceReferences(this.preview);
         }
         else {
             // Remove references if not defined
-            displayStr = this.removeReferences(displayStr);
+            this.preview = this.removeReferences(this.preview);
         }
 
         let loaded = function(ids: string[], lookup: {}) {
             return ids.every(id => Object.keys(lookup).includes(id));
         }
 
-        let linkedIDs = this.getLinkedIds(displayStr);
+        // Check for LinkById tags
+        let linkedIDs = this.getLinkedIds(this.preview);
+        if (!linkedIDs) {
+            this.loading = false;
+            return;
+        }
+
+        // Parse LinkById tags
         if (linkedIDs) {
             if (loaded(linkedIDs, this.objectLookup)) {
-                displayStr = this.replaceLinkByIds(displayStr, linkedIDs);
+                this.preview = this.replaceLinkByIds(this.preview, linkedIDs);
+                this.loading = false;
             } else {
                 let missing = linkedIDs.filter(id => Object.keys(this.objectLookup).indexOf(id) < 0);
                 this.sub = this.loadLinkedObjects(missing).subscribe({
                     next: (results: any) => {
-                        displayStr = this.replaceLinkByIds(displayStr, linkedIDs);
+                        this.preview = this.replaceLinkByIds(this.preview, linkedIDs);
+                        this.loading = false;
                     },
                     complete: () => { this.sub.unsubscribe(); }
                 })
             }
         }
-
-        return displayStr;
     }
 }
