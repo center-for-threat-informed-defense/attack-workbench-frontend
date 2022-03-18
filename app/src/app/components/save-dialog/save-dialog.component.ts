@@ -1,8 +1,7 @@
 import { Component, Inject, OnInit, ViewEncapsulation } from '@angular/core';
-import { FormControl, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { Observable } from 'rxjs';
-import { ValidationData, ValidationFieldData } from 'src/app/classes/serializable';
+import { forkJoin } from 'rxjs';
+import { ValidationData } from 'src/app/classes/serializable';
 import { StixObject, workflowStates } from 'src/app/classes/stix/stix-object';
 import { VersionNumber } from 'src/app/classes/version-number';
 import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/rest-api-connector.service';
@@ -14,10 +13,11 @@ import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/re
   encapsulation: ViewEncapsulation.None
 })
 export class SaveDialogComponent implements OnInit {
-
+    public stage: number = 0;
     public currentVersion: string;
     public nextMajorVersion: string;
     public nextMinorVersion: string;
+    public patch_objects = [];
     public validation: ValidationData = null;
     public newState: workflowStates = "work-in-progress";
     public workflows: string[] = ["work-in-progress", "awaiting-review", "reviewed"];
@@ -45,23 +45,84 @@ export class SaveDialogComponent implements OnInit {
         })
     }
 
+    ngOnInit(): void {
+        this.newState = this.config.object.workflow? this.config.object.workflow.state : "";
+    }
+
+    /**
+     * Find objects with links to the previous object ATT&CK ID
+     */
+    private parse_patches(): void {
+        this.stage = 1; // enter patching stage
+        let objSubscription = this.restApiConnectorService.getAllObjects(null, null, null, null, null, null, true).subscribe({
+            next: (results) => {
+                // find objects with a link to the previous ID
+                let objLink = `(LinkById: ${this.config.patchID})`;
+                results.data.forEach(x => {
+                    if ((x.description && x.description.indexOf(objLink) !== -1) || ("detection" in x && x.detection && x.detection.indexOf(objLink) !== -1)) {
+                            this.patch_objects.push(x);
+                    }
+                });
+                this.stage = 2;
+            },
+            complete: () => objSubscription.unsubscribe()
+        })
+    }
+
+    /**
+     * Apply LinkById patches and save the object
+     */
+    public patch() {
+        let saves = [];
+        saves.push(this.config.object.save(this.restApiConnectorService));
+        for (let obj of this.patch_objects) {
+            // replace LinkById references with the new ATT&CK ID
+            let regex = new RegExp(`\\(LinkById: (${this.config.patchID})\\)`, "gmu");
+            obj.description = obj.description.replace(regex, `(LinkById: ${this.config.object.attackID})`);
+            if (obj.hasOwnProperty("detection") && obj.detection) {
+                obj.detection = obj.detection.replace(regex, `(LinkById: ${this.config.object.attackID})`);
+            }
+            saves.push(obj.save(this.restApiConnectorService));
+        }
+        this.stage = 3; // enter loading stage until patching is complete
+        let saveSubscription = forkJoin(saves).subscribe({
+            complete: () => { saveSubscription.unsubscribe(); this.dialogRef.close(true); }
+        })
+    }
+
+    /**
+     * Save the object with the current version and check for patches
+     */
     public saveCurrentVersion() {
-        this.save();
-    }
-
-    public saveNextMajorVersion() {
-        this.config.object.version = new VersionNumber(this.nextMajorVersion)
-        this.save();
-    }
-
-    public saveNextMinorVersion() {
-        this.config.object.version = new VersionNumber(this.nextMinorVersion)
-        this.save();
-    }
-
-    private save() {
         this.config.object.workflow = this.newState ? {state: this.newState } : undefined;
-        
+        if (this.config.patchID) this.parse_patches();
+        else this.save();
+    }
+
+    /**
+     * Save the object with the next minor version (i.e. 1.0 -> 1.1) and check for patches
+     */
+     public saveNextMinorVersion() {
+        this.config.object.version = new VersionNumber(this.nextMinorVersion);
+        this.config.object.workflow = this.newState ? {state: this.newState } : undefined;
+        if (this.config.patchID) this.parse_patches();
+        else this.save();
+    }
+
+    /**
+     * Save the object with the next major version (i.e. 1.0 -> 2.0) and check for patches
+     */
+    public saveNextMajorVersion() {
+        this.config.object.version = new VersionNumber(this.nextMajorVersion);
+        this.config.object.workflow = this.newState ? {state: this.newState } : undefined;
+        if (this.config.patchID) this.parse_patches();
+        else this.save();
+    }
+
+    /**
+     * Save the object without patching other objects
+     */
+    private save() {
         if (!this.saveEnabled) return;
         let subscription = this.config.object.save(this.restApiConnectorService).subscribe({
             next: (result) => { 
@@ -74,14 +135,10 @@ export class SaveDialogComponent implements OnInit {
     public getLabel(status: string): string {
         return status.replace(/-/g, ' ');
     }
-
-    ngOnInit(): void {
-        this.newState = this.config.object.workflow? this.config.object.workflow.state : "";
-    }
-
 }
 
 export interface SaveDialogConfig {
     object: StixObject;
+    patchID?: string; // previous object ID to patch in LinkByID tags
     versionAlreadyIncremented: boolean;
 }

@@ -1,7 +1,8 @@
-import { Component, OnInit, Input, ChangeDetectorRef, ViewEncapsulation } from '@angular/core';
+import { Component, Input, ViewEncapsulation, ViewChild } from '@angular/core';
 import { DescriptivePropertyConfig } from '../descriptive-property.component';
 import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/rest-api-connector.service';
-import { FormControl } from '@angular/forms';
+import { DescriptiveViewComponent } from '../descriptive-view/descriptive-view.component';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-descriptive-edit',
@@ -10,22 +11,34 @@ import { FormControl } from '@angular/forms';
   encapsulation: ViewEncapsulation.None
 })
 
-export class DescriptiveEditComponent implements OnInit {
+export class DescriptiveEditComponent {
     @Input() public config: DescriptivePropertyConfig;
+    @ViewChild('description') public description: DescriptiveViewComponent;
     public parsingCitations: boolean = false;
+    private sub: Subscription = new Subscription(); // prevent async issues
+
     constructor(public restApiConnector: RestApiConnectorService) { }
 
-    ngOnInit(): void {
+    /**
+     * Handle tab selection change to render preview in "Preview" tab
+     * @param {MatTabChangeEvent} $event tab change event
+     */
+    public selectionChanged($event): void {
+        if ($event && $event.index == 1) {
+            this.description.renderPreview();
+        }
     }
 
-    parseCitations() {
+    /**
+     * Parse external reference citations
+     */
+    public parseCitations(): void {
         this.parsingCitations = true;
-        let subscription = this.config.object['external_references'].parseCitations(this.config.object[this.config.field], this.restApiConnector).subscribe({
+        this.sub = this.config.object['external_references'].parseCitations(this.config.object[this.config.field], this.restApiConnector).subscribe({
             next: (result) => {
                 this.parsingCitations = false;
-                // subscription.unsubscribe(); 
             },
-            // complete: () => { subscription.unsubscribe();  } //TODO why doesn't this work in this case?
+            complete: () => { if (this.sub) this.sub.unsubscribe(); }
         })
     }
 }
