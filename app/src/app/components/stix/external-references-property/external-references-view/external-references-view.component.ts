@@ -1,20 +1,27 @@
 import { Component, OnInit, Input, ViewEncapsulation } from '@angular/core';
-import { ExternalReference } from 'src/app/classes/external-references';
 import { ExternalReferencesPropertyConfig } from '../external-references-property.component';
+import { ExternalReference } from 'src/app/classes/external-references';
 
 @Component({
-    selector: 'app-external-references-view',
-    templateUrl: './external-references-view.component.html',
-    styleUrls: ['./external-references-view.component.scss'],
-    encapsulation: ViewEncapsulation.None
+  selector: 'app-external-references-view',
+  templateUrl: './external-references-view.component.html',
+  styleUrls: ['./external-references-view.component.scss'],
+  encapsulation: ViewEncapsulation.None
 })
 export class ExternalReferencesViewComponent implements OnInit {
-    @Input() public config: ExternalReferencesPropertyConfig;
-    public referenceList: Array<[number, ExternalReference]> = [];
+  @Input() public config: ExternalReferencesPropertyConfig;
+  
+  constructor() { }
 
-    constructor() { }
+  ngOnInit(): void {
+  }
 
-    ngOnInit(): void {
-        this.referenceList = this.config.referencesField.list();
-    }
+  /**
+   * get list of references that will appear on the external references
+   * section
+   */
+  public get display(): Array<[number, ExternalReference]> {
+    return this.config.referencesField.list();
+  }
+
 }
