@@ -5,12 +5,13 @@ import { MatChipInputEvent } from '@angular/material/chips';
 import { FormControl, Validators } from '@angular/forms';
 import { MatOptionSelectionChange } from '@angular/material/core';
 import { MatDialog } from '@angular/material/dialog';
-import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/rest-api-connector.service';
+import { Paginated, RestApiConnectorService } from 'src/app/services/connectors/rest-api/rest-api-connector.service';
 import { SelectionModel } from '@angular/cdk/collections';
 import { Tactic } from 'src/app/classes/stix/tactic';
 import { StixObject } from 'src/app/classes/stix/stix-object';
 import { AddDialogComponent } from 'src/app/components/add-dialog/add-dialog.component';
 import { Subscription } from 'rxjs';
+import { Technique } from 'src/app/classes/stix/technique';
 
 @Component({
   selector: 'app-list-edit',
@@ -105,6 +106,20 @@ export class ListEditComponent implements OnInit, AfterContentChecked {
                 },
                 complete: () => { subscription.unsubscribe(); }
             })
+        } else if (this.config.field == 'parentTechnique') {
+          this.type = 'technique';
+          const subscription = this.restAPIConnectorService.getAllTechniques().subscribe({
+            next: (r: Paginated<Technique>) => {
+              this.allObjects = r.data.filter((t) => !t.is_subtechnique);
+              const selectableTechniqueIDs = r.data.map(t => t.stixID);
+              this.select = new SelectionModel<string>(false, selectableTechniqueIDs);
+              this.dataLoaded = true;
+            },
+            complete: () => {
+              subscription.unsubscribe();
+            }
+          });
+
         }
     }
 
@@ -166,6 +181,9 @@ export class ListEditComponent implements OnInit, AfterContentChecked {
                 object.domains.forEach(domain => this.domainState.push(domain));
                 selectedTactics.forEach(tactic => this.tacticState.push(tactic));
             }
+        }
+        if (this.config.field == 'parentTechnique' && this.config.object[this.config.field]) {
+          return [this.config.object[this.config.field]?.name]
         }
         return this.config.object[this.config.field];
     }
@@ -270,9 +288,16 @@ export class ListEditComponent implements OnInit, AfterContentChecked {
 
     /** Open stix list selection window */
     public openStixList() {
+      let tactics;
+      let selectableObjects;
+      if (this.config.field == 'parentTechnique') {
+        tactics = this.allObjects;
+        selectableObjects = this.allObjects;
+      } else {
         // filter tactic objects by domain
-        let tactics = this.allObjects as Tactic[];
-        let selectableObjects = tactics.filter(tactic => this.tacticInDomain(tactic));
+        tactics = this.allObjects as Tactic[];
+        selectableObjects = tactics.filter(tactic => this.tacticInDomain(tactic));
+      }
 
         let dialogRef = this.dialog.open(AddDialogComponent, {
             maxWidth: "70em",
@@ -285,10 +310,10 @@ export class ListEditComponent implements OnInit, AfterContentChecked {
             }
         });
 
-        let selectCopy = new SelectionModel(true, this.select.selected);
+        let selectCopy = this.config.field != 'parentTechnique' ? new SelectionModel(true, this.select.selected) : new SelectionModel(false, this.select.selected);
         let subscription = dialogRef.afterClosed().subscribe({
             next: (result) => {
-                if (result) {
+                if (result && this.config.field != 'parentTechnique') {
                     let tacticShortnames = this.select.selected.map(id => this.stixIDToShortname(id));
                     this.config.object[this.config.field] = tacticShortnames;
 
@@ -297,6 +322,9 @@ export class ListEditComponent implements OnInit, AfterContentChecked {
                     let allObjects = this.allObjects as Tactic[];
                     let tactics = this.select.selected.map(tacticID => allObjects.find(tactic => tactic.stixID == tacticID));
                     tactics.forEach(tactic => this.tacticState.push(tactic));
+                } else if (result && this.config.field == 'parentTechnique') {
+                  let allObjects = this.allObjects as Technique[];
+                  this.config.object[this.config.field] = this.select.selected.length > 0 ? allObjects.find(t => t.stixID === this.select.selected[0]) : null;
                 } else { // user cancel
                     this.select = selectCopy; // reset selection
                 }

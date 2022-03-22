@@ -47,6 +47,19 @@
             }"></app-list-property>
         </div>
     </div>
+    <!-- PARENT SUBTECHNIQUE FIELDS -->
+    <div class="row" *ngIf="technique.is_subtechnique && editing">
+        <div class="col">
+            <app-list-property class="grow-to-row" [config]="{
+                mode: editing? 'edit': 'view',
+                object: technique,
+                field: 'parentTechnique',
+                label: 'parent technique',
+                editType: 'stixList',
+                required: true
+            }"></app-list-property>
+        </div>
+    </div>
     <!-- ADDITIONAL IDs -->
     <div *ngIf="technique.capec_ids.length || (editing && technique.domains.includes('enterprise-attack'))" class="row">
         <div class="col">
@@ -70,9 +83,9 @@
             }"></app-list-property>
         </div>
     </div>
+    <!-- DESCRIPTION -->
     <div class="row">
         <div class="col">
-            <!-- DESCRIPTION -->
             <app-descriptive-property [config]="{
                 mode: editing? 'edit' : 'view',
                 object: technique,

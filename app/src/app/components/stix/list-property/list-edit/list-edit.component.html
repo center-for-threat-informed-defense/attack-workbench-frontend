@@ -25,7 +25,7 @@
         <mat-label *ngIf="dataLoaded">{{config.label? config.label : config.field}}</mat-label>
         <mat-select [formControl]="selectControl" multiple [required]="config.required ? config.required : false">
             <mat-select-trigger>
-                <mat-chip-list>
+                <mat-chip-list [required]="config.required ? config.required : false">
                     <mat-chip *ngFor="let value of selectControl.value" [removable]="true" (removed)="removeSelection(value)">
                         {{value}} <mat-icon *ngIf="!config.disabled" matChipRemove>cancel</mat-icon>
                     </mat-chip>
@@ -38,7 +38,7 @@
     <mat-form-field *ngIf="config.editType == 'stixList'" class="stix-select grow-to-row" appearance="outline" (click)="openStixList()">
         <mat-label>{{config.label? config.label : config.field}}</mat-label>
         <mat-icon aria-hidden="false" aria-label="open" class="icon">open_in_new</mat-icon>
-        <mat-chip-list #stixChipList>
+        <mat-chip-list #stixChipList [required]="config.required ? config.required : false">
             <mat-chip *ngFor="let value of selectedValues()" [removable]="false">{{value}}</mat-chip>
         </mat-chip-list>
     </mat-form-field>
