@@ -455,7 +455,7 @@ export abstract class StixObject extends Serializable {
     }
 
     public generateAttackIDWithPrefix(restAPIService?: RestApiConnectorService) {
-      if (!this.firstInitialized) return;
+      if (!this.firstInitialized || !this.supportsNamespace) return;
       this.attackID = '(generating ID)';
       let sub = this.getNamespaceID(restAPIService).subscribe({
         next: (val) => {
