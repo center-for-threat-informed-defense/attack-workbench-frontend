@@ -3,8 +3,11 @@ import { forkJoin } from 'rxjs';
 import { Relationship } from 'src/app/classes/stix/relationship';
 import { StixObject, stixTypeToAttackType } from 'src/app/classes/stix/stix-object';
 import { AuthenticationService } from 'src/app/services/connectors/authentication/authentication.service';
-import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/rest-api-connector.service';
+import { RestApiConnectorService, attackTypeToClass } from 'src/app/services/connectors/rest-api/rest-api-connector.service';
 import { StixViewPage } from '../../stix-view-page';
+import { VersionNumber } from 'src/app/classes/version-number';
+import { EditorService } from 'src/app/services/editor/editor.service';
+import { Software } from 'src/app/classes/stix/software';
 import * as moment from 'moment';
 
 @Component({
@@ -14,7 +17,6 @@ import * as moment from 'moment';
   encapsulation: ViewEncapsulation.None
 })
 export class RelationshipViewComponent extends StixViewPage implements OnInit {
-
     public get relationship() { return this.config.object as Relationship; }
     public source_type: string;
     public target_type: string;
@@ -30,8 +32,38 @@ export class RelationshipViewComponent extends StixViewPage implements OnInit {
         })
     }
 
-    constructor(private restApiService: RestApiConnectorService, authenticationService: AuthenticationService) { 
-        super(authenticationService)
+    public source_minor_update: boolean;
+    public source_major_update: boolean;
+    public target_minor_update: boolean;
+    public target_major_update: boolean;
+
+    constructor(private restApiService: RestApiConnectorService, private editorService: EditorService, authenticationService: AuthenticationService) { 
+        super(authenticationService);
+
+        // event to save source/target objects with version updates, if selected
+        let saveSubscription = this.editorService.onRelationshipSave.subscribe({
+            next: (event) => {
+                let saves = [];
+                if (this.source_minor_update || this.source_major_update) {
+                    let source_obj = this.getObject(this.source_type, this.relationship.source_object);
+                    if (this.source_minor_update) source_obj.version = source_obj.version.nextMinorVersion();
+                    else if (this.source_major_update) source_obj.version = source_obj.version.nextMajorVersion();
+                    saves.push(source_obj.save(restApiService));
+                }
+                if (this.target_minor_update || this.target_major_update) {
+                    let target_obj = this.getObject(this.target_type, this.relationship.target_object);
+                    if (this.target_minor_update) target_obj.version = target_obj.version.nextMinorVersion();
+                    else if (this.target_major_update) target_obj.version = target_obj.version.nextMajorVersion();
+                    saves.push(target_obj.save(restApiService));
+                }
+                if (saves.length) {
+                    var subscription = forkJoin(saves).subscribe({
+                        complete: () => { if(subscription) subscription.unsubscribe(); }
+                    });
+                }
+            },
+            complete: () => { if (saveSubscription) saveSubscription.unsubscribe() }
+        })
     }
 
     ngOnInit(): void {
@@ -90,5 +122,35 @@ export class RelationshipViewComponent extends StixViewPage implements OnInit {
         else if (version && !modified) return `(v${version})`;
         else if (!version && modified) return `(last modified ${modified})`;
         else return '';
+    }
+
+    /**
+     * Get the formatted string for the next minor version of the given object
+     * @param {any} obj the raw STIX object
+     */
+    public nextMinorVersion(obj: any): string {
+        if (!obj || !obj["stix"] || !obj["stix"].x_mitre_version) return '';
+        let nextMinorVersion = new VersionNumber(obj["stix"].x_mitre_version).nextMinorVersion();
+        return nextMinorVersion.toString();
+    }
+
+    /**
+     * Get the formatted string for the next major version of the given object
+     * @param {any} obj the raw STIX object
+     */
+    public nextMajorVersion(obj: any): string {
+        if (!obj || !obj["stix"] || !obj["stix"].x_mitre_version) return '';
+        let nextMajorVersion = new VersionNumber(obj["stix"].x_mitre_version).nextMajorVersion();
+        return nextMajorVersion.toString();
+    }
+
+    /**
+     * Creates and returns the deserialized object
+     * @param type the attack type of the object
+     * @param raw the raw STIX object
+     */
+    private getObject(type: string, raw: any) {
+        if (type == "malware" || type == "tool") return new Software(type, raw);
+        return new attackTypeToClass[type](raw);
     }
 }

@@ -58,6 +58,7 @@ const attackTypeToClass = {
     "data-source": DataSource,
     "data-component": DataComponent
 }
+export { attackTypeToClass };
 
 // transform AttackType to the relevant class
 const stixTypeToClass = {

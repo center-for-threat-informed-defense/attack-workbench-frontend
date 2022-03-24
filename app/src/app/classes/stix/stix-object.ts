@@ -271,7 +271,7 @@ export abstract class StixObject extends Serializable {
         if ("workspace" in raw) {
             // parse workspace fields
             let workspaceData = raw.workspace;
-            if ("workflow" in workspaceData) {
+            if ("workflow" in workspaceData && workspaceData.workflow !== undefined) {
                 if (typeof (workspaceData.workflow) == "object") {
                     this.workflow = workspaceData.workflow;
                 } else logger.error("TypeError: workflow field is not an object", workspaceData)
