@@ -26,6 +26,17 @@
     </div>
     <div class="row">
         <div class="col">
+            <!-- DOMAINS-->
+            <app-list-property class="grow-to-row" [config]="{
+                mode: editing? 'edit': 'view',
+                object: software,
+                field: 'domains',
+                editType: 'select'
+            }"></app-list-property>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
             <!-- TYPE -->
             <div class="labelled-box grow-to-row" matTooltip="this field cannot be edited" [matTooltipDisabled]="!editing">
                 <div class="content capitalize">
@@ -76,16 +87,6 @@
                 referencesField: software.external_references,
                 label: 'Description'
             }"></app-descriptive-property>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col">
-            <app-list-property class="grow-to-row" [config]="{
-                mode: editing? 'edit': 'view',
-                object: software,
-                field: 'domains',
-                editType: 'select'
-            }"></app-list-property>
         </div>
     </div>
     <!-- only show relationships if configured to show them -->

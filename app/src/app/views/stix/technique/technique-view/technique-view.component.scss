@@ -5,4 +5,13 @@
         align-items: center;
         justify-content: center;
     }
+
+    .mat-form-field-wrapper {
+        margin: 0;
+        padding: 0;
+    }
+
+    .no-padding {
+        .labelled-box { padding-top: 0px; }
+    }
 }

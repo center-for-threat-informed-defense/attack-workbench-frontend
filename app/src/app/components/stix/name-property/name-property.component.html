@@ -1,6 +1,7 @@
 <h1 class="name-property">
     <ng-container *ngIf="config.mode == 'view'; else edit">
-        <span *ngIf="config.parent">{{config.parent.name}}: </span> {{config.object[config.field ? config.field : "name"]}}
+        <span *ngIf="config.parent">
+            <a class="external-link" [href]="internalParentLink" target="_blank">{{config.parent.name}}</a>: </span> {{config.object[config.field ? config.field : "name"]}}
         <app-icon-view [config]="{object: config.object, field: 'workflow'}"></app-icon-view>
     </ng-container>
     <ng-template #edit>
