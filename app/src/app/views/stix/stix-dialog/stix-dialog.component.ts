@@ -90,6 +90,7 @@ export class StixDialogComponent implements OnInit {
         let subscription = object.save(this.restApiConnectorService).subscribe({
             next: (result) => {
                 this.editorService.onEditingStopped.emit();
+                if (object.attackType == 'relationship') this.editorService.onRelationshipSave.emit();
                 if (this.prevObject) this.revertToPreviousObject();
                 else if (object.attackType == 'data-component') { // view data component on save
                     this.validating = false;

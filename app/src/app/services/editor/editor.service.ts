@@ -13,6 +13,7 @@ export class EditorService {
     public editable: boolean = false;
     public editing: boolean = false;
     public onSave = new EventEmitter();
+    public onRelationshipSave = new EventEmitter();
     public onEditingStopped = new EventEmitter();
     public onReload = new EventEmitter();
     
