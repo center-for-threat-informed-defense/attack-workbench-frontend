@@ -33,6 +33,12 @@ export class NamePropertyComponent implements OnInit {
         }
     }
 
+    /**
+     * retrieve the internal link to the parent technique
+     */
+    public get internalParentLink(): string {
+        return `/${this.config.parent.attackType}/${this.config.parent.stixID}`;
+    }
 }
 
 export interface NamePropertyConfig {

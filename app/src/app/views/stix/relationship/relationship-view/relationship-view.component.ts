@@ -5,6 +5,7 @@ import { StixObject, stixTypeToAttackType } from 'src/app/classes/stix/stix-obje
 import { AuthenticationService } from 'src/app/services/connectors/authentication/authentication.service';
 import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/rest-api-connector.service';
 import { StixViewPage } from '../../stix-view-page';
+import * as moment from 'moment';
 
 @Component({
   selector: 'app-relationship-view',
@@ -48,7 +49,7 @@ export class RelationshipViewComponent extends StixViewPage implements OnInit {
             }
         }
         if (this.relationship.target_object) {
-            if ( (this.relationship.target_object.stix.x_mitre_is_subtechnique || this.target_type == 'data-component') ) {
+            if (this.relationship.target_object.stix.x_mitre_is_subtechnique || this.target_type == 'data-component') {
                 parent_calls.push(this.relationship.update_target_parent(this.restApiService));
             }
         }
@@ -74,4 +75,20 @@ export class RelationshipViewComponent extends StixViewPage implements OnInit {
         }) 
     }
 
+    /**
+     * Get the object version and last modified date information to display in the relationship view
+     * @param {any} obj the object to retrieve details for
+     * @returns formatted string with object's version (if defined) and last modified date (if defined)
+     */
+    public getObjectDetails(obj: any): string {
+        if (!obj || !obj["stix"]) return '';
+
+        let version = obj["stix"].x_mitre_version;
+        let modified = obj["stix"].modified ? moment(obj["stix"].modified).format('D MMM YYYY, h:mm A') : undefined;
+        
+        if (version && modified) return `(v${version}, last modified ${modified})`;
+        else if (version && !modified) return `(v${version})`;
+        else if (!version && modified) return `(last modified ${modified})`;
+        else return '';
+    }
 }

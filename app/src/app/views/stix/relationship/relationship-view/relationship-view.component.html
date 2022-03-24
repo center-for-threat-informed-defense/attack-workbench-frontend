@@ -40,7 +40,11 @@
                 <mat-expansion-panel [expanded]="relationship.target_object && !relationship.source_object" class="mat-elevation-z0">
                     <mat-expansion-panel-header>
                         <mat-panel-title>
-                            {{!relationship.source_object? 'select a source object' : relationship.source_name}}
+                            <span *ngIf="!relationship.source_object">select a source object</span>
+                            <span *ngIf="relationship.source_object">
+                                {{relationship.source_name}}
+                                <span class="text-deemphasis">{{getObjectDetails(relationship.source_object)}}</span>
+                            </span>
                         </mat-panel-title>
                         <ng-template matExpansionPanelContent>
                             <mat-form-field appearance="outline" class="type_select">
@@ -59,7 +63,11 @@
                 <mat-expansion-panel [expanded]="relationship.source_object && !relationship.target_object" class="mat-elevation-z0">
                     <mat-expansion-panel-header>
                         <mat-panel-title>
-                            {{!relationship.target_object? 'select a target object' : relationship.target_name}}
+                            <span *ngIf="!relationship.target_object">select a target object</span>
+                            <span *ngIf="relationship.target_object">
+                                {{relationship.target_name}}
+                                <span class="text-deemphasis">{{getObjectDetails(relationship.target_object)}}</span>
+                            </span>
                         </mat-panel-title>
                         <ng-template matExpansionPanelContent>
                             <mat-form-field appearance="outline" class="type_select">
