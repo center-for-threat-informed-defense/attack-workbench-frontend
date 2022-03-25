@@ -35,6 +35,7 @@ export class StixDialogComponent implements OnInit {
             object: object,
             showRelationships: object.attackType == "data-component" ? true : false,
             editable: this._config.editable && this.authenticationService.canEdit(),
+            is_new: this._config.is_new ? true : false,
             sidebarControl: this._config.sidebarControl == "disable" ? "disable" : "events",
             dialog: this.dialogRef // relevant when adding a new relationship inside of an existing dialog
         }
@@ -156,7 +157,6 @@ export class StixDialogComponent implements OnInit {
             saves.push(target_obj.save(this.restApiConnectorService));
         }
         if (saves.length) {
-            console.log(saves)
             var subscription = forkJoin(saves).subscribe({
                 complete: () => { if (subscription) subscription.unsubscribe(); }
             });

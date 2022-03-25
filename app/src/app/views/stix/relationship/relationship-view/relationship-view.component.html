@@ -87,54 +87,56 @@
                 </mat-accordion>
             </div>
         </div>
-        <!-- source object version -->
-        <h4 *ngIf="relationship.source_object && source_type !== 'data-component'" class="section-header">Update version of {{relationship.source_name}}?</h4>
-        <div class="row" *ngIf="relationship.source_object && source_type !== 'data-component'">
-            <div class="col">
-                <div class="labelled-box grow-to-row">
-                    <div class="content no-label">
-                        <mat-checkbox [(ngModel)]="source_version.minor" (change)="source_version.major=false; onSourceVersionChange($event)">
-                            Minor version update
-                            <span class="text-deemphasis">(v{{relationship.source_object['stix'].x_mitre_version}} <mat-icon inline="true">east</mat-icon> v{{nextMinorVersion(relationship.source_object)}})</span>
-                        </mat-checkbox>
+        <ng-container *ngIf="config.is_new">
+            <!-- source object version -->
+            <h4 *ngIf="relationship.source_object && source_type !== 'data-component'" class="section-header">Update version of {{relationship.source_name}}?</h4>
+            <div class="row" *ngIf="relationship.source_object && source_type !== 'data-component'">
+                <div class="col">
+                    <div class="labelled-box grow-to-row">
+                        <div class="content no-label">
+                            <mat-checkbox [(ngModel)]="source_version.minor" (change)="source_version.major=false; onSourceVersionChange($event)">
+                                Minor version update
+                                <span class="text-deemphasis">(v{{relationship.source_object['stix'].x_mitre_version}} <mat-icon inline="true">east</mat-icon> v{{nextMinorVersion(relationship.source_object)}})</span>
+                            </mat-checkbox>
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="labelled-box grow-to-row">
+                        <div class="content no-label">
+                            <mat-checkbox [(ngModel)]="source_version.major" (change)="source_version.minor=false; onSourceVersionChange($event)">
+                                Major version update
+                                <span class="text-deemphasis">(v{{relationship.source_object['stix'].x_mitre_version}} <mat-icon inline="true">east</mat-icon> v{{nextMajorVersion(relationship.source_object)}})</span>
+                            </mat-checkbox>
+                        </div>
                     </div>
                 </div>
             </div>
-            <div class="col">
-                <div class="labelled-box grow-to-row">
-                    <div class="content no-label">
-                        <mat-checkbox [(ngModel)]="source_version.major" (change)="source_version.minor=false; onSourceVersionChange($event)">
-                            Major version update
-                            <span class="text-deemphasis">(v{{relationship.source_object['stix'].x_mitre_version}} <mat-icon inline="true">east</mat-icon> v{{nextMajorVersion(relationship.source_object)}})</span>
-                        </mat-checkbox>
+            <!-- target object version -->
+            <h4 *ngIf="relationship.target_object" class="section-header">Update version of {{relationship.target_name}}?</h4>
+            <div class="row" *ngIf="relationship.target_object">
+                <div class="col">
+                    <div class="labelled-box grow-to-row">
+                        <div class="content no-label">
+                            <mat-checkbox [(ngModel)]="target_version.minor" (change)="target_version.major=false; onTargetVersionChange($event)">
+                                Minor version update
+                                <span class="text-deemphasis">(v{{relationship.target_object['stix'].x_mitre_version}} <mat-icon inline="true">east</mat-icon> v{{nextMinorVersion(relationship.target_object)}})</span>
+                            </mat-checkbox>
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="labelled-box grow-to-row">
+                        <div class="content no-label">
+                            <mat-checkbox [(ngModel)]="target_version.major" (change)="target_version.minor=false; onTargetVersionChange($event)">
+                                Major version update
+                                <span class="text-deemphasis">(v{{relationship.target_object['stix'].x_mitre_version}} <mat-icon inline="true">east</mat-icon> v{{nextMajorVersion(relationship.target_object)}})</span>
+                            </mat-checkbox>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-        <!-- target object version -->
-        <h4 *ngIf="relationship.target_object" class="section-header">Update version of {{relationship.target_name}}?</h4>
-        <div class="row" *ngIf="relationship.target_object">
-            <div class="col">
-                <div class="labelled-box grow-to-row">
-                    <div class="content no-label">
-                        <mat-checkbox [(ngModel)]="target_version.minor" (change)="target_version.major=false; onTargetVersionChange($event)">
-                            Minor version update
-                            <span class="text-deemphasis">(v{{relationship.target_object['stix'].x_mitre_version}} <mat-icon inline="true">east</mat-icon> v{{nextMinorVersion(relationship.target_object)}})</span>
-                        </mat-checkbox>
-                    </div>
-                </div>
-            </div>
-            <div class="col">
-                <div class="labelled-box grow-to-row">
-                    <div class="content no-label">
-                        <mat-checkbox [(ngModel)]="target_version.major" (change)="target_version.minor=false; onTargetVersionChange($event)">
-                            Major version update
-                            <span class="text-deemphasis">(v{{relationship.target_object['stix'].x_mitre_version}} <mat-icon inline="true">east</mat-icon> v{{nextMajorVersion(relationship.target_object)}})</span>
-                        </mat-checkbox>
-                    </div>
-                </div>
-            </div>
-        </div>
+        </ng-container>
     </ng-container>
     <ng-container *ngIf="relationship.relationship_type != 'subtechnique-of'">
         <div class="row">
