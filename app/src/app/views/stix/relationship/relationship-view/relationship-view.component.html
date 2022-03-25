@@ -88,8 +88,8 @@
             </div>
         </div>
         <!-- source object version -->
-        <h4 *ngIf="relationship.source_object" class="section-header">Update version of {{relationship.source_name}}?</h4>
-        <div class="row" *ngIf="relationship.source_object">
+        <h4 *ngIf="relationship.source_object && source_type !== 'data-component'" class="section-header">Update version of {{relationship.source_name}}?</h4>
+        <div class="row" *ngIf="relationship.source_object && source_type !== 'data-component'">
             <div class="col">
                 <div class="labelled-box grow-to-row">
                     <div class="content no-label">
