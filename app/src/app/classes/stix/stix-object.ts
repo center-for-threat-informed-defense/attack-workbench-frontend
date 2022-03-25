@@ -456,7 +456,6 @@ export abstract class StixObject extends Serializable {
 
     public generateAttackIDWithPrefix(restAPIService?: RestApiConnectorService) {
       if (!this.firstInitialized || !this.supportsNamespace) return;
-      this.attackID = '(generating ID)';
       let sub = this.getNamespaceID(restAPIService).subscribe({
         next: (val) => {
           this.attackID = val
@@ -466,48 +465,89 @@ export abstract class StixObject extends Serializable {
     }
 
     public getNamespaceID(restAPIConnector): Observable<any> {
-      let newID = "";
+      let prefix = ''; // i.e. 'PRE-T'
+      let count = ''; // i.e. '1234'
+      let copyID = this.attackID;
+      this.attackID = '(generating ID)';
       return restAPIConnector.getOrganizationNamespace().pipe(
         map(namespaceSettings => namespaceSettings),
         switchMap(organizationNamespace => {
           if (organizationNamespace && organizationNamespace.hasOwnProperty('prefix')) {
-            if (organizationNamespace['prefix']) newID += (organizationNamespace['prefix'] + '-');
-              let count = organizationNamespace['range_start'];
-              count = (count > 0 ? count : 1).toString().padStart(4, '0'); // padStart() is unsupported in IE
-            let accessor = this.attackType == "group" ? restAPIConnector.getAllGroups() :
-              this.attackType == "mitigation" ? restAPIConnector.getAllMitigations() :
-              this.attackType == "software" ? restAPIConnector.getAllSoftware() :
-              this.attackType == "tactic" ? restAPIConnector.getAllTactics() :
-              this.attackType == "technique" ? restAPIConnector.getAllTechniques() :
-              this.attackType == "data-source" ? restAPIConnector.getAllDataSources() :
-              this.attackType == "matrix" ? restAPIConnector.getAllMatrices() : null;
-            if (accessor) {
-              // Find all other objects that have this prefix and range, and set ID to the most recent and unique ID possible
-              return accessor.pipe(map((objects) => {
-                let typePrefix = this.attackIDValidator.format.includes('#') ? this.attackIDValidator.format.split('#')[0] : '';
-                let substr = organizationNamespace['prefix'] + '-' + typePrefix + count.substr(0,3);
-                let filtered = objects['data'].filter((obj) => obj.attackID.startsWith(substr));
-                  let reg = new RegExp("\\d{4}");
-                filtered = filtered.sort((a, b,) => {
-                    a = a.attackID.match(reg);
-                    b = b.attackID.match(reg);
-                    return a[0] - b[0]
-                });
+            if (organizationNamespace['prefix']) prefix += (organizationNamespace['prefix'] + '-');
+            count = organizationNamespace['range_start'];
+            count = (Number(count) > 0 ? count : 1).toString().padStart(4, '0'); // make sure ID has 4 digits i.e. 0 -> 0001 (note: padStart() is unsupported in IE)
+          }
+          let accessor = this.attackType == "group" ? restAPIConnector.getAllGroups() :
+                         this.attackType == "mitigation" ? restAPIConnector.getAllMitigations() :
+                         this.attackType == "software" ? restAPIConnector.getAllSoftware() :
+                         this.attackType == "tactic" ? restAPIConnector.getAllTactics() :
+                         this.attackType == "technique" ? restAPIConnector.getAllTechniques() :
+                         this.attackType == "data-source" ? restAPIConnector.getAllDataSources() :
+                         this.attackType == "matrix" ? restAPIConnector.getAllMatrices() : null;
+          // Find all other objects that have this prefix and range, and set ID to the most recent and unique ID possible
+          if (accessor) {
+            prefix += this.attackIDValidator.format.includes('#') ? this.attackIDValidator.format.split('#')[0] : '';
+            return accessor.pipe(map((objects) => {
+              let substr = prefix + count.substr(0,3); // i.e. look for 'PRE-T123x' matches
+              let filtered = objects['data'].filter((obj) => obj.attackID.startsWith(substr));
 
-                let latest = filtered.pop().attackID.match(reg)[0];
-                latest = Number(latest)
-                count = count > latest ? count : latest;
-                count += 1
+              let reg = new RegExp("\\d{4}");
+              filtered = filtered.sort((a, b,) => {
+                a = a.attackID.match(reg);
+                b = b.attackID.match(reg);
+                return a[0] - b[0] // check which 4-digit ID is greater
+              });
 
-                // Add prefix, group type prefix, and trailing 0s if subtechnique
-                if (this.hasOwnProperty('supportsAttackID') && this['supportsAttackID'] && this.attackIDValidator.format.includes('#')) newID += this.attackIDValidator.format.split('#')[0]
-                if (this.attackType != "matrix") newID += (count > 0 ? count : 1).toString().padStart(4, '0'); // padStart() is unsupported in IE
-                if (this.hasOwnProperty('is_subtechnique') && this['is_subtechnique']) newID += '.00'
-                return newID
-              }))
-            }
-            return of(newID);
-          } else return of(newID)
+              let latest = filtered.pop().attackID.match(reg)[0];
+              latest = Number(latest)
+              count = (Number(count) > latest ? Number(count) + 1 : latest).toString().padStart(4, '0');
+
+              // Generate next available ID (assumes user had already clicked generate once and that's why the attackID already exists)
+              if (copyID && copyID.replace(/[A-Z]+-/i,'').endsWith(count)) {
+                count = (Number(count) + 1).toString().padStart(4, '0');
+              }
+
+              if (this.hasOwnProperty('is_subtechnique') && this['is_subtechnique']) {
+                count = '';
+                if (this.hasOwnProperty('parentTechnique') && this['parentTechnique']) {
+                  let children$ = restAPIConnector.getTechnique(this['parentTechnique'].stixID, null, "all");
+                  if (children$) {
+                    let sub = children$.subscribe({
+                      next: t => {
+                        if (t[0] && t[0].attackID) {
+                          count = t[0].attackID.replace(/[A-Z]+-/, "").replace(/[A-Z]/, ''); // 'PRE-T1234' -> '1234'
+                          count += '.01';
+                          let reg = new RegExp("[.]\\d{2}");
+                          let children = t[0].subTechniques;
+                          if (children.length > 0) {
+                            children = children.sort((a, b,) => {
+                              a = a.attackID.match(reg);
+                              b = b.attackID.match(reg);
+                              return a[0] - b[0] // check which sub ID is greater
+                            });
+                            let latest = children.pop().attackID.match(reg)[0];
+                            latest = Number(latest)
+                            count = (Number(count) > latest ? Number(count) + .01 : latest).toString();
+                            let [whole, fract] = count.split('.')
+                            count = whole.padStart(4, '0') + fract;
+                          }
+                          // Manually setting attack ID here, since otherwise might hit return before subscription ends
+                          this.attackID = prefix + count;
+                        }
+
+                      },
+                      complete: () => { sub.unsubscribe() }
+                    })
+                  }
+
+                }
+
+              }
+
+              return (prefix + count);
+            }))
+          }
+          return of((prefix + count));
         })
       )
     }
