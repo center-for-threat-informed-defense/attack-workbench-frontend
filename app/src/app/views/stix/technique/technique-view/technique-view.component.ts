@@ -1,7 +1,7 @@
 import { AfterContentChecked, ChangeDetectorRef, Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { Technique } from 'src/app/classes/stix/technique';
-import { AuthenticationService } from 'src/app/services/connectors/authentication/authentication.service';
 import { StixViewPage } from '../../stix-view-page';
+import { AuthenticationService } from 'src/app/services/connectors/authentication/authentication.service';
 import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/rest-api-connector.service';
 
 @Component({

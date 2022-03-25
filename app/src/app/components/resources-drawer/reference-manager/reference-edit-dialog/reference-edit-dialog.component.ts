@@ -32,6 +32,7 @@ export class ReferenceEditDialogComponent implements OnInit {
             this.is_new = true;
             this.citation.day = new FormControl(null, [Validators.max(31), Validators.min(1)]);
             this.citation.year = new FormControl(null, [Validators.max(2100), Validators.min(1970)]);
+            this.citation.retrieved = new Date(); // default to current date
             this.reference = {
                 source_name: "",
                 url: "",

@@ -5,5 +5,15 @@
         align-items: center;
         justify-content: center;
     }
+
     .name-property .mat-form-field-label-wrapper { top: -0.7em; }
+
+    .mat-form-field-wrapper {
+        margin: 0;
+        padding: 0;
+    }
+
+    .no-padding {
+        .labelled-box { padding-top: 0px; }
+    }
 }

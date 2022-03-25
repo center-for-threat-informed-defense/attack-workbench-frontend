@@ -1,5 +1,5 @@
 <div class="descriptive-edit">
-    <mat-tab-group>
+    <mat-tab-group (selectedTabChange)="selectionChanged($event)">
         <mat-tab label="Write">
             <mat-form-field class="edit" floatLabel="never" appearance="outline">
                 <div class="vertical-centered">
@@ -14,7 +14,7 @@
                 <h3>{{config.label}}</h3>
                 <app-loading-overlay *ngIf="parsingCitations else preview"></app-loading-overlay>
                 <ng-template #preview>
-                    <app-descriptive-view [config]="config"></app-descriptive-view>
+                    <app-descriptive-view #description [config]="config"></app-descriptive-view>
                 </ng-template>
             </div>
         </mat-tab>

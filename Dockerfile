@@ -26,8 +26,7 @@ FROM nginx:1.19
 # Remove the default nginx website
 RUN rm -rf /usr/share/nginx/html/*
 
-# Copy the nginx config file
-COPY ./nginx/nginx.conf /etc/nginx/nginx.conf
+# Note: The nginx config file must be included as a volume at /etc/nginx/nginx.conf
 
 # Copy the application bundles
 COPY --from=build  /usr/src/app/dist/app /usr/share/nginx/html
