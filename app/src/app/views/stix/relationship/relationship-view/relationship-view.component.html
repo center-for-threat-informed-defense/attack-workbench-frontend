@@ -93,7 +93,7 @@
             <div class="col">
                 <div class="labelled-box grow-to-row">
                     <div class="content no-label">
-                        <mat-checkbox [(ngModel)]="source_minor_update" (change)="source_major_update=false">
+                        <mat-checkbox [(ngModel)]="source_version.minor" (change)="source_version.major=false; onSourceVersionChange($event)">
                             Minor version update
                             <span class="text-deemphasis">(v{{relationship.source_object['stix'].x_mitre_version}} <mat-icon inline="true">east</mat-icon> v{{nextMinorVersion(relationship.source_object)}})</span>
                         </mat-checkbox>
@@ -103,7 +103,7 @@
             <div class="col">
                 <div class="labelled-box grow-to-row">
                     <div class="content no-label">
-                        <mat-checkbox [(ngModel)]="source_major_update" (change)="source_minor_update=false">
+                        <mat-checkbox [(ngModel)]="source_version.major" (change)="source_version.minor=false; onSourceVersionChange($event)">
                             Major version update
                             <span class="text-deemphasis">(v{{relationship.source_object['stix'].x_mitre_version}} <mat-icon inline="true">east</mat-icon> v{{nextMajorVersion(relationship.source_object)}})</span>
                         </mat-checkbox>
@@ -117,7 +117,7 @@
             <div class="col">
                 <div class="labelled-box grow-to-row">
                     <div class="content no-label">
-                        <mat-checkbox [(ngModel)]="target_minor_update" (change)="target_major_update=false">
+                        <mat-checkbox [(ngModel)]="target_version.minor" (change)="target_version.major=false; onTargetVersionChange($event)">
                             Minor version update
                             <span class="text-deemphasis">(v{{relationship.target_object['stix'].x_mitre_version}} <mat-icon inline="true">east</mat-icon> v{{nextMinorVersion(relationship.target_object)}})</span>
                         </mat-checkbox>
@@ -127,7 +127,7 @@
             <div class="col">
                 <div class="labelled-box grow-to-row">
                     <div class="content no-label">
-                        <mat-checkbox [(ngModel)]="target_major_update" (change)="target_minor_update=false">
+                        <mat-checkbox [(ngModel)]="target_version.major" (change)="target_version.minor=false; onTargetVersionChange($event)">
                             Major version update
                             <span class="text-deemphasis">(v{{relationship.target_object['stix'].x_mitre_version}} <mat-icon inline="true">east</mat-icon> v{{nextMajorVersion(relationship.target_object)}})</span>
                         </mat-checkbox>
