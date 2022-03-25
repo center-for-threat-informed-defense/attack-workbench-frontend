@@ -626,7 +626,7 @@ export abstract class StixObject extends Serializable {
                     next: t => {
                       if (t[0] && t[0].attackID) {
                         count = t[0].attackID.replace(/[A-Z]+-/, "").replace(/[A-Z]/, ''); // 'PRE-T1234' -> '1234'
-                        count += '.01';
+                        count += '.001';
                         let reg = new RegExp("[.]\\d{2}");
                         let children = t[0].subTechniques;
                         if (children.length > 0) {
@@ -637,7 +637,7 @@ export abstract class StixObject extends Serializable {
                           });
                           let latest = children.pop().attackID.match(reg)[0];
                           latest = Number(latest)
-                          count = (Number(count) > latest ? Number(count) + .01 : latest).toString();
+                          count = (Number(count) > latest ? Number(count) + .001 : latest).toString();
                           let [whole, fract] = count.split('.')
                           count = whole.padStart(4, '0') + fract;
                         }
