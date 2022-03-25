@@ -21,9 +21,6 @@ export class TechniqueViewComponent extends StixViewPage implements OnInit, Afte
         if (this.technique.firstInitialized) {
             this.technique.initializeWithDefaultMarkingDefinitions(this.restApiConnector);
         }
-        if (this.technique.supportsNamespace && this.editing) {
-            this.technique.generateAttackIDWithPrefix(this.restApiConnector);
-        }
       }
 
     ngAfterContentChecked() {

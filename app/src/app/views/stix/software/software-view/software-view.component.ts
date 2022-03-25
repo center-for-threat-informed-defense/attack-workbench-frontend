@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Software } from 'src/app/classes/stix/software';
 import { AuthenticationService } from 'src/app/services/connectors/authentication/authentication.service';
 import { StixViewPage } from '../../stix-view-page';
-import { RestApiConnectorService } from "src/app/services/connectors/rest-api/rest-api-connector.service";
+import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/rest-api-connector.service';
 
 @Component({
     selector: 'app-software-view',
@@ -19,9 +19,6 @@ export class SoftwareViewComponent extends StixViewPage implements OnInit {
     ngOnInit() {
         if (this.software.firstInitialized ) {
             this.software.initializeWithDefaultMarkingDefinitions(this.restApiConnector);
-        }
-        if (this.software.supportsNamespace && this.editing) {
-            this.software.generateAttackIDWithPrefix(this.restApiConnector);
         }
     }
 

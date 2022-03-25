@@ -31,11 +31,5 @@ export class MatrixViewComponent extends StixViewPage implements OnInit {
         if (this.matrix.firstInitialized) {
             this.matrix.initializeWithDefaultMarkingDefinitions(this.restAPIConnectorService);
         }
-        if (this.matrix.supportsNamespace) {
-            this.matrix.generateAttackIDWithPrefix(this.restAPIConnectorService);
-        }
-        if (this.matrix.supportsNamespace && this.editing) {
-            this.matrix.generateAttackIDWithPrefix(this.restAPIConnectorService);
-        }
     }
 }

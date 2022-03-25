@@ -498,7 +498,7 @@ export abstract class StixObject extends Serializable {
                 return a[0] - b[0] // check which 4-digit ID is greater
               });
 
-              let latest = filtered.pop().attackID.match(reg)[0];
+              let latest = filtered.length > 0 ? filtered.pop().attackID.match(reg)[0] : '0';
               latest = Number(latest)
               count = (Number(count) > latest ? Number(count) + 1 : latest).toString().padStart(4, '0');
 

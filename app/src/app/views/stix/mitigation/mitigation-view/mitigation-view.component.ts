@@ -3,7 +3,7 @@ import { Mitigation } from 'src/app/classes/stix/mitigation';
 import { StixViewPage } from '../../stix-view-page';
 import { Relationship } from 'src/app/classes/stix/relationship';
 import { AuthenticationService } from 'src/app/services/connectors/authentication/authentication.service';
-import { RestApiConnectorService } from "src/app/services/connectors/rest-api/rest-api-connector.service";
+import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/rest-api-connector.service';
 
 @Component({
     selector: 'app-mitigation-view',
@@ -22,9 +22,6 @@ export class MitigationViewComponent extends StixViewPage implements OnInit {
     ngOnInit() {
         if (this.mitigation.firstInitialized ) {
             this.mitigation.initializeWithDefaultMarkingDefinitions(this.restApiConnector);
-        }
-        if (this.mitigation.supportsNamespace && this.editing) {
-            this.mitigation.generateAttackIDWithPrefix(this.restApiConnector);
         }
     }
 }
