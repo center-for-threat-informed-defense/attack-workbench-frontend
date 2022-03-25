@@ -589,12 +589,12 @@ export abstract class StixObject extends Serializable {
           count = (Number(count) > 0 ? count : 1).toString().padStart(4, '0'); // make sure ID has 4 digits i.e. 0 -> 0001 (note: padStart() is unsupported in IE)
         }
         let accessor = this.attackType == "group" ? restAPIConnector.getAllGroups() :
-          this.attackType == "mitigation" ? restAPIConnector.getAllMitigations() :
-            this.attackType == "software" ? restAPIConnector.getAllSoftware() :
-              this.attackType == "tactic" ? restAPIConnector.getAllTactics() :
-                this.attackType == "technique" ? restAPIConnector.getAllTechniques() :
-                  this.attackType == "data-source" ? restAPIConnector.getAllDataSources() :
-                    this.attackType == "matrix" ? restAPIConnector.getAllMatrices() : null;
+                       this.attackType == "mitigation" ? restAPIConnector.getAllMitigations() :
+                       this.attackType == "software" ? restAPIConnector.getAllSoftware() :
+                       this.attackType == "tactic" ? restAPIConnector.getAllTactics() :
+                       this.attackType == "technique" ? restAPIConnector.getAllTechniques() :
+                       this.attackType == "data-source" ? restAPIConnector.getAllDataSources() :
+                       this.attackType == "matrix" ? restAPIConnector.getAllMatrices() : null;
         // Find all other objects that have this prefix and range, and set ID to the most recent and unique ID possible
         if (accessor) {
           prefix += this.attackIDValidator.format.includes('#') ? this.attackIDValidator.format.split('#')[0] : '';
@@ -611,7 +611,7 @@ export abstract class StixObject extends Serializable {
 
             let latest = filtered.length > 0 ? filtered.pop().attackID.match(reg)[0] : '0';
             latest = Number(latest)
-            count = (Number(count) > latest ? Number(count) + 1 : latest).toString().padStart(4, '0');
+            count = (Number(count) > latest ? count : latest + 1).toString().padStart(4, '0');
 
             // Generate next available ID (assumes user had already clicked generate once and that's why the attackID already exists)
             if (copyID && copyID.replace(/[A-Z]+-/i,'').endsWith(count)) {

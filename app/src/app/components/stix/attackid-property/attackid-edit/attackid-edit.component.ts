@@ -1,6 +1,7 @@
 import { Component, OnInit, Input, ViewEncapsulation } from '@angular/core';
 import { AttackIDPropertyConfig } from '../attackid-property.component';
 import { RestApiConnectorService } from '../../../../services/connectors/rest-api/rest-api-connector.service';
+import { StixObject } from '../../../../classes/stix/stix-object';
 
 @Component({
   selector: 'app-attackid-edit',
@@ -10,7 +11,11 @@ import { RestApiConnectorService } from '../../../../services/connectors/rest-ap
 })
 export class AttackIDEditComponent {
   @Input() public config: AttackIDPropertyConfig;
-  public generateClicked = false;
 
-  constructor(private restApiConnector: RestApiConnectorService) {}
+  constructor(public restApiConnector: RestApiConnectorService) {}
+
+  handleGenerateClick(): void {
+    this.config.object = this.config.object as StixObject;
+    this.config.object.generateAttackIDWithPrefix(this.restApiConnector);
+  }
 }

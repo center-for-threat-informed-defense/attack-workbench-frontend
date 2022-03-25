@@ -2,9 +2,8 @@
     <mat-form-field class="attackid" appearance="outline">
         <mat-label>ID</mat-label>
         <input matInput [(ngModel)]="config.object['attackID']">
-        <button mat-icon-button matSuffix (click)="generateClicked = true; config.object.generateAttackIDWithPrefix(restApiConnector)" aria-label="Generate ATT&CK ID">
+        <button *ngIf="config.object['firstInitialized'] && ['group', 'mitigation', 'software', 'tactic', 'technique', 'data-source', 'matrix'].includes(config.object['attackType'])" mat-icon-button matSuffix (click)="handleGenerateClick()" matTooltip="ID is generated based on your organization's namespace settings" aria-label="Generate ID button">
             <mat-icon>{{'autorenew'}}</mat-icon>
         </button>
-        <mat-hint *ngIf="config.object['firstInitialized'] && generateClicked && ['group', 'mitigation', 'software', 'tactic', 'technique', 'data-source', 'matrix'].includes(config.object['attackType'])">ID is generated based on your organization's namespace settings</mat-hint>
     </mat-form-field>
 </div>
