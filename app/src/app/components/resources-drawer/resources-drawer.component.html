@@ -10,7 +10,7 @@
             </button>
         </ng-container>
     </mat-toolbar>
-    <div class="content">
+    <div class="content" *ngIf="isLoggedIn">
         <h1 class="tab-title">
             {{currentTab}}
         </h1>
