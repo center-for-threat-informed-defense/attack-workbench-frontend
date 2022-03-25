@@ -583,11 +583,13 @@ export abstract class StixObject extends Serializable {
     return restAPIConnector.getOrganizationNamespace().pipe(
       map(namespaceSettings => namespaceSettings),
       switchMap(organizationNamespace => {
-        if (organizationNamespace && organizationNamespace.hasOwnProperty('prefix')) {
+        if (organizationNamespace && organizationNamespace.hasOwnProperty('prefix') && this.firstInitialized) {
           if (organizationNamespace['prefix']) prefix += (organizationNamespace['prefix'] + '-');
           if (appendNamespaceOnly) return of(prefix += inputID.replace(/(.*?)-/, ""));
           count = organizationNamespace['range_start'];
           count = (Number(count) > 0 ? count : 1).toString().padStart(4, '0'); // make sure ID has 4 digits i.e. 0 -> 0001 (note: padStart() is unsupported in IE)
+        } else if (!this.firstInitialized) {
+          count = copyID.replace(/[A-Z]+/, "");
         }
         let accessor = this.attackType == "group" ? restAPIConnector.getAllGroups() :
                        this.attackType == "mitigation" ? restAPIConnector.getAllMitigations() :
@@ -600,47 +602,38 @@ export abstract class StixObject extends Serializable {
         if (accessor) {
           prefix += this.attackIDValidator.format.includes('#') ? this.attackIDValidator.format.split('#')[0] : '';
           return accessor.pipe(map((objects) => {
-            let substr = prefix + count.substr(0,3); // i.e. look for 'PRE-T123x' matches
-            let filtered = objects['data'].filter((obj) => obj.attackID.startsWith(substr));
+            // keep all existing ids, remove non-digits and decimals
+            const existingIDs = objects['data'].map(o => o.attackID.replace(/[A-Z]+/, "").replace(/[.](\d{3})/, ""));
 
-            let reg = new RegExp("\\d{4}");
-            filtered = filtered.sort((a, b,) => {
-              a = a.attackID.match(reg);
-              b = b.attackID.match(reg);
-              return a[0] - b[0] // check which 4-digit ID is greater
-            });
-
-            let latest = filtered.length > 0 ? filtered.pop().attackID.match(reg)[0] : '0';
-            latest = Number(latest)
-            count = (Number(count) > latest ? count : latest + 1).toString().padStart(4, '0');
-
-            // Generate next available ID (assumes user had already clicked generate once and that's why the attackID already exists)
-            if (copyID && copyID.replace(/[A-Z]+-/i,'').endsWith(count)) {
-              count = (Number(count) + 1).toString().padStart(4, '0');
+            // if range_start was undefined or 0, and is not in edit mode, then start counting from latest ID in object group
+            if (!organizationNamespace['range_start'] && this.firstInitialized) {
+              count = (existingIDs.length > 0 ? Number(existingIDs.sort().pop()) + 1 : 1).toString().padStart(4, '0');
+            }
+            else {// keep incrementing count until it is not found in objects and is a unique ID
+              while (existingIDs.includes(count)) {
+                count = (Number(count) + 1).toString().padStart(4, '0');
+              }
             }
 
             if (this.hasOwnProperty('is_subtechnique') && this['is_subtechnique']) {
               if (this.hasOwnProperty('parentTechnique') && this['parentTechnique']) {
-                let children$ = restAPIConnector.getTechnique(this['parentTechnique'].stixID, null, "all");
+                let children$ = restAPIConnector.getTechnique(this['parentTechnique'].stixID, null, "latest", true);
                 if (children$) {
                   let sub = children$.subscribe({
                     next: t => {
                       if (t[0] && t[0].attackID) {
                         count = t[0].attackID.replace(/[A-Z]+-/, "").replace(/[A-Z]/, ''); // 'PRE-T1234' -> '1234'
-                        count += '.001';
-                        let reg = new RegExp("[.]\\d{2}");
+                        let reg = new RegExp("[.]\\d{3}");
                         let children = t[0].subTechniques;
                         if (children.length > 0) {
-                          children = children.sort((a, b,) => {
-                            a = a.attackID.match(reg);
-                            b = b.attackID.match(reg);
-                            return a[0] - b[0] // check which sub ID is greater
-                          });
-                          let latest = children.pop().attackID.match(reg)[0];
-                          latest = Number(latest)
-                          count = (Number(count) > latest ? Number(count) + .001 : latest).toString();
+                          children = children.map(c => c.attackID.replace(/[A-Z]/, "")).sort()
+                          let latest = children.pop();
+                          latest = Number(latest) // i.e. 1234.001
+                          count = (Number(count) > latest ? Number(count) : latest + .001).toString();
                           let [whole, fract] = count.split('.')
-                          count = whole.padStart(4, '0') + fract;
+                          count = whole.padStart(4, '0') + '.' + fract.padEnd(3, '0');
+                        } else {
+                          count += '.001';
                         }
                         // Manually setting attack ID here, since otherwise might hit return before subscription ends
                         this.attackID = prefix + count;
