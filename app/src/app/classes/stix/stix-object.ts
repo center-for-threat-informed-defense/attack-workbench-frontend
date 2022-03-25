@@ -508,7 +508,6 @@ export abstract class StixObject extends Serializable {
               }
 
               if (this.hasOwnProperty('is_subtechnique') && this['is_subtechnique']) {
-                count = '';
                 if (this.hasOwnProperty('parentTechnique') && this['parentTechnique']) {
                   let children$ = restAPIConnector.getTechnique(this['parentTechnique'].stixID, null, "all");
                   if (children$) {
@@ -541,7 +540,7 @@ export abstract class StixObject extends Serializable {
                   }
 
                 }
-
+                else return '(parent technique missing)';
               }
 
               return (prefix + count);
