@@ -58,7 +58,6 @@ const attackTypeToClass = {
     "data-source": DataSource,
     "data-component": DataComponent
 }
-export { attackTypeToClass };
 
 // transform AttackType to the relevant class
 const stixTypeToClass = {
@@ -76,6 +75,7 @@ const stixTypeToClass = {
     "x-mitre-data-source": DataSource,
     "x-mitre-data-component": DataComponent
 }
+export { stixTypeToClass };
 
 export interface Paginated<T> {
     data: T[],
