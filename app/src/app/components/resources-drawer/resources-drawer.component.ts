@@ -1,4 +1,5 @@
 import { Component, OnInit, ViewEncapsulation, Output, EventEmitter, Input } from '@angular/core';
+import { AuthenticationService } from 'src/app/services/connectors/authentication/authentication.service';
 import { SidebarService } from 'src/app/services/sidebar/sidebar.service';
 
 @Component({
@@ -18,8 +19,9 @@ export class ResourcesDrawerComponent implements OnInit {
         if (this.useService) return this.sidebarService.currentTab;
         else return this.currentTabOverride;
     }
+    public get isLoggedIn(): boolean { return this.authenticationService.isLoggedIn; }
 
-    constructor(public sidebarService: SidebarService) { }
+    constructor(public sidebarService: SidebarService, public authenticationService: AuthenticationService) { }
 
     public onTabClick(tab: any) {
         if (this.useService) this.sidebarService.currentTab = tab.name;
