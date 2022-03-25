@@ -629,9 +629,9 @@ export abstract class StixObject extends Serializable {
                           children = children.map(c => c.attackID.replace(/[A-Z]/, "")).sort()
                           let latest = children.pop();
                           latest = Number(latest) // i.e. 1234.001
-                          count = (Number(count) > latest ? Number(count) : latest + .001).toString();
+                          count = (Number(count) > latest ? count : latest + .001).toFixed(3).toString();
                           let [whole, fract] = count.split('.')
-                          count = whole.padStart(4, '0') + '.' + fract.padEnd(3, '0');
+                          count = whole.padStart(4, '0') + '.' + fract;
                         } else {
                           count += '.001';
                         }
