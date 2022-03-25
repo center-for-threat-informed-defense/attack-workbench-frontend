@@ -565,9 +565,9 @@ export abstract class StixObject extends Serializable {
         });
     }
 
-  public generateAttackIDWithPrefix(restAPIService?: RestApiConnectorService) {
-    if (!this.firstInitialized || !this.supportsNamespace) return;
-    let sub = this.getNamespaceID(restAPIService).subscribe({
+  public generateAttackIDWithPrefix(restAPIService?: RestApiConnectorService, appendNamespaceOnly = false, inputID = '') {
+    if (!this.supportsNamespace) return;
+    let sub = this.getNamespaceID(restAPIService, appendNamespaceOnly, inputID).subscribe({
       next: (val) => {
         this.attackID = val
       },
@@ -575,16 +575,17 @@ export abstract class StixObject extends Serializable {
     });
   }
 
-  public getNamespaceID(restAPIConnector): Observable<any> {
+  public getNamespaceID(restAPIConnector, appendNamespaceOnly, inputID): Observable<any> {
     let prefix = ''; // i.e. 'PRE-T'
     let count = ''; // i.e. '1234'
     let copyID = this.attackID;
-    this.attackID = '(generating ID)';
+    if (!appendNamespaceOnly) this.attackID = '(generating ID)';
     return restAPIConnector.getOrganizationNamespace().pipe(
       map(namespaceSettings => namespaceSettings),
       switchMap(organizationNamespace => {
         if (organizationNamespace && organizationNamespace.hasOwnProperty('prefix')) {
           if (organizationNamespace['prefix']) prefix += (organizationNamespace['prefix'] + '-');
+          if (appendNamespaceOnly) return of(prefix += inputID.replace(/(.*?)-/, ""));
           count = organizationNamespace['range_start'];
           count = (Number(count) > 0 ? count : 1).toString().padStart(4, '0'); // make sure ID has 4 digits i.e. 0 -> 0001 (note: padStart() is unsupported in IE)
         }

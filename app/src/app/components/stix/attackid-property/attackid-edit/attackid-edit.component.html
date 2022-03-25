@@ -1,9 +1,10 @@
 <div class="attackid-edit">
     <mat-form-field class="attackid" appearance="outline">
         <mat-label>ID</mat-label>
-        <input matInput [(ngModel)]="config.object['attackID']">
-        <button *ngIf="config.object['firstInitialized'] && ['group', 'mitigation', 'software', 'tactic', 'technique', 'data-source', 'matrix'].includes(config.object['attackType'])" mat-icon-button matSuffix (click)="handleGenerateClick()" matTooltip="ID is generated based on your organization's namespace settings" aria-label="Generate ID button">
+        <input matInput [ngModel]="config.object['attackID']" (keyup)="handleKeyup($event.target.value)">
+        <button *ngIf="['group', 'mitigation', 'software', 'tactic', 'technique', 'data-source'].includes(config.object['attackType'])" mat-icon-button matSuffix (click)="handleGenerateClick()" matTooltip="Generate a unique ID, with your organization's namespace settings." aria-label="Generate ID button">
             <mat-icon>{{'autorenew'}}</mat-icon>
         </button>
+        <mat-hint *ngIf="config.object['attackType'] === 'matrix' && showHint">ID prefix appended is based on your organization's namespace settings</mat-hint>
     </mat-form-field>
 </div>

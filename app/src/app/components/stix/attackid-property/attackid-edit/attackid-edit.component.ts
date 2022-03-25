@@ -11,8 +11,20 @@ import { StixObject } from '../../../../classes/stix/stix-object';
 })
 export class AttackIDEditComponent {
   @Input() public config: AttackIDPropertyConfig;
+  public showHint = false;
 
   constructor(public restApiConnector: RestApiConnectorService) {}
+
+  handleKeyup(val): void {
+    this.config.object = this.config.object as StixObject;
+    if (this.config.object.attackType === 'matrix') {
+      this.config.object.generateAttackIDWithPrefix(this.restApiConnector, true, val);
+      this.showHint = true;
+    }
+    else {
+      this.config.object.attackID = val;
+    }
+  }
 
   handleGenerateClick(): void {
     this.config.object = this.config.object as StixObject;
