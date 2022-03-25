@@ -336,8 +336,8 @@ export abstract class StixObject extends Serializable {
                                 })
                             }
                         }
-                        // check ATT&CK ID and ignore collections
-                        if (this.hasOwnProperty("supportsAttackID") && this.supportsAttackID == true) {
+                        // check ATT&CK ID, ignoring collections and matrices
+                        if (this.attackType !== "matrix" && this.hasOwnProperty("supportsAttackID") && this.supportsAttackID == true) {
                             if (this.attackID == "") {
                                 result.warnings.push({
                                     "result": "warning",
