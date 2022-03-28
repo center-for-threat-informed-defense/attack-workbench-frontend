@@ -32,32 +32,19 @@ export class ReferenceManagerComponent implements OnInit, AfterViewInit {
     
     constructor(private restApiConnector: RestApiConnectorService, public snackbar: MatSnackBar, public dialog: MatDialog, private authenticationService: AuthenticationService) { }
 
-    public editReference(reference?: ExternalReference) {
+    public openReference(edit: boolean = false, reference?: ExternalReference) {
         let ref = this.dialog.open(ReferenceEditDialogComponent, {
             maxHeight: "75vh",
             data: {
-                mode: 'edit',
+                mode: edit ? 'edit' : 'view',
                 reference: reference
             }
         });
         let subscription = ref.afterClosed().subscribe({
             complete: () => {
-                this.applyControls();
-                subscription.unsubscribe();
+                this.applyControls(this.search.nativeElement.value);
+                subscription.unsubscribe()
             }
-        });
-    }
-
-    public viewReference(reference: ExternalReference) {
-        let ref = this.dialog.open(ReferenceEditDialogComponent, {
-            maxHeight: "75vh",
-            data: {
-                mode: 'view',
-                reference: reference
-            }
-        });
-        let subscription = ref.afterClosed().subscribe({
-            complete: () => subscription.unsubscribe()
         });
     }
 

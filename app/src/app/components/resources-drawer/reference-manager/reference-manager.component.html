@@ -1,6 +1,6 @@
 <div class="references-manager">
     <div class="add-container" *ngIf="editable && canEdit">
-        <button mat-mini-fab class="extended-fab-button" color="primary" (click)="editReference()">
+        <button mat-mini-fab class="extended-fab-button" color="primary" (click)="openReference(true)">
             <mat-icon>add</mat-icon> <span class="text-label">add a reference</span>
         </button>
     </div>
@@ -24,11 +24,8 @@
                         </div>
                         <div class="text-label lowercase">{{reference.source_name}}</div>
                     </div>
-                    <div class="col narrow clickable" (click)="viewReference(reference)">
-                        <mat-icon aria-label="view">visibility</mat-icon>
-                    </div>
-                    <div class="col narrow clickable" *ngIf="editable && canEdit" (click)="editReference(reference)">
-                        <mat-icon aria-label="edit">edit</mat-icon>
+                    <div class="col narrow clickable" (click)="openReference(false, reference)">
+                        <mat-icon aria-label="open">open_in_new</mat-icon>
                     </div>
                 </div>
             </div>
