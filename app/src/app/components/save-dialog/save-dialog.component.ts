@@ -5,6 +5,7 @@ import { ValidationData } from 'src/app/classes/serializable';
 import { StixObject, workflowStates } from 'src/app/classes/stix/stix-object';
 import { VersionNumber } from 'src/app/classes/version-number';
 import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/rest-api-connector.service';
+import { Relationship } from '../../classes/stix/relationship';
 
 @Component({
   selector: 'app-save-dialog',
@@ -123,10 +124,20 @@ export class SaveDialogComponent implements OnInit {
      * Save the object without patching other objects
      */
     private save() {
-        if (!this.saveEnabled) return;
-        let subscription = this.config.object.save(this.restApiConnectorService).subscribe({
-            next: (result) => { 
+        if (!this.saveEnabled) { return; }
+        const subscription = this.config.object.save(this.restApiConnectorService).subscribe({
+            next: (result) => {
                 this.dialogRef.close(true);
+                // if saving a sub-technique, also create a relationship between parentTechnique & sub techniques
+                if (result.attackType === 'technique') {
+                    if (result.is_subtechnique && this.config.object.parentTechnique) {
+                      const relationship = new Relationship();
+                      relationship.relationship_type = 'subtechnique-of';
+                      relationship.set_source_object(result, this.restApiConnectorService);
+                      relationship.set_target_object(this.config.object.parentTechnique, this.restApiConnectorService);
+                      relationship.save(this.restApiConnectorService);
+                    }
+                }
             },
             complete: () => {subscription.unsubscribe(); }
         });
