@@ -99,7 +99,7 @@
                 <div class="col">
                     <mat-form-field appearance="outline">
                         <mat-label>range (lower bound)</mat-label>
-                        <input matInput [pattern]="rangeRegex" type="number" [(ngModel)]="organizationNamespace.range_start">
+                        <input matInput [pattern]="rangeRegex" type="number" (blur)="onBlur()" [(ngModel)]="organizationNamespace.range_start">
                         <mat-hint>range must be 4 digits; this field can be left blank if desired</mat-hint>
                     </mat-form-field>
                 </div>

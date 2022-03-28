@@ -87,7 +87,7 @@ export interface Paginated<T> {
 
 export interface Namespace {
     prefix: string,
-    range_start: number
+    range_start: string
 }
 
 @Injectable({

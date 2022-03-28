@@ -15,7 +15,7 @@ export class OrgSettingsPageComponent implements OnInit {
     public get isNamespaceInvalid(): boolean {
       const regid = new RegExp(this.idRegex);
       const regrange = new RegExp(this.rangeRegex);
-      return !regid.test(this.organizationNamespace.prefix) || !regrange.test(this.organizationNamespace.range_start?.toString());
+      return !regid.test(this.organizationNamespace.prefix) || (this.organizationNamespace.range_start && !regrange.test(this.organizationNamespace.range_start?.toString()));
     }
 
     constructor(private restAPIConnector: RestApiConnectorService) { }
@@ -27,10 +27,16 @@ export class OrgSettingsPageComponent implements OnInit {
         });
 
         let namespaceSub = this.restAPIConnector.getOrganizationNamespace().subscribe({
-            next: (namespaceSettings) => this.organizationNamespace = namespaceSettings,
+            next: (namespaceSettings) =>
+              this.organizationNamespace = {...namespaceSettings, range_start: namespaceSettings.range_start ? namespaceSettings.range_start.toString().padStart(4, '0') : undefined},
             complete: () => namespaceSub.unsubscribe()
         })
 
+    }
+
+    onBlur() {
+      if (!this.organizationNamespace.range_start) return;
+      this.organizationNamespace.range_start = this.organizationNamespace.range_start.toString().padStart(4, '0');
     }
 
     saveIdentity() {
