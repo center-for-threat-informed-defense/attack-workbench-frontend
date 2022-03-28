@@ -21,6 +21,7 @@
                     <app-relationship-view 
                                            *ngIf="stixType == 'relationship'" 
                                            [config]="config"
+                                           (onVersionChange)="versionChange($event)"
                                            (onOpenHistory)="openHistory()"
                                            (onOpenNotes)="openNotes()">
                     </app-relationship-view>

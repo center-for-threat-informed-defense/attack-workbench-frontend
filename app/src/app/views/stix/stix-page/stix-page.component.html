@@ -5,11 +5,11 @@
         </div>
         <ng-template #showObject>
             <app-relationship-view *ngIf="objects[0].attackType == 'relationship'" [config]="buildConfig()"></app-relationship-view>
-            <app-group-view *ngIf="objects[0].attackType == 'group'" [config]="buildConfig()"></app-group-view>
-            <app-software-view *ngIf="objects[0].attackType == 'software'" [config]="buildConfig()"></app-software-view>
+            <app-group-view *ngIf="objects[0].attackType == 'group'" (onReload)="loadObjects()" [config]="buildConfig()"></app-group-view>
+            <app-software-view *ngIf="objects[0].attackType == 'software'" (onReload)="loadObjects()" [config]="buildConfig()"></app-software-view>
             <app-matrix-view *ngIf="objects[0].attackType == 'matrix'" [config]="buildConfig()"></app-matrix-view>
-            <app-mitigation-view *ngIf="objects[0].attackType == 'mitigation'" [config]="buildConfig()"></app-mitigation-view>
-            <app-technique-view *ngIf="objects[0].attackType == 'technique'"  [config]="buildConfig()"></app-technique-view>
+            <app-mitigation-view *ngIf="objects[0].attackType == 'mitigation'" (onReload)="loadObjects()" [config]="buildConfig()"></app-mitigation-view>
+            <app-technique-view *ngIf="objects[0].attackType == 'technique'" (onReload)="loadObjects()" [config]="buildConfig()"></app-technique-view>
             <app-tactic-view *ngIf="objects[0].attackType == 'tactic'" [config]="buildConfig()"></app-tactic-view>
             <app-data-source-view *ngIf="objects[0].attackType == 'data-source'" [config]="buildConfig()"></app-data-source-view>
             <app-marking-definition-view *ngIf="objects[0].attackType == 'marking-definition'" [config]="buildConfig()"></app-marking-definition-view>
