@@ -38,6 +38,8 @@ export interface StixViewConfig {
      * if false, hide such elements
      */
     editable?: boolean;
+    /** is this a new object? */
+    is_new?: boolean;
     /* How should control of the sidebar be configured? Default if omitted is "service"
      * if "disable", sidebar-related controls should not be present
      * if "events", sidebar-related controls should be passed as an @output event.

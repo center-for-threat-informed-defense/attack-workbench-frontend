@@ -37,6 +37,7 @@ export class AddRelationshipButtonComponent implements OnInit {
                 let config: StixViewConfig = {
                     object: relationship,
                     editable: true,
+                    is_new: true,
                     mode: "edit",
                     sidebarControl: "events"
                 }

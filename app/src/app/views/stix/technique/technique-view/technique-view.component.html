@@ -239,7 +239,7 @@
             </div>
             <div class="row" *ngIf="canEdit">
                 <div class="col">
-                    <app-add-relationship-button (created)="subTechniquesList.applyControls()" [config]="{
+                    <app-add-relationship-button (created)="subTechniquesList.applyControls(); onReload.emit()" [config]="{
                         label: 'sub-technique',
                         relationship_type: 'subtechnique-of',
                         target_object: technique
@@ -287,7 +287,7 @@
         </div>
         <div class="row" *ngIf="canEdit">
             <div class="col">
-                <app-add-relationship-button (created)="mitigatesList.applyControls()" [config]="{
+                <app-add-relationship-button (created)="mitigatesList.applyControls(); onReload.emit()" [config]="{
                     label: 'mitigation',
                     relationship_type: 'mitigates',
                     target_object: technique
@@ -313,7 +313,7 @@
         </div>
         <div class="row" *ngIf="canEdit">
             <div class="col">
-                <app-add-relationship-button (created)="usesList.applyControls()" [config]="{
+                <app-add-relationship-button (created)="usesList.applyControls(); onReload.emit()" [config]="{
                     label: 'procedure example',
                     relationship_type: 'uses',
                     target_object: technique
@@ -339,7 +339,7 @@
         </div>
         <div class="row" *ngIf="canEdit">
             <div class="col">
-                <app-add-relationship-button (created)="detectsList.applyControls()" [config]="{
+                <app-add-relationship-button (created)="detectsList.applyControls(); onReload.emit()" [config]="{
                     label: 'data source',
                     relationship_type: 'detects',
                     target_object: technique

@@ -120,7 +120,6 @@ export class UserAccountsPageComponent implements OnInit {
                 next: (r) => {
                     const user = r;
                     user.status = Status[`${newStatus}`];
-                    console.log(user.status)
                     if (user.status == Status.PENDING || user.status == Status.INACTIVE) {
                         // set user role to 'none'
                         user.role = Role.NONE;

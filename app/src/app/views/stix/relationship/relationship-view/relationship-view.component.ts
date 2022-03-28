@@ -1,10 +1,12 @@
-import { Component, OnInit, ViewEncapsulation } from '@angular/core';
-import { forkJoin } from 'rxjs';
+import { Component, EventEmitter, OnInit, Output, ViewEncapsulation } from '@angular/core';
 import { Relationship } from 'src/app/classes/stix/relationship';
 import { StixObject, stixTypeToAttackType } from 'src/app/classes/stix/stix-object';
 import { AuthenticationService } from 'src/app/services/connectors/authentication/authentication.service';
 import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/rest-api-connector.service';
 import { StixViewPage } from '../../stix-view-page';
+import { VersionNumber } from 'src/app/classes/version-number';
+import { EditorService } from 'src/app/services/editor/editor.service';
+import { forkJoin } from 'rxjs';
 import * as moment from 'moment';
 
 @Component({
@@ -14,7 +16,7 @@ import * as moment from 'moment';
   encapsulation: ViewEncapsulation.None
 })
 export class RelationshipViewComponent extends StixViewPage implements OnInit {
-
+    @Output() public onVersionChange = new EventEmitter();
     public get relationship() { return this.config.object as Relationship; }
     public source_type: string;
     public target_type: string;
@@ -29,9 +31,17 @@ export class RelationshipViewComponent extends StixViewPage implements OnInit {
             this.refresh = true;
         })
     }
+    public source_version: any = {
+        minor: false,
+        major: false
+    }
+    public target_version: any = {
+        minor: false,
+        major: false
+    }
 
-    constructor(private restApiService: RestApiConnectorService, authenticationService: AuthenticationService) { 
-        super(authenticationService)
+    constructor(private restApiService: RestApiConnectorService, private editorService: EditorService, authenticationService: AuthenticationService) { 
+        super(authenticationService);
     }
 
     ngOnInit(): void {
@@ -90,5 +100,41 @@ export class RelationshipViewComponent extends StixViewPage implements OnInit {
         else if (version && !modified) return `(v${version})`;
         else if (!version && modified) return `(last modified ${modified})`;
         else return '';
+    }
+
+    /**
+     * Get the formatted string for the next minor version of the given object
+     * @param {any} obj the raw STIX object
+     */
+    public nextMinorVersion(obj: any): string {
+        if (!obj || !obj["stix"] || !obj["stix"].x_mitre_version) return '';
+        let nextMinorVersion = new VersionNumber(obj["stix"].x_mitre_version).nextMinorVersion();
+        return nextMinorVersion.toString();
+    }
+
+    /**
+     * Get the formatted string for the next major version of the given object
+     * @param {any} obj the raw STIX object
+     */
+    public nextMajorVersion(obj: any): string {
+        if (!obj || !obj["stix"] || !obj["stix"].x_mitre_version) return '';
+        let nextMajorVersion = new VersionNumber(obj["stix"].x_mitre_version).nextMajorVersion();
+        return nextMajorVersion.toString();
+    }
+
+    /**
+     * Handle checkbox change for source object version update
+     * @param {MatCheckBoxChange} $event 
+     */
+    public onSourceVersionChange($event) {
+        this.onVersionChange.emit({source: this.source_version});
+    }
+
+    /**
+     * Handle checkbox change for target object version update
+     * @param {MatCheckBoxChange} $event 
+     */
+    public onTargetVersionChange($event) {
+        this.onVersionChange.emit({target: this.target_version});
     }
 }

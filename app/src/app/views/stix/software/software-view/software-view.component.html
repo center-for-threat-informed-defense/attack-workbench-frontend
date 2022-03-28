@@ -98,7 +98,7 @@
         </div>
         <div class="row" *ngIf="canEdit">
             <div class="col">
-                <app-add-relationship-button (created)="techniquesList.applyControls()" [config]="{
+                <app-add-relationship-button (created)="techniquesList.applyControls(); onReload.emit()" [config]="{
                     label: 'technique',
                     relationship_type: 'uses',
                     source_object: software
@@ -123,7 +123,7 @@
         </div>
         <div class="row" *ngIf="canEdit">
             <div class="col">
-                <app-add-relationship-button (created)="groupList.applyControls()" [config]="{
+                <app-add-relationship-button (created)="groupList.applyControls(); onReload.emit()" [config]="{
                     label: 'group',
                     relationship_type: 'uses',
                     target_object: software
