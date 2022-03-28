@@ -120,31 +120,15 @@ export abstract class StixObject extends Serializable {
      * @returns {*} the raw object to send
      */
     public base_serialize(): any {
-
         let serialized_external_references = this.external_references.serialize();
 
         // Add attackID for
         if (this.attackID && this.typeUrlMap[this.attackType]) {
-            let new_ext_ref = {
+          let new_ext_ref = {
                 "source_name": "mitre-attack",
-                "external_id": this.attackID
+                "external_id": this.attackID,
+                "url": `https://attack.mitre.org/${this.typeUrlMap[this.attackType]}/${this.attackID.replace(/\./g, '/')}`
             }
-
-            // Add url
-            // TODO: replace url with configuration
-            new_ext_ref["url"] = "https://attack.mitre.org/" + this.typeUrlMap[this.attackType] + "/"
-
-            let ID = this.attackID;
-
-            // Split attackID if it contains a '.'
-            if (this.attackID.split(".").length == 2) {
-                let divider = this.attackID.split(".");
-                ID = divider[0] + "/" + divider[1];
-            }
-
-            // Add attackID to url
-            new_ext_ref["url"] = new_ext_ref["url"] + ID;
-
             serialized_external_references.unshift(new_ext_ref);
         }
 
@@ -160,7 +144,7 @@ export abstract class StixObject extends Serializable {
             "object_marking_refs": this.object_marking_refs,
             "spec_version": "2.1"
         }
-        // Add modified data if type is not marking-definition
+        // Add modified date if type is not marking-definition
         if (this.type != "marking-definition") stix["modified"] = new Date().toISOString();
         if (this.created_by_ref) stix.created_by_ref = this.created_by_ref;
         // do not set modified by ref since we don't know who we are, but the REST API knows
@@ -232,7 +216,8 @@ export abstract class StixObject extends Serializable {
             if ("external_references" in sdo) {
                 if (typeof (sdo.external_references) === "object") {
                     this.external_references = new ExternalReferences(sdo.external_references);
-                    if (sdo.external_references.length > 0 && this.type != "relationship" && sdo.external_references[0].hasOwnProperty("external_id")) {
+                    let attack_sources = ['mitre-attack', 'mitre-mobile-attack', 'mitre-ics-attack'];
+                    if (sdo.external_references.length > 0 && this.type != "relationship" && sdo.external_references[0].hasOwnProperty("external_id") && sdo.external_references[0].hasOwnProperty("source_name") && attack_sources.includes(sdo.external_references[0].source_name)) {
                         if (typeof (sdo.external_references[0].external_id) === "string") this.attackID = sdo.external_references[0].external_id;
                         else logger.error("TypeError: attackID field is not a string:", sdo.external_references[0].external_id, "(", typeof (sdo.external_references[0].external_id), ")")
                     }
@@ -272,7 +257,7 @@ export abstract class StixObject extends Serializable {
         if ("workspace" in raw) {
             // parse workspace fields
             let workspaceData = raw.workspace;
-            if ("workflow" in workspaceData) {
+            if ("workflow" in workspaceData && workspaceData.workflow !== undefined) {
                 if (typeof (workspaceData.workflow) == "object") {
                     this.workflow = workspaceData.workflow;
                 } else logger.error("TypeError: workflow field is not an object", workspaceData)
@@ -337,8 +322,8 @@ export abstract class StixObject extends Serializable {
                                 })
                             }
                         }
-                        // check ATT&CK ID and ignore collections
-                        if (this.hasOwnProperty("supportsAttackID") && this.supportsAttackID == true) {
+                        // check ATT&CK ID, ignoring collections and matrices
+                        if (this.attackType !== "matrix" && this.hasOwnProperty("supportsAttackID") && this.supportsAttackID) {
                             if (this.attackID == "") {
                                 result.warnings.push({
                                     "result": "warning",

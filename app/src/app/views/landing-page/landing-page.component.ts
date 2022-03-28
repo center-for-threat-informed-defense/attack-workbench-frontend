@@ -1,6 +1,7 @@
 import { Component, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
+import { Subscription } from 'rxjs';
 import { Role } from 'src/app/classes/authn/role';
 import { ConfirmationDialogComponent } from 'src/app/components/confirmation-dialog/confirmation-dialog.component';
 import { AuthenticationService } from 'src/app/services/connectors/authentication/authentication.service';
@@ -14,7 +15,7 @@ import { stixRoutes } from "../../app-routing-stix.module";
   encapsulation: ViewEncapsulation.None
 })
 export class LandingPageComponent implements OnInit, OnDestroy {
-    private loginSubscription;
+    private loginSubscription: Subscription;
     public pendingUsers;
     public routes: any[] = [];
 
@@ -26,17 +27,26 @@ export class LandingPageComponent implements OnInit, OnDestroy {
     public get isLoggedIn(): boolean { return this.authenticationService.isLoggedIn; }
 
     ngOnInit() {
-        this.loginSubscription = this.authenticationService.onLogin.subscribe({
-            next: (event) => { this.openOrgIdentityDialog(); }
+        this.loginSubscription = this.authenticationService.onLogin.subscribe({ // called on initial user login
+            next: (event) => {
+                this.getPendingUsers();
+                this.openOrgIdentityDialog();
+            }
         });
-        let userSubscription = this.restApiConnector.getAllUserAccounts({status: ["pending"]}).subscribe({
-            next: (results) => {
-                let users = results as any;
-                if (users && users.length) this.pendingUsers = users.length;
-            },
-            complete: () => userSubscription.unsubscribe()
-        })
-        this.openOrgIdentityDialog();
+        setTimeout(() => { this.getPendingUsers(); this.openOrgIdentityDialog(); }, 500); // called on page refresh or re-route
+    }
+
+    private getPendingUsers(): void {
+        if (this.authenticationService.isAuthorized([Role.ADMIN])) {
+            console.log("?????")
+            let userSubscription = this.restApiConnector.getAllUserAccounts({status: ["pending"]}).subscribe({
+                next: (results) => {
+                    let users = results as any;
+                    if (users && users.length) this.pendingUsers = users.length;
+                },
+                complete: () => userSubscription.unsubscribe()
+            });
+        }
     }
 
     // bug the admin about editing their organization identity

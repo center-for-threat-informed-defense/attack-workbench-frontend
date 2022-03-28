@@ -75,6 +75,7 @@ const stixTypeToClass = {
     "x-mitre-data-source": DataSource,
     "x-mitre-data-component": DataComponent
 }
+export { stixTypeToClass };
 
 export interface Paginated<T> {
     data: T[],

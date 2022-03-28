@@ -62,7 +62,10 @@ export class AuthenticationService extends ApiConnector {
                     // redirect to OIDC Identity Provider
                     window.location.href = url;
                     return this.getSession().pipe(
-                        map(res => { return res; })
+                        map(res => {
+                            this.onLogin.emit();
+                            return res;
+                        })
                     );
                 }
                 // anonymous login

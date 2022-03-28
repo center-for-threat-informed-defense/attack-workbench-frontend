@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { Mitigation } from 'src/app/classes/stix/mitigation';
 import { StixViewPage } from '../../stix-view-page';
 import { Relationship } from 'src/app/classes/stix/relationship';
@@ -11,6 +11,7 @@ import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/re
     styleUrls: ['./mitigation-view.component.scss']
 })
 export class MitigationViewComponent extends StixViewPage implements OnInit {
+    @Output() public onReload = new EventEmitter();
     public get mitigation(): Mitigation { return this.config.object as Mitigation; }
 
     public relationships: Relationship[] = [];

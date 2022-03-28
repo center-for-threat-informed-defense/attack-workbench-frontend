@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { Group } from 'src/app/classes/stix/group';
 import { StixViewPage } from '../../stix-view-page';
 import { Relationship } from 'src/app/classes/stix/relationship';
@@ -11,6 +11,7 @@ import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/re
     styleUrls: ['./group-view.component.scss']
 })
 export class GroupViewComponent extends StixViewPage implements OnInit {
+    @Output() public onReload = new EventEmitter();
     public get group(): Group { return this.config.object as Group; }
     public relationships_techniques: Relationship[] = [];
     public relationships_software: Relationship[] = [];

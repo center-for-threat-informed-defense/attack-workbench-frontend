@@ -1,4 +1,4 @@
-import { AfterContentChecked, ChangeDetectorRef, Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { AfterContentChecked, ChangeDetectorRef, Component, EventEmitter, OnInit, Output, ViewEncapsulation } from '@angular/core';
 import { Technique } from 'src/app/classes/stix/technique';
 import { StixViewPage } from '../../stix-view-page';
 import { AuthenticationService } from 'src/app/services/connectors/authentication/authentication.service';
@@ -11,6 +11,7 @@ import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/re
     encapsulation: ViewEncapsulation.None
 })
 export class TechniqueViewComponent extends StixViewPage implements OnInit, AfterContentChecked {
+    @Output() public onReload = new EventEmitter();
     public get technique(): Technique { return this.config.object as Technique; }
 
     constructor(private ref: ChangeDetectorRef, authenticationService: AuthenticationService, private restApiConnector: RestApiConnectorService) {
