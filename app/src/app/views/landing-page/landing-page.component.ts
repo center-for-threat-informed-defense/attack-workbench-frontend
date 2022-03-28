@@ -38,7 +38,6 @@ export class LandingPageComponent implements OnInit, OnDestroy {
 
     private getPendingUsers(): void {
         if (this.authenticationService.isAuthorized([Role.ADMIN])) {
-            console.log("?????")
             let userSubscription = this.restApiConnector.getAllUserAccounts({status: ["pending"]}).subscribe({
                 next: (results) => {
                     let users = results as any;
