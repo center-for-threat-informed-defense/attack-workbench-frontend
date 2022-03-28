@@ -43,7 +43,7 @@ export class ReferenceManagerComponent implements OnInit, AfterViewInit {
         let subscription = ref.afterClosed().subscribe({
             complete: () => {
                 this.applyControls(this.search.nativeElement.value);
-                subscription.unsubscribe()
+                subscription.unsubscribe();
             }
         });
     }

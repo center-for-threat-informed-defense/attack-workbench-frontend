@@ -1,4 +1,4 @@
-<div *ngIf="config.mode == 'edit' || !config.mode else viewReference" class="reference-edit-dialog">
+<div *ngIf="config.mode == 'edit' else viewReference" class="reference-edit-dialog">
     <div *ngIf="stage == 0" class="stage edit">
         <h1>Reference Editor</h1>
         <div class="grid spacing-16">
