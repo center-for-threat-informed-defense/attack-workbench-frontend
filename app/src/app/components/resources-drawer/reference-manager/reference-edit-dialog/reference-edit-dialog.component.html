@@ -124,7 +124,7 @@
             </ng-container>
         </ng-template>
         <div class="buttons">
-            <button mat-button matDialogClose>cancel</button>
+            <button mat-button (click)="stage=0">cancel</button>
             <button mat-stroked-button *ngIf="patch_objects.length > 0 || patch_relationships > 0" (click)="patch()">apply patches and save</button>
             <button mat-stroked-button *ngIf="patch_objects.length == 0 && patch_relationships == 0" (click)="save()">save</button>
         </div>
@@ -161,7 +161,7 @@
                 </div>
             </div>
         </div>
-        <div class="row">
+        <div class="row" *ngIf="reference.url">
             <div class="col">
                 <div class="labelled-box grow-to-row">
                     <div class="content">
@@ -173,7 +173,7 @@
         </div>
         <div class="buttons">
             <button mat-button matDialogClose>close</button>
-            <button mat-stroked-button (click)="config.mode = 'edit'">edit</button>
+            <button mat-stroked-button (click)="toggle('edit')">edit</button>
         </div>
     </div>
 </ng-template>

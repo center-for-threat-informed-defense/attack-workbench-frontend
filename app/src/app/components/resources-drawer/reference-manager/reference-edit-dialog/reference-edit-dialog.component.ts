@@ -137,7 +137,10 @@ export class ReferenceEditDialogComponent implements OnInit {
         }
         this.stage = 3;
         let subscription = forkJoin(saves).subscribe({
-            complete: () => { subscription.unsubscribe(); this.dialogRef.close(); }
+            complete: () => {
+                this.toggle('view');
+                subscription.unsubscribe();
+            }
         })
     }
 
@@ -147,13 +150,21 @@ export class ReferenceEditDialogComponent implements OnInit {
     public save() {
         let api = this.is_new? this.restApiConnectorService.postReference(this.reference) : this.restApiConnectorService.putReference(this.reference);
         let subscription = api.subscribe({
-            complete: () => { 
+            complete: () => {
+                this.is_new = false;
+                this.toggle('view');
                 subscription.unsubscribe();
-                this.dialogRef.close();
             }
         });
     }
 
+    /**
+     * change the current mode
+     * @param mode 'view' or 'edit'
+     */
+    public toggle(mode: 'view' | 'edit') {
+        this.config.mode = mode;
+    }
 }
 
 export interface ReferenceEditConfig {
