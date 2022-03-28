@@ -4,8 +4,12 @@
 .list-edit {
     // font-size: 14px;
     input, mat-chip { font-size: 14px; }
-    mat-form-field { 
-        width: 100%; 
+    .loading-label {
+      position: absolute;
+      right: 0;
+    }
+    mat-form-field {
+        width: 100%;
         .mat-form-field-wrapper {
             flex: 1 0; 
             display: flex;

@@ -288,6 +288,7 @@ export class ListEditComponent implements OnInit, AfterContentChecked {
 
     /** Open stix list selection window */
     public openStixList() {
+      if (this.config.label === 'parent technique' && !this.dataLoaded) return;
       let tactics;
       let selectableObjects;
       if (this.config.field == 'parentTechnique') {

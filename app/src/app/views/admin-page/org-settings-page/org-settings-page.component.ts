@@ -47,7 +47,6 @@ export class OrgSettingsPageComponent implements OnInit {
     }
 
     saveNamespace() {
-        if (!this.organizationNamespace.range_start) this.organizationNamespace.range_start = 0; // must send number to api call
         let subscription = this.restAPIConnector.setOrganizationNamespace(this.organizationNamespace).subscribe({
             next: (namespace) => this.organizationNamespace = namespace,
             complete: () => subscription.unsubscribe()

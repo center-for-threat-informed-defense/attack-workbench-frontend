@@ -130,6 +130,8 @@ export class SaveDialogComponent implements OnInit {
                 this.dialogRef.close(true);
                 // if saving a sub-technique, also create a relationship between parentTechnique & sub techniques
                 if (result.attackType === 'technique') {
+                    this.config.object = this.config.object as Technique;
+                    result = result as Technique;
                     if (result.is_subtechnique && this.config.object.parentTechnique) {
                       const relationship = new Relationship();
                       relationship.relationship_type = 'subtechnique-of';
