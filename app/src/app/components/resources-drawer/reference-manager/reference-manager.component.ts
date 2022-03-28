@@ -36,15 +36,29 @@ export class ReferenceManagerComponent implements OnInit, AfterViewInit {
         let ref = this.dialog.open(ReferenceEditDialogComponent, {
             maxHeight: "75vh",
             data: {
+                mode: 'edit',
                 reference: reference
             }
-        })
+        });
         let subscription = ref.afterClosed().subscribe({
             complete: () => {
                 this.applyControls();
                 subscription.unsubscribe();
             }
-        })
+        });
+    }
+
+    public viewReference(reference: ExternalReference) {
+        let ref = this.dialog.open(ReferenceEditDialogComponent, {
+            maxHeight: "75vh",
+            data: {
+                mode: 'view',
+                reference: reference
+            }
+        });
+        let subscription = ref.afterClosed().subscribe({
+            complete: () => subscription.unsubscribe()
+        });
     }
 
     /**

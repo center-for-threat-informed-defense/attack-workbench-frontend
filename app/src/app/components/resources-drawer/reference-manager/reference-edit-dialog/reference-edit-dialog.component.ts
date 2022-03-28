@@ -23,6 +23,8 @@ export class ReferenceEditDialogComponent implements OnInit {
     public months: string[] = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
     public citation: any = {};
 
+    public get citationTag(): string { return `(Citation: ${this.reference.source_name})`; }
+
     constructor(public dialogRef: MatDialogRef<ReferenceEditDialogComponent>, @Inject(MAT_DIALOG_DATA) public config: ReferenceEditConfig, public restApiConnectorService: RestApiConnectorService) {
         if (this.config.reference) {
             this.is_new = false;
@@ -155,5 +157,10 @@ export class ReferenceEditDialogComponent implements OnInit {
 }
 
 export interface ReferenceEditConfig {
+    /* What is the current mode? Default: 'view'
+    *    view: viewing the reference
+    *    edit: editing the reference
+    */
+    mode?: "view" | "edit";
     reference?: ExternalReference
 }
