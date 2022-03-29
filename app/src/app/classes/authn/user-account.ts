@@ -35,7 +35,7 @@ export class UserAccount extends Serializable {
             id: this.id,
             email: this.email,
             username: this.username,
-            displayName: this.displayName,
+            displayName: this._displayName,
             status: this.status,
             role: this.role,
             created: this.created.toISOString(),
