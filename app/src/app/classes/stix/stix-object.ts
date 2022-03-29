@@ -570,7 +570,7 @@ export abstract class StixObject extends Serializable {
       switchMap(organizationNamespace => {
         if (organizationNamespace && organizationNamespace.hasOwnProperty('prefix') && this.firstInitialized) {
           if (organizationNamespace['prefix']) prefix += (organizationNamespace['prefix'] + '-');
-          if (appendNamespaceOnly) return of(prefix += inputID.replace(/(.*?)-/, ""));
+          if (appendNamespaceOnly) return of(prefix + inputID.replace(/(.*?)-/, ""));
           count = organizationNamespace['range_start'];
           count = (Number(count) > 0 ? count : 1).toString().padStart(4, '0'); // make sure ID has 4 digits i.e. 0 -> 0001 (note: padStart() is unsupported in IE)
         } else if (!this.firstInitialized) {
@@ -608,7 +608,6 @@ export abstract class StixObject extends Serializable {
                     next: t => {
                       if (t[0] && t[0].attackID) {
                         count = t[0].attackID.replace(/[A-Z]+-/, "").replace(/[A-Z]/, ''); // 'PRE-T1234' -> '1234'
-                        let reg = new RegExp("[.]\\d{3}");
                         let children = t[0].subTechniques;
                         if (children.length > 0) {
                           children = children.map(c => c.attackID.replace(/[A-Z]/, "")).sort()

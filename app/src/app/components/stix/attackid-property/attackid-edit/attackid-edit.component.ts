@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, ViewEncapsulation } from '@angular/core';
+import { Component, Input, ViewEncapsulation } from '@angular/core';
 import { AttackIDPropertyConfig } from '../attackid-property.component';
 import { RestApiConnectorService } from '../../../../services/connectors/rest-api/rest-api-connector.service';
 import { StixObject } from '../../../../classes/stix/stix-object';

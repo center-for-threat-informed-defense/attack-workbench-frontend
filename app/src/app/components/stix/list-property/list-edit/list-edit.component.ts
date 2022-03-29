@@ -289,14 +289,10 @@ export class ListEditComponent implements OnInit, AfterContentChecked {
     /** Open stix list selection window */
     public openStixList() {
       if (this.config.label === 'parent technique' && !this.dataLoaded) return;
-      let tactics;
-      let selectableObjects;
-      if (this.config.field == 'parentTechnique') {
-        tactics = this.allObjects;
-        selectableObjects = this.allObjects;
-      } else {
+      let selectableObjects = this.allObjects;
+      if (this.config.field !== 'parentTechnique') {
         // filter tactic objects by domain
-        tactics = this.allObjects as Tactic[];
+        let tactics = this.allObjects as Tactic[];
         selectableObjects = tactics.filter(tactic => this.tacticInDomain(tactic));
       }
 
