@@ -85,7 +85,7 @@
             </div>
         </div>
         <div class="buttons">
-            <button mat-button matDialogClose>cancel</button>
+            <button mat-button (click)="is_new ? dialogRef.close() : toggle('view')">cancel</button>
             <button mat-stroked-button [disabled]="!reference.source_name || (!is_new && !reference.description) || (is_new && (!citation.authors || !citation.retrieved || !validDate()))" (click)="next()">
                 {{is_new ? 'save' : 'next'}}
             </button>
