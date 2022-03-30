@@ -11,13 +11,6 @@
     .stage.edit .mat-form-field {
         width: 100%;
     }
-    .buttons {
-        button + button {
-            margin-left: 10px;
-        }
-        margin-top: 24px;
-        margin-bottom: 24px;
-    }
     .grid {
         .editor {
             max-width: 66% !important;
@@ -31,4 +24,25 @@
         }
         .editor .mat-form-field-infix { width: unset; }
     }
+}
+.reference-view-dialog {
+    max-width: 50vw;
+    min-width: 35vw;
+    .rel-button {
+        justify-content: center;
+    }
+    .clickable {
+        cursor: pointer;
+        &:hover { 
+            .dark & { background: color-alternate(dark); }
+            .light & { background: color-alternate(light); }
+        }
+    }
+}
+.buttons {
+    button + button {
+        margin-left: 10px;
+    }
+    margin-top: 24px;
+    margin-bottom: 24px;
 }
