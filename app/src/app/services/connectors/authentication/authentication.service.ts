@@ -17,6 +17,8 @@ import { Status } from 'src/app/classes/authn/status';
 export class AuthenticationService extends ApiConnector {
     public currentUser: UserAccount;
     public get isLoggedIn(): boolean { return this.currentUser && this.currentUser.status == Status.ACTIVE; }
+    public activeRoles: Role[] = [Role.ADMIN, Role.EDITOR, Role.VISITOR];
+    public inactiveRoles: Role[] = [Role.NONE];
     private get baseUrl(): string { return environment.integrations.rest_api.url; }
     public onLogin = new EventEmitter(); // event emitter for admin organization identity pop-up
 

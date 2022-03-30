@@ -31,7 +31,7 @@ export class IdentityPropertyComponent implements OnInit {
             this.userSubscription$ = this.restAPIConnector.getUserAccount(userID).subscribe({
                 next: (account) => {
                     if (!this.identity) this.identity = new Identity();
-                    this.identity.name = account.username;
+                    this.identity.name = account.displayName;
                 },
                 complete: () => this.userSubscription$.unsubscribe()
             });
