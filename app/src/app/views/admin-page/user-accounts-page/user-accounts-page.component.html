@@ -33,7 +33,7 @@
             <table mat-table *ngIf="userAccounts.length > 0 else nothingHere" [dataSource]="userAccounts" aria-label="user accounts table">
                 <ng-container matColumnDef="username">
                     <th scope="col" mat-header-cell *matHeaderCellDef>Username</th>
-                    <td mat-cell *matCellDef="let user"> {{user.username}} </td>
+                    <td mat-cell *matCellDef="let user"> {{user.displayName ? user.displayName : user.username}} </td>
                 </ng-container>
                 <ng-container matColumnDef="email">
                     <th scope="col" mat-header-cell *matHeaderCellDef>Email</th>
