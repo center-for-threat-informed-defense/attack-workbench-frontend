@@ -550,94 +550,78 @@ export abstract class StixObject extends Serializable {
         });
     }
 
-  public generateAttackIDWithPrefix(restAPIService?: RestApiConnectorService, appendNamespaceOnly = false, inputID = '') {
-    if (!this.supportsNamespace) return;
-    let sub = this.getNamespaceID(restAPIService, appendNamespaceOnly, inputID).subscribe({
-      next: (val) => {
-        this.attackID = val
-      },
-      complete: () => sub.unsubscribe()
-    });
-  }
-
-  public getNamespaceID(restAPIConnector, appendNamespaceOnly, inputID): Observable<any> {
-    let prefix = ''; // i.e. 'PRE-T'
+  public getNamespaceID(restAPIConnector, orgNamespaceRange): Observable<any> {
+    let prefix = ''; // i.e. 'TA', if StixObject type is tactic
     let count = ''; // i.e. '1234'
     let copyID = this.attackID;
-    if (!appendNamespaceOnly) this.attackID = '(generating ID)';
-    return restAPIConnector.getOrganizationNamespace().pipe(
-      map(namespaceSettings => namespaceSettings),
-      switchMap(organizationNamespace => {
-        if (organizationNamespace && organizationNamespace.hasOwnProperty('prefix') && this.firstInitialized) {
-          if (organizationNamespace['prefix']) prefix += (organizationNamespace['prefix'] + '-');
-          if (appendNamespaceOnly) return of(prefix + inputID.replace(/(.*?)-/, ""));
-          count = organizationNamespace['range_start'];
-          count = (Number(count) > 0 ? count : 1).toString().padStart(4, '0'); // make sure ID has 4 digits i.e. 0 -> 0001 (note: padStart() is unsupported in IE)
-        } else if (!this.firstInitialized) {
-          count = copyID.replace(/[A-Z]+/, "");
-        }
-        let accessor = this.attackType == "group" ? restAPIConnector.getAllGroups() :
-                       this.attackType == "mitigation" ? restAPIConnector.getAllMitigations() :
-                       this.attackType == "software" ? restAPIConnector.getAllSoftware() :
-                       this.attackType == "tactic" ? restAPIConnector.getAllTactics() :
-                       this.attackType == "technique" ? restAPIConnector.getAllTechniques() :
-                       this.attackType == "data-source" ? restAPIConnector.getAllDataSources() :
-                       this.attackType == "matrix" ? restAPIConnector.getAllMatrices() : null;
-        // Find all other objects that have this prefix and range, and set ID to the most recent and unique ID possible
-        if (accessor) {
-          prefix += this.attackIDValidator.format.includes('#') ? this.attackIDValidator.format.split('#')[0] : '';
-          return accessor.pipe(map((objects) => {
-            // keep all existing ids, remove non-digits and decimals
-            const existingIDs = objects['data'].map(o => o.attackID.replace(/[A-Z]+/, "").replace(/[.](\d{3})/, ""));
+    this.attackID = '(generating ID)';
+    if (this.firstInitialized) {
+      count = (Number(orgNamespaceRange) > 0 ? orgNamespaceRange : 1).toString().padStart(4, '0');
+    } else {
+      count = copyID.replace(/[A-Z]+/, "");
+    }
+    let accessor = this.attackType == "group" ? restAPIConnector.getAllGroups() :
+                    this.attackType == "mitigation" ? restAPIConnector.getAllMitigations() :
+                    this.attackType == "software" ? restAPIConnector.getAllSoftware() :
+                    this.attackType == "tactic" ? restAPIConnector.getAllTactics() :
+                    this.attackType == "technique" ? restAPIConnector.getAllTechniques() :
+                    this.attackType == "data-source" ? restAPIConnector.getAllDataSources() :
+                    this.attackType == "matrix" ? restAPIConnector.getAllMatrices() : null;
+    // Find all other objects that have this prefix and range, and set ID to the most recent and unique ID possible
+    if (accessor) {
+      prefix += this.attackIDValidator.format.includes('#') ? this.attackIDValidator.format.split('#')[0] : '';
+      return accessor.pipe(
+        map(objects => objects),
+        switchMap(allObjects => {
+          // keep all existing ids, remove non-digits and decimals
+          const existingIDs = allObjects['data'].map(o => o.attackID.replace(/[A-Z]+/, "").replace(/[.](\d{3})/, ""));
 
-            // if range_start was undefined or 0, and is not in edit mode, then start counting from latest ID in object group
-            if (!organizationNamespace['range_start'] && this.firstInitialized) {
-              count = (existingIDs.length > 0 ? Number(existingIDs.sort().pop()) + 1 : 1).toString().padStart(4, '0');
+          // if range_start was undefined or 0, and is a new object, then start counting from latest ID in object group
+          if (!orgNamespaceRange && this.firstInitialized) {
+            count = (existingIDs.length > 0 ? Number(existingIDs.sort().pop()) + 1 : 1).toString().padStart(4, '0');
+          }
+          else { // keep incrementing count until it is not found in objects and is a unique ID
+            while (existingIDs.includes(count)) {
+              count = (Number(count) + 1).toString().padStart(4, '0');
             }
-            else {// keep incrementing count until it is not found in objects and is a unique ID
-              while (existingIDs.includes(count)) {
-                count = (Number(count) + 1).toString().padStart(4, '0');
-              }
-            }
+          }
 
-            if (this.hasOwnProperty('is_subtechnique') && this['is_subtechnique']) {
-              if (this.hasOwnProperty('parentTechnique') && this['parentTechnique']) {
-                let children$ = restAPIConnector.getTechnique(this['parentTechnique'].stixID, null, "latest", true);
-                if (children$) {
-                  let sub = children$.subscribe({
-                    next: t => {
-                      if (t[0] && t[0].attackID) {
-                        count = t[0].attackID.replace(/[A-Z]+-/, "").replace(/[A-Z]/, ''); // 'PRE-T1234' -> '1234'
-                        let children = t[0].subTechniques;
-                        if (children.length > 0) {
-                          children = children.map(c => c.attackID.replace(/[A-Z]/, "")).sort()
-                          let latest = children.pop();
-                          latest = Number(latest) // i.e. 1234.001
-                          count = (Number(count) > latest ? count : latest + .001).toFixed(3).toString();
-                          let [whole, fract] = count.split('.')
-                          count = whole.padStart(4, '0') + '.' + fract;
-                        } else {
-                          count += '.001';
-                        }
-                        // Manually setting attack ID here, since otherwise might hit return before subscription ends
-                        this.attackID = prefix + count;
+          if (this.hasOwnProperty('is_subtechnique') && this['is_subtechnique']) {
+            if (this.hasOwnProperty('parentTechnique') && this['parentTechnique']) {
+              let children$ = restAPIConnector.getTechnique(this['parentTechnique'].stixID, null, "latest", true);
+              if (children$) {
+                let sub = children$.subscribe({
+                  next: t => {
+                    if (t[0] && t[0].attackID) {
+                      count = t[0].attackID.replace(/[A-Z]+-/, "").replace(/[A-Z]/, ''); // 'PRE-T1234' -> '1234'
+                      let children = t[0].subTechniques;
+                      if (children.length > 0) {
+                        children = children.map(c => c.attackID.replace(/[A-Z]/, "")).sort()
+                        let latest = children.pop();
+                        latest = Number(latest) // i.e. 1234.001
+                        count = (Number(count) > latest ? count : latest + .001).toFixed(3).toString();
+                        let [whole, fract] = count.split('.')
+                        count = whole.padStart(4, '0') + '.' + fract;
+                      } else {
+                        count += '.001';
                       }
+                      // TODO? Manually setting attack ID here, since otherwise might hit return before subscription ends
+                      // this.attackID = prefix + count;
+                    }
 
-                    },
-                    complete: () => { sub.unsubscribe() }
-                  })
-                }
-
+                  },
+                  complete: () => { sub.unsubscribe() }
+                })
               }
-              else return '(parent technique missing)';
-            }
 
-            return (prefix + count);
-          }))
-        }
-        return of((prefix + count));
-      })
-    )
+            }
+            else return '(parent technique missing)';
+          }
+
+          return of((prefix + count));
+        })
+      )
+    } else return of(copyID);
   }
 }
 
