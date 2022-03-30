@@ -10,7 +10,7 @@ import { Namespace, RestApiConnectorService } from 'src/app/services/connectors/
 export class OrgSettingsPageComponent implements OnInit {
     public organizationIdentity: Identity;
     public organizationNamespace: Namespace;
-    public idRegex = `^([A-Za-z])+$`;
+    public idRegex = `^([A-Za-z])*$`;
     public rangeRegex = `^([0-9]){0,4}$`;
     public get isNamespaceInvalid(): boolean {
       const regid = new RegExp(this.idRegex);

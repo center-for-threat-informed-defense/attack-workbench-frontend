@@ -24,7 +24,7 @@ export class AttackIDEditComponent implements OnInit {
       const namespaceSub = this.restApiConnector.getOrganizationNamespace().subscribe({
         next: (namespaceSettings) => {
           organizationNamespace = namespaceSettings;
-          this.prefix = namespaceSettings.prefix + '-';
+          this.prefix = namespaceSettings.prefix ? namespaceSettings.prefix + '-' : '';
           this.namespaceRange = namespaceSettings.range_start;
         },
         complete: () => namespaceSub.unsubscribe()

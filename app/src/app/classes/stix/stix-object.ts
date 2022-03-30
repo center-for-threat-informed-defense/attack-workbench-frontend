@@ -605,8 +605,6 @@ export abstract class StixObject extends Serializable {
                       } else {
                         count += '.001';
                       }
-                      // TODO? Manually setting attack ID here, since otherwise might hit return before subscription ends
-                      // this.attackID = prefix + count;
                     }
 
                   },
