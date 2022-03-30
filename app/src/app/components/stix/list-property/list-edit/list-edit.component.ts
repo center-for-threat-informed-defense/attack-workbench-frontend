@@ -236,7 +236,6 @@ export class ListEditComponent implements OnInit, AfterContentChecked {
         if (i >= 0) {
             this.config.object[this.config.field].splice(i, 1);
         }
-        this.inputControl.setValue(this.config.object[this.config.field])
     }
 
     /** Remove selection from via chip cancel button */

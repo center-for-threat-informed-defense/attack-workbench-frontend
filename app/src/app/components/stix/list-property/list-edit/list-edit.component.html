@@ -1,7 +1,6 @@
 <div class="list-edit grow-to-row">
     <mat-form-field *ngIf="!config.editType || config.editType == 'any'" class="grow-to-row" appearance="outline">
         <mat-label>{{config.label? config.label : config.field}}</mat-label>
-        <mat-card-content>
         <mat-chip-list #anyChipList [required]="config.required ? config.required : false" [formControl]="inputControl">
             <mat-chip *ngFor="let value of config.object[config.field]" [removable]="true" (removed)="remove(value)">
                 {{value}} <mat-icon matChipRemove>cancel</mat-icon>
@@ -13,7 +12,6 @@
                     [matChipInputAddOnBlur]="true"
                     (matChipInputTokenEnd)="add($event)"/>
         </mat-chip-list>
-        </mat-card-content>
     </mat-form-field>
 
     <mat-form-field *ngIf="config.editType == 'select'" class="grow-to-row" appearance="outline"
