@@ -1,6 +1,7 @@
 import { Component, Inject, OnInit, ViewEncapsulation } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { forkJoin } from 'rxjs';
 import { ExternalReference } from 'src/app/classes/external-references';
 import { Relationship } from 'src/app/classes/stix/relationship';
@@ -23,7 +24,9 @@ export class ReferenceEditDialogComponent implements OnInit {
     public months: string[] = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
     public citation: any = {};
 
-    constructor(public dialogRef: MatDialogRef<ReferenceEditDialogComponent>, @Inject(MAT_DIALOG_DATA) public config: ReferenceEditConfig, public restApiConnectorService: RestApiConnectorService) {
+    public get citationTag(): string { return `(Citation: ${this.reference.source_name})`; }
+
+    constructor(public dialogRef: MatDialogRef<ReferenceEditDialogComponent>, @Inject(MAT_DIALOG_DATA) public config: ReferenceEditConfig, public restApiConnectorService: RestApiConnectorService, public snackbar: MatSnackBar) {
         if (this.config.reference) {
             this.is_new = false;
             this.reference = JSON.parse(JSON.stringify(this.config.reference)); //deep copy
@@ -135,7 +138,10 @@ export class ReferenceEditDialogComponent implements OnInit {
         }
         this.stage = 3;
         let subscription = forkJoin(saves).subscribe({
-            complete: () => { subscription.unsubscribe(); this.dialogRef.close(); }
+            complete: () => {
+                this.toggle('view');
+                subscription.unsubscribe();
+            }
         })
     }
 
@@ -145,15 +151,28 @@ export class ReferenceEditDialogComponent implements OnInit {
     public save() {
         let api = this.is_new? this.restApiConnectorService.postReference(this.reference) : this.restApiConnectorService.putReference(this.reference);
         let subscription = api.subscribe({
-            complete: () => { 
+            complete: () => {
+                this.is_new = false;
+                this.toggle('view');
                 subscription.unsubscribe();
-                this.dialogRef.close();
             }
         });
     }
 
+    /**
+     * change the current mode
+     * @param mode 'view' or 'edit'
+     */
+    public toggle(mode: 'view' | 'edit') {
+        this.config.mode = mode;
+    }
 }
 
 export interface ReferenceEditConfig {
+    /* What is the current mode? Default: 'view'
+    *    view: viewing the reference
+    *    edit: editing the reference
+    */
+    mode?: "view" | "edit";
     reference?: ExternalReference
 }

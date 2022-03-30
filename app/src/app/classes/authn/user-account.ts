@@ -10,8 +10,12 @@ export class UserAccount extends Serializable {
     public id: string;
     public email: string;
     public username: string;
+    private _displayName: string;
+    public get displayName(): string { return this._displayName ? this._displayName : this.username }
     public status: Status;
     public role: Role;
+    public created: Date;
+    public modified: Date;
 
     /**
      * Initialize user account object
@@ -31,8 +35,11 @@ export class UserAccount extends Serializable {
             id: this.id,
             email: this.email,
             username: this.username,
+            displayName: this._displayName,
             status: this.status,
-            role: this.role
+            role: this.role,
+            created: this.created.toISOString(),
+            modified: this.modified.toISOString()
         };
     }
 
@@ -57,6 +64,11 @@ export class UserAccount extends Serializable {
             else { logger.error('TypeError: username field is not a string:', raw.username, '(', typeof(raw.username), ')'); }
         } else { this.username = ''; }
 
+        if ('displayName' in raw) {
+            if (typeof(raw.displayName) === 'string') { this._displayName = raw.displayName; }
+            else { logger.error('TypeError: displayName field is not a string:', raw.displayName, '(', typeof(raw.displayName), ')'); }
+        }
+
         if ('status' in raw) {
             if (typeof(raw.status) === 'string') { this.status = raw.status; }
             else { logger.error('TypeError: status field is not a string:', raw.status, '(', typeof(raw.status), ')'); }
@@ -66,6 +78,16 @@ export class UserAccount extends Serializable {
             if (typeof(raw.role) === 'string') { this.role = raw.role; }
             else { logger.error('TypeError: role field is not a string:', raw.role, '(', typeof(raw.role), ')'); }
         } else { this.role = Role.NONE; }
+
+        if ('created' in raw) {
+            if (typeof (raw.created) === "string") this.created = new Date(raw.created);
+            else logger.error("TypeError: created field is not a string:", raw.created, "(", typeof (raw.created), ")")
+        } else { this.created = new Date(); }
+
+        if ('modified' in raw) {
+            if (typeof (raw.modified) === "string") this.modified = new Date(raw.modified);
+            else logger.error("TypeError: modified field is not a string:", raw.modified, "(", typeof (raw.modified), ")")
+        } else { this.modified = new Date(); }
     }
 
     /**

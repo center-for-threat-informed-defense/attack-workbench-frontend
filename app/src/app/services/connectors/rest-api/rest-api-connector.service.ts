@@ -143,7 +143,7 @@ export class RestApiConnectorService extends ApiConnector {
             if (options && options.includeRevoked) query = query.set("includeRevoked", options.includeRevoked ? "true" : "false");
             if (options && options.includeDeprecated) query = query.set("includeDeprecated", options.includeDeprecated ? "true" : "false");
             if (options && options.versions) query = query.set("versions", options.versions);
-            if (options && options.search) query = query.set("search", encodeURIComponent(options.search));
+            if (options && options.search) query = query.set("search", options.search);
             // perform the request
             let url = `${this.baseUrl}/${plural}`;
             return this.http.get(url, {headers: this.headers, params: query}).pipe(
@@ -1003,7 +1003,7 @@ export class RestApiConnectorService extends ApiConnector {
         // pagination
         if (limit) query = query.set("limit", limit.toString());
         if (offset) query = query.set("offset", offset.toString());
-        if (search) query = query.set("search", encodeURIComponent(search));
+        if (search) query = query.set("search", search);
         /*if (limit || offset) */ query = query.set("includePagination", "true");
         return this.http.get<Paginated<ExternalReference>>(url, {params: query}).pipe(
             tap(results => logger.log("retrieved references", results)),
@@ -1386,7 +1386,7 @@ export class RestApiConnectorService extends ApiConnector {
         if (options && options.offset) query = query.set("offset", options.offset.toString());
         if (options && (options.limit || options.offset)) query = query.set("includePagination", "true");
         // search
-        if (options && options.search) query = query.set("search", encodeURIComponent(options.search));
+        if (options && options.search) query = query.set("search", options.search);
         // status/role
         if (options && options.status) options.status.forEach((status) => query = query.append("status", status));
         if (options && options.role) options.role.forEach((role) => query = query.append("role", role));

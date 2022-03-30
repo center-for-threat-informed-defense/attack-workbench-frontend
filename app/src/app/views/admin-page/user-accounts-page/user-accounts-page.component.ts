@@ -104,9 +104,13 @@ export class UserAccountsPageComponent implements OnInit {
                 next: (r) => {
                     const user = r;
                     user.role = Role[`${newRole}`];
+                    // update user status based on active roles
+                    if (this.authenticationService.activeRoles.includes(user.role)) user.status = Status.ACTIVE;
+                    if (this.authenticationService.inactiveRoles.includes(user.role)) user.status = Status.INACTIVE;
                     new UserAccount(user).save(this.restAPIConnector);
                 },
                 complete: () => {
+                    this.applyControls(); // refresh list
                     subscription.unsubscribe();
                 }
             });
@@ -120,13 +124,12 @@ export class UserAccountsPageComponent implements OnInit {
                 next: (r) => {
                     const user = r;
                     user.status = Status[`${newStatus}`];
-                    if (user.status == Status.PENDING || user.status == Status.INACTIVE) {
-                        // set user role to 'none'
-                        user.role = Role.NONE;
-                    }
+                    // update user role based on status
+                    if ([Status.INACTIVE, Status.PENDING].includes(user.status)) user.role = Role.NONE;
                     new UserAccount(user).save(this.restAPIConnector);
                 },
                 complete: () => {
+                    this.applyControls(); // refresh list
                     subscription.unsubscribe();
                 }
             });

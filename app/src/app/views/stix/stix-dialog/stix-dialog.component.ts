@@ -176,6 +176,7 @@ export class StixDialogComponent implements OnInit {
     public deprecateChanged() {
         let object = Array.isArray(this.config.object) ? this.config.object[0] : this.config.object;
         object.deprecated = !object.deprecated;
+        this.dirty = true; // triggers refresh of object list
         let subscription = object.save(this.restApiConnectorService).subscribe({
             complete: () => { subscription.unsubscribe(); }
         })
