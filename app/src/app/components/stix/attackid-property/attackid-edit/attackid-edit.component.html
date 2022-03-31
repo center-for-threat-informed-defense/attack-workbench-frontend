@@ -5,6 +5,5 @@
         <button *ngIf="['group', 'mitigation', 'software', 'tactic', 'technique', 'data-source'].includes(config.object['attackType'])" mat-icon-button matSuffix (click)="handleGenerateClick()" matTooltip="Generate a unique ID, with your organization's namespace settings." aria-label="Generate ID button">
             <mat-icon>{{'autorenew'}}</mat-icon>
         </button>
-        <mat-hint></mat-hint>
     </mat-form-field>
 </div>
