@@ -19,6 +19,7 @@ export class Technique extends StixObject {
     public defense_bypassed: string[] = [];
     public effective_permissions: string[] = [];
     public impact_type: string[] = [];
+    public contributors: string[] = [];
 
     public supports_remote: boolean = false;
     public requires_network: boolean = false;
@@ -99,6 +100,7 @@ export class Technique extends StixObject {
         rep.stix.x_mitre_platforms = this.platforms;
         rep.stix.kill_chain_phases = this.kill_chain_phases;
         rep.stix.x_mitre_is_subtechnique = this.is_subtechnique;
+        rep.stix.x_mitre_contributors = this.contributors;
 
         // domain specific fields
         if (this.domains.includes('ics-attack')) {
@@ -235,6 +237,11 @@ export class Technique extends StixObject {
                 if (this.isStringArray(sdo.x_mitre_effective_permissions)) this.effective_permissions = sdo.x_mitre_effective_permissions;
                 else logger.error("TypeError: effective permissions field is not a string array.");
             }
+
+            if ("x_mitre_contributors" in sdo) {
+                if (this.isStringArray(sdo.x_mitre_contributors)) this.contributors = sdo.x_mitre_contributors;
+                else logger.error("TypeError: x_mitre_contributors is not a string array:", sdo.x_mitre_contributors, "(",typeof(sdo.x_mitre_contributors),")")
+            } else this.contributors = [];
 
             if ("external_references" in sdo) {
                 if (typeof(sdo.external_references) === "object") {
