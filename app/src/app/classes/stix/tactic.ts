@@ -7,6 +7,7 @@ import { logger } from "../../util/logger";
 export class Tactic extends StixObject {
     public name: string = "";
     public domains: string[] = [];
+    public contributors: string[] = [];
 
     public readonly supportsAttackID = true;
     public readonly supportsNamespace = true;
@@ -35,6 +36,7 @@ export class Tactic extends StixObject {
         rep.stix.name = this.name;
         rep.stix.x_mitre_domains = this.domains;
         rep.stix.x_mitre_shortname = this.shortname;
+        rep.stix.x_mitre_contributors = this.contributors;
 
         return rep;
     }
@@ -57,6 +59,11 @@ export class Tactic extends StixObject {
                 if (this.isStringArray(sdo.x_mitre_domains)) this.domains = sdo.x_mitre_domains;
                 else logger.error("TypeError: domains field is not a string array.");
             } else this.domains = [];
+
+            if ("x_mitre_contributors" in sdo) {
+                if (this.isStringArray(sdo.x_mitre_contributors)) this.contributors = sdo.x_mitre_contributors;
+                else logger.error("TypeError: x_mitre_contributors is not a string array:", sdo.x_mitre_contributors, "(",typeof(sdo.x_mitre_contributors),")")
+            } else this.contributors = [];
         }
     }
 

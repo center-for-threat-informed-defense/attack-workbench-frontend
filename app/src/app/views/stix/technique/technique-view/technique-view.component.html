@@ -110,6 +110,15 @@
                 editType: 'select'
             }"></app-list-property>
         </div>
+        <div class="col">
+            <!-- CONTRIBUTORS -->
+            <app-list-property class="grow-to-row" [config]="{
+                mode: editing? 'edit' : 'view',
+                object: technique,
+                field: 'contributors',
+                editType: 'any'
+            }"></app-list-property>
+        </div>
     </div>
     <!-- ADDITIONAL IDs -->
     <div *ngIf="technique.capec_ids.length || (editing && technique.domains.includes('enterprise-attack'))" class="row">
