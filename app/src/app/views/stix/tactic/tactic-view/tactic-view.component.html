@@ -17,6 +17,15 @@
             }"></app-attackid-property>
         </div>
         <div class="col">
+            <!-- VERSION NUMBER -->
+            <app-version-property class="grow-to-row" [config]="{
+                mode: editing? 'edit' : 'view',
+                object: tactic
+            }"></app-version-property>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
             <!-- DOMAIN -->
             <app-list-property class="grow-to-row" [config]="{
                 mode: editing? 'edit' : 'view',
@@ -26,11 +35,13 @@
             }"></app-list-property>
         </div>
         <div class="col">
-            <!-- VERSION NUMBER -->
-            <app-version-property class="grow-to-row" [config]="{
+            <!-- CONTRIBUTORS -->
+            <app-list-property class="grow-to-row" [config]="{
                 mode: editing? 'edit' : 'view',
-                object: tactic
-            }"></app-version-property>
+                object: tactic,
+                field: 'contributors',
+                editType: 'any'
+            }"></app-list-property>
         </div>
     </div>
     <div class="row">
