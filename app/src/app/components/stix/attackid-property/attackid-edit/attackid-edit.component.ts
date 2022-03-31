@@ -14,10 +14,14 @@ export class AttackIDEditComponent implements OnInit {
   public showHint = false;
   public prefix = '';
   public namespaceRange = '';
+  public regMatch = /[A-Z]*[0-9]+[.0-9]*/g;
 
   constructor(public restApiConnector: RestApiConnectorService) {}
 
   ngOnInit(): void {
+    if ((this.config.object as StixObject).attackType === 'matrix') {
+        this.regMatch = /^(.*?)*$/g;
+    }
     // Get namespace settings and prepend, if creating a new object
     if ((this.config.object as StixObject).firstInitialized) {
       let organizationNamespace = {};
@@ -37,8 +41,26 @@ export class AttackIDEditComponent implements OnInit {
     }
   }
 
+  handleGenerateClick(): void {
+    if ((this.config.object as StixObject).supportsNamespace) {
+      const sub = (this.config.object as StixObject).getNamespaceID(this.restApiConnector, {prefix: this.prefix, range_start: this.namespaceRange}).subscribe({
+        next: (val) => {
+          console.log('** val', val);
+          (this.config.object as StixObject).attackID = val;
+        },
+        complete: () => {
+          sub.unsubscribe();
+          this.prependPrefix();
+        }
+      });
+    }
+  }
+
   prependPrefix(): void {
-    const found = (this.config.object as StixObject).attackID.toUpperCase().match(/[A-Z]*[0-9]+[.0-9]*/g);
+    if ((this.config.object as StixObject).attackID.startsWith(this.prefix)) return; // If prefix is already present, exit
+    const ID = (this.config.object as StixObject).attackType === 'matrix' ?
+          (this.config.object as StixObject).attackID : (this.config.object as StixObject).attackID.toUpperCase();
+    const found = ID.match(this.regMatch);
     if (found) {
       (this.config.object as StixObject).attackID = this.prefix + found[0];
       this.showHint = true;
@@ -47,16 +69,4 @@ export class AttackIDEditComponent implements OnInit {
     }
   }
 
-  handleGenerateClick(): void {
-    if ((this.config.object as StixObject).supportsNamespace) {
-      const
-        sub = (this.config.object as StixObject).getNamespaceID(this.restApiConnector, this.namespaceRange).subscribe({
-          next: (val) => {
-            (this.config.object as StixObject).attackID = val;
-            this.prependPrefix();
-          },
-          complete: () => sub.unsubscribe()
-        });
-    }
-  }
 }

@@ -18,8 +18,7 @@ export class OrgSettingsPageComponent implements OnInit {
     public get isNamespaceInvalid(): boolean {
       const regid = new RegExp(this.idRegex);
       const regrange = new RegExp(this.rangeRegex);
-      return (this.organizationNamespace.prefix === '' && this.isNOU(this.organizationNamespace.range_start)) ||
-              (!regid.test(this.organizationNamespace.prefix)) ||
+      return (!regid.test(this.organizationNamespace.prefix)) ||
               (!this.isNOU(this.organizationNamespace.range_start) && !regrange.test(this.organizationNamespace.range_start?.toString()));
     }
 
