@@ -22,7 +22,7 @@ export class HeaderComponent implements AfterViewInit {
     authnTypeSubscription: Subscription;
     public authnType: string;
     public get isLoggedIn(): boolean { return this.authenticationService.isLoggedIn; }
-    public get username() { return this.authenticationService.currentUser.displayName; }
+    public get username() { return this.authenticationService.currentUser.displayName ? this.authenticationService.currentUser.displayName : this.authenticationService.currentUser.username; }
 
     @ViewChild('linkMenu', {static: false})
     private linkMenu: ElementRef;
