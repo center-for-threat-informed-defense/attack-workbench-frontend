@@ -576,7 +576,7 @@ export abstract class StixObject extends Serializable {
                     if (this.hasOwnProperty('is_subtechnique') && this['is_subtechnique']) {
                         if (this.hasOwnProperty('parentTechnique') && this['parentTechnique']) {
                             const found = this['parentTechnique'].attackID.match(/[0-9]{4}/g); // Get 4-digit ID of parent technique
-                            if (found) {
+                            if (found && found.length > 0) {
                                 familyPrefix += found[0];
                                 count = 1;
                                 return restAPIConnector.getTechnique(this['parentTechnique'].stixID, null, "latest", true).pipe(map(
@@ -587,11 +587,11 @@ export abstract class StixObject extends Serializable {
                                                 const childIds = children.reduce((ids, obj) => {
                                                     if (obj.attackID.startsWith(familyPrefix)) {
                                                         const match = obj.attackID.match(/[^.]([0-9]*)$/g);
-                                                        if (match) {
+                                                        if (match && match.length > 0) {
                                                             ids.push(match[0]);
                                                         }
-                                                        return ids;
                                                     }
+                                                    return ids;
                                                 }, []);
                                                 count = childIds?.length > 0 ? Number(childIds.sort().pop()) + 1 : 1;
                                             }
@@ -620,7 +620,17 @@ export abstract class StixObject extends Serializable {
                             if (!orgNamespace.range_start) {
                                 count = relatedIDs.length > 0 ? Number(relatedIDs.sort().pop()) + 1 : 1;
                             } else {
-                                count = Number(orgNamespace.range_start);
+                                let range = Number(orgNamespace.range_start)
+                                if (relatedIDs.length > 0) {
+                                    count = relatedIDs.sort().reduce((acc, v) => { // keep incrementing from range until a unique ID is found
+                                        if (acc === Number(v)) {
+                                            acc += 1
+                                        }
+                                        return acc
+                                    }, range);
+                                } else {
+                                    count = range;
+                                }
                             }
                         } else { // If editing an existing object
                             count = relatedIDs.length > 0 ? Number(relatedIDs.sort().pop()) + 1 : 1;
