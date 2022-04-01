@@ -1,15 +1,42 @@
+import { DataSource } from '@angular/cdk/collections';
 import { Component, Inject, OnInit, ViewEncapsulation } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { forkJoin } from 'rxjs';
 import { ValidationData } from 'src/app/classes/serializable';
+import { Collection } from 'src/app/classes/stix/collection';
+import { DataComponent } from 'src/app/classes/stix/data-component';
+import { Group } from 'src/app/classes/stix/group';
+import { Identity } from 'src/app/classes/stix/identity';
+import { MarkingDefinition } from 'src/app/classes/stix/marking-definition';
+import { Matrix } from 'src/app/classes/stix/matrix';
+import { Mitigation } from 'src/app/classes/stix/mitigation';
 import { Relationship } from 'src/app/classes/stix/relationship';
 import { Software } from 'src/app/classes/stix/software';
 import { StixObject } from 'src/app/classes/stix/stix-object';
+import { Tactic } from 'src/app/classes/stix/tactic';
+import { Technique } from 'src/app/classes/stix/technique';
 import { AuthenticationService } from 'src/app/services/connectors/authentication/authentication.service';
-import { RestApiConnectorService, stixTypeToClass } from 'src/app/services/connectors/rest-api/rest-api-connector.service';
+import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/rest-api-connector.service';
 import { EditorService } from 'src/app/services/editor/editor.service';
 import { SidebarService, tabOption } from 'src/app/services/sidebar/sidebar.service';
 import { StixViewConfig } from '../stix-view-page';
+
+// transform AttackType to the relevant class
+const stixTypeToClass = {
+    "attack-pattern": Technique,
+    "x-mitre-tactic": Tactic,
+    "intrusion-set": Group,
+    "tool": Software,
+    "malware": Software,
+    "course-of-action": Mitigation,
+    "x-mitre-matrix": Matrix,
+    "x-mitre-collection": Collection,
+    "relationship": Relationship,
+    "identity": Identity,
+    "marking-definition": MarkingDefinition,
+    "x-mitre-data-source": DataSource,
+    "x-mitre-data-component": DataComponent
+}
 
 @Component({
     selector: 'app-stix-dialog',
