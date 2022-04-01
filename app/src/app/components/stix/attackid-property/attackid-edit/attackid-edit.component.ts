@@ -45,7 +45,6 @@ export class AttackIDEditComponent implements OnInit {
     if ((this.config.object as StixObject).supportsNamespace) {
       const sub = (this.config.object as StixObject).getNamespaceID(this.restApiConnector, {prefix: this.prefix, range_start: this.namespaceRange}).subscribe({
         next: (val) => {
-          console.log('** val', val);
           (this.config.object as StixObject).attackID = val;
         },
         complete: () => {

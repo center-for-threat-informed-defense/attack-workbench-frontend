@@ -569,35 +569,32 @@ export abstract class StixObject extends Serializable {
             // Get object identifier, i.e. 'TA' for Tactic
             prefix += this.attackIDValidator.format.includes('#') ? this.attackIDValidator.format.split('#')[0] : '';
             let familyPrefix = orgNamespace.prefix ? orgNamespace.prefix + prefix : prefix;
-            let isSubtechnique = false;
 
             return accessor.pipe(
                 map(stixObjects => stixObjects),
                 switchMap(objects => {
                     if (this.hasOwnProperty('is_subtechnique') && this['is_subtechnique']) {
-                        isSubtechnique = true;
                         if (this.hasOwnProperty('parentTechnique') && this['parentTechnique']) {
-                            const found = this['parentTechnique'].attackID.match(/[0-9]{4}/g);
+                            const found = this['parentTechnique'].attackID.match(/[0-9]{4}/g); // Get 4-digit ID of parent technique
                             if (found) {
                                 familyPrefix += found[0];
+                                count = 1;
                                 return restAPIConnector.getTechnique(this['parentTechnique'].stixID, null, "latest", true).pipe(map(
                                     technique => {
                                         if (technique[0] && technique[0].attackID) {
                                             let children = technique[0].subTechniques;
                                             if (children.length > 0) {
                                                 const childIds = children.reduce((ids, obj) => {
-                                                    if (obj.attackID.startsWith(familyPrefix)) {
-                                                        ids.push(obj.attackID.replace(familyPrefix, ""));
+                                                    const match = obj.attackID.match(/[^.]([0-9]*)$/g);
+                                                    if (match) {
+                                                        ids.push(match[0]);
                                                     }
                                                     return ids;
                                                 }, []);
-                                                count = childIds.length > 0 ?
-                                                    (Number(childIds.sort().pop()) + .001).toFixed(3) : .001;
-                                            } else {
-                                                count = .001;
+                                                count = childIds.length > 0 ? Number(childIds.sort().pop()) + 1 : 1;
                                             }
                                         }
-                                        return (prefix + found[0] + count);
+                                        return (prefix + found[0] + '.' + count.toString().padStart(3, '0'));
                                     }
                                 ))
                             }
@@ -608,7 +605,7 @@ export abstract class StixObject extends Serializable {
                     else return of(objects)
                 }),
                 switchMap(objects => {
-                    if (!isSubtechnique) {
+                    if (!this.hasOwnProperty('is_subtechnique') || !this['is_subtechnique']) {
                         // Get ids of existing objects that have the same prefix
                         const relatedIDs = objects['data'].reduce((ids, obj) => {
                             if (obj.attackID.startsWith(familyPrefix)) {
