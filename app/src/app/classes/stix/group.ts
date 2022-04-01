@@ -11,6 +11,7 @@ export class Group extends StixObject {
     public contributors: string[] = [];
 
     public readonly supportsAttackID = true;
+    public readonly supportsNamespace = true;
     protected get attackIDValidator() { return {
         regex: "G\\d{4}",
         format: "G####"
@@ -30,7 +31,7 @@ export class Group extends StixObject {
      */
     public serialize(): any {
         let rep = super.base_serialize();
-        
+
         rep.stix.name = this.name;
         rep.stix.aliases = this.aliases;
         rep.stix.x_mitre_contributors = this.contributors;
@@ -51,7 +52,7 @@ export class Group extends StixObject {
                 if (typeof(sdo.name) === "string") this.name = sdo.name;
                 else logger.error("TypeError: name field is not a string:", sdo.name, "(",typeof(sdo.name),")")
             } else this.name = "";
-            
+
             if ("aliases" in sdo) {
                 if (this.isStringArray(sdo.aliases)) this.aliases = sdo.aliases;
                 else logger.error("TypeError: aliases is not a string array:", sdo.aliases, "(",typeof(sdo.aliases),")")
@@ -80,7 +81,7 @@ export class Group extends StixObject {
      */
     public save(restAPIService: RestApiConnectorService): Observable<Group> {
         // TODO PUT if the object was just created (doesn't exist in db yet)
-        
+
         let postObservable = restAPIService.postGroup(this);
         let subscription = postObservable.subscribe({
             next: (result) => { this.deserialize(result.serialize()); },

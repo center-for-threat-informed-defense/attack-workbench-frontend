@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Tactic } from 'src/app/classes/stix/tactic';
 import { AuthenticationService } from 'src/app/services/connectors/authentication/authentication.service';
 import { StixViewPage } from '../../stix-view-page';
-import { RestApiConnectorService } from "src/app/services/connectors/rest-api/rest-api-connector.service";
+import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/rest-api-connector.service';
 
 @Component({
     selector: 'app-tactic-view',

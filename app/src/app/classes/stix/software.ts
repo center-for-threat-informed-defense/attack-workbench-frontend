@@ -13,8 +13,9 @@ export class Software extends StixObject {
     public type: string;
     public contributors: string[] = [];
     public domains: string[] = [];
-    
+
     public readonly supportsAttackID = true;
+    public readonly supportsNamespace = true;
     protected get attackIDValidator() { return {
         regex: "S\\d{4}",
         format: "S####"
@@ -34,7 +35,7 @@ export class Software extends StixObject {
      */
     public serialize(): any {
         let rep = super.base_serialize();
-        
+
         rep.stix.name = this.name;
         rep.stix.type = this.type;
         rep.stix.x_mitre_domains = this.domains;
@@ -103,7 +104,7 @@ export class Software extends StixObject {
      */
     public save(restAPIService: RestApiConnectorService): Observable<Software> {
         // TODO POST if the object was just created (doesn't exist in db yet)
-        
+
         let postObservable = restAPIService.postSoftware(this);
         let subscription = postObservable.subscribe({
             next: (result) => { this.deserialize(result.serialize()); },

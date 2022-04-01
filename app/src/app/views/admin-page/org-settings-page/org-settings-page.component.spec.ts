@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { OrgIdentityPageComponent } from './org-identity-page.component';
+import { OrgSettingsPageComponent } from './org-settings-page.component';
 
-describe('OrgIdentityPageComponent', () => {
-  let component: OrgIdentityPageComponent;
-  let fixture: ComponentFixture<OrgIdentityPageComponent>;
+describe('OrgSettingsPageComponent', () => {
+  let component: OrgSettingsPageComponent;
+  let fixture: ComponentFixture<OrgSettingsPageComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ OrgIdentityPageComponent ]
+      declarations: [ OrgSettingsPageComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(OrgIdentityPageComponent);
+    fixture = TestBed.createComponent(OrgSettingsPageComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

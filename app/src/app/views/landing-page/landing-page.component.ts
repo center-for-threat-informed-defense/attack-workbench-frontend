@@ -64,7 +64,7 @@ export class LandingPageComponent implements OnInit, OnDestroy {
                         })
                         let prompt_subscription = prompt.afterClosed().subscribe({
                             next: (prompt_result) => {
-                                if (prompt_result) this.router.navigate(["/admin/org-identity"]);
+                                if (prompt_result) this.router.navigate(["/admin/org-settings"]);
                             },
                             complete: () => { prompt_subscription.unsubscribe(); }
                         })

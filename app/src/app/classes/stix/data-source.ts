@@ -15,6 +15,7 @@ export class DataSource extends StixObject {
     public data_components: DataComponent[] = [];
 
     public readonly supportsAttackID = true;
+    public readonly supportsNamespace = true;
     protected get attackIDValidator() {
         return {
             regex: "DS\\d{4}",
@@ -43,7 +44,7 @@ export class DataSource extends StixObject {
         rep.stix.x_mitre_collection_layers = this.collection_layers;
         rep.stix.x_mitre_contributors = this.contributors;
         rep.stix.x_mitre_domains = this.domains;
-        
+
         return rep;
     }
 
@@ -76,7 +77,7 @@ export class DataSource extends StixObject {
             if (this.isStringArray(sdo.x_mitre_platforms)) this.platforms = sdo.x_mitre_platforms;
             else logger.error("TypeError: platforms field is not a string array.")
         } else this.platforms = [];
-        
+
         if ("x_mitre_collection_layers" in sdo) {
             if (this.isStringArray(sdo.x_mitre_collection_layers)) this.collection_layers = sdo.x_mitre_collection_layers;
             else logger.error("TypeError: collection layers field is not a string array.");
@@ -109,7 +110,7 @@ export class DataSource extends StixObject {
      */
     public save(restAPIService: RestApiConnectorService): Observable<DataSource> {
         // TODO POST if the object was just created (doesn't exist in db yet)
-                
+
         let postObservable = restAPIService.postDataSource(this);
         let subscription = postObservable.subscribe({
             next: (result) => { this.deserialize(result.serialize()); },
