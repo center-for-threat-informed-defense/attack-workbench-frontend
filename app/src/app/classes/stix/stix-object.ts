@@ -40,6 +40,7 @@ export abstract class StixObject extends Serializable {
     public object_marking_refs: string[] = []; //list of embedded relationships to marking_defs
 
     public abstract readonly supportsAttackID: boolean; // boolean to determine if object supports ATT&CK IDs
+    public abstract readonly supportsNamespace: boolean; // boolean to determine if object supports namespacing of ATT&CK ID
     protected abstract get attackIDValidator(): {
         regex: string, // regex to validate the ID
         format: string // format to display to user
@@ -100,7 +101,7 @@ export abstract class StixObject extends Serializable {
             this.stixID = type + "--" + uuid();
             this.type = type;
             this.version = new VersionNumber("0.1");
-            this.attackID = "";
+            this.attackID = '';
             this.external_references = new ExternalReferences();
             if (this.type !== 'x-mitre-collection') {
                 this.workflow = {
@@ -121,9 +122,9 @@ export abstract class StixObject extends Serializable {
     public base_serialize(): any {
         let serialized_external_references = this.external_references.serialize();
 
-        // add ATT&CK ID to external references
-        if (this.supportsAttackID && this.attackID && this.typeUrlMap[this.attackType]) {
-            let new_ext_ref = {
+        // Add attackID for
+        if (this.attackID && this.typeUrlMap[this.attackType]) {
+          let new_ext_ref = {
                 "source_name": "mitre-attack",
                 "external_id": this.attackID,
                 "url": `https://attack.mitre.org/${this.typeUrlMap[this.attackType]}/${this.attackID.replace(/\./g, '/')}`
@@ -288,15 +289,15 @@ export abstract class StixObject extends Serializable {
                 //do not check name or attackID for relationships or marking definitions
                 if (this.attackType == "relationship" || this.attackType == "marking-definition") return of(result);
                 // check if name & ATT&CK ID is unique, record result in validation, and return validation
-                let accessor = this.attackType == "collection" ? restAPIService.getAllCollections() :
-                    this.attackType == "group" ? restAPIService.getAllGroups() :
-                        this.attackType == "software" ? restAPIService.getAllSoftware() :
-                            this.attackType == "matrix" ? restAPIService.getAllMatrices() :
-                                this.attackType == "mitigation" ? restAPIService.getAllMitigations() :
-                                    this.attackType == "technique" ? restAPIService.getAllTechniques() :
-                                        this.attackType == "data-source" ? restAPIService.getAllDataSources() :
-                                            this.attackType == "data-component" ? restAPIService.getAllDataComponents() :
-                                                restAPIService.getAllTactics();
+                let accessor = this.attackType == "collection"? restAPIService.getAllCollections() :
+                                this.attackType == "group"? restAPIService.getAllGroups() :
+                                this.attackType == "software"? restAPIService.getAllSoftware() :
+                                this.attackType == "matrix"? restAPIService.getAllMatrices() :
+                                this.attackType == "mitigation"? restAPIService.getAllMitigations() :
+                                this.attackType == "technique"? restAPIService.getAllTechniques() :
+                                this.attackType == "data-source"? restAPIService.getAllDataSources() :
+                                this.attackType == "data-component"? restAPIService.getAllDataComponents() :
+                                restAPIService.getAllTactics();
                 return accessor.pipe(
                     map(objects => {
                         // check name
@@ -329,8 +330,7 @@ export abstract class StixObject extends Serializable {
                                     "field": "attackID",
                                     "message": "Object does not have ATT&CK ID"
                                 })
-                            }
-                            else {
+                            } else {
                                 if (objects.data.some(x => x.attackID == this.attackID && x.stixID != this.stixID)) {
                                     result.errors.push({
                                         "result": "error",
@@ -344,8 +344,7 @@ export abstract class StixObject extends Serializable {
                                         "message": "ATT&CK ID is unique"
                                     })
                                 }
-                                // (\S+--)? is an organization prefix, and should probably be improved when that is made an explicit feature
-                                let idRegex = new RegExp("^(\\S+--)?" + this.attackIDValidator.regex + "$");
+                                let idRegex = new RegExp("^([A-Z]+-)?" + this.attackIDValidator.regex + "$");
                                 let attackIDValid = idRegex.test(this.attackID);
                                 if (!attackIDValid) {
                                     result.errors.push({
@@ -549,6 +548,92 @@ export abstract class StixObject extends Serializable {
             },
             complete: () => { sub.unsubscribe(); }
         });
+    }
+
+    public getNamespaceID(restAPIConnector, orgNamespace): Observable<any> {
+        let prefix = ''; // i.e. 'TA', if StixObject type is tactic
+        let count = '' as any; // i.e. 1234
+        let copyID = this.attackID.slice(); // Deep copy of attack id
+        this.attackID = '(generating ID)';
+
+        let accessor = this.attackType == "group" ? restAPIConnector.getAllGroups() :
+                        this.attackType == "mitigation" ? restAPIConnector.getAllMitigations() :
+                        this.attackType == "software" ? restAPIConnector.getAllSoftware() :
+                        this.attackType == "tactic" ? restAPIConnector.getAllTactics() :
+                        this.attackType == "technique" ? restAPIConnector.getAllTechniques() :
+                        this.attackType == "data-source" ? restAPIConnector.getAllDataSources() :
+                        this.attackType == "matrix" ? restAPIConnector.getAllMatrices() : null;
+
+        // Find all other objects that have this prefix and range, and set ID to the most recent & unique ID available
+        if (accessor) {
+            // Get object identifier, i.e. 'TA' for Tactic
+            prefix += this.attackIDValidator.format.includes('#') ? this.attackIDValidator.format.split('#')[0] : '';
+            let familyPrefix = orgNamespace.prefix ? orgNamespace.prefix + prefix : prefix;
+
+            return accessor.pipe(
+                map(stixObjects => stixObjects),
+                switchMap(objects => {
+                    if (this.hasOwnProperty('is_subtechnique') && this['is_subtechnique']) {
+                        if (this.hasOwnProperty('parentTechnique') && this['parentTechnique']) {
+                            const found = this['parentTechnique'].attackID.match(/[0-9]{4}/g); // Get 4-digit ID of parent technique
+                            if (found && found.length > 0) {
+                                familyPrefix += found[0];
+                                count = 1;
+                                return restAPIConnector.getTechnique(this['parentTechnique'].stixID, null, "latest", true).pipe(map(
+                                    technique => {
+                                        if (technique[0] && technique[0].subTechniques) {
+                                            let children = technique[0].subTechniques;
+                                            if (children.length > 0) {
+                                                const childIds = children.reduce((ids, obj) => {
+                                                    if (obj.attackID.startsWith(familyPrefix)) {
+                                                        const match = obj.attackID.match(/[^.]([0-9]*)$/g);
+                                                        if (match && match.length > 0) {
+                                                            ids.push(match[0]);
+                                                        }
+                                                    }
+                                                    return ids;
+                                                }, []);
+                                                count = childIds?.length > 0 ? Number(childIds.sort().pop()) + 1 : 1;
+                                            }
+                                        }
+                                        return (prefix + found[0] + '.' + count.toString().padStart(3, '0'));
+                                    }
+                                ))
+                            }
+                        } else {
+                            return of('(parent technique missing)');
+                        }
+                    }
+                    else return of(objects)
+                }),
+                switchMap(objects => {
+                    if (!this.hasOwnProperty('is_subtechnique') || !this['is_subtechnique']) {
+                        // Get ids of existing objects that have the same prefix
+                        const relatedIDs = objects['data'].reduce((ids, obj) => {
+                            if (obj.attackID.startsWith(familyPrefix)) {
+                                // Remove non-digits and decimals
+                                ids.push(obj.attackID.replace(familyPrefix, "").replace(/[.](\d{3})/, ""));
+                            }
+                            return ids;
+                        }, []);
+                        if (this.firstInitialized) { // If creating a new object
+                            if (!orgNamespace.range_start) {
+                                count = relatedIDs.length > 0 ? Number(relatedIDs.sort().pop()) + 1 : 1;
+                            } else {
+                              const range = Number(orgNamespace.range_start);
+                              const latest = relatedIDs.length > 0 ? Number(relatedIDs.sort().pop()) + 1 : 1;
+                                count = range > latest ? range : latest;
+                            }
+                        } else { // If editing an existing object
+                            count = relatedIDs.length > 0 ? Number(relatedIDs.sort().pop()) + 1 : 1;
+                        }
+                        return of((prefix + (count.toString().padStart(4, '0'))));
+                    }
+                    return of(objects);
+                })
+            )
+        }
+
     }
 }
 

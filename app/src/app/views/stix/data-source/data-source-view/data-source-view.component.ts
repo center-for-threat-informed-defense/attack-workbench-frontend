@@ -13,8 +13,8 @@ import { AuthenticationService } from 'src/app/services/connectors/authenticatio
     styleUrls: ['./data-source-view.component.scss']
 })
 export class DataSourceViewComponent extends StixViewPage implements OnInit {
-    public get data_source(): DataSource { 
-        return this.config.object as DataSource; 
+    public get data_source(): DataSource {
+        return this.config.object as DataSource;
     }
 
     public data_components: DataComponent[] = [];
@@ -38,7 +38,7 @@ export class DataSourceViewComponent extends StixViewPage implements OnInit {
                 let objects = results.data as DataComponent[];
                 this.data_components = objects.filter(obj => obj.data_source_ref == this.data_source.stixID)
                 this.loading = false;
-            }, 
+            },
             complete: () => {sub.unsubscribe();}
         })
     }

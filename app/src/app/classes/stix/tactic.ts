@@ -8,8 +8,9 @@ export class Tactic extends StixObject {
     public name: string = "";
     public domains: string[] = [];
     public contributors: string[] = [];
-    
+
     public readonly supportsAttackID = true;
+    public readonly supportsNamespace = true;
     protected get attackIDValidator() { return {
         regex: "TA\\d{4}",
         format: "TA####"
@@ -31,7 +32,7 @@ export class Tactic extends StixObject {
      */
     public serialize(): any {
         let rep = super.base_serialize();
-        
+
         rep.stix.name = this.name;
         rep.stix.x_mitre_domains = this.domains;
         rep.stix.x_mitre_shortname = this.shortname;
@@ -82,7 +83,7 @@ export class Tactic extends StixObject {
      */
     public save(restAPIService: RestApiConnectorService): Observable<Tactic> {
         // TODO POST if the object was just created (doesn't exist in db yet)
-        
+
         let postObservable = restAPIService.postTactic(this);
         let subscription = postObservable.subscribe({
             next: (result) => { this.deserialize(result.serialize()); },

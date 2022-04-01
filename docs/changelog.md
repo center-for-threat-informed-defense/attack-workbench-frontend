@@ -32,6 +32,13 @@
 
 # Changelog
 
+## 29 March 2022
+
+### Changes staged in develop
+
+-   Added namespace feature, which will be automatically generated when creating a new StixObject of a certain type ("group", "mitigation", "software", "tactic", "technique", "data-source", or "matrix"). See [frontend#113](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/113) and [frontend#114](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/114).
+-   Added parent technique field when creating a sub-technique, which will automatically create a relationship between the parent and sub-techniques. See [frontend#308](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/308).
+
 ## 28 February 2022
 
 ### ATT&CK Workbench version 1.2.0

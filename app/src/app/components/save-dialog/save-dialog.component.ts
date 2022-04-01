@@ -1,10 +1,13 @@
 import { Component, Inject, OnInit, ViewEncapsulation } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { forkJoin } from 'rxjs';
+import { forkJoin, of } from 'rxjs';
 import { ValidationData } from 'src/app/classes/serializable';
 import { StixObject, workflowStates } from 'src/app/classes/stix/stix-object';
 import { VersionNumber } from 'src/app/classes/version-number';
 import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/rest-api-connector.service';
+import { Relationship } from '../../classes/stix/relationship';
+import { Technique } from '../../classes/stix/technique';
+import { map, switchMap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-save-dialog',
@@ -119,17 +122,61 @@ export class SaveDialogComponent implements OnInit {
         else this.save();
     }
 
+    private saveNewParent() {
+        return this.config.object.save(this.restApiConnectorService).pipe(
+            map(result => {
+                if (result.attackType !== 'technique') return result;
+                // If saving a sub-technique, update relationship between the sub-technique & its parent technique
+                if ((result as Technique).is_subtechnique && (this.config.object as Technique).parentTechnique) {
+                    // If new object, create a relationship
+                    if (this.config.object.hasOwnProperty('firstInitialized') && this.config.object.firstInitialized) {
+                        const relationship = new Relationship();
+                        relationship.relationship_type = 'subtechnique-of';
+                        relationship.set_source_object(result, this.restApiConnectorService);
+                        relationship.set_target_object((this.config.object as Technique).parentTechnique, this.restApiConnectorService);
+                        relationship.save(this.restApiConnectorService);
+                    }
+
+                    // Otherwise if not a new object, check if parent technique changed
+                    else if (this.config.object.hasOwnProperty('firstInitialized') && !this.config.object.firstInitialized) {
+                        const sub$ = this.restApiConnectorService.getRelatedTo({sourceRef: this.config.object.stixID, relationshipType: "subtechnique-of"})
+                        const sub = sub$.subscribe({
+                            next: (r) => {
+                                if (r.data.length > 0 && r.data[0]) {
+                                    // If the parent technique has changed
+                                    if ((r.data[0] as Relationship).target_ref !== (this.config.object as Technique).parentTechnique.stixID) {
+                                        (r.data[0] as Relationship).revoked = true; // revoke original parent
+                                        (r.data[0] as Relationship).save(this.restApiConnectorService);
+
+                                        const relationship = new Relationship(); // create relationship with new parent
+                                        relationship.relationship_type = 'subtechnique-of';
+                                        relationship.set_source_object(this.config.object, this.restApiConnectorService);
+                                        relationship.set_target_object((this.config.object as Technique).parentTechnique, this.restApiConnectorService);
+                                        relationship.save(this.restApiConnectorService);
+                                    }
+                                }
+                            },
+                            complete: () => sub.unsubscribe()
+                        });
+                        return sub$;
+                    }
+                }
+                return of(result);
+            })
+        );
+    }
+
     /**
      * Save the object without patching other objects
      */
     private save() {
-        if (!this.saveEnabled) return;
-        let subscription = this.config.object.save(this.restApiConnectorService).subscribe({
-            next: (result) => { 
+        if (!this.saveEnabled) { return; }
+        const sub = this.saveNewParent().subscribe({
+            next: v => {
                 this.dialogRef.close(true);
             },
-            complete: () => {subscription.unsubscribe(); }
-        });
+            complete: () => sub.unsubscribe()
+        })
     }
 
     public getLabel(status: string): string {

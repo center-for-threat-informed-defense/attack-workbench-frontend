@@ -85,6 +85,11 @@ export interface Paginated<T> {
     }
 }
 
+export interface Namespace {
+    prefix: string,
+    range_start: string
+}
+
 @Injectable({
     providedIn: 'root'
 })
@@ -1321,6 +1326,40 @@ export class RestApiConnectorService extends ApiConnector {
                 )
             })
         )
+    }
+
+    /**
+     * Get the organization namespace configurations
+     * @returns {Observable<Namespace>} the organization namespace configurations
+     */
+    public getOrganizationNamespace(): Observable<Namespace> {
+        return this.http.get(`${this.baseUrl}/config/organization-namespace`).pipe(
+            tap(_ => logger.log("retrieved organization namespace configurations")),
+            map(result => {
+                return result;
+            }),
+            catchError(this.handleError_continue<any>()),
+            share() //multicast to subscribers
+        )
+    }
+
+    /**
+     * Update the organization namespace config
+     * @returns {Observable<Namespace>} the updated identity
+     * @memberof RestApiConnectorService
+     * @param namespaceSettings the namespace object to save
+     */
+    public setOrganizationNamespace(namespaceSettings: Namespace):  Observable<Namespace> {
+        const range = namespaceSettings.range_start ? Number(namespaceSettings.range_start) : 0;
+        return this.http.post(`${this.baseUrl}/config/organization-namespace`, {...namespaceSettings, range_start: range}).pipe(
+            // set the organization identity to be this identity's ID after it was created/updated
+            tap(this.handleSuccess("Organization Namespace Updated")),
+            map(_ => {
+                return namespaceSettings;
+            }),
+            catchError(this.handleError_raise<any>()),
+            share() // multicast so that multiple subscribers don't trigger the call twice. THIS MUST BE THE LAST LINE OF THE PIPE
+        );
     }
 
     //   _   _ ___ ___ ___     _   ___ ___ ___  _   _ _  _ _____     _   ___ ___ ___

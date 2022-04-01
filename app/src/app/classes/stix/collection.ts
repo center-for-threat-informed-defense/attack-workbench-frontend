@@ -168,6 +168,7 @@ export class Collection extends StixObject {
     public import_categories: CollectionDiffCategories<string>;
     
     public readonly supportsAttackID = false; // collections do not support ATT&CK IDs
+    public readonly supportsNamespace = false;
     protected get attackIDValidator() { return null; } //collections do not have ATT&CK IDs
 
     constructor(sdo?: any) {

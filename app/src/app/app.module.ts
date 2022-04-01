@@ -116,7 +116,7 @@ import { NamePropertyComponent } from "./components/stix/name-property/name-prop
 import { HelpPageComponent } from './views/help-page/help-page.component';
 import { LandingPageComponent } from './views/landing-page/landing-page.component';
 import { AdminPageComponent } from "./views/admin-page/admin-page.component";
-import { OrgIdentityPageComponent } from "./views/admin-page/org-identity-page/org-identity-page.component";
+import { OrgSettingsPageComponent } from "./views/admin-page/org-settings-page/org-settings-page.component";
 import { UserAccountsPageComponent } from './views/admin-page/user-accounts-page/user-accounts-page.component';
 import { DefaultMarkingDefinitionsComponent } from './views/admin-page/default-marking-definitions/default-marking-definitions.component';
 
@@ -231,7 +231,7 @@ import { MarkingDefinitionListComponent } from "./views/stix/marking-definition/
     LandingPageComponent,
     HelpPageComponent,
     AdminPageComponent,
-    OrgIdentityPageComponent,
+    OrgSettingsPageComponent,
     UserAccountsPageComponent,
     DefaultMarkingDefinitionsComponent,
 

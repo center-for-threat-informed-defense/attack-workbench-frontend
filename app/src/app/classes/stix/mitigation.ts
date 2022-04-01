@@ -9,6 +9,7 @@ export class Mitigation extends StixObject {
     public domains: string[] = [];
 
     public readonly supportsAttackID = true;
+    public readonly supportsNamespace = true;
     protected get attackIDValidator() { return {
         regex: "M\\d{4}",
         format: "M####"
@@ -48,7 +49,7 @@ export class Mitigation extends StixObject {
                 if (typeof(sdo.name) === "string") this.name = sdo.name;
                 else logger.error("TypeError: name field is not a string:", sdo.name, "(",typeof(sdo.name),")")
             } else this.name = "";
-            
+
             if ("x_mitre_domains" in sdo) {
                 if (this.isStringArray(sdo.x_mitre_domains)) this.domains = sdo.x_mitre_domains;
                 else logger.error("TypeError: domains field is not a string array.");

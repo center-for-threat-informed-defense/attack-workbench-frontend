@@ -2,7 +2,7 @@ import { AfterContentChecked, ChangeDetectorRef, Component, EventEmitter, OnInit
 import { Technique } from 'src/app/classes/stix/technique';
 import { StixViewPage } from '../../stix-view-page';
 import { AuthenticationService } from 'src/app/services/connectors/authentication/authentication.service';
-import { RestApiConnectorService } from "src/app/services/connectors/rest-api/rest-api-connector.service";
+import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/rest-api-connector.service';
 
 @Component({
     selector: 'app-technique-view',
@@ -22,7 +22,7 @@ export class TechniqueViewComponent extends StixViewPage implements OnInit, Afte
         if (this.technique.firstInitialized) {
             this.technique.initializeWithDefaultMarkingDefinitions(this.restApiConnector);
         }
-    }
+      }
 
     ngAfterContentChecked() {
         this.ref.detectChanges();

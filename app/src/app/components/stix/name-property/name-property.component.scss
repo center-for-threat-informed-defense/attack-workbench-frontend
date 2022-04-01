@@ -8,7 +8,10 @@
             text-transform: none;
             top: 0 !important;
             margin-right: 1ex;
-        
+            text-overflow: ellipsis;
+            overflow: hidden;
+            width: 38%;
+
         }
         .mat-form-field-wrapper {
             padding-bottom: 0;

@@ -10,10 +10,10 @@
         height: 175px;
         margin: 10px;
 
-        h2 { white-space: normal; } 
+        h2 { white-space: normal; }
     }
     .mat-badge-content.mat-badge-active {
         color: on-color(pending);
         background-color: color(pending);
-    }  
+    }
 }

@@ -4,15 +4,17 @@
 .list-edit {
     // font-size: 14px;
     input, mat-chip { font-size: 14px; }
-    mat-form-field { 
-        width: 100%; 
+    .loading-label {
+      position: absolute;
+      right: 0;
+    }
+    mat-form-field {
+        width: 100%;
         .mat-form-field-wrapper {
-            flex: 1 0; 
+            flex: 1 0;
             display: flex;
             flex-direction: column;
-            margin: 0px!important;
-            padding-top: 6px!important;
-            padding-bottom: 0px!important;
+            margin: 0.25em 0 0 0 !important;
             :active, :focus { outline: none; }
         }
         .mat-form-field-flex {
@@ -22,7 +24,7 @@
             display: flex;
             align-items: center;
           }
-          
+
         .loading > span {
             flex: 1;
         }
@@ -32,7 +34,7 @@
     .mat-select-placeholder, .mat-chip-list-wrapper, .mat-select-trigger {
         min-height: 32px;
     }
-    
+
     // stix list object selection dialog
     .icon { float: right; }
     .stix-select { cursor: pointer; }
