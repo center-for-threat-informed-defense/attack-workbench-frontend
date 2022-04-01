@@ -620,17 +620,9 @@ export abstract class StixObject extends Serializable {
                             if (!orgNamespace.range_start) {
                                 count = relatedIDs.length > 0 ? Number(relatedIDs.sort().pop()) + 1 : 1;
                             } else {
-                                let range = Number(orgNamespace.range_start)
-                                if (relatedIDs.length > 0) {
-                                    count = relatedIDs.sort().reduce((acc, v) => { // keep incrementing from range until a unique ID is found
-                                        if (acc === Number(v)) {
-                                            acc += 1
-                                        }
-                                        return acc
-                                    }, range);
-                                } else {
-                                    count = range;
-                                }
+                              const range = Number(orgNamespace.range_start);
+                              const latest = relatedIDs.length > 0 ? Number(relatedIDs.sort().pop()) + 1 : 1;
+                                count = range > latest ? range : latest;
                             }
                         } else { // If editing an existing object
                             count = relatedIDs.length > 0 ? Number(relatedIDs.sort().pop()) + 1 : 1;
