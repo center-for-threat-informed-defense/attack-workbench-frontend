@@ -41,7 +41,7 @@
         <span *ngIf="!(!dataLoaded && config.label === 'parent technique')">
             <mat-icon aria-hidden="false" aria-label="open" class="icon">open_in_new</mat-icon>
         </span>
-        <mat-chip-list #stixChipList [required]="config.required ? config.required : false" [disabled]="!dataLoaded && config.label === 'parent technique'">
+        <mat-chip-list #stixChipList [required]="config.required ? config.required : false" [disabled]="!dataLoaded && config.label === 'parent technique'" (blur)="onBlur()">
             <mat-chip *ngFor="let value of selectedValues()" [removable]="false">{{value}}</mat-chip>
         </mat-chip-list>
     </mat-form-field>

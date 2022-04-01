@@ -127,6 +127,13 @@ export class ListEditComponent implements OnInit, AfterContentChecked {
         this.ref.detectChanges();
     }
 
+    /** Clear attack ID field if parent technique is changed */
+    private onBlur() {
+        if (this.config.label === 'parent technique' && !(this.config.object as StixObject).firstInitialized) {
+            (this.config.object as StixObject).attackID = '';
+        }
+    }
+
     /** Retrieves a list of selected tactics */
     private shortnameToTactic(domains: string[]): Tactic[] {
         let allObjects = this.allObjects as Tactic[];
