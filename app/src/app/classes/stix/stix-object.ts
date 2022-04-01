@@ -581,17 +581,19 @@ export abstract class StixObject extends Serializable {
                                 count = 1;
                                 return restAPIConnector.getTechnique(this['parentTechnique'].stixID, null, "latest", true).pipe(map(
                                     technique => {
-                                        if (technique[0] && technique[0].attackID) {
+                                        if (technique[0] && technique[0].subTechniques) {
                                             let children = technique[0].subTechniques;
                                             if (children.length > 0) {
                                                 const childIds = children.reduce((ids, obj) => {
-                                                    const match = obj.attackID.match(/[^.]([0-9]*)$/g);
-                                                    if (match) {
-                                                        ids.push(match[0]);
+                                                    if (obj.attackID.startsWith(familyPrefix)) {
+                                                        const match = obj.attackID.match(/[^.]([0-9]*)$/g);
+                                                        if (match) {
+                                                            ids.push(match[0]);
+                                                        }
+                                                        return ids;
                                                     }
-                                                    return ids;
                                                 }, []);
-                                                count = childIds.length > 0 ? Number(childIds.sort().pop()) + 1 : 1;
+                                                count = childIds?.length > 0 ? Number(childIds.sort().pop()) + 1 : 1;
                                             }
                                         }
                                         return (prefix + found[0] + '.' + count.toString().padStart(3, '0'));
