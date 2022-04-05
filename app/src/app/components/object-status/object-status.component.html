@@ -17,8 +17,8 @@
         </mat-form-field>
 
         <div class="status-options">
-            <mat-checkbox [(ngModel)]="revoked" (change)="revoke($event)" [disabled]="deprecated" [class.disabled]="deprecated">Revoke</mat-checkbox>
-            <mat-checkbox [(ngModel)]="deprecated" (change)="deprecate($event)" [disabled]="revoked" [class.disabled]="revoked">Deprecate</mat-checkbox>
+            <mat-checkbox [(ngModel)]="revoked" (change)="revoke($event)" [disabled]="deprecated || !objects" [class.disabled]="deprecated || !objects">Revoke</mat-checkbox>
+            <mat-checkbox [(ngModel)]="deprecated" (change)="deprecate($event)" [disabled]="revoked || !objects" [class.disabled]="revoked || !objects">Deprecate</mat-checkbox>
         </div>
     </div>
     <ng-template #loading>
