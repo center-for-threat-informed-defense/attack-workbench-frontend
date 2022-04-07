@@ -271,6 +271,17 @@ export class Technique extends StixObject {
     public validate(restAPIService: RestApiConnectorService): Observable<ValidationData> {
         return this.base_validate(restAPIService).pipe(
             map(result => {
+                // validate technique has at least one tactic
+                if (this.attackID) { // only check tactics if object is not a draft
+                    if (!this.tactics || this.tactics.length == 0) {
+                        result.errors.push({
+                            "field": "tactics",
+                            "result": "error",
+                            "message": "object has no tactics"
+                        });
+                    }
+                }
+
                 // check CAPEC IDs
                 let malformed_capec = this.capec_ids.filter(capec => !/^CAPEC-\d+$/.test(capec))
                 if (malformed_capec.length > 0) result.errors.push({
