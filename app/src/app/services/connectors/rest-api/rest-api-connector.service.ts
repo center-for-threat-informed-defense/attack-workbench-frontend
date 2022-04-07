@@ -102,7 +102,10 @@ export class RestApiConnectorService extends ApiConnector {
      */
     private getObjectName(object: StixObject): string {
         if (object.type == "relationship") {
-            return `${object["source_name"]} ${object["relationship_type"]} ${object["target_name"]}`
+            if (object["source_name"] == '[unknown object]' || object["target_name"] == '[unknown object]') {
+                return `${object["relationship_type"].charAt(0).toUpperCase()}${object["relationship_type"].slice(1)} relationship`;
+            }
+            return `${object["source_name"]} ${object["relationship_type"]} ${object["target_name"]}`;
         } else if (object.type == "note") {
             return object["title"];
         } else if ("name" in object) {
