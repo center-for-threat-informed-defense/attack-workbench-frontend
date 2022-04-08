@@ -1,4 +1,5 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input } from '@angular/core';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { StixObject } from 'src/app/classes/stix/stix-object';
 
 @Component({
@@ -6,14 +7,13 @@ import { StixObject } from 'src/app/classes/stix/stix-object';
   templateUrl: './attackid-property.component.html',
   styleUrls: ['./attackid-property.component.scss']
 })
-export class AttackIDPropertyComponent implements OnInit {
+export class AttackIDPropertyComponent {
     @Input() public config: AttackIDPropertyConfig;
+    public get linkById(): string { return `(LinkById: ${this.config.object["attackID"]})`; }
 
-    constructor() { }
-
-    ngOnInit(): void {
+    constructor(public snackbar: MatSnackBar) {
+        // intentionally left blank
     }
-
 }
 export interface AttackIDPropertyConfig {
     /* What is the current mode? Default: 'view
