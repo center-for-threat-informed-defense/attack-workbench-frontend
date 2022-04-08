@@ -135,7 +135,7 @@ export class RestApiConnectorService extends ApiConnector {
         let plural = attackTypeToPlural[attackType]
         return function<P extends T>(options?: { limit?: number, offset?: number, state?: string, includeRevoked?: boolean, includeDeprecated?: boolean, versions?: "all" | "latest", excludeIDs?: string[], search?: string }): Observable<Paginated<StixObject>> {
             // parse params into query string
-            let query = new HttpParams();
+            let query = new HttpParams({encoder: new CustomEncoder()});
             // pagination
             if (options && options.limit) query = query.set("limit", options.limit.toString());
             if (options && options.offset) query = query.set("offset", options.offset.toString());
@@ -350,7 +350,7 @@ export class RestApiConnectorService extends ApiConnector {
      * @returns {Observable<any[]>} observable of retrieved objects
      */
     public getAllObjects(attackID?: string, limit?: number, offset?: number, state?: string, revoked?: boolean, deprecated?: boolean, deserialize?: boolean) {
-        let query = new HttpParams();
+        let query = new HttpParams({encoder: new CustomEncoder()});
         // pagination
         if (limit) query = query.set("limit", limit.toString());
         if (offset) query = query.set("offset", offset.toString());
@@ -1001,7 +1001,7 @@ export class RestApiConnectorService extends ApiConnector {
     public getAllReferences(limit?: number, offset?: number, search?: string): Observable<Paginated<ExternalReference>> {
         let url = `${this.baseUrl}/references`;
         // parse params into query string
-        let query = new HttpParams();
+        let query = new HttpParams({encoder: new CustomEncoder()});
         // pagination
         if (limit) query = query.set("limit", limit.toString());
         if (offset) query = query.set("offset", offset.toString());
@@ -1382,7 +1382,7 @@ export class RestApiConnectorService extends ApiConnector {
     public getAllUserAccounts(options?: {limit?: number, offset?: number, status?: string[], role?: string[], search?: string}): Observable<Paginated<UserAccount>> {
         let url = `${this.baseUrl}/user-accounts`;
         // parse params into query string
-        let query = new HttpParams();
+        let query = new HttpParams({encoder: new CustomEncoder()});
         // pagination
         if (options && options.limit) query = query.set("limit", options.limit.toString());
         if (options && options.offset) query = query.set("offset", options.offset.toString());
