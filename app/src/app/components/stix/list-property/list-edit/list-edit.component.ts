@@ -25,7 +25,6 @@ export class ListEditComponent implements OnInit, AfterContentChecked {
     // allowed values (editType: 'select')
     public allAllowedValues: any;
     public selectControl: FormControl;
-    public disabledTooltip: string = "a valid domain must be selected first";
     public dataLoaded: boolean = false;
 
     // prevent async issues
