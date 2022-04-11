@@ -53,7 +53,7 @@ export class ListEditComponent implements OnInit, AfterContentChecked {
 
     // any value (editType: 'any')
     public inputControl: FormControl;
-    readonly separatorKeysCodes: number[] = [ENTER, COMMA];   
+    readonly separatorKeysCodes: number[] = [ENTER];   
 
     constructor(public dialog: MatDialog, private restAPIConnectorService: RestApiConnectorService, private ref: ChangeDetectorRef) { }
 
