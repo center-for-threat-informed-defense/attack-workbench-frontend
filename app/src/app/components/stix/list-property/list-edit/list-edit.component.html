@@ -23,19 +23,16 @@
         <mat-select [formControl]="selectControl" multiple [required]="config.required ? config.required : false">
             <mat-select-trigger>
                 <mat-chip-list [required]="config.required ? config.required : false">
-                    <mat-chip *ngFor="let value of selectControl.value" [removable]="true"
-                        (removed)="removeSelection(value)">
+                    <mat-chip *ngFor="let value of selectControl.value" [removable]="true" (removed)="removeSelection(value)">
                         {{value}} <mat-icon *ngIf="!config.disabled" matChipRemove>cancel</mat-icon>
                     </mat-chip>
                 </mat-chip-list>
             </mat-select-trigger>
-            <mat-option *ngFor="let item of getAllowedValues()" (onSelectionChange)="change($event)" [value]="item">
-                {{item}}</mat-option>
+            <mat-option *ngFor="let item of getAllowedValues()" (onSelectionChange)="change($event)" [value]="item">{{item}}</mat-option>
         </mat-select>
     </mat-form-field>
     <!-- input type: 'stixList' -->
-    <mat-form-field *ngIf="config.editType == 'stixList'" class="stix-select grow-to-row" appearance="outline"
-        (click)="config.disabled? null : openStixList()"
+    <mat-form-field *ngIf="config.editType == 'stixList'" class="stix-select grow-to-row" [ngClass]="{'disabled': config.disabled || !dataLoaded}" appearance="outline" (click)="openStixList()"
         [matTooltip]="config.disabled ? 'a valid domain must be selected first' : null">
         <mat-label>{{config.label? config.label : config.field}}</mat-label>
         <span *ngIf="!dataLoaded && config.label === 'parent technique'" class="loading-label">

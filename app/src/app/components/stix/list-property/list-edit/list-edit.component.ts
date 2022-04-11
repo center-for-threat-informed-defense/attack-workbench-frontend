@@ -293,13 +293,14 @@ export class ListEditComponent implements OnInit, AfterContentChecked {
 
     /** Open stix list selection window */
     public openStixList() {
-      if (this.config.label === 'parent technique' && !this.dataLoaded) return;
-      let selectableObjects = this.allObjects;
-      if (this.config.field !== 'parentTechnique') {
-        // filter tactic objects by domain
-        let tactics = this.allObjects as Tactic[];
-        selectableObjects = tactics.filter(tactic => this.tacticInDomain(tactic));
-      }
+        if (this.config.disabled) return; // cannot open stix list if field is disabled
+        if (this.config.label === 'parent technique' && !this.dataLoaded) return;
+        let selectableObjects = this.allObjects;
+        if (this.config.field !== 'parentTechnique') {
+            // filter tactic objects by domain
+            let tactics = this.allObjects as Tactic[];
+            selectableObjects = tactics.filter(tactic => this.tacticInDomain(tactic));
+        }
 
         let dialogRef = this.dialog.open(AddDialogComponent, {
             maxWidth: "70em",
@@ -325,8 +326,8 @@ export class ListEditComponent implements OnInit, AfterContentChecked {
                     let tactics = this.select.selected.map(tacticID => allObjects.find(tactic => tactic.stixID == tacticID));
                     tactics.forEach(tactic => this.tacticState.push(tactic));
                 } else if (result && this.config.field == 'parentTechnique') {
-                  let allObjects = this.allObjects as Technique[];
-                  this.config.object[this.config.field] = this.select.selected.length > 0 ? allObjects.find(t => t.stixID === this.select.selected[0]) : null;
+                    let allObjects = this.allObjects as Technique[];
+                    this.config.object[this.config.field] = this.select.selected.length > 0 ? allObjects.find(t => t.stixID === this.select.selected[0]) : null;
                 } else { // user cancel
                     this.select = selectCopy; // reset selection
                 }
