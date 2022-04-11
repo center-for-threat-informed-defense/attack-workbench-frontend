@@ -272,14 +272,12 @@ export class Technique extends StixObject {
         return this.base_validate(restAPIService).pipe(
             map(result => {
                 // validate technique has at least one tactic
-                if (this.attackID) { // only check tactics if object is not a draft
-                    if (this.tactics.length == 0) {
-                        result.errors.push({
-                            "field": "tactics",
-                            "result": "error",
-                            "message": "object has no tactics"
-                        });
-                    }
+                if (this.attackID && this.tactics.length == 0) { // only check tactics if object is not a draft
+                    result.errors.push({
+                        "field": "tactics",
+                        "result": "error",
+                        "message": "object has no tactics"
+                    });
                 }
 
                 // check CAPEC IDs
