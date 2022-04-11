@@ -273,7 +273,7 @@ export class Technique extends StixObject {
             map(result => {
                 // validate technique has at least one tactic
                 if (this.attackID) { // only check tactics if object is not a draft
-                    if (!this.tactics || this.tactics.length == 0) {
+                    if (this.tactics.length == 0) {
                         result.errors.push({
                             "field": "tactics",
                             "result": "error",
