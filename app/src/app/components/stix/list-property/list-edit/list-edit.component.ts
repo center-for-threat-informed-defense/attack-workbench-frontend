@@ -1,6 +1,6 @@
 import { AfterContentChecked, ChangeDetectorRef, Component, Input, OnInit, ViewEncapsulation } from '@angular/core';
 import { ListPropertyConfig } from '../list-property.component';
-import { COMMA, ENTER } from '@angular/cdk/keycodes';
+import { ENTER } from '@angular/cdk/keycodes';
 import { MatChipInputEvent } from '@angular/material/chips';
 import { FormControl, Validators } from '@angular/forms';
 import { MatOptionSelectionChange } from '@angular/material/core';
@@ -53,7 +53,7 @@ export class ListEditComponent implements OnInit, AfterContentChecked {
 
     // any value (editType: 'any')
     public inputControl: FormControl;
-    readonly separatorKeysCodes: number[] = [ENTER, COMMA];   
+    readonly separatorKeysCodes: number[] = [ENTER];   
 
     constructor(public dialog: MatDialog, private restAPIConnectorService: RestApiConnectorService, private ref: ChangeDetectorRef) { }
 
