@@ -26,7 +26,6 @@ export class NotesEditorComponent implements OnInit, AfterViewInit {
     constructor(private router: Router, private restAPIConnectorService: RestApiConnectorService, private dialog: MatDialog, private snackbar: MatSnackBar) { }
 
     ngOnInit(): void {
-        this.loading = true;
         this.objectStixID = this.router.url.split("/")[2].split("?")[0];
         this.selected = new FormControl('date-descending');
         this.parseNotes();
@@ -44,6 +43,8 @@ export class NotesEditorComponent implements OnInit, AfterViewInit {
 
     /** Retrieve objects from backend */
     private parseNotes(): void {
+        console.log('** parsing notes')
+        this.loading = true;
         let query = this.search? this.search.nativeElement.value.toLowerCase() : "";
 
         let objects$ = this.restAPIConnectorService.getAllNotes();
@@ -128,9 +129,12 @@ export class NotesEditorComponent implements OnInit, AfterViewInit {
     /** Save note */
     public saveNote(note: Note): void {
         if (note.content) {
-            note.save(this.restAPIConnectorService);
-            note.editing = false;
-            this.parseNotes();
+            note.save(this.restAPIConnectorService).subscribe({
+                complete: () => {
+                    note.editing = false;
+                    this.parseNotes();
+                }
+            });
         }
     }
 
