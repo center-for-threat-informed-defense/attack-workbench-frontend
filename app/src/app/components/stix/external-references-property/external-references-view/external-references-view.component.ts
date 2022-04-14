@@ -31,6 +31,7 @@ export class ExternalReferencesViewComponent implements OnInit, OnDestroy {
 
     ngOnDestroy(): void {
         this.onEditStopSubscription.unsubscribe();
+        this.onReloadReferencesSub.unsubscribe();
     }
 
     public loadReferences(): void {
