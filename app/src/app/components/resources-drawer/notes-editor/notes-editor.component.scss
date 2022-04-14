@@ -64,7 +64,10 @@
         .mat-form-field-underline { display: none; }
 
         mat-card-header {
-            textarea { margin-top: 12px; }
+            textarea {
+                margin-top: 12px;
+                overflow: hidden;
+            }
             .mat-card-header-text { width: 100%; }
             .history {
                 font-size: 13px;
