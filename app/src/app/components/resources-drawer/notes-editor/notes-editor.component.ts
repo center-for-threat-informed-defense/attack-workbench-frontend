@@ -43,7 +43,6 @@ export class NotesEditorComponent implements OnInit, AfterViewInit {
 
     /** Retrieve objects from backend */
     private parseNotes(): void {
-        console.log('** parsing notes')
         this.loading = true;
         let query = this.search? this.search.nativeElement.value.toLowerCase() : "";
 
