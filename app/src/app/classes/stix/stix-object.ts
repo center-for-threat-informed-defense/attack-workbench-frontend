@@ -328,7 +328,7 @@ export abstract class StixObject extends Serializable {
                                 result.warnings.push({
                                     "result": "warning",
                                     "field": "attackID",
-                                    "message": "Object does not have ATT&CK ID"
+                                    "message": "object does not have ATT&CK ID"
                                 })
                             } else {
                                 if (objects.data.some(x => x.attackID == this.attackID && x.stixID != this.stixID)) {
