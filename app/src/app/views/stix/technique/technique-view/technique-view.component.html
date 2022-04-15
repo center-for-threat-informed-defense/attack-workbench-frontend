@@ -163,7 +163,8 @@
                 mode: editing? 'edit': 'view',
                 object: technique,
                 field: 'tactics',
-                editType: 'stixList'
+                editType: 'stixList',
+                disabled: technique.domains.length == 0
             }"></app-list-property>
         </div>
         <ng-container *ngIf="showTacticField('privilege-escalation', 'permissions_required') || showTacticField('privilege-escalation', 'effective_permissions')

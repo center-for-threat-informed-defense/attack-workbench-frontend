@@ -37,5 +37,7 @@
 
     // stix list object selection dialog
     .icon { float: right; }
-    .stix-select { cursor: pointer; }
+    .stix-select {
+        &:not(.disabled) { cursor: pointer; }
+    }
 }

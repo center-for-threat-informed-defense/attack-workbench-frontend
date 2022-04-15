@@ -73,7 +73,8 @@ const stixTypeToClass = {
     "identity": Identity,
     "marking-definition": MarkingDefinition,
     "x-mitre-data-source": DataSource,
-    "x-mitre-data-component": DataComponent
+    "x-mitre-data-component": DataComponent,
+    "note": Note
 }
 
 export interface Paginated<T> {
