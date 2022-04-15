@@ -13,11 +13,15 @@ import { ExternalReferencesPropertyConfig } from '../external-references-propert
 export class ExternalReferencesViewComponent implements OnInit, OnDestroy {
     @Input() public config: ExternalReferencesPropertyConfig;
     public onEditStopSubscription: Subscription;
+    public onReloadReferencesSub: Subscription;
     public referenceList: Array<[number, ExternalReference]> = [];
 
     constructor(private editorService: EditorService) {
         this.onEditStopSubscription = this.editorService.onEditingStopped.subscribe({
             next: () => { this.loadReferences(); } // reload references when done editing
+        })
+        this.onReloadReferencesSub = this.editorService.onReloadReferences.subscribe({
+            next: () => { this.loadReferences(); } // reload references on text preview
         })
     }
 
@@ -27,6 +31,7 @@ export class ExternalReferencesViewComponent implements OnInit, OnDestroy {
 
     ngOnDestroy(): void {
         this.onEditStopSubscription.unsubscribe();
+        this.onReloadReferencesSub.unsubscribe();
     }
 
     public loadReferences(): void {
