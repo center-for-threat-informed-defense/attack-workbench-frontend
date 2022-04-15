@@ -136,10 +136,43 @@ export class ExternalReferences extends Serializable {
     }
 
     /**
+     * Parses object descriptive fields for citations and updates the
+     * objects' external references list
+     * @param object the object to parse citations within
+     * @param restAPIConnector to connect to the REST API
+     * @returns 
+     */
+    public parseObjectCitations(object: StixObject, restAPIConnector: RestApiConnectorService): Observable<CitationParseResult> {
+        // get list of descriptive fields that support citations
+        let refs_fields = ['description'];
+        if (object.attackType == 'software' || object.attackType == 'group') refs_fields.push('aliases');
+        if (object.attackType == 'technique') refs_fields.push('detection');
+
+        // parse citations for each descriptive field on the object
+        let parse_apis = [];
+        for (let field of refs_fields) {
+            if (field == 'aliases') parse_apis.push(this.parseCitationsFromAliases(object[field], restAPIConnector));
+            else parse_apis.push(this.parseCitations(object[field], restAPIConnector));
+        }
+
+        return forkJoin(parse_apis).pipe(
+            map((api_results: CitationParseResult[]) => {
+                let citationResult = new CitationParseResult();
+                // merge all results into a single object
+                for (let parse_result of api_results) {
+                    citationResult.merge(parse_result);
+                }
+                // remove unused citations from external reference list
+                this.removeUnusedReferences(Array.from(citationResult.usedCitations));
+                return citationResult;
+            })
+        )
+    }
+
+    /**
      * Parses value for references
      * @param value the value to match citations within
      * @param restApiConnector to connect to the REST API
-     * @param validateReferencesAndCitations 
      */
     public parseCitations(value: string, restApiConnector: RestApiConnectorService): Observable<CitationParseResult> {
         let reReference = /\(Citation: (.*?)\)/gmu;
@@ -195,8 +228,7 @@ export class ExternalReferences extends Serializable {
      * Parse citations from aliases which stores descriptions in external references
      * Add missing references to object if found in global external reference list 
      * @param aliases list of alias names
-     * @param restApiConnector
-     * @param validateReferencesAndCitations? Optional param to validate references and citations
+     * @param restApiConnector to connect to the REST API
      */
     public parseCitationsFromAliases(aliases : string[], restApiConnector : RestApiConnectorService): Observable<CitationParseResult> {
         // Parse citations from the alias descriptions stored in external references
