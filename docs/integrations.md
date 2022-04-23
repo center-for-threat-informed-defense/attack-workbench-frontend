@@ -49,17 +49,21 @@ Edit the config file `nav-app/src/assets/config.json` by prepending a new object
     "versions": [
         {
             "name": "ATT&CK Workbench Data",
+            "version": "11",
             "domains": [
                 {
                     "name": "Enterprise",
+                    "identifier": "enterprise-attack",
                     "data": ["(Enterprise URL)"]
                 },
                 {
                     "name": "Mobile",
+                    "identifier": "mobile-attack",
                     "data": ["(Mobile URL)"]
                 },
                 {
                     "name": "ICS",
+                    "identifier": "ics-attack",
                     "data": ["(ICS URL)"]
                 }
             ]
