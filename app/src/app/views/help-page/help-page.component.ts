@@ -28,7 +28,7 @@ export class HelpPageComponent implements OnInit {
         let self = this;
         let counters = [];
         this.markdownService.renderer.heading = (text: string, level: number) => {
-            const escapedText = text.toLowerCase().replace(/[^\w]+/g, '-');
+            const escapedText = '_' + text.toLowerCase().replace(/[^\w]+/g, '-');
             if (level != 1) self.headingAnchors.push({
                 level: level,
                 anchor: escapedText,
