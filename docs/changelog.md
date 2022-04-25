@@ -34,64 +34,22 @@
 
 ## 25 April 2022
 
-### ATT&CK Workbench version 1.3.2
+### ATT&CK Workbench version 1.2.0
 
-#### New Features in 1.3.2
--   Added a button to object ATT&CK ID fields to copy the object's LinkById tag. See [frontend#327](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/327).
+ATT&CK Workbench v1.2.0 supports authentication and authorization for users. The REST API can be configured to use the Anonymous or OpenID Connect (OIDC) authentication mechanisms. See the [authentication documentation](https://github.com/center-for-threat-informed-defense/attack-workbench-rest-api/tree/master/docs/authentication.md#authentication) for more information.
 
-#### Improvements in 1.3.2
--   The external references field at the bottom of object pages are automatically updated to reflect citation changes to the `description` and `x_mitre_detection` fields before the object is saved. See [frontend#329](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/329).
--   Added validation to ensure a technique has been assigned at least one tactic. See [frontend#273](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/273).
--   Removed the comma key as a keycode separator for list input fields (i.e. `contributors`, `system requirements`, `CAPEC IDs`, etc.). See [frontend#335](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/pull/335).
-
-#### Fixes in 1.3.2
--   Fixed a bug where the search functionality would break with special characters because the query was not correctly encoded in the request. See [frontend#332](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/332).
--   Fixed an issue where Note objects were not registered as a valid class, resulting in errors when trying to retrieve all objects from the REST API. See [frontend#338](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/pull/338).
-
-## 1 April 2022
-
-### ATT&CK Workbench version 1.3.1
-
-#### New Features in 1.3.1
--   Added `contributors` field to Technique and Tactic objects. See [frontend#325](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/325).
--   Added ability to search for objects by ATT&CK ID. See [rest-api#162](https://github.com/center-for-threat-informed-defense/attack-workbench-rest-api/issues/162).
--   Added a view page for References in the Reference Manager. See [frontend#304](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/304).
--   Added a link to the parent technique page from the sub-technique page. See [frontend#309](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/309).
-
-#### Improvements in 1.3.1
--   Relationships which have been deprecated are hidden in the list of relationships without requiring a page refresh. See [frontend#321](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/321).
--   Changing a user's role to `admin`, `editor` or `visitor` automatically sets the user's status to `active`. A user's status is automatically set to `inactive` if their role is changed to `none`. See [frontend#318](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/318).
--   Added options to the relationship edit dialog to increment the source and/or target object versions when creating a new relationship. See [frontend#307](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/307).
--   The source and target objects' version numbers and last modified dates are shown alongside their names when creating a new relationship to provide more context. See [frontend#313](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/313).
--   When creating a new Reference object, the `retrieved` field will default to the current date. See [frontend#305](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/305).
-
-#### Fixes in 1.3.1
--   Added missing fields from User Account objects: `created`, `modified`, and `displayName`. See [frontend#319](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/319).
--   Fixed a bug where spaces would break the search in object tables and show no results. See [frontend#303](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/303).
--   Fixed an issue where other external references (such as MTC IDs or CAPEC IDs) were being identified as the object's ATT&CK ID, when the object had not yet been assigned an ATT&CK ID. See [frontend#322](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/322).
--   Fixed an issue where Matrix ATT&CK IDs (a.k.a. domain identifiers) were being validated and preventing users from saving. This caused issues for domains which have multiple matrices with the same domain identifier. See [frontend#315](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/315).
--   Fixed the unexpected calls being made to the REST API before the user is authenticated. See [frontend#314](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/314).
--   Fixed a bug where the external reference links at the bottom of object pages did not redirect to the reference's associated URL. See [frontend#306](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/306).
-
-
-## 31 March 2022
-
-### ATT&CK Workbench version 1.3.0
-
-#### New Features in 1.3.0
+#### New Features in 1.2.0
 
 -   Added functionality to generate object ATT&CK IDs. See [frontend#114](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/114) and [frontend#300](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/300).
 -   Added optional namespace settings for ATT&CK IDs, so object IDs don't conflict with ATT&CK or other organizations' object IDs. These settings are automatically applied when creating a new object. See [frontend#113](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/113).
 -   Added parent technique field when creating a sub-technique, this will automatically create a relationship between the parent and sub-technique. See [frontend#308](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/308).
 -   Added support for LinkById tags, which allow users to add links from one object to another in Workbench. LinkById tags are formatted as `(LinkById: ATT&CK ID)` and are supported in `description` and `x_mitre_detection` fields. When previewing or viewing these fields, LinkById tags are detected and replaced with a link to the corresponding object's page on the Workbench. See [frontend#279](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/279).
     -   LinkById tags are automatically checked and updated when a referenced object's ATT&CK ID is changed. See [frontend#281](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/281).
-
-
-## 28 February 2022
-
-### ATT&CK Workbench version 1.2.0
-
-ATT&CK Workbench v1.2.0 supports authentication and authorization for users. The REST API can be configured to use the Anonymous or OpenID Connect (OIDC) authentication mechanisms. See the [authentication documentation](https://github.com/center-for-threat-informed-defense/attack-workbench-rest-api/tree/master/docs/authentication.md#authentication) for more information.
+-   Added a button to object ATT&CK ID fields to copy the object's LinkById tag. See [frontend#327](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/327).
+-   Added `contributors` field to Technique and Tactic objects. See [frontend#325](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/325).
+-   Added ability to search for objects by ATT&CK ID. See [rest-api#162](https://github.com/center-for-threat-informed-defense/attack-workbench-rest-api/issues/162).
+-   Added a view page for References in the Reference Manager. See [frontend#304](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/304).
+-   Added a link to the parent technique page from the sub-technique page. See [frontend#309](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/309).
 
 #### Improvements in 1.2.0
 
@@ -100,6 +58,24 @@ ATT&CK Workbench v1.2.0 supports authentication and authorization for users. The
 -   Added user login and logout functionality. Pending users cannot log in until the Adminstrator has approved their account. See [frontend#266](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/266).
 -   Added support for individual attribution. If a user is logged in, the application will display the individual user who has edited an object in place of the organization-level identity. Individual attribution is not supported when the Workbench instance is set up with anonymous authentication. See [frontend#191](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/191).
 -   Added support for marking definitions. See [frontend#188](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/188).
+-   Relationships which have been deprecated are hidden in the list of relationships without requiring a page refresh. See [frontend#321](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/321).
+-   Changing a user's role to `admin`, `editor` or `visitor` automatically sets the user's status to `active`. A user's status is automatically set to `inactive` if their role is changed to `none`. See [frontend#318](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/318).
+-   Added options to the relationship edit dialog to increment the source and/or target object versions when creating a new relationship. See [frontend#307](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/307).
+-   The source and target objects' version numbers and last modified dates are shown alongside their names when creating a new relationship to provide more context. See [frontend#313](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/313).
+-   When creating a new Reference object, the `retrieved` field will default to the current date. See [frontend#305](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/305).
+-   The external references field at the bottom of object pages are automatically updated to reflect citation changes to the `description` and `x_mitre_detection` fields before the object is saved. See [frontend#329](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/329).
+-   Added validation to ensure a technique has been assigned at least one tactic. See [frontend#273](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/273).
+-   Removed the comma key as a keycode separator for list input fields (i.e. `contributors`, `system requirements`, `CAPEC IDs`, etc.). See [frontend#335](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/pull/335).
+
+#### Fixes in 1.2.0
+-   Added missing fields from User Account objects: `created`, `modified`, and `displayName`. See [frontend#319](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/319).
+-   Fixed a bug where spaces would break the search in object tables and show no results. See [frontend#303](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/303).
+-   Fixed an issue where other external references (such as MTC IDs or CAPEC IDs) were being identified as the object's ATT&CK ID, when the object had not yet been assigned an ATT&CK ID. See [frontend#322](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/322).
+-   Fixed an issue where Matrix ATT&CK IDs (a.k.a. domain identifiers) were being validated and preventing users from saving. This caused issues for domains which have multiple matrices with the same domain identifier. See [frontend#315](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/315).
+-   Fixed the unexpected calls being made to the REST API before the user is authenticated. See [frontend#314](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/314).
+-   Fixed a bug where the external reference links at the bottom of object pages did not redirect to the reference's associated URL. See [frontend#306](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/306).
+-   Fixed a bug where the search functionality would break with special characters because the query was not correctly encoded in the request. See [frontend#332](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/332).
+-   Fixed an issue where Note objects were not registered as a valid class, resulting in errors when trying to retrieve all objects from the REST API. See [frontend#338](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/pull/338).
 
 ## 21 October 2021
 
