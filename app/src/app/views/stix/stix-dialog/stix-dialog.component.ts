@@ -1,6 +1,6 @@
 import { DataSource } from '@angular/cdk/collections';
 import { Component, Inject, OnInit, ViewEncapsulation } from '@angular/core';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { forkJoin } from 'rxjs';
 import { ValidationData } from 'src/app/classes/serializable';
 import { Collection } from 'src/app/classes/stix/collection';
@@ -15,6 +15,7 @@ import { Software } from 'src/app/classes/stix/software';
 import { StixObject } from 'src/app/classes/stix/stix-object';
 import { Tactic } from 'src/app/classes/stix/tactic';
 import { Technique } from 'src/app/classes/stix/technique';
+import { DeleteDialogComponent } from 'src/app/components/delete-dialog/delete-dialog.component';
 import { AuthenticationService } from 'src/app/services/connectors/authentication/authentication.service';
 import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/rest-api-connector.service';
 import { EditorService } from 'src/app/services/editor/editor.service';
@@ -51,7 +52,8 @@ export class StixDialogComponent implements OnInit {
                 public sidebarService: SidebarService,
                 public restApiConnectorService: RestApiConnectorService,
                 public editorService: EditorService,
-                private authenticationService: AuthenticationService) {
+                private authenticationService: AuthenticationService,
+                private dialog: MatDialog) {
         if (this._config.mode && this._config.mode == "edit" && this.authenticationService.canEdit()) this.startEditing();
     }
 
@@ -141,6 +143,40 @@ export class StixDialogComponent implements OnInit {
         this.editorService.onEditingStopped.emit();
         if (this.prevObject) this.revertToPreviousObject();
         else this.close();
+    }
+
+    /** 
+     * Checks if this object is of type 'relationship' and can be deleted
+     */
+    public get isDeletableRelationship(): boolean {
+        if (this.stixType != 'relationship') return false;
+        let object = (Array.isArray(this.config.object) ? this.config.object[0] : this.config.object) as Relationship;
+        // 'subtechnique_of' relationships cannot be deleted
+        return this.stixType == 'relationship' && object.relationship_type != 'subtechnique_of';
+    }
+
+    /**
+     * Opens the deletion confirmation dialog and deletes the object
+     */
+    public delete(): void {
+        let object = (Array.isArray(this.config.object) ? this.config.object[0] : this.config.object) as Relationship;
+
+        // open confirmation dialog
+        let prompt = this.dialog.open(DeleteDialogComponent, {
+            maxWidth: "35em",
+            disableClose: true,
+            autoFocus: false // disables auto focus on the dialog form field
+        });
+        let subscription = prompt.afterClosed().subscribe({
+            next: (confirm) => {
+                if (confirm) {
+                    // delete relationship
+                    object.delete(this.restApiConnectorService);
+                    this.close();
+                }
+            },
+            complete: () => { subscription.unsubscribe(); } //prevent memory leaks
+        });
     }
 
     public close() {
