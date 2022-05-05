@@ -32,6 +32,10 @@
 
 # Changelog
 
+## 5 May 2022 - Changes staged on branch v1.3.0
+
+### ATT&CK Workbench version 1.3.0
+
 ## 25 April 2022
 
 ### ATT&CK Workbench version 1.2.0
