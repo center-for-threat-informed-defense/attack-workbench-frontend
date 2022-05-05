@@ -1,0 +1,21 @@
+@import "../../../style/colors.scss";
+.delete-dialog {
+    margin: 0 1.5em;
+    .confirm-form {
+        .mat-form-field {
+            display: block;
+        }
+        .mat-form-field-infix {
+            border-top: none;
+        }
+    }
+    .buttons {
+        text-align: center;
+        button + button {
+            margin-left: 10px;
+        }
+        .warn {
+            color: color(error);
+        }
+    }
+}
