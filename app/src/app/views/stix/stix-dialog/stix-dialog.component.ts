@@ -152,7 +152,7 @@ export class StixDialogComponent implements OnInit {
         if (this.stixType != 'relationship') return false;
         let object = (Array.isArray(this.config.object) ? this.config.object[0] : this.config.object) as Relationship;
         // 'subtechnique_of' relationships cannot be deleted
-        return this.stixType == 'relationship' && object.relationship_type != 'subtechnique_of';
+        return this.stixType == 'relationship' && object.relationship_type != 'subtechnique_of'; // && !object.workflow.published; TODO check if object has been published
     }
 
     /**
