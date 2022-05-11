@@ -1,0 +1,76 @@
+@import "../../../style/globals";
+
+.reference-manager {
+    max-width: 60em;
+    margin: 0 auto;
+    border-radius: 4px;
+    .dark & { border: 1px solid border-color(dark); }
+    .light & { border: 1px solid border-color(light); }
+
+    .search {
+        border-bottom: 1px solid;
+        .light & { border-color: border-color(light); }
+        .dark &  { border-color: border-color(dark); }
+        .fullwidth {
+            width: 100%;
+            font-size: 16px;
+        }
+
+        .mat-form-field-wrapper {
+            margin-bottom: -1.34375em; // remove bottom padding used for hint
+        }
+
+        .mat-form-field-flex {
+            padding: 12px 24px 0 24px !important; // override default padding for alignment w/ table
+        }
+
+        .mat-form-field-label {
+            .light & { color: on-color-deemphasis(light); }
+            .dark & { color: on-color-deemphasis(dark); }
+        }
+    }
+
+    .scroll-container {
+        width: 100%;
+        overflow: auto;
+        max-width: 100%;
+        display: flex;
+        flex-direction: column;
+        table {
+            flex: 1 0 auto;
+            width: 100%;
+            th, td { 
+                .light & { background: color(light); border-color: border-color(light); }
+                .dark &  { background: color(dark); border-color: border-color(dark); }
+            } 
+            th {
+                font-size: 20px;
+                @extend .text-label;
+            }
+    
+            tr.element-row:not(.expanded):hover {
+                .light & td { background: color-alternate(light); }
+                .dark & td  { background: color-alternate(dark);  }
+            }
+    
+            .mat-cell + .mat-cell, .mat-header-cell + .mat-header-cell {
+                padding: 4px 4px 4px 12px;
+            }
+
+            .mat-cell.icon-cell {
+                width: 24px;
+                padding-right: 12px;
+                .mat-icon { vertical-align: middle; }
+                cursor: pointer;
+                &:hover {
+                    .light & { background: color-alternate(light); }
+                    .dark & { background: color-alternate(dark);  }
+                }
+            }
+        }
+    }
+    .mat-icon-button.mat-button-disabled {
+        .dark & { color: on-color-deemphasis(dark); }
+        .light & { color: on-color-deemphasis(light); }
+    }
+}
