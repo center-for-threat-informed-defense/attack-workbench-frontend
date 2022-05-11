@@ -43,9 +43,10 @@
                         <!-- nothing in header -->
                     </th>
                     <td mat-cell *matCellDef="let reference" class="icon-cell"
+                        matTooltip="copy citation"
                         [cdkCopyToClipboard]="getCitation(reference.source_name)"
                         (click)="snackbar.open('Citation copied to clipboard', null, {duration: 500})">
-                        <mat-icon matTooltip="copy citation" aria-hidden="false" aria-label="copy">content_copy</mat-icon>
+                        <mat-icon aria-hidden="false" aria-label="copy">content_copy</mat-icon>
                     </td>
                 </ng-container>
                 <!-- edit -->
@@ -54,8 +55,9 @@
                         <!-- nothing in header -->
                     </th>
                     <td mat-cell *matCellDef="let reference" class="icon-cell"
+                        matTooltip="edit reference"
                         (click)="openReference(false, reference)">
-                        <mat-icon matTooltip="edit reference" aria-hidden="false" aria-label="edit">edit</mat-icon>
+                        <mat-icon aria-hidden="false" aria-label="edit">edit</mat-icon>
                     </td>
                 </ng-container>
                 <!-- row definitions -->
