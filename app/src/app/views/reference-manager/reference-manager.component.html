@@ -13,7 +13,7 @@
     <div class="search">
         <mat-form-field appearance="fill" class="fullwidth">
             <mat-label>search</mat-label>
-            <input matInput #search>
+            <input matInput #search [(ngModel)]="searchQuery">
         </mat-form-field>
     </div>
     <div class="scroll-container">

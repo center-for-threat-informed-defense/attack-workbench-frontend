@@ -1,9 +1,9 @@
-import { Component, ElementRef, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { forkJoin, Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { forkJoin, fromEvent, Observable, Subscription } from 'rxjs';
+import { debounceTime, distinctUntilChanged, filter, map, tap } from 'rxjs/operators';
 import { ExternalReference } from 'src/app/classes/external-references';
 import { StixObject } from 'src/app/classes/stix/stix-object';
 import { ReferenceEditDialogComponent } from 'src/app/components/reference-edit-dialog/reference-edit-dialog.component';
@@ -16,7 +16,7 @@ import { Paginated, RestApiConnectorService } from 'src/app/services/connectors/
     styleUrls: ['./reference-manager.component.scss'],
     encapsulation: ViewEncapsulation.None
 })
-export class ReferenceManagerComponent implements OnInit {
+export class ReferenceManagerComponent implements OnInit, AfterViewInit, OnDestroy {
     @ViewChild('search') search: ElementRef;
     @ViewChild(MatPaginator) paginator: MatPaginator;
     public references$: Observable<Paginated<ExternalReference>>;
@@ -25,14 +25,31 @@ export class ReferenceManagerComponent implements OnInit {
     public referenceMap: Map<string, number> = new Map(); // reference.source_name => number
     public loading: boolean = false;
     public get canEdit(): boolean { return this.authenticationService.canEdit(); }
+    private searchSubscription: Subscription;
+    public searchQuery: string = "";
 
     constructor(private authenticationService: AuthenticationService, private restApiConnector: RestApiConnectorService, public dialog: MatDialog, public snackbar: MatSnackBar) { }
 
     ngOnInit(): void {
-        // TODO search
-        // this.buildReferenceMap();
+        this.buildReferenceMap();
         this.applyControls();
         if (this.canEdit) this.columnDefs.push('edit');
+    }
+
+    ngAfterViewInit(): void {
+        this.searchSubscription = fromEvent(this.search.nativeElement, 'keyup').pipe(
+            filter(Boolean),
+            debounceTime(250),
+            distinctUntilChanged(),
+            tap(_ => { 
+                if (this.paginator) this.paginator.pageIndex = 0;
+                this.applyControls();
+            })
+        ).subscribe()
+    }
+
+    public ngOnDestroy() {
+        if (this.searchSubscription) this.searchSubscription.unsubscribe();
     }
 
     /**
@@ -63,7 +80,7 @@ export class ReferenceManagerComponent implements OnInit {
     public applyControls(search?: string): void {
         let limit = this.paginator ? this.paginator.pageSize : 10;
         let offset = this.paginator ? this.paginator.pageIndex * limit : 0;
-        this.references$ = this.restApiConnector.getAllReferences(limit, offset, search);
+        this.references$ = this.restApiConnector.getAllReferences(limit, offset, this.searchQuery);
         let subscription = this.references$.subscribe({
             next: (data) => {
                 this.totalReferences = data.pagination.total;
