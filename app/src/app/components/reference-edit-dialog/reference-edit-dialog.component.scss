@@ -1,48 +1,61 @@
 @import "../../../style/globals.scss";
+
 .reference-edit-dialog {
-    min-width: 75vw;
-    .reference-date {
-        display: flex;
-        width: 100%;
-        .mat-form-field:not(:first-child):not(:last-child) {
-            padding: 0px 16px;
+    mat-toolbar {
+        @extend %toolbar;
+        padding-left: 0;
+        .mat-icon { vertical-align: middle; } //vertically center icons
+    }
+    display: flex;
+    flex-direction: column;
+    margin: -24px;
+    .reference-content {
+        padding: 25px;
+        min-width: 75vw;
+        .reference-date {
+            display: flex;
+            width: 100%;
+            .mat-form-field:not(:first-child):not(:last-child) {
+                padding: 0px 16px;
+            }
+        }
+        .stage.edit .mat-form-field {
+            width: 100%;
+        }
+        .grid {
+            .editor {
+                max-width: 66% !important;
+                min-width: 66% !important;
+            }
+            .column:not(.editor) { // format the rightmost columns
+                margin-bottom: 24px;
+                padding-left: 16px;
+                .dark & { border-left: 1px solid border-color(dark); }
+                .light & { border-left: 1px solid border-color(light); }
+            }
+            .editor .mat-form-field-infix { width: unset; }
         }
     }
-    .stage.edit .mat-form-field {
-        width: 100%;
-    }
-    .grid {
-        .editor {
-            max-width: 66% !important;
-            min-width: 66% !important;
+    .reference-view-dialog {
+        padding: 25px;
+        max-width: 50vw;
+        min-width: 35vw;
+        .rel-button {
+            justify-content: center;
         }
-        .column:not(.editor) { // format the rightmost columns
-            margin-bottom: 24px;
-            padding-left: 16px;
-            .dark & { border-left: 1px solid border-color(dark); }
-            .light & { border-left: 1px solid border-color(light); }
-        }
-        .editor .mat-form-field-infix { width: unset; }
-    }
-}
-.reference-view-dialog {
-    max-width: 50vw;
-    min-width: 35vw;
-    .rel-button {
-        justify-content: center;
-    }
-    .clickable {
-        cursor: pointer;
-        &:hover { 
-            .dark & { background: color-alternate(dark); }
-            .light & { background: color-alternate(light); }
+        .clickable {
+            cursor: pointer;
+            &:hover { 
+                .dark & { background: color-alternate(dark); }
+                .light & { background: color-alternate(light); }
+            }
         }
     }
-}
-.buttons {
-    button + button {
-        margin-left: 10px;
+    .buttons {
+        button + button {
+            margin-left: 10px;
+        }
+        margin-top: 24px;
+        margin-bottom: 24px;
     }
-    margin-top: 24px;
-    margin-bottom: 24px;
 }
