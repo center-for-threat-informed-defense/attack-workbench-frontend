@@ -1,6 +1,6 @@
 <div class="reference-sidebar">
     <div class="add-container" *ngIf="editable && canEdit">
-        <button mat-mini-fab class="extended-fab-button" color="primary" (click)="openReference(true)">
+        <button mat-mini-fab class="extended-fab-button" color="primary" (click)="newReference()">
             <mat-icon>add</mat-icon> <span class="text-label">add a reference</span>
         </button>
     </div>
@@ -23,9 +23,6 @@
                             <a *ngIf="reference.url" class="external-link" [href]="reference.url" target="_blank" [matTooltip]="reference.description" matTooltipPosition="above">{{reference.description}}</a>
                         </div>
                         <div class="text-label lowercase">{{reference.source_name}}</div>
-                    </div>
-                    <div class="col narrow clickable" (click)="openReference(false, reference)">
-                        <mat-icon aria-label="view/edit reference">edit</mat-icon>
                     </div>
                 </div>
             </div>
