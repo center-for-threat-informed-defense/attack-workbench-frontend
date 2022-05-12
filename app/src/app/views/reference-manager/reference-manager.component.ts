@@ -30,7 +30,7 @@ export class ReferenceManagerComponent implements OnInit {
 
     ngOnInit(): void {
         // TODO search
-        this.buildReferenceMap();
+        // this.buildReferenceMap();
         this.applyControls();
         if (this.canEdit) this.columnDefs.push('edit');
     }
@@ -90,10 +90,7 @@ export class ReferenceManagerComponent implements OnInit {
                     });
                     return hasReference.length;
                 }
-
-                for (let ref of api_results.references.data) {
-                    this.referenceMap[ref.source_name] = uses(ref);
-                }
+                api_results.references.data.forEach(ref => this.referenceMap[ref.source_name] = uses(ref));
             })
         )
         .subscribe({
