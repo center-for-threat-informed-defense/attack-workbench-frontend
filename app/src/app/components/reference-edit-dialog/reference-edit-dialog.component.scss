@@ -60,6 +60,9 @@
                 .light & { background: color-alternate(light); }
             }
         }
+        .external-link:not(:hover) {
+            border-bottom: 2px solid transparent;
+        }
     }
     .buttons {
         button + button {

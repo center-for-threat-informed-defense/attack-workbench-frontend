@@ -11,6 +11,7 @@
         <button *ngIf="!editing" mat-button class="control" matTooltip="edit" (click)="startEditing()"><mat-icon aria-label="edit">edit</mat-icon></button>
         <button *ngIf="editing"  mat-button class="control" matTooltip="discard changes and stop editing" (click)="discardChanges()"><mat-icon aria-label="discard">edit_off</mat-icon></button>
     </mat-toolbar>
+    <!-- edit page -->
     <div *ngIf="editing else viewReference" class="edit-reference">
         <div *ngIf="stage == 0" class="stage edit">
             <h1>Reference Editor</h1>
@@ -106,7 +107,7 @@
             <h1>Required Patches</h1>
             <ng-container *ngIf="patch_objects.length == 0 && patch_relationships == 0; else patches">
                 <mat-list>
-                    <mat-list-item >
+                    <mat-list-item>
                         <mat-icon matListIcon class="text-success">check</mat-icon>
                         <p matLine class="text-success">No objects in the knowledge base use this reference.</p>
                     </mat-list-item>
@@ -141,9 +142,11 @@
             <app-loading-overlay></app-loading-overlay>
         </div>
     </div>
+    <!-- view page -->
     <ng-template #viewReference>
         <div class="reference-view grid spacing-12">
             <h1>{{reference.source_name}}</h1>
+            <!-- source name -->
             <div class="row">
                 <div class="col">
                     <div class="labelled-box grow-to-row">
@@ -157,6 +160,7 @@
                     <mat-icon aria-label="copy">content_copy</mat-icon>
                 </div>
             </div>
+            <!-- description/full reference text -->
             <div class="row">
                 <div class="col">
                     <div class="labelled-box grow-to-row">
@@ -167,11 +171,12 @@
                     </div>
                 </div>
             </div>
+            <!-- reference url -->
             <div class="row" *ngIf="reference.url">
                 <div class="col">
                     <div class="labelled-box grow-to-row">
                         <div class="content">
-                            <span>{{reference.url}}</span>
+                            <a class="external-link" [href]="reference.url" target="_blank">{{reference.url}}</a>
                         </div>
                         <label>URL</label>
                     </div>
