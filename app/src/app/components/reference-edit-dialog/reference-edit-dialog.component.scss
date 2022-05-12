@@ -6,6 +6,11 @@
         padding-left: 0;
         .mat-icon { vertical-align: middle; } //vertically center icons
     }
+    h1 {
+        margin-top: 0;
+        margin-bottom: 20px;
+        text-align: center;
+    }
     display: flex;
     flex-direction: column;
     margin: -24px;
@@ -50,12 +55,5 @@
                 .light & { background: color-alternate(light); }
             }
         }
-    }
-    .buttons {
-        button + button {
-            margin-left: 10px;
-        }
-        margin-top: 24px;
-        margin-bottom: 24px;
     }
 }

@@ -25,6 +25,7 @@ export class ReferenceEditDialogComponent implements OnInit {
     public citation: any = {};
 
     public get citationTag(): string { return `(Citation: ${this.reference.source_name})`; }
+    public get editing(): boolean { return this.config.mode == 'edit'; }
 
     constructor(public dialogRef: MatDialogRef<ReferenceEditDialogComponent>, @Inject(MAT_DIALOG_DATA) public config: ReferenceEditConfig, public restApiConnectorService: RestApiConnectorService, public snackbar: MatSnackBar) {
         if (this.config.reference) {
@@ -139,7 +140,7 @@ export class ReferenceEditDialogComponent implements OnInit {
         this.stage = 3;
         let subscription = forkJoin(saves).subscribe({
             complete: () => {
-                this.toggle('view');
+                this.stopEditing();
                 subscription.unsubscribe();
             }
         })
@@ -153,18 +154,18 @@ export class ReferenceEditDialogComponent implements OnInit {
         let subscription = api.subscribe({
             complete: () => {
                 this.is_new = false;
-                this.toggle('view');
+                this.stopEditing();
                 subscription.unsubscribe();
             }
         });
     }
 
-    /**
-     * change the current mode
-     * @param mode 'view' or 'edit'
-     */
-    public toggle(mode: 'view' | 'edit') {
-        this.config.mode = mode;
+    public stopEditing(): void {
+        this.config.mode = 'view';
+    }
+
+    public startEditing(): void {
+        this.config.mode = 'edit';
     }
 }
 
