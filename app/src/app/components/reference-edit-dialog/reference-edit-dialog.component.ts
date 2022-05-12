@@ -162,6 +162,7 @@ export class ReferenceEditDialogComponent implements OnInit {
 
     public stopEditing(): void {
         this.config.mode = 'view';
+        this.stage = 0;
     }
 
     public startEditing(): void {
