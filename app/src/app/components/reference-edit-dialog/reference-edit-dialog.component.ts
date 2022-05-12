@@ -167,6 +167,11 @@ export class ReferenceEditDialogComponent implements OnInit {
     public startEditing(): void {
         this.config.mode = 'edit';
     }
+
+    public discardChanges(): void {
+        this.reference = JSON.parse(JSON.stringify(this.config.reference)); //deep copy
+        this.stopEditing();
+    }
 }
 
 export interface ReferenceEditConfig {
