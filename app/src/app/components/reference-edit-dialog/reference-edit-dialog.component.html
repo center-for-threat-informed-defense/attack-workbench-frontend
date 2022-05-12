@@ -1,5 +1,5 @@
-<div class="reference-edit-dialog">
-    <mat-toolbar>
+<div class="reference-dialog">
+    <mat-toolbar *ngIf="!editing || stage == 0">
         <button mat-button class="control" matTooltip="close" matDialogClose><mat-icon aria-label="close">close</mat-icon></button>
         <div class="spacer"></div>
         <button mat-button class="control"
@@ -10,7 +10,7 @@
         </button>
         <button mat-button class="control" matTooltip="edit" [disabled]="editing" (click)="startEditing()"><mat-icon aria-label="edit">edit</mat-icon></button>
     </mat-toolbar>
-    <div *ngIf="editing else viewReference" class="reference-content">
+    <div *ngIf="editing else viewReference" class="edit-reference">
         <div *ngIf="stage == 0" class="stage edit">
             <h1>Reference Editor</h1>
             <div class="grid spacing-16">
@@ -130,7 +130,7 @@
                 </ng-container>
             </ng-template>
             <div class="buttons">
-                <button mat-button (click)="stage=0">cancel</button>
+                <button mat-button (click)="stage=0; stopEditing()">cancel</button>
                 <button mat-stroked-button *ngIf="patch_objects.length > 0 || patch_relationships > 0" (click)="patch()">apply patches and save</button>
                 <button mat-stroked-button *ngIf="patch_objects.length == 0 && patch_relationships == 0" (click)="save()">save</button>
             </div>
@@ -141,7 +141,7 @@
         </div>
     </div>
     <ng-template #viewReference>
-        <div class="reference-view-dialog grid spacing-12">
+        <div class="reference-view grid spacing-12">
             <h1>{{reference.source_name}}</h1>
             <div class="row">
                 <div class="col">
