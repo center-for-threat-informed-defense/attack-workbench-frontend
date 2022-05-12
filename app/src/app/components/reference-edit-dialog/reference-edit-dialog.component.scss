@@ -29,6 +29,8 @@
         }
         .stage.reviewing {
             text-align: center;
+            .mat-list-text { flex: none; }
+            .mat-list-item-content { justify-content: center; }
         }
         .grid {
             .editor {
