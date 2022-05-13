@@ -21,6 +21,7 @@ export class ReferenceEditDialogComponent implements OnInit {
     public stage: number = 0;
     public patch_objects: StixObject[];
     public patch_relationships: Relationship[];
+    public dirty: boolean;
 
     public months: string[] = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
     public citation: any = {};
@@ -146,6 +147,7 @@ export class ReferenceEditDialogComponent implements OnInit {
         this.stage = 3;
         let subscription = forkJoin(saves).subscribe({
             complete: () => {
+                this.dirty = true; // triggers refresh of object list
                 this.stopEditing();
                 subscription.unsubscribe();
             }
@@ -160,6 +162,7 @@ export class ReferenceEditDialogComponent implements OnInit {
         let subscription = api.subscribe({
             complete: () => {
                 this.is_new = false;
+                this.dirty = true; // triggers refresh of object list
                 this.stopEditing();
                 subscription.unsubscribe();
             }
@@ -178,6 +181,10 @@ export class ReferenceEditDialogComponent implements OnInit {
     public discardChanges(): void {
         this.reference = JSON.parse(JSON.stringify(this.config.reference)); //deep copy
         this.stopEditing();
+    }
+
+    public close(): void {
+        this.dialogRef.close(this.dirty);
     }
 }
 

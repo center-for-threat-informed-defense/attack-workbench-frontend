@@ -22,7 +22,7 @@ export class ReferenceManagerComponent implements OnInit, AfterViewInit, OnDestr
     public references$: Observable<Paginated<ExternalReference>>;
     public totalReferences: number = 0;
     public columnDefs: string[] = ['citation', 'reference', 'count', 'open'];
-    public referenceMap: Map<string, number> = new Map(); // reference.source_name => number
+    public referenceMap: Map<string, number> = new Map(); // reference.source_name => number of objects that use the reference
     public loading: boolean = false;
     private searchSubscription: Subscription;
     public searchQuery: string = "";
@@ -37,6 +37,7 @@ export class ReferenceManagerComponent implements OnInit, AfterViewInit, OnDestr
     }
 
     ngAfterViewInit(): void {
+        // search functionality
         this.searchSubscription = fromEvent(this.search.nativeElement, 'keyup').pipe(
             filter(Boolean),
             debounceTime(250),
@@ -54,30 +55,42 @@ export class ReferenceManagerComponent implements OnInit, AfterViewInit, OnDestr
 
     /**
      * Given a source_name, get the citation text
-     * @param {*} source_name the source_name of the reference
+     * @param {string} source_name the source name of the reference
      * @returns the citation text
      */
-    public getCitation(source_name): string {
+    public getCitation(source_name: string): string {
         return `(Citation: ${source_name})`
     }
 
+    /**
+     * Open the reference edit dialog.
+     * If a reference is provided, a user is viewing an existing reference.
+     * Otherwise, open dialog in edit mode to create a new reference.
+     * @param {ExternalReference} reference the external reference to view
+     */
     public openReference(reference?: ExternalReference): void {
-        let ref = this.dialog.open(ReferenceEditDialogComponent, {
+        let prompt = this.dialog.open(ReferenceEditDialogComponent, {
             maxHeight: "75vh",
             data: {
                 mode: reference ? 'view' : 'edit',
                 reference: reference
             }
         });
-        let subscription = ref.afterClosed().subscribe({
-            complete: () => {
-                this.applyControls(this.search.nativeElement.value);
-                subscription.unsubscribe();
-            }
+        let subscription = prompt.afterClosed().subscribe({
+            next: (result) => {
+                if (prompt.componentInstance.dirty) {
+                    // re-fetch values since an edit occurred
+                    this.applyControls();
+                }
+            },
+            complete: () => subscription.unsubscribe()
         });
     }
 
-    public applyControls(search?: string): void {
+    /**
+     * Fetch references with pagination and apply search query
+     */
+    public applyControls(): void {
         let limit = this.paginator ? this.paginator.pageSize : 10;
         let offset = this.paginator ? this.paginator.pageIndex * limit : 0;
         this.references$ = this.restApiConnector.getAllReferences(limit, offset, this.searchQuery);
@@ -89,6 +102,9 @@ export class ReferenceManagerComponent implements OnInit, AfterViewInit, OnDestr
         })
     }
 
+    /**
+     * Build reference lookup map
+     */
     public buildReferenceMap(): void {
         this.loading = true;
         let subscription = forkJoin({
@@ -98,14 +114,15 @@ export class ReferenceManagerComponent implements OnInit, AfterViewInit, OnDestr
             map(api_results => {
                 let allObjects = api_results.objects as StixObject[];
                 let uses = function(reference: ExternalReference) {
-                    let hasReference: StixObject[] = allObjects.filter(o => {
+                    // count number of objects that have this reference in its external_references list
+                    let usesReference: StixObject[] = allObjects.filter(o => {
                         let ext_refs: any[] = o['stix'] && o['stix']['external_references'] && o['stix']['external_references'].length > 0 ? o['stix']['external_references'] : undefined;
                         if (!ext_refs) return false; // object does not have external references
                         let sources = ext_refs.map(ref => ref.source_name);
                         if (sources.includes(reference.source_name)) return true;
                         return false;
                     });
-                    return hasReference.length;
+                    return usesReference.length;
                 }
                 api_results.references.data.forEach(ref => this.referenceMap[ref.source_name] = uses(ref));
             })
@@ -118,6 +135,10 @@ export class ReferenceManagerComponent implements OnInit, AfterViewInit, OnDestr
         })
     }
 
+    /**
+     * Lookup how many objects use the given reference
+     * @param {string} source the source name of the reference
+     */
     public referenceCount(source: string): number {
         if (!source) return 0;
         return this.referenceMap[source];
