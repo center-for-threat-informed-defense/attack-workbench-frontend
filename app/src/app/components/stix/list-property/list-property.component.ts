@@ -9,11 +9,13 @@ import { StixObject } from 'src/app/classes/stix/stix-object';
 export class ListPropertyComponent implements OnInit {
     @Input() public config: ListPropertyConfig;
 
-    constructor() { }
-
-    ngOnInit(): void {
+    constructor() {
+        // intentionally left blank
     }
 
+    ngOnInit(): void {
+        // intentionally left blank
+    }
 }
 
 export interface ListPropertyConfig {

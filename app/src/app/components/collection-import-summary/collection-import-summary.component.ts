@@ -20,9 +20,12 @@ import { Technique } from 'src/app/classes/stix/technique';
 export class CollectionImportSummaryComponent implements OnInit {
     @Input() config: CollectionImportSummaryConfig;
 
-    constructor() { }
+    constructor() {
+        // intentionally left blank
+    }
 
     ngOnInit(): void {
+        // intentionally left blank
     }
 
     public format(attackType: string): string {

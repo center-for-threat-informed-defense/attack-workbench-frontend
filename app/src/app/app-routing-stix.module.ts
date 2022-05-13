@@ -560,5 +560,5 @@ stixRoutes.push(
     ],
     providers: [],
 })
-export class AppRoutingStixModule { };
+export class AppRoutingStixModule { }
 export { stixRoutes };

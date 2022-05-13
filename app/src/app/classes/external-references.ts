@@ -184,9 +184,9 @@ export class ExternalReferences extends Serializable {
         if (citations) {
             // build lookup api map
             let api_map = {};
-            for (let i = 0; i < citations.length; i++) {
+            for (let citation of citations) {
                 // Split to get source name from citation
-                let sourceName = citations[i].split("(Citation: ")[1].slice(0, -1);
+                let sourceName = citation.split("(Citation: ")[1].slice(0, -1);
                 api_map[sourceName] = this.checkAndAddReference(sourceName, restApiConnector);
             }
             // check/add each citation
@@ -216,8 +216,8 @@ export class ExternalReferences extends Serializable {
         for (let regex of regExes) {
             let brokenReferences = field.match(regex);
             if (brokenReferences) {
-                for (let i = 0; i < brokenReferences.length; i++) {
-                    result.add(brokenReferences[i]);
+                for (let brokenReference of brokenReferences) {
+                    result.add(brokenReference);
                 }
             }
         }
@@ -234,10 +234,10 @@ export class ExternalReferences extends Serializable {
         // Parse citations from the alias descriptions stored in external references
         let api_calls = [];
         let result = new CitationParseResult();
-        for (let i = 0; i < aliases.length; i++) {
-            if (this._externalReferences.get(aliases[i])) {
-                result.usedCitations.add(aliases[i]);
-                api_calls.push(this.parseCitations(this._externalReferences.get(aliases[i]).description, restApiConnector));
+        for (let alias of aliases) {
+            if (this._externalReferences.get(alias)) {
+                result.usedCitations.add(alias);
+                api_calls.push(this.parseCitations(this._externalReferences.get(alias).description, restApiConnector));
             }
         }
         if (api_calls.length == 0) return of(result);
@@ -259,25 +259,20 @@ export class ExternalReferences extends Serializable {
     public set externalReferences(references: any) {
         this._externalReferences = new Map();
         this._externalReferencesIndex = new Map();
-        if (references){
+        if (references) {
             // Create externalReferences list
-            for (let i = 0; i < references.length; i++){
-                if ("source_name" in references[i] && !("external_id" in references[i])) {
-                    let description = ""
-                    if(references[i].description) {
-                        description = references[i].description;
-                    }
-                    let url = ""
-                    if(references[i].url) {
-                        url = references[i].url;
-                    }
+            for (let reference of references){
+                if ("source_name" in reference && !("external_id" in reference)) {
+                    let description = "", url = "";
+                    if(reference.description) description = reference.description;
+                    if(reference.url) url = reference.url;
     
                     let externalRef : ExternalReference = {
                         url : url,
                         description : description
                     }
     
-                    this._externalReferences.set(references[i]['source_name'], externalRef);
+                    this._externalReferences.set(reference['source_name'], externalRef);
                 }
             }
 
@@ -336,9 +331,8 @@ export class ExternalReferences extends Serializable {
         // Create temp external references map from used references
         // Resulting map will remove unused references
         let temp_externalReferences : Map<string, ExternalReference> = new Map();
-        for (let i = 0; i < usedSourceNames.length; i++) {
-            let sourceName = usedSourceNames[i];
-            if (this._externalReferences.get(sourceName)) temp_externalReferences.set(sourceName, this._externalReferences.get(sourceName));
+        for (let usedSourceName of usedSourceNames) {
+            if (this._externalReferences.get(usedSourceName)) temp_externalReferences.set(usedSourceName, this._externalReferences.get(usedSourceName));
         }
 
         

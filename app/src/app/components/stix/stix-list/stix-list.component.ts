@@ -331,7 +331,7 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
         }
         else {
             // this.filterOptions.push({
-            //     "name": "type", //TODO make more extensible to additional types
+            //     "name": "type",
             //     "disabled": "type" in this.config,
             //     "values": this.types
             // })
@@ -343,13 +343,10 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
             this.addColumn("created", "created", "timestamp");
         }
         
-        
-        if ("relatedTo" in this.config) {
-            
-        } 
         if ("query" in this.config) {
-            
+            // force the list to show only objects matching this query
         }
+
         //controls cols setup
         //selection setup
         if ("select" in this.config && this.config.select != "disabled") {
@@ -438,9 +435,7 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
                 // pull objects out of observable
             } else {
                 // no need to pull objects out of observable
-                
                 // set max length for paginator
-                // this.paginator.length = this.config.stixObjects.length;
                 // filter on STIX objects specified in the config
                 let filtered = this.config.stixObjects;
                 // filter to objects matching searchString
@@ -465,7 +460,6 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
                         limit: this.paginator? this.paginator.pageSize : 0
                     }
                 });
-                // this.objects$ = of(filtered);
             }
         } else {
             // fetch objects from backend

@@ -27,7 +27,9 @@ export class ToolbarComponent implements OnInit {
 
     constructor(private sidebarService: SidebarService, private editorService: EditorService, private authenticationService: AuthenticationService) {}
 
-    ngOnInit() {}
+    ngOnInit() {
+        // intentionally left blank
+    }
 
     public startEditing() {
         this.editorService.startEditing();

@@ -14,9 +14,11 @@ export class ListViewComponent implements OnInit {
         return this.config.hasOwnProperty('wrap') ? this.config.wrap : true;
     }
 
-    constructor() { }
-
-    ngOnInit(): void {
+    constructor() {
+        // intentionally left blank
     }
 
+    ngOnInit(): void {
+        // intentionally left blank
+    }
 }

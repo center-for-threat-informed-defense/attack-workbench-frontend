@@ -109,7 +109,6 @@ import { VersionEditComponent } from "./components/stix/version-property/version
 import { VersionViewComponent } from "./components/stix/version-property/version-view/version-view.component";
 
 import { NamePropertyComponent } from "./components/stix/name-property/name-property.component";
-// import { RelationshipDialogComponent } from "./components/stix/relationship-dialog/relationship-dialog.component";
 
 // views
 import { HelpPageComponent } from './views/help-page/help-page.component';
@@ -134,7 +133,6 @@ import { CollectionViewComponent } from './views/stix/collection/collection-view
 import { CollectionImportComponent } from './views/stix/collection/collection-import/collection-import-workflow/collection-import.component';
 import { CollectionImportReviewComponent } from "./views/stix/collection/collection-import/collection-import-review/collection-import-review.component";
 import { CollectionImportErrorComponent } from './views/stix/collection/collection-import/collection-import-error/collection-import-error.component';
-// import { CollectionExportComponent } from './views/stix/collection/collection-export/collection-export.component';
 
 import { GroupViewComponent } from './views/stix/group/group-view/group-view.component';
 import { GroupListComponent } from './views/stix/group/group-list/group-list.component';

@@ -18,7 +18,9 @@ export class AddDialogComponent implements OnInit {
     this.dialogRef.close(true)
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+      // intentionally left blank
+  }
 
 }
 

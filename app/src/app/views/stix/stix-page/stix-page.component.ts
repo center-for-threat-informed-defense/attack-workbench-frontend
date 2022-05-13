@@ -188,7 +188,7 @@ export class StixPageComponent implements OnInit, OnDestroy {
             );
             this.initialVersion = new VersionNumber(this.objects[0].version.toString());
             this.updateBreadcrumbs(this.objects, this.objectType);
-        };
+        }
     }
 
     ngOnDestroy() {

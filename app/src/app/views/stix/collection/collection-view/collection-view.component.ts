@@ -1,6 +1,6 @@
 import { Component, OnInit, QueryList, ViewChildren, ViewEncapsulation } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { forkJoin, Observable, of } from 'rxjs';
+import { forkJoin, of } from 'rxjs';
 import { delay, map, switchMap, tap } from 'rxjs/operators';
 import { ValidationData } from 'src/app/classes/serializable';
 import { Collection, CollectionDiffCategories, VersionReference } from 'src/app/classes/stix/collection';
@@ -14,7 +14,6 @@ import { Tactic } from 'src/app/classes/stix/tactic';
 import { Technique } from 'src/app/classes/stix/technique';
 import { DataSource } from 'src/app/classes/stix/data-source';
 import { DataComponent } from 'src/app/classes/stix/data-component';
-import { VersionNumber } from 'src/app/classes/version-number';
 import { StixListComponent } from 'src/app/components/stix/stix-list/stix-list.component';
 import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/rest-api-connector.service';
 import { EditorService } from 'src/app/services/editor/editor.service';

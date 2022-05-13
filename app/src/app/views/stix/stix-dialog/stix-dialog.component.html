@@ -17,7 +17,6 @@
                     <button *ngIf="config.sidebarControl != 'disable'" mat-button class="control" matTooltip="view sidebar" (click)="toggleSidebar()"><mat-icon aria-label="open sidebar">view_sidebar</mat-icon></button>
                 </mat-toolbar>
                 <div class="page-padding">
-                    <!-- TODO clean this up -->
                     <app-relationship-view 
                                            *ngIf="stixType == 'relationship'" 
                                            [config]="config"
