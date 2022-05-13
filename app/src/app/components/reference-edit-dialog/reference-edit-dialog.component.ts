@@ -106,12 +106,12 @@ export class ReferenceEditDialogComponent implements OnInit {
                     }
                 });
                 // patch relationship source/target names and IDs
-                this.patch_relationships.map(x => {
-                    let serialized = x.serialize();
-                    serialized.source_object = idToObject[x.source_ref].serialize();
-                    serialized.target_object = idToObject[x.target_ref].serialize();
-                    return x.deserialize(serialized);
-                });
+                this.patch_relationships.forEach(relationship => {
+                    let serialized = relationship.serialize();
+                    serialized.source_object = idToObject[relationship.source_ref].serialize();
+                    serialized.target_object = idToObject[relationship.target_ref].serialize();
+                    relationship.deserialize(serialized);
+                })
                 this.stage = 2;
             },
             complete: () => { subscription.unsubscribe(); }

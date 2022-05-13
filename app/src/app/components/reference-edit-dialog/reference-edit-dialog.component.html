@@ -27,7 +27,7 @@
                         </mat-form-field>
                     </div>
                     <div class="column narrow vertical-center">
-                        <b>In-text citation</b>
+                        <strong>In-text citation</strong>
                         <span>(Citation: {{reference.source_name}})</span>
                     </div>
                 </div>
@@ -79,11 +79,11 @@
                         </mat-form-field>
                     </div>
                     <div class="column narrow vertical-center" *ngIf="is_new">
-                        <b>Full reference text</b>
+                        <strong>Full reference text</strong>
                         <span>{{getRefDescription()}}</span>
                     </div>
                     <div class="column narrow vertical-center" *ngIf="!is_new">
-                        <b>Full reference text</b>
+                        <strong>Full reference text</strong>
                         <span>{{reference.description}}</span>
                     </div>
                 </div>
@@ -96,7 +96,7 @@
                         </mat-form-field>
                     </div>
                     <div class="column narrow vertical-center">
-                        <b>Link to the primary source</b>
+                        <strong>Link to the primary source</strong>
                     </div>
                 </div>
             </div>
