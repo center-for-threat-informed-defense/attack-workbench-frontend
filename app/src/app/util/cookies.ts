@@ -21,8 +21,9 @@ const setCookie = function(key: string, value: string, expirationDays: number) {
 const getCookie = function(key: string): string {
     let name = key + "=";
     let decodedCookie = decodeURIComponent(document.cookie);
-    let ca = decodedCookie.split(';');
-    for(let c of ca) {
+    let cas = decodedCookie.split(';');
+    for (let ca of cas) {
+        let c = ca;
         while (c.charAt(0) == ' ') {
             c = c.substring(1);
         }
