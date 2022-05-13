@@ -53,6 +53,7 @@ export class ReferenceEditDialogComponent implements OnInit {
     }
 
     ngOnInit(): void {
+        // intentionally left blank
     } 
 
     public next() {

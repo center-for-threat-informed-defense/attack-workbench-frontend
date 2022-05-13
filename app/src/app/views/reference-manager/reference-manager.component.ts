@@ -80,7 +80,7 @@ export class ReferenceManagerComponent implements OnInit, AfterViewInit, OnDestr
             }
         });
         let subscription = prompt.afterClosed().subscribe({
-            next: (result) => {
+            next: (_result) => {
                 if (prompt.componentInstance.dirty) {
                     // re-fetch values since an edit occurred
                     this.applyControls();
