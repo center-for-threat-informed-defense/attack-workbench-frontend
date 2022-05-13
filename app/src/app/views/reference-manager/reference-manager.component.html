@@ -19,7 +19,7 @@
     <div class="scroll-container">
         <ng-container *ngIf="!loading else loadingReferences">
             <table mat-table *ngIf="(references$ | async) as references; else loadingReferences" [dataSource]="references.data">
-                <caption hidden aria-hidden="false" aria-label="table">Reference List</caption>
+                <caption hidden aria-hidden="false" aria-label="reference table">Reference List</caption>
                 <!-- citation -->
                 <ng-container matColumnDef="citation">
                     <th mat-header-cell *matHeaderCellDef>Source Name</th>
