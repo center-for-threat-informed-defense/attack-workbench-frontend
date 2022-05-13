@@ -6,6 +6,7 @@ import { forkJoin } from 'rxjs';
 import { ExternalReference } from 'src/app/classes/external-references';
 import { Relationship } from 'src/app/classes/stix/relationship';
 import { StixObject } from 'src/app/classes/stix/stix-object';
+import { AuthenticationService } from 'src/app/services/connectors/authentication/authentication.service';
 import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/rest-api-connector.service';
 
 @Component({
@@ -26,8 +27,13 @@ export class ReferenceEditDialogComponent implements OnInit {
 
     public get citationTag(): string { return `(Citation: ${this.reference.source_name})`; }
     public get editing(): boolean { return this.config.mode == 'edit'; }
+    public get editable(): boolean { return this.authenticationService.canEdit(); }
 
-    constructor(public dialogRef: MatDialogRef<ReferenceEditDialogComponent>, @Inject(MAT_DIALOG_DATA) public config: ReferenceEditConfig, public restApiConnectorService: RestApiConnectorService, public snackbar: MatSnackBar) {
+    constructor(@Inject(MAT_DIALOG_DATA) public config: ReferenceEditConfig,
+                public dialogRef: MatDialogRef<ReferenceEditDialogComponent>,
+                public restApiConnectorService: RestApiConnectorService,
+                public snackbar: MatSnackBar,
+                private authenticationService: AuthenticationService) {
         if (this.config.reference) {
             this.is_new = false;
             this.reference = JSON.parse(JSON.stringify(this.config.reference)); //deep copy
