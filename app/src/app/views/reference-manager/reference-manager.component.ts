@@ -21,19 +21,19 @@ export class ReferenceManagerComponent implements OnInit, AfterViewInit, OnDestr
     @ViewChild(MatPaginator) paginator: MatPaginator;
     public references$: Observable<Paginated<ExternalReference>>;
     public totalReferences: number = 0;
-    public columnDefs: string[] = ['citation', 'reference', 'count', 'copy'];
+    public columnDefs: string[] = ['citation', 'reference', 'count', 'open'];
     public referenceMap: Map<string, number> = new Map(); // reference.source_name => number
     public loading: boolean = false;
-    public get canEdit(): boolean { return this.authenticationService.canEdit(); }
     private searchSubscription: Subscription;
     public searchQuery: string = "";
+
+    public get canEdit(): boolean { return this.authenticationService.canEdit(); }
 
     constructor(private authenticationService: AuthenticationService, private restApiConnector: RestApiConnectorService, public dialog: MatDialog, public snackbar: MatSnackBar) { }
 
     ngOnInit(): void {
         this.buildReferenceMap();
         this.applyControls();
-        if (this.canEdit) this.columnDefs.push('edit');
     }
 
     ngAfterViewInit(): void {
@@ -61,11 +61,11 @@ export class ReferenceManagerComponent implements OnInit, AfterViewInit, OnDestr
         return `(Citation: ${source_name})`
     }
 
-    public openReference(edit: boolean = false, reference?: ExternalReference): void {
+    public openReference(reference?: ExternalReference): void {
         let ref = this.dialog.open(ReferenceEditDialogComponent, {
             maxHeight: "75vh",
             data: {
-                mode: edit ? 'edit' : 'view',
+                mode: reference ? 'view' : 'edit',
                 reference: reference
             }
         });

@@ -48,7 +48,8 @@
                 @extend .text-label;
             }
     
-            tr.element-row:not(.expanded):hover {
+            tr:hover {
+                cursor: pointer;
                 .light & td { background: color-alternate(light); }
                 .dark & td  { background: color-alternate(dark);  }
             }

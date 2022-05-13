@@ -2,7 +2,7 @@
     <div class="list-page-header">
         <h1>Reference Manager</h1>
         <div class="button-group" *ngIf="canEdit">
-            <button mat-mini-fab class="extended-fab-button" color="primary" (click)="openReference(true)">
+            <button mat-mini-fab class="extended-fab-button" color="primary" (click)="openReference()">
                 <mat-icon>create</mat-icon>
                 <span class="text-label">create a reference</span>
             </button>
@@ -28,8 +28,7 @@
                 <ng-container matColumnDef="reference">
                     <th mat-header-cell *matHeaderCellDef>Reference</th>
                     <td mat-cell *matCellDef="let reference">
-                        <span *ngIf="!reference.url">{{reference.description}}</span>
-                        <a *ngIf="reference.url" class="external-link" [href]="reference.url" target="_blank">{{reference.description}}</a>
+                        <span>{{reference.description}}</span>
                     </td>
                 </ng-container>
                 <!-- count -->
@@ -37,32 +36,18 @@
                     <th mat-header-cell *matHeaderCellDef>Count</th>
                     <td mat-cell *matCellDef="let reference">{{referenceCount(reference.source_name)}}</td>
                 </ng-container>
-                <!-- copy -->
-                <ng-container matColumnDef="copy">
+                <!-- open -->
+                <ng-container matColumnDef="open">
                     <th mat-header-cell *matHeaderCellDef>
                         <!-- nothing in header -->
                     </th>
-                    <td mat-cell *matCellDef="let reference" class="icon-cell"
-                        matTooltip="copy citation"
-                        [cdkCopyToClipboard]="getCitation(reference.source_name)"
-                        (click)="snackbar.open('Citation copied to clipboard', null, {duration: 500})">
-                        <mat-icon aria-hidden="false" aria-label="copy">content_copy</mat-icon>
-                    </td>
-                </ng-container>
-                <!-- edit -->
-                <ng-container matColumnDef="edit">
-                    <th mat-header-cell *matHeaderCellDef>
-                        <!-- nothing in header -->
-                    </th>
-                    <td mat-cell *matCellDef="let reference" class="icon-cell"
-                        matTooltip="open reference"
-                        (click)="openReference(false, reference)">
+                    <td mat-cell *matCellDef="let reference" class="icon-cell">
                         <mat-icon aria-hidden="false" aria-label="open">open_in_new</mat-icon>
                     </td>
                 </ng-container>
                 <!-- row definitions -->
                 <tr mat-header-row *matHeaderRowDef="columnDefs"></tr>
-                <tr mat-row *matRowDef="let row; columns: columnDefs;"></tr>
+                <tr mat-row *matRowDef="let row; columns: columnDefs;" (click)="openReference(row)"></tr>
             </table>
         </ng-container>
         <ng-template #loadingReferences>
