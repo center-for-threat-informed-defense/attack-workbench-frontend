@@ -50,18 +50,14 @@
         padding: 25px;
         max-width: 50vw;
         min-width: 35vw;
-        .rel-button {
-            justify-content: center;
-        }
         .clickable {
             cursor: pointer;
-            &:hover { 
-                .dark & { background: color-alternate(dark); }
-                .light & { background: color-alternate(light); }
-            }
         }
         .external-link:not(:hover) {
             border-bottom: 2px solid transparent;
+        }
+        .content.icon-button {
+            padding: 10px 12px !important;
         }
     }
     .buttons {
