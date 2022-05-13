@@ -29,7 +29,10 @@ export class ReferenceManagerComponent implements OnInit, AfterViewInit, OnDestr
 
     public get canEdit(): boolean { return this.authenticationService.canEdit(); }
 
-    constructor(private authenticationService: AuthenticationService, private restApiConnector: RestApiConnectorService, public dialog: MatDialog, public snackbar: MatSnackBar) { }
+    constructor(private authenticationService: AuthenticationService,
+                private restApiConnector: RestApiConnectorService,
+                public dialog: MatDialog,
+                public snackbar: MatSnackBar) { }
 
     ngOnInit(): void {
         this.buildReferenceMap();

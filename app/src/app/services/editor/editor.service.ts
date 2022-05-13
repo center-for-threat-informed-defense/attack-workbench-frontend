@@ -9,7 +9,6 @@ import { AuthenticationService } from '../connectors/authentication/authenticati
   providedIn: 'root'
 })
 export class EditorService {
-
     public editable: boolean = false;
     public editing: boolean = false;
     public onSave = new EventEmitter();
@@ -19,6 +18,7 @@ export class EditorService {
     
     public get stixId(): string { return this.router.url.split("/")[2].split("?")[0]; }
     public get type(): string { return this.router.url.split("/")[1]; }
+    public get sidebarEnabled(): boolean { return this.type != 'reference-manager'; }
     
     constructor(private router: Router,
                 private route: ActivatedRoute,

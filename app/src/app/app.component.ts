@@ -7,6 +7,7 @@ import { NGXLogger } from 'ngx-logger';
 import { initLogger } from './util/logger';
 import { AuthenticationService } from './services/connectors/authentication/authentication.service';
 import { NavigationEnd, Router } from '@angular/router';
+import { EditorService } from './services/editor/editor.service';
 
 @Component({
   selector: 'app-root',
@@ -25,6 +26,7 @@ export class AppComponent implements AfterViewInit {
     constructor(private overlayContainer: OverlayContainer,
                 private sidebarService: SidebarService,
                 private authenticationService: AuthenticationService,
+                private editorService: EditorService,
                 private router: Router,
                 private logger: NGXLogger) { //note: this isn't used directly, but it MUST be imported to work properly
 
@@ -136,5 +138,7 @@ export class AppComponent implements AfterViewInit {
         this.scrollRef.nativeElement.scroll({top: 0, behavior: "smooth"});
     }
 
-    public get sidebarOpened() { return this.sidebarService.opened; }
+    public get sidebarOpened() {
+        return this.sidebarService.opened && this.editorService.sidebarEnabled;
+    }
 }

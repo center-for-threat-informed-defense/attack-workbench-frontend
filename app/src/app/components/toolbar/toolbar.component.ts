@@ -54,7 +54,7 @@ export class ToolbarComponent implements OnInit {
         this.onScrollTop.emit();
     }
 
-    public get sidebarDisabled() {
-        return this.editorService.type == 'reference-manager';
+    public get sidebarEnabled() {
+        return this.editorService.sidebarEnabled;
     }
 }
