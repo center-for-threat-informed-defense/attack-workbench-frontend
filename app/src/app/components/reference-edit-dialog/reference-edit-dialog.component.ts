@@ -92,7 +92,7 @@ export class ReferenceEditDialogComponent implements OnInit {
 
     public parse_patches() {
         this.stage = 1; //enter patching stage
-        let subscription = this.restApiConnectorService.getAllObjects(null, null, null, null, null, null, true).subscribe({
+        let subscription = this.restApiConnectorService.getAllObjects(null, null, null, null, true, true, true).subscribe({
             next: (results) => {
                 // build ID to [name, attackID] lookup
                 let idToObject = {}
