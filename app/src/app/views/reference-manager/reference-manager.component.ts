@@ -2,8 +2,8 @@ import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild, Vie
 import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { forkJoin, fromEvent, Observable, Subscription } from 'rxjs';
-import { debounceTime, distinctUntilChanged, filter, map, tap } from 'rxjs/operators';
+import { fromEvent, Observable, Subscription } from 'rxjs';
+import { debounceTime, distinctUntilChanged, filter, tap } from 'rxjs/operators';
 import { ExternalReference } from 'src/app/classes/external-references';
 import { StixObject } from 'src/app/classes/stix/stix-object';
 import { ReferenceEditDialogComponent } from 'src/app/components/reference-edit-dialog/reference-edit-dialog.component';
@@ -19,6 +19,7 @@ import { Paginated, RestApiConnectorService } from 'src/app/services/connectors/
 export class ReferenceManagerComponent implements OnInit, AfterViewInit, OnDestroy {
     @ViewChild('search') search: ElementRef;
     @ViewChild(MatPaginator) paginator: MatPaginator;
+    public attackObjects: StixObject[]; // all objects in the knowledge base
     public references$: Observable<Paginated<ExternalReference>>;
     public totalReferences: number = 0;
     public columnDefs: string[] = ['citation', 'reference', 'count', 'open'];
@@ -35,8 +36,15 @@ export class ReferenceManagerComponent implements OnInit, AfterViewInit, OnDestr
                 public snackbar: MatSnackBar) { }
 
     ngOnInit(): void {
-        this.buildReferenceMap();
-        this.applyControls();
+        let subscription = this.restApiConnector.getAllObjects().subscribe({
+            next: (results) => {
+                this.attackObjects = results as StixObject[];
+            },
+            complete: () => {
+                this.applyControls();
+                if (subscription) subscription.unsubscribe();
+            }
+        })
     }
 
     ngAfterViewInit(): void {
@@ -94,31 +102,20 @@ export class ReferenceManagerComponent implements OnInit, AfterViewInit, OnDestr
      * Fetch references with pagination and apply search query
      */
     public applyControls(): void {
+        this.loading = true;
+        let start = performance.now();
         let limit = this.paginator ? this.paginator.pageSize : 10;
         let offset = this.paginator ? this.paginator.pageIndex * limit : 0;
         this.references$ = this.restApiConnector.getAllReferences(limit, offset, this.searchQuery);
         let subscription = this.references$.subscribe({
             next: (data) => {
                 this.totalReferences = data.pagination.total;
-            },
-            complete: () => { subscription.unsubscribe() }
-        })
-    }
 
-    /**
-     * Build reference lookup map
-     */
-    public buildReferenceMap(): void {
-        this.loading = true;
-        let subscription = forkJoin({
-            references: this.restApiConnector.getAllReferences(),
-            objects: this.restApiConnector.getAllObjects()
-        }).pipe(
-            map(api_results => {
-                let allObjects = api_results.objects as StixObject[];
+                // build reference lookup map
+                let self = this;
                 let uses = function(reference: ExternalReference) {
                     // count number of objects that have this reference in its external_references list
-                    let usesReference: StixObject[] = allObjects.filter(o => {
+                    let usesReference: StixObject[] = self.attackObjects.filter(o => {
                         let ext_refs: any[] = o['stix'] && o['stix']['external_references'] && o['stix']['external_references'].length > 0 ? o['stix']['external_references'] : undefined;
                         if (!ext_refs) return false; // object does not have external references
                         let sources = ext_refs.map(ref => ref.source_name);
@@ -127,13 +124,15 @@ export class ReferenceManagerComponent implements OnInit, AfterViewInit, OnDestr
                     });
                     return usesReference.length;
                 }
-                api_results.references.data.forEach(ref => this.referenceMap[ref.source_name] = uses(ref));
-            })
-        )
-        .subscribe({
-            complete: () => {
-                this.loading = false;
-                if (subscription) subscription.unsubscribe();
+                for (let ref of data.data) {
+                    if (!this.referenceMap.has(ref.source_name)) {
+                        this.referenceMap[ref.source_name] = uses(ref);
+                    }
+                }
+            },
+            complete: () => { subscription.unsubscribe(); this.loading = false;
+                let end = performance.now()
+                console.log('** performance', (end - start)/1000)
             }
         })
     }
