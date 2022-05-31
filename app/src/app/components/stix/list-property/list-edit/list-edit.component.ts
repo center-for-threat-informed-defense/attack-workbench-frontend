@@ -79,9 +79,9 @@ export class ListEditComponent implements OnInit, AfterContentChecked {
                 });
             }
         }
-        else if (this.config.field == 'defense_bypassed') { } //any
-        else if (this.config.field == 'system_requirements') { } //any
-        else if (this.config.field == 'contributors') { } //any
+        else if (this.config.field == 'defense_bypassed' || this.config.field == 'system_requirements' || this.config.field == 'contributors') {
+            //any
+        }
         else if (this.config.field == 'tactics') {
             this.type = 'tactic';
             let subscription = this.restAPIConnectorService.getAllTactics().subscribe({
@@ -137,10 +137,9 @@ export class ListEditComponent implements OnInit, AfterContentChecked {
     private shortnameToTactic(domains: string[]): Tactic[] {
         let allObjects = this.allObjects as Tactic[];
         let tactics = this.config.object[this.config.field].map(shortname => {
-            let tactic = allObjects.find(tactic => {
+            return allObjects.find(tactic => {
                 return tactic.shortname == shortname && this.tacticInDomain(tactic, domains)
             });
-            return tactic;
         })
         return tactics;
     }
@@ -200,7 +199,7 @@ export class ListEditComponent implements OnInit, AfterContentChecked {
         if (!this.dataLoaded) {
             this.selectControl.disable();
             return null;
-        };
+        }
 
         // filter values
         let values: string[] = [];
@@ -323,8 +322,8 @@ export class ListEditComponent implements OnInit, AfterContentChecked {
                     // reset tactic selection state
                     this.tacticState = [];
                     let allObjects = this.allObjects as Tactic[];
-                    let tactics = this.select.selected.map(tacticID => allObjects.find(tactic => tactic.stixID == tacticID));
-                    tactics.forEach(tactic => this.tacticState.push(tactic));
+                    let tactic_selection = this.select.selected.map(tacticID => allObjects.find(tactic => tactic.stixID == tacticID));
+                    tactic_selection.forEach(tactic => this.tacticState.push(tactic));
                 } else if (result && this.config.field == 'parentTechnique') {
                     let allObjects = this.allObjects as Technique[];
                     this.config.object[this.config.field] = this.select.selected.length > 0 ? allObjects.find(t => t.stixID === this.select.selected[0]) : null;

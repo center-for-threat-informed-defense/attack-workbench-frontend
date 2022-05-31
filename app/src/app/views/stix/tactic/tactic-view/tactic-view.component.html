@@ -58,15 +58,6 @@
         </div>
     </div>
 
-    <!-- only show relationships if configured to show them -->
-    <!-- <div *ngIf="config.showRelationships || !config.hasOwnProperty('showRelationships')">
-        <div class="row">
-            <div class="col">
-                <h2 class="section-header">Techniques</h2>
-            </div>
-        </div>
-        <app-stix-list [config]="{'type': 'technique', 'showLinks': true}"></app-stix-list>
-    </div> -->
     <!-- EXTERNAL REFERENCES -->
     <div *ngIf="tactic.external_references.list().length > 0">
         <div class="row">

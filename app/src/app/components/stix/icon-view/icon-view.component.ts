@@ -14,7 +14,9 @@ export class IconViewComponent implements OnInit {
     public state: string;
     public get tooltip(): string { return this.state.replace(/-/g, ' ')}
 
-    constructor() { }
+    constructor() {
+        // intentionally left blank
+    }
 
     ngOnInit(): void {
         if (this.config.field == "workflow") {

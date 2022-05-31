@@ -263,5 +263,7 @@ export class StixDialogComponent implements OnInit {
         return Array.isArray(this.config.object) ? this.config.object[0].deprecated : (this.config.object as StixObject).deprecated;
     }
 
-    ngOnInit(): void { }
+    ngOnInit(): void {
+        // intentionally left blank
+    }
 }

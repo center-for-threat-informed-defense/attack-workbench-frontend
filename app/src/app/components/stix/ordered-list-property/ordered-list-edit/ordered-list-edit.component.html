@@ -9,9 +9,9 @@
         <div  class="box box-move" *ngFor="let sdo of list; let i = index" cdkDrag>
             {{getLabel(sdo)}}
             <div>
-                <i class="material-icons move-icon" [ngClass]="{'enabled': i > 0}" (click)="moveRow(i, i-1)">arrow_drop_up</i>
-                <i class="material-icons move-icon" [ngClass]="{'enabled': i < list.length - 1}" (click)="moveRow(i, i+1)" >arrow_drop_down</i>
-                <i class="material-icons move-icon enabled" (click)="deleteRow(i)">delete</i>
+                <em class="material-icons move-icon" [ngClass]="{'enabled': i > 0}" (click)="moveRow(i, i-1)">arrow_drop_up</em>
+                <em class="material-icons move-icon" [ngClass]="{'enabled': i < list.length - 1}" (click)="moveRow(i, i+1)" >arrow_drop_down</em>
+                <em class="material-icons move-icon enabled" (click)="deleteRow(i)">delete</em>
             </div>
         </div>
     </ng-container>

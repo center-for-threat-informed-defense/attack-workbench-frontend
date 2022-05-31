@@ -6,6 +6,7 @@ import { forkJoin } from 'rxjs';
 import { ExternalReference } from 'src/app/classes/external-references';
 import { Relationship } from 'src/app/classes/stix/relationship';
 import { StixObject } from 'src/app/classes/stix/stix-object';
+import { AuthenticationService } from 'src/app/services/connectors/authentication/authentication.service';
 import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/rest-api-connector.service';
 
 @Component({
@@ -20,13 +21,20 @@ export class ReferenceEditDialogComponent implements OnInit {
     public stage: number = 0;
     public patch_objects: StixObject[];
     public patch_relationships: Relationship[];
+    public dirty: boolean;
 
     public months: string[] = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
     public citation: any = {};
 
     public get citationTag(): string { return `(Citation: ${this.reference.source_name})`; }
+    public get editing(): boolean { return this.config.mode == 'edit'; }
+    public get editable(): boolean { return this.authenticationService.canEdit(); }
 
-    constructor(public dialogRef: MatDialogRef<ReferenceEditDialogComponent>, @Inject(MAT_DIALOG_DATA) public config: ReferenceEditConfig, public restApiConnectorService: RestApiConnectorService, public snackbar: MatSnackBar) {
+    constructor(@Inject(MAT_DIALOG_DATA) public config: ReferenceEditConfig,
+                public dialogRef: MatDialogRef<ReferenceEditDialogComponent>,
+                public restApiConnectorService: RestApiConnectorService,
+                public snackbar: MatSnackBar,
+                private authenticationService: AuthenticationService) {
         if (this.config.reference) {
             this.is_new = false;
             this.reference = JSON.parse(JSON.stringify(this.config.reference)); //deep copy
@@ -34,7 +42,7 @@ export class ReferenceEditDialogComponent implements OnInit {
         else {
             this.is_new = true;
             this.citation.day = new FormControl(null, [Validators.max(31), Validators.min(1)]);
-            this.citation.year = new FormControl(null, [Validators.max(2100), Validators.min(1970)]);
+            this.citation.year = new FormControl(null, [Validators.max(new Date().getFullYear()), Validators.min(1970)]);
             this.citation.retrieved = new Date(); // default to current date
             this.reference = {
                 source_name: "",
@@ -45,6 +53,7 @@ export class ReferenceEditDialogComponent implements OnInit {
     }
 
     ngOnInit(): void {
+        // intentionally left blank
     } 
 
     public next() {
@@ -83,7 +92,7 @@ export class ReferenceEditDialogComponent implements OnInit {
 
     public parse_patches() {
         this.stage = 1; //enter patching stage
-        let subscription = this.restApiConnectorService.getAllObjects(null, null, null, null, null, null, true).subscribe({
+        let subscription = this.restApiConnectorService.getAllObjects(null, null, null, null, true, true, true).subscribe({
             next: (results) => {
                 // build ID to [name, attackID] lookup
                 let idToObject = {}
@@ -98,12 +107,12 @@ export class ReferenceEditDialogComponent implements OnInit {
                     }
                 });
                 // patch relationship source/target names and IDs
-                this.patch_relationships.map(x => {
-                    let serialized = x.serialize();
-                    serialized.source_object = idToObject[x.source_ref].serialize();
-                    serialized.target_object = idToObject[x.target_ref].serialize();
-                    return x.deserialize(serialized);
-                });
+                this.patch_relationships.forEach(relationship => {
+                    let serialized = relationship.serialize();
+                    serialized.source_object = idToObject[relationship.source_ref].serialize();
+                    serialized.target_object = idToObject[relationship.target_ref].serialize();
+                    relationship.deserialize(serialized);
+                })
                 this.stage = 2;
             },
             complete: () => { subscription.unsubscribe(); }
@@ -139,7 +148,8 @@ export class ReferenceEditDialogComponent implements OnInit {
         this.stage = 3;
         let subscription = forkJoin(saves).subscribe({
             complete: () => {
-                this.toggle('view');
+                this.dirty = true; // triggers refresh of object list
+                this.stopEditing();
                 subscription.unsubscribe();
             }
         })
@@ -153,18 +163,29 @@ export class ReferenceEditDialogComponent implements OnInit {
         let subscription = api.subscribe({
             complete: () => {
                 this.is_new = false;
-                this.toggle('view');
+                this.dirty = true; // triggers refresh of object list
+                this.stopEditing();
                 subscription.unsubscribe();
             }
         });
     }
 
-    /**
-     * change the current mode
-     * @param mode 'view' or 'edit'
-     */
-    public toggle(mode: 'view' | 'edit') {
-        this.config.mode = mode;
+    public stopEditing(): void {
+        this.config.mode = 'view';
+        this.stage = 0;
+    }
+
+    public startEditing(): void {
+        this.config.mode = 'edit';
+    }
+
+    public discardChanges(): void {
+        this.reference = JSON.parse(JSON.stringify(this.config.reference)); //deep copy
+        this.stopEditing();
+    }
+
+    public close(): void {
+        this.dialogRef.close(this.dirty);
     }
 }
 

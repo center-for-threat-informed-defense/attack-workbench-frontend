@@ -62,7 +62,6 @@ export abstract class StixObject extends Serializable {
     private defaultMarkingDefinitionsLoaded = false; // avoid overloading of default marking definitions
 
     public get routes(): any[] { // route to view the object
-        // let baseRoute = "/" + [this.attackType, this.stixID].join("/")
         return [
             {
                 "label": "view",
@@ -514,10 +513,15 @@ export abstract class StixObject extends Serializable {
         );
     }
 
+    /**
+     * Check if the given array is a list of strings
+     * @param arr the array to check
+     * @returns true if all objects in the array are of type string, false otherwise
+     */
     public isStringArray = function (arr): boolean {
-        for (let i = 0; i < arr.length; i++) {
-            if (typeof (arr[i]) !== "string") {
-                logger.error("TypeError:", arr[i], "(", typeof (arr[i]), ")", "is not a string")
+        for (let a of arr) {
+            if (typeof(a) !== "string") {
+                logger.error("TypeError:", a, "(", typeof (a), ")", "is not a string")
                 return false;
             }
         }

@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ReferenceManagerComponent } from './reference-manager.component';
+import { ReferenceSidebarComponent } from './reference-sidebar.component';
 
 describe('ReferenceManagerComponent', () => {
-  let component: ReferenceManagerComponent;
-  let fixture: ComponentFixture<ReferenceManagerComponent>;
+  let component: ReferenceSidebarComponent;
+  let fixture: ComponentFixture<ReferenceSidebarComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ ReferenceManagerComponent ]
+      declarations: [ ReferenceSidebarComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(ReferenceManagerComponent);
+    fixture = TestBed.createComponent(ReferenceSidebarComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

@@ -1,0 +1,70 @@
+@import "../../../style/globals.scss";
+
+.reference-dialog {
+    mat-toolbar {
+        @extend %toolbar;
+        padding-left: 0;
+        .mat-icon { vertical-align: middle; } //vertically center icons
+    }
+    h1 {
+        margin-top: 0;
+        margin-bottom: 20px;
+        text-align: center;
+    }
+    display: flex;
+    flex-direction: column;
+    margin: -24px;
+    .edit-reference {
+        padding: 25px;
+        min-width: 75vw;
+        .reference-date {
+            display: flex;
+            width: 100%;
+            .mat-form-field:not(:first-child):not(:last-child) {
+                padding: 0px 16px;
+            }
+        }
+        .stage.edit .mat-form-field {
+            width: 100%;
+        }
+        .stage.reviewing {
+            text-align: center;
+            .mat-list-text { flex: none; }
+            .mat-list-item-content { justify-content: center; }
+        }
+        .grid {
+            .editor {
+                max-width: 66% !important;
+                min-width: 66% !important;
+            }
+            .column:not(.editor) { // format the rightmost columns
+                margin-bottom: 24px;
+                padding-left: 16px;
+                .dark & { border-left: 1px solid border-color(dark); }
+                .light & { border-left: 1px solid border-color(light); }
+            }
+            .editor .mat-form-field-infix { width: unset; }
+        }
+    }
+    .reference-view {
+        padding: 25px;
+        max-width: 50vw;
+        min-width: 35vw;
+        .clickable {
+            cursor: pointer;
+        }
+        .external-link:not(:hover) {
+            border-bottom: 2px solid transparent;
+        }
+        .content.icon-button {
+            padding: 10px 12px !important;
+        }
+    }
+    .buttons {
+        button + button {
+            margin-left: 10px;
+        }
+        margin-top: 24px;
+        margin-bottom: 24px;
+    }
+}

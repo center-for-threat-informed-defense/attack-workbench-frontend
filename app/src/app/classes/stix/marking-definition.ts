@@ -1,8 +1,7 @@
 import { map, switchMap } from "rxjs/operators";
 import { StixObject } from "./stix-object";
-import { Relationship } from './relationship';
 import { RestApiConnectorService } from "src/app/services/connectors/rest-api/rest-api-connector.service";
-import { Observable, of } from "rxjs";
+import { Observable } from "rxjs";
 import { ValidationData } from "../serializable";
 import { logger } from "../../util/logger";
 

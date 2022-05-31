@@ -10,9 +10,13 @@ import { OrderedListPropertyConfig } from '../ordered-list-property.component';
 export class OrderedListViewComponent implements OnInit {
     @Input() public config: OrderedListPropertyConfig;
 
-    constructor() {}
+    constructor() {
+        // intentionally left blank
+    }
 
-    ngOnInit(): void {}
+    ngOnInit(): void {
+        // intentionally left blank
+    }
 
     private _idToLabel: Map<string, string>;
     /**
