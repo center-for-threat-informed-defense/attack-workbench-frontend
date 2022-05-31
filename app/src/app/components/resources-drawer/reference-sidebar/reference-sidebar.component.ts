@@ -7,15 +7,15 @@ import { debounceTime, distinctUntilChanged, filter, tap } from 'rxjs/operators'
 import { ExternalReference } from 'src/app/classes/external-references';
 import { AuthenticationService } from 'src/app/services/connectors/authentication/authentication.service';
 import { Paginated, RestApiConnectorService } from 'src/app/services/connectors/rest-api/rest-api-connector.service';
-import { ReferenceEditDialogComponent } from './reference-edit-dialog/reference-edit-dialog.component';
+import { ReferenceEditDialogComponent } from 'src/app/components/reference-edit-dialog/reference-edit-dialog.component';
 
 @Component({
-  selector: 'app-reference-manager',
-  templateUrl: './reference-manager.component.html',
-  styleUrls: ['./reference-manager.component.scss'],
+  selector: 'app-reference-sidebar',
+  templateUrl: './reference-sidebar.component.html',
+  styleUrls: ['./reference-sidebar.component.scss'],
   encapsulation: ViewEncapsulation.None
 })
-export class ReferenceManagerComponent implements OnInit, AfterViewInit {
+export class ReferenceSidebarComponent implements OnInit, AfterViewInit {
     public newRef: ExternalReference = {
         source_name: "",
         description: "",
@@ -32,13 +32,10 @@ export class ReferenceManagerComponent implements OnInit, AfterViewInit {
     
     constructor(private restApiConnector: RestApiConnectorService, public snackbar: MatSnackBar, public dialog: MatDialog, private authenticationService: AuthenticationService) { }
 
-    public openReference(edit: boolean = false, reference?: ExternalReference) {
+    public newReference() {
         let ref = this.dialog.open(ReferenceEditDialogComponent, {
             maxHeight: "75vh",
-            data: {
-                mode: edit ? 'edit' : 'view',
-                reference: reference
-            }
+            data: { mode: 'edit' }
         });
         let subscription = ref.afterClosed().subscribe({
             complete: () => {

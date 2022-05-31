@@ -17,7 +17,6 @@
                     <button *ngIf="config.sidebarControl != 'disable'" mat-button class="control" matTooltip="view sidebar" (click)="toggleSidebar()"><mat-icon aria-label="open sidebar">view_sidebar</mat-icon></button>
                 </mat-toolbar>
                 <div class="page-padding">
-                    <!-- TODO clean this up -->
                     <app-relationship-view 
                                            *ngIf="stixType == 'relationship'" 
                                            [config]="config"
@@ -93,7 +92,7 @@
         </mat-drawer-content>
         <mat-drawer mode="side" position="end" #sidebar [opened]="sidebarOpened">
             <h3 class="references-label">References</h3>
-            <app-reference-manager [editable]="false"></app-reference-manager>
+            <app-reference-sidebar [editable]="false"></app-reference-sidebar>
         </mat-drawer>
     </mat-drawer-container>
 </div>

@@ -1,5 +1,4 @@
-import {StixObject} from "./stix-object";
-import { Relationship } from './relationship';
+import { StixObject } from "./stix-object";
 import { RestApiConnectorService } from "src/app/services/connectors/rest-api/rest-api-connector.service";
 import { Observable } from "rxjs";
 import { ValidationData } from "../serializable";

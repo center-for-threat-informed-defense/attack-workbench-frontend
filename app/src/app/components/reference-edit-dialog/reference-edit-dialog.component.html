@@ -1,0 +1,191 @@
+<div class="reference-dialog">
+    <mat-toolbar *ngIf="!editing || stage == 0">
+        <button mat-button class="control" matTooltip="close" (click)="close()"><mat-icon aria-label="close">close</mat-icon></button>
+        <div class="spacer"></div>
+        <ng-container *ngIf="editable">
+            <button mat-button class="control"
+                [matTooltip]="is_new ? 'validate & save' : 'patch & save'"
+                [disabled]="!editing || !reference.source_name || (!is_new && !reference.description) || (is_new && (!citation.authors || !citation.retrieved || !validDate()))"
+                (click)="next()">
+                <mat-icon aria-label="save">save</mat-icon>
+            </button>
+            <button *ngIf="!editing" mat-button class="control" matTooltip="edit" (click)="startEditing()"><mat-icon aria-label="edit">edit</mat-icon></button>
+            <button *ngIf="editing"  mat-button class="control" matTooltip="discard changes and stop editing" (click)="discardChanges()"><mat-icon aria-label="discard">edit_off</mat-icon></button>
+        </ng-container>
+    </mat-toolbar>
+    <!-- edit page -->
+    <div *ngIf="editing else viewReference" class="edit-reference">
+        <div *ngIf="stage == 0" class="stage edit">
+            <h1>Reference Editor</h1>
+            <div class="grid spacing-16">
+                <div class="row">
+                    <div class="column editor">
+                        <!-- source name -->
+                        <mat-form-field appearance="outline">
+                            <mat-label>source name</mat-label>
+                            <input matInput required [disabled]="!is_new" [(ngModel)]="reference.source_name">
+                        </mat-form-field>
+                    </div>
+                    <div class="column narrow vertical-center">
+                        <strong>In-text citation</strong>
+                        <span>(Citation: {{reference.source_name}})</span>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="column editor">
+                        <ng-container *ngIf="is_new">
+                            <!-- authors -->
+                            <mat-form-field appearance="outline">
+                                <mat-label>authors</mat-label>
+                                <input matInput required [(ngModel)]="citation.authors">
+                            </mat-form-field>
+                            <!-- month, day, year -->
+                            <div class="reference-date">
+                                <mat-form-field appearance="outline">
+                                    <mat-label>month</mat-label>
+                                    <mat-select [(ngModel)]="citation.month" [required]="citation.day.value !== null">
+                                        <mat-option></mat-option>
+                                        <mat-option *ngFor="let month of months" [value]="month">{{month}}</mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                                <mat-form-field appearance="outline">
+                                    <mat-label>day</mat-label>
+                                    <mat-error>Please enter a valid day.</mat-error>
+                                    <input matInput type="number" [formControl]="citation.day">
+                                </mat-form-field>
+                                <mat-form-field appearance="outline">
+                                    <mat-label>year</mat-label>
+                                    <input matInput type="number" [formControl]="citation.year" [required]="citation.month || citation.day.value !== null">
+                                    <mat-error>Please enter a valid year.</mat-error>
+                                </mat-form-field>
+                            </div>
+                            <!-- title -->
+                            <mat-form-field appearance="outline">
+                                <mat-label>title</mat-label>
+                                <input matInput [(ngModel)]="citation.title">
+                            </mat-form-field>
+                            <!-- retrieved date picker -->
+                            <mat-form-field appearance="outline">
+                                <mat-label>retrieved</mat-label>
+                                <input matInput required [matDatepicker]="datepicker" [(ngModel)]="citation.retrieved">
+                                <mat-datepicker-toggle matSuffix [for]="datepicker"></mat-datepicker-toggle>
+                                <mat-datepicker #datepicker></mat-datepicker>
+                            </mat-form-field>
+                        </ng-container>
+                        <!-- description -->
+                        <mat-form-field *ngIf="!is_new" appearance="outline">
+                            <mat-label>citation</mat-label>
+                            <input matInput required [(ngModel)]="reference.description">
+                        </mat-form-field>
+                    </div>
+                    <div class="column narrow vertical-center" *ngIf="is_new">
+                        <strong>Full reference text</strong>
+                        <span>{{getRefDescription()}}</span>
+                    </div>
+                    <div class="column narrow vertical-center" *ngIf="!is_new">
+                        <strong>Full reference text</strong>
+                        <span>{{reference.description}}</span>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="column editor">
+                        <!-- url -->
+                        <mat-form-field appearance="outline">
+                            <mat-label>url</mat-label>
+                            <input matInput [(ngModel)]="reference.url">
+                        </mat-form-field>
+                    </div>
+                    <div class="column narrow vertical-center">
+                        <strong>Link to the primary source</strong>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div *ngIf="stage == 1" class="stage parsing">
+            <h1>Determining required knowledge base patches...</h1>
+            <app-loading-overlay></app-loading-overlay>
+        </div>
+        <div *ngIf="stage == 2" class="stage reviewing">
+            <h1>Required Patches</h1>
+            <ng-container *ngIf="patch_objects.length == 0 && patch_relationships == 0; else patches">
+                <mat-list>
+                    <mat-list-item>
+                        <mat-icon matListIcon class="text-success">check</mat-icon>
+                        <p matLine class="text-success">No objects in the knowledge base use this reference.</p>
+                    </mat-list-item>
+                </mat-list>
+            </ng-container>
+            <ng-template #patches>
+                <p>The following objects include the edited reference and will be updated automatically.</p>
+                <ng-container *ngIf="patch_objects.length > 0">
+                    <h3>Objects</h3>
+                    <app-stix-list [config]="{
+                        stixObjects: patch_objects,
+                        clickBehavior: 'none'
+                    }"></app-stix-list>
+                </ng-container>
+                <ng-container *ngIf="patch_relationships.length > 0">
+                    <h3>Relationships</h3>
+                    <app-stix-list [config]="{
+                        stixObjects: patch_relationships,
+                        type: 'relationship',
+                        clickBehavior: 'none'
+                    }"></app-stix-list>
+                </ng-container>
+            </ng-template>
+            <div class="buttons">
+                <button mat-button (click)="discardChanges()">cancel</button>
+                <button mat-stroked-button *ngIf="patch_objects.length > 0 || patch_relationships > 0" (click)="patch()">apply patches and save</button>
+                <button mat-stroked-button *ngIf="patch_objects.length == 0 && patch_relationships == 0" (click)="save()">save</button>
+            </div>
+        </div>
+        <div *ngIf="stage == 3" class="stage patching">
+            <h1>Patching references...</h1>
+            <app-loading-overlay></app-loading-overlay>
+        </div>
+    </div>
+    <!-- view page -->
+    <ng-template #viewReference>
+        <div class="reference-view grid spacing-12">
+            <h1>{{reference.source_name}}</h1>
+            <!-- source name -->
+            <div class="row">
+                <div class="col">
+                    <div class="labelled-box grow-to-row">
+                        <div class="content icon-button">
+                            (Citation: {{reference.source_name}})
+                            <button mat-icon-button [cdkCopyToClipboard]="citationTag"
+                                (click)="snackbar.open('Citation copied to clipboard', null, {duration: 1000})"
+                                matTooltip="copy citation" aria-label="copy citation">
+                                <mat-icon>content_copy</mat-icon>
+                            </button>
+                        </div>
+                        <label>In-text citation</label>
+                    </div>
+                </div>
+            </div>
+            <!-- description/full reference text -->
+            <div class="row">
+                <div class="col">
+                    <div class="labelled-box grow-to-row">
+                        <div class="content">
+                            <span>{{reference.description}}</span>
+                        </div>
+                        <label>Full reference text</label>
+                    </div>
+                </div>
+            </div>
+            <!-- reference url -->
+            <div class="row" *ngIf="reference.url">
+                <div class="col">
+                    <div class="labelled-box grow-to-row">
+                        <div class="content">
+                            <a class="external-link" [href]="reference.url" target="_blank">{{reference.url}}</a>
+                        </div>
+                        <label>URL</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </ng-template>
+</div>

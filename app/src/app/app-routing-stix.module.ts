@@ -18,6 +18,7 @@ import { NgModule } from '@angular/core';
 import { environment } from "../environments/environment"
 import { AuthorizationGuard } from "./services/helpers/authorization.guard";
 import { Role } from "./classes/authn/role";
+import { ReferenceManagerComponent } from "./views/reference-manager/reference-manager.component";
 
 var viewRoles = [Role.VISITOR, Role.EDITOR, Role.ADMIN];
 var editRoles = [Role.EDITOR, Role.ADMIN];
@@ -390,59 +391,59 @@ const stixRoutes: Routes = [{
         ]
     }
     ]
-  },
-  {
+},
+{
     path: 'marking-definition',
     canActivateChild: [AuthorizationGuard],
     data: {
-      breadcrumb: 'marking definitions',
-      more: true
+        breadcrumb: 'marking definitions',
+        more: true
     },
     children: [{
         path: '',
         data: {
-          breadcrumb: 'list',
-          title: "marking definitions",
-          roles: viewRoles
+            breadcrumb: 'list',
+            title: "marking definitions",
+            roles: viewRoles
         },
         component: MarkingDefinitionListComponent
-      },
-      {
+    },
+    {
         path: ':id',
         data: {
-          breadcrumb: 'loading...'
+            breadcrumb: 'loading...'
         },
         children: [{
             path: '',
             data: {
-              breadcrumb: 'view',
-              editable: false,
-              title: "view marking definition",
-              roles: viewRoles
+                breadcrumb: 'view',
+                editable: false,
+                title: "view marking definition",
+                roles: viewRoles
             },
             component: StixPageComponent
-          }
+        }
         ]
-      },
-      {
+    },
+    {
         path: ":new",
         data: {
             breadcrumb: "new marking definition"
         },
         children: [{
-          path: '',
-          data: {
-            breadcrumb: 'view',
-            editable: false,
-            title: "new marking definition",
-            roles: [Role.ADMIN]
-          },
-          component: StixPageComponent
+            path: '',
+            data: {
+                breadcrumb: 'view',
+                editable: false,
+                title: "new marking definition",
+                roles: [Role.ADMIN]
+            },
+            component: StixPageComponent
         }
-      ]
+        ]
     }
     ]
-  }
+}
 ]
 
 if (environment.integrations.collection_manager.enabled) {
@@ -528,6 +529,27 @@ if (environment.integrations.collection_manager.enabled) {
     })
 }
 
+stixRoutes.push(
+    {
+        path: 'reference-manager',
+        canActivateChild: [AuthorizationGuard],
+        data: {
+            breadcrumb: 'reference manager',
+            more: true
+        },
+        children: [{
+            path: '',
+            data: {
+                breadcrumb: 'list',
+                title: "references",
+                roles: viewRoles,
+                editRoles: editRoles
+            },
+            component: ReferenceManagerComponent
+        }
+        ]
+    }
+)
 
 @NgModule({
     imports: [
@@ -538,5 +560,5 @@ if (environment.integrations.collection_manager.enabled) {
     ],
     providers: [],
 })
-export class AppRoutingStixModule { };
+export class AppRoutingStixModule { }
 export { stixRoutes };

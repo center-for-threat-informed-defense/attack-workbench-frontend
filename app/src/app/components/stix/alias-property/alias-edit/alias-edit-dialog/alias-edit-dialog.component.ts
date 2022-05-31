@@ -22,6 +22,7 @@ export class AliasEditDialogComponent implements OnInit {
     }
 
     ngOnInit(): void {
+        // intentionally left blank
     }
 
     /**

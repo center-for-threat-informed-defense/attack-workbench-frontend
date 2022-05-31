@@ -291,7 +291,6 @@ export class Relationship extends StixObject {
         }
         if ("source_object" in raw) {
             this.source_object = raw.source_object;
-            // this.source_name = raw.source_object.stix.name;
             
             let src_sdo = raw.source_object.stix;
             if ("external_references" in src_sdo) {
@@ -304,7 +303,6 @@ export class Relationship extends StixObject {
         }
         if ("target_object" in raw) {
             this.target_object = raw.target_object;
-            // this.target_name = raw.target_object.stix.name;
 
             let tgt_sdo = raw.target_object.stix;
             if ("external_references" in tgt_sdo) {
@@ -347,14 +345,14 @@ export class Relationship extends StixObject {
                 })}
                 // is this a valid sub-technique-of relationship?
                 if (this.source_ref && this.target_ref && this.relationship_type == "subtechnique-of") {
-                    if (!this.source_object.stix.hasOwnProperty("x_mitre_is_subtechnique") || this.source_object.stix.x_mitre_is_subtechnique == false) {
+                    if (!this.source_object.stix.hasOwnProperty("x_mitre_is_subtechnique") || !this.source_object.stix.x_mitre_is_subtechnique) {
                         result.errors.push({
                             "field": "source_ref",
                             "result": "error",
                             "message": "source is not a sub-technique"
                         })
                     }
-                    if (this.target_object.stix.x_mitre_is_subtechnique == true) {
+                    if (this.target_object.stix.x_mitre_is_subtechnique) {
                         result.errors.push({
                             "field": "target_ref",
                             "result": "error",
@@ -417,9 +415,7 @@ export class Relationship extends StixObject {
      * @param restAPIService [RestApiConnectorService] the service to perform the POST/PUT through
      * @returns {Observable} of the post
      */
-    public save(restAPIService: RestApiConnectorService): Observable<Relationship> {
-        // TODO POST if the object was just created (doesn't exist in db yet)
-        
+    public save(restAPIService: RestApiConnectorService): Observable<Relationship> {        
         let postObservable = restAPIService.postRelationship(this);
         let subscription = postObservable.subscribe({
             next: (result) => { this.deserialize(result.serialize()); },

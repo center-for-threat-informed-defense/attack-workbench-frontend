@@ -68,7 +68,7 @@ export class CollectionVersion extends Serializable  {
      * @returns {Observable<ValidationData>} the validation warnings and errors once validation is complete.
      */
     public validate(restAPIService: RestApiConnectorService): Observable<ValidationData> {
-        return of(new ValidationData()) //TODO
+        return of(new ValidationData())
     }
 }
 // https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/blob/develop/docs/collections.md#collection-reference-properties
@@ -78,7 +78,7 @@ export class CollectionReference extends Serializable  {
     public description: string;
     public created: Date;
     public versions: CollectionVersion[];
-    public subscribed: boolean; //TODO how does this get determined
+    public subscribed: boolean;
     public lastModified: Date; //must be updated whenever the versions field is updated (get function won't work here)
     constructor(raw?: any) {
         super();
@@ -136,7 +136,7 @@ export class CollectionReference extends Serializable  {
      * @returns {Observable<ValidationData>} the validation warnings and errors once validation is complete.
      */
     public validate(restAPIService: RestApiConnectorService): Observable<ValidationData> {
-        return of(new ValidationData()) //TODO
+        return of(new ValidationData())
     }
 }
 // https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/blob/develop/docs/collections.md#collection-index-properties
@@ -258,7 +258,7 @@ export class CollectionIndex extends Serializable {
      * @returns {Observable<ValidationData>} the validation warnings and errors once validation is complete.
      */
     public validate(restAPIService: RestApiConnectorService): Observable<ValidationData> {
-        return of(new ValidationData()) //TODO
+        return of(new ValidationData())
     }
 
     /**

@@ -3,14 +3,22 @@ import { TimestampPropertyConfig } from '../timestamp-property.component';
 import * as moment from 'moment';
 
 @Component({
-  selector: 'app-timestamp-view',
-  templateUrl: './timestamp-view.component.html',
-  styleUrls: ['./timestamp-view.component.scss']
+    selector: 'app-timestamp-view',
+    templateUrl: './timestamp-view.component.html',
+    styleUrls: ['./timestamp-view.component.scss']
 })
 export class TimestampViewComponent implements OnInit {
     @Input() public config: TimestampPropertyConfig;
 
     private _humanized: string = null;
+
+    constructor() {
+        // intentionally left blank
+    }
+
+    ngOnInit(): void {
+        // intentionally left blank
+    }
     
     /**
      *get the formatted timestamp with relative date
@@ -40,9 +48,4 @@ export class TimestampViewComponent implements OnInit {
         if (!this.config.object.hasOwnProperty(this.config.field)) return "";
         return moment(this.config.object[this.config.field]).format('D MMMM YYYY, h:mm A')
     }
-    
-    constructor() { }
-
-    ngOnInit(): void { }
-
 }
