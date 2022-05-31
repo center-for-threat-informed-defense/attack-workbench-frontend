@@ -103,7 +103,6 @@ export class ReferenceManagerComponent implements OnInit, AfterViewInit, OnDestr
      */
     public applyControls(): void {
         this.loading = true;
-        let start = performance.now();
         let limit = this.paginator ? this.paginator.pageSize : 10;
         let offset = this.paginator ? this.paginator.pageIndex * limit : 0;
         this.references$ = this.restApiConnector.getAllReferences(limit, offset, this.searchQuery);
@@ -130,10 +129,7 @@ export class ReferenceManagerComponent implements OnInit, AfterViewInit, OnDestr
                     }
                 }
             },
-            complete: () => { subscription.unsubscribe(); this.loading = false;
-                let end = performance.now()
-                console.log('** performance', (end - start)/1000)
-            }
+            complete: () => { subscription.unsubscribe(); this.loading = false; }
         })
     }
 
