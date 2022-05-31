@@ -32,9 +32,19 @@
 
 # Changelog
 
-## 5 May 2022 - Changes staged on branch v1.3.0
+## Changes staged on branch v1.3.0
 
 ### ATT&CK Workbench version 1.3.0
+
+ATT&CK Workbench version 1.3.0 supports the deletion of objects.
+
+#### New Features in 1.3.0
+-   Added a Reference Manager page to the Workbench to increase usability. The ability to view and edit a reference has been moved from the sidebar to the Reference Manager page. See [frontend#349](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/349).
+
+
+#### Fixes in 1.3.0
+-   Fixed an issue where updating a reference used by a revoked or deprecated object would throw an error and prevent the user from saving the changes to the reference. See [frontend#355](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/355).
+-   Fixed an issue where the "apply patches and save" button would be unavailable when updating a reference used only by Relationship objects. See [frontend#356](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/356).
 
 ## 25 April 2022
 
