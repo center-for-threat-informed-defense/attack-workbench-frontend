@@ -858,6 +858,13 @@ export class RestApiConnectorService extends ApiConnector {
      */
     public get deleteCollection() { return this.deleteStixObjectFactory("collection"); }
     /**
+     * DELETE a relationship
+     * @param {string} id the STIX ID of the object to delete
+     * @param {Date} modified The modified date of the version to delete
+     * @returns {Observable<{}>} observable of the response body
+     */
+     public get deleteRelationship() { return this.deleteStixObjectFactory("relationship"); }
+    /**
      * DELETE a note
      * @param {string} id the STIX ID of the object to delete
      * @param {Date} modified The modified date of the version to delete

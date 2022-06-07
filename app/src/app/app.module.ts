@@ -66,6 +66,7 @@ import { MarkdownViewDialogComponent } from "./components/markdown-view-dialog/m
 import { CollectionImportSummaryComponent } from "./components/collection-import-summary/collection-import-summary.component";
 import { SaveDialogComponent } from "./components/save-dialog/save-dialog.component";
 import { AddDialogComponent } from './components/add-dialog/add-dialog.component';
+import { DeleteDialogComponent } from './components/delete-dialog/delete-dialog.component';
 import { HistoryTimelineComponent } from "./components/resources-drawer/history-timeline/history-timeline.component";
 import { ReferenceSidebarComponent } from "./components/resources-drawer/reference-sidebar/reference-sidebar.component";
 import { ReferenceEditDialogComponent } from "./components/reference-edit-dialog/reference-edit-dialog.component"
@@ -188,6 +189,7 @@ import { MarkingDefinitionListComponent } from "./views/stix/marking-definition/
     CollectionImportSummaryComponent,
     SaveDialogComponent,
     AddDialogComponent,
+    DeleteDialogComponent,
     HistoryTimelineComponent,
     ReferenceSidebarComponent,
     ReferenceEditDialogComponent,
