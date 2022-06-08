@@ -1,0 +1,21 @@
+name: publish
+
+on:
+  push:
+    branches: [master, develop]
+
+jobs:
+  publish-docker-image:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout the repository
+        uses: actions/checkout@v2
+
+      - name: Build and publish the Docker image
+        run: |
+          echo $GITHUB_TOKEN | docker login ghcr.io -u center-for-threat-informed-defense --password-stdin
+          docker build . --tag ghcr.io/center-for-threat-informed-defense/attack-workbench-frontend:$IMAGE_TAG
+          docker push ghcr.io/center-for-threat-informed-defense/attack-workbench-frontend:$IMAGE_TAG
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          IMAGE_TAG: "${{ github.ref == 'refs/head/master' && 'latest' || 'develop' }}"
