@@ -213,8 +213,7 @@ export class ReferenceEditDialogComponent implements OnInit, OnDestroy {
         if (!source_name) return throwError({required: true});
 
         // cannot contain parenthesis
-        let regex = /(\(|\))/g;
-        if (regex.test(source_name)) return throwError({containsInvalidChar: true});
+        if (['(',')'].some(x => source_name.includes(x))) return throwError({containsParenthesis: true})
 
         // uniqueness
         if (this.references$.some(x => x.source_name == source_name)) return throwError({nonUnique: true});
@@ -224,7 +223,7 @@ export class ReferenceEditDialogComponent implements OnInit, OnDestroy {
 
     /** Retrieve the validation error for display */
     public getError(): string {
-        if (this.source_control.errors.containsInvalidChar) return 'source name cannot contain parenthesis';
+        if (this.source_control.errors.containsParenthesis) return 'source name cannot contain parenthesis';
         if (this.source_control.errors.nonUnique) return 'source name is not unique';
     }
 
