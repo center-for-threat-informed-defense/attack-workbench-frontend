@@ -84,7 +84,8 @@ export class ReferenceManagerComponent implements OnInit, AfterViewInit, OnDestr
             maxHeight: "75vh",
             data: {
                 mode: reference ? 'view' : 'edit',
-                reference: reference
+                reference: reference,
+                count: this.referenceCount(reference.source_name)
             }
         });
         let subscription = prompt.afterClosed().subscribe({

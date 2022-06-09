@@ -1,6 +1,6 @@
 import { Component, Inject, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
 import { FormControl, ValidationErrors, Validators } from '@angular/forms';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { forkJoin, Observable, of, Subscription, throwError } from 'rxjs';
 import { ExternalReference } from 'src/app/classes/external-references';
@@ -8,6 +8,7 @@ import { Relationship } from 'src/app/classes/stix/relationship';
 import { StixObject } from 'src/app/classes/stix/stix-object';
 import { AuthenticationService } from 'src/app/services/connectors/authentication/authentication.service';
 import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/rest-api-connector.service';
+import { DeleteDialogComponent } from '../delete-dialog/delete-dialog.component';
 
 @Component({
   selector: 'app-reference-edit-dialog',
@@ -38,7 +39,8 @@ export class ReferenceEditDialogComponent implements OnInit, OnDestroy {
                 public dialogRef: MatDialogRef<ReferenceEditDialogComponent>,
                 public restApiConnectorService: RestApiConnectorService,
                 public snackbar: MatSnackBar,
-                private authenticationService: AuthenticationService) {
+                private authenticationService: AuthenticationService,
+                private dialog: MatDialog) {
         if (this.config.reference) {
             this.is_new = false;
             this.reference = JSON.parse(JSON.stringify(this.config.reference)); //deep copy
@@ -243,6 +245,28 @@ export class ReferenceEditDialogComponent implements OnInit, OnDestroy {
 
     public close(): void {
         this.dialogRef.close(this.dirty);
+    }
+
+    /** Opens the deletion confirmation dialog and deletes the reference */
+    public delete(): void {
+        let prompt = this.dialog.open(DeleteDialogComponent, {
+            maxWidth: "35em",
+            data: {
+                hardDelete: true
+            },
+            disableClose: true,
+            autoFocus: false // disables auto focus on the dialog form field
+        });
+        let subscription = prompt.afterClosed().subscribe({
+            next: (confirm) => {
+                if (confirm) {
+                    // delete the reference
+                    console.log('** todo delete reference');
+                    this.close();
+                }
+            },
+            complete: () => { subscription.unsubscribe(); }
+        })
     }
 }
 
