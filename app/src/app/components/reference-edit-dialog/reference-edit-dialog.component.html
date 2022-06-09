@@ -5,7 +5,7 @@
         <ng-container *ngIf="editable">
             <button mat-button class="control"
                 [matTooltip]="is_new ? 'validate & save' : 'patch & save'"
-                [disabled]="!editing || !reference.source_name || (!is_new && !reference.description) || (is_new && (!citation.authors || !citation.retrieved || !validDate()))"
+                [disabled]="!editing || !reference.source_name || (is_new && source_control.errors) || (!is_new && !reference.description) || (is_new && (!citation.authors || !citation.retrieved || !validDate()))"
                 (click)="next()">
                 <mat-icon aria-label="save">save</mat-icon>
             </button>
@@ -24,7 +24,7 @@
                         <mat-form-field appearance="outline">
                             <mat-label>source name</mat-label>
                             <input matInput required [formControl]="source_control">
-                            <mat-error *ngIf="source_control.errors">{{getError()}}</mat-error>
+                            <mat-error *ngIf="is_new && source_control.errors">{{getError()}}</mat-error>
                         </mat-form-field>
                     </div>
                     <div class="column narrow vertical-center">

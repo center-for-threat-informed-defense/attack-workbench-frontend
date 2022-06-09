@@ -54,8 +54,8 @@ export class ReferenceEditDialogComponent implements OnInit, OnDestroy {
                 url: "",
                 description: ""
             }
-            this.source_control = new FormControl(null);
         }
+        this.source_control = new FormControl({value: this.reference.source_name, disabled: !this.is_new});
     }
 
     ngOnInit(): void {
@@ -67,12 +67,15 @@ export class ReferenceEditDialogComponent implements OnInit, OnDestroy {
             complete: () => referenceSubscription.unsubscribe()
         })
 
-        // listen to source_name input changes
-        this.validationSubscription = this.source_control.valueChanges.subscribe(source_name => {
-            this.validate(this.source_control.value).subscribe({
-                error: (err) => { if (err) this.source_control.setErrors(err); }
+        if (this.is_new) {
+            // listen to source_name input changes for validation (can only be edited on new references)
+            this.validationSubscription = this.source_control.valueChanges.subscribe(source_name => {
+                this.reference.source_name = source_name;
+                this.validate(source_name).subscribe({
+                    error: (err) => { if (err) this.source_control.setErrors(err); }
+                });
             })
-        })
+        }
     }
 
     ngOnDestroy(): void {
