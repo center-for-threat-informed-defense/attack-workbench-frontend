@@ -5,7 +5,7 @@
         <ng-container *ngIf="editable">
             <button mat-button class="control"
                 [matTooltip]="is_new ? 'validate & save' : 'patch & save'"
-                [disabled]="!editing || !validCitation() || source_control.errors"
+                [disabled]="!editing || !validCitation() || (is_new && source_control.errors)"
                 (click)="next()">
                 <mat-icon aria-label="save">save</mat-icon>
             </button>
