@@ -5,12 +5,12 @@
         <ng-container *ngIf="editable">
             <button mat-button class="control"
                 [matTooltip]="is_new ? 'validate & save' : 'patch & save'"
-                [disabled]="!editing || !reference.source_name || (!is_new && !reference.description) || (is_new && (!citation.authors || !citation.retrieved || !validDate()))"
+                [disabled]="!editing || !validCitation() || (is_new && source_control.errors)"
                 (click)="next()">
                 <mat-icon aria-label="save">save</mat-icon>
             </button>
             <button *ngIf="!editing" mat-button class="control" matTooltip="edit" (click)="startEditing()"><mat-icon aria-label="edit">edit</mat-icon></button>
-            <button *ngIf="editing"  mat-button class="control" matTooltip="discard changes and stop editing" (click)="discardChanges()"><mat-icon aria-label="discard">edit_off</mat-icon></button>
+            <button *ngIf="editing"  mat-button class="control" matTooltip="discard changes & stop editing" (click)="discardChanges()"><mat-icon aria-label="discard">edit_off</mat-icon></button>
         </ng-container>
     </mat-toolbar>
     <!-- edit page -->
@@ -23,7 +23,8 @@
                         <!-- source name -->
                         <mat-form-field appearance="outline">
                             <mat-label>source name</mat-label>
-                            <input matInput required [disabled]="!is_new" [(ngModel)]="reference.source_name">
+                            <input matInput required [formControl]="source_control">
+                            <mat-error *ngIf="is_new && source_control.errors">{{getError()}}</mat-error>
                         </mat-form-field>
                     </div>
                     <div class="column narrow vertical-center">

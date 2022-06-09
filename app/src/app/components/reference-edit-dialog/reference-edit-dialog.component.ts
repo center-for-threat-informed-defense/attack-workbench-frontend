@@ -1,8 +1,8 @@
-import { Component, Inject, OnInit, ViewEncapsulation } from '@angular/core';
-import { FormControl, Validators } from '@angular/forms';
+import { Component, Inject, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
+import { FormControl, ValidationErrors, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { forkJoin } from 'rxjs';
+import { forkJoin, Observable, of, Subscription, throwError } from 'rxjs';
 import { ExternalReference } from 'src/app/classes/external-references';
 import { Relationship } from 'src/app/classes/stix/relationship';
 import { StixObject } from 'src/app/classes/stix/stix-object';
@@ -15,13 +15,17 @@ import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/re
   styleUrls: ['./reference-edit-dialog.component.scss'],
   encapsulation: ViewEncapsulation.None
 })
-export class ReferenceEditDialogComponent implements OnInit {
+export class ReferenceEditDialogComponent implements OnInit, OnDestroy {
     public reference: ExternalReference;
     public is_new: boolean;
     public stage: number = 0;
     public patch_objects: StixObject[];
     public patch_relationships: Relationship[];
     public dirty: boolean;
+
+    public references$: ExternalReference[];
+    public source_control: FormControl;
+    public validationSubscription: Subscription;
 
     public months: string[] = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
     public citation: any = {};
@@ -50,11 +54,32 @@ export class ReferenceEditDialogComponent implements OnInit {
                 description: ""
             }
         }
+        this.source_control = new FormControl({value: this.reference.source_name, disabled: !this.is_new});
     }
 
     ngOnInit(): void {
-        // intentionally left blank
-    } 
+        // retrieve all references
+        let referenceSubscription = this.restApiConnectorService.getAllReferences().subscribe({
+            next: (data) => {
+                this.references$ = data.data;
+            },
+            complete: () => referenceSubscription.unsubscribe()
+        })
+
+        if (this.is_new) {
+            // listen to source_name input changes for validation (can only be edited on new references)
+            this.validationSubscription = this.source_control.valueChanges.subscribe(source_name => {
+                this.reference.source_name = source_name;
+                this.validate(source_name).subscribe({
+                    error: (err) => { if (err) this.source_control.setErrors(err); }
+                });
+            })
+        }
+    }
+
+    ngOnDestroy(): void {
+        if (this.validationSubscription) this.validationSubscription.unsubscribe();
+    }
 
     public next() {
         if (this.is_new) {
@@ -63,7 +88,14 @@ export class ReferenceEditDialogComponent implements OnInit {
         } else this.parse_patches();
     }
 
-    public validDate(): boolean {
+    public validCitation(): boolean {
+        if (!this.is_new) return this.reference.description && this.reference.description.length > 0;
+        else { // new reference
+            return this.citation.authors && this.citation.retrieved && this.validPublishedDate();
+        }
+    }
+
+    public validPublishedDate(): boolean {
         if (this.is_new) {
             if (this.citation.day.value && !this.citation.day.valid) return false;
             if (this.citation.year.value && !this.citation.year.valid) return false;
@@ -168,6 +200,31 @@ export class ReferenceEditDialogComponent implements OnInit {
                 subscription.unsubscribe();
             }
         });
+    }
+
+    /**
+     * Validate reference source name
+     * @param source_name the source name input
+     * @returns 
+     */
+    public validate(source_name): Observable<ValidationErrors> {
+        this.source_control.setErrors(null); // clear previous validation
+        // required
+        if (!source_name) return throwError({required: true});
+
+        // cannot contain parenthesis
+        if (['(',')'].some(x => source_name.includes(x))) return throwError({containsParenthesis: true})
+
+        // uniqueness
+        if (this.references$.some(x => x.source_name == source_name)) return throwError({nonUnique: true});
+
+        return of();
+    }
+
+    /** Retrieve the validation error for display */
+    public getError(): string {
+        if (this.source_control.errors.containsParenthesis) return 'source name cannot contain parenthesis';
+        if (this.source_control.errors.nonUnique) return 'source name is not unique';
     }
 
     public stopEditing(): void {
