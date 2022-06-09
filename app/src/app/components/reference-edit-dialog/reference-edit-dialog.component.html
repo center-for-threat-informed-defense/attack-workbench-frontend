@@ -23,7 +23,8 @@
                         <!-- source name -->
                         <mat-form-field appearance="outline">
                             <mat-label>source name</mat-label>
-                            <input matInput required [disabled]="!is_new" [(ngModel)]="reference.source_name">
+                            <input matInput required [formControl]="source_control">
+                            <mat-error *ngIf="source_control.errors">{{getError()}}</mat-error>
                         </mat-form-field>
                     </div>
                     <div class="column narrow vertical-center">
