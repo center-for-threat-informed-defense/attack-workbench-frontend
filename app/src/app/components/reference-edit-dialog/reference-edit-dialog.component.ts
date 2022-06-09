@@ -3,7 +3,6 @@ import { FormControl, ValidationErrors, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { forkJoin, Observable, of, Subscription, throwError } from 'rxjs';
-import { concatMap } from 'rxjs/operators';
 import { ExternalReference } from 'src/app/classes/external-references';
 import { Relationship } from 'src/app/classes/stix/relationship';
 import { StixObject } from 'src/app/classes/stix/stix-object';
@@ -89,7 +88,14 @@ export class ReferenceEditDialogComponent implements OnInit, OnDestroy {
         } else this.parse_patches();
     }
 
-    public validDate(): boolean {
+    public validCitation(): boolean {
+        if (!this.is_new) return this.reference.description && this.reference.description.length > 0;
+        else { // new reference
+            return this.citation.authors && this.citation.retrieved && this.validPublishedDate();
+        }
+    }
+
+    public validPublishedDate(): boolean {
         if (this.is_new) {
             if (this.citation.day.value && !this.citation.day.valid) return false;
             if (this.citation.year.value && !this.citation.year.valid) return false;
