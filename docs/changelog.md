@@ -43,6 +43,8 @@ ATT&CK Workbench version 1.3.0 supports the deletion of objects.
 -   Added a Reference Manager page to the Workbench to increase usability. The ability to view and edit a reference has been moved from the sidebar to the Reference Manager page. See [frontend#349](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/349).
 - Added functionality to delete Relationship objects, with the exception of `subtechnique_of` relationships. See [frontend#341](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/341).
 
+#### Improvements in 1.3.0
+-   Improved validation for the `source_name` field on Reference objects to prevent duplicated source names and issues caused by invalid characters during citation parsing. See [frontend#352](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/352).
 
 #### Fixes in 1.3.0
 -   Fixed an issue where updating a reference used by a revoked or deprecated object would throw an error and prevent the user from saving the changes to the reference. See [frontend#355](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/355).
