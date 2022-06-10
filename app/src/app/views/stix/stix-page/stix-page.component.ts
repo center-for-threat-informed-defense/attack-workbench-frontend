@@ -1,7 +1,6 @@
 import { Component, OnDestroy, OnInit, ViewChild, Output, EventEmitter } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router, NavigationEnd } from '@angular/router';
-import { Location } from '@angular/common';
 import { BreadcrumbService } from 'angular-crumbs';
 import { Observable, forkJoin } from 'rxjs';
 import { switchMap } from "rxjs/operators";
@@ -53,8 +52,7 @@ export class StixPageComponent implements OnInit, OnDestroy {
                 private breadcrumbService: BreadcrumbService, 
                 private editorService: EditorService,
                 private dialog: MatDialog,
-                private titleService: TitleService,
-                private _location: Location) { }
+                private titleService: TitleService) { }
     
     /**
      * Parse an object list and build a config for passing into child components
