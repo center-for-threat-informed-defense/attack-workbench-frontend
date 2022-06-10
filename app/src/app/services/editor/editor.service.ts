@@ -16,6 +16,7 @@ export class EditorService {
     public editing: boolean = false;
     public deletable: boolean = false;
     public onSave = new EventEmitter();
+    public onDelete = new EventEmitter();
     public onEditingStopped = new EventEmitter();
     public onReload = new EventEmitter();
     public onReloadReferences = new EventEmitter();

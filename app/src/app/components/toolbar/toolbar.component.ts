@@ -22,6 +22,7 @@ export class ToolbarComponent implements OnInit {
 
     public get editing(): boolean { return this.editorService.editing; }
     public get editable(): boolean { return this.editorService.editable; }
+    public get deletable(): boolean { return this.editorService.deletable; }
 
     public get isLoggedIn(): boolean { return this.authenticationService.isLoggedIn; }
 
@@ -41,6 +42,10 @@ export class ToolbarComponent implements OnInit {
 
     public saveEdits() {
         this.editorService.onSave.emit();
+    }
+
+    public delete() {
+        this.editorService.onDelete.emit();
     }
     
     // emit a toggle theme event
