@@ -1,4 +1,4 @@
-import { Observable } from "rxjs";
+import { Observable, of } from "rxjs";
 import { RestApiConnectorService } from "src/app/services/connectors/rest-api/rest-api-connector.service";
 import { ValidationData } from "../serializable";
 import { StixObject } from "./stix-object";
@@ -92,7 +92,8 @@ export class Identity extends StixObject {
         return postObservable;
     }
 
-    public delete(restAPIService: RestApiConnectorService): void {
+    public delete(restAPIService: RestApiConnectorService): Observable<{}> {
         // deletion is not supported on Identity objects
+        return of({});
     }
 }

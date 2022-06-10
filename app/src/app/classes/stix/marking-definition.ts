@@ -1,7 +1,7 @@
 import { map, switchMap } from "rxjs/operators";
 import { StixObject } from "./stix-object";
 import { RestApiConnectorService } from "src/app/services/connectors/rest-api/rest-api-connector.service";
-import { Observable } from "rxjs";
+import { Observable, of } from "rxjs";
 import { ValidationData } from "../serializable";
 import { logger } from "../../util/logger";
 
@@ -131,7 +131,8 @@ export class MarkingDefinition extends StixObject {
         return postObservable;
     }
 
-    public delete(restAPIService: RestApiConnectorService): void {
+    public delete(restAPIService: RestApiConnectorService): Observable<{}> {
         // deletion is not supported on Marking Definitions
+        return of({});
     }
 }
