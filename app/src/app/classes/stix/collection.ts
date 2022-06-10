@@ -395,7 +395,7 @@ export class Collection extends StixObject {
         return postObservable;
     }
 
-    public delete(restAPIService: RestApiConnectorService): Observable<{}> {
+    public delete(_restAPIService: RestApiConnectorService): Observable<{}> {
         // deletion is not supported on Collections
         return of({});
     }

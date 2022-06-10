@@ -108,7 +108,7 @@ export class StixPageComponent implements OnInit, OnDestroy {
             disableClose: true,
             autoFocus: false
         });
-        var closeSubscription = prompt.afterClosed().subscribe({
+        let closeSubscription = prompt.afterClosed().subscribe({
             next: (confirm) => {
                 if (confirm) {
                     let deleteSubscription = this.deleteObjects().subscribe({
@@ -137,13 +137,13 @@ export class StixPageComponent implements OnInit, OnDestroy {
     ngOnInit(): void {
         this.loadObjects();
         this.saveSubscription = this.editorService.onSave.subscribe({
-            next: (event) => this.save()
+            next: (_event) => this.save()
         });
         this.deleteSubscription = this.editorService.onDelete.subscribe({
-            next: (event) => this.delete()
+            next: (_event) => this.delete()
         });
         this.reloadSubscription = this.editorService.onReload.subscribe({
-            next: (event) => {
+            next: (_event) => {
                 this.objects = undefined;
                 this.loadObjects();
             }

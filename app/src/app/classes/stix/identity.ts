@@ -92,7 +92,7 @@ export class Identity extends StixObject {
         return postObservable;
     }
 
-    public delete(restAPIService: RestApiConnectorService): Observable<{}> {
+    public delete(_restAPIService: RestApiConnectorService): Observable<{}> {
         // deletion is not supported on Identity objects
         return of({});
     }
