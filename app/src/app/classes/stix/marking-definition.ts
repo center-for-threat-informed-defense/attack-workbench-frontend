@@ -130,4 +130,8 @@ export class MarkingDefinition extends StixObject {
         });
         return postObservable;
     }
+
+    public delete(restAPIService: RestApiConnectorService): void {
+        // deletion is not supported on Marking Definitions
+    }
 }

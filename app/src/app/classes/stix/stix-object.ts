@@ -536,6 +536,12 @@ export abstract class StixObject extends Serializable {
     abstract save(restAPIService: RestApiConnectorService): Observable<StixObject>;
 
     /**
+     * Delete the STIX object from the database.
+     * @param restAPIService [RestApiConnectorService] the service to perform the DELETE through
+     */
+    abstract delete(restAPIService: RestApiConnectorService): void;
+    
+    /**
      * Updates the object's marking definitions with the default the first time an object is created
      * @param restAPIService [RestApiConnectorService] the service to perform the POST/PUT through
      */
