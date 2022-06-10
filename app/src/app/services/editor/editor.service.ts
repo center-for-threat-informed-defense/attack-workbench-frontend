@@ -41,7 +41,7 @@ export class EditorService {
                 if (!this.editable) this.sidebarService.currentTab = "references";
                 if (this.editable) {
                     var delSubscription = this.getDeletable().subscribe({
-                        next: (res) => this.deletable = res,
+                        next: (res) => this.deletable = res && !this.router.url.includes("/new"),
                         complete: () => { if (delSubscription) delSubscription.unsubscribe(); }
                     })
                 }
