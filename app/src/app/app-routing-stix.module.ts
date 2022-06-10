@@ -10,6 +10,7 @@ import { TacticListComponent } from './views/stix/tactic/tactic-list/tactic-list
 import { TechniqueListComponent } from './views/stix/technique/technique-list/technique-list.component';
 import { MarkingDefinitionListComponent } from "./views/stix/marking-definition/marking-definition-list/marking-definition-list.component";
 import { DataSourceListComponent } from "./views/stix/data-source/data-source-list/data-source-list.component";
+import { ReferenceManagerComponent } from "./views/reference-manager/reference-manager.component";
 
 import { StixPageComponent } from "./views/stix/stix-page/stix-page.component";
 
@@ -18,7 +19,6 @@ import { NgModule } from '@angular/core';
 import { environment } from "../environments/environment"
 import { AuthorizationGuard } from "./services/helpers/authorization.guard";
 import { Role } from "./classes/authn/role";
-import { ReferenceManagerComponent } from "./views/reference-manager/reference-manager.component";
 
 var viewRoles = [Role.VISITOR, Role.EDITOR, Role.ADMIN];
 var editRoles = [Role.EDITOR, Role.ADMIN];

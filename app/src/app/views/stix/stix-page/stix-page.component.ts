@@ -1,6 +1,7 @@
 import { Component, OnDestroy, OnInit, ViewChild, Output, EventEmitter } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router, NavigationEnd } from '@angular/router';
+import { Location } from '@angular/common';
 import { BreadcrumbService } from 'angular-crumbs';
 import { Observable, forkJoin } from 'rxjs';
 import { switchMap } from "rxjs/operators";
@@ -52,7 +53,8 @@ export class StixPageComponent implements OnInit, OnDestroy {
                 private breadcrumbService: BreadcrumbService, 
                 private editorService: EditorService,
                 private dialog: MatDialog,
-                private titleService: TitleService) { }
+                private titleService: TitleService,
+                private _location: Location) { }
     
     /**
      * Parse an object list and build a config for passing into child components
@@ -110,8 +112,10 @@ export class StixPageComponent implements OnInit, OnDestroy {
             next: (confirm) => {
                 if (confirm) {
                     let deleteSubscription = this.deleteObjects().subscribe({
-                        // TODO reroute back to list page
-                        complete: () => deleteSubscription.unsubscribe()
+                        complete: () => {
+                            this.router.navigate([this.route.parent.url])
+                            deleteSubscription.unsubscribe();
+                        }
                     });
                 }
             },
