@@ -2,18 +2,21 @@ import { Component, OnDestroy, OnInit, ViewChild, Output, EventEmitter } from '@
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router, NavigationEnd } from '@angular/router';
 import { BreadcrumbService } from 'angular-crumbs';
-import { Observable } from 'rxjs';
+import { Observable, forkJoin } from 'rxjs';
+import { switchMap } from "rxjs/operators";
 import { Collection } from 'src/app/classes/stix/collection';
 import { DataSource } from 'src/app/classes/stix/data-source';
 import { Group } from 'src/app/classes/stix/group';
 import { MarkingDefinition } from 'src/app/classes/stix/marking-definition';
 import { Matrix } from 'src/app/classes/stix/matrix';
 import { Mitigation } from 'src/app/classes/stix/mitigation';
+import { Note } from 'src/app/classes/stix/note';
 import { Software } from 'src/app/classes/stix/software';
 import { StixObject } from 'src/app/classes/stix/stix-object';
 import { Tactic } from 'src/app/classes/stix/tactic';
 import { Technique } from 'src/app/classes/stix/technique';
 import { VersionNumber } from 'src/app/classes/version-number';
+import { DeleteDialogComponent } from 'src/app/components/delete-dialog/delete-dialog.component';
 import { MultipleChoiceDialogComponent } from 'src/app/components/multiple-choice-dialog/multiple-choice-dialog.component';
 import { SaveDialogComponent } from 'src/app/components/save-dialog/save-dialog.component';
 import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/rest-api-connector.service';
@@ -35,6 +38,7 @@ export class StixPageComponent implements OnInit, OnDestroy {
     private objectID: string;
     private routerEvents;
     private saveSubscription;
+    private deleteSubscription;
     private reloadSubscription;
 
     @Output() created = new EventEmitter();
@@ -96,11 +100,43 @@ export class StixPageComponent implements OnInit, OnDestroy {
         }
     }
 
+    private delete() {
+        let prompt = this.dialog.open(DeleteDialogComponent, {
+            maxWidth: "35em",
+            disableClose: true,
+            autoFocus: false
+        });
+        var closeSubscription = prompt.afterClosed().subscribe({
+            next: (confirm) => {
+                if (confirm) {
+                    let deleteSubscription = this.deleteObjects().subscribe({
+                        // TODO reroute back to list page
+                        complete: () => deleteSubscription.unsubscribe()
+                    });
+                }
+            },
+            complete: () => closeSubscription.unsubscribe()
+        })
+    }
+
+    private deleteObjects() {
+        return this.restAPIConnectorService.getAllNotes().pipe(
+            switchMap(notes => {
+                let relatedNotes = (notes.data as Note[]).filter(note => note.object_refs.includes(this.objects[0].stixID));
+                let noteSubscribers = relatedNotes.map(note => note.delete(this.restAPIConnectorService));
+                let api_calls = [...noteSubscribers, this.objects[0].delete(this.restAPIConnectorService)];
+                return forkJoin(api_calls)
+            })
+        )
+    }
 
     ngOnInit(): void {
         this.loadObjects();
         this.saveSubscription = this.editorService.onSave.subscribe({
             next: (event) => this.save()
+        });
+        this.deleteSubscription = this.editorService.onDelete.subscribe({
+            next: (event) => this.delete()
         });
         this.reloadSubscription = this.editorService.onReload.subscribe({
             next: (event) => {
@@ -193,6 +229,7 @@ export class StixPageComponent implements OnInit, OnDestroy {
 
     ngOnDestroy() {
         this.saveSubscription.unsubscribe();
+        this.deleteSubscription.unsubscribe();
         this.reloadSubscription.unsubscribe();
         this.routerEvents.unsubscribe();
     }
