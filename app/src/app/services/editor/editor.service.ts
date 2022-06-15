@@ -40,10 +40,9 @@ export class EditorService {
                 this.sidebarService.setEnabled("notes", this.editable);
                 if (!this.editable) this.sidebarService.currentTab = "references";
                 if (this.editable) {
-                    let delSubscription = this.getDeletable().subscribe({
-                        next: (res) => this.deletable = res && !this.router.url.includes("/new"),
-                        complete: () => { if (delSubscription) delSubscription.unsubscribe(); }
-                    })
+                    this.getDeletable().subscribe(res => {
+                        this.deletable = res && !this.router.url.includes("/new");
+                    });
                 }
             }
         })
