@@ -1,4 +1,4 @@
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/rest-api-connector.service';
 import { ValidationData } from '../serializable';
 import { Group } from './group';
@@ -393,5 +393,10 @@ export class Collection extends StixObject {
             complete: () => { subscription.unsubscribe(); }
         })
         return postObservable;
+    }
+
+    public delete(_restAPIService: RestApiConnectorService): Observable<{}> {
+        // deletion is not supported on Collections
+        return of({});
     }
 }

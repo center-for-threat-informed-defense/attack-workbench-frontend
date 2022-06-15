@@ -4,6 +4,9 @@ import { SidebarService } from '../sidebar/sidebar.service';
 import { ConfirmationDialogComponent } from 'src/app/components/confirmation-dialog/confirmation-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
 import { AuthenticationService } from '../connectors/authentication/authentication.service';
+import { RestApiConnectorService } from '../connectors/rest-api/rest-api-connector.service';
+import { map } from 'rxjs/operators';
+import { Observable, of } from 'rxjs';
 
 @Injectable({
     providedIn: 'root'
@@ -11,7 +14,9 @@ import { AuthenticationService } from '../connectors/authentication/authenticati
 export class EditorService {
     public editable: boolean = false;
     public editing: boolean = false;
+    public deletable: boolean = false;
     public onSave = new EventEmitter();
+    public onDelete = new EventEmitter();
     public onEditingStopped = new EventEmitter();
     public onReload = new EventEmitter();
     public onReloadReferences = new EventEmitter();
@@ -24,6 +29,7 @@ export class EditorService {
         private route: ActivatedRoute,
         private sidebarService: SidebarService,
         private authenticationService: AuthenticationService,
+        private restAPIConnectorService: RestApiConnectorService,
         private dialog: MatDialog) {
         this.router.events.subscribe(event => {
             if (event instanceof NavigationEnd) {
@@ -33,6 +39,11 @@ export class EditorService {
                 this.sidebarService.setEnabled("history", this.editable);
                 this.sidebarService.setEnabled("notes", this.editable);
                 if (!this.editable) this.sidebarService.currentTab = "references";
+                if (this.editable) {
+                    this.getDeletable().subscribe(res => {
+                        this.deletable = res && !this.router.url.includes("/new");
+                    });
+                }
             }
         })
         this.route.queryParams.subscribe(params => {
@@ -75,5 +86,18 @@ export class EditorService {
             data.push(... this.getEditableFromRoute(state, state.firstChild(parent)));
         }
         return data;
+    }
+
+    /** 
+     * Determine whether or not this object can be deleted
+     * Software, Group, and Mitigation objects cannot be deleted if they have relationships with other objects
+     */
+    public getDeletable(): Observable<boolean> {
+        if (["software", "group", "mitigation"].includes(this.type)) {
+            return this.restAPIConnectorService.getRelatedTo({sourceOrTargetRef: this.stixId}).pipe(
+                map(relationships => relationships.data.length == 0)
+            )
+        }
+        return of(false);
     }
 }
