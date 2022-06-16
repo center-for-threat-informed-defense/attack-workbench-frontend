@@ -1,5 +1,5 @@
-import { Component, ViewEncapsulation } from '@angular/core';
-import { MatDialogRef } from '@angular/material/dialog';
+import { Component, Inject, ViewEncapsulation } from '@angular/core';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 @Component({
     selector: 'app-delete-dialog',
@@ -14,7 +14,7 @@ export class DeleteDialogComponent {
         return this.confirmInput != this.deleteConfirmation;
     }
 
-    constructor(public dialogRef: MatDialogRef<DeleteDialogComponent>) { }
+    constructor(@Inject(MAT_DIALOG_DATA) public config: any, public dialogRef: MatDialogRef<DeleteDialogComponent>) { }
 
     public confirm() {
         this.dialogRef.close(true);
