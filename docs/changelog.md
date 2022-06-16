@@ -41,7 +41,9 @@ ATT&CK Workbench version 1.3.0 supports the deletion of objects.
 #### New Features in 1.3.0
 
 -   Added a Reference Manager page to the Workbench to increase usability. The ability to view and edit a reference has been moved from the sidebar to the Reference Manager page. See [frontend#349](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/349).
-- Added functionality to delete Relationship objects, with the exception of `subtechnique_of` relationships. See [frontend#341](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/341).
+-   Added functionality to delete Relationship objects, with the exception of `subtechnique_of` relationships. See [frontend#341](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/341).
+-   Added the capability to delete References which are not cited by any objects. See [frontend#350](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/350).
+-   Added functionality to delete Mitigation, Group, and Software objects that do not have any existing relationships. See [frontend#342](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/342).
 
 #### Improvements in 1.3.0
 -   Improved validation for the `source_name` field on Reference objects to prevent duplicated source names and issues caused by invalid characters during citation parsing. See [frontend#352](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/352).
@@ -49,6 +51,7 @@ ATT&CK Workbench version 1.3.0 supports the deletion of objects.
 #### Fixes in 1.3.0
 -   Fixed an issue where updating a reference used by a revoked or deprecated object would throw an error and prevent the user from saving the changes to the reference. See [frontend#355](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/355).
 -   Fixed an issue where the "apply patches and save" button would be unavailable when updating a reference used only by Relationship objects. See [frontend#356](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/356).
+-   Fixed a bug where citations would break if the reference source name contained special characters because the query was not correctly encoded in the request. See [frontend#371](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/pull/371).
 
 ## 25 April 2022
 
