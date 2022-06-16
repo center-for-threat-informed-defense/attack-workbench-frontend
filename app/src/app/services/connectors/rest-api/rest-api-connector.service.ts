@@ -1029,7 +1029,7 @@ export class RestApiConnectorService extends ApiConnector {
     public getReference(source_name: string): Observable<ExternalReference> {
         let url = `${this.baseUrl}/references`;
         // parse params into query string
-        let query = new HttpParams();
+        let query = new HttpParams({encoder: new CustomEncoder()});
         query = query.set("sourceName", source_name);
         return this.http.get<ExternalReference>(url, {params: query}).pipe(
             tap(results => logger.log("retrieved reference", results)),
@@ -1073,7 +1073,7 @@ export class RestApiConnectorService extends ApiConnector {
      */
     public deleteReference(source_name: string) {
         let url = `${this.baseUrl}/references`;
-        let query = new HttpParams();
+        let query = new HttpParams({encoder: new CustomEncoder()});
         query = query.set("sourceName", source_name);
         return this.http.delete(url, {params: query}).pipe(
             tap(this.handleSuccess("reference removed")),
