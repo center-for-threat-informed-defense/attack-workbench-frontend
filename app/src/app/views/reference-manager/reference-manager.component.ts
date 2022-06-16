@@ -85,7 +85,7 @@ export class ReferenceManagerComponent implements OnInit, AfterViewInit, OnDestr
             data: {
                 mode: reference ? 'view' : 'edit',
                 reference: reference,
-                count: this.referenceCount(reference.source_name)
+                count: reference ? this.referenceCount(reference.source_name): 0
             }
         });
         let subscription = prompt.afterClosed().subscribe({

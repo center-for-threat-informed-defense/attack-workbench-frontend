@@ -11,7 +11,7 @@
             </button>
             <button *ngIf="!editing" mat-button class="control" matTooltip="edit" (click)="startEditing()"><mat-icon aria-label="edit">edit</mat-icon></button>
             <button *ngIf="editing"  mat-button class="control" matTooltip="discard changes & stop editing" (click)="discardChanges()"><mat-icon aria-label="discard">edit_off</mat-icon></button>
-            <button mat-button class="control" matTooltip="delete" [disabled]="!editing || config.count > 0" (click)="delete()"><mat-icon aria-label="delete">delete</mat-icon></button>
+            <button mat-button class="control" matTooltip="delete" [disabled]="!editing || config.count > 0 || is_new" (click)="delete()"><mat-icon aria-label="delete">delete</mat-icon></button>
         </ng-container>
     </mat-toolbar>
     <!-- edit page -->
