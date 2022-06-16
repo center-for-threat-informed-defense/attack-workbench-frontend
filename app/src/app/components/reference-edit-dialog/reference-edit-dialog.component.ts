@@ -261,8 +261,12 @@ export class ReferenceEditDialogComponent implements OnInit, OnDestroy {
             next: (confirm) => {
                 if (confirm) {
                     // delete the reference
-                    console.log('** todo delete reference');
-                    this.close();
+                    let sub = this.restApiConnectorService.deleteReference(this.reference.source_name).subscribe({
+                        complete: () => {
+                            this.close();
+                            if (sub) sub.unsubscribe();
+                        }
+                    });
                 }
             },
             complete: () => { subscription.unsubscribe(); }

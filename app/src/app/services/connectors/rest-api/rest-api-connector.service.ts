@@ -867,7 +867,6 @@ export class RestApiConnectorService extends ApiConnector {
     /**
      * DELETE a note
      * @param {string} id the STIX ID of the object to delete
-     * @param {Date} modified The modified date of the version to delete
      * @returns {Observable<{}>} observable of the response body
      */
     public deleteNote(id: string) {
@@ -1064,6 +1063,22 @@ export class RestApiConnectorService extends ApiConnector {
             tap(this.handleSuccess(`${reference.source_name} saved`)),
             catchError(this.handleError_raise<ExternalReference>()), // on error, trigger the error notification and continue operation without crashing (returns empty item)
             share() // multicast so that multiple subscribers don't trigger the call twice. THIS MUST BE THE LAST LINE OF THE PIPE
+        )
+    }
+
+    /**
+     * DELETE a reference
+     * @param {string} source_name the source name of the reference to delete
+     * @returns {Observable<{}>} observable of the response body
+     */
+    public deleteReference(source_name: string) {
+        let url = `${this.baseUrl}/references`;
+        let query = new HttpParams();
+        query = query.set("sourceName", source_name);
+        return this.http.delete(url, {params: query}).pipe(
+            tap(this.handleSuccess("reference removed")),
+            catchError(this.handleError_raise()),
+            share()
         )
     }
 
