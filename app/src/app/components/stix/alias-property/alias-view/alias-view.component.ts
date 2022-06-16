@@ -37,12 +37,13 @@ export class AliasViewComponent implements OnInit {
    * return list of aliass with inline citations
    */
   public get inlineCitations() {
+    let aliases = this.config.object[this.config.field].slice(1);
     if (this.config.referencesField) {
       let value : string;
       let aliasArray : Array<string> = [];
 
-      let arraySize = this.config.object[this.config.field].length;
-      for (value of this.config.object[this.config.field]) {
+      let arraySize = aliases.length;
+      for (value of aliases) {
 
         let alias = value;
 
@@ -68,9 +69,9 @@ export class AliasViewComponent implements OnInit {
 
           aliasArray.push(alias);
       }
-      return aliasArray
+      return aliasArray;
     }
-    return this.config[this.config.field]
+    return aliases;
   }
 
   /**
