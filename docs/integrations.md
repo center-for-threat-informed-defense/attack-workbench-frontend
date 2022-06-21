@@ -72,6 +72,8 @@ Edit the config file `nav-app/src/assets/config.json` by prepending a new object
 }
 ```
 
+_Note: due to inflexibility of the data loading in Navigator v4.5.1, the version name must be _exactly_ two words and start with the word `"ATT&CK"`. The domain names must also exactly match those shown above. Version and domain name flexibility in ATT&CK Navigator will be improved in a future update. See [attack-navigator#370](https://github.com/mitre-attack/attack-navigator/issues/370) for more information._
+
 ### 3. Serve the application
 
 Follow the [install and run](https://github.com/mitre-attack/attack-navigator#install-and-run) instructions on the ATT&CK Navigator to deploy the application. The Navigator will update its data from the Workbench every time it loads, so there is no need to periodically rebuild the application to stay synchronized with Workbench data.
