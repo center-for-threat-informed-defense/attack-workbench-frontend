@@ -10,6 +10,9 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 export class DeleteDialogComponent {
     private deleteConfirmation: string = 'DELETE';
     public confirmInput: string;
+    public get hardDelete(): boolean {
+        return this.config && this.config.hardDelete;
+    }
     public get invalid(): boolean {
         return this.confirmInput != this.deleteConfirmation;
     }
