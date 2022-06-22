@@ -38,11 +38,11 @@ export class DataSource extends StixObject {
     public serialize(): any {
         let rep = super.base_serialize();
 
-        rep.stix.name = this.name;
+        rep.stix.name = this.name.trim();
         rep.stix.description = this.description;
         rep.stix.x_mitre_platforms = this.platforms;
         rep.stix.x_mitre_collection_layers = this.collection_layers;
-        rep.stix.x_mitre_contributors = this.contributors;
+        rep.stix.x_mitre_contributors = this.contributors.map(x => x.trim());
         rep.stix.x_mitre_domains = this.domains;
 
         return rep;
