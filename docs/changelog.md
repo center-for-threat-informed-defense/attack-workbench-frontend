@@ -32,6 +32,13 @@
 
 # Changelog
 
+## Changes staged on develop
+
+### ATT&CK Workbench version 1.2.1
+
+#### Improvements in 1.2.1
+-   Whitespace is trimmed during the serialization of string fields for all STIX objects and external references. See [frontend#187](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/187).
+
 ## 25 April 2022
 
 ### ATT&CK Workbench version 1.2.0
