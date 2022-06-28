@@ -39,10 +39,10 @@ export class EditorService {
                 this.sidebarService.setEnabled("history", this.editable);
                 this.sidebarService.setEnabled("notes", this.editable);
                 if (!this.editable) this.sidebarService.currentTab = "references";
+
                 if (this.editable) {
-                    this.getDeletable().subscribe(res => {
-                        this.deletable = res && !this.router.url.includes("/new");
-                    });
+                    if (this.router.url.includes("/new")) this.deletable = false; // cannot delete objects which have not been saved
+                    else this.getDeletable().subscribe(res => this.deletable = res);
                 }
             }
         })
@@ -90,12 +90,18 @@ export class EditorService {
 
     /** 
      * Determine whether or not this object can be deleted
-     * Software, Group, and Mitigation objects cannot be deleted if they have relationships with other objects
      */
     public getDeletable(): Observable<boolean> {
+        // software, group, and mitigation objects cannot be deleted if they have relationships with other objects
         if (["software", "group", "mitigation"].includes(this.type)) {
             return this.restAPIConnectorService.getRelatedTo({sourceOrTargetRef: this.stixId}).pipe(
                 map(relationships => relationships.data.length == 0)
+            )
+        }
+        if (this.type == "data-source") {
+            // data source objects cannot be deleted if they have data components
+            return this.restAPIConnectorService.getDataSource(this.stixId, null, "latest", false, false, true).pipe(
+                map(dataSource => dataSource[0] && dataSource[0].data_components.length == 0)
             )
         }
         return of(false);
