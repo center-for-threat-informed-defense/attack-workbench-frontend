@@ -36,12 +36,12 @@ export class Software extends StixObject {
     public serialize(): any {
         let rep = super.base_serialize();
 
-        rep.stix.name = this.name;
+        rep.stix.name = this.name.trim();
         rep.stix.type = this.type;
         rep.stix.x_mitre_domains = this.domains;
-        rep.stix.x_mitre_aliases = this.aliases;
+        rep.stix.x_mitre_aliases = this.aliases.map(x => x.trim());
         rep.stix.x_mitre_platforms = this.platforms;
-        rep.stix.x_mitre_contributors = this.contributors;
+        rep.stix.x_mitre_contributors = this.contributors.map(x => x.trim());
         if (this.type == "malware") rep.stix.is_family = true; // add is_family to malware type SDOs
 
         return rep;

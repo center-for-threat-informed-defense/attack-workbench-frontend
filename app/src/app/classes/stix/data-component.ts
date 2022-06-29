@@ -33,7 +33,7 @@ export class DataComponent extends StixObject {
     public serialize(): any {
         let rep = super.base_serialize();
 
-        rep.stix.name = this.name;
+        rep.stix.name = this.name.trim();
         rep.stix.description = this.description;
         rep.stix.x_mitre_data_source_ref = this.data_source_ref;
         rep.stix.x_mitre_domains = this.domains;

@@ -307,8 +307,8 @@ export class ExternalReferences extends Serializable {
         for (const [key, value] of this._externalReferences) {
             let temp = {};
 
-            temp["source_name"] = key;
-            if (value["url"]) temp["url"] = value["url"];
+            temp["source_name"] = key.trim();
+            if (value["url"]) temp["url"] = value["url"].trim();
             if (value["description"]) temp["description"] = value["description"];
             
             rep.push(temp);

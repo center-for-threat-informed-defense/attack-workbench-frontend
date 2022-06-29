@@ -204,7 +204,7 @@ export class Collection extends StixObject {
     public serialize(): any {
         let rep = super.base_serialize();
         
-        rep.stix.name = this.name;
+        rep.stix.name = this.name.trim();
         rep.stix.x_mitre_contents = this.contents.map(vr => vr.serialize());
         // add release marking
         if (!rep.workspace.hasOwnProperty("workflow") || !rep.workspace.workflow) {

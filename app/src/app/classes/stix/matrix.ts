@@ -30,7 +30,7 @@ export class Matrix extends StixObject {
     public serialize(): any {
         let rep = super.base_serialize();
 
-        rep.stix.name = this.name;
+        rep.stix.name = this.name.trim();
         rep.stix.tactic_refs = this.tactic_refs;
 
         return rep;

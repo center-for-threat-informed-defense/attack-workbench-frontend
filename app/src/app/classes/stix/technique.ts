@@ -95,13 +95,13 @@ export class Technique extends StixObject {
     public serialize(): any {
         let rep = super.base_serialize();
         
-        rep.stix.name = this.name;
+        rep.stix.name = this.name.trim();
         rep.stix.x_mitre_domains = this.domains;
         rep.stix.x_mitre_detection = this.detection;
         rep.stix.x_mitre_platforms = this.platforms;
         rep.stix.kill_chain_phases = this.kill_chain_phases;
         rep.stix.x_mitre_is_subtechnique = this.is_subtechnique;
-        rep.stix.x_mitre_contributors = this.contributors;
+        rep.stix.x_mitre_contributors = this.contributors.map(x => x.trim());
 
         // domain specific fields
         if (this.domains.includes('ics-attack')) {
@@ -112,14 +112,14 @@ export class Technique extends StixObject {
         }
         if (this.domains.includes('enterprise-attack')) {
             rep.stix.x_mitre_data_sources = this.data_sources;
-            rep.stix.x_mitre_system_requirements = this.system_requirements;
+            rep.stix.x_mitre_system_requirements = this.system_requirements.map(x => x.trim());
 
             // tactic specific fields
             if (this.tactics.includes('privilege-escalation')) {
                 rep.stix.x_mitre_permissions_required = this.permissions_required;
                 rep.stix.x_mitre_effective_permissions = this.effective_permissions;
             }
-            if (this.tactics.includes('defense-evasion')) rep.stix.x_mitre_defense_bypassed = this.defense_bypassed;
+            if (this.tactics.includes('defense-evasion')) rep.stix.x_mitre_defense_bypassed = this.defense_bypassed.map(x => x.trim());
             if (this.tactics.includes('execution')) rep.stix.x_mitre_remote_support = this.supports_remote;
             if (this.tactics.includes('impact')) rep.stix.x_mitre_impact_type = this.impact_type;
             if (this.tactics.includes('exfiltration')) rep.stix.x_mitre_network_requirements = this.requires_network;
@@ -131,9 +131,9 @@ export class Technique extends StixObject {
                 if (this.mtc_ids.length) {
                     for (let id of this.mtc_ids) {
                         let temp = {}
-                        temp["url"] = "https://pages.nist.gov/mobile-threat-catalogue/" + this.mtcUrlMap[id.split('-')[0]] + "/" + id + ".html";
+                        temp["url"] = "https://pages.nist.gov/mobile-threat-catalogue/" + this.mtcUrlMap[id.trim().split('-')[0]] + "/" + id + ".html";
                         temp["source_name"] = "NIST Mobile Threat Catalogue";
-                        temp["external_id"] = id;
+                        temp["external_id"] = id.trim();
                         rep.stix.external_references.push(temp);
                     }
                 }
@@ -142,9 +142,9 @@ export class Technique extends StixObject {
                 if (this.capec_ids.length) {
                     for (let id of this.capec_ids) {
                         let temp = {}
-                        temp["url"] = "https://capec.mitre.org/data/definitions/" + id.split('-')[1] + ".html";
+                        temp["url"] = "https://capec.mitre.org/data/definitions/" + id.trim().split('-')[1] + ".html";
                         temp["source_name"] = "capec";
-                        temp["external_id"] = id;
+                        temp["external_id"] = id.trim();
                         rep.stix.external_references.push(temp);
                     }
                 }
