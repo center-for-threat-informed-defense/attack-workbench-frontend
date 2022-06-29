@@ -31,9 +31,9 @@ export class Group extends StixObject {
     public serialize(): any {
         let rep = super.base_serialize();
 
-        rep.stix.name = this.name;
-        rep.stix.aliases = this.aliases;
-        rep.stix.x_mitre_contributors = this.contributors;
+        rep.stix.name = this.name.trim();
+        rep.stix.aliases = this.aliases.map(x => x.trim());
+        rep.stix.x_mitre_contributors = this.contributors.map(x => x.trim());
 
         return rep;
     }

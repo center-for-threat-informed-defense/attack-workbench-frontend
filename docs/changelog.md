@@ -36,6 +36,9 @@
 
 ### ATT&CK Workbench version 1.2.1
 
+#### Improvements in 1.2.1
+-   Whitespace is trimmed during the serialization of string fields for all STIX objects and external references. See [frontend#187](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/187).
+
 #### Fixes in 1.2.1
 -   Fixed an issue where the Software/Group `aliases` field expected the object name as the first array entry, causing display issues in downstream applications. See [frontend#370](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/370).
 

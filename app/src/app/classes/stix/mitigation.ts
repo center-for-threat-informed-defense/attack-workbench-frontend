@@ -30,7 +30,7 @@ export class Mitigation extends StixObject {
     public serialize(): any {
         let rep = super.base_serialize();
 
-        rep.stix.name = this.name;
+        rep.stix.name = this.name.trim();
         rep.stix.x_mitre_domains = this.domains;
 
         return rep;
