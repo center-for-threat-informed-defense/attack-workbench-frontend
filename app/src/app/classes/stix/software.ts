@@ -1,14 +1,14 @@
 import { Observable } from "rxjs";
 import { RestApiConnectorService } from "src/app/services/connectors/rest-api/rest-api-connector.service";
 import { ValidationData } from "../serializable";
-import {StixObject} from "./stix-object";
+import { StixObject } from "./stix-object";
 import { logger } from "../../util/logger";
 
 type type_software = "malware" | "tool"
 export class Software extends StixObject {
     public name: string = "";
     public description: string;
-    public aliases: string[] = [];
+    public aliases: string[] = ["placeholder"]; // initialize field with placeholder in first index for group name
     public platforms: string[] = [];
     public type: string;
     public contributors: string[] = [];
@@ -103,8 +103,8 @@ export class Software extends StixObject {
      * @returns {Observable} of the post
      */
     public save(restAPIService: RestApiConnectorService): Observable<Software> {
-        // TODO POST if the object was just created (doesn't exist in db yet)
-
+        // update first index of aliases field to software name
+        this.aliases[0] = this.name;
         let postObservable = restAPIService.postSoftware(this);
         let subscription = postObservable.subscribe({
             next: (result) => { this.deserialize(result.serialize()); },

@@ -32,6 +32,13 @@
 
 # Changelog
 
+## Changes staged on develop
+
+### ATT&CK Workbench version 1.2.1
+
+#### Fixes in 1.2.1
+-   Fixed an issue where the Software/Group `aliases` field expected the object name as the first array entry, causing display issues in downstream applications. See [frontend#370](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/370).
+
 ## 25 April 2022
 
 ### ATT&CK Workbench version 1.2.0
