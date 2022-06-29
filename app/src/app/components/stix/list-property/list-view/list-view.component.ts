@@ -14,6 +14,11 @@ export class ListViewComponent implements OnInit {
         return this.config.hasOwnProperty('wrap') ? this.config.wrap : true;
     }
 
+    public get values() {
+        if (this.config.field == "aliases") return this.config.object[this.config.field].slice(1); // filter out the first alias
+        return this.config.object[this.config.field];
+    }
+
     constructor() { }
 
     ngOnInit(): void {
