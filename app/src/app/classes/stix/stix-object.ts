@@ -14,6 +14,7 @@ let stixTypeToAttackType = {
     "malware": "software",
     "tool": "software",
     "intrusion-set": "group",
+    "campaign": "campaign",
     "course-of-action": "mitigation",
     "x-mitre-matrix": "matrix",
     "x-mitre-tactic": "tactic",
@@ -50,6 +51,7 @@ export abstract class StixObject extends Serializable {
         "technique": "techniques",
         "software": "software",
         "group": "groups",
+        "campaign": "campaigns",
         "mitigation": "mitigations",
         "matrix": "matrices",
         "tactic": "tactics",
@@ -291,6 +293,7 @@ export abstract class StixObject extends Serializable {
                 // check if name & ATT&CK ID is unique, record result in validation, and return validation
                 let accessor = this.attackType == "collection"? restAPIService.getAllCollections() :
                                 this.attackType == "group"? restAPIService.getAllGroups() :
+                                this.attackType == "campaign"? restAPIService.getAllCampaigns() :
                                 this.attackType == "software"? restAPIService.getAllSoftware() :
                                 this.attackType == "matrix"? restAPIService.getAllMatrices() :
                                 this.attackType == "mitigation"? restAPIService.getAllMitigations() :
@@ -557,6 +560,7 @@ export abstract class StixObject extends Serializable {
         this.attackID = '(generating ID)';
 
         let accessor = this.attackType == "group" ? restAPIConnector.getAllGroups() :
+                        this.attackType == "campaign" ? restAPIConnector.getAllCampaigns() :
                         this.attackType == "mitigation" ? restAPIConnector.getAllMitigations() :
                         this.attackType == "software" ? restAPIConnector.getAllSoftware() :
                         this.attackType == "tactic" ? restAPIConnector.getAllTactics() :
