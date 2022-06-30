@@ -8,6 +8,7 @@ export class Campaign extends StixObject {
     public name: string = "";
     public first_seen: Date;
     public last_seen: Date;
+    public contributors: string[] = [];
 
     public readonly supportsAttackID = true;
     public readonly supportsNamespace = true;
@@ -36,6 +37,7 @@ export class Campaign extends StixObject {
         rep.stix.name = this.name.trim();
         rep.stix.first_seen = this.first_seen.toISOString();
         rep.stix.last_seen = this.last_seen.toISOString();
+        rep.stix.x_mitre_contributors = this.contributors.map(x => x.trim());
 
         return rep;
     }
@@ -63,6 +65,11 @@ export class Campaign extends StixObject {
                 if (typeof (sdo.last_seen) === "string") this.last_seen = new Date(sdo.last_seen);
                 else logger.error("TypeError: last_seen field is not a string:", sdo.last_seen, "(", typeof (sdo.last_seen), ")")
             } else this.last_seen = new Date();
+
+            if ("x_mitre_contributors" in sdo) {
+                if (this.isStringArray(sdo.x_mitre_contributors)) this.contributors = sdo.x_mitre_contributors;
+                else logger.error("TypeError: x_mitre_contributors is not a string array:", sdo.x_mitre_contributors, "(",typeof(sdo.x_mitre_contributors),")")
+            } else this.contributors = [];
         }
     }
 
