@@ -76,6 +76,7 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
         "malware": "software",
         "tool": "software",
         "intrusion-set": "group",
+        "campaign": "campaign",
         "course-of-action": "mitigation",
         "x-mitre-matrix": "matrix",
         "x-mitre-tactic": "tactic",
@@ -245,6 +246,19 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
                         "field": "description",
                         "display": "descriptive"
                     }]
+                    break;
+                case "campaign":
+                    this.addColumn("", "workflow", "icon");
+                    this.addColumn("", "state", "icon");
+                    this.addColumn("ID", "attackID", "plain", false);
+                    this.addColumn("name", "name", "plain", sticky_allowed, ["name"]);
+                    this.addColumn("version", "version", "version");
+                    this.addColumn("modified","modified", "timestamp");
+                    this.addColumn("created", "created", "timestamp");
+                    this.tableDetail = [{
+                        "field": "description",
+                        "display": "descriptive"
+                    }];
                     break;
                 case "group":
                     this.addColumn("", "workflow", "icon");
@@ -503,6 +517,7 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
             }
 
             if (this.config.type == "software") this.data$ = this.restAPIConnectorService.getAllSoftware(options);
+            else if (this.config.type == "campaign") this.data$ = this.restAPIConnectorService.getAllCampaigns(options);
             else if (this.config.type == "group") this.data$ = this.restAPIConnectorService.getAllGroups(options);
             else if (this.config.type == "matrix") this.data$ = this.restAPIConnectorService.getAllMatrices(options);
             else if (this.config.type == "mitigation") this.data$ = this.restAPIConnectorService.getAllMitigations(options);
@@ -538,7 +553,7 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
 }
 
 //allowed types for StixListConfig
-type type_attacktype = "collection" | "group" | "matrix" | "mitigation" | "software" | "tactic" | "technique" | "relationship" | "data-source" | "data-component" | "marking-definition";
+type type_attacktype = "collection" | "campaign" | "group" | "matrix" | "mitigation" | "software" | "tactic" | "technique" | "relationship" | "data-source" | "data-component" | "marking-definition";
 type selection_types = "one" | "many" | "disabled"
 export interface StixListConfig {
     /* if specified, shows the given STIX objects in the table instead of loading from the back-end based on other configurations. */
