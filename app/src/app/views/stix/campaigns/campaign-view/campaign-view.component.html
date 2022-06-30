@@ -1,1 +1,99 @@
-<p>campaign-view works!</p>
+<div class="campaign-view view-page grid spacing-12">
+    <div class="row">
+        <div class="col">
+            <!-- NAME -->
+            <app-name-property [config]="{
+                mode: editing? 'edit' : 'view',
+                object: campaign
+            }"></app-name-property>
+            <app-subheading [config]="config" (onOpenHistory)="openHistory()" (onOpenNotes)="openNotes()"></app-subheading>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <!-- ATT&CK ID -->
+            <app-attackid-property class="grow-to-row" [config]="{
+                mode: editing? 'edit' : 'view',
+                object: campaign
+            }"></app-attackid-property>
+        </div>
+        <div class="col">
+            <!-- VERSION NUMBER -->
+            <app-version-property class="grow-to-row" [config]="{
+                mode: editing? 'edit' : 'view',
+                object: campaign
+            }"></app-version-property>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <div class="labelled-box grow-to-row">
+                <div class="content">
+                    <!-- FIRST SEEN -->
+                    <app-timestamp-view [config]="{
+                        object: campaign, 
+                        field: 'first_seen'
+                    }"></app-timestamp-view>
+                </div>
+                <label>first seen</label>
+            </div>
+        </div>
+        <div class="col">
+            <div class="labelled-box grow-to-row">
+                <div class="content">
+                    <!-- LAST SEEN -->
+                    <app-timestamp-view [config]="{
+                        object: campaign, 
+                        field: 'last_seen'
+                    }"></app-timestamp-view>
+                </div>
+                <label>last seen</label>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <!-- CONTRIBUTORS -->
+            <app-list-property class="grow-to-row" [config]="{
+                mode: editing? 'edit' : 'view',
+                object: campaign,
+                field: 'contributors',
+                editType: 'any'
+            }"></app-list-property>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <!-- DESCRIPTION -->
+            <app-descriptive-property [config]="{
+                mode: editing? 'edit' : 'view',
+                object: campaign,
+                field: 'description',
+                firstParagraphOnly: false, 
+                referencesField: campaign.external_references,
+                label: 'Description'
+            }"></app-descriptive-property>
+        </div>
+    </div>
+    <!-- only show relationships if configured to show them -->
+    <div *ngIf="(config.showRelationships || !config.hasOwnProperty('showRelationships')) && !editing">
+
+    </div>
+    <!-- EXTERNAL REFERENCES -->
+    <div *ngIf="campaign.external_references.list().length > 0">
+        <div class="row">
+            <div class="col">
+                <h2 class="section-header">References</h2>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <app-external-references-property [config]="{
+                    mode: editing? 'edit': 'view',
+                    object: campaign,
+                    referencesField: campaign.external_references
+                }"></app-external-references-property>
+            </div>
+        </div>
+    </div>
+</div>
