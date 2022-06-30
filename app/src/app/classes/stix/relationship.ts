@@ -36,12 +36,13 @@ export class Relationship extends StixObject {
      */
     public get valid_source_types(): string[] {
         if (this.relationship_type == "uses") {
-            if (this.target_object && (this.target_object.stix.type == "malware" || this.target_object.stix.type == "tool")) return ["group"];
-            else return ["software", "group"];
+            if (this.target_object && (this.target_object.stix.type == "malware" || this.target_object.stix.type == "tool")) return ["group", "campaign"];
+            else return ["software", "group", "campaign"];
         }
         if (this.relationship_type == "mitigates") return ["mitigation"];
         if (this.relationship_type == "subtechnique-of") return ["technique"];
         if (this.relationship_type == "detects") return ["data-component"];
+        if (this.relationship_type == "attributed-to") return ["campaign"];
         else return null;
     }
     /**
@@ -56,6 +57,7 @@ export class Relationship extends StixObject {
         if (this.relationship_type == "mitigates") return ["technique"];
         if (this.relationship_type == "subtechnique-of") return ["technique"];
         if (this.relationship_type == "detects") return ["technique"];
+        if (this.relationship_type == "attributed-to") return ["group"];
         else return null;
     }
 
