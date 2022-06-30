@@ -18,6 +18,7 @@ import { NgModule } from '@angular/core';
 import { environment } from "../environments/environment"
 import { AuthorizationGuard } from "./services/helpers/authorization.guard";
 import { Role } from "./classes/authn/role";
+import { CampaignListComponent } from "./views/stix/campaigns/campaign-list/campaign-list.component";
 
 var viewRoles = [Role.VISITOR, Role.EDITOR, Role.ADMIN];
 var editRoles = [Role.EDITOR, Role.ADMIN];
@@ -223,6 +224,59 @@ const stixRoutes: Routes = [{
                 breadcrumb: 'view',
                 editable: true,
                 title: "new mitigation",
+                roles: editRoles,
+                editRoles: editRoles
+            },
+            component: StixPageComponent
+        }
+        ]
+    }
+    ]
+},
+{
+    path: 'campaign',
+    canActivateChild: [AuthorizationGuard],
+    data: {
+        breadcrumb: 'campaigns'
+    },
+    children: [{
+        path: '',
+        data: {
+            breadcrumb: 'list',
+            title: "campaigns",
+            roles: viewRoles
+        },
+        component: CampaignListComponent
+    },
+    {
+        path: ':id',
+        data: {
+            breadcrumb: 'loading...'
+        },
+        children: [{
+            path: '',
+            data: {
+                breadcrumb: 'view',
+                editable: true,
+                title: "view campaign",
+                roles: viewRoles,
+                editRoles: editRoles
+            },
+            component: StixPageComponent
+        }
+        ]
+    },
+    {
+        path: ":new",
+        data: {
+            breadcrumb: "new campaign"
+        },
+        children: [{
+            path: '',
+            data: {
+                breadcrumb: 'view',
+                editable: true,
+                title: "new campaign",
                 roles: editRoles,
                 editRoles: editRoles
             },
