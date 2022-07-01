@@ -2,7 +2,8 @@ import { Component, OnDestroy, OnInit, ViewChild, Output, EventEmitter } from '@
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router, NavigationEnd } from '@angular/router';
 import { BreadcrumbService } from 'angular-crumbs';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
+import { Campaign } from 'src/app/classes/stix/campaign';
 import { Collection } from 'src/app/classes/stix/collection';
 import { DataSource } from 'src/app/classes/stix/data-source';
 import { Group } from 'src/app/classes/stix/group';
@@ -118,7 +119,7 @@ export class StixPageComponent implements OnInit, OnDestroy {
     }
 
     /**
-     * Load the objects forthis page from the REST API
+     * Load the objects for this page from the REST API
      * @memberof StixPageComponent
      */
     private loadObjects(): void {
@@ -130,6 +131,7 @@ export class StixPageComponent implements OnInit, OnDestroy {
             let objects$: Observable<StixObject[]>;
             if (this.objectType  == "software") objects$ = this.restAPIConnectorService.getSoftware(objectStixID);
             else if (this.objectType  == "group") objects$ = this.restAPIConnectorService.getGroup(objectStixID);
+            // else if (this.objectType == "campaign") objects$ = this.restAPIConnectorService.getCampaign(objectStixID);
             else if (this.objectType  == "matrix") objects$ = this.restAPIConnectorService.getMatrix(objectStixID);
             else if (this.objectType  == "mitigation") objects$ = this.restAPIConnectorService.getMitigation(objectStixID);
             else if (this.objectType  == "tactic") objects$ = this.restAPIConnectorService.getTactic(objectStixID);
@@ -138,15 +140,40 @@ export class StixPageComponent implements OnInit, OnDestroy {
             else if (this.objectType  == "data-source") objects$ = this.restAPIConnectorService.getDataSource(objectStixID, null, "latest", false, false, true);
             else if (this.objectType  == "data-component") objects$ = this.restAPIConnectorService.getDataComponent(objectStixID);
             else if (this.objectType  == "marking-definition") objects$ = this.restAPIConnectorService.getMarkingDefinition(objectStixID);
+            else objects$ = of([new Campaign({
+                "stix": {
+                    "id": "campaign-190242d7-73fc-4738-af68-20162f7a5aae",
+                    "name": "Lorem Ipsum Campaign",
+                    "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Volutpat sed cras ornare arcu dui vivamus arcu felis bibendum. Nulla pharetra diam sit amet nisl. Ut enim blandit volutpat maecenas volutpat. Etiam erat velit scelerisque in dictum non consectetur. Lacus luctus accumsan tortor posuere ac ut consequat semper viverra. Odio pellentesque diam volutpat commodo sed egestas egestas fringilla phasellus. Eget aliquet nibh praesent tristique magna sit amet purus. Non tellus orci ac auctor. Sed elementum tempus egestas sed sed risus pretium quam. Tincidunt praesent semper feugiat nibh sed pulvinar proin gravida. Felis donec et odio pellentesque diam volutpat. Ut etiam sit amet nisl purus in mollis nunc sed. Adipiscing vitae proin sagittis nisl rhoncus mattis rhoncus urna. Platea dictumst vestibulum rhoncus est pellentesque elit ullamcorper.",
+                    "first_seen": new Date().toISOString(),
+                    "last_seen": new Date().toISOString(),
+                    "x_mitre_version": "1.0",
+                    "created": new Date().toISOString(),
+                    "modified": new Date().toISOString(),
+                    "x_mitre_contributors": ["lorem", "ipsum"],
+                    "object_marking_refs": [
+                        "marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168"
+                    ],
+                    "type": "campaign",
+                    "external_references": [
+                        {
+                            "source_name": "mitre-attack",
+                            "external_id": "C0001",
+                            "url": "https://attack.mitre.org/campaigns/C0001"
+                        }
+                    ],
+                }
+            })]);
             let  subscription = objects$.subscribe({
                 next: result => {
+                    console.log(result)
                     this.updateBreadcrumbs(result, this.objectType );
                     this.objects = result;
                     if (objectModified) this.objects = this.objects.filter(x => x.modified.toISOString() == objectModified); //filter to just the object with that date
                     if (this.objects.length > 0) this.initialVersion = new VersionNumber(this.objects[0].version.toString());
                     this.objectID = this.objects[0].supportsAttackID ? this.objects[0].attackID : null;
                 },
-                complete: () => { subscription.unsubscribe() }
+                // complete: () => { subscription.unsubscribe() }
             });
         } else if (this.objectType  == "software") {
             // ask the user what sub-type of software they want to create
@@ -180,6 +207,7 @@ export class StixPageComponent implements OnInit, OnDestroy {
                 this.objectType  == 'technique' ? new Technique() :
                 this.objectType  == 'tactic' ? new Tactic() :
                 this.objectType  == 'mitigation' ? new Mitigation() :
+                this.objectType  == 'campaign' ? new Campaign() :
                 this.objectType  == 'group' ? new Group() :
                 this.objectType  == 'collection' ? new Collection() :
                 this.objectType  == 'data-source' ? new DataSource() :
