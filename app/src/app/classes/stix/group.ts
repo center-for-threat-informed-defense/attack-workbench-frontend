@@ -6,7 +6,7 @@ import { logger } from "../../util/logger";
 
 export class Group extends StixObject {
     public name: string = "";
-    public aliases: string[] = [];
+    public aliases: string[] = ["placeholder"]; // initialize field with placeholder in first index for group name
     public contributors: string[] = [];
 
     public readonly supportsAttackID = true;
@@ -31,9 +31,9 @@ export class Group extends StixObject {
     public serialize(): any {
         let rep = super.base_serialize();
 
-        rep.stix.name = this.name;
-        rep.stix.aliases = this.aliases;
-        rep.stix.x_mitre_contributors = this.contributors;
+        rep.stix.name = this.name.trim();
+        rep.stix.aliases = this.aliases.map(x => x.trim());
+        rep.stix.x_mitre_contributors = this.contributors.map(x => x.trim());
 
         return rep;
     }
@@ -79,8 +79,8 @@ export class Group extends StixObject {
      * @returns {Observable} of the post
      */
     public save(restAPIService: RestApiConnectorService): Observable<Group> {
-        // TODO PUT if the object was just created (doesn't exist in db yet)
-
+        // update first index of aliases field to group name
+        this.aliases[0] = this.name;
         let postObservable = restAPIService.postGroup(this);
         let subscription = postObservable.subscribe({
             next: (result) => { this.deserialize(result.serialize()); },
