@@ -2,6 +2,7 @@ import { Component, Input, OnInit, ViewEncapsulation } from '@angular/core';
 import { AliasPropertyConfig } from '../alias-property.component';
 import { animate, style, transition, trigger } from '@angular/animations';
 
+
 @Component({
     selector: 'app-alias-view',
     templateUrl: './alias-view.component.html',
@@ -40,15 +41,14 @@ export class AliasViewComponent implements OnInit {
      * return list of aliass with inline citations
      */
     public get inlineCitations() {
+        let aliases = this.config.object[this.config.field].slice(1);
         if (this.config.referencesField) {
             let value: string;
             let aliasArray: Array<string> = [];
 
-            let arraySize = this.config.object[this.config.field].length;
-            for (value of this.config.object[this.config.field]) {
-
+            let arraySize = aliases.length;
+            for (value of aliases) {
                 let alias = value;
-
                 if (this.config.object[this.config.referencesField].hasValue(value)) {
                     // Get citations from description
                     let descr = this.config.object[this.config.referencesField].getDescription(value);
@@ -68,12 +68,11 @@ export class AliasViewComponent implements OnInit {
                 if (--arraySize) {
                     alias = alias + ","
                 }
-
                 aliasArray.push(alias);
             }
             return aliasArray;
         }
-        return this.config[this.config.field];
+        return aliases;
     }
 
     /**
@@ -102,9 +101,9 @@ export class AliasViewComponent implements OnInit {
                     if (this.hasDescriptiveProperty(displayStr, referenceNamesFromDescr)) descriptionArray.push([value, displayStr]);
                 }
             }
-            return descriptionArray;
+            return descriptionArray
         }
-        return [];
+        return []
     }
 
     /**
@@ -140,8 +139,8 @@ export class AliasViewComponent implements OnInit {
         let displayStrCopy = displayStr;
 
         // Remove citations from string
-        for (let reference of completeReferences) {
-            displayStrCopy = displayStrCopy.replace(reference, "");
+        for (let i = 0; i < completeReferences.length; i++) {
+            displayStrCopy = displayStrCopy.replace(completeReferences[i], "");
         }
 
         // Remove spaces

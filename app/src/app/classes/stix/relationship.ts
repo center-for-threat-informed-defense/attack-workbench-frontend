@@ -115,7 +115,7 @@ export class Relationship extends StixObject {
         let serialized = this.serialize();
         let modified = new_source_object.modified;
         serialized.source_object = new_source_object.serialize();
-        serialized.source_object["stix"].modified = modified.toISOString(); // fix modified date overwrite by serialization
+        serialized.source_object["stix"].modified = modified ? modified.toISOString() : undefined; // fix modified date overwrite by serialization
         this.deserialize(serialized);
 
         if (this.source_object.stix.x_mitre_is_subtechnique || this.source_object.stix.type == 'x-mitre-data-component') {
@@ -179,7 +179,7 @@ export class Relationship extends StixObject {
         let serialized = this.serialize();
         let modified = new_target_object.modified;
         serialized.target_object = new_target_object.serialize();
-        serialized.target_object["stix"].modified = modified.toISOString(); // fix modified date overwrite by serialization
+        serialized.target_object["stix"].modified = modified ? modified.toISOString() : undefined; // fix modified date overwrite by serialization
         this.deserialize(serialized);
 
         if (this.target_object.stix.x_mitre_is_subtechnique || this.target_object.stix.type == 'x-mitre-data-component') {

@@ -17,6 +17,10 @@ export class ListViewComponent implements OnInit {
     constructor() {
         // intentionally left blank
     }
+    public get values() {
+        if (this.config.field == "aliases") return this.config.object[this.config.field].slice(1); // filter out the first alias
+        return this.config.object[this.config.field];
+    }
 
     ngOnInit(): void {
         // intentionally left blank
