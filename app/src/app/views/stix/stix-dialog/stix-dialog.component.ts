@@ -188,9 +188,9 @@ export class StixDialogComponent implements OnInit {
         let subscription = prompt.afterClosed().subscribe({
             next: (confirm) => {
                 if (confirm) {
-                    // delete relationship
+                    // delete the object
                     object.delete(this.restApiConnectorService);
-                    this.close();
+                    this.discardChanges();
                 }
             },
             complete: () => { subscription.unsubscribe(); } //prevent memory leaks
