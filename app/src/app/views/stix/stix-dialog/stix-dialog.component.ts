@@ -81,6 +81,7 @@ export class StixDialogComponent implements OnInit {
     public changeDialogObject(object: StixObject): void {
         this.prevObject = this._config.object;
         this._config.object = object;
+        this.reload();
     }
 
     /**
@@ -93,6 +94,7 @@ export class StixDialogComponent implements OnInit {
         this.editing = false;
         this._config.object = this.prevObject;
         this.prevObject = undefined;
+        this.reload();
     }
 
     public editing: boolean = false;
