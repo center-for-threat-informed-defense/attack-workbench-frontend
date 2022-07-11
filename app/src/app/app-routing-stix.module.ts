@@ -76,58 +76,6 @@ const stixRoutes: Routes = [{
     ]
 },
 {
-    path: 'technique',
-    canActivateChild: [AuthorizationGuard],
-    data: {
-        breadcrumb: 'techniques'
-    },
-    children: [{
-        path: '',
-        data: {
-            breadcrumb: 'list',
-            title: "techniques",
-            roles: viewRoles
-        },
-        component: TechniqueListComponent
-    },
-    {
-        path: ':id',
-        data: {
-            breadcrumb: 'loading...'
-        },
-        children: [{
-            path: '',
-            data: {
-                breadcrumb: 'view',
-                editable: true,
-                title: "view technique",
-                roles: viewRoles,
-                editRoles: editRoles
-            },
-            component: StixPageComponent
-        }
-        ]
-    },
-    {
-        path: ":new",
-        data: {
-            breadcrumb: "new technique"
-        },
-        children: [{
-            path: '',
-            data: {
-                breadcrumb: 'view',
-                editable: true,
-                title: "new technique",
-                roles: editRoles,
-                editRoles: editRoles
-            },
-            component: StixPageComponent
-        }]
-    }
-    ]
-},
-{
     path: 'tactic',
     canActivateChild: [AuthorizationGuard],
     data: {
@@ -177,6 +125,58 @@ const stixRoutes: Routes = [{
             component: StixPageComponent
         }
         ]
+    }
+    ]
+},
+{
+    path: 'technique',
+    canActivateChild: [AuthorizationGuard],
+    data: {
+        breadcrumb: 'techniques'
+    },
+    children: [{
+        path: '',
+        data: {
+            breadcrumb: 'list',
+            title: "techniques",
+            roles: viewRoles
+        },
+        component: TechniqueListComponent
+    },
+    {
+        path: ':id',
+        data: {
+            breadcrumb: 'loading...'
+        },
+        children: [{
+            path: '',
+            data: {
+                breadcrumb: 'view',
+                editable: true,
+                title: "view technique",
+                roles: viewRoles,
+                editRoles: editRoles
+            },
+            component: StixPageComponent
+        }
+        ]
+    },
+    {
+        path: ":new",
+        data: {
+            breadcrumb: "new technique"
+        },
+        children: [{
+            path: '',
+            data: {
+                breadcrumb: 'view',
+                editable: true,
+                title: "new technique",
+                roles: editRoles,
+                editRoles: editRoles
+            },
+            component: StixPageComponent
+        }]
     }
     ]
 },

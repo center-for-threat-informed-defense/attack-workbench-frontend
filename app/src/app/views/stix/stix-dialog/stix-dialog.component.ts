@@ -1,7 +1,8 @@
 import { DataSource } from '@angular/cdk/collections';
 import { Component, Inject, OnInit, ViewEncapsulation } from '@angular/core';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { forkJoin } from 'rxjs';
+import { forkJoin, Observable, of } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { ValidationData } from 'src/app/classes/serializable';
 import { Collection } from 'src/app/classes/stix/collection';
 import { DataComponent } from 'src/app/classes/stix/data-component';
@@ -80,6 +81,7 @@ export class StixDialogComponent implements OnInit {
     public changeDialogObject(object: StixObject): void {
         this.prevObject = this._config.object;
         this._config.object = object;
+        this.reload();
     }
 
     /**
@@ -92,9 +94,11 @@ export class StixDialogComponent implements OnInit {
         this.editing = false;
         this._config.object = this.prevObject;
         this.prevObject = undefined;
+        this.reload();
     }
 
     public editing: boolean = false;
+    public deletable: boolean = false;
     public validating: boolean = false;
     public validation: ValidationData = null;
     public dirty: boolean = false;
@@ -124,6 +128,7 @@ export class StixDialogComponent implements OnInit {
         let subscription = object.save(this.restApiConnectorService).subscribe({
             next: (result) => {
                 this.editorService.onEditingStopped.emit();
+                this._config.is_new = false;
                 if (object.attackType == 'relationship') this.updateRelationshipObjects(object as Relationship); // update source/target object versions
                 if (this.prevObject) this.revertToPreviousObject();
                 else if (object.attackType == 'data-component') { // view data component on save
@@ -132,7 +137,10 @@ export class StixDialogComponent implements OnInit {
                 }
                 else this.dialogRef.close(this.dirty);
             },
-            complete: () => { subscription.unsubscribe(); }
+            complete: () => {
+                this.reload();
+                subscription.unsubscribe();
+            }
         })
     }
     public cancelValidation() {
@@ -146,13 +154,23 @@ export class StixDialogComponent implements OnInit {
     }
 
     /** 
-     * Checks if this object is of type 'relationship' and can be deleted
+     * Determine whether or not this object can be deleted
      */
-    public get isDeletableRelationship(): boolean {
-        if (this.stixType != 'relationship') return false;
-        let object = (Array.isArray(this.config.object) ? this.config.object[0] : this.config.object) as Relationship;
-        // 'subtechnique_of' relationships cannot be deleted
-        return this.stixType == 'relationship' && object.relationship_type != 'subtechnique_of'; // && !object.workflow.published; TODO check if object has been published
+    public getDeletable(): Observable<boolean> {
+        let object = Array.isArray(this.config.object) ? this.config.object[0] : this.config.object;
+        if (this.stixType == 'relationship') {
+            // 'subtechnique_of' relationships cannot be deleted
+            return of(this.stixType == 'relationship' && (object as Relationship).relationship_type != 'subtechnique_of'); // && !object.workflow.published; TODO check if object has been published
+        }
+        if (this.stixType == 'x-mitre-data-component') {
+            // cannot delete a data component if it has existing relationships
+            return this.restApiConnectorService.getRelatedTo({sourceOrTargetRef: (object as DataComponent).stixID}).pipe(
+                map(relationships => {
+                    return relationships.data.length == 0
+                })
+            )
+        }
+        return of(false);
     }
 
     /**
@@ -170,9 +188,9 @@ export class StixDialogComponent implements OnInit {
         let subscription = prompt.afterClosed().subscribe({
             next: (confirm) => {
                 if (confirm) {
-                    // delete relationship
+                    // delete the object
                     object.delete(this.restApiConnectorService);
-                    this.close();
+                    this.discardChanges();
                 }
             },
             complete: () => { subscription.unsubscribe(); } //prevent memory leaks
@@ -263,7 +281,11 @@ export class StixDialogComponent implements OnInit {
         return Array.isArray(this.config.object) ? this.config.object[0].deprecated : (this.config.object as StixObject).deprecated;
     }
 
+    public reload() {
+        this.getDeletable().subscribe(res => this.deletable = res);
+    }
+
     ngOnInit(): void {
-        // intentionally left blank
+        this.reload();
     }
 }

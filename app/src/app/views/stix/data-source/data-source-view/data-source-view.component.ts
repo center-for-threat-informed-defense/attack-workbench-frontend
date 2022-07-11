@@ -53,6 +53,7 @@ export class DataSourceViewComponent extends StixViewPage implements OnInit {
                 object: data_component,
                 editable: true,
                 mode: "edit",
+                is_new: true,
                 sidebarControl: "events"
             },
             maxHeight: "75vh"
