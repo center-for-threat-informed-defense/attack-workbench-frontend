@@ -15,6 +15,7 @@ export class EditorService {
     public editable: boolean = false;
     public editing: boolean = false;
     public deletable: boolean = false;
+    public hasRelationships: boolean = false;
     public onSave = new EventEmitter();
     public onDelete = new EventEmitter();
     public onEditingStopped = new EventEmitter();
@@ -41,8 +42,14 @@ export class EditorService {
                 if (!this.editable) this.sidebarService.currentTab = "references";
 
                 if (this.editable) {
-                    if (this.router.url.includes("/new")) this.deletable = false; // cannot delete objects which have not been saved
-                    else this.getDeletable().subscribe(res => this.deletable = res);
+                    if (this.router.url.includes("/new") || ["matrix", "tactic", "collection"].includes(this.type)) {
+                        // new objects, matrices, tactics, and collections cannot be deleted
+                        this.deletable = false;
+                    } else {
+                        this.deletable = true;
+                        // determine if this object has existing relationships
+                        this.getRelationships().subscribe(rels => this.hasRelationships = rels > 0);
+                    }
                 }
             }
         })
@@ -89,21 +96,19 @@ export class EditorService {
     }
 
     /** 
-     * Determine whether or not this object can be deleted
+     * Determine whether or not this object has relationships with other objects
      */
-    public getDeletable(): Observable<boolean> {
-        // software, group, and mitigation objects cannot be deleted if they have relationships with other objects
+    public getRelationships(): Observable<number> {
         if (["software", "group", "mitigation"].includes(this.type)) {
             return this.restAPIConnectorService.getRelatedTo({sourceOrTargetRef: this.stixId}).pipe(
-                map(relationships => relationships.data.length == 0)
+                map(relationships => relationships.data.length)
             )
         }
         if (this.type == "data-source") {
-            // data source objects cannot be deleted if they have data components
             return this.restAPIConnectorService.getDataSource(this.stixId, null, "latest", false, false, true).pipe(
-                map(dataSource => dataSource[0] && dataSource[0].data_components.length == 0)
+                map(dataSource => dataSource[0] && dataSource[0].data_components.length)
             )
         }
-        return of(false);
+        return of(0);
     }
 }
