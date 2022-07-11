@@ -6,7 +6,8 @@ import { MatDialog } from '@angular/material/dialog';
 import { AuthenticationService } from '../connectors/authentication/authentication.service';
 import { RestApiConnectorService } from '../connectors/rest-api/rest-api-connector.service';
 import { map } from 'rxjs/operators';
-import { Observable, of } from 'rxjs';
+import { Observable } from 'rxjs';
+import { Relationship } from 'src/app/classes/stix/relationship';
 
 @Injectable({
     providedIn: 'root'
@@ -15,7 +16,7 @@ export class EditorService {
     public editable: boolean = false;
     public editing: boolean = false;
     public deletable: boolean = false;
-    public hasRelationships: boolean = false;
+    public hasRelationships: boolean = true;
     public onSave = new EventEmitter();
     public onDelete = new EventEmitter();
     public onEditingStopped = new EventEmitter();
@@ -99,16 +100,20 @@ export class EditorService {
      * Determine whether or not this object has relationships with other objects
      */
     public getRelationships(): Observable<number> {
-        if (["software", "group", "mitigation"].includes(this.type)) {
-            return this.restAPIConnectorService.getRelatedTo({sourceOrTargetRef: this.stixId}).pipe(
-                map(relationships => relationships.data.length)
-            )
-        }
         if (this.type == "data-source") {
             return this.restAPIConnectorService.getDataSource(this.stixId, null, "latest", false, false, true).pipe(
                 map(dataSource => dataSource[0] && dataSource[0].data_components.length)
-            )
+            );
+        } else {
+            return this.restAPIConnectorService.getRelatedTo({sourceOrTargetRef: this.stixId}).pipe(
+                map(relationships => {
+                    return relationships.data.filter((r: Relationship) => {
+                        // filter out subtechnique-of relationships, IFF this is the source object (sub-technique)
+                        // note: the subtechique-of relationship is automatically deleted with the sub-technique object
+                        return !(r.relationship_type == 'subtechnique-of' && r.source_object && r.source_object["stix"]["id"] == this.stixId)
+                    }).length;
+                })
+            );
         }
-        return of(0);
     }
 }
