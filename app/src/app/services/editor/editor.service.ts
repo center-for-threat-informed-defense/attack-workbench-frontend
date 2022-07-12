@@ -6,7 +6,8 @@ import { MatDialog } from '@angular/material/dialog';
 import { AuthenticationService } from '../connectors/authentication/authentication.service';
 import { RestApiConnectorService } from '../connectors/rest-api/rest-api-connector.service';
 import { map } from 'rxjs/operators';
-import { Observable, of } from 'rxjs';
+import { Observable } from 'rxjs';
+import { Relationship } from 'src/app/classes/stix/relationship';
 
 @Injectable({
     providedIn: 'root'
@@ -15,6 +16,7 @@ export class EditorService {
     public editable: boolean = false;
     public editing: boolean = false;
     public deletable: boolean = false;
+    public hasRelationships: boolean = true;
     public onSave = new EventEmitter();
     public onDelete = new EventEmitter();
     public onEditingStopped = new EventEmitter();
@@ -41,8 +43,14 @@ export class EditorService {
                 if (!this.editable) this.sidebarService.currentTab = "references";
 
                 if (this.editable) {
-                    if (this.router.url.includes("/new")) this.deletable = false; // cannot delete objects which have not been saved
-                    else this.getDeletable().subscribe(res => this.deletable = res);
+                    if (this.router.url.includes("/new") || ["matrix", "tactic", "collection"].includes(this.type)) {
+                        // new objects, matrices, tactics, and collections cannot be deleted
+                        this.deletable = false;
+                    } else {
+                        this.deletable = true;
+                        // determine if this object has existing relationships
+                        this.getRelationships().subscribe(rels => this.hasRelationships = rels > 0);
+                    }
                 }
             }
         })
@@ -89,21 +97,23 @@ export class EditorService {
     }
 
     /** 
-     * Determine whether or not this object can be deleted
+     * Determine whether or not this object has relationships with other objects
      */
-    public getDeletable(): Observable<boolean> {
-        // software, group, and mitigation objects cannot be deleted if they have relationships with other objects
-        if (["software", "group", "mitigation"].includes(this.type)) {
-            return this.restAPIConnectorService.getRelatedTo({sourceOrTargetRef: this.stixId}).pipe(
-                map(relationships => relationships.data.length == 0)
-            )
-        }
+    public getRelationships(): Observable<number> {
         if (this.type == "data-source") {
-            // data source objects cannot be deleted if they have data components
             return this.restAPIConnectorService.getDataSource(this.stixId, null, "latest", false, false, true).pipe(
-                map(dataSource => dataSource[0] && dataSource[0].data_components.length == 0)
-            )
+                map(dataSource => dataSource[0] && dataSource[0].data_components.length)
+            );
+        } else {
+            return this.restAPIConnectorService.getRelatedTo({sourceOrTargetRef: this.stixId}).pipe(
+                map(relationships => {
+                    return relationships.data.filter((r: Relationship) => {
+                        // filter out subtechnique-of relationships, IFF this is the source object (sub-technique)
+                        // note: the subtechique-of relationship is automatically deleted with the sub-technique object
+                        return !(r.relationship_type == 'subtechnique-of' && r.source_object && r.source_object["stix"]["id"] == this.stixId)
+                    }).length;
+                })
+            );
         }
-        return of(false);
     }
 }

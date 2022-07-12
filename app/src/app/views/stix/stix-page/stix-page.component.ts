@@ -3,7 +3,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router, NavigationEnd } from '@angular/router';
 import { BreadcrumbService } from 'angular-crumbs';
 import { Observable, forkJoin } from 'rxjs';
-import { switchMap } from "rxjs/operators";
+import { concatMap } from "rxjs/operators";
 import { Collection } from 'src/app/classes/stix/collection';
 import { DataSource } from 'src/app/classes/stix/data-source';
 import { Group } from 'src/app/classes/stix/group';
@@ -48,7 +48,7 @@ export class StixPageComponent implements OnInit, OnDestroy {
     
     constructor(private router: Router, 
                 private route: ActivatedRoute, 
-                private restAPIConnectorService: RestApiConnectorService, 
+                private restApiService: RestApiConnectorService, 
                 private breadcrumbService: BreadcrumbService, 
                 private editorService: EditorService,
                 private dialog: MatDialog,
@@ -122,12 +122,23 @@ export class StixPageComponent implements OnInit, OnDestroy {
     }
 
     private deleteObjects() {
-        return this.restAPIConnectorService.getAllNotes().pipe(
-            switchMap(notes => {
+        return this.restApiService.getAllNotes().pipe(
+            concatMap(notes => {
                 let relatedNotes = (notes.data as Note[]).filter(note => note.object_refs.includes(this.objects[0].stixID));
-                let noteSubscribers = relatedNotes.map(note => note.delete(this.restAPIConnectorService));
-                let api_calls = [...noteSubscribers, this.objects[0].delete(this.restAPIConnectorService)];
-                return forkJoin(api_calls)
+                if (this.objects[0].attackType == 'technique' && this.objects[0]["is_subtechnique"]) {
+                    // if sub-technique, delete the 'subtechnique-of' relationship
+                    return this.restApiService.getRelatedTo({sourceRef: this.objects[0].stixID, relationshipType: 'subtechnique-of'}).pipe(
+                        concatMap(sub_relationship => {
+                            let noteSubs = relatedNotes.map(note => note.delete(this.restApiService));
+                            let relSubs = sub_relationship.data.map(r => r.delete(this.restApiService));
+                            let sub_api_calls = [...noteSubs, ...relSubs, this.objects[0].delete(this.restApiService)];
+                            return forkJoin(sub_api_calls);
+                        })
+                    )
+                }
+                let noteSubscribers = relatedNotes.map(note => note.delete(this.restApiService));
+                let api_calls = [...noteSubscribers, this.objects[0].delete(this.restApiService)];
+                return forkJoin(api_calls);
             })
         )
     }
@@ -166,16 +177,16 @@ export class StixPageComponent implements OnInit, OnDestroy {
         if (objectStixID && objectStixID != "new") {
             // get objects at REST API
             let objects$: Observable<StixObject[]>;
-            if (this.objectType  == "software") objects$ = this.restAPIConnectorService.getSoftware(objectStixID);
-            else if (this.objectType  == "group") objects$ = this.restAPIConnectorService.getGroup(objectStixID);
-            else if (this.objectType  == "matrix") objects$ = this.restAPIConnectorService.getMatrix(objectStixID);
-            else if (this.objectType  == "mitigation") objects$ = this.restAPIConnectorService.getMitigation(objectStixID);
-            else if (this.objectType  == "tactic") objects$ = this.restAPIConnectorService.getTactic(objectStixID);
-            else if (this.objectType  == "technique") objects$ = this.restAPIConnectorService.getTechnique(objectStixID, null, "latest", true); 
-            else if (this.objectType  == "collection") objects$ = this.restAPIConnectorService.getCollection(objectStixID, objectModified, "latest", false, true);
-            else if (this.objectType  == "data-source") objects$ = this.restAPIConnectorService.getDataSource(objectStixID, null, "latest", false, false, true);
-            else if (this.objectType  == "data-component") objects$ = this.restAPIConnectorService.getDataComponent(objectStixID);
-            else if (this.objectType  == "marking-definition") objects$ = this.restAPIConnectorService.getMarkingDefinition(objectStixID);
+            if (this.objectType  == "software") objects$ = this.restApiService.getSoftware(objectStixID);
+            else if (this.objectType  == "group") objects$ = this.restApiService.getGroup(objectStixID);
+            else if (this.objectType  == "matrix") objects$ = this.restApiService.getMatrix(objectStixID);
+            else if (this.objectType  == "mitigation") objects$ = this.restApiService.getMitigation(objectStixID);
+            else if (this.objectType  == "tactic") objects$ = this.restApiService.getTactic(objectStixID);
+            else if (this.objectType  == "technique") objects$ = this.restApiService.getTechnique(objectStixID, null, "latest", true); 
+            else if (this.objectType  == "collection") objects$ = this.restApiService.getCollection(objectStixID, objectModified, "latest", false, true);
+            else if (this.objectType  == "data-source") objects$ = this.restApiService.getDataSource(objectStixID, null, "latest", false, false, true);
+            else if (this.objectType  == "data-component") objects$ = this.restApiService.getDataComponent(objectStixID);
+            else if (this.objectType  == "marking-definition") objects$ = this.restApiService.getMarkingDefinition(objectStixID);
             let  subscription = objects$.subscribe({
                 next: result => {
                     this.updateBreadcrumbs(result, this.objectType );
