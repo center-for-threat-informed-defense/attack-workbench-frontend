@@ -131,8 +131,8 @@ export class StixPageComponent implements OnInit, OnDestroy {
                         concatMap(sub_relationship => {
                             let noteSubs = relatedNotes.map(note => note.delete(this.restApiService));
                             let relSubs = sub_relationship.data.map(r => r.delete(this.restApiService));
-                            let api_calls = [...noteSubs, ...relSubs, this.objects[0].delete(this.restApiService)];
-                            return forkJoin(api_calls);
+                            let sub_api_calls = [...noteSubs, ...relSubs, this.objects[0].delete(this.restApiService)];
+                            return forkJoin(sub_api_calls);
                         })
                     )
                 }
