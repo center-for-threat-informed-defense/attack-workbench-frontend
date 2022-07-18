@@ -9,9 +9,12 @@ import { StixObject } from 'src/app/classes/stix/stix-object';
 export class TimestampPropertyComponent implements OnInit {
     @Input() public config: TimestampPropertyConfig;
 
-    constructor() { }
+    constructor() {
+        // intentionally left blank
+    }
 
     ngOnInit(): void {
+        // intentionally left blank
     }
 
     /** Check if the object has a workflow identity attached */

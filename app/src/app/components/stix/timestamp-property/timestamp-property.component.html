@@ -14,7 +14,7 @@
     <ng-container *ngIf="config.mode == 'edit'">
         <mat-form-field class="timestamp-edit" appearance="outline">
             <mat-label>{{config.label? config.label : config.field}}</mat-label>
-            <input matInput required [matDatepicker]="datepicker" [(ngModel)]="config.object[config.field]">
+            <input matInput [matDatepicker]="datepicker" [(ngModel)]="config.object[config.field]">
             <mat-datepicker-toggle matSuffix [for]="datepicker"></mat-datepicker-toggle>
             <mat-datepicker #datepicker></mat-datepicker>
         </mat-form-field>
