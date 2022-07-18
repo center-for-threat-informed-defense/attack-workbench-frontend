@@ -161,12 +161,14 @@ Description, detection, and alias-description* fields allow for in-text citation
 
 Citations are formatted within the text as `(Citation: source name)`, which corresponds to the source name of a reference. This will get compiled to a citation marker with hyperlink when rendered, and the relevant reference added to the references section of the object when it is saved.
 
-The **Reference Manager Tool** can be used to add, edit, and find references. The reference manager can be found in the resources drawer by clicking the icon on the far right of the toolbar, and contains a list of all references on all objects, as well as references you've created to add to objects later. 
+The **Reference Manager Tool** can be used to add, view, edit, and find references. The tool can be found under "Reference Manager" in the header, and contains a list of all references on all objects, as well as references you've created to add to objects later. 
 
 - When a collection is imported, all references will be added to the master list in the sidebar.
 - Once a reference has been created, you cannot change the source name.
 - If you edit the description or URL on an existing reference, any objects which cite this reference will automatically be updated with the adjusted data. The interface will notify you of which objects contain the updated reference. This patch will show up as a change within object history, but will not change the object version number.
 - You can use the "copy" button on a reference in the list to quickly copy the in-text citation string to your clipboard to paste into a description or alias.
+
+A complete list of references can also be found in the resources drawer by clicking the icon on the far right of the toolbar. This provides a convenient way to add, find, or copy a reference without leaving the current object being viewed or edited.
 
 _\* Unlike other descriptions, alias descriptions do not support markdown and typically only contain citations without other text._
 
