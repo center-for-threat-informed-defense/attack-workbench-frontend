@@ -31,8 +31,9 @@
                 <div class="content">
                     <!-- FIRST SEEN -->
                     <app-timestamp-view [config]="{
-                        object: campaign, 
-                        field: 'first_seen'
+                        object: campaign,
+                        field: 'first_seen',
+                        humanize: true
                     }"></app-timestamp-view>
                 </div>
                 <label>first seen</label>
@@ -43,8 +44,9 @@
                 <div class="content">
                     <!-- LAST SEEN -->
                     <app-timestamp-view [config]="{
-                        object: campaign, 
-                        field: 'last_seen'
+                        object: campaign,
+                        field: 'last_seen',
+                        humanize: true
                     }"></app-timestamp-view>
                 </div>
                 <label>last seen</label>

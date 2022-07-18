@@ -145,11 +145,11 @@ export class StixPageComponent implements OnInit, OnDestroy {
                     "id": "campaign--190242d7-73fc-4738-af68-20162f7a5aae",
                     "name": "Lorem Ipsum Campaign",
                     "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Volutpat sed cras ornare arcu dui vivamus arcu felis bibendum. Nulla pharetra diam sit amet nisl. Ut enim blandit volutpat maecenas volutpat. Etiam erat velit scelerisque in dictum non consectetur. Lacus luctus accumsan tortor posuere ac ut consequat semper viverra. Odio pellentesque diam volutpat commodo sed egestas egestas fringilla phasellus. Eget aliquet nibh praesent tristique magna sit amet purus. Non tellus orci ac auctor. Sed elementum tempus egestas sed sed risus pretium quam. Tincidunt praesent semper feugiat nibh sed pulvinar proin gravida. Felis donec et odio pellentesque diam volutpat. Ut etiam sit amet nisl purus in mollis nunc sed. Adipiscing vitae proin sagittis nisl rhoncus mattis rhoncus urna. Platea dictumst vestibulum rhoncus est pellentesque elit ullamcorper.",
-                    "first_seen": new Date(),
-                    "last_seen": new Date(),
+                    "first_seen": new Date('April 8, 2017 03:24:00').toISOString(),
+                    "last_seen": new Date('August 12, 2018 12:31:00').toISOString(),
                     "x_mitre_version": "1.0",
-                    "created": new Date().toISOString(),
-                    "modified": new Date().toISOString(),
+                    "created": new Date('January 17, 2022 03:24:00').toISOString(),
+                    "modified": new Date('July 16, 2022 02:43:00').toISOString(),
                     "x_mitre_contributors": ["lorem", "ipsum"],
                     "object_marking_refs": [
                         "marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168"
