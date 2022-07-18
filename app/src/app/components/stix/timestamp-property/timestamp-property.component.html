@@ -6,5 +6,5 @@
             <app-identity-property [config]="{object: config.object, field: config.attribution, displayName: config.displayName}"></app-identity-property>
         </div>
     </div>
-    <label>{{config.field}}</label>
+    <label>{{config.label? config.label : config.field}}</label>
 </div>

@@ -41,6 +41,8 @@ export interface TimestampPropertyConfig {
      * Note: will not work with fields that are actually get functions!
      */
     field: string;
+    /* if specified, label with this string instead of field */
+    label?: string;
     /* field to display attribution information from. If omitted, does not display attribution.
     */
     attribution?: string;
