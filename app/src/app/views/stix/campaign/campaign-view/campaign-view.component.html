@@ -27,30 +27,24 @@
     </div>
     <div class="row">
         <div class="col">
-            <div class="labelled-box grow-to-row">
-                <div class="content">
-                    <!-- FIRST SEEN -->
-                    <app-timestamp-view [config]="{
-                        object: campaign,
-                        field: 'first_seen',
-                        humanize: true
-                    }"></app-timestamp-view>
-                </div>
-                <label>first seen</label>
-            </div>
+            <!-- FIRST SEEN -->
+            <app-timestamp-property [config]="{
+                mode: editing? 'edit': 'view',
+                humanize: true,
+                object: campaign,
+                field: 'first_seen',
+                label: 'first seen'
+            }"></app-timestamp-property>
         </div>
         <div class="col">
-            <div class="labelled-box grow-to-row">
-                <div class="content">
-                    <!-- LAST SEEN -->
-                    <app-timestamp-view [config]="{
-                        object: campaign,
-                        field: 'last_seen',
-                        humanize: true
-                    }"></app-timestamp-view>
-                </div>
-                <label>last seen</label>
-            </div>
+            <!-- LAST SEEN -->
+            <app-timestamp-property [config]="{
+                mode: editing? 'edit': 'view',
+                humanize: true,
+                object: campaign,
+                field: 'last_seen',
+                label: 'last seen'
+            }"></app-timestamp-property>
         </div>
     </div>
     <div class="row">
