@@ -142,11 +142,11 @@ export class StixPageComponent implements OnInit, OnDestroy {
             else if (this.objectType  == "marking-definition") objects$ = this.restAPIConnectorService.getMarkingDefinition(objectStixID);
             else objects$ = of([new Campaign({
                 "stix": {
-                    "id": "campaign-190242d7-73fc-4738-af68-20162f7a5aae",
+                    "id": "campaign--190242d7-73fc-4738-af68-20162f7a5aae",
                     "name": "Lorem Ipsum Campaign",
                     "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Volutpat sed cras ornare arcu dui vivamus arcu felis bibendum. Nulla pharetra diam sit amet nisl. Ut enim blandit volutpat maecenas volutpat. Etiam erat velit scelerisque in dictum non consectetur. Lacus luctus accumsan tortor posuere ac ut consequat semper viverra. Odio pellentesque diam volutpat commodo sed egestas egestas fringilla phasellus. Eget aliquet nibh praesent tristique magna sit amet purus. Non tellus orci ac auctor. Sed elementum tempus egestas sed sed risus pretium quam. Tincidunt praesent semper feugiat nibh sed pulvinar proin gravida. Felis donec et odio pellentesque diam volutpat. Ut etiam sit amet nisl purus in mollis nunc sed. Adipiscing vitae proin sagittis nisl rhoncus mattis rhoncus urna. Platea dictumst vestibulum rhoncus est pellentesque elit ullamcorper.",
-                    "first_seen": new Date().toISOString(),
-                    "last_seen": new Date().toISOString(),
+                    "first_seen": new Date(),
+                    "last_seen": new Date(),
                     "x_mitre_version": "1.0",
                     "created": new Date().toISOString(),
                     "modified": new Date().toISOString(),

@@ -18,7 +18,7 @@ import { NgModule } from '@angular/core';
 import { environment } from "../environments/environment"
 import { AuthorizationGuard } from "./services/helpers/authorization.guard";
 import { Role } from "./classes/authn/role";
-import { CampaignListComponent } from "./views/stix/campaigns/campaign-list/campaign-list.component";
+import { CampaignListComponent } from "./views/stix/campaign/campaign-list/campaign-list.component";
 
 var viewRoles = [Role.VISITOR, Role.EDITOR, Role.ADMIN];
 var editRoles = [Role.EDITOR, Role.ADMIN];

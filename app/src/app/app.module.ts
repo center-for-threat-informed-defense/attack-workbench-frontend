@@ -174,8 +174,8 @@ import { DataComponentViewComponent } from './views/stix/data-component/data-com
 
 import { MarkingDefinitionViewComponent } from "./views/stix/marking-definition/marking-definition-view/marking-definition-view.component";
 import { MarkingDefinitionListComponent } from "./views/stix/marking-definition/marking-definition-list/marking-definition-list.component";
-import { CampaignViewComponent } from './views/stix/campaigns/campaign-view/campaign-view.component';
-import { CampaignListComponent } from './views/stix/campaigns/campaign-list/campaign-list.component';
+import { CampaignViewComponent } from './views/stix/campaign/campaign-view/campaign-view.component';
+import { CampaignListComponent } from './views/stix/campaign/campaign-list/campaign-list.component';
 
 @NgModule({
   declarations: [
