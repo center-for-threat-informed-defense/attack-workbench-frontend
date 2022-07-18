@@ -1,11 +1,22 @@
-<div class="timestamp-property labelled-box suffixed">
-    <div class="content">
-        <app-timestamp-diff *ngIf="config.mode == 'diff'" [config]="config"></app-timestamp-diff>
-        <app-timestamp-view *ngIf="config.mode == 'view'" [config]="config"></app-timestamp-view>
-        <app-timestamp-edit *ngIf="config.mode == 'edit'" [config]="config"></app-timestamp-edit>
-        <div class="suffix" *ngIf="config.attribution && (config.object[config.attribution] || hasIdentity())">
-            <app-identity-property [config]="{object: config.object, field: config.attribution, displayName: config.displayName}"></app-identity-property>
+<div class="timestamp-property grow-to-row">
+    <ng-container *ngIf="config.mode == 'view' || config.mode == 'diff'">
+        <div class="labelled-box suffixed">
+            <div class="content">
+                <app-timestamp-view *ngIf="config.mode == 'view'" [config]="config"></app-timestamp-view>
+                <app-timestamp-diff *ngIf="config.mode == 'diff'" [config]="config"></app-timestamp-diff>
+                <div class="suffix" *ngIf="config.attribution && (config.object[config.attribution] || hasIdentity())">
+                    <app-identity-property [config]="{object: config.object, field: config.attribution, displayName: config.displayName}"></app-identity-property>
+                </div>
+            </div>
+            <label>{{config.label? config.label : config.field}}</label>
         </div>
-    </div>
-    <label>{{config.label? config.label : config.field}}</label>
+    </ng-container>
+    <ng-container *ngIf="config.mode == 'edit'">
+        <mat-form-field class="timestamp-edit" appearance="outline">
+            <mat-label>{{config.label? config.label : config.field}}</mat-label>
+            <input matInput required [matDatepicker]="datepicker" [(ngModel)]="config.object[config.field]">
+            <mat-datepicker-toggle matSuffix [for]="datepicker"></mat-datepicker-toggle>
+            <mat-datepicker #datepicker></mat-datepicker>
+        </mat-form-field>
+    </ng-container>
 </div>

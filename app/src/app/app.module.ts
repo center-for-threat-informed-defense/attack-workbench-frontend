@@ -86,7 +86,6 @@ import { DescriptiveDiffComponent } from './components/stix/descriptive-property
 
 import { TimestampPropertyComponent } from "./components/stix/timestamp-property/timestamp-property.component";
 import { TimestampViewComponent } from "./components/stix/timestamp-property/timestamp-view/timestamp-view.component";
-import { TimestampEditComponent } from './components/stix/timestamp-property/timestamp-edit/timestamp-edit.component';
 import { TimestampDiffComponent } from "./components/stix/timestamp-property/timestamp-diff/timestamp-diff.component";
 
 import { StatementPropertyComponent } from "./components/stix/statement-property/statement-property.component";
@@ -212,7 +211,6 @@ import { CampaignListComponent } from './views/stix/campaign/campaign-list/campa
     ExternalReferencesDiffComponent,
     TimestampPropertyComponent,
     TimestampViewComponent,
-    TimestampEditComponent,
     TimestampDiffComponent,
     StatementPropertyComponent,
     StatementViewComponent,
