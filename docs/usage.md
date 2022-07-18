@@ -18,7 +18,7 @@ Objects may exist in multiple collections simultaneously, and objects can exist 
 
 You can read more about the technical specifications for a collection, such as the STIX representation of a collection object, in our [collections](/docs/collections.md) document. MITRE's ATT&CK collections and collection index can be found on our [attack-stix-data GitHub repository](https://github.com/mitre-attack/attack-stix-data).
 
-#### Adding a collection index
+#### Adding a Collection Index
 
 Collection indexes can be added from the collections page. To add a collection index, specify the URL at which the index is found. The application will then provide a preview of the index for you to review before you save. You can also choose from the provided "recommended collection indexes" to quickly connect your Workbench instance to a data provider without having to find the URL yourself. The ATT&CK Workbench is pre-configured to recommend the MITRE ATT&CK collection index in the "add a collection index" interface.
 
@@ -37,14 +37,14 @@ Older versions of subscribed collections will not be automatically downloaded. I
 
 There are multiple means through which a collection can be imported. The "import collection" workflow provides the means through which a collection can be specified, its contents reviewed, and then incorporated to the local knowledge base instance.
 
-##### 1. Indicate the collection
+##### 1. Indicate the Collection
 
 Users can import the collection in several different ways:
 - *Import from URL*: In cases where the collection has been hosted on the internet, the user may specify the URL of a collection STIX bundle for the application to download.
 <!-- - *Upload from file*: Users can also upload a STIX bundle representing the collection. -->
 - *Import from collection index*: The user can choose to import collections listed by attached _collection indexes_, which are essentially lists of collections on the internet.
 
-##### 2. Review contents
+##### 2. Review Contents
 
 In this step, the user should review the contents of the collection being imported. The review step is provided to ensure that users have control over the contents of their local knowledge base. Users can choose to only import specific objects from the collection if they so choose, or likewise exclude certain objects from the import. 
 
@@ -63,7 +63,7 @@ The following error change types may appear when there are conflicts importing a
 
 After importing a collection, users can review the results of the import from the collection page. The collection review UI reflects the changes that occurred at the time of the import.
 
-##### 3. Incorporate into knowledge base
+##### 3. Incorporate into Knowledge Base
 
 After selecting the objects to import, the application will automatically integrate them into the knowledge base. 
 
@@ -73,7 +73,7 @@ In cases where objects being imported already exist in the knowledge base, the i
 
 In both cases, the user may need to manually merge the two versions to prevent the incoming knowledge, or knowledge created by the user, from being lost. 
 
-### Browsing the knowledge base
+### Browsing the Knowledge Base
 
 Once you have imported or created data, you can browse the knowledge base using the simple interface provided. For each object type (excepting relationships) a master list of all objects is provided to find the data you want to explore. Clicking on an entry in that list will preview the description of the object, and provide a link to view the full definition. 
 
@@ -105,7 +105,7 @@ The history timeline browser allows users to see the revision history of an obje
 
 Objects imported from collections can be modified, or new objects created. The processes for these are documented in the sections below.
 
-### Attribution of edits
+### Attribution of Edits
 
 The Workbench will attribute edits to you when you either edit existing objects or create new objects. Edit attribution is shown next to created and modified dates and in the object history timeline. Attribution is represented by an automatically generated icon to easily distinguish different editing/creating organizations; hovering over the icon will display the full organization name. 
 
@@ -207,7 +207,7 @@ Marking definition statements can be created and assigned to individual objects.
 
 Default marking definition statments can be set in the admin page. Selected marking definition statements will be applied by default to any newly created objects. If you edit an object that does not have the default marking definitions, it will be added automatically on save.
 
-#### Adding Statements and TLP marking definitions
+#### Adding Statements and TLP Marking Definitions
 
 When creating and/or editing an object, you can add multiple statements and select one of the four standard TLP markings. TLP markings are loaded by the REST API and cannot be created and/or edited from the front end.
 
@@ -227,7 +227,7 @@ Matrices share the typical fields on objects, including a description supporting
 
 Multiple matrices _can_ exist for a domain (e.x _Device Access_ and _Network-Based Effects_ in the Mobile domain), and matrices of the same domain share IDs.
 
-##### Editing tactics on matrices
+##### Editing Tactics on Matrices
 
 The order of tactics in matrices can be added, ordered, and removed. Tactic ordering can be completed by using the mouse to drag and drop the entire row or by clicking on the up/down arrows. Tactics recently added to the matrix will appear at the bottom of the tactic list.
 
@@ -368,7 +368,7 @@ The source and target objects can be changed after the relationship has been cre
 Relationships also have a description to provide additional context or to hold citations of relevant reporting. Like all descriptions, those on relationships support citations, LinkByIds, and markdown formatting. Relationships between sub-techniques and techniques however are purely structural and do not support descriptions.
 
 
-### Revoking and deprecating objects
+### Revoking and Deprecating Objects
 
 All objects within the knowledge base can be _revoked_ or _deprecated_. These functionalities allow you to remove irrelevant or outdated objects without deleting them outright since deletions cannot be propagated to data consumers subscribed to your collections. Revoked and deprecated objects are hidden from UIs unless the user explicitly chooses to display them.
 
@@ -377,7 +377,7 @@ All objects within the knowledge base can be _revoked_ or _deprecated_. These fu
 
 When an object is revoked or deprecated, all relationships attached to the object in question will themselves be deprecated. 
 
-## Annotating ATT&CK data
+## Annotating ATT&CK Data
 
 Annotations allow users to add additional information about an object in the dataset without extending it directly. This is useful for a number of reasons, most notably that incoming updates from a data provider won't overwrite notes but _can_ conflict with local changes to the object itself. 
 
@@ -394,7 +394,7 @@ The Note Editor is found within the resources drawer accessible through the butt
 
 Note have titles and descriptions, both of which must be filled in order to save the note. The description field supports markdown. Once saved, a note can be edited by clicking on it in the note editor.
 
-## Sharing your Extensions
+## Sharing Your Extensions
 
 Objects you create can be published in collections. Please see the [collections document](/docs/collections.md) for more information about the representation and intention of collections.
 
