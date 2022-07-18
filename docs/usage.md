@@ -377,6 +377,12 @@ All objects within the knowledge base can be _revoked_ or _deprecated_. These fu
 
 When an object is revoked or deprecated, all relationships attached to the object in question will themselves be deprecated. 
 
+### Deleting Objects
+
+Objects can be deleted from the knowledge base from the edit page by clicking on the "edit" button followed by the "delete" button in the toolbar. This functionality allows you to remove any incomplete or extraneous objects which do not have relationships with other objects and have not been previously exported or published.
+
+Deletion is limited to Technique, Mitigation, Group, Software, Data Source, Data Component, and Relationship objects. When a sub-technique is deleted, the associated `subtechnique_of` relationship will also be deleted. Additionally, a reference can be deleted if it is not cited by any objects in the knowledge base.
+
 ## Annotating ATT&CK Data
 
 Annotations allow users to add additional information about an object in the dataset without extending it directly. This is useful for a number of reasons, most notably that incoming updates from a data provider won't overwrite notes but _can_ conflict with local changes to the object itself. 
@@ -392,7 +398,7 @@ Annotations in the ATT&CK Workbench are implemented through _notes_. Typically n
 
 The Note Editor is found within the resources drawer accessible through the button on the far right of the toolbar. The note editor is only available when on the page for an object, and created notes will only be visible within that page. Notes within the editor can be sorted by modified date or alphabetically by title.
 
-Note have titles and descriptions, both of which must be filled in order to save the note. The description field supports markdown. Once saved, a note can be edited by clicking on it in the note editor.
+Notes have titles and descriptions, both of which must be filled in order to save the note. The description field supports markdown. Once saved, a note can be edited by clicking on it in the note editor.
 
 ## Sharing Your Extensions
 
