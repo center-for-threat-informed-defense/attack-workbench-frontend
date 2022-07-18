@@ -27,7 +27,7 @@ export interface TimestampPropertyConfig {
      *    view: viewing the timestamp property
      *    diff: displaying the diff between two STIX objects. If this mode is selected, two StixObjects must be specified in the objects field
      */
-    mode?: "view" | "diff";
+    mode?: "view" | "edit" | "diff";
     /* humanize the timestamp? Default: false
      *       if true, displays relative to the current date if within last week, and older timestamps don't display the exact edit time, only date.
      *       if false, display the full timestamp including the exact edit time.
