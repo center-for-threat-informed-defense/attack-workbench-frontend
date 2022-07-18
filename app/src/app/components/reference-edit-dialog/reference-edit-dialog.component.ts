@@ -218,19 +218,19 @@ export class ReferenceEditDialogComponent implements OnInit, OnDestroy {
         // required
         if (!source_name) return throwError({required: true});
 
-        // cannot contain parenthesis
-        if (['(',')'].some(x => source_name.includes(x))) return throwError({containsParenthesis: true})
-
         // uniqueness
         if (this.references$.some(x => x.source_name == source_name)) return throwError({nonUnique: true});
+
+        // cannot contain special characters
+        if (/[~`!@#$%^&*+=\[\]';{}()|\"<>\?]/g.test(source_name)) return throwError({invalidSpecialChar: true});
 
         return of();
     }
 
     /** Retrieve the validation error for display */
     public getError(): string {
-        if (this.source_control.errors.containsParenthesis) return 'source name cannot contain parenthesis';
         if (this.source_control.errors.nonUnique) return 'source name is not unique';
+        if (this.source_control.errors.invalidSpecialChar) return 'source name cannot contain special characters';
     }
 
     public stopEditing(): void {
