@@ -530,7 +530,7 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
             else if (this.config.type == "marking-definition") this.data$ = this.restAPIConnectorService.getAllMarkingDefinitions(options);
             let subscription = this.data$.subscribe({
                 next: (data) => { this.totalObjectCount = data.pagination.total; },
-                complete: () => { subscription.unsubscribe() }
+                // complete: () => { subscription.unsubscribe() }
             })
         }
     }

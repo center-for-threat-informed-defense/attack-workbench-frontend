@@ -109,12 +109,8 @@
         <div class="row">
             <div class="col">
                 <app-stix-list #campaignList [config]="{
-                    'type': 'relationship', 
-                    'targetRef': software.stixID,
-                    'sourceType': 'campaign',
-                    'relationshipType': 'uses',
-                    'clickBehavior': 'dialog',
-                    'allowEdits': true
+                    'stixObjects': [],
+                    'type': 'relationship'
                 }"></app-stix-list>
             </div>
         </div>
