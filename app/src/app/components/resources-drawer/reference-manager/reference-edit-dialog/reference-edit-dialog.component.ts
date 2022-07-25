@@ -49,10 +49,10 @@ export class ReferenceEditDialogComponent implements OnInit {
 
     public next() {
         // trim reference fields
-        this.reference.source_name = this.reference.source_name.trim();
         this.reference.url = this.reference.url.trim();
 
         if (this.is_new) { // save new reference
+            this.reference.source_name = this.reference.source_name.trim(); // trim source_name only if this is a new reference
             this.reference.description = this.getRefDescription();
             this.save();
         } else this.parse_patches(); // check for necessary patches on STIX objects
