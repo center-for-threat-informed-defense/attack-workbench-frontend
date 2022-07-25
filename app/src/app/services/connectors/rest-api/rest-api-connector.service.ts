@@ -268,6 +268,11 @@ export class RestApiConnectorService extends ApiConnector {
                                 "source_name": "mitre-attack",
                                 "external_id": "C0001",
                                 "url": "https://attack.mitre.org/campaigns/C0001"
+                            },
+                            {
+                                "source_name": "Lorem Ipsum",
+                                "url": "https://www.google.com",
+                                "description": "Dolor Sit. (2022, April 26). Lorem Ipsum. Retrieved July 24, 2022.",
                             }
                         ],
                     }
