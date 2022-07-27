@@ -320,8 +320,12 @@
         <div class="row">
             <div class="col">
                 <app-stix-list #campaignList [config]="{
-                    'stixObjects': [],
-                    'type': 'relationship'
+                    'type': 'relationship', 
+                    'targetRef': technique.stixID,
+                    'sourceType': 'campaign',
+                    'relationshipType': 'uses',
+                    'clickBehavior': 'dialog',
+                    'allowEdits': true
                 }"></app-stix-list>
             </div>
         </div>

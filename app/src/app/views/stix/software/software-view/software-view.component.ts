@@ -3,7 +3,6 @@ import { Software } from 'src/app/classes/stix/software';
 import { AuthenticationService } from 'src/app/services/connectors/authentication/authentication.service';
 import { StixViewPage } from '../../stix-view-page';
 import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/rest-api-connector.service';
-import { Relationship } from 'src/app/classes/stix/relationship';
 
 @Component({
     selector: 'app-software-view',
