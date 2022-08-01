@@ -28,23 +28,21 @@
     <div class="row">
         <div class="col">
             <!-- FIRST SEEN -->
-            <app-timestamp-property [config]="{
+            <app-datepicker-property [config]="{
                 mode: editing? 'edit': 'view',
-                humanize: true,
                 object: campaign,
                 field: 'first_seen',
                 label: 'first seen'
-            }"></app-timestamp-property>
+            }"></app-datepicker-property>
         </div>
         <div class="col">
             <!-- LAST SEEN -->
-            <app-timestamp-property [config]="{
+            <app-datepicker-property [config]="{
                 mode: editing? 'edit': 'view',
-                humanize: true,
                 object: campaign,
                 field: 'last_seen',
                 label: 'last seen'
-            }"></app-timestamp-property>
+            }"></app-datepicker-property>
         </div>
     </div>
     <div class="row">
@@ -55,6 +53,16 @@
                 object: campaign,
                 field: 'contributors',
                 editType: 'any'
+            }"></app-list-property>
+        </div>
+        <div class="col">
+            <!-- ALIASES -->
+            <app-list-property class="grow-to-row" [config]="{
+                mode: editing? 'edit' : 'view',
+                object: campaign,
+                field: 'aliases',
+                editType: 'any',
+                label: 'associated campaigns'
             }"></app-list-property>
         </div>
     </div>
