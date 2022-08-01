@@ -8,6 +8,7 @@ export class Campaign extends StixObject {
     public name: string = "";
     public first_seen: Date;
     public last_seen: Date;
+    public aliases: string[] = ["placeholder"]; // initialize field with placeholder in first index for campaign name
     public contributors: string[] = [];
 
     public readonly supportsAttackID = true;
@@ -37,6 +38,7 @@ export class Campaign extends StixObject {
         rep.stix.name = this.name.trim();
         rep.stix.first_seen = this.first_seen.toISOString();
         rep.stix.last_seen = this.last_seen.toISOString();
+        rep.stix.aliases = this.aliases.map(x => x.trim());
         rep.stix.x_mitre_contributors = this.contributors.map(x => x.trim());
 
         return rep;
@@ -66,6 +68,11 @@ export class Campaign extends StixObject {
                 else logger.error("TypeError: last_seen field is not a string:", sdo.last_seen, "(", typeof (sdo.last_seen), ")")
             } else this.last_seen = new Date();
 
+            if ("aliases" in sdo) {
+                if (this.isStringArray(sdo.aliases)) this.aliases = sdo.aliases;
+                else logger.error("TypeError: aliases is not a string array:", sdo.aliases, "(",typeof(sdo.aliases),")")
+            } else this.aliases = [];
+
             if ("x_mitre_contributors" in sdo) {
                 if (this.isStringArray(sdo.x_mitre_contributors)) this.contributors = sdo.x_mitre_contributors;
                 else logger.error("TypeError: x_mitre_contributors is not a string array:", sdo.x_mitre_contributors, "(",typeof(sdo.x_mitre_contributors),")")
@@ -88,8 +95,8 @@ export class Campaign extends StixObject {
      * @returns {Observable} of the post
      */
     public save(restAPIService: RestApiConnectorService): Observable<Campaign> {
-        // update first index of aliases field to group name
-        // this.aliases[0] = this.name;
+        // update first index of aliases field to campaign name
+        this.aliases[0] = this.name;
         let postObservable = restAPIService.postCampaign(this);
         let subscription = postObservable.subscribe({
             next: (result) => { this.deserialize(result.serialize()); },
