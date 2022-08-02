@@ -938,7 +938,6 @@ export class RestApiConnectorService extends ApiConnector {
      * @returns {Observable<Paginated>} paginated data of the relationships
      */
     public getRelatedTo(args: {sourceRef?: string, targetRef?: string, sourceOrTargetRef?: string, sourceType?: AttackType, targetType?: AttackType, relationshipType?: string, excludeSourceRefs?: string[], excludeTargetRefs?: string[], limit?: number, offset?: number, includeDeprecated?: boolean, versions?: "all" | "latest"}): Observable<Paginated<StixObject>> {
-        console.log(args.sourceType)
         let query = new HttpParams();
 
         if (args.sourceRef) query = query.set("sourceRef", args.sourceRef);
