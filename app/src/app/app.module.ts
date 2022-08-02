@@ -109,7 +109,8 @@ import { VersionEditComponent } from "./components/stix/version-property/version
 import { VersionViewComponent } from "./components/stix/version-property/version-view/version-view.component";
 
 import { NamePropertyComponent } from "./components/stix/name-property/name-property.component";
-// import { RelationshipDialogComponent } from "./components/stix/relationship-dialog/relationship-dialog.component";
+
+import { DatepickerPropertyComponent } from './components/stix/datepicker-property/datepicker-property.component';
 
 // views
 
@@ -228,6 +229,7 @@ import { CampaignListComponent } from './views/stix/campaign/campaign-list/campa
     VersionEditComponent,
     VersionViewComponent,
     NamePropertyComponent,
+    DatepickerPropertyComponent,
     IconViewComponent,
 
     LandingPageComponent,
@@ -378,7 +380,6 @@ import { CampaignListComponent } from './views/stix/campaign/campaign-list/campa
     MatSnackBarModule,
     DragDropModule,
     ClipboardModule,
-
     OverlayModule
   ],
   providers: [
