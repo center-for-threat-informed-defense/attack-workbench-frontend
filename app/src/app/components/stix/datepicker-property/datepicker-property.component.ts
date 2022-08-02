@@ -12,7 +12,8 @@ export class DatepickerPropertyComponent {
     @Input() public config: DatepickerPropertyConfig;
 
     public get date() {
-        return moment(this.config.object[this.config.field]).format('MMMM YYYY');
+        let m = moment(this.config.object[this.config.field]);
+        return m.format(this.config.dateFormat ? this.config.dateFormat : 'MM/DD/YYYY');
     }
 
     constructor() {
@@ -37,4 +38,6 @@ export interface DatepickerPropertyConfig {
     field: string;
     /* if specified, label with this string instead of field */
     label?: string;
+    /* if specified, display the date according to this format */
+    dateFormat?: string;
 }
