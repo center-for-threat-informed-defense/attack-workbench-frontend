@@ -28,7 +28,7 @@
     <div class="row">
         <div class="col">
             <!-- FIRST SEEN -->
-            <app-datepicker-property [config]="{
+            <app-datepicker-property class="datepicker" [config]="{
                 mode: editing? 'edit': 'view',
                 object: campaign,
                 field: 'first_seen',
@@ -38,7 +38,7 @@
         </div>
         <div class="col">
             <!-- LAST SEEN -->
-            <app-datepicker-property [config]="{
+            <app-datepicker-property class="datepicker" [config]="{
                 mode: editing? 'edit': 'view',
                 object: campaign,
                 field: 'last_seen',
