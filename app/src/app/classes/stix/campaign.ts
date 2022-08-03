@@ -36,8 +36,8 @@ export class Campaign extends StixObject {
         let rep = super.base_serialize();
 
         rep.stix.name = this.name.trim();
-        rep.stix.first_seen = this.first_seen.toISOString();
-        rep.stix.last_seen = this.last_seen.toISOString();
+        if (this.first_seen) rep.stix.first_seen = this.first_seen.toISOString();
+        if (this.last_seen) rep.stix.last_seen = this.last_seen.toISOString();
         rep.stix.aliases = this.aliases.map(x => x.trim());
         rep.stix.x_mitre_contributors = this.contributors.map(x => x.trim());
 
@@ -61,12 +61,12 @@ export class Campaign extends StixObject {
             if ("first_seen" in sdo) {
                 if (typeof (sdo.first_seen) === "string") this.first_seen = new Date(sdo.first_seen);
                 else logger.error("TypeError: first_seen field is not a string:", sdo.first_seen, "(", typeof (sdo.first_seen), ")")
-            } else this.first_seen = new Date();
+            }
 
             if ("last_seen" in sdo) {
                 if (typeof (sdo.last_seen) === "string") this.last_seen = new Date(sdo.last_seen);
                 else logger.error("TypeError: last_seen field is not a string:", sdo.last_seen, "(", typeof (sdo.last_seen), ")")
-            } else this.last_seen = new Date();
+            }
 
             if ("aliases" in sdo) {
                 if (this.isStringArray(sdo.aliases)) this.aliases = sdo.aliases;
