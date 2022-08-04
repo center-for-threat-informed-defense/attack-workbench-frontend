@@ -1,4 +1,3 @@
-<script src="https://unpkg.com/angular-datetime-input"></script>
 <div class="datepicker-property grow-to-row">
     <div *ngIf="!config.mode || config.mode == 'view'" class="labelled-box grow-to-row">
         <div class="content">
@@ -9,12 +8,12 @@
         <label>{{config.label? config.label : config.field}}</label>
     </div>
     <ng-container *ngIf="config.mode == 'edit'">
-        <mat-form-field (click)="datepicker.open()" class="timestamp-edit" appearance="outline">
+        <mat-form-field class="timestamp-edit" appearance="outline">
             <mat-label>{{config.label? config.label : config.field}}</mat-label>
-            <input class="date-input" matInput [matDatepicker]="datepicker" [max]="today" [ngModel]="config.object[config.field]" >
-            <div  class="date-display">{{date}}</div>
+            <input matInput [matDatepicker]="datepicker" [(ngModel)]="config.object[config.field]">
             <mat-datepicker-toggle matSuffix [for]="datepicker"></mat-datepicker-toggle>
-            <mat-datepicker #datepicker startView="multi-year" (monthSelected)="setDate($event, datepicker)"></mat-datepicker>
+            <mat-datepicker #datepicker startView="multi-year" (monthSelected)="monthSelected($event, datepicker)"></mat-datepicker>
+            <mat-hint>{{formatHint}}</mat-hint>
         </mat-form-field>
     </ng-container>
     
