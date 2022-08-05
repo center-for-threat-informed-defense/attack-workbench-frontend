@@ -100,7 +100,8 @@
             <div class="col">
                 <app-stix-list #groupsList [config]="{
                     'type': 'relationship',
-                    'targetRef': campaign.stixID,
+                    'sourceRef': campaign.stixID,
+                    'targetType': 'group',
                     'relationshipType': 'attributed-to',
                     'clickBehavior': 'dialog',
                     'allowEdits': true
