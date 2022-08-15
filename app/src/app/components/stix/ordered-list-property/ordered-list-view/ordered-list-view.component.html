@@ -1,6 +1,9 @@
 <div class="list">
     <div *ngIf="list.length > 0 else nothingHere">
-        <div class="box" *ngFor="let sdo of list">{{getLabel(sdo)}}</div>
+        <div class="box" *ngFor="let stixID of list">
+            <a *ngIf="config.displayAsURL else label" rel="nofollow" [href]="internalLink(stixID)" target="_blank">{{getLabel(stixID)}}</a>
+            <ng-template #label>{{getLabel(stixID)}}</ng-template>
+        </div>
     </div>
     <ng-template #nothingHere>
         <app-empty-list-marker [checkAgain]="false"></app-empty-list-marker>
