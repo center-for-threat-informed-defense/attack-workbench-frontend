@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, Input, ViewEncapsulation } from '@angular/core';
 import { OrderedListPropertyConfig } from '../ordered-list-property.component';
 
 @Component({
@@ -7,29 +7,41 @@ import { OrderedListPropertyConfig } from '../ordered-list-property.component';
   styleUrls: ['./ordered-list-view.component.scss'],
   encapsulation: ViewEncapsulation.None,
 })
-export class OrderedListViewComponent implements OnInit {
+export class OrderedListViewComponent {
     @Input() public config: OrderedListPropertyConfig;
-
-    constructor() {}
-
-    ngOnInit(): void {}
-
     private _idToLabel: Map<string, string>;
+
+    constructor() {
+        // intentionally left blank
+    }
+
     /**
      * Get a human readable label for the given object
      *
-     * @param {string} id the stix ID to get
+     * @param {string} stixID the stix ID to get
      */
-    public getLabel(id: string): string {
+    public getLabel(stixID: string): string {
         if (!this._idToLabel) {
             this._idToLabel = new Map();
             for (let object of this.config.globalObjects) {
                 this._idToLabel.set(object.stixID, object[this.config.field]);
             }
         }
-        return this._idToLabel.get(id);
+        return this._idToLabel.get(stixID);
     }
 
+    /**
+     * retrieve the internal link to the object
+     * 
+     * @param {string} stixID the stix ID to get
+     */
+     public internalLink(stixID: string): string {
+        return `/${this.config.type}/${stixID}`;
+    }
+
+    /**
+     * retrieve the ordered list of ids
+     */
     public get list(): string[] {
         return this.config.object[this.config.objectOrderedListField];
     }
