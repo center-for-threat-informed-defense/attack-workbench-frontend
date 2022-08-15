@@ -49,10 +49,10 @@ export class ReferenceEditDialogComponent implements OnInit {
 
     public next() {
         // trim reference fields
-        this.reference.source_name = this.reference.source_name.trim();
         this.reference.url = this.reference.url.trim();
 
         if (this.is_new) { // save new reference
+            this.reference.source_name = this.reference.source_name.trim(); // trim source_name only if this is a new reference
             this.reference.description = this.getRefDescription();
             this.save();
         } else this.parse_patches(); // check for necessary patches on STIX objects
@@ -87,7 +87,8 @@ export class ReferenceEditDialogComponent implements OnInit {
 
     public parse_patches() {
         this.stage = 1; //enter patching stage
-        let subscription = this.restApiConnectorService.getAllObjects(null, null, null, null, null, null, true).subscribe({
+        // retrieve all objects, including revoked & deprecated to create object lookup map
+        let subscription = this.restApiConnectorService.getAllObjects(null, null, null, null, true, true, true).subscribe({
             next: (results) => {
                 // build ID to [name, attackID] lookup
                 let idToObject = {}
@@ -96,6 +97,7 @@ export class ReferenceEditDialogComponent implements OnInit {
                 this.patch_objects = [];
                 this.patch_relationships = [];
                 results.data.forEach(x => {
+                    if (x.revoked || x.deprecated) return; // do not patch revoked/deprecated objects
                     if (x.external_references.hasValue(this.reference.source_name)) {
                         if (x.attackType == 'relationship') this.patch_relationships.push(x);
                         else this.patch_objects.push(x);
