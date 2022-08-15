@@ -34,16 +34,6 @@
 
 ## Changes staged on develop
 
-### ATT&CK Workbench version 1.2.1
-
-#### Improvements in 1.2.1
--   Whitespace is trimmed during the serialization of string fields for all STIX objects and external references. See [frontend#187](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/187).
-
-#### Fixes in 1.2.1
--   Fixed an issue where the Software/Group `aliases` field expected the object name as the first array entry, causing display issues in downstream applications. See [frontend#370](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/370).
-
-## 25 April 2022
-
 ### ATT&CK Workbench version 1.2.0
 
 ATT&CK Workbench v1.2.0 supports authentication and authorization for users. The REST API can be configured to use the Anonymous or OpenID Connect (OIDC) authentication mechanisms. See the [authentication documentation](https://github.com/center-for-threat-informed-defense/attack-workbench-rest-api/tree/master/docs/authentication.md#authentication) for more information.
@@ -60,6 +50,7 @@ ATT&CK Workbench v1.2.0 supports authentication and authorization for users. The
 -   Added ability to search for objects by ATT&CK ID. See [rest-api#162](https://github.com/center-for-threat-informed-defense/attack-workbench-rest-api/issues/162).
 -   Added a view page for References in the Reference Manager. See [frontend#304](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/304).
 -   Added a link to the parent technique page from the sub-technique page. See [frontend#309](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/309).
+-   Added a link to tactic pages from the matrix page. See [frontend#391](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/391).
 
 #### Improvements in 1.2.0
 
@@ -76,6 +67,7 @@ ATT&CK Workbench v1.2.0 supports authentication and authorization for users. The
 -   The external references field at the bottom of object pages are automatically updated to reflect citation changes to the `description` and `x_mitre_detection` fields before the object is saved. See [frontend#329](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/329).
 -   Added validation to ensure a technique has been assigned at least one tactic. See [frontend#273](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/273).
 -   Removed the comma key as a keycode separator for list input fields (i.e. `contributors`, `system requirements`, `CAPEC IDs`, etc.). See [frontend#335](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/pull/335).
+-   Whitespace is trimmed during the serialization of string fields for all STIX objects and external references. See [frontend#187](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/187).
 
 #### Fixes in 1.2.0
 -   Added missing fields from User Account objects: `created`, `modified`, and `displayName`. See [frontend#319](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/319).
@@ -86,6 +78,7 @@ ATT&CK Workbench v1.2.0 supports authentication and authorization for users. The
 -   Fixed a bug where the external reference links at the bottom of object pages did not redirect to the reference's associated URL. See [frontend#306](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/306).
 -   Fixed a bug where the search functionality would break with special characters because the query was not correctly encoded in the request. See [frontend#332](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/332).
 -   Fixed an issue where Note objects were not registered as a valid class, resulting in errors when trying to retrieve all objects from the REST API. See [frontend#338](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/pull/338).
+-   Fixed an issue where the Software/Group `aliases` field expected the object name as the first array entry, causing display issues in downstream applications. See [frontend#370](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/370).
 
 ## 21 October 2021
 
