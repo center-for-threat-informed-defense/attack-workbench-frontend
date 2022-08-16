@@ -987,6 +987,15 @@ export class RestApiConnectorService extends ApiConnector {
         );
     }
 
+    public getTechniquesInTactic(tactic_id: string): Observable<Paginated<StixObject>> {
+        let url = `${this.baseUrl}/tactics/${tactic_id}/techniques`;
+        return this.http.get<Paginated<StixObject>>(url).pipe(
+            tap(results => logger.log("retrieved techniques", results)),
+            catchError(this.handleError_continue<Paginated<StixObject>>({data: [], pagination: {total: 0, limit: 0, offset: 0}})),
+            share()
+        )
+    }
+
     //   ___ ___ ___ ___ ___ ___ _  _  ___ ___ ___
     //  | _ \ __| __| __| _ \ __| \| |/ __| __/ __|
     //  |   / _|| _|| _||   / _|| .` | (__| _|\__ \
