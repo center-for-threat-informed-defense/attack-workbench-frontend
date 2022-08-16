@@ -50,6 +50,7 @@ ATT&CK Workbench v1.2.0 supports authentication and authorization for users. The
 -   Added ability to search for objects by ATT&CK ID. See [rest-api#162](https://github.com/center-for-threat-informed-defense/attack-workbench-rest-api/issues/162).
 -   Added a view page for References in the Reference Manager. See [frontend#304](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/304).
 -   Added a link to the parent technique page from the sub-technique page. See [frontend#309](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/309).
+-   Added a link to tactic pages from the matrix page. See [frontend#391](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/391).
 -   Added ability to create and edit Campaign objects. See [frontend#376](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/376), [frontend#377](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/377), and [frontend#384](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/384).
 
 #### Improvements in 1.2.0
