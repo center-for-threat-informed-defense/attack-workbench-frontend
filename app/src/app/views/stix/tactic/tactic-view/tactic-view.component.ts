@@ -12,8 +12,8 @@ import { StixObject } from 'src/app/classes/stix/stix-object';
 })
 export class TacticViewComponent extends StixViewPage implements OnInit {
     public get tactic(): Tactic { return this.config.object as Tactic; }
-    // public techniques: StixObject[];
-    public get techniques(): StixObject[] { return []; }
+    public techniques: StixObject[];
+    // public get techniques(): StixObject[] { return []; }
 
     constructor(authenticationService: AuthenticationService, private restApiConnector: RestApiConnectorService) {
         super(authenticationService);
@@ -27,10 +27,11 @@ export class TacticViewComponent extends StixViewPage implements OnInit {
     }
 
     public getTechniques(): void {
-        // let data$: any = this.restApiConnector.getTechniquesInTactic(this.tactic.stixID);
-        // let subscription = data$.subscribe({
-        //     next: (data) => { this.techniques = data.data; },
-        //     complete: () => { subscription.unsubscribe() }
-        // })
+        let data$: any = this.restApiConnector.getTechniquesInTactic(this.tactic.stixID, this.tactic.modified);
+        let subscription = data$.subscribe({
+            next: (data) => { 
+                this.techniques = data.data; },
+            complete: () => { subscription.unsubscribe() }
+        })
     }
 }
