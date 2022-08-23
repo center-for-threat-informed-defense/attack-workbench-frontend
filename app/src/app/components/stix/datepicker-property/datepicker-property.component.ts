@@ -42,6 +42,7 @@ export const DATE_FORMATS = {
 
 export class DatepickerPropertyComponent {
     @Input() public config: DatepickerPropertyConfig;
+    public maxDate: Date;
 
     public get formatHint() { return DATE_FORMATS.parse.dateInput; }
     public get date() { // get date in view display format (i.e. January 2022)
@@ -52,7 +53,8 @@ export class DatepickerPropertyComponent {
     }
 
     constructor() {
-        // intentionally left blank
+        // set the maximum date to today
+        this.maxDate = new Date();
     }
 
     // event handler for datepicker month selection
