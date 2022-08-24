@@ -76,4 +76,6 @@ export interface DatepickerPropertyConfig {
     field: string;
     /* if specified, label with this string instead of field */
     label?: string;
+    /* If true, the field will be required. Default false if omitted. */
+    required?: boolean;
 }

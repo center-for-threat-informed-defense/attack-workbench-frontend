@@ -10,7 +10,7 @@
     <ng-container *ngIf="config.mode == 'edit'">
         <mat-form-field class="timestamp-edit" appearance="outline">
             <mat-label>{{config.label? config.label : config.field}}</mat-label>
-            <input matInput [max]="maxDate" [matDatepicker]="datepicker" [(ngModel)]="config.object[config.field]">
+            <input matInput [max]="maxDate" [matDatepicker]="datepicker" [(ngModel)]="config.object[config.field]" [required]="config.required ? config.required : false">
             <mat-datepicker-toggle matSuffix [for]="datepicker"></mat-datepicker-toggle>
             <mat-datepicker #datepicker startView="multi-year" (monthSelected)="monthSelected($event, datepicker)"></mat-datepicker>
             <mat-hint>{{formatHint}}</mat-hint>
