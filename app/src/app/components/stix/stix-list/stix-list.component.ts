@@ -118,6 +118,15 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     /**
+     * Add version, modified, and created columns to the table
+     */
+    private addVersionsAndDatesColumns() {
+        this.addColumn("version", "version", "version");
+        this.addColumn("modified","modified", "timestamp");
+        this.addColumn("created", "created", "timestamp");
+    }
+
+    /**
      * Handles row click events. Open the panel, or open a modal depending on object type
      * @param {StixObject} object of the row that was clicked
      */
@@ -201,10 +210,8 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
                 case "collection":
                 case "collection-created":
                     this.addColumn("name", "name", "plain", sticky_allowed, ["name"]);
-                    this.addColumn("version", "version", "version");
                     this.addColumn("released?", "release", "plain", null, ["text-label"]);
-                    this.addColumn("modified", "modified", "timestamp");
-                    this.addColumn("created", "created", "timestamp");
+                    this.addVersionsAndDatesColumns();
                     this.tableDetail = [{
                         "field": "description",
                         "display": "descriptive"
@@ -227,9 +234,7 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
                     this.addColumn("ID", "attackID", "plain", false);
                     this.addColumn("name", "name", "plain", sticky_allowed, ["name"]);
                     this.addColumn("domain", "domains", "list");
-                    this.addColumn("version", "version", "version");
-                    this.addColumn("modified","modified", "timestamp");
-                    this.addColumn("created", "created", "timestamp");
+                    this.addVersionsAndDatesColumns();
                     this.tableDetail = [{
                         "field": "description",
                         "display": "descriptive"
@@ -239,9 +244,7 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
                     this.addColumn("", "workflow", "icon");
                     this.addColumn("", "state", "icon");
                     this.addColumn("name", "name", "plain", sticky_allowed, ["name"]);
-                    this.addColumn("version", "version", "version");
-                    this.addColumn("modified","modified", "timestamp");
-                    this.addColumn("created", "created", "timestamp");
+                    this.addVersionsAndDatesColumns();
                     this.tableDetail = [{
                         "field": "description",
                         "display": "descriptive"
@@ -252,9 +255,7 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
                     this.addColumn("", "state", "icon");
                     this.addColumn("ID", "attackID", "plain", false);
                     this.addColumn("name", "name", "plain", sticky_allowed, ["name"]);
-                    this.addColumn("version", "version", "version");
-                    this.addColumn("modified","modified", "timestamp");
-                    this.addColumn("created", "created", "timestamp");
+                    this.addVersionsAndDatesColumns();
                     this.tableDetail = [{
                         "field": "description",
                         "display": "descriptive"
@@ -266,9 +267,7 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
                     this.addColumn("ID", "attackID", "plain", false);
                     this.addColumn("name", "name", "plain", sticky_allowed, ["name"]);
                     this.addColumn("associated groups", "aliases", "list");
-                    this.addColumn("version", "version", "version");
-                    this.addColumn("modified","modified", "timestamp");
-                    this.addColumn("created", "created", "timestamp");
+                    this.addVersionsAndDatesColumns();
                     this.tableDetail = [{
                         "field": "description",
                         "display": "descriptive"
@@ -281,9 +280,7 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
                     this.addColumn("name", "name", "plain", sticky_allowed, ["name"]);
                     this.addColumn("type", "type", "plain");
                     this.addColumn("domain", "domains", "list");
-                    this.addColumn("version", "version", "version");
-                    this.addColumn("modified","modified", "timestamp");
-                    this.addColumn("created", "created", "timestamp");
+                    this.addVersionsAndDatesColumns();
                     this.tableDetail = [{
                         "field": "description",
                         "display": "descriptive"
@@ -297,9 +294,7 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
                     this.addColumn("name", "name", "plain", sticky_allowed, ["name"]);
                     this.addColumn("platforms", "platforms", "list");
                     this.addColumn("domain", "domains", "list");
-                    this.addColumn("version", "version", "version");
-                    this.addColumn("modified","modified", "timestamp");
-                    this.addColumn("created", "created", "timestamp");
+                    this.addVersionsAndDatesColumns();
                     this.tableDetail = [{
                         "field": "description",
                         "display": "descriptive"
@@ -308,9 +303,7 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
                 case "data-component":
                     this.addColumn("name", "name", "plain", sticky_allowed, ["name"]);
                     this.addColumn("domain", "domains", "list");
-                    this.addColumn("version", "version", "version");
-                    this.addColumn("modified","modified", "timestamp");
-                    this.addColumn("created", "created", "timestamp");
+                    this.addVersionsAndDatesColumns();
                     this.tableDetail = [{
                         "field": "description",
                         "display": "descriptive"
@@ -326,7 +319,6 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
                     this.addColumn("target", "target_ID", "plain");
                     this.addColumn("", "target_name", "plain", this.config.sourceRef? sticky_allowed: false, ["relationship-name"]);// ["name", "relationship-right"]);
                     if (!(this.config.relationshipType && this.config.relationshipType == "subtechnique-of")) this.addColumn("description", "description", "descriptive", false);
-                    // controls_after.push("open-link")
                     break;
                 case "marking-definition":
                     this.addColumn("definition type", "definition_type", "plain");
