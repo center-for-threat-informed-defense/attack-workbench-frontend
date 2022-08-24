@@ -358,6 +358,23 @@ export abstract class StixObject extends Serializable {
                                 }
                             }
                         }
+                        // check required first/last seen fields for campaigns
+                        if (this.attackType == "campaign") {
+                            if (!this.hasOwnProperty('first_seen') || this['first_seen'] == null) {
+                                result.errors.push({
+                                    "result": "error",
+                                    "field": "first_seen",
+                                    "message": "object does not have a first seen date"
+                                })
+                            }
+                            if (!this.hasOwnProperty('last_seen') || this['last_seen'] == null) {
+                                result.errors.push({
+                                    "result": "error",
+                                    "field": "last_seen",
+                                    "message": "object does not have a last seen date"
+                                })
+                            }
+                        }
                         return result;
                     })
                 )
