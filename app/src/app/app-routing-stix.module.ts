@@ -76,58 +76,6 @@ const stixRoutes: Routes = [{
     ]
 },
 {
-    path: 'technique',
-    canActivateChild: [AuthorizationGuard],
-    data: {
-        breadcrumb: 'techniques'
-    },
-    children: [{
-        path: '',
-        data: {
-            breadcrumb: 'list',
-            title: "techniques",
-            roles: viewRoles
-        },
-        component: TechniqueListComponent
-    },
-    {
-        path: ':id',
-        data: {
-            breadcrumb: 'loading...'
-        },
-        children: [{
-            path: '',
-            data: {
-                breadcrumb: 'view',
-                editable: true,
-                title: "view technique",
-                roles: viewRoles,
-                editRoles: editRoles
-            },
-            component: StixPageComponent
-        }
-        ]
-    },
-    {
-        path: ":new",
-        data: {
-            breadcrumb: "new technique"
-        },
-        children: [{
-            path: '',
-            data: {
-                breadcrumb: 'view',
-                editable: true,
-                title: "new technique",
-                roles: editRoles,
-                editRoles: editRoles
-            },
-            component: StixPageComponent
-        }]
-    }
-    ]
-},
-{
     path: 'tactic',
     canActivateChild: [AuthorizationGuard],
     data: {
@@ -181,6 +129,111 @@ const stixRoutes: Routes = [{
     ]
 },
 {
+    path: 'technique',
+    canActivateChild: [AuthorizationGuard],
+    data: {
+        breadcrumb: 'techniques'
+    },
+    children: [{
+        path: '',
+        data: {
+            breadcrumb: 'list',
+            title: "techniques",
+            roles: viewRoles
+        },
+        component: TechniqueListComponent
+    },
+    {
+        path: ':id',
+        data: {
+            breadcrumb: 'loading...'
+        },
+        children: [{
+            path: '',
+            data: {
+                breadcrumb: 'view',
+                editable: true,
+                title: "view technique",
+                roles: viewRoles,
+                editRoles: editRoles
+            },
+            component: StixPageComponent
+        }
+        ]
+    },
+    {
+        path: ":new",
+        data: {
+            breadcrumb: "new technique"
+        },
+        children: [{
+            path: '',
+            data: {
+                breadcrumb: 'view',
+                editable: true,
+                title: "new technique",
+                roles: editRoles,
+                editRoles: editRoles
+            },
+            component: StixPageComponent
+        }]
+    }
+    ]
+},
+{
+    path: 'data-source',
+    canActivateChild: [AuthorizationGuard],
+    data: {
+        breadcrumb: 'data sources'
+    },
+    children: [{
+        path: '',
+        data: {
+            breadcrumb: 'list',
+            title: "data sources",
+            roles: viewRoles
+        },
+        component: DataSourceListComponent
+    },
+    {
+        path: ':id',
+        data: {
+            breadcrumb: 'loading...'
+        },
+        children: [{
+            path: '',
+            data: {
+                breadcrumb: 'view',
+                editable: true,
+                title: "view data source",
+                roles: viewRoles,
+                editRoles: editRoles
+            },
+            component: StixPageComponent
+        }
+        ]
+    },
+    {
+        path: ":new",
+        data: {
+            breadcrumb: "new data source"
+        },
+        children: [{
+            path: '',
+            data: {
+                breadcrumb: 'view',
+                editable: true,
+                title: "new data source",
+                roles: editRoles,
+                editRoles: editRoles
+            },
+            component: StixPageComponent
+        }
+        ]
+    }
+    ]
+},
+{
     path: 'mitigation',
     canActivateChild: [AuthorizationGuard],
     data: {
@@ -224,59 +277,6 @@ const stixRoutes: Routes = [{
                 breadcrumb: 'view',
                 editable: true,
                 title: "new mitigation",
-                roles: editRoles,
-                editRoles: editRoles
-            },
-            component: StixPageComponent
-        }
-        ]
-    }
-    ]
-},
-{
-    path: 'campaign',
-    canActivateChild: [AuthorizationGuard],
-    data: {
-        breadcrumb: 'campaigns'
-    },
-    children: [{
-        path: '',
-        data: {
-            breadcrumb: 'list',
-            title: "campaigns",
-            roles: viewRoles
-        },
-        component: CampaignListComponent
-    },
-    {
-        path: ':id',
-        data: {
-            breadcrumb: 'loading...'
-        },
-        children: [{
-            path: '',
-            data: {
-                breadcrumb: 'view',
-                editable: true,
-                title: "view campaign",
-                roles: viewRoles,
-                editRoles: editRoles
-            },
-            component: StixPageComponent
-        }
-        ]
-    },
-    {
-        path: ":new",
-        data: {
-            breadcrumb: "new campaign"
-        },
-        children: [{
-            path: '',
-            data: {
-                breadcrumb: 'view',
-                editable: true,
-                title: "new campaign",
                 roles: editRoles,
                 editRoles: editRoles
             },
@@ -393,19 +393,19 @@ const stixRoutes: Routes = [{
     ]
 },
 {
-    path: 'data-source',
+    path: 'campaign',
     canActivateChild: [AuthorizationGuard],
     data: {
-        breadcrumb: 'data sources'
+        breadcrumb: 'campaigns'
     },
     children: [{
         path: '',
         data: {
             breadcrumb: 'list',
-            title: "data sources",
+            title: "campaigns",
             roles: viewRoles
         },
-        component: DataSourceListComponent
+        component: CampaignListComponent
     },
     {
         path: ':id',
@@ -417,7 +417,7 @@ const stixRoutes: Routes = [{
             data: {
                 breadcrumb: 'view',
                 editable: true,
-                title: "view data source",
+                title: "view campaign",
                 roles: viewRoles,
                 editRoles: editRoles
             },
@@ -428,14 +428,14 @@ const stixRoutes: Routes = [{
     {
         path: ":new",
         data: {
-            breadcrumb: "new data source"
+            breadcrumb: "new campaign"
         },
         children: [{
             path: '',
             data: {
                 breadcrumb: 'view',
                 editable: true,
-                title: "new data source",
+                title: "new campaign",
                 roles: editRoles,
                 editRoles: editRoles
             },
@@ -444,7 +444,7 @@ const stixRoutes: Routes = [{
         ]
     }
     ]
-  },
+},
   {
     path: 'marking-definition',
     canActivateChild: [AuthorizationGuard],
