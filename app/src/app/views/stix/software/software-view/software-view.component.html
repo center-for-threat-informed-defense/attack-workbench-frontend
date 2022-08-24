@@ -91,33 +91,6 @@
     </div>
     <!-- only show relationships if configured to show them -->
     <div *ngIf="(config.showRelationships || !config.hasOwnProperty('showRelationships')) && !editing">
-        <!-- campaigns -->
-        <div class="row">
-            <div class="col">
-                <h2 class="section-header">Campaigns</h2>
-            </div>
-        </div>
-        <div class="row" *ngIf="canEdit">
-            <div class="col">
-                <app-add-relationship-button (created)="campaignList.applyControls(); onReload.emit()" [config]="{
-                    label: 'campaign',
-                    relationship_type: 'uses',
-                    target_object: software
-                }"></app-add-relationship-button>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col">
-                <app-stix-list #campaignList [config]="{
-                    'type': 'relationship', 
-                    'targetRef': software.stixID,
-                    'sourceType': 'campaign',
-                    'relationshipType': 'uses',
-                    'clickBehavior': 'dialog',
-                    'allowEdits': true
-                }"></app-stix-list>
-            </div>
-        </div>
         <!-- techniques used -->
         <div class="row">
             <div class="col">
@@ -144,6 +117,7 @@
                 }"></app-stix-list>
             </div>
         </div>
+        
         <!-- associated groups -->
         <div class="row">
             <div class="col">
@@ -164,6 +138,34 @@
                 <app-stix-list #groupList [config]="{
                     'type': 'relationship', 
                     'targetRef': software.stixID,
+                    'relationshipType': 'uses',
+                    'clickBehavior': 'dialog',
+                    'allowEdits': true
+                }"></app-stix-list>
+            </div>
+        </div>
+
+        <!-- campaigns -->
+        <div class="row">
+            <div class="col">
+                <h2 class="section-header">Campaigns</h2>
+            </div>
+        </div>
+        <div class="row" *ngIf="canEdit">
+            <div class="col">
+                <app-add-relationship-button (created)="campaignList.applyControls(); onReload.emit()" [config]="{
+                    label: 'campaign',
+                    relationship_type: 'uses',
+                    target_object: software
+                }"></app-add-relationship-button>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <app-stix-list #campaignList [config]="{
+                    'type': 'relationship', 
+                    'targetRef': software.stixID,
+                    'sourceType': 'campaign',
                     'relationshipType': 'uses',
                     'clickBehavior': 'dialog',
                     'allowEdits': true

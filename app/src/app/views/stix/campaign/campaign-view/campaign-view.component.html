@@ -82,35 +82,7 @@
         </div>
     </div>
     <!-- only show relationships if configured to show them -->
-    <div *ngIf="(config.showRelationships || !config.hasOwnProperty('showRelationships')) && !editing">
-        <!-- GROUPS -->
-        <div class="row">
-            <div class="col">
-                <h2 class="section-header">Groups</h2>
-            </div>
-        </div>
-        <div class="row" *ngIf="canEdit">
-            <div class="col">
-                <app-add-relationship-button (created)="groupsList.applyControls(); onReload.emit()" [config]="{
-                    label: 'group',
-                    relationship_type: 'attributed-to',
-                    source_object: campaign
-                }"></app-add-relationship-button>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col">
-                <app-stix-list #groupsList [config]="{
-                    'type': 'relationship',
-                    'sourceRef': campaign.stixID,
-                    'targetType': 'group',
-                    'relationshipType': 'attributed-to',
-                    'clickBehavior': 'dialog',
-                    'allowEdits': true
-                }"></app-stix-list>
-            </div>
-        </div>
-        
+    <div *ngIf="(config.showRelationships || !config.hasOwnProperty('showRelationships')) && !editing">        
         <!-- TECHNIQUES USED -->
         <div class="row">
             <div class="col">
@@ -133,6 +105,34 @@
                     'sourceRef': campaign.stixID,
                     'targetType': 'technique',
                     'relationshipType': 'uses',
+                    'clickBehavior': 'dialog',
+                    'allowEdits': true
+                }"></app-stix-list>
+            </div>
+        </div>
+
+        <!-- GROUPS -->
+        <div class="row">
+            <div class="col">
+                <h2 class="section-header">Groups</h2>
+            </div>
+        </div>
+        <div class="row" *ngIf="canEdit">
+            <div class="col">
+                <app-add-relationship-button (created)="groupsList.applyControls(); onReload.emit()" [config]="{
+                    label: 'group',
+                    relationship_type: 'attributed-to',
+                    source_object: campaign
+                }"></app-add-relationship-button>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <app-stix-list #groupsList [config]="{
+                    'type': 'relationship',
+                    'sourceRef': campaign.stixID,
+                    'targetType': 'group',
+                    'relationshipType': 'attributed-to',
                     'clickBehavior': 'dialog',
                     'allowEdits': true
                 }"></app-stix-list>
