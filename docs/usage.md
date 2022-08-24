@@ -298,8 +298,7 @@ A special mitigation published within the Enterprise domain, "Do Not Mitigate," 
 
 Campaigns are a grouping of adversarial behaviors that describe activities or attacks that occur over a period of time. Overlaps between names based on publicly reported associations are tracked using "Associated Campaigns" (also known as "Aliases").
 
-Campaigns support the standard set of fields, including a description supporting citations, LinkByIds, and markdown formatting, as well as the "Associated Campaigns" field. Additionally, campaigns support optional first and last seen fields to identify
-the period of time activity was seen for a particular campaign.
+Campaigns support the standard set of fields, including a description supporting citations, LinkByIds, and markdown formatting, as well as the "Associated Campaigns" field. Each associated campaign is tracked using a name and description. The alias description is typically used to hold a set of citations, though plain-text can also be entered alongside citations if additional context is necessary. Alias names cannot be changed after they are added, but the description can be changed by clicking on the entry in the associated campaigns list. Additionally, campaigns support optional first and last seen fields to identify the period of time activity was seen for a particular campaign.
 
 ##### Campaign Relationships
 

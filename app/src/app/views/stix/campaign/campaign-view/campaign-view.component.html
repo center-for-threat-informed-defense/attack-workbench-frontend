@@ -56,14 +56,14 @@
             }"></app-list-property>
         </div>
         <div class="col">
-            <!-- ALIASES -->
-            <app-list-property class="grow-to-row" [config]="{
+            <!-- CAMPAIGN ALIASES -->
+            <app-alias-property class="grow-to-row" [config]="{
                 mode: editing? 'edit' : 'view',
                 object: campaign,
                 field: 'aliases',
-                editType: 'any',
-                label: 'associated campaigns'
-            }"></app-list-property>
+                referencesField: 'external_references',
+                label: 'Associated Campaigns'
+            }"></app-alias-property>
         </div>
     </div>
     <div class="row">
