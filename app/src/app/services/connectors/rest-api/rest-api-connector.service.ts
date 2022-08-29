@@ -987,19 +987,24 @@ export class RestApiConnectorService extends ApiConnector {
         );
     }
 
-    public getTechniquesInTactic(tactic_id: string, modified: Date): Observable<Paginated<StixObject>> {
+    /**
+     * Get all techniques referencing the given tactic
+     * @param {string} tactic_id the stix id of the tactic
+     * @param {Date} modified the modified date of the tactic
+     * @returns {Technique[]} a list of techniques that reference the tactic
+     */
+    public getTechniquesInTactic(tactic_id: string, modified: Date, limit?: number, offset?: number): Observable<Technique[]> {
         let url = `${this.baseUrl}/tactics/${tactic_id}/modified/${modified.toISOString()}/techniques`;
-        return this.http.get<Paginated<StixObject>>(url).pipe(
+        return this.http.get(url).pipe(
             tap(results => logger.log("retrieved techniques", results)),
             map(response => {
-                let data = response.data as Array<any>;
+                let data = response as Array<any>;
                 data = data.map(sdo => {
                     return new Technique(sdo);
                 });
-                response.data = data;
-                return response;
+                return data;
             }),
-            catchError(this.handleError_continue<Paginated<StixObject>>({data: [], pagination: {total: 0, limit: 0, offset: 0}})),
+            catchError(this.handleError_continue([])),
             share()
         )
     }

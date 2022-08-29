@@ -59,7 +59,7 @@
     </div>
 
     <!-- only show relationships if configured to show them -->
-    <div *ngIf="(config.showRelationships || !config.hasOwnProperty('showRelationships')) && !editing">
+    <div *ngIf="(config.showRelationships || !config.hasOwnProperty('showRelationships')) && !editing && !loading">
         <div class="row">
             <div class="col">
                 <h2 class="section-header">Techniques</h2>
@@ -68,9 +68,9 @@
         <div class="row">
             <div class="col">
                 <app-stix-list #techniqueList [config]="{
-                    'stixObjects': techniques,
-                    'type': 'relationship', 
-                    'clickBehavior': 'dialog'
+                    stixObjects: techniques,
+                    type: 'technique',
+                    clickBehavior: 'dialog'
                 }"></app-stix-list>
             </div>
         </div>
