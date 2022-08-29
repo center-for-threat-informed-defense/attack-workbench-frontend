@@ -1,0 +1,35 @@
+<div class="collection-update-dialog">
+    <!-- stage: loading -->
+    <div *ngIf="stage == 0" class="stage parsing">
+        <h1>Loading additional objects...</h1>
+        <app-loading-overlay></app-loading-overlay>
+    </div>
+    <!-- stage:reviewing -->
+    <div *ngIf="stage == 1" class="stage reviewing">
+        <h1>Objects to add to collection</h1>
+        <ng-container *ngIf="tacticsToAdd.length == 0; else objectList">
+            <mat-list>
+                <mat-list-item>
+                    <mat-icon matListIcon class="text-success">check</mat-icon>
+                    <p matLine class="text-success">No additional tactics are referenced by techniques in this collection.</p>
+                </mat-list-item>
+            </mat-list>
+        </ng-container>
+        <ng-template #objectList>
+            <p>The following tactics are referenced by techniques in this collection and will be added automatically.</p>
+            <ng-container>
+                <h3>Objects</h3>
+                <app-stix-list [config]="{stixObjects: tacticsToAdd, clickBehavior: 'none'}"></app-stix-list>
+            </ng-container>
+        </ng-template>
+        <div class="buttons">
+            <button mat-button matDialogClose>{{tacticsToAdd.length == 0 ? 'close' : 'cancel'}}</button>
+            <button mat-stroked-button *ngIf="tacticsToAdd.length > 0" (click)="update()">update collection</button>
+        </div>
+    </div>
+    <!-- stage:updating -->
+    <div *ngIf="stage == 2" class="stage updating">
+        <h1>Updating collection...</h1>
+        <app-loading-overlay></app-loading-overlay>
+    </div>
+</div>

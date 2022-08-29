@@ -11,6 +11,10 @@
     .buttons {
         margin-top: 48px !important;
     }
+    .apply-button {
+        display: flex;
+        justify-content: center;
+    }
     .col.border-left {
         margin-left: 24px !important;
         padding-left: 24px;
@@ -60,11 +64,6 @@
     }
 
     .content.collection-data {
-        code {
-            // overflow-x: hidden;
-            // white-space: nowrap;
-            // text-overflow: ellipsis;
-        }
         .download {
             cursor: pointer;
             &:hover { 
@@ -82,16 +81,4 @@
     .releaseExplanation {
         max-width: 25em;
     }
-    // .version-select {
-    //     @extend .heading;
-    //     text-transform: none;
-    //     padding: 0px 5px;
-    //     border-radius: 4px;
-    //     font-size: 36px;
-    //     background: transparent;
-    //     -webkit-appearance:none;
-    //     cursor: pointer;
-    //     .dark & { color: on-color(dark); border-color: on-color(dark);}
-    //     .light & { color: on-color(light); border-color: on-color(light);}
-    // }
 }

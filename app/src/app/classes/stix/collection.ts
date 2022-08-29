@@ -345,7 +345,7 @@ export class Collection extends StixObject {
                     continue;
                 }
                 // determine if there was a change, and if so what type it was
-                if (thatAttackObject.modified.toISOString() == thisAttackObject.modified.toISOString()) {
+                if (thatAttackObject.modified && thisAttackObject.modified && thatAttackObject.modified.toISOString() == thisAttackObject.modified.toISOString()) {
                     // not a change
                     results[attackType].duplicates.push(thisAttackObject);
                 } else {

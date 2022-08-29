@@ -1,6 +1,6 @@
 import { Component, OnInit, QueryList, ViewChildren, ViewEncapsulation } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { forkJoin, Observable, of } from 'rxjs';
+import { forkJoin, of } from 'rxjs';
 import { delay, map, switchMap, tap } from 'rxjs/operators';
 import { ValidationData } from 'src/app/classes/serializable';
 import { Collection, CollectionDiffCategories, VersionReference } from 'src/app/classes/stix/collection';
@@ -14,7 +14,6 @@ import { Tactic } from 'src/app/classes/stix/tactic';
 import { Technique } from 'src/app/classes/stix/technique';
 import { DataSource } from 'src/app/classes/stix/data-source';
 import { DataComponent } from 'src/app/classes/stix/data-component';
-import { VersionNumber } from 'src/app/classes/version-number';
 import { StixListComponent } from 'src/app/components/stix/stix-list/stix-list.component';
 import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/rest-api-connector.service';
 import { EditorService } from 'src/app/services/editor/editor.service';
@@ -23,6 +22,8 @@ import { environment } from "../../../../../environments/environment";
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { logger } from "../../../../util/logger";
 import { AuthenticationService } from 'src/app/services/connectors/authentication/authentication.service';
+import { MatDialog } from '@angular/material/dialog';
+import { CollectionUpdateDialogComponent } from 'src/app/components/collection-update-dialog/collection-update-dialog.component';
 
 type changeCategory = "additions" | "changes" | "minor_changes" | "revocations" | "deprecations";
 
@@ -48,6 +49,10 @@ export class CollectionViewComponent extends StixViewPage implements OnInit {
 
     public get collectionDownloadURL() {
         return `${environment.integrations.rest_api.url}/collection-bundles/?collectionId=${this.collection.stixID}&collectionModified=${this.collection.modified.toISOString()}`
+    }
+
+    public get hasTechniques() {
+        return this.collectionChanges.technique.object_count > 0;
     }
 
     public stagedData: VersionReference[] = [];
@@ -84,7 +89,8 @@ export class CollectionViewComponent extends StixViewPage implements OnInit {
                 private restApiConnector: RestApiConnectorService,
                 private snackbar: MatSnackBar,
                 private editor: EditorService,
-                authenticationService: AuthenticationService) {
+                public dialog: MatDialog,
+                authenticationService: AuthenticationService,) {
         super(authenticationService);
     }
 
@@ -179,6 +185,8 @@ export class CollectionViewComponent extends StixViewPage implements OnInit {
                     if (object.created_by_ref) identities.add(object.created_by_ref);
                     if (object.modified_by_ref) identities.add(object.modified_by_ref);
                     for (let marking_ref of object.object_marking_refs) marking_defs.add(marking_ref);
+
+                    if (object.type == "marking-definition") continue;
 
                     this.stagedData.push(new VersionReference({
                         "object_ref": object.stixID,
@@ -536,6 +544,30 @@ export class CollectionViewComponent extends StixViewPage implements OnInit {
 
     public format(attackType: string): string {
         return attackType.replace(/_/g, ' ');
+    }
+
+    /**
+     * Open the update dialog to automatically find and add
+     * related objects to the collection
+     */
+    public addObjectsToCollection(): void {
+        let prompt = this.dialog.open(CollectionUpdateDialogComponent, {
+            data: {
+                collectionChanges: this.collectionChanges,
+                potentialChanges: this.potentialChanges
+            },
+            maxHeight: "75vh"
+        })
+        let subscription = prompt.afterClosed().subscribe({
+            next: result => {
+                if (result) {
+                    // reinitialize stix lists
+                    this.editingReloadToggle = false;
+                    setTimeout(() => this.editingReloadToggle = true);
+                }
+            },
+            complete: () => { subscription.unsubscribe(); }
+        });
     }
 
     ngOnInit() {

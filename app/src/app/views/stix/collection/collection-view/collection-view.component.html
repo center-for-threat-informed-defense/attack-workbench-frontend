@@ -71,26 +71,30 @@
                     <h2 class="section-header">Changes in this release</h2>
                 </div>
             </div>
-            <!-- LIST BUILDER / DUAL LIST UI -->
-            <!-- <div class="row">
-                <div class="col center">
-                    <h4 class="text-label">Objects in Knowledge Base</h4>
-                </div>
-                <div class="col center">
-                    <h4 class="text-label">Objects in Collection</h4>
-                </div>
-            </div> !-->
+            <div *ngIf="editing" class="row apply-button">
+                <button mat-mini-fab class="extended-fab-button" color="primary"
+                        (click)="addObjectsToCollection()"
+                        [disabled]="!hasTechniques"
+                        matTooltipPosition="above"
+                        matTooltip="automatically add tactics related to techniques in this collection">
+                    <mat-icon>sync</mat-icon> <span class="text-label">apply tactics to collection</span>
+                </button>
+            </div>
             <div class="row">
                 <div class="col changes" *ngIf="editingReloadToggle">
+                    <!-- expansion panels -->
                     <mat-accordion>
                         <mat-expansion-panel *ngFor="let attackType of ['matrix', 'technique', 'tactic', 'mitigation', 'group', 'software', 'data_source', 'data_component']" class="mat-elevation-z0">
+                            <!-- header -->
                             <mat-expansion-panel-header>
                                 <mat-panel-title>
                                     <h3>{{format(attackType)}}</h3>
                                 </mat-panel-title>
                             </mat-expansion-panel-header>
+                            <!-- panel content ( staged changes ) -->
                             <ng-template matExpansionPanelContent>
                                 <mat-accordion>
+                                    <!-- additions -->
                                     <mat-expansion-panel class="mat-elevation-z0">
                                         <mat-expansion-panel-header>
                                             <mat-panel-title>
@@ -156,6 +160,7 @@
                                             </div>
                                         </ng-template>
                                     </mat-expansion-panel>
+                                    <!-- changes -->
                                     <mat-expansion-panel class="mat-elevation-z0">
                                         <mat-expansion-panel-header>
                                             <mat-panel-title>
@@ -221,6 +226,7 @@
                                             </div>
                                         </ng-template>
                                     </mat-expansion-panel>
+                                    <!-- minor changes -->
                                     <mat-expansion-panel class="mat-elevation-z0">
                                         <mat-expansion-panel-header>
                                             <mat-panel-title>
@@ -286,6 +292,7 @@
                                             </div>
                                         </ng-template>
                                     </mat-expansion-panel>
+                                    <!-- revocations -->
                                     <mat-expansion-panel class="mat-elevation-z0">
                                         <mat-expansion-panel-header>
                                             <mat-panel-title>
@@ -351,6 +358,7 @@
                                             </div>
                                         </ng-template>
                                     </mat-expansion-panel>
+                                    <!-- deprecations -->
                                     <mat-expansion-panel class="mat-elevation-z0">
                                         <mat-expansion-panel-header>
                                             <mat-panel-title>
@@ -416,6 +424,7 @@
                                             </div>
                                         </ng-template>
                                     </mat-expansion-panel>
+                                    <!-- unchanged objects -->
                                     <mat-expansion-panel class="mat-elevation-z0">
                                         <mat-expansion-panel-header>
                                             <mat-panel-title>
@@ -436,6 +445,7 @@
                                 </mat-accordion>
                             </ng-template>
                         </mat-expansion-panel>
+                        <!-- relationships -->
                         <mat-expansion-panel  class="mat-elevation-z0">
                             <mat-expansion-panel-header>
                                 <mat-panel-title>
@@ -471,6 +481,7 @@
                                 </p>
                             </ng-template>
                         </mat-expansion-panel>
+                        <!-- marking definitions -->
                         <mat-expansion-panel  class="mat-elevation-z0">
                             <mat-expansion-panel-header>
                                 <mat-panel-title>
