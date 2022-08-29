@@ -51,6 +51,7 @@ ATT&CK Workbench v1.2.0 supports authentication and authorization for users. The
 -   Added a view page for References in the Reference Manager. See [frontend#304](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/304).
 -   Added a link to the parent technique page from the sub-technique page. See [frontend#309](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/309).
 -   Added a link to tactic pages from the matrix page. See [frontend#391](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/391).
+-   Added support for viewing techniques associated with a tactic on the tactic view page. See [frontend#390](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/390).
 
 #### Improvements in 1.2.0
 
@@ -215,7 +216,7 @@ ATT&CK Workbench version 1.1.0 includes improvements to how data is imported whi
 -   Lists of objects now display ATT&CK IDs when relevant. See [frontend#119](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/119).
 -   When viewing an object, fields which have no value(s) will now be hidden. See [frontend#120](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/120).
 -   Improved display of sub-techniques. See [frontend#125](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/125).
--   Layout and formatting improvements to [USAGE](/docs/usage.md) document
+-   Layout and formatting improvements to [USAGE](/docs/usage.md) document.
 
 #### Fixes in 0.2.0
 
