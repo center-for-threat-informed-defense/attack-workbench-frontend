@@ -71,15 +71,6 @@
                     <h2 class="section-header">Changes in this release</h2>
                 </div>
             </div>
-            <div *ngIf="editing" class="row apply-button">
-                <button mat-mini-fab class="extended-fab-button" color="primary"
-                        (click)="addObjectsToCollection()"
-                        [disabled]="!hasTechniques"
-                        matTooltipPosition="above"
-                        matTooltip="automatically add tactics related to techniques in this collection">
-                    <mat-icon>sync</mat-icon> <span class="text-label">apply tactics to collection</span>
-                </button>
-            </div>
             <div class="row">
                 <div class="col changes" *ngIf="editingReloadToggle">
                     <!-- expansion panels -->
@@ -93,6 +84,16 @@
                             </mat-expansion-panel-header>
                             <!-- panel content ( staged changes ) -->
                             <ng-template matExpansionPanelContent>
+                                <!-- automatically add tactics -->
+                                <div *ngIf="editing && attackType == 'tactic'" class="row apply-button">
+                                    <button mat-mini-fab class="extended-fab-button" color="primary"
+                                            (click)="addObjectsToCollection(attackType)"
+                                            [disabled]="autoAddDisabled(attackType)"
+                                            matTooltipPosition="above"
+                                            [matTooltip]="tooltip(attackType)">
+                                        <mat-icon>sync</mat-icon> <span class="text-label">apply {{attackType}} objects to collection</span>
+                                    </button>
+                                </div>
                                 <mat-accordion>
                                     <!-- additions -->
                                     <mat-expansion-panel class="mat-elevation-z0">

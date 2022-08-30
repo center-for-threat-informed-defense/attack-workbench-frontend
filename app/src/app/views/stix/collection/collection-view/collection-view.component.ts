@@ -547,14 +547,41 @@ export class CollectionViewComponent extends StixViewPage implements OnInit {
     }
 
     /**
+     * Determine if the auto add objects button is disabled
+     * for a given attack type
+     * @param {string} attackType the type of object to add
+     * @returns {boolean} true, if objects of this type can be
+     * added, false otherwise
+     */
+    public autoAddDisabled(attackType: string): boolean {
+        if (attackType == 'tactic') return !this.hasTechniques;
+        else true; // only tactics are currently supported for this feature
+    }
+
+    /**
+     * Generate the matTooltip for the auto add objects button
+     * for the given attack type
+     * @param {string} attackType  the type of object to add
+     * @returns {string} the tooltip to be displayed
+     */
+    public tooltip(attackType: string): string {
+        let types: string = 'objects';
+        if (attackType == 'tactic') types = 'techniques';
+        let tooltip = `automatically add ${attackType} objects related to ${types} in this collection`;
+        return tooltip;
+    }
+
+    /**
      * Open the update dialog to automatically find and add
      * related objects to the collection
+     * @param {string} attackType the type of objects to add to the collection
      */
-    public addObjectsToCollection(): void {
+    public addObjectsToCollection(attackType: string): void {
         let prompt = this.dialog.open(CollectionUpdateDialogComponent, {
             data: {
                 collectionChanges: this.collectionChanges,
-                potentialChanges: this.potentialChanges
+                potentialChanges: this.potentialChanges,
+                attackType: attackType
             },
             maxHeight: "75vh"
         })
