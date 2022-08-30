@@ -2,6 +2,7 @@ import { Component, Inject, OnInit, ViewEncapsulation } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { forkJoin } from 'rxjs';
 import { StixObject } from 'src/app/classes/stix/stix-object';
+import { Tactic } from 'src/app/classes/stix/tactic';
 import { Technique } from 'src/app/classes/stix/technique';
 import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/rest-api-connector.service';
 
@@ -26,31 +27,44 @@ export class CollectionUpdateDialogComponent implements OnInit {
     }
 
     /**
-     * Find tactic objects referenced by techniques in the collection
+     * Retrieve tactic objects referenced by techniques in the collection, filter out
+     * duplicate tactics and tactics already in the collection, then add them
+     * to the list of objects to add
      */
     private loadObjects(): void {
         // get tactics related to techniques
-        let techniques: Technique[] = this.config.collectionChanges.technique.flatten();
+        let techniques: Technique[] = this.config.collectionChanges.technique.flatten(true);
         let api_calls = [];
-        for (let technique of techniques) {
-            // api_calls.push(this.restApiService.getTacticsRelatedToTechnique(technique.stixID));
-            api_calls.push(technique.stixID);
-        }
+        techniques.forEach(t =>
+            api_calls.push(this.restApiService.getTacticsRelatedToTechnique(t.stixID, t.modified))
+        );
+        if (!api_calls.length) { this.stage = 1; return; } // no techniques found in collection, move to next stage
         let objSubscription = forkJoin(api_calls).subscribe({
             next: (results) => {
-                // filter out tactics already added to the collection
-                // let staged_tactics = this.config.collectionChanges.tactic.flatten();
-                // let staged_tactic_ids: string[] = staged_tactics.map(t => t.stixID);
-                // results = results.filter(t => !staged_tactic_ids.includes(t.stixID));
+                // merge the results of forkJoin
+                let tactics: Tactic[] = [];
+                results.forEach((arr: Tactic[]) => {
+                    tactics.push(...arr)
+                });
+
+                // filter out duplicates and tactics already in the collection
+                let staged_tactics = this.config.collectionChanges.tactic.flatten(true);
+                let staged_tactic_ids: string[] = staged_tactics.map(t => t.stixID); // list of tactic stixIDs already in collection
+                tactics = tactics.filter((tactic, index, self) => {
+                    return index === self.findIndex(t => tactic.stixID === t.stixID) && !staged_tactic_ids.includes(tactic.stixID)
+                });
 
                 // add tactics to list and enter reviewing stage
-                // this.tacticsToAdd.push(...results);
+                this.tacticsToAdd.push(...tactics);
                 this.stage = 1;
             },
             complete: () => objSubscription.unsubscribe()
         });
     }
 
+    /**
+     * Add all objects to collection and update the collection view
+     */
     public update(): void {
         // enter updating stage
         this.stage = 2;
@@ -64,9 +78,14 @@ export class CollectionUpdateDialogComponent implements OnInit {
                 this.config.potentialChanges.tactic.remove_objects(this.tacticsToAdd, changeType);
             }
         }
-        this.dialogRef.close(true);
+        this.dialogRef.close(true); // trigger reinitialization stix lists in collection view
     }
 
+    /**
+     * Get the name of the collection category (change type) the given object exists in
+     * @param {StixObject} object the object to find
+     * @returns {string} the name of the change type structure the object exists in (see CollectionDiffCategories class)
+     */
     public getChangeType(object: StixObject): string {
         for (let change_type in this.config.potentialChanges.tactic) {
             if (this.config.potentialChanges.tactic.has_object(object, change_type)) {
@@ -78,6 +97,8 @@ export class CollectionUpdateDialogComponent implements OnInit {
 }
 
 export interface CollectionUpdateConfig {
+    // set of CollectionDiffCategories which contain objects in the collection
     collectionChanges: any;
+    // set of CollectionDiffCategories which contain objects NOT in the collection
     potentialChanges: any;
 }
