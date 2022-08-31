@@ -75,7 +75,10 @@
                 <div class="col changes" *ngIf="editingReloadToggle">
                     <!-- expansion panels -->
                     <mat-accordion>
-                        <mat-expansion-panel *ngFor="let attackType of ['matrix', 'technique', 'tactic', 'mitigation', 'group', 'software', 'data_source', 'data_component']" class="mat-elevation-z0">
+                        <mat-expansion-panel class="mat-elevation-z0"
+                                *ngFor="let attackType of ['matrix', 'technique', 'tactic', 'mitigation', 'group', 'software', 'data_source', 'data_component']"
+                                [expanded]="panel == attackType"
+                                (click)="panel = attackType">
                             <!-- header -->
                             <mat-expansion-panel-header>
                                 <mat-panel-title>
@@ -447,7 +450,9 @@
                             </ng-template>
                         </mat-expansion-panel>
                         <!-- relationships -->
-                        <mat-expansion-panel  class="mat-elevation-z0">
+                        <mat-expansion-panel  class="mat-elevation-z0"
+                                [expanded]="panel == 'relationships'"
+                                (click)="panel = 'relationships'">
                             <mat-expansion-panel-header>
                                 <mat-panel-title>
                                     <h3>Relationship</h3>
@@ -483,7 +488,9 @@
                             </ng-template>
                         </mat-expansion-panel>
                         <!-- marking definitions -->
-                        <mat-expansion-panel  class="mat-elevation-z0">
+                        <mat-expansion-panel  class="mat-elevation-z0"
+                                [expanded]="panel == 'marking_defs'"
+                                (click)="panel = 'marking_defs'">
                             <mat-expansion-panel-header>
                                 <mat-panel-title>
                                     <h3>Marking Definition</h3>
