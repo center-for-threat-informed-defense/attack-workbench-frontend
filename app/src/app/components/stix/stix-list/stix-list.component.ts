@@ -76,6 +76,7 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
         "malware": "software",
         "tool": "software",
         "intrusion-set": "group",
+        "campaign": "campaign",
         "course-of-action": "mitigation",
         "x-mitre-matrix": "matrix",
         "x-mitre-tactic": "tactic",
@@ -114,6 +115,15 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
     private addColumn(label: string, field: string, display: "version" | "list" | "plain" | "timestamp" | "descriptive" | "relationship_name" | "icon", sticky?: boolean, classes?: string[]) {
         this.tableColumns.push(field);
         this.tableColumns_settings.set(field, {label, display, sticky, classes});
+    }
+
+    /**
+     * Add version, modified, and created columns to the table
+     */
+    private addVersionsAndDatesColumns() {
+        this.addColumn("version", "version", "version");
+        this.addColumn("modified","modified", "timestamp");
+        this.addColumn("created", "created", "timestamp");
     }
 
     /**
@@ -200,10 +210,8 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
                 case "collection":
                 case "collection-created":
                     this.addColumn("name", "name", "plain", sticky_allowed, ["name"]);
-                    this.addColumn("version", "version", "version");
                     this.addColumn("released?", "release", "plain", null, ["text-label"]);
-                    this.addColumn("modified", "modified", "timestamp");
-                    this.addColumn("created", "created", "timestamp");
+                    this.addVersionsAndDatesColumns();
                     this.tableDetail = [{
                         "field": "description",
                         "display": "descriptive"
@@ -226,9 +234,7 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
                     this.addColumn("ID", "attackID", "plain", false);
                     this.addColumn("name", "name", "plain", sticky_allowed, ["name"]);
                     this.addColumn("domain", "domains", "list");
-                    this.addColumn("version", "version", "version");
-                    this.addColumn("modified","modified", "timestamp");
-                    this.addColumn("created", "created", "timestamp");
+                    this.addVersionsAndDatesColumns();
                     this.tableDetail = [{
                         "field": "description",
                         "display": "descriptive"
@@ -238,13 +244,22 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
                     this.addColumn("", "workflow", "icon");
                     this.addColumn("", "state", "icon");
                     this.addColumn("name", "name", "plain", sticky_allowed, ["name"]);
-                    this.addColumn("version", "version", "version");
-                    this.addColumn("modified","modified", "timestamp");
-                    this.addColumn("created", "created", "timestamp");
+                    this.addVersionsAndDatesColumns();
                     this.tableDetail = [{
                         "field": "description",
                         "display": "descriptive"
                     }]
+                    break;
+                case "campaign":
+                    this.addColumn("", "workflow", "icon");
+                    this.addColumn("", "state", "icon");
+                    this.addColumn("ID", "attackID", "plain", false);
+                    this.addColumn("name", "name", "plain", sticky_allowed, ["name"]);
+                    this.addVersionsAndDatesColumns();
+                    this.tableDetail = [{
+                        "field": "description",
+                        "display": "descriptive"
+                    }];
                     break;
                 case "group":
                     this.addColumn("", "workflow", "icon");
@@ -252,9 +267,7 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
                     this.addColumn("ID", "attackID", "plain", false);
                     this.addColumn("name", "name", "plain", sticky_allowed, ["name"]);
                     this.addColumn("associated groups", "aliases", "list");
-                    this.addColumn("version", "version", "version");
-                    this.addColumn("modified","modified", "timestamp");
-                    this.addColumn("created", "created", "timestamp");
+                    this.addVersionsAndDatesColumns();
                     this.tableDetail = [{
                         "field": "description",
                         "display": "descriptive"
@@ -267,9 +280,7 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
                     this.addColumn("name", "name", "plain", sticky_allowed, ["name"]);
                     this.addColumn("type", "type", "plain");
                     this.addColumn("domain", "domains", "list");
-                    this.addColumn("version", "version", "version");
-                    this.addColumn("modified","modified", "timestamp");
-                    this.addColumn("created", "created", "timestamp");
+                    this.addVersionsAndDatesColumns();
                     this.tableDetail = [{
                         "field": "description",
                         "display": "descriptive"
@@ -283,9 +294,7 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
                     this.addColumn("name", "name", "plain", sticky_allowed, ["name"]);
                     this.addColumn("platforms", "platforms", "list");
                     this.addColumn("domain", "domains", "list");
-                    this.addColumn("version", "version", "version");
-                    this.addColumn("modified","modified", "timestamp");
-                    this.addColumn("created", "created", "timestamp");
+                    this.addVersionsAndDatesColumns();
                     this.tableDetail = [{
                         "field": "description",
                         "display": "descriptive"
@@ -294,9 +303,7 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
                 case "data-component":
                     this.addColumn("name", "name", "plain", sticky_allowed, ["name"]);
                     this.addColumn("domain", "domains", "list");
-                    this.addColumn("version", "version", "version");
-                    this.addColumn("modified","modified", "timestamp");
-                    this.addColumn("created", "created", "timestamp");
+                    this.addVersionsAndDatesColumns();
                     this.tableDetail = [{
                         "field": "description",
                         "display": "descriptive"
@@ -312,7 +319,6 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
                     this.addColumn("target", "target_ID", "plain");
                     this.addColumn("", "target_name", "plain", this.config.sourceRef? sticky_allowed: false, ["relationship-name"]);// ["name", "relationship-right"]);
                     if (!(this.config.relationshipType && this.config.relationshipType == "subtechnique-of")) this.addColumn("description", "description", "descriptive", false);
-                    // controls_after.push("open-link")
                     break;
                 case "marking-definition":
                     this.addColumn("definition type", "definition_type", "plain");
@@ -503,6 +509,7 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
             }
 
             if (this.config.type == "software") this.data$ = this.restAPIConnectorService.getAllSoftware(options);
+            else if (this.config.type == "campaign") this.data$ = this.restAPIConnectorService.getAllCampaigns(options);
             else if (this.config.type == "group") this.data$ = this.restAPIConnectorService.getAllGroups(options);
             else if (this.config.type == "matrix") this.data$ = this.restAPIConnectorService.getAllMatrices(options);
             else if (this.config.type == "mitigation") this.data$ = this.restAPIConnectorService.getAllMitigations(options);
@@ -538,7 +545,7 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
 }
 
 //allowed types for StixListConfig
-type type_attacktype = "collection" | "group" | "matrix" | "mitigation" | "software" | "tactic" | "technique" | "relationship" | "data-source" | "data-component" | "marking-definition";
+type type_attacktype = "collection" | "campaign" | "group" | "matrix" | "mitigation" | "software" | "tactic" | "technique" | "relationship" | "data-source" | "data-component" | "marking-definition";
 type selection_types = "one" | "many" | "disabled"
 export interface StixListConfig {
     /* if specified, shows the given STIX objects in the table instead of loading from the back-end based on other configurations. */

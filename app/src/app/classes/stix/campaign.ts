@@ -1,28 +1,27 @@
+import { StixObject } from "./stix-object";
+import { logger } from "../../util/logger";
 import { Observable } from "rxjs";
 import { RestApiConnectorService } from "src/app/services/connectors/rest-api/rest-api-connector.service";
 import { ValidationData } from "../serializable";
-import { StixObject } from "./stix-object";
-import { logger } from "../../util/logger";
 
-type type_software = "malware" | "tool"
-export class Software extends StixObject {
+export class Campaign extends StixObject {
     public name: string = "";
-    public description: string;
-    public aliases: string[] = ["placeholder"]; // initialize field with placeholder in first index for software name
-    public platforms: string[] = [];
-    public type: string;
+    public first_seen: Date;
+    public last_seen: Date;
+    public aliases: string[] = ["placeholder"]; // initialize field with placeholder in first index for campaign name
     public contributors: string[] = [];
-    public domains: string[] = [];
 
     public readonly supportsAttackID = true;
     public readonly supportsNamespace = true;
-    protected get attackIDValidator() { return {
-        regex: "S\\d{4}",
-        format: "S####"
-    }}
+    protected get attackIDValidator() {
+        return {
+            regex: "C\\d{4}",
+            format: "C####"
+        }
+    }
 
-    constructor(type: type_software, sdo?: any) {
-        super(sdo, type);
+    constructor(sdo?: any) {
+        super(sdo, "campaign");
         if (sdo) {
             this.deserialize(sdo);
         }
@@ -37,12 +36,10 @@ export class Software extends StixObject {
         let rep = super.base_serialize();
 
         rep.stix.name = this.name.trim();
-        rep.stix.type = this.type;
-        rep.stix.x_mitre_domains = this.domains;
-        rep.stix.x_mitre_aliases = this.aliases.map(x => x.trim());
-        rep.stix.x_mitre_platforms = this.platforms;
+        if (this.first_seen) rep.stix.first_seen = this.first_seen.toISOString();
+        if (this.last_seen) rep.stix.last_seen = this.last_seen.toISOString();
+        rep.stix.aliases = this.aliases.map(x => x.trim());
         rep.stix.x_mitre_contributors = this.contributors.map(x => x.trim());
-        if (this.type == "malware") rep.stix.is_family = true; // add is_family to malware type SDOs
 
         return rep;
     }
@@ -61,25 +58,20 @@ export class Software extends StixObject {
                 else logger.error("TypeError: name field is not a string:", sdo.name, "(",typeof(sdo.name),")")
             } else this.name = "";
 
-            if ("type" in sdo) {
-                if (typeof(sdo.type) === "string") this.type = sdo.type;
-                else logger.error("TypeError: type field is not a string:", sdo.type, "(",typeof(sdo.type),")")
-            } else this.type = "";
+            if ("first_seen" in sdo) {
+                if (typeof (sdo.first_seen) === "string") this.first_seen = new Date(sdo.first_seen);
+                else logger.error("TypeError: first_seen field is not a string:", sdo.first_seen, "(", typeof (sdo.first_seen), ")")
+            }
 
-            if ("x_mitre_aliases" in sdo) {
-                if (this.isStringArray(sdo.x_mitre_aliases)) this.aliases = sdo.x_mitre_aliases;
-                else logger.error("TypeError: aliases is not a string array:", sdo.x_mitre_aliases, "(",typeof(sdo.x_mitre_aliases),")")
+            if ("last_seen" in sdo) {
+                if (typeof (sdo.last_seen) === "string") this.last_seen = new Date(sdo.last_seen);
+                else logger.error("TypeError: last_seen field is not a string:", sdo.last_seen, "(", typeof (sdo.last_seen), ")")
+            }
+
+            if ("aliases" in sdo) {
+                if (this.isStringArray(sdo.aliases)) this.aliases = sdo.aliases;
+                else logger.error("TypeError: aliases is not a string array:", sdo.aliases, "(",typeof(sdo.aliases),")")
             } else this.aliases = [];
-
-            if ("x_mitre_domains" in sdo) {
-                if (this.isStringArray(sdo.x_mitre_domains)) this.domains = sdo.x_mitre_domains;
-                else logger.error("TypeError: domains field is not a string array.");
-            } else this.domains = [];
-
-            if ("x_mitre_platforms" in sdo) {
-                if (this.isStringArray(sdo.x_mitre_platforms)) this.platforms = sdo.x_mitre_platforms;
-                else logger.error("TypeError: x_mitre_platforms is not a string array:", sdo.x_mitre_platforms, "(",typeof(sdo.x_mitre_platforms),")")
-            } else this.platforms = [];
 
             if ("x_mitre_contributors" in sdo) {
                 if (this.isStringArray(sdo.x_mitre_contributors)) this.contributors = sdo.x_mitre_contributors;
@@ -102,10 +94,10 @@ export class Software extends StixObject {
      * @param restAPIService [RestApiConnectorService] the service to perform the POST/PUT through
      * @returns {Observable} of the post
      */
-    public save(restAPIService: RestApiConnectorService): Observable<Software> {
-        // update first index of aliases field to software name
+    public save(restAPIService: RestApiConnectorService): Observable<Campaign> {
+        // update first index of aliases field to campaign name
         this.aliases[0] = this.name;
-        let postObservable = restAPIService.postSoftware(this);
+        let postObservable = restAPIService.postCampaign(this);
         let subscription = postObservable.subscribe({
             next: (result) => { this.deserialize(result.serialize()); },
             complete: () => { subscription.unsubscribe(); }

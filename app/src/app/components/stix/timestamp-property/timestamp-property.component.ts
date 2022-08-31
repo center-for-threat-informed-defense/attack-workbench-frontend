@@ -9,9 +9,12 @@ import { StixObject } from 'src/app/classes/stix/stix-object';
 export class TimestampPropertyComponent implements OnInit {
     @Input() public config: TimestampPropertyConfig;
 
-    constructor() { }
+    constructor() {
+        // intentionally left blank
+    }
 
     ngOnInit(): void {
+        // intentionally left blank
     }
 
     /** Check if the object has a workflow identity attached */
@@ -23,12 +26,12 @@ export class TimestampPropertyComponent implements OnInit {
 }
 
 export interface TimestampPropertyConfig {
-    /* What is the current mode? Default: 'view
+    /* What is the current mode? Default: 'view'
      *    view: viewing the timestamp property
      *    diff: displaying the diff between two STIX objects. If this mode is selected, two StixObjects must be specified in the objects field
      */
     mode?: "view" | "diff";
-    /* humanize the timestamp? 
+    /* humanize the timestamp? Default: false
      *       if true, displays relative to the current date if within last week, and older timestamps don't display the exact edit time, only date.
      *       if false, display the full timestamp including the exact edit time.
      */
@@ -41,6 +44,8 @@ export interface TimestampPropertyConfig {
      * Note: will not work with fields that are actually get functions!
      */
     field: string;
+    /* if specified, label with this string instead of field */
+    label?: string;
     /* field to display attribution information from. If omitted, does not display attribution.
     */
     attribution?: string;

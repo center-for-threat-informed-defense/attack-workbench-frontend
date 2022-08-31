@@ -23,14 +23,16 @@ import { logger } from "../../../util/logger";
 import { DataSource } from 'src/app/classes/stix/data-source';
 import { DataComponent } from 'src/app/classes/stix/data-component';
 import { UserAccount } from 'src/app/classes/authn/user-account';
+import { Campaign } from 'src/app/classes/stix/campaign';
 
 //attack types
-type AttackType = "collection" | "group" | "matrix" | "mitigation" | "software" | "tactic" | "technique" | "relationship" | "note" | "identity" | "marking-definition" | "data-source" | "data-component";
+type AttackType = "campaign" | "collection" | "group" | "matrix" | "mitigation" | "software" | "tactic" | "technique" | "relationship" | "note" | "identity" | "marking-definition" | "data-source" | "data-component";
 // pluralize AttackType
 const attackTypeToPlural = {
     "technique": "techniques",
     "tactic": "tactics",
     "group": "groups",
+    "campaign": "campaigns",
     "software": "software",
     "mitigation": "mitigations",
     "matrix": "matrices",
@@ -47,6 +49,7 @@ const attackTypeToClass = {
     "technique": Technique,
     "tactic": Tactic,
     "group": Group,
+    "campaign": Campaign,
     "software": Software,
     "mitigation": Mitigation,
     "matrix": Matrix,
@@ -64,6 +67,7 @@ const stixTypeToClass = {
     "attack-pattern": Technique,
     "x-mitre-tactic": Tactic,
     "intrusion-set": Group,
+    "campaign": Campaign,
     "tool": Software,
     "malware": Software,
     "course-of-action": Mitigation,
@@ -225,6 +229,17 @@ export class RestApiConnectorService extends ApiConnector {
      * @returns {Observable<Group[]>} observable of retrieved objects
      */
     public get getAllGroups() { return this.getStixObjectsFactory<Group>("group"); }
+    /**
+     * Get all campaigns
+     * @param {number} [limit] the number of campaigns to retrieve
+     * @param {number} [offset] the number of campaigns to skip
+     * @param {string} [state] if specified, only get objects with this state
+     * @param {boolean} [revoked] if true, get revoked objects
+     * @param {boolean} [deprecated] if true, get deprecated objects
+     * @param {string[]} [excludeIDs] if specified, excludes these STIX IDs from the result
+     * @returns {Observable<Campaign[]>} observable of retrieved objects
+     */
+    public get getAllCampaigns() { return this.getStixObjectsFactory<Campaign>("campaign"); }
     /**
      * Get all software
      * @param {number} [limit] the number of software to retrieve
@@ -504,6 +519,14 @@ export class RestApiConnectorService extends ApiConnector {
      */
     public get getGroup() { return this.getStixObjectFactory<Group>("group"); }
     /**
+     * Get a single campaign by STIX ID
+     * @param {string} id the object STIX ID
+     * @param {Date} [modified] if specified, get the version modified at the given date
+     * * @param {versions} [string] default "latest", if "all" returns all versions of the object instead of just the latest version.
+     * @returns {Observable<Campaign>} the object with the given ID and modified date
+     */
+    public get getCampaign() { return this.getStixObjectFactory<Campaign>("campaign"); }
+    /**
      * Get a single software by STIX ID
      * @param {string} id the object STIX ID
      * @param {Date} [modified] if specified, get the version modified at the given date
@@ -617,6 +640,12 @@ export class RestApiConnectorService extends ApiConnector {
      */
     public get postGroup() { return this.postStixObjectFactory<Group>("group"); }
     /**
+     * POST (create) a new campaign
+     * @param {Campaign} object the object to create
+     * @returns {Observable<Campaign>} the created object
+     */
+    public get postCampaign() { return this.postStixObjectFactory<Campaign>("campaign"); }
+    /**
      * POST (create) a new software
      * @param {Software} object the object to create
      * @returns {Observable<Software>} the created object
@@ -724,6 +753,13 @@ export class RestApiConnectorService extends ApiConnector {
      */
     public get putGroup() { return this.putStixObjectFactory<Group>("group"); }
     /**
+     * PUT (update) a campaign
+     * @param {Campaign} object the object to update
+     * @param {Date} [modified] optional, the modified date to overwrite. If omitted, uses the modified field of the object
+     * @returns {Observable<Campaign>} the updated object
+     */
+    public get putCampaign() { return this.putStixObjectFactory<Campaign>("campaign"); }
+    /**
      * PUT (update) a software
      * @param {Software} object the object to update
      * @param {Date} [modified] optional, the modified date to overwrite. If omitted, uses the modified field of the object
@@ -815,6 +851,13 @@ export class RestApiConnectorService extends ApiConnector {
      * @returns {Observable<{}>} observable of the response body
      */
     public get deleteGroup() { return this.deleteStixObjectFactory("group"); }
+    /**
+     * DELETE a campaign
+     * @param {string} id the STIX ID of the object to delete
+     * @param {Date} modified the modified date of the version to delete
+     * @returns {Observable<{}>} observable of the response body
+     */
+    public get deleteCampaign() { return this.deleteStixObjectFactory("campaign"); }
     /**
      * DELETE a software
      * @param {string} id the STIX ID of the object to delete

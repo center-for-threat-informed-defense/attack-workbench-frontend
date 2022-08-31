@@ -109,7 +109,8 @@ import { VersionEditComponent } from "./components/stix/version-property/version
 import { VersionViewComponent } from "./components/stix/version-property/version-view/version-view.component";
 
 import { NamePropertyComponent } from "./components/stix/name-property/name-property.component";
-// import { RelationshipDialogComponent } from "./components/stix/relationship-dialog/relationship-dialog.component";
+
+import { DatepickerPropertyComponent } from './components/stix/datepicker-property/datepicker-property.component';
 
 // views
 
@@ -174,6 +175,8 @@ import { DataComponentViewComponent } from './views/stix/data-component/data-com
 
 import { MarkingDefinitionViewComponent } from "./views/stix/marking-definition/marking-definition-view/marking-definition-view.component";
 import { MarkingDefinitionListComponent } from "./views/stix/marking-definition/marking-definition-list/marking-definition-list.component";
+import { CampaignViewComponent } from './views/stix/campaign/campaign-view/campaign-view.component';
+import { CampaignListComponent } from './views/stix/campaign/campaign-list/campaign-list.component';
 
 @NgModule({
   declarations: [
@@ -226,6 +229,7 @@ import { MarkingDefinitionListComponent } from "./views/stix/marking-definition/
     VersionEditComponent,
     VersionViewComponent,
     NamePropertyComponent,
+    DatepickerPropertyComponent,
     IconViewComponent,
 
     LandingPageComponent,
@@ -283,7 +287,9 @@ import { MarkingDefinitionListComponent } from "./views/stix/marking-definition/
     DataSourceListComponent,
     DataComponentViewComponent,
     MarkingDefinitionViewComponent,
-    MarkingDefinitionListComponent
+    MarkingDefinitionListComponent,
+    CampaignViewComponent,
+    CampaignListComponent
   ],
   imports: [
     BreadcrumbModule,
@@ -374,7 +380,6 @@ import { MarkingDefinitionListComponent } from "./views/stix/marking-definition/
     MatSnackBarModule,
     DragDropModule,
     ClipboardModule,
-
     OverlayModule
   ],
   providers: [

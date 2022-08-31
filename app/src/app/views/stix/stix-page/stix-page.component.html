@@ -5,6 +5,7 @@
         </div>
         <ng-template #showObject>
             <app-relationship-view *ngIf="objects[0].attackType == 'relationship'" [config]="buildConfig()"></app-relationship-view>
+            <app-campaign-view *ngIf="objects[0].attackType == 'campaign'" (onReload)="loadObjects()" [config]="buildConfig()"></app-campaign-view>
             <app-group-view *ngIf="objects[0].attackType == 'group'" (onReload)="loadObjects()" [config]="buildConfig()"></app-group-view>
             <app-software-view *ngIf="objects[0].attackType == 'software'" (onReload)="loadObjects()" [config]="buildConfig()"></app-software-view>
             <app-matrix-view *ngIf="objects[0].attackType == 'matrix'" [config]="buildConfig()"></app-matrix-view>

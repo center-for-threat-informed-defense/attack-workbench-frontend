@@ -3,6 +3,7 @@ import { Component, Inject, OnInit, ViewEncapsulation } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { forkJoin } from 'rxjs';
 import { ValidationData } from 'src/app/classes/serializable';
+import { Campaign } from 'src/app/classes/stix/campaign';
 import { Collection } from 'src/app/classes/stix/collection';
 import { DataComponent } from 'src/app/classes/stix/data-component';
 import { Group } from 'src/app/classes/stix/group';
@@ -25,6 +26,7 @@ import { StixViewConfig } from '../stix-view-page';
 const stixTypeToClass = {
     "attack-pattern": Technique,
     "x-mitre-tactic": Tactic,
+    "campaign": Campaign,
     "intrusion-set": Group,
     "tool": Software,
     "malware": Software,

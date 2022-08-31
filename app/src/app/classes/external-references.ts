@@ -145,7 +145,7 @@ export class ExternalReferences extends Serializable {
     public parseObjectCitations(object: StixObject, restAPIConnector: RestApiConnectorService): Observable<CitationParseResult> {
         // get list of descriptive fields that support citations
         let refs_fields = ['description'];
-        if (object.attackType == 'software' || object.attackType == 'group') refs_fields.push('aliases');
+        if (['software', 'group', 'campaign'].includes(object.attackType)) refs_fields.push('aliases');
         if (object.attackType == 'technique') refs_fields.push('detection');
 
         // parse citations for each descriptive field on the object

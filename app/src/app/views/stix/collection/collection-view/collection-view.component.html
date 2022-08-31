@@ -83,7 +83,7 @@
             <div class="row">
                 <div class="col changes" *ngIf="editingReloadToggle">
                     <mat-accordion>
-                        <mat-expansion-panel *ngFor="let attackType of ['matrix', 'technique', 'tactic', 'mitigation', 'group', 'software', 'data_source', 'data_component']" class="mat-elevation-z0">
+                        <mat-expansion-panel *ngFor="let attackType of ['matrix', 'tactic', 'technique', 'mitigation', 'campaign', 'group', 'software', 'data_source', 'data_component']" class="mat-elevation-z0">
                             <mat-expansion-panel-header>
                                 <mat-panel-title>
                                     <h3>{{format(attackType)}}</h3>

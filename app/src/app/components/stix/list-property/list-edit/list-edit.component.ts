@@ -54,6 +54,11 @@ export class ListEditComponent implements OnInit, AfterContentChecked {
     public inputControl: FormControl;
     readonly separatorKeysCodes: number[] = [ENTER];   
 
+    public get values() {
+        if (this.config.field == "aliases") return this.config.object[this.config.field].slice(1); // filter out the first alias
+        return this.config.object[this.config.field];
+    }
+
     constructor(public dialog: MatDialog, private restAPIConnectorService: RestApiConnectorService, private ref: ChangeDetectorRef) { }
 
     ngOnInit(): void {
