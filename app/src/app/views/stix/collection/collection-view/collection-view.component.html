@@ -93,8 +93,9 @@
                                             (click)="addObjectsToCollection(attackType)"
                                             [disabled]="autoAddDisabled(attackType)"
                                             matTooltipPosition="above"
-                                            [matTooltip]="tooltip(attackType)">
-                                        <mat-icon>sync</mat-icon> <span class="text-label">apply {{attackType}} objects to collection</span>
+                                            matTooltip="automatically find and add {{plural[attackType]}} related to objects in this collection">
+                                        <mat-icon>playlist_add</mat-icon>
+                                        <span class="text-label">add {{plural[attackType]}} to collection</span>
                                     </button>
                                 </div>
                                 <mat-accordion>

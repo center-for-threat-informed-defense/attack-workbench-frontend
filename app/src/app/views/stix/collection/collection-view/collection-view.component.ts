@@ -47,6 +47,18 @@ export class CollectionViewComponent extends StixViewPage implements OnInit {
     public validating: boolean = false;
     public validationData: ValidationData = null;
 
+    // pluralize attackType for text display
+    public plural = {
+        "technique": "techniques",
+        "tactic": "tactics",
+        "group": "groups",
+        "software": "software",
+        "mitigation": "mitigations",
+        "matrix": "matrices",
+        "data-source": "data sources",
+        "data-component": "data components"
+    }
+
     public get collectionDownloadURL() {
         return `${environment.integrations.rest_api.url}/collection-bundles/?collectionId=${this.collection.stixID}&collectionModified=${this.collection.modified.toISOString()}`
     }
@@ -556,19 +568,6 @@ export class CollectionViewComponent extends StixViewPage implements OnInit {
     public autoAddDisabled(attackType: string): boolean {
         if (attackType == 'tactic') return !this.hasTechniques;
         else true; // only tactics are currently supported for this feature
-    }
-
-    /**
-     * Generate the matTooltip for the auto add objects button
-     * for the given attack type
-     * @param {string} attackType  the type of object to add
-     * @returns {string} the tooltip to be displayed
-     */
-    public tooltip(attackType: string): string {
-        let types: string = 'objects';
-        if (attackType == 'tactic') types = 'techniques';
-        let tooltip = `automatically add ${attackType} objects related to ${types} in this collection`;
-        return tooltip;
     }
 
     /**

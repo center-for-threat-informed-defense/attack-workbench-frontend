@@ -18,7 +18,6 @@
         <ng-template #objectList>
             <p>The following tactics are referenced by techniques in this collection and will be added automatically.</p>
             <ng-container>
-                <h3>Objects</h3>
                 <app-stix-list [config]="{stixObjects: tacticsToAdd, type: config.attackType, clickBehavior: 'none'}"></app-stix-list>
             </ng-container>
         </ng-template>
