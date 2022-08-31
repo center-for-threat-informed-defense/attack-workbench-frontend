@@ -54,6 +54,7 @@ export class ObjectStatusComponent implements OnInit {
             else if (this.editorService.type == "matrix") data$ = this.restAPIService.getAllMatrices(options);
             else if (this.editorService.type == "mitigation") data$ = this.restAPIService.getAllMitigations(options);
             else if (this.editorService.type == "tactic") data$ = this.restAPIService.getAllTactics(options);
+            else if (this.editorService.type == "campaign") data$ = this.restAPIService.getAllCampaigns(options);
             else if (this.editorService.type == "technique") data$ = this.restAPIService.getAllTechniques(options);
             else if (this.editorService.type == "collection") data$ = this.restAPIService.getAllCollections(options);
             else if (this.editorService.type == "data-source") data$ = this.restAPIService.getAllDataSources(options);

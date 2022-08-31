@@ -3,6 +3,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router, NavigationEnd } from '@angular/router';
 import { BreadcrumbService } from 'angular-crumbs';
 import { Observable } from 'rxjs';
+import { Campaign } from 'src/app/classes/stix/campaign';
 import { Collection } from 'src/app/classes/stix/collection';
 import { DataSource } from 'src/app/classes/stix/data-source';
 import { Group } from 'src/app/classes/stix/group';
@@ -118,7 +119,7 @@ export class StixPageComponent implements OnInit, OnDestroy {
     }
 
     /**
-     * Load the objects forthis page from the REST API
+     * Load the objects for this page from the REST API
      * @memberof StixPageComponent
      */
     private loadObjects(): void {
@@ -130,6 +131,7 @@ export class StixPageComponent implements OnInit, OnDestroy {
             let objects$: Observable<StixObject[]>;
             if (this.objectType  == "software") objects$ = this.restAPIConnectorService.getSoftware(objectStixID);
             else if (this.objectType  == "group") objects$ = this.restAPIConnectorService.getGroup(objectStixID);
+            else if (this.objectType == "campaign") objects$ = this.restAPIConnectorService.getCampaign(objectStixID);
             else if (this.objectType  == "matrix") objects$ = this.restAPIConnectorService.getMatrix(objectStixID);
             else if (this.objectType  == "mitigation") objects$ = this.restAPIConnectorService.getMitigation(objectStixID);
             else if (this.objectType  == "tactic") objects$ = this.restAPIConnectorService.getTactic(objectStixID);
@@ -175,17 +177,21 @@ export class StixPageComponent implements OnInit, OnDestroy {
         } else {
             // create a new object to edit
             this.objects = [];
-            this.objects.push(
-                this.objectType  == 'matrix' ? new Matrix() :
-                this.objectType  == 'technique' ? new Technique() :
-                this.objectType  == 'tactic' ? new Tactic() :
-                this.objectType  == 'mitigation' ? new Mitigation() :
-                this.objectType  == 'group' ? new Group() :
-                this.objectType  == 'collection' ? new Collection() :
-                this.objectType  == 'data-source' ? new DataSource() :
-                this.objectType  == 'marking-definition' ? new MarkingDefinition() :
-                null // if not any of the above types
-            );
+            let attackTypeToClass = function(objectType: string) {
+                switch(objectType) {
+                    case 'matrix': return new Matrix();
+                    case 'technique': return new Technique();
+                    case 'tactic': return new Tactic();
+                    case 'mitigation': return new Mitigation();
+                    case 'campaign': return new Campaign();
+                    case 'group': return new Group();
+                    case 'collection': return new Collection();
+                    case 'data-source': return new DataSource();
+                    case 'marking-definition': return new MarkingDefinition();
+                    default: return null;
+                }
+            }
+            this.objects.push(attackTypeToClass(this.objectType));
             this.initialVersion = new VersionNumber(this.objects[0].version.toString());
             this.updateBreadcrumbs(this.objects, this.objectType);
         };

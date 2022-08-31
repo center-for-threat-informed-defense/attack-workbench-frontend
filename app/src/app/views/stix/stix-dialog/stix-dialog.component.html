@@ -30,6 +30,11 @@
                                            (onOpenHistory)="openHistory()"
                                            (onOpenNotes)="openNotes()">
                     </app-group-view>
+                    <app-campaign-view     *ngIf="stixType == 'campaign'" 
+                                           [config]="config"
+                                           (onOpenHistory)="openHistory()"
+                                           (onOpenNotes)="openNotes()">
+                    </app-campaign-view>
                     <app-software-view     *ngIf="stixType == 'malware' || stixType == 'tool'" 
                                            [config]="config"
                                            (onOpenHistory)="openHistory()"

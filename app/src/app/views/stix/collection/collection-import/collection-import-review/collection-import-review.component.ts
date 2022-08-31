@@ -14,6 +14,7 @@ import { EditorService } from 'src/app/services/editor/editor.service';
 import { StixViewPage } from '../../../stix-view-page';
 import { logger } from "../../../../../util/logger";
 import { AuthenticationService } from 'src/app/services/connectors/authentication/authentication.service';
+import { Campaign } from 'src/app/classes/stix/campaign';
 
 @Component({
     selector: 'app-collection-import-review',
@@ -29,6 +30,7 @@ export class CollectionImportReviewComponent extends StixViewPage implements OnI
     public collection_import_categories = {
         technique:      new CollectionDiffCategories<Technique>(),
         tactic:         new CollectionDiffCategories<Tactic>(),
+        campaign:       new CollectionDiffCategories<Campaign>(),
         software:       new CollectionDiffCategories<Software>(),
         relationship:   new CollectionDiffCategories<Relationship>(),
         mitigation:     new CollectionDiffCategories<Mitigation>(),
@@ -98,6 +100,9 @@ export class CollectionImportReviewComponent extends StixViewPage implements OnI
                 break;
                 case "x-mitre-data-component": // data component
                     this.collection_import_categories.data_component[category].push(object);
+                break;
+                case "campaign": // campaign
+                    this.collection_import_categories.campaign[category].push(object);
                 break;
             }
         }
