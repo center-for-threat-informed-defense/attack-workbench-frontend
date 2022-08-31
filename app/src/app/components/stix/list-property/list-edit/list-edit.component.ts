@@ -27,6 +27,15 @@ export class ListEditComponent implements OnInit, AfterContentChecked {
     public selectControl: FormControl;
     public dataLoaded: boolean = false;
 
+    // selection model (editType: 'stixList')
+    public select: SelectionModel<string>;
+    public type: string;
+    public allObjects: StixObject[] = [];
+
+    // any value (editType: 'any')
+    public inputControl: FormControl;
+    readonly separatorKeysCodes: number[] = [ENTER];   
+
     // prevent async issues
     private sub: Subscription = new Subscription();
 
@@ -45,16 +54,9 @@ export class ListEditComponent implements OnInit, AfterContentChecked {
         "ics-attack"
     ]
 
-    // selection model (editType: 'stixList')
-    public select: SelectionModel<string>;
-    public type: string;
-    public allObjects: StixObject[] = [];
-
-    // any value (editType: 'any')
-    public inputControl: FormControl;
-    readonly separatorKeysCodes: number[] = [ENTER];   
-
-    constructor(public dialog: MatDialog, private restAPIConnectorService: RestApiConnectorService, private ref: ChangeDetectorRef) { }
+    constructor(public dialog: MatDialog, private restAPIConnectorService: RestApiConnectorService, private ref: ChangeDetectorRef) {
+        // intentionally left blank
+    }
 
     ngOnInit(): void {
         this.selectControl = new FormControl({value: this.config.object[this.config.field], disabled: this.config.disabled ? this.config.disabled : false});
