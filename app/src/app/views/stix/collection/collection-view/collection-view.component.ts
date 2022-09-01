@@ -599,6 +599,17 @@ export class CollectionViewComponent extends StixViewPage implements OnInit {
         });
     }
 
+    /**
+     * Get the display text list of object types that will be used
+     * to identify objects to automatically add to the collection
+     * @param attackType the type of objects to add to the collection
+     * @returns {string} display text of relevant objects
+     */
+    public relevantObjects(attackType: string): string {
+        if (attackType == 'tactic') return 'techniques';
+        else return 'objects'; // only tactics are currently supported for auto-add
+    }
+
     ngOnInit() {
         //set up subscription to route query params to reinitialize stix lists
         this.route.queryParams.subscribe(params => {
