@@ -565,12 +565,12 @@ export class CollectionViewComponent extends StixViewPage implements OnInit {
      * Determine if the auto add objects button is disabled
      * for a given attack type
      * @param {string} attackType the type of object to add
-     * @returns {boolean} true, if objects of this type can be
-     * added, false otherwise
+     * @returns {boolean} false, if objects of this type can be added
+     * (button is not disabled), true otherwise (button is disabled)
      */
     public autoAddDisabled(attackType: string): boolean {
         if (attackType == 'tactic') return !this.hasTechniques;
-        else true; // only tactics are currently supported for this feature
+        return true; // only tactics are currently supported for this feature
     }
 
     /**
@@ -607,7 +607,7 @@ export class CollectionViewComponent extends StixViewPage implements OnInit {
      */
     public relevantObjects(attackType: string): string {
         if (attackType == 'tactic') return 'techniques';
-        else return 'objects'; // only tactics are currently supported for auto-add
+        return 'objects'; // only tactics are currently supported for auto-add
     }
 
     ngOnInit() {
