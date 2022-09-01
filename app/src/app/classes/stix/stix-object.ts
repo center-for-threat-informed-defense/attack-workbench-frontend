@@ -14,6 +14,7 @@ let stixTypeToAttackType = {
     "malware": "software",
     "tool": "software",
     "intrusion-set": "group",
+    "campaign": "campaign",
     "course-of-action": "mitigation",
     "x-mitre-matrix": "matrix",
     "x-mitre-tactic": "tactic",
@@ -50,6 +51,7 @@ export abstract class StixObject extends Serializable {
         "technique": "techniques",
         "software": "software",
         "group": "groups",
+        "campaign": "campaigns",
         "mitigation": "mitigations",
         "matrix": "matrices",
         "tactic": "tactics",
@@ -291,6 +293,7 @@ export abstract class StixObject extends Serializable {
                 // check if name & ATT&CK ID is unique, record result in validation, and return validation
                 let accessor = this.attackType == "collection"? restAPIService.getAllCollections() :
                                 this.attackType == "group"? restAPIService.getAllGroups() :
+                                this.attackType == "campaign"? restAPIService.getAllCampaigns() :
                                 this.attackType == "software"? restAPIService.getAllSoftware() :
                                 this.attackType == "matrix"? restAPIService.getAllMatrices() :
                                 this.attackType == "mitigation"? restAPIService.getAllMitigations() :
@@ -355,6 +358,23 @@ export abstract class StixObject extends Serializable {
                                 }
                             }
                         }
+                        // check required first/last seen fields for campaigns
+                        if (this.attackType == "campaign") {
+                            if (!this.hasOwnProperty('first_seen') || this['first_seen'] == null) {
+                                result.errors.push({
+                                    "result": "error",
+                                    "field": "first_seen",
+                                    "message": "object does not have a first seen date"
+                                })
+                            }
+                            if (!this.hasOwnProperty('last_seen') || this['last_seen'] == null) {
+                                result.errors.push({
+                                    "result": "error",
+                                    "field": "last_seen",
+                                    "message": "object does not have a last seen date"
+                                })
+                            }
+                        }
                         return result;
                     })
                 )
@@ -363,7 +383,7 @@ export abstract class StixObject extends Serializable {
             switchMap(result => {
                 // build list of fields to validate external references on according to ATT&CK type
                 let refs_fields = ["description"];
-                if (this.attackType == "software" || this.attackType == "group") refs_fields.push("aliases");
+                if (['software', 'group', 'campaign'].includes(this.attackType)) refs_fields.push("aliases");
                 if (this.attackType == "technique") refs_fields.push("detection");
 
                 return this.external_references.validate(restAPIService, { object: this, fields: refs_fields }).pipe(
@@ -557,6 +577,7 @@ export abstract class StixObject extends Serializable {
         this.attackID = '(generating ID)';
 
         let accessor = this.attackType == "group" ? restAPIConnector.getAllGroups() :
+                        this.attackType == "campaign" ? restAPIConnector.getAllCampaigns() :
                         this.attackType == "mitigation" ? restAPIConnector.getAllMitigations() :
                         this.attackType == "software" ? restAPIConnector.getAllSoftware() :
                         this.attackType == "tactic" ? restAPIConnector.getAllTactics() :

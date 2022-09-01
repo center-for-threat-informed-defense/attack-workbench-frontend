@@ -38,6 +38,8 @@
 
 ATT&CK Workbench v1.2.0 supports authentication and authorization for users. The REST API can be configured to use the Anonymous or OpenID Connect (OIDC) authentication mechanisms. See the [authentication documentation](https://github.com/center-for-threat-informed-defense/attack-workbench-rest-api/tree/master/docs/authentication.md#authentication) for more information.
 
+Additionally, Workbench v1.2.0 introduces the ability to create, edit, and view Campaign objects.
+
 #### New Features in 1.2.0
 
 -   Added functionality to generate object ATT&CK IDs. See [frontend#114](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/114) and [frontend#300](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/300).
@@ -52,6 +54,7 @@ ATT&CK Workbench v1.2.0 supports authentication and authorization for users. The
 -   Added a link to the parent technique page from the sub-technique page. See [frontend#309](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/309).
 -   Added a link to tactic pages from the matrix page. See [frontend#391](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/391).
 -   Added support for viewing techniques associated with a tactic on the tactic view page. See [frontend#390](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/390).
+-   Added ability to create and edit Campaign objects. See [frontend#376](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/376), [frontend#377](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/377), and [frontend#384](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/384).
 
 #### Improvements in 1.2.0
 

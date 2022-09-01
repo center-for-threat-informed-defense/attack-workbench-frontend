@@ -6,6 +6,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatStepper } from '@angular/material/stepper';
 import { ActivatedRoute } from '@angular/router';
 import { FileInputComponent } from 'ngx-material-file-input';
+import { Campaign } from 'src/app/classes/stix/campaign';
 import { Collection, CollectionDiffCategories } from 'src/app/classes/stix/collection';
 import { DataComponent } from 'src/app/classes/stix/data-component';
 import { DataSource } from 'src/app/classes/stix/data-source';
@@ -47,6 +48,7 @@ export class CollectionImportComponent implements OnInit {
     public object_import_categories = {
         technique:      new CollectionDiffCategories<Technique>(),
         tactic:         new CollectionDiffCategories<Tactic>(),
+        campaign:       new CollectionDiffCategories<Campaign>(),
         software:       new CollectionDiffCategories<Software>(),
         relationship:   new CollectionDiffCategories<Relationship>(),
         mitigation:     new CollectionDiffCategories<Mitigation>(),
@@ -187,6 +189,9 @@ export class CollectionImportComponent implements OnInit {
                 break;
                 case "x-mitre-data-component": // data component
                     this.object_import_categories.data_component[category].push(new DataComponent(raw))
+                break;
+                case "campaign": // campaign
+                    this.object_import_categories.campaign[category].push(new Campaign(raw))
                 break;
             }
         }

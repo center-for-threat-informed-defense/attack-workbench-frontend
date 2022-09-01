@@ -1,9 +1,10 @@
-<div class="software-view view-page grid spacing-12">
+<div class="campaign-view view-page grid spacing-12">
     <div class="row">
         <div class="col">
+            <!-- NAME -->
             <app-name-property [config]="{
                 mode: editing? 'edit' : 'view',
-                object: software
+                object: campaign
             }"></app-name-property>
             <app-subheading [config]="config" (onOpenHistory)="openHistory()" (onOpenNotes)="openNotes()"></app-subheading>
         </div>
@@ -13,46 +14,37 @@
             <!-- ATT&CK ID -->
             <app-attackid-property class="grow-to-row" [config]="{
                 mode: editing? 'edit' : 'view',
-                object: software
+                object: campaign
             }"></app-attackid-property>
         </div>
         <div class="col">
             <!-- VERSION NUMBER -->
             <app-version-property class="grow-to-row" [config]="{
                 mode: editing? 'edit' : 'view',
-                object: software
+                object: campaign
             }"></app-version-property>
         </div>
     </div>
     <div class="row">
         <div class="col">
-            <!-- DOMAINS-->
-            <app-list-property class="grow-to-row" [config]="{
+            <!-- FIRST SEEN -->
+            <app-datepicker-property class="datepicker" [config]="{
                 mode: editing? 'edit': 'view',
-                object: software,
-                field: 'domains',
-                editType: 'select'
-            }"></app-list-property>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col">
-            <!-- TYPE -->
-            <div class="labelled-box grow-to-row" matTooltip="this field cannot be edited" [matTooltipDisabled]="!editing">
-                <div class="content capitalize">
-                    {{software.type}}
-                </div>
-                <label>type</label>
-            </div>
+                object: campaign,
+                field: 'first_seen',
+                label: 'first seen',
+                required: true
+            }"></app-datepicker-property>
         </div>
         <div class="col">
-            <!-- PLATFORMS -->
-            <app-list-property class="grow-to-row" [config]="{
-                mode: editing? 'edit' : 'view',
-                object: software,
-                field: 'platforms',
-                editType: 'select'
-            }"></app-list-property>
+            <!-- LAST SEEN -->
+            <app-datepicker-property class="datepicker" [config]="{
+                mode: editing? 'edit': 'view',
+                object: campaign,
+                field: 'last_seen',
+                label: 'last seen',
+                required: true
+            }"></app-datepicker-property>
         </div>
     </div>
     <div class="row">
@@ -60,19 +52,19 @@
             <!-- CONTRIBUTORS -->
             <app-list-property class="grow-to-row" [config]="{
                 mode: editing? 'edit' : 'view',
-                object: software,
+                object: campaign,
                 field: 'contributors',
                 editType: 'any'
             }"></app-list-property>
         </div>
         <div class="col">
-            <!-- SOFTWARE ALIASES -->
+            <!-- CAMPAIGN ALIASES -->
             <app-alias-property class="grow-to-row" [config]="{
                 mode: editing? 'edit' : 'view',
-                object: software,
+                object: campaign,
                 field: 'aliases',
                 referencesField: 'external_references',
-                label: 'Associated Software'
+                label: 'Associated Campaigns'
             }"></app-alias-property>
         </div>
     </div>
@@ -81,17 +73,17 @@
             <!-- DESCRIPTION -->
             <app-descriptive-property [config]="{
                 mode: editing? 'edit' : 'view',
-                object: software,
+                object: campaign,
                 field: 'description',
                 firstParagraphOnly: false, 
-                referencesField: software.external_references,
+                referencesField: campaign.external_references,
                 label: 'Description'
             }"></app-descriptive-property>
         </div>
     </div>
     <!-- only show relationships if configured to show them -->
-    <div *ngIf="(config.showRelationships || !config.hasOwnProperty('showRelationships')) && !editing">
-        <!-- techniques used -->
+    <div *ngIf="(config.showRelationships || !config.hasOwnProperty('showRelationships')) && !editing">        
+        <!-- TECHNIQUES USED -->
         <div class="row">
             <div class="col">
                 <h2 class="section-header">Techniques Used</h2>
@@ -99,45 +91,19 @@
         </div>
         <div class="row" *ngIf="canEdit">
             <div class="col">
-                <app-add-relationship-button (created)="techniquesList.applyControls(); onReload.emit()" [config]="{
+                <app-add-relationship-button (created)="techniqueList.applyControls(); onReload.emit()" [config]="{
                     label: 'technique',
                     relationship_type: 'uses',
-                    source_object: software
+                    source_object: campaign
                 }"></app-add-relationship-button>
             </div>
         </div>
         <div class="row">
             <div class="col">
-                <app-stix-list #techniquesList [config]="{
+                <app-stix-list #techniqueList [config]="{
                     'type': 'relationship', 
-                    'sourceRef': software.stixID,
-                    'relationshipType': 'uses',
-                    'clickBehavior': 'dialog',
-                    'allowEdits': true
-                }"></app-stix-list>
-            </div>
-        </div>
-        
-        <!-- associated groups -->
-        <div class="row">
-            <div class="col">
-                <h2 class="section-header">Associated Groups</h2>
-            </div>
-        </div>
-        <div class="row" *ngIf="canEdit">
-            <div class="col">
-                <app-add-relationship-button (created)="groupList.applyControls(); onReload.emit()" [config]="{
-                    label: 'group',
-                    relationship_type: 'uses',
-                    target_object: software
-                }"></app-add-relationship-button>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col">
-                <app-stix-list #groupList [config]="{
-                    'type': 'relationship', 
-                    'targetRef': software.stixID,
+                    'sourceRef': campaign.stixID,
+                    'targetType': 'technique',
                     'relationshipType': 'uses',
                     'clickBehavior': 'dialog',
                     'allowEdits': true
@@ -145,27 +111,55 @@
             </div>
         </div>
 
-        <!-- campaigns -->
+        <!-- GROUPS -->
         <div class="row">
             <div class="col">
-                <h2 class="section-header">Campaigns</h2>
+                <h2 class="section-header">Groups</h2>
             </div>
         </div>
         <div class="row" *ngIf="canEdit">
             <div class="col">
-                <app-add-relationship-button (created)="campaignList.applyControls(); onReload.emit()" [config]="{
-                    label: 'campaign',
-                    relationship_type: 'uses',
-                    target_object: software
+                <app-add-relationship-button (created)="groupsList.applyControls(); onReload.emit()" [config]="{
+                    label: 'group',
+                    relationship_type: 'attributed-to',
+                    source_object: campaign
                 }"></app-add-relationship-button>
             </div>
         </div>
         <div class="row">
             <div class="col">
-                <app-stix-list #campaignList [config]="{
+                <app-stix-list #groupsList [config]="{
+                    'type': 'relationship',
+                    'sourceRef': campaign.stixID,
+                    'targetType': 'group',
+                    'relationshipType': 'attributed-to',
+                    'clickBehavior': 'dialog',
+                    'allowEdits': true
+                }"></app-stix-list>
+            </div>
+        </div>
+
+        <!-- SOFTWARE USED -->
+        <div class="row">
+            <div class="col">
+                <h2 class="section-header">Software Used</h2>
+            </div>
+        </div>
+        <div class="row" *ngIf="canEdit">
+            <div class="col">
+                <app-add-relationship-button (created)="softwareList.applyControls(); onReload.emit()" [config]="{
+                    label: 'software',
+                    relationship_type: 'uses',
+                    source_object: campaign
+                }"></app-add-relationship-button>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <app-stix-list #softwareList [config]="{
                     'type': 'relationship', 
-                    'targetRef': software.stixID,
-                    'sourceType': 'campaign',
+                    'sourceRef': campaign.stixID,
+                    'targetType': 'software',
                     'relationshipType': 'uses',
                     'clickBehavior': 'dialog',
                     'allowEdits': true
@@ -174,7 +168,7 @@
         </div>
     </div>
     <!-- EXTERNAL REFERENCES -->
-    <div *ngIf="software.external_references.list().length > 0">
+    <div *ngIf="campaign.external_references.list().length > 0">
         <div class="row">
             <div class="col">
                 <h2 class="section-header">References</h2>
@@ -184,8 +178,8 @@
             <div class="col">
                 <app-external-references-property [config]="{
                     mode: editing? 'edit': 'view',
-                    object: software,
-                    referencesField: software.external_references
+                    object: campaign,
+                    referencesField: campaign.external_references
                 }"></app-external-references-property>
             </div>
         </div>

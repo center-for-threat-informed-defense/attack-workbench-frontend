@@ -13,6 +13,7 @@ import { DataSource } from './data-source';
 import { DataComponent } from './data-component';
 import { logger } from "../../util/logger";
 import { MarkingDefinition } from './marking-definition';
+import { Campaign } from './campaign';
 
 /**
  *auto-generated changelog/report about an import
@@ -268,6 +269,9 @@ export class Collection extends StixObject {
                     case "x-mitre-tactic": //tactic
                         this.stix_contents.push(new Tactic(obj))
                     break;
+                    case "campaign": // campaign
+                        this.stix_contents.push(new Campaign(obj))
+                    break;
                     case "malware": //software
                     case "tool": 
                         this.stix_contents.push(new Software(obj.type, obj))
@@ -305,6 +309,7 @@ export class Collection extends StixObject {
     public compareTo(that: Collection): { 
         technique:      CollectionDiffCategories<Technique>,
         tactic:         CollectionDiffCategories<Tactic>,
+        campaign:       CollectionDiffCategories<Campaign>,
         software:       CollectionDiffCategories<Software>,
         relationship:   CollectionDiffCategories<Relationship>,
         mitigation:     CollectionDiffCategories<Mitigation>,
@@ -317,6 +322,7 @@ export class Collection extends StixObject {
         let results = {
             technique:      new CollectionDiffCategories<Technique>(),
             tactic:         new CollectionDiffCategories<Tactic>(),
+            campaign:       new CollectionDiffCategories<Campaign>(),
             software:       new CollectionDiffCategories<Software>(),
             relationship:   new CollectionDiffCategories<Relationship>(),
             mitigation:     new CollectionDiffCategories<Mitigation>(),

@@ -76,7 +76,7 @@
                     <!-- expansion panels -->
                     <mat-accordion>
                         <mat-expansion-panel class="mat-elevation-z0"
-                                *ngFor="let attackType of ['matrix', 'technique', 'tactic', 'mitigation', 'group', 'software', 'data_source', 'data_component']"
+                                *ngFor="let attackType of ['matrix', 'tactic', 'technique', 'mitigation', 'campaign', 'group', 'software', 'data_source', 'data_component']"
                                 [expanded]="panel == attackType"
                                 (click)="panel = attackType">
                             <!-- header -->

@@ -24,6 +24,7 @@ import { logger } from "../../../../util/logger";
 import { AuthenticationService } from 'src/app/services/connectors/authentication/authentication.service';
 import { MatDialog } from '@angular/material/dialog';
 import { CollectionUpdateDialogComponent } from 'src/app/components/collection-update-dialog/collection-update-dialog.component';
+import { Campaign } from 'src/app/classes/stix/campaign';
 
 type changeCategory = "additions" | "changes" | "minor_changes" | "revocations" | "deprecations";
 
@@ -72,6 +73,7 @@ export class CollectionViewComponent extends StixViewPage implements OnInit {
     public potentialChanges = {
         technique:      new CollectionDiffCategories<Technique>(),
         tactic:         new CollectionDiffCategories<Tactic>(),
+        campaign:       new CollectionDiffCategories<Campaign>(),
         software:       new CollectionDiffCategories<Software>(),
         relationship:   new CollectionDiffCategories<Relationship>(),
         mitigation:     new CollectionDiffCategories<Mitigation>(),
@@ -84,6 +86,7 @@ export class CollectionViewComponent extends StixViewPage implements OnInit {
     public collectionChanges = {
         technique:      new CollectionDiffCategories<Technique>(),
         tactic:         new CollectionDiffCategories<Tactic>(),
+        campaign:       new CollectionDiffCategories<Campaign>(),
         software:       new CollectionDiffCategories<Software>(),
         relationship:   new CollectionDiffCategories<Relationship>(),
         mitigation:     new CollectionDiffCategories<Mitigation>(),

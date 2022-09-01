@@ -58,6 +58,11 @@ export class ListEditComponent implements OnInit, AfterContentChecked {
         // intentionally left blank
     }
 
+    public get values() {
+        if (this.config.field == "aliases") return this.config.object[this.config.field].slice(1); // filter out the first alias
+        return this.config.object[this.config.field];
+    }
+
     ngOnInit(): void {
         this.selectControl = new FormControl({value: this.config.object[this.config.field], disabled: this.config.disabled ? this.config.disabled : false});
         this.inputControl = new FormControl(null, this.config.required ? [Validators.required] : undefined);
