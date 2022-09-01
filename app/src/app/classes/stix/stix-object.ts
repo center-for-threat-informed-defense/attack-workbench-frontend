@@ -367,11 +367,25 @@ export abstract class StixObject extends Serializable {
                                     "message": "object does not have a first seen date"
                                 })
                             }
+                            if (!this.hasOwnProperty('first_seen_citation') || this['first_seen_citation'] == null) {
+                                result.errors.push({
+                                    "result": "error",
+                                    "field": "first_seen_citation",
+                                    "message": "object is missing a citation for the first seen date"
+                                })
+                            }
                             if (!this.hasOwnProperty('last_seen') || this['last_seen'] == null) {
                                 result.errors.push({
                                     "result": "error",
                                     "field": "last_seen",
                                     "message": "object does not have a last seen date"
+                                })
+                            }
+                            if (!this.hasOwnProperty('last_seen_citation') || this['last_seen_citation'] == null) {
+                                result.errors.push({
+                                    "result": "error",
+                                    "field": "last_seen_citation",
+                                    "message": "object is missing a citation for the last seen date"
                                 })
                             }
                         }
