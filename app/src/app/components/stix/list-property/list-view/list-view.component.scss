@@ -11,11 +11,8 @@ ul.list-view {
     li.list-item {
         display: inline-block;
         &:not(:last-child):after {
-            content: ",";
+            content: ";";
             margin-right: 3px;
         }
-        // & + li.list-item {
-        //     padding-left: 4px;
-        // }
     }
 }

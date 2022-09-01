@@ -71,26 +71,35 @@
                     <h2 class="section-header">Changes in this release</h2>
                 </div>
             </div>
-            <!-- LIST BUILDER / DUAL LIST UI -->
-            <!-- <div class="row">
-                <div class="col center">
-                    <h4 class="text-label">Objects in Knowledge Base</h4>
-                </div>
-                <div class="col center">
-                    <h4 class="text-label">Objects in Collection</h4>
-                </div>
-            </div> !-->
             <div class="row">
                 <div class="col changes" *ngIf="editingReloadToggle">
+                    <!-- expansion panels -->
                     <mat-accordion>
-                        <mat-expansion-panel *ngFor="let attackType of ['matrix', 'tactic', 'technique', 'mitigation', 'campaign', 'group', 'software', 'data_source', 'data_component']" class="mat-elevation-z0">
+                        <mat-expansion-panel class="mat-elevation-z0"
+                                *ngFor="let attackType of ['matrix', 'tactic', 'technique', 'mitigation', 'campaign', 'group', 'software', 'data_source', 'data_component']"
+                                [expanded]="panel == attackType"
+                                (click)="panel = attackType">
+                            <!-- header -->
                             <mat-expansion-panel-header>
                                 <mat-panel-title>
                                     <h3>{{format(attackType)}}</h3>
                                 </mat-panel-title>
                             </mat-expansion-panel-header>
+                            <!-- panel content ( staged changes ) -->
                             <ng-template matExpansionPanelContent>
+                                <!-- automatically add tactics -->
+                                <div *ngIf="editing && attackType == 'tactic'" class="row apply-button">
+                                    <button mat-mini-fab class="extended-fab-button" color="primary"
+                                            (click)="addObjectsToCollection(attackType)"
+                                            [disabled]="autoAddDisabled(attackType)"
+                                            matTooltipPosition="above"
+                                            matTooltip="automatically find and add {{plural[attackType]}} related to {{relevantObjects(attackType)}} in this collection">
+                                        <mat-icon>playlist_add</mat-icon>
+                                        <span class="text-label">apply {{plural[attackType]}} to collection</span>
+                                    </button>
+                                </div>
                                 <mat-accordion>
+                                    <!-- additions -->
                                     <mat-expansion-panel class="mat-elevation-z0">
                                         <mat-expansion-panel-header>
                                             <mat-panel-title>
@@ -156,6 +165,7 @@
                                             </div>
                                         </ng-template>
                                     </mat-expansion-panel>
+                                    <!-- changes -->
                                     <mat-expansion-panel class="mat-elevation-z0">
                                         <mat-expansion-panel-header>
                                             <mat-panel-title>
@@ -221,6 +231,7 @@
                                             </div>
                                         </ng-template>
                                     </mat-expansion-panel>
+                                    <!-- minor changes -->
                                     <mat-expansion-panel class="mat-elevation-z0">
                                         <mat-expansion-panel-header>
                                             <mat-panel-title>
@@ -286,6 +297,7 @@
                                             </div>
                                         </ng-template>
                                     </mat-expansion-panel>
+                                    <!-- revocations -->
                                     <mat-expansion-panel class="mat-elevation-z0">
                                         <mat-expansion-panel-header>
                                             <mat-panel-title>
@@ -351,6 +363,7 @@
                                             </div>
                                         </ng-template>
                                     </mat-expansion-panel>
+                                    <!-- deprecations -->
                                     <mat-expansion-panel class="mat-elevation-z0">
                                         <mat-expansion-panel-header>
                                             <mat-panel-title>
@@ -416,6 +429,7 @@
                                             </div>
                                         </ng-template>
                                     </mat-expansion-panel>
+                                    <!-- unchanged objects -->
                                     <mat-expansion-panel class="mat-elevation-z0">
                                         <mat-expansion-panel-header>
                                             <mat-panel-title>
@@ -436,7 +450,10 @@
                                 </mat-accordion>
                             </ng-template>
                         </mat-expansion-panel>
-                        <mat-expansion-panel  class="mat-elevation-z0">
+                        <!-- relationships -->
+                        <mat-expansion-panel  class="mat-elevation-z0"
+                                [expanded]="panel == 'relationships'"
+                                (click)="panel = 'relationships'">
                             <mat-expansion-panel-header>
                                 <mat-panel-title>
                                     <h3>Relationship</h3>
@@ -471,7 +488,10 @@
                                 </p>
                             </ng-template>
                         </mat-expansion-panel>
-                        <mat-expansion-panel  class="mat-elevation-z0">
+                        <!-- marking definitions -->
+                        <mat-expansion-panel  class="mat-elevation-z0"
+                                [expanded]="panel == 'marking_defs'"
+                                (click)="panel = 'marking_defs'">
                             <mat-expansion-panel-header>
                                 <mat-panel-title>
                                     <h3>Marking Definition</h3>

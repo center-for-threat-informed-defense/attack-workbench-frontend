@@ -72,6 +72,7 @@ import { ReferenceEditDialogComponent } from "./components/resources-drawer/refe
 import { MultipleChoiceDialogComponent } from "./components/multiple-choice-dialog/multiple-choice-dialog.component";
 import { ValidationResultsComponent } from "./components/validation-results/validation-results.component";
 import { AddRelationshipButtonComponent } from "./components/add-relationship-button/add-relationship-button.component";
+import { CollectionUpdateDialogComponent } from './components/collection-update-dialog/collection-update-dialog.component';
 
 // STIX components
 import { StixListComponent } from './components/stix/stix-list/stix-list.component';
@@ -200,6 +201,7 @@ import { CampaignListComponent } from './views/stix/campaign/campaign-list/campa
     MultipleChoiceDialogComponent,
     ValidationResultsComponent,
     AddRelationshipButtonComponent,
+    CollectionUpdateDialogComponent,
 
     StixListComponent,
 
