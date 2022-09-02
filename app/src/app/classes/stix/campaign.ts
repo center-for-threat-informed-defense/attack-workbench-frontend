@@ -8,6 +8,8 @@ export class Campaign extends StixObject {
     public name: string = "";
     public first_seen: Date;
     public last_seen: Date;
+    public first_seen_citation: string = "";
+    public last_seen_citation: string = "";
     public aliases: string[] = ["placeholder"]; // initialize field with placeholder in first index for campaign name
     public contributors: string[] = [];
 
@@ -36,8 +38,10 @@ export class Campaign extends StixObject {
         let rep = super.base_serialize();
 
         rep.stix.name = this.name.trim();
-        if (this.first_seen) rep.stix.first_seen = this.first_seen.toISOString();
-        if (this.last_seen) rep.stix.last_seen = this.last_seen.toISOString();
+        rep.stix.first_seen = this.first_seen.toISOString();
+        rep.stix.last_seen = this.last_seen.toISOString();
+        rep.stix.x_mitre_first_seen_citation = this.first_seen_citation.trim();
+        rep.stix.x_mitre_last_seen_citation = this.last_seen_citation.trim();
         rep.stix.aliases = this.aliases.map(x => x.trim());
         rep.stix.x_mitre_contributors = this.contributors.map(x => x.trim());
 
@@ -66,6 +70,16 @@ export class Campaign extends StixObject {
             if ("last_seen" in sdo) {
                 if (typeof (sdo.last_seen) === "string") this.last_seen = new Date(sdo.last_seen);
                 else logger.error("TypeError: last_seen field is not a string:", sdo.last_seen, "(", typeof (sdo.last_seen), ")")
+            }
+
+            if ("x_mitre_first_seen_citation" in sdo) {
+                if (typeof(sdo.x_mitre_first_seen_citation) === "string") this.first_seen_citation = sdo.x_mitre_first_seen_citation;
+                else logger.error("TypeError: x_mitre_first_seen_citation field is not a string:", sdo.first_seen_citation, "(", typeof (sdo.first_seen_citation), ")")
+            }
+
+            if ("x_mitre_last_seen_citation" in sdo) {
+                if (typeof(sdo.x_mitre_last_seen_citation) === "string") this.last_seen_citation = sdo.x_mitre_last_seen_citation;
+                else logger.error("TypeError: x_mitre_last_seen_citation field is not a string:", sdo.last_seen_citation, "(", typeof (sdo.last_seen_citation), ")")
             }
 
             if ("aliases" in sdo) {

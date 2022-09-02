@@ -1053,16 +1053,38 @@ export class RestApiConnectorService extends ApiConnector {
      * @param {Date} modified the modified date of the tactic
      * @returns {Technique[]} a list of techniques that reference the tactic
      */
-    public getTechniquesInTactic(tactic_id: string, modified: Date, limit?: number, offset?: number): Observable<Technique[]> {
+    public getTechniquesInTactic(tactic_id: string, modified: Date): Observable<Technique[]> {
         let url = `${this.baseUrl}/tactics/${tactic_id}/modified/${modified.toISOString()}/techniques`;
         return this.http.get(url).pipe(
             tap(results => logger.log("retrieved techniques", results)),
             map(response => {
                 let data = response as Array<any>;
-                data = data.map(sdo => {
+                let techniques: Technique[] = data.map(sdo => {
                     return new Technique(sdo);
                 });
-                return data;
+                return techniques;
+            }),
+            catchError(this.handleError_continue([])),
+            share()
+        )
+    }
+
+    /**
+     * Get all tactics referenced by the given technique
+     * @param {string} technique_id the stix id of the technique
+     * @param {Date} modified the modified date of the technique
+     * @returns {Tactic[]} a list of tactics that are referenced by the technique
+     */
+    public getTacticsRelatedToTechnique(technique_id: string, modified: Date): Observable<Tactic[]> {
+        let url = `${this.baseUrl}/techniques/${technique_id}/modified/${modified.toISOString()}/tactics`;
+        return this.http.get(url).pipe(
+            tap(results => logger.log("retrieved tactics", results)),
+            map(response => {
+                let data = response as Array<any>;
+                let tactics: Tactic[] = data.map(sdo => {
+                    return new Tactic(sdo);
+                });
+                return tactics;
             }),
             catchError(this.handleError_continue([])),
             share()

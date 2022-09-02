@@ -37,7 +37,10 @@ export interface OrderedListPropertyConfig {
     /* type of object to display stix lists
     */
     type?: string;
-    /* Display the labels as a hyperlink to the object's Workbench page? default: false
-    */
-    displayAsURL?: boolean;
+    /**
+     * How should the table act when the row is clicked? default "none"
+     *     "link": clicking redirects to the object
+     *     "none": row is not clickable
+     */
+    clickBehavior?: "link" | "none";
 }

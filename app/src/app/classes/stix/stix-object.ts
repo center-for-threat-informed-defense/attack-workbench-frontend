@@ -367,11 +367,25 @@ export abstract class StixObject extends Serializable {
                                     "message": "object does not have a first seen date"
                                 })
                             }
+                            if (!this.hasOwnProperty('first_seen_citation') || this['first_seen_citation'] == "") {
+                                result.errors.push({
+                                    "result": "error",
+                                    "field": "first_seen_citation",
+                                    "message": "object is missing a citation for the first seen date"
+                                })
+                            }
                             if (!this.hasOwnProperty('last_seen') || this['last_seen'] == null) {
                                 result.errors.push({
                                     "result": "error",
                                     "field": "last_seen",
                                     "message": "object does not have a last seen date"
+                                })
+                            }
+                            if (!this.hasOwnProperty('last_seen_citation') || this['last_seen_citation'] == "") {
+                                result.errors.push({
+                                    "result": "error",
+                                    "field": "last_seen_citation",
+                                    "message": "object is missing a citation for the last seen date"
                                 })
                             }
                         }
@@ -382,9 +396,10 @@ export abstract class StixObject extends Serializable {
             // validate external references
             switchMap(result => {
                 // build list of fields to validate external references on according to ATT&CK type
-                let refs_fields = ["description"];
-                if (['software', 'group', 'campaign'].includes(this.attackType)) refs_fields.push("aliases");
-                if (this.attackType == "technique") refs_fields.push("detection");
+                let refs_fields = ['description'];
+                if (['software', 'group', 'campaign'].includes(this.attackType)) refs_fields.push('aliases');
+                if (this.attackType == 'technique') refs_fields.push('detection');
+                if (this.attackType == 'campaign') refs_fields.push('first_seen_citation', 'last_seen_citation');
 
                 return this.external_references.validate(restAPIService, { object: this, fields: refs_fields }).pipe(
                     map(refs_result => {

@@ -55,6 +55,7 @@ Additionally, Workbench v1.2.0 introduces the ability to create, edit, and view 
 -   Added a link to tactic pages from the matrix page. See [frontend#391](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/391).
 -   Added support for viewing techniques associated with a tactic on the tactic view page. See [frontend#390](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/390).
 -   Added ability to create and edit Campaign objects. See [frontend#376](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/376), [frontend#377](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/377), and [frontend#384](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/384).
+-   Added the ability to automatically find and add tactics related to techniques when creating or editing a collection. See [frontend#388](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/388).
 
 #### Improvements in 1.2.0
 
