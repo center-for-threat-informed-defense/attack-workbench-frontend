@@ -1,5 +1,4 @@
 import { Component, Input, OnInit, ViewEncapsulation } from '@angular/core';
-import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/rest-api-connector.service';
 import { CitationPropertyConfig } from '../citation-property.component';
 
 @Component({
@@ -15,7 +14,7 @@ export class CitationViewComponent implements OnInit {
 
     private reReference = /\(Citation: (.*?)\)/gmu;
 
-    constructor(private restApiService: RestApiConnectorService) {
+    constructor() {
         // intentionally left blank
     }
 
