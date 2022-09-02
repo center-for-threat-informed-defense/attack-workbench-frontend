@@ -50,33 +50,25 @@
     <div class="row">
         <div class="col">
             <!-- FIRST SEEN CITATION -->
-            <mat-form-field *ngIf="editing; else viewFirst" appearance="outline">
-                <mat-label>first seen citation</mat-label>
-                <input matInput [(ngModel)]="campaign.first_seen_citation" required>
-            </mat-form-field>
-            <ng-template #viewFirst>
-                <div class="labelled-box grow-to-row">
-                    <div class="content">
-                        {{campaign.first_seen_citation}}
-                    </div>
-                    <label>first seen citation</label>
-                </div>
-            </ng-template>
+            <app-citation-property [config]="{
+                mode: editing? 'edit': 'view',
+                object: campaign,
+                field: 'first_seen_citation',
+                referencesField: campaign.external_references,
+                label: 'first seen citation',
+                required: true
+            }"></app-citation-property>
         </div>
         <div class="col">
             <!-- LAST SEEN CITATION -->
-            <mat-form-field *ngIf="editing; else viewLast" appearance="outline">
-                <mat-label>last seen citation</mat-label>
-                <input matInput [(ngModel)]="campaign.last_seen_citation" required>
-            </mat-form-field>
-            <ng-template #viewLast>
-                <div class="labelled-box grow-to-row">
-                    <div class="content">
-                        {{campaign.last_seen_citation}}
-                    </div>
-                    <label>last seen citation</label>
-                </div>
-            </ng-template>
+            <app-citation-property [config]="{
+                mode: editing? 'edit': 'view',
+                object: campaign,
+                field: 'last_seen_citation',
+                referencesField: campaign.external_references,
+                label: 'last seen citation',
+                required: true
+            }"></app-citation-property>
         </div>
     </div>
     <div class="row">
