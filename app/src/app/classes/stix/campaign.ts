@@ -73,12 +73,12 @@ export class Campaign extends StixObject {
             }
 
             if ("x_mitre_first_seen_citation" in sdo) {
-                if (typeof(sdo.x_mitre_first_seen_citation) === "string") this.first_seen_citation = sdo.first_seen_citation;
+                if (typeof(sdo.x_mitre_first_seen_citation) === "string") this.first_seen_citation = sdo.x_mitre_first_seen_citation;
                 else logger.error("TypeError: x_mitre_first_seen_citation field is not a string:", sdo.first_seen_citation, "(", typeof (sdo.first_seen_citation), ")")
             }
 
             if ("x_mitre_last_seen_citation" in sdo) {
-                if (typeof(sdo.x_mitre_last_seen_citation) === "string") this.last_seen_citation = sdo.last_seen_citation;
+                if (typeof(sdo.x_mitre_last_seen_citation) === "string") this.last_seen_citation = sdo.x_mitre_last_seen_citation;
                 else logger.error("TypeError: x_mitre_last_seen_citation field is not a string:", sdo.last_seen_citation, "(", typeof (sdo.last_seen_citation), ")")
             }
 
