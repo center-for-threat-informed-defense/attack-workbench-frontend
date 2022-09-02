@@ -1,0 +1,11 @@
+<div class="citation-property grow-to-row">
+    <div *ngIf="!config.mode || config.mode == 'view'" class="labelled-box grow-to-row">
+        <div class="content">
+            <app-citation-view [config]="config"></app-citation-view>
+        </div>
+        <label>{{config.label}}</label>
+    </div>
+    <div *ngIf="config.mode == 'edit'" class="grow-to-row">
+        <app-citation-edit [config]="config"></app-citation-edit>
+    </div>
+</div>

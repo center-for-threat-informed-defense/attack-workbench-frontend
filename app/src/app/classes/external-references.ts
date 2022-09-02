@@ -147,7 +147,7 @@ export class ExternalReferences extends Serializable {
         let refs_fields = ['description'];
         if (['software', 'group', 'campaign'].includes(object.attackType)) refs_fields.push('aliases');
         if (object.attackType == 'technique') refs_fields.push('detection');
-
+        if (object.attackType == 'campaign') refs_fields.push('first_seen_citation', 'last_seen_citation');
         // parse citations for each descriptive field on the object
         let parse_apis = [];
         for (let field of refs_fields) {
@@ -340,7 +340,6 @@ export class ExternalReferences extends Serializable {
             let sourceName = usedSourceNames[i];
             if (this._externalReferences.get(sourceName)) temp_externalReferences.set(sourceName, this._externalReferences.get(sourceName));
         }
-
         
         let pre_delete_keys = Array.from(this._externalReferences.keys());
         // Update external references with used references

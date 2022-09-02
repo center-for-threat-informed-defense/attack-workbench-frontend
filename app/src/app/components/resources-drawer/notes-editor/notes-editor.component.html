@@ -48,7 +48,7 @@
                 </mat-card-header>
                 <mat-card-content>
                     <!-- content -->
-                    <markdown *ngIf="!note.editing" [data]="note.content"></markdown>
+                    <markdown class="markdown" *ngIf="!note.editing" [data]="note.content"></markdown>
                     <mat-form-field *ngIf="note.editing" class="edit-note" floatLabel="never">
                         <textarea matInput cdkTextareaAutosize [(ngModel)]="note.content" placeholder="Note" required></textarea>
                     </mat-form-field>
