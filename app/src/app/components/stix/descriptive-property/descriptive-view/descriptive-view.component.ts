@@ -129,7 +129,7 @@ export class DescriptiveViewComponent implements OnInit {
     }
 
     /**
-     * Render the descriptive view of of the stix object
+     * Render the descriptive view of the stix object
      */
     public renderPreview(): void {
         this.loading = true;

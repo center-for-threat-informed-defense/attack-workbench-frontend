@@ -1,0 +1,4 @@
+<div class="citation-view" *ngIf="!loading">
+    <markdown [data]="display"></markdown>
+</div>
+<app-loading-overlay *ngIf="loading"></app-loading-overlay>
