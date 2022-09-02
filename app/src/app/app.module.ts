@@ -75,6 +75,7 @@ import { AddRelationshipButtonComponent } from "./components/add-relationship-bu
 
 // STIX components
 import { StixListComponent } from './components/stix/stix-list/stix-list.component';
+
 import { ExternalReferencesPropertyComponent } from "./components/stix/external-references-property/external-references-property.component";
 import { ExternalReferencesViewComponent } from './components/stix/external-references-property/external-references-view/external-references-view.component';
 import { ExternalReferencesDiffComponent } from './components/stix/external-references-property/external-references-diff/external-references-diff.component';
@@ -111,6 +112,24 @@ import { VersionViewComponent } from "./components/stix/version-property/version
 import { NamePropertyComponent } from "./components/stix/name-property/name-property.component";
 
 import { DatepickerPropertyComponent } from './components/stix/datepicker-property/datepicker-property.component';
+
+import { AliasPropertyComponent } from './components/stix/alias-property/alias-property.component';
+import { AliasViewComponent } from './components/stix/alias-property/alias-view/alias-view.component';
+import { AliasEditComponent } from './components/stix/alias-property/alias-edit/alias-edit.component';
+import { AliasEditDialogComponent } from './components/stix/alias-property/alias-edit/alias-edit-dialog/alias-edit-dialog.component';
+
+import { OrderedListPropertyComponent } from './components/stix/ordered-list-property/ordered-list-property.component';
+import { OrderedListViewComponent } from './components/stix/ordered-list-property/ordered-list-view/ordered-list-view.component';
+import { OrderedListEditComponent } from './components/stix/ordered-list-property/ordered-list-edit/ordered-list-edit.component';
+
+import { NotesEditorComponent } from './components/resources-drawer/notes-editor/notes-editor.component';
+import { ObjectStatusComponent } from './components/object-status/object-status.component';
+import { IconViewComponent } from './components/stix/icon-view/icon-view.component';
+import { IdentityPropertyComponent } from './components/stix/identity-property/identity-property.component';
+
+import { CitationPropertyComponent } from './components/stix/citation-property/citation-property.component';
+import { CitationViewComponent } from './components/stix/citation-property/citation-view/citation-view.component';
+import { CitationEditComponent } from './components/stix/citation-property/citation-edit/citation-edit.component';
 
 // views
 
@@ -157,24 +176,14 @@ import { TechniqueViewComponent } from './views/stix/technique/technique-view/te
 import { TechniqueListComponent } from './views/stix/technique/technique-list/technique-list.component';
 
 import { RelationshipViewComponent } from './views/stix/relationship/relationship-view/relationship-view.component';
-import { AliasPropertyComponent } from './components/stix/alias-property/alias-property.component';
-import { AliasViewComponent } from './components/stix/alias-property/alias-view/alias-view.component';
-import { AliasEditComponent } from './components/stix/alias-property/alias-edit/alias-edit.component';
-import { AliasEditDialogComponent } from './components/stix/alias-property/alias-edit/alias-edit-dialog/alias-edit-dialog.component';
-import { OrderedListPropertyComponent } from './components/stix/ordered-list-property/ordered-list-property.component';
-import { OrderedListViewComponent } from './components/stix/ordered-list-property/ordered-list-view/ordered-list-view.component';
-import { OrderedListEditComponent } from './components/stix/ordered-list-property/ordered-list-edit/ordered-list-edit.component';
 
-import { NotesEditorComponent } from './components/resources-drawer/notes-editor/notes-editor.component';
-import { ObjectStatusComponent } from './components/object-status/object-status.component';
-import { IconViewComponent } from './components/stix/icon-view/icon-view.component';
-import { IdentityPropertyComponent } from './components/stix/identity-property/identity-property.component';
 import { DataSourceViewComponent } from './views/stix/data-source/data-source-view/data-source-view.component';
 import { DataSourceListComponent } from './views/stix/data-source/data-source-list/data-source-list.component';
 import { DataComponentViewComponent } from './views/stix/data-component/data-component-view/data-component-view.component';
 
 import { MarkingDefinitionViewComponent } from "./views/stix/marking-definition/marking-definition-view/marking-definition-view.component";
 import { MarkingDefinitionListComponent } from "./views/stix/marking-definition/marking-definition-list/marking-definition-list.component";
+
 import { CampaignViewComponent } from './views/stix/campaign/campaign-view/campaign-view.component';
 import { CampaignListComponent } from './views/stix/campaign/campaign-list/campaign-list.component';
 
@@ -289,7 +298,10 @@ import { CampaignListComponent } from './views/stix/campaign/campaign-list/campa
     MarkingDefinitionViewComponent,
     MarkingDefinitionListComponent,
     CampaignViewComponent,
-    CampaignListComponent
+    CampaignListComponent,
+    CitationPropertyComponent,
+    CitationViewComponent,
+    CitationEditComponent
   ],
   imports: [
     BreadcrumbModule,
