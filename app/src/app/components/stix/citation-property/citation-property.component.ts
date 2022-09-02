@@ -34,4 +34,6 @@ export interface CitationPropertyConfig {
     referencesField?: ExternalReferences;
     /* The label for labelled box */
     label: string;
+    /* Is this field required? Default false */
+    required?: boolean;
 }
