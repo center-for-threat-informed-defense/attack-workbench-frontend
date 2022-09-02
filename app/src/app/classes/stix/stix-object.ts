@@ -396,9 +396,10 @@ export abstract class StixObject extends Serializable {
             // validate external references
             switchMap(result => {
                 // build list of fields to validate external references on according to ATT&CK type
-                let refs_fields = ["description"];
-                if (['software', 'group', 'campaign'].includes(this.attackType)) refs_fields.push("aliases");
-                if (this.attackType == "technique") refs_fields.push("detection");
+                let refs_fields = ['description'];
+                if (['software', 'group', 'campaign'].includes(this.attackType)) refs_fields.push('aliases');
+                if (this.attackType == 'technique') refs_fields.push('detection');
+                if (this.attackType == 'campaign') refs_fields.push('first_seen_citation', 'last_seen_citation');
 
                 return this.external_references.validate(restAPIService, { object: this, fields: refs_fields }).pipe(
                     map(refs_result => {
