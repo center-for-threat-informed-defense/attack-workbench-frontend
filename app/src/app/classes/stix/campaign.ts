@@ -8,8 +8,8 @@ export class Campaign extends StixObject {
     public name: string = "";
     public first_seen: Date;
     public last_seen: Date;
-    public first_seen_citation: string;
-    public last_seen_citation: string;
+    public first_seen_citation: string = "";
+    public last_seen_citation: string = "";
     public aliases: string[] = ["placeholder"]; // initialize field with placeholder in first index for campaign name
     public contributors: string[] = [];
 
