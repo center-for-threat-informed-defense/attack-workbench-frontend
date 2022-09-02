@@ -1,0 +1,11 @@
+@import "../../../style/globals";
+
+.collection-update-dialog {
+    .buttons {
+        button + button {
+            margin-left: 10px;
+        }
+        margin-top: 24px;
+        margin-bottom: 24px;
+    }
+}
