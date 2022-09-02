@@ -49,6 +49,30 @@
     </div>
     <div class="row">
         <div class="col">
+            <!-- FIRST SEEN CITATION -->
+            <app-citation-property [config]="{
+                mode: editing? 'edit': 'view',
+                object: campaign,
+                field: 'first_seen_citation',
+                referencesField: campaign.external_references,
+                label: 'first seen citation',
+                required: true
+            }"></app-citation-property>
+        </div>
+        <div class="col">
+            <!-- LAST SEEN CITATION -->
+            <app-citation-property [config]="{
+                mode: editing? 'edit': 'view',
+                object: campaign,
+                field: 'last_seen_citation',
+                referencesField: campaign.external_references,
+                label: 'last seen citation',
+                required: true
+            }"></app-citation-property>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
             <!-- CONTRIBUTORS -->
             <app-list-property class="grow-to-row" [config]="{
                 mode: editing? 'edit' : 'view',
