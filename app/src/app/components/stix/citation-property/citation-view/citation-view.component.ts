@@ -35,9 +35,9 @@ export class CitationViewComponent implements OnInit {
         }
 
         // parse references and replace from references field
-        if (this.config.referencesField) this.parseReferences();
+        if (this.config.referencesField) this.display = this.parseReferences(this.display);
         // remove references if not defined
-        else this.display.replace(this.reReference, "");
+        else this.display = this.display.replace(this.reReference, "");
 
         this.loading = false;
     }
@@ -45,15 +45,16 @@ export class CitationViewComponent implements OnInit {
     /**
      * Parse and replace references from citation property
      */
-    private parseReferences(): void {
+    private parseReferences(displayStr: string): string {
         let references = this.display.match(this.reReference);
         let sourceNames = [];
         if (references) {
             for (let i = 0; i < references.length; i++) {
                 sourceNames[i] = references[i].split("(Citation: ")[1].slice(0, -1);
-                this.citationToHTML(sourceNames[i], references[i]);
+                displayStr = this.citationToHTML(displayStr, sourceNames[i], references[i]);
             }
         }
+        return displayStr;
     }
 
     /**
@@ -61,7 +62,7 @@ export class CitationViewComponent implements OnInit {
      * @param {string} sourceName source name of the reference
      * @param {string} citation complete citation string, e.g. (Citation: sourceName)
      */
-    private citationToHTML(sourceName: string, citation: string): void {
+    private citationToHTML(displayStr: string, sourceName: string, citation: string): string {
         let reference = this.config.referencesField.getReference(sourceName);
         let referenceNum = this.config.referencesField.getIndexOfReference(sourceName);
         if (reference && referenceNum) {
@@ -69,7 +70,8 @@ export class CitationViewComponent implements OnInit {
             if (reference.url) {
                 html = "<span><sup><a href=\"" + reference.url + "\" class=\"external-link\" target=\"_blank\">[" + referenceNum + "]</a></sup></span>";
             } else html = "<span><sup>[" + referenceNum + "]</sup></span>";
-            this.display.replace(citation, html);
+            return displayStr.replace(citation, html);
         }
+        return displayStr;
     }
 }
