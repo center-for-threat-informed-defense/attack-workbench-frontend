@@ -166,7 +166,7 @@ export class RestApiConnectorService extends ApiConnector {
                 if (options.search) query = query.set("search", options.search);
                 // platforms/domains
                 if (options.platforms) options.platforms.forEach(platform => query = query.append('platform', platform));
-                if (options.domains) options.domains.forEach(domain => query.append('domain', domain));
+                if (options.domains) options.domains.forEach(domain => query = query.append('domain', domain));
             }
             // perform the request
             let url = `${this.baseUrl}/${plural}`;
