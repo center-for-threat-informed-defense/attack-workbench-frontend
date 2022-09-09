@@ -489,6 +489,18 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     /**
+     * Enable all filters for the given filter name
+     * @param {string} name name of the filter group 
+     */
+    private enableAllFilters(name: string) {
+        for (let group of this.filterOptions) {
+            if (group.name == name) {
+                group.values.forEach(option => option.disabled = false);
+            }
+        }
+    }
+
+    /**
      * Build platform filter values for the given attack type
      */
     private buildPlatformFilter(attackType: string): FilterValue[] {
@@ -520,19 +532,47 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
         if (!domains.length) return;
         // get set of valid platforms in the selected domains
         let validPlatforms: Set<string> = new Set();
+        let domainMap = this.platformMap.get(this.config.type);
+        if (!domainMap) return;
         for (let domain of domains) {
-            let domainMap = this.platformMap.get(this.config.type)
-            if (domainMap) {
-                let platforms = domainMap.get(domain);
-                platforms.forEach(p => validPlatforms.add(p));
-            }
+            let platforms = domainMap.get(domain);
+            platforms.forEach(p => validPlatforms.add(p));
         }
+        // set enabledness of platform filters
         for (let group of this.filterOptions) {
             if (group.name == 'platform') {
                 for (let option of group.values) {
                     let platform = option.value.split("platform.")[1];
                     // disable platform filters not in the list of valid platforms
                     option.disabled = !validPlatforms.has(platform);
+                }
+            }
+        }
+    }
+
+    /**
+     * Disable domain filters which do not support the list of selected platforms.
+     * All other domains are enabled.
+     * @param platforms list of selected platform filters
+     */
+    private disableDomainFilters(platforms: string[]): void {
+        if (!platforms.length) return;
+        // get set of domains the selected platforms are supported by
+        let validDomains: Set<string> = new Set();
+        let domainMap = this.platformMap.get(this.config.type);
+        if (!domainMap) return;
+        for (let [domain, domainPlatforms] of domainMap.entries()) {
+            // get intersection of selected platforms and the domain platforms
+            let filtered = domainPlatforms.filter(p => platforms.includes(p));
+            if (filtered.length) validDomains.add(domain);
+        }
+        // set enabledness of domain filters
+        for (let group of this.filterOptions) {
+            if (group.name == 'domain') {
+                for (let option of group.values) {
+                    let domain = option.value.split("domain.")[1];
+                    // disable domain filters not in the list of valid domains
+                    option.disabled = !validDomains.has(domain);
                 }
             }
         }
@@ -590,16 +630,19 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
                 }
             } else {
                 // enable all states
-                for (let group of this.filterOptions) {
-                    for (let option of group.values) {
-                        if (option.value.startsWith("status.")) option.disabled = false;
-                    }
-                }
+                this.enableAllFilters('workflow status');
             }
 
             // platform filter
             let platforms: string[] = this.filter.filter((x) => x.startsWith("platform."));
-            if (platforms.length) platforms = platforms.map(p => p.split("platform.")[1]);
+            if (platforms.length) {
+                platforms = platforms.map(p => p.split("platform.")[1]);
+                // disable domains that do not support selected platforms
+                this.disableDomainFilters(platforms);
+            } else {
+                // enable all domains
+                this.enableAllFilters('domain');
+            }
 
             // domain filter
             let domains: string[] = this.filter.filter((x) => x.startsWith("domain."));
@@ -609,13 +652,7 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
                 this.disablePlatformFilters(domains);
             } else {
                 // enable all platforms
-                for (let group of this.filterOptions) {
-                    if (group.name == 'platform') {
-                        for (let option of group.values) {
-                            if (option.value.startsWith("platform.")) option.disabled = false;
-                        }
-                    }
-                }
+                this.enableAllFilters('platform');
             }
             
             let options = {
