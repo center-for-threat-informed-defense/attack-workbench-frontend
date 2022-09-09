@@ -1,16 +1,16 @@
 import { Component, OnInit, Input, ViewEncapsulation, ViewChild, AfterViewInit, ElementRef, EventEmitter, Output, OnDestroy } from '@angular/core';
-import { StixObject } from 'src/app/classes/stix/stix-object';
 import { animate, style, transition, trigger } from '@angular/animations';
 import { MatPaginator } from '@angular/material/paginator';
+import { SelectionModel } from '@angular/cdk/collections';
+import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 
-import { SelectionModel } from '@angular/cdk/collections';
-import { StixDialogComponent } from '../../../views/stix/stix-dialog/stix-dialog.component';
-
-import { MatDialog } from '@angular/material/dialog';
 import { fromEvent, Observable, of, Subscription } from 'rxjs';
-import { Paginated, RestApiConnectorService } from 'src/app/services/connectors/rest-api/rest-api-connector.service';
 import { debounceTime, distinctUntilChanged, filter, tap } from 'rxjs/operators';
+
+import { StixObject } from 'src/app/classes/stix/stix-object';
+import { StixDialogComponent } from 'src/app/views/stix/stix-dialog/stix-dialog.component';
+import { Paginated, RestApiConnectorService } from 'src/app/services/connectors/rest-api/rest-api-connector.service';
 import { AuthenticationService } from 'src/app/services/connectors/authentication/authentication.service';
 
 @Component({
@@ -38,26 +38,32 @@ import { AuthenticationService } from 'src/app/services/connectors/authenticatio
 })
 export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
     @Input() public config: StixListConfig = {};
+
     @Output() public onRowAction = new EventEmitter<string>();
     @Output() public onSelect = new EventEmitter<StixObject>();
     @Output() public refresh = new EventEmitter();
+
     @ViewChild(MatPaginator) paginator: MatPaginator;
     @ViewChild('search') search: ElementRef;
+
+    // search query
     public searchQuery: string = "";
     private searchSubscription: Subscription;
 
-    //objects to render;
+    // objects to render
     public objects$: Observable<StixObject[]>;
     public data$: Observable<Paginated<StixObject>>;
     public totalObjectCount: number = 0;
-    //view mode
+
+    // view mode
     public mode: string = "cards";
-    //options provided to the user for grouping and filtering
+
+    // options provided to the user for grouping and filtering
     public filterOptions: FilterGroup[] = [];
-    //current grouping and filtering selections
+
+    // current grouping and filtering selections
     public filter: string[] = [];
     public groupBy: string[] = [];
-    // search query
 
     // TABLE STUFF
     public tableColumns: string[] = [];
@@ -83,107 +89,13 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
         "relationship": "relationship"
     }
 
-    // Route authentication
-    public getAccessibleRoutes(attackType: string, routes: any[], ) {
-        return routes.filter(route => this.canAccess(attackType, route) && this.canEdit(route));
-    }
-
-    private canAccess(attackType: string, route: any) {
-        if (route.label && route.label == 'edit' && !this.authenticationService.canEdit(attackType)) {
-            // user not authorized
-            return false;
-        }
-        // user authorized
-        return true;
-    }
-
-    private canEdit(route: any) {
-        if (route.label && route.label == 'edit' && this.config.uneditableObject) {
-            return false;
-        }
-        return true;
-    }
-
-    /**
-     * Add a column to the table
-     * @param {string} label the label to display the field under; column name
-     * @param {string} field the field to display
-     * @param {string} display how to format the column data
-     * @param {boolean} [sticky] is the column sticky? If true, the column will be static in the X scrolling of the view
-     * @param {string[]} [classes] list of css classes to apply to the cell
-     */
-    private addColumn(label: string, field: string, display: "version" | "list" | "plain" | "timestamp" | "descriptive" | "relationship_name" | "icon", sticky?: boolean, classes?: string[]) {
-        this.tableColumns.push(field);
-        this.tableColumns_settings.set(field, {label, display, sticky, classes});
-    }
-
-    /**
-     * Add version, modified, and created columns to the table
-     */
-    private addVersionsAndDatesColumns() {
-        this.addColumn("version", "version", "version");
-        this.addColumn("modified","modified", "timestamp");
-        this.addColumn("created", "created", "timestamp");
-    }
-
-    /**
-     * Handles row click events. Open the panel, or open a modal depending on object type
-     * @param {StixObject} object of the row that was clicked
-     */
-    public rowClick(element: StixObject) {
-        if (this.config.clickBehavior && this.config.clickBehavior == "none") return;
-        if (this.config.clickBehavior && this.config.clickBehavior == "dialog") { //open modal
-            let prompt = this.dialog.open(StixDialogComponent, {
-                data: {
-                    object: element,
-                    editable: this.config.allowEdits,
-                    sidebarControl: this.config.allowEdits? "events" : "disable"
-                },
-                maxHeight: "75vh"
-            })
-            let subscription = prompt.afterClosed().subscribe({
-                next: result => {
-                    if (prompt.componentInstance.dirty) { //re-fetch values since an edit occurred
-                        this.applyControls();
-                        this.refresh.emit();
-                    }
-                },
-                complete: () => { subscription.unsubscribe(); }
-            });
-        }
-        else if (this.config.clickBehavior && this.config.clickBehavior == "linkToSourceRef") {
-            let source_ref = element['source_ref'];
-            // Get type to navigate from source_ref
-            let type = this.typeMap[source_ref.split('--')[0]];
-
-            this.router.navigateByUrl('/' + type + '/' + source_ref);
-        }
-        else if (this.config.clickBehavior && this.config.clickBehavior == "linkToTargetRef") {
-            let target_ref = element['target_ref'];
-            // Get type to navigate from target_ref
-            let type = this.typeMap[target_ref.split('--')[0]];
-
-            this.router.navigateByUrl('/'+ type + '/' + target_ref);
-        }
-        else { //expand
-            this.expandedElement = this.expandedElement === element ? null : element;
-        }
-    }
-    
-
-    //all possible each type of filter/groupBy
-    // private types: FilterValue[] = [
-    //     {"value": "type.group", "label": "group", "disabled": false},
-    //     {"value": "type.matrix", "label": "matrix", "disabled": false},
-    //     {"value": "type.mitigation", "label": "mitigation", "disabled": false},
-    //     {"value": "type.software", "label": "software", "disabled": false},
-    //     {"value": "type.tactic", "label": "tactic", "disabled": false},
-    //     {"value": "type.technique", "label": "technique", "disabled": false},
-    // ]
-    // private domains: FilterValue[] = [
-    //     {"value": "domain.enterprise-attack", "label": "enterprise", "disabled": false},
-    //     {"value": "domain.mobile-attack", "label": "mobile", "disabled": false}
-    // ]
+    // all possible each type of filter/groupBy
+    private platformMap: Map<string, string[]> = new Map();
+    private domains: FilterValue[] = [
+        {"value": "domain.enterprise-attack", "label": "enterprise", "disabled": false},
+        {"value": "domain.mobile-attack", "label": "mobile", "disabled": false},
+        {"value": "domain.ics-attack", "label": "ics", "disabled": false}
+    ]
     private statuses: FilterValue[] = [
         {"value": "status.work-in-progress", "label": "show only work in progress", "disabled": false},
         {"value": "status.awaiting-review", "label": "show only awaiting review", "disabled": false},
@@ -194,17 +106,67 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
         {"value": "state.revoked", "label": "include revoked", "disabled": false}
     ]
 
-    constructor(public dialog: MatDialog, private restAPIConnectorService: RestApiConnectorService, private router: Router, private authenticationService: AuthenticationService) {}
-    
-    ngOnInit() {
+    constructor(public dialog: MatDialog, 
+                private restAPIConnectorService: RestApiConnectorService, 
+                private router: Router, 
+                private authenticationService: AuthenticationService) { }
+
+    ngOnInit(): void {
+        // build query options for platforms
+        let sub = this.restAPIConnectorService.getAllAllowedValues().subscribe({
+            next: (data) => {
+                for (let values of data) {
+                    let platforms: Set<string> = new Set();
+                    if (values.properties) {
+                        // extract domain->platform properties from allowedValues structure
+                        let properties = values.properties.find(p => p.propertyName == 'x_mitre_platforms');
+                        if (properties && properties.domains) {
+                            properties.domains.forEach(domain => {
+                                // add platforms to set
+                                for (let platform of domain.allowedValues) {
+                                    platforms.add(platform);
+                                }
+                            });
+                        }
+                    }
+                    // set attackType->platforms
+                    this.platformMap.set(values["objectType"], Array.from(platforms.values()));
+                }
+                // build the stix list table
+                this.buildTable();
+                this.setUpControls();
+            }
+        });
+    }
+
+    ngAfterViewInit() {
+        // get objects from backend if data is not from config
+        if (!("stixObjects" in this.config)) this.applyControls();
+        // set up listener to search input
+        if (this.config.type && this.config.type != "relationship") {
+            this.searchSubscription = fromEvent(this.search.nativeElement, 'keyup').pipe(
+                filter(Boolean),
+                debounceTime(250),
+                distinctUntilChanged(),
+                tap(_ => { 
+                    if (this.paginator) this.paginator.pageIndex = 0;
+                    this.applyControls();
+                })
+            ).subscribe()
+        }
+    }
+
+    /**
+     * Build the stix list table to display
+     */
+    private buildTable(): void {
+        // filter options
         this.filterOptions = []
-        // parse the config
-        let controls_before = [] // control columns which occur before the main columns
-        let controls_after = []; // control columns which occur after the main columns
-        let sticky_allowed = !(this.config.rowAction && this.config.rowAction.position == "start");
         if (!('showFilters' in this.config)) this.config.showFilters = true;
+
+        // parse the config
+        let sticky_allowed = !(this.config.rowAction && this.config.rowAction.position == "start");
         if ("type" in this.config) { 
-            // this.filter.push("type." + this.config.type); 
             // set columns according to type
             switch(this.config.type.replace(/_/g, '-')) {
                 case "collection":
@@ -336,11 +298,6 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
             }
         }
         else {
-            // this.filterOptions.push({
-            //     "name": "type", //TODO make more extensible to additional types
-            //     "disabled": "type" in this.config,
-            //     "values": this.types
-            // })
             this.groupBy = ["type"];
             this.addColumn("type", "attackType", "plain");
             this.addColumn("ID", "attackID", "plain", false);
@@ -348,15 +305,16 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
             this.addColumn("modified","modified", "timestamp");
             this.addColumn("created", "created", "timestamp");
         }
-        
-        
-        if ("relatedTo" in this.config) {
-            
-        } 
-        if ("query" in this.config) {
-            
-        }
+    }
+
+    /**
+     * Set up controls, including control columns and filters
+     */
+    private setUpControls(): void {
         //controls cols setup
+        let controls_before = [] // control columns which occur before the main columns
+        let controls_after = []; // control columns which occur after the main columns
+
         //selection setup
         if ("select" in this.config && this.config.select != "disabled") {
             if ("selectionModel" in this.config) {
@@ -366,16 +324,19 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
             }
             controls_before.unshift("select") // add select column to view
         }
+
         // open-link icon setup
         if (this.config.clickBehavior && this.config.clickBehavior == "dialog") {
             controls_after.push("open-link")
         }
+
         // row action setup
         if (this.config.rowAction) {
             if (this.config.rowAction.position == "start") controls_before.push("start-action");
             else controls_after.push("end-action");
         }
         this.tableColumns_controls = controls_before.concat(this.tableColumns, controls_after);
+
         // filter setup
         this.filterOptions.push({
             "name": "workflow status",
@@ -387,6 +348,25 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
             "disabled": "status" in this.config,
             "values": this.states
         })
+        let filterByDomain: boolean = this.config.type ? ['data-source', 'mitigation', 'software', 'tactic', 'technique'].includes(this.config.type) : false;
+        let filterByPlatform: boolean = this.config.type ? ['data-source', 'software', 'technique'].includes(this.config.type) : false;
+        if (filterByDomain) {
+            this.filterOptions.push({
+                "name": "domain",
+                "disabled": "status" in this.config,
+                "values": this.domains
+            })
+        }
+        if (filterByPlatform) {
+            // only executed if config.type is defined and object has 'x_mitre_platforms' field
+            let platforms: FilterValue[] = this.buildPlatformFilter(this.config.type);
+            this.filterOptions.push({
+                "name": "platform",
+                "disabled": "status" in this.config,
+                "values": platforms
+            })
+        }
+
         // get data from config (if we are not connecting to back-end)
         if ("stixObjects" in this.config && !(this.config.stixObjects instanceof Observable)) {
             this.totalObjectCount = this.config.stixObjects.length;
@@ -394,23 +374,93 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
         }
     }
 
-    ngAfterViewInit() {
-        // get objects from backend if data is not from config
-        if (!("stixObjects" in this.config)) this.applyControls();
-        // set up listener to search input
-        if (this.config.type && this.config.type != "relationship") {
-            this.searchSubscription = fromEvent(this.search.nativeElement, 'keyup').pipe(
-                filter(Boolean),
-                debounceTime(250),
-                distinctUntilChanged(),
-                tap(_ => { 
-                    if (this.paginator) this.paginator.pageIndex = 0;
-                    this.applyControls();
-                })
-            ).subscribe()
+    /**
+     * Add a column to the table
+     * @param {string} label the label to display the field under; column name
+     * @param {string} field the field to display
+     * @param {string} display how to format the column data
+     * @param {boolean} [sticky] is the column sticky? If true, the column will be static in the X scrolling of the view
+     * @param {string[]} [classes] list of css classes to apply to the cell
+     */
+    private addColumn(label: string, field: string, display: "version" | "list" | "plain" | "timestamp" | "descriptive" | "relationship_name" | "icon", sticky?: boolean, classes?: string[]) {
+        this.tableColumns.push(field);
+        this.tableColumns_settings.set(field, {label, display, sticky, classes});
+    }
+
+    /**
+     * Add version, modified, and created columns to the table
+     */
+    private addVersionsAndDatesColumns() {
+        this.addColumn("version", "version", "version");
+        this.addColumn("modified","modified", "timestamp");
+        this.addColumn("created", "created", "timestamp");
+    }
+
+    /**
+     * Handles row click events. Open the panel, or open a modal depending on object type
+     * @param {StixObject} object of the row that was clicked
+     */
+    public rowClick(element: StixObject) {
+        if (this.config.clickBehavior && this.config.clickBehavior == "none") return;
+        if (this.config.clickBehavior && this.config.clickBehavior == "dialog") { //open modal
+            let prompt = this.dialog.open(StixDialogComponent, {
+                data: {
+                    object: element,
+                    editable: this.config.allowEdits,
+                    sidebarControl: this.config.allowEdits? "events" : "disable"
+                },
+                maxHeight: "75vh"
+            })
+            let subscription = prompt.afterClosed().subscribe({
+                next: result => {
+                    if (prompt.componentInstance.dirty) { //re-fetch values since an edit occurred
+                        this.applyControls();
+                        this.refresh.emit();
+                    }
+                },
+                complete: () => { subscription.unsubscribe(); }
+            });
+        }
+        else if (this.config.clickBehavior && this.config.clickBehavior == "linkToSourceRef") {
+            let source_ref = element['source_ref'];
+            // Get type to navigate from source_ref
+            let type = this.typeMap[source_ref.split('--')[0]];
+
+            this.router.navigateByUrl('/' + type + '/' + source_ref);
+        }
+        else if (this.config.clickBehavior && this.config.clickBehavior == "linkToTargetRef") {
+            let target_ref = element['target_ref'];
+            // Get type to navigate from target_ref
+            let type = this.typeMap[target_ref.split('--')[0]];
+
+            this.router.navigateByUrl('/'+ type + '/' + target_ref);
+        }
+        else { //expand
+            this.expandedElement = this.expandedElement === element ? null : element;
         }
     }
 
+    // AUTHENTICATION FUNCTIONS
+    
+    public getAccessibleRoutes(attackType: string, routes: any[], ) {
+        return routes.filter(route => this.canAccess(attackType, route) && this.canEdit(route));
+    }
+
+    private canAccess(attackType: string, route: any) {
+        if (route.label && route.label == 'edit' && !this.authenticationService.canEdit(attackType)) {
+            // user not authorized
+            return false;
+        }
+        // user authorized
+        return true;
+    }
+
+    private canEdit(route: any) {
+        if (route.label && route.label == 'edit' && this.config.uneditableObject) {
+            return false;
+        }
+        return true;
+    }
 
     /**
      * Filter the given objects to those which include the query. Searches all string and string[] properties
@@ -436,21 +486,32 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     /**
+     * Build platform filter values for the given attack type
+     */
+    private buildPlatformFilter(attackType: string): FilterValue[] {
+        let platforms: FilterValue[] = [];
+        for (let platform of this.platformMap.get(attackType)) {
+            platforms.push({
+                "value": `platform.${platform}`,
+                "label": platform,
+                "disabled": false
+            });
+        }
+        return platforms;
+    }
+
+    /**
      * Apply all controls and fetch objects from the back-end if configured
      */
     public applyControls() {
         if ("stixObjects" in this.config) {
             if (this.config.stixObjects instanceof Observable) {
                 // pull objects out of observable
-            } else {
-                // no need to pull objects out of observable
-                
-                // set max length for paginator
-                // this.paginator.length = this.config.stixObjects.length;
+            } else {                
                 // filter on STIX objects specified in the config
                 let filtered = this.config.stixObjects;
                 // filter to objects matching searchString
-                filtered = this.filterObjects(this.searchQuery, filtered); 
+                filtered = this.filterObjects(this.searchQuery, filtered);
                 // sort
                 filtered = filtered.sort((a, b) => {
                     let x = a as any;
@@ -471,7 +532,6 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
                         limit: this.paginator? this.paginator.pageSize : 0
                     }
                 });
-                // this.objects$ = of(filtered);
             }
         } else {
             // fetch objects from backend
@@ -479,8 +539,9 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
             let offset = this.paginator? this.paginator.pageIndex * limit : 0;
             let deprecated = this.filter.includes("state.deprecated");
             let revoked = this.filter.includes("state.revoked");
-            let state = this.filter.find((x) => x.startsWith("status."));
 
+            // state filter
+            let state = this.filter.find((x) => x.startsWith("status."));
             if (state) {
                 state = state.split("status.")[1];
                 // disable other states
@@ -497,6 +558,14 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
                     }
                 }
             }
+
+            // platform filter
+            let platforms: string[] = this.filter.filter((x) => x.startsWith("platform."));
+            if (platforms) platforms = platforms.map(p => p.split("platform.")[1]);
+
+            // domain filter
+            let domains: string[] = this.filter.filter((x) => x.startsWith("domain."));
+            if (domains) domains = domains.map(d => d.split("domain.")[1])
             
             let options = {
                 limit: limit, 
@@ -505,7 +574,9 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
                 search: this.searchQuery, 
                 state: state, 
                 includeRevoked: revoked, 
-                includeDeprecated: deprecated
+                includeDeprecated: deprecated,
+                platforms: platforms,
+                domains: domains
             }
 
             if (this.config.type == "software") this.data$ = this.restAPIConnectorService.getAllSoftware(options);
