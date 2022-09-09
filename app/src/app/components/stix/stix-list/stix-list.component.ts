@@ -90,6 +90,7 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     // all possible each type of filter/groupBy
+    private platformSubscription: Subscription;
     private platformMap: Map<string, string[]> = new Map();
     private domains: FilterValue[] = [
         {"value": "domain.enterprise-attack", "label": "enterprise", "disabled": false},
@@ -113,7 +114,7 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
 
     ngOnInit(): void {
         // build query options for platforms
-        let sub = this.restAPIConnectorService.getAllAllowedValues().subscribe({
+        this.platformSubscription = this.restAPIConnectorService.getAllAllowedValues().subscribe({
             next: (data) => {
                 for (let values of data) {
                     let platforms: Set<string> = new Set();
@@ -132,6 +133,8 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
                     // set attackType->platforms
                     this.platformMap.set(values["objectType"], Array.from(platforms.values()));
                 }
+            },
+            complete: () => {
                 // build the stix list table
                 this.buildTable();
                 this.setUpControls();
@@ -360,11 +363,13 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
         if (filterByPlatform) {
             // only executed if config.type is defined and object has 'x_mitre_platforms' field
             let platforms: FilterValue[] = this.buildPlatformFilter(this.config.type);
-            this.filterOptions.push({
-                "name": "platform",
-                "disabled": "status" in this.config,
-                "values": platforms
-            })
+            if (platforms.length) {
+                this.filterOptions.push({
+                    "name": "platform",
+                    "disabled": "status" in this.config,
+                    "values": platforms
+                })
+            }
         }
 
         // get data from config (if we are not connecting to back-end)
@@ -490,12 +495,15 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
      */
     private buildPlatformFilter(attackType: string): FilterValue[] {
         let platforms: FilterValue[] = [];
-        for (let platform of this.platformMap.get(attackType)) {
-            platforms.push({
-                "value": `platform.${platform}`,
-                "label": platform,
-                "disabled": false
-            });
+        if (this.platformMap.get(attackType)) {
+            // add platforms related to this attackType
+            for (let platform of this.platformMap.get(attackType)) {
+                platforms.push({
+                    "value": `platform.${platform}`,
+                    "label": platform,
+                    "disabled": false
+                });
+            }
         }
         return platforms;
     }
@@ -611,7 +619,9 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     public ngOnDestroy() {
+        // prevent memory leaks
         if (this.searchSubscription) this.searchSubscription.unsubscribe();
+        if (this.platformSubscription) this.platformSubscription.unsubscribe();
     }
 }
 
