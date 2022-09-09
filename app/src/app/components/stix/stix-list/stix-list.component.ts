@@ -91,7 +91,7 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
 
     // all possible each type of filter/groupBy
     private platformSubscription: Subscription;
-    private platformMap: Map<string, string[]> = new Map();
+    private platformMap: Map<string, Map<string, string[]>> = new Map();
     private domains: FilterValue[] = [
         {"value": "domain.enterprise-attack", "label": "enterprise", "disabled": false},
         {"value": "domain.mobile-attack", "label": "mobile", "disabled": false},
@@ -117,21 +117,19 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
         this.platformSubscription = this.restAPIConnectorService.getAllAllowedValues().subscribe({
             next: (data) => {
                 for (let values of data) {
-                    let platforms: Set<string> = new Set();
+                    // setup domain map (domainName->platforms)
+                    let domainMap: Map<string, string[]> = new Map();
                     if (values.properties) {
-                        // extract domain->platform properties from allowedValues structure
+                        // extract domain->platforms properties from allowedValues structure
                         let properties = values.properties.find(p => p.propertyName == 'x_mitre_platforms');
                         if (properties && properties.domains) {
                             properties.domains.forEach(domain => {
-                                // add platforms to set
-                                for (let platform of domain.allowedValues) {
-                                    platforms.add(platform);
-                                }
+                                domainMap.set(domain.domainName, domain.allowedValues);
                             });
                         }
                     }
-                    // set attackType->platforms
-                    this.platformMap.set(values["objectType"], Array.from(platforms.values()));
+                    // set attackType->domainMap
+                    this.platformMap.set(values["objectType"], domainMap);
                 }
             },
             complete: () => {
@@ -495,17 +493,49 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
      */
     private buildPlatformFilter(attackType: string): FilterValue[] {
         let platforms: FilterValue[] = [];
-        if (this.platformMap.get(attackType)) {
+        let domainMap = this.platformMap.get(attackType);
+        if (domainMap) {
             // add platforms related to this attackType
-            for (let platform of this.platformMap.get(attackType)) {
+            let values: Set<string> = new Set();
+            for (let platforms of domainMap.values()) {
+                platforms.forEach(platform => values.add(platform));
+            }
+            for (let value of values) {
                 platforms.push({
-                    "value": `platform.${platform}`,
-                    "label": platform,
+                    "value": `platform.${value}`,
+                    "label": value,
                     "disabled": false
                 });
             }
         }
         return platforms;
+    }
+
+    /**
+     * Disable platform filters which are not in the list of selected domains.
+     * All other platforms are enabled.
+     * @param domains list of selected domain filters
+     */
+    private disablePlatformFilters(domains: string[]): void {
+        if (!domains.length) return;
+        // get set of valid platforms in the selected domains
+        let validPlatforms: Set<string> = new Set();
+        for (let domain of domains) {
+            let domainMap = this.platformMap.get(this.config.type)
+            if (domainMap) {
+                let platforms = domainMap.get(domain);
+                platforms.forEach(p => validPlatforms.add(p));
+            }
+        }
+        for (let group of this.filterOptions) {
+            if (group.name == 'platform') {
+                for (let option of group.values) {
+                    let platform = option.value.split("platform.")[1];
+                    // disable platform filters not in the list of valid platforms
+                    option.disabled = !validPlatforms.has(platform);
+                }
+            }
+        }
     }
 
     /**
@@ -569,11 +599,24 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
 
             // platform filter
             let platforms: string[] = this.filter.filter((x) => x.startsWith("platform."));
-            if (platforms) platforms = platforms.map(p => p.split("platform.")[1]);
+            if (platforms.length) platforms = platforms.map(p => p.split("platform.")[1]);
 
             // domain filter
             let domains: string[] = this.filter.filter((x) => x.startsWith("domain."));
-            if (domains) domains = domains.map(d => d.split("domain.")[1])
+            if (domains.length) {
+                domains = domains.map(d => d.split("domain.")[1]);
+                // disable platforms not in selected domains
+                this.disablePlatformFilters(domains);
+            } else {
+                // enable all platforms
+                for (let group of this.filterOptions) {
+                    if (group.name == 'platform') {
+                        for (let option of group.values) {
+                            if (option.value.startsWith("platform.")) option.disabled = false;
+                        }
+                    }
+                }
+            }
             
             let options = {
                 limit: limit, 
