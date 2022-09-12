@@ -73,6 +73,8 @@ Additionally, Workbench v1.2.0 introduces the ability to create, edit, and view 
 -   Added validation to ensure a technique has been assigned at least one tactic. See [frontend#273](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/273).
 -   Removed the comma key as a keycode separator for list input fields (i.e. `contributors`, `system requirements`, `CAPEC IDs`, etc.). See [frontend#335](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/pull/335).
 -   Whitespace is trimmed during the serialization of string fields for all STIX objects and external references. See [frontend#187](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/187).
+-   Lists of objects can now be filtered by domains and platforms. See [frontend#392](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/392). 
+
 
 #### Fixes in 1.2.0
 -   Added missing fields from User Account objects: `created`, `modified`, and `displayName`. See [frontend#319](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/319).

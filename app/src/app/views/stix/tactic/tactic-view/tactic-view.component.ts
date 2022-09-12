@@ -22,8 +22,9 @@ export class TacticViewComponent extends StixViewPage implements OnInit {
     ngOnInit() {
         if (this.tactic.firstInitialized) {
             this.tactic.initializeWithDefaultMarkingDefinitions(this.restApiConnector);
+        } else {
+            this.getTechniques();
         }
-        this.getTechniques();
     }
 
     /**

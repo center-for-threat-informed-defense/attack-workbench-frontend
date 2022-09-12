@@ -138,19 +138,36 @@ export class RestApiConnectorService extends ApiConnector {
     private getStixObjectsFactory<T extends StixObject>(attackType: AttackType) {
         let attackClass = attackTypeToClass[attackType];
         let plural = attackTypeToPlural[attackType]
-        return function<P extends T>(options?: { limit?: number, offset?: number, state?: string, includeRevoked?: boolean, includeDeprecated?: boolean, versions?: "all" | "latest", excludeIDs?: string[], search?: string }): Observable<Paginated<StixObject>> {
+        return function<P extends T>(options?: { limit?: number, 
+                                                 offset?: number, 
+                                                 state?: string, 
+                                                 includeRevoked?: boolean, 
+                                                 includeDeprecated?: boolean, 
+                                                 versions?: "all" | "latest", 
+                                                 excludeIDs?: string[], 
+                                                 search?: string,
+                                                 platforms?: string[],
+                                                 domains?: string[]
+                                                 }): Observable<Paginated<StixObject>> {
             // parse params into query string
             let query = new HttpParams({encoder: new CustomEncoder()});
-            // pagination
-            if (options && options.limit) query = query.set("limit", options.limit.toString());
-            if (options && options.offset) query = query.set("offset", options.offset.toString());
-            if (options && (options.limit || options.offset)) query = query.set("includePagination", "true");
-            // other properties
-            if (options && options.state) query = query.set("state", options.state);
-            if (options && options.includeRevoked) query = query.set("includeRevoked", options.includeRevoked ? "true" : "false");
-            if (options && options.includeDeprecated) query = query.set("includeDeprecated", options.includeDeprecated ? "true" : "false");
-            if (options && options.versions) query = query.set("versions", options.versions);
-            if (options && options.search) query = query.set("search", options.search);
+            if (options) {
+                // pagination
+                if (options.limit) query = query.set("limit", options.limit.toString());
+                if (options.offset) query = query.set("offset", options.offset.toString());
+                if (options.limit || options.offset) query = query.set("includePagination", "true");
+                // state/workflow
+                if (options.state) query = query.set("state", options.state);
+                if (options.includeRevoked) query = query.set("includeRevoked", options.includeRevoked ? "true" : "false");
+                if (options.includeDeprecated) query = query.set("includeDeprecated", options.includeDeprecated ? "true" : "false");
+                // versions selector
+                if (options.versions) query = query.set("versions", options.versions);
+                // searching
+                if (options.search) query = query.set("search", options.search);
+                // platforms/domains
+                if (options.platforms) options.platforms.forEach(platform => query = query.append('platform', platform));
+                if (options.domains) options.domains.forEach(domain => query = query.append('domain', domain));
+            }
             // perform the request
             let url = `${this.baseUrl}/${plural}`;
             return this.http.get(url, {headers: this.headers, params: query}).pipe(

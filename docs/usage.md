@@ -83,9 +83,11 @@ On the view page for a specific object you can also see relationships the object
 
 Most object lists include pagination, which improves performance of the application by only loading a few objects at a time. The controls in the bottom of the list provides controls for changing the page size and moving between pages.
 
-Most object lists also support searching and filtering. The search input above such lists will match text within object names and descriptions. The options dropdown menu allows you to filter the data. Available filters include:
+Most object lists also support searching and filtering. The search input above such lists will match text within object IDs, names, and descriptions. The options dropdown menu allows you to filter the data. Available filters include:
 - Workflow status: quality control workflow status as discussed in the quality control workflows section below.
 - State: by default, revoked and deprecated objects are not shown in lists as they are considered removed from the knowledge base. Enabling them in this menu will allow them to appear in the list.
+- Domain: available in lists of objects which support the domains field.
+- Platform: available in lists of objects which support the platforms field.
 
 #### Reviewing Object History
 
