@@ -372,7 +372,7 @@ export class RestApiConnectorService extends ApiConnector {
 
     /**
      * Get all objects; objects will not be deserialized to STIX objects unless the parameter is used
-     * @param {string} [attackID] filter to only include objects with this ATT&CK ID
+     * @param {string[]} [attackIDs] filter to only include objects within the list of given ATT&CK IDs
      * @param {number} [limit] the number of collections to retrieve
      * @param {number} [offset] the number of collections to skip
      * @param {string} [state] if specified, only get objects with this state
@@ -382,14 +382,16 @@ export class RestApiConnectorService extends ApiConnector {
      * @param {boolean} [deserialize] if true, deserialize objects to full STIX objects
      * @returns {Observable<any[]>} observable of retrieved objects
      */
-    public getAllObjects(attackID?: string, limit?: number, offset?: number, state?: string, revoked?: boolean, deprecated?: boolean, deserialize?: boolean) {
+    public getAllObjects(attackIDs?: string[], limit?: number, offset?: number, state?: string, revoked?: boolean, deprecated?: boolean, deserialize?: boolean) {
         let query = new HttpParams({encoder: new CustomEncoder()});
         // pagination
         if (limit) query = query.set("limit", limit.toString());
         if (offset) query = query.set("offset", offset.toString());
         if (limit || offset) query = query.set("includePagination", "true");
         // other properties
-        if (attackID) query = query.set("attackId", attackID);
+        if (attackIDs) {
+            attackIDs.forEach(id => query = query.append("attackId", id));
+        }
         if (state) query = query.set("state", state);
         if (revoked) query = query.set("includeRevoked", revoked ? "true" : "false");
         if (deprecated) query = query.set("includeDeprecated", deprecated ? "true" : "false");
