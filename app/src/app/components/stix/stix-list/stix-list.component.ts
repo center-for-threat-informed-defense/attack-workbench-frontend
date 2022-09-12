@@ -361,7 +361,7 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
             })
         }
         if (filterByPlatform) {
-            // only executed if config.type is defined and object has 'x_mitre_platforms' field
+            // only build platform filters if config.type is defined and object has 'x_mitre_platforms' field
             let platforms: FilterValue[] = this.buildPlatformFilter(this.config.type);
             if (platforms.length) {
                 this.filterOptions.push({
@@ -527,7 +527,7 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
 
     /**
      * Disable platform filters which are not in the list of selected domains.
-     * All other platforms are enabled.
+     * All other platforms will be marked as enabled.
      * @param domains list of selected domain filters
      */
     private disablePlatformFilters(domains: string[]): void {
@@ -556,7 +556,7 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
 
     /**
      * Disable domain filters which do not support the list of selected platforms.
-     * All other domains are enabled.
+     * All other domains will be marked as enabled.
      * @param platforms list of selected platform filters
      */
     private disableDomainFilters(platforms: string[]): void {
