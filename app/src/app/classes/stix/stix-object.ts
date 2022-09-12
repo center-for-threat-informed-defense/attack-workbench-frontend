@@ -498,20 +498,17 @@ export abstract class StixObject extends Serializable {
 
         if (!links) return of(result); // no LinkByIds found
 
-        let link_map = {};
+        let ids = [];
         for (let link of links) {
             let id = link.split("(LinkById: ")[1].slice(0, -1);
-            if (!(id in link_map)) {
-                link_map[id] = this.findLink(id, restAPIService);
-            }
+            if(!ids.includes(id)) ids.push(id);
         }
 
-        return forkJoin(link_map).pipe(
-            map((results) => {
-                let link_results = results as any;
-                for (let key of Object.keys(link_results)) {
-                    // verify whether or not all links were found
-                    if (!link_results[key]) result.missingLinks.add(key);
+        return restAPIService.getAllObjects(ids, null, null, null, true, true, true).pipe(
+            map((results: any) => {
+                let retrieved_ids = (results.data as StixObject[]).map(obj => obj.attackID);
+                for (let id of ids) {
+                    if (!retrieved_ids.includes(id)) result.missingLinks.add(id);
                 }
                 return result;
             })
@@ -532,21 +529,6 @@ export abstract class StixObject extends Serializable {
             }
         }
         return result;
-    }
-
-    /**
-     * retrieves the linked object by ID
-     * @param id the ID of the linked object
-     * @param restAPIService service to connect to the REST API
-     */
-    private findLink(id: string, restAPIService: RestApiConnectorService): Observable<boolean> {
-        return restAPIService.getAllObjects(id, null, null, null, true, true, true).pipe(
-            map((result) => {
-                let object = result.data[0];
-                if (object) return true;
-                return false; // object not found
-            })
-        );
     }
 
     public isStringArray = function (arr): boolean {
