@@ -136,13 +136,15 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
                 // build the stix list table
                 this.buildTable();
                 this.setUpControls();
+                // get objects from backend if data is not from config
+                if (!("stixObjects" in this.config)) {
+                    this.applyControls();
+                }
             }
         });
     }
 
     ngAfterViewInit() {
-        // get objects from backend if data is not from config
-        if (!("stixObjects" in this.config)) this.applyControls();
         // set up listener to search input
         if (this.config.type && this.config.type != "relationship") {
             this.searchSubscription = fromEvent(this.search.nativeElement, 'keyup').pipe(
@@ -533,10 +535,12 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
         // get set of valid platforms in the selected domains
         let validPlatforms: Set<string> = new Set();
         let domainMap = this.platformMap.get(this.config.type);
-        if (!domainMap) return;
+        if (!domainMap) return; // platforms not supported for this attack type
         for (let domain of domains) {
             let platforms = domainMap.get(domain);
-            platforms.forEach(p => validPlatforms.add(p));
+            if (platforms) {
+                platforms.forEach(p => validPlatforms.add(p));
+            }
         }
         // set enabledness of platform filters
         for (let group of this.filterOptions) {
@@ -560,7 +564,7 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
         // get set of domains the selected platforms are supported by
         let validDomains: Set<string> = new Set();
         let domainMap = this.platformMap.get(this.config.type);
-        if (!domainMap) return;
+        if (!domainMap) return; // domains not supported for this attack type
         for (let [domain, domainPlatforms] of domainMap.entries()) {
             // get intersection of selected platforms and the domain platforms
             let filtered = domainPlatforms.filter(p => platforms.includes(p));

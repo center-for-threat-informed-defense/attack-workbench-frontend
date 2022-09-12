@@ -4,7 +4,6 @@ import { AuthenticationService } from 'src/app/services/connectors/authenticatio
 import { StixViewPage } from '../../stix-view-page';
 import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/rest-api-connector.service';
 import { StixObject } from 'src/app/classes/stix/stix-object';
-import { Subscription } from 'rxjs';
 
 @Component({
     selector: 'app-tactic-view',
