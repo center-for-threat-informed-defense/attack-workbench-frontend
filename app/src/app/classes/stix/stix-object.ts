@@ -501,7 +501,7 @@ export abstract class StixObject extends Serializable {
         let ids = [];
         for (let link of links) {
             let id = link.split("(LinkById: ")[1].slice(0, -1);
-            if (!(id in ids)) ids.push(id);
+            if(!ids.includes(id)) ids.push(id);
         }
 
         return restAPIService.getAllObjects(ids, null, null, null, true, true, true).pipe(
