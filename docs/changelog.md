@@ -73,7 +73,7 @@ Additionally, Workbench v1.2.0 introduces the ability to create, edit, and view 
 -   Added validation to ensure a technique has been assigned at least one tactic. See [frontend#273](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/273).
 -   Removed the comma key as a keycode separator for list input fields (i.e. `contributors`, `system requirements`, `CAPEC IDs`, etc.). See [frontend#335](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/pull/335).
 -   Whitespace is trimmed during the serialization of string fields for all STIX objects and external references. See [frontend#187](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/187).
--   Lists of objects can now be filtered by domains and platforms. See [frontend#392](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/392). 
+-   Lists of objects can now be filtered by domains and platforms. See [frontend#392](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/392).
 
 
 #### Fixes in 1.2.0
@@ -86,6 +86,7 @@ Additionally, Workbench v1.2.0 introduces the ability to create, edit, and view 
 -   Fixed a bug where the search functionality would break with special characters because the query was not correctly encoded in the request. See [frontend#332](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/332).
 -   Fixed an issue where Note objects were not registered as a valid class, resulting in errors when trying to retrieve all objects from the REST API. See [frontend#338](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/pull/338).
 -   Fixed an issue where the Software/Group `aliases` field expected the object name as the first array entry, causing display issues in downstream applications. See [frontend#370](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/370).
+-   Increased request timeout in nginx. See [frontend#387](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/387).
 
 ## 21 October 2021
 
