@@ -43,9 +43,17 @@
                 <div class="col" *ngIf="!editing">
                     <div class="labelled-box">
                         <div class="content collection-data">
-                            <code class="url" [cdkCopyToClipboard]="collectionDownloadURL" (click)="snackbar.open('copied to clipboard', null, {duration: 1000})" matTooltip="click to copy URL">
-                                {{collectionDownloadURL}}
-                            </code>
+                            <!-- collection data -->
+                            <div class="url">
+                                <code class="copy-url" [cdkCopyToClipboard]="collectionDownloadURL" (click)="snackbar.open('copied to clipboard', null, {duration: 1000})" matTooltip="click to copy URL">
+                                    {{collectionDownloadURL}}
+                                </code>
+                                <!-- include notes? -->
+                                <div class="notes">
+                                    <mat-checkbox [(ngModel)]="includeNotes">Include associated notes?</mat-checkbox>
+                                </div>
+                            </div>
+                            <!-- download collection -->
                             <div class="suffix download" (click)="downloadCollectionBundle()">
                                 <mat-icon aria-label="download">download</mat-icon>
                             </div>
