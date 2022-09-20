@@ -1256,12 +1256,14 @@ export class RestApiConnectorService extends ApiConnector {
      * Get a collection bundle
      * @param {string} id STIX ID of collection
      * @param {Date} modified modified date of collection
+     * @param {boolean} includeNotes if true, include relevant Note objects
      * @returns {Observable<any>} collection STIX bundle
      */
-    public getCollectionBundle(id: string, modified: Date): Observable<any> {
+    public getCollectionBundle(id: string, modified: Date, includeNotes?: boolean): Observable<any> {
         let query = new HttpParams();
         query = query.set("collectionId", id);
         query = query.set("collectionModified", modified.toISOString());
+        if (includeNotes) query = query.set("includeNotes", "true");
         return this.http.get(`${this.baseUrl}/collection-bundles`, {params: query}).pipe(
             tap(results => logger.log("retrieved collection bundle")),
             catchError(this.handleError_continue<any>({})),
@@ -1600,11 +1602,12 @@ export class RestApiConnectorService extends ApiConnector {
      * Download a collection bundle. Triggers browser download UI when complete.
      * @param {string} id the STIX ID of the collection
      * @param {Date} modified the modified date of the collection
-     * @param {string} filename: the name of the file to download
+     * @param {string} filename the name of the file to download
+     * @param {boolean} includeNotes if true, include relevant Note objects
      * @returns {Observable<any>} the observable to watch while download is loading
      */
-     public downloadCollectionBundle(id: string, modified: Date, filename: string): Observable<any> {
-        let getter = this.getCollectionBundle(id, modified);
+     public downloadCollectionBundle(id: string, modified: Date, filename: string, includeNotes?: boolean): Observable<any> {
+        let getter = this.getCollectionBundle(id, modified, includeNotes);
         let subscription = getter.subscribe({
             next: (result) => {
                 logger.log(result);
