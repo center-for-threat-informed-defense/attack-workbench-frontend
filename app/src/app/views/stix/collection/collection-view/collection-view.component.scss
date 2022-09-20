@@ -72,11 +72,17 @@
                 .light & { background: color-alternate(light); }
             }
         }
-        .url {
+        .copy-url {
             cursor: pointer;
             &:hover {
                 color: color(link);
             }
+        }
+        .url {
+            display: block;
+        }
+        .notes {
+            margin-top: 12px;
         }
     }
     .releaseExplanation {
