@@ -41,6 +41,7 @@ export class CollectionViewComponent extends StixViewPage implements OnInit {
     public knowledgeBaseCollection: Collection;
     public editingReloadToggle: boolean = true;
     public release: boolean = false;
+    public includeNotes: boolean = false;
 
     @ViewChildren(StixListComponent) stixLists: QueryList<StixListComponent>;
 
@@ -61,7 +62,7 @@ export class CollectionViewComponent extends StixViewPage implements OnInit {
     }
 
     public get collectionDownloadURL() {
-        return `${environment.integrations.rest_api.url}/collection-bundles/?collectionId=${this.collection.stixID}&collectionModified=${this.collection.modified.toISOString()}`
+        return `${environment.integrations.rest_api.url}/collection-bundles/?collectionId=${this.collection.stixID}&collectionModified=${this.collection.modified.toISOString()}${this.includeNotes ? '&includeNotes=true' : ''}`
     }
 
     public get hasTechniques() {
@@ -382,7 +383,7 @@ export class CollectionViewComponent extends StixViewPage implements OnInit {
     }
 
     public downloadCollectionBundle() {
-        this.restApiConnector.downloadCollectionBundle(this.collection.stixID, this.collection.modified, `${this.collection.name.toLowerCase().replace(" ", "-")}-${this.collection.version.toString()}.json`);
+        this.restApiConnector.downloadCollectionBundle(this.collection.stixID, this.collection.modified, `${this.collection.name.toLowerCase().replace(" ", "-")}-${this.collection.version.toString()}.json`, this.includeNotes);
     }
 
 
