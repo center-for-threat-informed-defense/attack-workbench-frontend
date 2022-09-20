@@ -408,7 +408,7 @@ Uses of notes include but are not limited to:
 - Recording potential knowledge (e.g "TODO: verify whether the mention in threat report _X_ is actually this technique")
 - Enabling collaboration in development workflows (e.g "Marcie, make sure to update the platforms once you finish determining the technique scope")
 
-Annotations in the ATT&CK Workbench are implemented through _notes_. Typically notes are not published outside of a Workbench instance, and are intended to be local knowledge. Note are associated directly with objects within the knowledge base, and cannot exist without an attached object.
+Annotations in the ATT&CK Workbench are implemented through _notes_. Typically notes are not published outside of a Workbench instance, and are intended to be local knowledge. Notes are associated directly with objects within the knowledge base, and cannot exist without an attached object.
 
 ### Creating Notes
 
