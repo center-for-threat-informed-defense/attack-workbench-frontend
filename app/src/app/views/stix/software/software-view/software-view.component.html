@@ -111,6 +111,7 @@
                 <app-stix-list #techniquesList [config]="{
                     'type': 'relationship', 
                     'sourceRef': software.stixID,
+                    'targetType': 'technique',
                     'relationshipType': 'uses',
                     'clickBehavior': 'dialog',
                     'allowEdits': true
@@ -138,6 +139,7 @@
                 <app-stix-list #groupList [config]="{
                     'type': 'relationship', 
                     'targetRef': software.stixID,
+                    'sourceType': 'group',
                     'relationshipType': 'uses',
                     'clickBehavior': 'dialog',
                     'allowEdits': true
