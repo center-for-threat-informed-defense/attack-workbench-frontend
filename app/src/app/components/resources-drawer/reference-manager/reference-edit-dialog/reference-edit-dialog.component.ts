@@ -68,6 +68,33 @@ export class ReferenceEditDialogComponent implements OnInit {
         return true;
     }
 
+    public get validURL(): boolean {
+        if (this.is_new && this.reference.url) {
+            // check for protocol
+            if (!this.reference.url.startsWith('https://') && !this.reference.url.startsWith('http://')) {
+                return false;
+            }
+            // check for other malformities
+            try {
+                new URL(this.reference.url);
+            } catch (_) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public get URLError(): string {
+        if (this.reference.url) {
+            if (!this.reference.url.startsWith('https://') && !this.reference.url.startsWith('http://')) {
+                return "protocol not specified, must begin with 'http:' or 'https:'";
+            } else {
+                return "malformed URL";
+            }
+        }
+        return '';
+    }
+
     public getRefDescription(): string {
         let description = '';
         if (this.citation.authors) description = `${this.citation.authors}. `;
