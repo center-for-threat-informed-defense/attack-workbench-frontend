@@ -29,7 +29,7 @@ export class ReferenceEditDialogComponent implements OnInit {
     constructor(public dialogRef: MatDialogRef<ReferenceEditDialogComponent>, @Inject(MAT_DIALOG_DATA) public config: ReferenceEditConfig, public restApiConnectorService: RestApiConnectorService, public snackbar: MatSnackBar) {
         if (this.config.reference) {
             this.is_new = false;
-            this.reference = JSON.parse(JSON.stringify(this.config.reference)); //deep copy
+            this.reference = this.referenceCopy;
         }
         else {
             this.is_new = true;
@@ -66,6 +66,33 @@ export class ReferenceEditDialogComponent implements OnInit {
             if (this.citation.month && !this.citation.year.value) return false;
         }
         return true;
+    }
+
+    public get validURL(): boolean {
+        if (this.reference.url) {
+            // check for protocol
+            if (!this.reference.url.startsWith('https://') && !this.reference.url.startsWith('http://')) {
+                return false;
+            }
+            // check for other malformities
+            try {
+                new URL(this.reference.url);
+            } catch (_) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public get URLError(): string {
+        if (this.reference.url) {
+            if (!this.reference.url.startsWith('https://') && !this.reference.url.startsWith('http://')) {
+                return "URL must begin with 'http://' or 'https://'";
+            } else {
+                return "malformed URL";
+            }
+        }
+        return '';
     }
 
     public getRefDescription(): string {
@@ -171,6 +198,15 @@ export class ReferenceEditDialogComponent implements OnInit {
      */
     public toggle(mode: 'view' | 'edit') {
         this.config.mode = mode;
+    }
+
+    public get referenceCopy() {
+        return JSON.parse(JSON.stringify(this.config.reference)); //deep copy
+    }
+
+    public cancel(): void {
+        this.reference = this.referenceCopy; // discard any changes
+        this.toggle('view');
     }
 }
 
