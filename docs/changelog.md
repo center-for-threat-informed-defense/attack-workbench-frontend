@@ -32,13 +32,13 @@
 
 # Changelog
 
-## Changes staged on develop
+## 25 October 2022
 
 ### ATT&CK Workbench version 1.2.0
 
 ATT&CK Workbench v1.2.0 supports authentication and authorization for users. The REST API can be configured to use the Anonymous or OpenID Connect (OIDC) authentication mechanisms. See the [authentication documentation](https://github.com/center-for-threat-informed-defense/attack-workbench-rest-api/tree/master/docs/authentication.md#authentication) for more information.
 
-Additionally, Workbench v1.2.0 introduces the ability to create, edit, and view Campaign objects.
+Additionally, Workbench v1.2.0 introduces the ability to create, edit, and view Campaign objects and coincides with the ATT&CK v12.0 release. Users who do not upgrade to Workbench v1.2.0 may encounter issues with the new ATT&CK data.
 
 #### New Features in 1.2.0
 
