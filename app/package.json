@@ -40,7 +40,7 @@
     "@angular/router": "~10.1.1",
     "angular-crumbs": "^3.0.1",
     "jdenticon": "^3.1.0",
-    "moment": "^2.29.1",
+    "moment": "^2.29.4",
     "ngx-jdenticon": "^1.0.4",
     "ngx-logger": "^4.2.1",
     "ngx-markdown": "^10.1.1",
