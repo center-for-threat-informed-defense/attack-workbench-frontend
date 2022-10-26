@@ -83,9 +83,11 @@ On the view page for a specific object you can also see relationships the object
 
 Most object lists include pagination, which improves performance of the application by only loading a few objects at a time. The controls in the bottom of the list provides controls for changing the page size and moving between pages.
 
-Most object lists also support searching and filtering. The search input above such lists will match text within object names and descriptions. The options dropdown menu allows you to filter the data. Available filters include:
+Most object lists also support searching and filtering. The search input above such lists will match text within object IDs, names, and descriptions. The options dropdown menu allows you to filter the data. Available filters include:
 - Workflow status: quality control workflow status as discussed in the quality control workflows section below.
 - State: by default, revoked and deprecated objects are not shown in lists as they are considered removed from the knowledge base. Enabling them in this menu will allow them to appear in the list.
+- Domain: available in lists of objects which support the domains field.
+- Platform: available in lists of objects which support the platforms field.
 
 #### Reviewing Object History
 
@@ -181,8 +183,9 @@ ATT&CK IDs must follow a prescribed format:
 | Matrix           | (domain identifier)* |
 | Tactic           | `TAxxxx` |
 | Technique        | `Txxxx` |
-| Sub-Technique    |  `Txxxx.yyy` |
+| Sub-Technique    | `Txxxx.yyy` |
 | Mitigation       | `Mxxxx` |
+| Campaign         | `Cxxxx` |
 | Group            | `Gxxxx`  |
 | Software         | `Sxxxx` |
 | Data Source      | `DSxxxx` |
@@ -271,6 +274,7 @@ The set of fields available to edit on a technique differs according to the doma
 | Relationship Section                       | Description |
 |:-----|:----|
 | Sub-techniques / Other Sub-techniques      | Sub-techniques of the technique if it is a parent technique, or other sub-techniques of the parent | is a sub-technique.
+| Campaigns                                  | Campaigns that use this technique |
 | Mitigations                                | Mitigations that apply to this technique |
 | Procedure Examples                         | Groups and software that use this technique |
 | Data Sources                               | Data components that detect this technique |
@@ -294,6 +298,20 @@ A special mitigation published within the Enterprise domain, "Do Not Mitigate," 
 |:-----|:----|
 | Techniques Addressed by Mitigation      | Techniques the mitigation addresses / mitigates. |
 
+#### Editing Campaigns
+
+Campaigns are a grouping of adversarial behaviors that describe activities or attacks that occur over a period of time. Overlaps between names based on publicly reported associations are tracked using "Associated Campaigns" (also known as "Aliases").
+
+Campaigns support the standard set of fields, including a description supporting citations, LinkByIds, and markdown formatting, as well as the "Associated Campaigns" field. Each associated campaign is tracked using a name and description. The alias description is typically used to hold a set of citations, though plain-text can also be entered alongside citations if additional context is necessary. Alias names cannot be changed after they are added, but the description can be changed by clicking on the entry in the associated campaigns list. Additionally, campaigns support optional first and last seen fields to identify the period of time activity was seen for a particular campaign.
+
+##### Campaign Relationships
+
+| Relationship Section                    | Description |
+|:-----|:----|
+| Groups | Groups involved in carrying out the campaign |
+| Techniques Used | Techniques used as part of the campaign |
+| Software Used | Software used as part of the campaign |
+
 #### Editing Groups
 
 Groups are sets of related intrusion activity that are tracked by a common name in the security community. Overlaps between names based on publicly reported associations are tracked using "Associated Groups" (also known as "Aliases").
@@ -304,13 +322,15 @@ Groups support the standard set of fields as well as the "Associated Groups" fie
 
 | Relationship Section                    | Description |
 |:-----|:----|
+| Campaigns | Campaigns attributed to the group |
 | Techniques Used      | Techniques used by the group. Note that this should not include indirect usages through software, which should be expressed by mapping to the software itself. |
 | Software Used      | Software used by the group |
+
 #### Editing Software
 
 Software is a generic term for custom or commercial code, operating system utilities, open-source software, or other tools used to conduct behavior modeled in ATT&CK. Some instances of software have multiple names associated with the same instance due to various organizations tracking the same set of software by different names. The team makes a best effort to track overlaps between names based on publicly reported associations, which are designated as “Associated Software” on each page (also known as "Aliases").
 
-Software support the standard set of fields as well as the "Associated Software" field. Each associated software is tracked using a name and description. The alias description is typically used to hold a set of citations, though plain-text can also be entered alongside citations if additional context is necessary. Alias names cannot be changed after they are added, but the description can be changed by clicking on the entry in the associated groups list.
+Software support the standard set of fields as well as the "Associated Software" field. Each associated software is tracked using a name and description. The alias description is typically used to hold a set of citations, though plain-text can also be entered alongside citations if additional context is necessary. Alias names cannot be changed after they are added, but the description can be changed by clicking on the entry in the associated software list.
 
 ##### Types of Software 
 
@@ -324,7 +344,8 @@ The software type must be selected when creating it and due to limitations of th
 
 | Relationship Section                    | Description |
 |:-----|:----|
-| Techniques Used      | Techniques used by the group |
+| Campaigns | Campaigns that use this software |
+| Techniques Used      | Techniques used by the software |
 | Associated Groups    | Groups that use this software |
 
 #### Editing Data Sources
@@ -356,10 +377,11 @@ Relationships map objects to other objects. Relationships have types, sources, a
 
 | Relationship Type | Valid Source Types | Valid Target Types |
 |:-----|:----|:---|
-| uses              | Group, Software*  | Software*, Technique |
+| uses              | Campaign, Group, Software*  | Software*, Technique |
 | mitigates         | Mitigation       | Technique |
 | subtechnique-of   | Technique        | Technique |
 | detects           | Data Component   | Technique |
+| attributed-to     | Campaign         | Group     |
 
 _\* Relationships cannot be created between two software._
 
@@ -394,7 +416,7 @@ Uses of notes include but are not limited to:
 - Recording potential knowledge (e.g "TODO: verify whether the mention in threat report _X_ is actually this technique")
 - Enabling collaboration in development workflows (e.g "Marcie, make sure to update the platforms once you finish determining the technique scope")
 
-Annotations in the ATT&CK Workbench are implemented through _notes_. Typically notes are not published outside of a Workbench instance, and are intended to be local knowledge. Note are associated directly with objects within the knowledge base, and cannot exist without an attached object.
+Annotations in the ATT&CK Workbench are implemented through _notes_. Typically notes are not published outside of a Workbench instance, and are intended to be local knowledge. Notes are associated directly with objects within the knowledge base, and cannot exist without an attached object.
 
 ### Creating Notes
 

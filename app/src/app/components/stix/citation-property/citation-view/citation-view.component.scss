@@ -1,0 +1,8 @@
+@import "../../../../../style/globals";
+@import '~@angular/material/theming';
+
+.citation-view {
+    .markdown p {
+        margin: 0px;
+    }
+}

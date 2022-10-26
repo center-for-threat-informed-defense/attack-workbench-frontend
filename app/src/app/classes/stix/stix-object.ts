@@ -14,6 +14,7 @@ let stixTypeToAttackType = {
     "malware": "software",
     "tool": "software",
     "intrusion-set": "group",
+    "campaign": "campaign",
     "course-of-action": "mitigation",
     "x-mitre-matrix": "matrix",
     "x-mitre-tactic": "tactic",
@@ -50,6 +51,7 @@ export abstract class StixObject extends Serializable {
         "technique": "techniques",
         "software": "software",
         "group": "groups",
+        "campaign": "campaigns",
         "mitigation": "mitigations",
         "matrix": "matrices",
         "tactic": "tactics",
@@ -290,6 +292,7 @@ export abstract class StixObject extends Serializable {
                 // check if name & ATT&CK ID is unique, record result in validation, and return validation
                 let accessor = this.attackType == "collection"? restAPIService.getAllCollections() :
                                 this.attackType == "group"? restAPIService.getAllGroups() :
+                                this.attackType == "campaign"? restAPIService.getAllCampaigns() :
                                 this.attackType == "software"? restAPIService.getAllSoftware() :
                                 this.attackType == "matrix"? restAPIService.getAllMatrices() :
                                 this.attackType == "mitigation"? restAPIService.getAllMitigations() :
@@ -354,6 +357,37 @@ export abstract class StixObject extends Serializable {
                                 }
                             }
                         }
+                        // check required first/last seen fields for campaigns
+                        if (this.attackType == "campaign") {
+                            if (!this.hasOwnProperty('first_seen') || this['first_seen'] == null) {
+                                result.errors.push({
+                                    "result": "error",
+                                    "field": "first_seen",
+                                    "message": "object does not have a first seen date"
+                                })
+                            }
+                            if (!this.hasOwnProperty('first_seen_citation') || this['first_seen_citation'] == "") {
+                                result.errors.push({
+                                    "result": "error",
+                                    "field": "first_seen_citation",
+                                    "message": "object is missing a citation for the first seen date"
+                                })
+                            }
+                            if (!this.hasOwnProperty('last_seen') || this['last_seen'] == null) {
+                                result.errors.push({
+                                    "result": "error",
+                                    "field": "last_seen",
+                                    "message": "object does not have a last seen date"
+                                })
+                            }
+                            if (!this.hasOwnProperty('last_seen_citation') || this['last_seen_citation'] == "") {
+                                result.errors.push({
+                                    "result": "error",
+                                    "field": "last_seen_citation",
+                                    "message": "object is missing a citation for the last seen date"
+                                })
+                            }
+                        }
                         return result;
                     })
                 )
@@ -361,9 +395,10 @@ export abstract class StixObject extends Serializable {
             // validate external references
             switchMap(result => {
                 // build list of fields to validate external references on according to ATT&CK type
-                let refs_fields = ["description"];
-                if (this.attackType == "software" || this.attackType == "group") refs_fields.push("aliases");
-                if (this.attackType == "technique") refs_fields.push("detection");
+                let refs_fields = ['description'];
+                if (['software', 'group', 'campaign'].includes(this.attackType)) refs_fields.push('aliases');
+                if (this.attackType == 'technique') refs_fields.push('detection');
+                if (this.attackType == 'campaign') refs_fields.push('first_seen_citation', 'last_seen_citation');
 
                 return this.external_references.validate(restAPIService, { object: this, fields: refs_fields }).pipe(
                     map(refs_result => {
@@ -462,20 +497,17 @@ export abstract class StixObject extends Serializable {
 
         if (!links) return of(result); // no LinkByIds found
 
-        let link_map = {};
+        let ids = [];
         for (let link of links) {
             let id = link.split("(LinkById: ")[1].slice(0, -1);
-            if (!(id in link_map)) {
-                link_map[id] = this.findLink(id, restAPIService);
-            }
+            if(!ids.includes(id)) ids.push(id);
         }
 
-        return forkJoin(link_map).pipe(
-            map((results) => {
-                let link_results = results as any;
-                for (let key of Object.keys(link_results)) {
-                    // verify whether or not all links were found
-                    if (!link_results[key]) result.missingLinks.add(key);
+        return restAPIService.getAllObjects(ids, null, null, null, true, true, true).pipe(
+            map((results: any) => {
+                let retrieved_ids = (results.data as StixObject[]).map(obj => obj.attackID);
+                for (let id of ids) {
+                    if (!retrieved_ids.includes(id)) result.missingLinks.add(id);
                 }
                 return result;
             })
@@ -496,21 +528,6 @@ export abstract class StixObject extends Serializable {
             }
         }
         return result;
-    }
-
-    /**
-     * retrieves the linked object by ID
-     * @param id the ID of the linked object
-     * @param restAPIService service to connect to the REST API
-     */
-    private findLink(id: string, restAPIService: RestApiConnectorService): Observable<boolean> {
-        return restAPIService.getAllObjects(id, null, null, null, true, true, true).pipe(
-            map((result) => {
-                let object = result.data[0];
-                if (object) return true;
-                return false; // object not found
-            })
-        );
     }
 
     /**
@@ -567,6 +584,7 @@ export abstract class StixObject extends Serializable {
         this.attackID = '(generating ID)';
 
         let accessor = this.attackType == "group" ? restAPIConnector.getAllGroups() :
+                        this.attackType == "campaign" ? restAPIConnector.getAllCampaigns() :
                         this.attackType == "mitigation" ? restAPIConnector.getAllMitigations() :
                         this.attackType == "software" ? restAPIConnector.getAllSoftware() :
                         this.attackType == "tactic" ? restAPIConnector.getAllTactics() :

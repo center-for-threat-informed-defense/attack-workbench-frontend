@@ -1,6 +1,7 @@
 import { Component, Input, OnInit, ViewEncapsulation } from '@angular/core';
-import { forkJoin, Observable, Subscription } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { StixObject } from 'src/app/classes/stix/stix-object';
 import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/rest-api-connector.service';
 import { DescriptivePropertyConfig } from '../descriptive-property.component';
 
@@ -98,15 +99,11 @@ export class DescriptiveViewComponent implements OnInit {
      * @param ids list of IDs to retrieve
      */
     private loadLinkedObjects(ids: string[]): Observable<any> {
-        let api_map = {};
-        for (let id of ids) {
-            api_map[id] = this.restApiConnector.getAllObjects(id, null, null, null, true, true, true)
-        }
-
-        return forkJoin(api_map).pipe(
+        return this.restApiConnector.getAllObjects(ids, null, null, null, true, true, true).pipe(
             map((results: any) => {
+                let data = results.data as StixObject[];
                 // store retrieved objects in dictionary for quick lookup
-                Object.keys(results).forEach(id => this.objectLookup[id] = results[id].data[0]);
+                data.forEach(obj => this.objectLookup[obj.attackID] = obj);
                 return results;
             })
         );
@@ -129,7 +126,7 @@ export class DescriptiveViewComponent implements OnInit {
     }
 
     /**
-     * Render the descriptive view of of the stix object
+     * Render the descriptive view of the stix object
      */
     public renderPreview(): void {
         this.loading = true;

@@ -20,7 +20,7 @@ export class DescriptivePropertyComponent implements OnInit {
 }
 
 export interface DescriptivePropertyConfig {
-    /* What is the current mode? Default: 'view
+    /* What is the current mode? Default: 'view'
      *    view: viewing the descriptive property
      *    edit: editing the descriptive property
      *    diff: displaying the diff between two STIX objects. If this mode is selected, two StixObjects must be specified in the objects field

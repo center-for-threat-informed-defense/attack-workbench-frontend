@@ -23,14 +23,16 @@ import { logger } from "../../../util/logger";
 import { DataSource } from 'src/app/classes/stix/data-source';
 import { DataComponent } from 'src/app/classes/stix/data-component';
 import { UserAccount } from 'src/app/classes/authn/user-account';
+import { Campaign } from 'src/app/classes/stix/campaign';
 
 //attack types
-type AttackType = "collection" | "group" | "matrix" | "mitigation" | "software" | "tactic" | "technique" | "relationship" | "note" | "identity" | "marking-definition" | "data-source" | "data-component";
+type AttackType = "campaign" | "collection" | "group" | "matrix" | "mitigation" | "software" | "tactic" | "technique" | "relationship" | "note" | "identity" | "marking-definition" | "data-source" | "data-component";
 // pluralize AttackType
 const attackTypeToPlural = {
     "technique": "techniques",
     "tactic": "tactics",
     "group": "groups",
+    "campaign": "campaigns",
     "software": "software",
     "mitigation": "mitigations",
     "matrix": "matrices",
@@ -47,6 +49,7 @@ const attackTypeToClass = {
     "technique": Technique,
     "tactic": Tactic,
     "group": Group,
+    "campaign": Campaign,
     "software": Software,
     "mitigation": Mitigation,
     "matrix": Matrix,
@@ -64,6 +67,7 @@ const stixTypeToClass = {
     "attack-pattern": Technique,
     "x-mitre-tactic": Tactic,
     "intrusion-set": Group,
+    "campaign": Campaign,
     "tool": Software,
     "malware": Software,
     "course-of-action": Mitigation,
@@ -134,19 +138,36 @@ export class RestApiConnectorService extends ApiConnector {
     private getStixObjectsFactory<T extends StixObject>(attackType: AttackType) {
         let attackClass = attackTypeToClass[attackType];
         let plural = attackTypeToPlural[attackType]
-        return function<P extends T>(options?: { limit?: number, offset?: number, state?: string, includeRevoked?: boolean, includeDeprecated?: boolean, versions?: "all" | "latest", excludeIDs?: string[], search?: string }): Observable<Paginated<StixObject>> {
+        return function<P extends T>(options?: { limit?: number, 
+                                                 offset?: number, 
+                                                 state?: string, 
+                                                 includeRevoked?: boolean, 
+                                                 includeDeprecated?: boolean, 
+                                                 versions?: "all" | "latest", 
+                                                 excludeIDs?: string[], 
+                                                 search?: string,
+                                                 platforms?: string[],
+                                                 domains?: string[]
+                                                 }): Observable<Paginated<StixObject>> {
             // parse params into query string
             let query = new HttpParams({encoder: new CustomEncoder()});
-            // pagination
-            if (options && options.limit) query = query.set("limit", options.limit.toString());
-            if (options && options.offset) query = query.set("offset", options.offset.toString());
-            if (options && (options.limit || options.offset)) query = query.set("includePagination", "true");
-            // other properties
-            if (options && options.state) query = query.set("state", options.state);
-            if (options && options.includeRevoked) query = query.set("includeRevoked", options.includeRevoked ? "true" : "false");
-            if (options && options.includeDeprecated) query = query.set("includeDeprecated", options.includeDeprecated ? "true" : "false");
-            if (options && options.versions) query = query.set("versions", options.versions);
-            if (options && options.search) query = query.set("search", options.search);
+            if (options) {
+                // pagination
+                if (options.limit) query = query.set("limit", options.limit.toString());
+                if (options.offset) query = query.set("offset", options.offset.toString());
+                if (options.limit || options.offset) query = query.set("includePagination", "true");
+                // state/workflow
+                if (options.state) query = query.set("state", options.state);
+                if (options.includeRevoked) query = query.set("includeRevoked", options.includeRevoked ? "true" : "false");
+                if (options.includeDeprecated) query = query.set("includeDeprecated", options.includeDeprecated ? "true" : "false");
+                // versions selector
+                if (options.versions) query = query.set("versions", options.versions);
+                // searching
+                if (options.search) query = query.set("search", options.search);
+                // platforms/domains
+                if (options.platforms) options.platforms.forEach(platform => query = query.append('platform', platform));
+                if (options.domains) options.domains.forEach(domain => query = query.append('domain', domain));
+            }
             // perform the request
             let url = `${this.baseUrl}/${plural}`;
             return this.http.get(url, {headers: this.headers, params: query}).pipe(
@@ -225,6 +246,17 @@ export class RestApiConnectorService extends ApiConnector {
      * @returns {Observable<Group[]>} observable of retrieved objects
      */
     public get getAllGroups() { return this.getStixObjectsFactory<Group>("group"); }
+    /**
+     * Get all campaigns
+     * @param {number} [limit] the number of campaigns to retrieve
+     * @param {number} [offset] the number of campaigns to skip
+     * @param {string} [state] if specified, only get objects with this state
+     * @param {boolean} [revoked] if true, get revoked objects
+     * @param {boolean} [deprecated] if true, get deprecated objects
+     * @param {string[]} [excludeIDs] if specified, excludes these STIX IDs from the result
+     * @returns {Observable<Campaign[]>} observable of retrieved objects
+     */
+    public get getAllCampaigns() { return this.getStixObjectsFactory<Campaign>("campaign"); }
     /**
      * Get all software
      * @param {number} [limit] the number of software to retrieve
@@ -340,7 +372,7 @@ export class RestApiConnectorService extends ApiConnector {
 
     /**
      * Get all objects; objects will not be deserialized to STIX objects unless the parameter is used
-     * @param {string} [attackID] filter to only include objects with this ATT&CK ID
+     * @param {string[]} [attackIDs] filter to only include objects within the list of given ATT&CK IDs
      * @param {number} [limit] the number of collections to retrieve
      * @param {number} [offset] the number of collections to skip
      * @param {string} [state] if specified, only get objects with this state
@@ -350,14 +382,16 @@ export class RestApiConnectorService extends ApiConnector {
      * @param {boolean} [deserialize] if true, deserialize objects to full STIX objects
      * @returns {Observable<any[]>} observable of retrieved objects
      */
-    public getAllObjects(attackID?: string, limit?: number, offset?: number, state?: string, revoked?: boolean, deprecated?: boolean, deserialize?: boolean) {
+    public getAllObjects(attackIDs?: string[], limit?: number, offset?: number, state?: string, revoked?: boolean, deprecated?: boolean, deserialize?: boolean) {
         let query = new HttpParams({encoder: new CustomEncoder()});
         // pagination
         if (limit) query = query.set("limit", limit.toString());
         if (offset) query = query.set("offset", offset.toString());
         if (limit || offset) query = query.set("includePagination", "true");
         // other properties
-        if (attackID) query = query.set("attackId", attackID);
+        if (attackIDs) {
+            attackIDs.forEach(id => query = query.append("attackId", id));
+        }
         if (state) query = query.set("state", state);
         if (revoked) query = query.set("includeRevoked", revoked ? "true" : "false");
         if (deprecated) query = query.set("includeDeprecated", deprecated ? "true" : "false");
@@ -504,6 +538,14 @@ export class RestApiConnectorService extends ApiConnector {
      */
     public get getGroup() { return this.getStixObjectFactory<Group>("group"); }
     /**
+     * Get a single campaign by STIX ID
+     * @param {string} id the object STIX ID
+     * @param {Date} [modified] if specified, get the version modified at the given date
+     * * @param {versions} [string] default "latest", if "all" returns all versions of the object instead of just the latest version.
+     * @returns {Observable<Campaign>} the object with the given ID and modified date
+     */
+    public get getCampaign() { return this.getStixObjectFactory<Campaign>("campaign"); }
+    /**
      * Get a single software by STIX ID
      * @param {string} id the object STIX ID
      * @param {Date} [modified] if specified, get the version modified at the given date
@@ -617,6 +659,12 @@ export class RestApiConnectorService extends ApiConnector {
      */
     public get postGroup() { return this.postStixObjectFactory<Group>("group"); }
     /**
+     * POST (create) a new campaign
+     * @param {Campaign} object the object to create
+     * @returns {Observable<Campaign>} the created object
+     */
+    public get postCampaign() { return this.postStixObjectFactory<Campaign>("campaign"); }
+    /**
      * POST (create) a new software
      * @param {Software} object the object to create
      * @returns {Observable<Software>} the created object
@@ -724,6 +772,13 @@ export class RestApiConnectorService extends ApiConnector {
      */
     public get putGroup() { return this.putStixObjectFactory<Group>("group"); }
     /**
+     * PUT (update) a campaign
+     * @param {Campaign} object the object to update
+     * @param {Date} [modified] optional, the modified date to overwrite. If omitted, uses the modified field of the object
+     * @returns {Observable<Campaign>} the updated object
+     */
+    public get putCampaign() { return this.putStixObjectFactory<Campaign>("campaign"); }
+    /**
      * PUT (update) a software
      * @param {Software} object the object to update
      * @param {Date} [modified] optional, the modified date to overwrite. If omitted, uses the modified field of the object
@@ -815,6 +870,13 @@ export class RestApiConnectorService extends ApiConnector {
      * @returns {Observable<{}>} observable of the response body
      */
     public get deleteGroup() { return this.deleteStixObjectFactory("group"); }
+    /**
+     * DELETE a campaign
+     * @param {string} id the STIX ID of the object to delete
+     * @param {Date} modified the modified date of the version to delete
+     * @returns {Observable<{}>} observable of the response body
+     */
+    public get deleteCampaign() { return this.deleteStixObjectFactory("campaign"); }
     /**
      * DELETE a software
      * @param {string} id the STIX ID of the object to delete
@@ -991,6 +1053,50 @@ export class RestApiConnectorService extends ApiConnector {
             catchError(this.handleError_continue([])),
             share()
         );
+    }
+
+    /**
+     * Get all techniques referencing the given tactic
+     * @param {string} tactic_id the stix id of the tactic
+     * @param {Date} modified the modified date of the tactic
+     * @returns {Technique[]} a list of techniques that reference the tactic
+     */
+    public getTechniquesInTactic(tactic_id: string, modified: Date): Observable<Technique[]> {
+        let url = `${this.baseUrl}/tactics/${tactic_id}/modified/${modified.toISOString()}/techniques`;
+        return this.http.get(url).pipe(
+            tap(results => logger.log("retrieved techniques", results)),
+            map(response => {
+                let data = response as Array<any>;
+                let techniques: Technique[] = data.map(sdo => {
+                    return new Technique(sdo);
+                });
+                return techniques;
+            }),
+            catchError(this.handleError_continue([])),
+            share()
+        )
+    }
+
+    /**
+     * Get all tactics referenced by the given technique
+     * @param {string} technique_id the stix id of the technique
+     * @param {Date} modified the modified date of the technique
+     * @returns {Tactic[]} a list of tactics that are referenced by the technique
+     */
+    public getTacticsRelatedToTechnique(technique_id: string, modified: Date): Observable<Tactic[]> {
+        let url = `${this.baseUrl}/techniques/${technique_id}/modified/${modified.toISOString()}/tactics`;
+        return this.http.get(url).pipe(
+            tap(results => logger.log("retrieved tactics", results)),
+            map(response => {
+                let data = response as Array<any>;
+                let tactics: Tactic[] = data.map(sdo => {
+                    return new Tactic(sdo);
+                });
+                return tactics;
+            }),
+            catchError(this.handleError_continue([])),
+            share()
+        )
     }
 
     //   ___ ___ ___ ___ ___ ___ _  _  ___ ___ ___
@@ -1172,12 +1278,14 @@ export class RestApiConnectorService extends ApiConnector {
      * Get a collection bundle
      * @param {string} id STIX ID of collection
      * @param {Date} modified modified date of collection
+     * @param {boolean} includeNotes if true, include relevant Note objects
      * @returns {Observable<any>} collection STIX bundle
      */
-    public getCollectionBundle(id: string, modified: Date): Observable<any> {
+    public getCollectionBundle(id: string, modified: Date, includeNotes?: boolean): Observable<any> {
         let query = new HttpParams();
         query = query.set("collectionId", id);
         query = query.set("collectionModified", modified.toISOString());
+        if (includeNotes) query = query.set("includeNotes", "true");
         return this.http.get(`${this.baseUrl}/collection-bundles`, {params: query}).pipe(
             tap(results => logger.log("retrieved collection bundle")),
             catchError(this.handleError_continue<any>({})),
@@ -1516,11 +1624,12 @@ export class RestApiConnectorService extends ApiConnector {
      * Download a collection bundle. Triggers browser download UI when complete.
      * @param {string} id the STIX ID of the collection
      * @param {Date} modified the modified date of the collection
-     * @param {string} filename: the name of the file to download
+     * @param {string} filename the name of the file to download
+     * @param {boolean} includeNotes if true, include relevant Note objects
      * @returns {Observable<any>} the observable to watch while download is loading
      */
-     public downloadCollectionBundle(id: string, modified: Date, filename: string): Observable<any> {
-        let getter = this.getCollectionBundle(id, modified);
+     public downloadCollectionBundle(id: string, modified: Date, filename: string, includeNotes?: boolean): Observable<any> {
+        let getter = this.getCollectionBundle(id, modified, includeNotes);
         let subscription = getter.subscribe({
             next: (result) => {
                 logger.log(result);

@@ -3,7 +3,7 @@
     <mat-form-field *ngIf="!config.editType || config.editType == 'any'" class="grow-to-row" appearance="outline">
         <mat-label>{{config.label? config.label : config.field}}</mat-label>
         <mat-chip-list #anyChipList [required]="config.required ? config.required : false" [formControl]="inputControl">
-            <mat-chip *ngFor="let value of config.object[config.field]" [removable]="true" (removed)="remove(value)">
+            <mat-chip *ngFor="let value of values" [removable]="true" (removed)="remove(value)">
                 {{value}} <mat-icon matChipRemove>cancel</mat-icon>
             </mat-chip>
             <input matInput placeholder="new {{config.label? config.label : config.field }}..."

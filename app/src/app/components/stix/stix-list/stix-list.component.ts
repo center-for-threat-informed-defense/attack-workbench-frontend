@@ -1,16 +1,16 @@
 import { Component, OnInit, Input, ViewEncapsulation, ViewChild, AfterViewInit, ElementRef, EventEmitter, Output, OnDestroy } from '@angular/core';
-import { StixObject } from 'src/app/classes/stix/stix-object';
 import { animate, style, transition, trigger } from '@angular/animations';
 import { MatPaginator } from '@angular/material/paginator';
+import { SelectionModel } from '@angular/cdk/collections';
+import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 
-import { SelectionModel } from '@angular/cdk/collections';
-import { StixDialogComponent } from '../../../views/stix/stix-dialog/stix-dialog.component';
-
-import { MatDialog } from '@angular/material/dialog';
 import { fromEvent, Observable, of, Subscription } from 'rxjs';
-import { Paginated, RestApiConnectorService } from 'src/app/services/connectors/rest-api/rest-api-connector.service';
 import { debounceTime, distinctUntilChanged, filter, tap } from 'rxjs/operators';
+
+import { StixObject } from 'src/app/classes/stix/stix-object';
+import { StixDialogComponent } from 'src/app/views/stix/stix-dialog/stix-dialog.component';
+import { Paginated, RestApiConnectorService } from 'src/app/services/connectors/rest-api/rest-api-connector.service';
 import { AuthenticationService } from 'src/app/services/connectors/authentication/authentication.service';
 
 @Component({
@@ -38,26 +38,32 @@ import { AuthenticationService } from 'src/app/services/connectors/authenticatio
 })
 export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
     @Input() public config: StixListConfig = {};
+
     @Output() public onRowAction = new EventEmitter<string>();
     @Output() public onSelect = new EventEmitter<StixObject>();
     @Output() public refresh = new EventEmitter();
+
     @ViewChild(MatPaginator) paginator: MatPaginator;
     @ViewChild('search') search: ElementRef;
+
+    // search query
     public searchQuery: string = "";
     private searchSubscription: Subscription;
 
-    //objects to render;
+    // objects to render
     public objects$: Observable<StixObject[]>;
     public data$: Observable<Paginated<StixObject>>;
     public totalObjectCount: number = 0;
-    //view mode
+
+    // view mode
     public mode: string = "cards";
-    //options provided to the user for grouping and filtering
+
+    // options provided to the user for grouping and filtering
     public filterOptions: FilterGroup[] = [];
-    //current grouping and filtering selections
+
+    // current grouping and filtering selections
     public filter: string[] = [];
     public groupBy: string[] = [];
-    // search query
 
     // TABLE STUFF
     public tableColumns: string[] = [];
@@ -76,31 +82,301 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
         "malware": "software",
         "tool": "software",
         "intrusion-set": "group",
+        "campaign": "campaign",
         "course-of-action": "mitigation",
         "x-mitre-matrix": "matrix",
         "x-mitre-tactic": "tactic",
         "relationship": "relationship"
     }
 
-    // Route authentication
-    public getAccessibleRoutes(attackType: string, routes: any[], ) {
-        return routes.filter(route => this.canAccess(attackType, route) && this.canEdit(route));
+    // all possible each type of filter/groupBy
+    private platformSubscription: Subscription;
+    private platformMap: Map<string, Map<string, string[]>> = new Map();
+    private domains: FilterValue[] = [
+        {"value": "domain.enterprise-attack", "label": "enterprise", "disabled": false},
+        {"value": "domain.mobile-attack", "label": "mobile", "disabled": false},
+        {"value": "domain.ics-attack", "label": "ics", "disabled": false}
+    ]
+    private statuses: FilterValue[] = [
+        {"value": "status.work-in-progress", "label": "show only work in progress", "disabled": false},
+        {"value": "status.awaiting-review", "label": "show only awaiting review", "disabled": false},
+        {"value": "status.reviewed", "label": "show only reviewed", "disabled": false}
+    ]
+    private states: FilterValue[] = [
+        {"value": "state.deprecated", "label": "include deprecated", "disabled": false},
+        {"value": "state.revoked", "label": "include revoked", "disabled": false}
+    ]
+
+    constructor(public dialog: MatDialog, 
+                private restAPIConnectorService: RestApiConnectorService, 
+                private router: Router, 
+                private authenticationService: AuthenticationService) { }
+
+    ngOnInit(): void {
+        // build query options for platforms
+        this.platformSubscription = this.restAPIConnectorService.getAllAllowedValues().subscribe({
+            next: (data) => {
+                for (let values of data) {
+                    // setup domain map (domainName->platforms)
+                    let domainMap: Map<string, string[]> = new Map();
+                    if (values.properties) {
+                        // extract domain->platforms properties from allowedValues structure
+                        let properties = values.properties.find(p => p.propertyName == 'x_mitre_platforms');
+                        if (properties && properties.domains) {
+                            properties.domains.forEach(domain => {
+                                domainMap.set(domain.domainName, domain.allowedValues);
+                            });
+                        }
+                    }
+                    // set attackType->domainMap
+                    this.platformMap.set(values["objectType"], domainMap);
+                }
+            },
+            complete: () => {
+                // build the stix list table
+                this.buildTable();
+                this.setUpControls();
+                // get objects from backend if data is not from config
+                if (!("stixObjects" in this.config)) {
+                    this.applyControls();
+                }
+            }
+        });
     }
 
-    private canAccess(attackType: string, route: any) {
-        if (route.label && route.label == 'edit' && !this.authenticationService.canEdit(attackType)) {
-            // user not authorized
-            return false;
+    ngAfterViewInit() {
+        // set up listener to search input
+        if (this.config.type && this.config.type != "relationship") {
+            this.searchSubscription = fromEvent(this.search.nativeElement, 'keyup').pipe(
+                filter(Boolean),
+                debounceTime(250),
+                distinctUntilChanged(),
+                tap(_ => { 
+                    if (this.paginator) this.paginator.pageIndex = 0;
+                    this.applyControls();
+                })
+            ).subscribe()
         }
-        // user authorized
-        return true;
     }
 
-    private canEdit(route: any) {
-        if (route.label && route.label == 'edit' && this.config.uneditableObject) {
-            return false;
+    /**
+     * Build the stix list table to display
+     */
+    private buildTable(): void {
+        // filter options
+        this.filterOptions = []
+        if (!('showFilters' in this.config)) this.config.showFilters = true;
+
+        // parse the config
+        let sticky_allowed = !(this.config.rowAction && this.config.rowAction.position == "start");
+        if ("type" in this.config) { 
+            // set columns according to type
+            switch(this.config.type.replace(/_/g, '-')) {
+                case "collection":
+                case "collection-created":
+                    this.addColumn("name", "name", "plain", sticky_allowed, ["name"]);
+                    this.addColumn("released?", "release", "plain", null, ["text-label"]);
+                    this.addVersionsAndDatesColumns();
+                    this.tableDetail = [{
+                        "field": "description",
+                        "display": "descriptive"
+                    }]
+                    break;
+                case "collection-imported":
+                    this.addColumn("name", "name", "plain", sticky_allowed, ["name"]);
+                    this.addColumn("version", "version", "version");
+                    this.addColumn("imported", "imported", "timestamp");
+                    this.addColumn("modified", "modified", "timestamp");
+                    this.tableDetail = [{
+                        "field": "description",
+                        "display": "descriptive"
+                    }]
+                    break;
+                case "mitigation":
+                case "tactic":
+                    this.addColumn("", "workflow", "icon");
+                    this.addColumn("", "state", "icon");
+                    this.addColumn("ID", "attackID", "plain", false);
+                    this.addColumn("name", "name", "plain", sticky_allowed, ["name"]);
+                    this.addColumn("domain", "domains", "list");
+                    this.addVersionsAndDatesColumns();
+                    this.tableDetail = [{
+                        "field": "description",
+                        "display": "descriptive"
+                    }]
+                    break;
+                case "matrix":
+                    this.addColumn("", "workflow", "icon");
+                    this.addColumn("", "state", "icon");
+                    this.addColumn("name", "name", "plain", sticky_allowed, ["name"]);
+                    this.addVersionsAndDatesColumns();
+                    this.tableDetail = [{
+                        "field": "description",
+                        "display": "descriptive"
+                    }]
+                    break;
+                case "campaign":
+                    this.addColumn("", "workflow", "icon");
+                    this.addColumn("", "state", "icon");
+                    this.addColumn("ID", "attackID", "plain", false);
+                    this.addColumn("name", "name", "plain", sticky_allowed, ["name"]);
+                    this.addVersionsAndDatesColumns();
+                    this.tableDetail = [{
+                        "field": "description",
+                        "display": "descriptive"
+                    }];
+                    break;
+                case "group":
+                    this.addColumn("", "workflow", "icon");
+                    this.addColumn("", "state", "icon");
+                    this.addColumn("ID", "attackID", "plain", false);
+                    this.addColumn("name", "name", "plain", sticky_allowed, ["name"]);
+                    this.addColumn("associated groups", "aliases", "list");
+                    this.addVersionsAndDatesColumns();
+                    this.tableDetail = [{
+                        "field": "description",
+                        "display": "descriptive"
+                    }]
+                    break;
+                case "software":
+                    this.addColumn("", "workflow", "icon");
+                    this.addColumn("", "state", "icon");
+                    this.addColumn("ID", "attackID", "plain", false);
+                    this.addColumn("name", "name", "plain", sticky_allowed, ["name"]);
+                    this.addColumn("type", "type", "plain");
+                    this.addColumn("domain", "domains", "list");
+                    this.addVersionsAndDatesColumns();
+                    this.tableDetail = [{
+                        "field": "description",
+                        "display": "descriptive"
+                    }]
+                    break;
+                case "data-source":
+                case "technique":
+                    this.addColumn("", "workflow", "icon");
+                    this.addColumn("", "state", "icon");
+                    this.addColumn("ID", "attackID", "plain", false);
+                    this.addColumn("name", "name", "plain", sticky_allowed, ["name"]);
+                    this.addColumn("platforms", "platforms", "list");
+                    this.addColumn("domain", "domains", "list");
+                    this.addVersionsAndDatesColumns();
+                    this.tableDetail = [{
+                        "field": "description",
+                        "display": "descriptive"
+                    }]
+                    break;
+                case "data-component":
+                    this.addColumn("name", "name", "plain", sticky_allowed, ["name"]);
+                    this.addColumn("domain", "domains", "list");
+                    this.addVersionsAndDatesColumns();
+                    this.tableDetail = [{
+                        "field": "description",
+                        "display": "descriptive"
+                    }]
+                    break;
+                case "relationship":
+                    this.addColumn("", "state", "icon");
+                    if (this.config.relationshipType && this.config.relationshipType !== "detects") {
+                        this.addColumn("source", "source_ID", "plain");
+                        this.addColumn("", "source_name", "plain", this.config.targetRef? sticky_allowed: false, ["relationship-name"]);// ["name", "relationship-left"]);
+                    } else this.addColumn("source", "source_name", "plain", this.config.targetRef? sticky_allowed: false, ["relationship-name"]);
+                    this.addColumn("type", "relationship_type", "plain", false, ["text-deemphasis", "relationship-joiner"]);
+                    this.addColumn("target", "target_ID", "plain");
+                    this.addColumn("", "target_name", "plain", this.config.sourceRef? sticky_allowed: false, ["relationship-name"]);// ["name", "relationship-right"]);
+                    if (!(this.config.relationshipType && this.config.relationshipType == "subtechnique-of")) this.addColumn("description", "description", "descriptive", false);
+                    break;
+                case "marking-definition":
+                    this.addColumn("definition type", "definition_type", "plain");
+                    this.addColumn("created", "created", "timestamp");
+                    this.addColumn("definition", "definition_string", "descriptive");
+                    this.tableDetail = [{
+                        "field": "definition_string",
+                        "display": "descriptive"
+                    }]
+                    break;
+                default:
+                    this.addColumn("type", "attackType", "plain");
+                    this.addColumn("modified","modified", "timestamp");
+                    this.addColumn("created", "created", "timestamp");
+            }
         }
-        return true;
+        else {
+            this.groupBy = ["type"];
+            this.addColumn("type", "attackType", "plain");
+            this.addColumn("ID", "attackID", "plain", false);
+            this.addColumn("name", "name", "plain", true, ["name"]);
+            this.addColumn("modified","modified", "timestamp");
+            this.addColumn("created", "created", "timestamp");
+        }
+    }
+
+    /**
+     * Set up controls, including control columns and filters
+     */
+    private setUpControls(): void {
+        //controls cols setup
+        let controls_before = [] // control columns which occur before the main columns
+        let controls_after = []; // control columns which occur after the main columns
+
+        //selection setup
+        if ("select" in this.config && this.config.select != "disabled") {
+            if ("selectionModel" in this.config) {
+                this.selection = this.config.selectionModel;
+            } else {
+                this.selection = new SelectionModel<string>(this.config.select == "many");
+            }
+            controls_before.unshift("select") // add select column to view
+        }
+
+        // open-link icon setup
+        if (this.config.clickBehavior && this.config.clickBehavior == "dialog") {
+            controls_after.push("open-link")
+        }
+
+        // row action setup
+        if (this.config.rowAction) {
+            if (this.config.rowAction.position == "start") controls_before.push("start-action");
+            else controls_after.push("end-action");
+        }
+        this.tableColumns_controls = controls_before.concat(this.tableColumns, controls_after);
+
+        // filter setup
+        this.filterOptions.push({
+            "name": "workflow status",
+            "disabled": "status" in this.config,
+            "values": this.statuses
+        })
+        this.filterOptions.push({
+            "name": "state",
+            "disabled": "status" in this.config,
+            "values": this.states
+        })
+        let filterByDomain: boolean = this.config.type ? ['data-source', 'mitigation', 'software', 'tactic', 'technique'].includes(this.config.type) : false;
+        let filterByPlatform: boolean = this.config.type ? ['data-source', 'software', 'technique'].includes(this.config.type) : false;
+        if (filterByDomain) {
+            this.filterOptions.push({
+                "name": "domain",
+                "disabled": "status" in this.config,
+                "values": this.domains
+            })
+        }
+        if (filterByPlatform) {
+            // only build platform filters if config.type is defined and object has 'x_mitre_platforms' field
+            let platforms: FilterValue[] = this.buildPlatformFilter(this.config.type);
+            if (platforms.length) {
+                this.filterOptions.push({
+                    "name": "platform",
+                    "disabled": "status" in this.config,
+                    "values": platforms
+                })
+            }
+        }
+
+        // get data from config (if we are not connecting to back-end)
+        if ("stixObjects" in this.config && !(this.config.stixObjects instanceof Observable)) {
+            this.totalObjectCount = this.config.stixObjects.length;
+            this.applyControls();
+        }
     }
 
     /**
@@ -114,6 +390,15 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
     private addColumn(label: string, field: string, display: "version" | "list" | "plain" | "timestamp" | "descriptive" | "relationship_name" | "icon", sticky?: boolean, classes?: string[]) {
         this.tableColumns.push(field);
         this.tableColumns_settings.set(field, {label, display, sticky, classes});
+    }
+
+    /**
+     * Add version, modified, and created columns to the table
+     */
+    private addVersionsAndDatesColumns() {
+        this.addColumn("version", "version", "version");
+        this.addColumn("modified","modified", "timestamp");
+        this.addColumn("created", "created", "timestamp");
     }
 
     /**
@@ -159,249 +444,28 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
             this.expandedElement = this.expandedElement === element ? null : element;
         }
     }
+
+    // AUTHENTICATION FUNCTIONS
     
-
-    //all possible each type of filter/groupBy
-    // private types: FilterValue[] = [
-    //     {"value": "type.group", "label": "group", "disabled": false},
-    //     {"value": "type.matrix", "label": "matrix", "disabled": false},
-    //     {"value": "type.mitigation", "label": "mitigation", "disabled": false},
-    //     {"value": "type.software", "label": "software", "disabled": false},
-    //     {"value": "type.tactic", "label": "tactic", "disabled": false},
-    //     {"value": "type.technique", "label": "technique", "disabled": false},
-    // ]
-    // private domains: FilterValue[] = [
-    //     {"value": "domain.enterprise-attack", "label": "enterprise", "disabled": false},
-    //     {"value": "domain.mobile-attack", "label": "mobile", "disabled": false}
-    // ]
-    private statuses: FilterValue[] = [
-        {"value": "status.work-in-progress", "label": "show only work in progress", "disabled": false},
-        {"value": "status.awaiting-review", "label": "show only awaiting review", "disabled": false},
-        {"value": "status.reviewed", "label": "show only reviewed", "disabled": false}
-    ]
-    private states: FilterValue[] = [
-        {"value": "state.deprecated", "label": "include deprecated", "disabled": false},
-        {"value": "state.revoked", "label": "include revoked", "disabled": false}
-    ]
-
-    constructor(public dialog: MatDialog, private restAPIConnectorService: RestApiConnectorService, private router: Router, private authenticationService: AuthenticationService) {}
-    
-    ngOnInit() {
-        this.filterOptions = []
-        // parse the config
-        let controls_before = [] // control columns which occur before the main columns
-        let controls_after = []; // control columns which occur after the main columns
-        let sticky_allowed = !(this.config.rowAction && this.config.rowAction.position == "start");
-        if (!('showFilters' in this.config)) this.config.showFilters = true;
-        if ("type" in this.config) { 
-            // this.filter.push("type." + this.config.type); 
-            // set columns according to type
-            switch(this.config.type.replace(/_/g, '-')) {
-                case "collection":
-                case "collection-created":
-                    this.addColumn("name", "name", "plain", sticky_allowed, ["name"]);
-                    this.addColumn("version", "version", "version");
-                    this.addColumn("released?", "release", "plain", null, ["text-label"]);
-                    this.addColumn("modified", "modified", "timestamp");
-                    this.addColumn("created", "created", "timestamp");
-                    this.tableDetail = [{
-                        "field": "description",
-                        "display": "descriptive"
-                    }]
-                    break;
-                case "collection-imported":
-                    this.addColumn("name", "name", "plain", sticky_allowed, ["name"]);
-                    this.addColumn("version", "version", "version");
-                    this.addColumn("imported", "imported", "timestamp");
-                    this.addColumn("modified", "modified", "timestamp");
-                    this.tableDetail = [{
-                        "field": "description",
-                        "display": "descriptive"
-                    }]
-                    break;
-                case "mitigation":
-                case "tactic":
-                    this.addColumn("", "workflow", "icon");
-                    this.addColumn("", "state", "icon");
-                    this.addColumn("ID", "attackID", "plain", false);
-                    this.addColumn("name", "name", "plain", sticky_allowed, ["name"]);
-                    this.addColumn("domain", "domains", "list");
-                    this.addColumn("version", "version", "version");
-                    this.addColumn("modified","modified", "timestamp");
-                    this.addColumn("created", "created", "timestamp");
-                    this.tableDetail = [{
-                        "field": "description",
-                        "display": "descriptive"
-                    }]
-                    break;
-                case "matrix":
-                    this.addColumn("", "workflow", "icon");
-                    this.addColumn("", "state", "icon");
-                    this.addColumn("name", "name", "plain", sticky_allowed, ["name"]);
-                    this.addColumn("version", "version", "version");
-                    this.addColumn("modified","modified", "timestamp");
-                    this.addColumn("created", "created", "timestamp");
-                    this.tableDetail = [{
-                        "field": "description",
-                        "display": "descriptive"
-                    }]
-                    break;
-                case "group":
-                    this.addColumn("", "workflow", "icon");
-                    this.addColumn("", "state", "icon");
-                    this.addColumn("ID", "attackID", "plain", false);
-                    this.addColumn("name", "name", "plain", sticky_allowed, ["name"]);
-                    this.addColumn("associated groups", "aliases", "list");
-                    this.addColumn("version", "version", "version");
-                    this.addColumn("modified","modified", "timestamp");
-                    this.addColumn("created", "created", "timestamp");
-                    this.tableDetail = [{
-                        "field": "description",
-                        "display": "descriptive"
-                    }]
-                    break;
-                case "software":
-                    this.addColumn("", "workflow", "icon");
-                    this.addColumn("", "state", "icon");
-                    this.addColumn("ID", "attackID", "plain", false);
-                    this.addColumn("name", "name", "plain", sticky_allowed, ["name"]);
-                    this.addColumn("type", "type", "plain");
-                    this.addColumn("domain", "domains", "list");
-                    this.addColumn("version", "version", "version");
-                    this.addColumn("modified","modified", "timestamp");
-                    this.addColumn("created", "created", "timestamp");
-                    this.tableDetail = [{
-                        "field": "description",
-                        "display": "descriptive"
-                    }]
-                    break;
-                case "data-source":
-                case "technique":
-                    this.addColumn("", "workflow", "icon");
-                    this.addColumn("", "state", "icon");
-                    this.addColumn("ID", "attackID", "plain", false);
-                    this.addColumn("name", "name", "plain", sticky_allowed, ["name"]);
-                    this.addColumn("platforms", "platforms", "list");
-                    this.addColumn("domain", "domains", "list");
-                    this.addColumn("version", "version", "version");
-                    this.addColumn("modified","modified", "timestamp");
-                    this.addColumn("created", "created", "timestamp");
-                    this.tableDetail = [{
-                        "field": "description",
-                        "display": "descriptive"
-                    }]
-                    break;
-                case "data-component":
-                    this.addColumn("name", "name", "plain", sticky_allowed, ["name"]);
-                    this.addColumn("domain", "domains", "list");
-                    this.addColumn("version", "version", "version");
-                    this.addColumn("modified","modified", "timestamp");
-                    this.addColumn("created", "created", "timestamp");
-                    this.tableDetail = [{
-                        "field": "description",
-                        "display": "descriptive"
-                    }]
-                    break;
-                case "relationship":
-                    this.addColumn("", "state", "icon");
-                    if (this.config.relationshipType && this.config.relationshipType !== "detects") {
-                        this.addColumn("source", "source_ID", "plain");
-                        this.addColumn("", "source_name", "plain", this.config.targetRef? sticky_allowed: false, ["relationship-name"]);// ["name", "relationship-left"]);
-                    } else this.addColumn("source", "source_name", "plain", this.config.targetRef? sticky_allowed: false, ["relationship-name"]);
-                    this.addColumn("type", "relationship_type", "plain", false, ["text-deemphasis", "relationship-joiner"]);
-                    this.addColumn("target", "target_ID", "plain");
-                    this.addColumn("", "target_name", "plain", this.config.sourceRef? sticky_allowed: false, ["relationship-name"]);// ["name", "relationship-right"]);
-                    if (!(this.config.relationshipType && this.config.relationshipType == "subtechnique-of")) this.addColumn("description", "description", "descriptive", false);
-                    // controls_after.push("open-link")
-                    break;
-                case "marking-definition":
-                    this.addColumn("definition type", "definition_type", "plain");
-                    this.addColumn("created", "created", "timestamp");
-                    this.addColumn("definition", "definition_string", "descriptive");
-                    this.tableDetail = [{
-                        "field": "definition_string",
-                        "display": "descriptive"
-                    }]
-                    break;
-                default:
-                    this.addColumn("type", "attackType", "plain");
-                    this.addColumn("modified","modified", "timestamp");
-                    this.addColumn("created", "created", "timestamp");
-            }
-        }
-        else {
-            // this.filterOptions.push({
-            //     "name": "type",
-            //     "disabled": "type" in this.config,
-            //     "values": this.types
-            // })
-            this.groupBy = ["type"];
-            this.addColumn("type", "attackType", "plain");
-            this.addColumn("ID", "attackID", "plain", false);
-            this.addColumn("name", "name", "plain", true, ["name"]);
-            this.addColumn("modified","modified", "timestamp");
-            this.addColumn("created", "created", "timestamp");
-        }
-        
-        if ("query" in this.config) {
-            // force the list to show only objects matching this query
-        }
-
-        //controls cols setup
-        //selection setup
-        if ("select" in this.config && this.config.select != "disabled") {
-            if ("selectionModel" in this.config) {
-                this.selection = this.config.selectionModel;
-            } else {
-                this.selection = new SelectionModel<string>(this.config.select == "many");
-            }
-            controls_before.unshift("select") // add select column to view
-        }
-        // open-link icon setup
-        if (this.config.clickBehavior && this.config.clickBehavior == "dialog") {
-            controls_after.push("open-link")
-        }
-        // row action setup
-        if (this.config.rowAction) {
-            if (this.config.rowAction.position == "start") controls_before.push("start-action");
-            else controls_after.push("end-action");
-        }
-        this.tableColumns_controls = controls_before.concat(this.tableColumns, controls_after);
-        // filter setup
-        this.filterOptions.push({
-            "name": "workflow status",
-            "disabled": "status" in this.config,
-            "values": this.statuses
-        })
-        this.filterOptions.push({
-            "name": "state",
-            "disabled": "status" in this.config,
-            "values": this.states
-        })
-        // get data from config (if we are not connecting to back-end)
-        if ("stixObjects" in this.config && !(this.config.stixObjects instanceof Observable)) {
-            this.totalObjectCount = this.config.stixObjects.length;
-            this.applyControls();
-        }
+    public getAccessibleRoutes(attackType: string, routes: any[], ) {
+        return routes.filter(route => this.canAccess(attackType, route) && this.canEdit(route));
     }
 
-    ngAfterViewInit() {
-        // get objects from backend if data is not from config
-        if (!("stixObjects" in this.config)) this.applyControls();
-        // set up listener to search input
-        if (this.config.type && this.config.type != "relationship") {
-            this.searchSubscription = fromEvent(this.search.nativeElement, 'keyup').pipe(
-                filter(Boolean),
-                debounceTime(250),
-                distinctUntilChanged(),
-                tap(_ => { 
-                    if (this.paginator) this.paginator.pageIndex = 0;
-                    this.applyControls();
-                })
-            ).subscribe()
+    private canAccess(attackType: string, route: any) {
+        if (route.label && route.label == 'edit' && !this.authenticationService.canEdit(attackType)) {
+            // user not authorized
+            return false;
         }
+        // user authorized
+        return true;
     }
 
+    private canEdit(route: any) {
+        if (route.label && route.label == 'edit' && this.config.uneditableObject) {
+            return false;
+        }
+        return true;
+    }
 
     /**
      * Filter the given objects to those which include the query. Searches all string and string[] properties
@@ -427,19 +491,109 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     /**
+     * Enable all filters for the given filter name
+     * @param {string} name name of the filter group 
+     */
+    private enableAllFilters(name: string) {
+        for (let group of this.filterOptions) {
+            if (group.name == name) {
+                group.values.forEach(option => option.disabled = false);
+            }
+        }
+    }
+
+    /**
+     * Build platform filter values for the given attack type
+     */
+    private buildPlatformFilter(attackType: string): FilterValue[] {
+        let platforms: FilterValue[] = [];
+        let domainMap = this.platformMap.get(attackType);
+        if (domainMap) {
+            // add platforms related to this attackType
+            let values: Set<string> = new Set();
+            for (let platforms of domainMap.values()) {
+                platforms.forEach(platform => values.add(platform));
+            }
+            for (let value of values) {
+                platforms.push({
+                    "value": `platform.${value}`,
+                    "label": value,
+                    "disabled": false
+                });
+            }
+        }
+        return platforms;
+    }
+
+    /**
+     * Disable platform filters which are not in the list of selected domains.
+     * All other platforms will be marked as enabled.
+     * @param domains list of selected domain filters
+     */
+    private disablePlatformFilters(domains: string[]): void {
+        if (!domains.length) return;
+        // get set of valid platforms in the selected domains
+        let validPlatforms: Set<string> = new Set();
+        let domainMap = this.platformMap.get(this.config.type);
+        if (!domainMap) return; // platforms not supported for this attack type
+        for (let domain of domains) {
+            let platforms = domainMap.get(domain);
+            if (platforms) {
+                platforms.forEach(p => validPlatforms.add(p));
+            }
+        }
+        // set enabledness of platform filters
+        for (let group of this.filterOptions) {
+            if (group.name == 'platform') {
+                for (let option of group.values) {
+                    let platform = option.value.split("platform.")[1];
+                    // disable platform filters not in the list of valid platforms
+                    option.disabled = !validPlatforms.has(platform);
+                }
+            }
+        }
+    }
+
+    /**
+     * Disable domain filters which do not support the list of selected platforms.
+     * All other domains will be marked as enabled.
+     * @param platforms list of selected platform filters
+     */
+    private disableDomainFilters(platforms: string[]): void {
+        if (!platforms.length) return;
+        // get set of domains the selected platforms are supported by
+        let validDomains: Set<string> = new Set();
+        let domainMap = this.platformMap.get(this.config.type);
+        if (!domainMap) return; // domains not supported for this attack type
+        for (let [domain, domainPlatforms] of domainMap.entries()) {
+            // get intersection of selected platforms and the domain platforms
+            let filtered = domainPlatforms.filter(p => platforms.includes(p));
+            if (filtered.length) validDomains.add(domain);
+        }
+        // set enabledness of domain filters
+        for (let group of this.filterOptions) {
+            if (group.name == 'domain') {
+                for (let option of group.values) {
+                    let domain = option.value.split("domain.")[1];
+                    // disable domain filters not in the list of valid domains
+                    option.disabled = !validDomains.has(domain);
+                }
+            }
+        }
+    }
+
+    /**
      * Apply all controls and fetch objects from the back-end if configured
      */
     public applyControls() {
         if ("stixObjects" in this.config) {
             if (this.config.stixObjects instanceof Observable) {
                 // pull objects out of observable
-            } else {
-                // no need to pull objects out of observable
-                // set max length for paginator
+            } else {                
                 // filter on STIX objects specified in the config
                 let filtered = this.config.stixObjects;
                 // filter to objects matching searchString
-                filtered = this.filterObjects(this.searchQuery, filtered); 
+                filtered = this.filterObjects(this.searchQuery, filtered);
                 // sort
                 filtered = filtered.sort((a, b) => {
                     let x = a as any;
@@ -467,8 +621,9 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
             let offset = this.paginator? this.paginator.pageIndex * limit : 0;
             let deprecated = this.filter.includes("state.deprecated");
             let revoked = this.filter.includes("state.revoked");
-            let state = this.filter.find((x) => x.startsWith("status."));
 
+            // state filter
+            let state = this.filter.find((x) => x.startsWith("status."));
             if (state) {
                 state = state.split("status.")[1];
                 // disable other states
@@ -479,11 +634,29 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
                 }
             } else {
                 // enable all states
-                for (let group of this.filterOptions) {
-                    for (let option of group.values) {
-                        if (option.value.startsWith("status.")) option.disabled = false;
-                    }
-                }
+                this.enableAllFilters('workflow status');
+            }
+
+            // platform filter
+            let platforms: string[] = this.filter.filter((x) => x.startsWith("platform."));
+            if (platforms.length) {
+                platforms = platforms.map(p => p.split("platform.")[1]);
+                // disable domains that do not support selected platforms
+                this.disableDomainFilters(platforms);
+            } else {
+                // enable all domains
+                this.enableAllFilters('domain');
+            }
+
+            // domain filter
+            let domains: string[] = this.filter.filter((x) => x.startsWith("domain."));
+            if (domains.length) {
+                domains = domains.map(d => d.split("domain.")[1]);
+                // disable platforms not in selected domains
+                this.disablePlatformFilters(domains);
+            } else {
+                // enable all platforms
+                this.enableAllFilters('platform');
             }
             
             let options = {
@@ -493,10 +666,13 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
                 search: this.searchQuery, 
                 state: state, 
                 includeRevoked: revoked, 
-                includeDeprecated: deprecated
+                includeDeprecated: deprecated,
+                platforms: platforms,
+                domains: domains
             }
 
             if (this.config.type == "software") this.data$ = this.restAPIConnectorService.getAllSoftware(options);
+            else if (this.config.type == "campaign") this.data$ = this.restAPIConnectorService.getAllCampaigns(options);
             else if (this.config.type == "group") this.data$ = this.restAPIConnectorService.getAllGroups(options);
             else if (this.config.type == "matrix") this.data$ = this.restAPIConnectorService.getAllMatrices(options);
             else if (this.config.type == "mitigation") this.data$ = this.restAPIConnectorService.getAllMitigations(options);
@@ -527,12 +703,14 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     public ngOnDestroy() {
+        // prevent memory leaks
         if (this.searchSubscription) this.searchSubscription.unsubscribe();
+        if (this.platformSubscription) this.platformSubscription.unsubscribe();
     }
 }
 
 //allowed types for StixListConfig
-type type_attacktype = "collection" | "group" | "matrix" | "mitigation" | "software" | "tactic" | "technique" | "relationship" | "data-source" | "data-component" | "marking-definition";
+type type_attacktype = "collection" | "campaign" | "group" | "matrix" | "mitigation" | "software" | "tactic" | "technique" | "relationship" | "data-source" | "data-component" | "marking-definition";
 type selection_types = "one" | "many" | "disabled"
 export interface StixListConfig {
     /* if specified, shows the given STIX objects in the table instead of loading from the back-end based on other configurations. */

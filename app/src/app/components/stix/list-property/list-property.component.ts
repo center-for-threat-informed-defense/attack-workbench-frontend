@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { StixObject } from 'src/app/classes/stix/stix-object';
 
 @Component({
@@ -6,14 +6,10 @@ import { StixObject } from 'src/app/classes/stix/stix-object';
   templateUrl: './list-property.component.html',
   styleUrls: ['./list-property.component.scss']
 })
-export class ListPropertyComponent implements OnInit {
+export class ListPropertyComponent {
     @Input() public config: ListPropertyConfig;
 
     constructor() {
-        // intentionally left blank
-    }
-
-    ngOnInit(): void {
         // intentionally left blank
     }
 }

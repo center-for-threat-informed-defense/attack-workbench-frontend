@@ -11,6 +11,7 @@ import { TechniqueListComponent } from './views/stix/technique/technique-list/te
 import { MarkingDefinitionListComponent } from "./views/stix/marking-definition/marking-definition-list/marking-definition-list.component";
 import { DataSourceListComponent } from "./views/stix/data-source/data-source-list/data-source-list.component";
 import { ReferenceManagerComponent } from "./views/reference-manager/reference-manager.component";
+import { CampaignListComponent } from "./views/stix/campaign/campaign-list/campaign-list.component";
 
 import { StixPageComponent } from "./views/stix/stix-page/stix-page.component";
 
@@ -172,6 +173,59 @@ const stixRoutes: Routes = [{
                 breadcrumb: 'view',
                 editable: true,
                 title: "new technique",
+                roles: editRoles,
+                editRoles: editRoles
+            },
+            component: StixPageComponent
+        }
+        ]
+    }
+    ]
+},
+{
+    path: 'data-source',
+    canActivateChild: [AuthorizationGuard],
+    data: {
+        breadcrumb: 'data sources'
+    },
+    children: [{
+        path: '',
+        data: {
+            breadcrumb: 'list',
+            title: "data sources",
+            roles: viewRoles
+        },
+        component: DataSourceListComponent
+    },
+    {
+        path: ':id',
+        data: {
+            breadcrumb: 'loading...'
+        },
+        children: [{
+            path: '',
+            data: {
+                breadcrumb: 'view',
+                editable: true,
+                title: "view data source",
+                roles: viewRoles,
+                editRoles: editRoles
+            },
+            component: StixPageComponent
+        }
+        ]
+    },
+    {
+        path: ":new",
+        data: {
+            breadcrumb: "new data source"
+        },
+        children: [{
+            path: '',
+            data: {
+                breadcrumb: 'view',
+                editable: true,
+                title: "new data source",
                 roles: editRoles,
                 editRoles: editRoles
             },
@@ -340,19 +394,19 @@ const stixRoutes: Routes = [{
     ]
 },
 {
-    path: 'data-source',
+    path: 'campaign',
     canActivateChild: [AuthorizationGuard],
     data: {
-        breadcrumb: 'data sources'
+        breadcrumb: 'campaigns'
     },
     children: [{
         path: '',
         data: {
             breadcrumb: 'list',
-            title: "data sources",
+            title: "campaigns",
             roles: viewRoles
         },
-        component: DataSourceListComponent
+        component: CampaignListComponent
     },
     {
         path: ':id',
@@ -364,7 +418,7 @@ const stixRoutes: Routes = [{
             data: {
                 breadcrumb: 'view',
                 editable: true,
-                title: "view data source",
+                title: "view campaign",
                 roles: viewRoles,
                 editRoles: editRoles
             },
@@ -375,14 +429,14 @@ const stixRoutes: Routes = [{
     {
         path: ":new",
         data: {
-            breadcrumb: "new data source"
+            breadcrumb: "new campaign"
         },
         children: [{
             path: '',
             data: {
                 breadcrumb: 'view',
                 editable: true,
-                title: "new data source",
+                title: "new campaign",
                 roles: editRoles,
                 editRoles: editRoles
             },

@@ -5,7 +5,7 @@
         <ng-container *ngIf="editable">
             <button mat-button class="control"
                 [matTooltip]="is_new ? 'validate & save' : 'patch & save'"
-                [disabled]="!editing || !validCitation() || (is_new && source_control.errors)"
+                [disabled]="!editing || !validCitation() || !validURL || (is_new && source_control.errors)"
                 (click)="next()">
                 <mat-icon aria-label="save">save</mat-icon>
             </button>
@@ -92,9 +92,10 @@
                 <div class="row">
                     <div class="column editor">
                         <!-- url -->
-                        <mat-form-field appearance="outline">
+                        <mat-form-field [class.mat-form-field-invalid]="!validURL" appearance="outline">
                             <mat-label>url</mat-label>
                             <input matInput [(ngModel)]="reference.url">
+                            <mat-hint class="mat-error" *ngIf="!validURL">{{URLError}}</mat-hint>
                         </mat-form-field>
                     </div>
                     <div class="column narrow vertical-center">

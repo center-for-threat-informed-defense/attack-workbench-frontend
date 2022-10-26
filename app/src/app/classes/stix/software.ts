@@ -8,7 +8,7 @@ type type_software = "malware" | "tool"
 export class Software extends StixObject {
     public name: string = "";
     public description: string;
-    public aliases: string[] = ["placeholder"]; // initialize field with placeholder in first index for group name
+    public aliases: string[] = ["placeholder"]; // initialize field with placeholder in first index for software name
     public platforms: string[] = [];
     public type: string;
     public contributors: string[] = [];

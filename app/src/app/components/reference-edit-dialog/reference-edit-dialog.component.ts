@@ -43,7 +43,7 @@ export class ReferenceEditDialogComponent implements OnInit, OnDestroy {
                 private dialog: MatDialog) {
         if (this.config.reference) {
             this.is_new = false;
-            this.reference = JSON.parse(JSON.stringify(this.config.reference)); //deep copy
+            this.reference = this.referenceCopy;
         }
         else {
             this.is_new = true;
@@ -85,10 +85,10 @@ export class ReferenceEditDialogComponent implements OnInit, OnDestroy {
 
     public next() {
         // trim reference fields
-        this.reference.source_name = this.reference.source_name.trim();
         this.reference.url = this.reference.url.trim();
 
         if (this.is_new) { // save new reference
+            this.reference.source_name = this.reference.source_name.trim(); // trim source_name only if this is a new reference
             this.reference.description = this.getRefDescription();
             this.save();
         } else this.parse_patches(); // check for necessary patches on STIX objects
@@ -109,6 +109,33 @@ export class ReferenceEditDialogComponent implements OnInit, OnDestroy {
             if (this.citation.month && !this.citation.year.value) return false;
         }
         return true;
+    }
+
+    public get validURL(): boolean {
+        if (this.reference.url) {
+            // check for protocol
+            if (!this.reference.url.startsWith('https://') && !this.reference.url.startsWith('http://')) {
+                return false;
+            }
+            // check for other malformities
+            try {
+                new URL(this.reference.url);
+            } catch (_) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public get URLError(): string {
+        if (this.reference.url) {
+            if (!this.reference.url.startsWith('https://') && !this.reference.url.startsWith('http://')) {
+                return "URL must begin with 'http://' or 'https://'";
+            } else {
+                return "malformed URL";
+            }
+        }
+        return '';
     }
 
     public getRefDescription(): string {
@@ -139,6 +166,7 @@ export class ReferenceEditDialogComponent implements OnInit, OnDestroy {
                 this.patch_objects = [];
                 this.patch_relationships = [];
                 results.data.forEach(x => {
+                    if (x.revoked || x.deprecated) return; // do not patch revoked/deprecated objects
                     if (x.external_references.hasValue(this.reference.source_name)) {
                         if (x.attackType == 'relationship') this.patch_relationships.push(x);
                         else this.patch_objects.push(x);
@@ -243,7 +271,7 @@ export class ReferenceEditDialogComponent implements OnInit, OnDestroy {
     }
 
     public discardChanges(): void {
-        this.reference = JSON.parse(JSON.stringify(this.config.reference)); //deep copy
+        this.reference = this.referenceCopy; // discard any changes
         this.stopEditing();
     }
 
@@ -276,6 +304,10 @@ export class ReferenceEditDialogComponent implements OnInit, OnDestroy {
             },
             complete: () => { subscription.unsubscribe(); }
         })
+    }
+
+    public get referenceCopy() {
+        return JSON.parse(JSON.stringify(this.config.reference)); //deep copy
     }
 }
 

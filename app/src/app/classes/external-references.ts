@@ -145,9 +145,9 @@ export class ExternalReferences extends Serializable {
     public parseObjectCitations(object: StixObject, restAPIConnector: RestApiConnectorService): Observable<CitationParseResult> {
         // get list of descriptive fields that support citations
         let refs_fields = ['description'];
-        if (object.attackType == 'software' || object.attackType == 'group') refs_fields.push('aliases');
+        if (['software', 'group', 'campaign'].includes(object.attackType)) refs_fields.push('aliases');
         if (object.attackType == 'technique') refs_fields.push('detection');
-
+        if (object.attackType == 'campaign') refs_fields.push('first_seen_citation', 'last_seen_citation');
         // parse citations for each descriptive field on the object
         let parse_apis = [];
         for (let field of refs_fields) {
@@ -302,7 +302,7 @@ export class ExternalReferences extends Serializable {
         for (const [key, value] of this._externalReferences) {
             let temp = {};
 
-            temp["source_name"] = key.trim();
+            temp["source_name"] = key; // do not trim source_name to prevent discrepancy between the Reference source_name and list of external references
             if (value["url"]) temp["url"] = value["url"].trim();
             if (value["description"]) temp["description"] = value["description"];
             
@@ -334,7 +334,6 @@ export class ExternalReferences extends Serializable {
         for (let usedSourceName of usedSourceNames) {
             if (this._externalReferences.get(usedSourceName)) temp_externalReferences.set(usedSourceName, this._externalReferences.get(usedSourceName));
         }
-
         
         let pre_delete_keys = Array.from(this._externalReferences.keys());
         // Update external references with used references

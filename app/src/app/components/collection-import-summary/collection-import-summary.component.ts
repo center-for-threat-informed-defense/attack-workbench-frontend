@@ -1,5 +1,6 @@
 import { SelectionModel } from '@angular/cdk/collections';
 import { Component, Input, OnInit, ViewEncapsulation } from '@angular/core';
+import { Campaign } from 'src/app/classes/stix/campaign';
 import { CollectionDiffCategories } from 'src/app/classes/stix/collection';
 import { DataComponent } from 'src/app/classes/stix/data-component';
 import { DataSource } from 'src/app/classes/stix/data-source';
@@ -37,6 +38,7 @@ export interface CollectionImportSummaryConfig {
     object_import_categories: {
         technique: CollectionDiffCategories<Technique>,
         tactic: CollectionDiffCategories<Tactic>,
+        campaign: CollectionDiffCategories<Campaign>,
         software: CollectionDiffCategories<Software>,
         relationship: CollectionDiffCategories<Relationship>,
         mitigation: CollectionDiffCategories<Mitigation>,
