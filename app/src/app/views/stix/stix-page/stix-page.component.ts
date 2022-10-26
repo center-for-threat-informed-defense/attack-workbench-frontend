@@ -268,12 +268,12 @@ export class StixPageComponent implements OnInit, OnDestroy {
                 this.titleService.setTitle(`Marking Definition`);
             }
             else {
-                this.breadcrumbService.changeBreadcrumb(this.route.snapshot, `new ${objectType}`) 
+                this.breadcrumbService.changeBreadcrumb(this.route.snapshot, `new ${objectType.replace(/-/g, ' ')}`) 
                 this.titleService.setTitle(`New Marking Definition`);
             }
         }
         else {
-            this.breadcrumbService.changeBreadcrumb(this.route.snapshot, `new ${objectType}`)
+            this.breadcrumbService.changeBreadcrumb(this.route.snapshot, `new ${objectType.replace(/-/g, ' ')}`)
             this.titleService.setTitle(`new ${objectType}`);
         }
     }
