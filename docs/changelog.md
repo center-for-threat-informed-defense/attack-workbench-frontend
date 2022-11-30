@@ -32,6 +32,13 @@
 
 # Changelog
 
+## Changes staged on develop
+
+### ATT&CK Workbench version 1.2.1
+
+#### Fixes in 1.2.1
+-   Fixed an issue where the external reference for a Data Source's ATT&CK ID pointed to an incorrect URL. See [frontend#422](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/422).
+
 ## 25 October 2022
 
 ### ATT&CK Workbench version 1.2.0
