@@ -58,7 +58,7 @@ export abstract class StixObject extends Serializable {
         "note": "notes",
         "marking-definition": "marking-definitions",
         "data-source": "datasources",
-        "data-component": "data-components"
+        "data-component": "datacomponents"
     }
 
     private defaultMarkingDefinitionsLoaded = false; // avoid overloading of default marking definitions
