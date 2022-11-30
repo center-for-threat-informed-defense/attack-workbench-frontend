@@ -57,7 +57,7 @@ export abstract class StixObject extends Serializable {
         "tactic": "tactics",
         "note": "notes",
         "marking-definition": "marking-definitions",
-        "data-source": "data-sources",
+        "data-source": "datasources",
         "data-component": "data-components"
     }
 
