@@ -50,8 +50,16 @@ ATT&CK Workbench version 1.3.0 supports the deletion of objects.
 
 #### Fixes in 1.3.0
 -   Fixed an issue where updating a reference used by a revoked or deprecated object would throw an error and prevent the user from saving the changes to the reference. See [frontend#355](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/355).
--   Fixed an issue where the "apply patches and save" button would be unavailable when updating a reference used only by Relationship objects. See [frontend#356](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/356).
 -   Fixed a bug where citations would break if the reference source name contained special characters because the query was not correctly encoded in the request. See [frontend#371](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/pull/371).
+
+## TODO Changes staged on develop
+
+### ATT&CK Workbench version 1.2.1
+
+#### Fixes in 1.2.1
+-   Fixed an issue where the "apply patches and save" button would be unavailable when updating a reference used only by Relationship objects. See [frontend#356](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/356).
+-   Fixed an issue where the external reference for a Data Source's ATT&CK ID pointed to an incorrect URL. See [frontend#422](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/422).
+
 ## 25 October 2022
 
 ### ATT&CK Workbench version 1.2.0
