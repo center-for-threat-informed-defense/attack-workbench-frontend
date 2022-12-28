@@ -1,13 +1,13 @@
-import {OnInit, AfterViewInit, Component, ElementRef, ViewChild, ViewEncapsulation} from '@angular/core';
-import {MatDrawerContainer} from '@angular/material/sidenav';
-import {OverlayContainer} from '@angular/cdk/overlay';
-import {getCookie, hasCookie, setCookie} from "./util/cookies";
-import {SidebarService} from './services/sidebar/sidebar.service';
-import {NGXLogger} from 'ngx-logger';
-import {initLogger} from './util/logger';
-import {AuthenticationService} from './services/connectors/authentication/authentication.service';
-import {NavigationEnd, Router} from '@angular/router';
-import {Theme} from './globals';
+import { OnInit, AfterViewInit, Component, ElementRef, ViewChild, ViewEncapsulation } from '@angular/core';
+import { MatDrawerContainer } from '@angular/material/sidenav';
+import { OverlayContainer } from '@angular/cdk/overlay';
+import { getCookie, hasCookie, setCookie } from './util/cookies';
+import { SidebarService } from './services/sidebar/sidebar.service';
+import { NGXLogger } from 'ngx-logger';
+import { initLogger } from './util/logger';
+import { AuthenticationService } from './services/connectors/authentication/authentication.service';
+import { NavigationEnd, Router } from '@angular/router';
+import { Theme } from './globals';
 
 @Component({
   selector: 'app-root',
@@ -16,16 +16,6 @@ import {Theme} from './globals';
   encapsulation: ViewEncapsulation.None
 })
 export class AppComponent implements AfterViewInit, OnInit {
-
-    // Drawer container to resize when contents change size
-    @ViewChild(MatDrawerContainer, {static: true}) private container: MatDrawerContainer;
-
-    // Elements for scroll behavior
-    @ViewChild('header', { static: false, read: ElementRef }) private header: ElementRef;
-    @ViewChild('scrollRef', { static: false, read: ElementRef }) private scrollRef: ElementRef;
-
-    public theme = Theme.DarkMode; // sets the default theme?
-    public alertStatus;
 
     constructor(private overlayContainer: OverlayContainer,
                 private sidebarService: SidebarService,
@@ -49,7 +39,7 @@ export class AppComponent implements AfterViewInit, OnInit {
                     });
                 } else if (e instanceof NavigationEnd) {
                     // check user login
-                    let authSubscription = this.authenticationService.getSession().subscribe({
+                    const authSubscription = this.authenticationService.getSession().subscribe({
                         next: (res) => { this.checkStatus(); },
                         complete: () => { authSubscription.unsubscribe(); }
                     });
@@ -61,6 +51,20 @@ export class AppComponent implements AfterViewInit, OnInit {
         initLogger(logger);
     }
 
+    public get sidebarOpened() { return this.sidebarService.opened; }
+
+    // Drawer container to resize when contents change size
+    @ViewChild(MatDrawerContainer, {static: true}) private container: MatDrawerContainer;
+
+    // Elements for scroll behavior
+    @ViewChild('header', { static: false, read: ElementRef }) private header: ElementRef;
+    @ViewChild('scrollRef', { static: false, read: ElementRef }) private scrollRef: ElementRef;
+
+    public theme;
+    public alertStatus;
+
+    public hiddenHeaderPX = 0; // number of px of the header which is hidden
+
     /**
      * Check the account status of the logged in user.
      * If the user's account status is not active, an alert
@@ -68,8 +72,8 @@ export class AppComponent implements AfterViewInit, OnInit {
      */
     public checkStatus(): void {
         if (this.authenticationService.currentUser) {
-            let status = this.authenticationService.currentUser.status;
-            if (status != "active") {
+            const status = this.authenticationService.currentUser.status;
+            if (status != 'active') {
                 this.alertStatus = status;
                 this.logout();
             }
@@ -142,7 +146,7 @@ export class AppComponent implements AfterViewInit, OnInit {
     // header hiding with scroll
     ngAfterViewInit() {
         this.scrollRef.nativeElement.addEventListener('scroll', (e) => this.adjustHeaderPlacement(), true);
-        //to fix rare cases that the page has resized without scroll events triggering, recompute the offset every 5 seconds
+        // to fix rare cases that the page has resized without scroll events triggering, recompute the offset every 5 seconds
       /**
        * The code is using the setInterval() function to call the adjustHeaderPlacement() method every 5
        * seconds. This is likely intended to fix cases where the page has been resized without scroll events being
@@ -153,18 +157,14 @@ export class AppComponent implements AfterViewInit, OnInit {
     ngOnDestroy() {
         this.scrollRef.nativeElement.removeEventListener('scroll', (e) => this.adjustHeaderPlacement(), true);
     }
-
-    public hiddenHeaderPX: number = 0; //number of px of the header which is hidden
     // adjust the header placement
     private adjustHeaderPlacement(): void {
-        let headerHeight = this.header.nativeElement.offsetHeight;
+        const headerHeight = this.header.nativeElement.offsetHeight;
         // constrain amount of hidden to bounds, round up because decimal scroll causes flicker
-        this.hiddenHeaderPX = Math.floor(Math.min(Math.max(0, this.scrollRef.nativeElement.scrollTop/2), headerHeight));
+        this.hiddenHeaderPX = Math.floor(Math.min(Math.max(0, this.scrollRef.nativeElement.scrollTop / 2), headerHeight));
     }
     // scroll to the top of the main content
     public scrollToTop(): void {
-        this.scrollRef.nativeElement.scroll({top: 0, behavior: "smooth"});
+        this.scrollRef.nativeElement.scroll({top: 0, behavior: 'smooth'});
     }
-
-    public get sidebarOpened() { return this.sidebarService.opened; }
 }
