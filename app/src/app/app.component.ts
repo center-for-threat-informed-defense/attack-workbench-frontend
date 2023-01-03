@@ -1,4 +1,4 @@
-import { OnInit, AfterViewInit, Component, ElementRef, ViewChild, ViewEncapsulation } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, ViewChild, ViewEncapsulation } from '@angular/core';
 import { MatDrawerContainer } from '@angular/material/sidenav';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { getCookie, hasCookie, setCookie } from './util/cookies';
@@ -15,7 +15,7 @@ import { Theme } from './globals';
   styleUrls: ['./app.component.scss'],
   encapsulation: ViewEncapsulation.None
 })
-export class AppComponent implements AfterViewInit, OnInit {
+export class AppComponent implements AfterViewInit {
 
     constructor(private overlayContainer: OverlayContainer,
                 private sidebarService: SidebarService,
@@ -26,7 +26,7 @@ export class AppComponent implements AfterViewInit, OnInit {
         if (hasCookie('theme')) {
             this.setTheme(getCookie('theme'));
         } else {
-            this.setTheme(Theme.LightMode);
+            this.setDefaultTheme();
         }
 
         const routerSubscription = this.router.events.subscribe({
@@ -137,10 +137,6 @@ export class AppComponent implements AfterViewInit, OnInit {
         overlayContainerClasses.remove(Theme.DarkMode, Theme.LightMode);
         overlayContainerClasses.add(this.theme);
         setCookie('theme', theme, 30);
-    }
-
-    ngOnInit(): void {
-      this.setDefaultTheme();
     }
 
     // header hiding with scroll
