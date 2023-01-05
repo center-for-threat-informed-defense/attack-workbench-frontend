@@ -32,7 +32,7 @@ export class HelpPageComponent implements OnInit {
             if (level != 1) self.headingAnchors.push({
                 level: level,
                 anchor: escapedText,
-                label: text.replace("&amp;", "&")
+                label: text.replace("&amp;", "&").replace("&#39;", "'")
             });
             return '<h' + level + ' class="' + escapedText + '">' +
                         text +

@@ -2,9 +2,9 @@ import { Component, Input, OnInit } from '@angular/core';
 import { StixObject } from 'src/app/classes/stix/stix-object';
 
 @Component({
-  selector: 'app-timestamp-property',
-  templateUrl: './timestamp-property.component.html',
-  styleUrls: ['./timestamp-property.component.scss']
+    selector: 'app-timestamp-property',
+    templateUrl: './timestamp-property.component.html',
+    styleUrls: ['./timestamp-property.component.scss']
 })
 export class TimestampPropertyComponent implements OnInit {
     @Input() public config: TimestampPropertyConfig;
@@ -19,9 +19,9 @@ export class TimestampPropertyComponent implements OnInit {
 
     /** Check if the object has a workflow identity attached */
     public hasIdentity(): boolean {
-        return this.config.field.includes('modified') && 
-               this.config.object && 'workflow' in this.config.object && 
-               this.config.object.workflow && 'created_by_user_account' in this.config.object.workflow
+        return this.config.field.includes('modified') &&
+            this.config.object && 'workflow' in this.config.object &&
+            this.config.object.workflow && 'created_by_user_account' in this.config.object.workflow
     }
 }
 

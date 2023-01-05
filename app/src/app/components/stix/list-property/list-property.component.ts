@@ -12,7 +12,6 @@ export class ListPropertyComponent {
     constructor() {
         // intentionally left blank
     }
-
 }
 
 export interface ListPropertyConfig {

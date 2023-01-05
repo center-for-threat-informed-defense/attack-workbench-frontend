@@ -44,7 +44,7 @@ export class AliasEditComponent implements OnInit {
         // remove external reference citation
         let references = obj.external_references.serialize();
         references = references.filter((ref) => {
-            if (ref.source_name == aliasName) { return false };
+            if (ref.source_name == aliasName) { return false; }
             return true;
         });
         obj.external_references.deserialize(references);

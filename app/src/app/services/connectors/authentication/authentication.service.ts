@@ -46,7 +46,15 @@ export class AuthenticationService extends ApiConnector {
             // restrict collection editing to admin only
             return this.isAuthorized([Role.ADMIN]);
         }
-        return this.isAuthorized([Role.EDITOR, Role.ADMIN])
+        return this.isAuthorized([Role.EDITOR, Role.ADMIN]);
+    }
+
+    /**
+     * Check if user is authorized to delete objects
+     * @returns true, if the user can delete objects, false otherwise
+     */
+    public canDelete(): boolean {
+        return this.isAuthorized([Role.ADMIN]);
     }
 
     /**

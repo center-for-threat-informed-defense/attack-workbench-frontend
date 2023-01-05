@@ -9,10 +9,10 @@ import { AuthenticationService } from 'src/app/services/connectors/authenticatio
 import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/rest-api-connector.service';
 
 @Component({
-  selector: 'app-collection-index-view',
-  templateUrl: './collection-index-view.component.html',
-  styleUrls: ['./collection-index-view.component.scss'],
-  encapsulation: ViewEncapsulation.None
+    selector: 'app-collection-index-view',
+    templateUrl: './collection-index-view.component.html',
+    styleUrls: ['./collection-index-view.component.scss'],
+    encapsulation: ViewEncapsulation.None
 })
 export class CollectionIndexViewComponent implements OnInit {
     @Input() config: CollectionIndexViewConfig;
@@ -22,6 +22,7 @@ export class CollectionIndexViewComponent implements OnInit {
     constructor(private authenticationService: AuthenticationService, private restAPIConnector: RestApiConnectorService, private dialog: MatDialog, private router: Router) { }
 
     ngOnInit(): void {
+        // intentionally left blank
     }
 
     public get showActions(): boolean {
@@ -38,11 +39,10 @@ export class CollectionIndexViewComponent implements OnInit {
     }
 
     public versionDownloaded(version: CollectionVersion, ref: CollectionReference): boolean {
-        let result = this.config.subscribed_collections.some(subscribed => {
+        return this.config.subscribed_collections.some(subscribed => {
             let matcher = `${ref.id}@${version.modified}`;
             return matcher == subscribed;
         });
-        return result;
     }
 
     /**

@@ -4,7 +4,7 @@
             <mat-expansion-panel *ngFor="let index of result" class="mat-elevation-z0">
                 <mat-expansion-panel-header>
                     <mat-panel-title>
-                        <b>{{index.collection_index.name}}</b>
+                        <strong>{{index.collection_index.name}}</strong>
                     </mat-panel-title>
                     <mat-panel-description>
                         {{index.collection_index.collections.length}} collections, last updated&nbsp;<app-timestamp-view [config]="{

@@ -66,9 +66,10 @@ import { MarkdownViewDialogComponent } from "./components/markdown-view-dialog/m
 import { CollectionImportSummaryComponent } from "./components/collection-import-summary/collection-import-summary.component";
 import { SaveDialogComponent } from "./components/save-dialog/save-dialog.component";
 import { AddDialogComponent } from './components/add-dialog/add-dialog.component';
+import { DeleteDialogComponent } from './components/delete-dialog/delete-dialog.component';
 import { HistoryTimelineComponent } from "./components/resources-drawer/history-timeline/history-timeline.component";
-import { ReferenceManagerComponent } from "./components/resources-drawer/reference-manager/reference-manager.component";
-import { ReferenceEditDialogComponent } from "./components/resources-drawer/reference-manager/reference-edit-dialog/reference-edit-dialog.component"
+import { ReferenceSidebarComponent } from "./components/resources-drawer/reference-sidebar/reference-sidebar.component";
+import { ReferenceEditDialogComponent } from "./components/reference-edit-dialog/reference-edit-dialog.component"
 import { MultipleChoiceDialogComponent } from "./components/multiple-choice-dialog/multiple-choice-dialog.component";
 import { ValidationResultsComponent } from "./components/validation-results/validation-results.component";
 import { AddRelationshipButtonComponent } from "./components/add-relationship-button/add-relationship-button.component";
@@ -133,13 +134,13 @@ import { CitationViewComponent } from './components/stix/citation-property/citat
 import { CitationEditComponent } from './components/stix/citation-property/citation-edit/citation-edit.component';
 
 // views
-
 import { HelpPageComponent } from './views/help-page/help-page.component';
 import { LandingPageComponent } from './views/landing-page/landing-page.component';
 import { AdminPageComponent } from "./views/admin-page/admin-page.component";
 import { OrgSettingsPageComponent } from "./views/admin-page/org-settings-page/org-settings-page.component";
 import { UserAccountsPageComponent } from './views/admin-page/user-accounts-page/user-accounts-page.component';
 import { DefaultMarkingDefinitionsComponent } from './views/admin-page/default-marking-definitions/default-marking-definitions.component';
+import { ReferenceManagerComponent } from './views/reference-manager/reference-manager.component';
 
 import { StixDialogComponent } from "./views/stix/stix-dialog/stix-dialog.component"
 import { StixPageComponent } from "./views/stix/stix-page/stix-page.component"
@@ -155,8 +156,6 @@ import { CollectionViewComponent } from './views/stix/collection/collection-view
 import { CollectionImportComponent } from './views/stix/collection/collection-import/collection-import-workflow/collection-import.component';
 import { CollectionImportReviewComponent } from "./views/stix/collection/collection-import/collection-import-review/collection-import-review.component";
 import { CollectionImportErrorComponent } from './views/stix/collection/collection-import/collection-import-error/collection-import-error.component';
-
-// import { CollectionExportComponent } from './views/stix/collection/collection-export/collection-export.component';
 
 import { GroupViewComponent } from './views/stix/group/group-view/group-view.component';
 import { GroupListComponent } from './views/stix/group/group-list/group-list.component';
@@ -204,8 +203,9 @@ import { CampaignListComponent } from './views/stix/campaign/campaign-list/campa
     CollectionImportSummaryComponent,
     SaveDialogComponent,
     AddDialogComponent,
+    DeleteDialogComponent,
     HistoryTimelineComponent,
-    ReferenceManagerComponent,
+    ReferenceSidebarComponent,
     ReferenceEditDialogComponent,
     MultipleChoiceDialogComponent,
     ValidationResultsComponent,
@@ -249,6 +249,7 @@ import { CampaignListComponent } from './views/stix/campaign/campaign-list/campa
     OrgSettingsPageComponent,
     UserAccountsPageComponent,
     DefaultMarkingDefinitionsComponent,
+    ReferenceManagerComponent,
 
     StixDialogComponent,
     StixPageComponent,
