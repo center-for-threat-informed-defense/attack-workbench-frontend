@@ -60,6 +60,8 @@ export class StixDialogComponent implements OnInit {
         if (this._config.mode && this._config.mode == "edit" && this.authenticationService.canEdit()) this.startEditing();
     }
 
+    public get canDelete(): boolean { return this.authenticationService.canDelete(); }
+
     public get config(): StixViewConfig {
         let object = Array.isArray(this._config.object) ? this._config.object[0] : this._config.object;
         return {
@@ -162,7 +164,7 @@ export class StixDialogComponent implements OnInit {
         let object = Array.isArray(this.config.object) ? this.config.object[0] : this.config.object;
         if (this.stixType == 'relationship') {
             // 'subtechnique_of' relationships cannot be deleted
-            return of(this.stixType == 'relationship' && (object as Relationship).relationship_type != 'subtechnique_of'); // && !object.workflow.published; TODO check if object has been published
+            return of(this.stixType == 'relationship' && (object as Relationship).relationship_type != 'subtechnique_of');
         }
         if (this.stixType == 'x-mitre-data-component') {
             // cannot delete a data component if it has existing relationships
