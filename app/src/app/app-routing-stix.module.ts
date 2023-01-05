@@ -10,6 +10,7 @@ import { TacticListComponent } from './views/stix/tactic/tactic-list/tactic-list
 import { TechniqueListComponent } from './views/stix/technique/technique-list/technique-list.component';
 import { MarkingDefinitionListComponent } from "./views/stix/marking-definition/marking-definition-list/marking-definition-list.component";
 import { DataSourceListComponent } from "./views/stix/data-source/data-source-list/data-source-list.component";
+import { ReferenceManagerComponent } from "./views/reference-manager/reference-manager.component";
 import { CampaignListComponent } from "./views/stix/campaign/campaign-list/campaign-list.component";
 
 import { StixPageComponent } from "./views/stix/stix-page/stix-page.component";
@@ -176,7 +177,8 @@ const stixRoutes: Routes = [{
                 editRoles: editRoles
             },
             component: StixPageComponent
-        }]
+        }
+        ]
     }
     ]
 },
@@ -228,8 +230,7 @@ const stixRoutes: Routes = [{
                 editRoles: editRoles
             },
             component: StixPageComponent
-        }
-        ]
+        }]
     }
     ]
 },
@@ -445,58 +446,58 @@ const stixRoutes: Routes = [{
     }
     ]
 },
-  {
+{
     path: 'marking-definition',
     canActivateChild: [AuthorizationGuard],
     data: {
-      breadcrumb: 'marking definitions',
-      more: true
+        breadcrumb: 'marking definitions',
+        more: true
     },
     children: [{
         path: '',
         data: {
-          breadcrumb: 'list',
-          title: "marking definitions",
-          roles: viewRoles
+            breadcrumb: 'list',
+            title: "marking definitions",
+            roles: viewRoles
         },
         component: MarkingDefinitionListComponent
-      },
-      {
+    },
+    {
         path: ':id',
         data: {
-          breadcrumb: 'loading...'
+            breadcrumb: 'loading...'
         },
         children: [{
             path: '',
             data: {
-              breadcrumb: 'view',
-              editable: false,
-              title: "view marking definition",
-              roles: viewRoles
+                breadcrumb: 'view',
+                editable: false,
+                title: "view marking definition",
+                roles: viewRoles
             },
             component: StixPageComponent
-          }
+        }
         ]
-      },
-      {
+    },
+    {
         path: ":new",
         data: {
             breadcrumb: "new marking definition"
         },
         children: [{
-          path: '',
-          data: {
-            breadcrumb: 'view',
-            editable: false,
-            title: "new marking definition",
-            roles: [Role.ADMIN]
-          },
-          component: StixPageComponent
+            path: '',
+            data: {
+                breadcrumb: 'view',
+                editable: false,
+                title: "new marking definition",
+                roles: [Role.ADMIN]
+            },
+            component: StixPageComponent
         }
-      ]
+        ]
     }
     ]
-  }
+}
 ]
 
 if (environment.integrations.collection_manager.enabled) {
@@ -582,6 +583,27 @@ if (environment.integrations.collection_manager.enabled) {
     })
 }
 
+stixRoutes.push(
+    {
+        path: 'reference-manager',
+        canActivateChild: [AuthorizationGuard],
+        data: {
+            breadcrumb: 'reference manager',
+            more: true
+        },
+        children: [{
+            path: '',
+            data: {
+                breadcrumb: 'list',
+                title: "references",
+                roles: viewRoles,
+                editRoles: editRoles
+            },
+            component: ReferenceManagerComponent
+        }
+        ]
+    }
+)
 
 @NgModule({
     imports: [
@@ -592,5 +614,5 @@ if (environment.integrations.collection_manager.enabled) {
     ],
     providers: [],
 })
-export class AppRoutingStixModule { };
+export class AppRoutingStixModule { }
 export { stixRoutes };

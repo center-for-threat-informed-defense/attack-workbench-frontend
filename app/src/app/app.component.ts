@@ -7,6 +7,7 @@ import { NGXLogger } from 'ngx-logger';
 import { initLogger } from './util/logger';
 import { AuthenticationService } from './services/connectors/authentication/authentication.service';
 import { NavigationEnd, Router } from '@angular/router';
+import { EditorService } from './services/editor/editor.service';
 import { Theme } from './globals';
 
 @Component({
@@ -20,6 +21,7 @@ export class AppComponent implements AfterViewInit {
     constructor(private overlayContainer: OverlayContainer,
                 private sidebarService: SidebarService,
                 private authenticationService: AuthenticationService,
+                private editorService: EditorService,
                 private router: Router,
                 private logger: NGXLogger) { // Note: this isn't used directly, but it MUST be imported to work properly
 
@@ -51,7 +53,9 @@ export class AppComponent implements AfterViewInit {
         initLogger(logger);
     }
 
-    public get sidebarOpened() { return this.sidebarService.opened; }
+    public get sidebarOpened() {
+        return this.sidebarService.opened && this.editorService.sidebarEnabled;
+    }
 
     // Drawer container to resize when contents change size
     @ViewChild(MatDrawerContainer, {static: true}) private container: MatDrawerContainer;

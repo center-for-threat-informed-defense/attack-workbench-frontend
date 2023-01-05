@@ -77,7 +77,6 @@ export class VersionNumber {
      * @returns {number} 0 if the same, + if this is greater, - if that is greater
      */
     public compareTo(that: VersionNumber): number {
-        //TODO test this
         for (let i = 0; i < Math.max(this.granularity, that.granularity); i++) {
             if (this.granularity == that.granularity && this.granularity < i) return 0; //same version
             if (this.granularity < i) return -1;

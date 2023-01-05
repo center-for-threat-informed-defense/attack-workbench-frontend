@@ -22,12 +22,16 @@ export class ToolbarComponent implements OnInit {
 
     public get editing(): boolean { return this.editorService.editing; }
     public get editable(): boolean { return this.editorService.editable; }
+    public get hasRelationships(): boolean { return this.editorService.hasRelationships; }
+    public get deletable(): boolean { return this.editorService.deletable && this.authenticationService.canDelete(); }
 
     public get isLoggedIn(): boolean { return this.authenticationService.isLoggedIn; }
 
     constructor(private sidebarService: SidebarService, private editorService: EditorService, private authenticationService: AuthenticationService) {}
 
-    ngOnInit() {}
+    ngOnInit() {
+        // intentionally left blank
+    }
 
     public startEditing() {
         this.editorService.startEditing();
@@ -39,6 +43,10 @@ export class ToolbarComponent implements OnInit {
 
     public saveEdits() {
         this.editorService.onSave.emit();
+    }
+
+    public delete() {
+        this.editorService.onDelete.emit();
     }
     
     // emit a toggle theme event
@@ -52,5 +60,9 @@ export class ToolbarComponent implements OnInit {
     // emit scroll to top event
     public emitScrollTop() { 
         this.onScrollTop.emit();
+    }
+
+    public get sidebarEnabled() {
+        return this.editorService.sidebarEnabled;
     }
 }

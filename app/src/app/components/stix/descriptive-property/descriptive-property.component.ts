@@ -10,11 +10,13 @@ import { ExternalReferences } from 'src/app/classes/external-references';
 export class DescriptivePropertyComponent implements OnInit {
     @Input() public config: DescriptivePropertyConfig;
 
-    constructor() { }
-
-    ngOnInit(): void {
+    constructor() {
+        // intentionally left blank
     }
 
+    ngOnInit(): void {
+        // intentionally left blank
+    }
 }
 
 export interface DescriptivePropertyConfig {

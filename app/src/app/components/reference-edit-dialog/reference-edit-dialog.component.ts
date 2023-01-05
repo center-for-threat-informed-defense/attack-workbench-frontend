@@ -1,12 +1,14 @@
-import { Component, Inject, OnInit, ViewEncapsulation } from '@angular/core';
-import { FormControl, Validators } from '@angular/forms';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { Component, Inject, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
+import { FormControl, ValidationErrors, Validators } from '@angular/forms';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { forkJoin } from 'rxjs';
+import { forkJoin, Observable, of, Subscription, throwError } from 'rxjs';
 import { ExternalReference } from 'src/app/classes/external-references';
 import { Relationship } from 'src/app/classes/stix/relationship';
 import { StixObject } from 'src/app/classes/stix/stix-object';
+import { AuthenticationService } from 'src/app/services/connectors/authentication/authentication.service';
 import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/rest-api-connector.service';
+import { DeleteDialogComponent } from '../delete-dialog/delete-dialog.component';
 
 @Component({
   selector: 'app-reference-edit-dialog',
@@ -14,19 +16,32 @@ import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/re
   styleUrls: ['./reference-edit-dialog.component.scss'],
   encapsulation: ViewEncapsulation.None
 })
-export class ReferenceEditDialogComponent implements OnInit {
+export class ReferenceEditDialogComponent implements OnInit, OnDestroy {
     public reference: ExternalReference;
     public is_new: boolean;
     public stage: number = 0;
     public patch_objects: StixObject[];
     public patch_relationships: Relationship[];
+    public dirty: boolean;
+
+    public references$: ExternalReference[];
+    public source_control: FormControl;
+    public validationSubscription: Subscription;
 
     public months: string[] = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
     public citation: any = {};
 
     public get citationTag(): string { return `(Citation: ${this.reference.source_name})`; }
+    public get editing(): boolean { return this.config.mode == 'edit'; }
+    public get editable(): boolean { return this.authenticationService.canEdit(); }
+    public get deletable(): boolean { return this.authenticationService.canDelete(); }
 
-    constructor(public dialogRef: MatDialogRef<ReferenceEditDialogComponent>, @Inject(MAT_DIALOG_DATA) public config: ReferenceEditConfig, public restApiConnectorService: RestApiConnectorService, public snackbar: MatSnackBar) {
+    constructor(@Inject(MAT_DIALOG_DATA) public config: ReferenceEditConfig,
+                public dialogRef: MatDialogRef<ReferenceEditDialogComponent>,
+                public restApiConnectorService: RestApiConnectorService,
+                public snackbar: MatSnackBar,
+                private authenticationService: AuthenticationService,
+                private dialog: MatDialog) {
         if (this.config.reference) {
             this.is_new = false;
             this.reference = this.referenceCopy;
@@ -34,7 +49,7 @@ export class ReferenceEditDialogComponent implements OnInit {
         else {
             this.is_new = true;
             this.citation.day = new FormControl(null, [Validators.max(31), Validators.min(1)]);
-            this.citation.year = new FormControl(null, [Validators.max(2100), Validators.min(1970)]);
+            this.citation.year = new FormControl(null, [Validators.max(new Date().getFullYear()), Validators.min(1970)]);
             this.citation.retrieved = new Date(); // default to current date
             this.reference = {
                 source_name: "",
@@ -42,10 +57,32 @@ export class ReferenceEditDialogComponent implements OnInit {
                 description: ""
             }
         }
+        this.source_control = new FormControl({value: this.reference.source_name, disabled: !this.is_new});
     }
 
     ngOnInit(): void {
-    } 
+        // retrieve all references
+        let referenceSubscription = this.restApiConnectorService.getAllReferences().subscribe({
+            next: (data) => {
+                this.references$ = data.data;
+            },
+            complete: () => referenceSubscription.unsubscribe()
+        })
+
+        if (this.is_new) {
+            // listen to source_name input changes for validation (can only be edited on new references)
+            this.validationSubscription = this.source_control.valueChanges.subscribe(source_name => {
+                this.reference.source_name = source_name;
+                this.validate(source_name).subscribe({
+                    error: (err) => { if (err) this.source_control.setErrors(err); }
+                });
+            })
+        }
+    }
+
+    ngOnDestroy(): void {
+        if (this.validationSubscription) this.validationSubscription.unsubscribe();
+    }
 
     public next() {
         // trim reference fields
@@ -58,7 +95,14 @@ export class ReferenceEditDialogComponent implements OnInit {
         } else this.parse_patches(); // check for necessary patches on STIX objects
     }
 
-    public validDate(): boolean {
+    public validCitation(): boolean {
+        if (!this.is_new) return this.reference.description && this.reference.description.length > 0;
+        else { // new reference
+            return this.citation.authors && this.citation.retrieved && this.validPublishedDate();
+        }
+    }
+
+    public validPublishedDate(): boolean {
         if (this.is_new) {
             if (this.citation.day.value && !this.citation.day.valid) return false;
             if (this.citation.year.value && !this.citation.year.valid) return false;
@@ -114,7 +158,6 @@ export class ReferenceEditDialogComponent implements OnInit {
 
     public parse_patches() {
         this.stage = 1; //enter patching stage
-        // retrieve all objects, including revoked & deprecated to create object lookup map
         let subscription = this.restApiConnectorService.getAllObjects(null, null, null, null, true, true, true).subscribe({
             next: (results) => {
                 // build ID to [name, attackID] lookup
@@ -131,12 +174,12 @@ export class ReferenceEditDialogComponent implements OnInit {
                     }
                 });
                 // patch relationship source/target names and IDs
-                this.patch_relationships.map(x => {
-                    let serialized = x.serialize();
-                    serialized.source_object = idToObject[x.source_ref].serialize();
-                    serialized.target_object = idToObject[x.target_ref].serialize();
-                    return x.deserialize(serialized);
-                });
+                this.patch_relationships.forEach(relationship => {
+                    let serialized = relationship.serialize();
+                    serialized.source_object = idToObject[relationship.source_ref].serialize();
+                    serialized.target_object = idToObject[relationship.target_ref].serialize();
+                    relationship.deserialize(serialized);
+                })
                 this.stage = 2;
             },
             complete: () => { subscription.unsubscribe(); }
@@ -172,7 +215,8 @@ export class ReferenceEditDialogComponent implements OnInit {
         this.stage = 3;
         let subscription = forkJoin(saves).subscribe({
             complete: () => {
-                this.toggle('view');
+                this.dirty = true; // triggers refresh of object list
+                this.stopEditing();
                 subscription.unsubscribe();
             }
         })
@@ -186,27 +230,85 @@ export class ReferenceEditDialogComponent implements OnInit {
         let subscription = api.subscribe({
             complete: () => {
                 this.is_new = false;
-                this.toggle('view');
+                this.dirty = true; // triggers refresh of object list
+                this.stopEditing();
                 subscription.unsubscribe();
             }
         });
     }
 
     /**
-     * change the current mode
-     * @param mode 'view' or 'edit'
+     * Validate reference source name
+     * @param source_name the source name input
+     * @returns 
      */
-    public toggle(mode: 'view' | 'edit') {
-        this.config.mode = mode;
+    public validate(source_name): Observable<ValidationErrors> {
+        this.source_control.setErrors(null); // clear previous validation
+        // required
+        if (!source_name) return throwError({required: true});
+
+        // uniqueness
+        if (this.references$.some(x => x.source_name == source_name)) return throwError({nonUnique: true});
+
+        // cannot contain special characters
+        if (/[~`!@#$%^&*+=\[\]';{}()|\"<>\?]/g.test(source_name)) return throwError({invalidSpecialChar: true});
+
+        return of();
+    }
+
+    /** Retrieve the validation error for display */
+    public getError(): string {
+        if (this.source_control.errors.nonUnique) return 'source name is not unique';
+        if (this.source_control.errors.invalidSpecialChar) return 'source name cannot contain special characters';
+    }
+
+    public stopEditing(): void {
+        this.config.mode = 'view';
+        this.stage = 0;
+    }
+
+    public startEditing(): void {
+        this.config.mode = 'edit';
+    }
+
+    public discardChanges(): void {
+        this.reference = this.referenceCopy; // discard any changes
+        this.stopEditing();
+    }
+
+    public close(): void {
+        this.dialogRef.close(this.dirty);
+    }
+
+    /** Opens the deletion confirmation dialog and deletes the reference */
+    public delete(): void {
+        let prompt = this.dialog.open(DeleteDialogComponent, {
+            maxWidth: "35em",
+            data: {
+                hardDelete: true
+            },
+            disableClose: true,
+            autoFocus: false // disables auto focus on the dialog form field
+        });
+        let subscription = prompt.afterClosed().subscribe({
+            next: (confirm) => {
+                if (confirm) {
+                    // delete the reference
+                    let sub = this.restApiConnectorService.deleteReference(this.reference.source_name).subscribe({
+                        complete: () => {
+                            this.dirty = true; // triggers refresh of object list
+                            this.close();
+                            if (sub) sub.unsubscribe();
+                        }
+                    });
+                }
+            },
+            complete: () => { subscription.unsubscribe(); }
+        })
     }
 
     public get referenceCopy() {
         return JSON.parse(JSON.stringify(this.config.reference)); //deep copy
-    }
-
-    public cancel(): void {
-        this.reference = this.referenceCopy; // discard any changes
-        this.toggle('view');
     }
 }
 

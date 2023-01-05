@@ -1,6 +1,5 @@
 // utilities for working with browser cookies
 
-
 /**
  * Set a cookie
  * @param  {string} key            key to set under
@@ -22,9 +21,9 @@ const setCookie = function(key: string, value: string, expirationDays: number) {
 const getCookie = function(key: string): string {
     let name = key + "=";
     let decodedCookie = decodeURIComponent(document.cookie);
-    let ca = decodedCookie.split(';');
-    for(let i = 0; i <ca.length; i++) {
-        let c = ca[i];
+    let cas = decodedCookie.split(';');
+    for (let ca of cas) {
+        let c = ca;
         while (c.charAt(0) == ' ') {
             c = c.substring(1);
         }

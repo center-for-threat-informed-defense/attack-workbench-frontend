@@ -43,10 +43,9 @@
                 <mat-expansion-panel *ngFor="let collectionRef of config.index.collection_index.collections" class="mat-elevation-z0">
                     <mat-expansion-panel-header>
                         <mat-panel-title>
-                            <b>{{collectionRef.name}}</b>
+                            <strong>{{collectionRef.name}}</strong>
                         </mat-panel-title>
                         <mat-panel-description>
-                            <!-- {{collectionRef.lastModified}} -->
                             {{collectionRef.versions.length}} versions, last updated&nbsp;<app-timestamp-view *ngIf="collectionRef.versions.length > 0" [config]="{
                                 'mode': 'view',
                                 'humanize': true,
@@ -79,7 +78,7 @@
                                 </div>
                                 <div class="col">
                                     <div>
-                                        <b>v{{version.version}}</b>
+                                        <strong>v{{version.version}}</strong>
                                     </div>
                                     <div>
                                         released&nbsp;<app-timestamp-view [config]="{

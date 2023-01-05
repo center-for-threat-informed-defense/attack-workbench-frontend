@@ -11,6 +11,7 @@ export class SoftwareListComponent implements OnInit {
 
     constructor(private authenticationService: AuthenticationService) { }
 
-    ngOnInit() {}
-
+    ngOnInit() {
+        // intentionally left blank
+    }
 }

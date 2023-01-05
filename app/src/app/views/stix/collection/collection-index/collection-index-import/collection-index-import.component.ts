@@ -6,17 +6,19 @@ import { MatSnackBar } from "@angular/material/snack-bar";
 import { environment } from "../../../../../../environments/environment";
 import { logger } from "../../../../../util/logger";
 @Component({
-  selector: 'app-collection-index-import',
-  templateUrl: './collection-index-import.component.html',
-  styleUrls: ['./collection-index-import.component.scss'],
-  encapsulation: ViewEncapsulation.None
+    selector: 'app-collection-index-import',
+    templateUrl: './collection-index-import.component.html',
+    styleUrls: ['./collection-index-import.component.scss'],
+    encapsulation: ViewEncapsulation.None
 })
 export class CollectionIndexImportComponent implements OnInit {
     @ViewChild(MatStepper) public stepper: MatStepper;
 
     constructor(private restAPIConnector: RestApiConnectorService, private snackbar: MatSnackBar) { }
 
-    ngOnInit(): void {}
+    ngOnInit(): void {
+        // intentionally left blank
+    }
 
     public url: string = "";
     public get recommended_indexes() { return environment.recommended_indexes; }

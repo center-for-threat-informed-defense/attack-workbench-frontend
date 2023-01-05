@@ -14,7 +14,7 @@ export class ListViewComponent {
         return this.config.hasOwnProperty('wrap') ? this.config.wrap : true;
     }
 
-    public get list() {
+    public get values() {
         if (this.config.field == "aliases") return this.config.object[this.config.field].slice(1); // filter out the first alias
         return this.config.object[this.config.field];
     }

@@ -2,16 +2,18 @@ import { Component, Input, OnInit, ViewEncapsulation } from '@angular/core';
 import { Collection } from 'src/app/classes/stix/collection';
 
 @Component({
-  selector: 'app-collection-list',
-  templateUrl: './collection-list.component.html',
-  styleUrls: ['./collection-list.component.scss'],
-  encapsulation: ViewEncapsulation.None
+    selector: 'app-collection-list',
+    templateUrl: './collection-list.component.html',
+    styleUrls: ['./collection-list.component.scss'],
+    encapsulation: ViewEncapsulation.None
 })
 export class CollectionListComponent implements OnInit {
     @Input() config: CollectionListConfig;
     public filteredCollections: Collection[];
         
-    constructor() {}
+    constructor() {
+        // intentionally left blank
+    }
 
     ngOnInit() {
         if (this.config.mode == "imported") {

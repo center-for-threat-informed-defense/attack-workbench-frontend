@@ -8,9 +8,9 @@ import { StixObject } from 'src/app/classes/stix/stix-object';
 import { SelectionModel } from '@angular/cdk/collections';
 import { logger } from "../../../../util/logger";
 @Component({
-selector: 'app-ordered-list-edit',
-templateUrl: './ordered-list-edit.component.html',
-styleUrls: ['./ordered-list-edit.component.scss'],
+    selector: 'app-ordered-list-edit',
+    templateUrl: './ordered-list-edit.component.html',
+    styleUrls: ['./ordered-list-edit.component.scss'],
 })
 export class OrderedListEditComponent implements OnInit {
     @Input() public config: OrderedListPropertyConfig;
@@ -28,10 +28,11 @@ export class OrderedListEditComponent implements OnInit {
      */
     drop(event: CdkDragDrop<string[]>) {
         moveItemInArray(this.list, event.previousIndex, event.currentIndex);
-        // this.applyUpdates();
     }
 
-    ngOnInit(): void {}
+    ngOnInit(): void {
+        // intentionally left blank
+    }
 
     private _idToLabel: Map<string, string>;
     /**

@@ -1,15 +1,17 @@
 import { Component, OnInit } from '@angular/core';
 
 @Component({
-  selector: 'app-descriptive-diff',
-  templateUrl: './descriptive-diff.component.html',
-  styleUrls: ['./descriptive-diff.component.scss']
+    selector: 'app-descriptive-diff',
+    templateUrl: './descriptive-diff.component.html',
+    styleUrls: ['./descriptive-diff.component.scss']
 })
 export class DescriptiveDiffComponent implements OnInit {
 
-  constructor() { }
+    constructor() {
+        // intentionally left blank
+    }
 
-  ngOnInit(): void {
-  }
-
+    ngOnInit(): void {
+        // intentionally left blank
+    }
 }

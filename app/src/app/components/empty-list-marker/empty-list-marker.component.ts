@@ -11,9 +11,12 @@ export class EmptyListMarkerComponent implements OnInit {
     @Input() public checkAgain: boolean = true;
     @Output() onCheckAgain = new EventEmitter();
 
-    constructor() { }
+    constructor() {
+        // intentionally left blank
+    }
 
     ngOnInit(): void {
+        // intentionally left blank
     }
 
 }

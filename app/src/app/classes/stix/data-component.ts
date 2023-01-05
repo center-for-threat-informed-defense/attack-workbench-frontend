@@ -96,4 +96,16 @@ export class DataComponent extends StixObject {
         });
         return postObservable;
     }
+
+    /**
+     * Delete this STIX object from the database.
+     * @param restAPIService [RestApiConnectorService] the service to perform the DELETE through
+     */
+     public delete(restAPIService: RestApiConnectorService) : Observable<{}> {
+        let deleteObservable = restAPIService.deleteDataComponent(this.stixID, this.modified);
+        let subscription = deleteObservable.subscribe({
+            complete: () => { subscription.unsubscribe(); }
+        });
+        return deleteObservable;
+    }
 }

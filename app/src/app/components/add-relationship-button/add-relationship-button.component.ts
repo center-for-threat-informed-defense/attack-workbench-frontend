@@ -19,6 +19,7 @@ export class AddRelationshipButtonComponent implements OnInit {
     constructor(public restApiService: RestApiConnectorService, public dialog: MatDialog) { }
 
     ngOnInit(): void {
+        // intentionally left blank
     }
 
     public createRelationship() {

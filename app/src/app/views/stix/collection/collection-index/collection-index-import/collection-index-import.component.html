@@ -1,8 +1,4 @@
 <div class="collection-index-import import-workflow">
-    <!-- <mat-toolbar>
-        <div class="spacer"></div>
-        <button mat-button class="control" mat-dialog-close><mat-icon aria-label="close">close</mat-icon></button>
-    </mat-toolbar> -->
     <mat-vertical-stepper linear>
         <mat-step label="specify index">
             <div class="import-options">
@@ -11,12 +7,6 @@
                     <input matInput [(ngModel)]="url" (keyup.enter)="url.length > 0 ? previewIndex() : null">
                     <mat-icon matSuffix>cloud_download</mat-icon>
                 </mat-form-field>
-                <!-- <div class="spacer">or</div>
-                <mat-form-field appearance="outline">
-                    <mat-label>upload a file</mat-label>
-                    <ngx-mat-file-input></ngx-mat-file-input>
-                    <mat-icon matSuffix>attach_file</mat-icon>
-                </mat-form-field> -->
                 <div class="spacer">or</div>
                 <mat-form-field appearance="outline">
                     <mat-label>select a recommended index</mat-label>
@@ -27,11 +17,7 @@
                     </mat-select>
                 </mat-form-field>
             </div>
-            
             <div class="action-bar">
-                <!-- <button mat-button routerLink="/collection">
-                    <span class="text-label">cancel</span>
-                </button> -->
                 <button mat-raised-button color="primary" (click)="previewIndex()" *ngIf="url.length > 0">
                     <span class="text-label">preview</span>
                 </button>

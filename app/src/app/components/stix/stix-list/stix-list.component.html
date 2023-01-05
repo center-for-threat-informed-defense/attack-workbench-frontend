@@ -33,6 +33,7 @@
             <table mat-table multiTemplateDataRows 
                    *ngIf="data.data.length > 0 else noObjects"
                    [dataSource]="data.data" >
+                <caption hidden aria-hidden="false" aria-label="object table">Object List</caption>
 
                 <!-- column definitions -->
                 <ng-container matColumnDef="{{column}}" *ngFor="let column of tableColumns" [sticky]="tableColumns_settings.get(column)['sticky']">

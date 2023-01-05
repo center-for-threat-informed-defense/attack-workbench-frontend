@@ -1,4 +1,4 @@
-import { forkJoin, Observable, of } from "rxjs";
+import { forkJoin, Observable } from "rxjs";
 import { map, switchMap } from "rxjs/operators";
 import { RestApiConnectorService } from "src/app/services/connectors/rest-api/rest-api-connector.service";
 import { ValidationData } from "../serializable";
@@ -336,5 +336,17 @@ export class Technique extends StixObject {
             complete: () => { subscription.unsubscribe(); }
         });
         return postObservable;
+    }
+
+    /**
+     * Delete this STIX object from the database.
+     * @param restAPIService [RestApiConnectorService] the service to perform the DELETE through
+     */
+    public delete(restAPIService: RestApiConnectorService) : Observable<{}> {
+        let deleteObservable = restAPIService.deleteTechnique(this.stixID, this.modified);
+        let subscription = deleteObservable.subscribe({
+            complete: () => { subscription.unsubscribe(); }
+        });
+        return deleteObservable;
     }
 }
