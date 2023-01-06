@@ -300,7 +300,7 @@ export class Relationship extends StixObject {
                     if (typeof(src_sdo.external_references[0].external_id) === "string") this.source_ID = src_sdo.external_references[0].external_id;
                     else logger.error("TypeError: attackID field is not a string:", src_sdo.external_references[0].external_id, "(", typeof(src_sdo.external_references[0].external_id), ")");
                 }
-                else logger.warn("ObjectWarning: cannot find attackID for source object");
+                // else logger.warn("ObjectWarning: cannot find attackID for source object");
             } else this.source_ID = "";
         }
         if ("target_object" in raw) {
@@ -312,7 +312,7 @@ export class Relationship extends StixObject {
                     if (typeof(tgt_sdo.external_references[0].external_id) === "string") this.target_ID = tgt_sdo.external_references[0].external_id;
                     else logger.error("TypeError: attackID field is not a string:", tgt_sdo.external_references[0].external_id, "(", typeof(tgt_sdo.external_references[0].external_id), ")");
                 }
-                else logger.warn("ObjectWarning: cannot find attackID for target object");
+                // else logger.warn("ObjectWarning: cannot find attackID for target object");
             } else this.target_ID = "";
         }
     }

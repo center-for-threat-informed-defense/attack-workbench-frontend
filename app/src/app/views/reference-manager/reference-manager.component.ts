@@ -5,6 +5,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { fromEvent, Observable, Subscription } from 'rxjs';
 import { debounceTime, distinctUntilChanged, filter, tap } from 'rxjs/operators';
 import { ExternalReference } from 'src/app/classes/external-references';
+import { Relationship } from 'src/app/classes/stix/relationship';
 import { StixObject } from 'src/app/classes/stix/stix-object';
 import { ReferenceEditDialogComponent } from 'src/app/components/reference-edit-dialog/reference-edit-dialog.component';
 import { AuthenticationService } from 'src/app/services/connectors/authentication/authentication.service';
@@ -19,11 +20,11 @@ import { Paginated, RestApiConnectorService } from 'src/app/services/connectors/
 export class ReferenceManagerComponent implements OnInit, AfterViewInit, OnDestroy {
     @ViewChild('search') search: ElementRef;
     @ViewChild(MatPaginator) paginator: MatPaginator;
-    public attackObjects: StixObject[]; // all objects in the knowledge base
+    public attackObjects: StixObject[] = []; // all objects in the knowledge base
     public references$: Observable<Paginated<ExternalReference>>;
     public totalReferences: number = 0;
     public columnDefs: string[] = ['citation', 'reference', 'count', 'open'];
-    public referenceMap: Map<string, number> = new Map(); // reference.source_name => number of objects that use the reference
+    public referenceMap: Map<string, StixObject[]> = new Map(); // reference.source_name => objects that cite the reference
     public loading: boolean = false;
     private searchSubscription: Subscription;
     public searchQuery: string = "";
@@ -36,9 +37,25 @@ export class ReferenceManagerComponent implements OnInit, AfterViewInit, OnDestr
                 public snackbar: MatSnackBar) { }
 
     ngOnInit(): void {
-        let subscription = this.restApiConnector.getAllObjects().subscribe({
+        let subscription = this.restApiConnector.getAllObjects(null, null, null, null, true, true, true).subscribe({
             next: (results) => {
-                this.attackObjects = results as StixObject[];
+                // build ID to SDO lookup
+                let idToObject = {};
+                results.data.forEach(x => idToObject[x.stixID] = x);
+
+                results.data.forEach(sdo => {
+                    if (sdo.attackType == 'relationship') {
+                        // serialize relationship source/target objects
+                        let rel = sdo as Relationship;
+                        if (idToObject[rel.source_ref] && idToObject[rel.target_ref]) {
+                            let serialized = rel.serialize();
+                            serialized.source_object = idToObject[rel.source_ref].serialize();
+                            serialized.target_object = idToObject[rel.target_ref].serialize();
+                            rel.deserialize(serialized);
+                            this.attackObjects.push(rel);
+                        }
+                    } else this.attackObjects.push(sdo);
+                });
             },
             complete: () => {
                 this.applyControls();
@@ -85,7 +102,7 @@ export class ReferenceManagerComponent implements OnInit, AfterViewInit, OnDestr
             data: {
                 mode: reference ? 'view' : 'edit',
                 reference: reference,
-                count: reference ? this.referenceCount(reference.source_name): 0
+                objects: reference ? this.referenceMap[reference.source_name] : []
             }
         });
         let subscription = prompt.afterClosed().subscribe({
@@ -116,13 +133,10 @@ export class ReferenceManagerComponent implements OnInit, AfterViewInit, OnDestr
                 let uses = function(reference: ExternalReference) {
                     // count number of objects that have this reference in its external_references list
                     let usesReference: StixObject[] = self.attackObjects.filter(o => {
-                        let ext_refs: any[] = o['stix'] && o['stix']['external_references'] && o['stix']['external_references'].length > 0 ? o['stix']['external_references'] : undefined;
-                        if (!ext_refs) return false; // object does not have external references
-                        let sources = ext_refs.map(ref => ref.source_name);
-                        if (sources.includes(reference.source_name)) return true;
-                        return false;
+                        let ext_refs = o.external_references && o.external_references.list().length > 0 ? o.external_references : undefined;
+                        return ext_refs && ext_refs.hasValue(reference.source_name);
                     });
-                    return usesReference.length;
+                    return usesReference;
                 }
                 for (let ref of data.data) {
                     if (!this.referenceMap.has(ref.source_name)) {
@@ -140,6 +154,6 @@ export class ReferenceManagerComponent implements OnInit, AfterViewInit, OnDestr
      */
     public referenceCount(source: string): number {
         if (!source) return 0;
-        return this.referenceMap[source];
+        return this.referenceMap[source].length;
     }
 }

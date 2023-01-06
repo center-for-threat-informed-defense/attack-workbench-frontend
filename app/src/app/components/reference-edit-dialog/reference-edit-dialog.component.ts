@@ -19,6 +19,9 @@ import { DeleteDialogComponent } from '../delete-dialog/delete-dialog.component'
 export class ReferenceEditDialogComponent implements OnInit, OnDestroy {
     public reference: ExternalReference;
     public is_new: boolean;
+    public stix_objects: StixObject[] = [];
+    public relationships: StixObject[] = [];
+
     public stage: number = 0;
     public patch_objects: StixObject[];
     public patch_relationships: Relationship[];
@@ -45,6 +48,10 @@ export class ReferenceEditDialogComponent implements OnInit, OnDestroy {
         if (this.config.reference) {
             this.is_new = false;
             this.reference = this.referenceCopy;
+            if (this.config.objects && this.config.objects.length > 0) {
+                this.stix_objects = this.config.objects.filter(sdo => sdo.attackType != 'relationship');
+                this.relationships = this.config.objects.filter(sdo => sdo.attackType == 'relationship');
+            }
         }
         else {
             this.is_new = true;
@@ -160,7 +167,7 @@ export class ReferenceEditDialogComponent implements OnInit, OnDestroy {
         this.stage = 1; //enter patching stage
         let subscription = this.restApiConnectorService.getAllObjects(null, null, null, null, true, true, true).subscribe({
             next: (results) => {
-                // build ID to [name, attackID] lookup
+                // build ID to SDO lookup
                 let idToObject = {}
                 results.data.forEach(x => { idToObject[x.stixID] = x });
                 // find objects with given reference
@@ -319,4 +326,5 @@ export interface ReferenceEditConfig {
     */
     mode?: "view" | "edit";
     reference?: ExternalReference
+    objects?: StixObject[]
 }

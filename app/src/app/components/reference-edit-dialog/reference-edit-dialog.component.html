@@ -189,6 +189,33 @@
                     </div>
                 </div>
             </div>
+            <!-- objects that cite this reference -->
+            <h3>Objects citing {{reference.source_name}}</h3>
+            <!-- <h3>The following objects cite this reference:</h3> -->
+            <ng-container *ngIf="stix_objects.length == 0 && relationships.length == 0; else objectList">
+                <mat-list>
+                    <mat-list-item>
+                        <p matLine class="text-success">No objects in the knowledge base use this reference.</p>
+                    </mat-list-item>
+                </mat-list>
+            </ng-container>
+            <ng-template #objectList>
+                <ng-container *ngIf="stix_objects.length > 0">
+                    <h4>Objects</h4>
+                    <app-stix-list [config]="{
+                        stixObjects: stix_objects,
+                        clickBehavior: 'none'
+                    }"></app-stix-list>
+                </ng-container>
+                <ng-container *ngIf="relationships.length > 0">
+                    <h4>Relationships</h4>
+                    <app-stix-list [config]="{
+                        stixObjects: relationships,
+                        type: 'relationship',
+                        clickBehavior: 'none'
+                    }"></app-stix-list>
+                </ng-container>
+            </ng-template>
         </div>
     </ng-template>
 </div>
