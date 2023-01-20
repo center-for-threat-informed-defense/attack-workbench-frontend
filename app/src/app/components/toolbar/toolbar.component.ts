@@ -17,17 +17,26 @@ export class ToolbarComponent implements OnInit {
     @Output() public onToggleSidebar = new EventEmitter();
     @Output() public onScrollTop = new EventEmitter();
     @ViewChild('saveValidation') saveValidation: PopoverContentComponent;
-    
+
     public validationData: ValidationData = null;
+    public revoked = false;
 
     public get editing(): boolean { return this.editorService.editing; }
-    public get editable(): boolean { return this.editorService.editable; }
+    public get editable(): boolean { return this.editorService.editable && !this.revoked; }
     public get hasRelationships(): boolean { return this.editorService.hasRelationships; }
     public get deletable(): boolean { return this.editorService.deletable && this.authenticationService.canDelete(); }
 
     public get isLoggedIn(): boolean { return this.authenticationService.isLoggedIn; }
 
-    constructor(private sidebarService: SidebarService, private editorService: EditorService, private authenticationService: AuthenticationService) {}
+    constructor(private sidebarService: SidebarService,
+                private editorService: EditorService,
+                private authenticationService: AuthenticationService) {
+
+      // subscribe to the revoked$ observable and update the element whenever the value changes
+      this.editorService.revoked$.subscribe(value => {
+        this.revoked = value;
+      });
+    }
 
     ngOnInit() {
         // intentionally left blank
@@ -48,17 +57,17 @@ export class ToolbarComponent implements OnInit {
     public delete() {
         this.editorService.onDelete.emit();
     }
-    
+
     // emit a toggle theme event
     public emitToggleTheme() {
         this.onToggleTheme.emit();
     }
     //toggle sidebar
-    public toggleSidebar() { 
+    public toggleSidebar() {
         this.sidebarService.opened = !this.sidebarService.opened;
     }
     // emit scroll to top event
-    public emitScrollTop() { 
+    public emitScrollTop() {
         this.onScrollTop.emit();
     }
 
