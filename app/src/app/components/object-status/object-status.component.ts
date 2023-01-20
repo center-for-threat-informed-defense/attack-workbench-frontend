@@ -28,12 +28,14 @@ export class ObjectStatusComponent implements OnInit {
     public relationships = [];
     public revoked: boolean = false;
     public deprecated: boolean = false;
-    
+
     public get disabled(): boolean {
         return this.editorService.editing || this.editorService.type == "collection";
     }
 
-    constructor(public editorService: EditorService, private restAPIService: RestApiConnectorService, private dialog: MatDialog) { }
+    constructor(private editorService: EditorService,
+                private restAPIService: RestApiConnectorService,
+                private dialog: MatDialog) { }
 
     ngOnInit(): void {
         this.statusControl = new FormControl();
@@ -42,7 +44,7 @@ export class ObjectStatusComponent implements OnInit {
     public loadData() {
         let data$: any;
         let options = {
-            includeRevoked: true, 
+            includeRevoked: true,
             includeDeprecated: true
         }
         if (this.editorService.stixId && this.editorService.stixId != "new") { // don't load if the object doesn't exist yet
@@ -66,6 +68,8 @@ export class ObjectStatusComponent implements OnInit {
                             this.statusControl.setValue(this.object.workflow.state);
                         }
                         this.revoked = this.object.revoked;
+                        this.editorService.updateRevoked(this.revoked); // Sync `revoked` on all dependent components,
+                                                                        // e.g., EditorService, ToolbarComponent
                         this.deprecated = this.object.deprecated;
                     }
                 },
@@ -86,8 +90,8 @@ export class ObjectStatusComponent implements OnInit {
             // retrieve relationships with the object
             data$ = this.restAPIService.getRelatedTo({sourceOrTargetRef: this.editorService.stixId});
             let relSubscription = data$.subscribe({
-                next: (data) => { 
-                    let relationships = data.data as Relationship[]; 
+                next: (data) => {
+                    let relationships = data.data as Relationship[];
                     this.relationships = this.relationships.concat(relationships)
                     this.loaded = true;
                     setTimeout(() => this.popover.updatePosition()); //after render cycle update popover position since it has new content
@@ -148,7 +152,8 @@ export class ObjectStatusComponent implements OnInit {
                         let target_id = this.select.selected[0];
                         this.deprecateObjects(true, target_id);
                     } else { // user cancelled or no object selected
-                        this.revoked = false;
+                        // this.revoked = false;
+                        this.setRevoked(false);
                     }
                 },
                 complete: () => { revokedSubscription.unsubscribe(); }
@@ -167,9 +172,16 @@ export class ObjectStatusComponent implements OnInit {
                 }
             }
             // un-revoke object
-            this.object.revoked = false;
+            // this.object.revoked = false;
+            this.setRevoked(false);
             this.save();
         }
+    }
+
+    public setRevoked(revoked: boolean): void {
+      this.revoked = revoked;
+      this.object.revoked = revoked;
+      this.editorService.updateRevoked(revoked);
     }
 
     /**
@@ -203,7 +215,7 @@ export class ObjectStatusComponent implements OnInit {
         // inform users of relationship changes
         let confirmationPrompt = this.dialog.open(ConfirmationDialogComponent, {
             maxWidth: "35em",
-            data: { 
+            data: {
                 message: 'All relationships with this object will be deprecated. Do you want to continue?',
             }
         });
@@ -211,16 +223,22 @@ export class ObjectStatusComponent implements OnInit {
         let confirmationSub = confirmationPrompt.afterClosed().subscribe({
             next: (result) => {
                 if (!result) { // user cancelled
-                    if (revoked) this.revoked = false;
+                    if (revoked) {
+                      // this.revoked = false;
+                      this.setRevoked(false);
+                    }
                     else this.deprecated = false;
                     return;
                 }
 
                 // deprecate or revoke object
-                if (revoked) this.object.revoked = true;
+                if (revoked) {
+                  // this.object.revoked = true;
+                  this.setRevoked(true);
+                }
                 else this.object.deprecated = true;
                 saves.push(this.object.save(this.restAPIService));
-        
+
                 // update relationships with the object
                 for (let relationship of this.relationships) {
                     if (!relationship.deprecated) {
@@ -237,7 +255,7 @@ export class ObjectStatusComponent implements OnInit {
                     revokedRelationship.target_ref = revoked_by_id;
                     saves.push(revokedRelationship.save(this.restAPIService));
                 }
-        
+
                 // complete save calls
                 let saveSubscription = forkJoin(saves).subscribe({
                     complete: () => {
