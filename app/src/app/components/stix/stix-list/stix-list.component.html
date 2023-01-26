@@ -21,7 +21,7 @@
                 </mat-form-field>
             </div>
         </div>
-        <div class="controls" *ngIf="config.type && config.type == 'relationship'">
+        <div class="controls" *ngIf="(config.type && config.type == 'relationship') || config.showDeprecatedFilter">
             <div class="input-group align-right">
                 <mat-checkbox (change)="showDeprecated($event)">show deprecated</mat-checkbox>
             </div>
