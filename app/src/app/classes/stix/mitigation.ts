@@ -86,7 +86,7 @@ export class Mitigation extends StixObject {
      * @param restAPIService [RestApiConnectorService] the service to perform the DELETE through
      */
     public delete(restAPIService: RestApiConnectorService) : Observable<{}> {
-        let deleteObservable = restAPIService.deleteMitigation(this.stixID, this.modified);
+        let deleteObservable = restAPIService.deleteMitigation(this.stixID);
         let subscription = deleteObservable.subscribe({
             complete: () => { subscription.unsubscribe(); }
         });
