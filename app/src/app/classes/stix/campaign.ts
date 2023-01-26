@@ -124,7 +124,7 @@ export class Campaign extends StixObject {
      * @param restAPIService [RestApiConnectorService] the service to perform the DELETE through
      */
      public delete(restAPIService: RestApiConnectorService) : Observable<{}> {
-        let deleteObservable = restAPIService.deleteCampaign(this.stixID, this.modified);
+        let deleteObservable = restAPIService.deleteCampaign(this.stixID);
         let subscription = deleteObservable.subscribe({
             complete: () => { subscription.unsubscribe(); }
         });

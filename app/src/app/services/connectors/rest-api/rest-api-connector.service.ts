@@ -838,9 +838,8 @@ export class RestApiConnectorService extends ApiConnector {
 
     private deleteStixObjectFactory(attackType: AttackType) {
         let plural = attackTypeToPlural[attackType];
-        return function(id: string, modified: Date): Observable<{}> {
-            let modifiedStix = modified.toISOString();
-            let url = `${this.baseUrl}/${plural}/${id}/modified/${modifiedStix}`;
+        return function(id: string): Observable<{}> {
+            let url = `${this.baseUrl}/${plural}/${id}`;
             return this.http.delete(url).pipe(
                 tap(this.handleSuccess(`${attackType} deleted`)),
                 catchError(this.handleError_raise()),
@@ -852,77 +851,66 @@ export class RestApiConnectorService extends ApiConnector {
     /**
      * DELETE a technique
      * @param {string} id the STIX ID of the object to delete
-     * @param {Date} modified the modified date of the version to delete
      * @returns {Observable<{}>} observable of the response body
      */
     public get deleteTechnique() { return this.deleteStixObjectFactory("technique"); }
     /**
      * DELETE a tactic
      * @param {string} id the STIX ID of the object to delete
-     * @param {Date} modified the modified date of the version to delete
      * @returns {Observable<{}>} observable of the response body
      */
     public get deleteTactic() { return this.deleteStixObjectFactory("tactic"); }
     /**
      * DELETE a group
      * @param {string} id the STIX ID of the object to delete
-     * @param {Date} modified the modified date of the version to delete
      * @returns {Observable<{}>} observable of the response body
      */
     public get deleteGroup() { return this.deleteStixObjectFactory("group"); }
     /**
      * DELETE a campaign
      * @param {string} id the STIX ID of the object to delete
-     * @param {Date} modified the modified date of the version to delete
      * @returns {Observable<{}>} observable of the response body
      */
     public get deleteCampaign() { return this.deleteStixObjectFactory("campaign"); }
     /**
      * DELETE a software
      * @param {string} id the STIX ID of the object to delete
-     * @param {Date} modified the modified date of the version to delete
      * @returns {Observable<{}>} observable of the response body
      */
     public get deleteSoftware() { return this.deleteStixObjectFactory("software"); }
     /**
      * DELETE a mitigation
      * @param {string} id the STIX ID of the object to delete
-     * @param {Date} modified the modified date of the version to delete
      * @returns {Observable<{}>} observable of the response body
      */
     public get deleteMitigation() { return this.deleteStixObjectFactory("mitigation"); }
     /**
      * DELETE a data source
      * @param {string} id the STIX ID of the object to delete
-     * @param {Date} modified the modified date of the version to delete
      * @returns {Observable<{}>} observable of the response body
      */
     public get deleteDataSource() { return this.deleteStixObjectFactory("data-source"); }
     /**
      * DELETE a data component
      * @param {string} id the STIX ID of the object to delete
-     * @param {Date} modified the modified date of the version to delete
      * @returns {Observable<{}>} observable of the response body
      */
     public get deleteDataComponent() { return this.deleteStixObjectFactory("data-component"); }
     /**
      * DELETE a matrix
      * @param {string} id the STIX ID of the object to delete
-     * @param {Date} modified The modified date of the version to delete
      * @returns {Observable<{}>} observable of the response body
      */
     public get deleteMatrix() { return this.deleteStixObjectFactory("matrix"); }
     /**
      * DELETE a collection
      * @param {string} id the STIX ID of the object to delete
-     * @param {Date} modified The modified date of the version to delete
      * @returns {Observable<{}>} observable of the response body
      */
     public get deleteCollection() { return this.deleteStixObjectFactory("collection"); }
     /**
      * DELETE a relationship
      * @param {string} id the STIX ID of the object to delete
-     * @param {Date} modified The modified date of the version to delete
      * @returns {Observable<{}>} observable of the response body
      */
      public get deleteRelationship() { return this.deleteStixObjectFactory("relationship"); }

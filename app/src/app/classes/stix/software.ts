@@ -118,7 +118,7 @@ export class Software extends StixObject {
      * @param restAPIService [RestApiConnectorService] the service to perform the DELETE through
      */
     public delete(restAPIService: RestApiConnectorService) : Observable<{}> {
-        let deleteObservable = restAPIService.deleteSoftware(this.stixID, this.modified);
+        let deleteObservable = restAPIService.deleteSoftware(this.stixID);
         let subscription = deleteObservable.subscribe({
             complete: () => { subscription.unsubscribe(); }
         });
