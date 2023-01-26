@@ -16,7 +16,9 @@
                             <button *ngIf="stixType == 'relationship'" mat-button matTooltip="{{isDeprecated ? 'undeprecate' : 'deprecate'}}" class="control" [disabled]="editing" (click)="deprecateChanged()">
                                 <mat-icon aria-label="{{isDeprecated ? 'undeprecate': 'deprecate'}}">{{isDeprecated ? 'unarchive' : 'archive'}}</mat-icon>
                             </button>
-                            <button *ngIf="canDelete" mat-button class="control" matTooltip="delete" [disabled]="config.is_new || !editing || !deletable" (click)="delete()"><mat-icon aria-label="delete">delete</mat-icon></button>
+                            <div *ngIf="canDelete" class="button-tooltip" [matTooltip]="editing && !config.is_new ? (!deletable ? 'an object with relationships cannot be deleted' : 'delete') : ''">
+                                <button mat-button class="control" [disabled]="config.is_new || !editing || !deletable" (click)="delete()"><mat-icon aria-label="delete">delete</mat-icon></button>
+                            </div>
                         </div>
                     </ng-container>
                     <div class="section">

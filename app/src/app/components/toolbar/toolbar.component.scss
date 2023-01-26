@@ -6,4 +6,7 @@
     button.mat-button-disabled {
         cursor: not-allowed;
     }
+    .button-tooltip {
+        display: inline-flex;
+    }
 }
