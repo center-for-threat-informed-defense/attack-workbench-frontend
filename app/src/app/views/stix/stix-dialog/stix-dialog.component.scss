@@ -28,7 +28,6 @@
         .light & { border-left: 1px solid border-color(light) !important; }
         .dark & { border-left: 1px solid border-color(dark) !important; }
     }
-
     .mat-drawer  {
         width: 40%;
         overflow: hidden;
@@ -51,16 +50,20 @@
             overflow-y: scroll;
         }
     }
-
     .validation {
         h3 {
             margin: 0px;
         }
     }
-
     .validation + .save-buttons {
         padding-left: 16px;
         .dark & { border-left: 1px solid border-color(dark); }
         .light & { border-left: 1px solid border-color(light); }
+    }
+    button.mat-button-disabled {
+        cursor: not-allowed;
+    }
+    .button-tooltip {
+        display: inline-flex;
     }
 }
