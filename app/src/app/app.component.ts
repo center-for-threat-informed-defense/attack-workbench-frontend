@@ -131,7 +131,12 @@ export class AppComponent implements AfterViewInit {
         // use the addEventListener method of the MediaQueryList object to set up a listener that will be called
         // whenever the light/dark mode setting changes
         mediaQueryList.addEventListener('change', (event) => {
-          this.theme = event.matches ? Theme.DarkMode : Theme.LightMode;
+            if (hasCookie('theme')) {
+                // User has set the theme using the app's toggle button, ignore changes in system/browser mode
+            } else {
+                this.theme = event.matches ? Theme.DarkMode : Theme.LightMode;
+                this.setThemeOnOverlayContainerElement();
+            }
         });
     }
 
