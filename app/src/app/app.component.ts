@@ -126,21 +126,31 @@ export class AppComponent implements AfterViewInit {
         // it is in light mode
         const mediaQueryList = window.matchMedia('(prefers-color-scheme: dark)');
         this.theme = mediaQueryList.matches ? Theme.DarkMode : Theme.LightMode;
+        this.setThemeOnOverlayContainerElement();
 
         // use the addEventListener method of the MediaQueryList object to set up a listener that will be called
         // whenever the light/dark mode setting changes
         mediaQueryList.addEventListener('change', (event) => {
-          this.theme = event.matches ? Theme.DarkMode : Theme.LightMode;
+            if (hasCookie('theme')) {
+                // User has set the theme using the app's toggle button, ignore changes in system/browser mode
+            } else {
+                this.theme = event.matches ? Theme.DarkMode : Theme.LightMode;
+                this.setThemeOnOverlayContainerElement();
+            }
         });
     }
 
     public setTheme(theme: string): void {
         this.logger.log(`Setting theme to ${theme}`);
         this.theme = theme;
-        const overlayContainerClasses = this.overlayContainer.getContainerElement().classList;
-        overlayContainerClasses.remove(Theme.DarkMode, Theme.LightMode);
-        overlayContainerClasses.add(this.theme);
+        this.setThemeOnOverlayContainerElement();
         setCookie('theme', theme, 30);
+    }
+
+    private setThemeOnOverlayContainerElement(): void {
+      const overlayContainerClasses = this.overlayContainer.getContainerElement().classList;
+      overlayContainerClasses.remove(Theme.DarkMode, Theme.LightMode);
+      overlayContainerClasses.add(this.theme);
     }
 
     // header hiding with scroll
