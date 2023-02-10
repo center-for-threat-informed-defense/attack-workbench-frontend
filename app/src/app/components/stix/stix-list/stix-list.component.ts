@@ -617,7 +617,6 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
             }
         } else {
             // fetch objects from backend
-            console.log(this.config)
             let limit = this.paginator? this.paginator.pageSize : 10;
             let offset = this.paginator? this.paginator.pageIndex * limit : 0;
             let deprecated = this.filter.includes("state.deprecated");
