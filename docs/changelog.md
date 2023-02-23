@@ -47,6 +47,7 @@ ATT&CK Workbench version 1.3.0 supports the deletion of objects.
 
 #### Improvements in 1.3.0
 -   Improved validation for the `source_name` field on Reference objects to prevent duplicated source names and issues caused by invalid characters during citation parsing. See [frontend#352](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/352).
+-   Enabled editing of the `domains` field for Data Sources and Data Components. See [frontend#428](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/428).
 
 #### Fixes in 1.3.0
 -   Fixed an issue where the "apply patches and save" button would be unavailable when updating a reference used only by Relationship objects. See [frontend#356](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/356).
