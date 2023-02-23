@@ -26,6 +26,16 @@ export class DataComponent extends StixObject {
     }
 
     /**
+     * Set the data source ref for this data component
+     * @param data_source the data source this component is a part of
+     */
+    public set_data_source_ref(data_source: DataSource): void {
+        this.data_source_ref = data_source.stixID;
+        this.data_source = data_source;
+        this.workflow = undefined;
+    }
+
+    /**
      * Transform the current object into a raw object for sending to the back-end
      * @abstract
      * @returns {*} the raw object to send
