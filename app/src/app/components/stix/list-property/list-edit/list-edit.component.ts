@@ -39,6 +39,10 @@ export class ListEditComponent implements OnInit, AfterContentChecked {
     // prevent async issues
     private sub: Subscription = new Subscription();
 
+    // domain & tactic selection state
+    private domainState: string[];
+    private tacticState: Tactic[];
+
     public fieldToStix = {
         "platforms": "x_mitre_platforms",
         "tactic_type": "x_mitre_tactic_type",
@@ -54,13 +58,13 @@ export class ListEditComponent implements OnInit, AfterContentChecked {
         "ics-attack"
     ]
 
-    constructor(public dialog: MatDialog, private restAPIConnectorService: RestApiConnectorService, private ref: ChangeDetectorRef) {
-        // intentionally left blank
-    }
-
     public get values() {
         if (this.config.field == "aliases") return this.config.object[this.config.field].slice(1); // filter out the first alias
         return this.config.object[this.config.field];
+    }
+
+    constructor(public dialog: MatDialog, private restAPIConnectorService: RestApiConnectorService, private ref: ChangeDetectorRef) {
+        // intentionally left blank
     }
 
     ngOnInit(): void {
@@ -159,8 +163,6 @@ export class ListEditComponent implements OnInit, AfterContentChecked {
     }
 
     /** Update current stix-list selection on domain change */
-    private domainState: string[];
-    private tacticState: Tactic[];
     public selectedValues(): string[] {
         if (!this.dataLoaded) return null;
 

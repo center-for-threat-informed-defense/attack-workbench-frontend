@@ -8,7 +8,7 @@ import { DataSource } from "./data-source";
 export class DataComponent extends StixObject {
     public name: string = "";
     public description: string = "";
-    public domains: string[] = ['enterprise-attack']; // default to enterprise
+    public domains: string[] = [];
     public data_source_ref: string; // stix ID of the data source
 
     // NOTE: the following field will only be populated when this object is fetched using getDataComponent()
@@ -23,6 +23,16 @@ export class DataComponent extends StixObject {
         if (sdo) {
             this.deserialize(sdo);
         }
+    }
+
+    /**
+     * Set the data source ref for this data component
+     * @param data_source the data source this component is a part of
+     */
+    public set_data_source_ref(data_source: DataSource): void {
+        this.data_source_ref = data_source.stixID;
+        this.data_source = data_source;
+        this.workflow = undefined;
     }
 
     /**
@@ -69,7 +79,7 @@ export class DataComponent extends StixObject {
         if ("x_mitre_domains" in sdo) {
             if (this.isStringArray(sdo.x_mitre_domains)) this.domains = sdo.x_mitre_domains;
             else logger.error("TypeError: domains field is not a string array.");
-        } else this.domains = ['enterprise-attack']; // default to enterprise
+        } else this.domains = [];
     }
 
     /**

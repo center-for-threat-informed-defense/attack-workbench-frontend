@@ -14,7 +14,7 @@
     </mat-form-field>
     <!-- input type: 'select' -->
     <mat-form-field *ngIf="config.editType == 'select'" class="grow-to-row" appearance="outline"
-        [matTooltip]="selectControl.disabled && !config.disabled ? 'a valid domain must be selected first' : null">
+        [matTooltip]="selectControl.disabled && !config.disabled ? 'a valid domain must be selected' : null">
         <mat-label *ngIf="!dataLoaded" class="loading">
             <span>Loading {{config.label? config.label : config.field}}...</span>
             <mat-spinner class="spinner" diameter="20"></mat-spinner>
