@@ -11,7 +11,7 @@ export class DataSource extends StixObject {
     public platforms: string[] = [];
     public collection_layers: string[] = [];
     public contributors: string[] = [];
-    public domains: string[] = ['enterprise-attack']; // default to enterprise
+    public domains: string[] = [];
     public data_components: DataComponent[] = [];
 
     public readonly supportsAttackID = true;
@@ -91,7 +91,7 @@ export class DataSource extends StixObject {
         if ("x_mitre_domains" in sdo) {
             if (this.isStringArray(sdo.x_mitre_domains)) this.domains = sdo.x_mitre_domains;
             else logger.error("TypeError: domains field is not a string array.");
-        } else this.domains = ['enterprise-attack']; // default to enterprise
+        } else this.domains = [];
     }
 
     /**
@@ -124,7 +124,7 @@ export class DataSource extends StixObject {
      * @param restAPIService [RestApiConnectorService] the service to perform the DELETE through
      */
     public delete(restAPIService: RestApiConnectorService) : Observable<{}> {
-        let deleteObservable = restAPIService.deleteDataSource(this.stixID, this.modified);
+        let deleteObservable = restAPIService.deleteDataSource(this.stixID);
         let subscription = deleteObservable.subscribe({
             complete: () => { subscription.unsubscribe(); }
         });
