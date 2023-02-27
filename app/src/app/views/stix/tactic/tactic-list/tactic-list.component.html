@@ -1,13 +1,11 @@
 <div class="list-page">
     <div class="list-page-header">
         <h1 class="with-help-icon">
-            tactics 
-            <mat-icon class="help-icon" aria-label="help"
-                        popover="Tactics represent the &quot;why&quot; of an ATT&CK technique or sub-technique. It is the adversary's tactical goal: the reason for performing an action. For example, an adversary may want to achieve credential access."
-                        popoverPlacement="bottom"
-                        >
-                help_outline
-            </mat-icon>
+            tactics
+            <popover-content #objectDescription placement="bottom">
+                <span>Tactics represent the &quot;why&quot; of an ATT&CK technique or sub-technique. It is the adversary's tactical goal: the reason for performing an action. For example, an adversary may want to achieve credential access.</span>
+            </popover-content>
+            <mat-icon class="help-icon" [popover]="objectDescription" aria-label="help">help_outline</mat-icon>
         </h1>
 
         <div class="button-group" *ngIf="canEdit">

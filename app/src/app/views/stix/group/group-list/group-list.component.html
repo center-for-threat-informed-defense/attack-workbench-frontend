@@ -1,12 +1,11 @@
 <div class="list-page">
     <div class="list-page-header">
         <h1 class="with-help-icon">
-            groups 
-            <mat-icon class="help-icon" aria-label="help"
-                        popover="Groups are sets of related intrusion activity that are tracked by a common name in the security community. Overlaps between names based on publicly reported associations are tracked using &quot;Associated Groups&quot; (also known as &quot;Aliases&quot;)."
-                        popoverPlacement="bottom">
-                help_outline
-            </mat-icon>
+            groups
+            <popover-content #objectDescription placement="bottom">
+                <span>Groups are sets of related intrusion activity that are tracked by a common name in the security community. Overlaps between names based on publicly reported associations are tracked using &quot;Associated Groups&quot; (also known as &quot;Aliases&quot;).</span>
+            </popover-content>
+            <mat-icon class="help-icon" [popover]="objectDescription" aria-label="help">help_outline</mat-icon>
         </h1>
 
         <div class="button-group" *ngIf="canEdit">
