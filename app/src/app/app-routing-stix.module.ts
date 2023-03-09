@@ -19,6 +19,7 @@ import { NgModule } from '@angular/core';
 import { environment } from "../environments/environment"
 import { AuthorizationGuard } from "./services/helpers/authorization.guard";
 import { Role } from "./classes/authn/role";
+import { NotesSearchListComponent } from "./views/stix/notes-search/notes-search-list/notes-search-list.component";
 
 var viewRoles = [Role.VISITOR, Role.EDITOR, Role.ADMIN];
 var editRoles = [Role.EDITOR, Role.ADMIN];
@@ -495,6 +496,40 @@ const stixRoutes: Routes = [{
         }
       ]
     }
+    ]
+  },{
+    path: 'notes',
+    canActivateChild: [AuthorizationGuard],
+    data: {
+      breadcrumb: 'notes',
+      more: true
+    },
+    children: [{
+        path: '',
+        data: {
+          breadcrumb: 'list',
+          title: "Notes Search",
+          roles: viewRoles
+        },
+        component: NotesSearchListComponent
+      },
+      {
+        path: ':id',
+        data: {
+          breadcrumb: 'loading...'
+        },
+        children: [{
+            path: '',
+            data: {
+              breadcrumb: 'view',
+              editable: false,
+              title: "view marking definition",
+              roles: viewRoles
+            },
+            component: StixPageComponent
+          }
+        ]
+      }
     ]
   }
 ]
