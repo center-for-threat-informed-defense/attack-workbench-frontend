@@ -15,11 +15,4 @@ export class NotesSearchListComponent implements OnInit {
 
   ngOnInit(): void {}
 
-  sendSearch() : void {
-    console.log('Search API call goes here');
-    this.api.getAllNotes().subscribe((res)=>{
-      console.log(res);
-    });
-  }
-
 }

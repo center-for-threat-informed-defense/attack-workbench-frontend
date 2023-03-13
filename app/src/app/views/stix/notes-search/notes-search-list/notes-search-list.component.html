@@ -3,25 +3,12 @@
       <h1 class="with-help-icon">
           notes 
           <mat-icon class="help-icon" aria-label="help"
-                      popover="Search for notes"
+                      popover="Search for notes by name or content"
                       popoverPlacement="bottom"
                       >
               help_outline
           </mat-icon>
       </h1>
-
-      <app-list-property class="grow-to-row" [config]="{
-        mode: 'edit',
-        object: {},
-        label: 'search',
-        editType: 'any',
-        wrap: true
-      }"></app-list-property>
-
-      <div class="button-group">
-          <button mat-mini-fab class="extended-fab-button" color="primary" (click)="sendSearch()">
-              <mat-icon>search</mat-icon> <span class="text-label">Search for notes</span>
-          </button>
-      </div>
   </div>
+  <app-stix-list [config]="{'type': 'note', 'showLinks': true, 'showFilters': false, 'clickBehavior': 'dialog'}"></app-stix-list>
 </div>
