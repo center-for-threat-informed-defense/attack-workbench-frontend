@@ -414,34 +414,23 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
     public rowClick(element: StixObject) {
         if (this.config.clickBehavior && this.config.clickBehavior == "none") return;
         if (this.config.clickBehavior && this.config.clickBehavior == "dialog") { //open modal
-          if(this.config.type === 'note') {
-            this.dialog.open(StixDialogComponent, {
+          let prompt = this.dialog.open(StixDialogComponent, {
               data: {
                   object: element,
-                  editable: false,
-                  sidebarControl:"disable"
+                  editable: this.config.allowEdits,
+                  sidebarControl: this.config.allowEdits? "events" : "disable"
               },
               maxHeight: "75vh"
-            })
-          } else {
-            let prompt = this.dialog.open(StixDialogComponent, {
-                data: {
-                    object: element,
-                    editable: this.config.allowEdits,
-                    sidebarControl: this.config.allowEdits? "events" : "disable"
-                },
-                maxHeight: "75vh"
-            })
-            let subscription = prompt.afterClosed().subscribe({
-                next: result => {
-                    if (prompt.componentInstance.dirty) { //re-fetch values since an edit occurred
-                        this.applyControls();
-                        this.refresh.emit();
-                    }
-                },
-                complete: () => { subscription.unsubscribe(); }
-            });
-          }
+          })
+          let subscription = prompt.afterClosed().subscribe({
+              next: result => {
+                  if (prompt.componentInstance.dirty) { //re-fetch values since an edit occurred
+                      this.applyControls();
+                      this.refresh.emit();
+                  }
+              },
+              complete: () => { subscription.unsubscribe(); }
+          });
         }
         else if (this.config.clickBehavior && this.config.clickBehavior == "linkToSourceRef") {
             let source_ref = element['source_ref'];
@@ -454,9 +443,15 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
             let target_ref = element['target_ref'];
             // Get type to navigate from target_ref
             let type = this.typeMap[target_ref.split('--')[0]];
-
             this.router.navigateByUrl('/'+ type + '/' + target_ref);
         }
+        else if (this.config.clickBehavior && this.config.clickBehavior == "linkToObjectRef") {
+          // technically a note can be linked to many objects, we will select the first object
+          let object_ref = element['object_refs'][0];
+          // Get type to navigate from target_ref
+          let type = this.typeMap[object_ref.split('--')[0]];
+          this.router.navigateByUrl('/'+ type + '/' + object_ref);
+      }
         else { //expand
             this.expandedElement = this.expandedElement === element ? null : element;
         }
@@ -771,7 +766,7 @@ export interface StixListConfig {
      *     "linkToTargetRef": clicking redirects user to target ref object
      *     "none": row is not clickable
      */
-    clickBehavior?: "expand" | "dialog" | "linkToSourceRef" | "linkToTargetRef" | "none";
+    clickBehavior?: "expand" | "dialog" | "linkToSourceRef" | "linkToTargetRef" | "linkToObjectRef" | "none";
     /**
      * Default false. If true, allows for edits of the objects in the table
      * when in dialog mode
