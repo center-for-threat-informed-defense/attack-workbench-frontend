@@ -140,6 +140,7 @@ import { AdminPageComponent } from "./views/admin-page/admin-page.component";
 import { OrgSettingsPageComponent } from "./views/admin-page/org-settings-page/org-settings-page.component";
 import { UserAccountsPageComponent } from './views/admin-page/user-accounts-page/user-accounts-page.component';
 import { DefaultMarkingDefinitionsComponent } from './views/admin-page/default-marking-definitions/default-marking-definitions.component';
+import { ProfilePageComponent } from './views/profile-page/profile-page.component';
 import { ReferenceManagerComponent } from './views/reference-manager/reference-manager.component';
 
 import { StixDialogComponent } from "./views/stix/stix-dialog/stix-dialog.component"
@@ -251,6 +252,7 @@ import { NotesSearchListComponent } from './views/notes-page/notes-search-list/n
     OrgSettingsPageComponent,
     UserAccountsPageComponent,
     DefaultMarkingDefinitionsComponent,
+    ProfilePageComponent,
     ReferenceManagerComponent,
 
     StixDialogComponent,
