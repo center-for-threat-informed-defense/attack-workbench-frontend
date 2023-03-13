@@ -294,6 +294,12 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
                         "display": "descriptive"
                     }]
                     break;
+                case "note":
+                    this.addColumn("title", "title", "plain");
+                    this.addColumn("content", "content", "plain");
+                    this.addColumn("modified","modified", "timestamp");
+                    this.addColumn("created", "created", "timestamp");
+                    break;
                 default:
                     this.addColumn("type", "attackType", "plain");
                     this.addColumn("modified","modified", "timestamp");
@@ -408,6 +414,16 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
     public rowClick(element: StixObject) {
         if (this.config.clickBehavior && this.config.clickBehavior == "none") return;
         if (this.config.clickBehavior && this.config.clickBehavior == "dialog") { //open modal
+          if(this.config.type === 'note') {
+            this.dialog.open(StixDialogComponent, {
+              data: {
+                  object: element,
+                  editable: false,
+                  sidebarControl:"disable"
+              },
+              maxHeight: "75vh"
+            })
+          } else {
             let prompt = this.dialog.open(StixDialogComponent, {
                 data: {
                     object: element,
@@ -425,6 +441,7 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
                 },
                 complete: () => { subscription.unsubscribe(); }
             });
+          }
         }
         else if (this.config.clickBehavior && this.config.clickBehavior == "linkToSourceRef") {
             let source_ref = element['source_ref'];
@@ -683,6 +700,7 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
             else if (this.config.type == "data-source") this.data$ = this.restAPIConnectorService.getAllDataSources(options);
             else if (this.config.type == "data-component") this.data$ = this.restAPIConnectorService.getAllDataComponents(options);
             else if (this.config.type == "marking-definition") this.data$ = this.restAPIConnectorService.getAllMarkingDefinitions(options);
+            else if (this.config.type == "note") this.data$ = this.restAPIConnectorService.getAllNotes(options);
             let subscription = this.data$.subscribe({
                 next: (data) => { this.totalObjectCount = data.pagination.total; },
                 complete: () => { subscription.unsubscribe() }
@@ -710,7 +728,7 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
 }
 
 //allowed types for StixListConfig
-type type_attacktype = "collection" | "campaign" | "group" | "matrix" | "mitigation" | "software" | "tactic" | "technique" | "relationship" | "data-source" | "data-component" | "marking-definition";
+type type_attacktype = "collection" | "campaign" | "group" | "matrix" | "mitigation" | "software" | "tactic" | "technique" | "relationship" | "data-source" | "data-component" | "marking-definition"  | "note";
 type selection_types = "one" | "many" | "disabled"
 export interface StixListConfig {
     /* if specified, shows the given STIX objects in the table instead of loading from the back-end based on other configurations. */
