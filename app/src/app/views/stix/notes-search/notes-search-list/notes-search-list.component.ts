@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/rest-api-connector.service';
+import { SidebarService } from 'src/app/services/sidebar/sidebar.service';
 
 @Component({
   selector: 'app-notes-search-list',
@@ -7,12 +7,11 @@ import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/re
   styleUrls: ['./notes-search-list.component.scss']
 })
 export class NotesSearchListComponent implements OnInit {
-
-  api;
-  constructor(api: RestApiConnectorService) { 
-    this.api = api;
+  constructor(private sidebarService: SidebarService) { 
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.sidebarService.opened = false;
+  }
 
 }
