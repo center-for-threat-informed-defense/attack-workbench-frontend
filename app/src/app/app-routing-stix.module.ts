@@ -513,23 +513,6 @@ const stixRoutes: Routes = [{
           roles: viewRoles
         },
         component: NotesSearchListComponent
-      },
-      {
-        path: ':id',
-        data: {
-          breadcrumb: 'loading...'
-        },
-        children: [{
-            path: '',
-            data: {
-              breadcrumb: 'view',
-              editable: false,
-              title: "view marking definition",
-              roles: viewRoles
-            },
-            component: StixPageComponent
-          }
-        ]
       }
     ]
   }
