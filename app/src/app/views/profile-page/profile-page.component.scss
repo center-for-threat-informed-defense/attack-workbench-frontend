@@ -1,10 +1,18 @@
+@import "../../../style/globals";
 .profile-page {
     .profile-icon {
         height: 150px;
         width: 150px;
         margin: auto;
     }
-    .no-margin {
-        margin: 0;
+    .display-name {
+        margin-top: 0;
+        margin-bottom: 12px;
+    }
+    .profile-subheader {
+        @extend .text-label;
+        @extend .text-deemphasis;
+        text-align: center;
+        text-transform: uppercase;
     }
 }

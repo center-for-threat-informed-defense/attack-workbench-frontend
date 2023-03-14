@@ -6,7 +6,16 @@
     </div>
     <div class="row">
         <div class="col">
-            <h2 class="no-margin">{{user.displayName}}</h2>
+            <h2 class="display-name">{{user.displayName}}</h2>
         </div>
+    </div>
+    <div class="profile-subheader">
+        Joined <app-timestamp-view [config]="{
+            mode: 'view',
+            object: user,
+            field: 'created',
+            humanize: true,
+            tooltip: true
+        }"></app-timestamp-view>
     </div>
 </div>
