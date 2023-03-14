@@ -1,0 +1,12 @@
+.profile-page {
+    .profile-icon {
+        width: 100%;
+        height: 100%;
+        .dark & { background: color-alternate(dark); }
+        .light & { background: color(light); }
+        svg {
+            height: 200px;
+            width: 200px;
+        }
+    }
+}
