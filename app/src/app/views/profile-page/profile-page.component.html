@@ -22,17 +22,19 @@
         }"></app-timestamp-view>
     </div>
     <!-- user's recent activity -->
-    <div class="row">
-        <div class="col">
-            <h2 class="section-header">Recent Activity</h2>
+    <ng-container *ngIf="canEdit">
+        <div class="row">
+            <div class="col">
+                <h2 class="section-header">Recent Activity</h2>
+            </div>
         </div>
-    </div>
-    <div class="row">
-        <div class="col">
-            <app-stix-list *ngIf="!reload" [config]="{
-                stixObjects: recentActivity ? recentActivity : data$,
-                clickBehavior: 'dialog'
-            }"></app-stix-list>
+        <div class="row">
+            <div class="col">
+                <app-stix-list *ngIf="!reload" [config]="{
+                    stixObjects: recentActivity ? recentActivity : data$,
+                    clickBehavior: 'dialog'
+                }"></app-stix-list>
+            </div>
         </div>
-    </div>
+    </ng-container>
 </div>

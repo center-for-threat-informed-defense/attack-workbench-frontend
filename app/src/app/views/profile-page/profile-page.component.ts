@@ -15,6 +15,8 @@ export class ProfilePageComponent implements OnInit {
     public reload: boolean = false;
     public data$;
 
+    public get canEdit(): boolean { return this.authenticationService.canEdit(); }
+
     constructor(private authenticationService: AuthenticationService, private restApiService: RestApiConnectorService) {
         // intentionally left blank
     }
