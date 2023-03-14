@@ -29,12 +29,12 @@ export class SaveDialogComponent implements OnInit {
         return this.validation && this.validation.errors.length == 0;
     }
 
-    constructor(public dialogRef: MatDialogRef<SaveDialogComponent>, @Inject(MAT_DIALOG_DATA) public config: SaveDialogConfig, public restApiConnectorService: RestApiConnectorService) {
+    constructor(public dialogRef: MatDialogRef<SaveDialogComponent>, @Inject(MAT_DIALOG_DATA) public config: SaveDialogConfig, public restApiService: RestApiConnectorService) {
         this.currentVersion = config.object.version.toString();
         this.nextMajorVersion = config.object.version.nextMajorVersion().toString();
         this.nextMinorVersion = config.object.version.nextMinorVersion().toString();
         
-        let subscription = config.object.validate(this.restApiConnectorService).subscribe({
+        let subscription = config.object.validate(this.restApiService).subscribe({
             next: (result) => { 
                 // tell the user version has been incremented, but not if the version has an error
                 if (this.config.versionAlreadyIncremented && !result.errors.some((x) => x.field == "version")) result.info.push({
@@ -57,7 +57,7 @@ export class SaveDialogComponent implements OnInit {
      */
     private parse_patches(): void {
         this.stage = 1; // enter patching stage
-        let objSubscription = this.restApiConnectorService.getAllObjects(null, null, null, null, null, null, true).subscribe({
+        let objSubscription = this.restApiService.getAllObjects(null, null, null, null, null, null, true).subscribe({
             next: (results) => {
                 // find objects with a link to the previous ID
                 let objLink = `(LinkById: ${this.config.patchID})`;
@@ -77,7 +77,7 @@ export class SaveDialogComponent implements OnInit {
      */
     public patch() {
         let saves = [];
-        saves.push(this.config.object.save(this.restApiConnectorService));
+        saves.push(this.config.object.save(this.restApiService));
         for (let obj of this.patch_objects) {
             // replace LinkById references with the new ATT&CK ID
             let regex = new RegExp(`\\(LinkById: (${this.config.patchID})\\)`, "gmu");
@@ -85,7 +85,7 @@ export class SaveDialogComponent implements OnInit {
             if (obj.hasOwnProperty("detection") && obj.detection) {
                 obj.detection = obj.detection.replace(regex, `(LinkById: ${this.config.object.attackID})`);
             }
-            saves.push(obj.save(this.restApiConnectorService));
+            saves.push(obj.save(this.restApiService));
         }
         this.stage = 3; // enter loading stage until patching is complete
         let saveSubscription = forkJoin(saves).subscribe({
@@ -122,44 +122,44 @@ export class SaveDialogComponent implements OnInit {
         else this.save();
     }
 
-    private saveNewParent() {
-        return this.config.object.save(this.restApiConnectorService).pipe(
+    private saveObject() {
+        return this.config.object.save(this.restApiService).pipe( // save this object
             map(result => {
                 if (result.attackType !== 'technique') return result;
-                // If saving a sub-technique, update relationship between the sub-technique & its parent technique
-                if ((result as Technique).is_subtechnique && (this.config.object as Technique).parentTechnique) {
-                    // If new object, create a relationship
-                    if (this.config.object.hasOwnProperty('firstInitialized') && this.config.object.firstInitialized) {
-                        const relationship = new Relationship();
-                        relationship.relationship_type = 'subtechnique-of';
-                        relationship.set_source_object(result, this.restApiConnectorService);
-                        relationship.set_target_object((this.config.object as Technique).parentTechnique, this.restApiConnectorService);
-                        relationship.save(this.restApiConnectorService);
-                    }
+                let technique = this.config.object as Technique;
 
-                    // Otherwise if not a new object, check if parent technique changed
-                    else if (this.config.object.hasOwnProperty('firstInitialized') && !this.config.object.firstInitialized) {
-                        const sub$ = this.restApiConnectorService.getRelatedTo({sourceRef: this.config.object.stixID, relationshipType: "subtechnique-of"})
-                        const sub = sub$.subscribe({
-                            next: (r) => {
-                                if (r.data.length > 0 && r.data[0]) {
-                                    // If the parent technique has changed
-                                    if ((r.data[0] as Relationship).target_ref !== (this.config.object as Technique).parentTechnique.stixID) {
-                                        (r.data[0] as Relationship).revoked = true; // revoke original parent
-                                        (r.data[0] as Relationship).save(this.restApiConnectorService);
+                if (technique.is_subtechnique && technique.parentTechnique) {
+                    // retrieve 'subtechnique-of' relationship, if any
+                    const sub$ = this.restApiService.getRelatedTo({sourceRef: technique.stixID, relationshipType: "subtechnique-of"})
+                    const sub = sub$.subscribe({
+                        next: (r) => {
+                            let createRelationship = function(source, target, restApiService): Relationship {
+                                // create a new 'subtechnique-of' relationship with the given source and target object
+                                let newRelationship = new Relationship();
+                                newRelationship.relationship_type = 'subtechnique-of';
+                                newRelationship.set_source_object(source, restApiService);
+                                newRelationship.set_target_object(target, restApiService);
+                                return newRelationship;
+                            }
 
-                                        const relationship = new Relationship(); // create relationship with new parent
-                                        relationship.relationship_type = 'subtechnique-of';
-                                        relationship.set_source_object(this.config.object, this.restApiConnectorService);
-                                        relationship.set_target_object((this.config.object as Technique).parentTechnique, this.restApiConnectorService);
-                                        relationship.save(this.restApiConnectorService);
-                                    }
-                                }
-                            },
-                            complete: () => sub.unsubscribe()
-                        });
-                        return sub$;
-                    }
+                            if (r.data.length > 0 && r.data[0]) {
+                                // relationship exists, check if parent has changed
+                                let relationship = r.data[0] as Relationship;
+                                if (relationship.target_ref !== technique.parentTechnique.stixID) {
+                                    // parent technique has changed, revoke previous 'subtechnique-of' relationship and create a new one
+                                    relationship.revoked = true;
+                                    relationship.save(this.restApiService);
+                                    const newRelationship = createRelationship(technique, technique.parentTechnique, this.restApiService);
+                                    newRelationship.save(this.restApiService);
+                                } // otherwise parent has not changed, do nothing
+                            } else {
+                                // 'subtechnique-of' relationship does not exist, create a new one
+                                const newRelationship = createRelationship(technique, technique.parentTechnique, this.restApiService);
+                                newRelationship.save(this.restApiService);
+                            }
+                        },
+                        complete: () => sub.unsubscribe()
+                    });
                 }
                 return of(result);
             })
@@ -171,7 +171,7 @@ export class SaveDialogComponent implements OnInit {
      */
     private save() {
         if (!this.saveEnabled) { return; }
-        const sub = this.saveNewParent().subscribe({
+        const sub = this.saveObject().subscribe({
             next: v => {
                 this.dialogRef.close(true);
             },

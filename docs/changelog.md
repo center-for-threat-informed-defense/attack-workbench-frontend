@@ -32,6 +32,13 @@
 
 # Changelog
 
+## Changes Staged on Develop
+
+### ATT&CK Workbench version 1.3.1
+
+#### Fixes in 1.3.1
+-   Fixed an issue where assigning an existing technique as a sub-technique would not create a `subtechnique-of` relationship. See [frontend#446](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/446).
+
 ## 8 March 2023
 
 ### ATT&CK Workbench version 1.3.0
