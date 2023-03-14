@@ -1,4 +1,4 @@
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/rest-api-connector.service';
 import { ValidationData } from '../serializable';
 import { Group } from './group';
@@ -16,7 +16,7 @@ import { MarkingDefinition } from './marking-definition';
 import { Campaign } from './campaign';
 
 /**
- *auto-generated changelog/report about an import
+ * auto-generated changelog/report about an import
  * each sub-property is a list of objects corresponding to objects in the import
  * @template T the type to record, typically a string for STIX IDs or a StixObject if the objects are being stratified directly
  */
@@ -215,7 +215,6 @@ export class Collection extends StixObject {
         // add import/categories
         if (this.imported) rep.workspace.imported = this.imported.toString();
         if (this.import_categories) rep.workspace.import_categories = this.import_categories;
-        // rep.contents = this.stix_contents.map(stix_objects => stix_objects.serialize());
 
         return rep;
     }
@@ -400,5 +399,10 @@ export class Collection extends StixObject {
             complete: () => { subscription.unsubscribe(); }
         })
         return postObservable;
+    }
+
+    public delete(_restAPIService: RestApiConnectorService): Observable<{}> {
+        // deletion is not supported on Collections
+        return of({});
     }
 }

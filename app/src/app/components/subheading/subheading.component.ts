@@ -1,5 +1,4 @@
 import { Component, EventEmitter, Input, OnInit, Output, ViewEncapsulation } from '@angular/core';
-import { StixObject } from 'src/app/classes/stix/stix-object';
 import { SidebarService } from 'src/app/services/sidebar/sidebar.service';
 import { StixViewConfig } from 'src/app/views/stix/stix-view-page';
 import { EditorService } from 'src/app/services/editor/editor.service';
@@ -37,6 +36,6 @@ export class SubheadingComponent implements OnInit {
     constructor(private sidebarService: SidebarService, private editorService: EditorService) { }
 
     ngOnInit(): void {
+        // intentionally left blank
     }
-
 }

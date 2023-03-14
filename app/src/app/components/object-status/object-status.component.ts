@@ -18,12 +18,11 @@ import { ConfirmationDialogComponent } from '../confirmation-dialog/confirmation
     encapsulation: ViewEncapsulation.None
 })
 export class ObjectStatusComponent implements OnInit {
-
+    @ViewChild("objectStatus", {static: false}) public popover: PopoverContentComponent;
     public loaded: boolean = false;
     public statusControl: FormControl;
     public select: SelectionModel<string>;
     public workflows: string[] = ["none", "work-in-progress", "awaiting-review", "reviewed"];
-    @ViewChild("objectStatus", {static: false}) public popover: PopoverContentComponent;
     public objects: StixObject[];
     public object: StixObject;
     public relationships = [];
@@ -38,7 +37,6 @@ export class ObjectStatusComponent implements OnInit {
 
     ngOnInit(): void {
         this.statusControl = new FormControl();
-        // this.loadData();
     }
 
     public loadData() {

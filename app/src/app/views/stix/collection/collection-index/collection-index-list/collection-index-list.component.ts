@@ -3,13 +3,12 @@ import { CollectionIndex} from 'src/app/classes/collection-index';
 import * as moment from 'moment';
 import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/rest-api-connector.service';
 import { Observable } from 'rxjs';
-import { StixObject } from 'src/app/classes/stix/stix-object';
 
 @Component({
-  selector: 'app-collection-index-list',
-  templateUrl: './collection-index-list.component.html',
-  styleUrls: ['./collection-index-list.component.scss'],
-  encapsulation: ViewEncapsulation.None
+    selector: 'app-collection-index-list',
+    templateUrl: './collection-index-list.component.html',
+    styleUrls: ['./collection-index-list.component.scss'],
+    encapsulation: ViewEncapsulation.None
 })
 export class CollectionIndexListComponent implements OnInit {
 

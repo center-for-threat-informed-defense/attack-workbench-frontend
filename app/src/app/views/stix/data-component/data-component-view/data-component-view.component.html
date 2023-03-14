@@ -4,13 +4,14 @@
             <app-name-property [config]="{
                 mode: editing? 'edit' : 'view',
                 object: data_component,
-                parent: data_component.data_source
-            }"></app-name-property>
+                parent: data_component.data_source}">
+            </app-name-property>
             <app-subheading [config]="{
                 mode: editing? 'edit' : 'view',
-                object: data_component
-            }" (onOpenHistory)="openHistory()"
-                (onOpenNotes)="openNotes()"></app-subheading>
+                object: data_component}"
+                (onOpenHistory)="openHistory()"
+                (onOpenNotes)="openNotes()">
+            </app-subheading>
         </div>
     </div>
     <div class="row">
@@ -20,8 +21,7 @@
                 mode: editing? 'edit': 'view',
                 object: data_component,
                 field: 'domains',
-                editType: 'select',
-                disabled: true
+                editType: 'select'
             }"></app-list-property>
         </div>
         <div class="col">
@@ -41,8 +41,8 @@
                 field: 'description',
                 firstParagraphOnly: false, 
                 referencesField: data_component.external_references,
-                label: 'Description'
-            }"></app-descriptive-property>
+                label: 'Description'}">
+            </app-descriptive-property>
         </div>
     </div>
     <!-- only show relationships if configured to show them -->
@@ -58,8 +58,8 @@
                     label: 'technique',
                     relationship_type: 'detects',
                     source_object: data_component,
-                    dialog: config.dialog? config.dialog : null
-                }"></app-add-relationship-button>
+                    dialog: config.dialog? config.dialog : null}">
+                </app-add-relationship-button>
             </div>
         </div>
         <div class="row">
@@ -73,9 +73,9 @@
                         'icon': 'open_in_new',
                         'tooltip': 'view relationship',
                         'position': 'end'
-                    } : null
-                }"
-                (onRowAction)="viewRelationship($event)"></app-stix-list>
+                    } : null}"
+                    (onRowAction)="viewRelationship($event)">
+                </app-stix-list>
             </div>
         </div>
     </div>
@@ -91,8 +91,8 @@
                 <app-external-references-property [config]="{
                     mode: editing? 'edit': 'view',
                     object: data_component,
-                    referencesField: data_component.external_references
-                }"></app-external-references-property>
+                    referencesField: data_component.external_references}">
+                </app-external-references-property>
             </div>
         </div>
     </div>

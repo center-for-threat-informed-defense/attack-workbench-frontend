@@ -45,14 +45,14 @@ export class DataSourceViewComponent extends StixViewPage implements OnInit {
 
     public createDataComponent(): void {
         let data_component = new DataComponent();
-        data_component.data_source_ref = this.data_source.stixID;
-        data_component.data_source = this.data_source;
-        data_component.workflow = undefined;
+        data_component.set_data_source_ref(this.data_source);
+
         let prompt = this.dialog.open(StixDialogComponent, {
             data: {
                 object: data_component,
                 editable: true,
                 mode: "edit",
+                is_new: true,
                 sidebarControl: "events"
             },
             maxHeight: "75vh"

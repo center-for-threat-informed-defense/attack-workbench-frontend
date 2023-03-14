@@ -39,6 +39,10 @@ export class ListEditComponent implements OnInit, AfterContentChecked {
     // prevent async issues
     private sub: Subscription = new Subscription();
 
+    // domain & tactic selection state
+    private domainState: string[];
+    private tacticState: Tactic[];
+
     public fieldToStix = {
         "platforms": "x_mitre_platforms",
         "tactic_type": "x_mitre_tactic_type",
@@ -54,13 +58,13 @@ export class ListEditComponent implements OnInit, AfterContentChecked {
         "ics-attack"
     ]
 
-    constructor(public dialog: MatDialog, private restAPIConnectorService: RestApiConnectorService, private ref: ChangeDetectorRef) {
-        // intentionally left blank
-    }
-
     public get values() {
         if (this.config.field == "aliases") return this.config.object[this.config.field].slice(1); // filter out the first alias
         return this.config.object[this.config.field];
+    }
+
+    constructor(public dialog: MatDialog, private restAPIConnectorService: RestApiConnectorService, private ref: ChangeDetectorRef) {
+        // intentionally left blank
     }
 
     ngOnInit(): void {
@@ -86,9 +90,9 @@ export class ListEditComponent implements OnInit, AfterContentChecked {
                 });
             }
         }
-        else if (this.config.field == 'defense_bypassed') { } //any
-        else if (this.config.field == 'system_requirements') { } //any
-        else if (this.config.field == 'contributors') { } //any
+        else if (this.config.field == 'defense_bypassed' || this.config.field == 'system_requirements' || this.config.field == 'contributors') {
+            //any
+        }
         else if (this.config.field == 'tactics') {
             this.type = 'tactic';
             let subscription = this.restAPIConnectorService.getAllTactics().subscribe({
@@ -144,10 +148,9 @@ export class ListEditComponent implements OnInit, AfterContentChecked {
     private shortnameToTactic(domains: string[]): Tactic[] {
         let allObjects = this.allObjects as Tactic[];
         let tactics = this.config.object[this.config.field].map(shortname => {
-            let tactic = allObjects.find(tactic => {
+            return allObjects.find(tactic => {
                 return tactic.shortname == shortname && this.tacticInDomain(tactic, domains)
             });
-            return tactic;
         })
         return tactics;
     }
@@ -160,8 +163,6 @@ export class ListEditComponent implements OnInit, AfterContentChecked {
     }
 
     /** Update current stix-list selection on domain change */
-    private domainState: string[];
-    private tacticState: Tactic[];
     public selectedValues(): string[] {
         if (!this.dataLoaded) return null;
 
@@ -207,7 +208,7 @@ export class ListEditComponent implements OnInit, AfterContentChecked {
         if (!this.dataLoaded) {
             this.selectControl.disable();
             return null;
-        };
+        }
 
         // filter values
         let values: string[] = [];
@@ -330,8 +331,8 @@ export class ListEditComponent implements OnInit, AfterContentChecked {
                     // reset tactic selection state
                     this.tacticState = [];
                     let allObjects = this.allObjects as Tactic[];
-                    let tactics = this.select.selected.map(tacticID => allObjects.find(tactic => tactic.stixID == tacticID));
-                    tactics.forEach(tactic => this.tacticState.push(tactic));
+                    let tactic_selection = this.select.selected.map(tacticID => allObjects.find(tactic => tactic.stixID == tacticID));
+                    tactic_selection.forEach(tactic => this.tacticState.push(tactic));
                 } else if (result && this.config.field == 'parentTechnique') {
                     let allObjects = this.allObjects as Technique[];
                     this.config.object[this.config.field] = this.select.selected.length > 0 ? allObjects.find(t => t.stixID === this.select.selected[0]) : null;

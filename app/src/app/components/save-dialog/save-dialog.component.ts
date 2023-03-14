@@ -7,7 +7,7 @@ import { VersionNumber } from 'src/app/classes/version-number';
 import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/rest-api-connector.service';
 import { Relationship } from '../../classes/stix/relationship';
 import { Technique } from '../../classes/stix/technique';
-import { map, switchMap } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-save-dialog',

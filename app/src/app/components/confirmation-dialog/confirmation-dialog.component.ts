@@ -11,6 +11,7 @@ export class ConfirmationDialogComponent implements OnInit {
     constructor(public dialogRef: MatDialogRef<ConfirmationDialogComponent>, @Inject(MAT_DIALOG_DATA) public config: ConfirmationDialogConfig) { }
 
     ngOnInit(): void {
+        // intentionally left blank
     }
 
 }

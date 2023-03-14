@@ -22,13 +22,19 @@ import { animate, style, transition, trigger } from '@angular/animations';
 })
 export class AliasViewComponent implements OnInit {
     @Input() public config: AliasPropertyConfig;
-
     private reReference = /\(Citation: (.*?)\)/gmu;
     public showMore: boolean = false;
+
     public toggleMore(): void { this.showMore = !this.showMore; }
 
-    public get wrap() {
-        return this.config.hasOwnProperty('wrap') ? this.config.wrap : true;
+    public get wrap() { return this.config.hasOwnProperty('wrap') ? this.config.wrap : true; }
+
+    constructor() {
+        // intentionally left blank
+    }
+
+    ngOnInit(): void {
+        // intentionally left blank
     }
 
     /**
@@ -39,8 +45,8 @@ export class AliasViewComponent implements OnInit {
         if (this.config.referencesField) {
             let value: string;
             let aliasArray: Array<string> = [];
-            let arraySize = aliases.length;
 
+            let arraySize = aliases.length;
             for (value of aliases) {
                 let alias = value;
                 if (this.config.object[this.config.referencesField].hasValue(value)) {
@@ -195,10 +201,4 @@ export class AliasViewComponent implements OnInit {
         }
         return false;
     }
-
-    constructor() { }
-
-    ngOnInit(): void {
-    }
-
 }
