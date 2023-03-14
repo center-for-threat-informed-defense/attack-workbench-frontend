@@ -12,6 +12,7 @@ import { StixObject } from 'src/app/classes/stix/stix-object';
 import { StixDialogComponent } from 'src/app/views/stix/stix-dialog/stix-dialog.component';
 import { Paginated, RestApiConnectorService } from 'src/app/services/connectors/rest-api/rest-api-connector.service';
 import { AuthenticationService } from 'src/app/services/connectors/authentication/authentication.service';
+import { SidebarService } from 'src/app/services/sidebar/sidebar.service';
 
 @Component({
     selector: 'app-stix-list',
@@ -110,7 +111,8 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
     constructor(public dialog: MatDialog, 
                 private restAPIConnectorService: RestApiConnectorService, 
                 private router: Router, 
-                private authenticationService: AuthenticationService) { }
+                private authenticationService: AuthenticationService,
+                private sidebarService: SidebarService) { }
 
     ngOnInit(): void {
         // build query options for platforms
@@ -334,9 +336,14 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
             controls_before.unshift("select") // add select column to view
         }
 
-        // open-link icon setup
+        // open-dialog icon setup
         if (this.config.clickBehavior && this.config.clickBehavior == "dialog") {
-            controls_after.push("open-link")
+            controls_after.push("open-dialog")
+        }
+
+        // open-link icon setup
+        if (this.config.clickBehavior && this.config.clickBehavior == "linkToObjectRef") {
+          controls_after.push("open-link")
         }
 
         // row action setup
@@ -450,6 +457,9 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
           let object_ref = element['object_refs'][0];
           // Get type to navigate from target_ref
           let type = this.typeMap[object_ref.split('--')[0]];
+
+          this.sidebarService.opened = true;
+          this.sidebarService.currentTab = 'notes';
           this.router.navigateByUrl('/'+ type + '/' + object_ref);
       }
         else { //expand

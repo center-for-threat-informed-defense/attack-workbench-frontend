@@ -83,6 +83,11 @@
                     .light & { background: color(light); border-color: border-color(light); }
                     .dark &  { background: color(dark); border-color: border-color(dark); }
                 } 
+                td {
+                  mat-icon {
+                    cursor: pointer;
+                  }
+                }
                 th {
                     font-size: 20px;
                     @extend .text-label;
