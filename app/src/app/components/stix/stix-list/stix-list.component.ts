@@ -774,6 +774,7 @@ export interface StixListConfig {
      *     "dialog": open a dialog with the full object definition
      *     "linkToSourceRef": clicking redirects to the source ref object
      *     "linkToTargetRef": clicking redirects user to target ref object
+     *     "linkToObjectRef": clicking redirects user to first object in the object ref array
      *     "none": row is not clickable
      */
     clickBehavior?: "expand" | "dialog" | "linkToSourceRef" | "linkToTargetRef" | "linkToObjectRef" | "none";
