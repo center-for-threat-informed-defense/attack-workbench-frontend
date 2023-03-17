@@ -90,15 +90,23 @@
                     </td>
                 </ng-container>
 
-                <!-- open in new icon column (for relationships) -->
-                <ng-container matColumnDef="open-link" stickyEnd>
-                    <th mat-header-cell *matHeaderCellDef>
-                        <!-- nothing in header -->
-                    </th>
+                <!-- open new dialog icon column (for relationships) -->
+                <ng-container matColumnDef="open-dialog" stickyEnd>
+                    <th mat-header-cell *matHeaderCellDef></th> <!-- nothing in header -->
                     <td mat-cell *matCellDef="let element" class="icon-cell">
-                        <mat-icon aria-hidden="false" aria-label="open">open_in_new</mat-icon>
+                        <mat-icon aria-hidden="false" aria-label="open-dialog"
+                          matTooltip="View object in dialog box">open_in_new</mat-icon>
                     </td>
                 </ng-container>
+
+                <!-- open link icon column (for notes) -->
+                <ng-container matColumnDef="open-link" stickyEnd>
+                  <th mat-header-cell *matHeaderCellDef></th> <!-- nothing in header -->
+                  <td mat-cell *matCellDef="let element" class="icon-cell">
+                      <mat-icon aria-hidden="false" aria-label="open-link"
+                        matTooltip="View object page">open_in_browser</mat-icon>
+                  </td>
+              </ng-container>
     
                 <!-- expanded content formatting -->
                 <ng-container matColumnDef="expandedDetail">

@@ -187,6 +187,8 @@ import { MarkingDefinitionListComponent } from "./views/stix/marking-definition/
 import { CampaignViewComponent } from './views/stix/campaign/campaign-view/campaign-view.component';
 import { CampaignListComponent } from './views/stix/campaign/campaign-list/campaign-list.component';
 
+import { NotesSearchListComponent } from './views/notes-page/notes-search-list/notes-search-list.component';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -304,7 +306,8 @@ import { CampaignListComponent } from './views/stix/campaign/campaign-list/campa
     CampaignListComponent,
     CitationPropertyComponent,
     CitationViewComponent,
-    CitationEditComponent
+    CitationEditComponent,
+    NotesSearchListComponent
   ],
   imports: [
     BreadcrumbModule,

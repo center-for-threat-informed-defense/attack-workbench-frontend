@@ -20,6 +20,7 @@ import { NgModule } from '@angular/core';
 import { environment } from "../environments/environment"
 import { AuthorizationGuard } from "./services/helpers/authorization.guard";
 import { Role } from "./classes/authn/role";
+import { NotesSearchListComponent } from "./views/notes-page/notes-search-list/notes-search-list.component";
 
 var viewRoles = [Role.VISITOR, Role.EDITOR, Role.ADMIN];
 var editRoles = [Role.EDITOR, Role.ADMIN];
@@ -497,7 +498,7 @@ const stixRoutes: Routes = [{
         ]
     }
     ]
-}
+  }
 ]
 
 if (environment.integrations.collection_manager.enabled) {
@@ -604,6 +605,28 @@ stixRoutes.push(
         ]
     }
 )
+
+
+stixRoutes.push(
+  {
+    path: 'notes',
+    canActivateChild: [AuthorizationGuard],
+    data: {
+      breadcrumb: 'notes',
+      more: true
+    },
+    children: [{
+        path: '',
+        data: {
+          breadcrumb: 'list',
+          title: "Notes Search",
+          roles: editRoles
+        },
+        component: NotesSearchListComponent
+      }
+    ]
+  }
+);
 
 @NgModule({
     imports: [
