@@ -12,6 +12,7 @@ import { StixObject } from 'src/app/classes/stix/stix-object';
 import { StixDialogComponent } from 'src/app/views/stix/stix-dialog/stix-dialog.component';
 import { Paginated, RestApiConnectorService } from 'src/app/services/connectors/rest-api/rest-api-connector.service';
 import { AuthenticationService } from 'src/app/services/connectors/authentication/authentication.service';
+import { SidebarService } from 'src/app/services/sidebar/sidebar.service';
 
 @Component({
     selector: 'app-stix-list',
@@ -110,7 +111,8 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
     constructor(public dialog: MatDialog, 
                 private restAPIConnectorService: RestApiConnectorService, 
                 private router: Router, 
-                private authenticationService: AuthenticationService) { }
+                private authenticationService: AuthenticationService,
+                private sidebarService: SidebarService) { }
 
     ngOnInit(): void {
         // build query options for platforms
@@ -294,6 +296,12 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
                         "display": "descriptive"
                     }]
                     break;
+                case "note":
+                    this.addColumn("title", "title", "plain");
+                    this.addColumn("content", "content", "plain");
+                    this.addColumn("modified","modified", "timestamp");
+                    this.addColumn("created", "created", "timestamp");
+                    break;
                 default:
                     this.addColumn("type", "attackType", "plain");
                     this.addColumn("modified","modified", "timestamp");
@@ -328,9 +336,14 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
             controls_before.unshift("select") // add select column to view
         }
 
-        // open-link icon setup
+        // open-dialog icon setup
         if (this.config.clickBehavior && this.config.clickBehavior == "dialog") {
-            controls_after.push("open-link")
+            controls_after.push("open-dialog")
+        }
+
+        // open-link icon setup
+        if (this.config.clickBehavior && this.config.clickBehavior == "linkToObjectRef") {
+          controls_after.push("open-link")
         }
 
         // row action setup
@@ -408,23 +421,23 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
     public rowClick(element: StixObject) {
         if (this.config.clickBehavior && this.config.clickBehavior == "none") return;
         if (this.config.clickBehavior && this.config.clickBehavior == "dialog") { //open modal
-            let prompt = this.dialog.open(StixDialogComponent, {
-                data: {
-                    object: element,
-                    editable: this.config.allowEdits,
-                    sidebarControl: this.config.allowEdits? "events" : "disable"
-                },
-                maxHeight: "75vh"
-            })
-            let subscription = prompt.afterClosed().subscribe({
-                next: result => {
-                    if (prompt.componentInstance.dirty) { //re-fetch values since an edit occurred
-                        this.applyControls();
-                        this.refresh.emit();
-                    }
-                },
-                complete: () => { subscription.unsubscribe(); }
-            });
+          let prompt = this.dialog.open(StixDialogComponent, {
+              data: {
+                  object: element,
+                  editable: this.config.allowEdits,
+                  sidebarControl: this.config.allowEdits? "events" : "disable"
+              },
+              maxHeight: "75vh"
+          })
+          let subscription = prompt.afterClosed().subscribe({
+              next: result => {
+                  if (prompt.componentInstance.dirty) { //re-fetch values since an edit occurred
+                      this.applyControls();
+                      this.refresh.emit();
+                  }
+              },
+              complete: () => { subscription.unsubscribe(); }
+          });
         }
         else if (this.config.clickBehavior && this.config.clickBehavior == "linkToSourceRef") {
             let source_ref = element['source_ref'];
@@ -437,9 +450,18 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
             let target_ref = element['target_ref'];
             // Get type to navigate from target_ref
             let type = this.typeMap[target_ref.split('--')[0]];
-
             this.router.navigateByUrl('/'+ type + '/' + target_ref);
         }
+        else if (this.config.clickBehavior && this.config.clickBehavior == "linkToObjectRef") {
+          // technically a note can be linked to many objects, we will select the first object
+          let object_ref = element['object_refs'][0];
+          // Get type to navigate from target_ref
+          let type = this.typeMap[object_ref.split('--')[0]];
+
+          this.sidebarService.opened = true;
+          this.sidebarService.currentTab = 'notes';
+          this.router.navigateByUrl('/'+ type + '/' + object_ref);
+      }
         else { //expand
             this.expandedElement = this.expandedElement === element ? null : element;
         }
@@ -683,6 +705,7 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
             else if (this.config.type == "data-source") this.data$ = this.restAPIConnectorService.getAllDataSources(options);
             else if (this.config.type == "data-component") this.data$ = this.restAPIConnectorService.getAllDataComponents(options);
             else if (this.config.type == "marking-definition") this.data$ = this.restAPIConnectorService.getAllMarkingDefinitions(options);
+            else if (this.config.type == "note") this.data$ = this.restAPIConnectorService.getAllNotes(options);
             let subscription = this.data$.subscribe({
                 next: (data) => { this.totalObjectCount = data.pagination.total; },
                 complete: () => { subscription.unsubscribe() }
@@ -710,7 +733,7 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
 }
 
 //allowed types for StixListConfig
-type type_attacktype = "collection" | "campaign" | "group" | "matrix" | "mitigation" | "software" | "tactic" | "technique" | "relationship" | "data-source" | "data-component" | "marking-definition";
+type type_attacktype = "collection" | "campaign" | "group" | "matrix" | "mitigation" | "software" | "tactic" | "technique" | "relationship" | "data-source" | "data-component" | "marking-definition"  | "note";
 type selection_types = "one" | "many" | "disabled"
 export interface StixListConfig {
     /* if specified, shows the given STIX objects in the table instead of loading from the back-end based on other configurations. */
@@ -751,9 +774,10 @@ export interface StixListConfig {
      *     "dialog": open a dialog with the full object definition
      *     "linkToSourceRef": clicking redirects to the source ref object
      *     "linkToTargetRef": clicking redirects user to target ref object
+     *     "linkToObjectRef": clicking redirects user to first object in the object ref array
      *     "none": row is not clickable
      */
-    clickBehavior?: "expand" | "dialog" | "linkToSourceRef" | "linkToTargetRef" | "none";
+    clickBehavior?: "expand" | "dialog" | "linkToSourceRef" | "linkToTargetRef" | "linkToObjectRef" | "none";
     /**
      * Default false. If true, allows for edits of the objects in the table
      * when in dialog mode

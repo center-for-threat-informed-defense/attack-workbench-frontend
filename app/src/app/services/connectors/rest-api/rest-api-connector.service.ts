@@ -619,7 +619,7 @@ export class RestApiConnectorService extends ApiConnector {
     /**
      * Factory to create a new STIX object creator (POST) function
      * @template T the type to create
-     * @param {AttackType} attackType tehe type to create
+     * @param {AttackType} attackType the type to create
      * @returns creator (POST) function
      */
     private postStixObjectFactory<T extends StixObject>(attackType: AttackType) {
