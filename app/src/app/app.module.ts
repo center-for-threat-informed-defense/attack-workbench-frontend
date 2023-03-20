@@ -113,6 +113,8 @@ import { VersionViewComponent } from "./components/stix/version-property/version
 
 import { NamePropertyComponent } from "./components/stix/name-property/name-property.component";
 
+import { StringPropertyComponent } from './components/stix/string-property/string-property.component';
+
 import { DatepickerPropertyComponent } from './components/stix/datepicker-property/datepicker-property.component';
 
 import { AliasPropertyComponent } from './components/stix/alias-property/alias-property.component';
@@ -230,6 +232,7 @@ import { NotesSearchListComponent } from './views/notes-page/notes-search-list/n
     StatementPropertyComponent,
     StatementViewComponent,
     StatementEditComponent,
+    StringPropertyComponent,
     TlpPropertyComponent,
     TlpViewComponent,
     TlpEditComponent,
