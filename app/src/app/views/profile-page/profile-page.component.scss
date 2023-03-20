@@ -7,12 +7,13 @@
     }
     .display-name {
         margin-top: 0;
-        margin-bottom: 12px;
+        margin-bottom: 8px;
     }
     .profile-subheader {
         @extend .text-label;
         @extend .text-deemphasis;
         text-align: center;
         text-transform: uppercase;
+        margin-bottom: 20px;
     }
 }

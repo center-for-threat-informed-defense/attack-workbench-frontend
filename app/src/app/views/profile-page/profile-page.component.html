@@ -1,4 +1,4 @@
-<div class="profile-page view-page grid spacing-16">
+<div class="profile-page view-page grid spacing-12">
     <!-- jdenticon -->
     <div class="row">
         <div class="col">
@@ -20,6 +20,32 @@
             humanize: true,
             tooltip: true
         }"></app-timestamp-view>
+    </div>
+    <div class="row">
+        <div class="col">
+            <!-- username -->
+            <app-string-property class="grow-to-row" [config]="{
+                mode: 'view',
+                object: user,
+                field: 'username'
+            }"></app-string-property>
+        </div>
+        <div class="col">
+            <!-- display name -->
+            <app-string-property class="grow-to-row" [config]="{
+                mode: 'view',
+                object: user,
+                field: 'displayName'
+            }"></app-string-property>
+        </div>
+        <div class="col">
+            <!-- email -->
+            <app-string-property class="grow-to-row" [config]="{
+                mode: 'view',
+                object: user,
+                field: 'email'
+            }"></app-string-property>
+        </div>
     </div>
     <!-- user's recent activity -->
     <ng-container *ngIf="canEdit">
