@@ -1,6 +1,8 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { TimestampPropertyConfig } from '../timestamp-property.component';
 import * as moment from 'moment';
+import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/rest-api-connector.service';
+import { Subscription } from 'rxjs';
 
 @Component({
     selector: 'app-timestamp-view',
@@ -11,13 +13,25 @@ export class TimestampViewComponent implements OnInit {
     @Input() public config: TimestampPropertyConfig;
 
     private _humanized: string = null;
+    private userSubscription$: Subscription;
+    username: string = '';
 
-    constructor() {
+    constructor(private restAPIConnector: RestApiConnectorService) {
         // intentionally left blank
     }
 
     ngOnInit(): void {
-        // intentionally left blank
+      if (this.config.displayCreatorUsernameWithTimestamp) {
+        const object = Array.isArray(this.config.object) ? this.config.object[0] : this.config.object;
+        const createdByAccountId = object.workflow.created_by_user_account;
+        this.userSubscription$ = this.restAPIConnector.getUserAccount(createdByAccountId).subscribe({
+          next: (response) => {
+            this.username = response.username;
+            console.log(this.username);
+          },
+          complete: () => this.userSubscription$.unsubscribe(),
+        });
+      }
     }
     
     /**

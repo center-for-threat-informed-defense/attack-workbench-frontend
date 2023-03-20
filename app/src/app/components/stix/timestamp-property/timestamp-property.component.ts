@@ -50,4 +50,8 @@ export interface TimestampPropertyConfig {
     */
     attribution?: string;
     displayName?: boolean;
+    /*
+      if true, the username of the user who created the object will be displayed before the timestamp.
+    */
+    displayCreatorUsernameWithTimestamp?: boolean;
 }
