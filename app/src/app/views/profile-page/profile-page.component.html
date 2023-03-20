@@ -47,7 +47,7 @@
             }"></app-string-property>
         </div>
     </div>
-    <!-- user's recent activity -->
+    <!-- recent activity -->
     <ng-container *ngIf="canEdit">
         <div class="row">
             <div class="col">
@@ -56,10 +56,7 @@
         </div>
         <div class="row">
             <div class="col">
-                <app-stix-list *ngIf="!reload" [config]="{
-                    stixObjects: recentActivity ? recentActivity : data$,
-                    clickBehavior: 'dialog'
-                }"></app-stix-list>
+                <app-recent-activity [identity]="user"></app-recent-activity>
             </div>
         </div>
     </ng-container>
