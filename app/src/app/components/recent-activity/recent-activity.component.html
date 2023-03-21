@@ -45,6 +45,9 @@
                     }"></app-timestamp-view>
                 </button>
             </ng-container>
+            <div class="view-more" *ngIf="allRecentActivity.length > recentActivity.length">
+                <a (click)="showMore()" class="external-link">more</a>
+            </div>
         </mat-action-list>
     </ng-template>
 </div>
