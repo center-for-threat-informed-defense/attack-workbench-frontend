@@ -114,6 +114,12 @@ export class RecentActivityComponent implements OnInit {
         this.recentActivity = this.allRecentActivity.slice(0, this.recentActivity.length + 5);
     }
 
+    /** show less activity */
+    public showLess(): void {
+        let end = this.recentActivity.length - 5 < 5 ? 5 : this.recentActivity.length - 5;
+        this.recentActivity = this.allRecentActivity.slice(0, end);
+    }
+
     /** redirect to object page */
     public open(event): void {
         if (event.sdo.attackType == 'note') {
