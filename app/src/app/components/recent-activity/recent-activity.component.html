@@ -1,7 +1,7 @@
 <div class="recent-activity">
-    <app-loading-overlay *ngIf="loading; else activityList"></app-loading-overlay>
-    <ng-template #activityList>
-        <mat-action-list>
+    <app-loading-overlay *ngIf="loading; else userActivity"></app-loading-overlay>
+    <ng-template #userActivity>
+        <mat-action-list *ngIf="allRecentActivity.length > 0; else noActivity">
             <ng-container *ngFor="let activity of recentActivity">
                 <button mat-list-item class="activity-event"
                         (click)="isRelationship(activity) ? preview(activity) : open(activity)"
@@ -49,5 +49,10 @@
                 <a (click)="showMore()" class="external-link">more</a>
             </div>
         </mat-action-list>
+        <app-empty-list-marker #noActivity 
+            class="no-activity"
+            message="no recent activity"
+            (onCheckAgain)="loadActivity()">
+        </app-empty-list-marker>
     </ng-template>
 </div>
