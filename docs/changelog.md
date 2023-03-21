@@ -39,6 +39,7 @@
 #### Fixes in 1.3.1
 -   Fixed an issue where assigning an existing technique as a sub-technique would not create a `subtechnique-of` relationship. See [frontend#446](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/446).
 -   Added new `/notes` route where users can search notes based on note content or title. Clicking a row in the table directs the user to the object the note was created on.  See [frontend#176](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/175).
+- Added new `displayCreatorUsernameWithTimestamp` option for the timestamp view.  Defaults to `false`, if set to `true` the username of the user who created the object for which the timestamp is displayed will be displayed in bold before the timestamp.
 
 ## 8 March 2023
 
