@@ -27,7 +27,8 @@ interface ActivityEvent {
 })
 export class RecentActivityComponent implements OnInit {
     @Input() public identity: UserAccount;
-    public recentActivity: ActivityEvent[] = [];
+    public allRecentActivity: ActivityEvent[] = [];
+    public recentActivity: ActivityEvent[];
     public loading: boolean = false;
     public hoveredEvent: ActivityEvent = null;
 
@@ -61,7 +62,7 @@ export class RecentActivityComponent implements OnInit {
     }
 
     /**
-     * Transform the objects into ActivityEvent objects and add them to the recentActivity array
+     * Transform the objects into ActivityEvent objects and add them to the allRecentActivity array
      */
     private parseActivity(allObjects: StixObject[]): void {
         let activity = [];
@@ -90,10 +91,10 @@ export class RecentActivityComponent implements OnInit {
             } else if (stixObject.type == "note") {
                 objectName = (stixObject as Note).title;
             } else {
-                objectName = stixObject["name"] + (stixObject.supportsAttackID ? ` (${stixObject["attackID"]})` : '');
+                objectName = stixObject["name"] + (stixObject.supportsAttackID && stixObject.attackID ? ` (${stixObject["attackID"]})` : '');
             }
 
-            this.recentActivity.push({
+            this.allRecentActivity.push({
                 icon: objectCreated ? (stixObject.type == "note" ? "sticky_note_2" : "add") : "edit",
                 name: objectName,
                 sdo: stixObject,
@@ -104,7 +105,13 @@ export class RecentActivityComponent implements OnInit {
         }
 
         // ensure that the stix objects are sorted in ascending order of date
-        this.recentActivity.sort((a, b) => (b.sdo.modified as any) - (a.sdo.modified as any));
+        this.allRecentActivity.sort((a, b) => (b.sdo.modified as any) - (a.sdo.modified as any));
+        this.recentActivity = this.allRecentActivity.slice(0, 5);
+    }
+
+    /** show more activity */
+    public showMore(): void {
+        this.recentActivity = this.allRecentActivity.slice(0, this.recentActivity.length + 5);
     }
 
     /** redirect to object page */

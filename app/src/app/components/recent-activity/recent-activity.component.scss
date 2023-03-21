@@ -32,4 +32,10 @@
             padding-left: 16px;
         }
     }
+    .view-more {
+        text-align: center;
+        .external-link {
+            cursor: pointer;
+        }
+    }
 }
