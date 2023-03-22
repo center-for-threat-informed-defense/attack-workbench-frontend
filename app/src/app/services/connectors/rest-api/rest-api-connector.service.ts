@@ -114,7 +114,7 @@ export class RestApiConnectorService extends ApiConnector {
         } else if (object.type == "note") {
             return object["title"];
         } else if ("name" in object) {
-            return object["name"];
+            return object["name"] as string;
         } else if (object["attackID"]) {
             return object["attackID"];
         } else {
@@ -1537,7 +1537,7 @@ export class RestApiConnectorService extends ApiConnector {
      */
     public postUserAccount(userAccount: UserAccount): Observable<UserAccount> {
         let url = `${this.baseUrl}/user-accounts/${userAccount.id}`;
-        return this.http.post<UserAccount>(url, userAccount).pipe(
+        return this.http.post<UserAccount>(url, userAccount.serialize()).pipe(
             catchError(this.handleError_raise<UserAccount>()),
             share() // multicast to subscribers
         )
@@ -1550,7 +1550,7 @@ export class RestApiConnectorService extends ApiConnector {
      */
     public putUserAccount(userAccount: UserAccount): Observable<UserAccount> {
         let url = `${this.baseUrl}/user-accounts/${userAccount.id}`;
-        return this.http.put<UserAccount>(url, userAccount).pipe(
+        return this.http.put<UserAccount>(url, userAccount.serialize()).pipe(
             catchError(this.handleError_raise<UserAccount>()),
             share() // multicast to subscribers
         )
