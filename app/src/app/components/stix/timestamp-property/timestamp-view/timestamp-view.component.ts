@@ -14,7 +14,7 @@ export class TimestampViewComponent implements OnInit {
 
     private _humanized: string = null;
     private userSubscription$: Subscription;
-    username: string = '';
+    displayName: string = '';
 
     constructor(private restAPIConnector: RestApiConnectorService) {
         // intentionally left blank
@@ -24,10 +24,13 @@ export class TimestampViewComponent implements OnInit {
       if (this.config.displayCreatorUsernameWithTimestamp) {
         const object = Array.isArray(this.config.object) ? this.config.object[0] : this.config.object;
         const createdByAccountId = object.workflow.created_by_user_account;
+        if (!createdByAccountId) { 
+          // createdByAccountId does not exist
+          return; 
+        }
         this.userSubscription$ = this.restAPIConnector.getUserAccount(createdByAccountId).subscribe({
           next: (response) => {
-            this.username = response.username;
-            console.log(this.username);
+            this.displayName = response.displayName;
           },
           complete: () => this.userSubscription$.unsubscribe(),
         });
