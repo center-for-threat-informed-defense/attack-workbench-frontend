@@ -97,18 +97,16 @@ export class UserAccountsPageComponent implements OnInit {
         }
     }
 
-    public updateUserRole(userAcc: UserAccount, newRole: string): void {
+    public updateUserRole(userAccount: UserAccount, newRole: string): void {
         newRole = newRole.toUpperCase();
-        if (Role[`${newRole}`]) {
-            const subscription = this.restAPIConnector.getUserAccount(userAcc.id).subscribe({
-                next: (r) => {
-                    const user = r;
-                    user.role = Role[`${newRole}`];
-                    // update user status based on active roles
-                    if (this.authenticationService.activeRoles.includes(user.role)) user.status = Status.ACTIVE;
-                    if (this.authenticationService.inactiveRoles.includes(user.role)) user.status = Status.INACTIVE;
-                    new UserAccount(user).save(this.restAPIConnector);
-                },
+        if (Role[newRole]) {
+            let user = new UserAccount(userAccount);
+            user.role = Role[newRole];
+
+            // update user status based on active roles
+            user.status = this.authenticationService.activeRoles.includes(user.role) ? Status.ACTIVE : Status.INACTIVE;
+
+            const subscription = user.save(this.restAPIConnector).subscribe({
                 complete: () => {
                     this.applyControls(); // refresh list
                     subscription.unsubscribe();
@@ -117,17 +115,16 @@ export class UserAccountsPageComponent implements OnInit {
         }
     }
 
-    public updateUserStatus(userAcc: UserAccount, newStatus: string): void {
+    public updateUserStatus(userAccount: UserAccount, newStatus: string): void {
         newStatus = newStatus.toUpperCase();
-        if (Status[`${newStatus}`]) {
-            const subscription = this.restAPIConnector.getUserAccount(userAcc.id).subscribe({
-                next: (r) => {
-                    const user = r;
-                    user.status = Status[`${newStatus}`];
-                    // update user role based on status
-                    if ([Status.INACTIVE, Status.PENDING].includes(user.status)) user.role = Role.NONE;
-                    new UserAccount(user).save(this.restAPIConnector);
-                },
+        if (Status[newStatus]) {
+            let user = new UserAccount(userAccount);
+            user.status = Status[newStatus];
+
+            // update user role based on status
+            if ([Status.INACTIVE, Status.PENDING].includes(user.status)) user.role = Role.NONE;
+
+            const subscription = user.save(this.restAPIConnector).subscribe({
                 complete: () => {
                     this.applyControls(); // refresh list
                     subscription.unsubscribe();
