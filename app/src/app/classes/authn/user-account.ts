@@ -64,7 +64,7 @@ export class UserAccount extends Serializable {
             else { logger.error('TypeError: username field is not a string:', raw.username, '(', typeof(raw.username), ')'); }
         } else { this.username = ''; }
 
-        if ('displayName' in raw) {
+        if ('displayName' in raw && raw.displayName) {
             if (typeof(raw.displayName) === 'string') { this._displayName = raw.displayName; }
             else { logger.error('TypeError: displayName field is not a string:', raw.displayName, '(', typeof(raw.displayName), ')'); }
         }
