@@ -33,6 +33,17 @@
             }"></app-version-property>
         </div>
     </div>
+    <div *ngIf="mitigation.securityControls.length || (editing && mitigation.domains.includes('ics-attack'))" class="row">
+        <div class="col">
+            <app-list-property class="grow-to-row" [config]="{
+                mode: editing? 'edit': 'view',
+                object: mitigation,
+                field: 'securityControls',
+                label: 'Security Controls',
+                editType: 'any'
+            }"></app-list-property>
+        </div>
+    </div>
     <div class="row">
         <div class="col">
             <!-- DESCRIPTION -->

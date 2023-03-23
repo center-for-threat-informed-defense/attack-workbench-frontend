@@ -35,7 +35,7 @@ export class Mitigation extends StixObject {
         rep.stix.x_mitre_domains = this.domains;
 
         // domain specific fields
-        if (this.domains.includes('ics-attack')) {
+        if (this.domains.includes('ics-attack') && this.securityControls.length > 0) {
             rep.stix.labels = this.securityControls;
         }
 
