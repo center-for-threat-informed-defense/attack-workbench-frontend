@@ -17,15 +17,6 @@
             }"></app-attackid-property>
         </div>
         <div class="col">
-            <!-- DOMAIN -->
-            <app-list-property class="grow-to-row" [config]="{
-                mode: editing? 'edit' : 'view',
-                object: mitigation,
-                field: 'domains',
-                editType: 'select'
-            }"></app-list-property>
-        </div>
-        <div class="col">
             <!-- VERSION NUMBER -->
             <app-version-property class="grow-to-row" [config]="{
                 mode: editing? 'edit' : 'view',
@@ -33,6 +24,18 @@
             }"></app-version-property>
         </div>
     </div>
+    <!-- DOMAIN -->
+    <div class="row">
+        <div class="col">
+            <app-list-property class="grow-to-row" [config]="{
+                mode: editing? 'edit' : 'view',
+                object: mitigation,
+                field: 'domains',
+                editType: 'select'
+            }"></app-list-property>
+        </div>
+    </div>
+    <!-- SECURITY CONTROLS-->
     <div *ngIf="mitigation.securityControls.length || (editing && mitigation.domains.includes('ics-attack'))" class="row">
         <div class="col">
             <app-list-property class="grow-to-row" [config]="{
