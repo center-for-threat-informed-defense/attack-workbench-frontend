@@ -3,6 +3,7 @@ import { TimestampPropertyConfig } from '../timestamp-property.component';
 import * as moment from 'moment';
 import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/rest-api-connector.service';
 import { Subscription } from 'rxjs';
+import { UserAccount } from 'src/app/classes/authn/user-account';
 
 @Component({
     selector: 'app-timestamp-view',
@@ -30,7 +31,8 @@ export class TimestampViewComponent implements OnInit {
         }
         this.userSubscription$ = this.restAPIConnector.getUserAccount(createdByAccountId).subscribe({
           next: (response) => {
-            this.displayName = response.displayName;
+            let user = new UserAccount(response);
+            this.displayName = user.displayName;
           },
           complete: () => this.userSubscription$.unsubscribe(),
         });

@@ -1,5 +1,5 @@
 <div class="app-timestamp-view">
-    <span *ngIf="config.displayCreatorUsernameWithTimestamp && displayName !== ''">
+    <span *ngIf="config.displayCreatorUsernameWithTimestamp && displayName">
       <b>{{displayName}}</b>, 
     </span>
     <span>{{config.humanize? humanized : timestamp}}</span>
