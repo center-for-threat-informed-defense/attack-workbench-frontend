@@ -24,6 +24,7 @@ import { DataSource } from 'src/app/classes/stix/data-source';
 import { DataComponent } from 'src/app/classes/stix/data-component';
 import { UserAccount } from 'src/app/classes/authn/user-account';
 import { Campaign } from 'src/app/classes/stix/campaign';
+import { Team } from 'src/app/classes/authn/team';
 
 //attack types
 type AttackType = "campaign" | "collection" | "group" | "matrix" | "mitigation" | "software" | "tactic" | "technique" | "relationship" | "note" | "identity" | "marking-definition" | "data-source" | "data-component";
@@ -1555,6 +1556,54 @@ export class RestApiConnectorService extends ApiConnector {
             share() // multicast to subscribers
         )
     }
+
+
+    //  _____ ___   _   __  __ ___     _   ___ ___ ___ 
+    // |_   _| __| /_\ |  \/  / __|   /_\ | _ \_ _/ __|
+    //   | | | _| / _ \| |\/| \__ \  / _ \|  _/| |\__ \
+    //   |_| |___/_/ \_\_|  |_|___/ /_/ \_\_| |___|___/
+
+    /**
+     * Get all user accounts
+     * @param {number} [limit] the number of teams to retrieve
+     * @param {number} [offset] the number of teams to skip
+     * @param {string[]} [status] if specified, only get objects with this status
+     * @param {string[]} [role] if specified, only get objects with this role
+     * @param {string} [search] Only return user accounts where the provided search text occurs in the name or description. The search is case-insensitive.
+     * @returns {Observable<Paginated>} paginated data of teams
+     */
+    public getAllTeams(options?: {limit?: number, offset?: number, status?: string[], role?: string[], search?: string}): Paginated<Team> {
+      const newTeam = new Team({id:'1',name:'Team Name',description:'Team Description',users:[]});
+      return {data: [newTeam], pagination:{total:1,offset:0,limit:0}};
+  }
+
+  /**
+   * GET a single team by ID
+   * @param {string} id the object ID
+   * @returns {Team} the object with the given ID
+   */
+  public getTeam(id: string): Team {
+      return new Team({id:'1',name:'Team Name',description:'Team Description',users:[]});
+  }
+
+  /**
+   * POST (create) a new team
+   * @param {Team} team the object to create
+   * @returns {Team} the created object
+   */
+  public postTeam(team: Team): Team {
+      return team;
+  }
+
+  /**
+   * PUT (update) a team
+   * @param {Team} team the object to update
+   * @returns {Team} the updated object
+   */
+  public putTeam(team: Team): Team {
+      return team;
+  }
+                                                 
 
     //   ___    ___      __  ___ _____ _____  __    _   ___ ___ ___
     //  | _ \  /_\ \    / / / __|_   _|_ _\ \/ /   /_\ | _ \_ _/ __|
