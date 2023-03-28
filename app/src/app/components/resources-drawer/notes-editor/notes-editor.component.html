@@ -40,7 +40,7 @@
                     </mat-card-title>
                     <!-- history -->
                     <mat-card-subtitle class="history">
-                            <app-timestamp-view [config]="{object: note, field: 'modified'}"></app-timestamp-view>
+                            <app-timestamp-view [config]="{object: note, field: 'modified', displayCreatorUsernameWithTimestamp: 'true'}"></app-timestamp-view>
                     </mat-card-subtitle>
                     <!-- save/delete note -->
                     <button mat-button *ngIf="note.editing" class="control" [disabled]="!note.title || !note.content" matTooltip="save note" (click)="saveNote(note)"><mat-icon aria-label="save">save</mat-icon></button>
