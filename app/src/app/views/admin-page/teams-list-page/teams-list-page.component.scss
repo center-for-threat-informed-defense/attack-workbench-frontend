@@ -1,0 +1,186 @@
+@import "../../../../style/globals";
+@import '~@angular/material/theming';
+
+.teams-list-page {
+  .mat-icon-button.mat-button-disabled {
+    .dark & { color: on-color-deemphasis(dark); }
+    .light & { color: on-color-deemphasis(light); }
+  }
+
+  .input-group {
+    font-size: 16px;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+
+    .search {
+      flex-grow: 1;
+    }
+
+    border-bottom: 1px solid;
+
+    .light & {
+      border-color: border-color(light);
+    }
+
+    .dark & {
+      border-color: border-color(dark);
+    }
+
+    .mat-form-field-wrapper {
+      margin-bottom: -1.34375em; // remove bottom padding used for hint
+    }
+  }
+
+  .mat-form-field-label {
+    .light & {
+      color: on-color-deemphasis(light);
+    }
+
+    .dark & {
+      color: on-color-deemphasis(dark);
+    }
+  }
+
+  .mat-checkbox {
+    padding: 12px;
+  }
+
+  .align-right {
+    justify-content: flex-end;
+  }
+
+  .table-container {
+    max-width: 60em;
+    margin: 0 auto;
+    border-radius: 4px;
+
+    .dark & {
+      border: 1px solid border-color(dark);
+    }
+
+    .light & {
+      border: 1px solid border-color(light);
+    }
+
+    .scroll-container {
+      width: 100%;
+      overflow: auto;
+      max-width: 100%;
+      display: flex;
+      flex-direction: column;
+
+      table {
+        flex: 1 0 auto;
+        width: 100%;
+
+        .nowrap {
+          white-space: nowrap;
+        }
+
+        th, td {
+          .light & {
+            background: color(light);
+            border-color: border-color(light);
+          }
+
+          .dark & {
+            background: color(dark);
+            border-color: border-color(dark);
+          }
+        }
+
+        th {
+          font-size: 20px;
+          @extend .text-label;
+        }
+
+        tr.element-row:not(.expanded):hover {
+          .light & td {
+            background: color-alternate(light);
+          }
+
+          .dark & td {
+            background: color-alternate(dark);
+          }
+        }
+
+        .mat-cell + .mat-cell, .mat-header-cell + .mat-header-cell {
+          padding-left: 12px;
+        }
+
+        .mat-column-status .mat-select-value {
+          width: 85%;
+        }
+
+        // cell with just an icon in it
+        .mat-cell.icon-cell {
+          width: 24px; //no need for text, icons are 24px wide
+          .mat-icon {
+            vertical-align: middle;
+          }
+
+          //vertically center icons
+        }
+
+        //row action styles
+        .mat-cell.mat-column-end-action, .mat-cell.mat-column-start-action {
+          cursor: pointer;
+
+          .dark & {
+            background: color(dark);
+          }
+
+          .light & {
+            background: color(light);
+          }
+
+          &:hover {
+            background: color(primary) !important;
+            color: on-color(primary);
+          }
+        }
+
+        .mat-column-start-action {
+          &.mat-cell {
+            .light & {
+              outline: 1px solid border-color(light);
+            }
+
+            .dark & {
+              outline: 1px solid border-color(dark);
+            }
+          }
+
+          padding-left: 12px;
+          padding-right: 12px;
+        }
+
+        .mat-column-end-action {
+          &.mat-cell {
+            .light & {
+              outline: 1px solid border-color(light);
+            }
+
+            .dark & {
+              outline: 1px solid border-color(dark);
+            }
+          }
+
+          padding-right: 12px;
+        }
+
+        .mat-column-select {
+          // overflow: initial;
+          &.many {
+            width: 28px;
+          }
+
+          &.one {
+            width: 30px;
+          }
+        }
+      }
+    }
+  }
+}

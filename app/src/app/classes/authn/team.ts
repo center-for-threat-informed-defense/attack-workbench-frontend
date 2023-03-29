@@ -9,7 +9,7 @@ export class Team extends Serializable {
     public id: string;
     public name: string;
     public description: string;
-    public users: Array<UserAccount>;
+    public users: string[];
     public created: Date;
     public modified: Date;
 

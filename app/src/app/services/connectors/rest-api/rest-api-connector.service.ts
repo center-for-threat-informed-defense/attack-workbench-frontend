@@ -96,13 +96,20 @@ export interface Namespace {
     range_start: string
 }
 
+
+
 @Injectable({
     providedIn: 'root'
 })
 export class RestApiConnectorService extends ApiConnector {
     private get baseUrl(): string { return environment.integrations.rest_api.url; }
 
-    constructor(private http: HttpClient, private snackbar: MatSnackBar) { super(snackbar); }
+    teamList;
+
+    constructor(private http: HttpClient, private snackbar: MatSnackBar) {
+      super(snackbar);
+      this.teamList = [new Team({id:'1',name:'Team Name',description:'Team Description',users:['identity--f568ad89-69bc-48e7-877b-43755f1d376d']})];
+    }
     /**
      * Get the name of a given STIX object
      */
@@ -1564,45 +1571,52 @@ export class RestApiConnectorService extends ApiConnector {
     //   |_| |___/_/ \_\_|  |_|___/ /_/ \_\_| |___|___/
 
     /**
-     * Get all user accounts
+     * Get all teams
      * @param {number} [limit] the number of teams to retrieve
      * @param {number} [offset] the number of teams to skip
-     * @param {string[]} [status] if specified, only get objects with this status
-     * @param {string[]} [role] if specified, only get objects with this role
-     * @param {string} [search] Only return user accounts where the provided search text occurs in the name or description. The search is case-insensitive.
+     * @param {string} [search] Only return teams where the provided search text occurs in the name or description. The search is case-insensitive.
      * @returns {Observable<Paginated>} paginated data of teams
      */
-    public getAllTeams(options?: {limit?: number, offset?: number, status?: string[], role?: string[], search?: string}): Paginated<Team> {
-      const newTeam = new Team({id:'1',name:'Team Name',description:'Team Description',users:[]});
-      return {data: [newTeam], pagination:{total:1,offset:0,limit:0}};
-  }
+    public getAllTeams(options?: {limit?: number, offset?: number, search?: string}): Paginated<Team> {
+      let data = this.teamList;
+      if (options && options.search) {
+        data = data.filter((teamObj)=>teamObj.name.indexOf(options.search)>= 0 || teamObj.description.indexOf(options.search)>=0);
+      }
+      return {data, pagination:{total: data.length, limit: 0, offset: 0}};
+    }
 
-  /**
-   * GET a single team by ID
-   * @param {string} id the object ID
-   * @returns {Team} the object with the given ID
-   */
-  public getTeam(id: string): Team {
-      return new Team({id:'1',name:'Team Name',description:'Team Description',users:[]});
-  }
+    /**
+     * GET a single team by ID
+     * @param {string} id the object ID
+     * @returns {Team} the object with the given ID
+     */
+    public getTeam(id: string): Team {
+        return this.teamList.find((team)=>team.id === id);
+    }
 
-  /**
-   * POST (create) a new team
-   * @param {Team} team the object to create
-   * @returns {Team} the created object
-   */
-  public postTeam(team: Team): Team {
-      return team;
-  }
+    /**
+     * POST (create) a new team
+     * @param {Team} team the object to create
+     * @returns {Team} the created object
+     */
+    public postTeam(team: Team): Team {
+        this.teamList.push(team);
+        return team;
+    }
 
-  /**
-   * PUT (update) a team
-   * @param {Team} team the object to update
-   * @returns {Team} the updated object
-   */
-  public putTeam(team: Team): Team {
-      return team;
-  }
+    /**
+     * PUT (update) a team
+     * @param {Team} team the object to update
+     * @returns {Team} the updated object
+     */
+    public putTeam(team: Team): Team {
+        const ind = this.teamList.findIndex((teamObj)=>teamObj.id===team.id);
+        if (ind !== -1) {
+          throw new Error();
+        }
+        this.teamList[ind] = team;
+        return team;
+    }
                                                  
 
     //   ___    ___      __  ___ _____ _____  __    _   ___ ___ ___
