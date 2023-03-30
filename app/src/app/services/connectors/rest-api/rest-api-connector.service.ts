@@ -1611,13 +1611,27 @@ export class RestApiConnectorService extends ApiConnector {
      */
     public putTeam(team: Team): Team {
         const ind = this.teamList.findIndex((teamObj)=>teamObj.id===team.id);
-        if (ind !== -1) {
+        if (ind === -1) {
           throw new Error();
         }
         this.teamList[ind] = team;
         return team;
     }
-                                                 
+
+    /**
+     * DELETE (remove) a team
+     * @param {Team} team the object to delete
+     * @returns {boolean} A nifty placeholder :)
+     */
+    public deleteTeam(team: Team): boolean {
+      const ind = this.teamList.findIndex((teamObj)=>teamObj.id===team.id);
+      if (ind === -1) {
+        throw new Error();
+      }
+      this.teamList.splice(ind,1);
+      return true;
+  }
+          
 
     //   ___    ___      __  ___ _____ _____  __    _   ___ ___ ___
     //  | _ \  /_\ \    / / / __|_   _|_ _\ \/ /   /_\ | _ \_ _/ __|

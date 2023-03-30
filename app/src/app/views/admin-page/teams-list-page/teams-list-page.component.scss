@@ -94,6 +94,9 @@
           font-size: 20px;
           @extend .text-label;
         }
+        tbody tr:hover{
+          cursor: pointer;
+        }
 
         tr.element-row:not(.expanded):hover {
           .light & td {

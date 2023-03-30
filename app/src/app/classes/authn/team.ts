@@ -63,7 +63,7 @@ export class Team extends Serializable {
             else { logger.error('TypeError: users field is not an array:', raw.users, '(', typeof(raw.users), ')'); }
         }
 
-        if ('created' in raw) {
+        /*if ('created' in raw) {
             if (typeof (raw.created) === "string") this.created = new Date(raw.created);
             else logger.error("TypeError: created field is not a string:", raw.created, "(", typeof (raw.created), ")")
         } else { this.created = new Date(); }
@@ -71,7 +71,7 @@ export class Team extends Serializable {
         if ('modified' in raw) {
             if (typeof (raw.modified) === "string") this.modified = new Date(raw.modified);
             else logger.error("TypeError: modified field is not a string:", raw.modified, "(", typeof (raw.modified), ")")
-        } else { this.modified = new Date(); }
+        } else { this.modified = new Date(); }*/
     }
 
     /**
