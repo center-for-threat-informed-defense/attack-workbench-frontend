@@ -1,4 +1,4 @@
-FROM node:14 as build
+FROM arm64v8/node:14 as build
 
 # Create app directory
 WORKDIR /usr/src/app
@@ -21,7 +21,7 @@ COPY ./docs ../docs
 # Build the bundle
 RUN npm run build-prod
 
-FROM nginx:1.19
+FROM arm64v8/nginx:1.22
 
 # Remove the default nginx website
 RUN rm -rf /usr/share/nginx/html/*
