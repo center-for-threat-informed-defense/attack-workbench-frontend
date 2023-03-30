@@ -188,8 +188,8 @@ import { CampaignViewComponent } from './views/stix/campaign/campaign-view/campa
 import { CampaignListComponent } from './views/stix/campaign/campaign-list/campaign-list.component';
 
 import { NotesSearchListComponent } from './views/notes-page/notes-search-list/notes-search-list.component';
-import { TeamsListPageComponent } from './views/admin-page/teams-list-page/teams-list-page.component';
-import { TeamsViewPageComponent } from './views/admin-page/teams-view-page/teams-view-page.component';
+import { TeamsListPageComponent } from './views/admin-page/teams/teams-list-page/teams-list-page.component';
+import { TeamsViewPageComponent } from './views/admin-page/teams/teams-view-page/teams-view-page.component';
 import { CreateNewDialogComponent } from './components/create-new-dialog/create-new-dialog.component';
 
 @NgModule({
