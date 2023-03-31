@@ -1,0 +1,67 @@
+<div class="recent-activity">
+    <app-loading-overlay *ngIf="loading; else userActivity"></app-loading-overlay>
+    <ng-template #userActivity>
+        <mat-action-list *ngIf="allRecentActivity.length > 0">
+            <ng-container *ngFor="let activity of recentActivity">
+                <button mat-list-item class="activity-event"
+                        (click)="isRelationship(activity) ? preview(activity) : open(activity)"
+
+                        [class.relationship]="isRelationship(activity)"
+                        [class.note]="activity.sdo.attackType == 'note'"
+                        [class.object]="!isRelationship(activity) && activity.sdo.attackType != 'note'"
+                        
+                        (mouseover)="hoveredEvent = activity" 
+                        (mouseout)="hoveredEvent = null">
+                    <!-- event icon -->
+                    <mat-icon mat-list-icon *ngIf="activity == hoveredEvent; else activityIcon"
+                        [matTooltip]="isRelationship(activity) ? 'preview object' : 'view object page'">
+                        {{isRelationship(activity) ? 'preview' : 'open_in_browser'}}
+                    </mat-icon>
+                    <ng-template #activityIcon>
+                        <mat-icon mat-list-icon>{{activity.icon}}</mat-icon>
+                    </ng-template>
+                    <!-- event description -->
+                    <div mat-line>
+                        <span *ngIf="activity.objectCreated && activity.sdo.type !== 'note'">
+                            Created a new {{activity.sdo.attackType}}: {{activity.name}} <ng-container *ngIf="activity.released" [ngTemplateOutlet]="released"></ng-container>
+                        </span>
+                        <span *ngIf="activity.objectCreated && activity.sdo.type == 'note'">
+                            Added a note to {{activity.object_ref.name}}
+                        </span>
+                        <span *ngIf="!activity.objectCreated">
+                            Edited a {{activity.sdo.attackType}}: {{activity.name}} <ng-container *ngIf="activity.released" [ngTemplateOutlet]="released"></ng-container>
+                        </span>
+                    </div>
+                    <ng-template #released>
+                        <span class="text-deemphasis">(released)</span>
+                    </ng-template>
+                    <!-- modified timestamp -->
+                    <app-identity-property *ngIf="showIdentity" [config]="{
+                        object: activity.sdo, 
+                        field: 'modified_by',
+                        timeField: 'modified'
+                    }"></app-identity-property>
+                    <app-timestamp-view *ngIf="!showIdentity" class="event-timestamp" [config]="{
+                        mode: 'view',
+                        humanize: true,
+                        tooltip: true,
+                        object: activity.sdo,
+                        field: 'modified'
+                    }"></app-timestamp-view>
+                </button>
+            </ng-container>
+            <div class="view-more">
+                <ng-container *ngIf="recentActivity.length > 5">
+                    <a (click)="showLess()" class="external-link">less</a>&nbsp;&nbsp;
+                </ng-container>
+                <a *ngIf="allRecentActivity.length > recentActivity.length" (click)="showMore()" class="external-link">more</a>
+            </div>
+        </mat-action-list>
+        <app-empty-list-marker
+            class="no-activity"
+            *ngIf="allRecentActivity.length == 0"
+            message="no recent activity"
+            (onCheckAgain)="loadActivity()">
+        </app-empty-list-marker>
+    </ng-template>
+</div>

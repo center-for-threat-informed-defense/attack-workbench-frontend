@@ -126,6 +126,7 @@ import { OrderedListEditComponent } from './components/stix/ordered-list-propert
 
 import { NotesEditorComponent } from './components/resources-drawer/notes-editor/notes-editor.component';
 import { ObjectStatusComponent } from './components/object-status/object-status.component';
+import { RecentActivityComponent } from './components/recent-activity/recent-activity.component';
 import { IconViewComponent } from './components/stix/icon-view/icon-view.component';
 import { IdentityPropertyComponent } from './components/stix/identity-property/identity-property.component';
 
@@ -299,6 +300,7 @@ import { CreateNewDialogComponent } from './components/create-new-dialog/create-
 
     NotesEditorComponent,
     ObjectStatusComponent,
+    RecentActivityComponent,
     IdentityPropertyComponent,
     DataSourceViewComponent,
     DataSourceListComponent,
