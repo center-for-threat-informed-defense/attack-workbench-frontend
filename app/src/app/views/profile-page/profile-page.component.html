@@ -57,7 +57,7 @@
         </div>
         <div class="row">
             <div class="col">
-                <app-recent-activity [identity]="user"></app-recent-activity>
+                <app-recent-activity [identities]="[user.id]" [showIdentity]="false"></app-recent-activity>
             </div>
         </div>
     </ng-container>
