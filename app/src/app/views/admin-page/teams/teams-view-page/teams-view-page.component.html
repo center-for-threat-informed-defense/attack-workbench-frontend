@@ -1,1 +1,7 @@
-<p>teams-view-page works!</p>
+<div *ngIf="false else loading">
+  <p>loaded team</p>
+</div>
+
+<ng-template #loading>
+  <app-loading-overlay message="loading team"></app-loading-overlay>
+</ng-template>
