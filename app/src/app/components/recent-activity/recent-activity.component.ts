@@ -1,7 +1,6 @@
 import { Component, Input, OnInit, ViewEncapsulation } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
-import { UserAccount } from 'src/app/classes/authn/user-account';
 import { Collection } from 'src/app/classes/stix/collection';
 import { Note } from 'src/app/classes/stix/note';
 import { Relationship } from 'src/app/classes/stix/relationship';
@@ -26,7 +25,8 @@ interface ActivityEvent {
     encapsulation: ViewEncapsulation.None
 })
 export class RecentActivityComponent implements OnInit {
-    @Input() public identity: UserAccount;
+    @Input() public identities: string[]; // list of user IDs
+    @Input() public showIdentity: boolean = true;
     public allRecentActivity: ActivityEvent[] = [];
     public recentActivity: ActivityEvent[];
     public loading: boolean = false;
@@ -70,8 +70,8 @@ export class RecentActivityComponent implements OnInit {
 
         // build object lookup table
         allObjects.forEach(sdo => {
-            // check if modified by this identity
-            if (sdo.workflow && sdo.workflow.created_by_user_account && sdo.workflow.created_by_user_account == this.identity.id) {
+            // check if modified by one of the given identities
+            if (sdo.workflow && sdo.workflow.created_by_user_account && this.identities.includes(sdo.workflow.created_by_user_account)) {
                 activity.push(sdo);
             }
             objectLookup[sdo.stixID] = sdo;
