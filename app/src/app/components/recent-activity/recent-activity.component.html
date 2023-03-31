@@ -36,7 +36,12 @@
                         <span class="text-deemphasis">(released)</span>
                     </ng-template>
                     <!-- modified timestamp -->
-                    <app-timestamp-view class="event-timestamp" [config]="{
+                    <app-identity-property *ngIf="showIdentity" [config]="{
+                        object: activity.sdo, 
+                        field: 'modified_by',
+                        timeField: 'modified'
+                    }"></app-identity-property>
+                    <app-timestamp-view *ngIf="!showIdentity" class="event-timestamp" [config]="{
                         mode: 'view',
                         humanize: true,
                         tooltip: true,
