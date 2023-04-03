@@ -102,6 +102,7 @@ export class RestApiConnectorService extends ApiConnector {
     private get baseUrl(): string { return environment.integrations.rest_api.url; }
 
     constructor(private http: HttpClient, private snackbar: MatSnackBar) { super(snackbar); }
+
     /**
      * Get the name of a given STIX object
      */
@@ -1346,11 +1347,9 @@ export class RestApiConnectorService extends ApiConnector {
      * @returns {Observable<CollectionIndex>} the collection index at the URL
      */
     public getRemoteIndex(url: string): Observable<CollectionIndex> {
-        console.log("get remote index via rest api")
-        let cmBaseUrl = environment.integrations.collection_manager.url;
-        let params = new HttpParams({encoder: new CustomEncoder()}).set("url", url);
+        let params = new HttpParams({encoder: new CustomEncoder()});
         let headers: HttpHeaders = new HttpHeaders({ 'ExcludeCredentials': 'true' });
-        return this.http.get(`${cmBaseUrl}/collection-indexes/remote`, {headers: headers, params: params}).pipe(
+        return this.http.get(url, {headers: headers, params: params}).pipe(
             tap(_ => logger.log("downloaded index at", url)), // on success, trigger the success notification
             map(index => { return {
                 "collection_index": index,
