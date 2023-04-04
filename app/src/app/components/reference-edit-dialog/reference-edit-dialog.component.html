@@ -24,7 +24,7 @@
                         <!-- source name -->
                         <mat-form-field appearance="outline">
                             <mat-label>source name</mat-label>
-                            <input matInput required [formControl]="source_control">
+                            <input matInput required [formControl]="source_control" [errorStateMatcher]="matcher">
                             <mat-error *ngIf="is_new && source_control.errors">{{getError()}}</mat-error>
                         </mat-form-field>
                     </div>

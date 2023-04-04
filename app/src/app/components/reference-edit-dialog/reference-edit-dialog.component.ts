@@ -1,5 +1,6 @@
 import { Component, Inject, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
-import { FormControl, Validators } from '@angular/forms';
+import { FormControl, FormGroupDirective, NgForm, Validators } from '@angular/forms';
+import { ErrorStateMatcher } from '@angular/material/core';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { forkJoin, Observable, of, Subscription } from 'rxjs';
@@ -10,6 +11,12 @@ import { StixObject } from 'src/app/classes/stix/stix-object';
 import { AuthenticationService } from 'src/app/services/connectors/authentication/authentication.service';
 import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/rest-api-connector.service';
 import { DeleteDialogComponent } from '../delete-dialog/delete-dialog.component';
+
+export class CustomErrorStateMatcher implements ErrorStateMatcher {
+    isErrorState(control: FormControl | null, form: FormGroupDirective | NgForm | null): boolean {
+        return !!(control && control.invalid && (control.dirty || control.touched));
+    }
+}
 
 @Component({
     selector: 'app-reference-edit-dialog',
@@ -27,6 +34,7 @@ export class ReferenceEditDialogComponent implements OnInit, OnDestroy {
 
     public references$: ExternalReference[];
     public source_control: FormControl;
+    public matcher: CustomErrorStateMatcher;
     public validationSubscription: Subscription;
 
     public months: string[] = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
@@ -59,6 +67,7 @@ export class ReferenceEditDialogComponent implements OnInit, OnDestroy {
             }
         }
         this.source_control = new FormControl({ value: this.reference.source_name, disabled: !this.is_new });
+        this.matcher = new CustomErrorStateMatcher();
     }
 
     ngOnInit(): void {
