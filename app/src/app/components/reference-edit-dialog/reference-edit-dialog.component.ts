@@ -1,8 +1,9 @@
 import { Component, Inject, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
-import { FormControl, ValidationErrors, Validators } from '@angular/forms';
+import { FormControl, Validators } from '@angular/forms';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { forkJoin, Observable, of, Subscription, throwError } from 'rxjs';
+import { forkJoin, Observable, of, Subscription } from 'rxjs';
+import { switchMap, tap } from 'rxjs/operators';
 import { ExternalReference } from 'src/app/classes/external-references';
 import { Relationship } from 'src/app/classes/stix/relationship';
 import { StixObject } from 'src/app/classes/stix/stix-object';
@@ -11,10 +12,10 @@ import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/re
 import { DeleteDialogComponent } from '../delete-dialog/delete-dialog.component';
 
 @Component({
-  selector: 'app-reference-edit-dialog',
-  templateUrl: './reference-edit-dialog.component.html',
-  styleUrls: ['./reference-edit-dialog.component.scss'],
-  encapsulation: ViewEncapsulation.None
+    selector: 'app-reference-edit-dialog',
+    templateUrl: './reference-edit-dialog.component.html',
+    styleUrls: ['./reference-edit-dialog.component.scss'],
+    encapsulation: ViewEncapsulation.None
 })
 export class ReferenceEditDialogComponent implements OnInit, OnDestroy {
     public reference: ExternalReference;
@@ -57,7 +58,7 @@ export class ReferenceEditDialogComponent implements OnInit, OnDestroy {
                 description: ""
             }
         }
-        this.source_control = new FormControl({value: this.reference.source_name, disabled: !this.is_new});
+        this.source_control = new FormControl({ value: this.reference.source_name, disabled: !this.is_new });
     }
 
     ngOnInit(): void {
@@ -70,13 +71,11 @@ export class ReferenceEditDialogComponent implements OnInit, OnDestroy {
         })
 
         if (this.is_new) {
-            // listen to source_name input changes for validation (can only be edited on new references)
-            this.validationSubscription = this.source_control.valueChanges.subscribe(source_name => {
-                this.reference.source_name = source_name;
-                this.validate(source_name).subscribe({
-                    error: (err) => { if (err) this.source_control.setErrors(err); }
-                });
-            })
+            // listen to source_name input changes for validation
+            this.validationSubscription = this.source_control.valueChanges.pipe(
+                tap(source_name => this.reference.source_name = source_name),
+                switchMap(source_name => this.validate(source_name))
+            ).subscribe();
         }
     }
 
@@ -226,7 +225,7 @@ export class ReferenceEditDialogComponent implements OnInit, OnDestroy {
      * Save the reference without patching objects using the reference
      */
     public save() {
-        let api = this.is_new? this.restApiConnectorService.postReference(this.reference) : this.restApiConnectorService.putReference(this.reference);
+        let api = this.is_new ? this.restApiConnectorService.postReference(this.reference) : this.restApiConnectorService.putReference(this.reference);
         let subscription = api.subscribe({
             complete: () => {
                 this.is_new = false;
@@ -242,24 +241,25 @@ export class ReferenceEditDialogComponent implements OnInit, OnDestroy {
      * @param source_name the source name input
      * @returns 
      */
-    public validate(source_name): Observable<ValidationErrors> {
+    public validate(source_name: string): Observable<string> {
         this.source_control.setErrors(null); // clear previous validation
+
         // required
-        if (!source_name) return throwError({required: true});
+        if (!source_name) this.source_control.setErrors({ required: true });
 
         // uniqueness
-        if (this.references$.some(x => x.source_name == source_name)) return throwError({nonUnique: true});
+        if (this.references$.some(x => x.source_name == source_name)) this.source_control.setErrors({ nonUnique: true });
 
         // cannot contain special characters
-        if (/[~`!@#$%^&*+=\[\]';{}()|\"<>\?]/g.test(source_name)) return throwError({invalidSpecialChar: true});
+        if (/[~`!@#$%^&*+=\[\]';{}()|\"<>\?]/g.test(source_name)) this.source_control.setErrors({ specialCharacterFound: true });
 
-        return of();
+        return of(source_name);
     }
 
     /** Retrieve the validation error for display */
     public getError(): string {
         if (this.source_control.errors.nonUnique) return 'source name is not unique';
-        if (this.source_control.errors.invalidSpecialChar) return 'source name cannot contain special characters';
+        if (this.source_control.errors.specialCharacterFound) return 'source name cannot contain special characters';
     }
 
     public stopEditing(): void {
