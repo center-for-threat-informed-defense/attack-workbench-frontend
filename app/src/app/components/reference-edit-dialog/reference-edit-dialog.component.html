@@ -25,7 +25,8 @@
                         <mat-form-field appearance="outline">
                             <mat-label>source name</mat-label>
                             <input matInput required [formControl]="source_control" [errorStateMatcher]="matcher">
-                            <mat-error *ngIf="is_new && source_control.errors">{{getError()}}</mat-error>
+                            <mat-error *ngIf="source_control.hasError('nonUnique')">source name is not unique</mat-error>
+                            <mat-error *ngIf="source_control.hasError('specialCharacter')">source name cannot contain special characters</mat-error>
                         </mat-form-field>
                     </div>
                     <div class="column narrow vertical-center">

@@ -261,15 +261,9 @@ export class ReferenceEditDialogComponent implements OnInit, OnDestroy {
         if (this.references$.some(x => x.source_name == source_name)) this.source_control.setErrors({ nonUnique: true });
 
         // cannot contain special characters
-        if (/[~`!@#$%^&*+=\[\]';{}()|\"<>\?]/g.test(source_name)) this.source_control.setErrors({ specialCharacterFound: true });
+        if (/[~`!@#$%^&*+=\[\]';{}()|\"<>\?]/g.test(source_name)) this.source_control.setErrors({ specialCharacter: true });
 
         return of(source_name);
-    }
-
-    /** Retrieve the validation error for display */
-    public getError(): string {
-        if (this.source_control.errors.nonUnique) return 'source name is not unique';
-        if (this.source_control.errors.specialCharacterFound) return 'source name cannot contain special characters';
     }
 
     public stopEditing(): void {
