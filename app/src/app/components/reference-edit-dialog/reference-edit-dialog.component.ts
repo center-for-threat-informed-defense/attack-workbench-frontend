@@ -3,7 +3,7 @@ import { FormControl, Validators } from '@angular/forms';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { forkJoin, Observable, of, Subscription } from 'rxjs';
-import { switchMap, tap } from 'rxjs/operators';
+import { debounceTime, switchMap, tap } from 'rxjs/operators';
 import { ExternalReference } from 'src/app/classes/external-references';
 import { Relationship } from 'src/app/classes/stix/relationship';
 import { StixObject } from 'src/app/classes/stix/stix-object';
@@ -73,6 +73,7 @@ export class ReferenceEditDialogComponent implements OnInit, OnDestroy {
         if (this.is_new) {
             // listen to source_name input changes for validation
             this.validationSubscription = this.source_control.valueChanges.pipe(
+                debounceTime(250),
                 tap(source_name => this.reference.source_name = source_name),
                 switchMap(source_name => this.validate(source_name))
             ).subscribe();
