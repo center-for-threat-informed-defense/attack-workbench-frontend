@@ -17,6 +17,7 @@ export class EditorService {
     public editing: boolean = false;
     public deletable: boolean = false;
     public hasRelationships: boolean = true;
+    public hasStatus: boolean = true;
     public onSave = new EventEmitter();
     public onDelete = new EventEmitter();
     public onEditingStopped = new EventEmitter();
@@ -38,10 +39,6 @@ export class EditorService {
                 let editable = this.getEditableFromRoute(this.router.routerState, this.router.routerState.root);
                 let attackType = this.route.root.firstChild.snapshot.data.breadcrumb;
                 this.editable = editable.length > 0 && editable.every(x => x) && this.authenticationService.canEdit(attackType);
-                this.sidebarService.setEnabled("history", this.editable);
-                this.sidebarService.setEnabled("notes", this.editable);
-                if (!this.editable) this.sidebarService.currentTab = "references";
-
                 if (this.editable) {
                     if (this.router.url.includes("/new") || ["matrix", "tactic", "collection"].includes(this.type)) {
                         // new objects, matrices, tactics, and collections cannot be deleted
@@ -51,7 +48,13 @@ export class EditorService {
                         // determine if this object has existing relationships
                         this.getRelationships().subscribe(rels => this.hasRelationships = rels > 0);
                     }
+                    if (this.type === "admin") {
+                      this.hasStatus = false;
+                    }
                 }
+                this.sidebarService.setEnabled("history", this.editable && this.hasStatus);
+                this.sidebarService.setEnabled("notes", this.editable && this.hasStatus);
+                if (!this.editable) this.sidebarService.currentTab = "references";
             }
         })
         this.route.queryParams.subscribe(params => {

@@ -95,6 +95,7 @@ const routes: Routes = [
                             "path": ":id",
                             "data": {
                                 "breadcrumb": "view team",
+                                "editable": true,
                                 "title": "View Team"
                             },
                             "component": TeamsViewPageComponent,

@@ -22,7 +22,6 @@ export class TeamsListPageComponent implements OnInit {
   public teams: Team[];
   public columnsToDisplay: string[];
   public totalObjectCount: number = 0;
-  public userSubscription: Subscription;
   public searchQuery: '';
 
   public get currentUser(): UserAccount {
@@ -42,7 +41,6 @@ export class TeamsListPageComponent implements OnInit {
   }
 
   public getTeams(options: { limit: number, offset: number, search?: string }) {
-    console.log('I ran');
     const hold = this.restAPIConnector.getAllTeams(options);
     this.teams = hold.data;
     this.totalObjectCount = hold.pagination.total;

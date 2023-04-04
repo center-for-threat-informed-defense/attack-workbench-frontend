@@ -1586,6 +1586,17 @@ export class RestApiConnectorService extends ApiConnector {
     }
 
     /**
+     * Get all teams
+     * @param {string} id the object ID
+     * @param {number} [limit] the number of users to retrieve
+     * @param {number} [offset] the number of users to skip
+     * @returns {Observable<Paginated>} paginated data of users from the given tem
+     */
+    public getUserAccountsByTeamId(id:string, options?: {limit?: number, offset?: number}): Observable<Paginated<UserAccount>> {
+      return this.getAllUserAccounts(options);
+    }
+
+    /**
      * GET a single team by ID
      * @param {string} id the object ID
      * @returns {Team} the object with the given ID
