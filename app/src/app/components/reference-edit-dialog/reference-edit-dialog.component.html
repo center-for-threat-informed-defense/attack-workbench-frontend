@@ -4,28 +4,29 @@
         <div class="spacer"></div>
         <ng-container *ngIf="editable">
             <button mat-button class="control"
-                [matTooltip]="is_new ? 'validate & save' : 'patch & save'"
-                [disabled]="!editing || !validCitation() || !validURL || (is_new && source_control.errors)"
+                [matTooltip]="isNew ? 'validate & save' : 'patch & save'"
+                [disabled]="!editing || !validCitation() || !validURL || (isNew && sourceNameControl.errors)"
                 (click)="next()">
                 <mat-icon aria-label="save">save</mat-icon>
             </button>
             <button *ngIf="!editing" mat-button class="control" matTooltip="edit" (click)="startEditing()"><mat-icon aria-label="edit">edit</mat-icon></button>
             <button *ngIf="editing"  mat-button class="control" matTooltip="discard changes & stop editing" (click)="discardChanges()"><mat-icon aria-label="discard">edit_off</mat-icon></button>
-            <button *ngIf="deletable" mat-button class="control" matTooltip="delete" [disabled]="!editing || config.count > 0 || is_new" (click)="delete()"><mat-icon aria-label="delete">delete</mat-icon></button>
+            <button *ngIf="deletable" mat-button class="control" matTooltip="delete" [disabled]="!editing || config.count > 0 || isNew" (click)="delete()"><mat-icon aria-label="delete">delete</mat-icon></button>
         </ng-container>
     </mat-toolbar>
     <!-- edit page -->
     <div *ngIf="editing else viewReference" class="edit-reference">
         <div *ngIf="stage == 0" class="stage edit">
             <h1>Reference Editor</h1>
-            <div class="grid spacing-16">
+            <div *ngIf="!loading else loadingDisplay" class="grid spacing-16">
                 <div class="row">
                     <div class="column editor">
                         <!-- source name -->
                         <mat-form-field appearance="outline">
                             <mat-label>source name</mat-label>
-                            <input matInput required [formControl]="source_control">
-                            <mat-error *ngIf="is_new && source_control.errors">{{getError()}}</mat-error>
+                            <input matInput required [formControl]="sourceNameControl" [errorStateMatcher]="matcher">
+                            <mat-error *ngIf="sourceNameControl.hasError('nonUnique')">source name is not unique</mat-error>
+                            <mat-error *ngIf="sourceNameControl.hasError('specialCharacter')">source name cannot contain special characters</mat-error>
                         </mat-form-field>
                     </div>
                     <div class="column narrow vertical-center">
@@ -35,7 +36,7 @@
                 </div>
                 <div class="row">
                     <div class="column editor">
-                        <ng-container *ngIf="is_new">
+                        <ng-container *ngIf="isNew">
                             <!-- authors -->
                             <mat-form-field appearance="outline">
                                 <mat-label>authors</mat-label>
@@ -75,16 +76,16 @@
                             </mat-form-field>
                         </ng-container>
                         <!-- description -->
-                        <mat-form-field *ngIf="!is_new" appearance="outline">
+                        <mat-form-field *ngIf="!isNew" appearance="outline">
                             <mat-label>citation</mat-label>
                             <input matInput required [(ngModel)]="reference.description">
                         </mat-form-field>
                     </div>
-                    <div class="column narrow vertical-center" *ngIf="is_new">
+                    <div class="column narrow vertical-center" *ngIf="isNew">
                         <strong>Full reference text</strong>
                         <span>{{getRefDescription()}}</span>
                     </div>
-                    <div class="column narrow vertical-center" *ngIf="!is_new">
+                    <div class="column narrow vertical-center" *ngIf="!isNew">
                         <strong>Full reference text</strong>
                         <span>{{reference.description}}</span>
                     </div>
@@ -103,6 +104,9 @@
                     </div>
                 </div>
             </div>
+            <ng-template #loadingDisplay>
+                <app-loading-overlay></app-loading-overlay>
+            </ng-template>
         </div>
         <div *ngIf="stage == 1" class="stage parsing">
             <h1>Determining required knowledge base patches...</h1>
@@ -110,7 +114,7 @@
         </div>
         <div *ngIf="stage == 2" class="stage reviewing">
             <h1>Required Patches</h1>
-            <ng-container *ngIf="patch_objects.length == 0 && patch_relationships == 0; else patches">
+            <ng-container *ngIf="patchObjects.length == 0 && patchRelationships == 0; else patches">
                 <mat-list>
                     <mat-list-item>
                         <mat-icon matListIcon class="text-success">check</mat-icon>
@@ -120,17 +124,17 @@
             </ng-container>
             <ng-template #patches>
                 <p>The following objects include the edited reference and will be updated automatically.</p>
-                <ng-container *ngIf="patch_objects.length > 0">
+                <ng-container *ngIf="patchObjects.length > 0">
                     <h3>Objects</h3>
                     <app-stix-list [config]="{
-                        stixObjects: patch_objects,
+                        stixObjects: patchObjects,
                         clickBehavior: 'none'
                     }"></app-stix-list>
                 </ng-container>
-                <ng-container *ngIf="patch_relationships.length > 0">
+                <ng-container *ngIf="patchRelationships.length > 0">
                     <h3>Relationships</h3>
                     <app-stix-list [config]="{
-                        stixObjects: patch_relationships,
+                        stixObjects: patchRelationships,
                         type: 'relationship',
                         clickBehavior: 'none'
                     }"></app-stix-list>
@@ -138,8 +142,8 @@
             </ng-template>
             <div class="buttons">
                 <button mat-button (click)="discardChanges()">cancel</button>
-                <button mat-stroked-button *ngIf="patch_objects.length > 0 || patch_relationships.length > 0" (click)="patch()">apply patches and save</button>
-                <button mat-stroked-button *ngIf="patch_objects.length == 0 && patch_relationships.length == 0" (click)="save()">save</button>
+                <button mat-stroked-button *ngIf="patchObjects.length > 0 || patchRelationships.length > 0" (click)="patch()">apply patches and save</button>
+                <button mat-stroked-button *ngIf="patchObjects.length == 0 && patchRelationships.length == 0" (click)="save()">save</button>
             </div>
         </div>
         <div *ngIf="stage == 3" class="stage patching">
