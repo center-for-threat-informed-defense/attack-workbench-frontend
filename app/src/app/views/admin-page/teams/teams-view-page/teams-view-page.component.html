@@ -34,40 +34,7 @@
           </div>
         </div>
     </div>
-    <div class="table-container">
-        <!-- ----- -->
-        <!-- TABLE -->
-        <!-- ----- -->
-        <div class="scroll-container" *ngIf="users else loadingUsers">
-            <table mat-table *ngIf="users.length > 0 else nothingHere" [dataSource]="users" aria-label="users table">
-                <ng-container matColumnDef="username">
-                    <th scope="col" mat-header-cell *matHeaderCellDef>Username</th>
-                    <td mat-cell *matCellDef="let user"> {{user.displayName}} </td>
-                </ng-container>
-                <ng-container matColumnDef="email">
-                    <th scope="col" mat-header-cell *matHeaderCellDef>Email</th>
-                    <td mat-cell *matCellDef="let user"> {{user.email}} </td>
-                </ng-container>
-                <ng-container matColumnDef="options" stickyEnd>
-                  <th mat-header-cell *matHeaderCellDef></th> <!-- nothing in header -->
-                  <td mat-cell *matCellDef="let user" class="icon-cell" (click)="removeUser(user)">
-                      <mat-icon aria-hidden="false" aria-label="remove-user-from-team"
-                        matTooltip="Remove user from team">clear</mat-icon>
-                  </td>
-                </ng-container>
-
-                <tr mat-header-row *matHeaderRowDef="columnsToDisplay"></tr>
-                <tr mat-row *matRowDef="let myRowData; columns: columnsToDisplay" class="element-row"></tr>
-            </table>
-            <ng-template #nothingHere>
-                <app-empty-list-marker [message]="'Nothing here'" (onCheckAgain)="loadUsers()"></app-empty-list-marker>
-            </ng-template>
-        </div>
-        <!-- ---------- -->
-        <!-- PAGINATION -->
-        <!-- ---------- -->
-        <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" pageSize="10" (page)="loadUsers()" [length]="totalObjectCount"></mat-paginator>
-    </div>
+    <app-users-list [config]="{'columnsToDisplay':['username','email','options'], 'team':team, 'showSearch': false, 'showFilters': false, 'mode':'view'}"></app-users-list> 
     <div class="col" >
       <div class="row">
         <mat-expansion-panel>
