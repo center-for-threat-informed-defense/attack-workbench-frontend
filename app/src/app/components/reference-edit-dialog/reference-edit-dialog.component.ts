@@ -263,7 +263,7 @@ export class ReferenceEditDialogComponent implements OnInit, OnDestroy {
         if (this.references$.some(x => x.source_name == sourceName)) this.sourceNameControl.setErrors({ nonUnique: true });
 
         // cannot contain special characters
-        if (/[~`!@#$%^&*+=\[\]';{}()|\"<>\?]/g.test(sourceName)) this.sourceNameControl.setErrors({ specialCharacter: true });
+        if (/[~`!@#$%^&*+=[\]';{}()|"<>?]/g.test(sourceName)) this.sourceNameControl.setErrors({ specialCharacter: true });
 
         return of(sourceName);
     }
