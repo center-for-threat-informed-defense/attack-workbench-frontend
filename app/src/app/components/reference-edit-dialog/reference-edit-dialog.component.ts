@@ -33,6 +33,7 @@ export class ReferenceEditDialogComponent implements OnInit, OnDestroy {
     public dirty: boolean;
 
     public references$: ExternalReference[];
+    public loading: boolean = true;
     public source_control: FormControl;
     public matcher: CustomErrorStateMatcher;
     public validationSubscription: Subscription;
@@ -75,6 +76,7 @@ export class ReferenceEditDialogComponent implements OnInit, OnDestroy {
         let referenceSubscription = this.restApiConnectorService.getAllReferences().subscribe({
             next: (data) => {
                 this.references$ = data.data;
+                this.loading = false;
             },
             complete: () => referenceSubscription.unsubscribe()
         })

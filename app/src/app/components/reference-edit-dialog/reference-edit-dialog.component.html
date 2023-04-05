@@ -18,7 +18,7 @@
     <div *ngIf="editing else viewReference" class="edit-reference">
         <div *ngIf="stage == 0" class="stage edit">
             <h1>Reference Editor</h1>
-            <div class="grid spacing-16">
+            <div *ngIf="!loading else loadingDisplay" class="grid spacing-16">
                 <div class="row">
                     <div class="column editor">
                         <!-- source name -->
@@ -104,6 +104,9 @@
                     </div>
                 </div>
             </div>
+            <ng-template #loadingDisplay>
+                <app-loading-overlay></app-loading-overlay>
+            </ng-template>
         </div>
         <div *ngIf="stage == 1" class="stage parsing">
             <h1>Determining required knowledge base patches...</h1>
