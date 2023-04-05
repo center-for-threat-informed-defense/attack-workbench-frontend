@@ -67,4 +67,4 @@ The `nginx` configuration file (`nginx/nginx.conf`) can be modified to use HTTPS
 
 ## PKI Certificates
 
-For additional troubleshooting and installation of security certificates for use by ATT&CK Workbench, pleaser refer to [PKI Certificates instructions](docs/certs.md)
+For additional troubleshooting and installation of security certificates for use by ATT&CK Workbench, pleaser refer to [PKI Certificates instructions](docs/certs.md).
