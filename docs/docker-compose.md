@@ -64,3 +64,7 @@ It also acts as a reverse proxy for the `rest-api` and `collection-manager` serv
 
 Note that the `docker-compose.yml` file exposes the ATT&CK Workbench web application on port 80.
 The `nginx` configuration file (`nginx/nginx.conf`) can be modified to use HTTPS and port 443, depending on your operational requirements.
+
+## PKI Certificates
+
+For additional troubleshooting and installation of security certificates for use by ATT&CK Workbench, pleaser refer to ![PKI Certificates instructions](docs/certs.md)
