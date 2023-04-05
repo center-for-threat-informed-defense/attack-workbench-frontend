@@ -38,12 +38,12 @@ version: "3.9"
 services:
   collection-manager:
     volumes:
-      - ${HOST_CERTS_PATH}:/usr/src/app/certs            # << CHANGE "${HOST_CERTS_PATH}"
+      - ${HOST_CERTS_PATH}:/usr/src/app/certs            # << EDIT "${HOST_CERTS_PATH}"
     environment:
-      - NODE_EXTRA_CA_CERTS=./certs/${CERTS_FILENAME}    # << CHANGE "${CERTS_FILENAME}"
+      - NODE_EXTRA_CA_CERTS=./certs/${CERTS_FILENAME}    # << EDIT "${CERTS_FILENAME}"
 ```
 
-3. Then, upon startup on ATT&CK Workbench, use the following docker-compose command to include the additional `docker-compose.certs.yml` file.
+3. Then, upon startup of ATT&CK Workbench, use the following docker-compose command to include the additional `docker-compose.certs.yml` file.
 
 ```
 docker-compose -f docker-compose.yml -f docker-compose.certs.yml up
