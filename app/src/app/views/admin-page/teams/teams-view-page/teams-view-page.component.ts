@@ -70,8 +70,7 @@ export class TeamsViewPageComponent implements OnInit,OnDestroy {
     });
     let subscription = prompt.afterClosed().subscribe({
         next: (response) => {
-            console.log(this.team.users)
-            if (response) {
+            if (response!==null) {
               this.team.users = response;
               this.restAPIConnector.putTeam(this.team);
               this.router.navigate([]);
