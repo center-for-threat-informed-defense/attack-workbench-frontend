@@ -62,7 +62,7 @@ export class TeamsViewPageComponent implements OnInit,OnDestroy {
       autoFocus: false, // disables auto focus on the dialog form field
       data: {
         selectedUserIds: this.team.users,
-        select: new SelectionModel<string>(),
+        selection: new SelectionModel<string>(true),
         title: `Select users you wish to be in this team`,
         buttonLabel: "CONFIRM",
         clearSelection: true,
@@ -73,7 +73,7 @@ export class TeamsViewPageComponent implements OnInit,OnDestroy {
             if (response!==null) {
               this.team.users = response;
               this.restAPIConnector.putTeam(this.team);
-              this.router.navigate([]);
+              this.loadTeam();
             }
         },
         complete: () => { subscription.unsubscribe(); } //prevent memory leaks

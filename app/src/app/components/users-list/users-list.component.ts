@@ -66,10 +66,7 @@ export class UsersListComponent implements OnInit {
     this.getAccounts({limit: 10, offset: 0});
     if (this.config.mode=='select') {
       this.columnsToDisplay = ['select'].concat(this.columnsToDisplay);
-      this.selection = new SelectionModel<String>(true)
-      for (let i = 0; i < this.config.selectedUserIds.length; i++) {
-        this.selection.toggle(this.config.selectedUserIds[i]);
-      }
+      this.selection = this.config.selection ? this.config.selection : new SelectionModel<String>(true)
     }
   }
 
@@ -195,4 +192,5 @@ export interface UsersListConfig {
   showFilters: false,
   mode:string,
   selectedUserIds: string[],
+  selection: SelectionModel<String>,
 }
