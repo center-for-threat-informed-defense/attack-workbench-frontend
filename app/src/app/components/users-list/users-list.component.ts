@@ -46,21 +46,6 @@ export class UsersListComponent implements OnInit {
       return this.authenticationService.isAuthorized([Role.ADMIN]);
   }
 
-  public get limit(): number {
-    if (this.paginator) {
-      return this.paginator.pageSize;
-    }
-    return 10;
-  }
-
-  public get offset(): number {
-    if (this.paginator) {
-      return this.paginator.pageIndex * this.offset;
-    }
-    return 0;
-  }
-  
-
   constructor(private restAPIConnector: RestApiConnectorService, private authenticationService: AuthenticationService) {
     this.filterOptions = [
         {
