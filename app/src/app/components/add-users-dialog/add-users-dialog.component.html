@@ -1,6 +1,6 @@
 <div class="add-dialog">
   <h1 *ngIf="config.title" mat-dialog-title>{{config.title}}</h1>
-    <app-users-list [config]="{'mode':'select', 'columnsToDisplay':['username','email'], 'selectedUserIds':workingUserList, 'showFilters': false}"></app-users-list>
+    <app-users-list [config]="{'mode':'select', 'columnsToDisplay':['username','email'], 'selectedUserIds':workingUserList, 'showFilters': false, 'selection': selection}"></app-users-list>
     <div class="centered button-padding">
         <button mat-mini-fab class="extended-fab-button left-button" color="primary" (click)="dialogRef.close(workingUserList)">
             <span class="text-label">{{config.buttonLabel? config.buttonLabel : "ADD"}}</span>
