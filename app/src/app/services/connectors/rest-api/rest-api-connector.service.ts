@@ -102,7 +102,7 @@ export interface Namespace {
     providedIn: 'root'
 })
 export class RestApiConnectorService extends ApiConnector {
-    private get baseUrl(): string { return environment.integrations.rest_api.url; }
+    private get apiUrl(): string { return environment.integrations.rest_api.url; }
 
     teamList;
 
@@ -110,6 +110,7 @@ export class RestApiConnectorService extends ApiConnector {
       super(snackbar);
       this.teamList = [new Team({id:'1',name:'Team Name',description:'Team Description',users:['identity--f568ad89-69bc-48e7-877b-43755f1d376d']})];
     }
+    
     /**
      * Get the name of a given STIX object
      */
@@ -177,7 +178,7 @@ export class RestApiConnectorService extends ApiConnector {
                 if (options.domains) options.domains.forEach(domain => query = query.append('domain', domain));
             }
             // perform the request
-            let url = `${this.baseUrl}/${plural}`;
+            let url = `${this.apiUrl}/${plural}`;
             return this.http.get(url, {headers: this.headers, params: query}).pipe(
                 tap(results => logger.log(`retrieved ${plural}`, results)), // on success, trigger the success notification
                 map(results => {
@@ -403,7 +404,7 @@ export class RestApiConnectorService extends ApiConnector {
         if (state) query = query.set("state", state);
         if (revoked) query = query.set("includeRevoked", revoked ? "true" : "false");
         if (deprecated) query = query.set("includeDeprecated", deprecated ? "true" : "false");
-        return this.http.get(`${this.baseUrl}/attack-objects`, {params: query}).pipe(
+        return this.http.get(`${this.apiUrl}/attack-objects`, {params: query}).pipe(
             tap(results => logger.log(`retrieved ATT&CK objects`, results)), // on success, trigger the success notification
             map(results => {
                 if (!deserialize) return results; //skip deserialization if param not added
@@ -445,7 +446,7 @@ export class RestApiConnectorService extends ApiConnector {
         let attackClass = attackTypeToClass[attackType];
         let plural = attackTypeToPlural[attackType]
         return function<P extends T>(id: string, modified?: Date | string, versions="latest", includeSubs?: boolean, retrieveContents?: boolean, retrieveDataComponents?: boolean): Observable<P[]> {
-            let url = `${this.baseUrl}/${plural}/${id}`;
+            let url = `${this.apiUrl}/${plural}/${id}`;
             if (modified) {
                 let modifiedString = typeof(modified) == "string"? modified : modified.toISOString();
                 url += `/modified/${modifiedString}`;
@@ -634,7 +635,7 @@ export class RestApiConnectorService extends ApiConnector {
         let attackClass = attackTypeToClass[attackType];
         let plural = attackTypeToPlural[attackType];
         return function<P extends T>(object: P): Observable<P> {
-            let url = `${this.baseUrl}/${plural}`;
+            let url = `${this.apiUrl}/${plural}`;
             return this.http.post(url, object.serialize(), {headers: this.headers}).pipe(
                 tap(this.handleSuccess(`${this.getObjectName(object)} saved`)),
                 map(result => {
@@ -744,7 +745,7 @@ export class RestApiConnectorService extends ApiConnector {
         let plural = attackTypeToPlural[attackType];
         return function<P extends T>(object: T, modified?: Date): Observable<P> {
             if (!modified) modified = object.modified; //infer modified from STIX object modified date
-            let url = `${this.baseUrl}/${plural}/${object.stixID}/modified/${modified}`;
+            let url = `${this.apiUrl}/${plural}/${object.stixID}/modified/${modified}`;
             return this.http.put(url, object.serialize(), {headers: this.headers}).pipe(
                 tap(this.handleSuccess(`${this.getObjectName(object)} saved`)),
                 map(result => {
@@ -847,7 +848,7 @@ export class RestApiConnectorService extends ApiConnector {
     private deleteStixObjectFactory(attackType: AttackType) {
         let plural = attackTypeToPlural[attackType];
         return function(id: string): Observable<{}> {
-            let url = `${this.baseUrl}/${plural}/${id}`;
+            let url = `${this.apiUrl}/${plural}/${id}`;
             return this.http.delete(url).pipe(
                 tap(this.handleSuccess(`${attackType} deleted`)),
                 catchError(this.handleError_raise()),
@@ -928,7 +929,7 @@ export class RestApiConnectorService extends ApiConnector {
      * @returns {Observable<{}>} observable of the response body
      */
     public deleteNote(id: string) {
-        return this.http.delete(`${this.baseUrl}/notes/${id}`).pipe(
+        return this.http.delete(`${this.apiUrl}/notes/${id}`).pipe(
             tap(this.handleSuccess("note removed")),
             catchError(this.handleError_raise()),
             share()
@@ -978,7 +979,7 @@ export class RestApiConnectorService extends ApiConnector {
         if (args.limit) query = query.set("limit", args.limit.toString());
         if (args.offset) query = query.set("offset", args.offset.toString());
         if (args.limit || args.offset) query = query.set("includePagination", "true");
-        let url = `${this.baseUrl}/relationships`
+        let url = `${this.apiUrl}/relationships`
         return this.http.get(url, {params: query}).pipe(
             tap(results => logger.log("retrieved relationships", results)),
             map(results => {
@@ -1058,7 +1059,7 @@ export class RestApiConnectorService extends ApiConnector {
      * @returns {Technique[]} a list of techniques that reference the tactic
      */
     public getTechniquesInTactic(tactic_id: string, modified: Date): Observable<Technique[]> {
-        let url = `${this.baseUrl}/tactics/${tactic_id}/modified/${modified.toISOString()}/techniques`;
+        let url = `${this.apiUrl}/tactics/${tactic_id}/modified/${modified.toISOString()}/techniques`;
         return this.http.get(url).pipe(
             tap(results => logger.log("retrieved techniques", results)),
             map(response => {
@@ -1080,7 +1081,7 @@ export class RestApiConnectorService extends ApiConnector {
      * @returns {Tactic[]} a list of tactics that are referenced by the technique
      */
     public getTacticsRelatedToTechnique(technique_id: string, modified: Date): Observable<Tactic[]> {
-        let url = `${this.baseUrl}/techniques/${technique_id}/modified/${modified.toISOString()}/tactics`;
+        let url = `${this.apiUrl}/techniques/${technique_id}/modified/${modified.toISOString()}/tactics`;
         return this.http.get(url).pipe(
             tap(results => logger.log("retrieved tactics", results)),
             map(response => {
@@ -1108,7 +1109,7 @@ export class RestApiConnectorService extends ApiConnector {
      * @returns {Observable<Paginated>} paginated data for external references
      */
     public getAllReferences(limit?: number, offset?: number, search?: string): Observable<Paginated<ExternalReference>> {
-        let url = `${this.baseUrl}/references`;
+        let url = `${this.apiUrl}/references`;
         // parse params into query string
         let query = new HttpParams({encoder: new CustomEncoder()});
         // pagination
@@ -1129,7 +1130,7 @@ export class RestApiConnectorService extends ApiConnector {
      * @returns {Observable<ExternalReference>} the external reference with the given source_name
      */
     public getReference(source_name: string): Observable<ExternalReference> {
-        let url = `${this.baseUrl}/references`;
+        let url = `${this.apiUrl}/references`;
         // parse params into query string
         let query = new HttpParams({encoder: new CustomEncoder()});
         query = query.set("sourceName", source_name);
@@ -1146,7 +1147,7 @@ export class RestApiConnectorService extends ApiConnector {
      * @returns {Observable<ExternalReference>} the created reference
      */
     public postReference(reference: ExternalReference): Observable<ExternalReference> {
-        let url = `${this.baseUrl}/references`;
+        let url = `${this.apiUrl}/references`;
         return this.http.post<ExternalReference>(url, reference).pipe(
             tap(this.handleSuccess(`${reference.source_name} saved`)),
             catchError(this.handleError_raise<ExternalReference>()), // on error, trigger the error notification and continue operation without crashing (returns empty item)
@@ -1160,7 +1161,7 @@ export class RestApiConnectorService extends ApiConnector {
      * @returns {Observable<ExternalReference>} the updated reference
      */
     public putReference(reference: ExternalReference): Observable<ExternalReference> {
-        let url = `${this.baseUrl}/references`;
+        let url = `${this.apiUrl}/references`;
         return this.http.put<ExternalReference>(url, reference).pipe(
             tap(this.handleSuccess(`${reference.source_name} saved`)),
             catchError(this.handleError_raise<ExternalReference>()), // on error, trigger the error notification and continue operation without crashing (returns empty item)
@@ -1174,7 +1175,7 @@ export class RestApiConnectorService extends ApiConnector {
      * @returns {Observable<{}>} observable of the response body
      */
     public deleteReference(source_name: string) {
-        let url = `${this.baseUrl}/references`;
+        let url = `${this.apiUrl}/references`;
         let query = new HttpParams({encoder: new CustomEncoder()});
         query = query.set("sourceName", source_name);
         return this.http.delete(url, {params: query}).pipe(
@@ -1204,7 +1205,7 @@ export class RestApiConnectorService extends ApiConnector {
         if (preview) query = query.set("previewOnly", "true");
         if (force) query = query.set("forceImport", "all");
         // perform the request
-        return this.http.post(`${this.baseUrl}/collection-bundles`, collectionBundle, {params: query}).pipe(
+        return this.http.post(`${this.apiUrl}/collection-bundles`, collectionBundle, {params: query}).pipe(
             tap(result => {
                 if (preview) logger.log("previewed collection import", result);
                 else this.handleSuccess("imported collection")(result);
@@ -1282,7 +1283,7 @@ export class RestApiConnectorService extends ApiConnector {
         query = query.set("collectionId", id);
         query = query.set("collectionModified", modified.toISOString());
         if (includeNotes) query = query.set("includeNotes", "true");
-        return this.http.get(`${this.baseUrl}/collection-bundles`, {params: query}).pipe(
+        return this.http.get(`${this.apiUrl}/collection-bundles`, {params: query}).pipe(
             tap(results => logger.log("retrieved collection bundle")),
             catchError(this.handleError_continue<any>({})),
             share() //multicast
@@ -1301,7 +1302,7 @@ export class RestApiConnectorService extends ApiConnector {
      * @returns {Observable<CollectionIndex>} posted index if successful
      */
     public postCollectionIndex(index: CollectionIndex): Observable<CollectionIndex> {
-        return this.http.post<CollectionIndex>(`${this.baseUrl}/collection-indexes`, index).pipe(
+        return this.http.post<CollectionIndex>(`${this.apiUrl}/collection-indexes`, index).pipe(
             tap(this.handleSuccess("collection index added")),
             map(result => result as CollectionIndex),
             catchError(this.handleError_raise<CollectionIndex>())
@@ -1316,7 +1317,7 @@ export class RestApiConnectorService extends ApiConnector {
      */
     public putCollectionIndex(index: CollectionIndex, successMessage: string = "collection index updated"): Observable<CollectionIndex> {
         let serialized = index.serialize()
-        return this.http.put<CollectionIndex>(`${this.baseUrl}/collection-indexes/${index.collection_index.id}`, serialized).pipe(
+        return this.http.put<CollectionIndex>(`${this.apiUrl}/collection-indexes/${index.collection_index.id}`, serialized).pipe(
             tap(this.handleSuccess(successMessage)),
             map(result => new CollectionIndex(result)),
             catchError(this.handleError_raise<CollectionIndex>())
@@ -1330,7 +1331,7 @@ export class RestApiConnectorService extends ApiConnector {
      * @returns {Observable<CollectionIndex>} collection indexes
      */
     public getCollectionIndexes(limit?: number, offset?: number): Observable<CollectionIndex[]> {
-        return this.http.get<CollectionIndex[]>(`${this.baseUrl}/collection-indexes`).pipe(
+        return this.http.get<CollectionIndex[]>(`${this.apiUrl}/collection-indexes`).pipe(
             tap(_ => logger.log("retrieved collection indexes")), // on success, trigger the success notification
             map(results => { return results.map(raw => new CollectionIndex(raw)); }),
             catchError(this.handleError_continue<CollectionIndex[]>([])) // on error, trigger the error notification and continue operation without crashing (returns empty item)
@@ -1342,7 +1343,7 @@ export class RestApiConnectorService extends ApiConnector {
      * @param {string} id the ID of the collection index to delete
      */
     public deleteCollectionIndex(id: string): Observable<{}> {
-        return this.http.delete(`${this.baseUrl}/collection-indexes/${id}`).pipe(
+        return this.http.delete(`${this.apiUrl}/collection-indexes/${id}`).pipe(
             tap(this.handleSuccess("collection index removed")),
             catchError(this.handleError_raise())
         )
@@ -1354,11 +1355,9 @@ export class RestApiConnectorService extends ApiConnector {
      * @returns {Observable<CollectionIndex>} the collection index at the URL
      */
     public getRemoteIndex(url: string): Observable<CollectionIndex> {
-        console.log("get remote index via rest api")
-        let cmBaseUrl = environment.integrations.collection_manager.url;
-        let params = new HttpParams({encoder: new CustomEncoder()}).set("url", url);
+        let params = new HttpParams({encoder: new CustomEncoder()});
         let headers: HttpHeaders = new HttpHeaders({ 'ExcludeCredentials': 'true' });
-        return this.http.get(`${cmBaseUrl}/collection-indexes/remote`, {headers: headers, params: params}).pipe(
+        return this.http.get(url, {headers: headers, params: params}).pipe(
             tap(_ => logger.log("downloaded index at", url)), // on success, trigger the success notification
             map(index => { return {
                 "collection_index": index,
@@ -1382,7 +1381,7 @@ export class RestApiConnectorService extends ApiConnector {
     public getAllAllowedValues(): Observable<any> {
         if (this.allowedValues) { return of(this.allowedValues)}
 
-        const data$ = this.http.get<any>(`${this.baseUrl}/config/allowed-values`).pipe(
+        const data$ = this.http.get<any>(`${this.apiUrl}/config/allowed-values`).pipe(
             tap(_ => logger.log("retrieved allowed values")),
             map(result => result as any),
             catchError(this.handleError_continue<string[]>([]))
@@ -1399,7 +1398,7 @@ export class RestApiConnectorService extends ApiConnector {
      * @returns {Observable<any>} default marking definitions
      */
      public getDefaultMarkingDefinitions(): Observable<any> {
-        return this.http.get(`${this.baseUrl}/config/default-marking-definitions`).pipe(
+        return this.http.get(`${this.apiUrl}/config/default-marking-definitions`).pipe(
             tap(_ => logger.log("retrieved default marking definitions")),
             map(result => {
                 return result;
@@ -1413,7 +1412,7 @@ export class RestApiConnectorService extends ApiConnector {
      * @returns {Observable<any>} default marking definitions
      */
     public postDefaultMarkingDefinitions(defaultMarkingDefs: string[]): Observable<any> {
-        return this.http.post(`${this.baseUrl}/config/default-marking-definitions`, defaultMarkingDefs).pipe(
+        return this.http.post(`${this.apiUrl}/config/default-marking-definitions`, defaultMarkingDefs).pipe(
             tap(this.handleSuccess(`saved default marking definitions`)),
             catchError(this.handleError_raise<string[]>()),
             share() //multicast to subscribers
@@ -1425,7 +1424,7 @@ export class RestApiConnectorService extends ApiConnector {
      * @returns {Observable<Identity>} the organization identity
      */
      public getOrganizationIdentity(): Observable<Identity> {
-        return this.http.get(`${this.baseUrl}/config/organization-identity`).pipe(
+        return this.http.get(`${this.apiUrl}/config/organization-identity`).pipe(
             tap(_ => logger.log("retrieved organization identity")),
             map(result => {
                 return new Identity(result);
@@ -1446,7 +1445,7 @@ export class RestApiConnectorService extends ApiConnector {
             switchMap((result) => {
                 logger.log(result);
                 // set the organization identity to be this identity's ID after it was created/updated
-                return this.http.post(`${this.baseUrl}/config/organization-identity`, {id: result.stixID}).pipe(
+                return this.http.post(`${this.apiUrl}/config/organization-identity`, {id: result.stixID}).pipe(
                     tap(this.handleSuccess("Organization Identity Updated")),
                     map(_ => {
                         return new Identity(result);
@@ -1463,7 +1462,7 @@ export class RestApiConnectorService extends ApiConnector {
      * @returns {Observable<Namespace>} the organization namespace configurations
      */
     public getOrganizationNamespace(): Observable<Namespace> {
-        return this.http.get(`${this.baseUrl}/config/organization-namespace`).pipe(
+        return this.http.get(`${this.apiUrl}/config/organization-namespace`).pipe(
             tap(_ => logger.log("retrieved organization namespace configurations")),
             map(result => {
                 return result;
@@ -1481,7 +1480,7 @@ export class RestApiConnectorService extends ApiConnector {
      */
     public setOrganizationNamespace(namespaceSettings: Namespace):  Observable<Namespace> {
         const range = namespaceSettings.range_start ? Number(namespaceSettings.range_start) : 0;
-        return this.http.post(`${this.baseUrl}/config/organization-namespace`, {...namespaceSettings, range_start: range}).pipe(
+        return this.http.post(`${this.apiUrl}/config/organization-namespace`, {...namespaceSettings, range_start: range}).pipe(
             // set the organization identity to be this identity's ID after it was created/updated
             tap(this.handleSuccess("Organization Namespace Updated")),
             map(_ => {
@@ -1507,7 +1506,7 @@ export class RestApiConnectorService extends ApiConnector {
      * @returns {Observable<Paginated>} paginated data of the user accounts
      */
     public getAllUserAccounts(options?: {limit?: number, offset?: number, status?: string[], role?: string[], search?: string}): Observable<Paginated<UserAccount>> {
-        let url = `${this.baseUrl}/user-accounts`;
+        let url = `${this.apiUrl}/user-accounts`;
         // parse params into query string
         let query = new HttpParams({encoder: new CustomEncoder()});
         // pagination
@@ -1531,7 +1530,7 @@ export class RestApiConnectorService extends ApiConnector {
      * @returns {Observable<UserAccount>} the object with the given ID
      */
     public getUserAccount(id: string): Observable<UserAccount> {
-        let url = `${this.baseUrl}/user-accounts/${id}`;
+        let url = `${this.apiUrl}/user-accounts/${id}`;
         return this.http.get<UserAccount>(url).pipe(
             catchError(this.handleError_continue<UserAccount>()),
             share() // multicast to subscribers
@@ -1544,7 +1543,7 @@ export class RestApiConnectorService extends ApiConnector {
      * @returns {Observable<UserAccount>} the created object
      */
     public postUserAccount(userAccount: UserAccount): Observable<UserAccount> {
-        let url = `${this.baseUrl}/user-accounts/${userAccount.id}`;
+        let url = `${this.apiUrl}/user-accounts/${userAccount.id}`;
         return this.http.post<UserAccount>(url, userAccount.serialize()).pipe(
             catchError(this.handleError_raise<UserAccount>()),
             share() // multicast to subscribers
@@ -1557,7 +1556,7 @@ export class RestApiConnectorService extends ApiConnector {
      * @returns {Observable<UserAccount>} the updated object
      */
     public putUserAccount(userAccount: UserAccount): Observable<UserAccount> {
-        let url = `${this.baseUrl}/user-accounts/${userAccount.id}`;
+        let url = `${this.apiUrl}/user-accounts/${userAccount.id}`;
         return this.http.put<UserAccount>(url, userAccount.serialize()).pipe(
             catchError(this.handleError_raise<UserAccount>()),
             share() // multicast to subscribers
@@ -1672,7 +1671,7 @@ export class RestApiConnectorService extends ApiConnector {
     public getStixBundle(domain: string): Observable<any> {
         let query = new HttpParams();
         query = query.set("domain", domain);
-        return this.http.get(`${this.baseUrl}/stix-bundles`, {params: query}).pipe(
+        return this.http.get(`${this.apiUrl}/stix-bundles`, {params: query}).pipe(
             tap(results => logger.log("retrieved stix bundle")),
             catchError(this.handleError_continue<any>({})),
             share() //multicast
