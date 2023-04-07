@@ -19,7 +19,7 @@ export class AuthenticationService extends ApiConnector {
     public get isLoggedIn(): boolean { return this.currentUser && this.currentUser.status == Status.ACTIVE; }
     public activeRoles: Role[] = [Role.ADMIN, Role.EDITOR, Role.VISITOR];
     public inactiveRoles: Role[] = [Role.NONE];
-    private get baseUrl(): string { return environment.integrations.rest_api.url; }
+    private get apiUrl(): string { return environment.integrations.rest_api.url; }
     public onLogin = new EventEmitter(); // event emitter for admin organization identity pop-up
 
     constructor(private router: Router, private http: HttpClient, snackbar: MatSnackBar, private restAPIConnector: RestApiConnectorService) { super(snackbar); }
@@ -65,7 +65,7 @@ export class AuthenticationService extends ApiConnector {
         return this.getAuthType().pipe(
             // retrieve authentication configuration
             concatMap(authnType => {
-                let url = `${this.baseUrl}/authn/${authnType}/login`;
+                let url = `${this.apiUrl}/authn/${authnType}/login`;
                 if (authnType == "oidc") {
                     // oidc login
                     url += `?destination=${encodeURIComponent(window.location.href)}`;
@@ -103,7 +103,7 @@ export class AuthenticationService extends ApiConnector {
     public logout(): Observable<any> {
         return this.getAuthType().pipe(
             concatMap(authnType => {
-                let url = `${this.baseUrl}/authn/${authnType}/logout`;
+                let url = `${this.apiUrl}/authn/${authnType}/logout`;
                 return this.http.get(url, {responseType: 'text'}).pipe(
                     map(res => {
                         this.currentUser = undefined;
@@ -125,7 +125,7 @@ export class AuthenticationService extends ApiConnector {
             // retrieve authentication configuration
             concatMap(authnType => {
                 if (authnType == "oidc") {
-                    let url = `${this.baseUrl}/authn/${authnType}/login`;
+                    let url = `${this.apiUrl}/authn/${authnType}/login`;
                     // oidc login
                     url += `?destination=${encodeURIComponent(window.location.href+'register')}`;
                     // redirect to OIDC Identity Provider
@@ -143,7 +143,7 @@ export class AuthenticationService extends ApiConnector {
             // retrieve authentication configuration
             concatMap(authnType => {
                 if (authnType == "oidc") {
-                    return this.http.post(`${this.baseUrl}/user-accounts/register`, {responseType: 'text'}).pipe(
+                    return this.http.post(`${this.apiUrl}/user-accounts/register`, {responseType: 'text'}).pipe(
                         concatMap(() => {
                             return this.getSession().pipe(
                                 map((res) => {
@@ -166,7 +166,7 @@ export class AuthenticationService extends ApiConnector {
      * otherwise return a default value
      */
     public getSession(): Observable<UserAccount> {
-        let url = `${this.baseUrl}/session`;
+        let url = `${this.apiUrl}/session`;
         // retrieve user session object
         return this.http.get<any>(url).pipe(
             concatMap(session => {
@@ -188,7 +188,7 @@ export class AuthenticationService extends ApiConnector {
      * @returns the configured user authentication mechanism
      */
     public getAuthType(): Observable<string> {
-        let url = `${this.baseUrl}/config/authn`;
+        let url = `${this.apiUrl}/config/authn`;
         return this.http.get<any>(url).pipe(
             map(results => {
                 if (results.mechanisms) {
