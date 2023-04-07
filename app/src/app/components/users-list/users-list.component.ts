@@ -170,19 +170,6 @@ export class UsersListComponent implements OnInit {
     this.restAPIConnector.putTeam(this.team);
     this.applyControls();
   }
-
-  public isSelected(user:UserAccount) : boolean {
-    return this.selection.isSelected(user.id);
-  }
-
-  public wasSelected(user:UserAccount) : void {
-    this.onSelect.emit(user.id);
-    if (this.isSelected(user)) {
-      this.config.selectedUserIds.splice(this.config.selectedUserIds.findIndex((userElement)=>{userElement===user.id}),1);
-    } else {
-      this.config.selectedUserIds.push(user.id);
-    }
-  }
 }
 
 export interface UsersListConfig {
@@ -191,6 +178,5 @@ export interface UsersListConfig {
   showSearch: boolean,
   showFilters: false,
   mode:string,
-  selectedUserIds: string[],
   selection: SelectionModel<String>,
 }

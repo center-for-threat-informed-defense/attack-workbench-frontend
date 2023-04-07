@@ -9,19 +9,15 @@ import { SelectionModel } from '@angular/cdk/collections';
   encapsulation: ViewEncapsulation.None
 })
 export class AddUsersDialogComponent implements OnInit {
-  public workingUserList:String[] = [];
   public selection:SelectionModel<String>;
   constructor(public dialogRef: MatDialogRef<AddUsersDialogComponent>, @Inject(MAT_DIALOG_DATA)  public config: AddUsersDialogConfig) {
-    // deep copy array
-    this.workingUserList = this.config.selectedUserIds.slice();
     this.selection = this.config.selection ? this.config.selection : new SelectionModel<String>(true);
-    for (let i = 0; i < this.workingUserList.length; i++) {
-      this.selection.toggle(this.workingUserList[i]);
+    for (let i = 0; i < this.config.selectedUserIds.length; i++) {
+      this.selection.toggle(this.config.selectedUserIds[i]);
     }
   }
 
   public clearSelections() {
-    this.workingUserList = [];
     this.selection.clear();
   }
 

@@ -81,9 +81,9 @@
           <th mat-header-cell *matHeaderCellDef></th><!-- nothing in header -->
           <td mat-cell *matCellDef="let user">
               <mat-checkbox *ngIf="config.mode=='select'" color="primary" 
-                            (click)="wasSelected(user); $event.stopPropagation()"
+                            (click)="onSelect.emit(user.id); $event.stopPropagation()"
                             (change)="$event ? selection.toggle(user.id) : null"
-                            [checked]="isSelected(user)">
+                            [checked]="selection.isSelected(user.id)">
               </mat-checkbox>
           </td>
         </ng-container>
