@@ -65,7 +65,7 @@ export class TeamsViewPageComponent implements OnInit,OnDestroy {
         selection: new SelectionModel<string>(true),
         title: `Select users you wish to be in this team`,
         buttonLabel: "CONFIRM",
-        clearSelection: true,
+        clearSelection: false,
       },
     });
     let subscription = prompt.afterClosed().subscribe({
