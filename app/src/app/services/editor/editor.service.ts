@@ -50,6 +50,8 @@ export class EditorService {
                     }
                     if (this.type === "admin") {
                       this.hasStatus = false;
+                    } else {
+                      this.hasStatus = true;
                     }
                 }
                 this.sidebarService.setEnabled("history", this.editable && this.hasStatus);
