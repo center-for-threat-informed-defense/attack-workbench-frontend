@@ -1,0 +1,13 @@
+.tactic-cell p{
+  text-align: center;
+    line-height: normal;
+  margin: 0;
+  padding: 0;
+  color: #707070;
+}
+.tactic-header {
+  font-weight: bold;
+  margin: 0;
+  text-align: center;
+  line-height: normal;
+}
