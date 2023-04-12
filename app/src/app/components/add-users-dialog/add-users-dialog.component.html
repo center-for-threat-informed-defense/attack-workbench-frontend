@@ -1,0 +1,15 @@
+<div class="add-dialog">
+  <h1 *ngIf="config.title" mat-dialog-title>{{config.title}}</h1>
+    <app-users-list [config]="{'mode':'select', 'columnsToDisplay':['username','email'], 'showFilters': false, 'selection': selection}"></app-users-list>
+    <div class="centered button-padding">
+        <button mat-mini-fab class="extended-fab-button left-button" color="primary" (click)="dialogRef.close(selection.selected)">
+            <span class="text-label">{{config.buttonLabel? config.buttonLabel : "ADD"}}</span>
+        </button>
+        <button *ngIf="config.clearSelection" mat-mini-fab class="extended-fab-button" color="primary" (click)="clearSelections()">
+            <span class="text-label">Clear</span>
+        </button>
+        <button mat-mini-fab class="extended-fab-button right-button" color="primary" (click)="dialogRef.close(null)">
+            <span class="text-label">Cancel</span>
+        </button>
+    </div>
+</div>
