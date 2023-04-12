@@ -192,8 +192,6 @@ import { NotesSearchListComponent } from './views/notes-page/notes-search-list/n
 import { TeamsListPageComponent } from './views/admin-page/teams/teams-list-page/teams-list-page.component';
 import { TeamsViewPageComponent } from './views/admin-page/teams/teams-view-page/teams-view-page.component';
 import { CreateNewDialogComponent } from './components/create-new-dialog/create-new-dialog.component';
-import { UsersListComponent } from './components/users-list/users-list.component';
-import { AddUsersDialogComponent } from './components/add-users-dialog/add-users-dialog.component';
 
 @NgModule({
   declarations: [
@@ -318,8 +316,6 @@ import { AddUsersDialogComponent } from './components/add-users-dialog/add-users
     TeamsListPageComponent,
     TeamsViewPageComponent,
     CreateNewDialogComponent,
-    UsersListComponent,
-    AddUsersDialogComponent
   ],
   imports: [
     BreadcrumbModule,
