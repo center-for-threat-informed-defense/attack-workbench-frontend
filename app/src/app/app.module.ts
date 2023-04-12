@@ -188,6 +188,8 @@ import { CampaignViewComponent } from './views/stix/campaign/campaign-view/campa
 import { CampaignListComponent } from './views/stix/campaign/campaign-list/campaign-list.component';
 
 import { NotesSearchListComponent } from './views/notes-page/notes-search-list/notes-search-list.component';
+import { AddUsersDialogComponent } from './components/add-users-dialog/add-users-dialog.component';
+import { UsersListComponent } from './components/users-list/users-list.component';
 
 @NgModule({
   declarations: [
@@ -307,7 +309,9 @@ import { NotesSearchListComponent } from './views/notes-page/notes-search-list/n
     CitationPropertyComponent,
     CitationViewComponent,
     CitationEditComponent,
-    NotesSearchListComponent
+    NotesSearchListComponent,
+    AddUsersDialogComponent,
+    UsersListComponent
   ],
   imports: [
     BreadcrumbModule,
