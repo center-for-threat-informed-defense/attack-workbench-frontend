@@ -1,0 +1,30 @@
+@import "../../../views/stix/matrix/matrix-base/matrix-base.component.scss";
+
+.technique-cell {
+  background-color: white;
+  color: black;
+  cursor: pointer;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  position: relative;
+  font-size: $sizeunit - 1px;
+  line-height: $sizeunit;
+  min-width: $sizeunit;
+  min-height: $sizeunit;
+  >div {
+    padding: $sizeunit /2 3px;
+    box-sizing: border-box;
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+
+  &.showID:not(.showName) {
+    text-align: center;
+  }
+  &.highlight {
+    background-color: rgb(96, 197, 255)
+  }
+
+}
