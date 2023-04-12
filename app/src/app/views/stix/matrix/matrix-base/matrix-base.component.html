@@ -1,0 +1,17 @@
+<div class="matrix" style="height: calc(100vh - 114px);" >
+  <table>
+    <tr>
+      <td *ngFor="let item of config.tacticList; let i = index">
+        <app-tactic-cell [tactic]="item" [count]="10" [showID]="showID"></app-tactic-cell>
+      </td>
+    </tr>
+        <td *ngFor="let item of matrixMap | keyvalue">
+          <tr *ngFor="let technique of item.value">
+            <td *ngIf="!technique.is_subtechnique">
+              <app-technique-cell [technique]="technique" [showID]="showID"></app-technique-cell>
+            </td>
+          </tr>
+        </td>
+  </table>
+
+</div>

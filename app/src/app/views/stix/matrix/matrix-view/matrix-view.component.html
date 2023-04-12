@@ -31,7 +31,7 @@
                 mode: editing? 'edit' : 'view',
                 object: matrix,
                 field: 'description',
-                firstParagraphOnly: false, 
+                firstParagraphOnly: false,
                 referencesField: matrix.external_references,
                 label: 'Description'
             }"></app-descriptive-property>
@@ -45,16 +45,13 @@
         </div>
         <div class="row">
             <div class="col">
-                <!-- TACTICS -->
-                <app-ordered-list-property *ngIf="all_tactics; else loadingTactics" class="grow-to-row" [config]="{
-                    mode: editing? 'edit' : 'view',
-                    field: 'name',
-                    globalObjects: all_tactics,
-                    object: matrix,
-                    objectOrderedListField: 'tactic_refs',
-                    type: 'tactic',
-                    clickBehavior: 'link'
-                }"></app-ordered-list-property>
+                <!-- MATRIX -->
+                <app-matrix-base *ngIf="all_tactics; else loadingTactics" [config]="{
+                  field: 'name',
+                  object: matrix,
+
+                  tacticList: all_tactics
+                }"></app-matrix-base>
                 <ng-template #loadingTactics>
                     <app-loading-overlay></app-loading-overlay>
                 </ng-template>

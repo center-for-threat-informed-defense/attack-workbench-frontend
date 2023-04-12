@@ -1,0 +1,16 @@
+.matrix table {
+  border: none;
+  border-collapse: collapse;
+}
+.matrix table th, .matrix table td {
+  border: black solid 1px;
+  width: 200px;
+  font-size: smaller;
+}
+
+$sizeunit: 14px;
+
+.matrix {
+    border-collapse: collapse;
+    line-height: $sizeunit;
+}
