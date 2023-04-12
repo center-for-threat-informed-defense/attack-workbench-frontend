@@ -460,7 +460,21 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
 
           this.sidebarService.opened = true;
           this.sidebarService.currentTab = 'notes';
-          this.router.navigateByUrl('/'+ type + '/' + object_ref);
+
+          // collection objs have a different URL structure
+          let url = `/${type}/${object_ref}`;
+          if (type === 'collection') {
+            const collectionSub = this.restAPIConnectorService.getCollection(object_ref).subscribe({
+              next: (result) => { 
+                url = `${url}/modified/${result[0].modified.toISOString()}`;
+                this.router.navigateByUrl(url);
+              },
+              complete: () => { collectionSub.unsubscribe(); }
+            });
+          } else {
+            this.router.navigateByUrl(url);
+          }
+
       }
         else { //expand
             this.expandedElement = this.expandedElement === element ? null : element;
