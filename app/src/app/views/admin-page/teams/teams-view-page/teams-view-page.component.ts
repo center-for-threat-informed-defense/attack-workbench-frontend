@@ -4,7 +4,6 @@ import { Subscription } from 'rxjs';
 import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/rest-api-connector.service';
 import { EditorService } from 'src/app/services/editor/editor.service';
 import { MatDialog } from '@angular/material/dialog';
-import { AddDialogComponent } from 'src/app/components/add-dialog/add-dialog.component';
 import { AddUsersDialogComponent } from 'src/app/components/add-users-dialog/add-users-dialog.component';
 import { SelectionModel } from '@angular/cdk/collections';
 

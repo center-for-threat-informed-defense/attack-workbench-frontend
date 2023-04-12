@@ -6,7 +6,7 @@ import { Role } from 'src/app/classes/authn/role';
 import { MatPaginator } from '@angular/material/paginator';
 import { AuthenticationService } from '../../services/connectors/authentication/authentication.service';
 import { Status } from 'src/app/classes/authn/status';
-// import { Team } from 'src/app/classes/authn/team';
+import { Team } from 'src/app/classes/authn/team';
 import { SelectionModel } from '@angular/cdk/collections';
 
 @Component({
@@ -27,8 +27,7 @@ export class UsersListComponent implements OnInit {
   public userSubscription: Subscription;
   public selectedFilters: string[];
   public searchQuery: '';
-  // public team:Team;
-  public team:any;
+  public team:Team;
   public selection: SelectionModel<String>;
 
   public get showSearch(): boolean {
@@ -73,7 +72,7 @@ export class UsersListComponent implements OnInit {
 
   public getAccounts(options: { limit: number, offset: number, status?: string[], role?: string[], search?: string }) {
       if (this.team) {
-        this.userAccounts$ = this.restAPIConnector.getAllUserAccounts();
+        this.userAccounts$ = this.restAPIConnector.getUserAccountsByTeamId(this.team.id, options);
         this.userSubscription = this.userAccounts$.subscribe({
           next: (data) => {
               this.userAccounts = data.data.filter((user)=>this.team.users.includes(user.id));
@@ -168,15 +167,14 @@ export class UsersListComponent implements OnInit {
 
   public removeUser(user:UserAccount): void {
     this.team.users = this.team.users.filter((userElement)=>userElement!==user.id);
-    // this.restAPIConnector.putTeam(this.team);
+    this.restAPIConnector.putTeam(this.team);
     this.applyControls();
   }
 }
 
 export interface UsersListConfig {
   columnsToDisplay:string[],
-  // team:Team,
-  team: any,
+  team:Team,
   showSearch: boolean,
   showFilters: false,
   mode:string,
