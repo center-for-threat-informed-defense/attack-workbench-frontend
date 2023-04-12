@@ -5,10 +5,18 @@
         <app-tactic-cell [tactic]="item" [count]="10" [showID]="showID"></app-tactic-cell>
       </td>
     </tr>
-        <td *ngFor="let item of matrixMap | keyvalue">
+        <td *ngFor="let item of matrixMap | keyvalue ; let i = index">
           <tr *ngFor="let technique of item.value">
             <td *ngIf="!technique.is_subtechnique">
-              <app-technique-cell [technique]="technique" [showID]="showID"></app-technique-cell>
+              <app-technique-cell [technique]="technique"
+                [tactic]="getTactic(technique)"
+                [showID]="showID"
+                [viewModel]="viewModel"
+                (leftclick)="onTechniqueLeftClick($event, technique, config.tacticList[i])"
+                (rightclick)="onTechniqueRightClick($event, technique)"
+                (highlight)="onTechniqueHighlight($event, technique, tactic)"
+                (unhighlight)="onTechniqueUnhighlight($event)">
+              </app-technique-cell>
             </td>
           </tr>
         </td>

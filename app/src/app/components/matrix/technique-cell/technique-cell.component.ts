@@ -30,16 +30,29 @@ export class TechniqueCellComponent extends Cell implements OnInit {
   ngOnInit() {
 
   }
-  public onLeftClick(event) {
 
+  public getClass(): string {
+    let theclass = super.getClass();
+    return theclass
+  }
+  public onLeftClick(event) {
+    console.log("technique left click");
+    this.leftclick.emit({
+      "technique": this.technique,
+    })
   }
   public onRightClick(event) {
+    console.log("technique right click");
+
     this.showContextmenu = true;
   }
   public onMouseEnter() {
+    console.log("on mouse enter- time to highlight")
     this.highlight.emit();
   }
   public onMouseLeave() {
+    console.log("on mouse leave- time to unhighlight")
+
     this.unhighlight.emit();
   }
 }

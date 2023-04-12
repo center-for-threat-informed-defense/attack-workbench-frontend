@@ -1,17 +1,22 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { StixObject } from 'src/app/classes/stix/stix-object';
+import { Tactic } from 'src/app/classes/stix/tactic';
 import { Technique } from 'src/app/classes/stix/technique';
+import { MatrixCommon } from 'src/app/components/matrix/matrix-common';
 import { FilterGroup } from 'src/app/components/stix/stix-list/stix-list.component';
 import { Paginated, RestApiConnectorService } from 'src/app/services/connectors/rest-api/rest-api-connector.service';
+import { ViewModel, ViewModelsService } from 'src/app/services/viewmodels.service';
 
 @Component({
   selector: 'app-matrix-base',
   templateUrl: './matrix-base.component.html',
   styleUrls: ['./matrix-base.component.scss']
 })
-export class MatrixBaseComponent implements OnInit {
+export class MatrixBaseComponent extends MatrixCommon implements OnInit {
   @Input() public config: MatrixBaseConfig;
+  @Input() viewModel: ViewModel;
+
   private _idToLabel: Map<string, string>;
   public data$: Observable<Paginated<StixObject>>;
   public filterOptions: FilterGroup[] = [];
@@ -24,9 +29,14 @@ export class MatrixBaseComponent implements OnInit {
   public matrixMap: Map<string, Technique[]>;
   constructor(
     private restAPIConnectorService: RestApiConnectorService,
-    ) { }
+    public viewModelsService: ViewModelsService
+    ) {
+      super(viewModelsService)
+    }
 
   ngOnInit() {
+    console.log("loading vm ", this.viewModel);
+
     this.matrixMap = new Map<string, Technique[]>();
     this.config.tacticList.forEach((tactic) => {
       let itemsCopy;
@@ -41,7 +51,6 @@ export class MatrixBaseComponent implements OnInit {
       })
 
     })
-
   }
 
     /**
@@ -59,10 +68,19 @@ export class MatrixBaseComponent implements OnInit {
       return this._idToLabel.get(stixID);
   }
   hideDisabled: boolean = false; //are disabled techniques hidden?
+
+  getTactic(id: string): Tactic {
+    this.config.tacticList.forEach((item)=> {
+      if(item.attackID == id || item.stixID == id) {
+        return item;
+      }
+    })
+    return null;
+  }
 }
 
 
 export interface MatrixBaseConfig {
   field: string;
-  tacticList: StixObject[];
+  tacticList: Tactic[];
 }
