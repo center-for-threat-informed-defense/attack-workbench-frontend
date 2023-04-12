@@ -9,7 +9,7 @@ import { Tactic } from 'src/app/classes/stix/tactic';
 export class TacticCellComponent implements OnInit {
   @Input() tactic: Tactic;
   @Input() count: Number;
-  public showId = false;
+  @Input() showID: boolean;
 
   constructor() { }
 
