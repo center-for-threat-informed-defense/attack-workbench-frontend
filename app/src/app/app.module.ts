@@ -191,6 +191,7 @@ import { NotesSearchListComponent } from './views/notes-page/notes-search-list/n
 import { MatrixBaseComponent } from './views/stix/matrix/matrix-base/matrix-base.component';
 import { TacticCellComponent } from './components/matrix/tactic-cell/tactic-cell.component';
 import { TechniqueCellComponent } from './components/matrix/technique-cell/technique-cell.component';
+import { TooltipComponent } from './components/matrix/technique-cell/tooltip/tooltip.component';
 
 @NgModule({
   declarations: [
@@ -280,6 +281,7 @@ import { TechniqueCellComponent } from './components/matrix/technique-cell/techn
     MatrixBaseComponent,
     TacticCellComponent,
     TechniqueCellComponent,
+    TooltipComponent,
 
     MitigationListComponent,
     MitigationViewComponent,

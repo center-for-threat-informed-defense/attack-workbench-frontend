@@ -22,10 +22,9 @@ export class TechniqueCellComponent extends Cell implements OnInit {
   }
   public get showTooltip(): boolean {
     if (this.showContextMenu) return false;
-
+    if (this.isHighlighted) return true;
     return false
   }
-
 
   ngOnInit() {
 
@@ -47,12 +46,9 @@ export class TechniqueCellComponent extends Cell implements OnInit {
     this.showContextmenu = true;
   }
   public onMouseEnter() {
-    console.log("on mouse enter- time to highlight")
     this.highlight.emit();
   }
   public onMouseLeave() {
-    console.log("on mouse leave- time to unhighlight")
-
     this.unhighlight.emit();
   }
 }
