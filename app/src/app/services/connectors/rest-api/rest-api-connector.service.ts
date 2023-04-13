@@ -218,13 +218,17 @@ export class RestApiConnectorService extends ApiConnector {
     }
 
     /**
-     * Get all techniques
+     * Get all techniques               
      * @param {number} [limit] the number of techniques to retrieve
      * @param {number} [offset] the number of techniques to skip
      * @param {string} [state] if specified, only get objects with this state
-     * @param {boolean} [revoked] if true, get revoked objects
-     * @param {boolean} [deprecated] if true, get deprecated objects
+     * @param {boolean} [includeRevoked] if true, get revoked objects
+     * @param {boolean} [includeDeprecated] if true, get deprecated objects
+     * @param {"all" | "latest"} [versions] if "all", get all versions of the objects. if "latest", only get the latest version of each object
      * @param {string[]} [excludeIDs] if specified, excludes these STIX IDs from the result
+     * @param {string} [search] if specified, return objects where the query occurs in the name, description, or ATT&CK ID; the search is case-insensitive
+     * @param {string[]} [platforms] if specified, retrieve objects that contain the specified platform(s)
+     * @param {string[]} [domains] if specified, retrieve objects that contain the specified domain(s)
      * @returns {Observable<Technique[]>} observable of retrieved objects
      */
     public get getAllTechniques() { return this.getStixObjectsFactory<Technique>("technique"); }
@@ -363,13 +367,16 @@ export class RestApiConnectorService extends ApiConnector {
      public get getAllIdentities() { return this.getStixObjectsFactory<Identity>("identity"); }
     /**
      * Get all relationships
-     * @param {number} [limit] the number of relationships to retrieve
-     * @param {number} [offset] the number of relationships to skip
+     * @param {number} [limit] the number of techniques to retrieve
+     * @param {number} [offset] the number of techniques to skip
      * @param {string} [state] if specified, only get objects with this state
-     * @param {boolean} [revoked] if true, get revoked objects
-     * @param {versions} ["all" | "latest"] if "all", get all versions of the relationships. if "latest", only get the latest version of each collection.
-     * @param {boolean} [deprecated] if true, get deprecated objects
+     * @param {boolean} [includeRevoked] if true, get revoked objects
+     * @param {boolean} [includeDeprecated] if true, get deprecated objects
+     * @param {"all" | "latest"} [versions] if "all", get all versions of the objects. if "latest", only get the latest version of each object
      * @param {string[]} [excludeIDs] if specified, excludes these STIX IDs from the result
+     * @param {string} [search] if specified, return objects where the query occurs in the name, description, or ATT&CK ID; the search is case-insensitive
+     * @param {string[]} [platforms] if specified, retrieve objects that contain the specified platform(s)
+     * @param {string[]} [domains] if specified, retrieve objects that contain the specified domain(s)
      * @returns {Observable<Relationships[]>} observable of retrieved objects
      */
     public get getAllRelationships() { return this.getStixObjectsFactory<Relationship>("relationship"); }
