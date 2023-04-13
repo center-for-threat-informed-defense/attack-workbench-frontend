@@ -148,7 +148,8 @@ export class RestApiConnectorService extends ApiConnector {
                                                  excludeIDs?: string[], 
                                                  search?: string,
                                                  platforms?: string[],
-                                                 domains?: string[]
+                                                 domains?: string[],
+                                                 users?: string[]
                                                  }): Observable<Paginated<StixObject>> {
             // parse params into query string
             let query = new HttpParams({encoder: new CustomEncoder()});
@@ -168,6 +169,8 @@ export class RestApiConnectorService extends ApiConnector {
                 // platforms/domains
                 if (options.platforms) options.platforms.forEach(platform => query = query.append('platform', platform));
                 if (options.domains) options.domains.forEach(domain => query = query.append('domain', domain));
+                // users
+                if (options.users) options.users.forEach(user => query = query.append('users', user));
             }
             // perform the request
             let url = `${this.apiUrl}/${plural}`;
@@ -378,24 +381,27 @@ export class RestApiConnectorService extends ApiConnector {
      * @param {number} [offset] the number of collections to skip
      * @param {string} [state] if specified, only get objects with this state
      * @param {boolean} [revoked] if true, get revoked objects
-     * @param {versions} ["all" | "latest"] if "all", get all versions of the collections. if "latest", only get the latest version of each collection.
      * @param {boolean} [deprecated] if true, get deprecated objects
      * @param {boolean} [deserialize] if true, deserialize objects to full STIX objects
+     * @param {string[]} [users] filter to only include objects modified by the list of given user IDs
      * @returns {Observable<any[]>} observable of retrieved objects
      */
-    public getAllObjects(attackIDs?: string[], limit?: number, offset?: number, state?: string, revoked?: boolean, deprecated?: boolean, deserialize?: boolean) {
+    public getAllObjects(attackIDs?: string[], limit?: number, offset?: number, state?: string, revoked?: boolean, deprecated?: boolean, deserialize?: boolean, users?: string[]) {
         let query = new HttpParams({encoder: new CustomEncoder()});
         // pagination
         if (limit) query = query.set("limit", limit.toString());
         if (offset) query = query.set("offset", offset.toString());
         if (limit || offset) query = query.set("includePagination", "true");
-        // other properties
+        // ATT&CK ID filter
         if (attackIDs) {
             attackIDs.forEach(id => query = query.append("attackId", id));
         }
+        // object state
         if (state) query = query.set("state", state);
         if (revoked) query = query.set("includeRevoked", revoked ? "true" : "false");
         if (deprecated) query = query.set("includeDeprecated", deprecated ? "true" : "false");
+        // User ID filter
+        if (users) query = query.set("users", users.toString());
         return this.http.get(`${this.apiUrl}/attack-objects`, {params: query}).pipe(
             tap(results => logger.log(`retrieved ATT&CK objects`, results)), // on success, trigger the success notification
             map(results => {
