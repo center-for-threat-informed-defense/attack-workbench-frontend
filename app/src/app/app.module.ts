@@ -192,6 +192,7 @@ import { MatrixBaseComponent } from './views/stix/matrix/matrix-base/matrix-base
 import { TacticCellComponent } from './components/matrix/tactic-cell/tactic-cell.component';
 import { TechniqueCellComponent } from './components/matrix/technique-cell/technique-cell.component';
 import { TooltipComponent } from './components/matrix/technique-cell/tooltip/tooltip.component';
+import { ContextmenuComponent } from './components/matrix/technique-cell/contextmenu/contextmenu.component';
 
 @NgModule({
   declarations: [
@@ -282,6 +283,7 @@ import { TooltipComponent } from './components/matrix/technique-cell/tooltip/too
     TacticCellComponent,
     TechniqueCellComponent,
     TooltipComponent,
+    ContextmenuComponent,
 
     MitigationListComponent,
     MitigationViewComponent,

@@ -35,8 +35,6 @@ export class MatrixBaseComponent extends MatrixCommon implements OnInit {
     }
 
   ngOnInit() {
-    console.log("loading vm ", this.viewModel);
-
     this.matrixMap = new Map<string, Technique[]>();
     this.config.tacticList.forEach((tactic) => {
       let itemsCopy;

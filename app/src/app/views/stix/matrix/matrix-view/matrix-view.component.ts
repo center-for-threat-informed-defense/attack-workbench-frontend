@@ -35,6 +35,5 @@ export class MatrixViewComponent extends StixViewPage implements OnInit {
         let vm = this.viewModelsService.newViewModel("newMatrixView");
         vm.loadVMData();
         this.viewModel = vm;
-        console.log("set vm ", vm);
     }
 }

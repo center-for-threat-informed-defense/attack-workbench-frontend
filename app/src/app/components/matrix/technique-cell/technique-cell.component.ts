@@ -1,5 +1,6 @@
 import { Component, Input, Output, OnInit, EventEmitter } from '@angular/core';
 import { Technique } from 'src/app/classes/stix/technique';
+import { ViewModelsService } from 'src/app/services/viewmodels.service';
 import { Cell } from '../cell';
 
 @Component({
@@ -15,9 +16,8 @@ export class TechniqueCellComponent extends Cell implements OnInit {
   @Output() unhighlight = new EventEmitter<any>();
   @Output() leftclick = new EventEmitter<any>(); // emit with the selected technique and the modifier keys
 
-  public showContextmenu: boolean = false;
 
-  constructor() {
+  constructor(public viewModelsService: ViewModelsService) {
     super()
   }
   public get showTooltip(): boolean {
@@ -39,17 +39,20 @@ export class TechniqueCellComponent extends Cell implements OnInit {
     this.leftclick.emit({
       "technique": this.technique,
     })
+    return false;
   }
   public onRightClick(event) {
-    console.log("technique right click");
-
-    this.showContextmenu = true;
+    event.preventDefault(); // prevent browser default context menu
+    this.showContextMenu = true;
   }
   public onMouseEnter() {
     this.highlight.emit();
   }
   public onMouseLeave() {
     this.unhighlight.emit();
+  }
+  public closeContextMenu() {
+    this.showContextMenu = false;
   }
 }
 

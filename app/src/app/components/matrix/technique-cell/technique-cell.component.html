@@ -9,4 +9,5 @@
     {{technique.name}}
   </div>
   <app-tooltip *ngIf="showTooltip" [technique]="technique" [tactic]="tactic" [viewModel]="viewModel"></app-tooltip>
+  <app-contextmenu *ngIf="showContextMenu" [technique]="technique" [tactic]="tactic" [viewModel]="viewModel" (close)="closeContextMenu(); onMouseLeave()"></app-contextmenu>
 </div>

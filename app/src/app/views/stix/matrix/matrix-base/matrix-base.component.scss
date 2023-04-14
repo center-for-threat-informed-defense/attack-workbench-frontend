@@ -6,6 +6,7 @@
   border: black solid 1px;
   width: 200px;
   font-size: smaller;
+  border-collapse: collapse;
 }
 
 $sizeunit: 14px;
@@ -13,4 +14,23 @@ $sizeunit: 14px;
 .matrix {
     border-collapse: collapse;
     line-height: $sizeunit;
+}
+
+
+.contextMenu-cover {
+  // covers entire page
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 100vw;
+  height: 100vh;
+  // background: rgba(0, 0, 0, 0.15);
+}
+
+.contextMenu-box {
+  position: absolute;
+  // background: white;
+  &.left {
+    right: 0
+  }
 }
