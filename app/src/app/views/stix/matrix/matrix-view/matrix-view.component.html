@@ -37,25 +37,26 @@
             }"></app-descriptive-property>
         </div>
     </div>
-    <div *ngIf="config.showRelationships || !config.hasOwnProperty('showRelationships')">
+  </div>
+  <div *ngIf="config.showRelationships || !config.hasOwnProperty('showRelationships')">
         <div class="row">
             <div class="col">
-                <h2 class="section-header">TACTICS</h2>
+                <h2 class="section-header">MATRIX</h2>
             </div>
         </div>
-        <div class="row">
-            <div class="col">
-                <!-- MATRIX -->
-                <app-matrix-base *ngIf="all_tactics; else loadingTactics" [viewModel]="viewModel" [config]="{
-                  field: 'name',
-                  object: matrix,
-                  tacticList: all_tactics
-                }"></app-matrix-base>
-                <ng-template #loadingTactics>
-                    <app-loading-overlay></app-loading-overlay>
-                </ng-template>
-            </div>
-        </div>
+    </div>
+  <div class="row w-full overflow-scroll">
+    <div class="col">
+        <!-- MATRIX -->
+        <app-matrix-base *ngIf="all_tactics; else loadingTactics" [viewModel]="viewModel" [config]="{
+          field: 'name',
+          object: matrix,
+          tacticList: all_tactics
+        }"></app-matrix-base>
+        <ng-template #loadingTactics>
+            <app-loading-overlay></app-loading-overlay>
+        </ng-template>
+      </div>
     </div>
     <!-- EXTERNAL REFERENCES -->
     <div *ngIf="matrix.external_references.list().length > 0">
@@ -74,4 +75,4 @@
             </div>
         </div>
     </div>
-</div>
+

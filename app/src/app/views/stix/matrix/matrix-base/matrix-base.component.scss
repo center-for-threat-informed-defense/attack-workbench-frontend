@@ -2,11 +2,16 @@
   border: none;
   border-collapse: collapse;
 }
-.matrix table th, .matrix table td {
-  border: black solid 1px;
+.matrix table th {
   width: 200px;
+
+}
+.matrix table td {
+  width: 100%;
+  // border: black solid 1px;
   font-size: smaller;
   border-collapse: collapse;
+  vertical-align: top;
 }
 
 $sizeunit: 14px;
@@ -32,5 +37,52 @@ $sizeunit: 14px;
   // background: white;
   &.left {
     right: 0
+  }
+}
+.sidebar {
+  max-width: 15px;
+  background-color: #707070;
+  color: white;
+  height: 100%;
+  vertical-align: middle !important;
+  text-align: center;
+  .handle {
+    text-align: center;
+    vertical-align: middle;
+    transform: rotate(-90deg);
+    width: 12px; height: 12px;
+    font-size: 16px;
+    line-height: 12px;
+  }
+  box-shadow: 0 0 0 1px #dfdfdf inset;
+
+}
+
+.techniques-table {
+  border-collapse: collapse;
+  width: 100%;
+  tr, td {
+      padding: 0;
+  }
+  tr {
+      height: 1px;
+  }
+}
+
+.subtechniques {
+  border-left: 2px solid #aaa;
+  &.hidden {
+    display: none;
+  }
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  margin-left: -1px;
+  white-space: nowrap;
+  vertical-align: top;
+
+  .subtechnique {
+      height: 100%;
+      flex-grow: 1;
   }
 }
