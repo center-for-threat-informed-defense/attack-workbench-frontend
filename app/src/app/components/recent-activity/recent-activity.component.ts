@@ -1,6 +1,8 @@
 import { Component, Input, OnInit, ViewEncapsulation } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
+import { forkJoin } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { Collection } from 'src/app/classes/stix/collection';
 import { Note } from 'src/app/classes/stix/note';
 import { Relationship } from 'src/app/classes/stix/relationship';
@@ -40,21 +42,27 @@ export class RecentActivityComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        this.loadActivity();
-    }
-
-    public loadActivity() {
         this.loading = true;
-
-        // set up subscribers to get object versions
-        let objects$ = this.restAPIService.getAllObjects(null, null, null, null, true, true, true);
-        let subscription = objects$.subscribe({
+        let subscription = this.getUserActivity().subscribe({
             next: (results) => {
-                this.parseActivity(results.data as StixObject[]);
+                this.parseActivity(results as StixObject[]);
                 this.loading = false;
             },
             complete: () => { subscription.unsubscribe(); }
         });
+    }
+
+    public getUserActivity() {
+        return forkJoin({
+            objects$: this.restAPIService.getAllObjects(null, null, null, null, true, true, true, this.identities),
+            relationships$: this.restAPIService.getAllRelationships({includeRevoked: true, includeDeprecated: true, lastUpdatedBy: this.identities})
+        }).pipe(
+            map(results => {
+                let activity : StixObject[] = [];
+                results.objects$.data.forEach((sdo: StixObject) => {if (sdo.attackType !== "relationship") activity.push(sdo)});
+                return activity.concat(results.relationships$.data);
+            })
+        );
     }
 
     public isRelationship(event): boolean {
@@ -64,29 +72,15 @@ export class RecentActivityComponent implements OnInit {
     /**
      * Transform the objects into ActivityEvent objects and add them to the allRecentActivity array
      */
-    private parseActivity(allObjects: StixObject[]): void {
-        let activity = [];
-        let objectLookup = {};
-
-        // build object lookup table
-        allObjects.forEach(sdo => {
-            // check if modified by one of the given identities
-            if (sdo.workflow && sdo.workflow.created_by_user_account && this.identities.includes(sdo.workflow.created_by_user_account)) {
-                activity.push(sdo);
-            }
-            objectLookup[sdo.stixID] = sdo;
-        });
-
+    private parseActivity(activity: StixObject[]): void {
         // build recent activity events
         for (let stixObject of activity) {
-            let objectCreated = stixObject.created.getTime() == stixObject.modified.getTime();
-            let released = stixObject.attackType == "collection" && (stixObject as Collection).release;
+            let createEvent = stixObject.created.getTime() == stixObject.modified.getTime();
+            let releaseEvent = stixObject.attackType == "collection" && (stixObject as Collection).release;
 
             let objectName;
             if (stixObject.type == "relationship") {
                 let relationship = stixObject as Relationship;
-                relationship.set_source_object(objectLookup[relationship.source_ref], this.restAPIService);
-                relationship.set_target_object(objectLookup[relationship.target_ref], this.restAPIService);
                 objectName = `${relationship.source_name} ${relationship.relationship_type} ${relationship.target_name}`
             } else if (stixObject.type == "note") {
                 objectName = (stixObject as Note).title;
@@ -95,12 +89,11 @@ export class RecentActivityComponent implements OnInit {
             }
 
             this.allRecentActivity.push({
-                icon: objectCreated ? (stixObject.type == "note" ? "sticky_note_2" : "add") : "edit",
+                icon: createEvent ? (stixObject.type == "note" ? "sticky_note_2" : "add") : "edit",
                 name: objectName,
                 sdo: stixObject,
-                object_ref: stixObject.type == "note" ? objectLookup[(stixObject as Note).object_refs[0]] : undefined,
-                objectCreated: objectCreated,
-                released: released
+                objectCreated: createEvent,
+                released: releaseEvent
             });
         }
 

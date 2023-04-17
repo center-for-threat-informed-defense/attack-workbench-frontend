@@ -149,7 +149,7 @@ export class RestApiConnectorService extends ApiConnector {
                                                  search?: string,
                                                  platforms?: string[],
                                                  domains?: string[],
-                                                 users?: string[]
+                                                 lastUpdatedBy?: string[]
                                                  }): Observable<Paginated<StixObject>> {
             // parse params into query string
             let query = new HttpParams({encoder: new CustomEncoder()});
@@ -170,7 +170,7 @@ export class RestApiConnectorService extends ApiConnector {
                 if (options.platforms) options.platforms.forEach(platform => query = query.append('platform', platform));
                 if (options.domains) options.domains.forEach(domain => query = query.append('domain', domain));
                 // users
-                if (options.users) options.users.forEach(user => query = query.append('users', user));
+                if (options.lastUpdatedBy) options.lastUpdatedBy.forEach(id => query = query.append('lastUpdatedBy', id));
             }
             // perform the request
             let url = `${this.apiUrl}/${plural}`;
@@ -623,13 +623,14 @@ export class RestApiConnectorService extends ApiConnector {
      * @param {versions} [string] default "latest", if "all" returns all versions of the object instead of just the latest version.
      * @returns {Observable<Identity>} the object with the given ID and modified date
      */
-     public get getIdentity() { return this.getStixObjectFactory<Identity>("identity"); }
+    public get getIdentity() { return this.getStixObjectFactory<Identity>("identity"); }
     /**
      * Get a single marking definition by STIX ID
      * @param {string} id the object STIX ID
      * @returns {Observable<MarkingDefinition>} the object with the given ID
      */
-     public get getMarkingDefinition() { return this.getStixObjectFactory<MarkingDefinition>("marking-definition")}
+    public get getMarkingDefinition() { return this.getStixObjectFactory<MarkingDefinition>("marking-definition")}
+
     /**
      * Factory to create a new STIX object creator (POST) function
      * @template T the type to create
