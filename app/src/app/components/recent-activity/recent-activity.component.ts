@@ -34,6 +34,25 @@ export class RecentActivityComponent implements OnInit {
     public loading: boolean = false;
     public hoveredEvent: ActivityEvent = null;
 
+    // Type map for redirections
+    private typeMap = {
+        "attack-pattern": "technique",
+        "x-mitre-tactic": "tactic",
+        "intrusion-set": "group",
+        "campaign": "campaign",
+        "malware": "software",
+        "tool": "software",
+        "course-of-action": "mitigation",
+        "x-mitre-matrix": "matrix",
+        "x-mitre-collection": "collection",
+        "relationship": "relationship",
+        "note": "note",
+        "identity": "identity",
+        "marking-definition": "marking-definition",
+        "x-mitre-data-source": "data-source",
+        "x-mitre-data-component": "data-component"
+    }
+
     constructor(private restAPIService: RestApiConnectorService,
                 private dialog: MatDialog,
                 private router: Router,
@@ -55,11 +74,11 @@ export class RecentActivityComponent implements OnInit {
     public getUserActivity() {
         return forkJoin({
             objects$: this.restAPIService.getAllObjects(null, null, null, null, true, true, true, this.identities),
-            relationships$: this.restAPIService.getAllRelationships({includeRevoked: true, includeDeprecated: true, lastUpdatedBy: this.identities})
+            relationships$: this.restAPIService.getAllRelationships({ includeRevoked: true, includeDeprecated: true, lastUpdatedBy: this.identities })
         }).pipe(
             map(results => {
-                let activity : StixObject[] = [];
-                results.objects$.data.forEach((sdo: StixObject) => {if (sdo.attackType !== "relationship") activity.push(sdo)});
+                let activity: StixObject[] = [];
+                results.objects$.data.forEach((sdo: StixObject) => { if (sdo.attackType !== "relationship") activity.push(sdo) });
                 return activity.concat(results.relationships$.data);
             })
         );
@@ -118,9 +137,27 @@ export class RecentActivityComponent implements OnInit {
         if (event.sdo.attackType == 'note') {
             this.sidebarService.opened = true;
             this.sidebarService.currentTab = 'notes';
-            this.router.navigateByUrl('/' + event.object_ref.attackType + '/' + event.object_ref.stixID);
+            let objectRef = (event.sdo as Note).object_refs[0];
+            let type = this.typeMap[objectRef.split('--')[0]];
+            this.navigateTo(objectRef, type);
         } else {
-            this.router.navigateByUrl('/' + event.sdo.attackType + '/' + event.sdo.stixID);
+            this.navigateTo(event.sdo.stixID, event.sdo.attackType);
+        }
+    }
+
+    public navigateTo(stixID: string, type: string): void {
+        let url = `/${type}/${stixID}`;
+        if (type == 'collection') {
+            // collection URLs must include their modified date
+            const collectionSub = this.restAPIService.getCollection(stixID).subscribe({
+                next: (result) => {
+                    url = `${url}/modified/${result[0].modified.toISOString()}`;
+                    this.router.navigateByUrl(url);
+                },
+                complete: () => { collectionSub.unsubscribe(); }
+            });
+        } else {
+            this.router.navigateByUrl(url);
         }
     }
 
