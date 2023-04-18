@@ -6,6 +6,7 @@ import { Technique } from "../classes/stix/technique";
 })
 export class ViewModelsService {
   @Output() onSelectionChange = new EventEmitter<any>();
+  pinnedCell = "";
   viewModels: ViewModel[] = [];
 
   constructor(){}
@@ -98,16 +99,9 @@ export class ViewModel {
    * @param {Tactic} tactic wherein the technique occurs
    */
     public highlightTechnique(technique: Technique, tactic?: Tactic | null) {
-        // if (this.selectSubtechniquesWithParent && technique.is_subtechnique)
-        // {
-        //   this.highlightedTechniques.add(technique.parent.id);
-        // }
-        console.log("highlighting technique: ", technique);
-
         this.highlightedTechnique = technique;
         this.highlightedTechniques.add(technique.attackID);
         this.highlightedTactic = tactic;
-        console.log("list ", this.highlightedTechniques)
     }
     /**
      * Clear the technique highlight
@@ -116,6 +110,118 @@ export class ViewModel {
       this.highlightedTactic = null;
       this.highlightedTechnique = null;
       this.highlightedTechniques = new Set<string>();
+  }
+  private selectedTechniques: Set<string> = new Set<string>();
+    /**
+     * Select the given technique. Depending on selectTechniquesAcrossTactics, either selects in all tactics or in given tactic
+     * @param {Technique} technique to select
+     * @param {Tactic} tactic wherein the technique occurs
+     */
+    public selectTechnique(technique: Technique, tactic: Tactic): void {
+      if (this.selectTechniquesAcrossTactics) this.selectTechniqueAcrossTactics(technique);
+      else (this.selectTechniqueInTactic(technique, tactic));
+  }
+  /**
+       * select the given technique across all tactics in which it occurs
+       * @param {Technique} technique to select
+       * @param {boolean} walkChildren (recursion helper) if true and selectSubtechniquesWithParent is true, walk selection up to parent technique
+       * @param highlightTechniques, if true, highlight techniques rather than add to selected techniques group
+       */
+  public selectTechniqueAcrossTactics(technique: Technique, walkChildren= true, highlightTechniques = false): void {
+    if (this.selectSubtechniquesWithParent && walkChildren) { //walk to parent / children / siblings
+        if (technique.is_subtechnique) { //select from parent
+            // this.selectTechniqueAcrossTactics(technique.parent, true, highlightTechniques);
+            return;
+        } else { //select subtechniques
+            // for (let subtechnique of technique.subtechniques) {
+            //     this.selectTechniqueAcrossTactics(subtechnique, false, highlightTechniques);
+            // }
+        }
+    }
+    if (highlightTechniques) {
+        this.highlightTechnique(technique);
+    }
+    else {
+        for (let id of technique.get_all_technique_tactic_ids()) {
+            // if (!this.isCurrentlyEditing()) this.activeTvm = this.getTechniqueVM_id(id); // first selection
+            this.selectedTechniques.add(id);
+            // this.checkValues(true, id);
+        }
+    }
+  }
+      /**
+     * select the given technique in the given tactic
+     * @param {Technique} technique to select
+     * @param {Tactic} tactic wherein the technique occurs
+     * @param {boolean} walkChildren (recursion helper) if true and selectSubtechniquesWithParent is true, walk selection up to parent technique
+     */
+      public selectTechniqueInTactic(technique: Technique, tactic: Tactic, walkChildren=true): void {
+        if (this.selectSubtechniquesWithParent && walkChildren) { //check parent / children / siblings
+            if (technique.is_subtechnique) { //select from parent
+                // this.selectTechniqueInTactic(technique.parent, tactic, true);
+                return;
+            } else { //select subtechniques
+                // for (let subtechnique of technique.subtechniques) {
+                //     this.selectTechniqueInTactic(subtechnique, tactic, false);
+                // }
+            }
+        }
+        let technique_tactic_id = technique.get_technique_tactic_id(tactic);
+        // if (!this.isCurrentlyEditing()) this.activeTvm = this.getTechniqueVM_id(technique_tactic_id); // first selection
+        this.selectedTechniques.add(technique_tactic_id);
+        // this.checkValues(true, technique_tactic_id);
+    }
+
+  /**
+   * unselect all techniques
+   */
+    public clearSelectedTechniques() {
+      this.selectedTechniques.clear();
+      // this.activeTvm = undefined;
+      // this.linkMismatches = [];
+      // this.metadataMismatches = [];
+  }
+
+  /**
+   * Select all techniques
+   */
+  public selectAllTechniques(): void {
+      this.clearSelectedTechniques()
+      this.invertSelection();
+  }
+      /**
+   * Set all selected techniques to deselected, and select all techniques not currently selected
+   */
+      public invertSelection(): void {
+        // let previouslySelected = new Set(this.selectedTechniques);
+        // this.clearSelectedTechniques();
+        // let self = this;
+        // this.techniqueVMs.forEach(function(tvm, key) {
+        //     if (!previouslySelected.has(tvm.technique_tactic_union_id)) {
+        //         if (!self.isCurrentlyEditing()) self.activeTvm = self.getTechniqueVM_id(tvm.technique_tactic_union_id); // first selection
+        //         self.selectedTechniques.add(tvm.technique_tactic_union_id);
+        //         self.checkValues(true, tvm.technique_tactic_union_id);
+        //     }
+        // });
+    }
+
+  techniqueVMs: Map<string, TechniqueVM> = new Map<string, TechniqueVM>(); //configuration for each technique
+  public getTechniqueVM(technique: Technique, tactic: Tactic) : TechniqueVM {
+    console.log("technique vm ", this.techniqueVMs);
+
+    if (!this.hasTechniqueVM(technique, tactic)) throw Error("technique VM not found: " + technique.attackID + ", " + tactic.attackID);
+    return this.techniqueVMs.get(technique.get_technique_tactic_id(tactic))
+  }
+  public getTechniqueVM_id(technique_tactic_id: string): TechniqueVM {
+    if (!this.hasTechniqueVM_id(technique_tactic_id)) throw Error("technique VM not found: " + technique_tactic_id);
+    return this.techniqueVMs.get(technique_tactic_id);
+  }
+
+  public hasTechniqueVM(technique: Technique, tactic: Tactic): boolean {
+    return this.techniqueVMs.has(technique.get_technique_tactic_id(tactic));
+  }
+  public hasTechniqueVM_id(technique_tactic_id: string): boolean {
+    return this.techniqueVMs.has(technique_tactic_id);
   }
 }
 export class TechniqueVM {

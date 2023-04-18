@@ -2,8 +2,10 @@
   text-align: center;
     line-height: normal;
   margin: 0;
-  padding: 0;
   color: #707070;
+}
+.tactic-cell {
+  padding: 5px;
 }
 .tactic-header {
   font-weight: bold;

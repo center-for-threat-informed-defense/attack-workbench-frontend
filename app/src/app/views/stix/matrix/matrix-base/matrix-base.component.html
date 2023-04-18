@@ -11,7 +11,7 @@
       <td *ngFor="let item of matrixMap | keyvalue ; let i = index">
           <ng-container *ngFor="let technique of item.value">
             <ng-container *ngIf="!technique.is_subtechnique">
-              <table>
+              <table [ngStyle]="{'width': technique.show_subtechniques ? '385px' : '200px'}">
                 <tr>
                   <td>
                     <app-technique-cell [technique]="technique"
@@ -24,11 +24,11 @@
                     (unhighlight)="onTechniqueUnhighlight($event)">
                     </app-technique-cell>
                   </td>
-                  <td class="sidebar">
+                  <td class="sidebar" (click)="onToggleSubtechniquesVisible(technique, tactic)">
                     <div class="handle">=</div>
                   </td>
                   <td class="subtechniques-td">
-                    <div class="subtechniques" [class.hidden]="true">
+                    <div class="subtechniques" [class.hidden]="!technique.show_subtechniques">
                       <div class="subtechnique">
                           <app-technique-cell [technique]="item.value[0]"
                             [tactic]="getTactic(item.value[0])"

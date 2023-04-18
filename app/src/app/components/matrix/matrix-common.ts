@@ -18,14 +18,9 @@ export abstract class MatrixCommon {
     console.log("on technique right click: ", technique)
   }
   public onTechniqueHighlight(event: any, technique: Technique, tactic: Tactic) {
-    console.log("on technique highlight")
-    console.log("vm ", this.viewModel, this.matrix);
-
     this.viewModel.highlightTechnique(technique, tactic)
-
   }
   public onTechniqueUnhighlight(event: any) {
-    console.log("on technique un highlight");
     this.viewModel.clearHighlight();
 
   }
@@ -33,6 +28,16 @@ export abstract class MatrixCommon {
     console.log(" on tactic click ", tactic);
 
   }
+  // complete logic once api call is done
+  public onToggleSubtechniquesVisible(technique: Technique, tactic: Tactic) {
+    console.log("toggling visibility for ", technique);
+    technique.show_subtechniques = !technique.show_subtechniques;
+    // if (technique.subtechniques.length == 0) return;
+    // let tvm = this.viewModel.getTechniqueVM(technique, tactic);
+    // console.log("tvm: ", tvm)
+    // tvm.showSubtechniques = !tvm.showSubtechniques;
+}
+
 }
 
 /**
