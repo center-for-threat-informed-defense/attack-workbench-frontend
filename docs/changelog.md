@@ -38,6 +38,7 @@
 
 #### Improvements in 1.3.1
 - Added individual attribution to edits made on Note objects.
+- Added ability to search objects by the user that created them.
 
 #### Fixes in 1.3.1
 -   Fixed an issue where assigning an existing technique as a sub-technique would not create a `subtechnique-of` relationship. See [frontend#446](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/446).
