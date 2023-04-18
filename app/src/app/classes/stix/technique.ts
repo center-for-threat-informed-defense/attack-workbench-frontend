@@ -4,6 +4,7 @@ import { RestApiConnectorService } from "src/app/services/connectors/rest-api/re
 import { ValidationData } from "../serializable";
 import { StixObject } from "./stix-object";
 import { logger } from "../../util/logger";
+import { Tactic } from "./tactic";
 
 export class Technique extends StixObject {
     public name: string = "";
@@ -25,7 +26,8 @@ export class Technique extends StixObject {
     public requires_network: boolean = false;
 
     public is_subtechnique: boolean = false;
-    
+    public show_subtechniques: boolean = false;
+
     public readonly supportsAttackID = true;
     public readonly supportsNamespace = true;
     protected get attackIDValidator() { return {
@@ -35,7 +37,7 @@ export class Technique extends StixObject {
 
     // NOTE: the following two fields will only be populated when this object is fetched using getTechnique().
     //       they will NOT be populated when fetched using getAllTechniques().
-    public subTechniques: Technique[] = []; 
+    public subTechniques: Technique[] = [];
     public parentTechnique: Technique = null;
 
     private killChainMap = {
@@ -86,6 +88,22 @@ export class Technique extends StixObject {
             this.deserialize(sdo);
         }
     }
+    /**
+     * get ID identifying this technique
+     */
+    public get_technique_tactic_id(tactic: string | Tactic): string {
+      let tactic_shortname = tactic instanceof Tactic ? tactic.shortname : tactic;
+      if (!this.tactics.includes(tactic_shortname)) {
+        throw new Error(tactic_shortname + " is not a tactic of " + this.attackID);
+      }
+      return this.attackID + "^" + tactic_shortname;
+    }
+    public get_all_technique_tactic_ids(): string[] {
+      console.log("getting technique tactic ids");
+
+      if (this.revoked || this.deprecated) return [];
+      return this.tactics.map((shortname: string) => this.get_technique_tactic_id(shortname));
+  }
 
     /**
      * Transform the current object into a raw object for sending to the back-end, stripping any unnecessary fields
@@ -94,7 +112,7 @@ export class Technique extends StixObject {
      */
     public serialize(): any {
         let rep = super.base_serialize();
-        
+
         rep.stix.name = this.name.trim();
         rep.stix.x_mitre_domains = this.domains;
         rep.stix.x_mitre_detection = this.detection;
@@ -218,12 +236,12 @@ export class Technique extends StixObject {
                 if (typeof(sdo.x_mitre_is_subtechnique) === "boolean") this.is_subtechnique = sdo.x_mitre_is_subtechnique;
                 else logger.error("TypeError: is subtechnique field is not a boolean:", sdo.x_mitre_is_subtechnique, "(", typeof(sdo.x_mitre_is_subtechnique),")")
             }
-            
+
             if ("x_mitre_remote_support" in sdo) {
                 if (typeof(sdo.x_mitre_remote_support) === "boolean") this.supports_remote = sdo.x_mitre_remote_support;
                 else logger.error("TypeError: supports remote field is not a boolean:", sdo.x_mitre_remote_support, "(", typeof(sdo.x_mitre_remote_support),")")
             }
-            
+
             if ("x_mitre_network_requirements" in sdo) {
                 if (typeof(sdo.x_mitre_network_requirements) === "boolean") this.requires_network = sdo.x_mitre_network_requirements;
                 else logger.error("TypeError: requires network field is not a boolean:", sdo.x_mitre_network_requirements, "(", typeof(sdo.x_mitre_network_requirements),")")
@@ -287,7 +305,7 @@ export class Technique extends StixObject {
                     "result": "error",
                     "message": `CAPEC ID${malformed_capec.length > 1? 's' : ''} ${malformed_capec.join(", ")} do${malformed_capec.length == 1? 'es' : ''} not match format CAPEC-###`
                 })
-                
+
                 // check MTC IDs
                 let mtc_regex = new RegExp(`^(${Object.keys(this.mtcUrlMap).join("|")})-\\d+$`)
                 let malformed_mtc = this.mtc_ids.filter(mtc => !mtc_regex.test(mtc));
@@ -329,7 +347,7 @@ export class Technique extends StixObject {
      */
     public save(restAPIService: RestApiConnectorService): Observable<Technique> {
         // TODO POST if the object was just created (doesn't exist in db yet)
-                
+
         let postObservable = restAPIService.postTechnique(this);
         let subscription = postObservable.subscribe({
             next: (result) => { this.deserialize(result.serialize()); },
