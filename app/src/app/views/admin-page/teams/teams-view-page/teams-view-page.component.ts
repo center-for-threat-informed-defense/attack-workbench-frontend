@@ -49,10 +49,16 @@ export class TeamsViewPageComponent implements OnInit,OnDestroy {
     }
   }
 
+  /**
+   * Loads the selected team from the REST API
+   */
   public loadTeam(): void {
     this.team = this.restAPIConnector.getTeam(this.teamId);
   }
 
+  /**
+   * Opens up the add users dialog component to allow users to select which users they wish to be part of the team
+   */
   public updateUsers(): void {
     let prompt = this.dialog.open(AddUsersDialogComponent, {
       maxWidth: "40em",

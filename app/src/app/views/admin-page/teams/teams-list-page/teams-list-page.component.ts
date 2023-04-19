@@ -37,15 +37,23 @@ export class TeamsListPageComponent implements OnInit {
   }
 
   ngOnInit(): void {
-      this.getTeams({limit: 10, offset: 0});
+      this.applyControls();
   }
 
+  /**
+   * Get teams from REST API
+   * @param options 
+   */
   public getTeams(options: { limit: number, offset: number, search?: string }) {
     const hold = this.restAPIConnector.getAllTeams(options);
     this.teams = hold.data;
     this.totalObjectCount = hold.pagination.total;
   }
 
+  /**
+   * Applies filters in the teams list
+   * @param applyControls whether or not to apply controls as well
+   */
   public applyFilters(applyControls = false): void {
       let limit = this.paginator ? this.paginator.pageSize : 10;
       let offset = this.paginator || applyControls ? this.paginator.pageIndex * limit : 0;
@@ -53,6 +61,10 @@ export class TeamsListPageComponent implements OnInit {
       this.getTeams({limit: limit, offset: offset});
   }
 
+  /**
+   * Applies search filter in the teams list
+   * @param applyControls whether or not to apply controls as well
+   */
   public applySearch(query, applyControls = false): void {
       let limit = this.paginator ? this.paginator.pageSize : 10;
       let offset = this.paginator || applyControls ? this.paginator.pageIndex * limit : 0;
@@ -61,6 +73,10 @@ export class TeamsListPageComponent implements OnInit {
       this.getTeams({limit: limit, offset: offset, search: query});
   }
 
+  /**
+   * Apply filters in the teams list
+   * @param applyControls whether or not to apply controls as well
+   */
   public applyControls(): void {
       if (this.searchQuery) this.applySearch(this.searchQuery, true);
       if (!this.searchQuery) {
@@ -70,6 +86,11 @@ export class TeamsListPageComponent implements OnInit {
       }
   }
 
+  /**
+   * Deletes a team from the REST API after the user confirms they wish to delete the team
+   * @param team Team to be deleted
+   * @param $event click event so we can stop propagation
+   */
   public deleteTeam(team:Team, $event): void {
     // overrides routerLink of parent element
     $event.stopPropagation();
@@ -90,6 +111,9 @@ export class TeamsListPageComponent implements OnInit {
     });
   }
 
+/**
+ * Opens a dialog to allow the user to input a team name and description and create a new team (user will be auto-navigated to the new team page upon completion)
+ */
   public createNewTeam(): void {
     // open create new team dialog
     let prompt = this.dialog.open(CreateNewDialogComponent, {
