@@ -9,7 +9,7 @@ export class Team extends Serializable {
     public id: string;
     public name: string;
     public description: string;
-    public users: string[];
+    public userIDs: string[] = [];
     public created: Date;
     public modified: Date;
 
@@ -31,10 +31,26 @@ export class Team extends Serializable {
             id: this.id,
             name: this.name,
             description: this.description,
-            users: this.users,
+            userIDs: this.userIDs,
             created: this.created.toISOString(),
             modified: this.modified.toISOString()
         };
+    }
+
+    /**
+     * Check if the given array is a list of strings
+     * @param arr the array to check
+     * @returns true if all objects in the array are of type string, false otherwise
+     */
+    public isStringArray = function (arr): boolean {
+        if (!Array.isArray(arr)) { return false;}
+        for (let a of arr) {
+            if (typeof(a) !== "string") {
+                logger.error("TypeError:", a, "(", typeof (a), ")", "is not a string")
+                return false;
+            }
+        }
+        return true;
     }
 
     /**
@@ -58,9 +74,9 @@ export class Team extends Serializable {
             else { logger.error('TypeError: description field is not a string:', raw.description, '(', typeof(raw.description), ')'); }
         } else { this.description = ''; }
 
-        if ('users' in raw && raw.users) {
-            if (Array.isArray(raw.users)) { this.users = raw.users; }
-            else { logger.error('TypeError: users field is not an array:', raw.users, '(', typeof(raw.users), ')'); }
+        if ('userIDs' in raw && raw.userIDs) {
+            if (this.isStringArray(raw.userIDs)) { this.userIDs = raw.userIDs; }
+            else { logger.error('TypeError: userIDs field is not a string array:', raw.userIDs, '(', typeof(raw.userIDs), ')'); }
         }
 
         /*if ('created' in raw) {
@@ -81,6 +97,7 @@ export class Team extends Serializable {
      */
     public validate(restAPIService: RestApiConnectorService): Observable<ValidationData> {
         const validation = new ValidationData();
+        // validate team name exists, and the team name is unique
         const obs = new Observable<ValidationData>();
         return obs;
     }
