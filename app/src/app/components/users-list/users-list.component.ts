@@ -31,18 +31,30 @@ export class UsersListComponent implements OnInit {
   public team:any;
   public selection: SelectionModel<String>;
 
+  /**
+   * Whether or not to show the search
+   */
   public get showSearch(): boolean {
     return this.config && this.config.showSearch !== null && this.config.showSearch !== undefined ? this.config.showSearch : true;
   }
 
+  /**
+   * Whether or not to show filters
+   */
   public get showFilters(): boolean {
     return this.config && this.config.showFilters !== null && this.config.showFilters !== undefined ? this.config.showFilters : true;
   }
 
+  /**
+   * Get current user
+   */
   public get currentUser(): UserAccount {
     return this.authenticationService.currentUser;
   }
 
+  /**
+   * Checks if user is an admin
+   */
   public get isAdmin(): boolean {
       return this.authenticationService.isAuthorized([Role.ADMIN]);
   }
@@ -64,13 +76,16 @@ export class UsersListComponent implements OnInit {
   ngOnInit(): void {
     this.columnsToDisplay = this.config && this.config.columnsToDisplay !== null && this.config.columnsToDisplay !== undefined && Array.isArray(this.config.columnsToDisplay) ? this.config.columnsToDisplay : ['username', 'email'];
     this.team = this.config && this.config.team !== null && this.config.team !== undefined ? this.config.team : null;
-    this.getAccounts({limit: 10, offset: 0});
+    this.applyControls();
     if (this.config.mode=='select') {
       this.columnsToDisplay = ['select'].concat(this.columnsToDisplay);
       this.selection = this.config.selection ? this.config.selection : new SelectionModel<String>(true)
     }
   }
 
+  /**
+   * Gets a list of all user accounts from REST API (if a team is passed in, only get accounts within the team)
+   */
   public getAccounts(options: { limit: number, offset: number, status?: string[], role?: string[], search?: string }) {
       if (this.team) {
         this.userAccounts$ = this.restAPIConnector.getAllUserAccounts();
@@ -98,6 +113,11 @@ export class UsersListComponent implements OnInit {
       }
   }
 
+  /**
+   * Apply filters to user search
+   * @param filters List of filters
+   * @param applyControls Whether or not to apply controls to the search
+   */
   public applyFilters(filters, applyControls = false): void {
       let roleFilters = [];
       let statusFilters = [];
@@ -115,6 +135,11 @@ export class UsersListComponent implements OnInit {
       this.getAccounts({limit: limit, offset: offset, status: statusFilters, role: roleFilters});
   }
 
+  /**
+   * Apply search to user search
+   * @param query query string
+   * @param applyControls Whether or not to apply controls to the search
+   */ 
   public applySearch(query, applyControls = false): void {
       let limit = this.paginator ? this.paginator.pageSize : 10;
       let offset = this.paginator || applyControls ? this.paginator.pageIndex * limit : 0;
@@ -122,6 +147,9 @@ export class UsersListComponent implements OnInit {
       this.getAccounts({limit: limit, offset: offset, search: query});
   }
 
+  /**
+   * Apply controls to the search
+   */ 
   public applyControls(): void {
       if (this.searchQuery) this.applySearch(this.searchQuery, true);
       if (this.selectedFilters) this.applyFilters(this.selectedFilters, true);
@@ -132,6 +160,11 @@ export class UsersListComponent implements OnInit {
       }
   }
 
+  /**
+   * Updates a user role
+   * @param userAccount User account to update
+   * @param newRole Role to be set
+   */
   public updateUserRole(userAccount: UserAccount, newRole: string): void {
       newRole = newRole.toUpperCase();
       if (Role[newRole]) {
@@ -148,6 +181,11 @@ export class UsersListComponent implements OnInit {
       }
   }
 
+  /**
+   * Updates a user status
+   * @param userAccount User account to update
+   * @param newStatus Status to be set
+   */
   public updateUserStatus(userAccount: UserAccount, newStatus: string): void {
       newStatus = newStatus.toUpperCase();
       if (Status[newStatus]) {
@@ -166,6 +204,10 @@ export class UsersListComponent implements OnInit {
       }
   }
 
+  /**
+   * Removes a user from a team
+   * @param user User to be removed
+   */
   public removeUser(user:UserAccount): void {
     this.team.users = this.team.users.filter((userElement)=>userElement!==user.id);
     // this.restAPIConnector.putTeam(this.team);
@@ -174,11 +216,20 @@ export class UsersListComponent implements OnInit {
 }
 
 export interface UsersListConfig {
+  // Columns to display
+  // defaults to username and email columns
   columnsToDisplay:string[],
   // team:Team,
   team: any,
+  // whether or not to display the search bar
+  // defaults to true 
   showSearch: boolean,
-  showFilters: false,
+  // whether or not to show the filters in the list
+  // defaults to true
+  showFilters: boolean,
+  // mode the list is being used 'view' or 'select'
+  // default is 'view'
   mode:string,
+  // selection object used in 'select' mode
   selection: SelectionModel<String>,
 }
