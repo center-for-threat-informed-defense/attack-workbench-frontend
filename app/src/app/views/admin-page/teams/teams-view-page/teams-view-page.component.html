@@ -36,8 +36,10 @@
           </div>
       </div>
     </div>
-    <app-users-list [config]="{'columnsToDisplay':['username','email','options'], 'team':team, 'showSearch': false, 'showFilters': false, 'mode':'view'}"></app-users-list> 
-    <div class="col" >
+    <div class="team-user-list">
+      <app-users-list [config]="{'columnsToDisplay':['username','email','options'], 'team':team, 'showSearch': false, 'showFilters': false, 'mode':'view'}"></app-users-list> 
+    </div>
+    <div class="col">
       <div class="row">
         <mat-expansion-panel>
           <mat-expansion-panel-header>
