@@ -108,7 +108,7 @@ export class RestApiConnectorService extends ApiConnector {
 
     constructor(private http: HttpClient, private snackbar: MatSnackBar) {
       super(snackbar);
-      this.teamList = [new Team({id:'1',name:'Team Name',description:'Team Description',users:['identity--f568ad89-69bc-48e7-877b-43755f1d376d']})];
+      this.teamList = [new Team({id:'1',name:'Team Name',description:'Team Description',userIDs:['identity--f568ad89-69bc-48e7-877b-43755f1d376d']})];
     }
     
     /**
