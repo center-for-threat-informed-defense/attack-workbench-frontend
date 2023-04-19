@@ -60,7 +60,7 @@ export class TeamsViewPageComponent implements OnInit,OnDestroy {
       disableClose: true,
       autoFocus: false, // disables auto focus on the dialog form field
       data: {
-        selectedUserIds: this.team.users,
+        selectedUserIds: this.team.userIDs,
         selection: new SelectionModel<string>(true),
         title: `Select users you wish to be in this team`,
         buttonLabel: "CONFIRM",
@@ -70,7 +70,7 @@ export class TeamsViewPageComponent implements OnInit,OnDestroy {
     let subscription = prompt.afterClosed().subscribe({
         next: (response) => {
             if (response!==null) {
-              this.team.users = response;
+              this.team.userIDs = response;
               this.restAPIConnector.putTeam(this.team);
               this.loadTeam();
             }

@@ -109,7 +109,7 @@ export class TeamsListPageComponent implements OnInit {
             {
               name: 'description',
               type: 'textBox',
-              required: true,
+              required: false,
             },
           ]
         },

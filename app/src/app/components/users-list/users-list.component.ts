@@ -75,7 +75,7 @@ export class UsersListComponent implements OnInit {
         this.userAccounts$ = this.restAPIConnector.getUserAccountsByTeamId(this.team.id, options);
         this.userSubscription = this.userAccounts$.subscribe({
           next: (data) => {
-              this.userAccounts = data.data.filter((user)=>this.team.users.includes(user.id));
+              this.userAccounts = data.data.filter((user)=>this.team.userIDs.includes(user.id));
               // this.totalObjectCount = data.pagination.total;
               this.totalObjectCount = this.userAccounts.length;
           },
@@ -166,7 +166,7 @@ export class UsersListComponent implements OnInit {
   }
 
   public removeUser(user:UserAccount): void {
-    this.team.users = this.team.users.filter((userElement)=>userElement!==user.id);
+    this.team.userIDs = this.team.userIDs.filter((userElement)=>userElement!==user.id);
     this.restAPIConnector.putTeam(this.team);
     this.applyControls();
   }
