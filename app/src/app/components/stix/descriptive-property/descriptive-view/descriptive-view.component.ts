@@ -146,13 +146,15 @@ export class DescriptiveViewComponent implements OnInit {
             this.preview = this.truncateToFirstParagraph(this.preview);
         }
 
-        if (this.config.referencesField && this.parseReferences) {
-            // Replace references from references field
-            this.preview = this.replaceReferences(this.preview);
-        }
-        else {
-            // Remove references if not defined
-            this.preview = this.removeReferences(this.preview);
+        if (this.parseReferences) {
+          if (this.config.referencesField) {
+              // Replace references from references field
+              this.preview = this.replaceReferences(this.preview);
+          }
+          else {
+              // Remove references if not defined
+              this.preview = this.removeReferences(this.preview);
+          }
         }
 
         let loaded = function(ids: string[], lookup: {}) {
