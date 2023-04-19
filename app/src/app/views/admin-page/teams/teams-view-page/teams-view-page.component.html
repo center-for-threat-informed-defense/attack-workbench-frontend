@@ -20,19 +20,21 @@
     </div>
   </div>
   <span *ngIf="!editing">
-    <div class="row">
-        <div class="col">
-          <h2>Users</h2>
-        </div>
-      </div>
-      <div class="form-row space-around">
-        <div class="col">
-          <div class="button-group">
-            <button mat-mini-fab class="extended-fab-button" color="primary" (click)="updateUsers()">
-              <mat-icon>supervisor_account</mat-icon> <span class="text-label">add or remove users</span>
-            </button>
+    <div class="users-header-row">
+      <div class="row">
+          <div class="col">
+            <h2>Users</h2>
           </div>
         </div>
+        <div class="form-row space-around">
+          <div class="col">
+            <div class="button-group">
+              <button mat-mini-fab class="extended-fab-button" color="primary" (click)="updateUsers()">
+                <mat-icon>supervisor_account</mat-icon> <span class="text-label">add or remove users</span>
+              </button>
+            </div>
+          </div>
+      </div>
     </div>
     <app-users-list [config]="{'columnsToDisplay':['username','email','options'], 'team':team, 'showSearch': false, 'showFilters': false, 'mode':'view'}"></app-users-list> 
     <div class="col" >
