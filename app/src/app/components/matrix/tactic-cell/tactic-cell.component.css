@@ -1,15 +1,19 @@
 .tactic-cell p{
   text-align: center;
-    line-height: normal;
+  line-height: normal;
   margin: 0;
-  color: #707070;
+  margin-top: 5px;
+  /* color: #707070; */
 }
 .tactic-cell {
-  padding: 5px;
+  padding: 10px 5px;
+  background-color: #6241c5;
+  color: white;
+  border: none;
+  margin: 0;
 }
 .tactic-header {
-  font-weight: bold;
+  font-weight: 500;
   margin: 0;
   text-align: center;
-  line-height: normal;
 }

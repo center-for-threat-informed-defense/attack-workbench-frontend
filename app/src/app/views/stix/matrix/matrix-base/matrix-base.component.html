@@ -1,7 +1,7 @@
 <div class="matrix" style="height: calc(100vh - 114px);" >
   <table>
     <thead>
-      <tr>
+      <tr style="background-color: #6241c5; border-bottom: 1px solid black;">
         <td *ngFor="let item of config.tacticList; let i = index">
           <app-tactic-cell [tactic]="item" [count]="10" [showID]="showID"></app-tactic-cell>
         </td>
@@ -28,7 +28,7 @@
                     <div class="handle">=</div>
                   </td>
                   <td class="subtechniques-td">
-                    <div class="subtechniques" [class.hidden]="!technique.show_subtechniques">
+                    <div class="subtechniques" [ngStyle]="{'display': technique.show_subtechniques ? 'inline' : 'none'}">
                       <div class="subtechnique">
                           <app-technique-cell [technique]="item.value[0]"
                             [tactic]="getTactic(item.value[0])"
@@ -40,7 +40,17 @@
                             (unhighlight)="onTechniqueUnhighlight($event)">
                           </app-technique-cell>
                       </div>
-
+                      <div class="subtechnique">
+                        <app-technique-cell [technique]="item.value[1]"
+                          [tactic]="getTactic(item.value[1])"
+                          [showID]="showID"
+                          [viewModel]="viewModel"
+                          (leftclick)="onTechniqueLeftClick($event, technique, config.tacticList[i])"
+                          (rightclick)="onTechniqueRightClick($event, technique)"
+                          (highlight)="onTechniqueHighlight($event, technique, tactic)"
+                          (unhighlight)="onTechniqueUnhighlight($event)">
+                        </app-technique-cell>
+                    </div>
                     </div>
                   </td>
                 </tr>
