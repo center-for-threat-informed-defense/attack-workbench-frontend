@@ -42,14 +42,14 @@ export class TechniqueCellComponent extends Cell implements OnInit {
     return false;
   }
   public onRightClick(event) {
-    event.preventDefault(); // prevent browser default context menu
-    this.showContextMenu = true;
+    // event.preventDefault(); // prevent browser default context menu
+    // this.showContextMenu = true;
   }
   public onMouseEnter() {
-    this.highlight.emit();
+    // this.highlight.emit();
   }
   public onMouseLeave() {
-    this.unhighlight.emit();
+    // this.unhighlight.emit();
   }
   public closeContextMenu() {
     this.showContextMenu = false;

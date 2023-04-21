@@ -1,12 +1,11 @@
-<div class="technique-cell" [ngClass]="getClass()">
+<div class="technique-cell">
   <div  (click)="onLeftClick($event)"
         (contextmenu)="onRightClick($event)"
         (mouseenter)="onMouseEnter()"
         (mouseleave)="onMouseLeave()">
-    <ng-container *ngIf="showID" class="showID">
-      {{technique.attackID}}
-    </ng-container>
-    {{technique.name}}
+    <span>
+      {{technique.name}}
+    </span>
   </div>
   <app-tooltip *ngIf="showTooltip" [technique]="technique" [tactic]="tactic" [viewModel]="viewModel"></app-tooltip>
   <app-contextmenu *ngIf="showContextMenu" [technique]="technique" [tactic]="tactic" [viewModel]="viewModel" (close)="closeContextMenu(); onMouseLeave()"></app-contextmenu>
