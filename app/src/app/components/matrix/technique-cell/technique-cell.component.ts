@@ -14,14 +14,12 @@ export class TechniqueCellComponent extends Cell implements OnInit {
   @Input() showName: boolean;
   @Output() highlight = new EventEmitter<any>(); // emit with the highlighted technique, or null to unhighlight
   @Output() unhighlight = new EventEmitter<any>();
-  @Output() leftclick = new EventEmitter<any>(); // emit with the selected technique and the modifier keys
 
 
   constructor(public viewModelsService: ViewModelsService) {
     super()
   }
   public get showTooltip(): boolean {
-    if (this.showContextMenu) return false;
     if (this.isHighlighted) return true;
     return false
   }
@@ -34,25 +32,13 @@ export class TechniqueCellComponent extends Cell implements OnInit {
     let theclass = super.getClass();
     return theclass
   }
-  public onLeftClick(event) {
-    console.log("technique left click");
-    this.leftclick.emit({
-      "technique": this.technique,
-    })
+  public onLeftClick() {
+    window.open("technique/"+this.technique.stixID)
     return false;
   }
-  public onRightClick(event) {
-    // event.preventDefault(); // prevent browser default context menu
-    // this.showContextMenu = true;
-  }
   public onMouseEnter() {
-    // this.highlight.emit();
   }
   public onMouseLeave() {
-    // this.unhighlight.emit();
-  }
-  public closeContextMenu() {
-    this.showContextMenu = false;
   }
 }
 

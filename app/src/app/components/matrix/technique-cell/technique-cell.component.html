@@ -1,12 +1,9 @@
 <div class="technique-cell">
-  <div  (click)="onLeftClick($event)"
-        (contextmenu)="onRightClick($event)"
+  <div  (click)="onLeftClick()"
         (mouseenter)="onMouseEnter()"
         (mouseleave)="onMouseLeave()">
     <span>
       {{technique.name}}
     </span>
   </div>
-  <app-tooltip *ngIf="showTooltip" [technique]="technique" [tactic]="tactic" [viewModel]="viewModel"></app-tooltip>
-  <app-contextmenu *ngIf="showContextMenu" [technique]="technique" [tactic]="tactic" [viewModel]="viewModel" (close)="closeContextMenu(); onMouseLeave()"></app-contextmenu>
 </div>
