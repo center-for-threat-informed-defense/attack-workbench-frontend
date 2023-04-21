@@ -1,6 +1,6 @@
 <div class="add-dialog">
     <h1 *ngIf="config.title" mat-dialog-title>{{config.title}}</h1>
-    <div *ngIf="config.selectableObjects.length > 0 else nothing">
+    <div *ngIf="!config.selectableObjects || config.selectableObjects.length > 0 else nothing">
         <app-stix-list *ngIf="config.type !== 'user'" [config]="{
             'select': config.selectionType ? config.selectionType : config.select? 'many' : 'disabled',
             'selectionModel' : config.select,
