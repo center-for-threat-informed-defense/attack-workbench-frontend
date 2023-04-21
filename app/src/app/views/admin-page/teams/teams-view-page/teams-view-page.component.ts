@@ -60,9 +60,9 @@ export class TeamsViewPageComponent implements OnInit,OnDestroy {
    * Opens up the add users dialog component to allow users to select which users they wish to be part of the team
    */
   public updateUsers(): void {
-    const selection = new SelectionModel<string>(true);
+    const select = new SelectionModel<string>(true);
     for (let i = 0; i < this.team.userIDs.length; i++) {
-      selection.toggle(this.team.userIDs[i]);
+      select.toggle(this.team.userIDs[i]);
     }
     let prompt = this.dialog.open(AddDialogComponent, {
       maxWidth: "40em",
@@ -70,7 +70,8 @@ export class TeamsViewPageComponent implements OnInit,OnDestroy {
       disableClose: true,
       autoFocus: false, // disables auto focus on the dialog form field
       data: {
-        selection,
+        select,
+        type: 'user',
         title: `Select users you wish to be in this team`,
         buttonLabel: "CONFIRM",
         clearSelection: false,
@@ -78,9 +79,8 @@ export class TeamsViewPageComponent implements OnInit,OnDestroy {
     });
     let subscription = prompt.afterClosed().subscribe({
         next: (response) => {
-          console.log(response)
-            if (response!==null) {
-              this.team.userIDs = response;
+            if (response) {
+              this.team.userIDs = select.selected;
               this.restAPIConnector.putTeam(this.team);
               this.loadTeam();
             }
