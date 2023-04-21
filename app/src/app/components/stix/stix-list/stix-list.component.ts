@@ -13,8 +13,8 @@ import { StixDialogComponent } from 'src/app/views/stix/stix-dialog/stix-dialog.
 import { Paginated, RestApiConnectorService } from 'src/app/services/connectors/rest-api/rest-api-connector.service';
 import { AuthenticationService } from 'src/app/services/connectors/authentication/authentication.service';
 import { SidebarService } from 'src/app/services/sidebar/sidebar.service';
-import { AddUsersDialogComponent } from '../../add-users-dialog/add-users-dialog.component';
 import { MatSelect } from '@angular/material/select';
+import { AddDialogComponent } from '../../add-dialog/add-dialog.component';
 
 @Component({
     selector: 'app-stix-list',
@@ -434,9 +434,15 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     public openUserSelectModal():void {
-      let prompt = this.dialog.open(AddUsersDialogComponent, {
+      const select = new SelectionModel<string>(true);
+      for (let i = 0; i < this.userIdsUsedInSearch.length; i++) {
+        select.toggle(this.userIdsUsedInSearch[i]);
+        
+      }
+      let prompt = this.dialog.open(AddDialogComponent, {
         data: {
-          selectedUserIds: this.userIdsUsedInSearch,
+          select,
+          type: 'user',
           buttonLabel: "SEARCH",
           title: "Select users you wish to search for",
           clearSelection: true,
@@ -446,7 +452,7 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
     let subscription = prompt.afterClosed().subscribe({
         next: result => {
             if (result) { 
-              this.userIdsUsedInSearch = result;
+              this.userIdsUsedInSearch = select.selected;
               this.applyControls();
             }
         },
