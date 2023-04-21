@@ -8,6 +8,7 @@
   padding: 5px;
   background-color: #6241c5;
   color: white;
+  cursor: pointer;
 }
 .tactic-header {
   font-weight: 500;

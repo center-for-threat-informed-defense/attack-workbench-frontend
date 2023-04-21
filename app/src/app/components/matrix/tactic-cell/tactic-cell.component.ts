@@ -15,4 +15,7 @@ export class TacticCellComponent implements OnInit {
 
   ngOnInit() {
   }
+  viewTactic() {
+    window.open("tactic/"+this.tactic.stixID)
+  }
 }
