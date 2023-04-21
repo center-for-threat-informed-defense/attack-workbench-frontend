@@ -4,8 +4,8 @@ import { Subscription } from 'rxjs';
 import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/rest-api-connector.service';
 import { EditorService } from 'src/app/services/editor/editor.service';
 import { MatDialog } from '@angular/material/dialog';
-import { AddUsersDialogComponent } from 'src/app/components/add-users-dialog/add-users-dialog.component';
 import { SelectionModel } from '@angular/cdk/collections';
+import { AddDialogComponent } from 'src/app/components/add-dialog/add-dialog.component';
 
 @Component({
   selector: 'app-teams-view-page',
@@ -60,14 +60,17 @@ export class TeamsViewPageComponent implements OnInit,OnDestroy {
    * Opens up the add users dialog component to allow users to select which users they wish to be part of the team
    */
   public updateUsers(): void {
-    let prompt = this.dialog.open(AddUsersDialogComponent, {
+    const selection = new SelectionModel<string>(true);
+    for (let i = 0; i < this.team.userIDs.length; i++) {
+      selection.toggle(this.team.userIDs[i]);
+    }
+    let prompt = this.dialog.open(AddDialogComponent, {
       maxWidth: "40em",
       minWidth: "40em",
       disableClose: true,
       autoFocus: false, // disables auto focus on the dialog form field
       data: {
-        selectedUserIds: this.team.userIDs,
-        selection: new SelectionModel<string>(true),
+        selection,
         title: `Select users you wish to be in this team`,
         buttonLabel: "CONFIRM",
         clearSelection: false,
@@ -75,6 +78,7 @@ export class TeamsViewPageComponent implements OnInit,OnDestroy {
     });
     let subscription = prompt.afterClosed().subscribe({
         next: (response) => {
+          console.log(response)
             if (response!==null) {
               this.team.userIDs = response;
               this.restAPIConnector.putTeam(this.team);
