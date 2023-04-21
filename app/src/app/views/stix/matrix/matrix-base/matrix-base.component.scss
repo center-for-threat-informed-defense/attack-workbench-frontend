@@ -1,87 +1,125 @@
-.matrix table {
-  border: none;
-  border-collapse: collapse;
-}
-.matrix table th {
-  width: 200px;
-
-}
-.matrix table td {
-  width: 100%;
-  // border: black solid 1px;
-  font-size: smaller;
-  border-collapse: collapse;
-  vertical-align: top;
-}
-
 $sizeunit: 14px;
 
-.matrix {
+.matrix.side {
+  thead {
     border-collapse: collapse;
-    line-height: $sizeunit;
-}
+  }
+  padding: 0;
+  tr.tactic {
+      background-color: #6241c5;
+      border-bottom: 1px solid black;
+      vertical-align: top;
+      border-collapse: collapse;
+      td {
+        padding: 0;
+        vertical-align: middle;
+        min-width: 180px;
+      }
+  }
+  .tactic {
 
 
-.contextMenu-cover {
-  // covers entire page
-  position: fixed;
-  left: 0;
-  top: 0;
-  width: 100vw;
-  height: 100vh;
-  // background: rgba(0, 0, 0, 0.15);
-}
 
-.contextMenu-box {
-  position: absolute;
-  // background: white;
-  &.left {
-    right: 0
+    .techniques-table {
+      border-collapse: collapse;
+      width: 100%;
+      tr, td {
+        padding: 0;
+      }
+      tr {
+          height: 1px;
+      }
+    }
+
+    .supertechnique {
+      border-collapse: collapse;
+      width: 100%;
+      padding: 0;
+      margin: 0;
+      background-color: white;
+
+      td {
+          padding: 0;
+          vertical-align: top;
+
+          &.technique {
+              outline: 1px solid #dfdfdf;
+              // outline-offset: -1px;
+          }
+      }
+    }
+
+    .subtechniques {
+      background-color: white;
+
+      &.hidden {
+        display: none;
+      }
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      margin-left: -1px;
+      white-space: nowrap;
+      vertical-align: top;
+      border-collapse: collapse;
+      .subtechnique {
+          height: 100%;
+          flex-grow: 1;
+
+          border: 1px solid #dfdfdf;
+          min-width: 100px;
+      }
+    }
+    .handle {
+      color: white;
+      font-family: roboto-regular;
+      text-align: center;
+      vertical-align: middle;
+      transform: rotate(-90deg);
+      width: 12px;
+      height: 12px;
+      // height: calc(100% - 25px);
+      font-size: 16px;
+      line-height: 12px;
+      // background-color: #707070;
+    }
   }
 }
 .sidebar {
-  max-width: 15px;
-  background-color: #707070;
-  color: white;
-  height: 100%;
-  vertical-align: middle !important;
-  text-align: center;
+  min-width: 8px;
+  width: 12px;
+  padding: 0;
   cursor: pointer;
-  .handle {
-    text-align: center;
-    vertical-align: middle;
-    transform: rotate(-90deg);
-    width: 10px; height: 10px;
-    font-size: 16px;
-    line-height: 12px;
-  }
-  box-shadow: 0 0 0 1px #dfdfdf inset;
-}
-
-.techniques-table {
-  border-collapse: collapse;
-  width: 100%;
-  tr, td {
-      padding: 0;
-  }
-  tr {
-      height: 1px;
-  }
-}
-
-.subtechniques {
-  &.hidden {
-    display: none;
-  }
-  display: flex;
-  flex-direction: column;
+  position:relative;
+  vertical-align: middle;
+  background: #707070;
   height: 100%;
-  margin-left: -1px;
-  white-space: nowrap;
-  vertical-align: top;
-  width: 185px;
-  .subtechnique {
-      height: 100%;
-      flex-grow: 1;
+  &.expanded {
+    // height: calc(100% - 24px);
+  }
+  .angle {
+      display: none;
+      color: white;
+  }
+  &.disabled {
+      pointer-events: none;
+  }
+  &.expanded .angle {
+      height: 12px;
+      display:block;
+      position: absolute;
+      svg {
+        fill: #f0f1f2;
+        position: absolute;
+      }
+      &.top {
+        top: 0;
+        svg{ transform: rotate(-90deg);}
+
+      }
+      &.bottom {
+        bottom: 0;
+        svg {transform: rotate(90deg);}
+      }
   }
 }
