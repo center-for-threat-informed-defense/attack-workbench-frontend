@@ -12,7 +12,7 @@
         <td *ngFor="let item of matrixMap | keyvalue ; let i = index" class="tactic" style="vertical-align: top;">
           <table class="techniques-table">
             <ng-container *ngFor="let technique of item.value">
-              <tr *ngIf="!technique.is_subtechnique" [ngStyle]="{'width': technique.show_subtechniques ? '400px' : '195px'}">
+              <tr *ngIf="!technique.is_subtechnique" [ngStyle]="{'width': technique.show_subtechniques ? '400px' : '170px'}">
                 <td>
                   <table class="supertechnique">
                     <tr>

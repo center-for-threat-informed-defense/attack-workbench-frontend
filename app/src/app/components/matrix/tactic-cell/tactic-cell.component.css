@@ -2,15 +2,12 @@
   text-align: center;
   line-height: normal;
   margin: 0;
-  margin-top: 5px;
-  /* color: #707070; */
+  font-size: 14px;
 }
 .tactic-cell {
-  padding: 10px 5px;
+  padding: 5px;
   background-color: #6241c5;
   color: white;
-  border: none;
-  margin: 0;
 }
 .tactic-header {
   font-weight: 500;
