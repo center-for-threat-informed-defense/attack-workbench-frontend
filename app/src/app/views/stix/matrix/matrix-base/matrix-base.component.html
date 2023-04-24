@@ -2,16 +2,16 @@
   <table class="matrix side">
     <thead>
       <tr class="tactic">
-        <td *ngFor="let item of tacticList; let i = index">
+        <td *ngFor="let item of tacticList">
           <app-tactic-cell [tactic]="item" [count]="10" [showID]="showID"></app-tactic-cell>
         </td>
       </tr>
     </thead>
     <tbody>
       <tr>
-        <td *ngFor="let item of matrixMap | keyvalue ; let i = index" class="tactic" style="vertical-align: top;">
+        <td *ngFor="let item of tacticList" class="tactic" style="vertical-align: top;">
           <table class="techniques-table">
-            <ng-container *ngFor="let technique of item.value">
+            <ng-container *ngFor="let technique of matrixMap.get(item.stixID)">
               <tr *ngIf="!technique.is_subtechnique" [ngStyle]="{'width': technique.show_subtechniques ? '400px' : '170px'}">
                 <td>
                   <table class="supertechnique">
