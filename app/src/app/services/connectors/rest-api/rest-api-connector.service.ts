@@ -170,7 +170,7 @@ export class RestApiConnectorService extends ApiConnector {
                 if (options.platforms) options.platforms.forEach(platform => query = query.append('platform', platform));
                 if (options.domains) options.domains.forEach(domain => query = query.append('domain', domain));
                 // users
-                if (options.lastUpdatedBy) options.lastUpdatedBy.forEach(id => query = query.append('lastUpdatedBy', id));
+                if (options.lastUpdatedBy) options.lastUpdatedBy.forEach(id => query = query.append('users', id));
             }
             // perform the request
             let url = `${this.apiUrl}/${plural}`;
