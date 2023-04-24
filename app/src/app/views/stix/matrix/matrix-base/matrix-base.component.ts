@@ -1,5 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { Observable, of } from 'rxjs';
+import { Matrix } from 'src/app/classes/stix/matrix';
 import { StixObject } from 'src/app/classes/stix/stix-object';
 import { Tactic } from 'src/app/classes/stix/tactic';
 import { Technique } from 'src/app/classes/stix/technique';
@@ -23,7 +24,8 @@ export class MatrixBaseComponent extends MatrixCommon implements OnInit {
   public searchQuery: string = "";
   public filter: string[] = [];
   public totalObjectCount: number = 0;
-  public showID = true;
+  public showID = false;
+  public tacticList = [];
 
   public matrixDetails: any;
   public matrixMap: Map<string, Technique[]>;
@@ -36,11 +38,16 @@ export class MatrixBaseComponent extends MatrixCommon implements OnInit {
 
   ngOnInit() {
     this.matrixMap = new Map<string, Technique[]>();
-    this.config.tacticList.forEach((tactic) => {
+    // order list of tactics to match ATT&Ck website
+    this.config.object.tactic_refs.forEach(item => {
+      this.tacticList.push(this.config.tacticList.find(e => e.stixID === item))
+    });
+    this.tacticList.forEach((tactic) => {
       let itemsCopy;
       let subscription = this.restAPIConnectorService.getTechniquesInTactic(tactic.stixID, tactic.modified).subscribe({
         next: (items) => {
-          itemsCopy = items
+          // alphabetically order subtechniques
+          itemsCopy = items.sort((a,b) => a.name.toLowerCase().localeCompare(b.name.toLowerCase()))
           this.matrixMap.set(tactic.stixID, itemsCopy)
         },
         complete: () => {
@@ -59,7 +66,7 @@ export class MatrixBaseComponent extends MatrixCommon implements OnInit {
     public getLabel(stixID: string): string {
       if (!this._idToLabel) {
           this._idToLabel = new Map();
-          for (let object of this.config.tacticList) {
+          for (let object of this.tacticList) {
               this._idToLabel.set(object.stixID, object[this.config.field]);
           }
       }
@@ -68,7 +75,7 @@ export class MatrixBaseComponent extends MatrixCommon implements OnInit {
   hideDisabled: boolean = false; //are disabled techniques hidden?
 
   getTactic(id: string): Tactic {
-    this.config.tacticList.forEach((item)=> {
+    this.tacticList.forEach((item)=> {
       if(item.attackID == id || item.stixID == id) {
         return item;
       }
@@ -81,4 +88,5 @@ export class MatrixBaseComponent extends MatrixCommon implements OnInit {
 export interface MatrixBaseConfig {
   field: string;
   tacticList: Tactic[];
+  object: Matrix;
 }

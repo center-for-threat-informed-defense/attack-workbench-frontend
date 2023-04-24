@@ -2,7 +2,7 @@
   <table class="matrix side">
     <thead>
       <tr class="tactic">
-        <td *ngFor="let item of config.tacticList; let i = index">
+        <td *ngFor="let item of tacticList; let i = index">
           <app-tactic-cell [tactic]="item" [count]="10" [showID]="showID"></app-tactic-cell>
         </td>
       </tr>
@@ -21,7 +21,7 @@
                           [tactic]="getTactic(technique)"
                           [showID]="showID"
                           [viewModel]="viewModel"
-                          (leftclick)="onTechniqueLeftClick($event, technique, config.tacticList[i])"
+                          (leftclick)="onTechniqueLeftClick($event, technique, tacticList[i])"
                           (rightclick)="onTechniqueRightClick($event, technique)"
                           (highlight)="onTechniqueHighlight($event, technique, tactic)"
                           (unhighlight)="onTechniqueUnhighlight($event)">
@@ -50,7 +50,7 @@
                           [tactic]="getTactic(technique)"
                           [showID]="showID"
                           [viewModel]="viewModel"
-                          (leftclick)="onTechniqueLeftClick($event, technique, config.tacticList[i])"
+                          (leftclick)="onTechniqueLeftClick($event, technique, tacticList[i])"
                           (rightclick)="onTechniqueRightClick($event, technique)"
                           (highlight)="onTechniqueHighlight($event, technique, tactic)"
                           (unhighlight)="onTechniqueUnhighlight($event)">
@@ -61,7 +61,7 @@
                           [tactic]="getTactic(technique)"
                           [showID]="showID"
                           [viewModel]="viewModel"
-                          (leftclick)="onTechniqueLeftClick($event, technique, config.tacticList[i])"
+                          (leftclick)="onTechniqueLeftClick($event, technique, tacticList[i])"
                           (rightclick)="onTechniqueRightClick($event, technique)"
                           (highlight)="onTechniqueHighlight($event, technique, tactic)"
                           (unhighlight)="onTechniqueUnhighlight($event)">
