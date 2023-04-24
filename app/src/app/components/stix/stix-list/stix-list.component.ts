@@ -22,8 +22,8 @@ import { SidebarService } from 'src/app/services/sidebar/sidebar.service';
     animations: [
         trigger("detailExpand", [
             transition(":enter", [
-                style({ height: '0px', minHeight: '0px'}),
-                animate("100ms cubic-bezier(0.4, 0.0, 0.2, 1)", style({height: '*'}))
+                style({ height: '0px', minHeight: '0px' }),
+                animate("100ms cubic-bezier(0.4, 0.0, 0.2, 1)", style({ height: '*' }))
             ]),
             transition(':leave', [
                 animate('100ms cubic-bezier(0.4, 0.0, 0.2, 1)', style({ height: '0px', minHeight: '0px' }))
@@ -32,7 +32,7 @@ import { SidebarService } from 'src/app/services/sidebar/sidebar.service';
         trigger("fadeIn", [
             transition(":enter", [
                 style({ opacity: 0 }),
-                animate("500ms cubic-bezier(0.4, 0.0, 0.2, 1)", style({opacity: '1'}))
+                animate("500ms cubic-bezier(0.4, 0.0, 0.2, 1)", style({ opacity: '1' }))
             ])
         ])
     ]
@@ -78,41 +78,46 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
 
     // Type map for redirections
     private typeMap = {
-        "x-mitre-collection": "collection",
         "attack-pattern": "technique",
-        "malware": "software",
-        "tool": "software",
+        "x-mitre-tactic": "tactic",
         "intrusion-set": "group",
         "campaign": "campaign",
+        "malware": "software",
+        "tool": "software",
         "course-of-action": "mitigation",
         "x-mitre-matrix": "matrix",
-        "x-mitre-tactic": "tactic",
-        "relationship": "relationship"
+        "x-mitre-collection": "collection",
+        "relationship": "relationship",
+        "note": "note",
+        "identity": "identity",
+        "marking-definition": "marking-definition",
+        "x-mitre-data-source": "data-source",
+        "x-mitre-data-component": "data-component"
     }
 
     // all possible each type of filter/groupBy
     private platformSubscription: Subscription;
     private platformMap: Map<string, Map<string, string[]>> = new Map();
     private domains: FilterValue[] = [
-        {"value": "domain.enterprise-attack", "label": "enterprise", "disabled": false},
-        {"value": "domain.mobile-attack", "label": "mobile", "disabled": false},
-        {"value": "domain.ics-attack", "label": "ics", "disabled": false}
+        { "value": "domain.enterprise-attack", "label": "enterprise", "disabled": false },
+        { "value": "domain.mobile-attack", "label": "mobile", "disabled": false },
+        { "value": "domain.ics-attack", "label": "ics", "disabled": false }
     ]
     private statuses: FilterValue[] = [
-        {"value": "status.work-in-progress", "label": "show only work in progress", "disabled": false},
-        {"value": "status.awaiting-review", "label": "show only awaiting review", "disabled": false},
-        {"value": "status.reviewed", "label": "show only reviewed", "disabled": false}
+        { "value": "status.work-in-progress", "label": "show only work in progress", "disabled": false },
+        { "value": "status.awaiting-review", "label": "show only awaiting review", "disabled": false },
+        { "value": "status.reviewed", "label": "show only reviewed", "disabled": false }
     ]
     private states: FilterValue[] = [
-        {"value": "state.deprecated", "label": "include deprecated", "disabled": false},
-        {"value": "state.revoked", "label": "include revoked", "disabled": false}
+        { "value": "state.deprecated", "label": "include deprecated", "disabled": false },
+        { "value": "state.revoked", "label": "include revoked", "disabled": false }
     ]
 
-    constructor(public dialog: MatDialog, 
-                private restAPIConnectorService: RestApiConnectorService, 
-                private router: Router, 
-                private authenticationService: AuthenticationService,
-                private sidebarService: SidebarService) { }
+    constructor(public dialog: MatDialog,
+        private restAPIConnectorService: RestApiConnectorService,
+        private router: Router,
+        private authenticationService: AuthenticationService,
+        private sidebarService: SidebarService) { }
 
     ngOnInit(): void {
         // build query options for platforms
@@ -153,7 +158,7 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
                 filter(Boolean),
                 debounceTime(250),
                 distinctUntilChanged(),
-                tap(_ => { 
+                tap(_ => {
                     if (this.paginator) this.paginator.pageIndex = 0;
                     this.applyControls();
                 })
@@ -171,9 +176,9 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
 
         // parse the config
         let sticky_allowed = !(this.config.rowAction && this.config.rowAction.position == "start");
-        if ("type" in this.config) { 
+        if ("type" in this.config) {
             // set columns according to type
-            switch(this.config.type.replace(/_/g, '-')) {
+            switch (this.config.type.replace(/_/g, '-')) {
                 case "collection":
                 case "collection-created":
                     this.addColumn("name", "name", "plain", sticky_allowed, ["name"]);
@@ -280,11 +285,11 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
                     this.addColumn("", "state", "icon");
                     if (this.config.relationshipType && this.config.relationshipType !== "detects") {
                         this.addColumn("source", "source_ID", "plain");
-                        this.addColumn("", "source_name", "plain", this.config.targetRef? sticky_allowed: false, ["relationship-name"]);
-                    } else this.addColumn("source", "source_name", "plain", this.config.targetRef? sticky_allowed: false, ["relationship-name"]);
+                        this.addColumn("", "source_name", "plain", this.config.targetRef ? sticky_allowed : false, ["relationship-name"]);
+                    } else this.addColumn("source", "source_name", "plain", this.config.targetRef ? sticky_allowed : false, ["relationship-name"]);
                     this.addColumn("type", "relationship_type", "plain", false, ["text-deemphasis", "relationship-joiner"]);
                     this.addColumn("target", "target_ID", "plain");
-                    this.addColumn("", "target_name", "plain", this.config.sourceRef? sticky_allowed: false, ["relationship-name"]);
+                    this.addColumn("", "target_name", "plain", this.config.sourceRef ? sticky_allowed : false, ["relationship-name"]);
                     if (!(this.config.relationshipType && this.config.relationshipType == "subtechnique-of")) this.addColumn("description", "description", "descriptive", false);
                     break;
                 case "marking-definition":
@@ -299,12 +304,12 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
                 case "note":
                     this.addColumn("title", "title", "plain");
                     this.addColumn("content", "content", "plain");
-                    this.addColumn("modified","modified", "timestamp");
+                    this.addColumn("modified", "modified", "timestamp");
                     this.addColumn("created", "created", "timestamp");
                     break;
                 default:
                     this.addColumn("type", "attackType", "plain");
-                    this.addColumn("modified","modified", "timestamp");
+                    this.addColumn("modified", "modified", "timestamp");
                     this.addColumn("created", "created", "timestamp");
             }
         }
@@ -313,7 +318,7 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
             this.addColumn("type", "attackType", "plain");
             this.addColumn("ID", "attackID", "plain", false);
             this.addColumn("name", "name", "plain", true, ["name"]);
-            this.addColumn("modified","modified", "timestamp");
+            this.addColumn("modified", "modified", "timestamp");
             this.addColumn("created", "created", "timestamp");
         }
     }
@@ -343,7 +348,7 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
 
         // open-link icon setup
         if (this.config.clickBehavior && this.config.clickBehavior == "linkToObjectRef") {
-          controls_after.push("open-link")
+            controls_after.push("open-link")
         }
 
         // row action setup
@@ -402,7 +407,7 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
      */
     private addColumn(label: string, field: string, display: "version" | "list" | "plain" | "timestamp" | "descriptive" | "relationship_name" | "icon", sticky?: boolean, classes?: string[]) {
         this.tableColumns.push(field);
-        this.tableColumns_settings.set(field, {label, display, sticky, classes});
+        this.tableColumns_settings.set(field, { label, display, sticky, classes });
     }
 
     /**
@@ -410,7 +415,7 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
      */
     private addVersionsAndDatesColumns() {
         this.addColumn("version", "version", "version");
-        this.addColumn("modified","modified", "timestamp");
+        this.addColumn("modified", "modified", "timestamp");
         this.addColumn("created", "created", "timestamp");
     }
 
@@ -421,23 +426,23 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
     public rowClick(element: StixObject) {
         if (this.config.clickBehavior && this.config.clickBehavior == "none") return;
         if (this.config.clickBehavior && this.config.clickBehavior == "dialog") { //open modal
-          let prompt = this.dialog.open(StixDialogComponent, {
-              data: {
-                  object: element,
-                  editable: this.config.allowEdits,
-                  sidebarControl: this.config.allowEdits? "events" : "disable"
-              },
-              maxHeight: "75vh"
-          })
-          let subscription = prompt.afterClosed().subscribe({
-              next: result => {
-                  if (prompt.componentInstance.dirty) { //re-fetch values since an edit occurred
-                      this.applyControls();
-                      this.refresh.emit();
-                  }
-              },
-              complete: () => { subscription.unsubscribe(); }
-          });
+            let prompt = this.dialog.open(StixDialogComponent, {
+                data: {
+                    object: element,
+                    editable: this.config.allowEdits,
+                    sidebarControl: this.config.allowEdits ? "events" : "disable"
+                },
+                maxHeight: "75vh"
+            })
+            let subscription = prompt.afterClosed().subscribe({
+                next: result => {
+                    if (prompt.componentInstance.dirty) { //re-fetch values since an edit occurred
+                        this.applyControls();
+                        this.refresh.emit();
+                    }
+                },
+                complete: () => { subscription.unsubscribe(); }
+            });
         }
         else if (this.config.clickBehavior && this.config.clickBehavior == "linkToSourceRef") {
             let source_ref = element['source_ref'];
@@ -450,40 +455,40 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
             let target_ref = element['target_ref'];
             // Get type to navigate from target_ref
             let type = this.typeMap[target_ref.split('--')[0]];
-            this.router.navigateByUrl('/'+ type + '/' + target_ref);
+            this.router.navigateByUrl('/' + type + '/' + target_ref);
         }
         else if (this.config.clickBehavior && this.config.clickBehavior == "linkToObjectRef") {
-          // technically a note can be linked to many objects, we will select the first object
-          let object_ref = element['object_refs'][0];
-          // Get type to navigate from target_ref
-          let type = this.typeMap[object_ref.split('--')[0]];
+            // technically a note can be linked to many objects, we will select the first object
+            let object_ref = element['object_refs'][0];
+            // Get type to navigate from target_ref
+            let type = this.typeMap[object_ref.split('--')[0]];
 
-          this.sidebarService.opened = true;
-          this.sidebarService.currentTab = 'notes';
+            this.sidebarService.opened = true;
+            this.sidebarService.currentTab = 'notes';
 
-          // collection objs have a different URL structure
-          let url = `/${type}/${object_ref}`;
-          if (type === 'collection') {
-            const collectionSub = this.restAPIConnectorService.getCollection(object_ref).subscribe({
-              next: (result) => { 
-                url = `${url}/modified/${result[0].modified.toISOString()}`;
+            // collection objs have a different URL structure
+            let url = `/${type}/${object_ref}`;
+            if (type === 'collection') {
+                const collectionSub = this.restAPIConnectorService.getCollection(object_ref).subscribe({
+                    next: (result) => {
+                        url = `${url}/modified/${result[0].modified.toISOString()}`;
+                        this.router.navigateByUrl(url);
+                    },
+                    complete: () => { collectionSub.unsubscribe(); }
+                });
+            } else {
                 this.router.navigateByUrl(url);
-              },
-              complete: () => { collectionSub.unsubscribe(); }
-            });
-          } else {
-            this.router.navigateByUrl(url);
-          }
+            }
 
-      }
+        }
         else { //expand
             this.expandedElement = this.expandedElement === element ? null : element;
         }
     }
 
     // AUTHENTICATION FUNCTIONS
-    
-    public getAccessibleRoutes(attackType: string, routes: any[], ) {
+
+    public getAccessibleRoutes(attackType: string, routes: any[],) {
         return routes.filter(route => this.canAccess(attackType, route) && this.canEdit(route));
     }
 
@@ -517,7 +522,7 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
                 if (typeof obj[key] === 'string') return obj[key].toLowerCase().includes(query.toLowerCase())
                 else if (Array.isArray(obj[key])) {
                     return obj[key].some(val => {
-                        if (typeof(val) === 'string') {
+                        if (typeof (val) === 'string') {
                             return val.toLowerCase().includes(query.toLowerCase());
                         }
                     })
@@ -625,7 +630,7 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
         if ("stixObjects" in this.config) {
             if (this.config.stixObjects instanceof Observable) {
                 // pull objects out of observable
-            } else {                
+            } else {
                 // filter on STIX objects specified in the config
                 let filtered = this.config.stixObjects;
                 // filter to objects matching searchString
@@ -634,27 +639,27 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
                 filtered = filtered.sort((a, b) => {
                     let x = a as any;
                     let y = b as any;
-                    return x.hasOwnProperty("name") && y.hasOwnProperty("name")? x.name.localeCompare(y.name) : x.stixID.localeCompare(y.stixID)
+                    return x.hasOwnProperty("name") && y.hasOwnProperty("name") ? x.name.localeCompare(y.name) : x.stixID.localeCompare(y.stixID)
                 })
                 if (this.paginator) this.totalObjectCount = filtered.length;
-                
+
                 // filter to only ones within the correct index range
-                let startIndex = this.paginator? this.paginator.pageIndex * this.paginator.pageSize : 0
-                let endIndex = this.paginator? startIndex + this.paginator.pageSize : 10;
+                let startIndex = this.paginator ? this.paginator.pageIndex * this.paginator.pageSize : 0
+                let endIndex = this.paginator ? startIndex + this.paginator.pageSize : 10;
                 filtered = filtered.slice(startIndex, endIndex);
                 this.data$ = of({
                     data: filtered,
                     pagination: {
                         total: this.config.stixObjects.length,
                         offset: startIndex,
-                        limit: this.paginator? this.paginator.pageSize : 0
+                        limit: this.paginator ? this.paginator.pageSize : 0
                     }
                 });
             }
         } else {
             // fetch objects from backend
-            let limit = this.paginator? this.paginator.pageSize : 10;
-            let offset = this.paginator? this.paginator.pageIndex * limit : 0;
+            let limit = this.paginator ? this.paginator.pageSize : 10;
+            let offset = this.paginator ? this.paginator.pageIndex * limit : 0;
             let deprecated = this.filter.includes("state.deprecated");
             let revoked = this.filter.includes("state.revoked");
 
@@ -694,14 +699,14 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
                 // enable all platforms
                 this.enableAllFilters('platform');
             }
-            
+
             let options = {
-                limit: limit, 
-                offset: offset, 
-                excludeIDs: this.config.excludeIDs, 
-                search: this.searchQuery, 
-                state: state, 
-                includeRevoked: revoked, 
+                limit: limit,
+                offset: offset,
+                excludeIDs: this.config.excludeIDs,
+                search: this.searchQuery,
+                state: state,
+                includeRevoked: revoked,
                 includeDeprecated: deprecated,
                 platforms: platforms,
                 domains: domains
@@ -714,8 +719,8 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
             else if (this.config.type == "mitigation") this.data$ = this.restAPIConnectorService.getAllMitigations(options);
             else if (this.config.type == "tactic") this.data$ = this.restAPIConnectorService.getAllTactics(options);
             else if (this.config.type == "technique") this.data$ = this.restAPIConnectorService.getAllTechniques(options);
-            else if (this.config.type.includes("collection")) this.data$ = this.restAPIConnectorService.getAllCollections({search: this.searchQuery, versions: "all"});
-            else if (this.config.type == "relationship") this.data$ = this.restAPIConnectorService.getRelatedTo({sourceRef: this.config.sourceRef, targetRef: this.config.targetRef, sourceType: this.config.sourceType, targetType: this.config.targetType, relationshipType: this.config.relationshipType,  excludeSourceRefs: this.config.excludeSourceRefs, excludeTargetRefs: this.config.excludeTargetRefs, limit: limit, offset: offset, includeDeprecated: deprecated});
+            else if (this.config.type.includes("collection")) this.data$ = this.restAPIConnectorService.getAllCollections({ search: this.searchQuery, versions: "all" });
+            else if (this.config.type == "relationship") this.data$ = this.restAPIConnectorService.getRelatedTo({ sourceRef: this.config.sourceRef, targetRef: this.config.targetRef, sourceType: this.config.sourceType, targetType: this.config.targetType, relationshipType: this.config.relationshipType, excludeSourceRefs: this.config.excludeSourceRefs, excludeTargetRefs: this.config.excludeTargetRefs, limit: limit, offset: offset, includeDeprecated: deprecated });
             else if (this.config.type == "data-source") this.data$ = this.restAPIConnectorService.getAllDataSources(options);
             else if (this.config.type == "data-component") this.data$ = this.restAPIConnectorService.getAllDataComponents(options);
             else if (this.config.type == "marking-definition") this.data$ = this.restAPIConnectorService.getAllMarkingDefinitions(options);
@@ -726,7 +731,7 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
             })
         }
     }
-    
+
     public showDeprecated(event) {
         if (event.checked) {
             this.filter.push("state.deprecated");
@@ -747,7 +752,7 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
 }
 
 //allowed types for StixListConfig
-type type_attacktype = "collection" | "campaign" | "group" | "matrix" | "mitigation" | "software" | "tactic" | "technique" | "relationship" | "data-source" | "data-component" | "marking-definition"  | "note";
+type type_attacktype = "collection" | "campaign" | "group" | "matrix" | "mitigation" | "software" | "tactic" | "technique" | "relationship" | "data-source" | "data-component" | "marking-definition" | "note";
 type selection_types = "one" | "many" | "disabled"
 export interface StixListConfig {
     /* if specified, shows the given STIX objects in the table instead of loading from the back-end based on other configurations. */
@@ -802,7 +807,7 @@ export interface StixListConfig {
      * Default false. If true, edits will be disabled for the object
      */
     uneditableObject?: boolean;
-    
+
     excludeIDs?: string[]; //exclude objects with this ID from the list
     excludeSourceRefs?: string[]; //exclude relationships with this source_ref from the list
     excludeTargetRefs?: string[]; //exclude relationships with this target_ref from the list
