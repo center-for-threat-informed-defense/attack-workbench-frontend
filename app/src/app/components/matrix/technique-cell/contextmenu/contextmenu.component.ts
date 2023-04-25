@@ -1,7 +1,6 @@
 import { Component, OnInit, Input, Output, EventEmitter, ElementRef, ViewEncapsulation } from '@angular/core';
 import { Tactic } from 'src/app/classes/stix/tactic';
 import { Technique } from 'src/app/classes/stix/technique';
-import { ViewModel } from 'src/app/services/viewmodels.service';
 import { CellPopover } from '../cell-popover';
 
 @Component({
@@ -13,7 +12,6 @@ import { CellPopover } from '../cell-popover';
 export class ContextmenuComponent extends CellPopover implements OnInit {
   @Input() technique: Technique;
   @Input() tactic: Tactic;
-  @Input() viewModel: ViewModel;
   public placement: string;
   @Output() close = new EventEmitter<any>();
   constructor(private element: ElementRef) {
@@ -31,9 +29,6 @@ export class ContextmenuComponent extends CellPopover implements OnInit {
   }
   public select() {
     console.log("context menu select ");
-
-    this.viewModel.clearSelectedTechniques();
-    this.viewModel.selectTechnique(this.technique, this.tactic);
     this.closeContextmenu();
     console.log("closed context menu ");
 

@@ -1,7 +1,6 @@
 import { Component, OnInit, Input, ElementRef, ViewEncapsulation } from '@angular/core';
 import { Tactic } from 'src/app/classes/stix/tactic';
 import { Technique } from 'src/app/classes/stix/technique';
-import { ViewModel } from 'src/app/services/viewmodels.service';
 import { CellPopover } from '../cell-popover';
 
 @Component({
@@ -13,7 +12,6 @@ import { CellPopover } from '../cell-popover';
 export class TooltipComponent extends CellPopover implements OnInit {
   @Input() technique: Technique;
   @Input() tactic: Tactic;
-  @Input() viewModel: ViewModel;
   public placement: string;
   public notes: Note[];
 

@@ -1,33 +1,13 @@
 import { Directive, Input } from '@angular/core';
 import { Tactic } from 'src/app/classes/stix/tactic';
 import { Technique } from 'src/app/classes/stix/technique';
-import { ViewModel, ViewModelsService } from 'src/app/services/viewmodels.service';
 
 @Directive({ selector: '[selector-name]' })
 export abstract class MatrixCommon {
   @Input() matrix: Matrix
-  @Input() viewModel: ViewModel;
 
-  constructor(public viewModelsService: ViewModelsService) {
+  constructor() {
    }
-
-  public onTechniqueLeftClick(event: any, technique: Technique, tactic: Tactic) {
-    console.log("on technique left click: ", technique)
-  }
-  public onTechniqueRightClick(event: any, technique: Technique, tactic: Tactic) {
-    console.log("on technique right click: ", technique)
-  }
-  public onTechniqueHighlight(event: any, technique: Technique, tactic: Tactic) {
-    this.viewModel.highlightTechnique(technique, tactic)
-  }
-  public onTechniqueUnhighlight(event: any) {
-    this.viewModel.clearHighlight();
-
-  }
-  public onTacticClick(tactic: Tactic) {
-    console.log(" on tactic click ", tactic);
-
-  }
   // complete logic once api call is done
   public onToggleSubtechniquesVisible(technique: Technique, tactic: Tactic) {
     console.log("toggling visibility for ", technique);

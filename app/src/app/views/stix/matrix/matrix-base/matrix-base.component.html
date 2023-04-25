@@ -20,11 +20,7 @@
                         <app-technique-cell [technique]="technique"
                           [tactic]="getTactic(technique)"
                           [showID]="showID"
-                          [viewModel]="viewModel"
-                          (leftclick)="onTechniqueLeftClick($event, technique, tacticList[i])"
-                          (rightclick)="onTechniqueRightClick($event, technique)"
-                          (highlight)="onTechniqueHighlight($event, technique, tactic)"
-                          (unhighlight)="onTechniqueUnhighlight($event)">
+                          (leftclick)="onTechniqueLeftClick($event, technique, tacticList[i])">
                         </app-technique-cell>
                       </td>
                     </tr>
@@ -49,22 +45,14 @@
                       <app-technique-cell [technique]="technique"
                           [tactic]="getTactic(technique)"
                           [showID]="showID"
-                          [viewModel]="viewModel"
-                          (leftclick)="onTechniqueLeftClick($event, technique, tacticList[i])"
-                          (rightclick)="onTechniqueRightClick($event, technique)"
-                          (highlight)="onTechniqueHighlight($event, technique, tactic)"
-                          (unhighlight)="onTechniqueUnhighlight($event)">
+                          (leftclick)="onTechniqueLeftClick($event, technique, tacticList[i])">
                         </app-technique-cell>
                         </div>
                         <div class="subtechnique">
                         <app-technique-cell [technique]="technique"
                           [tactic]="getTactic(technique)"
                           [showID]="showID"
-                          [viewModel]="viewModel"
-                          (leftclick)="onTechniqueLeftClick($event, technique, tacticList[i])"
-                          (rightclick)="onTechniqueRightClick($event, technique)"
-                          (highlight)="onTechniqueHighlight($event, technique, tactic)"
-                          (unhighlight)="onTechniqueUnhighlight($event)">
+                          (leftclick)="onTechniqueLeftClick($event, technique, tacticList[i])">
                         </app-technique-cell>
                     </div>
                   </div>

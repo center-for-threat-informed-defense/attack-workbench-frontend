@@ -7,7 +7,6 @@ import { Technique } from 'src/app/classes/stix/technique';
 import { MatrixCommon } from 'src/app/components/matrix/matrix-common';
 import { FilterGroup } from 'src/app/components/stix/stix-list/stix-list.component';
 import { Paginated, RestApiConnectorService } from 'src/app/services/connectors/rest-api/rest-api-connector.service';
-import { ViewModel, ViewModelsService } from 'src/app/services/viewmodels.service';
 
 @Component({
   selector: 'app-matrix-base',
@@ -16,7 +15,6 @@ import { ViewModel, ViewModelsService } from 'src/app/services/viewmodels.servic
 })
 export class MatrixBaseComponent extends MatrixCommon implements OnInit {
   @Input() public config: MatrixBaseConfig;
-  @Input() viewModel: ViewModel;
 
   private _idToLabel: Map<string, string>;
   public data$: Observable<Paginated<StixObject>>;
@@ -30,10 +28,9 @@ export class MatrixBaseComponent extends MatrixCommon implements OnInit {
   public matrixDetails: any;
   public matrixMap: Map<string, Technique[]>;
   constructor(
-    private restAPIConnectorService: RestApiConnectorService,
-    public viewModelsService: ViewModelsService
+    private restAPIConnectorService: RestApiConnectorService
     ) {
-      super(viewModelsService)
+      super()
     }
 
   ngOnInit() {

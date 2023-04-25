@@ -4,7 +4,6 @@ import { StixViewPage } from '../../stix-view-page';
 import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/rest-api-connector.service';
 import { StixObject } from 'src/app/classes/stix/stix-object';
 import { AuthenticationService } from 'src/app/services/connectors/authentication/authentication.service';
-import { ViewModel, ViewModelsService } from 'src/app/services/viewmodels.service';
 
 @Component({
     selector: 'app-matrix-view',
@@ -15,8 +14,7 @@ export class MatrixViewComponent extends StixViewPage implements OnInit {
     public all_tactics: Array<StixObject>;
 
     public get matrix(): Matrix { return this.config.object as Matrix; }
-    viewModel: ViewModel = null;
-    constructor(private restAPIConnectorService: RestApiConnectorService, authenticationService: AuthenticationService, public viewModelsService: ViewModelsService) {
+    constructor(private restAPIConnectorService: RestApiConnectorService, authenticationService: AuthenticationService) {
         super(authenticationService);
     }
 
@@ -32,8 +30,6 @@ export class MatrixViewComponent extends StixViewPage implements OnInit {
         if (this.matrix.firstInitialized) {
             this.matrix.initializeWithDefaultMarkingDefinitions(this.restAPIConnectorService);
         }
-        let vm = this.viewModelsService.newViewModel("newMatrixView");
-        vm.loadVMData();
-        this.viewModel = vm;
+
     }
 }
