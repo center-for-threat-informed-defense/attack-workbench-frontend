@@ -5,5 +5,12 @@
     <span>
       {{technique.name}}
     </span>
+    <ng-container *ngIf="!technique.is_subtechnique">
+      <sub>
+        <!-- set this to be the number of subtechiques -->
+        (2)
+      </sub>
+    </ng-container>
+
   </div>
 </div>
