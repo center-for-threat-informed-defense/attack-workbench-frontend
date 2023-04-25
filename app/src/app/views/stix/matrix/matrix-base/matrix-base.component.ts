@@ -4,7 +4,6 @@ import { Matrix } from 'src/app/classes/stix/matrix';
 import { StixObject } from 'src/app/classes/stix/stix-object';
 import { Tactic } from 'src/app/classes/stix/tactic';
 import { Technique } from 'src/app/classes/stix/technique';
-import { MatrixCommon } from 'src/app/components/matrix/matrix-common';
 import { FilterGroup } from 'src/app/components/stix/stix-list/stix-list.component';
 import { Paginated, RestApiConnectorService } from 'src/app/services/connectors/rest-api/rest-api-connector.service';
 
@@ -13,7 +12,7 @@ import { Paginated, RestApiConnectorService } from 'src/app/services/connectors/
   templateUrl: './matrix-base.component.html',
   styleUrls: ['./matrix-base.component.scss']
 })
-export class MatrixBaseComponent extends MatrixCommon implements OnInit {
+export class MatrixBaseComponent implements OnInit {
   @Input() public config: MatrixBaseConfig;
 
   private _idToLabel: Map<string, string>;
@@ -30,7 +29,6 @@ export class MatrixBaseComponent extends MatrixCommon implements OnInit {
   constructor(
     private restAPIConnectorService: RestApiConnectorService
     ) {
-      super()
     }
 
   ngOnInit() {
@@ -54,20 +52,29 @@ export class MatrixBaseComponent extends MatrixCommon implements OnInit {
 
     })
   }
+  // complete logic once api call is done
+  public onToggleSubtechniquesVisible(technique: Technique, tactic: Tactic) {
+    console.log("toggling visibility for ", technique);
+    technique.show_subtechniques = !technique.show_subtechniques;
+    // if (technique.subtechniques.length == 0) return;
+    // let tvm = this.viewModel.getTechniqueVM(technique, tactic);
+    // console.log("tvm: ", tvm)
+    // tvm.showSubtechniques = !tvm.showSubtechniques;
+}
 
-    /**
-     * Get a human readable label for the given object
-     *
-     * @param {string} stixID the stix ID to get
-     */
-    public getLabel(stixID: string): string {
-      if (!this._idToLabel) {
-          this._idToLabel = new Map();
-          for (let object of this.tacticList) {
-              this._idToLabel.set(object.stixID, object[this.config.field]);
-          }
+/**
+ * Get a human readable label for the given object
+ *
+ * @param {string} stixID the stix ID to get
+ */
+public getLabel(stixID: string): string {
+  if (!this._idToLabel) {
+      this._idToLabel = new Map();
+      for (let object of this.tacticList) {
+          this._idToLabel.set(object.stixID, object[this.config.field]);
       }
-      return this._idToLabel.get(stixID);
+    }
+    return this._idToLabel.get(stixID);
   }
   hideDisabled: boolean = false; //are disabled techniques hidden?
 
