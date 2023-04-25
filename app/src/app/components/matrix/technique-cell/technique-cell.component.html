@@ -1,7 +1,8 @@
 <div class="technique-cell">
   <div  (click)="onLeftClick()"
-        (mouseenter)="onMouseEnter()"
-        (mouseleave)="onMouseLeave()">
+        matTooltip="{{technique.attackID}}"
+        matTooltipPosition="above"
+        matTooltipClass="technique-cell-tooltip">
     <span>
       {{technique.name}}
     </span>

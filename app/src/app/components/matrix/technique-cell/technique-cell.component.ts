@@ -1,4 +1,4 @@
-import { Component, Input, Output, OnInit, EventEmitter } from '@angular/core';
+import { Component, Input, Output, OnInit, EventEmitter, ViewEncapsulation } from '@angular/core';
 import { Technique } from 'src/app/classes/stix/technique';
 import { ViewModelsService } from 'src/app/services/viewmodels.service';
 import { Cell } from '../cell';
@@ -6,7 +6,8 @@ import { Cell } from '../cell';
 @Component({
   selector: 'app-technique-cell',
   templateUrl: './technique-cell.component.html',
-  styleUrls: ['./technique-cell.component.scss']
+  styleUrls: ['./technique-cell.component.scss'],
+  encapsulation: ViewEncapsulation.None
 })
 export class TechniqueCellComponent extends Cell implements OnInit {
   @Input() technique: Technique;
