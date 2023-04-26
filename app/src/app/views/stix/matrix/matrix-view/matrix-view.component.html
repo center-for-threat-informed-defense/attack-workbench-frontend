@@ -45,10 +45,10 @@
             </div>
         </div>
     </div>
-  <div class="row matrix-row">
+  <div class="row">
     <div class="col">
         <!-- MATRIX -->
-        <app-matrix-base *ngIf="all_tactics; else loadingTactics" [viewModel]="viewModel" [config]="{
+        <app-matrix-base *ngIf="all_tactics; else loadingTactics" [config]="{
           field: 'name',
           object: matrix,
           tacticList: all_tactics

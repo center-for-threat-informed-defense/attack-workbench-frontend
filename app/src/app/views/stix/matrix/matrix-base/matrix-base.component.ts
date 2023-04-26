@@ -52,15 +52,17 @@ export class MatrixBaseComponent implements OnInit {
 
     })
   }
-  // complete logic once api call is done
-  public onToggleSubtechniquesVisible(technique: Technique, tactic: Tactic) {
-    console.log("toggling visibility for ", technique);
+  public onToggleSubtechniquesVisible(technique: Technique) {
     technique.show_subtechniques = !technique.show_subtechniques;
-    // if (technique.subtechniques.length == 0) return;
-    // let tvm = this.viewModel.getTechniqueVM(technique, tactic);
-    // console.log("tvm: ", tvm)
-    // tvm.showSubtechniques = !tvm.showSubtechniques;
-}
+  }
+  public toggleAllSubtechniquesVisible(value: boolean) {
+    for (let entry of this.matrixMap.entries()) {
+      for (let technique of entry[1])
+      {
+        technique.show_subtechniques = value
+      }
+    }
+  }
 
 /**
  * Get a human readable label for the given object

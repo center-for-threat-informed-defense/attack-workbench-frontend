@@ -1,4 +1,19 @@
 $sizeunit: 14px;
+.button-row {
+  display: flex;
+  button{
+    margin: 10px;
+    float: right;
+  }
+}
+
+.matrix-container {
+  width: 100%;
+  height: 100vh;
+  overflow: visible;
+  overflow-x: scroll;
+  border: 1px solid black;
+}
 
 .matrix.side {
   border-collapse: collapse;
@@ -15,9 +30,6 @@ $sizeunit: 14px;
       }
   }
   .tactic {
-
-
-
     .techniques-table {
       border-collapse: collapse;
       width: 100%;
