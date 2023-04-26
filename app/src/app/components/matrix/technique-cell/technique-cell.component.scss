@@ -26,11 +26,11 @@
   span {
     margin: 0;
     padding-bottom: 1px;
-    border-bottom: 1px solid color(balanced-blue);  height: 100%;
     line-height: 18px;
   }
-  :hover {
+  :hover span {
     color: color(balanced-blue);
+    border-bottom: 1px solid color(balanced-blue);
     cursor: pointer;
   }
 }
@@ -39,8 +39,8 @@ sub {
   font-size: 75%;
   line-height: 0;
   vertical-align: baseline;
-  bottom: -.75em;
-  left: 0.5em
+  bottom: -.5em;
+  left: 0em
 }
 
 // custom styling for tooltip
