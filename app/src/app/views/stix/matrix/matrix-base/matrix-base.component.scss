@@ -1,3 +1,4 @@
+@import "../../../../../style/colors.scss";
 $sizeunit: 14px;
 .button-row {
   display: flex;
@@ -12,17 +13,31 @@ $sizeunit: 14px;
   height: 100vh;
   overflow: visible;
   overflow-x: scroll;
-  border: 1px solid black;
+  border: 1px solid;
+  .dark & { border-color: border-color(dark) }
+  .light & { border-color: on-color-deemphasis(light) }
 }
 
 .matrix.side {
   border-collapse: collapse;
   padding: 0;
   tr.tactic {
-      background-color: #6241c5;
-      border-bottom: 1px solid black;
+    margin-left: 14px;
+      border-bottom: 1px solid;
+      .dark & {
+        border-color: border-color(dark);
+        background-color: color(engenuity-gray);
+        color: color(engenuity-black);
+        // :hover {
+        //   background-color: #B2B2B2;
+        // }
+      }
+      .light & {
+        border-color: on-color-deemphasis(light);
+        background-color: color(engenuity-purple);
+        color: white;
+      }
       vertical-align: top;
-      border-collapse: collapse;
       td {
         padding: 0;
         vertical-align: middle;
@@ -46,22 +61,37 @@ $sizeunit: 14px;
       width: 100%;
       padding: 0;
       margin: 0;
-      background-color: white;
-
+      .dark & {
+        background-color: color(engenuity-black);
+        color: white;
+       }
+      .light & {
+        background-color: white;
+        color: black;
+      }
       td {
           padding: 0;
           vertical-align: top;
 
           &.technique {
-              outline: 1px solid #dfdfdf;
+            .dark & { outline: 1px solid border-color(dark) }
+            .light & { outline: 1px solid on-color-deemphasis(light) }
+
+              // outline: 1px solid #dfdfdf;
               // outline-offset: -1px;
           }
       }
     }
 
     .subtechniques {
-      background-color: white;
-
+      .dark & {
+        background-color: color(engenuity-black);
+        color: white;
+       }
+      .light & {
+        background-color: white;
+        color: black;
+      }
       &.hidden {
         display: none;
       }
@@ -71,13 +101,12 @@ $sizeunit: 14px;
       margin-left: -1px;
       white-space: nowrap;
       vertical-align: top;
-      border-collapse: collapse;
       .subtechnique {
           height: 100%;
           flex-grow: 1;
-
-          border: 1px solid #dfdfdf;
-          min-width: 200px;
+          .dark & { outline: 1px solid border-color(dark) }
+          .light & { outline: 1px solid on-color-deemphasis(light) }
+        min-width: 200px;
       }
     }
     .handle {
@@ -104,14 +133,14 @@ $sizeunit: 14px;
   height: 100%;
   .angle {
       display: none;
-      color: white;
   }
   &.expanded .angle {
     height: 12px;
     display:block;
     position: absolute;
     svg {
-      fill: #f0f1f2;
+      .dark & { fill: color(engenuity-black)}
+      .light & { fill: color(engenuity-gray)}
       position: absolute;
     }
     &.top {

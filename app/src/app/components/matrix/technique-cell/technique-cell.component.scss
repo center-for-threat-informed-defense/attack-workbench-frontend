@@ -2,7 +2,6 @@
 @import "../../../../style/colors.scss";
 
 .technique-cell {
-  color: black;
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -47,7 +46,8 @@ sub {
 .technique-cell-tooltip {
   position: relative  !important;
   font-size: small !important;
-  background-color: #000000c8 !important;
+  .dark & {background-color:#707070 !important;}
+  .light & {background-color: #000000c8 !important;}
   bottom: -.5rem !important;
   overflow: initial !important;
   margin-bottom: 1rem !important;
@@ -58,7 +58,8 @@ sub {
     position: absolute !important;
     border-left: 0.5rem solid transparent !important;
     border-right: 0.5rem solid transparent !important;
-    border-bottom: 0.5rem solid #000000c8 !important;
+    .dark & { border-bottom: 0.5rem solid #707070 !important;}
+    .light & {border-bottom: 0.5rem solid #000000c8 !important;}
     bottom: -0.5rem !important;
       right: calc(50% - 0.5rem) !important;
       transform: rotate(180deg) !important;
