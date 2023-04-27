@@ -88,27 +88,18 @@ export class UsersListComponent implements OnInit {
   public getAccounts(options: { limit: number, offset: number, status?: string[], role?: string[], search?: string }) {
       if (this.team) {
         this.userAccounts$ = this.restAPIConnector.getUserAccountsByTeamId(this.team.id, options);
-        this.userSubscription = this.userAccounts$.subscribe({
-          next: (data) => {
-              this.userAccounts = data.data;
-              this.totalObjectCount = data.pagination.total;
-          },
-          complete: () => {
-              this.userSubscription.unsubscribe();
-          }
-        });
       } else {
         this.userAccounts$ = this.restAPIConnector.getAllUserAccounts(options);
-        this.userSubscription = this.userAccounts$.subscribe({
-            next: (data) => {
-                this.userAccounts = data.data;
-                this.totalObjectCount = data.pagination.total;
-            },
-            complete: () => {
-                this.userSubscription.unsubscribe()
-            }
-        });
       }
+      this.userSubscription = this.userAccounts$.subscribe({
+        next: (data) => {
+            this.userAccounts = data.data;
+            this.totalObjectCount = data.pagination.total;
+        },
+        complete: () => {
+            this.userSubscription.unsubscribe();
+        }
+      });
   }
 
   /**
