@@ -7,7 +7,6 @@ import { MatPaginator } from '@angular/material/paginator';
 import { AuthenticationService } from '../../../../services/connectors/authentication/authentication.service';
 import { Team } from 'src/app/classes/authn/team';
 import { MatDialog } from '@angular/material/dialog';
-import { DeleteDialogComponent } from 'src/app/components/delete-dialog/delete-dialog.component';
 import { CreateNewDialogComponent } from 'src/app/components/create-new-dialog/create-new-dialog.component';
 import { Router } from '@angular/router';
 
@@ -33,7 +32,7 @@ export class TeamsListPageComponent implements OnInit {
   }
 
   constructor(private restAPIConnector: RestApiConnectorService, private authenticationService: AuthenticationService, private dialog: MatDialog, private router:Router) {
-      this.columnsToDisplay = ['name', 'description', 'members', 'options'];
+      this.columnsToDisplay = ['name', 'description', 'members'];
   }
 
   ngOnInit(): void {
@@ -91,35 +90,8 @@ export class TeamsListPageComponent implements OnInit {
   }
 
   /**
-   * Deletes a team from the REST API after the user confirms they wish to delete the team
-   * @param team Team to be deleted
-   * @param $event click event so we can stop propagation
+   * Opens a dialog to allow the user to input a team name and description and create a new team (user will be auto-navigated to the new team page upon completion)
    */
-  public deleteTeam(team:Team, $event): void {
-    // overrides routerLink of parent element
-    $event.stopPropagation();
-    // open confirmation dialog
-    let prompt = this.dialog.open(DeleteDialogComponent, {
-      maxWidth: "35em",
-      disableClose: true,
-      autoFocus: false // disables auto focus on the dialog form field
-    });
-    let subscription = prompt.afterClosed().subscribe({
-        next: (confirm) => {
-            if (confirm) {
-                const delSubscription = this.restAPIConnector.deleteTeam(team).subscribe({
-                  complete: () => {delSubscription.unsubscribe();},
-                });
-                this.applyControls();
-            }
-        },
-        complete: () => { subscription.unsubscribe(); } //prevent memory leaks
-    });
-  }
-
-/**
- * Opens a dialog to allow the user to input a team name and description and create a new team (user will be auto-navigated to the new team page upon completion)
- */
   public createNewTeam(): void {
     // open create new team dialog
     let prompt = this.dialog.open(CreateNewDialogComponent, {
