@@ -3,7 +3,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { DebugElement } from '@angular/core';
 
-import { MatrixBaseComponent } from './matrix-base.component';
+import { MatrixBaseComponent } from './matrix-side.component';
 
 describe('MatrixBaseComponent', () => {
   let component: MatrixBaseComponent;

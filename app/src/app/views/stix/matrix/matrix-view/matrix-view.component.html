@@ -48,11 +48,11 @@
   <div class="row">
     <div class="col">
         <!-- MATRIX -->
-        <app-matrix-base *ngIf="all_tactics; else loadingTactics" [config]="{
+        <app-matrix-side *ngIf="all_tactics; else loadingTactics" [config]="{
           field: 'name',
           object: matrix,
           tacticList: all_tactics
-        }"></app-matrix-base>
+        }"></app-matrix-side>
         <ng-template #loadingTactics>
             <app-loading-overlay></app-loading-overlay>
         </ng-template>

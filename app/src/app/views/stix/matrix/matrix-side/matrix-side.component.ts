@@ -8,11 +8,11 @@ import { FilterGroup } from 'src/app/components/stix/stix-list/stix-list.compone
 import { Paginated, RestApiConnectorService } from 'src/app/services/connectors/rest-api/rest-api-connector.service';
 
 @Component({
-  selector: 'app-matrix-base',
-  templateUrl: './matrix-base.component.html',
-  styleUrls: ['./matrix-base.component.scss']
+  selector: 'app-matrix-side',
+  templateUrl: './matrix-side.component.html',
+  styleUrls: ['./matrix-side.component.scss']
 })
-export class MatrixBaseComponent implements OnInit {
+export class MatrixSideComponent implements OnInit {
   @Input() public config: MatrixBaseConfig;
 
   private _idToLabel: Map<string, string>;

@@ -188,7 +188,7 @@ import { CampaignViewComponent } from './views/stix/campaign/campaign-view/campa
 import { CampaignListComponent } from './views/stix/campaign/campaign-list/campaign-list.component';
 
 import { NotesSearchListComponent } from './views/notes-page/notes-search-list/notes-search-list.component';
-import { MatrixBaseComponent } from './views/stix/matrix/matrix-base/matrix-base.component';
+import { MatrixSideComponent } from './views/stix/matrix/matrix-side/matrix-side.component';
 import { TacticCellComponent } from './components/matrix/tactic-cell/tactic-cell.component';
 import { TechniqueCellComponent } from './components/matrix/technique-cell/technique-cell.component';
 
@@ -278,7 +278,7 @@ import { TechniqueCellComponent } from './components/matrix/technique-cell/techn
 
     MatrixListComponent,
     MatrixViewComponent,
-    MatrixBaseComponent,
+    MatrixSideComponent,
     TacticCellComponent,
     TechniqueCellComponent,
 
