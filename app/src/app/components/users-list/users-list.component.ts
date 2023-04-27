@@ -90,9 +90,8 @@ export class UsersListComponent implements OnInit {
         this.userAccounts$ = this.restAPIConnector.getUserAccountsByTeamId(this.team.id, options);
         this.userSubscription = this.userAccounts$.subscribe({
           next: (data) => {
-              this.userAccounts = data.data.filter((user)=>this.team.userIDs.includes(user.id));
-              // this.totalObjectCount = data.pagination.total;
-              this.totalObjectCount = this.userAccounts.length;
+              this.userAccounts = data.data;
+              this.totalObjectCount = data.pagination.total;
           },
           complete: () => {
               this.userSubscription.unsubscribe();
