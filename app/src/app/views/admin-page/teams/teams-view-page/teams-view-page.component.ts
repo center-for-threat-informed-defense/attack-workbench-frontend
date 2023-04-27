@@ -27,7 +27,7 @@ export class TeamsViewPageComponent implements OnInit,OnDestroy {
       this.teamId = params.id;
     }));
     this.subscriptions.push(this.route.queryParams.subscribe((queryParams)=>{
-      this.editing = !!queryParams.editing ? queryParams.editing : false;
+      this.editing = queryParams.editing ? queryParams.editing : false;
     }));
     this.subscriptions.push(this.editorService.onSave.subscribe(()=>{
       const putRequest = this.restAPIConnector.putTeam(this.team).subscribe({

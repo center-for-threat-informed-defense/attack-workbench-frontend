@@ -3,7 +3,6 @@ import { map, switchMap } from 'rxjs/operators';
 import { RestApiConnectorService } from '../../services/connectors/rest-api/rest-api-connector.service';
 import { logger } from '../../util/logger';
 import { Serializable, ValidationData } from '../serializable';
-import { UserAccount } from './user-account';
 
 export class Team extends Serializable {
     public id: string;

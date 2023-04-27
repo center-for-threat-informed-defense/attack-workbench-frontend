@@ -1,7 +1,6 @@
 import { Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
-import { Observable, Subscription } from 'rxjs';
 import { UserAccount } from 'src/app/classes/authn/user-account';
-import { Paginated, RestApiConnectorService } from 'src/app/services/connectors/rest-api/rest-api-connector.service';
+import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/rest-api-connector.service';
 import { Role } from '../../../../classes/authn/role';
 import { MatPaginator } from '@angular/material/paginator';
 import { AuthenticationService } from '../../../../services/connectors/authentication/authentication.service';
