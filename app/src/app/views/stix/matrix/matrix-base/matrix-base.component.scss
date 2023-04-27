@@ -4,15 +4,13 @@ $sizeunit: 14px;
   display: flex;
   button{
     margin: 10px;
-    float: right;
   }
 }
 
 .matrix-container {
   width: 100%;
   height: 100vh;
-  overflow: visible;
-  overflow-x: scroll;
+  overflow: scroll;
   border: 1px solid;
   .dark & { border-color: border-color(dark) }
   .light & { border-color: on-color-deemphasis(light) }
@@ -74,8 +72,8 @@ $sizeunit: 14px;
           vertical-align: top;
 
           &.technique {
-            .dark & { outline: 1px solid border-color(dark) }
-            .light & { outline: 1px solid on-color-deemphasis(light) }
+            .dark & { border: 1px solid border-color(dark) }
+            .light & { border: 1px solid on-color-deemphasis(light) }
 
               // outline: 1px solid #dfdfdf;
               // outline-offset: -1px;
@@ -106,7 +104,7 @@ $sizeunit: 14px;
           flex-grow: 1;
           .dark & { outline: 1px solid border-color(dark) }
           .light & { outline: 1px solid on-color-deemphasis(light) }
-        min-width: 200px;
+        min-width: 150px;
       }
     }
     .handle {
