@@ -79,7 +79,7 @@ export class Team extends Serializable {
             else { logger.error('TypeError: userIDs field is not a string array:', raw.userIDs, '(', typeof(raw.userIDs), ')'); }
         }
 
-        /*if ('created' in raw) {
+        if ('created' in raw) {
             if (typeof (raw.created) === "string") this.created = new Date(raw.created);
             else logger.error("TypeError: created field is not a string:", raw.created, "(", typeof (raw.created), ")")
         } else { this.created = new Date(); }
@@ -87,7 +87,7 @@ export class Team extends Serializable {
         if ('modified' in raw) {
             if (typeof (raw.modified) === "string") this.modified = new Date(raw.modified);
             else logger.error("TypeError: modified field is not a string:", raw.modified, "(", typeof (raw.modified), ")")
-        } else { this.modified = new Date(); }*/
+        } else { this.modified = new Date(); }
     }
 
     /**
@@ -97,9 +97,37 @@ export class Team extends Serializable {
      */
     public validate(restAPIService: RestApiConnectorService): Observable<ValidationData> {
         const validation = new ValidationData();
-        // validate team name exists, and the team name is unique
-        const obs = new Observable<ValidationData>();
-        return obs;
+        return of(validation).pipe(
+          // check if username is unique
+          switchMap(result => {
+            return restAPIService.getAllTeams({includePagination: true}).pipe(
+              map(teams => {
+                  if (this.hasOwnProperty('name')) {
+                      if (this.name == '') {
+                          result.errors.push({
+                              result: 'error',
+                              field: 'name',
+                              message: 'team has no name'
+                          });
+                      } else if (teams.data.some(x => x.name.toLowerCase() == this.name.toLowerCase() && x.id != this.id)) {
+                          result.errors.push({
+                              result: 'error',
+                              field: 'name',
+                              message: 'name is not unique'
+                          });
+                      } else {
+                          result.successes.push({
+                              result: 'success',
+                              field: 'username',
+                              message: 'name is unique'
+                          });
+                      }
+                  }
+                  return result;
+              })
+          );
+          }) // end switchmap
+      );
     }
 
     /**
@@ -107,8 +135,12 @@ export class Team extends Serializable {
      * @param restAPIService [RestApiConnectorService] the service to perform the POST/PUT through
      * @returns {Observable} of the post
      */
-     public save(restAPIService: RestApiConnectorService): Team {
+     public save(restAPIService: RestApiConnectorService): Observable<Team> {
         const putObservable = restAPIService.putTeam(this);
-        return putObservable;
+        const subscription = putObservable.subscribe({
+          next: (result) => { this.deserialize(this.serialize()); },
+          complete: () => { subscription.unsubscribe(); }
+      });
+      return putObservable;
     }
 }

@@ -45,9 +45,13 @@ export class TeamsListPageComponent implements OnInit {
    * @param options 
    */
   public getTeams(options: { limit: number, offset: number, search?: string }) {
-    const hold = this.restAPIConnector.getAllTeams(options);
-    this.teams = hold.data;
-    this.totalObjectCount = hold.pagination.total;
+    const subscription = this.restAPIConnector.getAllTeams(options).subscribe({
+      next: (response) => {
+        this.teams = response.data;
+        this.totalObjectCount = response.pagination.total;
+      },
+      complete: () => subscription.unsubscribe()
+    });
   }
 
   /**
@@ -103,7 +107,9 @@ export class TeamsListPageComponent implements OnInit {
     let subscription = prompt.afterClosed().subscribe({
         next: (confirm) => {
             if (confirm) {
-                this.restAPIConnector.deleteTeam(team);
+                const delSubscription = this.restAPIConnector.deleteTeam(team).subscribe({
+                  complete: () => {delSubscription.unsubscribe();},
+                });
                 this.applyControls();
             }
         },
@@ -143,11 +149,16 @@ export class TeamsListPageComponent implements OnInit {
         next: (responseObj) => {
             if (responseObj.createObject) {
                 const {name, description} = responseObj.newObject;
-                const dateStr = new Date().toString();
-                const newTeam = new Team({name, description, users:[], id: ''+Math.floor(Math.random()*10000), created: dateStr, modified: dateStr});
-                const response = this.restAPIConnector.postTeam(new Team(newTeam));
-                this.applyControls();
-                this.router.navigateByUrl('/admin/teams/' + response.id);
+                const newTeam = new Team({name, description, users:[]});
+                const createTeamSub = this.restAPIConnector.postTeam(newTeam).subscribe({
+                  next: (response) => {
+                      if (response) {
+                          this.applyControls();
+                          this.router.navigateByUrl('/admin/teams/' + response.id);
+                      }
+                  },
+                  complete: () => createTeamSub.unsubscribe(),
+                });
             }
         },
         complete: () => { subscription.unsubscribe(); } //prevent memory leaks

@@ -30,12 +30,17 @@ export class TeamsViewPageComponent implements OnInit,OnDestroy {
       this.editing = !!queryParams.editing ? queryParams.editing : false;
     }));
     this.subscriptions.push(this.editorService.onSave.subscribe(()=>{
-      this.restAPIConnector.putTeam(this.team);
-      this.router.navigate([]);
+      const putRequest = this.restAPIConnector.putTeam(this.team).subscribe({
+        next: () => {this.router.navigate([]);},
+        complete: ()=> {putRequest.unsubscribe();}
+      });
     }));
     this.subscriptions.push(this.editorService.onDelete.subscribe(()=>{
-      this.restAPIConnector.deleteTeam(this.team);
-      this.router.navigate([this.route.parent.url], {});
+      const deleteRequest = this.restAPIConnector.deleteTeam(this.team).subscribe({
+        next: () => {this.router.navigate([this.route.parent.url], {});},
+        complete: ()=> {deleteRequest.unsubscribe();}
+      });
+      ;
     }));
     this.subscriptions.push(this.editorService.onEditingStopped.subscribe(()=>{
       this.loadTeam();
@@ -53,7 +58,11 @@ export class TeamsViewPageComponent implements OnInit,OnDestroy {
    * Loads the selected team from the REST API
    */
   public loadTeam(): void {
-    this.team = this.restAPIConnector.getTeam(this.teamId);
+    this.team = null;
+    const subscription = this.restAPIConnector.getTeam(this.teamId).subscribe({
+      next: (team) => {this.team = team},
+      complete: () => {subscription.unsubscribe();}
+    });
   }
 
   /**
@@ -81,8 +90,10 @@ export class TeamsViewPageComponent implements OnInit,OnDestroy {
         next: (response) => {
             if (response) {
               this.team.userIDs = select.selected;
-              this.restAPIConnector.putTeam(this.team);
-              this.loadTeam();
+              const putRequest = this.restAPIConnector.putTeam(this.team).subscribe({
+                next: () => {this.loadTeam();},
+                complete: ()=> {putRequest.unsubscribe();}
+              });
             }
         },
         complete: () => { subscription.unsubscribe(); } //prevent memory leaks

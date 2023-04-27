@@ -104,11 +104,8 @@ export interface Namespace {
 export class RestApiConnectorService extends ApiConnector {
     private get apiUrl(): string { return environment.integrations.rest_api.url; }
 
-    teamList;
-
     constructor(private http: HttpClient, private snackbar: MatSnackBar) {
       super(snackbar);
-      this.teamList = [new Team({id:'1',name:'Team Name',description:'Team Description',userIDs:['identity--f568ad89-69bc-48e7-877b-43755f1d376d']})];
     }
     
     /**
@@ -1573,15 +1570,24 @@ export class RestApiConnectorService extends ApiConnector {
      * Get all teams
      * @param {number} [limit] the number of teams to retrieve
      * @param {number} [offset] the number of teams to skip
+     * @param {boolean} [includePagination] whether or not to include pagination (will be done automatically if limit or offset are set)
      * @param {string} [search] Only return teams where the provided search text occurs in the name or description. The search is case-insensitive.
      * @returns {Observable<Paginated>} paginated data of teams
      */
-    public getAllTeams(options?: {limit?: number, offset?: number, search?: string}): Paginated<Team> {
-      let data = this.teamList;
-      if (options && options.search) {
-        data = data.filter((teamObj)=>teamObj.name.indexOf(options.search)>= 0 || teamObj.description.indexOf(options.search)>=0);
-      }
-      return {data, pagination:{total: data.length, limit: 0, offset: 0}};
+    public getAllTeams(options?: {limit?: number, offset?: number, search?: string, includePagination?: boolean}): Observable<Paginated<Team>> {
+      let url = `${this.apiUrl}/teams`;
+      // parse params into query string
+      let query = new HttpParams({encoder: new CustomEncoder()});
+      // pagination
+      if (options && options.limit) query = query.set("limit", options.limit.toString());
+      if (options && options.offset) query = query.set("offset", options.offset.toString());
+      if (options && (options.includePagination || options.limit || options.offset)) query = query.set("includePagination", "true");
+      // search
+      if (options && options.search) query = query.set("search", options.search);
+      return this.http.get<Paginated<Team>>(url, {params: query}).pipe(
+          catchError(this.handleError_continue<Paginated<Team>>({data: [], pagination: {total: 0, limit: 0, offset:0}})),
+          share() //multicast to subscribers
+      );
     }
 
     /**
@@ -1589,10 +1595,23 @@ export class RestApiConnectorService extends ApiConnector {
      * @param {string} id the object ID
      * @param {number} [limit] the number of users to retrieve
      * @param {number} [offset] the number of users to skip
+     * @param {string} [search] Only return users where the provided search text occurs in the username, email, or displayName.  The search is case-insensitive.
      * @returns {Observable<Paginated>} paginated data of users from the given tem
      */
-    public getUserAccountsByTeamId(id:string, options?: {limit?: number, offset?: number}): Observable<Paginated<UserAccount>> {
-      return this.getAllUserAccounts(options);
+    public getUserAccountsByTeamId(id:string, options?: {limit?: number, offset?: number, search?: string}): Observable<Paginated<UserAccount>> {
+      let url = `${this.apiUrl}/teams/${id}/users`;
+      // parse params into query string
+      let query = new HttpParams({encoder: new CustomEncoder()});
+      // pagination
+      if (options && options.limit) query = query.set("limit", options.limit.toString());
+      if (options && options.offset) query = query.set("offset", options.offset.toString());
+      if (options && (options.limit || options.offset)) query = query.set("includePagination", "true");
+      // search
+      if (options && options.search) query = query.set("search", options.search);
+      return this.http.get<Paginated<UserAccount>>(url, {params: query}).pipe(
+          catchError(this.handleError_continue<Paginated<UserAccount>>({data: [], pagination: {total: 0, limit: 0, offset:0}})),
+          share() //multicast to subscribers
+      );
     }
 
     /**
@@ -1600,8 +1619,12 @@ export class RestApiConnectorService extends ApiConnector {
      * @param {string} id the object ID
      * @returns {Team} the object with the given ID
      */
-    public getTeam(id: string): Team {
-        return this.teamList.find((team)=>team.id === id);
+    public getTeam(id: string): Observable<Team> {
+      let url = `${this.apiUrl}/teams/${id}`;
+      return this.http.get<Team>(url).pipe(
+          catchError(this.handleError_continue<Team>()),
+          share() //multicast to subscribers
+      );
     }
 
     /**
@@ -1609,9 +1632,12 @@ export class RestApiConnectorService extends ApiConnector {
      * @param {Team} team the object to create
      * @returns {Team} the created object
      */
-    public postTeam(team: Team): Team {
-        this.teamList.push(team);
-        return team;
+    public postTeam(team: Team): Observable<Team> {
+      let url = `${this.apiUrl}/teams`;
+      return this.http.post<Team>(url, team).pipe(
+          catchError(this.handleError_continue<Team>()),
+          share() //multicast to subscribers
+      );
     }
 
     /**
@@ -1619,27 +1645,25 @@ export class RestApiConnectorService extends ApiConnector {
      * @param {Team} team the object to update
      * @returns {Team} the updated object
      */
-    public putTeam(team: Team): Team {
-        const ind = this.teamList.findIndex((teamObj)=>teamObj.id===team.id);
-        if (ind === -1) {
-          throw new Error();
-        }
-        this.teamList[ind] = team;
-        return team;
+    public putTeam(team: Team): Observable<Team> {
+      let url = `${this.apiUrl}/teams/${team.id}`;
+      return this.http.put<Team>(url, team).pipe(
+          catchError(this.handleError_continue<Team>()),
+          share() //multicast to subscribers
+      );
     }
 
     /**
      * DELETE (remove) a team
      * @param {Team} team the object to delete
-     * @returns {boolean} A nifty placeholder :)
+     * @returns {Observable<{}>}
      */
-    public deleteTeam(team: Team): boolean {
-      const ind = this.teamList.findIndex((teamObj)=>teamObj.id===team.id);
-      if (ind === -1) {
-        throw new Error();
-      }
-      this.teamList.splice(ind,1);
-      return true;
+    public deleteTeam(team: Team): Observable<{}> {
+      let url = `${this.apiUrl}/teams/${team.id}`;
+      return this.http.delete<Object>(url).pipe(
+          catchError(this.handleError_continue<Object>()),
+          share() //multicast to subscribers
+      );
   }
           
 
