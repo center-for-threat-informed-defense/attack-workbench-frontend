@@ -13,7 +13,9 @@ import { AuthenticationService } from 'src/app/services/connectors/authenticatio
 export class MatrixViewComponent extends StixViewPage implements OnInit {
     public all_tactics: Array<StixObject>;
 
+    public view: String = "side";
     public get matrix(): Matrix { return this.config.object as Matrix; }
+
     constructor(private restAPIConnectorService: RestApiConnectorService, authenticationService: AuthenticationService) {
         super(authenticationService);
     }
@@ -30,6 +32,9 @@ export class MatrixViewComponent extends StixViewPage implements OnInit {
         if (this.matrix.firstInitialized) {
             this.matrix.initializeWithDefaultMarkingDefinitions(this.restAPIConnectorService);
         }
+
+    }
+    toggleAllSubtechniquesVisible(i: boolean) {
 
     }
 }

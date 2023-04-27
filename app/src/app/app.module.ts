@@ -191,6 +191,7 @@ import { NotesSearchListComponent } from './views/notes-page/notes-search-list/n
 import { MatrixSideComponent } from './views/stix/matrix/matrix-side/matrix-side.component';
 import { TacticCellComponent } from './components/matrix/tactic-cell/tactic-cell.component';
 import { TechniqueCellComponent } from './components/matrix/technique-cell/technique-cell.component';
+import { MatrixFlatComponent } from './views/stix/matrix/matrix-flat/matrix-flat.component';
 
 
 @NgModule({
@@ -279,6 +280,7 @@ import { TechniqueCellComponent } from './components/matrix/technique-cell/techn
     MatrixListComponent,
     MatrixViewComponent,
     MatrixSideComponent,
+    MatrixFlatComponent,
     TacticCellComponent,
     TechniqueCellComponent,
 
