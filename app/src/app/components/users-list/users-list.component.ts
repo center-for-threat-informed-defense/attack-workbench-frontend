@@ -18,7 +18,7 @@ import { SelectionModel } from '@angular/cdk/collections';
 export class UsersListComponent implements OnInit {
   @Input() config:UsersListConfig;
   @ViewChild(MatPaginator) paginator: MatPaginator;
-  @Output() public onSelect = new EventEmitter<String>();
+  @Output() public onSelect = new EventEmitter<string>();
   public userAccounts$: Observable<Paginated<UserAccount>>;
   public userAccounts: UserAccount[];
   public columnsToDisplay: string[];
@@ -28,7 +28,7 @@ export class UsersListComponent implements OnInit {
   public selectedFilters: string[];
   public searchQuery: '';
   public team:Team;
-  public selection: SelectionModel<String>;
+  public selection: SelectionModel<string>;
 
   /**
    * Whether or not to show the search
@@ -78,7 +78,7 @@ export class UsersListComponent implements OnInit {
     this.applyControls();
     if (this.config.mode=='select') {
       this.columnsToDisplay = ['select'].concat(this.columnsToDisplay);
-      this.selection = this.config.selection ? this.config.selection : new SelectionModel<String>(true)
+      this.selection = this.config.selection ? this.config.selection : new SelectionModel<string>(true)
     }
   }
 
@@ -231,5 +231,5 @@ export interface UsersListConfig {
   // default is 'view'
   mode:string,
   // selection object used in 'select' mode
-  selection: SelectionModel<String>,
+  selection: SelectionModel<string>,
 }
