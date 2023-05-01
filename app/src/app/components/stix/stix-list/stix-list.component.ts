@@ -119,7 +119,7 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
 
     public get userSearchString():string {
       if (this.userIdsUsedInSearch.length === 0) {
-        return "no users selected";
+        return "filter by users";
       } else {
         return `${this.userIdsUsedInSearch.length} user${this.userIdsUsedInSearch.length === 1 ? '' : 's'} selected`;
       } 
@@ -370,38 +370,40 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
         }
         this.tableColumns_controls = controls_before.concat(this.tableColumns, controls_after);
 
-        // filter setup
-      if (this.config.type !== 'note') {
+        const filterList = this.config.filterList ? this.config.filterList : [ 'state', 'workflow_status'];
+        if (filterList.includes('workflow_status')) {
           this.filterOptions.push({
               "name": "workflow status",
               "disabled": "status" in this.config,
               "values": this.statuses
           })
+        }
+        if (filterList.includes('state')) {
           this.filterOptions.push({
-              "name": "state",
-              "disabled": "status" in this.config,
-              "values": this.states
+            "name": "state",
+            "disabled": "status" in this.config,
+            "values": this.states
           })
-          let filterByDomain: boolean = this.config.type ? ['data-source', 'mitigation', 'software', 'tactic', 'technique'].includes(this.config.type) : false;
-          let filterByPlatform: boolean = this.config.type ? ['data-source', 'software', 'technique'].includes(this.config.type) : false;
-          if (filterByDomain) {
-              this.filterOptions.push({
-                  "name": "domain",
-                  "disabled": "status" in this.config,
-                  "values": this.domains
-              })
-          }
-          if (filterByPlatform) {
-              // only build platform filters if config.type is defined and object has 'x_mitre_platforms' field
-              let platforms: FilterValue[] = this.buildPlatformFilter(this.config.type);
-              if (platforms.length) {
-                  this.filterOptions.push({
-                      "name": "platform",
-                      "disabled": "status" in this.config,
-                      "values": platforms
-                  })
-              }
-          }
+        }
+        let filterByDomain: boolean = this.config.type ? ['data-source', 'mitigation', 'software', 'tactic', 'technique'].includes(this.config.type) : false;
+        let filterByPlatform: boolean = this.config.type ? ['data-source', 'software', 'technique'].includes(this.config.type) : false;
+        if (filterByDomain) {
+            this.filterOptions.push({
+                "name": "domain",
+                "disabled": "status" in this.config,
+                "values": this.domains
+            })
+        }
+        if (filterByPlatform) {
+            // only build platform filters if config.type is defined and object has 'x_mitre_platforms' field
+            let platforms: FilterValue[] = this.buildPlatformFilter(this.config.type);
+            if (platforms.length) {
+                this.filterOptions.push({
+                    "name": "platform",
+                    "disabled": "status" in this.config,
+                    "values": platforms
+                })
+            }
         }
 
         // get data from config (if we are not connecting to back-end)
@@ -444,9 +446,10 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
           select,
           type: 'user',
           buttonLabel: "SEARCH",
-          title: "Select users you wish to search for",
+          title: "Select users to filter by",
           clearSelection: true,
         },
+        minHeight: "50vh",
         maxHeight: "75vh"
     })
     let subscription = prompt.afterClosed().subscribe({
@@ -794,7 +797,8 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
 
 //allowed types for StixListConfig
 type type_attacktype = "collection" | "campaign" | "group" | "matrix" | "mitigation" | "software" | "tactic" | "technique" | "relationship" | "data-source" | "data-component" | "marking-definition" | "note";
-type selection_types = "one" | "many" | "disabled"
+type selection_types = "one" | "many" | "disabled";
+type filter_types = "state" | "workflow_status";
 export interface StixListConfig {
     /* if specified, shows the given STIX objects in the table instead of loading from the back-end based on other configurations. */
     stixObjects?: Observable<StixObject[]> | StixObject[];
@@ -828,6 +832,8 @@ export interface StixListConfig {
     showLinks?: boolean;
     /** default true, if false hides the filter dropdown menu */
     showFilters?: boolean;
+    /** default ['state','workflow_status'], if decides which filters to show */
+    filterList?: Array<filter_types>;
     /** default: false, if false hides the user search in the filters*/
     showUserSearch?: boolean;
     /**

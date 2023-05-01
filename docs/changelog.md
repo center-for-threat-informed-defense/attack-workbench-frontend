@@ -32,18 +32,24 @@
 
 # Changelog
 
+## 1 April 2023
+
+### ATT&K Workbench version 1.3.2
+
+#### New Features in 1.3.2
+-   Added ability to search objects by the user that created them.
+
 ## 21 April 2023
 
 ### ATT&CK Workbench version 1.3.1
 
-#### New Features is 1.3.1
+#### New Features in 1.3.1
 -   Added universal Notes page where users can search for notes based on title or content. Selecting a note in the table will redirect the user to the object the note was created on.  See [frontend#176](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/175).
 
 #### Improvements in 1.3.1
 -   Added individual attribution to edits made on Note objects.
 -   Added the ICS Security Control mapping field to Mitigation objects.
 -   Updated the documentation for installing Workbench with additional certs.
--   Added ability to search objects by the user that created them.
 
 #### Fixes in 1.3.1
 -   Fixed an issue where assigning an existing technique as a sub-technique would not create a `subtechnique-of` relationship. See [frontend#446](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/446).
