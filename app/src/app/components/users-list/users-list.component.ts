@@ -35,14 +35,14 @@ export class UsersListComponent implements OnInit {
    * Whether or not to show the search
    */
   public get showSearch(): boolean {
-    return this.config && this.config.showSearch !== null && this.config.showSearch !== undefined ? this.config.showSearch : true;
+    return this.config && this.config.showSearch ? this.config.showSearch : true;
   }
 
   /**
    * Whether or not to show filters
    */
   public get showFilters(): boolean {
-    return this.config && this.config.showFilters !== null && this.config.showFilters !== undefined ? this.config.showFilters : true;
+    return this.config && this.config.showFilters ? this.config.showFilters : true;
   }
 
   /**
@@ -74,8 +74,8 @@ export class UsersListComponent implements OnInit {
 
 
   ngOnInit(): void {
-    this.columnsToDisplay = this.config && this.config.columnsToDisplay !== null && this.config.columnsToDisplay !== undefined && Array.isArray(this.config.columnsToDisplay) ? this.config.columnsToDisplay : ['username', 'email'];
-    this.team = this.config && this.config.team !== null && this.config.team !== undefined ? this.config.team : null;
+    this.columnsToDisplay = this.config && this.config.columnsToDisplay && Array.isArray(this.config.columnsToDisplay) ? this.config.columnsToDisplay : ['username', 'email'];
+    this.team = this.config && this.config.team? this.config.team : null;
     this.applyControls();
     if (this.config.mode=='select') {
       this.columnsToDisplay = ['select'].concat(this.columnsToDisplay);
