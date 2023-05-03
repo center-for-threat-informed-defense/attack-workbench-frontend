@@ -1,3 +1,57 @@
-<p>
-  matrix-flat works!
-</p>
+<div class="matrix-container">
+  <table class="matrix flat">
+    <thead>
+      <tr class="tactic">
+        <td *ngFor="let item of tacticList">
+          <app-tactic-cell [tactic]="item" [count]="10" [showID]="showID"></app-tactic-cell>
+        </td>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td *ngFor="let item of tacticList" class="tactic" style="vertical-align: top; padding-right: 5px;">
+          <ng-container *ngFor="let technique of matrixMap.get(item.stixID)">
+            <tr *ngIf="!technique.is_subtechnique">
+              <table class="supertechnique">
+                <tr>
+                  <td class="sidebar technique" (click)="onToggleSubtechniquesVisible(technique, tactic)" style="vertical-align: middle;">
+                    <div class="handle"> = </div>
+                  </td>
+                  <td class="technique">
+                    <app-technique-cell [technique]="technique"
+                      [tactic]="getTactic(technique)"
+                      [showID]="showID"
+                      (leftclick)="onTechniqueLeftClick($event, technique, tacticList[i])">
+                    </app-technique-cell>
+                  </td>
+                </tr>
+                <tr class="subtechniques-row subtechniques-container" [class.hidden]="!technique.show_subtechniques">
+                    <td class="angle-top">
+                      <svg width="12px" height="12px">
+                        <path d="M0 0H12V12Z"/>
+                    </svg>
+                    </td>
+                    <td class="subtechniques">
+                      <div class="subtechnique">
+                        <app-technique-cell [technique]="technique"
+                          [tactic]="getTactic(technique)"
+                          [showID]="showID"
+                          (leftclick)="onTechniqueLeftClick($event, technique, tacticList[i])">
+                        </app-technique-cell>
+                      </div>
+                      <div class="subtechnique">
+                        <app-technique-cell [technique]="technique"
+                          [tactic]="getTactic(technique)"
+                          [showID]="showID"
+                          (leftclick)="onTechniqueLeftClick($event, technique, tacticList[i])">
+                        </app-technique-cell>
+                      </div>
+                    </td>
+                </tr>
+              </table>
+            </tr>
+          </ng-container>
+        </td>
+    </tbody>
+  </table>
+</div>

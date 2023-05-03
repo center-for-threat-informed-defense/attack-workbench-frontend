@@ -1,0 +1,127 @@
+@import "../../../../../style/colors.scss";
+$sizeunit: 14px;
+.matrix.flat {
+  border-collapse: collapse;
+  padding: 0;
+  tr.tactic {
+    margin-left: 14px;
+      border-bottom: 1px solid;
+      .dark & {
+        border-color: border-color(dark);
+        background-color: color(engenuity-gray) !important;
+      }
+
+      .dark & {
+        border-color: border-color(dark);
+        background-color: color(engenuity-gray);
+        color: color(engenuity-black);
+      }
+      .light & {
+        border-color: on-color-deemphasis(light);
+        color: white;
+        background-color: color(engenuity-purple);
+      }
+      td {
+        padding: 0;
+        vertical-align: middle;
+        min-width: 180px;
+      }
+  }
+
+  .tactic {
+    .techniques-table {
+      border-collapse: collapse;
+      width: 100%;
+      tr, td {
+        padding: 0;
+      }
+      tr {
+          height: 1px;
+      }
+    }
+
+    .supertechnique {
+      border-collapse: collapse;
+      width: 100%;
+      padding: 0;
+      margin: 0;
+      .dark & {
+        background-color: color(engenuity-black);
+        color: white;
+       }
+      .light & {
+        background-color: white;
+        color: black;
+      }
+      td {
+          padding: 0;
+          vertical-align: top;
+
+          &.technique {
+            .dark & { border: 1px solid border-color(dark) }
+            .light & { border: 1px solid on-color-deemphasis(light) }
+            border: 1px solid on-color-deemphasis(light)
+          }
+      }
+    }
+
+    .subtechniques {
+      .dark & {
+        background-color: color(engenuity-black);
+        color: white;
+       }
+      .light & {
+        background-color: white;
+        color: black;
+      }
+      &.hidden {
+        display: none;
+      }
+      .subtechnique {
+          height: 100%;
+          border: 1px solid border-color(light);
+
+          .dark & { outline: 1px solid border-color(dark) }
+          .light & { outline: 1px solid on-color-deemphasis(light) }
+        min-width: 150px;
+      }
+    }
+
+  }
+}
+.matrix.flat .tactic .supertechnique {
+  vertical-align: middle !important;
+}
+.subtechniques-row.hidden {
+  display: none;
+}
+.handle {
+      color: white;
+      font-family: roboto-regular;
+      transform: rotate(-90deg);
+      width: 12px;
+      height: 12px;
+      font-size: 16px;
+      line-height: 12px;
+    }
+
+.angle-top {
+  position: relative;
+  border-right: 3px solid #707070 !important;
+  svg {
+    position: absolute;
+    top: 0;
+    right: 0;
+    fill: #707070;
+  }
+}
+td.sidebar {
+  border: 1px solid #707070 !important;
+  border-right: 3px solid #707070 !important;
+}
+
+.light tr.tactic {
+  border-color: on-color-deemphasis(light);
+  color: white;
+  background-color: color(engenuity-purple) !important;
+}
