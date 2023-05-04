@@ -13,6 +13,8 @@ import { StixDialogComponent } from 'src/app/views/stix/stix-dialog/stix-dialog.
 import { Paginated, RestApiConnectorService } from 'src/app/services/connectors/rest-api/rest-api-connector.service';
 import { AuthenticationService } from 'src/app/services/connectors/authentication/authentication.service';
 import { SidebarService } from 'src/app/services/sidebar/sidebar.service';
+import { MatSelect } from '@angular/material/select';
+import { AddDialogComponent } from '../../add-dialog/add-dialog.component';
 
 @Component({
     selector: 'app-stix-list',
@@ -46,6 +48,7 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
 
     @ViewChild(MatPaginator) paginator: MatPaginator;
     @ViewChild('search') search: ElementRef;
+    @ViewChild(MatSelect) matSelect: MatSelect;
 
     // search query
     public searchQuery: string = "";
@@ -65,6 +68,7 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
     // current grouping and filtering selections
     public filter: string[] = [];
     public groupBy: string[] = [];
+    public userIdsUsedInSearch = [];
 
     // TABLE STUFF
     public tableColumns: string[] = [];
@@ -113,11 +117,19 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
         { "value": "state.revoked", "label": "include revoked", "disabled": false }
     ]
 
-    constructor(public dialog: MatDialog,
-        private restAPIConnectorService: RestApiConnectorService,
-        private router: Router,
-        private authenticationService: AuthenticationService,
-        private sidebarService: SidebarService) { }
+    public get userSearchString():string {
+      if (this.userIdsUsedInSearch.length === 0) {
+        return "filter by users";
+      } else {
+        return `${this.userIdsUsedInSearch.length} user${this.userIdsUsedInSearch.length === 1 ? '' : 's'} selected`;
+      } 
+    }
+
+    constructor(public dialog: MatDialog, 
+                private restAPIConnectorService: RestApiConnectorService, 
+                private router: Router, 
+                private authenticationService: AuthenticationService,
+                private sidebarService: SidebarService) { }
 
     ngOnInit(): void {
         // build query options for platforms
@@ -358,17 +370,21 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
         }
         this.tableColumns_controls = controls_before.concat(this.tableColumns, controls_after);
 
-        // filter setup
-        this.filterOptions.push({
-            "name": "workflow status",
-            "disabled": "status" in this.config,
-            "values": this.statuses
-        })
-        this.filterOptions.push({
+        const filterList = this.config.filterList ? this.config.filterList : [ 'state', 'workflow_status'];
+        if (filterList.includes('workflow_status')) {
+          this.filterOptions.push({
+              "name": "workflow status",
+              "disabled": "status" in this.config,
+              "values": this.statuses
+          })
+        }
+        if (filterList.includes('state')) {
+          this.filterOptions.push({
             "name": "state",
             "disabled": "status" in this.config,
             "values": this.states
-        })
+          })
+        }
         let filterByDomain: boolean = this.config.type ? ['data-source', 'mitigation', 'software', 'tactic', 'technique'].includes(this.config.type) : false;
         let filterByPlatform: boolean = this.config.type ? ['data-source', 'software', 'technique'].includes(this.config.type) : false;
         if (filterByDomain) {
@@ -417,6 +433,34 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
         this.addColumn("version", "version", "version");
         this.addColumn("modified", "modified", "timestamp");
         this.addColumn("created", "created", "timestamp");
+    }
+
+    public openUserSelectModal():void {
+      const select = new SelectionModel<string>(true);
+      for (let i = 0; i < this.userIdsUsedInSearch.length; i++) {
+        select.toggle(this.userIdsUsedInSearch[i]);
+        
+      }
+      let prompt = this.dialog.open(AddDialogComponent, {
+        data: {
+          select,
+          type: 'user',
+          buttonLabel: "SEARCH",
+          title: "Select users to filter by",
+          clearSelection: true,
+        },
+        minHeight: "50vh",
+        maxHeight: "75vh"
+    })
+    let subscription = prompt.afterClosed().subscribe({
+        next: result => {
+            if (result) { 
+              this.userIdsUsedInSearch = select.selected;
+              this.applyControls();
+            }
+        },
+        complete: () => { subscription.unsubscribe(); }
+    });
     }
 
     /**
@@ -709,9 +753,9 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
                 includeRevoked: revoked,
                 includeDeprecated: deprecated,
                 platforms: platforms,
-                domains: domains
+                domains: domains,
+                lastUpdatedBy: this.userIdsUsedInSearch,
             }
-
             if (this.config.type == "software") this.data$ = this.restAPIConnectorService.getAllSoftware(options);
             else if (this.config.type == "campaign") this.data$ = this.restAPIConnectorService.getAllCampaigns(options);
             else if (this.config.type == "group") this.data$ = this.restAPIConnectorService.getAllGroups(options);
@@ -753,7 +797,8 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
 
 //allowed types for StixListConfig
 type type_attacktype = "collection" | "campaign" | "group" | "matrix" | "mitigation" | "software" | "tactic" | "technique" | "relationship" | "data-source" | "data-component" | "marking-definition" | "note";
-type selection_types = "one" | "many" | "disabled"
+type selection_types = "one" | "many" | "disabled";
+type filter_types = "state" | "workflow_status";
 export interface StixListConfig {
     /* if specified, shows the given STIX objects in the table instead of loading from the back-end based on other configurations. */
     stixObjects?: Observable<StixObject[]> | StixObject[];
@@ -785,8 +830,12 @@ export interface StixListConfig {
     selectionModel?: SelectionModel<string>;
     /** show links to view/edit pages for relevant objects? */
     showLinks?: boolean;
-    /** default false, if false hides the filter dropdown menu */
+    /** default true, if false hides the filter dropdown menu */
     showFilters?: boolean;
+    /** default ['state','workflow_status'], if decides which filters to show */
+    filterList?: Array<filter_types>;
+    /** default: false, if false hides the user search in the filters*/
+    showUserSearch?: boolean;
     /**
      * How should the table act when the row is clicked? default "expand"
      *     "expand": expand the row to show additional detail
