@@ -228,3 +228,15 @@
         }
     }
 }
+.no-checkbox {
+  mat-pseudo-checkbox {
+    display: none !important;
+  }
+}
+.user-search {
+  display: flex;
+  justify-content: space-between;
+  &:hover {
+    cursor: pointer;
+  }
+}

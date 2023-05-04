@@ -77,6 +77,7 @@ import { CollectionUpdateDialogComponent } from './components/collection-update-
 
 // STIX components
 import { StixListComponent } from './components/stix/stix-list/stix-list.component';
+import { UsersListComponent } from './components/users-list/users-list.component';
 
 import { ExternalReferencesPropertyComponent } from "./components/stix/external-references-property/external-references-property.component";
 import { ExternalReferencesViewComponent } from './components/stix/external-references-property/external-references-view/external-references-view.component';
@@ -307,7 +308,8 @@ import { NotesSearchListComponent } from './views/notes-page/notes-search-list/n
     CitationPropertyComponent,
     CitationViewComponent,
     CitationEditComponent,
-    NotesSearchListComponent
+    NotesSearchListComponent,
+    UsersListComponent
   ],
   imports: [
     BreadcrumbModule,
