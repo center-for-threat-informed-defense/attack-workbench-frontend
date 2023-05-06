@@ -6,6 +6,8 @@ import { StixViewPage } from '../../stix-view-page';
 import { MatDialog } from '@angular/material/dialog';
 import { StixDialogComponent } from '../../stix-dialog/stix-dialog.component';
 import { AuthenticationService } from 'src/app/services/connectors/authentication/authentication.service';
+import { StixObject } from 'src/app/classes/stix/stix-object';
+import { EditorService } from 'src/app/services/editor/editor.service';
 
 @Component({
     selector: 'app-data-source-view',
@@ -20,7 +22,13 @@ export class DataSourceViewComponent extends StixViewPage implements OnInit {
     public data_components: DataComponent[] = [];
     public loading = false;
 
-    constructor(public dialog: MatDialog, private restAPIConnectorService: RestApiConnectorService, authenticationService: AuthenticationService) { super(authenticationService); }
+    constructor(public dialog: MatDialog,
+                private restAPIConnectorService: RestApiConnectorService,
+                authenticationService: AuthenticationService,
+                private editorService: EditorService)
+    {
+      super(authenticationService);
+    }
 
     ngOnInit(): void {
         this.data_components = this.data_source.data_components;
@@ -28,6 +36,18 @@ export class DataSourceViewComponent extends StixViewPage implements OnInit {
         if ( data_source.firstInitialized ) {
             data_source.initializeWithDefaultMarkingDefinitions(this.restAPIConnectorService);
         }
+        /**
+         * Whenever the view is initialized, the `revoked` property on EditorService must be updated to match the
+         * `revoked` property of whichever STIX object is currently in view. When EditorService receives this update, it
+         * notifies ToolbarComponent which happens to be subscribed to the revoked$ Subject (a type of Observable) in
+         * EditorService. ToolbarComponent thus sets its copy of `revoked` to the same value of `revoked` from the
+         * aforementioned STIX object. ToolbarComponent has a boolean property, `editable` that can only be true if
+         * `revoked` is false.
+         *
+         * TL;DR the following call to editorService.updateRevoked is necessary to ensure that the edit toolbar is not
+         * shown when the object in view is revoked.
+         */
+        this.editorService.updateRevoked((this.config.object as StixObject).revoked);
     }
 
     public getDataComponents(): void {

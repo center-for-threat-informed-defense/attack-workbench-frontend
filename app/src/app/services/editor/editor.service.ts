@@ -5,14 +5,28 @@ import { ConfirmationDialogComponent } from 'src/app/components/confirmation-dia
 import { MatDialog } from '@angular/material/dialog';
 import { AuthenticationService } from '../connectors/authentication/authentication.service';
 import { RestApiConnectorService } from '../connectors/rest-api/rest-api-connector.service';
-import { map } from 'rxjs/operators';
-import { Observable } from 'rxjs';
+import { first, map } from 'rxjs/operators';
+import { Observable, Subject } from 'rxjs';
 import { Relationship } from 'src/app/classes/stix/relationship';
 
 @Injectable({
     providedIn: 'root'
 })
 export class EditorService {
+
+    /* The underlying STIX object's `revoked` property (`this.config.object.revoked`) is made shareable to components
+     * by mapping it to an observable called `revokedSubject`, which is maintained here in the EditorService. */
+    private revokedSubject = new Subject<boolean>();
+
+    /* Subscribers subscribe to `revoked$ to be notified when the `revoked` property contained within `revokedSubject`
+     * changes. */
+    public revoked$ = this.revokedSubject.asObservable(); // Subscribers can receive updates whenever `revoked` changes
+
+    /* Though the `revokedSubject` is hosted here in EditorService, the EditorService also subscribes to `revoked$`;
+     * that subscribable value is mapped here to `revoked`, which the EditorService references every time the route
+     * changes. */
+    private revoked = false;
+
     public editable: boolean = false;
     public editing: boolean = false;
     public deletable: boolean = false;
@@ -33,27 +47,41 @@ export class EditorService {
         private authenticationService: AuthenticationService,
         private restAPIConnectorService: RestApiConnectorService,
         private dialog: MatDialog) {
-        this.router.events.subscribe(event => {
-            if (event instanceof NavigationEnd) {
-                let editable = this.getEditableFromRoute(this.router.routerState, this.router.routerState.root);
-                let attackType = this.route.root.firstChild.snapshot.data.breadcrumb;
-                this.editable = editable.length > 0 && editable.every(x => x) && this.authenticationService.canEdit(attackType);
-                this.sidebarService.setEnabled("history", this.editable);
-                this.sidebarService.setEnabled("notes", this.editable);
-                if (!this.editable) this.sidebarService.currentTab = "references";
 
-                if (this.editable) {
-                    if (this.router.url.includes("/new") || ["matrix", "tactic", "collection"].includes(this.type)) {
-                        // new objects, matrices, tactics, and collections cannot be deleted
-                        this.deletable = false;
-                    } else {
-                        this.deletable = true;
-                        // determine if this object has existing relationships
-                        this.getRelationships().subscribe(rels => this.hasRelationships = rels > 0);
-                    }
-                }
+        /**
+         * EditorService must subscribe to revoked$ to remain informed of the current value of `revoked`.
+         *
+         * ObjectStatusComponent updates the revoked$ value whenever the underlying STIX object's `revoked` property is
+         * changed.
+         *
+         * Each StixViewPage child class (e.g., TechniqueViewComponent) updates the `revoked$ value whenever it is
+         * initialized in ngOnInit.
+         */
+        this.revoked$.pipe(first()).subscribe(value => {
+          this.revoked = value;
+        });
+
+        this.router.events.subscribe(event => {
+          if (event instanceof NavigationEnd) {
+            let editable = this.getEditableFromRoute(this.router.routerState, this.router.routerState.root);
+            let attackType = this.route.root.firstChild.snapshot.data.breadcrumb;
+            this.editable = editable.length > 0 && editable.every(x => x) && this.authenticationService.canEdit(attackType) && !this.revoked;
+            this.sidebarService.setEnabled("history", this.editable);
+            this.sidebarService.setEnabled("notes", this.editable);
+            if (!this.editable) this.sidebarService.currentTab = "references";
+
+            if (this.editable) {
+              if (this.router.url.includes("/new") || ["matrix", "tactic", "collection"].includes(this.type)) {
+                // new objects, matrices, tactics, and collections cannot be deleted
+                this.deletable = false;
+              } else {
+                this.deletable = true;
+                // determine if this object has existing relationships
+                this.getRelationships().subscribe(rels => this.hasRelationships = rels > 0);
+              }
             }
-        })
+          }
+        });
         this.route.queryParams.subscribe(params => {
             this.editing = params["editing"] && this.authenticationService.canEdit();
         });
@@ -96,7 +124,7 @@ export class EditorService {
         return data;
     }
 
-    /** 
+    /**
      * Determine whether or not this object has relationships with other objects
      */
     public getRelationships(): Observable<number> {
@@ -116,4 +144,20 @@ export class EditorService {
             );
         }
     }
+
+  /**
+   * Updates the value of `revoked` and notifies all subscribers.
+   *
+   * This is used by STIX derivative components (e.g., TechniqueComponent) and the ToolbarComponent. The
+   * ToolbarComponent conditionally renders the "edit" button based on whether on not the STIX object currently
+   * in view is revoked or not. The `revoked` property is synchronized via a one-way data flow from each STIX component
+   * to the ToolbarComponent. This is made possible by this observable; TechniqueComponent updates `revoked` by calling
+   * the `updateRevoked` function, and the function emits an event everytime the property changes. ToolbarComponent
+   * subscribes to the observable, so it always receives the latest value of `revoked`.
+   *
+   * @param value `true` if STIX object is revoked or `false` if STIX object is not revoked
+   */
+  public updateRevoked(value: boolean): void {
+      this.revokedSubject.next(value);
+  }
 }
