@@ -153,7 +153,8 @@ export class RestApiConnectorService extends ApiConnector {
                                                  excludeIDs?: string[], 
                                                  search?: string,
                                                  platforms?: string[],
-                                                 domains?: string[]
+                                                 domains?: string[],
+                                                 lastUpdatedBy?: string[],
                                                  }): Observable<Paginated<StixObject>> {
             // parse params into query string
             let query = new HttpParams({encoder: new CustomEncoder()});
@@ -173,6 +174,8 @@ export class RestApiConnectorService extends ApiConnector {
                 // platforms/domains
                 if (options.platforms) options.platforms.forEach(platform => query = query.append('platform', platform));
                 if (options.domains) options.domains.forEach(domain => query = query.append('domain', domain));
+                // lastUpdatedBy
+                if (options.lastUpdatedBy) options.lastUpdatedBy.forEach(user => query = query.append('lastUpdatedBy', user));
             }
             // perform the request
             let url = `${this.apiUrl}/${plural}`;
@@ -224,6 +227,7 @@ export class RestApiConnectorService extends ApiConnector {
      * @param {number} [limit] the number of techniques to retrieve
      * @param {number} [offset] the number of techniques to skip
      * @param {string} [state] if specified, only get objects with this state
+     * @param {string} [lastUpdatedBy] if specified, only get objects which were last updated by these users
      * @param {boolean} [revoked] if true, get revoked objects
      * @param {boolean} [deprecated] if true, get deprecated objects
      * @param {string[]} [excludeIDs] if specified, excludes these STIX IDs from the result
@@ -235,6 +239,7 @@ export class RestApiConnectorService extends ApiConnector {
      * @param {number} [limit] the number of tactics to retrieve
      * @param {number} [offset] the number of tactics to skip
      * @param {string} [state] if specified, only get objects with this state
+     * @param {string} [lastUpdatedBy] if specified, only get objects which were last updated by these users
      * @param {boolean} [revoked] if true, get revoked objects
      * @param {boolean} [deprecated] if true, get deprecated objects
      * @param {string[]} [excludeIDs] if specified, excludes these STIX IDs from the result
@@ -246,6 +251,7 @@ export class RestApiConnectorService extends ApiConnector {
      * @param {number} [limit] the number of groups to retrieve
      * @param {number} [offset] the number of groups to skip
      * @param {string} [state] if specified, only get objects with this state
+     * @param {string} [lastUpdatedBy] if specified, only get objects which were last updated by these users
      * @param {boolean} [revoked] if true, get revoked objects
      * @param {boolean} [deprecated] if true, get deprecated objects
      * @param {string[]} [excludeIDs] if specified, excludes these STIX IDs from the result
@@ -257,6 +263,7 @@ export class RestApiConnectorService extends ApiConnector {
      * @param {number} [limit] the number of campaigns to retrieve
      * @param {number} [offset] the number of campaigns to skip
      * @param {string} [state] if specified, only get objects with this state
+     * @param {string} [lastUpdatedBy] if specified, only get objects which were last updated by these users
      * @param {boolean} [revoked] if true, get revoked objects
      * @param {boolean} [deprecated] if true, get deprecated objects
      * @param {string[]} [excludeIDs] if specified, excludes these STIX IDs from the result
@@ -268,6 +275,7 @@ export class RestApiConnectorService extends ApiConnector {
      * @param {number} [limit] the number of software to retrieve
      * @param {number} [offset] the number of software to skip
      * @param {string} [state] if specified, only get objects with this state
+     * @param {string} [lastUpdatedBy] if specified, only get objects which were last updated by these users
      * @param {boolean} [revoked] if true, get revoked objects
      * @param {boolean} [deprecated] if true, get deprecated objects
      * @returns {Observable<Software[]>} observable of retrieved objects
@@ -278,6 +286,7 @@ export class RestApiConnectorService extends ApiConnector {
      * @param {number} [limit] the number of mitigations to retrieve
      * @param {number} [offset] the number of mitigations to skip
      * @param {string} [state] if specified, only get objects with this state
+     * @param {string} [lastUpdatedBy] if specified, only get objects which were last updated by these users
      * @param {boolean} [revoked] if true, get revoked objects
      * @param {boolean} [deprecated] if true, get deprecated objects
      * @param {string[]} [excludeIDs] if specified, excludes these STIX IDs from the result
@@ -289,6 +298,7 @@ export class RestApiConnectorService extends ApiConnector {
      * @param {number} [limit] the number of data sources to retrieve
      * @param {number} [offset] the number of data sources to skip
      * @param {string} [state] if specified, only get objects with this state
+     * @param {string} [lastUpdatedBy] if specified, only get objects which were last updated by these users
      * @param {boolean} [revoked] if true, get revoked objects
      * @param {boolean} [deprecated] if true, get deprecated objects
      * @param {string[]} [excludeIDs] if specified, excludes these STIX IDs from the result
@@ -300,6 +310,7 @@ export class RestApiConnectorService extends ApiConnector {
      * @param {number} [limit] the number of data components to retrieve
      * @param {number} [offset] the number of data components to skip
      * @param {string} [state] if specified, only get objects with this state
+     * @param {string} [lastUpdatedBy] if specified, only get objects which were last updated by these users
      * @param {boolean} [revoked] if true, get revoked objects
      * @param {boolean} [deprecated] if true, get deprecated objects
      * @param {string[]} [excludeIDs] if specified, excludes these STIX IDs from the result
@@ -311,6 +322,7 @@ export class RestApiConnectorService extends ApiConnector {
      * @param {number} [limit] the number of matrices to retrieve
      * @param {number} [offset] the number of matrices to skip
      * @param {string} [state] if specified, only get objects with this state
+     * @param {string} [lastUpdatedBy] if specified, only get objects which were last updated by these users
      * @param {boolean} [revoked] if true, get revoked objects
      * @param {boolean} [deprecated] if true, get deprecated objects
      * @param {string[]} [excludeIDs] if specified, excludes these STIX IDs from the result
@@ -322,6 +334,7 @@ export class RestApiConnectorService extends ApiConnector {
      * @param {number} [limit] the number of collections to retrieve
      * @param {number} [offset] the number of collections to skip
      * @param {string} [state] if specified, only get objects with this state
+     * @param {string} [lastUpdatedBy] if specified, only get objects which were last updated by these users
      * @param {boolean} [revoked] if true, get revoked objects
      * @param {versions} ["all" | "latest"] if "all", get all versions of the collections. if "latest", only get the latest version of each collection.
      * @param {boolean} [deprecated] if true, get deprecated objects
@@ -334,6 +347,7 @@ export class RestApiConnectorService extends ApiConnector {
      * @param {number} [limit] the number of marking definitions to retrieve
      * @param {number} [offset] the number of marking definitions to skip
      * @param {string} [state] if specified, only get objects with this state
+     * @param {string} [lastUpdatedBy] if specified, only get objects which were last updated by these users
      * @param {boolean} [revoked] if true, get revoked objects
      * @param {versions} ["all" | "latest"] if "all", get all versions of the marking definitions. if "latest", only get the latest version of each collection.
      * @param {boolean} [deprecated] if true, get deprecated objects
@@ -346,6 +360,7 @@ export class RestApiConnectorService extends ApiConnector {
      * @param {number} [limit] the number of notes to retrieve
      * @param {number} [offset] the number of notes to skip
      * @param {string} [state] if specified, only get objects with this state
+     * @param {string} [lastUpdatedBy] if specified, only get objects which were last updated by these users
      * @param {boolean} [revoked] if true, get revoked objects
      * @param {boolean} [deprecated] if true, get deprecated objects
      * @param {string[]} [excludeIDs] if specified, excludes these STIX IDs from the result
@@ -357,6 +372,7 @@ export class RestApiConnectorService extends ApiConnector {
      * @param {number} [limit] the number of identities to retrieve
      * @param {number} [offset] the number of identities to skip
      * @param {string} [state] if specified, only get objects with this state
+     * @param {string} [lastUpdatedBy] if specified, only get objects which were last updated by these users
      * @param {boolean} [revoked] if true, get revoked objects
      * @param {boolean} [deprecated] if true, get deprecated objects
      * @param {string[]} [excludeIDs] if specified, excludes these STIX IDs from the result
@@ -368,6 +384,7 @@ export class RestApiConnectorService extends ApiConnector {
      * @param {number} [limit] the number of relationships to retrieve
      * @param {number} [offset] the number of relationships to skip
      * @param {string} [state] if specified, only get objects with this state
+     * @param {string} [lastUpdatedBy] if specified, only get objects which were last updated by these users
      * @param {boolean} [revoked] if true, get revoked objects
      * @param {versions} ["all" | "latest"] if "all", get all versions of the relationships. if "latest", only get the latest version of each collection.
      * @param {boolean} [deprecated] if true, get deprecated objects
