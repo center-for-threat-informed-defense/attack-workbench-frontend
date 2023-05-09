@@ -1552,7 +1552,6 @@ export class RestApiConnectorService extends ApiConnector {
     public getUserAccount(id: string): Observable<UserAccount> {
         let url = `${this.apiUrl}/user-accounts/${id}`;
         return this.http.get<UserAccount>(url).pipe(
-            map(result => new UserAccount(result)),
             catchError(this.handleError_continue<UserAccount>()),
             share() // multicast to subscribers
         )
