@@ -97,7 +97,12 @@ export class RecentActivityComponent implements OnInit {
             let createEvent = stixObject.created.getTime() == stixObject.modified.getTime();
             let releaseEvent = stixObject.attackType == "collection" && (stixObject as Collection).release;
 
-            let objectName;
+            let objectName, eventIcon;
+            if (createEvent) {
+                eventIcon = stixObject.type == "note" ? "sticky_note_2" : "add";
+            }
+            else eventIcon = "edit";
+
             if (stixObject.type == "relationship") {
                 let relationship = stixObject as Relationship;
                 objectName = `${relationship.source_name} ${relationship.relationship_type} ${relationship.target_name}`
@@ -108,7 +113,7 @@ export class RecentActivityComponent implements OnInit {
             }
 
             this.allRecentActivity.push({
-                icon: createEvent ? (stixObject.type == "note" ? "sticky_note_2" : "add") : "edit",
+                icon: eventIcon,
                 name: objectName,
                 sdo: stixObject,
                 objectCreated: createEvent,
