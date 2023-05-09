@@ -23,20 +23,20 @@
     </div>
     <div class="row">
         <div class="col">
-            <!-- username -->
-            <app-string-property class="grow-to-row" [config]="{
-                mode: 'view',
-                object: user,
-                field: 'username'
-            }"></app-string-property>
-        </div>
-        <div class="col">
             <!-- display name -->
             <app-string-property class="grow-to-row" [config]="{
                 mode: editing? 'edit': 'view',
                 object: user,
                 field: '_displayName',
                 label: 'display name'
+            }"></app-string-property>
+        </div>
+        <div class="col">
+            <!-- username -->
+            <app-string-property class="grow-to-row" [config]="{
+                mode: 'view',
+                object: user,
+                field: 'username'
             }"></app-string-property>
         </div>
         <div class="col">
