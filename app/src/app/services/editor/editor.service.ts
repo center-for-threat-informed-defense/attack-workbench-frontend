@@ -16,7 +16,7 @@ export class EditorService {
     public editable: boolean = false;
     public editing: boolean = false;
     public deletable: boolean = false;
-    public hasStatus: boolean = true;
+    public hasWorkflow: boolean = true;
     public hasRelationships: boolean = true;
     public onSave = new EventEmitter();
     public onDelete = new EventEmitter();
@@ -39,10 +39,10 @@ export class EditorService {
                 let editable = this.getEditableFromRoute(this.router.routerState, this.router.routerState.root);
                 let attackType = this.route.root.firstChild.snapshot.data.breadcrumb;
                 this.editable = editable.length > 0 && editable.every(x => x) && this.authenticationService.canEdit(attackType);
-                this.sidebarService.setEnabled("history", this.editable);
-                this.sidebarService.setEnabled("notes", this.editable);
                 if (!this.editable) this.sidebarService.currentTab = "references";
-                if (attackType == 'home') this.hasStatus = false;
+                this.hasWorkflow = attackType !== 'home';
+                this.sidebarService.setEnabled("history", this.editable && this.hasWorkflow);
+                this.sidebarService.setEnabled("notes", this.editable && this.hasWorkflow);
 
                 if (this.editable && attackType !== 'home') {
                     if (this.router.url.includes("/new") || ["matrix", "tactic", "collection"].includes(this.type)) {
