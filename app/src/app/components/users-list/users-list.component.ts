@@ -35,14 +35,14 @@ export class UsersListComponent implements OnInit {
    * Whether or not to show the search
    */
   public get showSearch(): boolean {
-    return this.config && this.config.showSearch ? this.config.showSearch : false;
+    return this.config ? this.config.showSearch : true;
   }
 
   /**
    * Whether or not to show filters
    */
   public get showFilters(): boolean {
-    return this.config && this.config.showFilters ? this.config.showFilters : false;
+    return this.config ? this.config.showFilters : true;
   }
 
   /**
@@ -222,10 +222,10 @@ export interface UsersListConfig {
   // team:Team,
   team: any,
   // whether or not to display the search bar
-  // defaults to false 
+  // defaults to true 
   showSearch: boolean,
   // whether or not to show the filters in the list
-  // defaults to false
+  // defaults to true
   showFilters: boolean,
   // mode the list is being used 'view' or 'select'
   // default is 'view'
