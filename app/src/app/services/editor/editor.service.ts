@@ -44,8 +44,11 @@ export class EditorService {
                 this.sidebarService.setEnabled("history", this.editable && this.hasWorkflow);
                 this.sidebarService.setEnabled("notes", this.editable && this.hasWorkflow);
 
-                if (this.editable && attackType !== 'home') {
-                    if (this.router.url.includes("/new") || ["matrix", "tactic", "collection"].includes(this.type)) {
+                if (this.editable) {
+                    if (!this.hasWorkflow) {
+                        // user accounts/teams cannot be deleted
+                        this.deletable = false;
+                    } else if (this.router.url.includes("/new") || ["matrix", "tactic", "collection"].includes(this.type)) {
                         // new objects, matrices, tactics, and collections cannot be deleted
                         this.deletable = false;
                     } else {
