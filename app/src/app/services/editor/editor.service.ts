@@ -16,6 +16,7 @@ export class EditorService {
     public editable: boolean = false;
     public editing: boolean = false;
     public deletable: boolean = false;
+    public hasStatus: boolean = true;
     public hasRelationships: boolean = true;
     public onSave = new EventEmitter();
     public onDelete = new EventEmitter();
@@ -41,8 +42,9 @@ export class EditorService {
                 this.sidebarService.setEnabled("history", this.editable);
                 this.sidebarService.setEnabled("notes", this.editable);
                 if (!this.editable) this.sidebarService.currentTab = "references";
+                if (attackType == 'home') this.hasStatus = false;
 
-                if (this.editable) {
+                if (this.editable && attackType !== 'home') {
                     if (this.router.url.includes("/new") || ["matrix", "tactic", "collection"].includes(this.type)) {
                         // new objects, matrices, tactics, and collections cannot be deleted
                         this.deletable = false;
