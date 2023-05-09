@@ -32,12 +32,12 @@
 
 # Changelog
 
-## 1 April 2023
+## Changes Staged on Develop
 
 ### ATT&K Workbench version 1.3.2
 
 #### New Features in 1.3.2
--   Added ability to search objects by the user that created them.
+-   Added ability to search objects by one or more users.
 
 ## 21 April 2023
 
