@@ -143,13 +143,24 @@ const routes: Routes = [
             {
                 "path": "profile",
                 "canActivate": [AuthorizationGuard],
+                "canActivateChild": [AuthorizationGuard],
                 "data": {
                     "breadcrumb": "profile",
                     "title": "Profile",
                     "roles": [Role.VISITOR, Role.EDITOR, Role.ADMIN]
                 },
-                "component": ProfilePageComponent
-            },
+                "children": [
+                    {
+                        "path": "",
+                        "data": {
+                            "breadcrumb": "profile",
+                            "title": "Profile",
+                            "editable": true
+                        },
+                        "component": ProfilePageComponent,
+                    },
+                ]
+            }
         ]
     },
 
