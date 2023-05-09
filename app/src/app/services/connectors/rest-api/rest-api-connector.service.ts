@@ -404,10 +404,10 @@ export class RestApiConnectorService extends ApiConnector {
      * @param {boolean} [revoked] if true, get revoked objects
      * @param {boolean} [deprecated] if true, get deprecated objects
      * @param {boolean} [deserialize] if true, deserialize objects to full STIX objects
-     * @param {string[]} [users] filter to only include objects modified by the list of given user IDs
+     * @param {string[]} [lastUpdatedBy] filter to only include objects modified by the list of given user IDs
      * @returns {Observable<any[]>} observable of retrieved objects
      */
-    public getAllObjects(attackIDs?: string[], limit?: number, offset?: number, state?: string, revoked?: boolean, deprecated?: boolean, deserialize?: boolean, users?: string[]) {
+    public getAllObjects(attackIDs?: string[], limit?: number, offset?: number, state?: string, revoked?: boolean, deprecated?: boolean, deserialize?: boolean, lastUpdatedBy?: string[]) {
         let query = new HttpParams({encoder: new CustomEncoder()});
         // pagination
         if (limit) query = query.set("limit", limit.toString());
@@ -422,7 +422,7 @@ export class RestApiConnectorService extends ApiConnector {
         if (revoked) query = query.set("includeRevoked", revoked ? "true" : "false");
         if (deprecated) query = query.set("includeDeprecated", deprecated ? "true" : "false");
         // User ID filter
-        if (users) query = query.set("users", users.toString());
+        if (lastUpdatedBy) query = query.set("lastUpdatedBy", lastUpdatedBy.toString());
         return this.http.get(`${this.apiUrl}/attack-objects`, {params: query}).pipe(
             tap(results => logger.log(`retrieved ATT&CK objects`, results)), // on success, trigger the success notification
             map(results => {
