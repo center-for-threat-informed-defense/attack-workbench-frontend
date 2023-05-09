@@ -147,7 +147,8 @@ const routes: Routes = [
                 "data": {
                     "breadcrumb": "profile",
                     "title": "Profile",
-                    "roles": [Role.VISITOR, Role.EDITOR, Role.ADMIN]
+                    "roles": [Role.VISITOR, Role.EDITOR, Role.ADMIN],
+                    "editRoles": [Role.VISITOR, Role.EDITOR, Role.ADMIN]
                 },
                 "children": [
                     {
