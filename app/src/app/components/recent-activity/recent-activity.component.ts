@@ -71,6 +71,10 @@ export class RecentActivityComponent implements OnInit {
         });
     }
 
+    /**
+     * Retrieve recent user activity
+     * @returns a list of recent user activity
+     */
     public getUserActivity() {
         return forkJoin({
             objects$: this.restAPIService.getAllObjects(null, null, null, null, true, true, true, this.identities),
@@ -84,6 +88,9 @@ export class RecentActivityComponent implements OnInit {
         );
     }
 
+    /**
+     * Determine if the SDO in the given event is a relationship
+     */
     public isRelationship(event): boolean {
         return event.sdo.attackType == 'relationship';
     }
@@ -137,7 +144,7 @@ export class RecentActivityComponent implements OnInit {
         this.recentActivity = this.allRecentActivity.slice(0, end);
     }
 
-    /** redirect to object page */
+    /** open the event in a dialog or redirect to the object page */
     public open(event): void {
         if (event.sdo.attackType == 'note') {
             this.sidebarService.opened = true;
@@ -150,6 +157,7 @@ export class RecentActivityComponent implements OnInit {
         }
     }
 
+    /** navigate to the object page */
     public navigateTo(stixID: string, type: string): void {
         let url = `/${type}/${stixID}`;
         if (type == 'collection') {

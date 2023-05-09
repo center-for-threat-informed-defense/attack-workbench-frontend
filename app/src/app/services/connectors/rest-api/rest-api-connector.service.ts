@@ -218,7 +218,7 @@ export class RestApiConnectorService extends ApiConnector {
     }
 
     /**
-     * Get all techniques               
+     * Get all techniques
      * @param {number} [limit] the number of techniques to retrieve
      * @param {number} [offset] the number of techniques to skip
      * @param {string} [state] if specified, only get objects with this state
