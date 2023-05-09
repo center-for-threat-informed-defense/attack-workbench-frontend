@@ -39,8 +39,8 @@ export class EditorService {
                 let editable = this.getEditableFromRoute(this.router.routerState, this.router.routerState.root);
                 let attackType = this.route.root.firstChild.snapshot.data.breadcrumb;
                 this.editable = editable.length > 0 && editable.every(x => x) && this.authenticationService.canEdit(attackType);
-                if (!this.editable) this.sidebarService.currentTab = "references";
                 this.hasWorkflow = attackType !== 'home';
+                if (!(this.editable && this.hasWorkflow)) this.sidebarService.currentTab = "references";
                 this.sidebarService.setEnabled("history", this.editable && this.hasWorkflow);
                 this.sidebarService.setEnabled("notes", this.editable && this.hasWorkflow);
 
