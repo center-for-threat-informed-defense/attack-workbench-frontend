@@ -1,5 +1,5 @@
 import { Component, Inject, OnInit, ViewEncapsulation } from '@angular/core';
-import { MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { StixObject } from 'src/app/classes/stix/stix-object';
 import { SelectionModel } from '@angular/cdk/collections';
 
@@ -11,7 +11,7 @@ import { SelectionModel } from '@angular/cdk/collections';
 })
 export class AddDialogComponent implements OnInit {
 
-  constructor(public dialogRef: MatDialogRef<AddDialogComponent>, @Inject(MAT_DIALOG_DATA)  public config: AddDialogConfig) {}
+  constructor(public dialogRef: MatDialogRef<AddDialogComponent>, @Inject(MAT_DIALOG_DATA) public config: AddDialogConfig) { }
 
   public clearSelections() {
     this.config.select.clear();
@@ -19,7 +19,7 @@ export class AddDialogComponent implements OnInit {
   }
 
   ngOnInit(): void {
-      // intentionally left blank
+    // intentionally left blank
   }
 
 }
