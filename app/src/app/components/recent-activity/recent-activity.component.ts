@@ -62,6 +62,11 @@ export class RecentActivityComponent implements OnInit {
 
     ngOnInit(): void {
         this.loading = true;
+        this.loadActivity();
+    }
+
+    /** load user activity and parse into events */
+    public loadActivity() {
         let subscription = this.getUserActivity().subscribe({
             next: (results) => {
                 this.parseActivity(results as StixObject[]);
