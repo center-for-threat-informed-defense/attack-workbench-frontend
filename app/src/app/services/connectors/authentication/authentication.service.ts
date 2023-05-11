@@ -173,7 +173,7 @@ export class AuthenticationService extends ApiConnector {
                 // retrieve user account from session
                 return this.restAPIConnector.getUserAccount(session.userAccountId).pipe(
                     map(res => {
-                        this.currentUser = res;
+                        this.currentUser = new UserAccount(res);
                         return res;
                     })
                 );

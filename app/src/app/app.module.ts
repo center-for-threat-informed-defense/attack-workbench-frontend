@@ -114,6 +114,8 @@ import { VersionViewComponent } from "./components/stix/version-property/version
 
 import { NamePropertyComponent } from "./components/stix/name-property/name-property.component";
 
+import { StringPropertyComponent } from './components/stix/string-property/string-property.component';
+
 import { DatepickerPropertyComponent } from './components/stix/datepicker-property/datepicker-property.component';
 
 import { AliasPropertyComponent } from './components/stix/alias-property/alias-property.component';
@@ -127,6 +129,7 @@ import { OrderedListEditComponent } from './components/stix/ordered-list-propert
 
 import { NotesEditorComponent } from './components/resources-drawer/notes-editor/notes-editor.component';
 import { ObjectStatusComponent } from './components/object-status/object-status.component';
+import { RecentActivityComponent } from './components/recent-activity/recent-activity.component';
 import { IconViewComponent } from './components/stix/icon-view/icon-view.component';
 import { IdentityPropertyComponent } from './components/stix/identity-property/identity-property.component';
 
@@ -141,6 +144,7 @@ import { AdminPageComponent } from "./views/admin-page/admin-page.component";
 import { OrgSettingsPageComponent } from "./views/admin-page/org-settings-page/org-settings-page.component";
 import { UserAccountsPageComponent } from './views/admin-page/user-accounts-page/user-accounts-page.component';
 import { DefaultMarkingDefinitionsComponent } from './views/admin-page/default-marking-definitions/default-marking-definitions.component';
+import { ProfilePageComponent } from './views/profile-page/profile-page.component';
 import { ReferenceManagerComponent } from './views/reference-manager/reference-manager.component';
 
 import { StixDialogComponent } from "./views/stix/stix-dialog/stix-dialog.component"
@@ -230,6 +234,7 @@ import { NotesSearchListComponent } from './views/notes-page/notes-search-list/n
     StatementPropertyComponent,
     StatementViewComponent,
     StatementEditComponent,
+    StringPropertyComponent,
     TlpPropertyComponent,
     TlpViewComponent,
     TlpEditComponent,
@@ -252,6 +257,7 @@ import { NotesSearchListComponent } from './views/notes-page/notes-search-list/n
     OrgSettingsPageComponent,
     UserAccountsPageComponent,
     DefaultMarkingDefinitionsComponent,
+    ProfilePageComponent,
     ReferenceManagerComponent,
 
     StixDialogComponent,
@@ -297,6 +303,7 @@ import { NotesSearchListComponent } from './views/notes-page/notes-search-list/n
 
     NotesEditorComponent,
     ObjectStatusComponent,
+    RecentActivityComponent,
     IdentityPropertyComponent,
     DataSourceViewComponent,
     DataSourceListComponent,

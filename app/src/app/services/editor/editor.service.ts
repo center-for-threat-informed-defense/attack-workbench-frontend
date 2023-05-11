@@ -16,6 +16,7 @@ export class EditorService {
     public editable: boolean = false;
     public editing: boolean = false;
     public deletable: boolean = false;
+    public hasWorkflow: boolean = true;
     public hasRelationships: boolean = true;
     public onSave = new EventEmitter();
     public onDelete = new EventEmitter();
@@ -38,12 +39,16 @@ export class EditorService {
                 let editable = this.getEditableFromRoute(this.router.routerState, this.router.routerState.root);
                 let attackType = this.route.root.firstChild.snapshot.data.breadcrumb;
                 this.editable = editable.length > 0 && editable.every(x => x) && this.authenticationService.canEdit(attackType);
-                this.sidebarService.setEnabled("history", this.editable);
-                this.sidebarService.setEnabled("notes", this.editable);
-                if (!this.editable) this.sidebarService.currentTab = "references";
+                this.hasWorkflow = attackType !== 'home';
+                if (!(this.editable && this.hasWorkflow)) this.sidebarService.currentTab = "references";
+                this.sidebarService.setEnabled("history", this.editable && this.hasWorkflow);
+                this.sidebarService.setEnabled("notes", this.editable && this.hasWorkflow);
 
                 if (this.editable) {
-                    if (this.router.url.includes("/new") || ["matrix", "tactic", "collection"].includes(this.type)) {
+                    if (!this.hasWorkflow) {
+                        // user accounts/teams cannot be deleted
+                        this.deletable = false;
+                    } else if (this.router.url.includes("/new") || ["matrix", "tactic", "collection"].includes(this.type)) {
                         // new objects, matrices, tactics, and collections cannot be deleted
                         this.deletable = false;
                     } else {

@@ -21,7 +21,8 @@ let stixTypeToAttackType = {
     "relationship": "relationship",
     "marking-definition": "marking-definition",
     "x-mitre-data-source": "data-source",
-    "x-mitre-data-component": "data-component"
+    "x-mitre-data-component": "data-component",
+    "note": "note"
 }
 export { stixTypeToAttackType };
 
