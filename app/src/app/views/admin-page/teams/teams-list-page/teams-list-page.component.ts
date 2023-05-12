@@ -120,7 +120,7 @@ export class TeamsListPageComponent implements OnInit {
         next: (responseObj) => {
             if (responseObj.createObject) {
                 const {name, description} = responseObj.newObject;
-                const newTeam = new Team({name, description, users:[]});
+                const newTeam = new Team({name, description, userIDs:[]});
                 const createTeamSub = this.restAPIConnector.postTeam(newTeam).subscribe({
                   next: (response) => {
                       if (response) {
