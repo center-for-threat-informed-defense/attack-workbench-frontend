@@ -31,7 +31,7 @@ export class TeamsListPageComponent implements OnInit {
   }
 
   constructor(private restAPIConnector: RestApiConnectorService, private authenticationService: AuthenticationService, private dialog: MatDialog, private router:Router) {
-      this.columnsToDisplay = ['name', 'description', 'members'];
+      this.columnsToDisplay = ['name', 'description', 'members', 'open_link'];
   }
 
   ngOnInit(): void {
