@@ -6,6 +6,8 @@ import { EditorService } from 'src/app/services/editor/editor.service';
 import { MatDialog } from '@angular/material/dialog';
 import { SelectionModel } from '@angular/cdk/collections';
 import { AddDialogComponent } from 'src/app/components/add-dialog/add-dialog.component';
+import { Team } from 'src/app/classes/authn/team';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-teams-view-page',
@@ -14,11 +16,11 @@ import { AddDialogComponent } from 'src/app/components/add-dialog/add-dialog.com
 })
 export class TeamsViewPageComponent implements OnInit,OnDestroy {
   public editing: boolean;
-  public team = null;
+  public team:Team = null;
   private subscriptions: Array<Subscription> = [];
   private teamId = '';
 
-  constructor(private restAPIConnector: RestApiConnectorService, private route: ActivatedRoute, private editorService: EditorService, private router:Router, private dialog: MatDialog) { 
+  constructor(private restAPIConnector: RestApiConnectorService, private route: ActivatedRoute, private editorService: EditorService, private router:Router, private dialog: MatDialog,  private snackbar: MatSnackBar,) { 
   }
 
   ngOnInit(): void {
@@ -30,9 +32,18 @@ export class TeamsViewPageComponent implements OnInit,OnDestroy {
       this.editing = queryParams.editing ? queryParams.editing : false;
     }));
     this.subscriptions.push(this.editorService.onSave.subscribe(()=>{
-      const putRequest = this.restAPIConnector.putTeam(this.team).subscribe({
-        next: () => {this.router.navigate([]);},
-        complete: ()=> {putRequest.unsubscribe();}
+      const validateTeamSub = this.team.validate(this.restAPIConnector).subscribe({
+        next: (result) => {
+          if (result.errors.length != 0) {
+            this.snackbar.open(result.errors[0].message, null, {duration: 2000, panelClass: 'warn'});
+          } else {
+            const putRequest = this.restAPIConnector.putTeam(this.team).subscribe({
+              next: () => {this.router.navigate([]);},
+              complete: ()=> {putRequest.unsubscribe();}
+            });
+          }
+        },
+        complete: () => {validateTeamSub.unsubscribe();}
       });
     }));
     this.subscriptions.push(this.editorService.onDelete.subscribe(()=>{
@@ -60,7 +71,7 @@ export class TeamsViewPageComponent implements OnInit,OnDestroy {
   public loadTeam(): void {
     this.team = null;
     const subscription = this.restAPIConnector.getTeam(this.teamId).subscribe({
-      next: (team) => {this.team = team},
+      next: (team) => {this.team = new Team(team)},
       complete: () => {subscription.unsubscribe();}
     });
   }
