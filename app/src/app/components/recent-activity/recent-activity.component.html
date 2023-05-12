@@ -26,7 +26,7 @@
                             Created a new {{activity.sdo.attackType}}: {{activity.name}} <ng-container *ngIf="activity.released" [ngTemplateOutlet]="released"></ng-container>
                         </span>
                         <span *ngIf="activity.objectCreated && activity.sdo.type == 'note'">
-                            Added a note to {{activity.object_ref.name}}
+                            Added a note: {{activity.name}}
                         </span>
                         <span *ngIf="!activity.objectCreated">
                             Edited a {{activity.sdo.attackType}}: {{activity.name}} <ng-container *ngIf="activity.released" [ngTemplateOutlet]="released"></ng-container>

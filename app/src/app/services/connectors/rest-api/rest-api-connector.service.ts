@@ -227,10 +227,14 @@ export class RestApiConnectorService extends ApiConnector {
      * @param {number} [limit] the number of techniques to retrieve
      * @param {number} [offset] the number of techniques to skip
      * @param {string} [state] if specified, only get objects with this state
+     * @param {boolean} [includeRevoked] if true, get revoked objects
+     * @param {boolean} [includeDeprecated] if true, get deprecated objects
+     * @param {"all" | "latest"} [versions] if "all", get all versions of the objects. if "latest", only get the latest version of each object
      * @param {string} [lastUpdatedBy] if specified, only get objects which were last updated by these users
-     * @param {boolean} [revoked] if true, get revoked objects
-     * @param {boolean} [deprecated] if true, get deprecated objects
      * @param {string[]} [excludeIDs] if specified, excludes these STIX IDs from the result
+     * @param {string} [search] if specified, return objects where the query occurs in the name, description, or ATT&CK ID; the search is case-insensitive
+     * @param {string[]} [platforms] if specified, retrieve objects that contain the specified platform(s)
+     * @param {string[]} [domains] if specified, retrieve objects that contain the specified domain(s)
      * @returns {Observable<Technique[]>} observable of retrieved objects
      */
     public get getAllTechniques() { return this.getStixObjectsFactory<Technique>("technique"); }
@@ -381,14 +385,17 @@ export class RestApiConnectorService extends ApiConnector {
      public get getAllIdentities() { return this.getStixObjectsFactory<Identity>("identity"); }
     /**
      * Get all relationships
-     * @param {number} [limit] the number of relationships to retrieve
-     * @param {number} [offset] the number of relationships to skip
+     * @param {number} [limit] the number of techniques to retrieve
+     * @param {number} [offset] the number of techniques to skip
      * @param {string} [state] if specified, only get objects with this state
+     * @param {boolean} [includeRevoked] if true, get revoked objects
+     * @param {boolean} [includeDeprecated] if true, get deprecated objects
+     * @param {"all" | "latest"} [versions] if "all", get all versions of the objects. if "latest", only get the latest version of each object
      * @param {string} [lastUpdatedBy] if specified, only get objects which were last updated by these users
-     * @param {boolean} [revoked] if true, get revoked objects
-     * @param {versions} ["all" | "latest"] if "all", get all versions of the relationships. if "latest", only get the latest version of each collection.
-     * @param {boolean} [deprecated] if true, get deprecated objects
      * @param {string[]} [excludeIDs] if specified, excludes these STIX IDs from the result
+     * @param {string} [search] if specified, return objects where the query occurs in the name, description, or ATT&CK ID; the search is case-insensitive
+     * @param {string[]} [platforms] if specified, retrieve objects that contain the specified platform(s)
+     * @param {string[]} [domains] if specified, retrieve objects that contain the specified domain(s)
      * @returns {Observable<Relationships[]>} observable of retrieved objects
      */
     public get getAllRelationships() { return this.getStixObjectsFactory<Relationship>("relationship"); }
@@ -400,24 +407,27 @@ export class RestApiConnectorService extends ApiConnector {
      * @param {number} [offset] the number of collections to skip
      * @param {string} [state] if specified, only get objects with this state
      * @param {boolean} [revoked] if true, get revoked objects
-     * @param {versions} ["all" | "latest"] if "all", get all versions of the collections. if "latest", only get the latest version of each collection.
      * @param {boolean} [deprecated] if true, get deprecated objects
      * @param {boolean} [deserialize] if true, deserialize objects to full STIX objects
+     * @param {string[]} [lastUpdatedBy] filter to only include objects modified by the list of given user IDs
      * @returns {Observable<any[]>} observable of retrieved objects
      */
-    public getAllObjects(attackIDs?: string[], limit?: number, offset?: number, state?: string, revoked?: boolean, deprecated?: boolean, deserialize?: boolean) {
+    public getAllObjects(attackIDs?: string[], limit?: number, offset?: number, state?: string, revoked?: boolean, deprecated?: boolean, deserialize?: boolean, lastUpdatedBy?: string[]) {
         let query = new HttpParams({encoder: new CustomEncoder()});
         // pagination
         if (limit) query = query.set("limit", limit.toString());
         if (offset) query = query.set("offset", offset.toString());
         if (limit || offset) query = query.set("includePagination", "true");
-        // other properties
+        // ATT&CK ID filter
         if (attackIDs) {
             attackIDs.forEach(id => query = query.append("attackId", id));
         }
+        // object state
         if (state) query = query.set("state", state);
         if (revoked) query = query.set("includeRevoked", revoked ? "true" : "false");
         if (deprecated) query = query.set("includeDeprecated", deprecated ? "true" : "false");
+        // User ID filter
+        if (lastUpdatedBy) query = query.set("lastUpdatedBy", lastUpdatedBy.toString());
         return this.http.get(`${this.apiUrl}/attack-objects`, {params: query}).pipe(
             tap(results => logger.log(`retrieved ATT&CK objects`, results)), // on success, trigger the success notification
             map(results => {
@@ -632,13 +642,14 @@ export class RestApiConnectorService extends ApiConnector {
      * @param {versions} [string] default "latest", if "all" returns all versions of the object instead of just the latest version.
      * @returns {Observable<Identity>} the object with the given ID and modified date
      */
-     public get getIdentity() { return this.getStixObjectFactory<Identity>("identity"); }
+    public get getIdentity() { return this.getStixObjectFactory<Identity>("identity"); }
     /**
      * Get a single marking definition by STIX ID
      * @param {string} id the object STIX ID
      * @returns {Observable<MarkingDefinition>} the object with the given ID
      */
-     public get getMarkingDefinition() { return this.getStixObjectFactory<MarkingDefinition>("marking-definition")}
+    public get getMarkingDefinition() { return this.getStixObjectFactory<MarkingDefinition>("marking-definition")}
+
     /**
      * Factory to create a new STIX object creator (POST) function
      * @template T the type to create

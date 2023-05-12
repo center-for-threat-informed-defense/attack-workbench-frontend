@@ -114,6 +114,8 @@ import { VersionViewComponent } from "./components/stix/version-property/version
 
 import { NamePropertyComponent } from "./components/stix/name-property/name-property.component";
 
+import { StringPropertyComponent } from './components/stix/string-property/string-property.component';
+
 import { DatepickerPropertyComponent } from './components/stix/datepicker-property/datepicker-property.component';
 
 import { AliasPropertyComponent } from './components/stix/alias-property/alias-property.component';
@@ -142,6 +144,7 @@ import { AdminPageComponent } from "./views/admin-page/admin-page.component";
 import { OrgSettingsPageComponent } from "./views/admin-page/org-settings-page/org-settings-page.component";
 import { UserAccountsPageComponent } from './views/admin-page/user-accounts-page/user-accounts-page.component';
 import { DefaultMarkingDefinitionsComponent } from './views/admin-page/default-marking-definitions/default-marking-definitions.component';
+import { ProfilePageComponent } from './views/profile-page/profile-page.component';
 import { ReferenceManagerComponent } from './views/reference-manager/reference-manager.component';
 
 import { StixDialogComponent } from "./views/stix/stix-dialog/stix-dialog.component"
@@ -235,6 +238,7 @@ import { CreateNewDialogComponent } from './components/create-new-dialog/create-
     StatementPropertyComponent,
     StatementViewComponent,
     StatementEditComponent,
+    StringPropertyComponent,
     TlpPropertyComponent,
     TlpViewComponent,
     TlpEditComponent,
@@ -257,6 +261,7 @@ import { CreateNewDialogComponent } from './components/create-new-dialog/create-
     OrgSettingsPageComponent,
     UserAccountsPageComponent,
     DefaultMarkingDefinitionsComponent,
+    ProfilePageComponent,
     ReferenceManagerComponent,
 
     StixDialogComponent,

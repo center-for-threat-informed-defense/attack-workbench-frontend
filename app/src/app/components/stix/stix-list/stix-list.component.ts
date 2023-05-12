@@ -117,19 +117,19 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
         { "value": "state.revoked", "label": "include revoked", "disabled": false }
     ]
 
-    public get userSearchString():string {
-      if (this.userIdsUsedInSearch.length === 0) {
-        return "filter by users";
-      } else {
-        return `${this.userIdsUsedInSearch.length} user${this.userIdsUsedInSearch.length === 1 ? '' : 's'} selected`;
-      } 
+    public get userSearchString(): string {
+        if (this.userIdsUsedInSearch.length === 0) {
+            return "filter by users";
+        } else {
+            return `${this.userIdsUsedInSearch.length} user${this.userIdsUsedInSearch.length === 1 ? '' : 's'} selected`;
+        }
     }
 
-    constructor(public dialog: MatDialog, 
-                private restAPIConnectorService: RestApiConnectorService, 
-                private router: Router, 
-                private authenticationService: AuthenticationService,
-                private sidebarService: SidebarService) { }
+    constructor(public dialog: MatDialog,
+        private restAPIConnectorService: RestApiConnectorService,
+        private router: Router,
+        private authenticationService: AuthenticationService,
+        private sidebarService: SidebarService) { }
 
     ngOnInit(): void {
         // build query options for platforms
@@ -370,20 +370,20 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
         }
         this.tableColumns_controls = controls_before.concat(this.tableColumns, controls_after);
 
-        const filterList = this.config.filterList ? this.config.filterList : [ 'state', 'workflow_status'];
+        const filterList = this.config.filterList ? this.config.filterList : ['state', 'workflow_status'];
         if (filterList.includes('workflow_status')) {
-          this.filterOptions.push({
-              "name": "workflow status",
-              "disabled": "status" in this.config,
-              "values": this.statuses
-          })
+            this.filterOptions.push({
+                "name": "workflow status",
+                "disabled": "status" in this.config,
+                "values": this.statuses
+            })
         }
         if (filterList.includes('state')) {
-          this.filterOptions.push({
-            "name": "state",
-            "disabled": "status" in this.config,
-            "values": this.states
-          })
+            this.filterOptions.push({
+                "name": "state",
+                "disabled": "status" in this.config,
+                "values": this.states
+            })
         }
         let filterByDomain: boolean = this.config.type ? ['data-source', 'mitigation', 'software', 'tactic', 'technique'].includes(this.config.type) : false;
         let filterByPlatform: boolean = this.config.type ? ['data-source', 'software', 'technique'].includes(this.config.type) : false;
@@ -435,32 +435,32 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
         this.addColumn("created", "created", "timestamp");
     }
 
-    public openUserSelectModal():void {
-      const select = new SelectionModel<string>(true);
-      for (let i = 0; i < this.userIdsUsedInSearch.length; i++) {
-        select.toggle(this.userIdsUsedInSearch[i]);
-        
-      }
-      let prompt = this.dialog.open(AddDialogComponent, {
-        data: {
-          select,
-          type: 'user',
-          buttonLabel: "SEARCH",
-          title: "Select users to filter by",
-          clearSelection: true,
-        },
-        minHeight: "50vh",
-        maxHeight: "75vh"
-    })
-    let subscription = prompt.afterClosed().subscribe({
-        next: result => {
-            if (result) { 
-              this.userIdsUsedInSearch = select.selected;
-              this.applyControls();
-            }
-        },
-        complete: () => { subscription.unsubscribe(); }
-    });
+    public openUserSelectModal(): void {
+        const select = new SelectionModel<string>(true);
+        for (let i = 0; i < this.userIdsUsedInSearch.length; i++) {
+            select.toggle(this.userIdsUsedInSearch[i]);
+
+        }
+        let prompt = this.dialog.open(AddDialogComponent, {
+            data: {
+                select,
+                type: 'user',
+                buttonLabel: "SEARCH",
+                title: "Select users to filter by",
+                clearSelection: true,
+            },
+            minHeight: "50vh",
+            maxHeight: "75vh"
+        })
+        let subscription = prompt.afterClosed().subscribe({
+            next: result => {
+                if (result) {
+                    this.userIdsUsedInSearch = select.selected;
+                    this.applyControls();
+                }
+            },
+            complete: () => { subscription.unsubscribe(); }
+        });
     }
 
     /**
@@ -772,7 +772,7 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
             let subscription = this.data$.subscribe({
                 next: (data) => { this.totalObjectCount = data.pagination.total; },
                 complete: () => { subscription.unsubscribe() }
-            })
+            });
         }
     }
 

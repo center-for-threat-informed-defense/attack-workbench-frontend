@@ -1,6 +1,8 @@
 import { Component, Input, OnInit, ViewEncapsulation } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
+import { forkJoin } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { Collection } from 'src/app/classes/stix/collection';
 import { Note } from 'src/app/classes/stix/note';
 import { Relationship } from 'src/app/classes/stix/relationship';
@@ -32,6 +34,25 @@ export class RecentActivityComponent implements OnInit {
     public loading: boolean = false;
     public hoveredEvent: ActivityEvent = null;
 
+    // Type map for redirections
+    private typeMap = {
+        "attack-pattern": "technique",
+        "x-mitre-tactic": "tactic",
+        "intrusion-set": "group",
+        "campaign": "campaign",
+        "malware": "software",
+        "tool": "software",
+        "course-of-action": "mitigation",
+        "x-mitre-matrix": "matrix",
+        "x-mitre-collection": "collection",
+        "relationship": "relationship",
+        "note": "note",
+        "identity": "identity",
+        "marking-definition": "marking-definition",
+        "x-mitre-data-source": "data-source",
+        "x-mitre-data-component": "data-component"
+    }
+
     constructor(private restAPIService: RestApiConnectorService,
                 private dialog: MatDialog,
                 private router: Router,
@@ -40,23 +61,41 @@ export class RecentActivityComponent implements OnInit {
     }
 
     ngOnInit(): void {
+        this.loading = true;
         this.loadActivity();
     }
 
+    /** load user activity and parse into events */
     public loadActivity() {
-        this.loading = true;
-
-        // set up subscribers to get object versions
-        let objects$ = this.restAPIService.getAllObjects(null, null, null, null, true, true, true);
-        let subscription = objects$.subscribe({
+        let subscription = this.getUserActivity().subscribe({
             next: (results) => {
-                this.parseActivity(results.data as StixObject[]);
+                this.parseActivity(results as StixObject[]);
                 this.loading = false;
             },
             complete: () => { subscription.unsubscribe(); }
         });
     }
 
+    /**
+     * Retrieve recent user activity
+     * @returns a list of recent user activity
+     */
+    public getUserActivity() {
+        return forkJoin({
+            objects$: this.restAPIService.getAllObjects(null, null, null, null, true, true, true, this.identities),
+            relationships$: this.restAPIService.getAllRelationships({ includeRevoked: true, includeDeprecated: true, lastUpdatedBy: this.identities })
+        }).pipe(
+            map(results => {
+                let activity: StixObject[] = [];
+                results.objects$.data.forEach((sdo: StixObject) => { if (sdo.attackType !== "relationship") activity.push(sdo) });
+                return activity.concat(results.relationships$.data);
+            })
+        );
+    }
+
+    /**
+     * Determine if the SDO in the given event is a relationship
+     */
     public isRelationship(event): boolean {
         return event.sdo.attackType == 'relationship';
     }
@@ -64,29 +103,20 @@ export class RecentActivityComponent implements OnInit {
     /**
      * Transform the objects into ActivityEvent objects and add them to the allRecentActivity array
      */
-    private parseActivity(allObjects: StixObject[]): void {
-        let activity = [];
-        let objectLookup = {};
-
-        // build object lookup table
-        allObjects.forEach(sdo => {
-            // check if modified by one of the given identities
-            if (sdo.workflow && sdo.workflow.created_by_user_account && this.identities.includes(sdo.workflow.created_by_user_account)) {
-                activity.push(sdo);
-            }
-            objectLookup[sdo.stixID] = sdo;
-        });
-
+    private parseActivity(activity: StixObject[]): void {
         // build recent activity events
         for (let stixObject of activity) {
-            let objectCreated = stixObject.created.getTime() == stixObject.modified.getTime();
-            let released = stixObject.attackType == "collection" && (stixObject as Collection).release;
+            let createEvent = stixObject.created.getTime() == stixObject.modified.getTime();
+            let releaseEvent = stixObject.attackType == "collection" && (stixObject as Collection).release;
 
-            let objectName;
+            let objectName, eventIcon;
+            if (createEvent) {
+                eventIcon = stixObject.type == "note" ? "sticky_note_2" : "add";
+            }
+            else eventIcon = "edit";
+
             if (stixObject.type == "relationship") {
                 let relationship = stixObject as Relationship;
-                relationship.set_source_object(objectLookup[relationship.source_ref], this.restAPIService);
-                relationship.set_target_object(objectLookup[relationship.target_ref], this.restAPIService);
                 objectName = `${relationship.source_name} ${relationship.relationship_type} ${relationship.target_name}`
             } else if (stixObject.type == "note") {
                 objectName = (stixObject as Note).title;
@@ -95,12 +125,11 @@ export class RecentActivityComponent implements OnInit {
             }
 
             this.allRecentActivity.push({
-                icon: objectCreated ? (stixObject.type == "note" ? "sticky_note_2" : "add") : "edit",
+                icon: eventIcon,
                 name: objectName,
                 sdo: stixObject,
-                object_ref: stixObject.type == "note" ? objectLookup[(stixObject as Note).object_refs[0]] : undefined,
-                objectCreated: objectCreated,
-                released: released
+                objectCreated: createEvent,
+                released: releaseEvent
             });
         }
 
@@ -120,14 +149,33 @@ export class RecentActivityComponent implements OnInit {
         this.recentActivity = this.allRecentActivity.slice(0, end);
     }
 
-    /** redirect to object page */
+    /** open the event in a dialog or redirect to the object page */
     public open(event): void {
         if (event.sdo.attackType == 'note') {
             this.sidebarService.opened = true;
             this.sidebarService.currentTab = 'notes';
-            this.router.navigateByUrl('/' + event.object_ref.attackType + '/' + event.object_ref.stixID);
+            let objectRef = (event.sdo as Note).object_refs[0];
+            let type = this.typeMap[objectRef.split('--')[0]];
+            this.navigateTo(objectRef, type);
         } else {
-            this.router.navigateByUrl('/' + event.sdo.attackType + '/' + event.sdo.stixID);
+            this.navigateTo(event.sdo.stixID, event.sdo.attackType);
+        }
+    }
+
+    /** navigate to the object page */
+    public navigateTo(stixID: string, type: string): void {
+        let url = `/${type}/${stixID}`;
+        if (type == 'collection') {
+            // collection URLs must include their modified date
+            const collectionSub = this.restAPIService.getCollection(stixID).subscribe({
+                next: (result) => {
+                    url = `${url}/modified/${result[0].modified.toISOString()}`;
+                    this.router.navigateByUrl(url);
+                },
+                complete: () => { collectionSub.unsubscribe(); }
+            });
+        } else {
+            this.router.navigateByUrl(url);
         }
     }
 
