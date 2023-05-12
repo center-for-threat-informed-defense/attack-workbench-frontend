@@ -69,7 +69,8 @@ export class Team extends Serializable {
         } else { this.name = ''; }
 
         if ('description' in raw) {
-            if (typeof(raw.description) === 'string') { this.description = raw.description; }
+            if (typeof(raw.description) === 'undefined') { this.description = undefined}         // description is not required so we will allow undefined
+            else if (typeof(raw.description) === 'string') { this.description = raw.description; }
             else { logger.error('TypeError: description field is not a string:', raw.description, '(', typeof(raw.description), ')'); }
         } else { this.description = ''; }
 
@@ -97,7 +98,7 @@ export class Team extends Serializable {
     public validate(restAPIService: RestApiConnectorService): Observable<ValidationData> {
         const validation = new ValidationData();
         return of(validation).pipe(
-          // check if username is unique
+          // check if team name is unique
           switchMap(result => {
             return restAPIService.getAllTeams({includePagination: true}).pipe(
               map(teams => {
@@ -117,7 +118,7 @@ export class Team extends Serializable {
                       } else {
                           result.successes.push({
                               result: 'success',
-                              field: 'username',
+                              field: 'name',
                               message: 'name is unique'
                           });
                       }
