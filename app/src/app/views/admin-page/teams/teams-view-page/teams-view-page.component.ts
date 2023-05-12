@@ -48,10 +48,9 @@ export class TeamsViewPageComponent implements OnInit,OnDestroy {
     }));
     this.subscriptions.push(this.editorService.onDelete.subscribe(()=>{
       const deleteRequest = this.restAPIConnector.deleteTeam(this.team).subscribe({
-        next: () => {this.router.navigate([this.route.parent.url], {});},
+        next: () => {this.router.navigate(['..'], {relativeTo:this.route});},
         complete: ()=> {deleteRequest.unsubscribe();}
       });
-      ;
     }));
     this.subscriptions.push(this.editorService.onEditingStopped.subscribe(()=>{
       this.loadTeam();
