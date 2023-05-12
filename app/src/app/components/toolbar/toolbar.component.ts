@@ -4,6 +4,7 @@ import { ValidationData } from 'src/app/classes/serializable';
 import { AuthenticationService } from 'src/app/services/connectors/authentication/authentication.service';
 import { EditorService } from 'src/app/services/editor/editor.service';
 import { SidebarService } from 'src/app/services/sidebar/sidebar.service';
+import { WebsiteIntegrationService } from 'src/app/services/website-integration/website-integration.service';
 
 @Component({
   selector: 'app-toolbar',
@@ -27,7 +28,7 @@ export class ToolbarComponent implements OnInit {
 
     public get isLoggedIn(): boolean { return this.authenticationService.isLoggedIn; }
 
-    constructor(private sidebarService: SidebarService, private editorService: EditorService, private authenticationService: AuthenticationService) {}
+    constructor(private sidebarService: SidebarService, private editorService: EditorService, private authenticationService: AuthenticationService, private websiteIntegrationService:WebsiteIntegrationService) {}
 
     ngOnInit() {
         // intentionally left blank
