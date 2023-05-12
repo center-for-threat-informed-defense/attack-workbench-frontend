@@ -38,6 +38,7 @@
 
 #### New Features in 1.3.2
 -   Added ability to search objects by the user that created them.
+-   Added admin interface for creating and managing teams
 
 ## 21 April 2023
 
@@ -50,7 +51,6 @@
 -   Added individual attribution to edits made on Note objects.
 -   Added the ICS Security Control mapping field to Mitigation objects.
 -   Updated the documentation for installing Workbench with additional certs.
--   Added admin interface for creating and managing teams
 
 #### Fixes in 1.3.1
 -   Fixed an issue where assigning an existing technique as a sub-technique would not create a `subtechnique-of` relationship. See [frontend#446](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/446).
