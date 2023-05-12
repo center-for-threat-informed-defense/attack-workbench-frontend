@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { EditorService } from '../editor/editor.service';
 import { RestApiConnectorService } from '../connectors/rest-api/rest-api-connector.service';
 import { environment } from 'src/environments/environment';
-import { HttpClient } from '@angular/common/http';
 @Injectable({
   providedIn: 'root'
 })
@@ -21,14 +20,24 @@ export class WebsiteIntegrationService {
     'data-source': 'datasources',
   }
 
-  constructor(private editorService:EditorService, private restAPIService: RestApiConnectorService, private http: HttpClient) { }
+  currentWebIntegrationStatus: ExternalWebIntegrationStatus = {url:null,stixId:null,valid:false};
+  
+  constructor(private editorService:EditorService, private restAPIService: RestApiConnectorService) { }
 
-  public checkUrlValidity() {
-    if (this.websiteIntegrationStatus === false) {
-      return false;
+  public checkExternalUrlValidity() {
+    if (this.websiteIntegrationStatus == false) {
+      this.currentWebIntegrationStatus = {url:null,stixId:null,valid:false};
+      return this.currentWebIntegrationStatus.valid;
     }
     let data$: any;
-    if (this.editorService.stixId && this.editorService.stixId != "new") { // don't load if the object doesn't exist yet
+    if (this.editorService.stixId) { 
+      if (this.editorService.stixId == "new") {
+        this.currentWebIntegrationStatus = {url:null,stixId:null,valid:false};
+        return this.currentWebIntegrationStatus.valid;
+      }
+      if (this.editorService.stixId == this.currentWebIntegrationStatus.stixId) {
+        return this.currentWebIntegrationStatus.valid;
+      }
       // retrieve object
       if (this.editorService.type == "software") data$ = this.restAPIService.getSoftware(this.editorService.stixId);
       else if (this.editorService.type == "group") data$ = this.restAPIService.getSoftware(this.editorService.stixId);
@@ -38,32 +47,55 @@ export class WebsiteIntegrationService {
       else if (this.editorService.type == "campaign") data$ = this.restAPIService.getCampaign(this.editorService.stixId);
       else if (this.editorService.type == "technique") data$ = this.restAPIService.getTechnique(this.editorService.stixId);
       else if (this.editorService.type == "data-source") data$ = this.restAPIService.getDataSource(this.editorService.stixId);
-      else {return false}
+      else {
+        this.currentWebIntegrationStatus = {url:null,stixId:null,valid:false};
+        return this.currentWebIntegrationStatus.valid;
+      }
       let objSubscription = data$.subscribe({
           next: (data) => {
               if (data.length !== 1) {
-                return false;
+                this.currentWebIntegrationStatus = {url:null,stixId:null,valid:false};
+                return this.currentWebIntegrationStatus.valid;
               }
-              console.log(data);
               const attackObject = data[0];
               const attackID = attackObject.attackID.split('.');
               let additionalPath = '';
-              for (let i = 0; i < attackID.length; i++) {
-                additionalPath = additionalPath.concat('/',attackID[i]);
+              if (this.editorService.type == "matrix") {
+                if (attackID == 'enterprise-attack') {
+                  additionalPath = '/enterprise/';
+                } else if (attackID == 'mobile-attack') {
+                  additionalPath = '/mobile';
+                } else if (attackID == 'ics-attack') {
+                  additionalPath = '/ics';
+                }
+              } else {
+                for (let i = 0; i < attackID.length; i++) {
+                  additionalPath = additionalPath.concat('/',attackID[i]);
+                }
               }
               const url = `${this.websiteIntegrationUrl}/${this.typeToRouteMap[this.editorService.type]}${additionalPath}`;
-              const checkSubscription = this.http.get(url).subscribe({
-                next: (response) => {
-                  console.log(response);
+              this.currentWebIntegrationStatus.url = url;
+              this.currentWebIntegrationStatus.stixId = this.editorService.stixId;
+              // with no-cors we will get no data but we can validate that the URL is valid
+              fetch(url, {mode: 'no-cors'}).then(
+                (response) => {
+                  this.currentWebIntegrationStatus.valid = true;
+                  return this.currentWebIntegrationStatus.valid;
                 },
-                error: (error) => {
-                  console.log(error)
-                },
-                complete: () => {checkSubscription.unsubscribe}
-              });
+                (error) => {
+                  this.currentWebIntegrationStatus.valid = true;
+                  return this.currentWebIntegrationStatus.valid;
+                }
+              );
           },
           complete: () => { objSubscription.unsubscribe() }
       });
     }
   }
 }
+
+interface ExternalWebIntegrationStatus {
+  stixId:string,
+  url: string,
+  valid:boolean,
+};
