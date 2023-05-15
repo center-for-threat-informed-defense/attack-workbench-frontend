@@ -14,6 +14,9 @@ import { TeamsViewPageComponent } from './views/admin-page/teams/teams-view-page
 
 
 //see also https://www.npmjs.com/package/angular-crumbs
+
+var editRoles = [Role.EDITOR, Role.ADMIN];
+
 const routes: Routes = [
     {
         "path": "",
@@ -97,7 +100,8 @@ const routes: Routes = [
                             "data": {
                                 "breadcrumb": "view team",
                                 "editable": true,
-                                "title": "View Team"
+                                "title": "View Team",
+                                "editRoles": editRoles
                             },
                             "component": TeamsViewPageComponent,
                         },
