@@ -421,8 +421,8 @@ export class RestApiConnectorService extends ApiConnector {
         if (state) query = query.set("state", state);
         if (revoked) query = query.set("includeRevoked", revoked ? "true" : "false");
         if (deprecated) query = query.set("includeDeprecated", deprecated ? "true" : "false");
-        // User ID filter
-        if (lastUpdatedBy) query = query.set("lastUpdatedBy", lastUpdatedBy.toString());
+        // lastUpdatedBy
+        if (lastUpdatedBy) lastUpdatedBy.forEach(user => query = query.append('lastUpdatedBy', user));
         return this.http.get(`${this.apiUrl}/attack-objects`, {params: query}).pipe(
             tap(results => logger.log(`retrieved ATT&CK objects`, results)), // on success, trigger the success notification
             map(results => {
