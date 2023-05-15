@@ -33,7 +33,6 @@ export class RecentActivityComponent implements OnInit {
     public recentActivity: ActivityEvent[];
     public loading: boolean = false;
     public hoveredEvent: ActivityEvent = null;
-    public get hasIdentities(): boolean { return this.identities.length > 0; }
     // Type map for redirections
     private typeMap = {
         "attack-pattern": "technique",
@@ -67,18 +66,13 @@ export class RecentActivityComponent implements OnInit {
 
     /** load user activity and parse into events */
     public loadActivity() {
-        if (this.hasIdentities) {
-          let subscription = this.getUserActivity().subscribe({
-            next: (results) => {
-                this.parseActivity(results as StixObject[]);
-                this.loading = false;
-            },
-            complete: () => { subscription.unsubscribe(); }
-          });
-        } else {
-          this.loading = false;
-          this.recentActivity = [];
-        }
+        let subscription = this.getUserActivity().subscribe({
+          next: (results) => {
+              this.parseActivity(results as StixObject[]);
+              this.loading = false;
+          },
+          complete: () => { subscription.unsubscribe(); }
+        });
     }
 
     /**
