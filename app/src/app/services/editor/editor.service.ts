@@ -18,7 +18,6 @@ export class EditorService {
     public deletable: boolean = false;
     public hasWorkflow: boolean = true;
     public hasRelationships: boolean = true;
-    public hasStatus: boolean = true;
     public onSave = new EventEmitter();
     public onDelete = new EventEmitter();
     public onEditingStopped = new EventEmitter();
@@ -46,8 +45,12 @@ export class EditorService {
                 this.sidebarService.setEnabled("notes", this.editable && this.hasWorkflow);
                 if (this.editable) {
                     if (!this.hasWorkflow) {
-                        // user accounts/teams cannot be deleted
-                        this.deletable = false;
+                        if (this.stixId == 'teams') { // admin routes are prefixed w/ a '/admin'
+                          this.deletable = true;
+                          this.hasRelationships = false;
+                        } else {
+                          this.deletable = false;
+                        }
                     } else if (this.router.url.includes("/new") || ["matrix", "tactic", "collection"].includes(this.type)) {
                         // new objects, matrices, tactics, and collections cannot be deleted
                         this.deletable = false;
@@ -56,14 +59,7 @@ export class EditorService {
                         // determine if this object has existing relationships
                         this.getRelationships().subscribe(rels => this.hasRelationships = rels > 0);
                     }
-                    if (this.type === "admin") {
-                      this.hasStatus = false;
-                    } else {
-                      this.hasStatus = true;
-                    }
                 }
-                this.sidebarService.setEnabled("history", this.editable && this.hasStatus);
-                this.sidebarService.setEnabled("notes", this.editable && this.hasStatus);
                 if (!this.editable) this.sidebarService.currentTab = "references";
             }
         })
@@ -122,7 +118,7 @@ export class EditorService {
                 map(relationships => {
                     return relationships.data.filter((r: Relationship) => {
                         // filter out subtechnique-of relationships, IFF this is the source object (sub-technique)
-                        // note: the subtechique-of relationship is automatically deleted with the sub-technique object
+                        // note: the subtechnique-of relationship is automatically deleted with the sub-technique object
                         return !(r.relationship_type == 'subtechnique-of' && r.source_object && r.source_object["stix"]["id"] == this.stixId)
                     }).length;
                 })
