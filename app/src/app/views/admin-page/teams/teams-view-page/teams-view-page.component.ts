@@ -8,6 +8,7 @@ import { SelectionModel } from '@angular/cdk/collections';
 import { AddDialogComponent } from 'src/app/components/add-dialog/add-dialog.component';
 import { Team } from 'src/app/classes/authn/team';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { DeleteDialogComponent } from 'src/app/components/delete-dialog/delete-dialog.component';
 
 @Component({
   selector: 'app-teams-view-page',
@@ -47,10 +48,7 @@ export class TeamsViewPageComponent implements OnInit,OnDestroy {
       });
     }));
     this.subscriptions.push(this.editorService.onDelete.subscribe(()=>{
-      const deleteRequest = this.restAPIConnector.deleteTeam(this.team).subscribe({
-        next: () => {this.router.navigate(['..'], {relativeTo:this.route});},
-        complete: ()=> {deleteRequest.unsubscribe();}
-      });
+      this.delete();
     }));
     this.subscriptions.push(this.editorService.onEditingStopped.subscribe(()=>{
       this.loadTeam();
@@ -62,6 +60,28 @@ export class TeamsViewPageComponent implements OnInit,OnDestroy {
     for (let i = 0; i < this.subscriptions.length; i++) {
       this.subscriptions[i].unsubscribe();
     }
+  }
+
+  /**
+   * Deletes the currently loaded team object after the users confirms through a dialog box
+   */
+  private delete(): void {
+    const prompt = this.dialog.open(DeleteDialogComponent, {
+      maxWidth: "35em",
+      disableClose: true,
+      autoFocus: false
+    });
+    const closeSubscription = prompt.afterClosed().subscribe({
+      next: (confirm) => {
+          if (confirm) {
+            const deleteRequest = this.restAPIConnector.deleteTeam(this.team).subscribe({
+              next: () => {this.router.navigate(['..'], {relativeTo:this.route});},
+              complete: ()=> {deleteRequest.unsubscribe();}
+            });
+          }
+      },
+      complete: () => closeSubscription.unsubscribe()
+    })
   }
 
   /**
