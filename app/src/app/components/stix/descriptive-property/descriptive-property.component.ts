@@ -32,7 +32,7 @@ export interface DescriptivePropertyConfig {
     object: StixObject | [StixObject, StixObject];
     /** field; field of object to be displayed */
     field: string;
-    /** firstParagraphOnly; force descriptive field to show first paragragh only */
+    /** firstParagraphOnly; force descriptive field to show first paragraph only */
     firstParagraphOnly?: boolean;
     /* referencesField; external references object. 
      * References will be removed if not included 
@@ -42,4 +42,8 @@ export interface DescriptivePropertyConfig {
      * Required when using view mode
      */
     label?: string;
+    /* parseReferences; whether or not any references will be parsed
+     * optional: defaults to true
+     */
+    parseReferences?: boolean;
 }

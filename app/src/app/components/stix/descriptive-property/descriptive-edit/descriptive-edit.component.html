@@ -9,7 +9,7 @@
                 <textarea cdkTextareaAutosize matInput placeholder="{{config.label}}" (blur)="parseCitations()" [(ngModel)]="config.object[config.field]"></textarea>
             </mat-form-field>
         </mat-tab>
-        <mat-tab label="Preview" [disabled]="config.object[config.field].length == 0">
+        <mat-tab label="Preview" [disabled]="config.object[config.field] === undefined || config.object[config.field].length == 0">
             <div class="preview padding">
                 <h3>{{config.label}}</h3>
                 <app-loading-overlay *ngIf="parsingCitations else preview"></app-loading-overlay>

@@ -6,7 +6,7 @@ import { Role } from 'src/app/classes/authn/role';
 import { MatPaginator } from '@angular/material/paginator';
 import { AuthenticationService } from '../../services/connectors/authentication/authentication.service';
 import { Status } from 'src/app/classes/authn/status';
-// import { Team } from 'src/app/classes/authn/team';
+import { Team } from 'src/app/classes/authn/team';
 import { SelectionModel } from '@angular/cdk/collections';
 
 @Component({
@@ -27,22 +27,21 @@ export class UsersListComponent implements OnInit {
   public userSubscription: Subscription;
   public selectedFilters: string[];
   public searchQuery: '';
-  // public team:Team;
-  public team:any;
+  public team:Team;
   public selection: SelectionModel<string>;
 
   /**
    * Whether or not to show the search
    */
   public get showSearch(): boolean {
-    return this.config && this.config.showSearch ? this.config.showSearch : true;
+    return this.config ? this.config.showSearch : true;
   }
 
   /**
    * Whether or not to show filters
    */
   public get showFilters(): boolean {
-    return this.config && this.config.showFilters ? this.config.showFilters : true;
+    return this.config ? this.config.showFilters : true;
   }
 
   /**
@@ -88,29 +87,19 @@ export class UsersListComponent implements OnInit {
    */
   public getAccounts(options: { limit: number, offset: number, status?: string[], role?: string[], search?: string }) {
       if (this.team) {
-        this.userAccounts$ = this.restAPIConnector.getAllUserAccounts();
-        this.userSubscription = this.userAccounts$.subscribe({
-          next: (data) => {
-              this.userAccounts = data.data.filter((user)=>this.team.users.includes(user.id));
-              // this.totalObjectCount = data.pagination.total;
-              this.totalObjectCount = this.userAccounts.length;
-          },
-          complete: () => {
-              this.userSubscription.unsubscribe();
-          }
-        });
+        this.userAccounts$ = this.restAPIConnector.getUserAccountsByTeamId(this.team.id, options);
       } else {
         this.userAccounts$ = this.restAPIConnector.getAllUserAccounts(options);
-        this.userSubscription = this.userAccounts$.subscribe({
-            next: (data) => {
-                this.userAccounts = data.data;
-                this.totalObjectCount = data.pagination.total;
-            },
-            complete: () => {
-                this.userSubscription.unsubscribe()
-            }
-        });
       }
+      this.userSubscription = this.userAccounts$.subscribe({
+        next: (data) => {
+            this.userAccounts = data.data;
+            this.totalObjectCount = data.pagination.total;
+        },
+        complete: () => {
+            this.userSubscription.unsubscribe();
+        }
+      });
   }
 
   /**
@@ -209,8 +198,8 @@ export class UsersListComponent implements OnInit {
    * @param user User to be removed
    */
   public removeUser(user:UserAccount): void {
-    this.team.users = this.team.users.filter((userElement)=>userElement!==user.id);
-    // this.restAPIConnector.putTeam(this.team);
+    this.team.userIDs = this.team.userIDs.filter((userElement)=>userElement!==user.id);
+    this.restAPIConnector.putTeam(this.team);
     this.applyControls();
   }
 }
@@ -219,8 +208,9 @@ export interface UsersListConfig {
   // Columns to display
   // defaults to username and email columns
   columnsToDisplay:string[],
-  // team:Team,
-  team: any,
+  // team which we are fetching user accounts for
+  // if not specified, fetches all user accounts
+  team:Team,
   // whether or not to display the search bar
   // defaults to true 
   showSearch: boolean,
