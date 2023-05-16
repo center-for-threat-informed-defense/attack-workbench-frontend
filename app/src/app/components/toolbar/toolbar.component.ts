@@ -66,4 +66,8 @@ export class ToolbarComponent implements OnInit {
     public get sidebarEnabled() {
         return this.editorService.sidebarEnabled;
     }
+
+    public openExternalUrl() {
+      window.open(this.websiteIntegrationService.currentWebIntegrationStatus.url)
+    }
 }
