@@ -9,7 +9,7 @@
             <div *ngIf="deletable" class="button-tooltip" [matTooltip]="editing ? (hasRelationships ? 'an object with relationships cannot be deleted' : 'delete') : ''">
                 <button mat-button class="control" [disabled]="!editing || hasRelationships" (click)="delete()"><mat-icon aria-label="delete">delete</mat-icon></button>
             </div>
-            <app-object-status></app-object-status>
+            <app-object-status *ngIf="hasWorkflow"></app-object-status>
             <span [matTooltip]="!websiteIntegrationService.websiteIntegrationStatus ? 'external website integration disabled' : (!websiteIntegrationService.currentWebIntegrationStatus.valid ? 'could not find object on att&ck website' : 'view object in att&ck website')">
               <button mat-button 
                 [disabled]="!websiteIntegrationService.checkExternalUrlValidity()" 

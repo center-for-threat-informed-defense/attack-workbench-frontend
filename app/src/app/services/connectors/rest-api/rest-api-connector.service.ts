@@ -24,6 +24,7 @@ import { DataSource } from 'src/app/classes/stix/data-source';
 import { DataComponent } from 'src/app/classes/stix/data-component';
 import { UserAccount } from 'src/app/classes/authn/user-account';
 import { Campaign } from 'src/app/classes/stix/campaign';
+import { Team } from 'src/app/classes/authn/team';
 
 //attack types
 type AttackType = "campaign" | "collection" | "group" | "matrix" | "mitigation" | "software" | "tactic" | "technique" | "relationship" | "note" | "identity" | "marking-definition" | "data-source" | "data-component";
@@ -95,14 +96,18 @@ export interface Namespace {
     range_start: string
 }
 
+
+
 @Injectable({
     providedIn: 'root'
 })
 export class RestApiConnectorService extends ApiConnector {
     private get apiUrl(): string { return environment.integrations.rest_api.url; }
 
-    constructor(private http: HttpClient, private snackbar: MatSnackBar) { super(snackbar); }
-
+    constructor(private http: HttpClient, private snackbar: MatSnackBar) {
+      super(snackbar);
+    }
+    
     /**
      * Get the name of a given STIX object
      */
@@ -222,10 +227,14 @@ export class RestApiConnectorService extends ApiConnector {
      * @param {number} [limit] the number of techniques to retrieve
      * @param {number} [offset] the number of techniques to skip
      * @param {string} [state] if specified, only get objects with this state
+     * @param {boolean} [includeRevoked] if true, get revoked objects
+     * @param {boolean} [includeDeprecated] if true, get deprecated objects
+     * @param {"all" | "latest"} [versions] if "all", get all versions of the objects. if "latest", only get the latest version of each object
      * @param {string} [lastUpdatedBy] if specified, only get objects which were last updated by these users
-     * @param {boolean} [revoked] if true, get revoked objects
-     * @param {boolean} [deprecated] if true, get deprecated objects
      * @param {string[]} [excludeIDs] if specified, excludes these STIX IDs from the result
+     * @param {string} [search] if specified, return objects where the query occurs in the name, description, or ATT&CK ID; the search is case-insensitive
+     * @param {string[]} [platforms] if specified, retrieve objects that contain the specified platform(s)
+     * @param {string[]} [domains] if specified, retrieve objects that contain the specified domain(s)
      * @returns {Observable<Technique[]>} observable of retrieved objects
      */
     public get getAllTechniques() { return this.getStixObjectsFactory<Technique>("technique"); }
@@ -376,14 +385,17 @@ export class RestApiConnectorService extends ApiConnector {
      public get getAllIdentities() { return this.getStixObjectsFactory<Identity>("identity"); }
     /**
      * Get all relationships
-     * @param {number} [limit] the number of relationships to retrieve
-     * @param {number} [offset] the number of relationships to skip
+     * @param {number} [limit] the number of techniques to retrieve
+     * @param {number} [offset] the number of techniques to skip
      * @param {string} [state] if specified, only get objects with this state
+     * @param {boolean} [includeRevoked] if true, get revoked objects
+     * @param {boolean} [includeDeprecated] if true, get deprecated objects
+     * @param {"all" | "latest"} [versions] if "all", get all versions of the objects. if "latest", only get the latest version of each object
      * @param {string} [lastUpdatedBy] if specified, only get objects which were last updated by these users
-     * @param {boolean} [revoked] if true, get revoked objects
-     * @param {versions} ["all" | "latest"] if "all", get all versions of the relationships. if "latest", only get the latest version of each collection.
-     * @param {boolean} [deprecated] if true, get deprecated objects
      * @param {string[]} [excludeIDs] if specified, excludes these STIX IDs from the result
+     * @param {string} [search] if specified, return objects where the query occurs in the name, description, or ATT&CK ID; the search is case-insensitive
+     * @param {string[]} [platforms] if specified, retrieve objects that contain the specified platform(s)
+     * @param {string[]} [domains] if specified, retrieve objects that contain the specified domain(s)
      * @returns {Observable<Relationships[]>} observable of retrieved objects
      */
     public get getAllRelationships() { return this.getStixObjectsFactory<Relationship>("relationship"); }
@@ -395,24 +407,27 @@ export class RestApiConnectorService extends ApiConnector {
      * @param {number} [offset] the number of collections to skip
      * @param {string} [state] if specified, only get objects with this state
      * @param {boolean} [revoked] if true, get revoked objects
-     * @param {versions} ["all" | "latest"] if "all", get all versions of the collections. if "latest", only get the latest version of each collection.
      * @param {boolean} [deprecated] if true, get deprecated objects
      * @param {boolean} [deserialize] if true, deserialize objects to full STIX objects
+     * @param {string[]} [lastUpdatedBy] filter to only include objects modified by the list of given user IDs
      * @returns {Observable<any[]>} observable of retrieved objects
      */
-    public getAllObjects(attackIDs?: string[], limit?: number, offset?: number, state?: string, revoked?: boolean, deprecated?: boolean, deserialize?: boolean) {
+    public getAllObjects(attackIDs?: string[], limit?: number, offset?: number, state?: string, revoked?: boolean, deprecated?: boolean, deserialize?: boolean, lastUpdatedBy?: string[]) {
         let query = new HttpParams({encoder: new CustomEncoder()});
         // pagination
         if (limit) query = query.set("limit", limit.toString());
         if (offset) query = query.set("offset", offset.toString());
         if (limit || offset) query = query.set("includePagination", "true");
-        // other properties
+        // ATT&CK ID filter
         if (attackIDs) {
             attackIDs.forEach(id => query = query.append("attackId", id));
         }
+        // object state
         if (state) query = query.set("state", state);
         if (revoked) query = query.set("includeRevoked", revoked ? "true" : "false");
         if (deprecated) query = query.set("includeDeprecated", deprecated ? "true" : "false");
+        // lastUpdatedBy
+        if (lastUpdatedBy) lastUpdatedBy.forEach(user => query = query.append('lastUpdatedBy', user));
         return this.http.get(`${this.apiUrl}/attack-objects`, {params: query}).pipe(
             tap(results => logger.log(`retrieved ATT&CK objects`, results)), // on success, trigger the success notification
             map(results => {
@@ -627,13 +642,14 @@ export class RestApiConnectorService extends ApiConnector {
      * @param {versions} [string] default "latest", if "all" returns all versions of the object instead of just the latest version.
      * @returns {Observable<Identity>} the object with the given ID and modified date
      */
-     public get getIdentity() { return this.getStixObjectFactory<Identity>("identity"); }
+    public get getIdentity() { return this.getStixObjectFactory<Identity>("identity"); }
     /**
      * Get a single marking definition by STIX ID
      * @param {string} id the object STIX ID
      * @returns {Observable<MarkingDefinition>} the object with the given ID
      */
-     public get getMarkingDefinition() { return this.getStixObjectFactory<MarkingDefinition>("marking-definition")}
+    public get getMarkingDefinition() { return this.getStixObjectFactory<MarkingDefinition>("marking-definition")}
+
     /**
      * Factory to create a new STIX object creator (POST) function
      * @template T the type to create
@@ -1571,6 +1587,113 @@ export class RestApiConnectorService extends ApiConnector {
             share() // multicast to subscribers
         )
     }
+
+
+    //  _____ ___   _   __  __ ___     _   ___ ___ ___ 
+    // |_   _| __| /_\ |  \/  / __|   /_\ | _ \_ _/ __|
+    //   | | | _| / _ \| |\/| \__ \  / _ \|  _/| |\__ \
+    //   |_| |___/_/ \_\_|  |_|___/ /_/ \_\_| |___|___/
+
+    /**
+     * Get all teams
+     * @param {number} [limit] the number of teams to retrieve
+     * @param {number} [offset] the number of teams to skip
+     * @param {boolean} [includePagination] whether or not to include pagination (will be done automatically if limit or offset are set)
+     * @param {string} [search] Only return teams where the provided search text occurs in the name or description. The search is case-insensitive.
+     * @returns {Observable<Paginated>} paginated data of teams
+     */
+    public getAllTeams(options?: {limit?: number, offset?: number, search?: string, includePagination?: boolean}): Observable<Paginated<Team>> {
+      let url = `${this.apiUrl}/teams`;
+      // parse params into query string
+      let query = new HttpParams({encoder: new CustomEncoder()});
+      // pagination
+      if (options && options.limit) query = query.set("limit", options.limit.toString());
+      if (options && options.offset) query = query.set("offset", options.offset.toString());
+      if (options && (options.includePagination || options.limit || options.offset)) query = query.set("includePagination", "true");
+      // search
+      if (options && options.search) query = query.set("search", options.search);
+      return this.http.get<Paginated<Team>>(url, {params: query}).pipe(
+          catchError(this.handleError_continue<Paginated<Team>>({data: [], pagination: {total: 0, limit: 0, offset:0}})),
+          share() //multicast to subscribers
+      );
+    }
+
+    /**
+     * Get all teams
+     * @param {string} id the object ID
+     * @param {number} [limit] the number of users to retrieve
+     * @param {number} [offset] the number of users to skip
+     * @param {string} [search] Only return users where the provided search text occurs in the username, email, or displayName.  The search is case-insensitive.
+     * @returns {Observable<Paginated>} paginated data of users from the given tem
+     */
+    public getUserAccountsByTeamId(id:string, options?: {limit?: number, offset?: number, search?: string}): Observable<Paginated<UserAccount>> {
+      let url = `${this.apiUrl}/teams/${id}/users`;
+      // parse params into query string
+      let query = new HttpParams({encoder: new CustomEncoder()});
+      // pagination
+      if (options && options.limit) query = query.set("limit", options.limit.toString());
+      if (options && options.offset) query = query.set("offset", options.offset.toString());
+      if (options && (options.limit || options.offset)) query = query.set("includePagination", "true");
+      // search
+      if (options && options.search) query = query.set("search", options.search);
+      return this.http.get<Paginated<UserAccount>>(url, {params: query}).pipe(
+          catchError(this.handleError_continue<Paginated<UserAccount>>({data: [], pagination: {total: 0, limit: 0, offset:0}})),
+          share() //multicast to subscribers
+      );
+    }
+
+    /**
+     * GET a single team by ID
+     * @param {string} id the object ID
+     * @returns {Team} the object with the given ID
+     */
+    public getTeam(id: string): Observable<Team> {
+      let url = `${this.apiUrl}/teams/${id}`;
+      return this.http.get<Team>(url).pipe(
+          catchError(this.handleError_continue<Team>()),
+          share() //multicast to subscribers
+      );
+    }
+
+    /**
+     * POST (create) a new team
+     * @param {Team} team the object to create
+     * @returns {Team} the created object
+     */
+    public postTeam(team: Team): Observable<Team> {
+      let url = `${this.apiUrl}/teams`;
+      return this.http.post<Team>(url, team).pipe(
+          catchError(this.handleError_continue<Team>()),
+          share() //multicast to subscribers
+      );
+    }
+
+    /**
+     * PUT (update) a team
+     * @param {Team} team the object to update
+     * @returns {Team} the updated object
+     */
+    public putTeam(team: Team): Observable<Team> {
+      let url = `${this.apiUrl}/teams/${team.id}`;
+      return this.http.put<Team>(url, team).pipe(
+          catchError(this.handleError_continue<Team>()),
+          share() //multicast to subscribers
+      );
+    }
+
+    /**
+     * DELETE (remove) a team
+     * @param {Team} team the object to delete
+     * @returns {Observable<{}>}
+     */
+    public deleteTeam(team: Team): Observable<{}> {
+      let url = `${this.apiUrl}/teams/${team.id}`;
+      return this.http.delete<Object>(url).pipe(
+          catchError(this.handleError_continue<Object>()),
+          share() //multicast to subscribers
+      );
+  }
+          
 
     //   ___    ___      __  ___ _____ _____  __    _   ___ ___ ___
     //  | _ \  /_\ \    / / / __|_   _|_ _\ \/ /   /_\ | _ \_ _/ __|

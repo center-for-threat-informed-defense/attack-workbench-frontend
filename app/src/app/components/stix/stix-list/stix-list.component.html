@@ -14,19 +14,19 @@
                 <mat-form-field appearance="fill" *ngIf="config.showFilters && !(config.hasOwnProperty('stixObjects'))">
                     <mat-label>options</mat-label>
                     <mat-select multiple [(ngModel)]="filter" (selectionChange)="applyControls()">
-                      <mat-optgroup *ngIf="config.showUserSearch" label="users">
-                        <mat-option *ngIf="config.showUserSearch" disabled class="no-checkbox">
-                          <div class="user-search" (click)="openUserSelectModal()">
-                            <div>{{userSearchString}}</div>
-                            <div>
-                              <mat-icon aria-hidden="false" aria-label="select-users" matTooltip="Select users" class="align-right">open_in_new</mat-icon>
-                            </div>
-                          </div>
-                        </mat-option>             
-                      </mat-optgroup>
-                      <mat-optgroup *ngFor="let group of filterOptions" [label]="group.name" [disabled]="group.disabled">
-                          <mat-option *ngFor="let filter of group.values" [value]="filter.value" [disabled]="filter.disabled">{{filter.label}}</mat-option>
-                      </mat-optgroup>
+                        <mat-optgroup *ngIf="config.showUserSearch" label="users">
+                            <mat-option disabled class="no-checkbox">
+                                <div class="user-search" (click)="openUserSelectModal()">
+                                    <div>{{userSearchString}}</div>
+                                    <div>
+                                        <mat-icon aria-hidden="false" aria-label="select-users" matTooltip="Select users" class="align-right">open_in_new</mat-icon>
+                                    </div>
+                                </div>
+                            </mat-option>             
+                        </mat-optgroup>
+                        <mat-optgroup *ngFor="let group of filterOptions" [label]="group.name" [disabled]="group.disabled">
+                            <mat-option *ngFor="let filter of group.values" [value]="filter.value" [disabled]="filter.disabled">{{filter.label}}</mat-option>
+                        </mat-optgroup>
                     </mat-select>
                 </mat-form-field>
             </div>

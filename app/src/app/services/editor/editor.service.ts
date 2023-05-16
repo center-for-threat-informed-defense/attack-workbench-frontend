@@ -16,6 +16,7 @@ export class EditorService {
     public editable: boolean = false;
     public editing: boolean = false;
     public deletable: boolean = false;
+    public hasWorkflow: boolean = true;
     public hasRelationships: boolean = true;
     public onSave = new EventEmitter();
     public onDelete = new EventEmitter();
@@ -38,12 +39,16 @@ export class EditorService {
                 let editable = this.getEditableFromRoute(this.router.routerState, this.router.routerState.root);
                 let attackType = this.route.root.firstChild.snapshot.data.breadcrumb;
                 this.editable = editable.length > 0 && editable.every(x => x) && this.authenticationService.canEdit(attackType);
-                this.sidebarService.setEnabled("history", this.editable);
-                this.sidebarService.setEnabled("notes", this.editable);
-                if (!this.editable) this.sidebarService.currentTab = "references";
-
+                this.hasWorkflow = attackType !== 'home';
+                if (!(this.editable && this.hasWorkflow)) this.sidebarService.currentTab = "references";
+                this.sidebarService.setEnabled("history", this.editable && this.hasWorkflow);
+                this.sidebarService.setEnabled("notes", this.editable && this.hasWorkflow);
                 if (this.editable) {
-                    if (this.router.url.includes("/new") || ["matrix", "tactic", "collection"].includes(this.type)) {
+                    if (!this.hasWorkflow) {
+                        this.hasRelationships = false;
+                        if (this.type.includes('profile')) this.deletable = false;
+                        else this.deletable = true;
+                    } else if (this.router.url.includes("/new") || ["matrix", "tactic", "collection"].includes(this.type)) {
                         // new objects, matrices, tactics, and collections cannot be deleted
                         this.deletable = false;
                     } else {
@@ -51,7 +56,10 @@ export class EditorService {
                         // determine if this object has existing relationships
                         this.getRelationships().subscribe(rels => this.hasRelationships = rels > 0);
                     }
+
+                    console.log('** deletable', this.deletable)
                 }
+                if (!this.editable) this.sidebarService.currentTab = "references";
             }
         })
         this.route.queryParams.subscribe(params => {
@@ -105,11 +113,11 @@ export class EditorService {
                 map(dataSource => dataSource[0] && dataSource[0].data_components.length)
             );
         } else {
-            return this.restAPIConnectorService.getRelatedTo({sourceOrTargetRef: this.stixId}).pipe(
+            return this.restAPIConnectorService.getRelatedTo({ sourceOrTargetRef: this.stixId }).pipe(
                 map(relationships => {
                     return relationships.data.filter((r: Relationship) => {
                         // filter out subtechnique-of relationships, IFF this is the source object (sub-technique)
-                        // note: the subtechique-of relationship is automatically deleted with the sub-technique object
+                        // note: the subtechnique-of relationship is automatically deleted with the sub-technique object
                         return !(r.relationship_type == 'subtechnique-of' && r.source_object && r.source_object["stix"]["id"] == this.stixId)
                     }).length;
                 })

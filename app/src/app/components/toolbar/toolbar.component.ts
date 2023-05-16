@@ -23,6 +23,7 @@ export class ToolbarComponent implements OnInit {
 
     public get editing(): boolean { return this.editorService.editing; }
     public get editable(): boolean { return this.editorService.editable; }
+    public get hasWorkflow(): boolean { return this.editorService.hasWorkflow; }
     public get hasRelationships(): boolean { return this.editorService.hasRelationships; }
     public get deletable(): boolean { return this.editorService.deletable && this.authenticationService.canDelete(); }
 
