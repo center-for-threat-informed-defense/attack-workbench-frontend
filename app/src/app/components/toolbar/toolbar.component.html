@@ -10,7 +10,17 @@
                 <button mat-button class="control" [disabled]="!editing || hasRelationships" (click)="delete()"><mat-icon aria-label="delete">delete</mat-icon></button>
             </div>
             <app-object-status></app-object-status>
-            <button mat-button *ngIf="websiteIntegrationService.checkExternalUrlValidity()" class="control" matTooltip="view in att&ck website" (click)="websiteIntegrationService.checkExternalUrlValidity()"><mat-icon aria-label="view in att&ck website">open_in_new</mat-icon></button>
+            <span [matTooltip]="!websiteIntegrationService.websiteIntegrationStatus ? 'external website integration disabled' : (!websiteIntegrationService.currentWebIntegrationStatus.valid ? 'could not find object on att&ck website' : 'view object in att&ck website')">
+              <button mat-button 
+                [disabled]="!websiteIntegrationService.checkExternalUrlValidity()" 
+                class="control"
+                (click)="openExternalUrl()">
+                  <mat-icon>
+                    open_in_new
+                  </mat-icon>
+              </button>
+            </span>
+            
         </div>
         <div class="controls button-list section">
             <!-- <button mat-button class="control" matTooltip="back to top" [disabled]="!canScroll" (click)="emitScrollTop()"><mat-icon aria-label="back to top">vertical_align_top</mat-icon></button> -->
