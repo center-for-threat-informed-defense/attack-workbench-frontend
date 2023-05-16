@@ -30,7 +30,7 @@ export class RecentActivityComponent implements OnInit {
     @Input() public identities: string[]; // list of user IDs
     @Input() public showIdentity: boolean = true;
     public allRecentActivity: ActivityEvent[] = [];
-    public recentActivity: ActivityEvent[];
+    public recentActivity: ActivityEvent[] = [];
     public loading: boolean = false;
     public hoveredEvent: ActivityEvent = null;
     // Type map for redirections
@@ -53,26 +53,29 @@ export class RecentActivityComponent implements OnInit {
     }
 
     constructor(private restAPIService: RestApiConnectorService,
-                private dialog: MatDialog,
-                private router: Router,
-                private sidebarService: SidebarService) {
+        private dialog: MatDialog,
+        private router: Router,
+        private sidebarService: SidebarService) {
         // intentionally left blank
     }
 
     ngOnInit(): void {
-        this.loading = true;
         this.loadActivity();
     }
 
     /** load user activity and parse into events */
     public loadActivity() {
-        let subscription = this.getUserActivity().subscribe({
-          next: (results) => {
-              this.parseActivity(results as StixObject[]);
-              this.loading = false;
-          },
-          complete: () => { subscription.unsubscribe(); }
-        });
+        if (this.identities.length) {
+            this.loading = true;
+            let subscription = this.getUserActivity().subscribe({
+                next: (results) => {
+                    console.log('**', results.length)
+                    this.parseActivity(results as StixObject[]);
+                    this.loading = false;
+                },
+                complete: () => { subscription.unsubscribe(); }
+            });
+        }
     }
 
     /**
