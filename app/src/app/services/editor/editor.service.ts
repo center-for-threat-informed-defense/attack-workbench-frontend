@@ -45,12 +45,9 @@ export class EditorService {
                 this.sidebarService.setEnabled("notes", this.editable && this.hasWorkflow);
                 if (this.editable) {
                     if (!this.hasWorkflow) {
-                        if (this.stixId == 'teams') { // admin routes are prefixed w/ a '/admin'
-                          this.deletable = true;
-                          this.hasRelationships = false;
-                        } else {
-                          this.deletable = false;
-                        }
+                        this.hasRelationships = false;
+                        if (this.type.includes('profile')) this.deletable = false;
+                        else this.deletable = true;
                     } else if (this.router.url.includes("/new") || ["matrix", "tactic", "collection"].includes(this.type)) {
                         // new objects, matrices, tactics, and collections cannot be deleted
                         this.deletable = false;
@@ -59,6 +56,8 @@ export class EditorService {
                         // determine if this object has existing relationships
                         this.getRelationships().subscribe(rels => this.hasRelationships = rels > 0);
                     }
+
+                    console.log('** deletable', this.deletable)
                 }
                 if (!this.editable) this.sidebarService.currentTab = "references";
             }
@@ -114,7 +113,7 @@ export class EditorService {
                 map(dataSource => dataSource[0] && dataSource[0].data_components.length)
             );
         } else {
-            return this.restAPIConnectorService.getRelatedTo({sourceOrTargetRef: this.stixId}).pipe(
+            return this.restAPIConnectorService.getRelatedTo({ sourceOrTargetRef: this.stixId }).pipe(
                 map(relationships => {
                     return relationships.data.filter((r: Relationship) => {
                         // filter out subtechnique-of relationships, IFF this is the source object (sub-technique)

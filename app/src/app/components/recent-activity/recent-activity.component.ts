@@ -69,7 +69,6 @@ export class RecentActivityComponent implements OnInit {
             this.loading = true;
             let subscription = this.getUserActivity().subscribe({
                 next: (results) => {
-                    console.log('**', results.length)
                     this.parseActivity(results as StixObject[]);
                     this.loading = false;
                 },
