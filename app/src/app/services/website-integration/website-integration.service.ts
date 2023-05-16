@@ -40,7 +40,7 @@ export class WebsiteIntegrationService {
       }
       // retrieve object
       if (this.editorService.type == "software") data$ = this.restAPIService.getSoftware(this.editorService.stixId);
-      else if (this.editorService.type == "group") data$ = this.restAPIService.getSoftware(this.editorService.stixId);
+      else if (this.editorService.type == "group") data$ = this.restAPIService.getGroup(this.editorService.stixId);
       else if (this.editorService.type == "matrix") data$ = this.restAPIService.getMatrix(this.editorService.stixId);
       else if (this.editorService.type == "mitigation") data$ = this.restAPIService.getMitigation(this.editorService.stixId);
       else if (this.editorService.type == "tactic") data$ = this.restAPIService.getTactic(this.editorService.stixId);
