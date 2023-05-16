@@ -9,9 +9,14 @@ import { DefaultMarkingDefinitionsComponent } from './views/admin-page/default-m
 import { ProfilePageComponent } from './views/profile-page/profile-page.component';
 import { AuthorizationGuard } from './services/helpers/authorization.guard';
 import { Role } from './classes/authn/role';
+import { TeamsListPageComponent } from './views/admin-page/teams/teams-list-page/teams-list-page.component';
+import { TeamsViewPageComponent } from './views/admin-page/teams/teams-view-page/teams-view-page.component';
 
 
 //see also https://www.npmjs.com/package/angular-crumbs
+
+var editRoles = [Role.EDITOR, Role.ADMIN];
+
 const routes: Routes = [
     {
         "path": "",
@@ -74,7 +79,34 @@ const routes: Routes = [
                             "title": "Default Marking Definitions"
                         },
                         "component": DefaultMarkingDefinitionsComponent,
-                    }
+                    },
+                    {
+                      "path": "teams",
+                      "data": {
+                          "breadcrumb": "teams",
+                          "title": "Teams"
+                      },
+                      "children": [
+                        {
+                            "path": "",
+                            "data": {
+                                "breadcrumb": "teams",
+                                "title": "Teams"
+                            },
+                            "component": TeamsListPageComponent,
+                        },
+                        {
+                            "path": ":id",
+                            "data": {
+                                "breadcrumb": "view team",
+                                "editable": true,
+                                "title": "View Team",
+                                "editRoles": editRoles
+                            },
+                            "component": TeamsViewPageComponent,
+                        },
+                      ]
+                    },
                 ]
             },
             {

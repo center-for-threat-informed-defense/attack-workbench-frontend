@@ -194,6 +194,10 @@ import { CampaignListComponent } from './views/stix/campaign/campaign-list/campa
 
 import { NotesSearchListComponent } from './views/notes-page/notes-search-list/notes-search-list.component';
 
+import { TeamsListPageComponent } from './views/admin-page/teams/teams-list-page/teams-list-page.component';
+import { TeamsViewPageComponent } from './views/admin-page/teams/teams-view-page/teams-view-page.component';
+import { CreateNewDialogComponent } from './components/create-new-dialog/create-new-dialog.component';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -316,6 +320,9 @@ import { NotesSearchListComponent } from './views/notes-page/notes-search-list/n
     CitationViewComponent,
     CitationEditComponent,
     NotesSearchListComponent,
+    TeamsListPageComponent,
+    TeamsViewPageComponent,
+    CreateNewDialogComponent,
     UsersListComponent
   ],
   imports: [

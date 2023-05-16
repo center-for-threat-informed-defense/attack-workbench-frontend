@@ -43,11 +43,14 @@ export class EditorService {
                 if (!(this.editable && this.hasWorkflow)) this.sidebarService.currentTab = "references";
                 this.sidebarService.setEnabled("history", this.editable && this.hasWorkflow);
                 this.sidebarService.setEnabled("notes", this.editable && this.hasWorkflow);
-
                 if (this.editable) {
                     if (!this.hasWorkflow) {
-                        // user accounts/teams cannot be deleted
-                        this.deletable = false;
+                        if (this.stixId == 'teams') { // admin routes are prefixed w/ a '/admin'
+                          this.deletable = true;
+                          this.hasRelationships = false;
+                        } else {
+                          this.deletable = false;
+                        }
                     } else if (this.router.url.includes("/new") || ["matrix", "tactic", "collection"].includes(this.type)) {
                         // new objects, matrices, tactics, and collections cannot be deleted
                         this.deletable = false;
@@ -57,6 +60,7 @@ export class EditorService {
                         this.getRelationships().subscribe(rels => this.hasRelationships = rels > 0);
                     }
                 }
+                if (!this.editable) this.sidebarService.currentTab = "references";
             }
         })
         this.route.queryParams.subscribe(params => {
@@ -114,7 +118,7 @@ export class EditorService {
                 map(relationships => {
                     return relationships.data.filter((r: Relationship) => {
                         // filter out subtechnique-of relationships, IFF this is the source object (sub-technique)
-                        // note: the subtechique-of relationship is automatically deleted with the sub-technique object
+                        // note: the subtechnique-of relationship is automatically deleted with the sub-technique object
                         return !(r.relationship_type == 'subtechnique-of' && r.source_object && r.source_object["stix"]["id"] == this.stixId)
                     }).length;
                 })
