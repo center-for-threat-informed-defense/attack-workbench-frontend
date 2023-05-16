@@ -14,8 +14,8 @@ export class WebsiteIntegrationService {
     'matrix': 'matrices',
     'group': 'groups',
     'mitigation': 'mitigations',
-    'tactic': 'mitigations',
-    'campaign': 'tactics',
+    'tactic': 'tactics',
+    'campaign': 'campaigns',
     'technique': 'techniques',
     'data-source': 'datasources',
   }
@@ -83,7 +83,7 @@ export class WebsiteIntegrationService {
                   return this.currentWebIntegrationStatus.valid;
                 },
                 (error) => {
-                  this.currentWebIntegrationStatus.valid = true;
+                  this.currentWebIntegrationStatus.valid = false;
                   return this.currentWebIntegrationStatus.valid;
                 }
               );
