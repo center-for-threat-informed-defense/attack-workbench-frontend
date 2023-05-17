@@ -139,13 +139,13 @@ export class RestApiConnectorService extends ApiConnector {
     private getStixObjectsFactory<T extends StixObject>(attackType: AttackType) {
         let attackClass = attackTypeToClass[attackType];
         let plural = attackTypeToPlural[attackType]
-        return function<P extends T>(options?: { limit?: number, 
-                                                 offset?: number, 
-                                                 state?: string, 
-                                                 includeRevoked?: boolean, 
-                                                 includeDeprecated?: boolean, 
-                                                 versions?: "all" | "latest", 
-                                                 excludeIDs?: string[], 
+        return function<P extends T>(options?: { limit?: number,
+                                                 offset?: number,
+                                                 state?: string,
+                                                 includeRevoked?: boolean,
+                                                 includeDeprecated?: boolean,
+                                                 versions?: "all" | "latest",
+                                                 excludeIDs?: string[],
                                                  search?: string,
                                                  platforms?: string[],
                                                  domains?: string[]
@@ -486,7 +486,7 @@ export class RestApiConnectorService extends ApiConnector {
                                 let s = rel as any;
                                 return s.data.map(rel => new Technique(rel.source_object)); //transform them to Techniques
                             }),
-                            map(subs => { //add the sub-techniques to the parent
+                            map(subs => { //add the sub-techniques to the parent do this for matrix
                                 let s = subs as any[];
                                 t.subTechniques = s;
                                 return [t];
@@ -1065,6 +1065,42 @@ export class RestApiConnectorService extends ApiConnector {
             share()
         )
     }
+        /**
+     * Get all techniques referencing the given tactic
+     * @param {string} tactic_id the stix id of the tactic
+     * @param {Date} modified the modified date of the tactic
+     * @returns {Technique[]} a list of techniques that reference the tactic
+     */
+        public getTechniquesInMatrix(matrix: Matrix, matrix_id: string, modified: Date): Observable<any> {
+          let url = `${this.apiUrl}/matrices/${matrix_id}/modified/${modified.toISOString()}/techniques`;
+          return this.http.get(url).pipe(
+              tap(results => logger.log("retrieved techniques", results)),
+              map(response => {
+                  let data = response as Array<any>;
+                  let entries = Object.entries(data)
+                  entries.forEach((item) => {
+                    let tactic = new Tactic(item[1])
+                    let techniqueList = item[1].techniques;
+                    techniqueList.forEach((item) => {
+                      let technique = new Technique(item);
+                      if (item.subtechniques.length > 0) {
+                        item.subtechniques.forEach((subtechnique) => {
+                          technique.subTechniques.push(new Technique(subtechnique))
+                        })
+                      }
+                      technique.subTechniques.sort((a,b) => a.name.toLowerCase().localeCompare(b.name.toLowerCase()))
+                      tactic.technique_objects.push(technique);
+                    })
+                    tactic.technique_objects.sort((a,b) => a.name.toLowerCase().localeCompare(b.name.toLowerCase()))
+                    matrix.tactic_objects.push(tactic)
+                  })
+                  return matrix;
+              }),
+              catchError(this.handleError_continue([])),
+              share()
+          )
+      }
+
 
     /**
      * Get all tactics referenced by the given technique
