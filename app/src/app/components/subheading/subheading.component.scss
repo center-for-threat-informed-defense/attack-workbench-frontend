@@ -2,6 +2,11 @@
 .app-subheading {
     display: flex;
     align-items: center;
+
+    .section-header-section.source {
+        display: flex;
+        align-items: center;
+    }
 }
 
 .historyPeek {

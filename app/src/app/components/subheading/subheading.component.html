@@ -20,6 +20,14 @@
                 object: config.object
             }"></app-statement-property>
         </div>
+        <div class="section-header-section source">
+            <span>Source:&nbsp;</span>
+            <app-identity-property [config]="{
+                object: config.object,
+                field: 'created_by',
+                displayName: true
+            }"></app-identity-property>
+        </div>
     </div>
 </div>
 
