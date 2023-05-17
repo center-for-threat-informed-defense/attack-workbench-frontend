@@ -25,22 +25,21 @@
                         <mat-icon>bookmark</mat-icon>
                     </h3>
                 </button>
-
-                <button mat-raised-button color="primary" routerLink="teams">
-                  <h2>
-                    <br>Teams
-                  </h2>
-                  <h3 class="display-icon">
-                      <mat-icon>groups</mat-icon>
-                  </h3>
-                </button>
-
             </div>
         </div>
     </div>
     <div class="row">
       <div class="col center">
           <div>
+            <button mat-raised-button color="primary" routerLink="teams">
+                <h2>
+                  <br>Teams
+                </h2>
+                <h3 class="display-icon">
+                    <mat-icon>groups</mat-icon>
+                </h3>
+              </button>
+
               <button mat-raised-button color="primary" routerLink="user-accounts" [matBadge]="pendingUsers" matBadgeDescription="pending users">
                   <h2>
                       User<br>Accounts
