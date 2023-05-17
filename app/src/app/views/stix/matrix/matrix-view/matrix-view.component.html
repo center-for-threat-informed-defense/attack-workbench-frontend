@@ -59,14 +59,8 @@
           <button mat-stroked-button (click)="toggleAllSubtechniquesVisible(true)">Show all subtechniques</button>
           <button mat-stroked-button (click)="toggleAllSubtechniquesVisible(false)">Hide all subtechniques</button>
         </div>
-        <app-matrix-side *ngIf="view==='side' && all_tactics;" [config]="{
-          matrixMap: matrixMap,
-          field: 'name',
-          tacticList: tacticList}"></app-matrix-side>
-        <app-matrix-flat *ngIf="view==='flat' && all_tactics;" [config]="{
-          matrixMap: matrixMap,
-          field: 'name',
-          tacticList: tacticList}"></app-matrix-flat>
+        <app-matrix-side *ngIf="view==='side' && thisMatrix;" [matrix]="thisMatrix"></app-matrix-side>
+        <app-matrix-flat *ngIf="view==='flat' && thisMatrix;" [matrix]="thisMatrix"></app-matrix-flat>
         <ng-template *ngIf="!all_tactics">
             <app-loading-overlay></app-loading-overlay>
         </ng-template>
