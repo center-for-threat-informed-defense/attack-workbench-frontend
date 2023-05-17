@@ -6,10 +6,10 @@
     <span>
       {{technique.name}}
     </span>
-    <ng-container *ngIf="!technique.is_subtechnique">
+    <ng-container *ngIf="technique.subTechniques.length > 0">
       <sub>
         <!-- set this to be the number of subtechiques -->
-        (2)
+        ({{technique.subTechniques.length}})
       </sub>
     </ng-container>
 
