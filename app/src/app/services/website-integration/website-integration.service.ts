@@ -76,6 +76,8 @@ export class WebsiteIntegrationService {
                 additionalPath = '/mobile/';
               } else if (attackID == 'ics-attack') {
                 additionalPath = '/ics/';
+              } else {
+                return false;
               }
             } else {
               // for sub-objects we need to split based on the '.' delimiter in the url
