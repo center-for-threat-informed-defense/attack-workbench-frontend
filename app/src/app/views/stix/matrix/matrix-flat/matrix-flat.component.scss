@@ -39,7 +39,11 @@ $sizeunit: 14px;
           height: 1px;
       }
     }
-
+    td.technique {
+      .dark & { border: 1px solid border-color(dark) }
+      .light & { border: 1px solid on-color-deemphasis(light) }
+      border: 1px solid on-color-deemphasis(light);
+    }
     .supertechnique {
       border-collapse: collapse;
       width: 100%;
@@ -56,12 +60,6 @@ $sizeunit: 14px;
       td {
           padding: 0;
           vertical-align: top;
-
-          &.technique {
-            .dark & { border: 1px solid border-color(dark) }
-            .light & { border: 1px solid on-color-deemphasis(light) }
-            border: 1px solid on-color-deemphasis(light)
-          }
       }
     }
 

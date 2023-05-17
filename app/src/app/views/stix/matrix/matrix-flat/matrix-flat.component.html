@@ -2,16 +2,24 @@
   <table class="matrix flat">
     <thead>
       <tr class="tactic">
-        <td *ngFor="let item of tacticList">
-          <app-tactic-cell [tactic]="item" [count]="10" [showID]="showID"></app-tactic-cell>
+        <td *ngFor="let tactic of matrix.tactic_objects">
+          <app-tactic-cell [tactic]="tactic" [count]="10" [showID]="showID"></app-tactic-cell>
         </td>
       </tr>
     </thead>
     <tbody>
       <tr>
-        <td *ngFor="let item of tacticList" class="tactic" style="vertical-align: top; padding-right: 5px;">
-          <ng-container *ngFor="let technique of matrixMap.get(item.stixID)">
-            <tr *ngIf="!technique.is_subtechnique">
+        <td *ngFor="let tactic of matrix.tactic_objects" class="tactic" style="vertical-align: top; padding-right: 5px;">
+          <ng-container *ngFor="let technique of tactic.technique_objects">
+            <tr *ngIf="technique.subTechniques.length <=0">
+              <td class="technique">
+                <app-technique-cell [technique]="technique"
+                  [tactic]="tactic"
+                  [showID]="showID">
+                </app-technique-cell>
+              </td>
+            </tr>
+            <tr *ngIf="technique.subTechniques.length > 0">
               <table class="supertechnique">
                 <tr>
                   <td class="sidebar technique" (click)="onToggleSubtechniquesVisible(technique, tactic)" style="vertical-align: middle;">
@@ -19,9 +27,8 @@
                   </td>
                   <td class="technique">
                     <app-technique-cell [technique]="technique"
-                      [tactic]="getTactic(technique)"
-                      [showID]="showID"
-                      (leftclick)="onTechniqueLeftClick($event, technique, tacticList[i])">
+                      [tactic]="tactic"
+                      [showID]="showID">
                     </app-technique-cell>
                   </td>
                 </tr>
@@ -32,18 +39,10 @@
                     </svg>
                     </td>
                     <td class="subtechniques">
-                      <div class="subtechnique">
-                        <app-technique-cell [technique]="technique"
-                          [tactic]="getTactic(technique)"
-                          [showID]="showID"
-                          (leftclick)="onTechniqueLeftClick($event, technique, tacticList[i])">
-                        </app-technique-cell>
-                      </div>
-                      <div class="subtechnique">
-                        <app-technique-cell [technique]="technique"
-                          [tactic]="getTactic(technique)"
-                          [showID]="showID"
-                          (leftclick)="onTechniqueLeftClick($event, technique, tacticList[i])">
+                      <div *ngFor="let subtechnique of technique.subTechniques" class="subtechnique">
+                        <app-technique-cell [technique]="subtechnique"
+                          [tactic]="tactic"
+                          [showID]="showID">
                         </app-technique-cell>
                       </div>
                     </td>
