@@ -9,7 +9,7 @@
             <div *ngIf="deletable" class="button-tooltip" [matTooltip]="editing ? (hasRelationships ? 'an object with relationships cannot be deleted' : 'delete') : ''">
                 <button mat-button class="control" [disabled]="!editing || hasRelationships" (click)="delete()"><mat-icon aria-label="delete">delete</mat-icon></button>
             </div>
-            <app-object-status></app-object-status>
+            <app-object-status *ngIf="hasWorkflow"></app-object-status>
         </div>
         <div class="controls button-list section">
             <!-- <button mat-button class="control" matTooltip="back to top" [disabled]="!canScroll" (click)="emitScrollTop()"><mat-icon aria-label="back to top">vertical_align_top</mat-icon></button> -->

@@ -168,8 +168,7 @@
             }"></app-list-property>
         </div>
         <ng-container *ngIf="showTacticField('privilege-escalation', 'permissions_required') || showTacticField('privilege-escalation', 'effective_permissions')
-                            || showTacticField('impact', 'impact_type') || showTacticField('defense-evasion', 'defense_bypassed') || technique.tactics.includes('execution')
-                            || technique.tactics.includes('exfiltration')">
+                            || showTacticField('impact', 'impact_type') || showTacticField('defense-evasion', 'defense_bypassed') || technique.tactics.includes('execution')">
             <!-- Display only if tactic specific fields exist -->
             <div class="col arrow">
                 <mat-icon>arrow_forward</mat-icon>
@@ -221,16 +220,6 @@
                         <div class="content no-label">
                             <mat-checkbox [(ngModel)]="technique.supports_remote"  [disabled]="!editing">
                                 Supports Remote?
-                            </mat-checkbox>
-                        </div>
-                    </div>
-                </div>
-                <!-- REQUIRES NETWORK -->
-                <div *ngIf="technique.tactics.includes('exfiltration')" class="row">
-                    <div class="labelled-box grow-to-row">
-                        <div class="content no-label">
-                            <mat-checkbox [(ngModel)]="technique.requires_network"  [disabled]="!editing">
-                                Requires Network?
                             </mat-checkbox>
                         </div>
                     </div>

@@ -8,7 +8,6 @@ import { Tactic } from "./tactic";
 
 export class Technique extends StixObject {
     public name: string = "";
-
     public kill_chain_phases: any = [];
     public domains: string[] = [];
     public platforms: string[] = [];
@@ -21,10 +20,7 @@ export class Technique extends StixObject {
     public effective_permissions: string[] = [];
     public impact_type: string[] = [];
     public contributors: string[] = [];
-
     public supports_remote: boolean = false;
-    public requires_network: boolean = false;
-
     public is_subtechnique: boolean = false;
     public show_subtechniques: boolean = false;
 
@@ -140,7 +136,6 @@ export class Technique extends StixObject {
             if (this.tactics.includes('defense-evasion')) rep.stix.x_mitre_defense_bypassed = this.defense_bypassed.map(x => x.trim());
             if (this.tactics.includes('execution')) rep.stix.x_mitre_remote_support = this.supports_remote;
             if (this.tactics.includes('impact')) rep.stix.x_mitre_impact_type = this.impact_type;
-            if (this.tactics.includes('exfiltration')) rep.stix.x_mitre_network_requirements = this.requires_network;
         }
 
         // mtc & capec ids
@@ -240,11 +235,6 @@ export class Technique extends StixObject {
             if ("x_mitre_remote_support" in sdo) {
                 if (typeof(sdo.x_mitre_remote_support) === "boolean") this.supports_remote = sdo.x_mitre_remote_support;
                 else logger.error("TypeError: supports remote field is not a boolean:", sdo.x_mitre_remote_support, "(", typeof(sdo.x_mitre_remote_support),")")
-            }
-
-            if ("x_mitre_network_requirements" in sdo) {
-                if (typeof(sdo.x_mitre_network_requirements) === "boolean") this.requires_network = sdo.x_mitre_network_requirements;
-                else logger.error("TypeError: requires network field is not a boolean:", sdo.x_mitre_network_requirements, "(", typeof(sdo.x_mitre_network_requirements),")")
             }
 
             if ("x_mitre_impact_type" in sdo) {

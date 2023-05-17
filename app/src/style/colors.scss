@@ -14,6 +14,7 @@ $mitre-blue: #005b94;
 $spark-yellow: #fff601;
 $balanced-blue: #0096d1;
 $engenuity-gray: #f0f1f2;
+$engenuity-dark-gray: #B2B2B2;
 
 $colors: (
     // angular palette colors
@@ -29,6 +30,7 @@ $colors: (
     spark-yellow: (color: $spark-yellow, on-color: black),
     balanced-blue: (color: $balanced-blue, on-color: black),
     engenuity-gray: (color: $engenuity-gray, on-color: #050505),
+    engenuity-dark-gray: ((color: $engenuity-dark-gray, on-color: #050505)),
     // snackbar colors
     success: (color: #599e2f, on-color: black),
     warn: (color: #eb6635, on-color: black),

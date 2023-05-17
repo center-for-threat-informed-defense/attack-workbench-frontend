@@ -12,6 +12,7 @@ export class UserAccount extends Serializable {
     public username: string;
     private _displayName: string;
     public get displayName(): string { return this._displayName ? this._displayName : this.username }
+    public set displayName(input: string) { this._displayName = input; }
     public status: Status;
     public role: Role;
     public created: Date;
