@@ -10,9 +10,9 @@
                 <button mat-button class="control" [disabled]="!editing || hasRelationships" (click)="delete()"><mat-icon aria-label="delete">delete</mat-icon></button>
             </div>
             <app-object-status *ngIf="hasWorkflow"></app-object-status>
-            <span [matTooltip]="!websiteIntegrationService.websiteIntegrationStatus ? 'external website integration disabled' : (!websiteIntegrationService.currentWebIntegrationStatus.valid ? 'could not find object on att&ck website' : 'view object in att&ck website')">
+            <span [matTooltip]="!websiteIntegrationService.websiteIntegrationEnabled ? 'external website integration disabled' : (!websiteIntegrationService.currentWebIntegrationStatus.valid ? 'could not find object on att&ck website' : 'view object in att&ck website')">
               <button mat-button 
-                [disabled]="!websiteIntegrationService.checkExternalUrlValidity()" 
+                [disabled]="!websiteIntegrationService.checkExternalUrlValidity(editorService.stixId)" 
                 class="control"
                 (click)="openExternalUrl()">
                   <mat-icon>
