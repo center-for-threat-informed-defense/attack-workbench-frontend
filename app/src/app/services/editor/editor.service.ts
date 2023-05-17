@@ -56,8 +56,6 @@ export class EditorService {
                         // determine if this object has existing relationships
                         this.getRelationships().subscribe(rels => this.hasRelationships = rels > 0);
                     }
-
-                    console.log('** deletable', this.deletable)
                 }
                 if (!this.editable) this.sidebarService.currentTab = "references";
             }
