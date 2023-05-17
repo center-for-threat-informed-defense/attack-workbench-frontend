@@ -18,7 +18,6 @@ export class MatrixViewComponent extends StixViewPage implements OnInit {
     public view: String = "side";
     public get matrix(): Matrix { return this.config.object as Matrix; }
     public thisMatrix : Matrix;
-    public tacticList = [];
 
     constructor(private restAPIConnectorService: RestApiConnectorService, authenticationService: AuthenticationService) {
         super(authenticationService);

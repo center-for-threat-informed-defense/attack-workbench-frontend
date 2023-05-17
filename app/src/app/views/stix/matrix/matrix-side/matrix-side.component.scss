@@ -53,31 +53,31 @@ $sizeunit: 14px;
           height: 1px;
       }
     }
+    td.technique {
+      padding: 0;
+      margin: 0;
+
+      vertical-align: top;
+      .dark & {
+        background-color: color(engenuity-black);
+        color: white;
+        border: 1px solid border-color(dark)
+       }
+      .light & {
+        background-color: white;
+        color: black;
+        border: 1px solid on-color-deemphasis(light)
+      }
+    }
 
     .supertechnique {
       border-collapse: collapse;
       width: 100%;
       padding: 0;
       margin: 0;
-      .dark & {
-        background-color: color(engenuity-black);
-        color: white;
-       }
-      .light & {
-        background-color: white;
-        color: black;
-      }
       td {
           padding: 0;
           vertical-align: top;
-
-          &.technique {
-            .dark & { border: 1px solid border-color(dark) }
-            .light & { border: 1px solid on-color-deemphasis(light) }
-
-              // outline: 1px solid #dfdfdf;
-              // outline-offset: -1px;
-          }
       }
     }
 
