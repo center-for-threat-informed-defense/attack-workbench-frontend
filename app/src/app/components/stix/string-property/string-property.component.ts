@@ -26,7 +26,7 @@ export interface StringPropertyConfig {
      * Note: if mode is diff, pass an array of two objects to diff
      */
     object: StixObject | [StixObject, StixObject];
-    /* the field of the object(s) to visualize as a list */
+    /* the field of the object(s) */
     field: string;
     /* if specified, label with this string instead of field */
     label?: string;

@@ -48,6 +48,16 @@
             }"></app-string-property>
         </div>
     </div>
+    <!-- teams -->
+    <div class="row">
+        <div class="col" class="labelled-box grow-to-row">
+            <div class="content">
+                <span *ngIf="!loading">{{teamNames.join(', ')}}</span>
+                <mat-spinner *ngIf="loading" diameter="20"></mat-spinner>
+            </div>
+            <label>Teams</label>
+        </div>
+    </div>
     <!-- recent activity -->
     <ng-container *ngIf="canEdit">
         <div class="row">
