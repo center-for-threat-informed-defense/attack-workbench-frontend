@@ -24,7 +24,7 @@ export const environment = {
         attack_website: {
           // configuration for the ATT&CK Website
           // https://github.com/mitre-attack/attack-website
-          enabled: true, // if false, the attack website integration will not work
+          enabled: false, // if false, the attack website integration will not work
           url: "https://attack.mitre.org"
         }
     }

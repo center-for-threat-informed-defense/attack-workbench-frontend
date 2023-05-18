@@ -28,8 +28,8 @@ export const environment = {
         attack_website: {
           // configuration for the ATT&CK Website
           // https://github.com/mitre-attack/attack-website
-          enabled: true, // if false, the attack website integration will not work
-          url: "http://localhost:4900"
+          enabled: false, // if false, the attack website integration will not work
+          url: "http://localhost:8000"
         }
     }
 };
