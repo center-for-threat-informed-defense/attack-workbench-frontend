@@ -36,6 +36,7 @@ export class WebsiteIntegrationService {
   public checkExternalUrlValidity(stixIdToCheck) {
     // if the integration is disabled, if the stixId passed in is not truthy, or if the stixId is 'new' we can auto-return false
     if (this.websiteIntegrationEnabled == false || !stixIdToCheck || stixIdToCheck == 'new') {
+      this.currentWebIntegrationStatus = {url:null, valid: false, stixId: stixIdToCheck};
       return false;
     }
     // if the stixId matches the currently held stixId, no need to do the HTTP reqs
