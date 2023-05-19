@@ -61,7 +61,7 @@
         </div>
         <app-matrix-side *ngIf="view==='side' && thisMatrix;" [matrix]="thisMatrix"></app-matrix-side>
         <app-matrix-flat *ngIf="view==='flat' && thisMatrix;" [matrix]="thisMatrix"></app-matrix-flat>
-        <ng-template *ngIf="!all_tactics">
+        <ng-template *ngIf="!thisMatrix">
             <app-loading-overlay></app-loading-overlay>
         </ng-template>
       </div>

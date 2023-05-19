@@ -12,12 +12,16 @@
         <td *ngFor="let tactic of matrix.tactic_objects" class="tactic" style="vertical-align: top; padding-right: 5px;">
           <ng-container *ngFor="let technique of tactic.technique_objects">
             <tr *ngIf="technique.subTechniques.length <=0">
-              <td class="technique">
-                <app-technique-cell [technique]="technique"
-                  [tactic]="tactic"
-                  [showID]="showID">
-                </app-technique-cell>
-              </td>
+              <table class="regularTechnique">
+                <tr>
+                  <td class="technique">
+                    <app-technique-cell [technique]="technique"
+                      [tactic]="tactic"
+                      [showID]="showID">
+                    </app-technique-cell>
+                  </td>
+                </tr>
+              </table>
             </tr>
             <tr *ngIf="technique.subTechniques.length > 0">
               <table class="supertechnique">

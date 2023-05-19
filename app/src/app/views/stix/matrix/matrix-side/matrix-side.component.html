@@ -13,13 +13,17 @@
           <table class="techniques-table">
             <ng-container *ngFor="let technique of tactic.technique_objects">
               <tr *ngIf="technique.subTechniques.length <= 0">
-                <td class="technique">
-                  <app-technique-cell [technique]="technique"
-                    [tactic]="tactic"
-                    [showID]="showID"
-                    (leftclick)="onTechniqueLeftClick($event, technique, tactic)">
-                  </app-technique-cell>
-                </td>
+                <table class="regularTechnique">
+                  <tr>
+                    <td class="technique">
+                      <app-technique-cell [technique]="technique"
+                        [tactic]="tactic"
+                        [showID]="showID"
+                        (leftclick)="onTechniqueLeftClick($event, technique, tactic)">
+                      </app-technique-cell>
+                    </td>
+                  </tr>
+                </table>
               </tr>
               <tr *ngIf="technique.subTechniques.length > 0" [ngStyle]="{'width': technique.show_subtechniques ? '400px' : '170px'}">
                 <td>
