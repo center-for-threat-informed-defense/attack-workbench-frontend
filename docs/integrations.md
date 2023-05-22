@@ -125,3 +125,5 @@ Run `python3 update-attack.py` to build the website using the current Workbench 
 Copy the files from output to your web server or use `python3 -m http.server [port]` to host for local browsing.
 
 If the data within the Workbench changes you will need to rebuild the site (from step 3) again; for this reason you may want to consider re-running your build and deploy pipeline at regular intervals using `cron` to keep the data synchronized with the contents of the Workbench.
+
+Within the environment of the ATT&CK Workbench angular project, you can set the url of the ATT&CK Website instance you wish to point to with the `environment.attack_website.url` property and enable the ATT&CK website integration with the `environment.attack_website.enabled` property.  Setting the url properly and enabling the integration will allow an option to view ATT&CK objects from the Workbench within the ATT&CK Website with the simple click of a button found in the toolbar.

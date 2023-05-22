@@ -24,6 +24,12 @@ export const environment = {
             // https://github.com/center-for-threat-informed-defense/attack-workbench-collection-manager
             enabled: true, //if false, all systems for collection management will be disabled
             url: "http://localhost:3001/cm-api"
+        },
+        attack_website: {
+          // configuration for the ATT&CK Website
+          // https://github.com/mitre-attack/attack-website
+          enabled: false, // if false, the ATT&CK website integration will not work
+          url: "http://localhost:8000"
         }
     }
 };
