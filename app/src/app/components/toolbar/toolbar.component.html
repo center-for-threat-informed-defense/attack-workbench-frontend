@@ -10,6 +10,17 @@
                 <button mat-button class="control" [disabled]="!editing || hasRelationships" (click)="delete()"><mat-icon aria-label="delete">delete</mat-icon></button>
             </div>
             <app-object-status *ngIf="hasWorkflow"></app-object-status>
+            <span *ngIf="websiteIntegrationService.websiteIntegrationEnabled && hasWorkflow" [matTooltip]="!websiteIntegrationService.checkExternalUrlValidity(editorService.stixId) ? 'could not find object on ATT&CK website' : 'view object in ATT&CK website'">
+              <button mat-button 
+                [disabled]="!websiteIntegrationService.currentWebIntegrationStatus.valid" 
+                class="control"
+                (click)="openExternalUrl()">
+                  <mat-icon>
+                    open_in_new
+                  </mat-icon>
+              </button>
+            </span>
+            
         </div>
         <div class="controls button-list section">
             <!-- <button mat-button class="control" matTooltip="back to top" [disabled]="!canScroll" (click)="emitScrollTop()"><mat-icon aria-label="back to top">vertical_align_top</mat-icon></button> -->

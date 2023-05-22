@@ -40,6 +40,7 @@
 -   Added admin interface for creating and managing teams
 -   Added ability to search objects by one or more users.
 -   Added a new user profile page where logged in users can view their recent activity across the Workbench and view/edit their display name.
+- 	Added ability to view att&ck objects from workbench on an external att&ck website if they exist
 
 ## 21 April 2023
 
