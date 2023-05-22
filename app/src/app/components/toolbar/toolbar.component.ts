@@ -26,6 +26,7 @@ export class ToolbarComponent implements OnInit {
     public get hasWorkflow(): boolean { return this.editorService.hasWorkflow; }
     public get hasRelationships(): boolean { return this.editorService.hasRelationships; }
     public get deletable(): boolean { return this.editorService.deletable && this.authenticationService.canDelete(); }
+    public get isGroup(): boolean {return this.editorService.isGroup;}
 
     public get isLoggedIn(): boolean { return this.authenticationService.isLoggedIn; }
 
@@ -70,5 +71,9 @@ export class ToolbarComponent implements OnInit {
 
     public openExternalUrl() {
       window.open(this.websiteIntegrationService.currentWebIntegrationStatus.url)
+    }
+
+    public createCollectionFromGroup() {
+      
     }
 }
