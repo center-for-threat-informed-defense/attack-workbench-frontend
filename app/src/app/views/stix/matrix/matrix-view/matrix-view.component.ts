@@ -17,7 +17,7 @@ export class MatrixViewComponent extends StixViewPage implements OnInit {
 
     public view: String = "side";
     public get matrix(): Matrix { return this.config.object as Matrix; }
-    public thisMatrix : Matrix;
+    public loaded = false;
 
     constructor(private restAPIConnectorService: RestApiConnectorService, authenticationService: AuthenticationService) {
         super(authenticationService);
@@ -27,9 +27,7 @@ export class MatrixViewComponent extends StixViewPage implements OnInit {
 
         if (!this.config.hasOwnProperty('showRelationships') || this.config.showRelationships) {
             let subscription = this.restAPIConnectorService.getTechniquesInMatrix(this.matrix).subscribe({
-                next: (data) => {
-                  this.thisMatrix = data;
-                },
+                next: () => { this.loaded = true },
                 complete: () => { subscription.unsubscribe(); } //prevent memory leaks
             })
         }

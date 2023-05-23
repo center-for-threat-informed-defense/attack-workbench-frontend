@@ -59,9 +59,11 @@
           <button mat-stroked-button (click)="toggleAllSubtechniquesVisible(true)">Show all subtechniques</button>
           <button mat-stroked-button (click)="toggleAllSubtechniquesVisible(false)">Hide all subtechniques</button>
         </div>
-        <app-matrix-side *ngIf="view==='side' && thisMatrix;" [matrix]="thisMatrix"></app-matrix-side>
-        <app-matrix-flat *ngIf="view==='flat' && thisMatrix;" [matrix]="thisMatrix"></app-matrix-flat>
-        <ng-template *ngIf="!thisMatrix">
+        <ng-container *ngIf="loaded else loadingDisplay">
+          <app-matrix-side *ngIf="view==='side'" [matrix]="matrix"></app-matrix-side>
+          <app-matrix-flat *ngIf="view==='flat'" [matrix]="matrix"></app-matrix-flat>
+        </ng-container>
+        <ng-template #loadingDisplay>
             <app-loading-overlay></app-loading-overlay>
         </ng-template>
       </div>
