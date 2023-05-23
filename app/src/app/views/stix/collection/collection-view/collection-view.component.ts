@@ -262,7 +262,7 @@ export class CollectionViewComponent extends StixViewPage implements OnInit {
                     }
                 }
 
-                // add stats to vaidation
+                // add stats to validation
                 results.info.push({
                     result: "info",
                     field: "contents",
@@ -674,11 +674,76 @@ export class CollectionViewComponent extends StixViewPage implements OnInit {
                 });
                 this.potentialChanges = this.knowledgeBaseCollection.compareTo(this.collection);
                 this.loading = null;
+                // for a new collection we not have to option to create it from a groupId
+                // stixObjectID is not set to 'new' for some reason
+                if (this.route.snapshot.data.breadcrumb == 'new collection') {
+                  const groupId = this.route.snapshot.queryParams['groupId'];
+                  if (groupId) {
+                    this.loadGroupForCollection(groupId);
+                  }
+                }
             },
             complete: () => { subscription.unsubscribe(); }
         })
-
-
     }
 
+    /**
+     * Adds all objects within a group to the staged collection
+     * @param {string} groupId the groupId to create a collection from 
+     */
+    private loadGroupForCollection(groupId) {
+      const typeMap = {
+        'Technique' : 'technique',
+        'Tactic' : 'tactic',
+        'Campaign' : 'campaign',
+        'Software' : 'software',
+        'Course-of-Action' : 'mitigation',
+        'MatrixModel' : 'matrix',
+        'Intrusion-Set': 'group',
+        'Data-Source' : 'data_source',
+        'Data-Component' : 'data_component',
+      };
+      this.loading = 'loading objects from group into collection';
+
+      const apiCalls = {
+        'group': this.restApiConnector.getGroup(groupId),
+        'relationships': this.restApiConnector.getRelatedTo({sourceOrTargetRef: groupId}),
+      }
+
+      const subscription = forkJoin(apiCalls).pipe().subscribe({
+        next: (result: any) => {
+          this.collection.name = `Collection from group "${result['group'][0].name}"`;
+          this.collection.description = `This is an **auto-generated** collection from the group "*${result['group'][0].name}*"`;
+          // add the group
+          this.moveChanges(result['group'], 'group', 'additions', 'stage');
+          // add the related objects
+          for (let i = 0; i < result['relationships'].data.length; i++) {
+            const relationship = result['relationships'].data[i];
+            let reference = '';
+            if (relationship['target_ref'] == groupId) {
+              reference = 'source_object';
+            } else if (relationship['source_ref'] == groupId) {
+              reference = 'target_object';
+            }
+            let object = relationship[reference];
+            let type = typeMap[object.__t]
+            if (type == 'technique') { object = new Technique(object); }
+            else if (type == 'tactic') { object = new Tactic(object); }
+            else if (type == 'campaign') { object = new Campaign(object); }
+            else if (type == 'software') { object = new Software(object); }
+            else if (type == 'mitigation') { object = new Mitigation(object); }
+            else if (type == 'matrix') { object = new Matrix(object); }
+            else if (type == 'group') { object = new Group(object); }
+            else if (type == 'data_source') { object = new DataSource(object); }
+            else if (type == 'data_component') { object = new DataComponent(object); }
+            else { continue; }
+            this.moveChanges([object], type, 'additions', 'stage');
+          }
+        },
+        complete: () => { 
+          subscription.unsubscribe();
+          this.loading = null;
+        }
+    })
+  }
 }
