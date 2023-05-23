@@ -107,7 +107,7 @@ export class RestApiConnectorService extends ApiConnector {
     constructor(private http: HttpClient, private snackbar: MatSnackBar) {
       super(snackbar);
     }
-    
+
     /**
      * Get the name of a given STIX object
      */
@@ -518,7 +518,7 @@ export class RestApiConnectorService extends ApiConnector {
                                 let s = rel as any;
                                 return s.data.map(rel => new Technique(rel.source_object)); //transform them to Techniques
                             }),
-                            map(subs => { //add the sub-techniques to the parent do this for matrix
+                            map(subs => { //add the sub-techniques to the parent
                                 let s = subs as any[];
                                 t.subTechniques = s;
                                 return [t];
@@ -1098,42 +1098,40 @@ export class RestApiConnectorService extends ApiConnector {
             share()
         )
     }
-        /**
-     * Get all techniques referencing the given tactic
-     * @param {string} tactic_id the stix id of the tactic
-     * @param {Date} modified the modified date of the tactic
-     * @returns {Technique[]} a list of techniques that reference the tactic
+    /**
+     * Get list of all tactics, techniques, and nested subtechniques within a given matrix
+     * @param {Matrix} matrix the matrix object for the response's tactic list to be added to
+     * @returns
      */
-        public getTechniquesInMatrix(matrix: Matrix, matrix_id: string, modified: Date): Observable<any> {
-          let url = `${this.apiUrl}/matrices/${matrix_id}/modified/${modified.toISOString()}/techniques`;
-          return this.http.get(url).pipe(
-              tap(results => logger.log("retrieved techniques", results)),
-              map(response => {
-                  let data = response as Array<any>;
-                  let entries = Object.entries(data)
-                  entries.forEach((item) => {
-                    let tactic = new Tactic(item[1])
-                    let techniqueList = item[1].techniques;
-                    techniqueList.forEach((item) => {
-                      let technique = new Technique(item);
-                      if (item.subtechniques.length > 0) {
-                        item.subtechniques.forEach((subtechnique) => {
-                          technique.subTechniques.push(new Technique(subtechnique))
-                        })
-                      }
-                      technique.subTechniques.sort((a,b) => a.name.toLowerCase().localeCompare(b.name.toLowerCase()))
-                      tactic.technique_objects.push(technique);
-                    })
-                    tactic.technique_objects.sort((a,b) => a.name.toLowerCase().localeCompare(b.name.toLowerCase()))
-                    matrix.tactic_objects.push(tactic)
+    public getTechniquesInMatrix(matrix: Matrix): Observable<any> {
+        let url = `${this.apiUrl}/matrices/${matrix.stixID}/modified/${matrix.modified.toISOString()}/techniques`;
+        return this.http.get(url).pipe(
+            tap(results => logger.log("retrieved techniques", results)),
+            map(response => {
+                let data = response as Array<any>;
+                let entries = Object.entries(data)
+                entries.forEach((item) => {
+                  let tactic = new Tactic(item[1])
+                  let techniqueList = item[1].techniques;
+                  techniqueList.forEach((item) => {
+                    let technique = new Technique(item);
+                    if (item.subtechniques.length > 0) {
+                      item.subtechniques.forEach((subtechnique) => {
+                        technique.subTechniques.push(new Technique(subtechnique))
+                      })
+                    }
+                    technique.subTechniques.sort((a,b) => a.name.toLowerCase().localeCompare(b.name.toLowerCase()))
+                    tactic.technique_objects.push(technique);
                   })
-                  return matrix;
-              }),
-              catchError(this.handleError_continue([])),
-              share()
-          )
-      }
-
+                  tactic.technique_objects.sort((a,b) => a.name.toLowerCase().localeCompare(b.name.toLowerCase()))
+                  matrix.tactic_objects.push(tactic)
+                })
+                return matrix;
+            }),
+            catchError(this.handleError_continue([])),
+            share()
+        )
+    }
 
     /**
      * Get all tactics referenced by the given technique
@@ -1625,7 +1623,7 @@ export class RestApiConnectorService extends ApiConnector {
     }
 
 
-    //  _____ ___   _   __  __ ___     _   ___ ___ ___ 
+    //  _____ ___   _   __  __ ___     _   ___ ___ ___
     // |_   _| __| /_\ |  \/  / __|   /_\ | _ \_ _/ __|
     //   | | | _| / _ \| |\/| \__ \  / _ \|  _/| |\__ \
     //   |_| |___/_/ \_\_|  |_|___/ /_/ \_\_| |___|___/
@@ -1729,7 +1727,7 @@ export class RestApiConnectorService extends ApiConnector {
           share() //multicast to subscribers
       );
   }
-          
+
 
     //   ___    ___      __  ___ _____ _____  __    _   ___ ___ ___
     //  | _ \  /_\ \    / / / __|_   _|_ _\ \/ /   /_\ | _ \_ _/ __|

@@ -26,9 +26,8 @@ export class MatrixViewComponent extends StixViewPage implements OnInit {
     ngOnInit() {
 
         if (!this.config.hasOwnProperty('showRelationships') || this.config.showRelationships) {
-            let subscription = this.restAPIConnectorService.getTechniquesInMatrix(this.matrix, this.matrix.stixID, this.matrix.modified).subscribe({
+            let subscription = this.restAPIConnectorService.getTechniquesInMatrix(this.matrix).subscribe({
                 next: (data) => {
-                  console.log(data)
                   this.thisMatrix = data;
                 },
                 complete: () => { subscription.unsubscribe(); } //prevent memory leaks
