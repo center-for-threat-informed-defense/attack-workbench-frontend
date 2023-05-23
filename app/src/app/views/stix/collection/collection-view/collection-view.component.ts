@@ -730,7 +730,7 @@ export class CollectionViewComponent extends StixViewPage implements OnInit {
             if (type == 'technique') { object = new Technique(object); }
             else if (type == 'tactic') { object = new Tactic(object); }
             else if (type == 'campaign') { object = new Campaign(object); }
-            else if (type == 'software') { object = new Software(object); }
+            else if (type == 'software') { object = new Software(object.stix.type, object); }
             else if (type == 'mitigation') { object = new Mitigation(object); }
             else if (type == 'matrix') { object = new Matrix(object); }
             else if (type == 'group') { object = new Group(object); }
