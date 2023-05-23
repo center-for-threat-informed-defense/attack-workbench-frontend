@@ -22,7 +22,7 @@ export class Technique extends StixObject {
     public contributors: string[] = [];
     public supports_remote: boolean = false;
     public is_subtechnique: boolean = false;
-    public show_subtechniques: boolean = false;
+    public show_subtechniques: boolean = false; // used by matrix view to handle displaying subtechniques
 
     public readonly supportsAttackID = true;
     public readonly supportsNamespace = true;
@@ -84,22 +84,6 @@ export class Technique extends StixObject {
             this.deserialize(sdo);
         }
     }
-    /**
-     * get ID identifying this technique
-     */
-    public get_technique_tactic_id(tactic: string | Tactic): string {
-      let tactic_shortname = tactic instanceof Tactic ? tactic.shortname : tactic;
-      if (!this.tactics.includes(tactic_shortname)) {
-        throw new Error(tactic_shortname + " is not a tactic of " + this.attackID);
-      }
-      return this.attackID + "^" + tactic_shortname;
-    }
-    public get_all_technique_tactic_ids(): string[] {
-      console.log("getting technique tactic ids");
-
-      if (this.revoked || this.deprecated) return [];
-      return this.tactics.map((shortname: string) => this.get_technique_tactic_id(shortname));
-  }
 
     /**
      * Transform the current object into a raw object for sending to the back-end, stripping any unnecessary fields
