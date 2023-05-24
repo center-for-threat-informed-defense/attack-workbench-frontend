@@ -25,6 +25,8 @@ import { AuthenticationService } from 'src/app/services/connectors/authenticatio
 import { MatDialog } from '@angular/material/dialog';
 import { CollectionUpdateDialogComponent } from 'src/app/components/collection-update-dialog/collection-update-dialog.component';
 import { Campaign } from 'src/app/classes/stix/campaign';
+import { AddDialogComponent } from 'src/app/components/add-dialog/add-dialog.component';
+import { SelectionModel } from '@angular/cdk/collections';
 
 type changeCategory = "additions" | "changes" | "minor_changes" | "revocations" | "deprecations";
 
@@ -48,6 +50,19 @@ export class CollectionViewComponent extends StixViewPage implements OnInit {
     public loading: string = null; // loading message if loading
     public validating: boolean = false;
     public validationData: ValidationData = null;
+
+    // type map for the _t
+    private typeMap = {
+      'Technique' : 'technique',
+      'Tactic' : 'tactic',
+      'Campaign' : 'campaign',
+      'Software' : 'software',
+      'Course-of-Action' : 'mitigation',
+      'MatrixModel' : 'matrix',
+      'Intrusion-Set': 'group',
+      'Data-Source' : 'data_source',
+      'Data-Component' : 'data_component',
+    };
 
     // pluralize attackType for text display
     public plural = {
@@ -679,7 +694,7 @@ export class CollectionViewComponent extends StixViewPage implements OnInit {
                 if (this.route.snapshot.data.breadcrumb == 'new collection') {
                   const groupId = this.route.snapshot.queryParams['groupId'];
                   if (groupId) {
-                    this.loadGroupForCollection(groupId);
+                    this.updateCollectionFromGroup(groupId, 'add', true);
                   }
                 }
             },
@@ -688,22 +703,64 @@ export class CollectionViewComponent extends StixViewPage implements OnInit {
     }
 
     /**
-     * Adds all objects within a group to the staged collection
-     * @param {string} groupId the groupId to create a collection from 
+     * Handler for the add groups to the collection button
      */
-    private loadGroupForCollection(groupId) {
-      const typeMap = {
-        'Technique' : 'technique',
-        'Tactic' : 'tactic',
-        'Campaign' : 'campaign',
-        'Software' : 'software',
-        'Course-of-Action' : 'mitigation',
-        'MatrixModel' : 'matrix',
-        'Intrusion-Set': 'group',
-        'Data-Source' : 'data_source',
-        'Data-Component' : 'data_component',
-      };
-      this.loading = 'loading objects from group into collection';
+    private handleAddGroupsToCollectionButton(): void {
+      // add the list of all groups currently and potentially in the collection and we have a list of all the possible groups to create our selection from
+      const allGroups= this.potentialChanges['group'].additions.concat(this.collectionChanges['group'].additions);
+      const select = new SelectionModel(true);
+      const currentlySelectedGroupStixIds = [];
+      for (const index in this.collectionChanges['group'].additions) {
+        const stixID = this.collectionChanges['group'].additions[index].stixID
+        currentlySelectedGroupStixIds.push(stixID);
+        select.select(stixID);
+      }
+      const prompt = this.dialog.open(AddDialogComponent, {
+        maxWidth: '70em',
+        maxHeight: '70em',
+        data: {
+          title: `Select groups which you wish to add to the collection`,
+          selectableObjects: allGroups,
+          select: select,
+          type: "group",
+          buttonLabel: 'Update groups in collection'
+        },
+      });
+      const subscription = prompt.afterClosed().subscribe({
+        next: (response) => {
+            if (response) {
+              const newSelectedGroupStixIds = select.selected;
+              // if it is in the new list of selected groups, but not in the old one, we need to add it
+              for (let i  = 0; i < newSelectedGroupStixIds.length; i++) {
+                const groupIdToAdd = newSelectedGroupStixIds[i];
+                if (currentlySelectedGroupStixIds.findIndex((id)=>{id == groupIdToAdd}) == -1) {
+                  this.updateCollectionFromGroup(groupIdToAdd, 'add', false);
+                }
+              }
+              // if it is in the old list of selected groups, but not in the new one, we need to remove it
+              for (let i  = 0; i < currentlySelectedGroupStixIds.length; i++) {
+                const groupIdToRemove = currentlySelectedGroupStixIds[i];
+                if (currentlySelectedGroupStixIds.findIndex((id)=>{id == groupIdToRemove}) == -1) {
+                  this.updateCollectionFromGroup(groupIdToRemove, 'remove', false);
+                }
+              }
+            }
+        },
+        complete: () => { subscription.unsubscribe(); } //prevent memory leaks
+    });
+    }
+
+
+    /**
+     * Adds or removes ALL objects within a group to the staged collection
+     * @param {string} groupId the groupId to create a collection from 
+     * @param {string} direction either 'add' or 'remove' selects whether thr objects will be added to the current collection or removed from it 
+     * @param {boolean} fromPageLoad whether this request is coming from the initial page load of a new collection (if true will change the collection name and description)
+     */
+    private updateCollectionFromGroup(groupId, direction, fromPageLoad): void {
+      if (fromPageLoad) {
+        this.loading = 'loading objects from group into collection';
+      }
 
       const apiCalls = {
         'group': this.restApiConnector.getGroup(groupId),
@@ -712,11 +769,17 @@ export class CollectionViewComponent extends StixViewPage implements OnInit {
 
       const subscription = forkJoin(apiCalls).pipe().subscribe({
         next: (result: any) => {
-          this.collection.name = `Collection from group "${result['group'][0].name}"`;
-          this.collection.description = `This is an **auto-generated** collection from the group "*${result['group'][0].name}*"`;
-          // add the group
-          this.moveChanges(result['group'], 'group', 'additions', 'stage');
-          // add the related objects
+          if (fromPageLoad) {
+            this.collection.name = `Collection from group "${result['group'][0].name}"`;
+            this.collection.description = `This is an **auto-generated** collection from the group "*${result['group'][0].name}*"`;
+          }
+          // add or remove the group
+          if (direction == 'add') {
+            this.moveChanges(result['group'], 'group', 'additions', 'stage');
+          } else if (direction == 'remove'){
+            this.moveChanges(result['group'], 'group', 'additions', 'unstage');
+          }
+          // add or remove the related objects
           for (let i = 0; i < result['relationships'].data.length; i++) {
             const relationship = result['relationships'].data[i];
             let reference = '';
@@ -726,18 +789,21 @@ export class CollectionViewComponent extends StixViewPage implements OnInit {
               reference = 'target_object';
             }
             let object = relationship[reference];
-            let type = typeMap[object.__t]
+            let type = this.typeMap[object.__t]
             if (type == 'technique') { object = new Technique(object); }
             else if (type == 'tactic') { object = new Tactic(object); }
             else if (type == 'campaign') { object = new Campaign(object); }
             else if (type == 'software') { object = new Software(object.stix.type, object); }
             else if (type == 'mitigation') { object = new Mitigation(object); }
             else if (type == 'matrix') { object = new Matrix(object); }
-            else if (type == 'group') { object = new Group(object); }
             else if (type == 'data_source') { object = new DataSource(object); }
             else if (type == 'data_component') { object = new DataComponent(object); }
             else { continue; }
-            this.moveChanges([object], type, 'additions', 'stage');
+            if (direction == 'add') {
+              this.moveChanges([object], type, 'additions', 'stage');
+            } else if (direction == 'remove'){
+              this.moveChanges([object], type, 'additions', 'unstage');
+            }
           }
         },
         complete: () => { 
