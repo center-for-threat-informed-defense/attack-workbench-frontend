@@ -703,46 +703,30 @@ export class CollectionViewComponent extends StixViewPage implements OnInit {
     }
 
     /**
-     * Handler for the add groups to the collection button
+     * Handler for the import groups to the collection button
      */
-    private handleAddGroupsToCollectionButton(): void {
-      // add the list of all groups currently and potentially in the collection and we have a list of all the possible groups to create our selection from
+    private handleImportGroups(): void {
+      // add the list of all groups currently and potentially in the collection and we have a list of all the possible groups to import to our selection w/o making any API calls
       const allGroups= this.potentialChanges['group'].additions.concat(this.collectionChanges['group'].additions);
       const select = new SelectionModel(true);
-      const currentlySelectedGroupStixIds = [];
-      for (const index in this.collectionChanges['group'].additions) {
-        const stixID = this.collectionChanges['group'].additions[index].stixID
-        currentlySelectedGroupStixIds.push(stixID);
-        select.select(stixID);
-      }
       const prompt = this.dialog.open(AddDialogComponent, {
         maxWidth: '70em',
         maxHeight: '70em',
         data: {
-          title: `Select groups which you wish to add to the collection`,
+          title: `Select groups which you wish to import into the collection`,
           selectableObjects: allGroups,
           select: select,
           type: "group",
-          buttonLabel: 'Update groups in collection'
+          buttonLabel: 'import groups into collection'
         },
       });
       const subscription = prompt.afterClosed().subscribe({
         next: (response) => {
             if (response) {
               const newSelectedGroupStixIds = select.selected;
-              // if it is in the new list of selected groups, but not in the old one, we need to add it
               for (let i  = 0; i < newSelectedGroupStixIds.length; i++) {
                 const groupIdToAdd = newSelectedGroupStixIds[i];
-                if (currentlySelectedGroupStixIds.findIndex((id)=>{id == groupIdToAdd}) == -1) {
-                  this.updateCollectionFromGroup(groupIdToAdd, 'add', false);
-                }
-              }
-              // if it is in the old list of selected groups, but not in the new one, we need to remove it
-              for (let i  = 0; i < currentlySelectedGroupStixIds.length; i++) {
-                const groupIdToRemove = currentlySelectedGroupStixIds[i];
-                if (currentlySelectedGroupStixIds.findIndex((id)=>{id == groupIdToRemove}) == -1) {
-                  this.updateCollectionFromGroup(groupIdToRemove, 'remove', false);
-                }
+                this.updateCollectionFromGroup(groupIdToAdd, 'add', false);
               }
             }
         },
