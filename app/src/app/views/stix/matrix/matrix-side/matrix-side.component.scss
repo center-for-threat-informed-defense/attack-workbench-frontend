@@ -2,114 +2,41 @@
 $sizeunit: 14px;
 .button-row {
   display: flex;
-  button{
+  button {
     margin: 10px;
   }
 }
 
-.matrix-container {
-  width: 100%;
-  height: 100vh;
-  overflow: scroll;
-  border: 1px solid;
-}
-
 .matrix.side {
-  border-collapse: collapse;
-  padding: 0;
-  tr.tactic {
-    margin-left: 14px;
-    border-bottom: 1px solid;
-    vertical-align: top;
-    td {
-      padding: 0;
-      vertical-align: middle;
-      min-width: 180px;
-    }
-  }
   .tactic {
-    .techniques-table {
-      border-collapse: collapse;
-      width: 100%;
-      tr, td {
-        padding: 0;
-      }
-      tr {
-          height: 1px;
-      }
-    }
-    td.technique {
-      padding: 0;
-      margin: 0;
-      vertical-align: top;
-    }
-
-    .supertechnique, .regularTechnique {
-      border-collapse: collapse;
-      width: 100%;
-      padding: 0;
-      margin: 0;
-      td {
-          padding: 0;
-          vertical-align: top;
-      }
-    }
-
     .subtechniques {
-      &.hidden {
-        display: none;
-      }
-      display: flex;
-      flex-direction: column;
-      height: 100%;
       margin-left: -1px;
-      white-space: nowrap;
-      vertical-align: top;
-      .subtechnique {
-          height: 100%;
-          flex-grow: 1;
-        min-width: 150px;
-      }
-    }
-    .handle {
-      color: white;
-      font-family: roboto-regular;
-      text-align: center;
-      vertical-align: middle;
-      transform: rotate(-90deg);
-      width: 12px;
-      height: 12px;
-      font-size: 16px;
-      line-height: 12px;
     }
   }
-}
-.sidebar {
-  min-width: 8px;
-  width: 12px;
-  padding: 0;
-  cursor: pointer;
-  position:relative;
-  vertical-align: middle;
-  background: #707070;
-  height: 100%;
-  .angle {
+  .sidebar {
+    position: relative;
+    .angle {
       display: none;
-  }
-  &.expanded .angle {
-    height: 12px;
-    display:block;
-    position: absolute;
-    svg {
+    }
+    &.expanded .angle {
+      height: 12.5px;
+      display: block;
       position: absolute;
-    }
-    &.top {
-      top: 0;
-      svg{ transform: rotate(-90deg);}
-    }
-    &.bottom {
-      bottom: 0;
-      svg {transform: rotate(90deg);}
+      svg {
+        position: absolute;
+      }
+      &.top {
+        top: 0;
+        svg {
+          transform: rotate(-90deg);
+        }
+      }
+      &.bottom {
+        bottom: 0;
+        svg {
+          transform: rotate(90deg);
+        }
+      }
     }
   }
 }
