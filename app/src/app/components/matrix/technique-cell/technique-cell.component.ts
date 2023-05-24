@@ -13,10 +13,11 @@ export class TechniqueCellComponent implements OnInit {
   @Input() showName: boolean;
 
   constructor() {
+    // intentionally blank
   }
 
   ngOnInit() {
-
+    // intentionally blank
   }
 
   public onLeftClick() {

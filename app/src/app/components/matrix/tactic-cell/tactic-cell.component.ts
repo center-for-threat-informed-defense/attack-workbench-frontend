@@ -8,13 +8,17 @@ import { Tactic } from 'src/app/classes/stix/tactic';
 })
 export class TacticCellComponent implements OnInit {
   @Input() tactic: Tactic;
-  @Input() count: Number;
+  @Input() count: number;
   @Input() showID: boolean;
 
-  constructor() { }
+  constructor() {
+    // intentionally blank
+   }
 
   ngOnInit() {
+    //intentionally blank
   }
+
   viewTactic() {
     window.open("tactic/"+this.tactic.stixID)
   }

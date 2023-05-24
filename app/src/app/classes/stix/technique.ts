@@ -4,7 +4,6 @@ import { RestApiConnectorService } from "src/app/services/connectors/rest-api/re
 import { ValidationData } from "../serializable";
 import { StixObject } from "./stix-object";
 import { logger } from "../../util/logger";
-import { Tactic } from "./tactic";
 
 export class Technique extends StixObject {
     public name: string = "";

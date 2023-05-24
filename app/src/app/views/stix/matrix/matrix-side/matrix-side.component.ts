@@ -1,8 +1,7 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { Observable, of } from 'rxjs';
+import { Component, Input } from '@angular/core';
+import { Observable } from 'rxjs';
 import { Matrix } from 'src/app/classes/stix/matrix';
 import { StixObject } from 'src/app/classes/stix/stix-object';
-import { Tactic } from 'src/app/classes/stix/tactic';
 import { Technique } from 'src/app/classes/stix/technique';
 import { Paginated } from 'src/app/services/connectors/rest-api/rest-api-connector.service';
 
@@ -19,7 +18,8 @@ export class MatrixSideComponent {
   public showID = false;
 
   constructor() {
-    }
+    // intentionally left blank
+  }
 
   public onToggleSubtechniquesVisible(technique: Technique) {
     technique.show_subtechniques = !technique.show_subtechniques;
