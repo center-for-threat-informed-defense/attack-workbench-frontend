@@ -70,3 +70,15 @@
     height: 100%;
   }
 }
+.matrix-button-row {
+  margin: 0 auto;
+  width: max-content;
+  font-size: 14px;
+  text-align: center;
+  gap: 4px;
+  display: flex;
+  .mat-stroked-button {
+    margin: 3.5px 10px;
+    margin-bottom: 22.313px;
+  }
+}
