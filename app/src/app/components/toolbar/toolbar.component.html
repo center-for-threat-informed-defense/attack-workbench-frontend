@@ -23,9 +23,9 @@
             
         </div>
          <div class="controls button-list section" *ngIf="isGroup">
-            <button mat-button class="control" matTooltip="create a collection from this group" (click)="createCollectionFromGroup()">
+            <button mat-button class="control" matTooltip="create a collection from this group" [disabled]="!editing" (click)="createCollectionFromGroup()">
               <span class="material-symbols-outlined">
-                deployed_code_update
+                deployed_code
               </span>
             </button>
         </div>
