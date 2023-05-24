@@ -1,6 +1,5 @@
 <div class="collection-view">
     <div *ngIf="!validating">
-
         <div class="grid spacing-12" *ngIf="!loading else loadingDisplay">
             <div class="row width-limited">
                 <div class="col">
@@ -74,6 +73,20 @@
                     }"></app-descriptive-property>
                 </div>
             </div>
+            <div class="row width-limited">
+              <div class="col">
+                <div class="button-group">
+                  <button mat-mini-fab class="extended-fab-button" color="primary" (click)="handleAddGroupsToCollectionButton()">
+                    <span class="material-symbols-outlined">
+                      deployed_code
+                    </span>
+                    <span class="text-label">
+                      Add or remove groups and their related objects to this collection
+                    </span>
+                  </button>
+                </div>
+              </div>
+          </div>
             <div class="row">
                 <div class="col">
                     <h2 class="section-header">Changes in this release</h2>
