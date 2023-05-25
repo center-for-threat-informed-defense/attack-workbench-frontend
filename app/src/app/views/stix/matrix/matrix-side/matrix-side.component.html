@@ -2,14 +2,14 @@
   <table class="matrix side">
     <thead>
       <tr class="tactic">
-        <td *ngFor="let tactic of matrix.tactic_objects">
+        <td *ngFor="let tactic of tactics">
           <app-tactic-cell [tactic]="tactic" [showID]="showID"></app-tactic-cell>
         </td>
       </tr>
     </thead>
     <tbody>
       <tr>
-        <td *ngFor="let tactic of matrix.tactic_objects" class="tactic" style="vertical-align: top; padding-right: 5px;">
+        <td *ngFor="let tactic of tactics" class="tactic" style="vertical-align: top; padding-right: 5px;">
           <table class="techniques-table">
             <ng-container *ngFor="let technique of tactic.technique_objects">
               <tr *ngIf="technique.subTechniques.length <= 0">

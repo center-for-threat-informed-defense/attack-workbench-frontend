@@ -48,24 +48,44 @@
   <div class="row">
     <div class="col">
         <!-- MATRIX -->
-        <div class="matrix-button-row">
-          <mat-form-field appearance="outline">
-            <mat-label>Matrix View</mat-label>
-            <mat-select [(value)]="view">
-              <mat-option value="side">Side</mat-option>
-              <mat-option value="flat">Flat</mat-option>
-            </mat-select>
-          </mat-form-field>
-          <button mat-stroked-button (click)="toggleAllSubtechniquesVisible(true)">Show all subtechniques</button>
-          <button mat-stroked-button (click)="toggleAllSubtechniquesVisible(false)">Hide all subtechniques</button>
-        </div>
-        <ng-container *ngIf="loaded else loadingDisplay">
-          <app-matrix-side *ngIf="view==='side'" [matrix]="matrix"></app-matrix-side>
-          <app-matrix-flat *ngIf="view==='flat'" [matrix]="matrix"></app-matrix-flat>
+        <ng-container *ngIf="all_tactics else loadingDisplay">
+          <ng-container *ngIf="editing else matrixView">
+            <app-ordered-list-property class="grow-to-row"
+            [config]="{
+              mode: 'edit',
+              field: 'name',
+              globalObjects: all_tactics,
+              object: matrix,
+              objectOrderedListField: 'tactic_refs',
+              type: 'tactic',
+              clickBehavior: 'link'
+            }"></app-ordered-list-property>
+          </ng-container>
+          <ng-template #matrixView>
+            <div class="matrix-button-row">
+              <mat-form-field appearance="outline">
+                <mat-label>Matrix View</mat-label>
+                <mat-select [(value)]="view">
+                  <mat-option value="side">Side</mat-option>
+                  <mat-option value="flat">Flat</mat-option>
+                </mat-select>
+              </mat-form-field>
+              <button mat-stroked-button (click)="toggleAllSubtechniquesVisible(true)">Show all subtechniques</button>
+              <button mat-stroked-button (click)="toggleAllSubtechniquesVisible(false)">Hide all subtechniques</button>
+            </div>
+            <ng-container *ngIf="loaded else loadingDisplay">
+              <app-matrix-side *ngIf="view==='side'" [matrix]="matrix" [tactics]="all_tactics"></app-matrix-side>
+              <app-matrix-flat *ngIf="view==='flat'" [matrix]="matrix" [tactics]="all_tactics"></app-matrix-flat>
+            </ng-container>
+            <ng-template #loadingDisplay>
+                <app-loading-overlay></app-loading-overlay>
+            </ng-template>
+          </ng-template>
         </ng-container>
+
         <ng-template #loadingDisplay>
-            <app-loading-overlay></app-loading-overlay>
-        </ng-template>
+          <app-loading-overlay></app-loading-overlay>
+      </ng-template>
       </div>
     </div>
     <!-- EXTERNAL REFERENCES -->
