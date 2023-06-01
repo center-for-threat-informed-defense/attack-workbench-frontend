@@ -720,17 +720,22 @@ export class CollectionViewComponent extends StixViewPage implements OnInit {
           buttonLabel: 'import groups into collection'
         },
       });
+      let numOfGroups = 0;
       const subscription = prompt.afterClosed().subscribe({
         next: (response) => {
             if (response) {
               const newSelectedGroupStixIds = select.selected;
+              numOfGroups = newSelectedGroupStixIds.length;
               for (let i  = 0; i < newSelectedGroupStixIds.length; i++) {
                 const groupIdToAdd = newSelectedGroupStixIds[i];
                 this.updateCollectionFromGroup(groupIdToAdd, 'add', false);
               }
             }
         },
-        complete: () => { subscription.unsubscribe(); } //prevent memory leaks
+        complete: () => {
+          this.snackbar.open(`Added ${numOfGroups} groups and their related objects to collection`, null, {duration: 5000, panelClass: 'success'});
+          subscription.unsubscribe(); //prevent memory leaks
+        }
     });
     }
 
