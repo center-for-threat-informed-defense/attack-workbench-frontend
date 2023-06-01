@@ -1,6 +1,6 @@
 <div class="collection-view">
     <div *ngIf="!validating">
-        <div class="grid spacing-12" *ngIf="!loading else loadingDisplay">
+        <div class="grid spacing-12" *ngIf="true else loadingDisplay">
             <div class="row width-limited">
                 <div class="col">
                     <!-- things to add to the collection -->
@@ -73,7 +73,7 @@
                     }"></app-descriptive-property>
                 </div>
             </div>
-            <div class="row width-limited">
+            <div class="row width-limited" *ngIf="editing">
               <div class="col">
                 <div class="button-group">
                   <button mat-mini-fab class="extended-fab-button" color="primary" (click)="handleImportGroups()">
