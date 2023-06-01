@@ -1646,6 +1646,28 @@ export class RestApiConnectorService extends ApiConnector {
     }
 
     /**
+     * Get list of teams by user ID
+     * @param id the ID of the user account
+     * @param {number} [limit] the number of users to retrieve
+     * @param {number} [offset] the number of users to skip
+     * @returns {Team[]} the list of teams the user is a part of
+     */
+    public getTeamsByUserId(id: string, options?: { limit?: number, offset?: number }): Observable<Team[]> {
+        let url = `${this.apiUrl}/user-accounts/${id}/teams`;
+        // parse params into query string
+        let query = new HttpParams({ encoder: new CustomEncoder() });
+        // pagination
+        if (options && options.limit) query = query.set("limit", options.limit.toString());
+        if (options && options.offset) query = query.set("offset", options.offset.toString());
+        if (options && (options.limit || options.offset)) query = query.set("includePagination", "true");
+        return this.http.get<Team[]>(url, { params: query }).pipe(
+            tap(_ => console.log(`retrieved`, _)),
+            catchError(this.handleError_continue([])), // on error, trigger the error notification and continue operation without crashing (returns empty item)
+            share() // multicast so that multiple subscribers don't trigger the call twice
+        );
+    }
+
+    /**
      * GET a single team by ID
      * @param {string} id the object ID
      * @returns {Team} the object with the given ID

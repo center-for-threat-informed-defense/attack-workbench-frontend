@@ -42,9 +42,8 @@ export class ProfilePageComponent implements OnInit, OnDestroy {
     /** get list of teams the user is in */
     private getTeams() {
         this.loading = true;
-        let teamSubscription = this.restApiService.getAllTeams({includePagination: true}).subscribe({
-            next: (result) => {
-                let teams = result.data.filter(team => team.userIDs.includes(this.user.id));
+        let teamSubscription = this.restApiService.getTeamsByUserId(this.user.id).subscribe({
+            next: (teams) => {
                 this.teamNames = teams.map(team => team.name);
                 this.loading = false;
             },
