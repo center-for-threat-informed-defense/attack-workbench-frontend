@@ -26,6 +26,13 @@
               </button>
             </span>
         </div>
+         <div class="controls button-list section" *ngIf="isGroup">
+            <button mat-button class="control" matTooltip="create a collection from this group" [disabled]="editing" (click)="createCollectionFromGroup()">
+              <span class="material-symbols-outlined">
+                deployed_code
+              </span>
+            </button>
+        </div>
         <div class="controls button-list section">
             <!-- <button mat-button class="control" matTooltip="back to top" [disabled]="!canScroll" (click)="emitScrollTop()"><mat-icon aria-label="back to top">vertical_align_top</mat-icon></button> -->
             <button mat-button class="control" matTooltip="toggle theme" (click)="emitToggleTheme()"><mat-icon aria-label="help">invert_colors</mat-icon></button>

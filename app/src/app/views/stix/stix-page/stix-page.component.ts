@@ -58,7 +58,7 @@ export class StixPageComponent implements OnInit, OnDestroy {
     /**
      * Parse an object list and build a config for passing into child components
      * @param {StixObject} objects the objects to display
-     * @oaram {allVersions} return all versions instead of just a single version
+     * @param {allVersions} return all versions instead of just a single version
      * @returns {StixViewConfig} the built config
      */
     public buildConfig(): StixViewConfig {
@@ -167,10 +167,9 @@ export class StixPageComponent implements OnInit, OnDestroy {
                 this.loadObjects();
             }
         });
-
         this.routerEvents = this.router.events.subscribe(event => { 
             if (event instanceof NavigationEnd) {
-                // Load objects when navigation ends sucessfully
+                // Load objects when navigation ends successfully
                 this.loadObjects(); 
             }
         })
