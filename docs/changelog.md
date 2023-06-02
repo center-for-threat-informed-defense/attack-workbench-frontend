@@ -42,6 +42,9 @@
 -   Added a new user profile page where logged in users can view their recent activity across the Workbench and view/edit their display name.
 - 	Added ability to view att&ck objects from workbench on an external att&ck website if they exist
 
+#### Improvements in 1.3.2
+-   Improved error handling during collection import.
+
 ## 21 April 2023
 
 ### ATT&CK Workbench version 1.3.1
