@@ -1,6 +1,6 @@
 <div class="collection-view">
     <div *ngIf="!validating">
-        <div class="grid spacing-12" *ngIf="true else loadingDisplay">
+        <div class="grid spacing-12" *ngIf="!loading else loadingDisplay">
             <div class="row width-limited">
                 <div class="col">
                     <!-- things to add to the collection -->
