@@ -31,10 +31,10 @@ import { SelectionModel } from '@angular/cdk/collections';
 type changeCategory = "additions" | "changes" | "minor_changes" | "revocations" | "deprecations";
 
 @Component({
-  selector: 'app-collection-view',
-  templateUrl: './collection-view.component.html',
-  styleUrls: ['./collection-view.component.scss'],
-  encapsulation: ViewEncapsulation.None
+    selector: 'app-collection-view',
+    templateUrl: './collection-view.component.html',
+    styleUrls: ['./collection-view.component.scss'],
+    encapsulation: ViewEncapsulation.None
 })
 export class CollectionViewComponent extends StixViewPage implements OnInit {
     public get collection(): Collection { return this.config.object as Collection; }
@@ -53,15 +53,15 @@ export class CollectionViewComponent extends StixViewPage implements OnInit {
 
     // type map for the _t
     private typeMap = {
-      'Technique' : 'technique',
-      'Tactic' : 'tactic',
-      'Campaign' : 'campaign',
-      'Software' : 'software',
-      'Course-of-Action' : 'mitigation',
-      'MatrixModel' : 'matrix',
-      'Intrusion-Set': 'group',
-      'Data-Source' : 'data_source',
-      'Data-Component' : 'data_component',
+        'Technique': 'technique',
+        'Tactic': 'tactic',
+        'Campaign': 'campaign',
+        'Software': 'software',
+        'Course-of-Action': 'mitigation',
+        'MatrixModel': 'matrix',
+        'Intrusion-Set': 'group',
+        'Data-Source': 'data_source',
+        'Data-Component': 'data_component',
     };
 
     // pluralize attackType for text display
@@ -87,41 +87,41 @@ export class CollectionViewComponent extends StixViewPage implements OnInit {
     public stagedData: VersionReference[] = [];
 
     public potentialChanges = {
-        technique:      new CollectionDiffCategories<Technique>(),
-        tactic:         new CollectionDiffCategories<Tactic>(),
-        campaign:       new CollectionDiffCategories<Campaign>(),
-        software:       new CollectionDiffCategories<Software>(),
-        relationship:   new CollectionDiffCategories<Relationship>(),
-        mitigation:     new CollectionDiffCategories<Mitigation>(),
-        matrix:         new CollectionDiffCategories<Matrix>(),
-        group:          new CollectionDiffCategories<Group>(),
-        data_source:    new CollectionDiffCategories<DataSource>(),
+        technique: new CollectionDiffCategories<Technique>(),
+        tactic: new CollectionDiffCategories<Tactic>(),
+        campaign: new CollectionDiffCategories<Campaign>(),
+        software: new CollectionDiffCategories<Software>(),
+        relationship: new CollectionDiffCategories<Relationship>(),
+        mitigation: new CollectionDiffCategories<Mitigation>(),
+        matrix: new CollectionDiffCategories<Matrix>(),
+        group: new CollectionDiffCategories<Group>(),
+        data_source: new CollectionDiffCategories<DataSource>(),
         data_component: new CollectionDiffCategories<DataComponent>()
     }
 
     public collectionChanges = {
-        technique:      new CollectionDiffCategories<Technique>(),
-        tactic:         new CollectionDiffCategories<Tactic>(),
-        campaign:       new CollectionDiffCategories<Campaign>(),
-        software:       new CollectionDiffCategories<Software>(),
-        relationship:   new CollectionDiffCategories<Relationship>(),
-        mitigation:     new CollectionDiffCategories<Mitigation>(),
-        matrix:         new CollectionDiffCategories<Matrix>(),
-        group:          new CollectionDiffCategories<Group>(),
-        data_source:    new CollectionDiffCategories<DataSource>(),
+        technique: new CollectionDiffCategories<Technique>(),
+        tactic: new CollectionDiffCategories<Tactic>(),
+        campaign: new CollectionDiffCategories<Campaign>(),
+        software: new CollectionDiffCategories<Software>(),
+        relationship: new CollectionDiffCategories<Relationship>(),
+        mitigation: new CollectionDiffCategories<Mitigation>(),
+        matrix: new CollectionDiffCategories<Matrix>(),
+        group: new CollectionDiffCategories<Group>(),
+        data_source: new CollectionDiffCategories<DataSource>(),
         data_component: new CollectionDiffCategories<DataComponent>()
     }
 
     public collection_import_categories = [];
 
 
-    constructor(private route: ActivatedRoute, 
-                private router: Router, 
-                private restApiConnector: RestApiConnectorService,
-                private snackbar: MatSnackBar,
-                private editor: EditorService,
-                public dialog: MatDialog,
-                authenticationService: AuthenticationService,) {
+    constructor(private route: ActivatedRoute,
+        private router: Router,
+        private restApiConnector: RestApiConnectorService,
+        private snackbar: MatSnackBar,
+        private editor: EditorService,
+        public dialog: MatDialog,
+        authenticationService: AuthenticationService,) {
         super(authenticationService);
     }
 
@@ -145,29 +145,29 @@ export class CollectionViewComponent extends StixViewPage implements OnInit {
                 }
 
                 if (this.previousRelease) {
-                    if (this.collection.version.compareTo(this.previousRelease.version) <= 0) { 
+                    if (this.collection.version.compareTo(this.previousRelease.version) <= 0) {
                         results.errors.push({
                             result: "error",
                             field: "version",
                             message: "version number of the collection must be incremented from previous release"
-                        }); 
+                        });
                     } else if (this.collection.version.isDoubleIncrement(this.previousRelease.version)) {
                         results.warnings.push({
                             result: "warning",
                             field: "version",
                             message: `version number of the collection has been incremented twice (v${this.previousRelease.version.toString()} → v${this.collection.version.toString()})`
                         });
-                    } else { 
+                    } else {
                         results.successes.push({
                             result: "success",
                             field: "version",
                             message: "version number of the collection has been incremented from previous release"
                         })
-                    } 
+                    }
                 }
 
                 // check for double increments of version numbers
-                
+
                 // build lookup of STIX ID to version number for new collection
                 let collectionStixIDToObject = new Map<string, StixObject>()
                 for (let attackType in this.collectionChanges) {
@@ -179,7 +179,7 @@ export class CollectionViewComponent extends StixViewPage implements OnInit {
                     for (let oldObject of this.previousRelease.stix_contents) {
                         if (collectionStixIDToObject.has(oldObject.stixID)) { //only if was in collection previously
                             let newObject = collectionStixIDToObject.get(oldObject.stixID)
-                            let objectName = newObject.hasOwnProperty("name")? newObject["name"] : newObject.stixID;
+                            let objectName = newObject.hasOwnProperty("name") ? newObject["name"] : newObject.stixID;
                             if (newObject.version.compareTo(oldObject.version) < 0) {
                                 results.warnings.push({
                                     result: "warning",
@@ -224,8 +224,8 @@ export class CollectionViewComponent extends StixViewPage implements OnInit {
                         "object_modified": object.modified.toISOString()
                     }));
                 }
-                let previousRelationships = this.previousRelease? new Map<string, StixObject>(this.previousRelease.stix_contents.filter(x => x.type == "relationship").map(x => [x.stixID, x]))
-                                                                : new Map<string, StixObject>(); // empty if there was nothing here previously
+                let previousRelationships = this.previousRelease ? new Map<string, StixObject>(this.previousRelease.stix_contents.filter(x => x.type == "relationship").map(x => [x.stixID, x]))
+                    : new Map<string, StixObject>(); // empty if there was nothing here previously
                 // stage relationships for saving and determine stats
                 let relationship_stats = {
                     "total_included": 0,
@@ -254,7 +254,7 @@ export class CollectionViewComponent extends StixViewPage implements OnInit {
                         }));
                         // track stats
                         if (previousRelationships.has(rel_id)) {
-                            if ( previousRelationships.get(rel_id).modified.toISOString() != rel_modified) {
+                            if (previousRelationships.get(rel_id).modified.toISOString() != rel_modified) {
                                 // new version/updated 
                                 relationship_stats.updated++;
                             } else {
@@ -323,7 +323,7 @@ export class CollectionViewComponent extends StixViewPage implements OnInit {
                         message: customMessage
                     })
                 }
-                
+
                 //must have contents
                 if (this.stagedData.length == 0) results.errors.push({
                     result: "error",
@@ -340,7 +340,7 @@ export class CollectionViewComponent extends StixViewPage implements OnInit {
             switchMap((results_and_extras) => { //stage misc objects
                 logger.log("staging identities and marking_defs", results_and_extras)
                 let apis = {
-                    identities: results_and_extras.identities.length > 0 ? forkJoin(results_and_extras.identities.map(x => this.restApiConnector.getIdentity(x))): of([]),
+                    identities: results_and_extras.identities.length > 0 ? forkJoin(results_and_extras.identities.map(x => this.restApiConnector.getIdentity(x))) : of([]),
                     marking_defs: results_and_extras.marking_defs.length > 0 ? forkJoin(results_and_extras.marking_defs.map(x => this.restApiConnector.getMarkingDefinition(x))) : of([])
                 }
                 return forkJoin(apis).pipe(
@@ -448,7 +448,7 @@ export class CollectionViewComponent extends StixViewPage implements OnInit {
                 }
                 // - Else If object is present in deprecations, update presence in deprecations
                 else if (this.collectionChanges[attackType].has_object(object, "deprecations")) {
-                    updates["deprecations"].push(object);  
+                    updates["deprecations"].push(object);
                 }
                 // - Else update presence /add in changes
                 else {
@@ -490,15 +490,15 @@ export class CollectionViewComponent extends StixViewPage implements OnInit {
                 }
                 // - Else If object is present in deprecations, update presence in deprecations
                 else if (this.collectionChanges[attackType].has_object(object, "deprecations")) {
-                    updates["deprecations"].push(object);  
+                    updates["deprecations"].push(object);
                 }
                 // - Else If object present in changes, update presence in changes
                 else if (this.collectionChanges[attackType].has_object(object, "changes")) {
-                    updates["changes"].push(object);  
+                    updates["changes"].push(object);
                 }
                 // - Else update presence /add in minor changes
                 else {
-                    updates["minor_changes"].push(object);  
+                    updates["minor_changes"].push(object);
                 }
             }
             for (let update in updates) {
@@ -631,7 +631,7 @@ export class CollectionViewComponent extends StixViewPage implements OnInit {
         this.route.queryParams.subscribe(params => {
             //reinitialize stix lists in case editing has changed and they have different configs now
             this.editingReloadToggle = false;
-            setTimeout(() => this.editingReloadToggle = true); 
+            setTimeout(() => this.editingReloadToggle = true);
         });
 
         // prepare additional data loading
@@ -647,7 +647,7 @@ export class CollectionViewComponent extends StixViewPage implements OnInit {
                 switchMap((collections) => {
                     // are there newer versions? if so, disable editing
                     if (collections.some(collection => collection.modified.toISOString() > this.collection.modified.toISOString())) {
-                        this.collection.editable = false; 
+                        this.collection.editable = false;
                         this.editor.editable = false;
                     }
                     // get the most recent version which was released for comparison
@@ -676,12 +676,12 @@ export class CollectionViewComponent extends StixViewPage implements OnInit {
                 if (anyResult.hasOwnProperty("previousRelease") && anyResult["previousRelease"]) {
                     this.previousRelease = result["previousRelease"];
                     this.collectionChanges = this.collection.compareTo(this.previousRelease);
-                } else  {
+                } else {
                     this.collectionChanges = this.collection.compareTo(new Collection()); // compare to empty
                 }
                 // initialize potentialChanges based off diff of attackObjects vs contents of collection
                 // create a "collection" to represent the entire ATT&CK dataset
-                this.knowledgeBaseCollection = new Collection( {
+                this.knowledgeBaseCollection = new Collection({
                     "stix": {
                         "x_mitre_contents": this.attackObjects.filter(x => x.stix.hasOwnProperty("modified") && x.stix.modified).map(x => { return { object_ref: x.stix.id, object_modified: x.stix.modified } })
                     },
@@ -692,10 +692,10 @@ export class CollectionViewComponent extends StixViewPage implements OnInit {
                 // for a new collection we not have to option to create it from a groupId
                 // stixObjectID is not set to 'new' for some reason
                 if (this.route.snapshot.data.breadcrumb == 'new collection') {
-                  const groupId = this.route.snapshot.queryParams['groupId'];
-                  if (groupId) {
-                    this.updateCollectionFromGroup(groupId, 'add', true);
-                  }
+                    const groupId = this.route.snapshot.queryParams['groupId'];
+                    if (groupId) {
+                        this.updateCollectionFromGroup(groupId, 'add', true);
+                    }
                 }
             },
             complete: () => { subscription.unsubscribe(); }
@@ -706,37 +706,37 @@ export class CollectionViewComponent extends StixViewPage implements OnInit {
      * Handler for the import groups to the collection button
      */
     private handleImportGroups(): void {
-      // add the list of all groups currently and potentially in the collection and we have a list of all the possible groups to import to our selection w/o making any API calls
-      const allGroups= this.potentialChanges['group'].additions.concat(this.collectionChanges['group'].additions);
-      const select = new SelectionModel(true);
-      const prompt = this.dialog.open(AddDialogComponent, {
-        maxWidth: '70em',
-        maxHeight: '70em',
-        data: {
-          title: `Select groups which you wish to import into the collection`,
-          selectableObjects: allGroups,
-          select: select,
-          type: "group",
-          buttonLabel: 'import groups into collection'
-        },
-      });
-      let numOfGroups = 0;
-      const subscription = prompt.afterClosed().subscribe({
-        next: (response) => {
-            if (response) {
-              const newSelectedGroupStixIds = select.selected;
-              numOfGroups = newSelectedGroupStixIds.length;
-              for (let i  = 0; i < newSelectedGroupStixIds.length; i++) {
-                const groupIdToAdd = newSelectedGroupStixIds[i];
-                this.updateCollectionFromGroup(groupIdToAdd, 'add', false);
-              }
+        // add the list of all groups currently and potentially in the collection and we have a list of all the possible groups to import to our selection w/o making any API calls
+        const allGroups = this.potentialChanges['group'].additions.concat(this.collectionChanges['group'].additions);
+        const select = new SelectionModel(true);
+        const prompt = this.dialog.open(AddDialogComponent, {
+            maxWidth: '70em',
+            maxHeight: '70em',
+            data: {
+                title: `Select groups which you wish to import into the collection`,
+                selectableObjects: allGroups,
+                select: select,
+                type: "group",
+                buttonLabel: 'import groups into collection'
+            },
+        });
+        let numOfGroups = 0;
+        const subscription = prompt.afterClosed().subscribe({
+            next: (response) => {
+                if (response) {
+                    const newSelectedGroupStixIds = select.selected;
+                    numOfGroups = newSelectedGroupStixIds.length;
+                    for (let i = 0; i < newSelectedGroupStixIds.length; i++) {
+                        const groupIdToAdd = newSelectedGroupStixIds[i];
+                        this.updateCollectionFromGroup(groupIdToAdd, 'add', false);
+                    }
+                }
+            },
+            complete: () => {
+                this.snackbar.open(`Added ${numOfGroups} group${numOfGroups > 1 ? 's' : ''} and their related objects to collection`, null, { duration: 5000, panelClass: 'success' });
+                subscription.unsubscribe(); //prevent memory leaks
             }
-        },
-        complete: () => {
-          this.snackbar.open(`Added ${numOfGroups} groups and their related objects to collection`, null, {duration: 5000, panelClass: 'success'});
-          subscription.unsubscribe(); //prevent memory leaks
-        }
-    });
+        });
     }
 
 
@@ -747,58 +747,58 @@ export class CollectionViewComponent extends StixViewPage implements OnInit {
      * @param {boolean} fromPageLoad whether this request is coming from the initial page load of a new collection (if true will change the collection name and description)
      */
     private updateCollectionFromGroup(groupId, direction, fromPageLoad): void {
-      if (fromPageLoad) {
-        this.loading = 'loading objects from group into collection';
-      }
-
-      const apiCalls = {
-        'group': this.restApiConnector.getGroup(groupId),
-        'relationships': this.restApiConnector.getRelatedTo({sourceOrTargetRef: groupId}),
-      }
-
-      const subscription = forkJoin(apiCalls).pipe().subscribe({
-        next: (result: any) => {
-          if (fromPageLoad) {
-            this.collection.name = `Collection from group "${result['group'][0].name}"`;
-            this.collection.description = `This is an **auto-generated** collection from the group "*${result['group'][0].name}*"`;
-          }
-          // add or remove the group
-          if (direction == 'add') {
-            this.moveChanges(result['group'], 'group', 'additions', 'stage');
-          } else if (direction == 'remove'){
-            this.moveChanges(result['group'], 'group', 'additions', 'unstage');
-          }
-          // add or remove the related objects
-          for (let i = 0; i < result['relationships'].data.length; i++) {
-            const relationship = result['relationships'].data[i];
-            let reference = '';
-            if (relationship['target_ref'] == groupId) {
-              reference = 'source_object';
-            } else if (relationship['source_ref'] == groupId) {
-              reference = 'target_object';
-            }
-            let object = relationship[reference];
-            let type = this.typeMap[object.__t]
-            if (type == 'technique') { object = new Technique(object); }
-            else if (type == 'tactic') { object = new Tactic(object); }
-            else if (type == 'campaign') { object = new Campaign(object); }
-            else if (type == 'software') { object = new Software(object.stix.type, object); }
-            else if (type == 'mitigation') { object = new Mitigation(object); }
-            else if (type == 'matrix') { object = new Matrix(object); }
-            else if (type == 'data_source') { object = new DataSource(object); }
-            else if (type == 'data_component') { object = new DataComponent(object); }
-            else { continue; }
-            if (direction == 'add') {
-              this.moveChanges([object], type, 'additions', 'stage');
-            } else if (direction == 'remove'){
-              this.moveChanges([object], type, 'additions', 'unstage');
-            }
-          }
-        },
-        complete: () => { 
-          subscription.unsubscribe();
-          this.loading = null;
+        if (fromPageLoad) {
+            this.loading = 'loading objects from group into collection';
         }
-    })
-  }
+
+        const apiCalls = {
+            'group': this.restApiConnector.getGroup(groupId),
+            'relationships': this.restApiConnector.getRelatedTo({ sourceOrTargetRef: groupId }),
+        }
+
+        const subscription = forkJoin(apiCalls).pipe().subscribe({
+            next: (result: any) => {
+                if (fromPageLoad) {
+                    this.collection.name = `Collection from group "${result['group'][0].name}"`;
+                    this.collection.description = `This is an **auto-generated** collection from the group "*${result['group'][0].name}*"`;
+                }
+                // add or remove the group
+                if (direction == 'add') {
+                    this.moveChanges(result['group'], 'group', 'additions', 'stage');
+                } else if (direction == 'remove') {
+                    this.moveChanges(result['group'], 'group', 'additions', 'unstage');
+                }
+                // add or remove the related objects
+                for (let i = 0; i < result['relationships'].data.length; i++) {
+                    const relationship = result['relationships'].data[i];
+                    let reference = '';
+                    if (relationship['target_ref'] == groupId) {
+                        reference = 'source_object';
+                    } else if (relationship['source_ref'] == groupId) {
+                        reference = 'target_object';
+                    }
+                    let object = relationship[reference];
+                    let type = this.typeMap[object.__t]
+                    if (type == 'technique') { object = new Technique(object); }
+                    else if (type == 'tactic') { object = new Tactic(object); }
+                    else if (type == 'campaign') { object = new Campaign(object); }
+                    else if (type == 'software') { object = new Software(object.stix.type, object); }
+                    else if (type == 'mitigation') { object = new Mitigation(object); }
+                    else if (type == 'matrix') { object = new Matrix(object); }
+                    else if (type == 'data_source') { object = new DataSource(object); }
+                    else if (type == 'data_component') { object = new DataComponent(object); }
+                    else { continue; }
+                    if (direction == 'add') {
+                        this.moveChanges([object], type, 'additions', 'stage');
+                    } else if (direction == 'remove') {
+                        this.moveChanges([object], type, 'additions', 'unstage');
+                    }
+                }
+            },
+            complete: () => {
+                subscription.unsubscribe();
+                this.loading = null;
+            }
+        })
+    }
 }

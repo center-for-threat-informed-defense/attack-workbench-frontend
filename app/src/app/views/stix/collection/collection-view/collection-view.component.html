@@ -8,7 +8,8 @@
                         mode: editing? 'edit' : 'view',
                         object: collection
                     }"></app-name-property>
-                    <app-subheading *ngIf="!editing" [config]="config" (onOpenHistory)="openHistory()" (onOpenNotes)="openNotes()"></app-subheading>
+                    <app-subheading *ngIf="!editing" [config]="config" (onOpenHistory)="openHistory()"
+                        (onOpenNotes)="openNotes()"></app-subheading>
                 </div>
             </div>
             <div class="row width-limited">
@@ -28,10 +29,13 @@
                     <popover-content #releaseExplanation placement="bottom">
                         <div class="releaseExplanation">
                             <p>
-                                Is this version of the collection going to be released? Once a version has been marked as a release, it cannot be un-marked even if you choose not to publish it. 
+                                Is this version of the collection going to be released? Once a version has been marked
+                                as a release, it cannot be un-marked even if you choose not to publish it.
                             </p>
                             <p>
-                                Versions marked as releases will be considered when determining the changes between collection releases, and collection releases will show up independently within the collections list.
+                                Versions marked as releases will be considered when determining the changes between
+                                collection releases, and collection releases will show up independently within the
+                                collections list.
                             </p>
                             <p class="text-warn">
                                 Only mark a version as a release if you are sure you intend to publish it.
@@ -44,7 +48,9 @@
                         <div class="content collection-data">
                             <!-- collection data -->
                             <div class="url">
-                                <code class="copy-url" [cdkCopyToClipboard]="collectionDownloadURL" (click)="snackbar.open('copied to clipboard', null, {duration: 1000})" matTooltip="click to copy URL">
+                                <code class="copy-url" [cdkCopyToClipboard]="collectionDownloadURL"
+                                    (click)="snackbar.open('copied to clipboard', null, {duration: 1000})"
+                                    matTooltip="click to copy URL">
                                     {{collectionDownloadURL}}
                                 </code>
                                 <!-- include notes? -->
@@ -74,19 +80,19 @@
                 </div>
             </div>
             <div class="row width-limited" *ngIf="editing">
-              <div class="col">
-                <div class="button-group">
-                  <button mat-mini-fab class="extended-fab-button" color="primary" (click)="handleImportGroups()">
-                    <span class="material-symbols-outlined">
-                      deployed_code_update
-                    </span>
-                    <span class="text-label">
-                      Import groups and their related objects into this collection
-                    </span>
-                  </button>
+                <div class="col">
+                    <div class="button-group">
+                        <button mat-mini-fab class="extended-fab-button" color="primary" (click)="handleImportGroups()">
+                            <span class="material-symbols-outlined">
+                                deployed_code_update
+                            </span>
+                            <span class="text-label">
+                                Import groups and their related objects into this collection
+                            </span>
+                        </button>
+                    </div>
                 </div>
-              </div>
-          </div>
+            </div>
             <div class="row">
                 <div class="col">
                     <h2 class="section-header">Changes in this release</h2>
@@ -97,9 +103,8 @@
                     <!-- expansion panels -->
                     <mat-accordion>
                         <mat-expansion-panel class="mat-elevation-z0"
-                                *ngFor="let attackType of ['matrix', 'tactic', 'technique', 'mitigation', 'campaign', 'group', 'software', 'data_source', 'data_component']"
-                                [expanded]="panel == attackType"
-                                (click)="panel = attackType">
+                            *ngFor="let attackType of ['matrix', 'tactic', 'technique', 'mitigation', 'campaign', 'group', 'software', 'data_source', 'data_component']"
+                            [expanded]="panel == attackType" (click)="panel = attackType">
                             <!-- header -->
                             <mat-expansion-panel-header>
                                 <mat-panel-title>
@@ -111,10 +116,9 @@
                                 <!-- automatically add tactics -->
                                 <div *ngIf="editing && attackType == 'tactic'" class="row apply-button">
                                     <button mat-mini-fab class="extended-fab-button" color="primary"
-                                            (click)="addObjectsToCollection(attackType)"
-                                            [disabled]="autoAddDisabled(attackType)"
-                                            matTooltipPosition="above"
-                                            matTooltip="automatically find and add {{plural[attackType]}} related to {{relevantObjects(attackType)}} in this collection">
+                                        (click)="addObjectsToCollection(attackType)"
+                                        [disabled]="autoAddDisabled(attackType)" matTooltipPosition="above"
+                                        matTooltip="automatically find and add {{plural[attackType]}} related to {{relevantObjects(attackType)}} in this collection">
                                         <mat-icon>playlist_add</mat-icon>
                                         <span class="text-label">apply {{plural[attackType]}} to collection</span>
                                     </button>
@@ -153,20 +157,20 @@
                                                                 'position': 'end'
                                                             }
                                                         }"
-                                                        (onRowAction)="moveChanges([$event], attackType, 'additions', 'stage')"></app-stix-list>
+                                                            (onRowAction)="moveChanges([$event], attackType, 'additions', 'stage')"></app-stix-list>
                                                     </div>
                                                     <div class="col controls narrow" *ngIf="editing">
-                                                        <button mat-icon-button 
-                                                                matTooltip="stage all additions" 
-                                                                [disabled]="potentialChanges[attackType].additions.length == 0"
-                                                                (click)="moveChanges(potentialChanges[attackType].additions, attackType, 'additions', 'stage')">
-                                                            <mat-icon aria-label="move all to collection">double_arrow</mat-icon>
+                                                        <button mat-icon-button matTooltip="stage all additions"
+                                                            [disabled]="potentialChanges[attackType].additions.length == 0"
+                                                            (click)="moveChanges(potentialChanges[attackType].additions, attackType, 'additions', 'stage')">
+                                                            <mat-icon
+                                                                aria-label="move all to collection">double_arrow</mat-icon>
                                                         </button>
-                                                        <button mat-icon-button 
-                                                                matTooltip="unstage all additions" 
-                                                                [disabled]="collectionChanges[attackType].additions.length == 0"
-                                                                (click)="moveChanges(collectionChanges[attackType].additions, attackType, 'additions', 'unstage')">
-                                                            <mat-icon aria-label="move all from collection" class="icon-mirror">double_arrow</mat-icon>
+                                                        <button mat-icon-button matTooltip="unstage all additions"
+                                                            [disabled]="collectionChanges[attackType].additions.length == 0"
+                                                            (click)="moveChanges(collectionChanges[attackType].additions, attackType, 'additions', 'unstage')">
+                                                            <mat-icon aria-label="move all from collection"
+                                                                class="icon-mirror">double_arrow</mat-icon>
                                                         </button>
                                                     </div>
                                                     <div class="col">
@@ -180,7 +184,7 @@
                                                                 'position': 'start'
                                                             } : null
                                                         }"
-                                                        (onRowAction)="moveChanges([$event], attackType, 'additions', 'unstage')"></app-stix-list>
+                                                            (onRowAction)="moveChanges([$event], attackType, 'additions', 'unstage')"></app-stix-list>
                                                     </div>
                                                 </div>
                                             </div>
@@ -199,8 +203,10 @@
                                         <ng-template matExpansionPanelContent>
                                             <div class="grid spacing-0">
                                                 <div class="row">
-                                                    <div class="col center vertical-center vertical-center" *ngIf="editing">
-                                                        <h4 class="text-label">Newer versions available in the knowledge base</h4>
+                                                    <div class="col center vertical-center vertical-center"
+                                                        *ngIf="editing">
+                                                        <h4 class="text-label">Newer versions available in the knowledge
+                                                            base</h4>
                                                     </div>
                                                     <div class="col controls narrow" *ngIf="editing"></div>
                                                     <div class="col center vertical-center vertical-center">
@@ -219,20 +225,20 @@
                                                                 'position': 'end'
                                                             }
                                                         }"
-                                                        (onRowAction)="moveChanges([$event], attackType, 'changes', 'stage')"></app-stix-list>
+                                                            (onRowAction)="moveChanges([$event], attackType, 'changes', 'stage')"></app-stix-list>
                                                     </div>
                                                     <div class="col controls narrow" *ngIf="editing">
-                                                        <button mat-icon-button 
-                                                                matTooltip="stage all changes" 
-                                                                [disabled]="potentialChanges[attackType].changes.length == 0"
-                                                                (click)="moveChanges(potentialChanges[attackType].changes, attackType, 'changes', 'stage')">
-                                                                <mat-icon aria-label="move all to collection">double_arrow</mat-icon>
+                                                        <button mat-icon-button matTooltip="stage all changes"
+                                                            [disabled]="potentialChanges[attackType].changes.length == 0"
+                                                            (click)="moveChanges(potentialChanges[attackType].changes, attackType, 'changes', 'stage')">
+                                                            <mat-icon
+                                                                aria-label="move all to collection">double_arrow</mat-icon>
                                                         </button>
-                                                        <button mat-icon-button 
-                                                                matTooltip="unstage all changes" 
-                                                                [disabled]="collectionChanges[attackType].changes.length == 0"
-                                                                (click)="moveChanges(collectionChanges[attackType].changes, attackType, 'changes', 'unstage')">
-                                                            <mat-icon aria-label="move all from collection" class="icon-mirror">double_arrow</mat-icon>
+                                                        <button mat-icon-button matTooltip="unstage all changes"
+                                                            [disabled]="collectionChanges[attackType].changes.length == 0"
+                                                            (click)="moveChanges(collectionChanges[attackType].changes, attackType, 'changes', 'unstage')">
+                                                            <mat-icon aria-label="move all from collection"
+                                                                class="icon-mirror">double_arrow</mat-icon>
                                                         </button>
                                                     </div>
                                                     <div class="col">
@@ -246,7 +252,7 @@
                                                                 'position': 'start'
                                                             } : null
                                                         }"
-                                                        (onRowAction)="moveChanges([$event], attackType, 'changes', 'unstage')"></app-stix-list>
+                                                            (onRowAction)="moveChanges([$event], attackType, 'changes', 'unstage')"></app-stix-list>
                                                     </div>
                                                 </div>
                                             </div>
@@ -265,8 +271,10 @@
                                         <ng-template matExpansionPanelContent>
                                             <div class="grid spacing-0">
                                                 <div class="row">
-                                                    <div class="col center vertical-center vertical-center" *ngIf="editing">
-                                                        <h4 class="text-label">Newer versions available in the knowledge base</h4>
+                                                    <div class="col center vertical-center vertical-center"
+                                                        *ngIf="editing">
+                                                        <h4 class="text-label">Newer versions available in the knowledge
+                                                            base</h4>
                                                     </div>
                                                     <div class="col controls narrow" *ngIf="editing"></div>
                                                     <div class="col center vertical-center vertical-center">
@@ -285,20 +293,20 @@
                                                                 'position': 'end'
                                                             }
                                                         }"
-                                                        (onRowAction)="moveChanges([$event], attackType, 'minor_changes', 'stage')"></app-stix-list>
+                                                            (onRowAction)="moveChanges([$event], attackType, 'minor_changes', 'stage')"></app-stix-list>
                                                     </div>
                                                     <div class="col controls narrow" *ngIf="editing">
-                                                        <button mat-icon-button 
-                                                                matTooltip="stage all minor changes" 
-                                                                [disabled]="potentialChanges[attackType].minor_changes.length == 0"
-                                                                (click)="moveChanges(potentialChanges[attackType].minor_changes, attackType, 'minor_changes', 'stage')">
-                                                            <mat-icon aria-label="move all to collection">double_arrow</mat-icon>
+                                                        <button mat-icon-button matTooltip="stage all minor changes"
+                                                            [disabled]="potentialChanges[attackType].minor_changes.length == 0"
+                                                            (click)="moveChanges(potentialChanges[attackType].minor_changes, attackType, 'minor_changes', 'stage')">
+                                                            <mat-icon
+                                                                aria-label="move all to collection">double_arrow</mat-icon>
                                                         </button>
-                                                        <button mat-icon-button 
-                                                                matTooltip="unstage all minor changes" 
-                                                                [disabled]="collectionChanges[attackType].minor_changes.length == 0"
-                                                                (click)="moveChanges(collectionChanges[attackType].minor_changes, attackType, 'minor_changes', 'unstage')">
-                                                            <mat-icon aria-label="move all from collection" class="icon-mirror">double_arrow</mat-icon>
+                                                        <button mat-icon-button matTooltip="unstage all minor changes"
+                                                            [disabled]="collectionChanges[attackType].minor_changes.length == 0"
+                                                            (click)="moveChanges(collectionChanges[attackType].minor_changes, attackType, 'minor_changes', 'unstage')">
+                                                            <mat-icon aria-label="move all from collection"
+                                                                class="icon-mirror">double_arrow</mat-icon>
                                                         </button>
                                                     </div>
                                                     <div class="col">
@@ -312,7 +320,7 @@
                                                                 'position': 'start'
                                                             } : null
                                                         }"
-                                                        (onRowAction)="moveChanges([$event], attackType, 'minor_changes', 'unstage')"></app-stix-list>
+                                                            (onRowAction)="moveChanges([$event], attackType, 'minor_changes', 'unstage')"></app-stix-list>
                                                     </div>
                                                 </div>
                                             </div>
@@ -331,8 +339,10 @@
                                         <ng-template matExpansionPanelContent>
                                             <div class="grid spacing-0">
                                                 <div class="row">
-                                                    <div class="col center vertical-center vertical-center" *ngIf="editing">
-                                                        <h4 class="text-label">Objects revoked in the knowledge base</h4>
+                                                    <div class="col center vertical-center vertical-center"
+                                                        *ngIf="editing">
+                                                        <h4 class="text-label">Objects revoked in the knowledge base
+                                                        </h4>
                                                     </div>
                                                     <div class="col controls narrow" *ngIf="editing"></div>
                                                     <div class="col center vertical-center vertical-center">
@@ -351,20 +361,20 @@
                                                                 'position': 'end'
                                                             }
                                                         }"
-                                                        (onRowAction)="moveChanges([$event], attackType, 'revocations', 'stage')"></app-stix-list>
+                                                            (onRowAction)="moveChanges([$event], attackType, 'revocations', 'stage')"></app-stix-list>
                                                     </div>
                                                     <div class="col controls narrow" *ngIf="editing">
-                                                        <button mat-icon-button 
-                                                                matTooltip="stage all revocations" 
-                                                                [disabled]="potentialChanges[attackType].revocations.length == 0"
-                                                                (click)="moveChanges(potentialChanges[attackType].revocations, attackType, 'revocations', 'stage')">
-                                                            <mat-icon aria-label="move all to collection">double_arrow</mat-icon>
+                                                        <button mat-icon-button matTooltip="stage all revocations"
+                                                            [disabled]="potentialChanges[attackType].revocations.length == 0"
+                                                            (click)="moveChanges(potentialChanges[attackType].revocations, attackType, 'revocations', 'stage')">
+                                                            <mat-icon
+                                                                aria-label="move all to collection">double_arrow</mat-icon>
                                                         </button>
-                                                        <button mat-icon-button 
-                                                                matTooltip="unstage all revocations" 
-                                                                [disabled]="collectionChanges[attackType].revocations.length == 0"
-                                                                (click)="moveChanges(collectionChanges[attackType].revocations, attackType, 'revocations', 'unstage')">
-                                                            <mat-icon aria-label="move all from collection" class="icon-mirror">double_arrow</mat-icon>
+                                                        <button mat-icon-button matTooltip="unstage all revocations"
+                                                            [disabled]="collectionChanges[attackType].revocations.length == 0"
+                                                            (click)="moveChanges(collectionChanges[attackType].revocations, attackType, 'revocations', 'unstage')">
+                                                            <mat-icon aria-label="move all from collection"
+                                                                class="icon-mirror">double_arrow</mat-icon>
                                                         </button>
                                                     </div>
                                                     <div class="col">
@@ -378,7 +388,7 @@
                                                                 'position': 'start'
                                                             } : null
                                                         }"
-                                                        (onRowAction)="moveChanges([$event], attackType, 'revocations', 'unstage')"></app-stix-list>
+                                                            (onRowAction)="moveChanges([$event], attackType, 'revocations', 'unstage')"></app-stix-list>
                                                     </div>
                                                 </div>
                                             </div>
@@ -397,8 +407,10 @@
                                         <ng-template matExpansionPanelContent>
                                             <div class="grid spacing-0">
                                                 <div class="row">
-                                                    <div class="col center vertical-center vertical-center" *ngIf="editing">
-                                                        <h4 class="text-label">Objects deprecated in the knowledge base</h4>
+                                                    <div class="col center vertical-center vertical-center"
+                                                        *ngIf="editing">
+                                                        <h4 class="text-label">Objects deprecated in the knowledge base
+                                                        </h4>
                                                     </div>
                                                     <div class="col controls narrow" *ngIf="editing"></div>
                                                     <div class="col center vertical-center vertical-center">
@@ -417,20 +429,20 @@
                                                                 'position': 'end'
                                                             }
                                                         }"
-                                                        (onRowAction)="moveChanges([$event], attackType, 'deprecations', 'stage')"></app-stix-list>
+                                                            (onRowAction)="moveChanges([$event], attackType, 'deprecations', 'stage')"></app-stix-list>
                                                     </div>
                                                     <div class="col controls narrow" *ngIf="editing">
-                                                        <button mat-icon-button 
-                                                                matTooltip="stage all deprecations" 
-                                                                [disabled]="potentialChanges[attackType].deprecations.length == 0"
-                                                                (click)="moveChanges(potentialChanges[attackType].deprecations, attackType, 'deprecations', 'stage')">
-                                                            <mat-icon aria-label="move all to collection">double_arrow</mat-icon>
+                                                        <button mat-icon-button matTooltip="stage all deprecations"
+                                                            [disabled]="potentialChanges[attackType].deprecations.length == 0"
+                                                            (click)="moveChanges(potentialChanges[attackType].deprecations, attackType, 'deprecations', 'stage')">
+                                                            <mat-icon
+                                                                aria-label="move all to collection">double_arrow</mat-icon>
                                                         </button>
-                                                        <button mat-icon-button 
-                                                                matTooltip="unstage all deprecations" 
-                                                                [disabled]="collectionChanges[attackType].deprecations.length == 0"
-                                                                (click)="moveChanges(collectionChanges[attackType].deprecations, attackType, 'deprecations', 'unstage')">
-                                                            <mat-icon aria-label="move all from collection" class="icon-mirror">double_arrow</mat-icon>
+                                                        <button mat-icon-button matTooltip="unstage all deprecations"
+                                                            [disabled]="collectionChanges[attackType].deprecations.length == 0"
+                                                            (click)="moveChanges(collectionChanges[attackType].deprecations, attackType, 'deprecations', 'unstage')">
+                                                            <mat-icon aria-label="move all from collection"
+                                                                class="icon-mirror">double_arrow</mat-icon>
                                                         </button>
                                                     </div>
                                                     <div class="col">
@@ -444,7 +456,7 @@
                                                                 'position': 'start'
                                                             } : null
                                                         }"
-                                                        (onRowAction)="moveChanges([$event], attackType, 'deprecations', 'unstage')"></app-stix-list>
+                                                            (onRowAction)="moveChanges([$event], attackType, 'deprecations', 'unstage')"></app-stix-list>
                                                     </div>
                                                 </div>
                                             </div>
@@ -472,36 +484,47 @@
                             </ng-template>
                         </mat-expansion-panel>
                         <!-- relationships -->
-                        <mat-expansion-panel  class="mat-elevation-z0"
-                                [expanded]="panel == 'relationships'"
-                                (click)="panel = 'relationships'">
+                        <mat-expansion-panel class="mat-elevation-z0" [expanded]="panel == 'relationships'"
+                            (click)="panel = 'relationships'">
                             <mat-expansion-panel-header>
                                 <mat-panel-title>
                                     <h3>Relationship</h3>
                                 </mat-panel-title>
                             </mat-expansion-panel-header>
                             <ng-template matExpansionPanelContent>
-                                Relationships included in the collection will be updated automatically when the collection is saved.
+                                Relationships included in the collection will be updated automatically when the
+                                collection is saved.
                                 <ul>
                                     <li>
-                                        All relationships between objects in the collection will be included at their most recent version.
+                                        All relationships between objects in the collection will be included at their
+                                        most recent version.
                                         <ul>
                                             <li>
-                                                New relationships between objects already in the collection will be included even if their attached objects did not change or the changes to said objects were not staged.
+                                                New relationships between objects already in the collection will be
+                                                included even if their attached objects did not change or the changes to
+                                                said objects were not staged.
                                             </li>
                                             <li>
-                                                Existing relationships will be updated if newer versions are available even if the objects they are attached to did not change or the changes to said objects were not staged.
+                                                Existing relationships will be updated if newer versions are available
+                                                even if the objects they are attached to did not change or the changes
+                                                to said objects were not staged.
                                             </li>
                                             <li>
-                                                Updated relationships will exist at the version they existed at when the collection is saved; further updates to relationships after saving will not be included.
+                                                Updated relationships will exist at the version they existed at when the
+                                                collection is saved; further updates to relationships after saving will
+                                                not be included.
                                             </li>
                                         </ul>
                                     </li>
                                     <li>
-                                        Relationships will <em>not</em> be included if only one of their attached objects is in the collection.
+                                        Relationships will <em>not</em> be included if only one of their attached
+                                        objects is in the collection.
                                     </li>
                                     <li>
-                                        Relationships conveying revocations will be included only if the revoked version of the object they are attached to is included (staged) in the collection. Objects which have revoked versions <em>not</em> included in the collection won't trigger the inclusion of revoking relationships.
+                                        Relationships conveying revocations will be included only if the revoked version
+                                        of the object they are attached to is included (staged) in the collection.
+                                        Objects which have revoked versions <em>not</em> included in the collection
+                                        won't trigger the inclusion of revoking relationships.
                                     </li>
                                 </ul>
                                 <p>
@@ -510,9 +533,8 @@
                             </ng-template>
                         </mat-expansion-panel>
                         <!-- marking definitions -->
-                        <mat-expansion-panel  class="mat-elevation-z0"
-                                [expanded]="panel == 'marking_defs'"
-                                (click)="panel = 'marking_defs'">
+                        <mat-expansion-panel class="mat-elevation-z0" [expanded]="panel == 'marking_defs'"
+                            (click)="panel = 'marking_defs'">
                             <mat-expansion-panel-header>
                                 <mat-panel-title>
                                     <h3>Marking Definition</h3>
