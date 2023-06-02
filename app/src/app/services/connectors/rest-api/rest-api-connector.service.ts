@@ -939,9 +939,17 @@ export class RestApiConnectorService extends ApiConnector {
     /**
      * DELETE a collection
      * @param {string} id the STIX ID of the object to delete
+     * @param {boolean} deleteAllContents whether or not to delete all of the contents of the collection
      * @returns {Observable<{}>} observable of the response body
      */
-    public get deleteCollection() { return this.deleteStixObjectFactory("collection"); }
+    public get deleteCollection() { return function(id: string, deleteAllContents: boolean): Observable<{}> {
+      let url = `${this.apiUrl}/collections/${id}?deleteAllContents=${deleteAllContents ? 'true' : 'false'}`;
+      return this.http.delete(url).pipe(
+          tap(this.handleSuccess(`collection deleted`)),
+          catchError(this.handleError_raise()),
+          share() // multicast so that multiple subscribers don't trigger the call twice. THIS MUST BE THE LAST LINE OF THE PIPE
+      );
+  } }
     /**
      * DELETE a relationship
      * @param {string} id the STIX ID of the object to delete
