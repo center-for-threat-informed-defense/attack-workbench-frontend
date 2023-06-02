@@ -26,6 +26,7 @@ export class ToolbarComponent implements OnInit {
     public get hasWorkflow(): boolean { return this.editorService.hasWorkflow; }
     public get hasRelationships(): boolean { return this.editorService.hasRelationships; }
     public get deletable(): boolean { return this.editorService.deletable && this.authenticationService.canDelete(); }
+    public get isAnImportedCollection(): boolean { return this.editorService.isAnImportedCollection; }
 
     public get isLoggedIn(): boolean { return this.authenticationService.isLoggedIn; }
 

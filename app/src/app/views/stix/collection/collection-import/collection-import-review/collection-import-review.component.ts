@@ -45,6 +45,7 @@ export class CollectionImportReviewComponent extends StixViewPage implements OnI
     ngOnInit() {
         // disable editing
         this.editor.editable = false;
+        this.editor.isAnImportedCollection = true;
         // parse collection into object_import_categories
         
         //build category lookup
