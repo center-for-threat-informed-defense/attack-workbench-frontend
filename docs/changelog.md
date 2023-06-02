@@ -41,6 +41,8 @@
 -   Added ability to search objects by one or more users.
 -   Added a new user profile page where logged in users can view their recent activity across the Workbench and view/edit their display name.
 - 	Added ability to view att&ck objects from workbench on an external att&ck website if they exist
+-	Added ability to create collections from a group and all related objects
+-	Added button to import groups and their related objects into new or existing collections
 
 ## 21 April 2023
 

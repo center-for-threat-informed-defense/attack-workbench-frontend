@@ -1,4 +1,5 @@
 import { Component, OnInit, ViewEncapsulation, Output, EventEmitter, Input, ViewChild } from '@angular/core';
+import { Router } from '@angular/router';
 import { PopoverContentComponent } from 'ngx-smart-popover';
 import { ValidationData } from 'src/app/classes/serializable';
 import { AuthenticationService } from 'src/app/services/connectors/authentication/authentication.service';
@@ -26,10 +27,11 @@ export class ToolbarComponent implements OnInit {
     public get hasWorkflow(): boolean { return this.editorService.hasWorkflow; }
     public get hasRelationships(): boolean { return this.editorService.hasRelationships; }
     public get deletable(): boolean { return this.editorService.deletable && this.authenticationService.canDelete(); }
+    public get isGroup(): boolean {return this.editorService.isGroup;}
 
     public get isLoggedIn(): boolean { return this.authenticationService.isLoggedIn; }
 
-    constructor(private sidebarService: SidebarService, private editorService: EditorService, private authenticationService: AuthenticationService, private websiteIntegrationService:WebsiteIntegrationService) {}
+    constructor(private sidebarService: SidebarService, private editorService: EditorService, private authenticationService: AuthenticationService, private websiteIntegrationService:WebsiteIntegrationService, private router: Router) {}
 
     ngOnInit() {
         // intentionally left blank
@@ -70,5 +72,9 @@ export class ToolbarComponent implements OnInit {
 
     public openExternalUrl() {
       window.open(this.websiteIntegrationService.currentWebIntegrationStatus.url)
+    }
+
+    public createCollectionFromGroup() {
+      this.router.navigateByUrl(`/collection/new?editing=true&groupId=${this.editorService.stixId}`);
     }
 }
