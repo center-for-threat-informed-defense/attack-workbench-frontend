@@ -759,8 +759,8 @@ export class CollectionViewComponent extends StixViewPage implements OnInit {
         const subscription = forkJoin(apiCalls).pipe().subscribe({
             next: (result: any) => {
                 if (fromPageLoad) {
-                    this.collection.name = `Collection from group "${result['group'][0].name}"`;
-                    this.collection.description = `This is an **auto-generated** collection from the group "*${result['group'][0].name}*"`;
+                    this.collection.name = `Collection from Group "${result['group'][0].name}"`;
+                    this.collection.description = `This collection contains group "${result['group'][0].name}" and its related objects.`;
                 }
                 // add or remove the group
                 if (direction == 'add') {
