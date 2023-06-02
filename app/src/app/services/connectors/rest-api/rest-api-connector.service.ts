@@ -1286,12 +1286,17 @@ export class RestApiConnectorService extends ApiConnector {
      */
     private cannotForceImport(err: any): boolean {
         if (err.status == "400") {
-            let bundleErrors = err.error.bundleErrors;
-            let objectErrors = err.error.objectErrors.summary;
-            if (bundleErrors.noCollection || bundleErrors.moreThanOneCollection || bundleErrors.badlyFormattedCollection || objectErrors.duplicateObjectInBundleCount) {
-                return true;
+            try {
+                let bundleErrors = err.error.bundleErrors;
+                let objectErrors = err.error.objectErrors.summary;
+                if (bundleErrors.noCollection || bundleErrors.moreThanOneCollection || bundleErrors.badlyFormattedCollection || objectErrors.duplicateObjectInBundleCount) {
+                    return true;
+                }
+                return false;
+            } catch (_) {
+                // continue to force import; errors will be displayed to the user if the collection is invalid
+                return false;
             }
-            return false;
         }
         return true;
     }
