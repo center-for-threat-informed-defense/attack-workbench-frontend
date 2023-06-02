@@ -18,6 +18,7 @@ export class EditorService {
     public deletable: boolean = false;
     public hasWorkflow: boolean = true;
     public hasRelationships: boolean = true;
+    public isAnImportedCollection: boolean = false;
     public onSave = new EventEmitter();
     public onDelete = new EventEmitter();
     public onEditingStopped = new EventEmitter();
@@ -36,6 +37,7 @@ export class EditorService {
         private dialog: MatDialog) {
         this.router.events.subscribe(event => {
             if (event instanceof NavigationEnd) {
+                this.isAnImportedCollection = false;
                 let editable = this.getEditableFromRoute(this.router.routerState, this.router.routerState.root);
                 let attackType = this.route.root.firstChild.snapshot.data.breadcrumb;
                 this.editable = editable.length > 0 && editable.every(x => x) && this.authenticationService.canEdit(attackType);
