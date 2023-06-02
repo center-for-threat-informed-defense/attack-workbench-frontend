@@ -10,15 +10,15 @@
 #
 # Environment Variables
 # HOST_CERTS_PATH: path to the directory on the host where the certificate file is located
-# CERTS_FILENAME: name of the certificate file
+# CERTS_FILENAME: certs/MITRE-chain.txt
 #
 # Running docker compose at the command line:
 # docker-compose -f docker-compose.yml -f docker-compose.certs.yml up
 
 version: "3.9"
 services:
-  collection-manager:
+  rest-api:
     volumes:
-      - ${HOST_CERTS_PATH}:/usr/src/app/certs
+      - ./certs:/usr/src/app/certs
     environment:
-      - NODE_EXTRA_CA_CERTS=./certs/${CERTS_FILENAME}
+      - NODE_EXTRA_CA_CERTS=./certs/MITRE-chain.txt
