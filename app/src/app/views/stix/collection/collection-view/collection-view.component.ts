@@ -726,8 +726,7 @@ export class CollectionViewComponent extends StixViewPage implements OnInit {
                 if (response) {
                     const newSelectedGroupStixIds = select.selected;
                     numOfGroups = newSelectedGroupStixIds.length;
-                    for (let i = 0; i < newSelectedGroupStixIds.length; i++) {
-                        const groupIdToAdd = newSelectedGroupStixIds[i];
+                    for (let groupIdToAdd of newSelectedGroupStixIds) {
                         this.updateCollectionFromGroup(groupIdToAdd, 'add', false);
                     }
                 }
@@ -769,8 +768,7 @@ export class CollectionViewComponent extends StixViewPage implements OnInit {
                     this.moveChanges(result['group'], 'group', 'additions', 'unstage');
                 }
                 // add or remove the related objects
-                for (let i = 0; i < result['relationships'].data.length; i++) {
-                    const relationship = result['relationships'].data[i];
+                for (let relationship of result['relationships'].data) {
                     let reference = '';
                     if (relationship['target_ref'] == groupId) {
                         reference = 'source_object';
