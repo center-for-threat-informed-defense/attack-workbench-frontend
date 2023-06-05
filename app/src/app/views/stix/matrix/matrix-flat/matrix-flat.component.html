@@ -1,10 +1,11 @@
 <div class="matrix-container">
   <table class="matrix flat">
+    <caption hidden>Matrix view displaying the nested structure of techniques and tactics</caption>
     <thead>
       <tr class="tactic">
-        <td *ngFor="let tactic of tactics">
+        <th *ngFor="let tactic of tactics">
           <app-tactic-cell [tactic]="tactic" [showID]="showID"></app-tactic-cell>
-        </td>
+        </th>
       </tr>
     </thead>
     <tbody>
@@ -13,6 +14,8 @@
           <ng-container *ngFor="let technique of tactic.technique_objects">
             <tr *ngIf="technique.subTechniques.length <=0">
               <table class="regularTechnique">
+                <caption hidden>Technique with no subtechniques</caption>
+                <th hidden></th>
                 <tr>
                   <td class="technique">
                     <app-technique-cell [technique]="technique"
@@ -25,6 +28,8 @@
             </tr>
             <tr *ngIf="technique.subTechniques.length > 0">
               <table class="supertechnique">
+                <caption hidden>Technique with subtechniques</caption>
+                <th hidden></th>
                 <tr>
                   <td class="sidebar technique" (click)="onToggleSubtechniquesVisible(technique, tactic)" style="vertical-align: middle;">
                     <div class="handle"> = </div>
