@@ -37,7 +37,15 @@
 ### ATT&K Workbench version 1.3.2
 
 #### New Features in 1.3.2
+-   Added admin interface for creating and managing teams.
 -   Added ability to search objects by one or more users.
+-   Added a new user profile page where logged in users can view their recent activity across the Workbench and view/edit their display name.
+- 	Added ability to configure an external ATT&CK Website in which to view Workbench objects, if a relevant object page exists.
+-	Added ability to create a collection from a group and its related objects.
+-	Added button to import groups and their related objects into new or existing collections.
+
+#### Improvements in 1.3.2
+-   Improved error handling during collection import.
 
 ## 21 April 2023
 

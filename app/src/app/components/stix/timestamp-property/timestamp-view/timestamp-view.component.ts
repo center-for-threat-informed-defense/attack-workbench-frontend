@@ -61,7 +61,7 @@ export class TimestampViewComponent implements OnInit {
     }
 
     /**
-     *get the formatted absolute timestamp with hour/minute
+     * get the formatted absolute timestamp with hour/minute
      */
     public get timestamp(): string {
         if (!this.config.object.hasOwnProperty(this.config.field)) return "";

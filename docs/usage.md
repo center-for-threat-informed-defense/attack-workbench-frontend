@@ -109,7 +109,7 @@ Objects imported from collections can be modified, or new objects created. The p
 
 ### Attribution of Edits
 
-The Workbench will attribute edits to you when you either edit existing objects or create new objects. Edit attribution is shown next to created and modified dates and in the object history timeline. Attribution is represented by an automatically generated icon to easily distinguish different editing/creating organizations; hovering over the icon will display the full organization name. 
+The Workbench will attribute edits to you when you edit existing objects or create new objects. Attribution is shown next to created and modified dates and in the object history timeline. Attribution is represented by an automatically generated icon to easily distinguish different editing/creating organizations or individuals; hovering over the icon will display the full organization name or user display name. Your user display name can be edited or removed through the user profile page. If removed, your username will be shown in its place for attribution.
 
 Edits you make in the knowledge base are attributed to your _organization identity_, which is unique to your Workbench instance. The organization identity can be edited from the admin page accessible from the application homepage; when you first open the application you will be prompted to edit the organization identity to ensure the placeholder identity is not used. Changes to your organization identity will automatically update objects in the knowledge base, but attribution within exported collections will not be automatically affected. 
 

@@ -1,0 +1,64 @@
+<div class="teams-view-page view-page grid spacing-16" *ngIf="team else loadingTeam">
+  <div class="row">
+    <div class="col">
+      <app-name-property [config]="{
+          mode: editing? 'edit' : 'view',
+          object: team
+      }"></app-name-property>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col">
+        <!-- DESCRIPTION -->
+        <app-descriptive-property [config]="{
+            mode: editing? 'edit' : 'view',
+            object: team,
+            field: 'description',
+            firstParagraphOnly: false, 
+            parseReferences: false,
+            label: 'Description'
+        }"></app-descriptive-property>
+    </div>
+  </div>
+  <span *ngIf="!editing">
+    <div class="users-header-row">
+      <div class="row">
+          <div class="col">
+            <h2>Users</h2>
+          </div>
+        </div>
+        <div class="form-row space-around">
+          <div class="col">
+            <div class="button-group">
+              <button mat-mini-fab class="extended-fab-button" color="primary" (click)="updateUsers()">
+                <mat-icon>supervisor_account</mat-icon> <span class="text-label">add or remove users</span>
+              </button>
+            </div>
+          </div>
+      </div>
+    </div>
+    <div class="team-user-list">
+      <app-users-list [config]="{'columnsToDisplay':['username','email'], 'team':team, 'showSearch': false, 'showFilters': false, 'mode':'view'}"></app-users-list> 
+    </div>
+    <div class="col">
+      <div class="row">
+        <mat-expansion-panel>
+          <mat-expansion-panel-header>
+            <mat-panel-title>
+              Team Recent Activity 
+            </mat-panel-title>
+          </mat-expansion-panel-header>
+          <app-recent-activity [identities]="team.userIDs"></app-recent-activity>
+        </mat-expansion-panel>
+      </div>
+    </div>
+  </span>
+  <ng-template #loadingUsers>
+      <app-loading-overlay message="loading users"></app-loading-overlay>
+  </ng-template>
+</div>
+
+
+<ng-template #loadingTeam>
+  <app-loading-overlay message="loading team"></app-loading-overlay>
+</ng-template>
