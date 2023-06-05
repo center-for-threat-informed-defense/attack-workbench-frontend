@@ -44,6 +44,9 @@
 -	Added ability to create a collection from a group and its related objects.
 -	Added button to import groups and their related objects into new or existing collections.
 
+#### Improvements in 1.3.2
+-   Improved error handling during collection import.
+
 ## 21 April 2023
 
 ### ATT&CK Workbench version 1.3.1
