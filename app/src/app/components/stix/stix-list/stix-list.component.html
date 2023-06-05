@@ -3,39 +3,42 @@
         <!-- -------- -->
         <!-- CONTROLS -->
         <!-- -------- -->
-        <div class="controls" *ngIf="!(config.type && config.type == 'relationship')">
+        <div class="controls">
             <div class="input-group">
-                <mat-form-field class="search" appearance="fill">
-                    <mat-label>search</mat-label>
-                    <input matInput #search [(ngModel)]="searchQuery">
-                </mat-form-field>
-    
-                <!-- don't show options for collections or if loading data not from REST API -->
-                <mat-form-field appearance="fill" *ngIf="config.showFilters && !(config.hasOwnProperty('stixObjects'))">
-                    <mat-label>options</mat-label>
-                    <mat-select multiple [(ngModel)]="filter" (selectionChange)="applyControls()">
-                        <mat-optgroup *ngIf="config.showUserSearch" label="users">
-                            <mat-option disabled class="no-checkbox">
-                                <div class="user-search" (click)="openUserSelectModal()">
-                                    <div>{{userSearchString}}</div>
-                                    <div>
-                                        <mat-icon aria-hidden="false" aria-label="select-users" matTooltip="Select users" class="align-right">open_in_new</mat-icon>
+                <!-- show search/filter options for non-relationship objects -->
+                <ng-container *ngIf="!(config.type && config.type == 'relationship')">
+                    <mat-form-field class="search" appearance="fill">
+                        <mat-label>search</mat-label>
+                        <input matInput #search [(ngModel)]="searchQuery">
+                    </mat-form-field>
+        
+                    <!-- don't show options for collections or if loading data not from REST API -->
+                    <mat-form-field appearance="fill" *ngIf="config.showFilters && !(config.hasOwnProperty('stixObjects'))">
+                        <mat-label>options</mat-label>
+                        <mat-select multiple [(ngModel)]="filter" (selectionChange)="applyControls()">
+                            <mat-optgroup *ngIf="config.showUserSearch" label="users">
+                                <mat-option disabled class="no-checkbox">
+                                    <div class="user-search" (click)="openUserSelectModal()">
+                                        <div>{{userSearchString}}</div>
+                                        <div>
+                                            <mat-icon aria-hidden="false" aria-label="select-users" matTooltip="Select users" class="align-right">open_in_new</mat-icon>
+                                        </div>
                                     </div>
-                                </div>
-                            </mat-option>             
-                        </mat-optgroup>
-                        <mat-optgroup *ngFor="let group of filterOptions" [label]="group.name" [disabled]="group.disabled">
-                            <mat-option *ngFor="let filter of group.values" [value]="filter.value" [disabled]="filter.disabled">{{filter.label}}</mat-option>
-                        </mat-optgroup>
-                    </mat-select>
-                </mat-form-field>
+                                </mat-option>             
+                            </mat-optgroup>
+                            <mat-optgroup *ngFor="let group of filterOptions" [label]="group.name" [disabled]="group.disabled">
+                                <mat-option *ngFor="let filter of group.values" [value]="filter.value" [disabled]="filter.disabled">{{filter.label}}</mat-option>
+                            </mat-optgroup>
+                        </mat-select>
+                    </mat-form-field>
+                </ng-container>
+                <!-- show deprecated filter -->
+                <ng-container *ngIf="(config.type && config.type == 'relationship') || config.showDeprecatedFilter">
+                    <mat-checkbox class="align-center" (change)="showDeprecated($event)">show deprecated</mat-checkbox>
+                </ng-container>
             </div>
         </div>
-        <div class="controls" *ngIf="(config.type && config.type == 'relationship') || config.showDeprecatedFilter">
-            <div class="input-group align-right">
-                <mat-checkbox (change)="showDeprecated($event)">show deprecated</mat-checkbox>
-            </div>
-        </div>
+
         <!-- ----- -->
         <!-- TABLE -->
         <!-- ----- -->
