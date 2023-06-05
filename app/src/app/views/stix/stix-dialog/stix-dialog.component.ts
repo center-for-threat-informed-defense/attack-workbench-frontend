@@ -2,7 +2,7 @@ import { DataSource } from '@angular/cdk/collections';
 import { Component, Inject, OnInit, ViewEncapsulation } from '@angular/core';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { forkJoin, Observable, of } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { filter, map, switchMap } from 'rxjs/operators';
 import { ValidationData } from 'src/app/classes/serializable';
 import { Campaign } from 'src/app/classes/stix/campaign';
 import { Collection } from 'src/app/classes/stix/collection';
@@ -17,6 +17,7 @@ import { Software } from 'src/app/classes/stix/software';
 import { StixObject } from 'src/app/classes/stix/stix-object';
 import { Tactic } from 'src/app/classes/stix/tactic';
 import { Technique } from 'src/app/classes/stix/technique';
+import { ConfirmationDialogComponent } from 'src/app/components/confirmation-dialog/confirmation-dialog.component';
 import { DeleteDialogComponent } from 'src/app/components/delete-dialog/delete-dialog.component';
 import { AuthenticationService } from 'src/app/services/connectors/authentication/authentication.service';
 import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/rest-api-connector.service';
@@ -53,7 +54,7 @@ export class StixDialogComponent implements OnInit {
     constructor(public dialogRef: MatDialogRef<StixDialogComponent>,
                 @Inject(MAT_DIALOG_DATA) public _config: StixViewConfig,
                 public sidebarService: SidebarService,
-                public restApiConnectorService: RestApiConnectorService,
+                public restApiService: RestApiConnectorService,
                 public editorService: EditorService,
                 private authenticationService: AuthenticationService,
                 private dialog: MatDialog) {
@@ -61,6 +62,8 @@ export class StixDialogComponent implements OnInit {
     }
 
     public get canDelete(): boolean { return this.authenticationService.canDelete(); }
+
+    public get canDeprecate(): boolean { return this.stixType == 'relationship' || this.stixType == 'x-mitre-data-component'; }
 
     public get config(): StixViewConfig {
         let object = Array.isArray(this._config.object) ? this._config.object[0] : this._config.object;
@@ -116,7 +119,7 @@ export class StixDialogComponent implements OnInit {
         this.validation = null; // reset prior validation if it has been loaded
         this.validating = true;
         let object = Array.isArray(this.config.object) ? this.config.object[0] : this.config.object;
-        let subscription = object.validate(this.restApiConnectorService).subscribe({
+        let subscription = object.validate(this.restApiService).subscribe({
             next: (result) => {
                 this.validation = result;
             },
@@ -129,7 +132,7 @@ export class StixDialogComponent implements OnInit {
 
     public save() {
         let object = Array.isArray(this.config.object) ? this.config.object[0] : this.config.object;
-        let subscription = object.save(this.restApiConnectorService).subscribe({
+        let subscription = object.save(this.restApiService).subscribe({
             next: (result) => {
                 this.editorService.onEditingStopped.emit();
                 this._config.is_new = false;
@@ -168,7 +171,7 @@ export class StixDialogComponent implements OnInit {
         }
         if (this.stixType == 'x-mitre-data-component') {
             // cannot delete a data component if it has existing relationships
-            return this.restApiConnectorService.getRelatedTo({sourceOrTargetRef: (object as DataComponent).stixID}).pipe(
+            return this.restApiService.getRelatedTo({sourceOrTargetRef: (object as DataComponent).stixID}).pipe(
                 map(relationships => {
                     return relationships.data.length == 0
                 })
@@ -193,7 +196,7 @@ export class StixDialogComponent implements OnInit {
             next: (confirm) => {
                 if (confirm) {
                     // delete the object
-                    object.delete(this.restApiConnectorService);
+                    object.delete(this.restApiService);
                     this.discardChanges();
                 }
             },
@@ -232,14 +235,14 @@ export class StixDialogComponent implements OnInit {
             let source_obj = this.getObject(object.source_object.stix.type, object.source_object);
             if (this.versions.source.minor) source_obj.version = source_obj.version.nextMinorVersion();
             else source_obj.version = source_obj.version.nextMajorVersion();
-            saves.push(source_obj.save(this.restApiConnectorService));
+            saves.push(source_obj.save(this.restApiService));
         }
         if (this.versions.target.minor || this.versions.target.major) {
             // handle target object version update
             let target_obj = this.getObject(object.target_object.stix.type, object.target_object);
             if (this.versions.target.minor) target_obj.version = target_obj.version.nextMinorVersion();
             else target_obj.version = target_obj.version.nextMajorVersion();
-            saves.push(target_obj.save(this.restApiConnectorService));
+            saves.push(target_obj.save(this.restApiService));
         }
         if (saves.length) {
             var subscription = forkJoin(saves).subscribe({
@@ -258,13 +261,63 @@ export class StixDialogComponent implements OnInit {
         return new stixTypeToClass[type](raw);
     }
 
+    public loading: boolean = false;
     public deprecateChanged() {
         let object = Array.isArray(this.config.object) ? this.config.object[0] : this.config.object;
-        object.deprecated = !object.deprecated;
-        this.dirty = true; // triggers refresh of object list
-        let subscription = object.save(this.restApiConnectorService).subscribe({
-            complete: () => { subscription.unsubscribe(); }
-        })
+
+        if (!object.deprecated && this.stixType == 'x-mitre-data-component') {
+            // inform users of relationship changes
+            let confirmationPrompt = this.dialog.open(ConfirmationDialogComponent, {
+                maxWidth: "35em",
+                data: { 
+                    message: 'All relationships with this object will be deprecated. Do you want to continue?',
+                }
+            });
+
+            let confirmationSub = confirmationPrompt.afterClosed().pipe(
+                filter((result) => result), // user continued
+                switchMap(_ => {
+                    this.loading = true;
+                    return this.restApiService.getRelatedTo({sourceRef: object.stixID, includeDeprecated: false});
+                })
+            ).subscribe({
+                next: (result) => {
+                    let saves = [];
+                    let relationships = result?.data as Relationship[];
+
+                    // deprecate or revoke object
+                    object.deprecated = !object.deprecated;
+                    this.dirty = true; // triggers refresh of object list
+                    saves.push(object.save(this.restApiService));
+            
+                    // update relationships with the object
+                    for (let relationship of relationships) {
+                        relationship.deprecated = true;
+                        saves.push(relationship.save(this.restApiService));
+                    }
+
+                    // complete save calls
+                    let saveSubscription = forkJoin(saves).subscribe({
+                        complete: () => {
+                            this.editorService.onReload.emit();
+                            saveSubscription.unsubscribe();
+                        }
+                    });               
+                },
+                complete: () => {
+                    this.loading = false;
+                    confirmationSub.unsubscribe();
+                }
+            });
+        } else {
+            object.deprecated = !object.deprecated;
+            this.dirty = true; // triggers refresh of object list
+
+            // save object
+            let subscription = object.save(this.restApiService).subscribe({
+                complete: () => { subscription.unsubscribe(); }
+            })
+        }
     }
 
     public sidebarOpened: boolean = false;

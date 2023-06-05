@@ -285,6 +285,7 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
                     }]
                     break;
                 case "data-component":
+                    this.addColumn("", "state", "icon");
                     this.addColumn("name", "name", "plain", sticky_allowed, ["name"]);
                     this.addColumn("domain", "domains", "list");
                     this.addVersionsAndDatesColumns();
@@ -677,6 +678,12 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
             } else {
                 // filter on STIX objects specified in the config
                 let filtered = this.config.stixObjects;
+
+                // deprecation filter
+                if (this.config.showDeprecatedFilter && !this.filter.includes("state.deprecated")) {
+                    filtered = filtered.filter(o => !o.deprecated)
+                }
+
                 // filter to objects matching searchString
                 filtered = this.filterObjects(this.searchQuery, filtered);
                 // sort
@@ -832,6 +839,11 @@ export interface StixListConfig {
     showLinks?: boolean;
     /** default true, if false hides the filter dropdown menu */
     showFilters?: boolean;
+    /** display the 'show deprecated' filter, default false
+     *  this may be relevant when displaying a list of embedded relationships, where
+     *  the list of STIX objects is provided in the 'stixObjects' configuration
+     */
+    showDeprecatedFilter?: boolean;
     /** default ['state','workflow_status'], if decides which filters to show */
     filterList?: Array<filter_types>;
     /** default: false, if false hides the user search in the filters*/
