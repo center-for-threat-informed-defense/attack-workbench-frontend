@@ -44,6 +44,7 @@
 -	Added functionality to create a collection from a group and its related objects.
 -	Added button to import groups and their related objects into new or existing collections.
 -   Added an option to deprecate Data Component objects. See [frontend#429](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/429).
+-   Added matrix landing page in matris view to match [ATT&CK website](https://attack.mitre.org/) and display the tactic list in edit mode. See [frontend#20](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/20)
 
 #### Improvements in 1.3.2
 -   Improved error handling during collection import.
@@ -54,7 +55,6 @@
 
 #### New Features in 1.3.1
 -   Added universal Notes page where users can search for notes based on title or content. Selecting a note in the table will redirect the user to the object the note was created on.  See [frontend#176](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/175).
--   Added matrix landing page in matris view to match [ATT&CK website](https://attack.mitre.org/) and display the tactic list in edit mode. See [frontend#20](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/20)
 
 #### Improvements in 1.3.1
 -   Added individual attribution to edits made on Note objects.
