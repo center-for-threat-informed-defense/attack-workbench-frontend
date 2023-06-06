@@ -1,4 +1,8 @@
-<div class="tactic-cell" (click)="viewTactic()">
+<div class="tactic-cell" (click)="viewTactic()"
+  matTooltip="{{tactic.attackID}}"
+  matTooltipPosition="above"
+  matTooltipClass="technique-cell-tooltip"
+  >
   <h5 class="tactic-header">{{tactic.name}}</h5>
   <p>{{tactic.technique_objects.length}} techniques</p>
 </div>
