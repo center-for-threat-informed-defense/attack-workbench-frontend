@@ -11,7 +11,7 @@ import { Tactic } from 'src/app/classes/stix/tactic';
     styleUrls: ['./matrix-view.component.scss']
 })
 export class MatrixViewComponent extends StixViewPage implements OnInit {
-    public all_tactics: Array<Tactic>;
+    public all_tactics: Array<Tactic> = [];
     public view: string = "side";
     public get matrix(): Matrix { return this.config.object as Matrix; }
     public loaded = false;
