@@ -94,7 +94,7 @@ export class CollectionDiffCategories<T> {
     /**
      * Return all objects from all change types in a flat array
      * @param {boolean} include_nonchanges if true, include duplicates, out of date, supersedes and errors data, otherwise skips
-     * @returns {T[]} all objects wtihin the change categories
+     * @returns {T[]} all objects within the change categories
      * @memberof CollectionDiffCategories
      */
     public flatten(include_nonchanges: boolean): T[] {

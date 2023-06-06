@@ -14,6 +14,8 @@ import { EditorService } from 'src/app/services/editor/editor.service';
 })
 export class ProfilePageComponent implements OnInit, OnDestroy {
     private saveSubscription: Subscription;
+    public teamNames: string[] = [];
+    public loading: boolean = false;
 
     public get user(): UserAccount { return this.authenticationService.currentUser; }
     public get editing(): boolean { return this.editorService.editing; }
@@ -27,6 +29,7 @@ export class ProfilePageComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit(): void {
+        this.getTeams();
         this.saveSubscription = this.editorService.onSave.subscribe({
             next: (_event) => this.save()
         });
@@ -34,6 +37,18 @@ export class ProfilePageComponent implements OnInit, OnDestroy {
 
     ngOnDestroy() {
         this.saveSubscription.unsubscribe();
+    }
+
+    /** get list of teams the user is in */
+    private getTeams() {
+        this.loading = true;
+        let teamSubscription = this.restApiService.getTeamsByUserId(this.user.id).subscribe({
+            next: (teams) => {
+                this.teamNames = teams.map(team => team.name);
+                this.loading = false;
+            },
+            complete: () => { teamSubscription.unsubscribe(); }
+        });
     }
 
     /** save profile changes */
