@@ -46,12 +46,7 @@ The ATT&CK Workbench application is made up of several repositories. For the ful
   The front-end user interface for the ATT&CK Workbench tool, and the primary interface through which the knowledge base is accessed.
 - [ATT&CK Workbench REST API](https://github.com/center-for-threat-informed-defense/attack-workbench-rest-api)
 
-  REST API service for storing, querying and editing ATT&CK objects.
-- [ATT&CK Workbench Collection Manager](https://github.com/center-for-threat-informed-defense/attack-workbench-collection-manager)
-
-  REST API and services for managing collections, collection indexes, and collection subscriptions. 
-  
-  The collection manager is **not** required to be installed to use the ATT&CK Workbench, but is **highly recommended**. If you opt not to install the collection-manager you will not be able to import or export data from your local knowledge base. If the collection manager is not installed, set `integrations.collection_manager.enabled` to `false` in the front-end environment. See [modifying the environment](#modifying-the-environment) for more details.
+  REST API service for storing, querying and editing ATT&CK objects, as well as  for managing collections, collection indexes, and collection subscriptions.
 
 The manual install instructions in each repository describe how each component to be deployed to a separate machine or with customized settings. 
 
@@ -81,7 +76,7 @@ This step is necessary for cases where the app is deployed locally through `ng s
 If you're building the app for production, use `ng build --prod` which will use the production environment instead of the development environment. See [modifying the environment](#modifying-the-environment) for more information.
 
 #### Modifying the environment
-The ATT&CK Workbench Frontend is configured to connect to the Collection Manager and REST API running under their default configurations. If those applications are configured to run on different ports, or if the application is to be hosted for access on multiple machines, the environment must be edited to reflect their URLs and ports.
+The ATT&CK Workbench Frontend is configured to connect to the REST API running under its default configurations. If those applications are configured to run on different ports, or if the application is to be hosted for access on multiple machines, the environment must be edited to reflect their URLs and ports.
 
 These environment properties can be edited under `src/environments`:
 - [src/environments/environment.ts](app/src/environments/environment.ts) is the development environment with configurations for when it is hosted on a local machine or is being actively developed. This is the default environment file used when building the application.
