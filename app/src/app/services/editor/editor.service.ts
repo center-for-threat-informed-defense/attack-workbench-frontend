@@ -16,12 +16,14 @@ export class EditorService {
     public editable: boolean = false;
     public editing: boolean = false;
     public deletable: boolean = false;
+    public hasWorkflow: boolean = true;
     public hasRelationships: boolean = true;
     public onSave = new EventEmitter();
     public onDelete = new EventEmitter();
     public onEditingStopped = new EventEmitter();
     public onReload = new EventEmitter();
     public onReloadReferences = new EventEmitter();
+    public isGroup: boolean = false;
 
     public get stixId(): string { return this.router.url.split("/")[2].split("?")[0]; }
     public get type(): string { return this.router.url.split("/")[1]; }
@@ -38,12 +40,23 @@ export class EditorService {
                 let editable = this.getEditableFromRoute(this.router.routerState, this.router.routerState.root);
                 let attackType = this.route.root.firstChild.snapshot.data.breadcrumb;
                 this.editable = editable.length > 0 && editable.every(x => x) && this.authenticationService.canEdit(attackType);
-                this.sidebarService.setEnabled("history", this.editable);
-                this.sidebarService.setEnabled("notes", this.editable);
-                if (!this.editable) this.sidebarService.currentTab = "references";
-
+                try {
+                  // if we have a group type and it is NOT new we can create a collection from all of the objects in the group
+                  this.isGroup = this.type === 'group' && this.stixId != 'new';
+                } catch (err) {
+                  // stixId throws an error when we are on the list page so this catches that
+                  this.isGroup = false;
+                }
+                this.hasWorkflow = attackType !== 'home';
+                if (!(this.editable && this.hasWorkflow)) this.sidebarService.currentTab = "references";
+                this.sidebarService.setEnabled("history", this.editable && this.hasWorkflow);
+                this.sidebarService.setEnabled("notes", this.editable && this.hasWorkflow);
                 if (this.editable) {
-                    if (this.router.url.includes("/new") || ["matrix", "tactic", "collection"].includes(this.type)) {
+                    if (!this.hasWorkflow) {
+                        this.hasRelationships = false;
+                        if (this.type.includes('profile')) this.deletable = false;
+                        else this.deletable = true;
+                    } else if (this.router.url.includes("/new") || ["matrix", "tactic", "collection"].includes(this.type)) {
                         // new objects, matrices, tactics, and collections cannot be deleted
                         this.deletable = false;
                     } else {
@@ -52,6 +65,7 @@ export class EditorService {
                         this.getRelationships().subscribe(rels => this.hasRelationships = rels > 0);
                     }
                 }
+                if (!this.editable) this.sidebarService.currentTab = "references";
             }
         })
         this.route.queryParams.subscribe(params => {
@@ -105,11 +119,11 @@ export class EditorService {
                 map(dataSource => dataSource[0] && dataSource[0].data_components.length)
             );
         } else {
-            return this.restAPIConnectorService.getRelatedTo({sourceOrTargetRef: this.stixId}).pipe(
+            return this.restAPIConnectorService.getRelatedTo({ sourceOrTargetRef: this.stixId }).pipe(
                 map(relationships => {
                     return relationships.data.filter((r: Relationship) => {
                         // filter out subtechnique-of relationships, IFF this is the source object (sub-technique)
-                        // note: the subtechique-of relationship is automatically deleted with the sub-technique object
+                        // note: the subtechnique-of relationship is automatically deleted with the sub-technique object
                         return !(r.relationship_type == 'subtechnique-of' && r.source_object && r.source_object["stix"]["id"] == this.stixId)
                     }).length;
                 })

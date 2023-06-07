@@ -22,6 +22,12 @@ export const environment = {
         collection_manager: {
             // configuration for the ATT&CK Workbench Collection Manager
             enabled: true, //if false, all components for collection management will be disabled
+        },
+        attack_website: {
+          // configuration for the ATT&CK Website
+          // https://github.com/mitre-attack/attack-website
+          enabled: false, // if false, the ATT&CK website integration will not work
+          url: "http://localhost:8000"
         }
     }
 };

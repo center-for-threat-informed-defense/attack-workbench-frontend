@@ -1,13 +1,20 @@
 <div class="add-dialog">
     <h1 *ngIf="config.title" mat-dialog-title>{{config.title}}</h1>
-    <div *ngIf="config.selectableObjects.length > 0 else nothing">
-        <app-stix-list [config]="{
+    <div *ngIf="config.type == 'user' || config.selectableObjects.length > 0 else nothing">
+        <app-stix-list *ngIf="config.type !== 'user'" [config]="{
             'select': config.selectionType ? config.selectionType : config.select? 'many' : 'disabled',
             'selectionModel' : config.select,
             'type': config.type,
             'clickBehavior': 'expand',
             'stixObjects': config.selectableObjects
         }"></app-stix-list>
+        <app-users-list *ngIf="config.type === 'user'" [config]="{
+          'mode':'select',
+          'columnsToDisplay':['username','email'],
+          'showFilters': false,
+          'showSearch' : true,
+          'selection': config.select
+        }"></app-users-list>
         <div class="centered button-padding">
             <button mat-mini-fab class="extended-fab-button left-button" color="primary" (click)="dialogRef.close(true)">
                 <span class="text-label">{{config.buttonLabel? config.buttonLabel : "ADD"}}</span>
