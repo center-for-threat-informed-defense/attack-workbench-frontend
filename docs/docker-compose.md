@@ -12,7 +12,6 @@ These projects must be placed under a common parent directory:
 |-- <common parent directory>
     |-- attack-workbench-frontend
     |-- attack-workbench-rest-api
-    |-- attack-workbench-collection-manager
 ```
 
 To perform all three clones as required (including the clone of this repository), you can use the following commands from your working directory:

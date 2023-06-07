@@ -17,9 +17,7 @@ export const environment = {
         },
         collection_manager: {
             // configuration for the ATT&CK Workbench Collection Manager
-            // https://github.com/center-for-threat-informed-defense/attack-workbench-collection-manager
-            enabled: true, //if false, all systems for collection management will be disabled
-            url: "api"
+            enabled: true, //if false, all components for collection management will be disabled
         }
     }
 };
