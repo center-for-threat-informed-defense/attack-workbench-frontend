@@ -20,6 +20,12 @@ import { Technique } from 'src/app/classes/stix/technique';
 import { ConfirmationDialogComponent } from 'src/app/components/confirmation-dialog/confirmation-dialog.component';
 import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/rest-api-connector.service';
 import { logger } from "../../../../../util/logger";
+import { v4 as uuid } from 'uuid';
+import { AuthenticationService } from 'src/app/services/connectors/authentication/authentication.service';
+import { UserAccount } from 'src/app/classes/authn/user-account';
+import * as XLSX from 'xlsx';
+
+const _ = require("lodash");
 
 @Component({
   selector: 'app-collection-import',
@@ -45,6 +51,8 @@ export class CollectionImportComponent implements OnInit {
     public successfully_saved: Set<string> = new Set();
     public collectionBundle: any;
 
+    public get user(): UserAccount { return this.authenticationService.currentUser; }
+
     public object_import_categories = {
         technique:      new CollectionDiffCategories<Technique>(),
         tactic:         new CollectionDiffCategories<Tactic>(),
@@ -58,7 +66,32 @@ export class CollectionImportComponent implements OnInit {
         data_component: new CollectionDiffCategories<DataComponent>()
     }
 
-    constructor(public route: ActivatedRoute, public http: HttpClient, public snackbar: MatSnackBar, public restAPIConnectorService: RestApiConnectorService, private dialog: MatDialog) { }
+    public replacementList = [
+      ["ID", "attack-id"],
+      ["stix id", "id"],
+      ["descriptions", "description"],
+      // ["permissions required", "x_mitre_permissions_required"],
+      ["platforms", "x_mitre_platforms"],
+      // ["detection", "x_mitre_detection"],
+      ["version", "x_mitre_version"],
+      ["domain", "x_mitre_domains"],
+      // ["contributors", "x_mitre_contributors"],
+      ["data sources", "x_mitre_data_sources"],
+      // ["defenses bypassed", "x_mitre_defense_bypassed"],
+      // ["effective permissions", "x_mitre_permissions_required"],
+      ["is sub-technique", "x_mitre_is_subtechnique"],
+      ["last modified", "modified"],
+      ["first seen", "first_seen"],
+      ["last seen", "last_seen"],
+      ["first seen citation", "x_mitre_first_seen_citation"],
+      ["last seen citation", "x_mitre_last_seen_citation"],
+      // ["tactics", "kill_chain_phases"],
+      // ["relationship citations", "external_references"],
+    ]
+
+    constructor(public route: ActivatedRoute, public http: HttpClient,
+      public snackbar: MatSnackBar, public restAPIConnectorService: RestApiConnectorService,
+      private dialog: MatDialog, private authenticationService: AuthenticationService,) { }
 
     ngOnInit() {
         if (this.route.snapshot.queryParams["url"]) {
@@ -68,23 +101,110 @@ export class CollectionImportComponent implements OnInit {
         }
     }
 
-    public getCollectionFromFile() {
+    public getCollectionFromFile(event: any) {
+        const sheetName = event.target.files[0].name.split(".")[0];
+        console.log("Sheet name ", sheetName);
         this.loadingStep1 = true;
-        let reader = new FileReader();
-        reader.onload = (e) => {
-            let str = String(reader.result);
+        const target: DataTransfer = <DataTransfer>(event.target);
+        const reader = new FileReader();
+        reader.readAsBinaryString(target.files[0])
+        reader.onload = (e:any) => {
+
+          console.log("on load ", e)
+
+            let str = String(e.target.result);
+            let collectionBundle;
+
             try {
-                let collectionBundle = JSON.parse(str);
-                this.previewCollection(collectionBundle);
+              const bstr: string = e.target.result;
+              const wb: XLSX.WorkBook = XLSX.read(bstr, {type: 'binary'});
+              console.log("name ", wb.Props.Title, wb.Props.Version)
+              console.log("name ", wb.Props)
+
+              collectionBundle = this.buildXlsxRequest(wb, sheetName);
+              console.log("cb", collectionBundle)
+
             } catch (exception) {
-                this.snackbar.open(exception.message, "dismiss", {
-                    duration: 2000,
-                    panelClass: "warn"
-                })
-                this.loadingStep1 = false;
+              try {
+                collectionBundle = JSON.parse(str);
+              } catch (exception) {
+                    this.snackbar.open(exception.message, "dismiss", {
+                        duration: 2000,
+                        panelClass: "warn"
+                    })
+                    this.loadingStep1 = false;
+              }
             }
+            this.previewCollection(collectionBundle);
+
         }
-        reader.readAsText(this.fileInput.value.files[0]);
+    }
+    public buildXlsxRequest(wb: XLSX.WorkBook, name: string): any {
+      const wsname = wb.SheetNames[0];
+      console.log("sheet names", wsname);
+      let collectionObj = [{
+        name: name,
+        type:"x-mitre-collection",
+        id: "x-mitre-collection--" + uuid(),
+        x_mitre_deprecated: false,
+        x_mitre_version: "0.1",
+        created: new Date().toISOString(),
+        revoked: false,
+        object_marking_refs: [],
+        x_mitre_domains: ["enterprise-attack"],
+        spec_version: "2.1",
+        x_mitre_attack_spec_version: "3.1.0",
+        created_by_ref: this.user.id,
+        x_mitre_modified_by_ref: this.user.id,
+        modified: new Date().toISOString(),
+        description: "",
+        x_mitre_contents: []
+      }];
+
+      const objArray = [];
+
+      for (let sheetname of wb.SheetNames) {
+        let data: Array<string[]> = XLSX.utils.sheet_to_json(wb.Sheets[sheetname], {header: 1})
+        console.log("data", data);
+        let headerRow: string[] = data.splice(0,1)[0];
+        // change headers appropriately to transfer between excel spreadsheet and our naming convention
+        this.replacementList.forEach((i) => {
+          if (headerRow.includes(i[0])) {
+            headerRow[headerRow.indexOf(i[0])] = i[1]
+          }
+        })
+        headerRow.push("type", "spec_version") // add the object types to the end of each row's array
+        console.log(" header array ", headerRow)
+        data.forEach((row) => {
+          var i = _.zipObject(headerRow, row)
+          // set any variables that require a different format
+          i.type = (row[headerRow.indexOf("id")]) ? row[headerRow.indexOf("id")].split("--")[0]: "";
+          i.spec_version = "2.1";
+          i.x_mitre_is_subtechnique = Boolean(i.x_mitre_is_subtechnique);
+          i.created = (i.created) ? new Date(i.created).toISOString() : "";
+          i.modified = (i.modified) ? new Date(i.modified).toISOString() : "";
+          i.x_mitre_platforms = (i.x_mitre_platforms) ? i.x_mitre_platforms.split(", ") : [];
+          i.x_mitre_data_sources = (i.x_mitre_data_sources) ? i.x_mitre_data_sources.split(",") : [];
+          if (i.id) {
+            objArray.push(i)
+            // add object names and IDs to the collection object
+            collectionObj[0].x_mitre_contents.push({
+              object_ref: i.id,
+              object_modified: i.modified
+            })
+          }
+
+        })
+        console.log("obj array", objArray)
+
+      }
+      let jsonObj = {
+        type: "bundle",
+        id: "bundle--" + uuid(),
+        objects: collectionObj.concat(objArray)
+      }
+      console.log("json object ", jsonObj)
+      return jsonObj;
     }
 
     public getCollectionFromURL() {
@@ -131,7 +251,7 @@ export class CollectionImportComponent implements OnInit {
 
     public parsePreview(collectionBundle: any, preview: Collection) {
         this.collectionBundle = collectionBundle; //save for later
-        
+
         //build ID to category lookup
         let idToCategory = {};
 
@@ -152,7 +272,7 @@ export class CollectionImportComponent implements OnInit {
                 continue;
             }
             // track that this object has changed
-            this.changed_ids.push(object.id); 
+            this.changed_ids.push(object.id);
             // determine the change category
             let category = idToCategory[object.id];
             // wrap the object as if it came from the back-end
@@ -166,7 +286,7 @@ export class CollectionImportComponent implements OnInit {
                     this.object_import_categories.tactic[category].push(new Tactic(raw))
                 break;
                 case "malware": //software
-                case "tool": 
+                case "tool":
                     this.object_import_categories.software[category].push(new Software(object.type, raw))
                 break;
                 case "relationship": //relationship
@@ -197,7 +317,7 @@ export class CollectionImportComponent implements OnInit {
         }
         // set up selection
         this.select =  new SelectionModel(true, this.changed_ids);
-        
+
         this.stepper.next();
     }
 
@@ -207,7 +327,7 @@ export class CollectionImportComponent implements OnInit {
     public selectAll() {
         for (let id of this.changed_ids) this.select.select(id);
     }
-    
+
     /**
      * deselect all objects for import
      */
@@ -244,7 +364,7 @@ export class CollectionImportComponent implements OnInit {
                         newBundle.objects = objects;
                         let force = this.import_errors ? true : false; // force import if the collection bundle has errors
                         let subscription = this.restAPIConnectorService.postCollectionBundle(newBundle, false, force).subscribe({
-                            next: (results) => { 
+                            next: (results) => {
                                 if (results.import_categories.errors.length > 0) {
                                     logger.warn("Collection import completed with errors:", results.import_categories.errors);
                                 }
@@ -255,7 +375,7 @@ export class CollectionImportComponent implements OnInit {
                                     for (let id of results.import_categories[category]) if (!save_error_ids.has(id)) this.successfully_saved.add(id);
                                 }
                                 logger.log("Successfully imported the following objects:", Array.from(this.successfully_saved));
-                                this.stepper.next(); 
+                                this.stepper.next();
                             },
                             complete: () => { subscription.unsubscribe(); } //prevent memory leaks
                         })
