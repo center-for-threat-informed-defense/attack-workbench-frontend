@@ -11,7 +11,7 @@
                     <div class="spacer">or</div>
                     <mat-form-field appearance="outline">
                         <mat-label>upload a file</mat-label>
-                        <ngx-mat-file-input [disabled]="url.length > 0"  accept="application/json, .csv" (change)="getCollectionFromFile()"></ngx-mat-file-input>
+                        <ngx-mat-file-input [disabled]="url.length > 0"  accept="application/json, .csv, .xlsx" (change)="getCollectionFromFile($event)"></ngx-mat-file-input>
                         <mat-icon matSuffix>attach_file</mat-icon>
                     </mat-form-field>
                 </div>
