@@ -63,7 +63,7 @@
       </ng-container>
       <ng-template #matrixView>
         <ng-container *ngIf="loaded else loadingDisplay">
-          <ng-container *ngIf="loaded && all_tactics.length > 0 else nothingHere">
+          <ng-container *ngIf="loaded && matrix_tactics.length > 0 else nothingHere">
             <div class="matrix-button-row">
               <mat-form-field appearance="outline">
                 <mat-label>Matrix View</mat-label>
@@ -75,8 +75,8 @@
               <button mat-stroked-button (click)="toggleAllSubtechniquesVisible(true)">Show all sub-technique(s)</button>
               <button mat-stroked-button (click)="toggleAllSubtechniquesVisible(false)">Hide all sub-technique(s)</button>
             </div>
-            <app-matrix-side *ngIf="view==='side'" [matrix]="matrix" [tactics]="all_tactics"></app-matrix-side>
-            <app-matrix-flat *ngIf="view==='flat'" [matrix]="matrix" [tactics]="all_tactics"></app-matrix-flat>
+            <app-matrix-side *ngIf="view==='side'" [matrix]="matrix" [tactics]="matrix_tactics"></app-matrix-side>
+            <app-matrix-flat *ngIf="view==='flat'" [matrix]="matrix" [tactics]="matrix_tactics"></app-matrix-flat>
           </ng-container>
           <ng-template #nothingHere>
             <app-empty-list-marker [checkAgain]="false"></app-empty-list-marker>
