@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { MatrixViewComponent } from './matrix-view.component';
+import { MatrixFlatComponent } from './matrix-flat.component';
 
-describe('MatrixViewComponent', () => {
-	let component: MatrixViewComponent;
-	let fixture: ComponentFixture<MatrixViewComponent>;
+describe('MatrixFlatComponent', () => {
+	let component: MatrixFlatComponent;
+	let fixture: ComponentFixture<MatrixFlatComponent>;
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
-			declarations: [MatrixViewComponent]
+			declarations: [MatrixFlatComponent]
 		})
 			.compileComponents();
 	}));
 
 	beforeEach(() => {
-		fixture = TestBed.createComponent(MatrixViewComponent);
+		fixture = TestBed.createComponent(MatrixFlatComponent);
 		component = fixture.componentInstance;
 		fixture.detectChanges();
 	});

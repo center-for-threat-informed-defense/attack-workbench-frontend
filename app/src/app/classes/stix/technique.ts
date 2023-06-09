@@ -21,7 +21,8 @@ export class Technique extends StixObject {
     public contributors: string[] = [];
     public supports_remote: boolean = false;
     public is_subtechnique: boolean = false;
-    
+    public show_subtechniques: boolean = false; // used by matrix view to handle displaying subtechniques
+
     public readonly supportsAttackID = true;
     public readonly supportsNamespace = true;
     protected get attackIDValidator() { return {
@@ -31,7 +32,7 @@ export class Technique extends StixObject {
 
     // NOTE: the following two fields will only be populated when this object is fetched using getTechnique().
     //       they will NOT be populated when fetched using getAllTechniques().
-    public subTechniques: Technique[] = []; 
+    public subTechniques: Technique[] = [];
     public parentTechnique: Technique = null;
 
     private killChainMap = {
@@ -90,7 +91,7 @@ export class Technique extends StixObject {
      */
     public serialize(): any {
         let rep = super.base_serialize();
-        
+
         rep.stix.name = this.name.trim();
         rep.stix.x_mitre_domains = this.domains;
         rep.stix.x_mitre_detection = this.detection;
@@ -213,7 +214,7 @@ export class Technique extends StixObject {
                 if (typeof(sdo.x_mitre_is_subtechnique) === "boolean") this.is_subtechnique = sdo.x_mitre_is_subtechnique;
                 else logger.error("TypeError: is subtechnique field is not a boolean:", sdo.x_mitre_is_subtechnique, "(", typeof(sdo.x_mitre_is_subtechnique),")")
             }
-            
+
             if ("x_mitre_remote_support" in sdo) {
                 if (typeof(sdo.x_mitre_remote_support) === "boolean") this.supports_remote = sdo.x_mitre_remote_support;
                 else logger.error("TypeError: supports remote field is not a boolean:", sdo.x_mitre_remote_support, "(", typeof(sdo.x_mitre_remote_support),")")
@@ -277,7 +278,7 @@ export class Technique extends StixObject {
                     "result": "error",
                     "message": `CAPEC ID${malformed_capec.length > 1? 's' : ''} ${malformed_capec.join(", ")} do${malformed_capec.length == 1? 'es' : ''} not match format CAPEC-###`
                 })
-                
+
                 // check MTC IDs
                 let mtc_regex = new RegExp(`^(${Object.keys(this.mtcUrlMap).join("|")})-\\d+$`)
                 let malformed_mtc = this.mtc_ids.filter(mtc => !mtc_regex.test(mtc));
@@ -319,7 +320,7 @@ export class Technique extends StixObject {
      */
     public save(restAPIService: RestApiConnectorService): Observable<Technique> {
         // TODO POST if the object was just created (doesn't exist in db yet)
-                
+
         let postObservable = restAPIService.postTechnique(this);
         let subscription = postObservable.subscribe({
             next: (result) => { this.deserialize(result.serialize()); },
