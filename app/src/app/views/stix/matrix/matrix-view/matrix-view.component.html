@@ -62,8 +62,8 @@
         	}"></app-ordered-list-property>
 		</ng-container>
 		<ng-template #matrixView>
-			<ng-container *ngIf="loaded else loadingDisplay">
-				<ng-container *ngIf="loaded && matrix_tactics.length > 0 else nothingHere">
+			<ng-container *ngIf="!loading else loadingDisplay">
+				<ng-container *ngIf="matrix_tactics.length > 0 else nothingHere">
 					<div class="matrix-button-row">
 						<mat-form-field appearance="outline">
 							<mat-label>Matrix View</mat-label>
@@ -79,7 +79,7 @@
 					<app-matrix-flat *ngIf="view==='flat'" [matrix]="matrix" [tactics]="matrix_tactics"></app-matrix-flat>
 				</ng-container>
 				<ng-template #nothingHere>
-					<app-empty-list-marker [checkAgain]="false"></app-empty-list-marker>
+					<app-empty-list-marker (onCheckAgain)="loadMatrix()"></app-empty-list-marker>
 				</ng-template>
 			</ng-container>
 			<ng-template #loadingDisplay>

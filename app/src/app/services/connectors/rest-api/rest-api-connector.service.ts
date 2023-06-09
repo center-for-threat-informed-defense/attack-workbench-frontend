@@ -1110,22 +1110,22 @@ export class RestApiConnectorService extends ApiConnector {
             tap(results => logger.log("retrieved techniques", results)),
             map(response => {
                 let data = response as Array<any>;
-                let entries = Object.entries(data)
+                let entries = Object.entries(data);
                 entries.forEach((item) => {
-                  let tactic = new Tactic(item[1])
-                  let techniqueList = item[1].techniques;
-                  techniqueList.forEach((item) => {
-                    let technique = new Technique(item);
-                    if (item.subtechniques.length > 0) {
-                      item.subtechniques.forEach((subtechnique) => {
-                        technique.subTechniques.push(new Technique(subtechnique))
-                      })
-                    }
-                    technique.subTechniques.sort((a,b) => a.name.toLowerCase().localeCompare(b.name.toLowerCase()))
-                    tactic.technique_objects.push(technique);
-                  })
-                  tactic.technique_objects.sort((a,b) => a.name.toLowerCase().localeCompare(b.name.toLowerCase()))
-                  matrix.tactic_objects.push(tactic)
+                    let tactic = new Tactic(item[1]);
+                    let techniqueList = item[1].techniques;
+                    techniqueList.forEach((item) => {
+                        let technique = new Technique(item);
+                        if (item.subtechniques.length > 0) {
+                        item.subtechniques.forEach((subtechnique) => {
+                            technique.subTechniques.push(new Technique(subtechnique));
+                        })
+                        }
+                        technique.subTechniques.sort((a,b) => a.name.toLowerCase().localeCompare(b.name.toLowerCase()));
+                        tactic.technique_objects.push(technique);
+                    })
+                    tactic.technique_objects.sort((a,b) => a.name.toLowerCase().localeCompare(b.name.toLowerCase()));
+                    matrix.tactic_objects.push(tactic);
                 })
                 return matrix;
             }),
