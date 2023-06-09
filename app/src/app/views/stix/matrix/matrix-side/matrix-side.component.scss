@@ -1,33 +1,23 @@
 .matrix.side {
-  .tactic {
-    .subtechniques {
-      margin-left: -1px;
-    }
-  }
-  .sidebar {
-    position: relative;
-    .angle {
-      display: none;
-    }
-    &.expanded .angle {
-      height: 12px;
-      display: block;
-      position: absolute;
-      svg {
-        position: absolute;
-      }
-      &.top {
-        top: 0;
-        svg {
-          transform: rotate(-90deg);
-        }
-      }
-      &.bottom {
-        bottom: 0;
-        svg {
-          transform: rotate(90deg);
-        }
-      }
-    }
-  }
+	.tactic {
+		.subtechniques { margin-left: -1px; }
+	}
+	.sidebar {
+		position: relative;
+		.angle { display: none; }
+		&.expanded .angle {
+			height: 12px;
+			display: block;
+			position: absolute;
+			svg { position: absolute; }
+			&.top {
+				top: 0;
+				svg { transform: rotate(-90deg); }
+			}
+			&.bottom {
+				bottom: 0;
+				svg { transform: rotate(90deg); }
+			}
+		}
+	}
 }
