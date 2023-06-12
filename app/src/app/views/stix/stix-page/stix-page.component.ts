@@ -145,7 +145,7 @@ export class StixPageComponent implements OnInit, OnDestroy {
                 if (this.objects[0].attackType == 'collection') {
                   const anyCollection = this.objects[0] as any;
                   if (anyCollection.imported) {
-                    api_calls.push(this.restApiService.deleteCollection(this.objects[0].stixID, true));
+                    api_calls.push(this.restApiService.deleteCollection(this.objects[0].stixID, true, this.objects[0].modified.toISOString()));
                   }
                 }
                 return forkJoin(api_calls);

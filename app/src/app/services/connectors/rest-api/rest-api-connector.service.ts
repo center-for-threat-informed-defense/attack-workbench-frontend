@@ -941,10 +941,11 @@ export class RestApiConnectorService extends ApiConnector {
      * DELETE a collection
      * @param {string} id the STIX ID of the object to delete
      * @param {boolean} deleteAllContents whether or not to delete all of the contents of the collection
+     * @param {string} version modified date of the version to delete
      * @returns {Observable<{}>} observable of the response body
      */
-    public get deleteCollection() { return function(id: string, deleteAllContents: boolean): Observable<{}> {
-      let url = `${this.apiUrl}/collections/${id}?deleteAllContents=${deleteAllContents ? 'true' : 'false'}`;
+    public get deleteCollection() { return function(id: string, deleteAllContents: boolean, version?:string): Observable<{}> {
+      let url = `${this.apiUrl}/collections/${id}${version ? `/modified/${version}`: ``}?deleteAllContents=${deleteAllContents ? 'true' : 'false'}`;
       return this.http.delete(url).pipe(
           tap(this.handleSuccess(`collection deleted`)),
           catchError(this.handleError_raise()),
