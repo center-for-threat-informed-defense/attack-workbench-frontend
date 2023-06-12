@@ -37,13 +37,18 @@
 ### ATT&K Workbench version 1.3.2
 
 #### New Features in 1.3.2
--   Added admin interface for creating and managing teams.
--   Added ability to search objects by one or more users.
+-   Added an Admin interface for creating and managing teams.
+-   Added the ability to search objects by one or more users.
 -   Added a new user profile page where logged in users can view their recent activity across the Workbench and view/edit their display name.
-- 	Added ability to configure an external ATT&CK Website in which to view Workbench objects, if a relevant object page exists.
--	  Added ability to create a collection from a group and its related objects.
+-   Added an option to configure an external ATT&CK Website in which to view Workbench objects, if a relevant object page exists.
+-	  Added functionality to create a collection from a group and its related objects.
 -	  Added button to import groups and their related objects into new or existing collections.
+-   Added an option to deprecate Data Component objects. See [frontend#429](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/429).
+-   Added matrix landing page in matrix view to match [ATT&CK website](https://attack.mitre.org/) and display the tactic list in edit mode. See [frontend#20](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/20)
 -	  Added ability to delete a imported collection and all related objects
+
+#### Improvements in 1.3.2
+-   Improved error handling during collection import.
 
 ## 21 April 2023
 
