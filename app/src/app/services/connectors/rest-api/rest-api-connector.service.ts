@@ -1099,6 +1099,40 @@ export class RestApiConnectorService extends ApiConnector {
             share()
         )
     }
+    /**
+     * Get list of all tactics, techniques, and nested subtechniques within a given matrix
+     * @param {Matrix} matrix the matrix object for the response's tactic list to be added to
+     * @returns
+     */
+    public getTechniquesInMatrix(matrix: Matrix): Observable<any> {
+        let url = `${this.apiUrl}/matrices/${matrix.stixID}/modified/${matrix.modified.toISOString()}/techniques`;
+        return this.http.get(url).pipe(
+            tap(results => logger.log("retrieved techniques", results)),
+            map(response => {
+                let data = response as Array<any>;
+                let entries = Object.entries(data);
+                entries.forEach((item) => {
+                    let tactic = new Tactic(item[1]);
+                    let techniqueList = item[1].techniques;
+                    techniqueList.forEach((item) => {
+                        let technique = new Technique(item);
+                        if (item.subtechniques.length > 0) {
+                        item.subtechniques.forEach((subtechnique) => {
+                            technique.subTechniques.push(new Technique(subtechnique));
+                        })
+                        }
+                        technique.subTechniques.sort((a,b) => a.name.toLowerCase().localeCompare(b.name.toLowerCase()));
+                        tactic.technique_objects.push(technique);
+                    })
+                    tactic.technique_objects.sort((a,b) => a.name.toLowerCase().localeCompare(b.name.toLowerCase()));
+                    matrix.tactic_objects.push(tactic);
+                })
+                return matrix;
+            }),
+            catchError(this.handleError_continue([])),
+            share()
+        )
+    }
 
     /**
      * Get all tactics referenced by the given technique
@@ -1287,12 +1321,17 @@ export class RestApiConnectorService extends ApiConnector {
      */
     private cannotForceImport(err: any): boolean {
         if (err.status == "400") {
-            let bundleErrors = err.error.bundleErrors;
-            let objectErrors = err.error.objectErrors.summary;
-            if (bundleErrors.noCollection || bundleErrors.moreThanOneCollection || bundleErrors.badlyFormattedCollection || objectErrors.duplicateObjectInBundleCount) {
-                return true;
+            try {
+                let bundleErrors = err.error.bundleErrors;
+                let objectErrors = err.error.objectErrors.summary;
+                if (bundleErrors.noCollection || bundleErrors.moreThanOneCollection || bundleErrors.badlyFormattedCollection || objectErrors.duplicateObjectInBundleCount) {
+                    return true;
+                }
+                return false;
+            } catch (_) {
+                // continue to force import; errors will be displayed to the user if the collection is invalid
+                return false;
             }
-            return false;
         }
         return true;
     }
@@ -1592,7 +1631,7 @@ export class RestApiConnectorService extends ApiConnector {
     }
 
 
-    //  _____ ___   _   __  __ ___     _   ___ ___ ___ 
+    //  _____ ___   _   __  __ ___     _   ___ ___ ___
     // |_   _| __| /_\ |  \/  / __|   /_\ | _ \_ _/ __|
     //   | | | _| / _ \| |\/| \__ \  / _ \|  _/| |\__ \
     //   |_| |___/_/ \_\_|  |_|___/ /_/ \_\_| |___|___/

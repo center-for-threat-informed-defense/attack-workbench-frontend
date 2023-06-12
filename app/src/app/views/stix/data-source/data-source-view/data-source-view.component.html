@@ -98,7 +98,8 @@
             <div class="col">
                 <app-stix-list #dataComponentsList [config]="{
                     'stixObjects': data_components,
-                    'type': 'data-component', 
+                    'type': 'data-component',
+                    'showDeprecatedFilter': true,
                     'clickBehavior': 'dialog',
                     'allowEdits': true
                 }"
