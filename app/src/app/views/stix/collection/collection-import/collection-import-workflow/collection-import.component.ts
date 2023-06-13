@@ -67,26 +67,19 @@ export class CollectionImportComponent implements OnInit {
     }
 
     public replacementList = [
-      ["ID", "attack-id"],
-      ["stix id", "id"],
+      ["ID", "attack_id"],
+      ["STIX ID", "id"],
       ["descriptions", "description"],
-      // ["permissions required", "x_mitre_permissions_required"],
       ["platforms", "x_mitre_platforms"],
-      // ["detection", "x_mitre_detection"],
       ["version", "x_mitre_version"],
       ["domain", "x_mitre_domains"],
-      // ["contributors", "x_mitre_contributors"],
       ["data sources", "x_mitre_data_sources"],
-      // ["defenses bypassed", "x_mitre_defense_bypassed"],
-      // ["effective permissions", "x_mitre_permissions_required"],
       ["is sub-technique", "x_mitre_is_subtechnique"],
       ["last modified", "modified"],
       ["first seen", "first_seen"],
       ["last seen", "last_seen"],
       ["first seen citation", "x_mitre_first_seen_citation"],
       ["last seen citation", "x_mitre_last_seen_citation"],
-      // ["tactics", "kill_chain_phases"],
-      // ["relationship citations", "external_references"],
     ]
 
     constructor(public route: ActivatedRoute, public http: HttpClient,
@@ -103,45 +96,39 @@ export class CollectionImportComponent implements OnInit {
 
     public getCollectionFromFile(event: any) {
         const sheetName = event.target.files[0].name.split(".")[0];
-        console.log("Sheet name ", sheetName);
         this.loadingStep1 = true;
         const target: DataTransfer = <DataTransfer>(event.target);
         const reader = new FileReader();
         reader.readAsBinaryString(target.files[0])
         reader.onload = (e:any) => {
-
-          console.log("on load ", e)
-
-            let str = String(e.target.result);
-            let collectionBundle;
-
+          let str = String(e.target.result);
+          let collectionBundle;
+          try {
+            const bstr: string = e.target.result;
+            const wb: XLSX.WorkBook = XLSX.read(bstr, {type: 'binary'});
+            collectionBundle = this.buildXlsxRequest(wb, sheetName);
+          } catch (exception) {
             try {
-              const bstr: string = e.target.result;
-              const wb: XLSX.WorkBook = XLSX.read(bstr, {type: 'binary'});
-              console.log("name ", wb.Props.Title, wb.Props.Version)
-              console.log("name ", wb.Props)
-
-              collectionBundle = this.buildXlsxRequest(wb, sheetName);
-              console.log("cb", collectionBundle)
-
+              collectionBundle = JSON.parse(str);
             } catch (exception) {
-              try {
-                collectionBundle = JSON.parse(str);
-              } catch (exception) {
-                    this.snackbar.open(exception.message, "dismiss", {
-                        duration: 2000,
-                        panelClass: "warn"
-                    })
-                    this.loadingStep1 = false;
-              }
+              this.snackbar.open(exception.message, "dismiss", {
+                  duration: 2000,
+                  panelClass: "warn"
+              })
+              this.loadingStep1 = false;
             }
-            this.previewCollection(collectionBundle);
-
+          }
+          this.previewCollection(collectionBundle);
         }
     }
+    /**
+     * helper function to parse csv and excel files into collection objects
+     * @param wb Workbook or csv to be parsed
+     * @param name file name
+     * @returns a collection object to be uploaded to workbench
+     */
     public buildXlsxRequest(wb: XLSX.WorkBook, name: string): any {
       const wsname = wb.SheetNames[0];
-      console.log("sheet names", wsname);
       let collectionObj = [{
         name: name,
         type:"x-mitre-collection",
@@ -165,7 +152,6 @@ export class CollectionImportComponent implements OnInit {
 
       for (let sheetname of wb.SheetNames) {
         let data: Array<string[]> = XLSX.utils.sheet_to_json(wb.Sheets[sheetname], {header: 1})
-        console.log("data", data);
         let headerRow: string[] = data.splice(0,1)[0];
         // change headers appropriately to transfer between excel spreadsheet and our naming convention
         this.replacementList.forEach((i) => {
@@ -173,8 +159,7 @@ export class CollectionImportComponent implements OnInit {
             headerRow[headerRow.indexOf(i[0])] = i[1]
           }
         })
-        headerRow.push("type", "spec_version") // add the object types to the end of each row's array
-        console.log(" header array ", headerRow)
+        headerRow.push("type", "spec_version", "external_references") // add the object types to the end of each row's array
         data.forEach((row) => {
           var i = _.zipObject(headerRow, row)
           // set any variables that require a different format
@@ -185,6 +170,11 @@ export class CollectionImportComponent implements OnInit {
           i.modified = (i.modified) ? new Date(i.modified).toISOString() : "";
           i.x_mitre_platforms = (i.x_mitre_platforms) ? i.x_mitre_platforms.split(", ") : [];
           i.x_mitre_data_sources = (i.x_mitre_data_sources) ? i.x_mitre_data_sources.split(",") : [];
+          // add attack id into an external reference object
+          i.external_references = [{
+            source_name: "mitre-attack",
+            external_id: i.attack_id,
+          }]
           if (i.id) {
             objArray.push(i)
             // add object names and IDs to the collection object
@@ -195,15 +185,12 @@ export class CollectionImportComponent implements OnInit {
           }
 
         })
-        console.log("obj array", objArray)
-
       }
       let jsonObj = {
         type: "bundle",
         id: "bundle--" + uuid(),
         objects: collectionObj.concat(objArray)
       }
-      console.log("json object ", jsonObj)
       return jsonObj;
     }
 
