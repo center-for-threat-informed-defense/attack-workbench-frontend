@@ -68,17 +68,6 @@ export class EditorService {
                     }
                 }
                 if (!this.editable) this.sidebarService.currentTab = "references";
-                if (this.type === 'collection') {
-                  // hacky fix to check that the edit ability is not allowed for imported collections
-                  const collSub = this.restAPIConnectorService.getCollection(this.stixId).subscribe({
-                    next: (colls)  => {
-                      if (colls[0].imported != null) {
-                        this.editable = false;
-                      };
-                    },
-                    complete: () => {collSub.unsubscribe();}
-                  });
-                }
             }
         })
         this.route.queryParams.subscribe(params => {
