@@ -42,13 +42,8 @@ export class EditorService {
                 let editable = this.getEditableFromRoute(this.router.routerState, this.router.routerState.root);
                 let attackType = this.route.root.firstChild.snapshot.data.breadcrumb;
                 this.editable = editable.length > 0 && editable.every(x => x) && this.authenticationService.canEdit(attackType);
-                try {
-                  // if we have a group type and it is NOT new we can create a collection from all of the objects in the group
-                  this.isGroup = this.type === 'group' && this.stixId != 'new';
-                } catch (err) {
-                  // stixId throws an error when we are on the list page so this catches that
-                  this.isGroup = false;
-                }
+                // if we have a group type and it is NOT new we can create a collection from all of the objects in the group
+                this.isGroup = this.type === 'group' && !this.router.url.includes("/new");
                 this.hasWorkflow = attackType !== 'home';
                 if (!(this.editable && this.hasWorkflow)) this.sidebarService.currentTab = "references";
                 this.sidebarService.setEnabled("history", this.editable && this.hasWorkflow);
