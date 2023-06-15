@@ -15,6 +15,7 @@ import { AuthenticationService } from 'src/app/services/connectors/authenticatio
 import { SidebarService } from 'src/app/services/sidebar/sidebar.service';
 import { MatSelect } from '@angular/material/select';
 import { AddDialogComponent } from '../../add-dialog/add-dialog.component';
+import { logger } from 'src/app/util/logger';
 
 @Component({
     selector: 'app-stix-list',
@@ -385,8 +386,8 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
             })
         }
         if (filterList.includes('state') && filterList.includes('state_exclusive')) {
-          throw new Error("Cannot have both 'state' and 'state_exclusive' filters active.  Defaulting to 'state'");
-          filterList = filterList.filter((obj)=>obj!='state_exclusive')
+          filterList = filterList.filter((obj)=>obj!='state_exclusive');
+          logger.error("Cannot have both 'state' and 'state_exclusive' filters active.  Defaulting to 'state'");
         }
         if (filterList.includes('state')) {
             this.filterOptions.push({
