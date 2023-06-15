@@ -48,6 +48,7 @@
 
 #### Improvements in 1.3.2
 -   Improved error handling during collection import.
+-   Added filtering to collection views
 
 ## 21 April 2023
 
