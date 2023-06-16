@@ -60,8 +60,8 @@ The ATT&CK Workbench features a persistent database with the use of a named volu
 
 #### Improvements in 1.3.1
 -   Added individual attribution to edits made on Note objects.
--   Added the ICS Security Control mapping field to Mitigation objects.
--   Updated the documentation for installing Workbench with additional certs.
+-   Added the ICS Security Control mapping field to Mitigation objects. See [frontend#419](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/419). 
+-   Updated the documentation for installing Workbench with additional certs. See [frontend#225](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/225).
 
 #### Fixes in 1.3.1
 -   Fixed an issue where assigning an existing technique as a sub-technique would not create a `subtechnique-of` relationship. See [frontend#446](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/446).
