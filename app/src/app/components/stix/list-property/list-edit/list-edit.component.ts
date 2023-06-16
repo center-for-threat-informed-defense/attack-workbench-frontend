@@ -203,15 +203,15 @@ export class ListEditComponent implements OnInit, AfterContentChecked {
     }
     
     /** Get allowed values for this field */
-    public getAllowedValues(): string[] {
-        if (this.config.field == 'domains') return this.domains;
+    public getAllowedValues(): Set<string> {
+        if (this.config.field == 'domains') return new Set(this.domains);
         if (!this.dataLoaded) {
             this.selectControl.disable();
             return null;
         }
 
         // filter values
-        let values: string[] = [];
+        let values: Set<string> = new Set();
         let property = this.allAllowedValues.properties.find(p => {return p.propertyName == this.fieldToStix[this.config.field]});
         if (!property) { // property not found
             this.selectControl.disable();
@@ -222,24 +222,22 @@ export class ListEditComponent implements OnInit, AfterContentChecked {
             let object = this.config.object as any;
             property.domains.forEach(domain => {
                 if (object.domains.includes(domain.domainName)) {
-                    values = values.concat(domain.allowedValues);
+                    domain.allowedValues.forEach(values.add, values);
                 }
             })
         } 
         else { // domains not specified on object
             property.domains.forEach(domain => {
-                values = values.concat(domain.allowedValues);
+                domain.allowedValues.forEach(values.add, values);
             });
         }
 
         // check for existing data
         if (this.selectControl.value) {
-            for (let value of this.selectControl.value) {
-                if (!values.includes(value)) values.push(value);
-            }
+            this.selectControl.value.forEach(values.add, values);
         }
 
-        if (!values.length) {
+        if (!values.size) {
             // disable field and reset selection
             this.selectControl.disable();
             this.selectControl.reset();
