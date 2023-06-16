@@ -34,7 +34,7 @@
 
 ## Changes Staged on Develop
 
-### ATT&K Workbench version 2.0.0
+### ATT&CK Workbench version 2.0.0
 
 The ATT&CK Workbench features a persistent database with the use of a named volume as of version 2.0. **This change may result in data on the current anonymous volume being lost.** The [Docker Compose Migration](/docs/migration.md) document describes how to backup your existing ATT&CK Workbench data and restore it after the update.
 
@@ -46,7 +46,7 @@ The ATT&CK Workbench features a persistent database with the use of a named volu
 -	Added functionality to create a collection from a group and its related objects.
 -	Added button to import groups and their related objects into new or existing collections.
 -   Added an option to deprecate Data Component objects. See [frontend#429](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/429).
--   Added matrix landing page in matris view to match [ATT&CK website](https://attack.mitre.org/) and display the tactic list in edit mode. See [frontend#20](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/20)
+-   Added Matrix view to Matrix pages similar to the full matrix on the [ATT&CK website](https://attack.mitre.org/). See [frontend#20](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/20).
 
 #### Improvements in 2.0.0
 -   Improved error handling during collection import.
