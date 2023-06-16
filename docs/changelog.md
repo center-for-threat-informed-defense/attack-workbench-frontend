@@ -36,6 +36,8 @@
 
 ### ATT&K Workbench version 1.3.2
 
+The ATT&CK Workbench features a persistent database with the use of a named volume as of version 2.0. **This change may result in data on the current anonymous volume being lost.** The [Docker Compose Migration](/docs/migration.md) document describes how to backup your existing ATT&CK Workbench data and restore it after the update.
+
 #### New Features in 1.3.2
 -   Added an Admin interface for creating and managing teams.
 -   Added the ability to search objects by one or more users.
