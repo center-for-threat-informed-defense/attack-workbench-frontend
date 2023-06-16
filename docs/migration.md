@@ -1,6 +1,6 @@
 # Docker Compose Migration
 
-The ATT&CK Workbench features a persistent database with the use of a named volume as of version 2.0. This change results in data on the current anonymous volume being lost. This document describes how to backup your existing ATT&CK Workbench data and restore it after the update. This process only needs to be completed once.
+The ATT&CK Workbench features a persistent database with the use of a named volume as of version 2.0. This change may result in data on the current anonymous volume being lost. This document describes how to backup your existing ATT&CK Workbench data and restore it after the update. This process only needs to be completed once.
 
 
 ## 1. Identify anonymous volume
@@ -12,7 +12,7 @@ docker inspect --format "{{range .Mounts}}{{.Name}} {{println .Destination}}{{en
 
 ## 2. Backup the volume
 
-1. Create a named volume using 
+1. Create a temporary named volume
 ```
 docker volume create --name temp
 ```
@@ -27,24 +27,24 @@ This will install an `alpine` image and mount the volumes to a temporary contain
 ## 3. Updating the install
 
 1. Navigate to the `attack-workbench-frontend` directory (containing the `docker-compose.yml` file)
-2. Rebuild the Workbench: 
+2. Rebuild the ATT&CK Workbench: 
 ```
 docker-compose down
 docker-compose up --build
 ```
 
-This will rebuild the Workbench and wipe the current data. The persistent database is now in use. 
+This will rebuild the ATT&CK Workbench and may wipe the current data. The persistent database is now in use. 
 
 3. Restore data 
 
 ```
-docker run --rm -it -v temp:/from:ro -v attack-workbench-frontend_db-data:/to alpine ash -c "cd /from ; cp -av . /to" 
+docker run --rm -it -v temp:/from:ro -v attack-workbench-frontend_db-data:/to alpine ash -c "cd /from ; cp -av . /to"
 docker restart attack-workbench-database
 ```
 
 After restarting the database container, confirm that the ATT&CK Workbench contains the same data it did prior to the update by visiting `localhost` in your browser. 
 
-4. Delete temp volume
+4. Delete `temp` volume
 
 Only delete the temp volume after confirming the database has been restored. 
 ```
