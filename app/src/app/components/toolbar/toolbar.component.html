@@ -11,22 +11,14 @@
             </div>
             <app-object-status *ngIf="hasWorkflow"></app-object-status>
             <span *ngIf="websiteIntegrationService.websiteIntegrationEnabled && hasWorkflow" [matTooltip]="!websiteIntegrationService.checkExternalUrlValidity(editorService.stixId) ? 'could not find object on ATT&CK website' : 'view object in ATT&CK website'">
-              <button mat-button 
-                [disabled]="!websiteIntegrationService.currentWebIntegrationStatus.valid" 
-                class="control"
-                (click)="openExternalUrl()">
-                  <mat-icon>
-                    open_in_new
-                  </mat-icon>
-              </button>
+				<button mat-button [disabled]="!websiteIntegrationService.currentWebIntegrationStatus.valid" class="control" (click)="openExternalUrl()">
+					<mat-icon>open_in_new</mat-icon>
+				</button>
             </span>
-            
         </div>
          <div class="controls button-list section" *ngIf="isGroup">
             <button mat-button class="control" matTooltip="create a collection from this group" [disabled]="editing" (click)="createCollectionFromGroup()">
-              <span class="material-symbols-outlined">
-                deployed_code
-              </span>
+				<span class="material-symbols-outlined">deployed_code</span>
             </button>
         </div>
         <div class="controls button-list section">
