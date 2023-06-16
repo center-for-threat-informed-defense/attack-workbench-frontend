@@ -51,6 +51,9 @@ The ATT&CK Workbench features a persistent database with the use of a named volu
 #### Improvements in 2.0.0
 -   Improved error handling during collection import.
 
+#### Fixes in 2.0.0
+-   Fixed an issue where duplicate entries would be displayed in some dropdown lists for objects in multiple domains. See [frontend#454](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/454).
+
 ## 21 April 2023
 
 ### ATT&CK Workbench version 1.3.1
