@@ -80,6 +80,14 @@ export class CollectionImportComponent implements OnInit {
       ["last seen", "last_seen"],
       ["first seen citation", "x_mitre_first_seen_citation"],
       ["last seen citation", "x_mitre_last_seen_citation"],
+      ["target ref", "target_ref"],
+      ["source ref", "source_ref"],
+      ["source name", "source_name"],
+      ["target name", "target_name"],
+      ["source ID", "source_id"],
+      ["target ID", "target_id"],
+      ["mapping description", "description"],
+      ["mapping type","relationship_type"]
     ]
 
     constructor(public route: ActivatedRoute, public http: HttpClient,
@@ -277,8 +285,47 @@ export class CollectionImportComponent implements OnInit {
                     this.object_import_categories.software[category].push(new Software(object.type, raw))
                 break;
                 case "relationship": //relationship
-                    if (object.source_ref in idToSdo) raw.source_object = idToSdo[object.source_ref]
-                    if (object.target_ref in idToSdo) raw.target_object = idToSdo[object.target_ref]
+                // build source and target objects if only relationships are uploaded
+                if (object.source_ref in idToSdo) {
+                      raw.source_object = idToSdo[object.source_ref]
+                    } else {
+                      raw.source_object = {
+                        stix: {
+                          attackID: object.source_id,
+                          created: object.created,
+                          description: object.description,
+                          id: object.source_ref,
+                          modified: object.modified,
+                          name: object.source_name,
+                          spec_version: object.spec_version,
+                          type: object.relationship_type,
+                          external_references: [{
+                            source_name: "mitre-attack",
+                            external_id: object.source_id,
+                          }]
+                        }
+                      }
+                    }
+                    if (object.target_ref in idToSdo){
+                      raw.target_object = idToSdo[object.target_ref]
+                    } else {
+                      raw.target_object = {
+                        stix: {
+                          attackID: object.target_id,
+                          created: object.created,
+                          description: object.description,
+                          id: object.target_ref,
+                          modified: object.modified,
+                          name: object.target_name,
+                          spec_version: object.spec_version,
+                          type: object.relationship_type,
+                          external_references: [{
+                            source_name: "mitre-attack",
+                            external_id: object.target_id,
+                          }]
+                        }
+                      }
+                    }
                     let rel = new Relationship(raw)
                     this.object_import_categories.relationship[category].push(rel)
                 break;
