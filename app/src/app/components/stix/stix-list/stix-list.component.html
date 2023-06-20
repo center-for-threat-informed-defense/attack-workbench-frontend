@@ -138,7 +138,7 @@
                                     <div *ngFor="let collectionVersion of config.collectionMap.get(element.stixID)">
                                       <div *ngFor="let route of getAccessibleRoutes(collectionVersion.attackType, collectionVersion.routes)">
                                         <a class="mat-button" [routerLink]="'/' + [collectionVersion.attackType, collectionVersion.stixID, route.route].join('/')" [queryParams]="route.query">
-                                          {{route.label}} ({{collectionVersion.version}})
+                                          {{route.label}} (v{{collectionVersion.version}})
                                         </a>
                                       </div>
                                     </div>
