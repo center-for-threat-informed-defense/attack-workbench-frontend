@@ -87,6 +87,10 @@ These environment properties can be edited under `src/environments`:
 - [src/environments/environment.ts](app/src/environments/environment.ts) is the development environment with configurations for when it is hosted on a local machine or is being actively developed. This is the default environment file used when building the application.
 - [src/environments/environment.prod.ts](app/src/environments/environment.prod.ts) is the production environment for deployment inside of an organization or in cases where the user is not developing the application. When the application is built for production deployments (`ng build --prod`) this environment file is used.
 
+#### PKI Certificates
+
+For additional troubleshooting and installation of security certificates for use by ATT&CK Workbench, pleaser refer to [PKI Certificates instructions](docs/certs.md)
+
 ## Related Work
 
 ### STIX
@@ -113,7 +117,7 @@ https://github.com/mitre-attack/attack-navigator/
 
 ## Notice 
 
-Copyright 2020-2022 MITRE Engenuity. Approved for public release. Document number CT0020 and public release case number 22-3206.
+Copyright 2020-2023 MITRE Engenuity. Approved for public release. Document number CT0020 and public release case number 22-3206.
 
 Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at 
 

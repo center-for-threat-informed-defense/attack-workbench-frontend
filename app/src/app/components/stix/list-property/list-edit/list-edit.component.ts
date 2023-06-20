@@ -39,6 +39,10 @@ export class ListEditComponent implements OnInit, AfterContentChecked {
     // prevent async issues
     private sub: Subscription = new Subscription();
 
+    // domain & tactic selection state
+    private domainState: string[];
+    private tacticState: Tactic[];
+
     public fieldToStix = {
         "platforms": "x_mitre_platforms",
         "tactic_type": "x_mitre_tactic_type",
@@ -54,13 +58,13 @@ export class ListEditComponent implements OnInit, AfterContentChecked {
         "ics-attack"
     ]
 
-    constructor(public dialog: MatDialog, private restAPIConnectorService: RestApiConnectorService, private ref: ChangeDetectorRef) {
-        // intentionally left blank
-    }
-
     public get values() {
         if (this.config.field == "aliases") return this.config.object[this.config.field].slice(1); // filter out the first alias
         return this.config.object[this.config.field];
+    }
+
+    constructor(public dialog: MatDialog, private restAPIConnectorService: RestApiConnectorService, private ref: ChangeDetectorRef) {
+        // intentionally left blank
     }
 
     ngOnInit(): void {
@@ -159,8 +163,6 @@ export class ListEditComponent implements OnInit, AfterContentChecked {
     }
 
     /** Update current stix-list selection on domain change */
-    private domainState: string[];
-    private tacticState: Tactic[];
     public selectedValues(): string[] {
         if (!this.dataLoaded) return null;
 
@@ -201,15 +203,15 @@ export class ListEditComponent implements OnInit, AfterContentChecked {
     }
     
     /** Get allowed values for this field */
-    public getAllowedValues(): string[] {
-        if (this.config.field == 'domains') return this.domains;
+    public getAllowedValues(): Set<string> {
+        if (this.config.field == 'domains') return new Set(this.domains);
         if (!this.dataLoaded) {
             this.selectControl.disable();
             return null;
         }
 
         // filter values
-        let values: string[] = [];
+        let values: Set<string> = new Set();
         let property = this.allAllowedValues.properties.find(p => {return p.propertyName == this.fieldToStix[this.config.field]});
         if (!property) { // property not found
             this.selectControl.disable();
@@ -220,24 +222,22 @@ export class ListEditComponent implements OnInit, AfterContentChecked {
             let object = this.config.object as any;
             property.domains.forEach(domain => {
                 if (object.domains.includes(domain.domainName)) {
-                    values = values.concat(domain.allowedValues);
+                    domain.allowedValues.forEach(values.add, values);
                 }
             })
         } 
         else { // domains not specified on object
             property.domains.forEach(domain => {
-                values = values.concat(domain.allowedValues);
+                domain.allowedValues.forEach(values.add, values);
             });
         }
 
         // check for existing data
         if (this.selectControl.value) {
-            for (let value of this.selectControl.value) {
-                if (!values.includes(value)) values.push(value);
-            }
+            this.selectControl.value.forEach(values.add, values);
         }
 
-        if (!values.length) {
+        if (!values.size) {
             // disable field and reset selection
             this.selectControl.disable();
             this.selectControl.reset();

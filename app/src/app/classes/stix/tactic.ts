@@ -3,11 +3,15 @@ import { RestApiConnectorService } from "src/app/services/connectors/rest-api/re
 import { ValidationData } from "../serializable";
 import {StixObject} from "./stix-object";
 import { logger } from "../../util/logger";
+import { Technique } from "./technique";
 
 export class Tactic extends StixObject {
     public name: string = "";
     public domains: string[] = [];
     public contributors: string[] = [];
+
+    // NOTE: this is only populated in the matrix view when calling getTechniquesInMatrix() NOT getMatrix()
+    public technique_objects: Technique[] = [];
 
     public readonly supportsAttackID = true;
     public readonly supportsNamespace = true;

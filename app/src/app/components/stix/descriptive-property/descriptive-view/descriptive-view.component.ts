@@ -20,11 +20,15 @@ export class DescriptiveViewComponent implements OnInit {
     private reLinkById = /\(LinkById: (.*?)\)/gmu;
     private objectLookup = {};
     private sub: Subscription = new Subscription(); // prevent async issues
+    private parseReferences = true;
 
     constructor(private restApiConnector: RestApiConnectorService) { }
 
     ngOnInit(): void {
-        this.renderPreview();
+      if (this.config && 'parseReferences' in this.config) {
+        this.parseReferences = this.config.parseReferences;
+      }
+      this.renderPreview();
     }
 
     private truncateToFirstParagraph(displayStr: string): string {
@@ -142,13 +146,15 @@ export class DescriptiveViewComponent implements OnInit {
             this.preview = this.truncateToFirstParagraph(this.preview);
         }
 
-        if (this.config.referencesField) {
-            // Replace references from references field
-            this.preview = this.replaceReferences(this.preview);
-        }
-        else {
-            // Remove references if not defined
-            this.preview = this.removeReferences(this.preview);
+        if (this.parseReferences) {
+          if (this.config.referencesField) {
+              // Replace references from references field
+              this.preview = this.replaceReferences(this.preview);
+          }
+          else {
+              // Remove references if not defined
+              this.preview = this.removeReferences(this.preview);
+          }
         }
 
         let loaded = function(ids: string[], lookup: {}) {

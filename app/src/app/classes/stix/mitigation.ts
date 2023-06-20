@@ -7,6 +7,7 @@ import { logger } from "../../util/logger";
 export class Mitigation extends StixObject {
     public name: string = "";
     public domains: string[] = [];
+    public securityControls: string[] = [];
 
     public readonly supportsAttackID = true;
     public readonly supportsNamespace = true;
@@ -33,6 +34,11 @@ export class Mitigation extends StixObject {
         rep.stix.name = this.name.trim();
         rep.stix.x_mitre_domains = this.domains;
 
+        // domain specific fields
+        if (this.domains.includes('ics-attack') && this.securityControls.length > 0) {
+            rep.stix.labels = this.securityControls;
+        }
+
         return rep;
     }
 
@@ -54,6 +60,11 @@ export class Mitigation extends StixObject {
                 if (this.isStringArray(sdo.x_mitre_domains)) this.domains = sdo.x_mitre_domains;
                 else logger.error("TypeError: domains field is not a string array.");
             } else this.domains = [];
+
+            if ("labels" in sdo) {
+                if (this.isStringArray(sdo.labels)) this.securityControls = sdo.labels;
+                else logger.error("TypeError: labels field is not a string array.");
+            } else this.securityControls = [];
         }
     }
 
@@ -86,7 +97,7 @@ export class Mitigation extends StixObject {
      * @param restAPIService [RestApiConnectorService] the service to perform the DELETE through
      */
     public delete(restAPIService: RestApiConnectorService) : Observable<{}> {
-        let deleteObservable = restAPIService.deleteMitigation(this.stixID, this.modified);
+        let deleteObservable = restAPIService.deleteMitigation(this.stixID);
         let subscription = deleteObservable.subscribe({
             complete: () => { subscription.unsubscribe(); }
         });

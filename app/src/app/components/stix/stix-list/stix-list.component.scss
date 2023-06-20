@@ -2,12 +2,12 @@
 @import '~@angular/material/theming';
 .stix-list {
     .controls {
-        // &, .input-group, .input-group .mat-form-field { min-height: 60px; }
         .input-group {
             font-size: 16px;
             width: 100%;
             display: flex;
             flex-direction: row;
+            justify-content: flex-end;
             .search {
                 flex-grow: 1;
             }
@@ -16,7 +16,6 @@
             .dark &  { border-color: border-color(dark); }
         }
         .mat-form-field-wrapper {
-            // padding-bottom: 0px;
             margin-bottom: -1.34375em; // remove bottom padding used for hint
         }
         .mat-form-field-flex {
@@ -28,13 +27,14 @@
         }
         .mat-checkbox { padding: 12px; }
         .align-right { justify-content: flex-end ;}
-        // .light & { border-color: border-color(light); }
-        // .dark &  { border-color: border-color(dark); }
-        // border-bottom: 1px solid;
+        .align-center {
+            display: flex;
+            align-items: center;
+        }
     }
     
     .table-container {
-        max-width: 60em;
+        max-width: 75em;
         margin: 0 auto;
         border-radius: 4px;
         .dark & { 
@@ -42,7 +42,6 @@
         }
         .light & {
             border: 1px solid border-color(light);
-            // @include mat-elevation(8);
         }
         .scroll-container {
             width: 100%;
@@ -53,31 +52,10 @@
             table {
                 flex: 1 0 auto;
                 width: 100%;
-                // min-width: 100%;
-                // overflow: auto;
-                // max-width: 100%;
-                // table-layout: fixed;
 
                 .nowrap {
                     white-space: nowrap;
                 }
-                // .name { 
-                //     @extend .subheading;
-                // }
-
-                // .relationship-left {
-                //     padding-right: 12px;
-                //     text-align: right;
-                // }
-                // .relationship-right {
-                //     // padding-left: 0px;
-                // }
-                // .relationship-joiner {
-                //     padding-left: 12px;
-                //     padding-right: 12px;
-                //     flex-shrink: 1;
-                // }
-
         
                 th, td { 
                     .light & { background: color(light); border-color: border-color(light); }
@@ -86,13 +64,7 @@
                 th {
                     font-size: 20px;
                     @extend .text-label;
-                    // border-bottom-width: 3px;
-                    // border-bottom-style: double;
                 }
-                // th {
-                //     .light & { color: on-color-deemphasis(light); }
-                //     .dark &  { color: on-color-deemphasis(dark); }
-                // }
         
                 tr.detail-row {
                     height: 0;
@@ -153,7 +125,6 @@
                 }
         
                 .mat-column-select {
-                    // overflow: initial;
                     &.many {
                         width: 28px;
                     }
@@ -172,7 +143,6 @@
                         &.columns {
                             display: flex;
                             .column {
-                                // display: inline-block;
                                 &.is-narrow {
                                      flex-shrink: 1;
                                 }
@@ -185,7 +155,6 @@
                             }
                         }
                         .controls {
-                            // min-height: 60px;
                             a { // links to pages in detail column
                                 @extend .text-label;
                                 text-align: right;
@@ -202,7 +171,6 @@
                         .description {
                             display: flex;
                             align-items: center;
-                            // max-width: 36em;
                              p:first-child {
                                  margin-top: 6px;
                              }
@@ -227,4 +195,16 @@
             .light & { color: on-color-deemphasis(light); }
         }
     }
+}
+.no-checkbox {
+  mat-pseudo-checkbox {
+    display: none !important;
+  }
+}
+.user-search {
+  display: flex;
+  justify-content: space-between;
+  &:hover {
+    cursor: pointer;
+  }
 }

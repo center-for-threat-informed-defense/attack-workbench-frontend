@@ -24,6 +24,7 @@ import { DataSource } from 'src/app/classes/stix/data-source';
 import { DataComponent } from 'src/app/classes/stix/data-component';
 import { UserAccount } from 'src/app/classes/authn/user-account';
 import { Campaign } from 'src/app/classes/stix/campaign';
+import { Team } from 'src/app/classes/authn/team';
 
 //attack types
 type AttackType = "campaign" | "collection" | "group" | "matrix" | "mitigation" | "software" | "tactic" | "technique" | "relationship" | "note" | "identity" | "marking-definition" | "data-source" | "data-component";
@@ -95,13 +96,18 @@ export interface Namespace {
     range_start: string
 }
 
+
+
 @Injectable({
     providedIn: 'root'
 })
 export class RestApiConnectorService extends ApiConnector {
-    private get baseUrl(): string { return environment.integrations.rest_api.url; }
+    private get apiUrl(): string { return environment.integrations.rest_api.url; }
 
-    constructor(private http: HttpClient, private snackbar: MatSnackBar) { super(snackbar); }
+    constructor(private http: HttpClient, private snackbar: MatSnackBar) {
+        super(snackbar);
+    }
+
     /**
      * Get the name of a given STIX object
      */
@@ -114,7 +120,7 @@ export class RestApiConnectorService extends ApiConnector {
         } else if (object.type == "note") {
             return object["title"];
         } else if ("name" in object) {
-            return object["name"];
+            return object["name"] as string;
         } else if (object["attackID"]) {
             return object["attackID"];
         } else {
@@ -138,19 +144,21 @@ export class RestApiConnectorService extends ApiConnector {
     private getStixObjectsFactory<T extends StixObject>(attackType: AttackType) {
         let attackClass = attackTypeToClass[attackType];
         let plural = attackTypeToPlural[attackType]
-        return function<P extends T>(options?: { limit?: number, 
-                                                 offset?: number, 
-                                                 state?: string, 
-                                                 includeRevoked?: boolean, 
-                                                 includeDeprecated?: boolean, 
-                                                 versions?: "all" | "latest", 
-                                                 excludeIDs?: string[], 
-                                                 search?: string,
-                                                 platforms?: string[],
-                                                 domains?: string[]
-                                                 }): Observable<Paginated<StixObject>> {
+        return function <P extends T>(options?: {
+            limit?: number,
+            offset?: number,
+            state?: string,
+            includeRevoked?: boolean,
+            includeDeprecated?: boolean,
+            versions?: "all" | "latest",
+            excludeIDs?: string[],
+            search?: string,
+            platforms?: string[],
+            domains?: string[],
+            lastUpdatedBy?: string[],
+        }): Observable<Paginated<StixObject>> {
             // parse params into query string
-            let query = new HttpParams({encoder: new CustomEncoder()});
+            let query = new HttpParams({ encoder: new CustomEncoder() });
             if (options) {
                 // pagination
                 if (options.limit) query = query.set("limit", options.limit.toString());
@@ -167,10 +175,12 @@ export class RestApiConnectorService extends ApiConnector {
                 // platforms/domains
                 if (options.platforms) options.platforms.forEach(platform => query = query.append('platform', platform));
                 if (options.domains) options.domains.forEach(domain => query = query.append('domain', domain));
+                // lastUpdatedBy
+                if (options.lastUpdatedBy) options.lastUpdatedBy.forEach(user => query = query.append('lastUpdatedBy', user));
             }
             // perform the request
-            let url = `${this.baseUrl}/${plural}`;
-            return this.http.get(url, {headers: this.headers, params: query}).pipe(
+            let url = `${this.apiUrl}/${plural}`;
+            return this.http.get(url, { headers: this.headers, params: query }).pipe(
                 tap(results => logger.log(`retrieved ${plural}`, results)), // on success, trigger the success notification
                 map(results => {
                     if (!options || !options.excludeIDs) return results; // only filter if param is present
@@ -218,9 +228,14 @@ export class RestApiConnectorService extends ApiConnector {
      * @param {number} [limit] the number of techniques to retrieve
      * @param {number} [offset] the number of techniques to skip
      * @param {string} [state] if specified, only get objects with this state
-     * @param {boolean} [revoked] if true, get revoked objects
-     * @param {boolean} [deprecated] if true, get deprecated objects
+     * @param {boolean} [includeRevoked] if true, get revoked objects
+     * @param {boolean} [includeDeprecated] if true, get deprecated objects
+     * @param {"all" | "latest"} [versions] if "all", get all versions of the objects. if "latest", only get the latest version of each object
+     * @param {string} [lastUpdatedBy] if specified, only get objects which were last updated by these users
      * @param {string[]} [excludeIDs] if specified, excludes these STIX IDs from the result
+     * @param {string} [search] if specified, return objects where the query occurs in the name, description, or ATT&CK ID; the search is case-insensitive
+     * @param {string[]} [platforms] if specified, retrieve objects that contain the specified platform(s)
+     * @param {string[]} [domains] if specified, retrieve objects that contain the specified domain(s)
      * @returns {Observable<Technique[]>} observable of retrieved objects
      */
     public get getAllTechniques() { return this.getStixObjectsFactory<Technique>("technique"); }
@@ -229,6 +244,7 @@ export class RestApiConnectorService extends ApiConnector {
      * @param {number} [limit] the number of tactics to retrieve
      * @param {number} [offset] the number of tactics to skip
      * @param {string} [state] if specified, only get objects with this state
+     * @param {string} [lastUpdatedBy] if specified, only get objects which were last updated by these users
      * @param {boolean} [revoked] if true, get revoked objects
      * @param {boolean} [deprecated] if true, get deprecated objects
      * @param {string[]} [excludeIDs] if specified, excludes these STIX IDs from the result
@@ -240,6 +256,7 @@ export class RestApiConnectorService extends ApiConnector {
      * @param {number} [limit] the number of groups to retrieve
      * @param {number} [offset] the number of groups to skip
      * @param {string} [state] if specified, only get objects with this state
+     * @param {string} [lastUpdatedBy] if specified, only get objects which were last updated by these users
      * @param {boolean} [revoked] if true, get revoked objects
      * @param {boolean} [deprecated] if true, get deprecated objects
      * @param {string[]} [excludeIDs] if specified, excludes these STIX IDs from the result
@@ -251,6 +268,7 @@ export class RestApiConnectorService extends ApiConnector {
      * @param {number} [limit] the number of campaigns to retrieve
      * @param {number} [offset] the number of campaigns to skip
      * @param {string} [state] if specified, only get objects with this state
+     * @param {string} [lastUpdatedBy] if specified, only get objects which were last updated by these users
      * @param {boolean} [revoked] if true, get revoked objects
      * @param {boolean} [deprecated] if true, get deprecated objects
      * @param {string[]} [excludeIDs] if specified, excludes these STIX IDs from the result
@@ -262,6 +280,7 @@ export class RestApiConnectorService extends ApiConnector {
      * @param {number} [limit] the number of software to retrieve
      * @param {number} [offset] the number of software to skip
      * @param {string} [state] if specified, only get objects with this state
+     * @param {string} [lastUpdatedBy] if specified, only get objects which were last updated by these users
      * @param {boolean} [revoked] if true, get revoked objects
      * @param {boolean} [deprecated] if true, get deprecated objects
      * @returns {Observable<Software[]>} observable of retrieved objects
@@ -272,6 +291,7 @@ export class RestApiConnectorService extends ApiConnector {
      * @param {number} [limit] the number of mitigations to retrieve
      * @param {number} [offset] the number of mitigations to skip
      * @param {string} [state] if specified, only get objects with this state
+     * @param {string} [lastUpdatedBy] if specified, only get objects which were last updated by these users
      * @param {boolean} [revoked] if true, get revoked objects
      * @param {boolean} [deprecated] if true, get deprecated objects
      * @param {string[]} [excludeIDs] if specified, excludes these STIX IDs from the result
@@ -283,6 +303,7 @@ export class RestApiConnectorService extends ApiConnector {
      * @param {number} [limit] the number of data sources to retrieve
      * @param {number} [offset] the number of data sources to skip
      * @param {string} [state] if specified, only get objects with this state
+     * @param {string} [lastUpdatedBy] if specified, only get objects which were last updated by these users
      * @param {boolean} [revoked] if true, get revoked objects
      * @param {boolean} [deprecated] if true, get deprecated objects
      * @param {string[]} [excludeIDs] if specified, excludes these STIX IDs from the result
@@ -294,6 +315,7 @@ export class RestApiConnectorService extends ApiConnector {
      * @param {number} [limit] the number of data components to retrieve
      * @param {number} [offset] the number of data components to skip
      * @param {string} [state] if specified, only get objects with this state
+     * @param {string} [lastUpdatedBy] if specified, only get objects which were last updated by these users
      * @param {boolean} [revoked] if true, get revoked objects
      * @param {boolean} [deprecated] if true, get deprecated objects
      * @param {string[]} [excludeIDs] if specified, excludes these STIX IDs from the result
@@ -305,6 +327,7 @@ export class RestApiConnectorService extends ApiConnector {
      * @param {number} [limit] the number of matrices to retrieve
      * @param {number} [offset] the number of matrices to skip
      * @param {string} [state] if specified, only get objects with this state
+     * @param {string} [lastUpdatedBy] if specified, only get objects which were last updated by these users
      * @param {boolean} [revoked] if true, get revoked objects
      * @param {boolean} [deprecated] if true, get deprecated objects
      * @param {string[]} [excludeIDs] if specified, excludes these STIX IDs from the result
@@ -316,6 +339,7 @@ export class RestApiConnectorService extends ApiConnector {
      * @param {number} [limit] the number of collections to retrieve
      * @param {number} [offset] the number of collections to skip
      * @param {string} [state] if specified, only get objects with this state
+     * @param {string} [lastUpdatedBy] if specified, only get objects which were last updated by these users
      * @param {boolean} [revoked] if true, get revoked objects
      * @param {versions} ["all" | "latest"] if "all", get all versions of the collections. if "latest", only get the latest version of each collection.
      * @param {boolean} [deprecated] if true, get deprecated objects
@@ -328,6 +352,7 @@ export class RestApiConnectorService extends ApiConnector {
      * @param {number} [limit] the number of marking definitions to retrieve
      * @param {number} [offset] the number of marking definitions to skip
      * @param {string} [state] if specified, only get objects with this state
+     * @param {string} [lastUpdatedBy] if specified, only get objects which were last updated by these users
      * @param {boolean} [revoked] if true, get revoked objects
      * @param {versions} ["all" | "latest"] if "all", get all versions of the marking definitions. if "latest", only get the latest version of each collection.
      * @param {boolean} [deprecated] if true, get deprecated objects
@@ -340,6 +365,7 @@ export class RestApiConnectorService extends ApiConnector {
      * @param {number} [limit] the number of notes to retrieve
      * @param {number} [offset] the number of notes to skip
      * @param {string} [state] if specified, only get objects with this state
+     * @param {string} [lastUpdatedBy] if specified, only get objects which were last updated by these users
      * @param {boolean} [revoked] if true, get revoked objects
      * @param {boolean} [deprecated] if true, get deprecated objects
      * @param {string[]} [excludeIDs] if specified, excludes these STIX IDs from the result
@@ -351,21 +377,26 @@ export class RestApiConnectorService extends ApiConnector {
      * @param {number} [limit] the number of identities to retrieve
      * @param {number} [offset] the number of identities to skip
      * @param {string} [state] if specified, only get objects with this state
+     * @param {string} [lastUpdatedBy] if specified, only get objects which were last updated by these users
      * @param {boolean} [revoked] if true, get revoked objects
      * @param {boolean} [deprecated] if true, get deprecated objects
      * @param {string[]} [excludeIDs] if specified, excludes these STIX IDs from the result
      * @returns {Observable<Identity[]>} observable of retrieved objects
      */
-     public get getAllIdentities() { return this.getStixObjectsFactory<Identity>("identity"); }
+    public get getAllIdentities() { return this.getStixObjectsFactory<Identity>("identity"); }
     /**
      * Get all relationships
-     * @param {number} [limit] the number of relationships to retrieve
-     * @param {number} [offset] the number of relationships to skip
+     * @param {number} [limit] the number of techniques to retrieve
+     * @param {number} [offset] the number of techniques to skip
      * @param {string} [state] if specified, only get objects with this state
-     * @param {boolean} [revoked] if true, get revoked objects
-     * @param {versions} ["all" | "latest"] if "all", get all versions of the relationships. if "latest", only get the latest version of each collection.
-     * @param {boolean} [deprecated] if true, get deprecated objects
+     * @param {boolean} [includeRevoked] if true, get revoked objects
+     * @param {boolean} [includeDeprecated] if true, get deprecated objects
+     * @param {"all" | "latest"} [versions] if "all", get all versions of the objects. if "latest", only get the latest version of each object
+     * @param {string} [lastUpdatedBy] if specified, only get objects which were last updated by these users
      * @param {string[]} [excludeIDs] if specified, excludes these STIX IDs from the result
+     * @param {string} [search] if specified, return objects where the query occurs in the name, description, or ATT&CK ID; the search is case-insensitive
+     * @param {string[]} [platforms] if specified, retrieve objects that contain the specified platform(s)
+     * @param {string[]} [domains] if specified, retrieve objects that contain the specified domain(s)
      * @returns {Observable<Relationships[]>} observable of retrieved objects
      */
     public get getAllRelationships() { return this.getStixObjectsFactory<Relationship>("relationship"); }
@@ -377,25 +408,28 @@ export class RestApiConnectorService extends ApiConnector {
      * @param {number} [offset] the number of collections to skip
      * @param {string} [state] if specified, only get objects with this state
      * @param {boolean} [revoked] if true, get revoked objects
-     * @param {versions} ["all" | "latest"] if "all", get all versions of the collections. if "latest", only get the latest version of each collection.
      * @param {boolean} [deprecated] if true, get deprecated objects
      * @param {boolean} [deserialize] if true, deserialize objects to full STIX objects
+     * @param {string[]} [lastUpdatedBy] filter to only include objects modified by the list of given user IDs
      * @returns {Observable<any[]>} observable of retrieved objects
      */
-    public getAllObjects(attackIDs?: string[], limit?: number, offset?: number, state?: string, revoked?: boolean, deprecated?: boolean, deserialize?: boolean) {
-        let query = new HttpParams({encoder: new CustomEncoder()});
+    public getAllObjects(attackIDs?: string[], limit?: number, offset?: number, state?: string, revoked?: boolean, deprecated?: boolean, deserialize?: boolean, lastUpdatedBy?: string[]) {
+        let query = new HttpParams({ encoder: new CustomEncoder() });
         // pagination
         if (limit) query = query.set("limit", limit.toString());
         if (offset) query = query.set("offset", offset.toString());
         if (limit || offset) query = query.set("includePagination", "true");
-        // other properties
+        // ATT&CK ID filter
         if (attackIDs) {
             attackIDs.forEach(id => query = query.append("attackId", id));
         }
+        // object state
         if (state) query = query.set("state", state);
         if (revoked) query = query.set("includeRevoked", revoked ? "true" : "false");
         if (deprecated) query = query.set("includeDeprecated", deprecated ? "true" : "false");
-        return this.http.get(`${this.baseUrl}/attack-objects`, {params: query}).pipe(
+        // lastUpdatedBy
+        if (lastUpdatedBy) lastUpdatedBy.forEach(user => query = query.append('lastUpdatedBy', user));
+        return this.http.get(`${this.apiUrl}/attack-objects`, { params: query }).pipe(
             tap(results => logger.log(`retrieved ATT&CK objects`, results)), // on success, trigger the success notification
             map(results => {
                 if (!deserialize) return results; //skip deserialization if param not added
@@ -436,17 +470,17 @@ export class RestApiConnectorService extends ApiConnector {
     private getStixObjectFactory<T extends StixObject>(attackType: AttackType) {
         let attackClass = attackTypeToClass[attackType];
         let plural = attackTypeToPlural[attackType]
-        return function<P extends T>(id: string, modified?: Date | string, versions="latest", includeSubs?: boolean, retrieveContents?: boolean, retrieveDataComponents?: boolean): Observable<P[]> {
-            let url = `${this.baseUrl}/${plural}/${id}`;
+        return function <P extends T>(id: string, modified?: Date | string, versions = "latest", includeSubs?: boolean, retrieveContents?: boolean, retrieveDataComponents?: boolean): Observable<P[]> {
+            let url = `${this.apiUrl}/${plural}/${id}`;
             if (modified) {
-                let modifiedString = typeof(modified) == "string"? modified : modified.toISOString();
+                let modifiedString = typeof (modified) == "string" ? modified : modified.toISOString();
                 url += `/modified/${modifiedString}`;
             }
             let query = new HttpParams();
             if (versions != "latest") query = query.set("versions", versions);
             if (attackType == "collection" && retrieveContents) query = query.set("retrieveContents", "true");
             if (attackType == "data-source" && retrieveDataComponents) query = query.set("retrieveDataComponents", "true");
-            return this.http.get(url, {headers: this.headers, params: query}).pipe(
+            return this.http.get(url, { headers: this.headers, params: query }).pipe(
                 tap(result => logger.log(`retrieved ${attackType}`, result)), // on success, trigger the success notification
                 map(result => {
                     let x = result as any;
@@ -466,7 +500,7 @@ export class RestApiConnectorService extends ApiConnector {
                     if (x[0].attackType != "technique") return of(result); //don't transform non-techniques
                     let t = x[0] as Technique;
                     if (t.is_subtechnique) { //add parent technique
-                        return this.getRelatedTo({sourceRef: t.stixID, relationshipType: "subtechnique-of"}).pipe( // fetch from REST API
+                        return this.getRelatedTo({ sourceRef: t.stixID, relationshipType: "subtechnique-of" }).pipe( // fetch from REST API
                             map(rel => { //extract the parent from the relationship
                                 let p = rel as any;
                                 if (!p || p.data.length == 0) return null; // no parent technique
@@ -480,7 +514,7 @@ export class RestApiConnectorService extends ApiConnector {
                             tap(result => logger.log("fetched parent technique of", result, result[0]["parentTechnique"]))
                         );
                     } else { // add subtechniques
-                        return this.getRelatedTo({targetRef: t.stixID, relationshipType: "subtechnique-of"}).pipe( // fetch from REST API
+                        return this.getRelatedTo({ targetRef: t.stixID, relationshipType: "subtechnique-of" }).pipe( // fetch from REST API
                             map(rel => { //extract the sub-techniques from the relationships
                                 let s = rel as any;
                                 return s.data.map(rel => new Technique(rel.source_object)); //transform them to Techniques
@@ -609,25 +643,26 @@ export class RestApiConnectorService extends ApiConnector {
      * @param {versions} [string] default "latest", if "all" returns all versions of the object instead of just the latest version.
      * @returns {Observable<Identity>} the object with the given ID and modified date
      */
-     public get getIdentity() { return this.getStixObjectFactory<Identity>("identity"); }
+    public get getIdentity() { return this.getStixObjectFactory<Identity>("identity"); }
     /**
      * Get a single marking definition by STIX ID
      * @param {string} id the object STIX ID
      * @returns {Observable<MarkingDefinition>} the object with the given ID
      */
-     public get getMarkingDefinition() { return this.getStixObjectFactory<MarkingDefinition>("marking-definition")}
+    public get getMarkingDefinition() { return this.getStixObjectFactory<MarkingDefinition>("marking-definition") }
+
     /**
      * Factory to create a new STIX object creator (POST) function
      * @template T the type to create
-     * @param {AttackType} attackType tehe type to create
+     * @param {AttackType} attackType the type to create
      * @returns creator (POST) function
      */
     private postStixObjectFactory<T extends StixObject>(attackType: AttackType) {
         let attackClass = attackTypeToClass[attackType];
         let plural = attackTypeToPlural[attackType];
-        return function<P extends T>(object: P): Observable<P> {
-            let url = `${this.baseUrl}/${plural}`;
-            return this.http.post(url, object.serialize(), {headers: this.headers}).pipe(
+        return function <P extends T>(object: P): Observable<P> {
+            let url = `${this.apiUrl}/${plural}`;
+            return this.http.post(url, object.serialize(), { headers: this.headers }).pipe(
                 tap(this.handleSuccess(`${this.getObjectName(object)} saved`)),
                 map(result => {
                     let x = result as any;
@@ -705,7 +740,7 @@ export class RestApiConnectorService extends ApiConnector {
      * @param {MarkingDefinition} object the object to create
      * @returns {Observable<MarkingDefinition>} the created object
      */
-     public get postMarkingDefinition() { return this.postStixObjectFactory<MarkingDefinition>("marking-definition"); }
+    public get postMarkingDefinition() { return this.postStixObjectFactory<MarkingDefinition>("marking-definition"); }
     /**
      * POST (create) a new note
      * @param {Note} object the object to create
@@ -723,7 +758,7 @@ export class RestApiConnectorService extends ApiConnector {
      * @param {Identity} object the object to create
      * @returns {Observable<Identity>} the created object
      */
-     public get postIdentity() { return this.postStixObjectFactory<Identity>("identity"); }
+    public get postIdentity() { return this.postStixObjectFactory<Identity>("identity"); }
 
     /**
      * Factory to create a new STIX put (update) function
@@ -734,10 +769,10 @@ export class RestApiConnectorService extends ApiConnector {
     private putStixObjectFactory<T extends StixObject>(attackType: AttackType) {
         let attackClass = attackTypeToClass[attackType];
         let plural = attackTypeToPlural[attackType];
-        return function<P extends T>(object: T, modified?: Date): Observable<P> {
+        return function <P extends T>(object: T, modified?: Date): Observable<P> {
             if (!modified) modified = object.modified; //infer modified from STIX object modified date
-            let url = `${this.baseUrl}/${plural}/${object.stixID}/modified/${modified}`;
-            return this.http.put(url, object.serialize(), {headers: this.headers}).pipe(
+            let url = `${this.apiUrl}/${plural}/${object.stixID}/modified/${modified}`;
+            return this.http.put(url, object.serialize(), { headers: this.headers }).pipe(
                 tap(this.handleSuccess(`${this.getObjectName(object)} saved`)),
                 map(result => {
                     let x = result as any;
@@ -838,9 +873,8 @@ export class RestApiConnectorService extends ApiConnector {
 
     private deleteStixObjectFactory(attackType: AttackType) {
         let plural = attackTypeToPlural[attackType];
-        return function(id: string, modified: Date): Observable<{}> {
-            let modifiedStix = modified.toISOString();
-            let url = `${this.baseUrl}/${plural}/${id}/modified/${modifiedStix}`;
+        return function (id: string): Observable<{}> {
+            let url = `${this.apiUrl}/${plural}/${id}`;
             return this.http.delete(url).pipe(
                 tap(this.handleSuccess(`${attackType} deleted`)),
                 catchError(this.handleError_raise()),
@@ -852,87 +886,76 @@ export class RestApiConnectorService extends ApiConnector {
     /**
      * DELETE a technique
      * @param {string} id the STIX ID of the object to delete
-     * @param {Date} modified the modified date of the version to delete
      * @returns {Observable<{}>} observable of the response body
      */
     public get deleteTechnique() { return this.deleteStixObjectFactory("technique"); }
     /**
      * DELETE a tactic
      * @param {string} id the STIX ID of the object to delete
-     * @param {Date} modified the modified date of the version to delete
      * @returns {Observable<{}>} observable of the response body
      */
     public get deleteTactic() { return this.deleteStixObjectFactory("tactic"); }
     /**
      * DELETE a group
      * @param {string} id the STIX ID of the object to delete
-     * @param {Date} modified the modified date of the version to delete
      * @returns {Observable<{}>} observable of the response body
      */
     public get deleteGroup() { return this.deleteStixObjectFactory("group"); }
     /**
      * DELETE a campaign
      * @param {string} id the STIX ID of the object to delete
-     * @param {Date} modified the modified date of the version to delete
      * @returns {Observable<{}>} observable of the response body
      */
     public get deleteCampaign() { return this.deleteStixObjectFactory("campaign"); }
     /**
      * DELETE a software
      * @param {string} id the STIX ID of the object to delete
-     * @param {Date} modified the modified date of the version to delete
      * @returns {Observable<{}>} observable of the response body
      */
     public get deleteSoftware() { return this.deleteStixObjectFactory("software"); }
     /**
      * DELETE a mitigation
      * @param {string} id the STIX ID of the object to delete
-     * @param {Date} modified the modified date of the version to delete
      * @returns {Observable<{}>} observable of the response body
      */
     public get deleteMitigation() { return this.deleteStixObjectFactory("mitigation"); }
     /**
      * DELETE a data source
      * @param {string} id the STIX ID of the object to delete
-     * @param {Date} modified the modified date of the version to delete
      * @returns {Observable<{}>} observable of the response body
      */
     public get deleteDataSource() { return this.deleteStixObjectFactory("data-source"); }
     /**
      * DELETE a data component
      * @param {string} id the STIX ID of the object to delete
-     * @param {Date} modified the modified date of the version to delete
      * @returns {Observable<{}>} observable of the response body
      */
     public get deleteDataComponent() { return this.deleteStixObjectFactory("data-component"); }
     /**
      * DELETE a matrix
      * @param {string} id the STIX ID of the object to delete
-     * @param {Date} modified The modified date of the version to delete
      * @returns {Observable<{}>} observable of the response body
      */
     public get deleteMatrix() { return this.deleteStixObjectFactory("matrix"); }
     /**
      * DELETE a collection
      * @param {string} id the STIX ID of the object to delete
-     * @param {Date} modified The modified date of the version to delete
      * @returns {Observable<{}>} observable of the response body
      */
     public get deleteCollection() { return this.deleteStixObjectFactory("collection"); }
     /**
      * DELETE a relationship
      * @param {string} id the STIX ID of the object to delete
-     * @param {Date} modified The modified date of the version to delete
      * @returns {Observable<{}>} observable of the response body
      */
-     public get deleteRelationship() { return this.deleteStixObjectFactory("relationship"); }
+    public get deleteRelationship() { return this.deleteStixObjectFactory("relationship"); }
     /**
      * DELETE a note
      * @param {string} id the STIX ID of the object to delete
      * @returns {Observable<{}>} observable of the response body
      */
     public deleteNote(id: string) {
-        return this.http.delete(`${this.baseUrl}/notes/${id}`).pipe(
+        return this.http.delete(`${this.apiUrl}/notes/${id}`).pipe(
             tap(this.handleSuccess("note removed")),
             catchError(this.handleError_raise()),
             share()
@@ -962,7 +985,7 @@ export class RestApiConnectorService extends ApiConnector {
      * @param {string[]} [excludeTargetRefs] if specified, exclude target refs which are found in this array
      * @returns {Observable<Paginated>} paginated data of the relationships
      */
-    public getRelatedTo(args: {sourceRef?: string, targetRef?: string, sourceOrTargetRef?: string, sourceType?: AttackType, targetType?: AttackType, relationshipType?: string, excludeSourceRefs?: string[], excludeTargetRefs?: string[], limit?: number, offset?: number, includeDeprecated?: boolean, versions?: "all" | "latest"}): Observable<Paginated<StixObject>> {
+    public getRelatedTo(args: { sourceRef?: string, targetRef?: string, sourceOrTargetRef?: string, sourceType?: AttackType, targetType?: AttackType, relationshipType?: string, excludeSourceRefs?: string[], excludeTargetRefs?: string[], limit?: number, offset?: number, includeDeprecated?: boolean, versions?: "all" | "latest" }): Observable<Paginated<StixObject>> {
         let query = new HttpParams();
 
         if (args.sourceRef) query = query.set("sourceRef", args.sourceRef);
@@ -982,8 +1005,8 @@ export class RestApiConnectorService extends ApiConnector {
         if (args.limit) query = query.set("limit", args.limit.toString());
         if (args.offset) query = query.set("offset", args.offset.toString());
         if (args.limit || args.offset) query = query.set("includePagination", "true");
-        let url = `${this.baseUrl}/relationships`
-        return this.http.get(url, {params: query}).pipe(
+        let url = `${this.apiUrl}/relationships`
+        return this.http.get(url, { params: query }).pipe(
             tap(results => logger.log("retrieved relationships", results)),
             map(results => {
                 if (!args.excludeSourceRefs && !args.excludeTargetRefs) return results; // only filter if params are present
@@ -1038,12 +1061,12 @@ export class RestApiConnectorService extends ApiConnector {
                 return dataComponents.filter(d => d.data_source_ref == id);
             }),
             mergeMap(dataComponents => { // get relationships for each data component
-                let relatedTo = dataComponents.map(dc => this.getRelatedTo({sourceOrTargetRef: dc.stixID}));
+                let relatedTo = dataComponents.map(dc => this.getRelatedTo({ sourceOrTargetRef: dc.stixID }));
                 if (!relatedTo.length) return of(dataComponents);
                 return forkJoin(relatedTo).pipe(
                     map(relationships => {
                         let all_results: StixObject[] = [];
-                        for(let relationship_result of relationships) {
+                        for (let relationship_result of relationships) {
                             all_results = all_results.concat(relationship_result.data)
                         }
                         return all_results.concat(dataComponents);
@@ -1062,7 +1085,7 @@ export class RestApiConnectorService extends ApiConnector {
      * @returns {Technique[]} a list of techniques that reference the tactic
      */
     public getTechniquesInTactic(tactic_id: string, modified: Date): Observable<Technique[]> {
-        let url = `${this.baseUrl}/tactics/${tactic_id}/modified/${modified.toISOString()}/techniques`;
+        let url = `${this.apiUrl}/tactics/${tactic_id}/modified/${modified.toISOString()}/techniques`;
         return this.http.get(url).pipe(
             tap(results => logger.log("retrieved techniques", results)),
             map(response => {
@@ -1076,6 +1099,40 @@ export class RestApiConnectorService extends ApiConnector {
             share()
         )
     }
+    /**
+     * Get list of all tactics, techniques, and nested subtechniques within a given matrix
+     * @param {Matrix} matrix the matrix object for the response's tactic list to be added to
+     * @returns
+     */
+    public getTechniquesInMatrix(matrix: Matrix): Observable<any> {
+        let url = `${this.apiUrl}/matrices/${matrix.stixID}/modified/${matrix.modified.toISOString()}/techniques`;
+        return this.http.get(url).pipe(
+            tap(results => logger.log("retrieved techniques", results)),
+            map(response => {
+                let data = response as Array<any>;
+                let entries = Object.entries(data);
+                entries.forEach((item) => {
+                    let tactic = new Tactic(item[1]);
+                    let techniqueList = item[1].techniques;
+                    techniqueList.forEach((item) => {
+                        let technique = new Technique(item);
+                        if (item.subtechniques.length > 0) {
+                        item.subtechniques.forEach((subtechnique) => {
+                            technique.subTechniques.push(new Technique(subtechnique));
+                        })
+                        }
+                        technique.subTechniques.sort((a,b) => a.name.toLowerCase().localeCompare(b.name.toLowerCase()));
+                        tactic.technique_objects.push(technique);
+                    })
+                    tactic.technique_objects.sort((a,b) => a.name.toLowerCase().localeCompare(b.name.toLowerCase()));
+                    matrix.tactic_objects.push(tactic);
+                })
+                return matrix;
+            }),
+            catchError(this.handleError_continue([])),
+            share()
+        )
+    }
 
     /**
      * Get all tactics referenced by the given technique
@@ -1084,7 +1141,7 @@ export class RestApiConnectorService extends ApiConnector {
      * @returns {Tactic[]} a list of tactics that are referenced by the technique
      */
     public getTacticsRelatedToTechnique(technique_id: string, modified: Date): Observable<Tactic[]> {
-        let url = `${this.baseUrl}/techniques/${technique_id}/modified/${modified.toISOString()}/tactics`;
+        let url = `${this.apiUrl}/techniques/${technique_id}/modified/${modified.toISOString()}/tactics`;
         return this.http.get(url).pipe(
             tap(results => logger.log("retrieved tactics", results)),
             map(response => {
@@ -1112,17 +1169,17 @@ export class RestApiConnectorService extends ApiConnector {
      * @returns {Observable<Paginated>} paginated data for external references
      */
     public getAllReferences(limit?: number, offset?: number, search?: string): Observable<Paginated<ExternalReference>> {
-        let url = `${this.baseUrl}/references`;
+        let url = `${this.apiUrl}/references`;
         // parse params into query string
-        let query = new HttpParams({encoder: new CustomEncoder()});
+        let query = new HttpParams({ encoder: new CustomEncoder() });
         // pagination
         if (limit) query = query.set("limit", limit.toString());
         if (offset) query = query.set("offset", offset.toString());
         if (search) query = query.set("search", search);
         /*if (limit || offset) */ query = query.set("includePagination", "true");
-        return this.http.get<Paginated<ExternalReference>>(url, {params: query}).pipe(
+        return this.http.get<Paginated<ExternalReference>>(url, { params: query }).pipe(
             tap(results => logger.log("retrieved references", results)),
-            catchError(this.handleError_continue<Paginated<ExternalReference>>({data: [], pagination: {total: 0, limit: 0, offset: 0}})), // on error, trigger the error notification and continue operation without crashing (returns empty item)
+            catchError(this.handleError_continue<Paginated<ExternalReference>>({ data: [], pagination: { total: 0, limit: 0, offset: 0 } })), // on error, trigger the error notification and continue operation without crashing (returns empty item)
             share() // multicast so that multiple subscribers don't trigger the call twice. THIS MUST BE THE LAST LINE OF THE PIPE
         )
     }
@@ -1133,11 +1190,11 @@ export class RestApiConnectorService extends ApiConnector {
      * @returns {Observable<ExternalReference>} the external reference with the given source_name
      */
     public getReference(source_name: string): Observable<ExternalReference> {
-        let url = `${this.baseUrl}/references`;
+        let url = `${this.apiUrl}/references`;
         // parse params into query string
-        let query = new HttpParams({encoder: new CustomEncoder()});
+        let query = new HttpParams({ encoder: new CustomEncoder() });
         query = query.set("sourceName", source_name);
-        return this.http.get<ExternalReference>(url, {params: query}).pipe(
+        return this.http.get<ExternalReference>(url, { params: query }).pipe(
             tap(results => logger.log("retrieved reference", results)),
             catchError(this.handleError_continue<ExternalReference>()), // on error, trigger the error notification and continue operation without crashing (returns empty item)
             share() // multicast so that multiple subscribers don't trigger the call twice. THIS MUST BE THE LAST LINE OF THE PIPE
@@ -1150,7 +1207,7 @@ export class RestApiConnectorService extends ApiConnector {
      * @returns {Observable<ExternalReference>} the created reference
      */
     public postReference(reference: ExternalReference): Observable<ExternalReference> {
-        let url = `${this.baseUrl}/references`;
+        let url = `${this.apiUrl}/references`;
         return this.http.post<ExternalReference>(url, reference).pipe(
             tap(this.handleSuccess(`${reference.source_name} saved`)),
             catchError(this.handleError_raise<ExternalReference>()), // on error, trigger the error notification and continue operation without crashing (returns empty item)
@@ -1164,7 +1221,7 @@ export class RestApiConnectorService extends ApiConnector {
      * @returns {Observable<ExternalReference>} the updated reference
      */
     public putReference(reference: ExternalReference): Observable<ExternalReference> {
-        let url = `${this.baseUrl}/references`;
+        let url = `${this.apiUrl}/references`;
         return this.http.put<ExternalReference>(url, reference).pipe(
             tap(this.handleSuccess(`${reference.source_name} saved`)),
             catchError(this.handleError_raise<ExternalReference>()), // on error, trigger the error notification and continue operation without crashing (returns empty item)
@@ -1178,10 +1235,10 @@ export class RestApiConnectorService extends ApiConnector {
      * @returns {Observable<{}>} observable of the response body
      */
     public deleteReference(source_name: string) {
-        let url = `${this.baseUrl}/references`;
-        let query = new HttpParams({encoder: new CustomEncoder()});
+        let url = `${this.apiUrl}/references`;
+        let query = new HttpParams({ encoder: new CustomEncoder() });
         query = query.set("sourceName", source_name);
-        return this.http.delete(url, {params: query}).pipe(
+        return this.http.delete(url, { params: query }).pipe(
             tap(this.handleSuccess("reference removed")),
             catchError(this.handleError_raise()),
             share()
@@ -1208,7 +1265,7 @@ export class RestApiConnectorService extends ApiConnector {
         if (preview) query = query.set("previewOnly", "true");
         if (force) query = query.set("forceImport", "all");
         // perform the request
-        return this.http.post(`${this.baseUrl}/collection-bundles`, collectionBundle, {params: query}).pipe(
+        return this.http.post(`${this.apiUrl}/collection-bundles`, collectionBundle, { params: query }).pipe(
             tap(result => {
                 if (preview) logger.log("previewed collection import", result);
                 else this.handleSuccess("imported collection")(result);
@@ -1233,17 +1290,17 @@ export class RestApiConnectorService extends ApiConnector {
         // perform preview request
         return this.postCollectionBundle(collectionBundle, true, false, true).pipe(
             map(result => {
-                return {error: undefined, preview: result};
+                return { error: undefined, preview: result };
             }),
             catchError(err => {
                 // check if import can be forced
                 if (this.cannotForceImport(err)) {
-                    return of({error: err.error, preview: undefined});
+                    return of({ error: err.error, preview: undefined });
                 }
                 // force request
                 return this.postCollectionBundle(collectionBundle, true, true, true).pipe(
                     map(force_result => {
-                        return {error: err.error, preview: force_result};
+                        return { error: err.error, preview: force_result };
                     }),
                     catchError(this.handleError_raise<Collection>())
                 )
@@ -1264,12 +1321,17 @@ export class RestApiConnectorService extends ApiConnector {
      */
     private cannotForceImport(err: any): boolean {
         if (err.status == "400") {
-            let bundleErrors = err.error.bundleErrors;
-            let objectErrors = err.error.objectErrors.summary;
-            if (bundleErrors.noCollection || bundleErrors.moreThanOneCollection || bundleErrors.badlyFormattedCollection || objectErrors.duplicateObjectInBundleCount) {
-                return true;
+            try {
+                let bundleErrors = err.error.bundleErrors;
+                let objectErrors = err.error.objectErrors.summary;
+                if (bundleErrors.noCollection || bundleErrors.moreThanOneCollection || bundleErrors.badlyFormattedCollection || objectErrors.duplicateObjectInBundleCount) {
+                    return true;
+                }
+                return false;
+            } catch (_) {
+                // continue to force import; errors will be displayed to the user if the collection is invalid
+                return false;
             }
-            return false;
         }
         return true;
     }
@@ -1286,7 +1348,7 @@ export class RestApiConnectorService extends ApiConnector {
         query = query.set("collectionId", id);
         query = query.set("collectionModified", modified.toISOString());
         if (includeNotes) query = query.set("includeNotes", "true");
-        return this.http.get(`${this.baseUrl}/collection-bundles`, {params: query}).pipe(
+        return this.http.get(`${this.apiUrl}/collection-bundles`, { params: query }).pipe(
             tap(results => logger.log("retrieved collection bundle")),
             catchError(this.handleError_continue<any>({})),
             share() //multicast
@@ -1305,7 +1367,7 @@ export class RestApiConnectorService extends ApiConnector {
      * @returns {Observable<CollectionIndex>} posted index if successful
      */
     public postCollectionIndex(index: CollectionIndex): Observable<CollectionIndex> {
-        return this.http.post<CollectionIndex>(`${this.baseUrl}/collection-indexes`, index).pipe(
+        return this.http.post<CollectionIndex>(`${this.apiUrl}/collection-indexes`, index).pipe(
             tap(this.handleSuccess("collection index added")),
             map(result => result as CollectionIndex),
             catchError(this.handleError_raise<CollectionIndex>())
@@ -1320,7 +1382,7 @@ export class RestApiConnectorService extends ApiConnector {
      */
     public putCollectionIndex(index: CollectionIndex, successMessage: string = "collection index updated"): Observable<CollectionIndex> {
         let serialized = index.serialize()
-        return this.http.put<CollectionIndex>(`${this.baseUrl}/collection-indexes/${index.collection_index.id}`, serialized).pipe(
+        return this.http.put<CollectionIndex>(`${this.apiUrl}/collection-indexes/${index.collection_index.id}`, serialized).pipe(
             tap(this.handleSuccess(successMessage)),
             map(result => new CollectionIndex(result)),
             catchError(this.handleError_raise<CollectionIndex>())
@@ -1334,7 +1396,7 @@ export class RestApiConnectorService extends ApiConnector {
      * @returns {Observable<CollectionIndex>} collection indexes
      */
     public getCollectionIndexes(limit?: number, offset?: number): Observable<CollectionIndex[]> {
-        return this.http.get<CollectionIndex[]>(`${this.baseUrl}/collection-indexes`).pipe(
+        return this.http.get<CollectionIndex[]>(`${this.apiUrl}/collection-indexes`).pipe(
             tap(_ => logger.log("retrieved collection indexes")), // on success, trigger the success notification
             map(results => { return results.map(raw => new CollectionIndex(raw)); }),
             catchError(this.handleError_continue<CollectionIndex[]>([])) // on error, trigger the error notification and continue operation without crashing (returns empty item)
@@ -1346,7 +1408,7 @@ export class RestApiConnectorService extends ApiConnector {
      * @param {string} id the ID of the collection index to delete
      */
     public deleteCollectionIndex(id: string): Observable<{}> {
-        return this.http.delete(`${this.baseUrl}/collection-indexes/${id}`).pipe(
+        return this.http.delete(`${this.apiUrl}/collection-indexes/${id}`).pipe(
             tap(this.handleSuccess("collection index removed")),
             catchError(this.handleError_raise())
         )
@@ -1358,16 +1420,16 @@ export class RestApiConnectorService extends ApiConnector {
      * @returns {Observable<CollectionIndex>} the collection index at the URL
      */
     public getRemoteIndex(url: string): Observable<CollectionIndex> {
-        console.log("get remote index via rest api")
-        let cmBaseUrl = environment.integrations.collection_manager.url;
-        let params = new HttpParams({encoder: new CustomEncoder()}).set("url", url);
+        let params = new HttpParams({ encoder: new CustomEncoder() });
         let headers: HttpHeaders = new HttpHeaders({ 'ExcludeCredentials': 'true' });
-        return this.http.get(`${cmBaseUrl}/collection-indexes/remote`, {headers: headers, params: params}).pipe(
+        return this.http.get(url, { headers: headers, params: params }).pipe(
             tap(_ => logger.log("downloaded index at", url)), // on success, trigger the success notification
-            map(index => { return {
-                "collection_index": index,
-                "workspace": { remote_url: url }
-            } as CollectionIndex }),
+            map(index => {
+                return {
+                    "collection_index": index,
+                    "workspace": { remote_url: url }
+                } as CollectionIndex
+            }),
             catchError(this.handleError_continue<CollectionIndex>()) // on error, trigger the error notification and continue operation without crashing (returns empty item)
         )
     }
@@ -1384,9 +1446,9 @@ export class RestApiConnectorService extends ApiConnector {
      */
     private allowedValues;
     public getAllAllowedValues(): Observable<any> {
-        if (this.allowedValues) { return of(this.allowedValues)}
+        if (this.allowedValues) { return of(this.allowedValues) }
 
-        const data$ = this.http.get<any>(`${this.baseUrl}/config/allowed-values`).pipe(
+        const data$ = this.http.get<any>(`${this.apiUrl}/config/allowed-values`).pipe(
             tap(_ => logger.log("retrieved allowed values")),
             map(result => result as any),
             catchError(this.handleError_continue<string[]>([]))
@@ -1402,8 +1464,8 @@ export class RestApiConnectorService extends ApiConnector {
      * Get the default marking definitions
      * @returns {Observable<any>} default marking definitions
      */
-     public getDefaultMarkingDefinitions(): Observable<any> {
-        return this.http.get(`${this.baseUrl}/config/default-marking-definitions`).pipe(
+    public getDefaultMarkingDefinitions(): Observable<any> {
+        return this.http.get(`${this.apiUrl}/config/default-marking-definitions`).pipe(
             tap(_ => logger.log("retrieved default marking definitions")),
             map(result => {
                 return result;
@@ -1417,7 +1479,7 @@ export class RestApiConnectorService extends ApiConnector {
      * @returns {Observable<any>} default marking definitions
      */
     public postDefaultMarkingDefinitions(defaultMarkingDefs: string[]): Observable<any> {
-        return this.http.post(`${this.baseUrl}/config/default-marking-definitions`, defaultMarkingDefs).pipe(
+        return this.http.post(`${this.apiUrl}/config/default-marking-definitions`, defaultMarkingDefs).pipe(
             tap(this.handleSuccess(`saved default marking definitions`)),
             catchError(this.handleError_raise<string[]>()),
             share() //multicast to subscribers
@@ -1428,8 +1490,8 @@ export class RestApiConnectorService extends ApiConnector {
      * Get the organization identity
      * @returns {Observable<Identity>} the organization identity
      */
-     public getOrganizationIdentity(): Observable<Identity> {
-        return this.http.get(`${this.baseUrl}/config/organization-identity`).pipe(
+    public getOrganizationIdentity(): Observable<Identity> {
+        return this.http.get(`${this.apiUrl}/config/organization-identity`).pipe(
             tap(_ => logger.log("retrieved organization identity")),
             map(result => {
                 return new Identity(result);
@@ -1445,12 +1507,12 @@ export class RestApiConnectorService extends ApiConnector {
      * @returns {Observable<Identity>} the updated identity
      * @memberof RestApiConnectorService
      */
-    public setOrganizationIdentity(object: Identity):  Observable<Identity> {
+    public setOrganizationIdentity(object: Identity): Observable<Identity> {
         return this.postIdentity(object).pipe( //create/save the identity
             switchMap((result) => {
                 logger.log(result);
                 // set the organization identity to be this identity's ID after it was created/updated
-                return this.http.post(`${this.baseUrl}/config/organization-identity`, {id: result.stixID}).pipe(
+                return this.http.post(`${this.apiUrl}/config/organization-identity`, { id: result.stixID }).pipe(
                     tap(this.handleSuccess("Organization Identity Updated")),
                     map(_ => {
                         return new Identity(result);
@@ -1467,7 +1529,7 @@ export class RestApiConnectorService extends ApiConnector {
      * @returns {Observable<Namespace>} the organization namespace configurations
      */
     public getOrganizationNamespace(): Observable<Namespace> {
-        return this.http.get(`${this.baseUrl}/config/organization-namespace`).pipe(
+        return this.http.get(`${this.apiUrl}/config/organization-namespace`).pipe(
             tap(_ => logger.log("retrieved organization namespace configurations")),
             map(result => {
                 return result;
@@ -1483,9 +1545,9 @@ export class RestApiConnectorService extends ApiConnector {
      * @memberof RestApiConnectorService
      * @param namespaceSettings the namespace object to save
      */
-    public setOrganizationNamespace(namespaceSettings: Namespace):  Observable<Namespace> {
+    public setOrganizationNamespace(namespaceSettings: Namespace): Observable<Namespace> {
         const range = namespaceSettings.range_start ? Number(namespaceSettings.range_start) : 0;
-        return this.http.post(`${this.baseUrl}/config/organization-namespace`, {...namespaceSettings, range_start: range}).pipe(
+        return this.http.post(`${this.apiUrl}/config/organization-namespace`, { ...namespaceSettings, range_start: range }).pipe(
             // set the organization identity to be this identity's ID after it was created/updated
             tap(this.handleSuccess("Organization Namespace Updated")),
             map(_ => {
@@ -1510,10 +1572,10 @@ export class RestApiConnectorService extends ApiConnector {
      * @param {string} [search] Only return user accounts where the provided search text occurs in the username or email. The search is case-insensitive.
      * @returns {Observable<Paginated>} paginated data of the user accounts
      */
-    public getAllUserAccounts(options?: {limit?: number, offset?: number, status?: string[], role?: string[], search?: string}): Observable<Paginated<UserAccount>> {
-        let url = `${this.baseUrl}/user-accounts`;
+    public getAllUserAccounts(options?: { limit?: number, offset?: number, status?: string[], role?: string[], search?: string }): Observable<Paginated<UserAccount>> {
+        let url = `${this.apiUrl}/user-accounts`;
         // parse params into query string
-        let query = new HttpParams({encoder: new CustomEncoder()});
+        let query = new HttpParams({ encoder: new CustomEncoder() });
         // pagination
         if (options && options.limit) query = query.set("limit", options.limit.toString());
         if (options && options.offset) query = query.set("offset", options.offset.toString());
@@ -1523,8 +1585,8 @@ export class RestApiConnectorService extends ApiConnector {
         // status/role
         if (options && options.status) options.status.forEach((status) => query = query.append("status", status));
         if (options && options.role) options.role.forEach((role) => query = query.append("role", role));
-        return this.http.get<Paginated<UserAccount>>(url, {params: query}).pipe(
-            catchError(this.handleError_continue<Paginated<UserAccount>>({data: [], pagination: {total: 0, limit: 0, offset:0}})),
+        return this.http.get<Paginated<UserAccount>>(url, { params: query }).pipe(
+            catchError(this.handleError_continue<Paginated<UserAccount>>({ data: [], pagination: { total: 0, limit: 0, offset: 0 } })),
             share() //multicast to subscribers
         )
     }
@@ -1535,7 +1597,7 @@ export class RestApiConnectorService extends ApiConnector {
      * @returns {Observable<UserAccount>} the object with the given ID
      */
     public getUserAccount(id: string): Observable<UserAccount> {
-        let url = `${this.baseUrl}/user-accounts/${id}`;
+        let url = `${this.apiUrl}/user-accounts/${id}`;
         return this.http.get<UserAccount>(url).pipe(
             catchError(this.handleError_continue<UserAccount>()),
             share() // multicast to subscribers
@@ -1548,8 +1610,8 @@ export class RestApiConnectorService extends ApiConnector {
      * @returns {Observable<UserAccount>} the created object
      */
     public postUserAccount(userAccount: UserAccount): Observable<UserAccount> {
-        let url = `${this.baseUrl}/user-accounts/${userAccount.id}`;
-        return this.http.post<UserAccount>(url, userAccount).pipe(
+        let url = `${this.apiUrl}/user-accounts/${userAccount.id}`;
+        return this.http.post<UserAccount>(url, userAccount.serialize()).pipe(
             catchError(this.handleError_raise<UserAccount>()),
             share() // multicast to subscribers
         )
@@ -1561,12 +1623,141 @@ export class RestApiConnectorService extends ApiConnector {
      * @returns {Observable<UserAccount>} the updated object
      */
     public putUserAccount(userAccount: UserAccount): Observable<UserAccount> {
-        let url = `${this.baseUrl}/user-accounts/${userAccount.id}`;
-        return this.http.put<UserAccount>(url, userAccount).pipe(
+        let url = `${this.apiUrl}/user-accounts/${userAccount.id}`;
+        return this.http.put<UserAccount>(url, userAccount.serialize()).pipe(
             catchError(this.handleError_raise<UserAccount>()),
             share() // multicast to subscribers
         )
     }
+
+
+    //  _____ ___   _   __  __ ___     _   ___ ___ ___
+    // |_   _| __| /_\ |  \/  / __|   /_\ | _ \_ _/ __|
+    //   | | | _| / _ \| |\/| \__ \  / _ \|  _/| |\__ \
+    //   |_| |___/_/ \_\_|  |_|___/ /_/ \_\_| |___|___/
+
+    /**
+     * Get all teams
+     * @param {number} [limit] the number of teams to retrieve
+     * @param {number} [offset] the number of teams to skip
+     * @param {boolean} [includePagination] whether or not to include pagination (will be done automatically if limit or offset are set)
+     * @param {string} [search] Only return teams where the provided search text occurs in the name or description. The search is case-insensitive.
+     * @returns {Observable<Paginated>} paginated data of teams
+     */
+    public getAllTeams(options?: { limit?: number, offset?: number, search?: string, includePagination?: boolean }): Observable<Paginated<Team>> {
+        let url = `${this.apiUrl}/teams`;
+        // parse params into query string
+        let query = new HttpParams({ encoder: new CustomEncoder() });
+        // pagination
+        if (options && options.limit) query = query.set("limit", options.limit.toString());
+        if (options && options.offset) query = query.set("offset", options.offset.toString());
+        if (options && (options.includePagination || options.limit || options.offset)) query = query.set("includePagination", "true");
+        // search
+        if (options && options.search) query = query.set("search", options.search);
+        return this.http.get<Paginated<Team>>(url, { params: query }).pipe(
+            catchError(this.handleError_continue<Paginated<Team>>({ data: [], pagination: { total: 0, limit: 0, offset: 0 } })),
+            share() //multicast to subscribers
+        );
+    }
+
+    /**
+     * Get all teams
+     * @param {string} id the object ID
+     * @param {number} [limit] the number of users to retrieve
+     * @param {number} [offset] the number of users to skip
+     * @param {string} [search] Only return users where the provided search text occurs in the username, email, or displayName.  The search is case-insensitive.
+     * @returns {Observable<Paginated>} paginated data of users from the given tem
+     */
+    public getUserAccountsByTeamId(id: string, options?: { limit?: number, offset?: number, search?: string }): Observable<Paginated<UserAccount>> {
+        let url = `${this.apiUrl}/teams/${id}/users`;
+        // parse params into query string
+        let query = new HttpParams({ encoder: new CustomEncoder() });
+        // pagination
+        if (options && options.limit) query = query.set("limit", options.limit.toString());
+        if (options && options.offset) query = query.set("offset", options.offset.toString());
+        if (options && (options.limit || options.offset)) query = query.set("includePagination", "true");
+        // search
+        if (options && options.search) query = query.set("search", options.search);
+        return this.http.get<Paginated<UserAccount>>(url, { params: query }).pipe(
+            catchError(this.handleError_continue<Paginated<UserAccount>>({ data: [], pagination: { total: 0, limit: 0, offset: 0 } })),
+            share() //multicast to subscribers
+        );
+    }
+
+    /**
+     * Get list of teams by user ID
+     * @param id the ID of the user account
+     * @param {number} [limit] the number of users to retrieve
+     * @param {number} [offset] the number of users to skip
+     * @returns {Team[]} the list of teams the user is a part of
+     */
+    public getTeamsByUserId(id: string, options?: { limit?: number, offset?: number }): Observable<Team[]> {
+        let url = `${this.apiUrl}/user-accounts/${id}/teams`;
+        // parse params into query string
+        let query = new HttpParams({ encoder: new CustomEncoder() });
+        // pagination
+        if (options && options.limit) query = query.set("limit", options.limit.toString());
+        if (options && options.offset) query = query.set("offset", options.offset.toString());
+        if (options && (options.limit || options.offset)) query = query.set("includePagination", "true");
+        return this.http.get<Team[]>(url, { params: query }).pipe(
+            tap(_ => console.log(`retrieved`, _)),
+            catchError(this.handleError_continue([])), // on error, trigger the error notification and continue operation without crashing (returns empty item)
+            share() // multicast so that multiple subscribers don't trigger the call twice
+        );
+    }
+
+    /**
+     * GET a single team by ID
+     * @param {string} id the object ID
+     * @returns {Team} the object with the given ID
+     */
+    public getTeam(id: string): Observable<Team> {
+        let url = `${this.apiUrl}/teams/${id}`;
+        return this.http.get<Team>(url).pipe(
+            catchError(this.handleError_continue<Team>()),
+            share() //multicast to subscribers
+        );
+    }
+
+    /**
+     * POST (create) a new team
+     * @param {Team} team the object to create
+     * @returns {Team} the created object
+     */
+    public postTeam(team: Team): Observable<Team> {
+        let url = `${this.apiUrl}/teams`;
+        return this.http.post<Team>(url, team).pipe(
+            catchError(this.handleError_continue<Team>()),
+            share() //multicast to subscribers
+        );
+    }
+
+    /**
+     * PUT (update) a team
+     * @param {Team} team the object to update
+     * @returns {Team} the updated object
+     */
+    public putTeam(team: Team): Observable<Team> {
+        let url = `${this.apiUrl}/teams/${team.id}`;
+        return this.http.put<Team>(url, team).pipe(
+            catchError(this.handleError_continue<Team>()),
+            share() //multicast to subscribers
+        );
+    }
+
+    /**
+     * DELETE (remove) a team
+     * @param {Team} team the object to delete
+     * @returns {Observable<{}>}
+     */
+    public deleteTeam(team: Team): Observable<{}> {
+        let url = `${this.apiUrl}/teams/${team.id}`;
+        return this.http.delete<Object>(url).pipe(
+            catchError(this.handleError_continue<Object>()),
+            share() //multicast to subscribers
+        );
+    }
+
 
     //   ___    ___      __  ___ _____ _____  __    _   ___ ___ ___
     //  | _ \  /_\ \    / / / __|_   _|_ _\ \/ /   /_\ | _ \_ _/ __|
@@ -1578,8 +1769,8 @@ export class RestApiConnectorService extends ApiConnector {
      * @param data: the data to download. Must be a JSON
      * @param filename: the name of the file to download
      */
-     public triggerBrowserDownload(data: any, filename: string) {
-        let url = URL.createObjectURL(new Blob([JSON.stringify(data, null, 4)], {type: "text/json"}));
+    public triggerBrowserDownload(data: any, filename: string) {
+        let url = URL.createObjectURL(new Blob([JSON.stringify(data, null, 4)], { type: "text/json" }));
         let downloadLink = document.createElement("a");
         downloadLink.href = url;
         downloadLink.download = filename
@@ -1596,7 +1787,7 @@ export class RestApiConnectorService extends ApiConnector {
     public getStixBundle(domain: string): Observable<any> {
         let query = new HttpParams();
         query = query.set("domain", domain);
-        return this.http.get(`${this.baseUrl}/stix-bundles`, {params: query}).pipe(
+        return this.http.get(`${this.apiUrl}/stix-bundles`, { params: query }).pipe(
             tap(results => logger.log("retrieved stix bundle")),
             catchError(this.handleError_continue<any>({})),
             share() //multicast
@@ -1628,7 +1819,7 @@ export class RestApiConnectorService extends ApiConnector {
      * @param {boolean} includeNotes if true, include relevant Note objects
      * @returns {Observable<any>} the observable to watch while download is loading
      */
-     public downloadCollectionBundle(id: string, modified: Date, filename: string, includeNotes?: boolean): Observable<any> {
+    public downloadCollectionBundle(id: string, modified: Date, filename: string, includeNotes?: boolean): Observable<any> {
         let getter = this.getCollectionBundle(id, modified, includeNotes);
         let subscription = getter.subscribe({
             next: (result) => {

@@ -1,3 +1,6 @@
 <div class="app-timestamp-view">
-    <span>{{config.humanize? humanized : timestamp}}</span>
+    <span *ngIf="config.displayCreatorUsernameWithTimestamp && displayName">
+      <b>{{displayName}}</b>, 
+    </span>
+    <span [matTooltip]="this.config.tooltip ? timestamp : ''">{{config.humanize? humanized : timestamp}}</span>
 </div>

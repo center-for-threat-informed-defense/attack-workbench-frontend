@@ -1,5 +1,5 @@
 <div class="stix-dialog">
-    <mat-drawer-container class="stix-dialog-body">
+    <mat-drawer-container class="stix-dialog-body" *ngIf="!loading else loadingDisplay">
         <mat-drawer-content>
             <div class="stix-content" *ngIf="!validating">
                 <mat-toolbar>
@@ -13,10 +13,12 @@
                             <button mat-button class="control" matTooltip="validate & save" [disabled]="!editing" (click)="validate()"><mat-icon aria-label="save">save</mat-icon></button>
                             <button *ngIf="!editing" mat-button class="control" matTooltip="edit" (click)="startEditing()"><mat-icon aria-label="edit">edit</mat-icon></button>
                             <button *ngIf="editing"  mat-button class="control" matTooltip="discard changes & stop editing" (click)="discardChanges()"><mat-icon aria-label="discard">edit_off</mat-icon></button>
-                            <button *ngIf="stixType == 'relationship'" mat-button matTooltip="{{isDeprecated ? 'undeprecate' : 'deprecate'}}" class="control" [disabled]="editing" (click)="deprecateChanged()">
+                            <button *ngIf="canDeprecate" mat-button matTooltip="{{isDeprecated ? 'undeprecate' : 'deprecate'}}" class="control" [disabled]="editing" (click)="deprecateChanged()">
                                 <mat-icon aria-label="{{isDeprecated ? 'undeprecate': 'deprecate'}}">{{isDeprecated ? 'unarchive' : 'archive'}}</mat-icon>
                             </button>
-                            <button *ngIf="canDelete" mat-button class="control" matTooltip="delete" [disabled]="config.is_new || !editing || !deletable" (click)="delete()"><mat-icon aria-label="delete">delete</mat-icon></button>
+                            <div *ngIf="canDelete" class="button-tooltip" [matTooltip]="editing && !config.is_new ? (!deletable ? 'an object with relationships cannot be deleted' : 'delete') : ''">
+                                <button mat-button class="control" [disabled]="config.is_new || !editing || !deletable" (click)="delete()"><mat-icon aria-label="delete">delete</mat-icon></button>
+                            </div>
                         </div>
                     </ng-container>
                     <div class="section">
@@ -107,4 +109,7 @@
             <app-reference-sidebar [editable]="false"></app-reference-sidebar>
         </mat-drawer>
     </mat-drawer-container>
+    <ng-template #loadingDisplay>
+        <app-loading-overlay></app-loading-overlay>
+    </ng-template>
 </div>

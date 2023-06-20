@@ -12,6 +12,7 @@ export class UserAccount extends Serializable {
     public username: string;
     private _displayName: string;
     public get displayName(): string { return this._displayName ? this._displayName : this.username }
+    public set displayName(input: string) { this._displayName = input; }
     public status: Status;
     public role: Role;
     public created: Date;
@@ -64,7 +65,7 @@ export class UserAccount extends Serializable {
             else { logger.error('TypeError: username field is not a string:', raw.username, '(', typeof(raw.username), ')'); }
         } else { this.username = ''; }
 
-        if ('displayName' in raw) {
+        if ('displayName' in raw && raw.displayName) {
             if (typeof(raw.displayName) === 'string') { this._displayName = raw.displayName; }
             else { logger.error('TypeError: displayName field is not a string:', raw.displayName, '(', typeof(raw.displayName), ')'); }
         }

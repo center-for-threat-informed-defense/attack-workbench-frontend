@@ -20,6 +20,13 @@
                 object: config.object
             }"></app-statement-property>
         </div>
+        <div *ngIf="config.object.hasOwnProperty('created')" class="section-header-section source">
+            <app-identity-property [config]="{
+                object: config.object,
+                field: 'created_by',
+                displayName: true
+            }"></app-identity-property>
+        </div>
     </div>
 </div>
 

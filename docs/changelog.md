@@ -32,7 +32,49 @@
 
 # Changelog
 
-## Changes staged on develop
+## Changes Staged on Develop
+
+### ATT&CK Workbench version 2.0.0
+
+The ATT&CK Workbench features a persistent database with the use of a named volume as of version 2.0. **This change may result in data on the current anonymous volume being lost.** The [Docker Compose Migration](/docs/migration.md) document describes how to backup your existing ATT&CK Workbench data and restore it after the update.
+
+#### New Features in 2.0.0
+-   Added an Admin interface for creating and managing teams.
+-   Added the ability to search objects by one or more users.
+-   Added a new user profile page where logged in users can view their recent activity across the Workbench and view/edit their display name.
+-   Added an option to configure an external ATT&CK Website in which to view Workbench objects, if a relevant object page exists.
+-	Added functionality to create a collection from a group and its related objects.
+-	Added button to import groups and their related objects into new or existing collections.
+-   Added an option to deprecate Data Component objects. See [frontend#429](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/429).
+-   Added Matrix view to Matrix pages similar to the full matrix on the [ATT&CK website](https://attack.mitre.org/). See [frontend#20](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/20).
+
+#### Improvements in 2.0.0
+-   Improved error handling during collection import.
+-   Added filtering to collection views
+-   Lists of objects can now be filtered when viewing or editing collections. See [frontend#393](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/393).
+
+#### Fixes in 2.0.0
+-   Fixed an issue where duplicate entries would be displayed in some dropdown lists for objects in multiple domains. See [frontend#454](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/454).
+
+## 21 April 2023
+
+### ATT&CK Workbench version 1.3.1
+
+#### New Features in 1.3.1
+-   Added universal Notes page where users can search for notes based on title or content. Selecting a note in the table will redirect the user to the object the note was created on.  See [frontend#176](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/175).
+
+#### Improvements in 1.3.1
+-   Added individual attribution to edits made on Note objects.
+-   Added the ICS Security Control mapping field to Mitigation objects. See [frontend#419](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/419). 
+-   Updated the documentation for installing Workbench with additional certs. See [frontend#225](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/225).
+
+#### Fixes in 1.3.1
+-   Fixed an issue where assigning an existing technique as a sub-technique would not create a `subtechnique-of` relationship. See [frontend#446](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/446).
+-   Fixed an issue causing a user's `displayName` to be removed when updating a user account on the admin page. See [frontend#449](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/449).
+-   Fixed an issue where updates to a user account role or status would not be reflected until the page was refreshed. See [frontend#450](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/450).
+-   Fixed a bug with the validation of the `source_name` field on Reference objects.
+
+## 8 March 2023
 
 ### ATT&CK Workbench version 1.3.0
 
@@ -47,6 +89,7 @@ ATT&CK Workbench version 1.3.0 supports the deletion of objects.
 
 #### Improvements in 1.3.0
 -   Improved validation for the `source_name` field on Reference objects to prevent duplicated source names and issues caused by invalid characters during citation parsing. See [frontend#352](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/352).
+-   Enabled editing of the `domains` field for Data Sources and Data Components. See [frontend#428](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/428).
 
 #### Fixes in 1.3.0
 -   Fixed an issue where the "apply patches and save" button would be unavailable when updating a reference used only by Relationship objects. See [frontend#356](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/356).

@@ -31,8 +31,7 @@
                 mode: editing? 'edit': 'view',
                 object: data_source,
                 field: 'domains',
-                editType: 'select',
-                disabled: true
+                editType: 'select'
             }"></app-list-property>
         </div>
         <div class="col">
@@ -99,7 +98,8 @@
             <div class="col">
                 <app-stix-list #dataComponentsList [config]="{
                     'stixObjects': data_components,
-                    'type': 'data-component', 
+                    'type': 'data-component',
+                    'showDeprecatedFilter': true,
                     'clickBehavior': 'dialog',
                     'allowEdits': true
                 }"

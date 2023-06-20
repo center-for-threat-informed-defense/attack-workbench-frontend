@@ -36,6 +36,10 @@ export interface TimestampPropertyConfig {
      *       if false, display the full timestamp including the exact edit time.
      */
     humanize?: boolean;
+    /* Show a tooltip of the full timestamp? Default: false
+     *      if true, displays the formatted timestamp in a tooltip
+     */
+    tooltip?: boolean;
     /* The object to show the timestamp of
      * Note: if mode is diff, pass an array of two objects to diff
      */
@@ -50,4 +54,8 @@ export interface TimestampPropertyConfig {
     */
     attribution?: string;
     displayName?: boolean;
+    /*
+      if true, the username of the user who created the object will be displayed before the timestamp. Default: false
+    */
+    displayCreatorUsernameWithTimestamp?: boolean;
 }

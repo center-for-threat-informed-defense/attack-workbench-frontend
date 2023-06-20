@@ -432,7 +432,7 @@ export class Relationship extends StixObject {
      * @param restAPIService [RestApiConnectorService] the service to perform the DELETE through
      */
     public delete(restAPIService: RestApiConnectorService) : Observable<{}> {
-        let deleteObservable = restAPIService.deleteRelationship(this.stixID, this.modified);
+        let deleteObservable = restAPIService.deleteRelationship(this.stixID);
         let subscription = deleteObservable.subscribe({
             complete: () => { subscription.unsubscribe(); }
         });

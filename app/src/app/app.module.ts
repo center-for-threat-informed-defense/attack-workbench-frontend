@@ -77,6 +77,7 @@ import { CollectionUpdateDialogComponent } from './components/collection-update-
 
 // STIX components
 import { StixListComponent } from './components/stix/stix-list/stix-list.component';
+import { UsersListComponent } from './components/users-list/users-list.component';
 
 import { ExternalReferencesPropertyComponent } from "./components/stix/external-references-property/external-references-property.component";
 import { ExternalReferencesViewComponent } from './components/stix/external-references-property/external-references-view/external-references-view.component';
@@ -113,6 +114,8 @@ import { VersionViewComponent } from "./components/stix/version-property/version
 
 import { NamePropertyComponent } from "./components/stix/name-property/name-property.component";
 
+import { StringPropertyComponent } from './components/stix/string-property/string-property.component';
+
 import { DatepickerPropertyComponent } from './components/stix/datepicker-property/datepicker-property.component';
 
 import { AliasPropertyComponent } from './components/stix/alias-property/alias-property.component';
@@ -126,6 +129,7 @@ import { OrderedListEditComponent } from './components/stix/ordered-list-propert
 
 import { NotesEditorComponent } from './components/resources-drawer/notes-editor/notes-editor.component';
 import { ObjectStatusComponent } from './components/object-status/object-status.component';
+import { RecentActivityComponent } from './components/recent-activity/recent-activity.component';
 import { IconViewComponent } from './components/stix/icon-view/icon-view.component';
 import { IdentityPropertyComponent } from './components/stix/identity-property/identity-property.component';
 
@@ -140,6 +144,7 @@ import { AdminPageComponent } from "./views/admin-page/admin-page.component";
 import { OrgSettingsPageComponent } from "./views/admin-page/org-settings-page/org-settings-page.component";
 import { UserAccountsPageComponent } from './views/admin-page/user-accounts-page/user-accounts-page.component';
 import { DefaultMarkingDefinitionsComponent } from './views/admin-page/default-marking-definitions/default-marking-definitions.component';
+import { ProfilePageComponent } from './views/profile-page/profile-page.component';
 import { ReferenceManagerComponent } from './views/reference-manager/reference-manager.component';
 
 import { StixDialogComponent } from "./views/stix/stix-dialog/stix-dialog.component"
@@ -187,6 +192,17 @@ import { MarkingDefinitionListComponent } from "./views/stix/marking-definition/
 import { CampaignViewComponent } from './views/stix/campaign/campaign-view/campaign-view.component';
 import { CampaignListComponent } from './views/stix/campaign/campaign-list/campaign-list.component';
 
+import { NotesSearchListComponent } from './views/notes-page/notes-search-list/notes-search-list.component';
+import { MatrixSideComponent } from './views/stix/matrix/matrix-side/matrix-side.component';
+import { TacticCellComponent } from './components/matrix/tactic-cell/tactic-cell.component';
+import { TechniqueCellComponent } from './components/matrix/technique-cell/technique-cell.component';
+import { MatrixFlatComponent } from './views/stix/matrix/matrix-flat/matrix-flat.component';
+
+
+import { TeamsListPageComponent } from './views/admin-page/teams/teams-list-page/teams-list-page.component';
+import { TeamsViewPageComponent } from './views/admin-page/teams/teams-view-page/teams-view-page.component';
+import { CreateNewDialogComponent } from './components/create-new-dialog/create-new-dialog.component';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -227,6 +243,7 @@ import { CampaignListComponent } from './views/stix/campaign/campaign-list/campa
     StatementPropertyComponent,
     StatementViewComponent,
     StatementEditComponent,
+    StringPropertyComponent,
     TlpPropertyComponent,
     TlpViewComponent,
     TlpEditComponent,
@@ -249,6 +266,7 @@ import { CampaignListComponent } from './views/stix/campaign/campaign-list/campa
     OrgSettingsPageComponent,
     UserAccountsPageComponent,
     DefaultMarkingDefinitionsComponent,
+    ProfilePageComponent,
     ReferenceManagerComponent,
 
     StixDialogComponent,
@@ -272,6 +290,10 @@ import { CampaignListComponent } from './views/stix/campaign/campaign-list/campa
 
     MatrixListComponent,
     MatrixViewComponent,
+    MatrixSideComponent,
+    MatrixFlatComponent,
+    TacticCellComponent,
+    TechniqueCellComponent,
 
     MitigationListComponent,
     MitigationViewComponent,
@@ -294,6 +316,7 @@ import { CampaignListComponent } from './views/stix/campaign/campaign-list/campa
 
     NotesEditorComponent,
     ObjectStatusComponent,
+    RecentActivityComponent,
     IdentityPropertyComponent,
     DataSourceViewComponent,
     DataSourceListComponent,
@@ -304,7 +327,12 @@ import { CampaignListComponent } from './views/stix/campaign/campaign-list/campa
     CampaignListComponent,
     CitationPropertyComponent,
     CitationViewComponent,
-    CitationEditComponent
+    CitationEditComponent,
+    NotesSearchListComponent,
+    TeamsListPageComponent,
+    TeamsViewPageComponent,
+    CreateNewDialogComponent,
+    UsersListComponent
   ],
   imports: [
     BreadcrumbModule,

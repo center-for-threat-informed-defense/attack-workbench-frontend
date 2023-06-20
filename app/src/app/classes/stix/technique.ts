@@ -7,7 +7,6 @@ import { logger } from "../../util/logger";
 
 export class Technique extends StixObject {
     public name: string = "";
-
     public kill_chain_phases: any = [];
     public domains: string[] = [];
     public platforms: string[] = [];
@@ -20,12 +19,10 @@ export class Technique extends StixObject {
     public effective_permissions: string[] = [];
     public impact_type: string[] = [];
     public contributors: string[] = [];
-
     public supports_remote: boolean = false;
-    public requires_network: boolean = false;
-
     public is_subtechnique: boolean = false;
-    
+    public show_subtechniques: boolean = false; // used by matrix view to handle displaying subtechniques
+
     public readonly supportsAttackID = true;
     public readonly supportsNamespace = true;
     protected get attackIDValidator() { return {
@@ -35,7 +32,7 @@ export class Technique extends StixObject {
 
     // NOTE: the following two fields will only be populated when this object is fetched using getTechnique().
     //       they will NOT be populated when fetched using getAllTechniques().
-    public subTechniques: Technique[] = []; 
+    public subTechniques: Technique[] = [];
     public parentTechnique: Technique = null;
 
     private killChainMap = {
@@ -94,7 +91,7 @@ export class Technique extends StixObject {
      */
     public serialize(): any {
         let rep = super.base_serialize();
-        
+
         rep.stix.name = this.name.trim();
         rep.stix.x_mitre_domains = this.domains;
         rep.stix.x_mitre_detection = this.detection;
@@ -122,7 +119,6 @@ export class Technique extends StixObject {
             if (this.tactics.includes('defense-evasion')) rep.stix.x_mitre_defense_bypassed = this.defense_bypassed.map(x => x.trim());
             if (this.tactics.includes('execution')) rep.stix.x_mitre_remote_support = this.supports_remote;
             if (this.tactics.includes('impact')) rep.stix.x_mitre_impact_type = this.impact_type;
-            if (this.tactics.includes('exfiltration')) rep.stix.x_mitre_network_requirements = this.requires_network;
         }
 
         // mtc & capec ids
@@ -218,15 +214,10 @@ export class Technique extends StixObject {
                 if (typeof(sdo.x_mitre_is_subtechnique) === "boolean") this.is_subtechnique = sdo.x_mitre_is_subtechnique;
                 else logger.error("TypeError: is subtechnique field is not a boolean:", sdo.x_mitre_is_subtechnique, "(", typeof(sdo.x_mitre_is_subtechnique),")")
             }
-            
+
             if ("x_mitre_remote_support" in sdo) {
                 if (typeof(sdo.x_mitre_remote_support) === "boolean") this.supports_remote = sdo.x_mitre_remote_support;
                 else logger.error("TypeError: supports remote field is not a boolean:", sdo.x_mitre_remote_support, "(", typeof(sdo.x_mitre_remote_support),")")
-            }
-            
-            if ("x_mitre_network_requirements" in sdo) {
-                if (typeof(sdo.x_mitre_network_requirements) === "boolean") this.requires_network = sdo.x_mitre_network_requirements;
-                else logger.error("TypeError: requires network field is not a boolean:", sdo.x_mitre_network_requirements, "(", typeof(sdo.x_mitre_network_requirements),")")
             }
 
             if ("x_mitre_impact_type" in sdo) {
@@ -287,7 +278,7 @@ export class Technique extends StixObject {
                     "result": "error",
                     "message": `CAPEC ID${malformed_capec.length > 1? 's' : ''} ${malformed_capec.join(", ")} do${malformed_capec.length == 1? 'es' : ''} not match format CAPEC-###`
                 })
-                
+
                 // check MTC IDs
                 let mtc_regex = new RegExp(`^(${Object.keys(this.mtcUrlMap).join("|")})-\\d+$`)
                 let malformed_mtc = this.mtc_ids.filter(mtc => !mtc_regex.test(mtc));
@@ -329,7 +320,7 @@ export class Technique extends StixObject {
      */
     public save(restAPIService: RestApiConnectorService): Observable<Technique> {
         // TODO POST if the object was just created (doesn't exist in db yet)
-                
+
         let postObservable = restAPIService.postTechnique(this);
         let subscription = postObservable.subscribe({
             next: (result) => { this.deserialize(result.serialize()); },
@@ -343,7 +334,7 @@ export class Technique extends StixObject {
      * @param restAPIService [RestApiConnectorService] the service to perform the DELETE through
      */
     public delete(restAPIService: RestApiConnectorService) : Observable<{}> {
-        let deleteObservable = restAPIService.deleteTechnique(this.stixID, this.modified);
+        let deleteObservable = restAPIService.deleteTechnique(this.stixID);
         let subscription = deleteObservable.subscribe({
             complete: () => { subscription.unsubscribe(); }
         });

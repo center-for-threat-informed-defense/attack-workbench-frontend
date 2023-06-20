@@ -1,13 +1,11 @@
 <div class="list-page">
     <div class="list-page-header">
         <h1 class="with-help-icon">
-            software 
-            <mat-icon class="help-icon" aria-label="help"
-                        popover="Software is a generic term for custom or commercial code, operating system utilities, open-source software, or other tools used to conduct behavior modeled in ATT&CK. Some instances of software have multiple names associated with the same instance due to various organizations tracking the same set of software by different names. The team makes a best effort to track overlaps between names based on publicly reported associations, which are designated as &quot;Associated Software&quot; on each page (also known as &quot;Aliases&quot;)."
-                        popoverPlacement="bottom"
-                        >
-                help_outline
-            </mat-icon>
+            software
+            <popover-content #objectDescription placement="bottom">
+                <span>Software is a generic term for custom or commercial code, operating system utilities, open-source software, or other tools used to conduct behavior modeled in ATT&CK. Some instances of software have multiple names associated with the same instance due to various organizations tracking the same set of software by different names. The team makes a best effort to track overlaps between names based on publicly reported associations, which are designated as &quot;Associated Software&quot; on each page (also known as &quot;Aliases&quot;).</span>
+            </popover-content>
+            <mat-icon class="help-icon" [popover]="objectDescription" aria-label="help">help_outline</mat-icon>
         </h1>
         
         <div class="button-group" *ngIf="canEdit">
@@ -16,5 +14,5 @@
             </button>
         </div>
     </div>
-    <app-stix-list [config]="{type: 'software', 'showLinks': true}"></app-stix-list>
+    <app-stix-list [config]="{type: 'software', 'showLinks': true, 'showUserSearch': true}"></app-stix-list>
 </div>

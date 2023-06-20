@@ -1,13 +1,11 @@
 <div class="list-page">
     <div class="list-page-header">
         <h1 class="with-help-icon">
-            techniques 
-            <mat-icon class="help-icon" aria-label="help"
-                        popover="Techniques represent 'how' an adversary achieves a tactical goal by performing an action. For example, an adversary may dump credentials to achieve credential access."
-                        popoverPlacement="bottom"
-                        >
-                help_outline
-            </mat-icon>
+            techniques
+            <popover-content #objectDescription placement="bottom">
+                <span>Techniques represent 'how' an adversary achieves a tactical goal by performing an action. For example, an adversary may dump credentials to achieve credential access.</span>
+            </popover-content>
+            <mat-icon class="help-icon" [popover]="objectDescription" aria-label="help">help_outline</mat-icon>
         </h1>
 
         <div class="button-group" *ngIf="canEdit">
@@ -16,5 +14,5 @@
             </button>
         </div>
     </div>
-    <app-stix-list [config]="{'type': 'technique', 'showLinks': true}"></app-stix-list>
+    <app-stix-list [config]="{'type': 'technique', 'showLinks': true, 'showUserSearch': true}"></app-stix-list>
 </div>
