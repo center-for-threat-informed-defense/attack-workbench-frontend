@@ -45,6 +45,7 @@
 -	Added button to import groups and their related objects into new or existing collections.
 -   Added an option to deprecate Data Component objects. See [frontend#429](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/429).
 -   Added matrix landing page in matris view to match [ATT&CK website](https://attack.mitre.org/) and display the tactic list in edit mode. See [frontend#20](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/20)
+-   Added ability to upload csv and excel files in collection imports.
 
 #### Improvements in 1.3.2
 -   Improved error handling during collection import.

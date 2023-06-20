@@ -65,7 +65,7 @@ export class CollectionImportComponent implements OnInit {
         data_source:    new CollectionDiffCategories<DataSource>(),
         data_component: new CollectionDiffCategories<DataComponent>()
     }
-
+    // list of headers that comes from mitre-generated excel files and the mapping to support collection objects
     public replacementList = [
       ["ID", "attack_id"],
       ["STIX ID", "id"],
@@ -111,12 +111,14 @@ export class CollectionImportComponent implements OnInit {
         reader.onload = (e:any) => {
           let str = String(e.target.result);
           let collectionBundle;
+          // try to parse collection as an excel/csv file
           try {
             const bstr: string = e.target.result;
             const wb: XLSX.WorkBook = XLSX.read(bstr, {type: 'binary'});
             collectionBundle = this.buildXlsxRequest(wb, sheetName);
           } catch (exception) {
             try {
+              // try to parse collection as a json object
               collectionBundle = JSON.parse(str);
             } catch (exception) {
               this.snackbar.open(exception.message, "dismiss", {
@@ -136,7 +138,6 @@ export class CollectionImportComponent implements OnInit {
      * @returns a collection object to be uploaded to workbench
      */
     public buildXlsxRequest(wb: XLSX.WorkBook, name: string): any {
-      const wsname = wb.SheetNames[0];
       let collectionObj = [{
         name: name,
         type:"x-mitre-collection",
@@ -169,6 +170,7 @@ export class CollectionImportComponent implements OnInit {
         })
         headerRow.push("type", "spec_version", "external_references") // add the object types to the end of each row's array
         data.forEach((row) => {
+          // create an object for the row
           var i = _.zipObject(headerRow, row)
           // set any variables that require a different format
           i.type = (row[headerRow.indexOf("id")]) ? row[headerRow.indexOf("id")].split("--")[0]: "";
@@ -194,6 +196,7 @@ export class CollectionImportComponent implements OnInit {
 
         })
       }
+      // build outer json object with the object list inside
       let jsonObj = {
         type: "bundle",
         id: "bundle--" + uuid(),
@@ -285,7 +288,7 @@ export class CollectionImportComponent implements OnInit {
                     this.object_import_categories.software[category].push(new Software(object.type, raw))
                 break;
                 case "relationship": //relationship
-                // build source and target objects if only relationships are uploaded
+                // build source and target objects if the source/target objects aren't being uploaded simultaneously (in case where only relationships are uploaded)
                 if (object.source_ref in idToSdo) {
                       raw.source_object = idToSdo[object.source_ref]
                     } else {
