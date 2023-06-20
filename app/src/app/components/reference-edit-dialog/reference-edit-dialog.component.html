@@ -205,7 +205,8 @@
                     <h3 class="section-header">Objects citing this reference</h3>
                     <app-stix-list [config]="{
                         stixObjects: stix_objects,
-                        clickBehavior: 'none'
+                        clickBehavior: 'none',
+                        showFilters: false
                     }"></app-stix-list>
                 </ng-container>
                 <ng-container *ngIf="relationships.length > 0">
@@ -213,7 +214,8 @@
                     <app-stix-list [config]="{
                         stixObjects: relationships,
                         type: 'relationship',
-                        clickBehavior: 'none'
+                        clickBehavior: 'none',
+                        showFilters: false
                     }"></app-stix-list>
                 </ng-container>
             </ng-template>
