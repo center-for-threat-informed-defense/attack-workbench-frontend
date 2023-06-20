@@ -43,8 +43,8 @@ The ATT&CK Workbench features a persistent database with the use of a named volu
 -   Added the ability to search objects by one or more users.
 -   Added a new user profile page where logged in users can view their recent activity across the Workbench and view/edit their display name.
 -   Added an option to configure an external ATT&CK Website in which to view Workbench objects, if a relevant object page exists.
--	  Added functionality to create a collection from a group and its related objects.
--	  Added button to import groups and their related objects into new or existing collections.
+-   Added functionality to create a collection from a group and its related objects.
+-   Added button to import groups and their related objects into new or existing collections.
 -   Added an option to deprecate Data Component objects. See [frontend#429](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/429).
 -   Added Matrix view to Matrix pages similar to the full matrix on the [ATT&CK website](https://attack.mitre.org/). See [frontend#20](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/20).
 
