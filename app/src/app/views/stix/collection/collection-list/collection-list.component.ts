@@ -17,52 +17,53 @@ export class CollectionListComponent implements OnInit {
     }
 
     ngOnInit() {
-        if (this.config.mode == "imported") {
-            // show imported collections
-            const hold = this.config.collections.filter(collection => collection.imported);
-            this.collectionMap = new Map();
-            for (const collection of hold) {
-              if (this.collectionMap.has(collection.stixID)) {
-                const newArr = this.collectionMap.get(collection.stixID);
-                newArr.push(collection);
-                newArr.sort((a:Collection,b:Collection)=> b.modified.valueOf() - a.modified.valueOf());
-                this.collectionMap.set(collection.stixID, newArr);
-              } else {
-                this.collectionMap.set(collection.stixID, [collection]);
-              }
-            }
-            const newFilteredList = [];
-            for(const key of this.collectionMap.keys()){
-              newFilteredList.push(this.collectionMap.get(key)[0]);
-            }
-            this.filteredCollections = newFilteredList;
-        } else if (this.config.mode == "created") {
-            // get list of collections that were not imported (were created by the user)
-            let createdCollections = this.config.collections.filter(collection => !collection.imported);
-            let idToCollections = new Map<string, Collection[]>();
-            for (let collection of createdCollections) {
-                collection.editable = false; //all but last version of each release are not editable (see below for handing of last version)
-                if (idToCollections.has(collection.stixID)) { //update
-                    let values = idToCollections.get(collection.stixID);
-                    values.push(collection);
-                    idToCollections.set(collection.stixID, values)
-                } else { //set
-                    idToCollections.set(collection.stixID, [collection])
-                }
-            }
-            // for each collection, reduce to releases and most recent modified version
-            this.filteredCollections = [];
-            for (let collectionID of idToCollections.keys()) {
-                let versions = idToCollections.get(collectionID);
-                versions.sort((a,b) => a.modified.toISOString().localeCompare(b.modified.toISOString())); //sort by modified date
-                this.filteredCollections = this.filteredCollections.concat(versions.filter(x => x.release)) // add all released collections
-                if (!versions[versions.length - 1].release) {
-                    // if most recent version is not a release, add it as well
-                    this.filteredCollections.push(versions[versions.length - 1]) //push most recently modified version assuming it hasn't been pushed already
-                }
-                this.filteredCollections[this.filteredCollections.length - 1].editable = true; //last version of each collection is editable
-            }
+      // filter based on editing status
+      const hold = this.config.collections.filter((collection) => {
+        if (this.config.mode  == 'created'){
+          return !collection.imported;
+        } else {
+          return collection.imported;
         }
+      });
+      this.collectionMap = new Map();
+      for (const collection of hold) {
+        // ensure all collections are not editable
+        collection.editable = false
+        if (this.collectionMap.has(collection.stixID)) {
+          // if the key already exists, append to array and sort
+          let newArr = this.collectionMap.get(collection.stixID);
+          newArr.push(collection);
+          newArr.sort((a:Collection,b:Collection)=> b.modified.valueOf() - a.modified.valueOf());
+          this.collectionMap.set(collection.stixID, newArr);
+        } else {
+          // if the key does not exist, add it
+          this.collectionMap.set(collection.stixID, [collection]);
+        }
+      }
+      // for created mode, only keep the newest version of each numbered version
+      if (this.config.mode == 'created') {
+        for(const key of this.collectionMap.keys()){
+            const initialArr = this.collectionMap.get(key);
+            const uniqueVersionArr:Collection[] = [];
+            for (const collection in initialArr) {
+              if (uniqueVersionArr.findIndex(element=> element.version == collection.version) == -1) {
+                uniqueVersionArr.push(collection)
+              } 
+            }
+            this.collectionMap.set(key, uniqueVersionArr);
+        }
+      }
+      const newFilteredList = [];
+      for(const key of this.collectionMap.keys()){
+        // only add the newest version to display
+        const collection = this.collectionMap.get(key)[0];
+        if (this.config.mode=='created') {
+          // for created mode, only the newest version is editable
+          collection.editable = true;
+        }
+        newFilteredList.push(collection);
+      }
+      this.filteredCollections = newFilteredList;
     }
 
 }
