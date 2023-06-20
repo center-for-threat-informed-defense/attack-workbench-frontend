@@ -6,7 +6,8 @@
             'selectionModel' : config.select,
             'type': config.type,
             'clickBehavior': 'expand',
-            'stixObjects': config.selectableObjects
+            'stixObjects': config.selectableObjects,
+            'showFilters': false
         }"></app-stix-list>
         <app-users-list *ngIf="config.type === 'user'" [config]="{
           'mode':'select',
