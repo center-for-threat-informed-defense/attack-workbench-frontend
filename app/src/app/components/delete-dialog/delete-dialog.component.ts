@@ -16,6 +16,9 @@ export class DeleteDialogComponent {
     public get invalid(): boolean {
         return this.confirmInput != this.deleteConfirmation;
     }
+    public get collectionDelete(): boolean {
+      return this.config && this.config.collectionDelete;
+  }
 
     constructor(@Inject(MAT_DIALOG_DATA) public config: any, public dialogRef: MatDialogRef<DeleteDialogComponent>) { }
 
