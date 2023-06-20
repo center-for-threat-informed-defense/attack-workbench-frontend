@@ -10,6 +10,7 @@ import { Collection } from 'src/app/classes/stix/collection';
 export class CollectionListComponent implements OnInit {
     @Input() config: CollectionListConfig;
     public filteredCollections: Collection[];
+    public collectionMap: Map<string, Collection[]>;
         
     constructor() {
         // intentionally left blank
@@ -19,6 +20,17 @@ export class CollectionListComponent implements OnInit {
         if (this.config.mode == "imported") {
             // show imported collections
             this.filteredCollections = this.config.collections.filter(collection => collection.imported);
+            this.collectionMap = new Map();
+            for (const collection of this.filteredCollections) {
+              if (this.collectionMap.has(collection.stixID)) {
+                const newArr = this.collectionMap.get(collection.stixID);
+                newArr.push(collection);
+                this.collectionMap.set(collection.stixID, newArr);
+              } else {
+                this.collectionMap.set(collection.stixID, [collection]);
+              }
+            }
+            console.log(this.collectionMap);
         } else if (this.config.mode == "created") {
             // get list of collections that were not imported (were created by the user)
             let createdCollections = this.config.collections.filter(collection => !collection.imported);

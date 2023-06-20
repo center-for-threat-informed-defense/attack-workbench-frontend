@@ -15,6 +15,7 @@ import { AuthenticationService } from 'src/app/services/connectors/authenticatio
 import { SidebarService } from 'src/app/services/sidebar/sidebar.service';
 import { MatSelect } from '@angular/material/select';
 import { AddDialogComponent } from '../../add-dialog/add-dialog.component';
+import { Collection } from 'src/app/classes/stix/collection';
 
 @Component({
     selector: 'app-stix-list',
@@ -879,6 +880,11 @@ export interface StixListConfig {
         tooltip: string, // tooltip or descriptor of action
         position: "start" | "end" //start: occurs before first column; end: occurs after last column
     }
+
+    /**
+     * Map of collections by stixID
+     */
+    collectionMap?: Map<string, Collection[]>;
 }
 
 export interface FilterValue {
