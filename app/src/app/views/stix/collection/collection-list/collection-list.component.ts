@@ -45,8 +45,8 @@ export class CollectionListComponent implements OnInit {
         for(const key of this.collectionMap.keys()){
             const initialArr = this.collectionMap.get(key);
             const uniqueVersionArr:Collection[] = [];
-            for (const collection in initialArr) {
-              if (uniqueVersionArr.findIndex(element=> element.version == collection.version) == -1) {
+            for (const collection of initialArr) {
+              if (uniqueVersionArr.findIndex(element=> element.version.version == collection.version.version) == -1) {
                 uniqueVersionArr.push(collection)
               } 
             }
