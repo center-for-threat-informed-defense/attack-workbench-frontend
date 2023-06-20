@@ -13,7 +13,7 @@ export class MatrixFlatComponent {
 	public showID = false;
 
 	constructor() {
-		//intentionally blank
+		// intentionally blank
 	}
 
 	public onToggleSubtechniquesVisible(technique: Technique) {
