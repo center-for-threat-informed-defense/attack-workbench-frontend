@@ -6,27 +6,21 @@
             <button mat-button class="control" matTooltip="validate & save" [disabled]="!editing" (click)="saveEdits()"><mat-icon aria-label="save">save</mat-icon></button>
             <button *ngIf="!editing" mat-button class="control" matTooltip="edit" (click)="startEditing()"><mat-icon aria-label="edit">edit</mat-icon></button>
             <button *ngIf="editing" mat-button class="control" matTooltip="discard changes & stop editing" (click)="stopEditing()"><mat-icon aria-label="discard">edit_off</mat-icon></button>
-            <div *ngIf="deletable" class="button-tooltip" [matTooltip]="editing ? (hasRelationships ? 'an object with relationships cannot be deleted' : 'delete') : ''">
+            <div *ngIf="deletable" class="inline" [matTooltip]="editing ? (hasRelationships ? 'an object with relationships cannot be deleted' : 'delete') : ''">
                 <button mat-button class="control" [disabled]="!editing || hasRelationships" (click)="delete()"><mat-icon aria-label="delete">delete</mat-icon></button>
             </div>
             <app-object-status *ngIf="hasWorkflow"></app-object-status>
-            <span *ngIf="websiteIntegrationService.websiteIntegrationEnabled && hasWorkflow" [matTooltip]="!websiteIntegrationService.checkExternalUrlValidity(editorService.stixId) ? 'could not find object on ATT&CK website' : 'view object in ATT&CK website'">
-              <button mat-button 
-                [disabled]="!websiteIntegrationService.currentWebIntegrationStatus.valid" 
-                class="control"
-                (click)="openExternalUrl()">
-                  <mat-icon>
-                    open_in_new
-                  </mat-icon>
-              </button>
-            </span>
-            
         </div>
-         <div class="controls button-list section" *ngIf="isGroup">
-            <button mat-button class="control" matTooltip="create a collection from this group" [disabled]="editing" (click)="createCollectionFromGroup()">
-              <span class="material-symbols-outlined">
-                deployed_code
-              </span>
+         <div class="controls button-list section">
+			<div *ngIf="editable || editing" class="inline">
+				<span *ngIf="websiteIntegrationService.websiteIntegrationEnabled && hasWorkflow" [matTooltip]="!websiteIntegrationService.checkExternalUrlValidity(editorService.stixId) ? 'could not find object on ATT&CK website' : 'view object in ATT&CK website'">
+					<button mat-button [disabled]="!websiteIntegrationService.currentWebIntegrationStatus.valid" class="control" (click)="openExternalUrl()">
+						<mat-icon>open_in_new</mat-icon>
+					</button>
+				</span>
+			</div>
+            <button *ngIf="isGroup" mat-button class="control" matTooltip="create a collection from this group" [disabled]="editing" (click)="createCollectionFromGroup()">
+				<span class="material-symbols-outlined">deployed_code</span>
             </button>
         </div>
         <div class="controls button-list section">

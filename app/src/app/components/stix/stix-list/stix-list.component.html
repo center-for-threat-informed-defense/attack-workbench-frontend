@@ -13,7 +13,7 @@
                     </mat-form-field>
         
                     <!-- don't show options for collections or if loading data not from REST API -->
-                    <mat-form-field appearance="fill" *ngIf="config.showFilters && !(config.hasOwnProperty('stixObjects'))">
+                    <mat-form-field appearance="fill" *ngIf="config.showFilters">
                         <mat-label>options</mat-label>
                         <mat-select multiple [(ngModel)]="filter" (selectionChange)="applyControls()">
                             <mat-optgroup *ngIf="config.showUserSearch" label="users">

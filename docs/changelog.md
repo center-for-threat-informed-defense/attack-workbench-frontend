@@ -34,9 +34,11 @@
 
 ## Changes Staged on Develop
 
-### ATT&K Workbench version 1.3.2
+### ATT&CK Workbench version 2.0.0
 
-#### New Features in 1.3.2
+The ATT&CK Workbench features a persistent database with the use of a named volume as of version 2.0. **This change may result in data on the current anonymous volume being lost.** The [Docker Compose Migration](/docs/migration.md) document describes how to backup your existing ATT&CK Workbench data and restore it after the update.
+
+#### New Features in 2.0.0
 -   Added an Admin interface for creating and managing teams.
 -   Added the ability to search objects by one or more users.
 -   Added a new user profile page where logged in users can view their recent activity across the Workbench and view/edit their display name.
@@ -44,10 +46,15 @@
 -	Added functionality to create a collection from a group and its related objects.
 -	Added button to import groups and their related objects into new or existing collections.
 -   Added an option to deprecate Data Component objects. See [frontend#429](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/429).
--   Added matrix landing page in matris view to match [ATT&CK website](https://attack.mitre.org/) and display the tactic list in edit mode. See [frontend#20](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/20)
+-   Added Matrix view to Matrix pages similar to the full matrix on the [ATT&CK website](https://attack.mitre.org/). See [frontend#20](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/20).
 
-#### Improvements in 1.3.2
+#### Improvements in 2.0.0
 -   Improved error handling during collection import.
+-   Added filtering to collection views
+-   Lists of objects can now be filtered when viewing or editing collections. See [frontend#393](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/393).
+
+#### Fixes in 2.0.0
+-   Fixed an issue where duplicate entries would be displayed in some dropdown lists for objects in multiple domains. See [frontend#454](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/454).
 
 ## 21 April 2023
 
@@ -58,8 +65,8 @@
 
 #### Improvements in 1.3.1
 -   Added individual attribution to edits made on Note objects.
--   Added the ICS Security Control mapping field to Mitigation objects.
--   Updated the documentation for installing Workbench with additional certs.
+-   Added the ICS Security Control mapping field to Mitigation objects. See [frontend#419](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/419). 
+-   Updated the documentation for installing Workbench with additional certs. See [frontend#225](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/225).
 
 #### Fixes in 1.3.1
 -   Fixed an issue where assigning an existing technique as a sub-technique would not create a `subtechnique-of` relationship. See [frontend#446](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/446).
