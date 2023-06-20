@@ -44,7 +44,14 @@ export class CollectionImportReviewComponent extends StixViewPage implements OnI
 
     ngOnInit() {
         // disable editing
+        /**
+         *  TODO: From Vince and Charissa
+         *  This is really wonky since the page load completes and then the editor service is changed, the user can click the edit button while all of the attack objects are loading
+         *  Need to find a way to figure out how to tell is a collection is imported earlier on in the chain/disable the toolbar while things are loading
+         **/
+        
         this.editor.editable = false;
+        this.editor.isAnImportedCollection = true;
         // parse collection into object_import_categories
         
         //build category lookup
