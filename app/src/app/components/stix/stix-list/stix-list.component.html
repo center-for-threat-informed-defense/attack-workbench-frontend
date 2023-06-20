@@ -127,11 +127,22 @@
                         <div class="element-detail" @detailExpand *ngIf="expandedElement === element">
                             <div class="element-description columns">
                                 <div class="column is-narrow controls" *ngIf="config.showLinks">
+                                  <span *ngIf="config.type!= 'collection-imported'">
                                     <div *ngFor="let route of getAccessibleRoutes(element.attackType, element.routes)">
-                                        <a class="mat-button" [routerLink]="'/' + [element.attackType, element.stixID, route.route].join('/')" [queryParams]="route.query">
-                                            {{route.label}}
-                                        </a>
+                                      <a class="mat-button" [routerLink]="'/' + [element.attackType, element.stixID, route.route].join('/')" [queryParams]="route.query">
+                                          {{route.label}}
+                                      </a>
                                     </div>
+                                  </span>
+                                  <span *ngIf="config.type== 'collection-imported'">
+                                    <div *ngFor="let collectionVersion of config.collectionMap.get(element.stixID)">
+                                      <div *ngFor="let route of getAccessibleRoutes(collectionVersion.attackType, collectionVersion.routes)">
+                                        <a class="mat-button" [routerLink]="'/' + [collectionVersion.attackType, collectionVersion.stixID, route.route].join('/')" [queryParams]="route.query">
+                                          {{route.label}} ({{collectionVersion.version}})
+                                        </a>
+                                      </div>
+                                    </div>
+                                  </span>
                                 </div>
                                 <div class="column description">
                                     <div *ngFor="let property of tableDetail">

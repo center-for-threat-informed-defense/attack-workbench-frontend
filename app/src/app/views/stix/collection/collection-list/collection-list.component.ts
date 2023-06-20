@@ -19,18 +19,23 @@ export class CollectionListComponent implements OnInit {
     ngOnInit() {
         if (this.config.mode == "imported") {
             // show imported collections
-            this.filteredCollections = this.config.collections.filter(collection => collection.imported);
+            const hold = this.config.collections.filter(collection => collection.imported);
             this.collectionMap = new Map();
-            for (const collection of this.filteredCollections) {
+            for (const collection of hold) {
               if (this.collectionMap.has(collection.stixID)) {
                 const newArr = this.collectionMap.get(collection.stixID);
                 newArr.push(collection);
+                newArr.sort((a:Collection,b:Collection)=> b.modified.valueOf() - a.modified.valueOf());
                 this.collectionMap.set(collection.stixID, newArr);
               } else {
                 this.collectionMap.set(collection.stixID, [collection]);
               }
             }
-            console.log(this.collectionMap);
+            const newFilteredList = [];
+            for(const key of this.collectionMap.keys()){
+              newFilteredList.push(this.collectionMap.get(key)[0]);
+            }
+            this.filteredCollections = newFilteredList;
         } else if (this.config.mode == "created") {
             // get list of collections that were not imported (were created by the user)
             let createdCollections = this.config.collections.filter(collection => !collection.imported);
