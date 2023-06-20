@@ -10,52 +10,48 @@
 		</thead>
 		<tbody>
 			<tr>
-				<td *ngFor="let tactic of tactics" class="tactic" style="vertical-align: top; padding-right: 5px;">
-					<ng-container *ngFor="let technique of tactic.technique_objects">
-			<tr *ngIf="technique.subTechniques.length <=0">
-				<table class="regularTechnique">
-					<caption hidden>Technique with no subtechniques</caption>
-					<th hidden></th>
-					<tr>
-						<td class="technique">
-							<app-technique-cell [technique]="technique" [tactic]="tactic" [showID]="showID">
-							</app-technique-cell>
-						</td>
-					</tr>
-				</table>
+				<td *ngFor="let tactic of tactics" class="tactic" style="vertical-align: top">
+					<table class="techniques-table">
+						<ng-container *ngFor="let technique of tactic.technique_objects">
+							<tr *ngIf="!technique.subTechniques.length">
+								<table class="regularTechnique">
+									<caption hidden>Technique with no subtechniques</caption>
+									<th hidden></th>
+									<tr>
+										<td class="technique">
+											<app-technique-cell [technique]="technique" [tactic]="tactic" [showID]="showID"></app-technique-cell>
+										</td>
+									</tr>
+								</table>
+							</tr>
+							<tr *ngIf="technique.subTechniques.length > 0">
+								<table class="supertechnique">
+									<caption hidden>Technique with subtechniques</caption>
+									<th hidden></th>
+									<tr>
+										<td class="sidebar technique" (click)="onToggleSubtechniquesVisible(technique, tactic)" style="vertical-align: middle;">
+											<div class="handle"> = </div>
+										</td>
+										<td class="technique">
+											<app-technique-cell [technique]="technique" [tactic]="tactic" [showID]="showID"></app-technique-cell>
+										</td>
+									</tr>
+									<tr class="subtechniques-row subtechniques-container" [class.hidden]="!technique.show_subtechniques">
+										<td class="angle-top">
+											<svg width="12px" height="12px"><path d="M0 0H12V12Z"/></svg>
+										</td>
+										<td class="subtechniques">
+											<div *ngFor="let subtechnique of technique.subTechniques" class="subtechnique">
+												<app-technique-cell [technique]="subtechnique" [tactic]="tactic" [showID]="showID"></app-technique-cell>
+											</div>
+										</td>
+									</tr>
+								</table>
+							</tr>
+						</ng-container>
+					</table>
+				</td>
 			</tr>
-			<tr *ngIf="technique.subTechniques.length > 0">
-				<table class="supertechnique">
-					<caption hidden>Technique with subtechniques</caption>
-					<th hidden></th>
-					<tr>
-						<td class="sidebar technique" (click)="onToggleSubtechniquesVisible(technique, tactic)"
-							style="vertical-align: middle;">
-							<div class="handle"> = </div>
-						</td>
-						<td class="technique">
-							<app-technique-cell [technique]="technique" [tactic]="tactic" [showID]="showID">
-							</app-technique-cell>
-						</td>
-					</tr>
-					<tr class="subtechniques-row subtechniques-container"
-						[class.hidden]="!technique.show_subtechniques">
-						<td class="angle-top">
-							<svg width="12px" height="12px">
-								<path d="M0 0H12V12Z" />
-							</svg>
-						</td>
-						<td class="subtechniques">
-							<div *ngFor="let subtechnique of technique.subTechniques" class="subtechnique">
-								<app-technique-cell [technique]="subtechnique" [tactic]="tactic" [showID]="showID">
-								</app-technique-cell>
-							</div>
-						</td>
-					</tr>
-				</table>
-			</tr>
-			</ng-container>
-			</td>
 		</tbody>
 	</table>
 </div>
