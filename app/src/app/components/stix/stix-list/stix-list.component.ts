@@ -699,12 +699,12 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
 
                 //filter by domains
                 if (Array.isArray(domains) && domains.length > 0) {
-                  filtered = filtered.filter((obj:any)=> obj.domains.some(domains));
+                  filtered = filtered.filter((obj:any)=> obj.domains.some((object_domain: any) => domains.includes(object_domain)));
                 }
 
                 //filter by platforms
                 if (Array.isArray(platforms) && platforms.length > 0) {
-                  filtered = filtered.filter((obj:any)=> obj.platforms.some(platforms));
+                  filtered = filtered.filter((obj:any)=> obj.platforms.some((object_platform: any) => platforms.includes(object_platform)));
                 }
                 
                 // filter by workflow status
