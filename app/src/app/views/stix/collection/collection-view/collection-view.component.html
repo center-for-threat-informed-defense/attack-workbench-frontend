@@ -150,6 +150,8 @@
                                                         <app-stix-list #potentialAdditionsRef [config]="{
                                                             'clickBehavior': 'dialog',
                                                             'type': attackType,
+                                                            'showUserSearch': true,
+                                                            'filterList': ['state_exclusive','workflow_status'],
                                                             'stixObjects': potentialChanges[attackType].additions,
                                                             'rowAction': {
                                                                 'icon': 'keyboard_arrow_right',
@@ -177,6 +179,8 @@
                                                         <app-stix-list #collectionAdditionsRef [config]="{
                                                             'clickBehavior': 'dialog',
                                                             'type': attackType,
+                                                            'showUserSearch': true,
+                                                            'filterList': ['state_exclusive','workflow_status'],
                                                             'stixObjects': collectionChanges[attackType].additions,
                                                             'rowAction': editing? {
                                                                 'icon': 'keyboard_arrow_left',
@@ -218,6 +222,8 @@
                                                         <app-stix-list #potentialChangesRef [config]="{
                                                             'clickBehavior': 'dialog',
                                                             'type': attackType,
+                                                            'showUserSearch': true,
+                                                            'filterList': ['state_exclusive','workflow_status'],
                                                             'stixObjects': potentialChanges[attackType].changes,
                                                             'rowAction': {
                                                                 'icon': 'keyboard_arrow_right',
@@ -245,6 +251,8 @@
                                                         <app-stix-list #collectionChangesRef [config]="{
                                                             'clickBehavior': 'dialog',
                                                             'type': attackType,
+                                                            'showUserSearch': true,
+                                                            'filterList': ['state_exclusive','workflow_status'],
                                                             'stixObjects': collectionChanges[attackType].changes,
                                                             'rowAction': editing? {
                                                                 'icon': 'keyboard_arrow_left',
@@ -286,6 +294,8 @@
                                                         <app-stix-list #potentialMinorChangesRef [config]="{
                                                             'clickBehavior': 'dialog',
                                                             'type': attackType,
+                                                            'showUserSearch': true,
+                                                            'filterList': ['state_exclusive','workflow_status'],
                                                             'stixObjects': potentialChanges[attackType].minor_changes,
                                                             'rowAction': {
                                                                 'icon': 'keyboard_arrow_right',
@@ -313,6 +323,8 @@
                                                         <app-stix-list #collectionMinorChangesRef [config]="{
                                                             'clickBehavior': 'dialog',
                                                             'type': attackType,
+                                                            'showUserSearch': true,
+                                                            'filterList': ['state_exclusive','workflow_status'],
                                                             'stixObjects': collectionChanges[attackType].minor_changes,
                                                             'rowAction': editing? {
                                                                 'icon': 'keyboard_arrow_left',
@@ -354,6 +366,8 @@
                                                         <app-stix-list #potentialRevocationsRef [config]="{
                                                             'clickBehavior': 'dialog',
                                                             'type': attackType,
+                                                            'showUserSearch': true,
+                                                            'filterList': ['state_exclusive','workflow_status'],
                                                             'stixObjects': potentialChanges[attackType].revocations,
                                                             'rowAction': {
                                                                 'icon': 'keyboard_arrow_right',
@@ -381,6 +395,8 @@
                                                         <app-stix-list #collectionRevocationsRef [config]="{
                                                             'clickBehavior': 'dialog',
                                                             'type': attackType,
+                                                            'showUserSearch': true,
+                                                            'filterList': ['state_exclusive','workflow_status'],
                                                             'stixObjects': collectionChanges[attackType].revocations,
                                                             'rowAction': editing? {
                                                                 'icon': 'keyboard_arrow_left',
@@ -422,6 +438,8 @@
                                                         <app-stix-list #potentialDeprecationsRef [config]="{
                                                             'clickBehavior': 'dialog',
                                                             'type': attackType,
+                                                            'showUserSearch': true,
+                                                            'filterList': ['state_exclusive','workflow_status'],
                                                             'stixObjects': potentialChanges[attackType].deprecations,
                                                             'rowAction': {
                                                                 'icon': 'keyboard_arrow_right',
@@ -449,6 +467,8 @@
                                                         <app-stix-list #collectionDeprecationsRef [config]="{
                                                             'clickBehavior': 'dialog',
                                                             'type': attackType,
+                                                            'showUserSearch': true,
+                                                            'filterList': ['state_exclusive','workflow_status'],
                                                             'stixObjects': collectionChanges[attackType].deprecations,
                                                             'rowAction': editing? {
                                                                 'icon': 'keyboard_arrow_left',
@@ -476,6 +496,8 @@
                                             <app-stix-list [config]="{
                                                 'clickBehavior': 'dialog',
                                                 'type': attackType,
+                                                'showUserSearch': true,
+                                                'filterList': ['state_exclusive','workflow_status'],
                                                 'stixObjects': collectionChanges[attackType].duplicates
                                             }"></app-stix-list>
                                         </ng-template>
