@@ -10,12 +10,12 @@
 		</thead>
 		<tbody>
 			<tr>
-				<td *ngFor="let tactic of tactics" class="tactic" style="vertical-align: top; padding-right: 5px;">
+				<td *ngFor="let tactic of tactics" class="tactic" style="vertical-align: top">
 					<table class="techniques-table">
 						<caption hidden>Technique with no associated subtechniques</caption>
 						<th hidden></th>
 						<ng-container *ngFor="let technique of tactic.technique_objects">
-							<tr *ngIf="technique.subTechniques.length <= 0">
+							<tr *ngIf="!technique.subTechniques.length">
 								<table class="regularTechnique">
 									<caption hidden>Technique with no subtechniques</caption>
 									<th hidden></th>
@@ -73,6 +73,7 @@
 						</ng-container>
 					</table>
 				</td>
+			</tr>
 		</tbody>
 	</table>
 </div>
