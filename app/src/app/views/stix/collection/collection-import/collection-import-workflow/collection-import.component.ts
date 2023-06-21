@@ -24,8 +24,7 @@ import { v4 as uuid } from 'uuid';
 import { AuthenticationService } from 'src/app/services/connectors/authentication/authentication.service';
 import { UserAccount } from 'src/app/classes/authn/user-account';
 import * as XLSX from 'xlsx';
-
-const _ = require("lodash");
+import _ from "lodash";
 
 @Component({
   selector: 'app-collection-import',
