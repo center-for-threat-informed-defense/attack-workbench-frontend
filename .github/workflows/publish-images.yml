@@ -1,0 +1,21 @@
+name: Publish images to ghcr
+
+on:
+  push:
+    branches: ['master']
+
+jobs:
+  build-and-push-images:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+      - name: Build and push Docker image
+        run: |
+          echo $GITHUB_TOKEN | docker login ghcr.io -u center-for-threat-informed-defense --password-stdin
+          docker build . --tag ghcr.io/center-for-threat-informed-defense/attack-workbench-frontend:latest
+          docker build . --tag ghcr.io/center-for-threat-informed-defense/attack-workbench-rest-api:latest
+          docker push ghcr.io/center-for-threat-informed-defense/attack-workbench-frontend:latest
+          docker push ghcr.io/center-for-threat-informed-defense/attack-workbench-rest-api:latest
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
