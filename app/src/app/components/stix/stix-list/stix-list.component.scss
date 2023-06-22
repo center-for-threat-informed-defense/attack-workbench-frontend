@@ -146,6 +146,33 @@
                                 &.is-narrow {
                                      flex-shrink: 1;
                                 }
+                                &.collection-table{
+                                  max-height: 15em;
+                                  overflow-y: scroll;
+                                  mat-table{
+                                    min-width: 47em;
+                                    .mat-header-cell {
+                                      .light & { background-color: color(light); }
+                                      .dark &  { background-color: color(dark); }
+                                    }
+                                    .mat-column-action {
+                                      flex: 0 0 10%;
+                                      display: flex;
+                                      flex-direction: column;
+                                      justify-content: space-around;
+                                    }
+                                    .mat-column-version {
+                                      flex: 0 0 10%;
+                                    }
+                                    .mat-column-released {
+                                      flex: 0 0 10%;
+                                    }
+                                    .mat-row:nth-child(2n+1) {
+                                      .light & { background-color: color-alternate(light); }
+                                      .dark &  { background-color: color-alternate(dark); }
+                                    }
+                                  }
+                                }
                                 & + .column {
                                     .light & { border-color: border-color(light); }
                                     .dark &  { border-color: border-color(dark); }

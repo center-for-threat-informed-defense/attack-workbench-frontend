@@ -79,6 +79,8 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
     public tableDetail: any[];
     public expandedElement: StixObject | null;
 
+    public collectionColumnsToDisplay: string[];
+
     // Selection stuff
     public selection: SelectionModel<string>;
 
@@ -201,14 +203,15 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
                 case "collection":
                 case "collection-created":
                     this.addColumn("name", "name", "plain", sticky_allowed, ["name"]);
-                    this.addColumn("released?", "release", "plain", null, ["text-label"]);
+                    // this.addColumn("released?", "release", "plain", null, ["text-label"]);
                     this.addColumn("latest version", "version", "version");
                     this.addColumn("created", "created", "timestamp");
                     this.addColumn("modified", "modified", "timestamp");
                     this.tableDetail = [{
                         "field": "description",
                         "display": "descriptive"
-                    }]
+                    }];
+                    this.collectionColumnsToDisplay = ['action','version','released','description'];
                     break;
                 case "collection-imported":
                     this.addColumn("name", "name", "plain", sticky_allowed, ["name"]);
@@ -218,7 +221,8 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
                     this.tableDetail = [{
                         "field": "description",
                         "display": "descriptive"
-                    }]
+                    }];
+                    this.collectionColumnsToDisplay = ['action','version','description'];
                     break;
                 case "mitigation":
                 case "tactic":
