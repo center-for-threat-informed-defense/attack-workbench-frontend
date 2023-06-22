@@ -89,7 +89,7 @@ These environment properties can be edited under `src/environments`:
 
 #### PKI Certificates
 
-For additional troubleshooting and installation of security certificates for use by ATT&CK Workbench, pleaser refer to [PKI Certificates instructions](docs/certs.md)
+For additional troubleshooting and installation of security certificates for use by ATT&CK Workbench, pleaser refer to [PKI Certificates instructions](docs/certs.md).
 
 ## Related Work
 
