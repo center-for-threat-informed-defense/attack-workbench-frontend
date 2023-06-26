@@ -27,7 +27,7 @@ git clone https://github.com/center-for-threat-informed-defense/attack-workbench
 
 ## 2. Docker images
 
-Docker images can either be built on startup or pulled from the Github Container Registry. 
+Docker images can either be built locally or pulled from the Github Container Registry. 
 
 ### Build docker images
 1. Navigate to the `attack-workbench-frontend` directory (containing the `docker-compose.yml` file)
