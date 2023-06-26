@@ -16,7 +16,6 @@ export class ListViewComponent {
 
     public get values() {
         if (this.config.field == "aliases") return this.config.object[this.config.field].slice(1); // filter out the first alias
-        if (this.config.field == "domains" &&  typeof this.config.object[this.config.field] === 'string' ) return [this.config.object[this.config.field]]; // configure domains to be an array
         return this.config.object[this.config.field];
     }
 
