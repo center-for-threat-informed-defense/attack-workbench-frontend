@@ -187,6 +187,10 @@ export class CollectionImportComponent implements OnInit {
         // create an object for the row
         var i = _.zipObject(headerRow, row);
         // set any variables that require a different format
+        if (!i.id) {
+          // if there is not a stix id for the object, try to generate a stix id from the attack id
+          this.generateId(i);
+        }
         i.attack_id = (i.attack_id) ? i.attack_id : "";
         i.description = (i.description) ? i.description : "";
         i.type = (i.id) ? i.id.split('--')[0] : '';
@@ -210,7 +214,7 @@ export class CollectionImportComponent implements OnInit {
             object_modified: i.modified,
           });
         } else {
-          this.errorObjects.push(i); // count items that are unable to be imported
+          this.errorObjects.push(i);
         }
       });
     }
@@ -412,15 +416,20 @@ export class CollectionImportComponent implements OnInit {
       case 't': //technique or tactic
         const subtechniqueReg = new RegExp("T\\d{4}\\.\\d{3}");
         const techniqueReg = new RegExp("T\\d{4}");
-        // check if subtechnique match
-        if (subtechniqueReg.test(object.attack_id)) {
+        const tacticReg = new RegExp("TA\\d{4}");
+
+        // check if tactic match
+        if (tacticReg.test(object.attack_id)) {
+          object.id = 'x-mitre-tactic--' + uuid();
+        }
+        //check if subtechnique
+        else if (subtechniqueReg.test(object.attack_id)) {
           object.id = 'attack-pattern--' + uuid();
           object.is_subtechnique = true;
         }
         else if (techniqueReg.test(object.attack_id)) {
           object.id = 'attack-pattern--' + uuid();
         }
-
         break;
       case 's': // software
         if (object.type) {
@@ -439,6 +448,7 @@ export class CollectionImportComponent implements OnInit {
       }
       return;
     }
+    // relationships don't have attack ids, so check for target and source fields here
     if (object.source_id || object.target_id || object.source_name || object.target_name) {
       object.id = 'relationship--' + uuid();
       object.source_id = 'course-of-action--' + uuid();
