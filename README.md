@@ -40,7 +40,7 @@ More information about collections and collection indexes can be found in the [c
 
 ## Install and run
 
-The ATT&CK Workbench application is made up of several repositories. For the full application to operate each needs to be running at the same time. The [docker install instructions](docs/docker-compose.md) will install all components and is recommended for most deployments. 
+The ATT&CK Workbench application is made up of several repositories. For the full application to operate each needs to be running at the same time. The [docker install instructions](docs/docker-compose.md) will install all components and is recommended for most deployments.
 - [ATT&CK Workbench Frontend](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend) (this repository)
   
   The front-end user interface for the ATT&CK Workbench tool, and the primary interface through which the knowledge base is accessed.
