@@ -15,6 +15,7 @@ import { AuthenticationService } from 'src/app/services/connectors/authenticatio
 import { SidebarService } from 'src/app/services/sidebar/sidebar.service';
 import { MatSelect } from '@angular/material/select';
 import { AddDialogComponent } from '../../add-dialog/add-dialog.component';
+import { Collection } from 'src/app/classes/stix/collection';
 import { logger } from 'src/app/util/logger';
 
 @Component({
@@ -77,6 +78,8 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
     public tableColumns_settings: Map<string, any> = new Map<string, any>(); // property to display for each displayProperty
     public tableDetail: any[];
     public expandedElement: StixObject | null;
+
+    public collectionColumnsToDisplay: string[];
 
     // Selection stuff
     public selection: SelectionModel<string>;
@@ -200,22 +203,25 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
                 case "collection":
                 case "collection-created":
                     this.addColumn("name", "name", "plain", sticky_allowed, ["name"]);
-                    this.addColumn("released?", "release", "plain", null, ["text-label"]);
-                    this.addVersionsAndDatesColumns();
+                    this.addColumn("latest version", "version", "version");
+                    this.addColumn("created", "created", "timestamp");
+                    this.addColumn("modified", "modified", "timestamp");
                     this.tableDetail = [{
                         "field": "description",
                         "display": "descriptive"
-                    }]
+                    }];
+                    this.collectionColumnsToDisplay = ['action','version','released','description'];
                     break;
                 case "collection-imported":
                     this.addColumn("name", "name", "plain", sticky_allowed, ["name"]);
-                    this.addColumn("version", "version", "version");
+                    this.addColumn("latest version", "version", "version");
                     this.addColumn("imported", "imported", "timestamp");
                     this.addColumn("modified", "modified", "timestamp");
                     this.tableDetail = [{
                         "field": "description",
                         "display": "descriptive"
-                    }]
+                    }];
+                    this.collectionColumnsToDisplay = ['action','version','description'];
                     break;
                 case "mitigation":
                 case "tactic":
@@ -954,6 +960,11 @@ export interface StixListConfig {
         tooltip: string, // tooltip or descriptor of action
         position: "start" | "end" //start: occurs before first column; end: occurs after last column
     }
+
+    /**
+     * Map of collections by stixID
+     */
+    collectionMap?: Map<string, Collection[]>;
 }
 
 export interface FilterValue {

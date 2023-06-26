@@ -47,3 +47,7 @@
         background-color: color(success);
     }
 }
+
+::-webkit-scrollbar-corner {
+  background: rgba(0,0,0,0);
+}
