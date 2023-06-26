@@ -186,6 +186,7 @@ export class CollectionImportComponent implements OnInit {
       data.forEach((row) => {
         // create an object for the row
         var i = _.zipObject(headerRow, row);
+        // set any variables that require a different format
         i.attack_id = (i.attack_id) ? i.attack_id : "";
         i.description = (i.description) ? i.description : "";
         i.type = (i.id) ? i.id.split('--')[0] : '';
@@ -537,7 +538,9 @@ export class CollectionImportComponent implements OnInit {
    */
   public cancelImport(): void {
     this.import_errors = undefined;
-    this.stepper.previous();
+    this.stepper.reset();
+    this.loadingStep1 = false;
+    this.loadingStep2 = false;
   }
 
   /**

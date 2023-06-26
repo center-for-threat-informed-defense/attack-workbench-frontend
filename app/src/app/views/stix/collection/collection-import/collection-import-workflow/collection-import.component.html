@@ -46,12 +46,18 @@
                         <button mat-stroked-button (click)="selectAll()">select all</button>
                         <button mat-stroked-button (click)="deselectAll()">deselect all</button>
                     </div>
-                    <div class="action-bar">
+                    <div *ngIf="changed_ids.length > 0" class="action-bar">
                         <button mat-mini-fab class="extended-fab-button"  color="primary" (click)="import()">
                             <mat-icon aria-label="add">save_alt</mat-icon>
                             <span class="text-label">{{import_errors ? 'Proceed with ' : ''}} Import</span>
                         </button>
                     </div>
+                    <div *ngIf="changed_ids.length === 0" class="action-bar">
+                      <button mat-mini-fab class="extended-fab-button"  color="primary" (click)="cancelImport()">
+                          <mat-icon aria-label="close">close</mat-icon>
+                          <span class="text-label">Cancel Import</span>
+                      </button>
+                  </div>
                 </div>
             </div>
             <ng-template #loadingStep2_marker>
