@@ -127,49 +127,47 @@
                         <div class="element-detail" @detailExpand *ngIf="expandedElement === element">
                             <div class="element-description columns">
                                 <div class="column controls" [ngClass]="!config.type.includes('collection-') ? 'is-narrow' : 'collection-table'"*ngIf="config.showLinks">
-                                  <span *ngIf="!config.type.includes('collection-')">
-                                    <div *ngFor="let route of getAccessibleRoutes(element.attackType, element.routes)">
-                                      <a class="mat-button" [routerLink]="'/' + [element.attackType, element.stixID, route.route].join('/')" [queryParams]="route.query">
-                                          {{route.label}}
-                                      </a>
-                                    </div>
-                                  </span>
-                                  <span *ngIf="config.type.includes('collection-')">
-                                    <mat-table mat-table multiTemplateDataRows [dataSource]="config.collectionMap.get(element.stixID)">
-                                      <ng-container matColumnDef="action">
-                                        <mat-header-cell *matHeaderCellDef></mat-header-cell>
-                                        <mat-cell *matCellDef="let collection">
-                                          <div *ngFor="let route of getAccessibleRoutes(collection.attackType, collection.routes)">
-                                            <a class="mat-button" [routerLink]="'/' + [collection.attackType, collection.stixID, route.route].join('/')" [queryParams]="route.query">
-                                              {{route.label}}
-                                            </a>
-                                          </div>
-                                        </mat-cell>
-                                      </ng-container>
+                                    <span *ngIf="!config.type.includes('collection-')">
+                                        <div *ngFor="let route of getAccessibleRoutes(element.attackType, element.routes)">
+                                        <a class="mat-button" [routerLink]="'/' + [element.attackType, element.stixID, route.route].join('/')" [queryParams]="route.query">
+                                            {{route.label}}
+                                        </a>
+                                        </div>
+                                    </span>
+                                    <span *ngIf="config.type.includes('collection-')">
+                                        <mat-table mat-table multiTemplateDataRows [dataSource]="config.collectionMap.get(element.stixID)">
+                                        <ng-container matColumnDef="action">
+                                            <mat-header-cell *matHeaderCellDef></mat-header-cell>
+                                            <mat-cell *matCellDef="let collection">
+                                            <div *ngFor="let route of getAccessibleRoutes(collection.attackType, collection.routes)">
+                                                <a class="mat-button" [routerLink]="'/' + [collection.attackType, collection.stixID, route.route].join('/')" [queryParams]="route.query">
+                                                    {{route.label}}
+                                                </a>
+                                            </div>
+                                            </mat-cell>
+                                        </ng-container>
 
-                                      <ng-container matColumnDef="version">
-                                        <mat-header-cell *matHeaderCellDef> Version Number </mat-header-cell>
-                                        <mat-cell *matCellDef="let collection"> {{collection.version}} </mat-cell>
-                                      </ng-container>
+                                        <ng-container matColumnDef="version">
+                                            <mat-header-cell *matHeaderCellDef>Version</mat-header-cell>
+                                            <mat-cell *matCellDef="let collection">{{collection.version}}</mat-cell>
+                                        </ng-container>
 
-                                      <ng-container matColumnDef="released">
-                                        <mat-header-cell *matHeaderCellDef> Released? </mat-header-cell>
-                                        <mat-cell *matCellDef="let collection"> {{collection.release}} </mat-cell>
-                                      </ng-container>
+                                        <ng-container matColumnDef="released">
+                                            <mat-header-cell *matHeaderCellDef>Released?</mat-header-cell>
+                                            <mat-cell *matCellDef="let collection">{{collection.release}}</mat-cell>
+                                        </ng-container>
 
-                                      <ng-container matColumnDef="description">
-                                        <mat-header-cell *matHeaderCellDef> Description </mat-header-cell>
-                                        <mat-cell *matCellDef="let collection;let i = dataIndex">
-                                          <span *ngIf="i==0">
-                                            {{collection.description}}
-                                          </span>
-                                        </mat-cell>
-                                      </ng-container>
+                                        <ng-container matColumnDef="description">
+                                            <mat-header-cell *matHeaderCellDef>Description</mat-header-cell>
+                                            <mat-cell *matCellDef="let collection;let i = dataIndex">
+                                                <span *ngIf="i==0">{{collection.description}}</span>
+                                            </mat-cell>
+                                        </ng-container>
 
-                                      <mat-header-row *matHeaderRowDef="collectionColumnsToDisplay; sticky: true"></mat-header-row>
-                                      <mat-row *matRowDef="let row; columns: collectionColumnsToDisplay;"></mat-row>
-                                    </mat-table>
-                                  </span>
+                                        <mat-header-row *matHeaderRowDef="collectionColumnsToDisplay; sticky: true"></mat-header-row>
+                                        <mat-row *matRowDef="let row; columns: collectionColumnsToDisplay;"></mat-row>
+                                        </mat-table>
+                                    </span>
                                 </div>
                                 <div class="column description" *ngIf="!config.type.includes('collection-')">
                                     <div *ngFor="let property of tableDetail">
