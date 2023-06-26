@@ -48,7 +48,7 @@ export class CollectionImportComponent implements OnInit {
   public changed_ids: string[] = [];
   // ids of objects which have not changed (object-version not already in knowledge base)
   public unchanged_ids: string[] = [];
-
+  public errorObjects: any[] = []; // list of objects that did not have enough required fields to be imported
   public import_errors: any;
   public save_errors: string[] = [];
   public successfully_saved: Set<string> = new Set();
@@ -186,13 +186,8 @@ export class CollectionImportComponent implements OnInit {
       data.forEach((row) => {
         // create an object for the row
         var i = _.zipObject(headerRow, row);
-        // set any variables that require a different format
-        if (!i.id) {
-          // if there is not a stix id for the object, try to generate a stix id from the attack id
-          this.generateId(i);
-          console.log("generated id ", i.id);
-        }
-
+        i.attack_id = (i.attack_id) ? i.attack_id : "";
+        i.description = (i.description) ? i.description : "";
         i.type = (i.id) ? i.id.split('--')[0] : '';
         i.x_mitre_version = (i.x_mitre_version) ? i.x_mitre_version.toString() : "1.0";
         i.spec_version = '2.1';
@@ -200,20 +195,21 @@ export class CollectionImportComponent implements OnInit {
         i.created = i.created ? new Date(i.created).toISOString() : '';
         i.modified = i.modified ? new Date(i.modified).toISOString() : '';
         i.x_mitre_platforms = (i.x_mitre_platforms) ? i.x_mitre_platforms.split(', ') : [];
+        i.x_mitre_domains = (i.x_mitre_domains) ? i.x_mitre_domains.split(', ') : [];
         i.x_mitre_data_sources = i.x_mitre_data_sources ? i.x_mitre_data_sources.split(',') : [];
         i.external_references = [{
             source_name: 'mitre-attack',
             external_id: i.attack_id,
           }];
-        console.log("getting ready to add item")
         if (i.id) {
-          console.log("adding another item ", i)
           objArray.push(i);
           // add object names and IDs to the collection object
           collectionObj[0].x_mitre_contents.push({
             object_ref: i.id,
             object_modified: i.modified,
           });
+        } else {
+          this.errorObjects.push(i); // count items that are unable to be imported
         }
       });
     }
@@ -410,12 +406,8 @@ export class CollectionImportComponent implements OnInit {
  */
   public generateId(object: any) {
     // check if object is a relationship
-    if (object.source_id || object.target_id || object.source_name || object.target_name) {
-      object.id = 'relationship--' + uuid();
-      return;
-    }
-
-    switch (object.attack_id.charAt(0).toLowerCase()) {
+    if (object.attack_id) {
+      switch (object.attack_id.charAt(0).toLowerCase()) {
       case 't': //technique or tactic
         const subtechniqueReg = new RegExp("T\\d{4}\\.\\d{3}");
         const techniqueReg = new RegExp("T\\d{4}");
@@ -427,6 +419,7 @@ export class CollectionImportComponent implements OnInit {
         else if (techniqueReg.test(object.attack_id)) {
           object.id = 'attack-pattern--' + uuid();
         }
+
         break;
       case 's': // software
         if (object.type) {
@@ -442,6 +435,15 @@ export class CollectionImportComponent implements OnInit {
       case 'd': // data sources
         object.id = 'x-mitre-data-source--' + uuid();
         break;
+      }
+      return;
+    }
+    if (object.source_id || object.target_id || object.source_name || object.target_name) {
+      object.id = 'relationship--' + uuid();
+      object.source_id = 'course-of-action--' + uuid();
+      object.target_id = 'attack-pattern--' + uuid();
+
+      return;
     }
   }
 

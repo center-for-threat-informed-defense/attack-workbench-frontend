@@ -39,6 +39,9 @@
                     <p class="text-deemphasis">
                         Importing {{select.selected.length}}/{{changed_ids.length}} objects
                     </p>
+                    <p *ngIf="errorObjects.length > 0" class="text-deemphasis">
+                        {{errorObjects.length}} objects couldn't be imported because of missing or malformed fields
+                    </p>
                     <div class="action-bar nomargin">
                         <button mat-stroked-button (click)="selectAll()">select all</button>
                         <button mat-stroked-button (click)="deselectAll()">deselect all</button>
