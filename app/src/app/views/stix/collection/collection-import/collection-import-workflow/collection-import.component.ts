@@ -202,10 +202,12 @@ export class CollectionImportComponent implements OnInit {
         i.x_mitre_platforms = (i.x_mitre_platforms) ? i.x_mitre_platforms.split(', ') : [];
         i.x_mitre_domains = (i.x_mitre_domains) ? i.x_mitre_domains.split(', ') : [];
         i.x_mitre_data_sources = i.x_mitre_data_sources ? i.x_mitre_data_sources.split(',') : [];
-        i.external_references = [{
+        if (i.attack_id) {
+          i.external_references = [{
             source_name: 'mitre-attack',
             external_id: i.attack_id,
           }];
+        }
         if (i.id) {
           objArray.push(i);
           // add object names and IDs to the collection object
@@ -330,7 +332,7 @@ export class CollectionImportComponent implements OnInit {
           } else {
             raw.source_object = {
               stix: {
-                attackID: object.source_id,
+                attackID: object.source_id ? object.source_id : '',
                 created: object.created,
                 description: object.description,
                 id: object.source_ref,
@@ -338,12 +340,13 @@ export class CollectionImportComponent implements OnInit {
                 name: object.source_name,
                 spec_version: object.spec_version,
                 type: object.relationship_type,
-                external_references: [
+
+                external_references: object.attack_id ?[
                   {
                     source_name: 'mitre-attack',
                     external_id: object.source_id,
                   },
-                ],
+                ] : [],
               },
             };
           }
