@@ -25,8 +25,11 @@ git clone https://github.com/center-for-threat-informed-defense/attack-workbench
 git clone https://github.com/center-for-threat-informed-defense/attack-workbench-rest-api.git
 ```
 
-## 2. Build docker images
+## 2. Docker images
 
+Docker images can either be built locally or pulled from the Github Container Registry. 
+
+### Build docker images
 1. Navigate to the `attack-workbench-frontend` directory (containing the `docker-compose.yml` file)
 2. Run the command:
 ```shell
@@ -34,6 +37,32 @@ docker-compose up
 ```
 
 This command will build all of the necessary Docker images and run the corresponding Docker containers.
+
+### Using pre-built images
+1. Use the following commands to pull the images from the Github Container Registry. Replace the image tag with the version number you are using. 
+```
+docker pull ghcr.io/center-for-threat-informed-defense/attack-workbench-frontend-frontend:<TAG>
+docker pull ghcr.io/center-for-threat-informed-defense/attack-workbench-frontend-rest-api:<TAG>
+```
+2. Navigate to the `attack-workbench-frontend` directory, and modify the `docker-compose.yml` file. Replace the `build` attribute with the corresponding `image`. 
+```
+version: "3.9"
+services:
+  frontend:
+    container_name: attack-workbench-frontend
+    image: ghcr.io/center-for-threat-informed-defense/attack-workbench-frontend-frontend:<TAG>
+    depends_on:
+...
+  rest-api:
+    container_name: attack-workbench-rest-api
+    image: ghcr.io/center-for-threat-informed-defense/attack-workbench-frontend-rest-api:<TAG>
+    depends_on:
+...
+```
+3. Run the command:
+```shell
+docker-compose up
+```
 
 ## 3. Access Docker instance
 

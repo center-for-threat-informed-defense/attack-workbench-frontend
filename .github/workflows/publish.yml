@@ -2,7 +2,8 @@ name: publish
 
 on:
   push:
-    branches: [master, develop]
+    tags:
+      - v[0-9]+.[0-9]+.[0-9]+
 
 jobs:
   publish-docker-image:
@@ -14,8 +15,7 @@ jobs:
       - name: Build and publish the Docker image
         run: |
           echo $GITHUB_TOKEN | docker login ghcr.io -u center-for-threat-informed-defense --password-stdin
-          docker build . --tag ghcr.io/center-for-threat-informed-defense/attack-workbench-frontend:$IMAGE_TAG
-          docker push ghcr.io/center-for-threat-informed-defense/attack-workbench-frontend:$IMAGE_TAG
+          docker build . --tag ghcr.io/center-for-threat-informed-defense/attack-workbench-frontend:${{github.ref_name}}
+          docker push ghcr.io/center-for-threat-informed-defense/attack-workbench-frontend:${{github.ref_name}}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          IMAGE_TAG: "${{ github.ref == 'refs/head/master' && 'latest' || 'develop' }}"
