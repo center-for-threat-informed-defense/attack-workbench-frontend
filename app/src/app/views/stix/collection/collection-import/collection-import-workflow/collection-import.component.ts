@@ -340,8 +340,7 @@ export class CollectionImportComponent implements OnInit {
                 name: object.source_name,
                 spec_version: object.spec_version,
                 type: object.relationship_type,
-
-                external_references: object.attack_id ?[
+                external_references: object.source_id ?[
                   {
                     source_name: 'mitre-attack',
                     external_id: object.source_id,
@@ -355,7 +354,7 @@ export class CollectionImportComponent implements OnInit {
           } else {
             raw.target_object = {
               stix: {
-                attackID: object.target_id,
+                attackID: object.target_id ? object.target_id : '',
                 created: object.created,
                 description: object.description,
                 id: object.target_ref,
@@ -363,12 +362,12 @@ export class CollectionImportComponent implements OnInit {
                 name: object.target_name,
                 spec_version: object.spec_version,
                 type: object.relationship_type,
-                external_references: [
+                external_references: object.target_id ?[
                   {
                     source_name: 'mitre-attack',
                     external_id: object.target_id,
                   },
-                ],
+                ] : [],
               },
             };
           }
