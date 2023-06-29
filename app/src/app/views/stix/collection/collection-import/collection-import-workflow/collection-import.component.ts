@@ -448,6 +448,9 @@ export class CollectionImportComponent implements OnInit {
       case 'd': // data sources
         object.id = 'x-mitre-data-source--' + uuid();
         break;
+      case 'c': // campaign
+        object.id = 'campaign--' + uuid();
+        break;
       }
       return;
     }
