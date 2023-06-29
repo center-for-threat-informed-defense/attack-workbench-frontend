@@ -51,6 +51,7 @@ The ATT&CK Workbench features a persistent database with the use of a named volu
 #### Improvements in 2.0.0
 -   Improved error handling during collection import.
 -   Lists of objects can now be filtered when viewing or editing collections. See [frontend#393](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/393).
+-   Published pre-built Docker images to the Github Container Registry. See [frontend#250](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/250).
 -	Improved the collection view to display versions in the drop down rather than in the main list.
 
 #### Fixes in 2.0.0
