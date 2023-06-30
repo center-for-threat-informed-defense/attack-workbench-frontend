@@ -162,9 +162,8 @@ export class CollectionImportComponent implements OnInit {
 				created: new Date().toISOString(),
 				revoked: false,
 				object_marking_refs: [],
-				x_mitre_domains: ['enterprise-attack'],
+				x_mitre_domains: [],
 				spec_version: '2.1',
-				x_mitre_attack_spec_version: '3.1.0',
 				created_by_ref: this.user.id,
 				x_mitre_modified_by_ref: this.user.id,
 				modified: new Date().toISOString(),
@@ -173,6 +172,7 @@ export class CollectionImportComponent implements OnInit {
 			},
 		];
 
+		let domains: Set<string> = new Set();
 		const objArray = [];
 
 		for (let sheetname of wb.SheetNames) {
@@ -204,9 +204,14 @@ export class CollectionImportComponent implements OnInit {
 				i.x_mitre_is_subtechnique = Boolean(i.x_mitre_is_subtechnique);
 				i.created = i.created ? new Date(i.created).toISOString() : '';
 				i.modified = i.modified ? new Date(i.modified).toISOString() : '';
-				i.x_mitre_platforms = (i.x_mitre_platforms) ? i.x_mitre_platforms.split(', ') : [];
-				i.x_mitre_domains = (i.x_mitre_domains) ? i.x_mitre_domains.split(', ') : [];
-				i.x_mitre_data_sources = i.x_mitre_data_sources ? i.x_mitre_data_sources.split(',') : [];
+				i.x_mitre_platforms = (i.x_mitre_platforms) ? i.x_mitre_platforms.split(',').map((p: string) => p.trim()) : [];
+				i.x_mitre_data_sources = i.x_mitre_data_sources ? i.x_mitre_data_sources.split(',').map((ds: string) => ds.trim()) : [];
+
+				i.x_mitre_domains = (i.x_mitre_domains) ? i.x_mitre_domains.split(',').map((d: string) => d.trim()) : [];
+				if (i.x_mitre_domains?.length) {
+					i.x_mitre_domains.forEach((d: string) => domains.add(d) );
+				}
+
 				if (i.attack_id) {
 					i.external_references = [{
 						source_name: 'mitre-attack',
@@ -225,6 +230,11 @@ export class CollectionImportComponent implements OnInit {
 				}
 			});
 		}
+
+		// set collection domains
+		collection[0].x_mitre_domains = Array.from(domains.values());
+		console.log('**', collection[0].x_mitre_domains)
+
 		// build outer json object with the object list inside
 		let jsonObj = {
 			type: 'bundle',
