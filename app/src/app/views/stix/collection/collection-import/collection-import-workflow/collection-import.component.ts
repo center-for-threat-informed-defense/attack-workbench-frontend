@@ -49,7 +49,7 @@ export class CollectionImportComponent implements OnInit {
 	public save_errors: string[] = [];
 	public successfully_saved: Set<string> = new Set();
 	public collectionBundle: any;
-	public warning: boolean;
+	public csvWarning: boolean;
 
 	public get user(): UserAccount {
 		return this.authenticationService.currentUser;
@@ -116,7 +116,7 @@ export class CollectionImportComponent implements OnInit {
 	}
 
 	ngOnInit(): void {
-		this.warning = false;
+		this.csvWarning = false;
 		if (this.route.snapshot.queryParams['url']) {
 			// get URL
 			this.url = decodeURIComponent(this.route.snapshot.queryParams['url']);
@@ -147,7 +147,7 @@ export class CollectionImportComponent implements OnInit {
 					const bstr: string = e.target.result;
 					const wb: XLSX.WorkBook = XLSX.read(bstr, { type: 'binary' });
 					collectionBundle = this.buildXlsxRequest(wb, filename);
-					this.warning = true;
+					this.csvWarning = true;
 				}
 			} catch (exception) {
 				this.snackbar.open(exception.message, 'dismiss', {
@@ -616,7 +616,7 @@ export class CollectionImportComponent implements OnInit {
 		this.stepper.reset();
 		this.loadingStep1 = false;
 		this.loadingStep2 = false;
-		this.warning = false;
+		this.csvWarning = false;
 	}
 
 	/**
