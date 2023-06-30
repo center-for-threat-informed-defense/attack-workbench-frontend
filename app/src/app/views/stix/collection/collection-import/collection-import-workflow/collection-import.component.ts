@@ -187,7 +187,8 @@ export class CollectionImportComponent implements OnInit {
 					headerRow[headerRow.indexOf(i[0])] = i[1];
 				}
 			});
-			headerRow.push('type', 'spec_version', 'external_references'); // add the object types to the end of each row's array
+			if (!headerRow.includes('type')) headerRow.push('type');
+			headerRow.push('spec_version', 'external_references');
 			data.forEach((row) => {
 				// create an object for the row
 				var i = _.zipObject(headerRow, row);
@@ -440,8 +441,23 @@ export class CollectionImportComponent implements OnInit {
 	 * @param object stix object being imported to collection
 	 */
 	public generateId(object: any): void {
-		// check if object is a relationship
+		if (object.type) {
+			// generate STIX ID from type
+			switch(object.type) {
+				case 'datasource':
+					object.id = 'x-mitre-data-source--' + uuid();
+					return;
+				case 'datacomponent':
+					object.id = 'x-mitre-data-component--' + uuid();
+					return;
+				case 'malware':
+				case 'tool':
+					object.id = object.type + '--' + uuid();
+					return;
+			}
+		}
 		if (object.attack_id) {
+			// generate STIX ID from ATT&CK ID
 			switch (object.attack_id.charAt(0).toLowerCase()) {
 				case 't': //technique or tactic
 					const subtechniqueReg = new RegExp("T\\d{4}\\.\\d{3}");
@@ -460,33 +476,29 @@ export class CollectionImportComponent implements OnInit {
 					else if (techniqueReg.test(object.attack_id)) {
 						object.id = 'attack-pattern--' + uuid();
 					}
-					break;
+					return;
 				case 's': // software
 					if (object.type) {
 						object.id = object.type + '--' + uuid();
 					}
-					break;
+					return;
 				case 'g': //groups
 					object.id = 'intrusion-set--' + uuid();
-					break;
+					return;
 				case 'm': //mitigations
 					object.id = 'course-of-action--' + uuid();
-					break;
+					return;
 				case 'd': // data sources
 					object.id = 'x-mitre-data-source--' + uuid();
-					break;
+					return;
 				case 'c': // campaign
 					object.id = 'campaign--' + uuid();
-					break;
+					return;
 			}
-			return;
 		}
 		// relationships don't have attack ids, so check for target and source fields here
-		if (object.source_id || object.target_id || object.source_name || object.target_name) {
+		if (object.source_name && object.target_name && object.relationship_type) {
 			object.id = 'relationship--' + uuid();
-			object.source_id = 'course-of-action--' + uuid();
-			object.target_id = 'attack-pattern--' + uuid();
-
 			return;
 		}
 	}
