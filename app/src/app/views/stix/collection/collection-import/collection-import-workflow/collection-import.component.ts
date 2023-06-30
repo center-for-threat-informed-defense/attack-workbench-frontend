@@ -87,6 +87,8 @@ export class CollectionImportComponent implements OnInit {
 		['source ref', 'source_ref'],
 		['source name', 'source_name'],
 		['target name', 'target_name'],
+		['source type', 'source_type'],
+		['target type', 'target_type'],
 		['source ID', 'source_id'],
 		['target ID', 'target_id'],
 		['mapping description', 'description'],
@@ -188,7 +190,12 @@ export class CollectionImportComponent implements OnInit {
 		];
 
 		let domains: Set<string> = new Set();
-		const objArray = [];
+		const attackObjects = [];
+
+		// helpers for parsing relationship source/target objects
+		let relationships = [];
+		let objectLookup: Map<string, string> = new Map(); // attackId -> stixId
+		let dcLookup: Map<string, string> = new Map(); // data component name -> stixId
 
 		for (let sheetname of wb.SheetNames) {
 			let data: Array<string[]> = XLSX.utils.sheet_to_json(
@@ -204,6 +211,7 @@ export class CollectionImportComponent implements OnInit {
 			});
 			if (!headerRow.includes('type')) headerRow.push('type');
 			headerRow.push('spec_version', 'external_references');
+
 			data.forEach((row) => {
 				// create an object for the row
 				var i = _.zipObject(headerRow, row);
@@ -238,18 +246,65 @@ export class CollectionImportComponent implements OnInit {
 					}];
 				}
 
-				if (i.id) {
-					objArray.push(i);
-					// add object names and IDs to the collection object
-					collection[0].x_mitre_contents.push({
-						object_ref: i.id,
-						object_modified: i.modified,
-					});
-				} else {
+				if (!i.id) {
+					// report object error if object cannot be identified
 					this.errorObjects.push(i);
+				} else {
+					// update object lookup maps
+					if (i.attack_id) {
+						objectLookup.set(i.attack_id, i.id);
+					} else if (i.type && i.type == 'x-mitre-data-component' && i.name) {
+						// attempt to parse data component name
+						let name = i.name.split(':');
+						if (name.length > 1) name = name[1].trim();
+						else name = name[0].trim();
+						dcLookup.set(name, i.id);
+					}
+
+					// add objects to relevant lists
+					if (i.type && i.type == 'relationship') relationships.push(i);
+					else {
+						attackObjects.push(i);
+						// add object to collection contents
+						collection[0].x_mitre_contents.push({
+							object_ref: i.id,
+							object_modified: i.modified
+						});
+					}
 				}
 			});
 		}
+
+		// parse relationship source/target objects
+		relationships.forEach(r => {
+			// source
+			if (r.source_id && objectLookup.get(r.source_id)) {
+				r.source_ref = objectLookup.get(r.source_id);
+			} else if (
+				r.source_type && 
+				['x-mitre-data-component', 'datacomponent', 'data-component', 'data component'].includes(r.source_type)
+				&& r.source_name
+				&& dcLookup.get(r.source_name)) {
+					// no ATT&CK ID - try to ID by name
+					r.source_ref = dcLookup.get(r.source_name);
+			}
+
+			// target object
+			if (r.target_id && objectLookup.get(r.target_id)) {
+				r.target_ref = objectLookup.get(r.target_id);
+			} // data components are not valid target objects
+
+			if (r.source_ref && r.target_ref) {
+				// if valid relationship, add to collection bundle
+				attackObjects.push(r);
+				collection[0].x_mitre_contents.push({
+					object_ref: r.id,
+					object_modified: r.modified
+				});
+			} else {
+				this.errorObjects.push(r);
+			}
+		});
 
 		// set collection domains
 		collection[0].x_mitre_domains = Array.from(domains.values());
@@ -259,7 +314,7 @@ export class CollectionImportComponent implements OnInit {
 			type: 'bundle',
 			id: 'bundle--' + uuid(),
 			spec_version: '2.1',
-			objects: collection.concat(objArray),
+			objects: collection.concat(attackObjects),
 		};
 
 		return bundle;
@@ -589,10 +644,6 @@ export class CollectionImportComponent implements OnInit {
 											if (!save_error_ids.has(id))
 												this.successfully_saved.add(id);
 									}
-									logger.log(
-										'Successfully imported the following objects:',
-										Array.from(this.successfully_saved)
-									);
 									this.stepper.next();
 								},
 								complete: () => {

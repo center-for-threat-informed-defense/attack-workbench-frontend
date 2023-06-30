@@ -295,7 +295,7 @@ export class Relationship extends StixObject {
             this.source_object = raw.source_object;
             
             let src_sdo = raw.source_object.stix;
-            if ("external_references" in src_sdo) {
+            if ("external_references" in src_sdo && src_sdo["external_references"]) {
                 if (src_sdo.external_references.length > 0 && src_sdo.external_references[0].hasOwnProperty("external_id")) {
                     if (typeof(src_sdo.external_references[0].external_id) === "string") this.source_ID = src_sdo.external_references[0].external_id;
                     else logger.error("TypeError: attackID field is not a string:", src_sdo.external_references[0].external_id, "(", typeof(src_sdo.external_references[0].external_id), ")");
@@ -307,7 +307,7 @@ export class Relationship extends StixObject {
             this.target_object = raw.target_object;
 
             let tgt_sdo = raw.target_object.stix;
-            if ("external_references" in tgt_sdo) {
+            if ("external_references" in tgt_sdo && tgt_sdo["external_references"]) {
                 if (tgt_sdo.external_references.length > 0 && tgt_sdo.external_references[0].hasOwnProperty("external_id")) {
                     if (typeof(tgt_sdo.external_references[0].external_id) === "string") this.target_ID = tgt_sdo.external_references[0].external_id;
                     else logger.error("TypeError: attackID field is not a string:", tgt_sdo.external_references[0].external_id, "(", typeof(tgt_sdo.external_references[0].external_id), ")");
