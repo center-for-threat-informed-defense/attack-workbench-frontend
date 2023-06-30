@@ -1,0 +1,47 @@
+name: Retroactively publish Docker image for tagged releases
+
+on:
+  pull_request:
+
+jobs:
+  docker:
+    runs-on: ubuntu-latest
+    steps:
+      -
+        name: Check branch name
+        run: |
+            BRANCH_NAME=${GITHUB_HEAD_REF#refs/heads/}
+            if [[ ! $BRANCH_NAME == *-retroactively-publish-docker-image-for-all-tagged-releases ]]; then
+            echo "Branch name does not match the pattern. Skipping the workflow."
+            exit 1
+            fi
+      -
+        name: Checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      -
+        name: Get list of tags
+        id: get_tags
+        run: |
+          git tag > tags.txt
+      -
+        name: Checkout and Build Images for Tags
+        run: |
+          while read TAG; do
+            git checkout $TAG
+            VERSION=$(echo $TAG | cut -d / -f 3)
+            if [[ $VERSION =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+              if [ -f Dockerfile ]; then
+                echo "Building and Pushing Docker Image for Tag: $VERSION"
+                echo ${{ secrets.GITHUB_TOKEN }} | docker login ghcr.io -u ${{ github.repository_owner }} --password-stdin
+                IMAGE_NAME="ghcr.io/${{ github.repository }}:$VERSION"
+                docker build -t $IMAGE_NAME .
+                docker push $IMAGE_NAME
+              else
+                echo "No Dockerfile for tag: $VERSION. Skipping this tag."
+              fi
+            else
+              echo "Skipping Tag: $VERSION as it is not semver compliant"
+            fi
+          done < tags.txt
