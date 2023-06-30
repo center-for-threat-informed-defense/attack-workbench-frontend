@@ -44,7 +44,7 @@
                         Importing {{select.selected.length}}/{{changed_ids.length}} objects
                     </p>
                     <p *ngIf="errorObjects.length > 0" class="error">
-                        {{errorObjects.length}} objects cannot be imported due to missing or malformed fields
+                        {{errorObjects.length}} rows cannot be imported due to missing or malformed fields
                     </p>
                     <div class="action-bar nomargin">
                         <button mat-stroked-button (click)="selectAll()">select all</button>
