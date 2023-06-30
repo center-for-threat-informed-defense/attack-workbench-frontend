@@ -250,12 +250,12 @@ export class CollectionImportComponent implements OnInit {
 
 		// set collection domains
 		collection[0].x_mitre_domains = Array.from(domains.values());
-		console.log('**', collection[0].x_mitre_domains)
 
 		// build outer json object with the object list inside
 		let jsonObj = {
 			type: 'bundle',
 			id: 'bundle--' + uuid(),
+			spec_version: '2.1',
 			objects: collection.concat(objArray),
 		};
 		return jsonObj;
