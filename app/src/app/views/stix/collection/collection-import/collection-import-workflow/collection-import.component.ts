@@ -49,6 +49,7 @@ export class CollectionImportComponent implements OnInit {
 	public save_errors: string[] = [];
 	public successfully_saved: Set<string> = new Set();
 	public collectionBundle: any;
+	public warning: boolean;
 
 	public get user(): UserAccount {
 		return this.authenticationService.currentUser;
@@ -115,6 +116,7 @@ export class CollectionImportComponent implements OnInit {
 	}
 
 	ngOnInit(): void {
+		this.warning = false;
 		if (this.route.snapshot.queryParams['url']) {
 			// get URL
 			this.url = decodeURIComponent(this.route.snapshot.queryParams['url']);
@@ -145,6 +147,7 @@ export class CollectionImportComponent implements OnInit {
 					const bstr: string = e.target.result;
 					const wb: XLSX.WorkBook = XLSX.read(bstr, { type: 'binary' });
 					collectionBundle = this.buildXlsxRequest(wb, filename);
+					this.warning = true;
 				}
 			} catch (exception) {
 				this.snackbar.open(exception.message, 'dismiss', {
@@ -251,14 +254,15 @@ export class CollectionImportComponent implements OnInit {
 		// set collection domains
 		collection[0].x_mitre_domains = Array.from(domains.values());
 
-		// build outer json object with the object list inside
-		let jsonObj = {
+		// build bundle object
+		let bundle = {
 			type: 'bundle',
 			id: 'bundle--' + uuid(),
 			spec_version: '2.1',
 			objects: collection.concat(objArray),
 		};
-		return jsonObj;
+
+		return bundle;
 	}
 
 	/**
@@ -612,6 +616,7 @@ export class CollectionImportComponent implements OnInit {
 		this.stepper.reset();
 		this.loadingStep1 = false;
 		this.loadingStep2 = false;
+		this.warning = false;
 	}
 
 	/**
