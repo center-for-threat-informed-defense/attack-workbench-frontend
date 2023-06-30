@@ -196,7 +196,11 @@ export class CollectionImportComponent implements OnInit {
 		// helpers for parsing relationship source/target objects
 		let relationships = [];
 		let objectLookup: Map<string, string> = new Map(); // attackId -> stixId
-		let dcLookup: Map<string, string> = new Map(); // data component name -> stixId
+		let componentLookup: Map<string, string> = new Map(); // data component name -> stixId
+
+		// helpers for parsing data component parent objects
+		let components = [];
+		let sourceLookup: Map<string, string> = new Map(); // data source name => stixId
 
 		for (let sheetname of wb.SheetNames) {
 			let data: Array<string[]> = XLSX.utils.sheet_to_json(
@@ -279,23 +283,22 @@ export class CollectionImportComponent implements OnInit {
 					// update object lookup maps
 					if (i.attack_id) {
 						objectLookup.set(i.attack_id, i.id);
+						if (i.type && i.type == 'x-mitre-data-source' && i.name) {
+							sourceLookup.set(i.name, i.id);
+						}
 					} else if (i.type && i.type == 'x-mitre-data-component' && i.name) {
 						// attempt to parse data component name
 						let name = i.name.split(':');
 						if (name.length > 1) name = name[1].trim();
 						else name = name[0].trim();
-						dcLookup.set(name, i.id);
+						componentLookup.set(name, i.id);
 					}
 
 					// add objects to relevant lists
 					if (i.type && i.type == 'relationship') relationships.push(i);
+					else if (i.type && i.type == 'x-mitre-data-component') components.push(i);
 					else {
 						attackObjects.push(i);
-						// add object to collection contents
-						collection[0].x_mitre_contents.push({
-							object_ref: i.id,
-							object_modified: i.modified
-						});
 					}
 				}
 			});
@@ -310,9 +313,9 @@ export class CollectionImportComponent implements OnInit {
 				r.source_type && 
 				['x-mitre-data-component', 'datacomponent', 'data-component', 'data component'].includes(r.source_type)
 				&& r.source_name
-				&& dcLookup.get(r.source_name)) {
+				&& componentLookup.get(r.source_name)) {
 					// no ATT&CK ID - try to ID by name
-					r.source_ref = dcLookup.get(r.source_name);
+					r.source_ref = componentLookup.get(r.source_name);
 			}
 
 			// target object
@@ -323,17 +326,38 @@ export class CollectionImportComponent implements OnInit {
 			if (r.source_ref && r.target_ref) {
 				// if valid relationship, add to collection bundle
 				attackObjects.push(r);
-				collection[0].x_mitre_contents.push({
-					object_ref: r.id,
-					object_modified: r.modified
-				});
 			} else {
 				this.errorObjects.push(r);
 			}
 		});
 
+		// try to parse data component source references
+		components.forEach(d => {
+			// attempt to parse data component/data source name
+			let names = d.name.split(':');
+			if (names.length > 1) {
+				d.name = names[1].trim();
+
+				let source_name = names[0].trim();
+				d.x_mitre_data_source_ref = sourceLookup.get(source_name);
+				if (d.x_mitre_data_source_ref) {
+					attackObjects.push(d);
+				} else {
+					this.errorObjects.push(d);
+				}
+			}
+		});
+
 		// set collection domains
 		collection[0].x_mitre_domains = Array.from(domains.values());
+
+		// add objects to collection contents
+		attackObjects.forEach(obj => {
+			collection[0].x_mitre_contents.push({
+				object_ref: obj.id,
+				object_modified: obj.modified
+			});
+		});
 
 		// build bundle object
 		let bundle = {
