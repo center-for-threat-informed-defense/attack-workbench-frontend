@@ -21,7 +21,7 @@ jobs:
         uses: docker/metadata-action@v4
         with:
           images: |
-            ghcr.io/center-for-threat-informed-defense/attack-workbench-rest-api
+            ghcr.io/center-for-threat-informed-defense/attack-workbench-frontend
           tags: |
             # set latest tag for master branch
             type=raw,value=latest,enable=${{ github.ref == format('refs/heads/{0}', 'master') }}
