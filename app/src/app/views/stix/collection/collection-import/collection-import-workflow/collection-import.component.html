@@ -29,11 +29,11 @@
         <mat-step label="review contents">
             <app-collection-import-error *ngIf="import_errors && !loadingStep2" [error]="import_errors" (onCancel)="cancelImport()"></app-collection-import-error>
             <div *ngIf="select && !loadingStep2 else loadingStep2_marker">
+                <p *ngIf="warning" class="nomargin">
+                    <span class="warn">WARNING</span>: some data may be lost when importing from a CSV or XLSX file.
+                </p>
                 <p class="nomargin">
                     Below are the objects of the collection as compared to the current contents of your workbench. Select the objects you want to import into your knowledge base.
-                </p>
-                <p *ngIf="warning" class="nomargin warn">
-                    WARNING: some data may be lost when importing from a CSV or XLSX file.
                 </p>
                 <app-collection-import-summary [config]="{
                     'object_import_categories': object_import_categories,
