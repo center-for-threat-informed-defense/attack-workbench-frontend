@@ -110,8 +110,12 @@ export class CollectionImportComponent implements OnInit {
 		}
 	}
 
+	/**
+	 * Load collection from file input
+	 * @param event file input event
+	 */
 	public getCollectionFromFile(event: any) {
-		const sheetName = event.target.files[0].name.split('.')[0];
+		const filename = event.target.files[0].name.split('.')[0];
 		this.loadingStep1 = true;
 		const target: DataTransfer = <DataTransfer>event.target;
 		const reader = new FileReader();
@@ -121,12 +125,14 @@ export class CollectionImportComponent implements OnInit {
 			let collectionBundle;
 			try {
 				if (event.target.files[0].type === "application/json") {
+					// parse JSON file input
 					collectionBundle = JSON.parse(str);
 				}
 				else {
+					// parse .csv/.xlsx file input
 					const bstr: string = e.target.result;
 					const wb: XLSX.WorkBook = XLSX.read(bstr, { type: 'binary' });
-					collectionBundle = this.buildXlsxRequest(wb, sheetName);
+					collectionBundle = this.buildXlsxRequest(wb, filename);
 				}
 			} catch (exception) {
 				this.snackbar.open(exception.message, 'dismiss', {
@@ -140,15 +146,15 @@ export class CollectionImportComponent implements OnInit {
 	}
 
 	/**
-	 * helper function to parse csv and excel files into collection objects
+	 * Helper function to parse csv and excel files into collections
 	 * @param wb Workbook or csv to be parsed
-	 * @param name file name
-	 * @returns a collection object to be uploaded to workbench
+	 * @param filename input file name
+	 * @returns a collection to be uploaded to workbench
 	 */
-	public buildXlsxRequest(wb: XLSX.WorkBook, name: string): any {
-		let collectionObj = [
+	public buildXlsxRequest(wb: XLSX.WorkBook, filename: string): any {
+		let collection = [
 			{
-				name: name,
+				name: filename,
 				type: 'x-mitre-collection',
 				id: 'x-mitre-collection--' + uuid(),
 				x_mitre_deprecated: false,
@@ -210,7 +216,7 @@ export class CollectionImportComponent implements OnInit {
 				if (i.id) {
 					objArray.push(i);
 					// add object names and IDs to the collection object
-					collectionObj[0].x_mitre_contents.push({
+					collection[0].x_mitre_contents.push({
 						object_ref: i.id,
 						object_modified: i.modified,
 					});
@@ -223,11 +229,14 @@ export class CollectionImportComponent implements OnInit {
 		let jsonObj = {
 			type: 'bundle',
 			id: 'bundle--' + uuid(),
-			objects: collectionObj.concat(objArray),
+			objects: collection.concat(objArray),
 		};
 		return jsonObj;
 	}
 
+	/**
+	 * Download collection from URL
+	 */
 	public getCollectionFromURL() {
 		this.loadingStep1 = true;
 		let headers: HttpHeaders = new HttpHeaders({ ExcludeCredentials: 'true' });
@@ -250,6 +259,10 @@ export class CollectionImportComponent implements OnInit {
 			});
 	}
 
+	/**
+	 * Fetch collection to preview
+	 * @param collectionBundle collection to preview
+	 */
 	public previewCollection(collectionBundle) {
 		// send the collection bundle to the backend
 		let subscription_preview = this.restAPIConnectorService
@@ -279,6 +292,11 @@ export class CollectionImportComponent implements OnInit {
 			});
 	}
 
+	/**
+	 * Parse collection bundle for preview
+	 * @param collectionBundle the collection bundle
+	 * @param preview fetched preview results
+	 */
 	public parsePreview(collectionBundle: any, preview: Collection) {
 		this.collectionBundle = collectionBundle; //save for later
 
