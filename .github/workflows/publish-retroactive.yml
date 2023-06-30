@@ -28,6 +28,7 @@ jobs:
       -
         name: Checkout and Build Images for Tags
         run: |
+          set +e # Do not exit on failure
           while read TAG; do
             git checkout $TAG
             VERSION=$(echo $TAG | cut -d / -f 3)
@@ -36,7 +37,10 @@ jobs:
                 echo "Building and Pushing Docker Image for Tag: $VERSION"
                 echo ${{ secrets.GITHUB_TOKEN }} | docker login ghcr.io -u ${{ github.repository_owner }} --password-stdin
                 IMAGE_NAME="ghcr.io/${{ github.repository }}:$VERSION"
-                docker build -t $IMAGE_NAME .
+                docker build -t $IMAGE_NAME . || {
+                  echo "Docker build failed for tag: $VERSION. Continuing with the next tag."
+                  continue
+                }
                 docker push $IMAGE_NAME
               else
                 echo "No Dockerfile for tag: $VERSION. Skipping this tag."
@@ -45,3 +49,4 @@ jobs:
               echo "Skipping Tag: $VERSION as it is not semver compliant"
             fi
           done < tags.txt
+          set -e # Exit on failure
