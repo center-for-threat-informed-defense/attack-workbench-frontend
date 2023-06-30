@@ -1,6 +1,12 @@
 @import "../../../../../../style/globals";
 .collection-import {
     p.nomargin { margin-top: 0; }
+    .warn {
+        color: color(warn);
+    }
+    .error {
+        color: color(error);
+    }
     .mat-expansion-panel {
         @include expansion-panel(True);
     }

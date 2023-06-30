@@ -13,6 +13,7 @@
                         <mat-label>upload a file</mat-label>
                         <ngx-mat-file-input [disabled]="url.length > 0"  accept="application/json, .csv, .xlsx" (change)="getCollectionFromFile($event)"></ngx-mat-file-input>
                         <mat-icon matSuffix>attach_file</mat-icon>
+                        <mat-hint>supported formats: .json, .csv, .xlsx</mat-hint>
                     </mat-form-field>
                 </div>
                 <div class="action-bar">
@@ -31,6 +32,9 @@
                 <p class="nomargin">
                     Below are the objects of the collection as compared to the current contents of your workbench. Select the objects you want to import into your knowledge base.
                 </p>
+                <p *ngIf="warning" class="nomargin warn">
+                    WARNING: some data may be lost when importing from a CSV or XLSX file.
+                </p>
                 <app-collection-import-summary [config]="{
                     'object_import_categories': object_import_categories,
                     'select': select
@@ -39,8 +43,8 @@
                     <p class="text-deemphasis">
                         Importing {{select.selected.length}}/{{changed_ids.length}} objects
                     </p>
-                    <p *ngIf="errorObjects.length > 0" class="text-deemphasis">
-                        {{errorObjects.length}} objects couldn't be imported because of missing or malformed fields
+                    <p *ngIf="errorObjects.length > 0" class="error">
+                        {{errorObjects.length}} objects cannot be imported due to missing or malformed fields
                     </p>
                     <div class="action-bar nomargin">
                         <button mat-stroked-button (click)="selectAll()">select all</button>
