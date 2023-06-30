@@ -218,8 +218,8 @@ export class CollectionImportComponent implements OnInit {
 				i.x_mitre_version = (i.x_mitre_version) ? i.x_mitre_version.toString() : '1.0';
 				i.spec_version = '2.1';
 				i.x_mitre_is_subtechnique = Boolean(i.x_mitre_is_subtechnique);
-				i.created = i.created ? new Date(i.created).toISOString() : '';
-				i.modified = i.modified ? new Date(i.modified).toISOString() : '';
+				i.created = i.created ? new Date(i.created).toISOString() : new Date().toISOString();
+				i.modified = i.modified ? new Date(i.modified).toISOString() : new Date().toISOString();
 				i.x_mitre_platforms = (i.x_mitre_platforms) ? i.x_mitre_platforms.split(',').map((p: string) => p.trim()) : [];
 				i.x_mitre_data_sources = i.x_mitre_data_sources ? i.x_mitre_data_sources.split(',').map((ds: string) => ds.trim()) : [];
 
