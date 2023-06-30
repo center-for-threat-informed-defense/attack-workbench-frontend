@@ -170,6 +170,7 @@ export class CollectionImportComponent implements OnInit {
 	 * @returns a collection to be uploaded to workbench
 	 */
 	public buildXlsxRequest(wb: XLSX.WorkBook, filename: string): any {
+		let timestamp = new Date().toISOString();
 		let collection = [
 			{
 				name: filename,
@@ -177,14 +178,14 @@ export class CollectionImportComponent implements OnInit {
 				id: 'x-mitre-collection--' + uuid(),
 				x_mitre_deprecated: false,
 				x_mitre_version: '0.1',
-				created: new Date().toISOString(),
+				created: timestamp,
 				revoked: false,
 				object_marking_refs: [],
 				x_mitre_domains: [],
 				spec_version: '2.1',
 				created_by_ref: this.user.id,
 				x_mitre_modified_by_ref: this.user.id,
-				modified: new Date().toISOString(),
+				modified: timestamp,
 				description: '',
 				x_mitre_contents: [],
 			},
@@ -231,8 +232,8 @@ export class CollectionImportComponent implements OnInit {
 				i.x_mitre_version = (i.x_mitre_version) ? i.x_mitre_version.toString() : '1.0';
 				i.spec_version = '2.1';
 				i.x_mitre_is_subtechnique = Boolean(i.x_mitre_is_subtechnique);
-				i.created = i.created ? new Date(i.created).toISOString() : new Date().toISOString();
-				i.modified = i.modified ? new Date(i.modified).toISOString() : new Date().toISOString();
+				i.created = i.created ? new Date(i.created).toISOString() : timestamp;
+				i.modified = i.modified ? new Date(i.modified).toISOString() : timestamp;
 				i.x_mitre_platforms = (i.x_mitre_platforms) ? i.x_mitre_platforms.split(',').map((p: string) => p.trim()) : [];
 				i.x_mitre_data_sources = i.x_mitre_data_sources ? i.x_mitre_data_sources.split(',').map((ds: string) => ds.trim()) : [];
 				i.x_mitre_contributors = i.contributors ? i.contributors.split(',').map((c: string) => c.trim()): [];
