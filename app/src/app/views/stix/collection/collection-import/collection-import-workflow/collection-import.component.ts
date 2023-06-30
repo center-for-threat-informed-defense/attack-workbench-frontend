@@ -251,9 +251,14 @@ export class CollectionImportComponent implements OnInit {
 				}
 
 				// campaign aliases
-				if (i["associated campaigns"] && i.type == 'campaign') {
-					i.aliases = i["associated campaigns"].split(',').map((c: string) => c.trim());
-					i.aliases.splice(0, 0, i.name);
+				if (i.type == 'campaign') {
+					if (i["associated campaigns"]) {
+						i.aliases = i["associated campaigns"].split(',').map((c: string) => c.trim());
+						i.aliases.splice(0, 0, i.name);
+					}
+					if (!i["first_seen"] || !i["x_mitre_first_seen_citation"] || !i["last_seen"] || !i["x_mitre_last_seen_citation"]) {
+						i.id = '';
+					}
 				}
 
 				// data source collection layers
