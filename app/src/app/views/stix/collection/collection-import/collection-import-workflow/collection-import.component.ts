@@ -230,6 +230,28 @@ export class CollectionImportComponent implements OnInit {
 				i.modified = i.modified ? new Date(i.modified).toISOString() : new Date().toISOString();
 				i.x_mitre_platforms = (i.x_mitre_platforms) ? i.x_mitre_platforms.split(',').map((p: string) => p.trim()) : [];
 				i.x_mitre_data_sources = i.x_mitre_data_sources ? i.x_mitre_data_sources.split(',').map((ds: string) => ds.trim()) : [];
+				i.x_mitre_contributors = i.contributors ? i.contributors.split(',').map((c: string) => c.trim()): [];
+				i.x_mitre_detection = i.detection ? i.detection : "";
+
+				// software aliases
+				if ("aliases" in i && i.aliases && ['malware', 'tool'].includes(i.type)) {
+					i.x_mitre_aliases = i.aliases.split(',').map((a: string) => a.trim());
+					i.x_mitre_aliases.splice(0, 0, i.name);
+				}
+
+				// group aliases
+				if ("associated groups" in i && i["associated groups"] && i.type == "intrusion-set") {
+					i.aliases = i["associated groups"].split(',').map((g: string) => g.trim());
+					i.aliases.splice(0, 0, i.name);
+				}
+
+				// campaign aliases
+				if (i.type == 'campaign') {
+					if ("associated campaigns" in i && i["associated campaigns"]) {
+						i.aliases = i["associated campaigns"].split(',').map((c: string) => c.trim());
+						i.aliases.splice(0, 0, i.name);
+					}
+				}
 
 				// parse domains
 				i.x_mitre_domains = (i.x_mitre_domains) ? i.x_mitre_domains.split(',').map((d: string) => d.trim()) : [];
@@ -546,7 +568,7 @@ export class CollectionImportComponent implements OnInit {
 					//check if subtechnique
 					else if (subtechniqueReg.test(object.attack_id)) {
 						object.id = 'attack-pattern--' + uuid();
-						object.is_subtechnique = true;
+						// object.is_subtechnique = true;
 					}
 					else if (techniqueReg.test(object.attack_id)) {
 						object.id = 'attack-pattern--' + uuid();
