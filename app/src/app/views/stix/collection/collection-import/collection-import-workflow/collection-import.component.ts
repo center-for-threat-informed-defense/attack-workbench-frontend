@@ -92,6 +92,18 @@ export class CollectionImportComponent implements OnInit {
 		['mapping type', 'relationship_type'],
 	];
 
+    private typeUrlMap = {
+        "attack-pattern": "techniques",
+        "malware": "software",
+		"tool": "software",
+        "intrusion-set": "groups",
+        "campaign": "campaigns",
+        "course-of-action": "mitigations",
+        "x-mitre-tactic": "tactics",
+        "x-mitre-data-source": "datasources",
+        "x-mitre-data-component": "datacomponents"
+    }
+
 	constructor(public route: ActivatedRoute,
 		public http: HttpClient,
 		public snackbar: MatSnackBar,
@@ -124,7 +136,7 @@ export class CollectionImportComponent implements OnInit {
 			let str = String(e.target.result);
 			let collectionBundle;
 			try {
-				if (event.target.files[0].type === "application/json") {
+				if (event.target.files[0].type === 'application/json') {
 					// parse JSON file input
 					collectionBundle = JSON.parse(str);
 				}
@@ -192,15 +204,15 @@ export class CollectionImportComponent implements OnInit {
 			data.forEach((row) => {
 				// create an object for the row
 				var i = _.zipObject(headerRow, row);
-				// set any variables that require a different format
-				if (!i.id) {
-					// if there is not a stix id for the object, try to generate a stix id from the attack id
-					this.generateId(i);
-				}
-				i.attack_id = (i.attack_id) ? i.attack_id : "";
-				i.description = (i.description) ? i.description : "";
+
+				// try to generate a stix id from type or ATT&CK ID
+				if (!i.id) this.generateId(i);
+
+				// parse variables into correct types
+				i.attack_id = (i.attack_id) ? i.attack_id : '';
+				i.description = (i.description) ? i.description : '';
 				i.type = (i.id) ? i.id.split('--')[0] : '';
-				i.x_mitre_version = (i.x_mitre_version) ? i.x_mitre_version.toString() : "1.0";
+				i.x_mitre_version = (i.x_mitre_version) ? i.x_mitre_version.toString() : '1.0';
 				i.spec_version = '2.1';
 				i.x_mitre_is_subtechnique = Boolean(i.x_mitre_is_subtechnique);
 				i.created = i.created ? new Date(i.created).toISOString() : '';
@@ -208,17 +220,21 @@ export class CollectionImportComponent implements OnInit {
 				i.x_mitre_platforms = (i.x_mitre_platforms) ? i.x_mitre_platforms.split(',').map((p: string) => p.trim()) : [];
 				i.x_mitre_data_sources = i.x_mitre_data_sources ? i.x_mitre_data_sources.split(',').map((ds: string) => ds.trim()) : [];
 
+				// parse domains
 				i.x_mitre_domains = (i.x_mitre_domains) ? i.x_mitre_domains.split(',').map((d: string) => d.trim()) : [];
 				if (i.x_mitre_domains?.length) {
 					i.x_mitre_domains.forEach((d: string) => domains.add(d) );
 				}
 
-				if (i.attack_id) {
+				// add ATT&CK ID entry to external references
+				if (i.attack_id.length && this.typeUrlMap[i.type]) {
 					i.external_references = [{
 						source_name: 'mitre-attack',
 						external_id: i.attack_id,
+						url: `https://attack.mitre.org/${this.typeUrlMap[i.type]}/${i.attack_id.replace(/\./g, '/')}`
 					}];
 				}
+
 				if (i.id) {
 					objArray.push(i);
 					// add object names and IDs to the collection object
