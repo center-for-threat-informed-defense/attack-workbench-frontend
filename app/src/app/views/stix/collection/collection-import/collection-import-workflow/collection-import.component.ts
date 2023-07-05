@@ -6,17 +6,8 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatStepper } from '@angular/material/stepper';
 import { ActivatedRoute } from '@angular/router';
 import { FileInputComponent } from 'ngx-material-file-input';
-import { Campaign } from 'src/app/classes/stix/campaign';
+import { Asset, Campaign, DataComponent, DataSource, Group, Matrix, Mitigation, Relationship, Software, Tactic, Technique } from 'src/app/classes/stix';
 import { Collection, CollectionDiffCategories } from 'src/app/classes/stix/collection';
-import { DataComponent } from 'src/app/classes/stix/data-component';
-import { DataSource } from 'src/app/classes/stix/data-source';
-import { Group } from 'src/app/classes/stix/group';
-import { Matrix } from 'src/app/classes/stix/matrix';
-import { Mitigation } from 'src/app/classes/stix/mitigation';
-import { Relationship } from 'src/app/classes/stix/relationship';
-import { Software } from 'src/app/classes/stix/software';
-import { Tactic } from 'src/app/classes/stix/tactic';
-import { Technique } from 'src/app/classes/stix/technique';
 import { ConfirmationDialogComponent } from 'src/app/components/confirmation-dialog/confirmation-dialog.component';
 import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/rest-api-connector.service';
 import { AuthenticationService } from 'src/app/services/connectors/authentication/authentication.service';
@@ -66,6 +57,7 @@ export class CollectionImportComponent implements OnInit {
 		group:			new CollectionDiffCategories<Group>(),
 		data_source:	new CollectionDiffCategories<DataSource>(),
 		data_component:	new CollectionDiffCategories<DataComponent>(),
+		asset:			new CollectionDiffCategories<Asset>()
 	};
 
 	// list of headers that comes from mitre-generated excel files and the mapping to support collection objects
@@ -596,6 +588,11 @@ export class CollectionImportComponent implements OnInit {
 						new Campaign(raw)
 					);
 					break;
+				case 'asset': // asset
+					this.object_import_categories.asset[category].push(
+						new Asset(raw)
+					);
+					break;
 			}
 		}
 		// set up selection
@@ -652,6 +649,9 @@ export class CollectionImportComponent implements OnInit {
 					return;
 				case 'c': // campaign
 					object.id = 'campaign--' + uuid();
+					return;
+				case 'a': // asset
+					object.id = 'x-mitre-asset--' + uuid();
 					return;
 			}
 		}

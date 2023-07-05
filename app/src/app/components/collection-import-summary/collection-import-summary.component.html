@@ -1,6 +1,6 @@
 <div class="collection-import-summary">
     <mat-accordion>
-        <mat-expansion-panel *ngFor="let attackType of ['matrix', 'tactic', 'technique', 'mitigation', 'campaign', 'group', 'software', 'relationship', 'data_source', 'data_component']" class="mat-elevation-z0" [disabled]="config.object_import_categories[attackType].object_count == 0" [class.disabled]="config.object_import_categories[attackType].object_count == 0">
+        <mat-expansion-panel *ngFor="let attackType of ['matrix', 'tactic', 'technique', 'mitigation', 'campaign', 'group', 'software', 'relationship', 'data_source', 'data_component', 'asset']" class="mat-elevation-z0" [disabled]="config.object_import_categories[attackType].object_count == 0" [class.disabled]="config.object_import_categories[attackType].object_count == 0">
             <mat-expansion-panel-header>
                 <mat-panel-title>
                     {{format(attackType)}} ({{config.object_import_categories[attackType].object_count}})

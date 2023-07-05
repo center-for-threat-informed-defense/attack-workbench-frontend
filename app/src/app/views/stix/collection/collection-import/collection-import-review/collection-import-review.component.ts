@@ -1,20 +1,11 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Collection, CollectionDiffCategories } from 'src/app/classes/stix/collection';
-import { Group } from 'src/app/classes/stix/group';
-import { Matrix } from 'src/app/classes/stix/matrix';
-import { Mitigation } from 'src/app/classes/stix/mitigation';
-import { Relationship } from 'src/app/classes/stix/relationship';
-import { Software } from 'src/app/classes/stix/software';
-import { Tactic } from 'src/app/classes/stix/tactic';
-import { Technique } from 'src/app/classes/stix/technique';
-import { DataSource } from 'src/app/classes/stix/data-source';
-import { DataComponent } from 'src/app/classes/stix/data-component';
+import { Asset, Campaign, DataComponent, DataSource, Group, Matrix, Mitigation, Relationship, Software, Tactic, Technique } from 'src/app/classes/stix';
 import { EditorService } from 'src/app/services/editor/editor.service';
 import { StixViewPage } from '../../../stix-view-page';
 import { logger } from "../../../../../util/logger";
 import { AuthenticationService } from 'src/app/services/connectors/authentication/authentication.service';
-import { Campaign } from 'src/app/classes/stix/campaign';
 
 @Component({
     selector: 'app-collection-import-review',
@@ -37,7 +28,8 @@ export class CollectionImportReviewComponent extends StixViewPage implements OnI
         matrix:         new CollectionDiffCategories<Matrix>(),
         group:          new CollectionDiffCategories<Group>(),
         data_source:    new CollectionDiffCategories<DataSource>(),
-        data_component: new CollectionDiffCategories<DataComponent>()
+        data_component: new CollectionDiffCategories<DataComponent>(),
+        asset:          new CollectionDiffCategories<Asset>()
     }
 
     constructor(private route: ActivatedRoute, public editor: EditorService, authenticationService: AuthenticationService) { super(authenticationService) }
@@ -110,6 +102,9 @@ export class CollectionImportReviewComponent extends StixViewPage implements OnI
                 break;
                 case "campaign": // campaign
                     this.collection_import_categories.campaign[category].push(object);
+                break;
+                case "asset": // asset
+                    this.collection_import_categories.asset[category].push(object);
                 break;
             }
         }

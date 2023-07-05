@@ -1,6 +1,5 @@
 export { Asset } from "./asset";
 export { Campaign } from "./campaign";
-export { Collection } from "./collection";
 export { DataComponent } from "./data-component";
 export { DataSource } from "./data-source";
 export { Group } from "./group";
