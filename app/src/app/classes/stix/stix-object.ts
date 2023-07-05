@@ -22,6 +22,7 @@ let stixTypeToAttackType = {
     "marking-definition": "marking-definition",
     "x-mitre-data-source": "data-source",
     "x-mitre-data-component": "data-component",
+    "x-mitre-asset": "asset",
     "note": "note"
 }
 export { stixTypeToAttackType };
@@ -59,7 +60,8 @@ export abstract class StixObject extends Serializable {
         "note": "notes",
         "marking-definition": "marking-definitions",
         "data-source": "datasources",
-        "data-component": "datacomponents"
+        "data-component": "datacomponents",
+        "asset": "assets"
     }
 
     private defaultMarkingDefinitionsLoaded = false; // avoid overloading of default marking definitions
@@ -300,6 +302,7 @@ export abstract class StixObject extends Serializable {
                                 this.attackType == "technique"? restAPIService.getAllTechniques() :
                                 this.attackType == "data-source"? restAPIService.getAllDataSources() :
                                 this.attackType == "data-component"? restAPIService.getAllDataComponents() :
+                                this.attackType == "asset"? restAPIService.getAllAssets() :
                                 restAPIService.getAllTactics();
                 return accessor.pipe(
                     map(objects => {
@@ -591,6 +594,7 @@ export abstract class StixObject extends Serializable {
                         this.attackType == "tactic" ? restAPIConnector.getAllTactics() :
                         this.attackType == "technique" ? restAPIConnector.getAllTechniques() :
                         this.attackType == "data-source" ? restAPIConnector.getAllDataSources() :
+                        this.attackType == "asset" ? restAPIConnector.getAllAssets() :
                         this.attackType == "matrix" ? restAPIConnector.getAllMatrices() : null;
 
         // Find all other objects that have this prefix and range, and set ID to the most recent & unique ID available
