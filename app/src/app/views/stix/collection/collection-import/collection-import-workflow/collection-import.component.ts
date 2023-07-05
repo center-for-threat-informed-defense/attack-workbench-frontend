@@ -221,7 +221,7 @@ export class CollectionImportComponent implements OnInit {
 
 			data.forEach((row) => {
 				// create an object for the row
-				var i = _.zipObject(headerRow, row);
+				let i = _.zipObject(headerRow, row);
 
 				// try to generate a stix id from type or ATT&CK ID
 				if (!i.id) this.generateId(i);
@@ -595,26 +595,17 @@ export class CollectionImportComponent implements OnInit {
 			// generate STIX ID from ATT&CK ID
 			switch (object.attack_id.charAt(0).toLowerCase()) {
 				case 't': //technique or tactic
-					const subtechniqueReg = new RegExp("T\\d{4}\\.\\d{3}");
-					const techniqueReg = new RegExp("T\\d{4}");
-					const tacticReg = new RegExp("TA\\d{4}");
+					const subtechniqueRegex = /T\d{4}.\d{3}/;
+					const techniqueRegex = /T\d{4}/;
+					const tacticRegex = /TA\d{4}/;
 
-					// check if tactic match
-					if (tacticReg.test(object.attack_id)) {
+					// check if tactic
+					if (tacticRegex.test(object.attack_id)) {
 						object.id = 'x-mitre-tactic--' + uuid();
 					}
-					//check if subtechnique
-					else if (subtechniqueReg.test(object.attack_id)) {
+					//check if technique
+					else if (techniqueRegex.test(object.attack_id) || subtechniqueRegex.test(object.attack_id)) {
 						object.id = 'attack-pattern--' + uuid();
-						// object.is_subtechnique = true;
-					}
-					else if (techniqueReg.test(object.attack_id)) {
-						object.id = 'attack-pattern--' + uuid();
-					}
-					return;
-				case 's': // software
-					if (object.type) {
-						object.id = object.type + '--' + uuid();
 					}
 					return;
 				case 'g': //groups
@@ -634,7 +625,6 @@ export class CollectionImportComponent implements OnInit {
 		// relationships don't have attack ids, so check for target and source fields here
 		if (object.source_name && object.target_name && object.relationship_type) {
 			object.id = 'relationship--' + uuid();
-			return;
 		}
 	}
 
