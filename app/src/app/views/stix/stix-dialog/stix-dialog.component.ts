@@ -1,22 +1,10 @@
-import { DataSource } from '@angular/cdk/collections';
 import { Component, Inject, OnInit, ViewEncapsulation } from '@angular/core';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { forkJoin, Observable, of } from 'rxjs';
 import { filter, map, switchMap } from 'rxjs/operators';
 import { ValidationData } from 'src/app/classes/serializable';
-import { Campaign } from 'src/app/classes/stix/campaign';
+import { Asset, Campaign, DataComponent, DataSource, Group, Identity, MarkingDefinition, Matrix, Mitigation, Relationship, Software, StixObject, Tactic, Technique } from 'src/app/classes/stix';
 import { Collection } from 'src/app/classes/stix/collection';
-import { DataComponent } from 'src/app/classes/stix/data-component';
-import { Group } from 'src/app/classes/stix/group';
-import { Identity } from 'src/app/classes/stix/identity';
-import { MarkingDefinition } from 'src/app/classes/stix/marking-definition';
-import { Matrix } from 'src/app/classes/stix/matrix';
-import { Mitigation } from 'src/app/classes/stix/mitigation';
-import { Relationship } from 'src/app/classes/stix/relationship';
-import { Software } from 'src/app/classes/stix/software';
-import { StixObject } from 'src/app/classes/stix/stix-object';
-import { Tactic } from 'src/app/classes/stix/tactic';
-import { Technique } from 'src/app/classes/stix/technique';
 import { ConfirmationDialogComponent } from 'src/app/components/confirmation-dialog/confirmation-dialog.component';
 import { DeleteDialogComponent } from 'src/app/components/delete-dialog/delete-dialog.component';
 import { AuthenticationService } from 'src/app/services/connectors/authentication/authentication.service';
@@ -40,7 +28,8 @@ const stixTypeToClass = {
     "identity": Identity,
     "marking-definition": MarkingDefinition,
     "x-mitre-data-source": DataSource,
-    "x-mitre-data-component": DataComponent
+    "x-mitre-data-component": DataComponent,
+    "x-mitre-asset": Asset,
 }
 
 @Component({
