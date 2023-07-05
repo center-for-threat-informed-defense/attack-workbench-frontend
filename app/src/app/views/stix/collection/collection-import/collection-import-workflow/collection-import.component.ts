@@ -209,107 +209,46 @@ export class CollectionImportComponent implements OnInit {
 				wb.Sheets[sheetname],
 				{ header: 1 }
 			);
-			let headerRow: string[] = data.splice(0, 1)[0];
-			// change headers appropriately to transfer between excel spreadsheet and our naming convention
-			this.replacementList.forEach((i) => {
-				if (headerRow.includes(i[0])) {
-					headerRow[headerRow.indexOf(i[0])] = i[1];
-				}
-			});
-			if (!headerRow.includes('type')) headerRow.push('type');
-			headerRow.push('spec_version', 'external_references');
+			let headerRow = this.getHeader(data);
 
 			data.forEach((row) => {
 				// create an object for the row
 				let i = _.zipObject(headerRow, row);
 
-				// try to generate a stix id from type or ATT&CK ID
-				if (!i.id) this.generateId(i);
 				if (i.reference && i.citation && "url" in i) {
-					return; // citation detected
+					return; // citation detected, skip
 				}
 
-				// parse variables into correct types
-				i.attack_id = (i.attack_id) ? i.attack_id : '';
-				i.description = (i.description) ? i.description : '';
-				i.type = (i.id) ? i.id.split('--')[0] : '';
-				i.x_mitre_version = (i.x_mitre_version) ? i.x_mitre_version.toString() : '1.0';
-				i.spec_version = '2.1';
-				i.x_mitre_is_subtechnique = Boolean(i.x_mitre_is_subtechnique);
-				i.created = i.created ? new Date(i.created).toISOString() : timestamp;
-				i.modified = i.modified ? new Date(i.modified).toISOString() : timestamp;
-				i.x_mitre_platforms = (i.x_mitre_platforms) ? i.x_mitre_platforms.split(',').map((p: string) => p.trim()) : [];
-				i.x_mitre_data_sources = i.x_mitre_data_sources ? i.x_mitre_data_sources.split(',').map((ds: string) => ds.trim()) : [];
-				i.x_mitre_contributors = i.contributors ? i.contributors.split(',').map((c: string) => c.trim()): [];
-				i.x_mitre_detection = i.detection ? i.detection : "";
-
-				// software aliases
-				if (i.aliases && ['malware', 'tool'].includes(i.type)) {
-					i.x_mitre_aliases = i.aliases.split(',').map((a: string) => a.trim());
-					i.x_mitre_aliases.splice(0, 0, i.name);
+				let sdo = this.parseObject(i, timestamp);
+				if (sdo.x_mitre_domains?.length) {
+					sdo.x_mitre_domains.forEach((d: string) => domains.add(d) );
 				}
 
-				// group aliases
-				if (i["associated groups"] && i.type == "intrusion-set") {
-					i.aliases = i["associated groups"].split(',').map((g: string) => g.trim());
-					i.aliases.splice(0, 0, i.name);
-				}
-
-				// campaign aliases
-				if (i.type == 'campaign') {
-					if (i["associated campaigns"]) {
-						i.aliases = i["associated campaigns"].split(',').map((c: string) => c.trim());
-						i.aliases.splice(0, 0, i.name);
-					}
-					if (!i["first_seen"] || !i["x_mitre_first_seen_citation"] || !i["last_seen"] || !i["x_mitre_last_seen_citation"]) {
-						i.id = '';
-					}
-				}
-
-				// data source collection layers
-				if (i.x_mitre_collection_layers && i.type == "x-mitre-data-source") {
-					i.x_mitre_collection_layers = i.x_mitre_collection_layers.split(',').map((l: string) => l.trim());
-				}
-
-				// parse domains
-				i.x_mitre_domains = (i.x_mitre_domains) ? i.x_mitre_domains.split(',').map((d: string) => d.trim()) : [];
-				if (i.x_mitre_domains?.length) {
-					i.x_mitre_domains.forEach((d: string) => domains.add(d) );
-				}
-
-				// add ATT&CK ID entry to external references
-				if (i.attack_id.length && this.typeUrlMap[i.type]) {
-					i.external_references = [{
-						source_name: 'mitre-attack',
-						external_id: i.attack_id,
-						url: `https://attack.mitre.org/${this.typeUrlMap[i.type]}/${i.attack_id.replace(/\./g, '/')}`
-					}];
-				}
-
-				if (!i.id) {
+				if (!sdo.id) {
 					// report object error if object cannot be identified
-					this.errorObjects.push(i);
-				} else {
-					// update object lookup maps
-					if (i.attack_id) {
-						objectLookup.set(i.attack_id, i.id);
-						if (i.type && i.type == 'x-mitre-data-source' && i.name) {
-							sourceLookup.set(i.name, i.id);
-						}
-					} else if (i.type && i.type == 'x-mitre-data-component' && i.name) {
-						// attempt to parse data component name
-						let name = i.name.split(':');
-						if (name.length > 1) name = name[1].trim();
-						else name = name[0].trim();
-						componentLookup.set(name, i.id);
-					}
+					this.errorObjects.push(sdo);
+					return;
+				}
 
-					// add objects to relevant lists
-					if (i.type && i.type == 'relationship') relationships.push(i);
-					else if (i.type && i.type == 'x-mitre-data-component') components.push(i);
-					else {
-						attackObjects.push(i);
+				// update object lookup maps
+				if (sdo.attack_id) {
+					objectLookup.set(sdo.attack_id, sdo.id);
+					if (sdo.type && sdo.type == 'x-mitre-data-source' && sdo.name) {
+						sourceLookup.set(sdo.name, sdo.id);
 					}
+				} else if (sdo.type && sdo.type == 'x-mitre-data-component' && sdo.name) {
+					// attempt to parse data component name
+					let name = sdo.name.split(':');
+					if (name.length > 1) name = name[1].trim();
+					else name = name[0].trim();
+					componentLookup.set(name, sdo.id);
+				}
+
+				// add objects to relevant lists
+				if (sdo.type && sdo.type == 'relationship') relationships.push(sdo);
+				else if (sdo.type && sdo.type == 'x-mitre-data-component') components.push(sdo);
+				else {
+					attackObjects.push(sdo);
 				}
 			});
 		}
@@ -378,6 +317,94 @@ export class CollectionImportComponent implements OnInit {
 		};
 
 		return bundle;
+	}
+
+	/**
+	 * Get the header row of the Excel spreadsheet for variable conversion
+	 * @param data the spreadsheet data
+	 * @returns the header row of the spreadsheet
+	 */
+	public getHeader(data: any) {
+		let header: string[] = data.splice(0, 1)[0];
+
+		// update headers to transfer between excel spreadsheet and variables
+		this.replacementList.forEach((i) => {
+			if (header.includes(i[0])) {
+				header[header.indexOf(i[0])] = i[1];
+			}
+		});
+
+		if (!header.includes('type')) header.push('type');
+		header.push('spec_version', 'external_references');
+
+		return header;
+	}
+
+	/**
+	 * Parse the given object variables into correct types
+	 * @param i the object to parse
+	 * @param timestamp default timestamp to use for created/modified dates
+	 * @returns the parsed object
+	 */
+	public parseObject(i: any, timestamp: string) {
+		// try to generate a stix id from type or ATT&CK ID
+		if (!i.id) this.generateId(i);
+
+		// parse variables into correct types
+		i.attack_id = (i.attack_id) ? i.attack_id : '';
+		i.description = (i.description) ? i.description : '';
+		i.type = (i.id) ? i.id.split('--')[0] : '';
+		i.x_mitre_version = (i.x_mitre_version) ? i.x_mitre_version.toString() : '1.0';
+		i.spec_version = '2.1';
+		i.x_mitre_is_subtechnique = Boolean(i.x_mitre_is_subtechnique);
+		i.created = i.created ? new Date(i.created).toISOString() : timestamp;
+		i.modified = i.modified ? new Date(i.modified).toISOString() : timestamp;
+		i.x_mitre_platforms = (i.x_mitre_platforms) ? i.x_mitre_platforms.split(',').map((p: string) => p.trim()) : [];
+		i.x_mitre_data_sources = i.x_mitre_data_sources ? i.x_mitre_data_sources.split(',').map((ds: string) => ds.trim()) : [];
+		i.x_mitre_contributors = i.contributors ? i.contributors.split(',').map((c: string) => c.trim()): [];
+		i.x_mitre_detection = i.detection ? i.detection : "";
+
+		// software aliases
+		if (i.aliases && ['malware', 'tool'].includes(i.type)) {
+			i.x_mitre_aliases = i.aliases.split(',').map((a: string) => a.trim());
+			i.x_mitre_aliases.splice(0, 0, i.name);
+		}
+
+		// group aliases
+		if (i["associated groups"] && i.type == "intrusion-set") {
+			i.aliases = i["associated groups"].split(',').map((g: string) => g.trim());
+			i.aliases.splice(0, 0, i.name);
+		}
+
+		// campaign aliases
+		if (i.type == 'campaign') {
+			if (i["associated campaigns"]) {
+				i.aliases = i["associated campaigns"].split(',').map((c: string) => c.trim());
+				i.aliases.splice(0, 0, i.name);
+			}
+			if (!i["first_seen"] || !i["x_mitre_first_seen_citation"] || !i["last_seen"] || !i["x_mitre_last_seen_citation"]) {
+				i.id = '';
+			}
+		}
+
+		// data source collection layers
+		if (i.x_mitre_collection_layers && i.type == "x-mitre-data-source") {
+			i.x_mitre_collection_layers = i.x_mitre_collection_layers.split(',').map((l: string) => l.trim());
+		}
+
+		// parse domains
+		i.x_mitre_domains = (i.x_mitre_domains) ? i.x_mitre_domains.split(',').map((d: string) => d.trim()) : [];
+
+		// add ATT&CK ID entry to external references
+		if (i.attack_id.length && this.typeUrlMap[i.type]) {
+			i.external_references = [{
+				source_name: 'mitre-attack',
+				external_id: i.attack_id,
+				url: `https://attack.mitre.org/${this.typeUrlMap[i.type]}/${i.attack_id.replace(/\./g, '/')}`
+			}];
+		}
+
+		return i;
 	}
 
 	/**
