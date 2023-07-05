@@ -81,16 +81,13 @@ import { UsersListComponent } from './components/users-list/users-list.component
 
 import { ExternalReferencesPropertyComponent } from "./components/stix/external-references-property/external-references-property.component";
 import { ExternalReferencesViewComponent } from './components/stix/external-references-property/external-references-view/external-references-view.component';
-import { ExternalReferencesDiffComponent } from './components/stix/external-references-property/external-references-diff/external-references-diff.component';
 
 import { DescriptivePropertyComponent } from './components/stix/descriptive-property/descriptive-property.component';
 import { DescriptiveViewComponent } from './components/stix/descriptive-property/descriptive-view/descriptive-view.component';
 import { DescriptiveEditComponent } from './components/stix/descriptive-property/descriptive-edit/descriptive-edit.component';
-import { DescriptiveDiffComponent } from './components/stix/descriptive-property/descriptive-diff/descriptive-diff.component';
 
 import { TimestampPropertyComponent } from "./components/stix/timestamp-property/timestamp-property.component";
 import { TimestampViewComponent } from "./components/stix/timestamp-property/timestamp-view/timestamp-view.component";
-import { TimestampDiffComponent } from "./components/stix/timestamp-property/timestamp-diff/timestamp-diff.component";
 
 import { StatementPropertyComponent } from "./components/stix/statement-property/statement-property.component";
 import { StatementViewComponent } from './components/stix/statement-property/statement-view/statement-view.component';
@@ -233,13 +230,10 @@ import { CreateNewDialogComponent } from './components/create-new-dialog/create-
     DescriptivePropertyComponent,
     DescriptiveViewComponent,
     DescriptiveEditComponent,
-    DescriptiveDiffComponent,
     ExternalReferencesPropertyComponent,
     ExternalReferencesViewComponent,
-    ExternalReferencesDiffComponent,
     TimestampPropertyComponent,
     TimestampViewComponent,
-    TimestampDiffComponent,
     StatementPropertyComponent,
     StatementViewComponent,
     StatementEditComponent,
