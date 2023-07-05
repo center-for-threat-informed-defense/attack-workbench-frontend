@@ -134,6 +134,7 @@ export class CollectionImportComponent implements OnInit {
 	public getCollectionFromFile(event: any) {
 		const filename = event.target.files[0].name.split('.')[0];
 		this.loadingStep1 = true;
+		this.errorObjects = [];
 		const target: DataTransfer = <DataTransfer>event.target;
 		const reader = new FileReader();
 		reader.readAsBinaryString(target.files[0]);
@@ -224,6 +225,9 @@ export class CollectionImportComponent implements OnInit {
 
 				// try to generate a stix id from type or ATT&CK ID
 				if (!i.id) this.generateId(i);
+				if (i.reference && i.citation && "url" in i) {
+					return; // citation detected
+				}
 
 				// parse variables into correct types
 				i.attack_id = (i.attack_id) ? i.attack_id : '';
@@ -724,6 +728,7 @@ export class CollectionImportComponent implements OnInit {
 		this.loadingStep1 = false;
 		this.loadingStep2 = false;
 		this.csvWarning = false;
+		this.errorObjects = [];
 	}
 
 	/**
