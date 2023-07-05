@@ -1,5 +1,6 @@
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
+import { Router } from "@angular/router";
 
 
 @Injectable({
@@ -9,7 +10,18 @@ import { Injectable } from "@angular/core";
 export class AppConfigService {
   private appConfig: any;
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private router: Router) {}
+
+  /**
+   * helper function to redirect to the selected default page
+   * redirects to standard landing page on error
+   */
+  redirectToLanding() {
+    this.router.navigate([this.defaultLandingPage])
+    .catch(e => {
+      this.router.navigate(['/landing'])
+    })
+  }
 
   loadAppConfig() {
     return this.http.get('/assets/config.json')
@@ -23,7 +35,7 @@ export class AppConfigService {
    */
   get defaultLandingPage() {
     if (!this.appConfig) {
-      return '';
+      return 'landing';
     }
     return this.appConfig.defaultLandingPage;
   }
