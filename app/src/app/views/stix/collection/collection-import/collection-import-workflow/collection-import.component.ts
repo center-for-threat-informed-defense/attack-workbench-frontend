@@ -221,7 +221,7 @@ export class CollectionImportComponent implements OnInit {
 
 				let sdo = this.parseObject(i, timestamp);
 				if (sdo.x_mitre_domains?.length) {
-					sdo.x_mitre_domains.forEach((d: string) => domains.add(d) );
+					sdo.x_mitre_domains.forEach((d: string) => domains.add(d));
 				}
 
 				if (!sdo.id) {
@@ -362,8 +362,31 @@ export class CollectionImportComponent implements OnInit {
 		i.x_mitre_platforms = (i.x_mitre_platforms) ? i.x_mitre_platforms.split(',').map((p: string) => p.trim()) : [];
 		i.x_mitre_data_sources = i.x_mitre_data_sources ? i.x_mitre_data_sources.split(',').map((ds: string) => ds.trim()) : [];
 		i.x_mitre_contributors = i.contributors ? i.contributors.split(',').map((c: string) => c.trim()): [];
-		i.x_mitre_detection = i.detection ? i.detection : "";
+		i.x_mitre_detection = i.detection ? i.detection : '';
+		i.x_mitre_domains = (i.x_mitre_domains) ? i.x_mitre_domains.split(',').map((d: string) => d.trim()) : [];
+		i.x_mitre_collection_layers = (i.x_mitre_collection_layers) ? i.x_mitre_collection_layers.split(',').map((l: string) => l.trim()) : [];
 
+		// parse object aliases
+		i = this.parseAliases(i);
+
+		// add ATT&CK ID entry to external references
+		if (i.attack_id.length && this.typeUrlMap[i.type]) {
+			i.external_references = [{
+				source_name: 'mitre-attack',
+				external_id: i.attack_id,
+				url: `https://attack.mitre.org/${this.typeUrlMap[i.type]}/${i.attack_id.replace(/\./g, '/')}`
+			}];
+		}
+
+		return i;
+	}
+
+	/**
+	 * Parse object aliases, if applicable
+	 * @param i the object to parse
+	 * @returns the object with parsed aliases
+	 */
+	public parseAliases(i: any) {
 		// software aliases
 		if (i.aliases && ['malware', 'tool'].includes(i.type)) {
 			i.x_mitre_aliases = i.aliases.split(',').map((a: string) => a.trim());
@@ -385,23 +408,6 @@ export class CollectionImportComponent implements OnInit {
 			if (!i["first_seen"] || !i["x_mitre_first_seen_citation"] || !i["last_seen"] || !i["x_mitre_last_seen_citation"]) {
 				i.id = '';
 			}
-		}
-
-		// data source collection layers
-		if (i.x_mitre_collection_layers && i.type == "x-mitre-data-source") {
-			i.x_mitre_collection_layers = i.x_mitre_collection_layers.split(',').map((l: string) => l.trim());
-		}
-
-		// parse domains
-		i.x_mitre_domains = (i.x_mitre_domains) ? i.x_mitre_domains.split(',').map((d: string) => d.trim()) : [];
-
-		// add ATT&CK ID entry to external references
-		if (i.attack_id.length && this.typeUrlMap[i.type]) {
-			i.external_references = [{
-				source_name: 'mitre-attack',
-				external_id: i.attack_id,
-				url: `https://attack.mitre.org/${this.typeUrlMap[i.type]}/${i.attack_id.replace(/\./g, '/')}`
-			}];
 		}
 
 		return i;
