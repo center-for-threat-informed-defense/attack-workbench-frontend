@@ -17,10 +17,15 @@ export class AppConfigService {
    * redirects to standard landing page on error
    */
   redirectToLanding() {
-    this.router.navigate([this.defaultLandingPage])
-    .catch(e => {
+    if (this.defaultLandingPage && this.defaultLandingPage!=='') {
+      this.router.navigate([this.defaultLandingPage])
+      .catch(e => {
+        this.router.navigate(['/landing'])
+      })
+    } else {
       this.router.navigate(['/landing'])
-    })
+    }
+
   }
 
   loadAppConfig() {
