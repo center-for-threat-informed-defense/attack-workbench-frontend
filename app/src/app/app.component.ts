@@ -9,7 +9,7 @@ import { AuthenticationService } from './services/connectors/authentication/auth
 import { NavigationEnd, Router } from '@angular/router';
 import { EditorService } from './services/editor/editor.service';
 import { Theme } from './globals';
-import { AppConfigService } from './services/app-config.service';
+import { AppConfigService } from './services/config/app-config.service';
 
 @Component({
   selector: 'app-root',
