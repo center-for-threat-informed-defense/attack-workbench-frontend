@@ -215,7 +215,7 @@ export abstract class StixObject extends Serializable {
                 else logger.error("TypeError: x_mitre_version field is not a string:", sdo.x_mitre_version, "(", typeof (sdo.x_mitre_version), ")")
             } else this.version = new VersionNumber("0.1");
 
-            if ("external_references" in sdo) {
+            if ("external_references" in sdo && sdo['external_references']) {
                 if (typeof (sdo.external_references) === "object") {
                     this.external_references = new ExternalReferences(sdo.external_references);
                     let attack_sources = ['mitre-attack', 'mitre-mobile-attack', 'mitre-ics-attack'];
