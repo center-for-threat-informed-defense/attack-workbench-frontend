@@ -32,7 +32,6 @@ export class AppComponent implements AfterViewInit {
         } else {
             this.setDefaultTheme();
         }
-        this.configService.loadAppConfig();
         const routerSubscription = this.router.events.subscribe({
             next: (e) => {
                 if (e instanceof NavigationEnd && e.url.includes('register')) {

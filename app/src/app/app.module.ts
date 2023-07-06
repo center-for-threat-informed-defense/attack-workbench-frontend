@@ -3,7 +3,7 @@ import { LoggerModule } from 'ngx-logger';
 
 //angular imports
 import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
+import { APP_INITIALIZER, NgModule } from '@angular/core';
 import { AppRoutingModule } from './app-routing.module';
 import { AppRoutingStixModule } from "./app-routing-stix.module"
 import { HttpClient, HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http'
@@ -202,6 +202,12 @@ import { MatrixFlatComponent } from './views/stix/matrix/matrix-flat/matrix-flat
 import { TeamsListPageComponent } from './views/admin-page/teams/teams-list-page/teams-list-page.component';
 import { TeamsViewPageComponent } from './views/admin-page/teams/teams-view-page/teams-view-page.component';
 import { CreateNewDialogComponent } from './components/create-new-dialog/create-new-dialog.component';
+
+import { AppConfigService } from './services/config/app-config.service';
+
+export function loadConfig(appConfigService: AppConfigService) {
+  return () => appConfigService.loadAppConfig();
+}
 
 @NgModule({
   declarations: [
@@ -426,6 +432,13 @@ import { CreateNewDialogComponent } from './components/create-new-dialog/create-
     OverlayModule
   ],
   providers: [
+    AppConfigService,
+    {
+      provide: APP_INITIALIZER, 
+      useFactory: loadConfig, 
+      deps: [AppConfigService], 
+      multi: true 
+    },
     {
         provide: JDENTICON_CONFIG,
         useValue: {
