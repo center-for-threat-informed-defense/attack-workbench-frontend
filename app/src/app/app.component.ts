@@ -9,6 +9,7 @@ import { AuthenticationService } from './services/connectors/authentication/auth
 import { NavigationEnd, Router } from '@angular/router';
 import { EditorService } from './services/editor/editor.service';
 import { Theme } from './globals';
+import { AppConfigService } from './services/config/app-config.service';
 
 @Component({
   selector: 'app-root',
@@ -23,6 +24,7 @@ export class AppComponent implements AfterViewInit {
                 private authenticationService: AuthenticationService,
                 private editorService: EditorService,
                 private router: Router,
+                private configService: AppConfigService,
                 private logger: NGXLogger) { // Note: this isn't used directly, but it MUST be imported to work properly
 
         if (hasCookie('theme')) {
@@ -30,7 +32,6 @@ export class AppComponent implements AfterViewInit {
         } else {
             this.setDefaultTheme();
         }
-
         const routerSubscription = this.router.events.subscribe({
             next: (e) => {
                 if (e instanceof NavigationEnd && e.url.includes('register')) {
@@ -40,9 +41,13 @@ export class AppComponent implements AfterViewInit {
                         this.router.navigate(['']);
                     });
                 } else if (e instanceof NavigationEnd) {
-                    // check user login
                     const authSubscription = this.authenticationService.getSession().subscribe({
-                        next: (res) => { this.checkStatus(); },
+                        next: (res) => {
+                            this.checkStatus();
+                            if (this.router.url === '/') {
+                                this.configService.redirectToLanding();
+                            }
+                         },
                         complete: () => { authSubscription.unsubscribe(); }
                     });
                 }
