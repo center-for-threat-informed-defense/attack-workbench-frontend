@@ -21,6 +21,7 @@ export class EditorService {
     public isAnImportedCollection: boolean = false;
     public onSave = new EventEmitter();
     public onDelete = new EventEmitter();
+    public onDeleteImportedCollection = new EventEmitter();
     public onEditingStopped = new EventEmitter();
     public onReload = new EventEmitter();
     public onReloadReferences = new EventEmitter();
