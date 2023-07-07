@@ -4,6 +4,7 @@ import { stixRoutes } from "../../app-routing-stix.module";
 import * as app_package from "../../../../package.json";
 import { AuthenticationService } from 'src/app/services/connectors/authentication/authentication.service';
 import { Subscription } from "rxjs";
+
 @Component({
   selector: 'app-header',
   templateUrl: './header.component.html',

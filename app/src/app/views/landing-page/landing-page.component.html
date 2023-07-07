@@ -19,8 +19,8 @@
                     MITRE ATT&CK&reg; is a globally-accessible knowledge base of adversary tactics and techniques based on real-world observations.
                 </p>
                 <p>
-                    ATT&CK Workbench is a tool designed to containerize the ATT&CK knowledge base, making ATT&CK easier to use and extend throughout the community. 
-                    This application is your own customized instance of the knowledge base where you can explore, extend, and annotate ATT&CK data. 
+                    ATT&CK Workbench is a tool designed to containerize the ATT&CK knowledge base, making ATT&CK easier to use and extend throughout the community.
+                    This application is your own customized instance of the knowledge base where you can explore, extend, and annotate ATT&CK data.
                 </p>
                 <div class="learnmore">
                     <button mat-mini-fab class="extended-fab-button" color="primary" routerLink="/docs/usage">
@@ -32,7 +32,7 @@
         </div>
         <div class="col border-left">
             <div class="explore-links grow-to-row">
-                <div class="explore-link grow-to-row" [ngClass]="{'button-slide-left' : isLoggedIn, 'disabled': !isLoggedIn}" *ngFor="let stixRoute of routes" [routerLink]="stixRoute.path">
+                <div class="explore-link grow-to-row" [ngClass]="{'button-slide-left' : isLoggedIn, 'disabled': !isLoggedIn}" *ngFor="let stixRoute of routes" [routerLink]='"/" + stixRoute.path'>
                     <span class="text-label">{{stixRoute.data.breadcrumb}}</span>
                 </div>
             </div>
