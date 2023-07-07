@@ -48,7 +48,7 @@ The ATT&CK Workbench features a persistent database with the use of a named volu
 -   Added an option to deprecate Data Component objects. See [frontend#429](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/429).
 -   Added Matrix view to Matrix pages similar to the full matrix on the [ATT&CK website](https://attack.mitre.org/). See [frontend#20](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/20).
 -   Added ability to upload csv and excel files in collection imports.
--   Add support for a default landing page, allowing users to specify their desired landing page which the app will route to upon login.
+-   Added support for configuring a default landing page. The desired landing page can be specified in `assets/config.json`, which Workbench will route to upon login.
 
 #### Improvements in 2.0.0
 -   Improved error handling during collection import.
