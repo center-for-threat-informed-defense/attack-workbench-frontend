@@ -195,6 +195,8 @@ import { TacticCellComponent } from './components/matrix/tactic-cell/tactic-cell
 import { TechniqueCellComponent } from './components/matrix/technique-cell/technique-cell.component';
 import { MatrixFlatComponent } from './views/stix/matrix/matrix-flat/matrix-flat.component';
 
+import { AssetListComponent } from './views/stix/asset/asset-list/asset-list.component';
+import { AssetViewComponent } from './views/stix/asset/asset-view/asset-view.component';
 
 import { TeamsListPageComponent } from './views/admin-page/teams/teams-list-page/teams-list-page.component';
 import { TeamsViewPageComponent } from './views/admin-page/teams/teams-view-page/teams-view-page.component';
@@ -332,7 +334,9 @@ export function initConfig(appConfigService: AppConfigService) {
 		TeamsListPageComponent,
 		TeamsViewPageComponent,
 		CreateNewDialogComponent,
-		UsersListComponent
+		UsersListComponent,
+		AssetListComponent,
+		AssetViewComponent
 	],
 	imports: [
 		BreadcrumbModule,
