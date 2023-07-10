@@ -41,7 +41,7 @@ There are multiple means through which a collection can be imported. The "import
 
 Users can import the collection in several different ways:
 - *Import from URL*: In cases where the collection has been hosted on the internet, the user may specify the URL of a collection STIX bundle for the application to download.
-<!-- - *Upload from file*: Users can also upload a STIX bundle representing the collection. -->
+- *Upload from file*: Users can upload a STIX bundle representing the collection. You can upload a collection in JSON, CSV, or XLSX format.
 - *Import from collection index*: The user can choose to import collections listed by attached _collection indexes_, which are essentially lists of collections on the internet.
 
 ##### 2. Review Contents
