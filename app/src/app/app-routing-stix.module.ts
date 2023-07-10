@@ -12,6 +12,7 @@ import { MarkingDefinitionListComponent } from "./views/stix/marking-definition/
 import { DataSourceListComponent } from "./views/stix/data-source/data-source-list/data-source-list.component";
 import { ReferenceManagerComponent } from "./views/reference-manager/reference-manager.component";
 import { CampaignListComponent } from "./views/stix/campaign/campaign-list/campaign-list.component";
+import { AssetListComponent } from "./views/stix/asset/asset-list/asset-list.component";
 
 import { StixPageComponent } from "./views/stix/stix-page/stix-page.component";
 
@@ -438,6 +439,59 @@ const stixRoutes: Routes = [{
                 breadcrumb: 'view',
                 editable: true,
                 title: "new campaign",
+                roles: editRoles,
+                editRoles: editRoles
+            },
+            component: StixPageComponent
+        }
+        ]
+    }
+    ]
+},
+{
+    path: 'asset',
+    canActivateChild: [AuthorizationGuard],
+    data: {
+        breadcrumb: 'assets'
+    },
+    children: [{
+        path: '',
+        data: {
+            breadcrumb: 'list',
+            title: "assets",
+            roles: viewRoles
+        },
+        component: AssetListComponent
+    },
+    {
+        path: ':id',
+        data: {
+            breadcrumb: 'loading...'
+        },
+        children: [{
+            path: '',
+            data: {
+                breadcrumb: 'view',
+                editable: true,
+                title: "view asset",
+                roles: viewRoles,
+                editRoles: editRoles
+            },
+            component: StixPageComponent
+        }
+        ]
+    },
+    {
+        path: ":new",
+        data: {
+            breadcrumb: "new asset"
+        },
+        children: [{
+            path: '',
+            data: {
+                breadcrumb: 'view',
+                editable: true,
+                title: "new asset",
                 roles: editRoles,
                 editRoles: editRoles
             },
