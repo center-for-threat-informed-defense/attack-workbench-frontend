@@ -117,19 +117,18 @@ export class ListEditComponent implements OnInit, AfterContentChecked {
                 complete: () => { subscription.unsubscribe(); }
             })
         } else if (this.config.field == 'parentTechnique') {
-          this.type = 'technique';
-          const subscription = this.restAPIConnectorService.getAllTechniques().subscribe({
-            next: (r: Paginated<Technique>) => {
-              this.allObjects = r.data.filter((t) => !t.is_subtechnique);
-              const selectableTechniqueIDs = r.data.map(t => t.stixID);
-              this.select = new SelectionModel<string>(false, selectableTechniqueIDs);
-              this.dataLoaded = true;
-            },
-            complete: () => {
-              subscription.unsubscribe();
-            }
-          });
-
+            this.type = 'technique';
+            const subscription = this.restAPIConnectorService.getAllTechniques().subscribe({
+                next: (r: Paginated<Technique>) => {
+                    this.allObjects = r.data.filter((t) => !t.is_subtechnique);
+                    const selectableTechniqueIDs = r.data.map(t => t.stixID);
+                    this.select = new SelectionModel<string>(false, selectableTechniqueIDs);
+                    this.dataLoaded = true;
+                },
+                complete: () => {
+                    subscription.unsubscribe();
+                }
+            });
         }
     }
 
