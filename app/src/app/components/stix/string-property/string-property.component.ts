@@ -1,5 +1,6 @@
-import { Component, Input, ViewEncapsulation } from '@angular/core';
+import { Component, Input, OnInit, ViewEncapsulation } from '@angular/core';
 import { StixObject } from 'src/app/classes/stix/stix-object';
+import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/rest-api-connector.service';
 
 @Component({
     selector: 'app-string-property',
@@ -7,11 +8,48 @@ import { StixObject } from 'src/app/classes/stix/stix-object';
     styleUrls: ['./string-property.component.scss'],
     encapsulation: ViewEncapsulation.None
 })
-export class StringPropertyComponent {
+export class StringPropertyComponent implements OnInit {
     @Input() public config: StringPropertyConfig;
 
-    constructor() {
+    public allowedValues: string[];
+    public dataLoaded: boolean = false;
+
+    // map for fields with allowed values
+    public fieldToStix = {
+        "sector": "x_mitre_sector"
+    }
+
+    constructor(private restAPIService: RestApiConnectorService) {
         // intentionally left blank
+    }
+
+    ngOnInit(): void {
+        if (this.config.field in this.fieldToStix && !this.dataLoaded) {
+            let subscription = this.restAPIService.getAllAllowedValues().subscribe({
+                next: (data) => {
+                    let stixObject = this.config.object as StixObject;
+                    let allAllowedValues = data.find(obj => obj.objectType == stixObject.attackType)
+                    let property = allAllowedValues.properties.find(p => {return p.propertyName == this.fieldToStix[this.config.field]});
+
+                    let values: Set<string> = new Set();
+                    if ("domains" in this.config.object) {
+                        let obj = this.config.object as any;
+                        property.domains.forEach(domain => {
+                            if (obj.domains.includes(domain.domainName)) {
+                                domain.allowedValues.forEach(values.add, values);
+                            }
+                        })
+                    } else { // domains not specified on object
+                        property.domains.forEach(domain => {
+                            domain.allowedValues.forEach(values.add, values);
+                        })
+                    }
+                    this.allowedValues = Array.from(values);
+                    this.dataLoaded = true;
+                },
+                complete: () => { subscription.unsubscribe(); }
+            });
+        }
     }
 }
 
@@ -32,4 +70,6 @@ export interface StringPropertyConfig {
     label?: string;
     /* If true, the field will be required. Default false if omitted. */
     required?: boolean;
+    /* Edit mode. Default: 'any' */
+    editType?: "select" | "any";
 }
