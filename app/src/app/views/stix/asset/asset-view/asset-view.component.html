@@ -27,6 +27,17 @@
     </div>
     <div class="row">
         <div class="col">
+            <!-- SECTOR -->
+            <app-string-property class="grow-to-row" [config]="{
+                mode: editing ? 'edit': 'view',
+                object: asset,
+                field: 'sector',
+                editType: 'select'
+            }"></app-string-property>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
             <!-- PLATFORMS -->
             <app-list-property class="grow-to-row" [config]="{
                 mode: editing? 'edit': 'view',

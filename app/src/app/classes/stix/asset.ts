@@ -11,6 +11,9 @@ export class Asset extends StixObject {
     public relatedAssets: RelatedAsset[] = [];
     public platforms: string[] = [];
 
+    // assets are ICS-only
+    public domains: string[] = ['ics-attack'];
+
     public readonly supportsAttackID = true;
     public readonly supportsNamespace = true;
     protected get attackIDValidator() {
