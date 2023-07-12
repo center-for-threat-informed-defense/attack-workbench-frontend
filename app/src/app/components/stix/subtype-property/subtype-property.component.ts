@@ -30,5 +30,7 @@ export interface SubtypePropertyConfig {
 		name: string,
 		type: string,
 		key?: boolean /** The key field, must have at least one */
-	}[]
+	}[];
+	/* The mat tooltip for the add button */
+	addTooltip?: string;
 }
