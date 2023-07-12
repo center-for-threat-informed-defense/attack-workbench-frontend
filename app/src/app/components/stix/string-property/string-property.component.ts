@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { StixObject } from 'src/app/classes/stix/stix-object';
 import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/rest-api-connector.service';
@@ -9,7 +9,7 @@ import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/re
     styleUrls: ['./string-property.component.scss'],
     encapsulation: ViewEncapsulation.None
 })
-export class StringPropertyComponent implements OnInit {
+export class StringPropertyComponent implements OnInit, OnDestroy {
     @Input() public config: StringPropertyConfig;
 
     public allowedValues: string[];
@@ -48,10 +48,13 @@ export class StringPropertyComponent implements OnInit {
                     }
                     this.allowedValues = Array.from(values);
                     this.dataLoaded = true;
-                },
-                complete: () => { this.subscription.unsubscribe(); }
+                }
             });
         }
+    }
+
+    ngOnDestroy(): void {
+        if (this.subscription) this.subscription.unsubscribe();
     }
 }
 
