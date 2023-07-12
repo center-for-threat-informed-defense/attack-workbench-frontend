@@ -1,4 +1,5 @@
 import { Component, Input, OnInit, ViewEncapsulation } from '@angular/core';
+import { Subscription } from 'rxjs';
 import { StixObject } from 'src/app/classes/stix/stix-object';
 import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/rest-api-connector.service';
 
@@ -13,6 +14,7 @@ export class StringPropertyComponent implements OnInit {
 
     public allowedValues: string[];
     public dataLoaded: boolean = false;
+    private subscription: Subscription = new Subscription();
 
     // map for fields with allowed values
     public fieldToStix = {
@@ -25,7 +27,7 @@ export class StringPropertyComponent implements OnInit {
 
     ngOnInit(): void {
         if (this.config.field in this.fieldToStix && !this.dataLoaded) {
-            let subscription = this.restAPIService.getAllAllowedValues().subscribe({
+            this.subscription = this.restAPIService.getAllAllowedValues().subscribe({
                 next: (data) => {
                     let stixObject = this.config.object as StixObject;
                     let allAllowedValues = data.find(obj => obj.objectType == stixObject.attackType)
@@ -47,7 +49,7 @@ export class StringPropertyComponent implements OnInit {
                     this.allowedValues = Array.from(values);
                     this.dataLoaded = true;
                 },
-                complete: () => { subscription.unsubscribe(); }
+                complete: () => { this.subscription.unsubscribe(); }
             });
         }
     }
