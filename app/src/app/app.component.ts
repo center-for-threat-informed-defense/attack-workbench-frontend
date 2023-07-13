@@ -102,7 +102,7 @@ export class AppComponent implements AfterViewInit {
         const logoutSubscription = this.authenticationService.logout().subscribe({
             complete: () => {
                 this.sidebarService.opened = false;
-                this.router.navigate(['']);
+                this.router.navigate(['home']);
                 logoutSubscription.unsubscribe();
             }
         });
