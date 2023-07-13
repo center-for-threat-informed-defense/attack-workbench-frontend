@@ -25,7 +25,7 @@ const routes: Routes = [
         },
         "children": [
             {
-                "path": "home",
+                "path": "",
                 "data": {
                     "breadcrumb": "welcome"
                 },
