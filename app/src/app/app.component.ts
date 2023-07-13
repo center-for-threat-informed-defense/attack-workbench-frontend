@@ -42,12 +42,7 @@ export class AppComponent implements AfterViewInit {
                     });
                 } else if (e instanceof NavigationEnd) {
                     const authSubscription = this.authenticationService.getSession().subscribe({
-                        next: (res) => {
-                            this.checkStatus();
-                            if (this.router.url === '/') {
-                                this.configService.redirectToLanding();
-                            }
-                         },
+                        next: (res) => { this.checkStatus(); },
                         complete: () => { authSubscription.unsubscribe(); }
                     });
                 }

@@ -11,7 +11,7 @@ export class AppConfigService {
 
 	/** Get the default landing page route */
 	public get defaultLandingPage() {
-		if (!this.appConfig) return 'home';
+		if (!this.appConfig) return '';
 		return this.appConfig.defaultLandingPage;
 	}
 
@@ -27,10 +27,10 @@ export class AppConfigService {
 		if (this.defaultLandingPage && this.defaultLandingPage !== '') {
 			this.router.navigate([this.defaultLandingPage])
 				.catch(e => {
-					this.router.navigate(['/home'])
+					this.router.navigate([''])
 				})
 		} else {
-			this.router.navigate(['/home'])
+			this.router.navigate([''])
 		}
 	}
 
