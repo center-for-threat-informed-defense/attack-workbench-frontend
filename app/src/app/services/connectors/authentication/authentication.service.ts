@@ -10,6 +10,7 @@ import { Role } from 'src/app/classes/authn/role';
 import { Router } from '@angular/router';
 import { RestApiConnectorService } from '../rest-api/rest-api-connector.service';
 import { Status } from 'src/app/classes/authn/status';
+import { AppConfigService } from '../../config/app-config.service';
 
 @Injectable({
     providedIn: 'root'
@@ -22,7 +23,13 @@ export class AuthenticationService extends ApiConnector {
     private get apiUrl(): string { return environment.integrations.rest_api.url; }
     public onLogin = new EventEmitter(); // event emitter for admin organization identity pop-up
 
-    constructor(private router: Router, private http: HttpClient, snackbar: MatSnackBar, private restAPIConnector: RestApiConnectorService) { super(snackbar); }
+    constructor(private router: Router, 
+                private http: HttpClient, 
+                snackbar: MatSnackBar, 
+                private restAPIConnector: RestApiConnectorService,
+                private configService: AppConfigService) {
+        super(snackbar);
+    }
 
     /**
      * Check if user is authorized
@@ -73,7 +80,7 @@ export class AuthenticationService extends ApiConnector {
                     window.location.href = url;
                     return this.getSession().pipe(
                         map(res => {
-                            this.onLogin.emit();
+                            this.success();
                             return res;
                         })
                     );
@@ -83,7 +90,7 @@ export class AuthenticationService extends ApiConnector {
                     concatMap(success => {
                         return this.getSession().pipe(
                             map(res => {
-                                this.onLogin.emit();
+                                this.success();
                                 return res;
                             })
                         );
@@ -93,6 +100,11 @@ export class AuthenticationService extends ApiConnector {
             catchError(this.handleError_raise<UserAccount>()),
             share()
         );
+    }
+
+    public success(): void {
+        this.configService.redirectToLanding();
+        this.onLogin.emit();
     }
 
     /**
