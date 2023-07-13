@@ -1,0 +1,27 @@
+<div class="subtype-edit-dialog">
+    <h1>{{isNew ? 'Add' : 'Edit'}} {{config.tooltip}}</h1>
+
+    <ng-container *ngFor="let field of config.subtypeFields">
+        <mat-form-field *ngIf="field.type == 'string'" appearance="outline">
+            <mat-label>{{field.name}}</mat-label>
+            <input matInput [required]="field.required ? field.required : false" [(ngModel)]="value[field.name]"/>
+        </mat-form-field>
+
+        <mat-form-field *ngIf="field.type == 'select'" class="grow-to-row" appearance="outline">
+            <mat-label *ngIf="!dataLoaded" class="loading">
+                <mat-spinner class="spinner" diameter="20"></mat-spinner>&nbsp;
+                <span>Loading {{field.label? field.label : field.name}}...</span>
+            </mat-label>
+            <mat-label *ngIf="dataLoaded">{{field.label ? field.label : field.name}}</mat-label>
+            
+            <mat-select [required]="field.required ? field.required : false" [(value)]="value[field.name]">
+                <mat-option *ngFor="let item of allowedValues[field.name]" [value]="item">{{item}}</mat-option>
+            </mat-select>
+        </mat-form-field>
+    </ng-container>
+
+    <div class="buttons">
+        <button mat-button matDialogClose>cancel</button>
+        <button mat-stroked-button [disabled]="!isValid" (click)="saveValue()">confirm</button>
+    </div>
+</div>

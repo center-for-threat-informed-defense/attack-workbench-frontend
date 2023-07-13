@@ -27,10 +27,12 @@ export interface SubtypePropertyConfig {
     referencesField?: string;
 	/* The fields & types of the subtype property */
 	subtypeFields: {
-		name: string,
-		type: string,
-		key?: boolean /** The key field, must have at least one */
+		name: string;
+		type: "string" | "select";
+		required?: boolean;
+		label?: string;
+		key?: boolean; /** The key field, must have at least one */
 	}[];
-	/* The mat tooltip for the add button */
-	addTooltip?: string;
+	/* The tooltip for the add button/edit dialog */
+	tooltip: string;
 }

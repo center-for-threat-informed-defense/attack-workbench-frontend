@@ -120,6 +120,11 @@ import { AliasViewComponent } from './components/stix/alias-property/alias-view/
 import { AliasEditComponent } from './components/stix/alias-property/alias-edit/alias-edit.component';
 import { AliasEditDialogComponent } from './components/stix/alias-property/alias-edit/alias-edit-dialog/alias-edit-dialog.component';
 
+import { SubtypePropertyComponent } from './components/stix/subtype-property/subtype-property.component';
+import { SubtypeViewComponent } from './components/stix/subtype-property/subtype-view/subtype-view.component';
+import { SubtypeEditComponent } from './components/stix/subtype-property/subtype-edit/subtype-edit.component';
+import { SubtypeDialogComponent } from './components/stix/subtype-property/subtype-dialog/subtype-dialog.component';
+
 import { OrderedListPropertyComponent } from './components/stix/ordered-list-property/ordered-list-property.component';
 import { OrderedListViewComponent } from './components/stix/ordered-list-property/ordered-list-view/ordered-list-view.component';
 import { OrderedListEditComponent } from './components/stix/ordered-list-property/ordered-list-edit/ordered-list-edit.component';
@@ -336,7 +341,11 @@ export function initConfig(appConfigService: AppConfigService) {
 		CreateNewDialogComponent,
 		UsersListComponent,
 		AssetListComponent,
-		AssetViewComponent
+		AssetViewComponent,
+		SubtypePropertyComponent,
+		SubtypeViewComponent,
+		SubtypeEditComponent,
+		SubtypeDialogComponent
 	],
 	imports: [
 		BreadcrumbModule,
