@@ -4,7 +4,7 @@ This document describes how to install the ATT&CK Workbench components using Doc
 
 ## 1. Download required repositories
 
-In addition to this project, the [ATT&CK Workbench REST API](https://github.com/center-for-threat-informed-defense/attack-workbench-rest-api) and [ATT&CK Workbench Collection Manager](https://github.com/center-for-threat-informed-defense/attack-workbench-collection-manager) projects must be pulled from their github repositories.
+In addition to this project, the [ATT&CK Workbench REST API](https://github.com/center-for-threat-informed-defense/attack-workbench-rest-api) project must be pulled from its github repository.
 
 These projects must be placed under a common parent directory:
 
@@ -12,15 +12,12 @@ These projects must be placed under a common parent directory:
 |-- <common parent directory>
     |-- attack-workbench-frontend
     |-- attack-workbench-rest-api
-    |-- attack-workbench-collection-manager
 ```
 
-To perform all three clones as required (including the clone of this repository), you can use the following commands from your working directory:
+To perform all clones as required (including the clone of this repository), you can use the following commands from your working directory:
 ```shell
 # download the front-end repository
 git clone https://github.com/center-for-threat-informed-defense/attack-workbench-frontend.git
-# download the collection manager repository
-git clone https://github.com/center-for-threat-informed-defense/attack-workbench-collection-manager.git
 # download the REST API repository
 git clone https://github.com/center-for-threat-informed-defense/attack-workbench-rest-api.git
 ```
@@ -82,12 +79,11 @@ docker-compose up --build
 When deployed using Docker Compose, an ATT&CK Workbench installation will include four containers:
 * frontend
 * rest-api
-* collection-manager
 * mongodb
 
 These containers will communicate as illustrated in the diagram below.
 The `nginx` instance (part of the `frontend` container) is responsible for serving the statically built code for the ATT&CK Workbench web application.
-It also acts as a reverse proxy for the `rest-api` and `collection-manager` services.
+It also acts as a reverse proxy for the `rest-api` service.
 
 ![Workbench Configuration](images/workbench-configuration-docker-compose.png)
 
