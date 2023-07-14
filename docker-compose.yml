@@ -5,7 +5,6 @@ services:
     build: .
     depends_on:
       - rest-api
-      - collection-manager
     ports:
       - "80:80"
     volumes:
@@ -24,15 +23,6 @@ services:
       - DATABASE_URL=mongodb://attack-workbench-database/attack-workspace
       - SERVICE_ACCOUNT_APIKEY_ENABLE=true
       - JSON_CONFIG_PATH=./resources/rest-api-service-config.json
-
-  collection-manager:
-    container_name: attack-workbench-collection-manager
-    build: ../attack-workbench-collection-manager
-    depends_on:
-      - rest-api
-    ports:
-      - "3001:3001"
-    environment:
       - WORKBENCH_HOST=http://attack-workbench-rest-api
       - WORKBENCH_AUTHN_SERVICE_NAME=collection-manager
       - WORKBENCH_AUTHN_APIKEY=sample-key

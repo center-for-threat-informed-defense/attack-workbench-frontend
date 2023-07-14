@@ -1,9 +1,9 @@
 # Description
-# - This file augments the deployment of the ATT&CK Workbench by configuring the collection-manager container
+# - This file augments the deployment of the ATT&CK Workbench by configuring the REST API container
 # - with an additional certificate.
-# - This is recommended for deployments where the collection-manager container is behind a firewall that performs
-#   SSL inspection. The additional certificate allows collection-manager to retrieve collection-indexes and
-#   collection bundles without receiving a self-signed certificate error.
+# - This is recommended for deployments where the REST API container is behind a firewall that performs
+#   SSL inspection. The additional certificate allows the REST API collection management to retrieve 
+#   Collection Indexes and Collection bundles without receiving a self-signed certificate error.
 
 # Usage
 # This file must be used in conjunction with the main docker-compose.yml file.
@@ -17,8 +17,8 @@
 
 version: "3.9"
 services:
-  collection-manager:
+  rest-api:
     volumes:
-      - ${HOST_CERTS_PATH}:/usr/src/app/certs
+      - .${HOST_CERTS_PATH}:/usr/src/app/certs
     environment:
       - NODE_EXTRA_CA_CERTS=./certs/${CERTS_FILENAME}
