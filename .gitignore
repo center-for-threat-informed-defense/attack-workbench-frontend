@@ -33,3 +33,4 @@ Temporary Items
 
 *.env
 .vscode
+certs/

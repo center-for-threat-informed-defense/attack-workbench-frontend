@@ -105,7 +105,10 @@ export class StixPageComponent implements OnInit, OnDestroy {
         let prompt = this.dialog.open(DeleteDialogComponent, {
             maxWidth: "35em",
             disableClose: true,
-            autoFocus: false
+            autoFocus: false,
+            data: {
+              collectionDelete: this.objectType =='collection'
+            }
         });
         let closeSubscription = prompt.afterClosed().subscribe({
             next: (confirm) => {
@@ -125,20 +128,25 @@ export class StixPageComponent implements OnInit, OnDestroy {
     private deleteObjects() {
         return this.restApiService.getAllNotes().pipe(
             concatMap(notes => {
-                let relatedNotes = (notes.data as Note[]).filter(note => note.object_refs.includes(this.objects[0].stixID));
-                if (this.objects[0].attackType == 'technique' && this.objects[0]["is_subtechnique"]) {
+                const delObject = this.objects[0];
+                let relatedNotes = (notes.data as Note[]).filter(note => note.object_refs.includes(delObject.stixID));
+                if (delObject.attackType == 'technique' && delObject["is_subtechnique"]) {
                     // if sub-technique, delete the 'subtechnique-of' relationship
-                    return this.restApiService.getRelatedTo({sourceRef: this.objects[0].stixID, relationshipType: 'subtechnique-of'}).pipe(
+                    return this.restApiService.getRelatedTo({sourceRef: delObject.stixID, relationshipType: 'subtechnique-of'}).pipe(
                         concatMap(sub_relationship => {
                             let noteSubs = relatedNotes.map(note => note.delete(this.restApiService));
                             let relSubs = sub_relationship.data.map(r => r.delete(this.restApiService));
-                            let sub_api_calls = [...noteSubs, ...relSubs, this.objects[0].delete(this.restApiService)];
+                            let sub_api_calls = [...noteSubs, ...relSubs, delObject.delete(this.restApiService)];
                             return forkJoin(sub_api_calls);
                         })
                     )
                 }
                 let noteSubscribers = relatedNotes.map(note => note.delete(this.restApiService));
-                let api_calls = [...noteSubscribers, this.objects[0].delete(this.restApiService)];
+                let api_calls = [...noteSubscribers, delObject.delete(this.restApiService)];
+                if (delObject.attackType == 'collection' && (delObject as Collection).imported) {
+                    this.editorService.onDeleteImportedCollection.emit();
+                    api_calls.push(this.restApiService.deleteCollection(delObject.stixID, true, delObject.modified.toISOString()));
+                }
                 return forkJoin(api_calls);
             })
         )

@@ -30,5 +30,10 @@ services:
   mongodb:
     container_name: attack-workbench-database
     image: mongo
+    volumes:
+      - db-data:/data/db
     ports:
       - "27017:27017"
+      
+volumes:
+  db-data:

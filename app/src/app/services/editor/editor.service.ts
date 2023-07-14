@@ -18,8 +18,10 @@ export class EditorService {
     public deletable: boolean = false;
     public hasWorkflow: boolean = true;
     public hasRelationships: boolean = true;
+    public isAnImportedCollection: boolean = false;
     public onSave = new EventEmitter();
     public onDelete = new EventEmitter();
+    public onDeleteImportedCollection = new EventEmitter();
     public onEditingStopped = new EventEmitter();
     public onReload = new EventEmitter();
     public onReloadReferences = new EventEmitter();
@@ -37,16 +39,12 @@ export class EditorService {
         private dialog: MatDialog) {
         this.router.events.subscribe(event => {
             if (event instanceof NavigationEnd) {
+                this.isAnImportedCollection = false;
                 let editable = this.getEditableFromRoute(this.router.routerState, this.router.routerState.root);
                 let attackType = this.route.root.firstChild.snapshot.data.breadcrumb;
                 this.editable = editable.length > 0 && editable.every(x => x) && this.authenticationService.canEdit(attackType);
-                try {
-                  // if we have a group type and it is NOT new we can create a collection from all of the objects in the group
-                  this.isGroup = this.type === 'group' && this.stixId != 'new';
-                } catch (err) {
-                  // stixId throws an error when we are on the list page so this catches that
-                  this.isGroup = false;
-                }
+                // if we have a group type and it is NOT new we can create a collection from all of the objects in the group
+                this.isGroup = this.type === 'group' && !this.router.url.includes("/new");
                 this.hasWorkflow = attackType !== 'home';
                 if (!(this.editable && this.hasWorkflow)) this.sidebarService.currentTab = "references";
                 this.sidebarService.setEnabled("history", this.editable && this.hasWorkflow);

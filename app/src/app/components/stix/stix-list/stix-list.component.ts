@@ -15,6 +15,8 @@ import { AuthenticationService } from 'src/app/services/connectors/authenticatio
 import { SidebarService } from 'src/app/services/sidebar/sidebar.service';
 import { MatSelect } from '@angular/material/select';
 import { AddDialogComponent } from '../../add-dialog/add-dialog.component';
+import { Collection } from 'src/app/classes/stix/collection';
+import { logger } from 'src/app/util/logger';
 
 @Component({
     selector: 'app-stix-list',
@@ -77,6 +79,8 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
     public tableDetail: any[];
     public expandedElement: StixObject | null;
 
+    public collectionColumnsToDisplay: string[];
+
     // Selection stuff
     public selection: SelectionModel<string>;
 
@@ -116,6 +120,11 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
         { "value": "state.deprecated", "label": "include deprecated", "disabled": false },
         { "value": "state.revoked", "label": "include revoked", "disabled": false }
     ]
+
+    private statesExclusive: FilterValue[] = [
+      { "value": "state.exclusive.deprecated", "label": "show only deprecated", "disabled": false },
+      { "value": "state.exclusive.revoked", "label": "show only revoked", "disabled": false }
+  ]
 
     public get userSearchString(): string {
         if (this.userIdsUsedInSearch.length === 0) {
@@ -194,22 +203,25 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
                 case "collection":
                 case "collection-created":
                     this.addColumn("name", "name", "plain", sticky_allowed, ["name"]);
-                    this.addColumn("released?", "release", "plain", null, ["text-label"]);
-                    this.addVersionsAndDatesColumns();
+                    this.addColumn("latest version", "version", "version");
+                    this.addColumn("created", "created", "timestamp");
+                    this.addColumn("modified", "modified", "timestamp");
                     this.tableDetail = [{
                         "field": "description",
                         "display": "descriptive"
-                    }]
+                    }];
+                    this.collectionColumnsToDisplay = ['action','version','released','description'];
                     break;
                 case "collection-imported":
                     this.addColumn("name", "name", "plain", sticky_allowed, ["name"]);
-                    this.addColumn("version", "version", "version");
+                    this.addColumn("latest version", "version", "version");
                     this.addColumn("imported", "imported", "timestamp");
                     this.addColumn("modified", "modified", "timestamp");
                     this.tableDetail = [{
                         "field": "description",
                         "display": "descriptive"
-                    }]
+                    }];
+                    this.collectionColumnsToDisplay = ['action','version','description'];
                     break;
                 case "mitigation":
                 case "tactic":
@@ -371,7 +383,7 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
         }
         this.tableColumns_controls = controls_before.concat(this.tableColumns, controls_after);
 
-        const filterList = this.config.filterList ? this.config.filterList : ['state', 'workflow_status'];
+        let filterList = this.config.filterList ? this.config.filterList : ['state', 'workflow_status'];
         if (filterList.includes('workflow_status')) {
             this.filterOptions.push({
                 "name": "workflow status",
@@ -379,12 +391,23 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
                 "values": this.statuses
             })
         }
+        if (filterList.includes('state') && filterList.includes('state_exclusive')) {
+          filterList = filterList.filter((obj)=>obj!='state_exclusive');
+          logger.error("Cannot have both 'state' and 'state_exclusive' filters active.  Defaulting to 'state'");
+        }
         if (filterList.includes('state')) {
             this.filterOptions.push({
                 "name": "state",
                 "disabled": "status" in this.config,
                 "values": this.states
             })
+        }
+        if (filterList.includes('state_exclusive')) {
+          this.filterOptions.push({
+            "name": "state (exclusive)",
+            "disabled": "status" in this.config,
+            "values": this.statesExclusive,
+          })
         }
         let filterByDomain: boolean = this.config.type ? ['data-source', 'mitigation', 'software', 'tactic', 'technique'].includes(this.config.type) : false;
         let filterByPlatform: boolean = this.config.type ? ['data-source', 'software', 'technique'].includes(this.config.type) : false;
@@ -672,6 +695,7 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
      * Apply all controls and fetch objects from the back-end if configured
      */
     public applyControls() {
+        const {deprecated, revoked, state, platforms, domains, exclusiveDeprecated, exclusiveRevoked} = this.getFilterObjectStates();
         if ("stixObjects" in this.config) {
             if (this.config.stixObjects instanceof Observable) {
                 // pull objects out of observable
@@ -679,9 +703,34 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
                 // filter on STIX objects specified in the config
                 let filtered = this.config.stixObjects;
 
-                // deprecation filter
-                if (this.config.showDeprecatedFilter && !this.filter.includes("state.deprecated")) {
-                    filtered = filtered.filter(o => !o.deprecated)
+                //filter by domains
+                if (Array.isArray(domains) && domains.length > 0) {
+                  filtered = filtered.filter((obj:any)=> obj.domains.some((object_domain: any) => domains.includes(object_domain)));
+                }
+
+                //filter by platforms
+                if (Array.isArray(platforms) && platforms.length > 0) {
+                  filtered = filtered.filter((obj:any)=> obj.platforms.some((object_platform: any) => platforms.includes(object_platform)));
+                }
+                
+                // filter by workflow status
+                if (state) {
+                  filtered = filtered.filter((obj:any)=> obj.workflow && obj.workflow.state == state)
+                }
+
+                // filter by deprecation status
+                if (exclusiveDeprecated) {
+                  filtered = filtered.filter((obj:any)=> obj.deprecated)
+                }
+
+                // filter by deprecation status
+                if (exclusiveRevoked) {
+                  filtered = filtered.filter((obj:any)=> obj.revoked)
+                }
+
+                //filter by users
+                if (Array.isArray(this.userIdsUsedInSearch) && this.userIdsUsedInSearch.length > 0) {
+                  filtered = filtered.filter((obj:any)=> obj.workflow && this.userIdsUsedInSearch.includes(obj.workflow.created_by_user_account));
                 }
 
                 // filter to objects matching searchString
@@ -711,45 +760,6 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
             // fetch objects from backend
             let limit = this.paginator ? this.paginator.pageSize : 10;
             let offset = this.paginator ? this.paginator.pageIndex * limit : 0;
-            let deprecated = this.filter.includes("state.deprecated");
-            let revoked = this.filter.includes("state.revoked");
-
-            // state filter
-            let state = this.filter.find((x) => x.startsWith("status."));
-            if (state) {
-                state = state.split("status.")[1];
-                // disable other states
-                for (let group of this.filterOptions) {
-                    for (let option of group.values) {
-                        if (option.value.startsWith("status.") && !option.value.endsWith(state)) option.disabled = true;
-                    }
-                }
-            } else {
-                // enable all states
-                this.enableAllFilters('workflow status');
-            }
-
-            // platform filter
-            let platforms: string[] = this.filter.filter((x) => x.startsWith("platform."));
-            if (platforms.length) {
-                platforms = platforms.map(p => p.split("platform.")[1]);
-                // disable domains that do not support selected platforms
-                this.disableDomainFilters(platforms);
-            } else {
-                // enable all domains
-                this.enableAllFilters('domain');
-            }
-
-            // domain filter
-            let domains: string[] = this.filter.filter((x) => x.startsWith("domain."));
-            if (domains.length) {
-                domains = domains.map(d => d.split("domain.")[1]);
-                // disable platforms not in selected domains
-                this.disablePlatformFilters(domains);
-            } else {
-                // enable all platforms
-                this.enableAllFilters('platform');
-            }
 
             let options = {
                 limit: limit,
@@ -799,6 +809,77 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
         // prevent memory leaks
         if (this.searchSubscription) this.searchSubscription.unsubscribe();
         if (this.platformSubscription) this.platformSubscription.unsubscribe();
+    }
+
+    /**
+     * Captures the filter statuses and returns them as an object.
+     */
+    private getFilterObjectStates() {
+      let deprecated = this.filter.includes("state.deprecated");
+      let revoked = this.filter.includes("state.revoked");
+
+      // exclusive deprecated filter
+      let exclusiveDeprecated = this.filter.includes("state.exclusive.deprecated");
+      // exclusive revoked filter
+      let exclusiveRevoked = this.filter.includes("state.exclusive.revoked");
+
+      // state exclusive logic
+      if (exclusiveDeprecated || exclusiveRevoked) {
+        const search = exclusiveDeprecated ? 'state.exclusive.revoked' : 'state.exclusive.deprecated';
+        for (let group of this.filterOptions) {
+          for (let option of group.values) {
+              if (option.value == search) option.disabled = true;
+          }
+        }
+      } else {
+        this.enableAllFilters('state (exclusive)');
+      }
+
+      // state filter
+      let state = this.filter.find((x) => x.startsWith("status."));
+      if (state) {
+        state = state.split("status.")[1];
+        // disable other states
+        for (let group of this.filterOptions) {
+            for (let option of group.values) {
+                if (option.value.startsWith("status.") && !option.value.endsWith(state)) option.disabled = true;
+            }
+        }
+      } else {
+          // enable all states
+          this.enableAllFilters('workflow status');
+      }
+
+      // platform filter
+      let platforms: string[] = this.filter.filter((x) => x.startsWith("platform."));
+      if (platforms.length) {
+          platforms = platforms.map(p => p.split("platform.")[1]);
+          // disable domains that do not support selected platforms
+          this.disableDomainFilters(platforms);
+      } else {
+          // enable all domains
+          this.enableAllFilters('domain');
+      }
+
+      // domain filter
+      let domains: string[] = this.filter.filter((x) => x.startsWith("domain."));
+      if (domains.length) {
+          domains = domains.map(d => d.split("domain.")[1]);
+          // disable platforms not in selected domains
+          this.disablePlatformFilters(domains);
+      } else {
+          // enable all platforms
+          this.enableAllFilters('platform');
+      }
+      return {
+        deprecated,
+        revoked,
+        state,
+        platforms,
+        domains,
+        exclusiveDeprecated,
+        exclusiveRevoked,
+      };
     }
 }
 
@@ -879,6 +960,11 @@ export interface StixListConfig {
         tooltip: string, // tooltip or descriptor of action
         position: "start" | "end" //start: occurs before first column; end: occurs after last column
     }
+
+    /**
+     * Map of collections by stixID
+     */
+    collectionMap?: Map<string, Collection[]>;
 }
 
 export interface FilterValue {

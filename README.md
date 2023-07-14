@@ -82,9 +82,15 @@ These environment properties can be edited under `src/environments`:
 - [src/environments/environment.ts](app/src/environments/environment.ts) is the development environment with configurations for when it is hosted on a local machine or is being actively developed. This is the default environment file used when building the application.
 - [src/environments/environment.prod.ts](app/src/environments/environment.prod.ts) is the production environment for deployment inside of an organization or in cases where the user is not developing the application. When the application is built for production deployments (`ng build --prod`) this environment file is used.
 
+#### Setting the Default Landing Page
+To allow for additional customization, the ATT&CK Workbench enables users to set a default landing page for their instance of Workbench. To set the default landing page:
+- Open up the config file, found at `src/assets/config.ts`.
+- Set the `defaultLandingPage` variable to the url path you want to set as the default landing page
+  - You can set the default to a more general page, such as the tactic list view `"defaultLandingPage": "tactic"`, or to a specific page, such as a certain matrix `"defaultLandingPage": "matrix/x-mitre-matrix--eafc1b4c-5e56-4965-bd4e-66a6a89c88cc"`
+
 #### PKI Certificates
 
-For additional troubleshooting and installation of security certificates for use by ATT&CK Workbench, pleaser refer to [PKI Certificates instructions](docs/certs.md)
+For additional troubleshooting and installation of security certificates for use by ATT&CK Workbench, pleaser refer to [PKI Certificates instructions](docs/certs.md).
 
 ## Related Work
 

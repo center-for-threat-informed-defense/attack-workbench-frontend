@@ -1,4 +1,4 @@
-<div class="collection-import-review view-page grid spacing-12">
+<div class="collection-import-review view-page grid spacing-12" *ngIf="!deleting else loadingOverlay">
     <div class="row">
         <div class="col">
             <h1>{{collection.name}} v{{collection.version.toString()}}</h1>
@@ -51,3 +51,6 @@
         </div>
     </div>
 </div>
+<ng-template #loadingOverlay>
+    <app-loading-overlay message="deleting collection"></app-loading-overlay>
+</ng-template>

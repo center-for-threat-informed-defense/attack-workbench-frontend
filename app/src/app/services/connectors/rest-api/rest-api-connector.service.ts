@@ -940,9 +940,18 @@ export class RestApiConnectorService extends ApiConnector {
     /**
      * DELETE a collection
      * @param {string} id the STIX ID of the object to delete
+     * @param {boolean} deleteAllContents whether or not to delete all of the contents of the collection
+     * @param {string} version modified date of the version to delete
      * @returns {Observable<{}>} observable of the response body
      */
-    public get deleteCollection() { return this.deleteStixObjectFactory("collection"); }
+    public get deleteCollection() { return function(id: string, deleteAllContents: boolean, version?:string): Observable<{}> {
+      let url = `${this.apiUrl}/collections/${id}${version ? `/modified/${version}`: ``}?deleteAllContents=${deleteAllContents ? 'true' : 'false'}`;
+      return this.http.delete(url).pipe(
+          tap(this.handleSuccess(`collection deleted`)),
+          catchError(this.handleError_raise()),
+          share() // multicast so that multiple subscribers don't trigger the call twice. THIS MUST BE THE LAST LINE OF THE PIPE
+      );
+  } }
     /**
      * DELETE a relationship
      * @param {string} id the STIX ID of the object to delete
@@ -1094,6 +1103,40 @@ export class RestApiConnectorService extends ApiConnector {
                     return new Technique(sdo);
                 });
                 return techniques;
+            }),
+            catchError(this.handleError_continue([])),
+            share()
+        )
+    }
+    /**
+     * Get list of all tactics, techniques, and nested subtechniques within a given matrix
+     * @param {Matrix} matrix the matrix object for the response's tactic list to be added to
+     * @returns
+     */
+    public getTechniquesInMatrix(matrix: Matrix): Observable<any> {
+        let url = `${this.apiUrl}/matrices/${matrix.stixID}/modified/${matrix.modified.toISOString()}/techniques`;
+        return this.http.get(url).pipe(
+            tap(results => logger.log("retrieved techniques", results)),
+            map(response => {
+                let data = response as Array<any>;
+                let entries = Object.entries(data);
+                entries.forEach((item) => {
+                    let tactic = new Tactic(item[1]);
+                    let techniqueList = item[1].techniques;
+                    techniqueList.forEach((item) => {
+                        let technique = new Technique(item);
+                        if (item.subtechniques.length > 0) {
+                        item.subtechniques.forEach((subtechnique) => {
+                            technique.subTechniques.push(new Technique(subtechnique));
+                        })
+                        }
+                        technique.subTechniques.sort((a,b) => a.name.toLowerCase().localeCompare(b.name.toLowerCase()));
+                        tactic.technique_objects.push(technique);
+                    })
+                    tactic.technique_objects.sort((a,b) => a.name.toLowerCase().localeCompare(b.name.toLowerCase()));
+                    matrix.tactic_objects.push(tactic);
+                })
+                return matrix;
             }),
             catchError(this.handleError_continue([])),
             share()
@@ -1597,7 +1640,7 @@ export class RestApiConnectorService extends ApiConnector {
     }
 
 
-    //  _____ ___   _   __  __ ___     _   ___ ___ ___ 
+    //  _____ ___   _   __  __ ___     _   ___ ___ ___
     // |_   _| __| /_\ |  \/  / __|   /_\ | _ \_ _/ __|
     //   | | | _| / _ \| |\/| \__ \  / _ \|  _/| |\__ \
     //   |_| |___/_/ \_\_|  |_|___/ /_/ \_\_| |___|___/
