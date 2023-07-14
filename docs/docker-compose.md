@@ -4,7 +4,7 @@ This document describes how to install the ATT&CK Workbench components using Doc
 
 ## 1. Download required repositories
 
-In addition to this project, the [ATT&CK Workbench REST API](https://github.com/center-for-threat-informed-defense/attack-workbench-rest-api) project must be pulled from their github repositories.
+In addition to this project, the [ATT&CK Workbench REST API](https://github.com/center-for-threat-informed-defense/attack-workbench-rest-api) project must be pulled from its github repository.
 
 These projects must be placed under a common parent directory:
 
@@ -14,7 +14,7 @@ These projects must be placed under a common parent directory:
     |-- attack-workbench-rest-api
 ```
 
-To perform all three clones as required (including the clone of this repository), you can use the following commands from your working directory:
+To perform all clones as required (including the clone of this repository), you can use the following commands from your working directory:
 ```shell
 # download the front-end repository
 git clone https://github.com/center-for-threat-informed-defense/attack-workbench-frontend.git

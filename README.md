@@ -76,7 +76,7 @@ This step is necessary for cases where the app is deployed locally through `ng s
 If you're building the app for production, use `ng build --prod` which will use the production environment instead of the development environment. See [modifying the environment](#modifying-the-environment) for more information.
 
 #### Modifying the environment
-The ATT&CK Workbench Frontend is configured to connect to the REST API running under its default configurations. If those applications are configured to run on different ports, or if the application is to be hosted for access on multiple machines, the environment must be edited to reflect their URLs and ports.
+The ATT&CK Workbench Frontend is configured to connect to the REST API running under its default configuration. If the applications is configured to run on a different port, or if the application is to be hosted for access on multiple machines, the environment must be edited to reflect the URLs and port.
 
 These environment properties can be edited under `src/environments`:
 - [src/environments/environment.ts](app/src/environments/environment.ts) is the development environment with configurations for when it is hosted on a local machine or is being actively developed. This is the default environment file used when building the application.
