@@ -100,7 +100,7 @@
         <div class="row" *ngIf="canEdit">
             <div class="col">
                 <app-add-relationship-button (created)="techniquesList.applyControls(); onReload.emit()" [config]="{
-                    label: 'technique',
+                    label: 'add a technique',
                     relationship_type: 'uses',
                     source_object: software
                 }"></app-add-relationship-button>
@@ -128,7 +128,7 @@
         <div class="row" *ngIf="canEdit">
             <div class="col">
                 <app-add-relationship-button (created)="groupList.applyControls(); onReload.emit()" [config]="{
-                    label: 'group',
+                    label: 'add a group',
                     relationship_type: 'uses',
                     target_object: software
                 }"></app-add-relationship-button>
@@ -156,7 +156,7 @@
         <div class="row" *ngIf="canEdit">
             <div class="col">
                 <app-add-relationship-button (created)="campaignList.applyControls(); onReload.emit()" [config]="{
-                    label: 'campaign',
+                    label: 'add a campaign',
                     relationship_type: 'uses',
                     target_object: software
                 }"></app-add-relationship-button>
