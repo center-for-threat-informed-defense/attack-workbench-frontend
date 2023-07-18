@@ -16,6 +16,7 @@
             flex-direction: column;
             margin: 0.25em 0 0 0 !important;
             :active, :focus { outline: none; }
+            padding-bottom: 0px !important;
         }
         .mat-form-field-flex {
             flex: 1 0;

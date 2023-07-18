@@ -36,6 +36,26 @@
             }"></app-list-property>
         </div>
         <div class="col">
+            <!-- PLATFORMS -->
+            <app-list-property class="grow-to-row" [config]="{
+                mode: editing? 'edit': 'view',
+                object: asset,
+                field: 'platforms',
+                editType: 'select'
+            }"></app-list-property>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <!-- CONTRIBUTORS -->
+            <app-list-property class="grow-to-row" [config]="{
+                mode: editing? 'edit' : 'view',
+                object: asset,
+                field: 'contributors',
+                editType: 'any'
+            }"></app-list-property>
+        </div>
+        <div class="col">
             <!-- RELATED ASSETS -->
             <app-subtype-property class="grow-to-row" [config]="{
                 mode: editing? 'edit' : 'view',
@@ -50,26 +70,6 @@
                 ],
                 tooltip: 'a related asset'
             }"></app-subtype-property>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col">
-            <!-- PLATFORMS -->
-            <app-list-property class="grow-to-row" [config]="{
-                mode: editing? 'edit': 'view',
-                object: asset,
-                field: 'platforms',
-                editType: 'select'
-            }"></app-list-property>
-        </div>
-        <div class="col">
-            <!-- CONTRIBUTORS -->
-            <app-list-property class="grow-to-row" [config]="{
-                mode: editing? 'edit' : 'view',
-                object: asset,
-                field: 'contributors',
-                editType: 'any'
-            }"></app-list-property>
         </div>
     </div>
     <div class="row">
