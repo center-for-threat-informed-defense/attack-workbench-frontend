@@ -39,10 +39,11 @@ export class Asset extends StixObject {
         let rep = super.base_serialize();
 
         rep.stix.name = this.name.trim();
-        rep.stix.x_mitre_sector = this.sectors.map(s => s.trim());
+        rep.stix.x_mitre_domains = this.domains;
+        rep.stix.x_mitre_sector = this.sectors;
         rep.stix.x_mitre_related_assets = this.relatedAssets.map((asset: RelatedAsset) => {
             return {
-                name: asset.name,
+                name: asset.name.trim(),
                 related_asset_sector: asset.sector,
                 description: asset.description
             }
@@ -75,7 +76,7 @@ export class Asset extends StixObject {
                 else logger.error("TypeError: name field is not a string:", sdo.name, "(",typeof(sdo.name),")")
             } else this.name = "";
 
-            if ("x_mitre_sector" in sdo) {
+            if ("x_mitre_sectors" in sdo) {
                 if (this.isStringArray(sdo.x_mitre_sectors)) this.sectors = sdo.x_mitre_sectors;
                 else logger.error("TypeError: x_mitre_sectors field is not a string array.");
             } else this.sectors = [];
@@ -89,6 +90,11 @@ export class Asset extends StixObject {
                 if (this.isStringArray(sdo.x_mitre_platforms)) this.platforms = sdo.x_mitre_platforms;
                 else logger.error("TypeError: platforms field is not a string array.");
             } else this.platforms = [];
+
+            if ("x_mitre_domains" in sdo) {
+                if (this.isStringArray(sdo.x_mitre_domains)) this.domains = sdo.x_mitre_domains;
+                else logger.error("TypeError: domains field is not a string array.");
+            } else this.domains = ["ics-attack"];
 
             if ("x_mitre_contributors" in sdo) {
                 if (this.isStringArray(sdo.x_mitre_contributors)) this.contributors = sdo.x_mitre_contributors;
