@@ -85,4 +85,51 @@
             }"></app-descriptive-property>
         </div>
     </div>
+    <!-- only show relationships if configured to show them -->
+    <div *ngIf="(config.showRelationships || !config.hasOwnProperty('showRelationships')) && !editing">    
+        <!-- TECHNIQUES USED -->
+        <div class="row">
+            <div class="col">
+                <h2 class="section-header">Techniques Used</h2>
+            </div>
+        </div>
+        <div class="row" *ngIf="canEdit">
+            <div class="col">
+                <app-add-relationship-button (created)="techniqueList.applyControls(); onReload.emit()" [config]="{
+                    label: 'technique',
+                    relationship_type: 'targets',
+                    target_object: asset
+                }"></app-add-relationship-button>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <app-stix-list #techniqueList [config]="{
+                    'type': 'relationship', 
+                    'targetRef': asset.stixID,
+                    'sourceType': 'technique',
+                    'relationshipType': 'targets',
+                    'clickBehavior': 'dialog',
+                    'allowEdits': true
+                }"></app-stix-list>
+            </div>
+        </div>
+    </div>
+    <!-- EXTERNAL REFERENCES -->
+    <div *ngIf="asset.external_references.list().length > 0">
+        <div class="row">
+            <div class="col">
+                <h2 class="section-header">References</h2>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <app-external-references-property [config]="{
+                    mode: editing? 'edit': 'view',
+                    object: asset,
+                    referencesField: asset.external_references
+                }"></app-external-references-property>
+            </div>
+        </div>
+    </div>
 </div>

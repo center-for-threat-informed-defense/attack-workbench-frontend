@@ -40,7 +40,7 @@ export class Asset extends StixObject {
 
         rep.stix.name = this.name.trim();
         rep.stix.x_mitre_domains = this.domains;
-        rep.stix.x_mitre_sector = this.sectors;
+        rep.stix.x_mitre_sectors = this.sectors;
         rep.stix.x_mitre_related_assets = this.relatedAssets.map((asset: RelatedAsset) => {
             return {
                 name: asset.name.trim(),

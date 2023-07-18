@@ -396,6 +396,33 @@
                 }"></app-stix-list>
             </div>
         </div>
+        <!-- assets -->
+        <div class="row">
+            <div class="col">
+                <h2 class="section-header">Targeted Assets</h2>
+            </div>
+        </div>
+        <div class="row" *ngIf="canEdit">
+            <div class="col">
+                <app-add-relationship-button (created)="assetList.applyControls(); onReload.emit()" [config]="{
+                    label: 'asset',
+                    relationship_type: 'targets',
+                    target_object: asset
+                }"></app-add-relationship-button>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <app-stix-list #assetList [config]="{
+                    'type': 'relationship', 
+                    'sourceRef': technique.stixID,
+                    'targetType': 'asset',
+                    'relationshipType': 'targets',
+                    'clickBehavior': 'dialog',
+                    'allowEdits': true
+                }"></app-stix-list>
+            </div>
+        </div>
     </div>
     <!-- EXTERNAL REFERENCES -->
     <div *ngIf="technique.external_references.list().length > 0">
