@@ -7,7 +7,7 @@ import { ValidationData } from "../serializable";
 export class Asset extends StixObject {
     public name: string = "";
     public contributors: string[] = [];
-    public sector: string = "";
+    public sectors: string[] = [];
     public relatedAssets: RelatedAsset[] = [];
     public platforms: string[] = [];
 
@@ -39,11 +39,11 @@ export class Asset extends StixObject {
         let rep = super.base_serialize();
 
         rep.stix.name = this.name.trim();
-        rep.stix.x_mitre_sector = this.sector;
+        rep.stix.x_mitre_sector = this.sectors.map(s => s.trim());
         rep.stix.x_mitre_related_assets = this.relatedAssets.map((asset: RelatedAsset) => {
             return {
                 name: asset.name,
-                sector: asset.sector,
+                related_asset_sector: asset.sector,
                 description: asset.description
             }
         });
@@ -76,9 +76,9 @@ export class Asset extends StixObject {
             } else this.name = "";
 
             if ("x_mitre_sector" in sdo) {
-                if (typeof(sdo.x_mitre_sector) === "string") this.sector = sdo.x_mitre_sector;
-                else logger.error("TypeError: x_mitre_sector field is not a string:", sdo.x_mitre_sector, "(", typeof(sdo.x_mitre_sector), ")")
-            } else this.sector = "";
+                if (this.isStringArray(sdo.x_mitre_sectors)) this.sectors = sdo.x_mitre_sectors;
+                else logger.error("TypeError: x_mitre_sectors field is not a string array.");
+            } else this.sectors = [];
 
             if ("x_mitre_related_assets" in sdo) {
                 if (this.isRelatedAssetArray(sdo.x_mitre_related_assets)) this.relatedAssets = sdo.x_mitre_related_assets;

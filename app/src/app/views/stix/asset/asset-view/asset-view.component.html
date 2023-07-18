@@ -28,12 +28,12 @@
     <div class="row">
         <div class="col">
             <!-- SECTOR -->
-            <app-string-property class="grow-to-row" [config]="{
-                mode: editing ? 'edit': 'view',
+            <app-list-property class="grow-to-row" [config]="{
+                mode: editing? 'edit': 'view',
                 object: asset,
-                field: 'sector',
+                field: 'sectors',
                 editType: 'select'
-            }"></app-string-property>
+            }"></app-list-property>
         </div>
         <div class="col">
             <!-- RELATED ASSETS -->

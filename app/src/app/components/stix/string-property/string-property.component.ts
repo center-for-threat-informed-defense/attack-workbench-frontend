@@ -9,52 +9,11 @@ import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/re
     styleUrls: ['./string-property.component.scss'],
     encapsulation: ViewEncapsulation.None
 })
-export class StringPropertyComponent implements OnInit, OnDestroy {
+export class StringPropertyComponent {
     @Input() public config: StringPropertyConfig;
 
-    public allowedValues: string[];
-    public dataLoaded: boolean = false;
-    private subscription: Subscription = new Subscription();
-
-    // map for fields with allowed values
-    public fieldToStix = {
-        "sector": "x_mitre_sector"
-    }
-
-    constructor(private restAPIService: RestApiConnectorService) {
+    constructor() {
         // intentionally left blank
-    }
-
-    ngOnInit(): void {
-        if (this.config.field in this.fieldToStix && !this.dataLoaded) {
-            this.subscription = this.restAPIService.getAllAllowedValues().subscribe({
-                next: (data) => {
-                    let stixObject = this.config.object as StixObject;
-                    let allAllowedValues = data.find(obj => obj.objectType == stixObject.attackType)
-                    let property = allAllowedValues.properties.find(p => {return p.propertyName == this.fieldToStix[this.config.field]});
-
-                    let values: Set<string> = new Set();
-                    if ("domains" in this.config.object) {
-                        let obj = this.config.object as any;
-                        property.domains.forEach(domain => {
-                            if (obj.domains.includes(domain.domainName)) {
-                                domain.allowedValues.forEach(values.add, values);
-                            }
-                        })
-                    } else { // domains not specified on object
-                        property.domains.forEach(domain => {
-                            domain.allowedValues.forEach(values.add, values);
-                        })
-                    }
-                    this.allowedValues = Array.from(values);
-                    this.dataLoaded = true;
-                }
-            });
-        }
-    }
-
-    ngOnDestroy(): void {
-        if (this.subscription) this.subscription.unsubscribe();
     }
 }
 
@@ -75,6 +34,4 @@ export interface StringPropertyConfig {
     label?: string;
     /* If true, the field will be required. Default false if omitted. */
     required?: boolean;
-    /* Edit mode. Default: 'any' */
-    editType?: "select" | "any";
 }

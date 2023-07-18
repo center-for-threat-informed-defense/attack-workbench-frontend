@@ -5,24 +5,10 @@
         </div>
         <label>{{config.label? config.label : config.field}}</label>
     </div>
-    <div *ngIf="config.mode && config.mode == 'edit'" class="string-property-edit grow-to-row">
-        <!-- edit type: 'any' -->
-        <mat-form-field *ngIf="!config.editType || config.editType == 'any'" appearance="outline">
+    <div *ngIf="config.mode == 'edit'" class="string-property-edit grow-to-row">
+        <mat-form-field appearance="outline">
             <mat-label>{{config.label? config.label : config.field}}</mat-label>
             <input matInput [required]="config.required ? config.required : false" [(ngModel)]="config.object[config.field]">
-        </mat-form-field>
-
-        <!-- edit type: 'select' -->
-        <mat-form-field *ngIf="config.editType == 'select'" class="grow-to-row" appearance="outline">
-            <mat-label *ngIf="!dataLoaded" class="loading">
-                <mat-spinner class="spinner" diameter="20"></mat-spinner>&nbsp;
-                <span>Loading {{config.label? config.label : config.field}}...</span>
-            </mat-label>
-            <mat-label *ngIf="dataLoaded">{{config.label? config.label : config.field}}</mat-label>
-            
-            <mat-select [required]="config.required ? config.required : false" [(value)]="config.object[config.field]">
-                <mat-option *ngFor="let item of allowedValues" [value]="item">{{item}}</mat-option>
-            </mat-select>
         </mat-form-field>
     </div>
 </div>
