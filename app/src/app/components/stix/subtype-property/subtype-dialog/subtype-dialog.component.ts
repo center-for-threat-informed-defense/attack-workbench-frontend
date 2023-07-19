@@ -19,7 +19,7 @@ export class SubtypeDialogComponent implements OnInit, OnDestroy {
 
     // map for fields with allowed values
     public fieldToStix = {
-        "sector": "x_mitre_sector"
+        "related_asset_sector": "x_mitre_sectors"
     }
 
 	public get isValid(): boolean {
@@ -35,6 +35,7 @@ export class SubtypeDialogComponent implements OnInit, OnDestroy {
 	}
 
 	ngOnInit(): void {
+		// load allowed values for 'select' fields
 		let selections = this.config.subtypeFields.filter(field => field.type == 'select').map(field => field.name);
 		if (selections.length) {
 			this.subscription = this.restApiService.getAllAllowedValues().subscribe({
@@ -69,8 +70,13 @@ export class SubtypeDialogComponent implements OnInit, OnDestroy {
 	}
 
 	public saveValue(): void {
-		// step 1: add the value to the field
-		this.config.object[this.config.field].push(this.value);
+		if (this.config.index || this.config.index === 0) {
+			// update the existing value
+			this.config.object[this.config.field][this.config.index] = this.value;
+		} else {
+			// add the value to the field
+			this.config.object[this.config.field].push(this.value);
+		}
 
 		// this.sub = this.config.object['external_references'].parseObjectCitations(this.config.object, this.restApiConnector).subscribe({
 		// 	next: (result) => {
