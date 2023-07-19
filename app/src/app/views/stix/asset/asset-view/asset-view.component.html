@@ -98,6 +98,7 @@
                 <app-add-relationship-button (created)="techniqueList.applyControls(); onReload.emit()" [config]="{
                     label: 'add a technique',
                     relationship_type: 'targets',
+                    sourceType: 'technique',
                     target_object: asset
                 }"></app-add-relationship-button>
             </div>

@@ -72,6 +72,7 @@
                 <app-add-relationship-button (created)="mitigatesList.applyControls(); onReload.emit()" [config]="{
                     label: 'add a technique',
                     relationship_type: 'mitigates',
+                    targetType: 'technique',
                     source_object: mitigation
                 }"></app-add-relationship-button>
             </div>

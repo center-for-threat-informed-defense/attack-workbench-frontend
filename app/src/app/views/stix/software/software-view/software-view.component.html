@@ -102,6 +102,7 @@
                 <app-add-relationship-button (created)="techniquesList.applyControls(); onReload.emit()" [config]="{
                     label: 'add a technique',
                     relationship_type: 'uses',
+                    targetType: 'technique',
                     source_object: software
                 }"></app-add-relationship-button>
             </div>
@@ -130,6 +131,7 @@
                 <app-add-relationship-button (created)="groupList.applyControls(); onReload.emit()" [config]="{
                     label: 'add a group',
                     relationship_type: 'uses',
+                    sourceType: 'group',
                     target_object: software
                 }"></app-add-relationship-button>
             </div>
@@ -158,6 +160,7 @@
                 <app-add-relationship-button (created)="campaignList.applyControls(); onReload.emit()" [config]="{
                     label: 'add a campaign',
                     relationship_type: 'uses',
+                    sourceType: 'campaign',
                     target_object: software
                 }"></app-add-relationship-button>
             </div>

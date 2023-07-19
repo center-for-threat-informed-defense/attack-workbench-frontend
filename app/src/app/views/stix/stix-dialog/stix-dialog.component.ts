@@ -59,6 +59,8 @@ export class StixDialogComponent implements OnInit {
         return {
             mode: this.editing && this.authenticationService.canEdit() ? "edit" : "view",
             object: object,
+            sourceType: this._config.sourceType ? this._config.sourceType : null,
+            targetType: this._config.targetType ? this._config.targetType : null,
             showRelationships: object.attackType == "data-component" ? true : false,
             editable: this._config.editable && this.authenticationService.canEdit(),
             is_new: this._config.is_new ? true : false,

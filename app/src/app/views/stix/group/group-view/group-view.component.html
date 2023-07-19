@@ -98,6 +98,7 @@
                 <app-add-relationship-button (created)="techniqueList.applyControls(); onReload.emit()" [config]="{
                     label: 'add a technique',
                     relationship_type: 'uses',
+                    targetType: 'technique',
                     source_object: group
                 }"></app-add-relationship-button>
             </div>
@@ -126,6 +127,7 @@
                 <app-add-relationship-button (created)="softwareList.applyControls(); onReload.emit()" [config]="{
                     label: 'add a software',
                     relationship_type: 'uses',
+                    targetType: 'software',
                     source_object: group
                 }"></app-add-relationship-button>
             </div>

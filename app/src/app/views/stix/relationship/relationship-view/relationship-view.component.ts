@@ -46,9 +46,12 @@ export class RelationshipViewComponent extends StixViewPage implements OnInit {
 
     ngOnInit(): void {
         // initialize source/target types if there is a source/target object, or if there is only one possible value
-        if (this.relationship.source_object) this.source_type = stixTypeToAttackType[this.relationship.source_object.stix.type]
+        if (this.relationship.source_object) this.source_type = stixTypeToAttackType[this.relationship.source_object.stix.type];
+        else if (this.config.sourceType) this.source_type = this.config.sourceType;
         else if (this.relationship.valid_source_types.length == 1) this.source_type = this.relationship.valid_source_types[0];
-        if (this.relationship.target_object) this.target_type = stixTypeToAttackType[this.relationship.target_object.stix.type]
+
+        if (this.relationship.target_object) this.target_type = stixTypeToAttackType[this.relationship.target_object.stix.type];
+        else if (this.config.targetType) this.target_type = this.config.targetType;
         else if (this.relationship.valid_target_types.length == 1) this.target_type = this.relationship.valid_target_types[0];
 
         // fetch parent of source and/or target objects
