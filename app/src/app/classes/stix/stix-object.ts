@@ -401,6 +401,7 @@ export abstract class StixObject extends Serializable {
                 // build list of fields to validate external references on according to ATT&CK type
                 let refs_fields = ['description'];
                 if (['software', 'group', 'campaign'].includes(this.attackType)) refs_fields.push('aliases');
+                if (this.attackType == 'asset') refs_fields.push('relatedAssets');
                 if (this.attackType == 'technique') refs_fields.push('detection');
                 if (this.attackType == 'campaign') refs_fields.push('first_seen_citation', 'last_seen_citation');
 
