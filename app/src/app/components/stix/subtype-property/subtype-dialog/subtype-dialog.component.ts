@@ -3,6 +3,7 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Subscription } from 'rxjs';
 import { StixObject } from 'src/app/classes/stix';
 import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/rest-api-connector.service';
+import { EditorService } from 'src/app/services/editor/editor.service';
 
 @Component({
 	selector: 'app-subtype-dialog',
@@ -15,7 +16,8 @@ export class SubtypeDialogComponent implements OnInit, OnDestroy {
 
     public allowedValues: any = {};
     public dataLoaded: boolean = false;
-    private subscription: Subscription = new Subscription();
+    private allowedValuesSub: Subscription = new Subscription();
+	private saveSubscription: Subscription = new Subscription();
 
     // map for fields with allowed values
     public fieldToStix = {
@@ -29,7 +31,8 @@ export class SubtypeDialogComponent implements OnInit, OnDestroy {
 
 	constructor(public dialogRef: MatDialogRef<SubtypeDialogComponent>,
 				@Inject(MAT_DIALOG_DATA) public config: SubtypeDialogConfig,
-				public restApiService: RestApiConnectorService) {
+				public restApiService: RestApiConnectorService,
+				public editorService: EditorService) {
 		this.isNew = config.index == undefined ? true : false;
 		if (!this.isNew) this.value = config.object[config.field][config.index];
 	}
@@ -38,7 +41,7 @@ export class SubtypeDialogComponent implements OnInit, OnDestroy {
 		// load allowed values for 'select' fields
 		let selections = this.config.subtypeFields.filter(field => field.type == 'select').map(field => field.name);
 		if (selections.length) {
-			this.subscription = this.restApiService.getAllAllowedValues().subscribe({
+			this.allowedValuesSub = this.restApiService.getAllAllowedValues().subscribe({
 				next: (data) => {
 					let attackType = (this.config.object as StixObject).attackType;
 					let allAllowedValues = data.find(obj => obj.objectType == attackType);
@@ -66,7 +69,8 @@ export class SubtypeDialogComponent implements OnInit, OnDestroy {
 	}
 
 	ngOnDestroy(): void {
-		if (this.subscription) this.subscription.unsubscribe();
+		if (this.allowedValuesSub) this.allowedValuesSub.unsubscribe();
+		if (this.saveSubscription) this.saveSubscription.unsubscribe();
 	}
 
 	public saveValue(): void {
@@ -78,12 +82,12 @@ export class SubtypeDialogComponent implements OnInit, OnDestroy {
 			this.config.object[this.config.field].push(this.value);
 		}
 
-		// this.sub = this.config.object['external_references'].parseObjectCitations(this.config.object, this.restApiConnector).subscribe({
-		// 	next: (result) => {
-		// 		this.parsingCitations = false;
-		// 		this.editorService.onReloadReferences.emit();
-		// 	}
-		// })
+		// parse citations
+		this.saveSubscription = this.config.object['external_references'].parseObjectCitations(this.config.object, this.restApiService).subscribe({
+			next: (result) => {
+				this.editorService.onReloadReferences.emit();
+			}
+		})
 		this.dialogRef.close();
 	}
 }
