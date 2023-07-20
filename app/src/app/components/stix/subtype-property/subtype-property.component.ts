@@ -29,8 +29,9 @@ export interface SubtypePropertyConfig {
 	subtypeFields: {
 		name: string;
 		type: "string" | "select";
-		required?: boolean;
+		required?: boolean; // default false
 		label?: string;
+		supportsReferences?: boolean; // whether this field supports references, default false
 		key?: boolean; /** The key field, must have at least one */
 	}[];
 	/* The tooltip for the add button/edit dialog */

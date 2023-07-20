@@ -47,15 +47,6 @@
     </div>
     <div class="row">
         <div class="col">
-            <!-- CONTRIBUTORS -->
-            <app-list-property class="grow-to-row" [config]="{
-                mode: editing? 'edit' : 'view',
-                object: asset,
-                field: 'contributors',
-                editType: 'any'
-            }"></app-list-property>
-        </div>
-        <div class="col">
             <!-- RELATED ASSETS -->
             <app-subtype-property class="grow-to-row" [config]="{
                 mode: editing? 'edit' : 'view',
@@ -66,10 +57,31 @@
                 subtypeFields: [
                     { name: 'name', type: 'string', required: true, key: true},
                     { name: 'related_asset_sector', label: 'sector', type: 'select', required: true},
-                    { name: 'description', type: 'string'}
+                    { name: 'description', supportsReferences: true, type: 'string'}
                 ],
                 tooltip: 'a related asset'
             }"></app-subtype-property>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <!-- Domains -->
+            <app-list-property class="grow-to-row" [config]="{
+                mode: editing? 'edit': 'view',
+                object: asset,
+                field: 'domains',
+                disabled: true,
+                editType: 'select'
+            }"></app-list-property>
+        </div>
+        <div class="col">
+            <!-- CONTRIBUTORS -->
+            <app-list-property class="grow-to-row" [config]="{
+                mode: editing? 'edit' : 'view',
+                object: asset,
+                field: 'contributors',
+                editType: 'any'
+            }"></app-list-property>
         </div>
     </div>
     <div class="row">
