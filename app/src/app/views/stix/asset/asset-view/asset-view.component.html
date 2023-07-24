@@ -47,24 +47,6 @@
     </div>
     <div class="row">
         <div class="col">
-            <!-- RELATED ASSETS -->
-            <app-subtype-property class="grow-to-row" [config]="{
-                mode: editing? 'edit' : 'view',
-                object: asset,
-                field: 'relatedAssets',
-                referencesField: 'external_references',
-                label: 'related assets',
-                subtypeFields: [
-                    { name: 'name', type: 'string', required: true, key: true},
-                    { name: 'related_asset_sector', label: 'sector', type: 'select', required: true},
-                    { name: 'description', supportsReferences: true, type: 'string'}
-                ],
-                tooltip: 'a related asset'
-            }"></app-subtype-property>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col">
             <!-- Domains -->
             <app-list-property class="grow-to-row" [config]="{
                 mode: editing? 'edit': 'view',
@@ -82,6 +64,24 @@
                 field: 'contributors',
                 editType: 'any'
             }"></app-list-property>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <!-- RELATED ASSETS -->
+            <app-subtype-property class="grow-to-row" [config]="{
+                mode: editing? 'edit' : 'view',
+                object: asset,
+                field: 'relatedAssets',
+                referencesField: 'external_references',
+                label: 'related assets',
+                subtypeFields: [
+                    { name: 'name', type: 'string', required: true, key: true},
+                    { name: 'related_asset_sector', label: 'sector', type: 'select', required: true},
+                    { name: 'description', supportsReferences: true, type: 'string'}
+                ],
+                tooltip: 'a related asset'
+            }"></app-subtype-property>
         </div>
     </div>
     <div class="row">
