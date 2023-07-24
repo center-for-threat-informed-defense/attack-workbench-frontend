@@ -313,6 +313,7 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
                     this.addColumn("ID", "attackID", "plain", false);
                     this.addColumn("name", "name", "plain", sticky_allowed, ["name"]);
                     this.addColumn("platforms", "platforms", "list");
+                    this.addColumn("sectors", "sectors", "list");
                     this.addVersionsAndDatesColumns();
                     this.tableDetail = [{
                         "field": "description",
