@@ -407,7 +407,7 @@
                 <app-add-relationship-button (created)="assetList.applyControls(); onReload.emit()" [config]="{
                     label: 'add an asset',
                     relationship_type: 'targets',
-                    target_object: asset
+                    source_object: technique
                 }"></app-add-relationship-button>
             </div>
         </div>
