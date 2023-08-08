@@ -34,3 +34,11 @@ Temporary Items
 *.env
 .vscode
 certs/
+
+# Jetbrains
+.idea/
+
+# Angular build artifacts
+app/documentation/
+app/dist/
+app/node_modules/
