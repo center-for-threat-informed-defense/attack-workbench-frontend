@@ -1,43 +1,55 @@
-# ATT&CK Workbench Docker Update Guide for v1.3.1 to v2.0
+# ATT&CK Workbench Docker Install Update Guide for v1.3.1 to v2.0.0
 
-## Overview
+When updating from ATT&CK Workbench v1.3.1 to v2.0.0, the major changes are the removal of the Collection Manager component and the migration to a named volume. The change to a named volume may result in data on the current anonymous volume being lost. This document describes how to backup your existing ATT&CK Workbench data and restore it after the update. This process only needs to be completed once.
 
-When updating from ATT&CK Workbench v1.3.1 to v2.0, the major change (from install perspective) is the removal of the Collection Manager component. To do so, an existing instance of ATT&CK Workbench must be stopped, Collection Manager components removed, new Frontend and REST API components downloaded, and then Frontend and REST API components restarted. The instructions below detail the steps to updating ATT&CK Workbench Docker setup.
+### 1. Identify anonymous volume
 
-## Instructions
+The mongodb container has two anonymous volumes, only one of which contains the ATT&CK Workbench data. To find the name of the anonymous volume you should backup, perform the following command and make note of the string that precedes "/data/db". This will later be referred to as `old_volume`.
 
-1. Stop the current running ATT&CK Workbench
+```sh
+docker inspect --format "{{range .Mounts}}{{.Name}} {{println .Destination}}{{end}}" attack-workbench-database
+```
 
-**Warning:** Do not use `docker-compose down`, that will remove all the underlying docker containers and we dont want to delete the mongo database container.
+### 2. Backup the volume
+
+Create a temporary named volume
+
+```sh
+docker volume create --name temp
+```
+
+Run the following command, replacing `<old_volume>` with the string identified in Step 1
+
+```sh
+docker run --rm -it -v <old_volume>:/from:ro -v temp:/to alpine ash -c "cd /from ; cp -av . /to"
+```
+
+This will install an `alpine` image and mount the volumes to a temporary container to perform the backup. Once this step is complete, the `temp` volume contains a backup of the database. 
+
+### 3. Stop the ATT&CK Workbench and remove outdated Docker containers
 
 ```sh
 cd attack-workbench-frontend
-docker compose stop
+docker-compose down
 ```
 
-2. Delete current docker containers and images for `workbench-frontend`, `workbench-rest-api`, and `workbench-collection-manager`
+### 4. Remove Collection Manager repository
 
 ```sh
-docker container rm attack-workbench-rest-api attack-workbench-frontend attack-workbench-collection-manager
-
-docker rmi attack-workbench-frontend-frontend attack-workbench-frontend-rest-api attack-workbench-frontend-collection-manager
+rm -r ../attack-workbench-collection-manager
 ```
 
-3. Delete Collection Manager repository (directory)
+### 5. Backup custom environment configurations
 
-```sh
-rm -r attack-workbench-collection-manager
-```
-
-4. If you use custom settings, save environment (configuration) files
-
-If you have existing custom ATT&CK Workbench environment configurations, make sure to save the corresponding environment files. They will be overwritten with next step when the new ATT&CK Workbench version is cloned.
+If you have existing custom ATT&CK Workbench environment configurations, backup the corresponding environment files. They will be overwritten with next step when the ATT&CK Workbench is updated.
 
 Configuration files for ATT&CK Workbench Frontend are found here:  
 - [src/environments/environment.ts](app/src/environments/environment.ts)
 - [src/environments/environment.prod.ts](app/src/environments/environment.prod.ts)
 
-5. Clone latest version of ATT&CK Workbench Frontend and REST API
+### 6. Update to the latest version of ATT&CK Workbench
+
+Clone the latest version of ATT&CK Workbench Frontend and REST API
 
 ```sh
 cd attack-workbench-frontend
@@ -49,27 +61,43 @@ git checkout master
 git pull origin master
 ```
 
-6. If you use custom settings, update environment (configuration) files
+### 7. Restore custom environment configurations
 
-Following from Step 3., if you have used custom environment settings you will need to update the settings in the new (and reset) environment files.
-
-**NOTE**: The new environment files do not have a `collection_manager` section so do not re-add that section back in to the environment file(s).
+Following from Step 5, if you have custom environment settings, you will need to update the settings in the new environment files. **NOTE**: The new environment files do not have a `collection_manager` section; do not re-add that section back in to the environment file(s).
 
 Configuration files for ATT&CK Workbench Frontend are found here:  
 - [src/environments/environment.ts](app/src/environments/environment.ts)
 - [src/environments/environment.prod.ts](app/src/environments/environment.prod.ts)
 
+### 8. Restart ATT&CK Workbench
 
-7. Restart ATT&CK Workbench with updated ATT&CK Workbench Frontend and REST API components
+Rebuild the ATT&CK Workbench with updated Frontend and REST API components.
 
 ```sh
 cd attack-workbench-frontend
-docker compose up
+docker-compose up --build
 ```
 
-Alternatively, if also using custom SSL certs
+Alternatively, if using custom SSL certs
 
 ```sh
 cd attack-workbench-frontend
-docker-compose -f docker-compose.yml -f docker-compose.certs.yml up
+docker-compose -f docker-compose.yml -f docker-compose.certs.yml up --build
+```
+
+The persistent database is now in use.
+
+### 9. Restore data from backup
+
+```sh
+docker run --rm -it -v temp:/from:ro -v attack-workbench-frontend_db-data:/to alpine ash -c "cd /from ; cp -av . /to"
+docker restart attack-workbench-database
+```
+
+After restarting the database container, confirm that the data backup was restored in the ATT&CK Workbench by visiting `localhost` in your browser.
+
+Only delete the `temp` volume after confirming the database has been restored.
+
+```sh
+docker volume rm temp
 ```
