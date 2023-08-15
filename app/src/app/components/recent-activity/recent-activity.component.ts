@@ -83,7 +83,7 @@ export class RecentActivityComponent implements OnInit {
      */
     public getUserActivity() {
         return forkJoin({
-            objects$: this.restAPIService.getAllObjects(null, null, null, null, true, true, true, this.identities),
+            objects$: this.restAPIService.getAllObjects(null, null, null, null, true, true, true, this.identities), // returns relationships, but does not include source/target objects
             relationships$: this.restAPIService.getAllRelationships({ includeRevoked: true, includeDeprecated: true, lastUpdatedBy: this.identities })
         }).pipe(
             map(results => {
