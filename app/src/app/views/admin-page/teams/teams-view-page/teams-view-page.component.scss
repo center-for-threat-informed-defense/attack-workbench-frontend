@@ -2,18 +2,11 @@
 @import '~@angular/material/theming';
 
 .teams-view-page {
-  .mat-icon-button.mat-button-disabled {
-    .dark & { color: on-color-deemphasis(dark); }
-    .light & { color: on-color-deemphasis(light); }
-  }
-  mat-panel-title {
-    justify-content: center !important;
-  }
-  .users-header-row {
-    padding-bottom: 16px;
-  }
-
-  .team-user-list {
-    padding-bottom: 16px;
-  }
+	.mat-icon-button.mat-button-disabled {
+		.dark & { color: on-color-deemphasis(dark); }
+		.light & { color: on-color-deemphasis(light); }
+	}
+	mat-panel-title { justify-content: center !important; }
+	.users-header-row { padding-bottom: 16px; }
+	.team-user-list { padding-bottom: 16px; }
 }
