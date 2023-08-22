@@ -10,7 +10,7 @@ export class VersionEditComponent implements OnInit {
     @Input() public config: VersionPropertyConfig;
 
     public get field(): string { return this.config.field ? this.config.field : 'version'; }
-    public get version() { return this.config.object[this.field].version as Number }
+    public get version(): number { return this.config.object[this.field].version as number; }
 
     constructor() {
         // intentionally left blank
