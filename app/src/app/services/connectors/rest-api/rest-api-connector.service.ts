@@ -483,7 +483,7 @@ export class RestApiConnectorService extends ApiConnector {
         // lastUpdatedBy
         if (lastUpdatedBy) lastUpdatedBy.forEach(user => query = query.append('lastUpdatedBy', user));
         return this.http.get(`${this.apiUrl}/recent-activity`, { params: query }).pipe(
-            tap(results => logger.log(`retrieved ATT&CK objects`, results)), // on success, trigger the success notification
+            tap(results => logger.log(`retrieved recent activity`, results)), // on success, trigger the success notification
             map(results => {
                 if (!deserialize) return results; // skip deserialization if param not added
                 let response = results as any;
