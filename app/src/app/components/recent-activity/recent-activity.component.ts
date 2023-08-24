@@ -1,7 +1,6 @@
 import { Component, Input, OnInit, ViewEncapsulation } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
-import { forkJoin } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { Collection } from 'src/app/classes/stix/collection';
 import { Note } from 'src/app/classes/stix/note';
@@ -82,14 +81,9 @@ export class RecentActivityComponent implements OnInit {
      * @returns a list of recent user activity
      */
     public getUserActivity() {
-        return forkJoin({
-            objects$: this.restAPIService.getAllObjects(null, null, null, null, true, true, true, this.identities), // returns relationships, but does not include source/target objects
-            relationships$: this.restAPIService.getAllRelationships({ includeRevoked: true, includeDeprecated: true, lastUpdatedBy: this.identities })
-        }).pipe(
+        return this.restAPIService.getRecentActivity(50, null, true, true, true, this.identities).pipe(
             map(results => {
-                let activity: StixObject[] = [];
-                results.objects$.data.forEach((sdo: StixObject) => { if (sdo.attackType !== "relationship") activity.push(sdo) });
-                return activity.concat(results.relationships$.data);
+                return results.data as StixObject[];
             })
         );
     }

@@ -462,6 +462,59 @@ export class RestApiConnectorService extends ApiConnector {
     }
 
     /**
+     * Get all recent activity
+     * @param {number} [limit] the number of collections to retrieve
+     * @param {number} [offset] the number of collections to skip
+     * @param {boolean} [revoked] if true, get revoked objects
+     * @param {boolean} [deprecated] if true, get deprecated objects
+     * @param {boolean} [deserialize] if true, deserialize objects to full STIX objects
+     * @param {string[]} [lastUpdatedBy] filter to only include objects modified by the list of given user IDs
+     * @returns {Observable<any[]>} observable of retrieved objects
+     */
+    public getRecentActivity(limit?: number, offset?: number, revoked?: boolean, deprecated?: boolean, deserialize?: boolean, lastUpdatedBy?: string[]) {
+        let query = new HttpParams({ encoder: new CustomEncoder() });
+        // pagination
+        if (limit) query = query.set("limit", limit.toString());
+        if (offset) query = query.set("offset", offset.toString());
+        if (limit || offset) query = query.set("includePagination", "true");
+        // object state
+        if (revoked) query = query.set("includeRevoked", revoked ? "true" : "false");
+        if (deprecated) query = query.set("includeDeprecated", deprecated ? "true" : "false");
+        // lastUpdatedBy
+        if (lastUpdatedBy) lastUpdatedBy.forEach(user => query = query.append('lastUpdatedBy', user));
+        return this.http.get(`${this.apiUrl}/recent-activity`, { params: query }).pipe(
+            tap(results => logger.log(`retrieved ATT&CK objects`, results)), // on success, trigger the success notification
+            map(results => {
+                if (!deserialize) return results; // skip deserialization if param not added
+                let response = results as any;
+                if (limit || offset) { // returned a paginated
+                    let data = response.data as Array<any>;
+                    data = data.filter(y => !["marking-definition", "identity"].includes(y.stix.type)).map(y => {
+                        if (y.stix.type == "malware" || y.stix.type == "tool") return new Software(y.stix.type, y);
+                        else return new stixTypeToClass[y.stix.type](y);
+                    });
+                    response.data = data;
+                    return response;
+                } else { //returned a stixObject[]
+                    return {
+                        pagination: {
+                            total: response.length,
+                            limit: -1,
+                            offset: -1
+                        },
+                        data: response.filter(y => !["marking-definition", "identity"].includes(y.stix.type)).map(y => {
+                            if (y.stix.type == "malware" || y.stix.type == "tool") return new Software(y.stix.type, y);
+                            else return new stixTypeToClass[y.stix.type](y);
+                        })
+                    }
+                }
+            }),
+            catchError(this.handleError_continue([])), // on error, trigger the error notification and continue operation without crashing (returns empty item)
+            share() // multicast so that multiple subscribers don't trigger the call twice. THIS MUST BE THE LAST LINE OF THE PIPE
+        )
+    }
+
+    /**
      * Factory to create a new STIX get by ID function
      * @template T the type to get
      * @param {AttackType} attackType the type to get
