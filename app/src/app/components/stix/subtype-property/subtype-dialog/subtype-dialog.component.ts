@@ -33,7 +33,7 @@ export class SubtypeDialogComponent implements OnInit, OnDestroy {
 				@Inject(MAT_DIALOG_DATA) public config: SubtypeDialogConfig,
 				public restApiService: RestApiConnectorService,
 				public editorService: EditorService) {
-		this.isNew = config.index == undefined ? true : false;
+		this.isNew = config.index == undefined;
 		if (!this.isNew) this.value = config.object[config.field][config.index];
 	}
 

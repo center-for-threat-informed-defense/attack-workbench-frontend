@@ -6,8 +6,7 @@ import { StixViewPage } from '../../stix-view-page';
 
 @Component({
 	selector: 'app-asset-view',
-	templateUrl: './asset-view.component.html',
-	styleUrls: ['./asset-view.component.scss']
+	templateUrl: './asset-view.component.html'
 })
 export class AssetViewComponent extends StixViewPage implements OnInit {
 	@Output() public onReload = new EventEmitter();

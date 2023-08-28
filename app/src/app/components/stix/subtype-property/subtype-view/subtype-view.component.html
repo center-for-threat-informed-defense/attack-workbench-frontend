@@ -1,6 +1,6 @@
 <div class="subtype-view grow-to-row" *ngIf="!config.mode || config.mode == 'view'">
     <div class="content">
-        <table *ngIf="detailTable.length" mat-table [dataSource]="detailTable" class="subtype-table" role="presentation">
+        <table aria-describedby="subtypetable" *ngIf="detailTable.length" mat-table [dataSource]="detailTable" class="subtype-table">
             <ng-container [matColumnDef]="column.label ? column.label : column.name" *ngFor="let column of subtypeFields">
                 <th mat-header-cell *matHeaderCellDef> {{ (column.label ? column.label : column.name) | titlecase }} </th>
                 <td mat-cell *matCellDef="let element">
