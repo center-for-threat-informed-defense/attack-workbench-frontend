@@ -196,7 +196,8 @@ export class ObjectStatusComponent implements OnInit {
     }
 
     /**
-     * Deprecates or revokes the object and deprecates all relationships of this object
+     * Deprecates or revokes the object and deprecates all relationships with this object,
+     * with the exception of 'subtechnique-of' relationships
      */
     private deprecateObjects(revoked: boolean, revoked_by_id?:string) {
         let saves = [];
@@ -224,7 +225,7 @@ export class ObjectStatusComponent implements OnInit {
         
                 // update relationships with the object
                 for (let relationship of this.relationships) {
-                    if (!relationship.deprecated) {
+                    if (!relationship.deprecated && relationship.relationship_type != 'subtechnique-of') {
                         relationship.deprecated = true;
                         saves.push(relationship.save(this.restAPIService));
                     }

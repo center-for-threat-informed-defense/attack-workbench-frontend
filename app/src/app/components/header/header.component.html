@@ -45,6 +45,7 @@
         <!-- Account Options Menu -->
         <mat-menu #accountOptions="matMenu" backdropClass="override-light">
             <button mat-menu-item routerLink="/profile">profile</button>
+            <button *ngIf="isAdmin" mat-menu-item routerLink="/admin">admin</button>
             <button mat-menu-item (click)="logout()">logout</button>
         </mat-menu>
 
@@ -55,6 +56,7 @@
             </button>
             <button mat-menu-item routerLink="/docs">documentation</button>
             <button mat-menu-item *ngIf="isLoggedIn" routerLink="/profile">profile</button>
+            <button mat-menu-item *ngIf="isAdmin" routerLink="/admin">admin</button>
             <button mat-menu-item (click)="isLoggedIn ? logout() : login()">{{isLoggedIn ? 'logout': 'login'}}</button>
             <button mat-menu-item *ngIf="!isLoggedIn && authnType === 'oidc'" (click)="register()">register</button>
         </mat-menu>

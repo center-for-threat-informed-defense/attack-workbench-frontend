@@ -4,6 +4,7 @@ import { stixRoutes } from "../../app-routing-stix.module";
 import * as app_package from "../../../../package.json";
 import { AuthenticationService } from 'src/app/services/connectors/authentication/authentication.service';
 import { Subscription } from "rxjs";
+import { Role } from 'src/app/classes/authn/role';
 
 @Component({
   selector: 'app-header',
@@ -22,6 +23,8 @@ export class HeaderComponent implements AfterViewInit {
     @Output() public onRegister = new EventEmitter();
     authnTypeSubscription: Subscription;
     public authnType: string;
+
+    public get isAdmin(): boolean { return this.authenticationService.isAuthorized([Role.ADMIN]); }
     public get isLoggedIn(): boolean { return this.authenticationService.isLoggedIn; }
     public get username() { return this.authenticationService.currentUser.displayName ? this.authenticationService.currentUser.displayName : this.authenticationService.currentUser.username; }
 

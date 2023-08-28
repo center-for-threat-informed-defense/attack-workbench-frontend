@@ -32,11 +32,13 @@
 
 # Changelog
 
-## Changes Staged on Develop
+## 16 August 2023
 
 ### ATT&CK Workbench version 2.0.0
 
-The ATT&CK Workbench features a persistent database with the use of a named volume as of version 2.0. **This change may result in data on the current anonymous volume being lost.** The [Docker Compose Migration](/docs/migration.md) document describes how to backup your existing ATT&CK Workbench data and restore it after the update.
+As of v2.0.0, the [ATT&CK Workbench Collection Manager](https://github.com/center-for-threat-informed-defense/attack-workbench-collection-manager) has been deprecated. All functionality of the Collection Manager has been absorbed into the [ATT&CK Workbench REST API](https://github.com/center-for-threat-informed-defense/attack-workbench-rest-api).
+
+The ATT&CK Workbench now features a persistent database for Docker installs with the use of a named volume. **This change may result in data on the current anonymous volume being lost.** The [Docker Install Update Guide](/docs/update.md) describes how to backup your existing ATT&CK Workbench data, update to v2.0.0, and restore your data after the update.
 
 #### New Features in 2.0.0
 -   Added an Admin interface for creating and managing teams.
@@ -53,6 +55,7 @@ The ATT&CK Workbench features a persistent database with the use of a named volu
 #### Improvements in 2.0.0
 -   Improved error handling during collection import.
 -   Lists of objects can now be filtered when viewing or editing collections. See [frontend#393](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/393).
+-   Added a persistent database to Docker installs.
 -   Published pre-built Docker images to the Github Container Registry. See [frontend#250](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/250).
 -	Improved the collection view to display versions in the drop down rather than in the main list.
 
