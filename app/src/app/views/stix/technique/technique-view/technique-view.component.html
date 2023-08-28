@@ -302,6 +302,7 @@
                 <app-add-relationship-button (created)="campaignList.applyControls(); onReload.emit()" [config]="{
                     label: 'add a campaign',
                     relationship_type: 'uses',
+                    sourceType: 'campaign',
                     target_object: technique
                 }"></app-add-relationship-button>
             </div>

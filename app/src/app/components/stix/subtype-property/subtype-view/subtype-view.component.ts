@@ -21,10 +21,6 @@ export class SubtypeViewComponent implements OnInit {
         return JSON.parse(JSON.stringify(this.config.object[this.config.field])); //deep copy
     }
 
-	constructor() {
-		// intentionally left blank
-	}
-
 	ngOnInit(): void {
 		this.detailTable = this.valueCopy;
 		this.buildTable();

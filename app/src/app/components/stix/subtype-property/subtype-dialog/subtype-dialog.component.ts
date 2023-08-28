@@ -43,7 +43,7 @@ export class SubtypeDialogComponent implements OnInit, OnDestroy {
 		if (selections.length) {
 			this.allowedValuesSub = this.restApiService.getAllAllowedValues().subscribe({
 				next: (data) => {
-					let attackType = (this.config.object as StixObject).attackType;
+					let attackType = this.config.object.attackType;
 					let allAllowedValues = data.find(obj => obj.objectType == attackType);
 					selections.forEach(field => {
 						let values: Set<string> = new Set();

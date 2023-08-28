@@ -7,11 +7,6 @@ import { StixObject } from 'src/app/classes/stix';
 })
 export class SubtypePropertyComponent {
 	@Input() public config: SubtypePropertyConfig
-
-	constructor() {
-		// intentionally left blank
-	}
-
 }
 
 export interface SubtypePropertyConfig {
