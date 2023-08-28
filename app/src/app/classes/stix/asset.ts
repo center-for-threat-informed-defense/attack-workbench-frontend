@@ -68,39 +68,33 @@ export class Asset extends StixObject {
      * @param {*} raw the raw object to parse
      */
     public deserialize(raw: any) {
-        if ("stix" in raw) {
-            let sdo = raw.stix;
+        if (!("stix" in raw)) return;
 
-            if ("name" in sdo) {
-                if (typeof(sdo.name) === "string") this.name = sdo.name;
-                else logger.error("TypeError: name field is not a string:", sdo.name, "(",typeof(sdo.name),")")
-            } else this.name = "";
+        let sdo = raw.stix;
 
-            if ("x_mitre_sectors" in sdo) {
-                if (this.isStringArray(sdo.x_mitre_sectors)) this.sectors = sdo.x_mitre_sectors;
-                else logger.error("TypeError: x_mitre_sectors field is not a string array.");
-            } else this.sectors = [];
+        if (!("name" in sdo)) this.name = "";
+        else if (typeof(sdo.name) === "string") this.name = sdo.name;
+        else logger.error(`TypeError: name field is not a string: ${sdo.name} (${typeof(sdo.name)})`);
 
-            if ("x_mitre_related_assets" in sdo) {
-                if (this.isRelatedAssetArray(sdo.x_mitre_related_assets)) this.relatedAssets = sdo.x_mitre_related_assets;
-                else logger.error("TypeError: x_mitre_related_assets field is not an array of related assets.");
-            } else this.relatedAssets = [];
+        if (!("x_mitre_sectors" in sdo)) this.sectors = [];
+        else if (this.isStringArray(sdo.x_mitre_sectors)) this.sectors = sdo.x_mitre_sectors;
+        else logger.error(`TypeError: x_mitre_sectors field is not a string array.`);
 
-            if ("x_mitre_platforms" in sdo) {
-                if (this.isStringArray(sdo.x_mitre_platforms)) this.platforms = sdo.x_mitre_platforms;
-                else logger.error("TypeError: platforms field is not a string array.");
-            } else this.platforms = [];
+        if (!("x_mitre_related_assets" in sdo)) this.relatedAssets = [];
+        else if (this.isRelatedAssetArray(sdo.x_mitre_related_assets)) this.relatedAssets = sdo.x_mitre_related_assets;
+        else logger.error(`TypeError: x_mitre_related_assets field is not an array of related assets.`);
 
-            if ("x_mitre_domains" in sdo) {
-                if (this.isStringArray(sdo.x_mitre_domains)) this.domains = sdo.x_mitre_domains;
-                else logger.error("TypeError: domains field is not a string array.");
-            } else this.domains = ["ics-attack"];
+        if (!("x_mitre_platforms" in sdo)) this.platforms = [];
+        else if (this.isStringArray(sdo.x_mitre_platforms)) this.platforms = sdo.x_mitre_platforms;
+        else logger.error(`TypeError: platforms field is not a string array.`);
 
-            if ("x_mitre_contributors" in sdo) {
-                if (this.isStringArray(sdo.x_mitre_contributors)) this.contributors = sdo.x_mitre_contributors;
-                else logger.error("TypeError: x_mitre_contributors is not a string array:", sdo.x_mitre_contributors, "(",typeof(sdo.x_mitre_contributors),")")
-            } else this.contributors = [];
-        }
+        if (!("x_mitre_domains" in sdo)) this.domains = ["ics-attack"];
+        else if(this.isStringArray(sdo.x_mitre_domains)) this.domains = sdo.x_mitre_domains;
+        else logger.error(`TypeError: domains field is not a string array.`);
+
+        if (!("x_mitre_contributors" in sdo)) this.contributors = [];
+        else if (this.isStringArray(sdo.x_mitre_contributors)) this.contributors = sdo.x_mitre_contributors;
+        else logger.error(`TypeError: x_mitre_contributors is not a string array.`);
     }
 
     /**

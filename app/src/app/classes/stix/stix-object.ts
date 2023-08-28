@@ -2,7 +2,7 @@ import { VersionNumber } from '../version-number';
 import { ExternalReferences } from '../external-references';
 import { v4 as uuid } from 'uuid';
 import { Serializable, ValidationData } from '../serializable';
-import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/rest-api-connector.service';
+import { Paginated, RestApiConnectorService } from 'src/app/services/connectors/rest-api/rest-api-connector.service';
 import { forkJoin, Observable, of } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
 import { logger } from "../../util/logger";
@@ -293,17 +293,18 @@ export abstract class StixObject extends Serializable {
                 //do not check name or attackID for relationships or marking definitions
                 if (this.attackType == "relationship" || this.attackType == "marking-definition") return of(result);
                 // check if name & ATT&CK ID is unique, record result in validation, and return validation
-                let accessor = this.attackType == "collection"? restAPIService.getAllCollections() :
-                                this.attackType == "group"? restAPIService.getAllGroups() :
-                                this.attackType == "campaign"? restAPIService.getAllCampaigns() :
-                                this.attackType == "software"? restAPIService.getAllSoftware() :
-                                this.attackType == "matrix"? restAPIService.getAllMatrices() :
-                                this.attackType == "mitigation"? restAPIService.getAllMitigations() :
-                                this.attackType == "technique"? restAPIService.getAllTechniques() :
-                                this.attackType == "data-source"? restAPIService.getAllDataSources() :
-                                this.attackType == "data-component"? restAPIService.getAllDataComponents() :
-                                this.attackType == "asset"? restAPIService.getAllAssets() :
-                                restAPIService.getAllTactics();
+                let accessor: Observable<Paginated<StixObject>>;
+                if (this.attackType == "collection") accessor = restAPIService.getAllCollections();
+                else if (this.attackType == "group") accessor = restAPIService.getAllGroups();
+                else if (this.attackType == "campaign") accessor = restAPIService.getAllCampaigns();
+                else if (this.attackType == "software") accessor = restAPIService.getAllSoftware();
+                else if (this.attackType == "matrix") accessor = restAPIService.getAllMatrices();
+                else if (this.attackType == "mitigation") accessor = restAPIService.getAllMitigations();
+                else if (this.attackType == "technique") accessor = restAPIService.getAllTechniques();
+                else if (this.attackType == "data-source") accessor = restAPIService.getAllDataSources();
+                else if (this.attackType == "data-component") accessor = restAPIService.getAllDataComponents();
+                else if (this.attackType == "asset") accessor = restAPIService.getAllAssets();
+                else accessor = restAPIService.getAllTactics();
                 return accessor.pipe(
                     map(objects => {
                         // check name
@@ -585,18 +586,19 @@ export abstract class StixObject extends Serializable {
     public getNamespaceID(restAPIConnector, orgNamespace): Observable<any> {
         let prefix = ''; // i.e. 'TA', if StixObject type is tactic
         let count = '' as any; // i.e. 1234
-        let copyID = this.attackID.slice(); // Deep copy of attack id
         this.attackID = '(generating ID)';
 
-        let accessor = this.attackType == "group" ? restAPIConnector.getAllGroups() :
-                        this.attackType == "campaign" ? restAPIConnector.getAllCampaigns() :
-                        this.attackType == "mitigation" ? restAPIConnector.getAllMitigations() :
-                        this.attackType == "software" ? restAPIConnector.getAllSoftware() :
-                        this.attackType == "tactic" ? restAPIConnector.getAllTactics() :
-                        this.attackType == "technique" ? restAPIConnector.getAllTechniques() :
-                        this.attackType == "data-source" ? restAPIConnector.getAllDataSources() :
-                        this.attackType == "asset" ? restAPIConnector.getAllAssets() :
-                        this.attackType == "matrix" ? restAPIConnector.getAllMatrices() : null;
+        let accessor: Observable<Paginated<StixObject>>;
+        if (this.attackType == "group") accessor = restAPIConnector.getAllGroups();
+        else if (this.attackType == "campaign") accessor = restAPIConnector.getAllCampaigns();
+        else if (this.attackType == "mitigation") accessor = restAPIConnector.getAllMitigations();
+        else if (this.attackType == "software") accessor = restAPIConnector.getAllSoftware();
+        else if (this.attackType == "tactic") accessor = restAPIConnector.getAllTactics();
+        else if (this.attackType == "technique") accessor = restAPIConnector.getAllTechniques();
+        else if (this.attackType == "data-source") accessor = restAPIConnector.getAllDataSources();
+        else if (this.attackType == "asset") accessor = restAPIConnector.getAllAssets();
+        else if (this.attackType == "matrix") accessor = restAPIConnector.getAllMatrices();
+        else accessor = null;
 
         // Find all other objects that have this prefix and range, and set ID to the most recent & unique ID available
         if (accessor) {
