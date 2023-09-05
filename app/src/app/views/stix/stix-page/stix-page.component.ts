@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit, ViewChild, Output, EventEmitter } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router, NavigationEnd } from '@angular/router';
-import { BreadcrumbService } from 'angular-crumbs';
+// import { BreadcrumbService } from 'angular-crumbs';
 import { Observable, forkJoin } from 'rxjs';
 import { Campaign } from 'src/app/classes/stix/campaign';
 import { concatMap } from "rxjs/operators";
@@ -50,7 +50,7 @@ export class StixPageComponent implements OnInit, OnDestroy {
     constructor(private router: Router, 
                 private route: ActivatedRoute, 
                 private restApiService: RestApiConnectorService, 
-                private breadcrumbService: BreadcrumbService, 
+                // private breadcrumbService: BreadcrumbService, 
                 private editorService: EditorService,
                 private dialog: MatDialog,
                 private titleService: TitleService) { }
@@ -261,28 +261,28 @@ export class StixPageComponent implements OnInit, OnDestroy {
     }
 
     private updateBreadcrumbs(result, objectType) {
-        if (result.length == 0) {
-            this.breadcrumbService.changeBreadcrumb(this.route.snapshot, "object not found")
-            this.titleService.setTitle("object not found", true);
-        } 
-        else if ("name" in result[0] && result[0].name) {
-            this.breadcrumbService.changeBreadcrumb(this.route.snapshot, result[0].name)
-            this.titleService.setTitle(result[0].name, false);
-        } 
-        else if (objectType == 'marking-definition') {
-            if ("definition_string" in result[0] && result[0].definition_string){
-                this.breadcrumbService.changeBreadcrumb(this.route.snapshot, `marking definition`);
-                this.titleService.setTitle(`Marking Definition`);
-            }
-            else {
-                this.breadcrumbService.changeBreadcrumb(this.route.snapshot, `new ${objectType.replace(/-/g, ' ')}`) 
-                this.titleService.setTitle(`New Marking Definition`);
-            }
-        }
-        else {
-            this.breadcrumbService.changeBreadcrumb(this.route.snapshot, `new ${objectType.replace(/-/g, ' ')}`)
-            this.titleService.setTitle(`new ${objectType}`);
-        }
+        // if (result.length == 0) {
+        //     this.breadcrumbService.changeBreadcrumb(this.route.snapshot, "object not found")
+        //     this.titleService.setTitle("object not found", true);
+        // } 
+        // else if ("name" in result[0] && result[0].name) {
+        //     this.breadcrumbService.changeBreadcrumb(this.route.snapshot, result[0].name)
+        //     this.titleService.setTitle(result[0].name, false);
+        // } 
+        // else if (objectType == 'marking-definition') {
+        //     if ("definition_string" in result[0] && result[0].definition_string){
+        //         this.breadcrumbService.changeBreadcrumb(this.route.snapshot, `marking definition`);
+        //         this.titleService.setTitle(`Marking Definition`);
+        //     }
+        //     else {
+        //         this.breadcrumbService.changeBreadcrumb(this.route.snapshot, `new ${objectType.replace(/-/g, ' ')}`) 
+        //         this.titleService.setTitle(`New Marking Definition`);
+        //     }
+        // }
+        // else {
+        //     this.breadcrumbService.changeBreadcrumb(this.route.snapshot, `new ${objectType.replace(/-/g, ' ')}`)
+        //     this.titleService.setTitle(`new ${objectType}`);
+        // }
     }
 }
 

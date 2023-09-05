@@ -5,7 +5,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatStepper } from '@angular/material/stepper';
 import { ActivatedRoute } from '@angular/router';
-import { FileInputComponent } from 'ngx-material-file-input';
+// import { FileInputComponent } from 'ngx-material-file-input';
 import { Campaign } from 'src/app/classes/stix/campaign';
 import { Collection, CollectionDiffCategories } from 'src/app/classes/stix/collection';
 import { DataComponent } from 'src/app/classes/stix/data-component';
@@ -34,7 +34,7 @@ import _ from 'lodash';
 })
 export class CollectionImportComponent implements OnInit {
 	@ViewChild(MatStepper) public stepper: MatStepper;
-	@ViewChild(FileInputComponent) public fileInput: FileInputComponent;
+	// @ViewChild(FileInputComponent) public fileInput: FileInputComponent;
 
 	public url: string = '';
 	public loadingStep1: boolean = false;

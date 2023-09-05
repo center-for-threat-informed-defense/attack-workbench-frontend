@@ -47,8 +47,8 @@ import { MatNativeDateModule } from '@angular/material/core';
 import { MatBadgeModule } from '@angular/material/badge';
 
 // other library imports
-import { BreadcrumbModule } from "angular-crumbs";
-import { MaterialFileInputModule } from 'ngx-material-file-input';
+// import { BreadcrumbModule } from "angular-crumbs";
+// import { MaterialFileInputModule } from 'ngx-material-file-input';
 import { MarkdownModule } from "ngx-markdown";
 import { PopoverModule } from "ngx-smart-popover";
 import { NgxJdenticonModule, JDENTICON_CONFIG } from 'ngx-jdenticon';
@@ -341,8 +341,8 @@ export function initConfig(appConfigService: AppConfigService) {
 		UsersListComponent
 	],
 	imports: [
-		BreadcrumbModule,
-		MaterialFileInputModule,
+		// BreadcrumbModule,
+		// MaterialFileInputModule,
 		MarkdownModule.forRoot({
 			loader: HttpClient,
 			//   toggle this to disable github flavored markdown
