@@ -49,7 +49,7 @@
     "ngx-markdown": "^11.2.0",
     "ngx-smart-popover": "^1.5.0",
     "rxjs": "^6.6.7",
-    "tslib": "^2.0.0",
+    "tslib": "^2.6.2",
     "uuid": "^8.3.2",
     "xlsx": "^0.18.5",
     "zone.js": "~0.11.4"
@@ -71,6 +71,6 @@
     "karma-jasmine-html-reporter": "^1.5.0",
     "ts-node": "~8.3.0",
     "tslint": "~6.1.0",
-    "typescript": "^4.3.5"
+    "typescript": "~4.3.5"
   }
 }
