@@ -34,7 +34,7 @@ export class ReferenceEditDialogComponent implements OnInit, OnDestroy {
 
     public references$: ExternalReference[];
     public loading: boolean = true;
-    public sourceNameControl: FormControl;
+    public sourceNameControl: FormControl<string>;
     public matcher: CustomErrorStateMatcher;
     public validationSubscription: Subscription;
 
