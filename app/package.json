@@ -46,7 +46,7 @@
     "moment": "^2.29.4",
     "ngx-jdenticon": "^1.0.4",
     "ngx-logger": "^4.3.3",
-    "ngx-markdown": "^10.1.1",
+    "ngx-markdown": "^11.2.0",
     "ngx-smart-popover": "^1.5.0",
     "rxjs": "^6.6.7",
     "tslib": "^2.0.0",
