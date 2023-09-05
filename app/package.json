@@ -42,7 +42,6 @@
     "@angular/platform-browser": "^10.1.6",
     "@angular/platform-browser-dynamic": "^10.1.6",
     "@angular/router": "^10.1.6",
-    "angular-crumbs": "^3.0.1",
     "jdenticon": "^3.2.0",
     "moment": "^2.29.4",
     "ngx-jdenticon": "^1.0.4",
