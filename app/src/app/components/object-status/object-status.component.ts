@@ -20,7 +20,7 @@ import { ConfirmationDialogComponent } from '../confirmation-dialog/confirmation
 export class ObjectStatusComponent implements OnInit {
     @ViewChild("objectStatus", {static: false}) public popover: PopoverContentComponent;
     public loaded: boolean = false;
-    public statusControl: FormControl;
+    public statusControl: FormControl<string>;
     public select: SelectionModel<string>;
     public workflows: string[] = ["none", "work-in-progress", "awaiting-review", "reviewed"];
     public objects: StixObject[];
