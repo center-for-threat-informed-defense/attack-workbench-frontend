@@ -22,8 +22,8 @@ import { AuthorizationGuard } from "./services/helpers/authorization.guard";
 import { Role } from "./classes/authn/role";
 import { NotesSearchListComponent } from "./views/notes-page/notes-search-list/notes-search-list.component";
 
-var viewRoles = [Role.VISITOR, Role.EDITOR, Role.ADMIN];
-var editRoles = [Role.EDITOR, Role.ADMIN];
+const viewRoles = [Role.VISITOR, Role.EDITOR, Role.ADMIN];
+const editRoles = [Role.EDITOR, Role.ADMIN];
 
 const stixRoutes: Routes = [{
     path: 'matrix',
@@ -61,7 +61,11 @@ const stixRoutes: Routes = [{
     {
         path: ":new",
         data: {
-            breadcrumb: "new matrix",
+            // breadcrumb: "new matrix",
+            breadcrumb: [{
+                label: "new matrix",
+                url: ''
+            }]
         },
         children: [{
             path: '',

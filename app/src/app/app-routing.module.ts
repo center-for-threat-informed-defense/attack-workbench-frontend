@@ -12,185 +12,182 @@ import { Role } from './classes/authn/role';
 import { TeamsListPageComponent } from './views/admin-page/teams/teams-list-page/teams-list-page.component';
 import { TeamsViewPageComponent } from './views/admin-page/teams/teams-view-page/teams-view-page.component';
 
-
-//see also https://www.npmjs.com/package/angular-crumbs
-
-var editRoles = [Role.EDITOR, Role.ADMIN];
+const editRoles = [Role.EDITOR, Role.ADMIN];
 
 const routes: Routes = [
     {
-        "path": "",
-        "data": {
-            "breadcrumb": "home"
+        path: "",
+        data: {
+            breadcrumb: "home"
         },
-        "children": [
+        children: [
             {
-                "path": "",
-                "data": {
-                    "breadcrumb": "welcome"
+                path: "",
+                data: {
+                    breadcrumb: "welcome"
                 },
-                "component": LandingPageComponent,
+                component: LandingPageComponent,
             },
             {
-                "path": "register",
-                "data": {
-                    "breadcrumb": "welcome"
+                path: "register",
+                data: {
+                    breadcrumb: "welcome"
                 },
-                "component": LandingPageComponent,
+                component: LandingPageComponent,
             },
             {
-                "path": "admin",
-                "canActivate": [AuthorizationGuard],
-                "canActivateChild": [AuthorizationGuard],
-                "data": {
-                    "breadcrumb": "admin settings",
-                    "title": "Admin Settings",
-                    "roles": [Role.ADMIN]
+                path: "admin",
+                canActivate: [AuthorizationGuard],
+                canActivateChild: [AuthorizationGuard],
+                data: {
+                    breadcrumb: "admin settings",
+                    title: "Admin Settings",
+                    roles: [Role.ADMIN]
                 },
-                "children": [
+                children: [
                     {
-                        "path": "",
-                        "data": {
-                            "breadcrumb": "admin settings",
-                            "title": "Admin Settings"
+                        path: "",
+                        data: {
+                            breadcrumb: "admin settings",
+                            title: "Admin Settings"
                         },
-                        "component": AdminPageComponent,
+                        component: AdminPageComponent,
                     },
                     {
-                        "path": "org-settings",
-                        "data": {
-                            "breadcrumb": "organization settings",
+                        path: "org-settings",
+                        data: {
+                            breadcrumb: "organization settings",
                             "title": "Organization Identity"
                         },
-                        "component": OrgSettingsPageComponent,
+                        component: OrgSettingsPageComponent,
                     },
                     {
-                        "path": "user-accounts",
-                        "data": {
-                            "breadcrumb": "user accounts",
-                            "title": "User Accounts"
+                        path: "user-accounts",
+                        data: {
+                            breadcrumb: "user accounts",
+                            title: "User Accounts"
                         },
-                        "component": UserAccountsPageComponent,
+                        component: UserAccountsPageComponent,
                     },
                     {
-                        "path": "default-marking-definitions",
-                        "data": {
-                            "breadcrumb": "default marking definitions",
-                            "title": "Default Marking Definitions"
+                        path: "default-marking-definitions",
+                        data: {
+                            breadcrumb: "default marking definitions",
+                            title: "Default Marking Definitions"
                         },
-                        "component": DefaultMarkingDefinitionsComponent,
+                        component: DefaultMarkingDefinitionsComponent,
                     },
                     {
-                      "path": "teams",
-                      "data": {
-                          "breadcrumb": "teams",
-                          "title": "Teams"
-                      },
-                      "children": [
-                        {
-                            "path": "",
-                            "data": {
-                                "breadcrumb": "teams",
-                                "title": "Teams"
+                        path: "teams",
+                        data: {
+                            breadcrumb: "teams",
+                            title: "Teams"
+                        },
+                        children: [
+                            {
+                                path: "",
+                                data: {
+                                    breadcrumb: "teams",
+                                    title: "Teams"
+                                },
+                                component: TeamsListPageComponent,
                             },
-                            "component": TeamsListPageComponent,
-                        },
-                        {
-                            "path": ":id",
-                            "data": {
-                                "breadcrumb": "view team",
-                                "editable": true,
-                                "title": "View Team",
-                                "editRoles": editRoles
+                            {
+                                path: ":id",
+                                data: {
+                                    breadcrumb: "view team",
+                                    editable: true,
+                                    title: "View Team",
+                                    editRoles: editRoles
+                                },
+                                component: TeamsViewPageComponent,
                             },
-                            "component": TeamsViewPageComponent,
-                        },
-                      ]
+                        ]
                     },
                 ]
             },
             {
-                "path": "docs",
-                "data": {
-                    "breadcrumb": "documentation",
-                    "title": "Documentation"
+                path: "docs",
+                data: {
+                    breadcrumb: "documentation",
+                    title: "Documentation"
                 },
-                "children": [
+                children: [
                     {
-                        "path": "",
-                        "data": {
-                            "breadcrumb": "documentation",
-                            "markdown": "/assets/docs/README.md",
-                            "title": "Documentation"
+                        path: "",
+                        data: {
+                            breadcrumb: "documentation",
+                            markdown: "/assets/docs/README.md",
+                            title: "Documentation"
                         },
-                        "component": HelpPageComponent,
+                        component: HelpPageComponent,
                     },
                     {
-                        "path": "usage",
-                        "data": {
-                            "breadcrumb": "usage",
-                            "markdown": "/assets/docs/usage.md",
-                            "title": "Usage"
+                        path: "usage",
+                        data: {
+                            breadcrumb: "usage",
+                            markdown: "/assets/docs/usage.md",
+                            title: "Usage"
                         },
-                        "component": HelpPageComponent,
+                        component: HelpPageComponent,
                     },
                     {
-                        "path": "collections",
-                        "data": {
-                            "breadcrumb": "collections",
-                            "markdown": "/assets/docs/collections.md",
-                            "title": "About Collections"
+                        path: "collections",
+                        data: {
+                            breadcrumb: "collections",
+                            markdown: "/assets/docs/collections.md",
+                            title: "About Collections"
                         },
-                        "component": HelpPageComponent,
+                        component: HelpPageComponent,
                     },
                     {
-                        "path": "changelog",
-                        "data": {
-                            "breadcrumb": "changelog",
-                            "markdown": "/assets/docs/changelog.md",
-                            "title": "Changelog"
+                        path: "changelog",
+                        data: {
+                            breadcrumb: "changelog",
+                            markdown: "/assets/docs/changelog.md",
+                            title: "Changelog"
                         },
-                        "component": HelpPageComponent,
+                        component: HelpPageComponent,
                     },
                     {
-                        "path": "integrations",
-                        "data": {
-                            "breadcrumb": "integrations",
-                            "markdown": "/assets/docs/integrations.md",
-                            "title": "Integrations"
+                        path: "integrations",
+                        data: {
+                            breadcrumb: "integrations",
+                            markdown: "/assets/docs/integrations.md",
+                            title: "Integrations"
                         },
-                        "component": HelpPageComponent,
+                        component: HelpPageComponent,
                     },
                     {
-                        "path": "contributing",
-                        "data": {
-                            "breadcrumb": "contributing",
-                            "markdown": "/assets/docs/contributing.md",
-                            "title": "Contributing"
+                        path: "contributing",
+                        data: {
+                            breadcrumb: "contributing",
+                            markdown: "/assets/docs/contributing.md",
+                            title: "Contributing"
                         },
-                        "component": HelpPageComponent,
+                        component: HelpPageComponent,
                     },
                 ]
             },
             {
-                "path": "profile",
-                "canActivate": [AuthorizationGuard],
-                "canActivateChild": [AuthorizationGuard],
-                "data": {
-                    "breadcrumb": "profile",
-                    "title": "Profile",
-                    "roles": [Role.VISITOR, Role.EDITOR, Role.ADMIN],
-                    "editRoles": [Role.VISITOR, Role.EDITOR, Role.ADMIN]
+                path: "profile",
+                canActivate: [AuthorizationGuard],
+                canActivateChild: [AuthorizationGuard],
+                data: {
+                    breadcrumb: "profile",
+                    title: "Profile",
+                    roles: [Role.VISITOR, Role.EDITOR, Role.ADMIN],
+                    editRoles: [Role.VISITOR, Role.EDITOR, Role.ADMIN]
                 },
-                "children": [
+                children: [
                     {
-                        "path": "",
-                        "data": {
-                            "breadcrumb": "profile",
-                            "title": "Profile",
-                            "editable": true
+                        path: "",
+                        data: {
+                            breadcrumb: "profile",
+                            title: "Profile",
+                            editable: true
                         },
-                        "component": ProfilePageComponent,
+                        component: ProfilePageComponent,
                     },
                 ]
             }
