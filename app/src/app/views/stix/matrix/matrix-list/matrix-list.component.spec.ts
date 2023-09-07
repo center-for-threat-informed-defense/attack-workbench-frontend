@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { MatrixListComponent } from './matrix-list.component';
 
@@ -6,7 +6,7 @@ describe('MatrixListComponent', () => {
   let component: MatrixListComponent;
   let fixture: ComponentFixture<MatrixListComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ MatrixListComponent ]
     })

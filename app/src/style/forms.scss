@@ -63,3 +63,22 @@ mat-form-field.mat-form-field-appearance-outline.mat-form-field-disabled {
         border-bottom-right-radius: 0;
     }
 }
+
+.mat-error {
+    color: color(error) !important;
+}
+.mat-form-field {
+    &.mat-form-field-invalid, &.ng-invalid {
+        color: color(error);
+        .mat-form-field-label, 
+        .mat-input-element, 
+        .mat-form-field-outline, 
+        .mat-form-field-outline-thick, 
+        .mat-form-field-required-marker {
+            color: color(error) !important;
+        }
+    }
+    &.mat-warn .mat-input-element {
+        color: color(error) !important;
+    }
+}

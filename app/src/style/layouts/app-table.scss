@@ -1,4 +1,4 @@
-@import '~@angular/material/theming';
+@use '@angular/material' as mat;
 // @import "../globals";
 
 .app-table {
@@ -6,7 +6,7 @@
     border-spacing: 0px;
     
     .light & {
-        @include mat-elevation(8);
+        @include mat.elevation(8);
     }
     .dark & {
         border-radius: 4px;
