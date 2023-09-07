@@ -74,6 +74,7 @@ import { MultipleChoiceDialogComponent } from "./components/multiple-choice-dial
 import { ValidationResultsComponent } from "./components/validation-results/validation-results.component";
 import { AddRelationshipButtonComponent } from "./components/add-relationship-button/add-relationship-button.component";
 import { CollectionUpdateDialogComponent } from './components/collection-update-dialog/collection-update-dialog.component';
+import { BreadcrumbComponent } from './components/breadcrumb/breadcrumb.component';
 
 // STIX components
 import { StixListComponent } from './components/stix/stix-list/stix-list.component';
@@ -197,7 +198,6 @@ import { MatrixSideComponent } from './views/stix/matrix/matrix-side/matrix-side
 import { TacticCellComponent } from './components/matrix/tactic-cell/tactic-cell.component';
 import { TechniqueCellComponent } from './components/matrix/technique-cell/technique-cell.component';
 import { MatrixFlatComponent } from './views/stix/matrix/matrix-flat/matrix-flat.component';
-
 
 import { TeamsListPageComponent } from './views/admin-page/teams/teams-list-page/teams-list-page.component';
 import { TeamsViewPageComponent } from './views/admin-page/teams/teams-view-page/teams-view-page.component';
@@ -338,10 +338,10 @@ export function initConfig(appConfigService: AppConfigService) {
 		TeamsListPageComponent,
 		TeamsViewPageComponent,
 		CreateNewDialogComponent,
-		UsersListComponent
+		UsersListComponent,
+  		BreadcrumbComponent
 	],
 	imports: [
-		// BreadcrumbModule,
 		MaterialFileInputModule,
 		MarkdownModule.forRoot({
 			loader: HttpClient,
