@@ -50,45 +50,39 @@ export class UserAccount extends Serializable {
      * @param {*} raw the raw object to parse
      */
     public deserialize(raw: any) {
-        if ('id' in raw) {
-            if (typeof(raw.id) === 'string') { this.id = raw.id; }
-            else { logger.error('TypeError: id field is not a string:', raw.name, '(', typeof(raw.name), ')'); }
-        } else { this.id = ''; }
+        if (!('id' in raw)) this.id = '';
+        else if (typeof(raw.id) === 'string') this.id = raw.id;
+        else logger.error(`TypeError: id field is not a string: ${raw.id} (${typeof(raw.id)})`);
 
         if ('email' in raw && raw.email !== null) {
             if (typeof(raw.email) === 'string') { this.email = raw.email; }
             else { logger.error('TypeError: email field is not a string:', raw.email, '(', typeof(raw.email), ')'); }
         } else { this.email = ''; }
 
-        if ('username' in raw) {
-            if (typeof(raw.username) === 'string') { this.username = raw.username; }
-            else { logger.error('TypeError: username field is not a string:', raw.username, '(', typeof(raw.username), ')'); }
-        } else { this.username = ''; }
+        if (!('username' in raw)) this.username = '';
+        else if (typeof(raw.username) === 'string') this.username = raw.username;
+        else logger.error(`TypeError: username field is not a string: ${raw.username} (${typeof(raw.username)})`);
 
         if ('displayName' in raw && raw.displayName) {
             if (typeof(raw.displayName) === 'string') { this._displayName = raw.displayName; }
             else { logger.error('TypeError: displayName field is not a string:', raw.displayName, '(', typeof(raw.displayName), ')'); }
         }
 
-        if ('status' in raw) {
-            if (typeof(raw.status) === 'string') { this.status = raw.status; }
-            else { logger.error('TypeError: status field is not a string:', raw.status, '(', typeof(raw.status), ')'); }
-        } else { this.status = Status.PENDING; }
+        if (!('status' in raw)) this.status = Status.PENDING;
+        else if (typeof(raw.status) === 'string') this.status = raw.status;
+        else logger.error(`TypeError: status field is not a string: ${raw.status} (${typeof(raw.status)})`);
 
-        if ('role' in raw) {
-            if (typeof(raw.role) === 'string') { this.role = raw.role; }
-            else { logger.error('TypeError: role field is not a string:', raw.role, '(', typeof(raw.role), ')'); }
-        } else { this.role = Role.NONE; }
+        if (!('role' in raw)) this.role = Role.NONE;
+        else if (typeof(raw.role) === 'string') this.role = raw.role;
+        else logger.error(`TypeError: role field is not a string: ${raw.role} (${typeof(raw.role)})`);
 
-        if ('created' in raw) {
-            if (typeof (raw.created) === "string") this.created = new Date(raw.created);
-            else logger.error("TypeError: created field is not a string:", raw.created, "(", typeof (raw.created), ")")
-        } else { this.created = new Date(); }
+        if (!('created' in raw)) this.created = new Date();
+        else if (typeof(raw.created) === 'string') this.created = new Date(raw.created);
+        else logger.error(`TypeError: created field is not a string: ${raw.created} (${typeof(raw.created)})`);
 
-        if ('modified' in raw) {
-            if (typeof (raw.modified) === "string") this.modified = new Date(raw.modified);
-            else logger.error("TypeError: modified field is not a string:", raw.modified, "(", typeof (raw.modified), ")")
-        } else { this.modified = new Date(); }
+        if (!('modified' in raw)) this.modified = new Date();
+        else if (typeof(raw.modified) === 'string') this.modified = new Date(raw.modified);
+        else logger.error(`TypeError: modified field is not a string: ${raw.modified} (${typeof(raw.modified)})`);
     }
 
     /**
