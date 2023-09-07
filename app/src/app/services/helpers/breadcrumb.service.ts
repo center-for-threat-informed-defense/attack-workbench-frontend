@@ -1,6 +1,7 @@
 import { Injectable, EventEmitter } from '@angular/core';
 import { ActivatedRouteSnapshot, NavigationEnd, Router, Route } from '@angular/router';
 
+// see https://github.com/emilol/angular-crumbs
 @Injectable({
 	providedIn: 'root'
 })

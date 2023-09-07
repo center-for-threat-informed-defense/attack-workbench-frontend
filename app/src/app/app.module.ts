@@ -193,7 +193,7 @@ import { MarkingDefinitionListComponent } from "./views/stix/marking-definition/
 import { CampaignViewComponent } from './views/stix/campaign/campaign-view/campaign-view.component';
 import { CampaignListComponent } from './views/stix/campaign/campaign-list/campaign-list.component';
 
-import { NotesSearchListComponent } from './views/notes-page/notes-search-list/notes-search-list.component';
+import { NotesPageComponent } from './views/notes-page/notes-page.component';
 import { MatrixSideComponent } from './views/stix/matrix/matrix-side/matrix-side.component';
 import { TacticCellComponent } from './components/matrix/tactic-cell/tactic-cell.component';
 import { TechniqueCellComponent } from './components/matrix/technique-cell/technique-cell.component';
@@ -334,7 +334,7 @@ export function initConfig(appConfigService: AppConfigService) {
 		CitationPropertyComponent,
 		CitationViewComponent,
 		CitationEditComponent,
-		NotesSearchListComponent,
+		NotesPageComponent,
 		TeamsListPageComponent,
 		TeamsViewPageComponent,
 		CreateNewDialogComponent,
