@@ -37,7 +37,7 @@
 ### ATT&CK Workbench version x.x.x
 
 #### Improvements in x.x.x
--   Updated Angular from v10.2.5 to v14.3.0.
+-   Updated Angular to v14.
 
 ## 16 August 2023
 
