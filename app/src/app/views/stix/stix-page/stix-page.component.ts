@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit, ViewChild, Output, EventEmitter } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router, NavigationEnd } from '@angular/router';
-import { BreadcrumbService } from 'angular-crumbs';
+
 import { Observable, forkJoin } from 'rxjs';
 import { Asset, Campaign, DataSource, Group, MarkingDefinition, Matrix, Mitigation, Note, Software, StixObject, Tactic, Technique } from 'src/app/classes/stix';
 import { concatMap } from "rxjs/operators";
@@ -16,6 +16,7 @@ import { TitleService } from 'src/app/services/title/title.service';
 import { CollectionViewComponent } from '../collection/collection-view/collection-view.component';
 import { MarkingDefinitionViewComponent } from '../marking-definition/marking-definition-view/marking-definition-view.component';
 import { StixViewConfig } from '../stix-view-page';
+import { BreadcrumbService } from 'src/app/services/helpers/breadcrumb.service';
 
 @Component({
   selector: 'app-stix-page',

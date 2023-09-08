@@ -475,10 +475,12 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
 
     public openUserSelectModal(): void {
         const select = new SelectionModel<string>(true);
+
+        // a for-of loop does not work for this statement
         for (let i = 0; i < this.userIdsUsedInSearch.length; i++) {
             select.toggle(this.userIdsUsedInSearch[i]);
-
         }
+
         let prompt = this.dialog.open(AddDialogComponent, {
             data: {
                 select,
@@ -742,7 +744,7 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
                   filtered = filtered.filter((obj:any)=> obj.revoked)
                 }
 
-                //filter by users
+                // filter by users
                 if (Array.isArray(this.userIdsUsedInSearch) && this.userIdsUsedInSearch.length > 0) {
                   filtered = filtered.filter((obj:any)=> obj.workflow && this.userIdsUsedInSearch.includes(obj.workflow.created_by_user_account));
                 }

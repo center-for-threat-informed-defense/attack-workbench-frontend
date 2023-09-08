@@ -1,5 +1,4 @@
 @import "../../../../../style/globals";
-@import '~@angular/material/theming';
 
 .list-edit {
     // font-size: 14px;
@@ -34,6 +33,7 @@
 
     .mat-select-placeholder, .mat-chip-list-wrapper, .mat-select-trigger {
         min-height: 32px;
+        height: 100%;
     }
 
     // stix list object selection dialog

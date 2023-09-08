@@ -252,12 +252,12 @@ export class ListEditComponent implements OnInit, AfterContentChecked {
 
     /** Add value to object property list */
     public add(event: MatChipInputEvent): void {
-        if (event.value && event.value.trim()) {
+        if (event.value?.trim()) {
             this.config.object[this.config.field].push(event.value.trim());
             this.inputControl.setValue(this.config.object[this.config.field]);
         }
-        if (event.input) {
-            event.input.value = ''; // reset input value
+        if (event.chipInput.inputElement.value) {
+            event.chipInput.inputElement.value = ''; // reset input value
         }
     }
 

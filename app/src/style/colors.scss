@@ -84,16 +84,30 @@ $colors: (
     @return "%23"+ str-slice($string: #{$hex}, $start-at: 4); //skip #AA in #AARRGGBB
 }
 
-//convert the color to a material-supporting color map
+// convert the color to a material-supporting color map
 @function to-material-map($color) {
     @return (
         50: color($color),
         100: color($color),
         200: color($color),
+        300: color($color),
+        400: color($color),
+        500: color($color),
+        600: color($color),
+        700: color($color),
+        800: color($color),
+        900: color($color),
         contrast: (
             50: on-color($color),
             100: on-color($color),
-            200: on-color($color)
+            200: on-color($color),
+            300: on-color($color),
+            400: on-color($color),
+            500: on-color($color),
+            600: on-color($color),
+            700: on-color($color),
+            800: on-color($color),
+            900: on-color($color),
         )
     );
 }

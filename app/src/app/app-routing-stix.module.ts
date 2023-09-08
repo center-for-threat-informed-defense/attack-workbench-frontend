@@ -13,6 +13,7 @@ import { DataSourceListComponent } from "./views/stix/data-source/data-source-li
 import { ReferenceManagerComponent } from "./views/reference-manager/reference-manager.component";
 import { CampaignListComponent } from "./views/stix/campaign/campaign-list/campaign-list.component";
 import { AssetListComponent } from "./views/stix/asset/asset-list/asset-list.component";
+import { NotesPageComponent } from "./views/notes-page/notes-page.component";
 
 import { StixPageComponent } from "./views/stix/stix-page/stix-page.component";
 
@@ -21,10 +22,9 @@ import { NgModule } from '@angular/core';
 import { environment } from "../environments/environment"
 import { AuthorizationGuard } from "./services/helpers/authorization.guard";
 import { Role } from "./classes/authn/role";
-import { NotesSearchListComponent } from "./views/notes-page/notes-search-list/notes-search-list.component";
 
-var viewRoles = [Role.VISITOR, Role.EDITOR, Role.ADMIN];
-var editRoles = [Role.EDITOR, Role.ADMIN];
+const viewRoles = [Role.VISITOR, Role.EDITOR, Role.ADMIN];
+const editRoles = [Role.EDITOR, Role.ADMIN];
 
 const stixRoutes: Routes = [{
     path: 'matrix',
@@ -62,7 +62,11 @@ const stixRoutes: Routes = [{
     {
         path: ":new",
         data: {
-            breadcrumb: "new matrix",
+            // breadcrumb: "new matrix",
+            breadcrumb: [{
+                label: "new matrix",
+                url: ''
+            }]
         },
         children: [{
             path: '',
@@ -657,30 +661,26 @@ stixRoutes.push(
             component: ReferenceManagerComponent
         }
         ]
-    }
-)
-
-
-stixRoutes.push(
-  {
-    path: 'notes',
-    canActivateChild: [AuthorizationGuard],
-    data: {
-      breadcrumb: 'notes',
-      more: true
     },
-    children: [{
-        path: '',
-        data: {
-          breadcrumb: 'list',
-          title: "Notes Search",
-          roles: editRoles
-        },
-        component: NotesSearchListComponent
-      }
-    ]
-  }
-);
+	{
+		path: 'notes',
+		canActivateChild: [AuthorizationGuard],
+		data: {
+			breadcrumb: 'notes',
+			more: true
+		},
+		children: [{
+			path: '',
+			data: {
+				breadcrumb: 'list',
+				title: "Notes Search",
+				roles: editRoles
+			},
+			component: NotesPageComponent
+		}
+		]
+	}
+)
 
 @NgModule({
     imports: [

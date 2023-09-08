@@ -1,4 +1,4 @@
-FROM node:14 as build
+FROM node:18 AS build
 
 # Create app directory
 WORKDIR /usr/src/app
@@ -21,7 +21,7 @@ COPY ./docs ../docs
 # Build the bundle
 RUN npm run build-prod
 
-FROM nginx:1.19
+FROM nginx
 
 # Set Docker labels
 LABEL org.opencontainers.image.title="ATT&CK Workbench Frontend Service" \

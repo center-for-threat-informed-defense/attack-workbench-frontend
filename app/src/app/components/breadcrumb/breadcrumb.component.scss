@@ -1,0 +1,11 @@
+.breadcrumb {
+    font-weight: 400;
+    font-size: 18px;
+    display: inline-block;
+    & + .breadcrumb {
+        &:before {
+            content: "/";
+            padding: 10px;
+        }
+    }
+}
