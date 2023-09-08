@@ -36,6 +36,9 @@
 
 ### ATT&CK Workbench version x.x.x
 
+#### New Features in x.x.x
+-   Added ability to create and edit Asset objects.
+
 #### Improvements in x.x.x
 -   Updated Angular from v10.2.5 to v14.3.0.
 
