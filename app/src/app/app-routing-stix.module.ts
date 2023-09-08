@@ -61,11 +61,7 @@ const stixRoutes: Routes = [{
     {
         path: ":new",
         data: {
-            // breadcrumb: "new matrix",
-            breadcrumb: [{
-                label: "new matrix",
-                url: ''
-            }]
+            breadcrumb: "new matrix",
         },
         children: [{
             path: '',
