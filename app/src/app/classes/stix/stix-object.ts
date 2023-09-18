@@ -293,18 +293,23 @@ export abstract class StixObject extends Serializable {
                 //do not check name or attackID for relationships or marking definitions
                 if (this.attackType == "relationship" || this.attackType == "marking-definition") return of(result);
                 // check if name & ATT&CK ID is unique, record result in validation, and return validation
+                let options = { // validate against revoked & deprecated objects
+                    includeRevoked: true,
+                    includeDeprecated: true
+                };
                 let accessor: Observable<Paginated<StixObject>>;
-                if (this.attackType == "collection") accessor = restAPIService.getAllCollections();
-                else if (this.attackType == "group") accessor = restAPIService.getAllGroups();
-                else if (this.attackType == "campaign") accessor = restAPIService.getAllCampaigns();
-                else if (this.attackType == "software") accessor = restAPIService.getAllSoftware();
-                else if (this.attackType == "matrix") accessor = restAPIService.getAllMatrices();
-                else if (this.attackType == "mitigation") accessor = restAPIService.getAllMitigations();
-                else if (this.attackType == "technique") accessor = restAPIService.getAllTechniques();
-                else if (this.attackType == "data-source") accessor = restAPIService.getAllDataSources();
-                else if (this.attackType == "data-component") accessor = restAPIService.getAllDataComponents();
+                if (this.attackType == "collection") accessor = restAPIService.getAllCollections(options);
+                else if (this.attackType == "group") accessor = restAPIService.getAllGroups(options);
+                else if (this.attackType == "campaign") accessor = restAPIService.getAllCampaigns(options);
+                else if (this.attackType == "software") accessor = restAPIService.getAllSoftware(options);
+                else if (this.attackType == "matrix") accessor = restAPIService.getAllMatrices(options);
+                else if (this.attackType == "mitigation") accessor = restAPIService.getAllMitigations(options);
+                else if (this.attackType == "technique") accessor = restAPIService.getAllTechniques(options);
+                else if (this.attackType == "data-source") accessor = restAPIService.getAllDataSources(options);
+                else if (this.attackType == "data-component") accessor = restAPIService.getAllDataComponents(options);
                 else if (this.attackType == "asset") accessor = restAPIService.getAllAssets();
-                else accessor = restAPIService.getAllTactics();
+                else accessor = restAPIService.getAllTactics(options);
+
                 return accessor.pipe(
                     map(objects => {
                         // check name
