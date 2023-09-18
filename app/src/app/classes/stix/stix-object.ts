@@ -291,15 +291,19 @@ export abstract class StixObject extends Serializable {
                 //do not check name or attackID for relationships or marking definitions
                 if (this.attackType == "relationship" || this.attackType == "marking-definition") return of(result);
                 // check if name & ATT&CK ID is unique, record result in validation, and return validation
-                let accessor = this.attackType == "collection"? restAPIService.getAllCollections() :
-                                this.attackType == "group"? restAPIService.getAllGroups() :
-                                this.attackType == "campaign"? restAPIService.getAllCampaigns() :
-                                this.attackType == "software"? restAPIService.getAllSoftware() :
-                                this.attackType == "matrix"? restAPIService.getAllMatrices() :
-                                this.attackType == "mitigation"? restAPIService.getAllMitigations() :
-                                this.attackType == "technique"? restAPIService.getAllTechniques() :
-                                this.attackType == "data-source"? restAPIService.getAllDataSources() :
-                                this.attackType == "data-component"? restAPIService.getAllDataComponents() :
+                let options = { // validate against revoked & deprecated objects
+                    includeRevoked: true,
+                    includeDeprecated: true
+                };
+                let accessor = this.attackType == "collection"? restAPIService.getAllCollections(options) :
+                                this.attackType == "group"? restAPIService.getAllGroups(options) :
+                                this.attackType == "campaign"? restAPIService.getAllCampaigns(options) :
+                                this.attackType == "software"? restAPIService.getAllSoftware(options) :
+                                this.attackType == "matrix"? restAPIService.getAllMatrices(options) :
+                                this.attackType == "mitigation"? restAPIService.getAllMitigations(options) :
+                                this.attackType == "technique"? restAPIService.getAllTechniques(options) :
+                                this.attackType == "data-source"? restAPIService.getAllDataSources(options) :
+                                this.attackType == "data-component"? restAPIService.getAllDataComponents(options) :
                                 restAPIService.getAllTactics();
                 return accessor.pipe(
                     map(objects => {
