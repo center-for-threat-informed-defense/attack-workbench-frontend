@@ -44,8 +44,8 @@ export class Asset extends StixObject {
         rep.stix.x_mitre_related_assets = this.relatedAssets.map((asset: RelatedAsset) => {
             return {
                 name: asset.name.trim(),
-                related_asset_sector: asset.related_asset_sector,
-                description: asset.description
+                related_asset_sector: asset.related_asset_sector ? asset.related_asset_sector : "",
+                description: asset.description ? asset.description : ""
             }
         });
         rep.stix.x_mitre_platforms = this.platforms;
