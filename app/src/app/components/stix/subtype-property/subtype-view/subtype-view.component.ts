@@ -70,4 +70,10 @@ export class SubtypeViewComponent implements OnInit {
 			}
 		}
     }
+
+    /** Format table column */
+    public format(value): string {
+        if (Array.isArray(value)) return value.join("; ");
+        return value;
+    }
 }
