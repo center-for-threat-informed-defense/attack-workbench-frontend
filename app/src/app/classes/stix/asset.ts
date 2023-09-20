@@ -44,7 +44,7 @@ export class Asset extends StixObject {
         rep.stix.x_mitre_related_assets = this.relatedAssets.map((asset: RelatedAsset) => {
             return {
                 name: asset.name.trim(),
-                related_asset_sector: asset.related_asset_sector ? asset.related_asset_sector : "",
+                related_asset_sectors: asset.related_asset_sectors ? asset.related_asset_sectors : [],
                 description: asset.description ? asset.description : ""
             }
         });
@@ -59,7 +59,7 @@ export class Asset extends StixObject {
     }
 
     public instanceOfRelatedAsset(object: any): boolean {
-        return 'name' in object && 'related_asset_sector' in object;
+        return 'name' in object && 'related_asset_sectors' in object;
     }
 
     /**
@@ -135,6 +135,6 @@ export class Asset extends StixObject {
 
 export interface RelatedAsset {
     name: string;
-    related_asset_sector: string;
+    related_asset_sectors: string;
     description: string;
 }

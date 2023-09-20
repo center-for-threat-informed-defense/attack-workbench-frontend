@@ -2,26 +2,36 @@
     <h1>{{isNew ? 'Add' : 'Edit'}} {{config.tooltip}}</h1>
 
     <ng-container *ngFor="let field of config.subtypeFields">
-        <mat-form-field *ngIf="field.type == 'string'" appearance="outline">
+        <!-- edit type: 'string' -->
+        <mat-form-field *ngIf="field.editType == 'string'" appearance="outline">
             <mat-label>{{field.name}}</mat-label>
-            <input matInput [required]="field.required ? field.required : false" [(ngModel)]="value[field.name]"/>
+            <input matInput [required]="field.required ? field.required : false" [(ngModel)]="data[field.name]"/>
         </mat-form-field>
 
-        <mat-form-field *ngIf="field.type == 'select'" class="grow-to-row" appearance="outline">
+        <!-- edit type: 'select' -->
+        <mat-form-field *ngIf="field.editType == 'select'" class="grow-to-row" appearance="outline">
             <mat-label *ngIf="!dataLoaded" class="loading">
                 <mat-spinner class="spinner" diameter="20"></mat-spinner>&nbsp;
                 <span>Loading {{field.label? field.label : field.name}}...</span>
             </mat-label>
             <mat-label *ngIf="dataLoaded">{{field.label ? field.label : field.name}}</mat-label>
             
-            <mat-select [required]="field.required ? field.required : false" [(value)]="value[field.name]">
-                <mat-option *ngFor="let item of allowedValues[field.name]" [value]="item">{{item}}</mat-option>
+            <mat-select [formControl]="selectControls[field.name]" multiple [required]="field.required ? field.required : false">
+                <mat-select-trigger>
+                    <mat-chip-list>
+                        <mat-chip *ngFor="let value of selectControls[field.name].value" [removable]="true" (removed)="remove(field.name, value)">
+                            {{value}} <mat-icon matChipRemove>cancel</mat-icon>
+                        </mat-chip>
+                    </mat-chip-list>
+                </mat-select-trigger>
+                <mat-option *ngFor="let item of allowedValues[field.name]" (onSelectionChange)="change($event, field.name)" [value]="item">{{item}}</mat-option>
             </mat-select>
         </mat-form-field>
     </ng-container>
 
+    <!-- cancel/confirm -->
     <div class="buttons">
         <button mat-button matDialogClose>cancel</button>
-        <button mat-stroked-button [disabled]="!isValid" (click)="saveValue()">confirm</button>
+        <button mat-stroked-button [disabled]="!isValid" (click)="add()">confirm</button>
     </div>
 </div>

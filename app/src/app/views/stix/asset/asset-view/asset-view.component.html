@@ -76,9 +76,9 @@
                 referencesField: 'external_references',
                 label: 'related assets',
                 subtypeFields: [
-                    { name: 'name', type: 'string', required: true, key: true},
-                    { name: 'related_asset_sector', label: 'sector', type: 'select'},
-                    { name: 'description', supportsReferences: true, type: 'string'}
+                    { name: 'name', editType: 'string', required: true, key: true},
+                    { name: 'related_asset_sectors', label: 'sectors', editType: 'select'},
+                    { name: 'description', supportsReferences: true, editType: 'string'}
                 ],
                 tooltip: 'a related asset'
             }"></app-subtype-property>
