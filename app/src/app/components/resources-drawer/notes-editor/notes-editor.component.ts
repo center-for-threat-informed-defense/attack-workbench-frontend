@@ -58,7 +58,7 @@ export class NotesEditorComponent implements OnInit, AfterViewInit {
                     })
                 }
 
-                if (this.selected && this.selected.value) { // retain sorting selection
+                if (this.selected?.value) { // retain sorting selection
                     if (this.selected.value == 'title-ascending') this.sortTitle(true);
                     else if (this.selected.value == 'title-descending') this.sortTitle();
                     else if (this.selected.value == 'date-ascending') this.sortDate(true);

@@ -47,7 +47,7 @@ import { MatNativeDateModule } from '@angular/material/core';
 import { MatBadgeModule } from '@angular/material/badge';
 
 // other library imports
-import { BreadcrumbModule } from "angular-crumbs";
+// import { BreadcrumbModule } from "angular-crumbs";
 import { MaterialFileInputModule } from 'ngx-material-file-input';
 import { MarkdownModule } from "ngx-markdown";
 import { PopoverModule } from "ngx-smart-popover";
@@ -74,6 +74,7 @@ import { MultipleChoiceDialogComponent } from "./components/multiple-choice-dial
 import { ValidationResultsComponent } from "./components/validation-results/validation-results.component";
 import { AddRelationshipButtonComponent } from "./components/add-relationship-button/add-relationship-button.component";
 import { CollectionUpdateDialogComponent } from './components/collection-update-dialog/collection-update-dialog.component';
+import { BreadcrumbComponent } from './components/breadcrumb/breadcrumb.component';
 
 // STIX components
 import { StixListComponent } from './components/stix/stix-list/stix-list.component';
@@ -192,12 +193,11 @@ import { MarkingDefinitionListComponent } from "./views/stix/marking-definition/
 import { CampaignViewComponent } from './views/stix/campaign/campaign-view/campaign-view.component';
 import { CampaignListComponent } from './views/stix/campaign/campaign-list/campaign-list.component';
 
-import { NotesSearchListComponent } from './views/notes-page/notes-search-list/notes-search-list.component';
+import { NotesPageComponent } from './views/notes-page/notes-page.component';
 import { MatrixSideComponent } from './views/stix/matrix/matrix-side/matrix-side.component';
 import { TacticCellComponent } from './components/matrix/tactic-cell/tactic-cell.component';
 import { TechniqueCellComponent } from './components/matrix/technique-cell/technique-cell.component';
 import { MatrixFlatComponent } from './views/stix/matrix/matrix-flat/matrix-flat.component';
-
 
 import { TeamsListPageComponent } from './views/admin-page/teams/teams-list-page/teams-list-page.component';
 import { TeamsViewPageComponent } from './views/admin-page/teams/teams-view-page/teams-view-page.component';
@@ -334,14 +334,14 @@ export function initConfig(appConfigService: AppConfigService) {
 		CitationPropertyComponent,
 		CitationViewComponent,
 		CitationEditComponent,
-		NotesSearchListComponent,
+		NotesPageComponent,
 		TeamsListPageComponent,
 		TeamsViewPageComponent,
 		CreateNewDialogComponent,
-		UsersListComponent
+		UsersListComponent,
+  		BreadcrumbComponent
 	],
 	imports: [
-		BreadcrumbModule,
 		MaterialFileInputModule,
 		MarkdownModule.forRoot({
 			loader: HttpClient,

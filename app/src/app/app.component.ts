@@ -18,6 +18,20 @@ import { AppConfigService } from './services/config/app-config.service';
   encapsulation: ViewEncapsulation.None
 })
 export class AppComponent implements AfterViewInit {
+    // Drawer container to resize when contents change size
+    @ViewChild(MatDrawerContainer, {static: true}) private container: MatDrawerContainer;
+
+    // Elements for scroll behavior
+    @ViewChild('header', { static: false, read: ElementRef }) private header: ElementRef;
+    @ViewChild('scrollRef', { static: false, read: ElementRef }) private scrollRef: ElementRef;
+
+    public theme;
+    public alertStatus;
+    public hiddenHeaderPX = 0; // number of px of the header which is hidden
+
+    public get sidebarOpened() {
+        return this.sidebarService.opened && this.editorService.sidebarEnabled;
+    }
 
     constructor(private overlayContainer: OverlayContainer,
                 private sidebarService: SidebarService,
@@ -53,21 +67,16 @@ export class AppComponent implements AfterViewInit {
         initLogger(logger);
     }
 
-    public get sidebarOpened() {
-        return this.sidebarService.opened && this.editorService.sidebarEnabled;
+    ngAfterViewInit(): void {
+        // header hiding with scroll
+        this.scrollRef.nativeElement.addEventListener('scroll', (e) => this.adjustHeaderPlacement(), true);
+        // to fix rare cases that the page has resized without scroll events triggering, recompute the offset every 5 seconds
+        setInterval(() => this.adjustHeaderPlacement(), 5000);
     }
 
-    // Drawer container to resize when contents change size
-    @ViewChild(MatDrawerContainer, {static: true}) private container: MatDrawerContainer;
-
-    // Elements for scroll behavior
-    @ViewChild('header', { static: false, read: ElementRef }) private header: ElementRef;
-    @ViewChild('scrollRef', { static: false, read: ElementRef }) private scrollRef: ElementRef;
-
-    public theme;
-    public alertStatus;
-
-    public hiddenHeaderPX = 0; // number of px of the header which is hidden
+    ngOnDestroy(): void {
+        this.scrollRef.nativeElement.removeEventListener('scroll', (e) => this.adjustHeaderPlacement(), true);
+    }
 
     /**
      * Check the account status of the logged in user.
@@ -114,13 +123,10 @@ export class AppComponent implements AfterViewInit {
 
     // Toggle the current theme
     public toggleTheme(): void {
-        // tslint:disable-next-line:triple-equals
         this.setTheme(this.theme == Theme.LightMode ? Theme.DarkMode : Theme.LightMode);
     }
 
-    /**
-     * Sets the initial/default theme based on the operating system/browser settings. Called by ngOnInit.
-     */
+    // Set the initial/default theme based on the operating system/browser settings
     public setDefaultTheme(): void {
         // The theme property will be set to 'dark' if the operating system or browser is in dark mode, and 'light' if
         // it is in light mode
@@ -148,31 +154,18 @@ export class AppComponent implements AfterViewInit {
     }
 
     private setThemeOnOverlayContainerElement(): void {
-      const overlayContainerClasses = this.overlayContainer.getContainerElement().classList;
-      overlayContainerClasses.remove(Theme.DarkMode, Theme.LightMode);
-      overlayContainerClasses.add(this.theme);
+        const overlayContainerClasses = this.overlayContainer.getContainerElement().classList;
+        overlayContainerClasses.remove(Theme.DarkMode, Theme.LightMode);
+        overlayContainerClasses.add(this.theme);
     }
 
-    // header hiding with scroll
-    ngAfterViewInit() {
-        this.scrollRef.nativeElement.addEventListener('scroll', (e) => this.adjustHeaderPlacement(), true);
-        // to fix rare cases that the page has resized without scroll events triggering, recompute the offset every 5 seconds
-      /**
-       * The code is using the setInterval() function to call the adjustHeaderPlacement() method every 5
-       * seconds. This is likely intended to fix cases where the page has been resized without scroll events being
-       * triggered, in which case the header placement may need to be adjusted.
-       */
-        setInterval(() => this.adjustHeaderPlacement(), 5000);
-    }
-    ngOnDestroy() {
-        this.scrollRef.nativeElement.removeEventListener('scroll', (e) => this.adjustHeaderPlacement(), true);
-    }
     // adjust the header placement
     private adjustHeaderPlacement(): void {
         const headerHeight = this.header.nativeElement.offsetHeight;
         // constrain amount of hidden to bounds, round up because decimal scroll causes flicker
         this.hiddenHeaderPX = Math.floor(Math.min(Math.max(0, this.scrollRef.nativeElement.scrollTop / 2), headerHeight));
     }
+
     // scroll to the top of the main content
     public scrollToTop(): void {
         this.scrollRef.nativeElement.scroll({top: 0, behavior: 'smooth'});

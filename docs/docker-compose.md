@@ -39,8 +39,6 @@ This command will build all of the necessary Docker images and run the correspon
 1. Use the following commands to pull the images from the Github Container Registry. Replace the image tag with the version number you are using. If no image is specified, `latest` will be pulled. 
 ```
 docker pull ghcr.io/center-for-threat-informed-defense/attack-workbench-frontend:<TAG>
-```
-```
 docker pull ghcr.io/center-for-threat-informed-defense/attack-workbench-rest-api:<TAG>
 ```
 2. Navigate to the `attack-workbench-frontend` directory, and modify the `docker-compose.yml` file. Replace the `build` attribute with the corresponding `image`. 
@@ -54,7 +52,7 @@ services:
 ...
   rest-api:
     container_name: attack-workbench-rest-api
-    image: ghcr.io/center-for-threat-informed-defense/attack-workbench-frontend-rest-api:<TAG>
+    image: ghcr.io/center-for-threat-informed-defense/attack-workbench-rest-api:<TAG>
     depends_on:
 ...
 ```
