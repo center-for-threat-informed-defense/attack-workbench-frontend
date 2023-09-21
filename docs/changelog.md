@@ -32,6 +32,18 @@
 
 # Changelog
 
+## Changes Staged on Develop
+
+### ATT&CK Workbench version 2.0.1
+
+#### Fixes in 2.0.1
+-   Fixed a crash that would occur when retrieving recent activity for large teams.
+-   Fixed the incorrect path to the REST API Docker image documented in [`docker-compose.md`](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/blob/master/docs/docker-compose.md).
+-   Fixed an issue where the version number of an object could be saved in an invalid format.
+-   Fixed object name and ATT&CK ID validation to check against revoked and deprecated objects.
+-   Fixed an issue where the `retrieveAll()` query for Relationships and ATT&CK objects would cause a "Sort exceeded memory limit" error. See [rest-api#285](https://github.com/center-for-threat-informed-defense/attack-workbench-rest-api/issues/285).
+-   Updated Angular to v14.
+
 ## 16 August 2023
 
 ### ATT&CK Workbench version 2.0.0

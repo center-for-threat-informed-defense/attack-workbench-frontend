@@ -2,7 +2,7 @@ import { VersionNumber } from '../version-number';
 import { ExternalReferences } from '../external-references';
 import { v4 as uuid } from 'uuid';
 import { Serializable, ValidationData } from '../serializable';
-import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/rest-api-connector.service';
+import { Paginated, RestApiConnectorService } from 'src/app/services/connectors/rest-api/rest-api-connector.service';
 import { forkJoin, Observable, of } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
 import { logger } from "../../util/logger";
@@ -291,16 +291,22 @@ export abstract class StixObject extends Serializable {
                 //do not check name or attackID for relationships or marking definitions
                 if (this.attackType == "relationship" || this.attackType == "marking-definition") return of(result);
                 // check if name & ATT&CK ID is unique, record result in validation, and return validation
-                let accessor = this.attackType == "collection"? restAPIService.getAllCollections() :
-                                this.attackType == "group"? restAPIService.getAllGroups() :
-                                this.attackType == "campaign"? restAPIService.getAllCampaigns() :
-                                this.attackType == "software"? restAPIService.getAllSoftware() :
-                                this.attackType == "matrix"? restAPIService.getAllMatrices() :
-                                this.attackType == "mitigation"? restAPIService.getAllMitigations() :
-                                this.attackType == "technique"? restAPIService.getAllTechniques() :
-                                this.attackType == "data-source"? restAPIService.getAllDataSources() :
-                                this.attackType == "data-component"? restAPIService.getAllDataComponents() :
-                                restAPIService.getAllTactics();
+                let options = { // validate against revoked & deprecated objects
+                    includeRevoked: true,
+                    includeDeprecated: true
+                };
+                let accessor: Observable<Paginated<StixObject>>;
+                if (this.attackType == "collection") accessor = restAPIService.getAllCollections(options);
+                else if (this.attackType == "group") accessor = restAPIService.getAllGroups(options);
+                else if (this.attackType == "campaign") accessor = restAPIService.getAllCampaigns(options);
+                else if (this.attackType == "software") accessor = restAPIService.getAllSoftware(options);
+                else if (this.attackType == "matrix") accessor = restAPIService.getAllMatrices(options);
+                else if (this.attackType == "mitigation") accessor = restAPIService.getAllMitigations(options);
+                else if (this.attackType == "technique") accessor = restAPIService.getAllTechniques(options);
+                else if (this.attackType == "data-source") accessor = restAPIService.getAllDataSources(options);
+                else if (this.attackType == "data-component") accessor = restAPIService.getAllDataComponents(options);
+                else accessor = restAPIService.getAllTactics(options);
+
                 return accessor.pipe(
                     map(objects => {
                         // check name

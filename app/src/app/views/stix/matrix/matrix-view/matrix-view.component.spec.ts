@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { MatrixViewComponent } from './matrix-view.component';
 
@@ -6,7 +6,7 @@ describe('MatrixViewComponent', () => {
 	let component: MatrixViewComponent;
 	let fixture: ComponentFixture<MatrixViewComponent>;
 
-	beforeEach(async(() => {
+	beforeEach(waitForAsync(() => {
 		TestBed.configureTestingModule({
 			declarations: [MatrixViewComponent]
 		})

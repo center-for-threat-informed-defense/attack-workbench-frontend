@@ -15,6 +15,9 @@
             .light & { background: color(primary); color: on-color(primary); }
             .dark & { background: color(primary); color: on-color(primary); }
         }
+        .control.hide-selected-value {
+            .mat-select-value { display: none; }
+        }
         .search-field {
             padding-right: 12px;
             font-size: 14px;

@@ -1,10 +1,10 @@
 import { AfterViewInit, Component, ElementRef, EventEmitter, HostListener, Output, ViewChild, ViewEncapsulation } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { stixRoutes } from "../../app-routing-stix.module";
-import * as app_package from "../../../../package.json";
 import { AuthenticationService } from 'src/app/services/connectors/authentication/authentication.service';
 import { Subscription } from "rxjs";
 import { Role } from 'src/app/classes/authn/role';
+import * as globals from "../../globals";
 
 @Component({
   selector: 'app-header',
@@ -16,7 +16,7 @@ export class HeaderComponent implements AfterViewInit {
     public allRoutes: any[];
     public filteredRoutes: any[];
     public moreRoutes: any[];
-    public app_version = app_package["version"];
+    public appVersion = globals.appVersion;
 
     @Output() public onLogin = new EventEmitter();
     @Output() public onLogout = new EventEmitter();

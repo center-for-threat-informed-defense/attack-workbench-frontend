@@ -5,7 +5,7 @@
             <!-- add new note -->
             <button mat-button class="control" matTooltip="add a note" (click)="addNote()"><mat-icon>add</mat-icon></button>
             <!-- sorting options -->
-            <button mat-button class="control" matTooltip="sorting options" (click)="sortingDropdown.open()">
+            <button mat-button class="control hide-selected-value" matTooltip="sorting options" (click)="sortingDropdown.open()">
                 <mat-icon aria-label="sort">sort</mat-icon>
                 <mat-select [formControl]="selected" #sortingDropdown>
                     <mat-option value="title-ascending" (click)="sortTitle(true)">Sort alphabetically by title (ascending)</mat-option>
