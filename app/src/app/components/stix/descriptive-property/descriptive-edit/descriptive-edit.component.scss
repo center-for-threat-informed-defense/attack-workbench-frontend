@@ -1,6 +1,9 @@
 @import "../../../../../style/globals";
 
 .descriptive-edit {
+    .mat-input-element {
+        line-height: 1.5;
+    }
     .mat-tab-header {
         border: 0px;
     }
