@@ -6,7 +6,7 @@
                     <h3>{{config.label}}</h3>
                     <mat-icon class="info-icon" [matTooltip]="config.referencesField? 'markdown & citations supported' : 'markdown supported'" matTooltipPosition="above" aria-label="info">info_outline</mat-icon>
                 </div>
-                <textarea cdkTextareaAutosize matInput placeholder="{{config.label}}" (blur)="parseCitations()" [(ngModel)]="config.object[config.field]"></textarea>
+                <textarea autosize matInput placeholder="{{config.label}}" (blur)="parseCitations()" [(ngModel)]="config.object[config.field]"></textarea>
             </mat-form-field>
         </mat-tab>
         <mat-tab label="Preview" [disabled]="config.object[config.field] === undefined || config.object[config.field].length == 0">

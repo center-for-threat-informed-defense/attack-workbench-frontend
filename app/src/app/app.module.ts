@@ -1,7 +1,7 @@
 import { environment } from 'src/environments/environment';
 import { LoggerModule } from 'ngx-logger';
 
-//angular imports
+// angular imports
 import { BrowserModule } from '@angular/platform-browser';
 import { APP_INITIALIZER, NgModule } from '@angular/core';
 import { AppRoutingModule } from './app-routing.module';
@@ -52,6 +52,7 @@ import { MaterialFileInputModule } from 'ngx-material-file-input';
 import { MarkdownModule } from "ngx-markdown";
 import { PopoverModule } from "ngx-smart-popover";
 import { NgxJdenticonModule, JDENTICON_CONFIG } from 'ngx-jdenticon';
+import { AutosizeModule } from 'ngx-autosize';
 
 // custom components
 import { HeaderComponent } from './components/header/header.component';
@@ -359,6 +360,7 @@ export function initConfig(appConfigService: AppConfigService) {
 		}),
 		PopoverModule,
 		NgxJdenticonModule,
+		AutosizeModule,
 
 		BrowserModule,
 
