@@ -44,6 +44,7 @@
     "@angular/router": "^14.3.0",
     "jdenticon": "^3.2.0",
     "moment": "^2.29.4",
+    "ngx-autosize": "^2.0.4",
     "ngx-jdenticon": "^2.0.0",
     "ngx-logger": "^5.0.12",
     "ngx-markdown": "^14.0.1",
