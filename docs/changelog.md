@@ -34,10 +34,12 @@
 
 ## Changes Staged on Develop
 
-### ATT&CK Workbench version 2.0.1
-
 #### New Features in x.x.x
 -   Added ability to create and edit Asset objects.
+
+## 21 September 2023
+
+### ATT&CK Workbench version 2.0.1
 
 #### Fixes in 2.0.1
 -   Fixed a crash that would occur when retrieving recent activity for large teams.
