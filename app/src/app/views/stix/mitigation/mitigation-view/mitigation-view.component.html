@@ -70,8 +70,9 @@
         <div class="row" *ngIf="canEdit">
             <div class="col">
                 <app-add-relationship-button (created)="mitigatesList.applyControls(); onReload.emit()" [config]="{
-                    label: 'technique',
+                    label: 'add a technique',
                     relationship_type: 'mitigates',
+                    targetType: 'technique',
                     source_object: mitigation
                 }"></app-add-relationship-button>
             </div>

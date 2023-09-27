@@ -1,6 +1,5 @@
 <div class="alias-edit-dialog">
-    <h1 *ngIf="is_new">Add an associated {{config.object.attackType}}</h1>
-    <h1 *ngIf="!is_new">Edit an associated {{config.object.attackType}}</h1>
+    <h1>{{is_new ? 'Add' : 'Edit'}} an associated {{config.object.attackType}}</h1>
     <mat-form-field appearance="outline">
         <mat-label>associated {{config.object.attackType}} name</mat-label>
         <input matInput required [disabled]="!is_new" [(ngModel)]="config.aliasName">

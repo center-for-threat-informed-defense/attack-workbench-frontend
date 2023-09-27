@@ -76,7 +76,7 @@ export class AliasViewComponent implements OnInit {
     }
 
     /**
-     * return list of aliass with descriptive text
+     * return list of aliases with descriptive text
      */
     public get description(): Array<[string, string]> {
         if (this.config.referencesField) {

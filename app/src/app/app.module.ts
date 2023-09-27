@@ -83,16 +83,13 @@ import { UsersListComponent } from './components/users-list/users-list.component
 
 import { ExternalReferencesPropertyComponent } from "./components/stix/external-references-property/external-references-property.component";
 import { ExternalReferencesViewComponent } from './components/stix/external-references-property/external-references-view/external-references-view.component';
-import { ExternalReferencesDiffComponent } from './components/stix/external-references-property/external-references-diff/external-references-diff.component';
 
 import { DescriptivePropertyComponent } from './components/stix/descriptive-property/descriptive-property.component';
 import { DescriptiveViewComponent } from './components/stix/descriptive-property/descriptive-view/descriptive-view.component';
 import { DescriptiveEditComponent } from './components/stix/descriptive-property/descriptive-edit/descriptive-edit.component';
-import { DescriptiveDiffComponent } from './components/stix/descriptive-property/descriptive-diff/descriptive-diff.component';
 
 import { TimestampPropertyComponent } from "./components/stix/timestamp-property/timestamp-property.component";
 import { TimestampViewComponent } from "./components/stix/timestamp-property/timestamp-view/timestamp-view.component";
-import { TimestampDiffComponent } from "./components/stix/timestamp-property/timestamp-diff/timestamp-diff.component";
 
 import { StatementPropertyComponent } from "./components/stix/statement-property/statement-property.component";
 import { StatementViewComponent } from './components/stix/statement-property/statement-view/statement-view.component';
@@ -124,6 +121,11 @@ import { AliasPropertyComponent } from './components/stix/alias-property/alias-p
 import { AliasViewComponent } from './components/stix/alias-property/alias-view/alias-view.component';
 import { AliasEditComponent } from './components/stix/alias-property/alias-edit/alias-edit.component';
 import { AliasEditDialogComponent } from './components/stix/alias-property/alias-edit/alias-edit-dialog/alias-edit-dialog.component';
+
+import { SubtypePropertyComponent } from './components/stix/subtype-property/subtype-property.component';
+import { SubtypeViewComponent } from './components/stix/subtype-property/subtype-view/subtype-view.component';
+import { SubtypeEditComponent } from './components/stix/subtype-property/subtype-edit/subtype-edit.component';
+import { SubtypeDialogComponent } from './components/stix/subtype-property/subtype-dialog/subtype-dialog.component';
 
 import { OrderedListPropertyComponent } from './components/stix/ordered-list-property/ordered-list-property.component';
 import { OrderedListViewComponent } from './components/stix/ordered-list-property/ordered-list-view/ordered-list-view.component';
@@ -200,6 +202,9 @@ import { TacticCellComponent } from './components/matrix/tactic-cell/tactic-cell
 import { TechniqueCellComponent } from './components/matrix/technique-cell/technique-cell.component';
 import { MatrixFlatComponent } from './views/stix/matrix/matrix-flat/matrix-flat.component';
 
+import { AssetListComponent } from './views/stix/asset/asset-list/asset-list.component';
+import { AssetViewComponent } from './views/stix/asset/asset-view/asset-view.component';
+
 import { TeamsListPageComponent } from './views/admin-page/teams/teams-list-page/teams-list-page.component';
 import { TeamsViewPageComponent } from './views/admin-page/teams/teams-view-page/teams-view-page.component';
 import { CreateNewDialogComponent } from './components/create-new-dialog/create-new-dialog.component';
@@ -240,13 +245,10 @@ export function initConfig(appConfigService: AppConfigService) {
 		DescriptivePropertyComponent,
 		DescriptiveViewComponent,
 		DescriptiveEditComponent,
-		DescriptiveDiffComponent,
 		ExternalReferencesPropertyComponent,
 		ExternalReferencesViewComponent,
-		ExternalReferencesDiffComponent,
 		TimestampPropertyComponent,
 		TimestampViewComponent,
-		TimestampDiffComponent,
 		StatementPropertyComponent,
 		StatementViewComponent,
 		StatementEditComponent,
@@ -340,6 +342,12 @@ export function initConfig(appConfigService: AppConfigService) {
 		TeamsViewPageComponent,
 		CreateNewDialogComponent,
 		UsersListComponent,
+		AssetListComponent,
+		AssetViewComponent,
+		SubtypePropertyComponent,
+		SubtypeViewComponent,
+		SubtypeEditComponent,
+		SubtypeDialogComponent,
   		BreadcrumbComponent
 	],
 	imports: [

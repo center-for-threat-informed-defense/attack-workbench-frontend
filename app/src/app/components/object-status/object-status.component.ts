@@ -57,6 +57,7 @@ export class ObjectStatusComponent implements OnInit {
             else if (this.editorService.type == "collection") data$ = this.restAPIService.getAllCollections(options);
             else if (this.editorService.type == "data-source") data$ = this.restAPIService.getAllDataSources(options);
             else if (this.editorService.type == "data-component") data$ = this.restAPIService.getAllDataComponents(options);
+            else if (this.editorService.type == "asset") data$ = this.restAPIService.getAllAssets(options);
             let objSubscription = data$.subscribe({
                 next: (data) => {
                     this.objects = data.data;

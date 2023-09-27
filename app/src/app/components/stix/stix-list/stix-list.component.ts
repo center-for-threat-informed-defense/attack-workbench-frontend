@@ -100,7 +100,8 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
         "identity": "identity",
         "marking-definition": "marking-definition",
         "x-mitre-data-source": "data-source",
-        "x-mitre-data-component": "data-component"
+        "x-mitre-data-component": "data-component",
+        "x-mitre-asset": "asset"
     }
 
     // all possible each type of filter/groupBy
@@ -300,6 +301,19 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
                     this.addColumn("", "state", "icon");
                     this.addColumn("name", "name", "plain", sticky_allowed, ["name"]);
                     this.addColumn("domain", "domains", "list");
+                    this.addVersionsAndDatesColumns();
+                    this.tableDetail = [{
+                        "field": "description",
+                        "display": "descriptive"
+                    }]
+                    break;
+                case "asset":
+                    this.addColumn("", "workflow", "icon");
+                    this.addColumn("", "state", "icon");
+                    this.addColumn("ID", "attackID", "plain", false);
+                    this.addColumn("name", "name", "plain", sticky_allowed, ["name"]);
+                    this.addColumn("platforms", "platforms", "list");
+                    this.addColumn("sectors", "sectors", "list");
                     this.addVersionsAndDatesColumns();
                     this.tableDetail = [{
                         "field": "description",
@@ -786,6 +800,7 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
             else if (this.config.type == "relationship") this.data$ = this.restAPIConnectorService.getRelatedTo({ sourceRef: this.config.sourceRef, targetRef: this.config.targetRef, sourceType: this.config.sourceType, targetType: this.config.targetType, relationshipType: this.config.relationshipType, excludeSourceRefs: this.config.excludeSourceRefs, excludeTargetRefs: this.config.excludeTargetRefs, limit: limit, offset: offset, includeDeprecated: deprecated });
             else if (this.config.type == "data-source") this.data$ = this.restAPIConnectorService.getAllDataSources(options);
             else if (this.config.type == "data-component") this.data$ = this.restAPIConnectorService.getAllDataComponents(options);
+            else if (this.config.type == "asset") this.data$ = this.restAPIConnectorService.getAllAssets(options);
             else if (this.config.type == "marking-definition") this.data$ = this.restAPIConnectorService.getAllMarkingDefinitions(options);
             else if (this.config.type == "note") this.data$ = this.restAPIConnectorService.getAllNotes(options);
             let subscription = this.data$.subscribe({
@@ -886,7 +901,7 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
 }
 
 //allowed types for StixListConfig
-type type_attacktype = "collection" | "campaign" | "group" | "matrix" | "mitigation" | "software" | "tactic" | "technique" | "relationship" | "data-source" | "data-component" | "marking-definition" | "note";
+type type_attacktype = "collection" | "campaign" | "group" | "matrix" | "mitigation" | "software" | "tactic" | "technique" | "relationship" | "data-source" | "data-component" | "asset" | "marking-definition" | "note";
 type selection_types = "one" | "many" | "disabled";
 type filter_types = "state" | "workflow_status";
 export interface StixListConfig {
