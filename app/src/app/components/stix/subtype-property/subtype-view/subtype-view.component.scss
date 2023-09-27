@@ -1,0 +1,29 @@
+@import "../../../../../style/globals";
+
+.subtype-view {
+    @extend .labelled-box;
+
+    .subtype-table{
+        width: 100%;
+        padding: 8px;
+        tr.mat-header-row { height: 25px; }
+        .mat-cell, .mat-header-cell {
+            padding: 0 10px;
+            .light & { border-color: border-color(light); }
+            .dark &  { border-color: border-color(dark); }
+        }
+        .ref-column {
+            // width: 65%;
+        }
+    }
+    .subtype-markdown {
+        p {
+            padding: 0;
+            margin: 0;
+        }
+        sup {
+            vertical-align: top;
+            position: relative;
+        }
+    }
+}

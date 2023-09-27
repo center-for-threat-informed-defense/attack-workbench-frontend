@@ -11,6 +11,7 @@ import { MarkingDefinitionListComponent } from './views/stix/marking-definition/
 import { DataSourceListComponent } from './views/stix/data-source/data-source-list/data-source-list.component';
 import { ReferenceManagerComponent } from './views/reference-manager/reference-manager.component';
 import { CampaignListComponent } from './views/stix/campaign/campaign-list/campaign-list.component';
+import { AssetListComponent } from './views/stix/asset/asset-list/asset-list.component';
 import { NotesPageComponent } from './views/notes-page/notes-page.component';
 import { StixPageComponent } from './views/stix/stix-page/stix-page.component';
 
@@ -31,6 +32,7 @@ const attackTypeToPlural = {
     'mitigation': 'mitigations',
     'matrix': 'matrices',
     'data-source': 'data-sources',
+    'asset': 'assets',
 }
 const stixRouteData = [
 	{
@@ -73,6 +75,11 @@ const stixRouteData = [
 		editable: true,
 		component: CampaignListComponent
 	},
+    {
+        attackType: 'asset',
+        editable: true,
+        component: AssetListComponent
+    },
 ]
 
 const stixRoutes: Routes = [];

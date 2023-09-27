@@ -30,7 +30,9 @@ export interface StixViewConfig {
     /* The object to show on the page
      * Note: if mode is diff, pass an array of two objects to diff
      */
-    object: StixObject | StixObject[]
+    object: StixObject | StixObject[];
+    sourceType?: string; // the relationship source type (only relevant when creating a new relationship)
+    targetType?: string; // the relationship target type (only relevant when creating a new relationship)
     /* if true or omitted, show relationships with the object on the page. If false, omit the relationships */
     showRelationships?: boolean;
     /* is the current page editable? 

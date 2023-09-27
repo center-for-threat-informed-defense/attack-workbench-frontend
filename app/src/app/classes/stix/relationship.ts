@@ -43,6 +43,7 @@ export class Relationship extends StixObject {
         if (this.relationship_type == "subtechnique-of") return ["technique"];
         if (this.relationship_type == "detects") return ["data-component"];
         if (this.relationship_type == "attributed-to") return ["campaign"];
+        if (this.relationship_type == "targets") return ["technique"];
         else return null;
     }
     /**
@@ -58,6 +59,7 @@ export class Relationship extends StixObject {
         if (this.relationship_type == "subtechnique-of") return ["technique"];
         if (this.relationship_type == "detects") return ["technique"];
         if (this.relationship_type == "attributed-to") return ["group"];
+        if (this.relationship_type == "targets") return ["asset"];
         else return null;
     }
 

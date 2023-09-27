@@ -36,6 +36,9 @@
 
 ### ATT&CK Workbench version 2.0.1
 
+#### New Features in x.x.x
+-   Added ability to create and edit Asset objects.
+
 #### Fixes in 2.0.1
 -   Fixed a crash that would occur when retrieving recent activity for large teams.
 -   Fixed the incorrect path to the REST API Docker image documented in [`docker-compose.md`](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/blob/master/docs/docker-compose.md).
