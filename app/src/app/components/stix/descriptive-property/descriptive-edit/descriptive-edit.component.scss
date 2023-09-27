@@ -1,6 +1,9 @@
 @import "../../../../../style/globals";
 
 .descriptive-edit {
+    @-moz-document url-prefix() {
+        .moz-height { min-height: 500px !important; }
+    }
     .mat-input-element {
         line-height: 1.5;
     }
