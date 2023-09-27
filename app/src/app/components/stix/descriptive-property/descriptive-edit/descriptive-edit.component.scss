@@ -2,7 +2,17 @@
 
 .descriptive-edit {
     @-moz-document url-prefix() {
-        .moz-height { min-height: 500px !important; }
+        min-height: 40vh;
+        .moz-height {
+            min-height: 40vh !important;
+            max-height: 60vh;
+            overflow-y: auto !important;
+            display: flex;
+        }
+        .markdown-view {
+            min-height: 40vh !important;
+            display: flex;
+        }
     }
     .mat-input-element {
         line-height: 1.5;
