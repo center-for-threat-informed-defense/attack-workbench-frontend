@@ -155,7 +155,7 @@ export class ExternalReferences extends Serializable {
         let parse_apis = [];
         for (let field of refs_fields) {
             if (field == 'aliases') parse_apis.push(this.parseCitationsFromAliases(object[field], restAPIConnector));
-            if (field == 'relatedAssets') parse_apis.push(this.parseCitationsFromRelatedAssets(object[field], restAPIConnector));
+            else if (field == 'relatedAssets') parse_apis.push(this.parseCitationsFromRelatedAssets(object[field], restAPIConnector));
             else parse_apis.push(this.parseCitations(object[field], restAPIConnector));
         }
 
