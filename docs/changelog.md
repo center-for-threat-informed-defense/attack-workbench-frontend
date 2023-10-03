@@ -38,7 +38,7 @@
 -   Added the ability to create, view, and edit Asset objects.
 
 #### Fixes in 2.1.0
--   Fixed an issue where revoking or deprecating an object would deprecate all `revoked-by` relationships with the object. See [#467](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/467).
+-   Fixed an issue where revoking or deprecating an object would deprecate all `revoked-by` relationships with the object. See [frontend#467](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/467).
 
 ## 21 September 2023
 
