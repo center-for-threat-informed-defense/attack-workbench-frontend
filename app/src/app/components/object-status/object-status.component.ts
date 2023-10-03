@@ -63,7 +63,7 @@ export class ObjectStatusComponent implements OnInit {
                     this.objects = data.data;
                     this.object = this.objects.find(object => object.stixID === this.editorService.stixId);
                     if (this.object) {
-                        if (this.object.workflow && this.object.workflow.state) {
+                        if (this.object.workflow?.state) {
                             this.statusControl.setValue(this.object.workflow.state);
                         }
                         this.revoked = this.object.revoked;
