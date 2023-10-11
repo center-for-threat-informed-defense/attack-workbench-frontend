@@ -47,7 +47,7 @@ export class DatepickerPropertyComponent {
     public get formatHint() { return DATE_FORMATS.parse.dateInput; }
     public get date() { // get date in view display format (i.e. January 2022)
         if (this.config.object[this.config.field]) {
-            return moment(this.config.object[this.config.field]).format('MMMM YYYY');
+            return moment.utc(this.config.object[this.config.field]).format('MMMM YYYY');
         }
         return null;
     }
