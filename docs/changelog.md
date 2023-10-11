@@ -39,6 +39,7 @@
 
 #### Fixes in 2.1.0
 -   Fixed an issue where revoking or deprecating an object would deprecate all `revoked-by` relationships with the object. See [frontend#467](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/467).
+-   Fixed an issue where first/last seen Campaign dates were parsed in local time, causing the dates to be displayed incorrectly in certain timezones. See [frontend#508](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/pull/508).
 
 ## 21 September 2023
 
