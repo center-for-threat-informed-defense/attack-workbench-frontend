@@ -1,8 +1,8 @@
+@use '@angular/material' as mat;
 @import "./colors.scss";
 @import "./typography.scss";
 
-@import '~@angular/material/theming';
-@include mat-core();
+@include mat.core();
 
 ::-webkit-scrollbar {
     width: 8px;
@@ -16,12 +16,12 @@
 
 //custom color theme
 .light {
-    @include angular-material-theme((
-        primary: mat-palette(to-material-map(primary), 50, 100, 200),
-        accent: mat-palette(to-material-map(secondary), 50, 100, 200),
-        foreground: mat-palette(to-material-map(dark), 50, 100, 200),
-        background: mat-palette(to-material-map(light), 50, 100, 200),
-        warn: mat-palette(to-material-map(warn)),
+    @include mat.all-component-themes((
+        primary: mat.define-palette(to-material-map(primary), 50, 100, 200),
+        accent: mat.define-palette(to-material-map(secondary), 50, 100, 200),
+        foreground: mat.define-palette(to-material-map(dark), 50, 100, 200),
+        background: mat.define-palette(to-material-map(light), 50, 100, 200),
+        warn: mat.define-palette(to-material-map(warn)),
         is-dark: false
     ));
     background: color(light);
@@ -58,12 +58,12 @@
     .matrix-container { border-color: on-color-deemphasis(light) }
 }
 .dark {
-    @include angular-material-theme((
-        primary: mat-palette(to-material-map(primary), 50, 100, 200),
-        accent: mat-palette(to-material-map(secondary), 50, 100, 200),
-        foreground: mat-palette(to-material-map(light), 50, 100, 200),
-        background: mat-palette(to-material-map(dark), 50, 100, 200),
-        warn: mat-palette(to-material-map(warn)),
+    @include mat.all-component-themes((
+        primary: mat.define-palette(to-material-map(primary), 50, 100, 200),
+        accent: mat.define-palette(to-material-map(secondary), 50, 100, 200),
+        foreground: mat.define-palette(to-material-map(light), 50, 100, 200),
+        background: mat.define-palette(to-material-map(dark), 50, 100, 200),
+        warn: mat.define-palette(to-material-map(warn)),
         is-dark: true
     ));
     background: color(dark);
@@ -207,10 +207,6 @@ $tooltip-color: color-alternate(dark, 4);
         background: color-alternate(dark) !important;
         color: on-color(dark) !important;
     }
-}
-
-.mat-form-field.mat-form-field-invalid, .mat-form-field.ng-invalid {
-    color: color(error);
 }
 
 button.mat-stroked-button:disabled {

@@ -1,7 +1,7 @@
 import { environment } from 'src/environments/environment';
 import { LoggerModule } from 'ngx-logger';
 
-//angular imports
+// angular imports
 import { BrowserModule } from '@angular/platform-browser';
 import { APP_INITIALIZER, NgModule } from '@angular/core';
 import { AppRoutingModule } from './app-routing.module';
@@ -47,11 +47,12 @@ import { MatNativeDateModule } from '@angular/material/core';
 import { MatBadgeModule } from '@angular/material/badge';
 
 // other library imports
-import { BreadcrumbModule } from "angular-crumbs";
+// import { BreadcrumbModule } from "angular-crumbs";
 import { MaterialFileInputModule } from 'ngx-material-file-input';
 import { MarkdownModule } from "ngx-markdown";
 import { PopoverModule } from "ngx-smart-popover";
 import { NgxJdenticonModule, JDENTICON_CONFIG } from 'ngx-jdenticon';
+import { AutosizeModule } from 'ngx-autosize';
 
 // custom components
 import { HeaderComponent } from './components/header/header.component';
@@ -74,6 +75,7 @@ import { MultipleChoiceDialogComponent } from "./components/multiple-choice-dial
 import { ValidationResultsComponent } from "./components/validation-results/validation-results.component";
 import { AddRelationshipButtonComponent } from "./components/add-relationship-button/add-relationship-button.component";
 import { CollectionUpdateDialogComponent } from './components/collection-update-dialog/collection-update-dialog.component';
+import { BreadcrumbComponent } from './components/breadcrumb/breadcrumb.component';
 
 // STIX components
 import { StixListComponent } from './components/stix/stix-list/stix-list.component';
@@ -81,16 +83,13 @@ import { UsersListComponent } from './components/users-list/users-list.component
 
 import { ExternalReferencesPropertyComponent } from "./components/stix/external-references-property/external-references-property.component";
 import { ExternalReferencesViewComponent } from './components/stix/external-references-property/external-references-view/external-references-view.component';
-import { ExternalReferencesDiffComponent } from './components/stix/external-references-property/external-references-diff/external-references-diff.component';
 
 import { DescriptivePropertyComponent } from './components/stix/descriptive-property/descriptive-property.component';
 import { DescriptiveViewComponent } from './components/stix/descriptive-property/descriptive-view/descriptive-view.component';
 import { DescriptiveEditComponent } from './components/stix/descriptive-property/descriptive-edit/descriptive-edit.component';
-import { DescriptiveDiffComponent } from './components/stix/descriptive-property/descriptive-diff/descriptive-diff.component';
 
 import { TimestampPropertyComponent } from "./components/stix/timestamp-property/timestamp-property.component";
 import { TimestampViewComponent } from "./components/stix/timestamp-property/timestamp-view/timestamp-view.component";
-import { TimestampDiffComponent } from "./components/stix/timestamp-property/timestamp-diff/timestamp-diff.component";
 
 import { StatementPropertyComponent } from "./components/stix/statement-property/statement-property.component";
 import { StatementViewComponent } from './components/stix/statement-property/statement-view/statement-view.component';
@@ -122,6 +121,11 @@ import { AliasPropertyComponent } from './components/stix/alias-property/alias-p
 import { AliasViewComponent } from './components/stix/alias-property/alias-view/alias-view.component';
 import { AliasEditComponent } from './components/stix/alias-property/alias-edit/alias-edit.component';
 import { AliasEditDialogComponent } from './components/stix/alias-property/alias-edit/alias-edit-dialog/alias-edit-dialog.component';
+
+import { SubtypePropertyComponent } from './components/stix/subtype-property/subtype-property.component';
+import { SubtypeViewComponent } from './components/stix/subtype-property/subtype-view/subtype-view.component';
+import { SubtypeEditComponent } from './components/stix/subtype-property/subtype-edit/subtype-edit.component';
+import { SubtypeDialogComponent } from './components/stix/subtype-property/subtype-dialog/subtype-dialog.component';
 
 import { OrderedListPropertyComponent } from './components/stix/ordered-list-property/ordered-list-property.component';
 import { OrderedListViewComponent } from './components/stix/ordered-list-property/ordered-list-view/ordered-list-view.component';
@@ -192,12 +196,14 @@ import { MarkingDefinitionListComponent } from "./views/stix/marking-definition/
 import { CampaignViewComponent } from './views/stix/campaign/campaign-view/campaign-view.component';
 import { CampaignListComponent } from './views/stix/campaign/campaign-list/campaign-list.component';
 
-import { NotesSearchListComponent } from './views/notes-page/notes-search-list/notes-search-list.component';
+import { NotesPageComponent } from './views/notes-page/notes-page.component';
 import { MatrixSideComponent } from './views/stix/matrix/matrix-side/matrix-side.component';
 import { TacticCellComponent } from './components/matrix/tactic-cell/tactic-cell.component';
 import { TechniqueCellComponent } from './components/matrix/technique-cell/technique-cell.component';
 import { MatrixFlatComponent } from './views/stix/matrix/matrix-flat/matrix-flat.component';
 
+import { AssetListComponent } from './views/stix/asset/asset-list/asset-list.component';
+import { AssetViewComponent } from './views/stix/asset/asset-view/asset-view.component';
 
 import { TeamsListPageComponent } from './views/admin-page/teams/teams-list-page/teams-list-page.component';
 import { TeamsViewPageComponent } from './views/admin-page/teams/teams-view-page/teams-view-page.component';
@@ -239,13 +245,10 @@ export function initConfig(appConfigService: AppConfigService) {
 		DescriptivePropertyComponent,
 		DescriptiveViewComponent,
 		DescriptiveEditComponent,
-		DescriptiveDiffComponent,
 		ExternalReferencesPropertyComponent,
 		ExternalReferencesViewComponent,
-		ExternalReferencesDiffComponent,
 		TimestampPropertyComponent,
 		TimestampViewComponent,
-		TimestampDiffComponent,
 		StatementPropertyComponent,
 		StatementViewComponent,
 		StatementEditComponent,
@@ -334,14 +337,20 @@ export function initConfig(appConfigService: AppConfigService) {
 		CitationPropertyComponent,
 		CitationViewComponent,
 		CitationEditComponent,
-		NotesSearchListComponent,
+		NotesPageComponent,
 		TeamsListPageComponent,
 		TeamsViewPageComponent,
 		CreateNewDialogComponent,
-		UsersListComponent
+		UsersListComponent,
+		AssetListComponent,
+		AssetViewComponent,
+		SubtypePropertyComponent,
+		SubtypeViewComponent,
+		SubtypeEditComponent,
+		SubtypeDialogComponent,
+  		BreadcrumbComponent
 	],
 	imports: [
-		BreadcrumbModule,
 		MaterialFileInputModule,
 		MarkdownModule.forRoot({
 			loader: HttpClient,
@@ -359,6 +368,7 @@ export function initConfig(appConfigService: AppConfigService) {
 		}),
 		PopoverModule,
 		NgxJdenticonModule,
+		AutosizeModule,
 
 		BrowserModule,
 

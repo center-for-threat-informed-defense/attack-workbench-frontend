@@ -252,7 +252,7 @@
             <div class="row" *ngIf="canEdit">
                 <div class="col">
                     <app-add-relationship-button (created)="subTechniquesList.applyControls(); onReload.emit()" [config]="{
-                        label: 'sub-technique',
+                        label: 'add a sub-technique',
                         relationship_type: 'subtechnique-of',
                         target_object: technique
                     }"></app-add-relationship-button>
@@ -300,8 +300,9 @@
         <div class="row" *ngIf="canEdit">
             <div class="col">
                 <app-add-relationship-button (created)="campaignList.applyControls(); onReload.emit()" [config]="{
-                    label: 'campaign',
+                    label: 'add a campaign',
                     relationship_type: 'uses',
+                    sourceType: 'campaign',
                     target_object: technique
                 }"></app-add-relationship-button>
             </div>
@@ -327,7 +328,7 @@
         <div class="row" *ngIf="canEdit">
             <div class="col">
                 <app-add-relationship-button (created)="mitigatesList.applyControls(); onReload.emit()" [config]="{
-                    label: 'mitigation',
+                    label: 'add a mitigation',
                     relationship_type: 'mitigates',
                     target_object: technique
                 }"></app-add-relationship-button>
@@ -353,7 +354,7 @@
         <div class="row" *ngIf="canEdit">
             <div class="col">
                 <app-add-relationship-button (created)="usesList.applyControls(); onReload.emit()" [config]="{
-                    label: 'procedure example',
+                    label: 'add a procedure example',
                     relationship_type: 'uses',
                     target_object: technique
                 }"></app-add-relationship-button>
@@ -379,7 +380,7 @@
         <div class="row" *ngIf="canEdit">
             <div class="col">
                 <app-add-relationship-button (created)="detectsList.applyControls(); onReload.emit()" [config]="{
-                    label: 'data source',
+                    label: 'add a data source',
                     relationship_type: 'detects',
                     target_object: technique
                 }"></app-add-relationship-button>
@@ -391,6 +392,33 @@
                     'type': 'relationship',
                     'targetRef': technique.stixID,
                     'relationshipType': 'detects',
+                    'clickBehavior': 'dialog',
+                    'allowEdits': true
+                }"></app-stix-list>
+            </div>
+        </div>
+        <!-- assets -->
+        <div class="row">
+            <div class="col">
+                <h2 class="section-header">Assets</h2>
+            </div>
+        </div>
+        <div class="row" *ngIf="canEdit">
+            <div class="col">
+                <app-add-relationship-button (created)="assetList.applyControls(); onReload.emit()" [config]="{
+                    label: 'add an asset',
+                    relationship_type: 'targets',
+                    source_object: technique
+                }"></app-add-relationship-button>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <app-stix-list #assetList [config]="{
+                    'type': 'relationship', 
+                    'sourceRef': technique.stixID,
+                    'targetType': 'asset',
+                    'relationshipType': 'targets',
                     'clickBehavior': 'dialog',
                     'allowEdits': true
                 }"></app-stix-list>

@@ -4,6 +4,7 @@ import { RestApiConnectorService } from "../services/connectors/rest-api/rest-ap
 import { Serializable, ValidationData } from "./serializable";
 import { StixObject } from "./stix/stix-object";
 import { logger } from "../util/logger";
+import { RelatedAsset } from "./stix/asset";
 
 export class ExternalReferences extends Serializable {
     private _externalReferences : Map<string, ExternalReference> = new Map();
@@ -146,12 +147,15 @@ export class ExternalReferences extends Serializable {
         // get list of descriptive fields that support citations
         let refs_fields = ['description'];
         if (['software', 'group', 'campaign'].includes(object.attackType)) refs_fields.push('aliases');
+        if (object.attackType == 'asset') refs_fields.push('relatedAssets');
         if (object.attackType == 'technique') refs_fields.push('detection');
         if (object.attackType == 'campaign') refs_fields.push('first_seen_citation', 'last_seen_citation');
+
         // parse citations for each descriptive field on the object
         let parse_apis = [];
         for (let field of refs_fields) {
             if (field == 'aliases') parse_apis.push(this.parseCitationsFromAliases(object[field], restAPIConnector));
+            else if (field == 'relatedAssets') parse_apis.push(this.parseCitationsFromRelatedAssets(object[field], restAPIConnector));
             else parse_apis.push(this.parseCitations(object[field], restAPIConnector));
         }
 
@@ -248,6 +252,33 @@ export class ExternalReferences extends Serializable {
                     result.merge(citation_result);
                 }
                 return result; //return master list
+            })
+        )
+    }
+
+    /**
+     * Parse citations from related assets which stores descriptions in the related asset object
+     * Add missing references to object if found in global external reference list 
+     * @param relatedAssets list of related asset objects
+     * @param restApiConnector to connect to the REST API
+     */
+    public parseCitationsFromRelatedAssets(relatedAssets : RelatedAsset[], restApiConnector : RestApiConnectorService): Observable<CitationParseResult> {
+        // Parse citations from the related asset descriptions
+        let api_calls = [];
+        let result = new CitationParseResult();
+        for (let relatedAsset of relatedAssets) {
+            if ('description' in relatedAsset && relatedAsset.description) {
+                api_calls.push(this.parseCitations(relatedAsset.description, restApiConnector));
+            }
+        }
+        if (api_calls.length == 0) return of(result);
+        else return forkJoin(api_calls).pipe( // get citation errors
+            map((api_results) => {
+                let citation_results = api_results as any;
+                for (let citation_result of citation_results) { // merge into master list
+                    result.merge(citation_result);
+                }
+                return result; // return master list
             })
         )
     }
@@ -354,7 +385,8 @@ export class ExternalReferences extends Serializable {
         let parse_apis = [];
         for (let field of options.fields) {
             if (!Object.keys(options.object)) continue; //object does not implement the field
-            if (field == "aliases") parse_apis.push(this.parseCitationsFromAliases(options.object[field], restAPIService))
+            if (field == "aliases") parse_apis.push(this.parseCitationsFromAliases(options.object[field], restAPIService));
+            else if (field == 'relatedAssets') parse_apis.push(this.parseCitationsFromRelatedAssets(options.object[field], restAPIService));
             else parse_apis.push(this.parseCitations(options.object[field], restAPIService));
         }
         return forkJoin(parse_apis).pipe(

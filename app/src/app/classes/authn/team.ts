@@ -58,36 +58,30 @@ export class Team extends Serializable {
      * @param {*} raw the raw object to parse
      */
     public deserialize(raw: any) {
-        if ('id' in raw) {
-            if (typeof(raw.id) === 'string') { this.id = raw.id; }
-            else { logger.error('TypeError: id field is not a string:', raw.name, '(', typeof(raw.name), ')'); }
-        } else { this.id = ''; }
+        if (!('id' in  raw)) this.id = '';
+        else if (typeof(raw.id) === 'string') this.id = raw.id;
+        else logger.error(`TypeError: id field is not a string: ${raw.id} (${typeof(raw.id)})`);
 
-        if ('name' in raw && raw.name !== null) {
-            if (typeof(raw.name) === 'string') { this.name = raw.name; }
-            else { logger.error('TypeError: name field is not a string:', raw.name, '(', typeof(raw.name), ')'); }
-        } else { this.name = ''; }
+        if (!('name' in raw)) this.name = '';
+        else if (typeof(raw.name) === 'string') this.name = raw.name;
+        else logger.error(`TypeError: name field is not a string: ${raw.name} (${typeof(raw.name)})`);
 
-        if ('description' in raw) {
-            if (typeof(raw.description) === 'undefined') { this.description = undefined}         // description is not required so we will allow undefined
-            else if (typeof(raw.description) === 'string') { this.description = raw.description; }
-            else { logger.error('TypeError: description field is not a string:', raw.description, '(', typeof(raw.description), ')'); }
-        } else { this.description = ''; }
+        if (!('description' in raw)) this.description = '';
+        else if (typeof(raw.description) === 'string' || typeof(raw.description) === 'undefined') this.description = raw.description;
+        else logger.error(`TypeError: description field is not a string: ${raw.description} (${typeof(raw.description)})`);
 
         if ('userIDs' in raw && raw.userIDs) {
-            if (this.isStringArray(raw.userIDs)) { this.userIDs = raw.userIDs; }
-            else { logger.error('TypeError: userIDs field is not a string array:', raw.userIDs, '(', typeof(raw.userIDs), ')'); }
+            if (this.isStringArray(raw.userIDs)) this.userIDs = raw.userIDs;
+            else logger.error(`TypeError: userIDs field is not a string array: ${raw.userIDs} (${typeof(raw.userIDs)})`);
         }
 
-        if ('created' in raw) {
-            if (typeof (raw.created) === "string") this.created = new Date(raw.created);
-            else logger.error("TypeError: created field is not a string:", raw.created, "(", typeof (raw.created), ")")
-        } else { this.created = new Date(); }
+        if (!('created' in raw)) this.created = new Date();
+        else if (typeof(raw.created) === 'string') this.created = new Date(raw.created);
+        else logger.error(`TypeError: created field is not a string: ${raw.created} (${typeof(raw.created)})`);
 
-        if ('modified' in raw) {
-            if (typeof (raw.modified) === "string") this.modified = new Date(raw.modified);
-            else logger.error("TypeError: modified field is not a string:", raw.modified, "(", typeof (raw.modified), ")")
-        } else { this.modified = new Date(); }
+        if (!('modified' in raw)) this.modified = new Date();
+        else if (typeof(raw.modified) === 'string') this.modified = new Date(raw.modified);
+        else logger.error(`TypeError: modified field is not a string: ${raw.modified} (${typeof(raw.modified)})`);
     }
 
     /**

@@ -1,21 +1,11 @@
 import { Component, OnDestroy, OnInit, ViewChild, Output, EventEmitter } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router, NavigationEnd } from '@angular/router';
-import { BreadcrumbService } from 'angular-crumbs';
+
 import { Observable, forkJoin } from 'rxjs';
-import { Campaign } from 'src/app/classes/stix/campaign';
+import { Asset, Campaign, DataSource, Group, MarkingDefinition, Matrix, Mitigation, Note, Software, StixObject, Tactic, Technique } from 'src/app/classes/stix';
 import { concatMap } from "rxjs/operators";
 import { Collection } from 'src/app/classes/stix/collection';
-import { DataSource } from 'src/app/classes/stix/data-source';
-import { Group } from 'src/app/classes/stix/group';
-import { MarkingDefinition } from 'src/app/classes/stix/marking-definition';
-import { Matrix } from 'src/app/classes/stix/matrix';
-import { Mitigation } from 'src/app/classes/stix/mitigation';
-import { Note } from 'src/app/classes/stix/note';
-import { Software } from 'src/app/classes/stix/software';
-import { StixObject } from 'src/app/classes/stix/stix-object';
-import { Tactic } from 'src/app/classes/stix/tactic';
-import { Technique } from 'src/app/classes/stix/technique';
 import { VersionNumber } from 'src/app/classes/version-number';
 import { DeleteDialogComponent } from 'src/app/components/delete-dialog/delete-dialog.component';
 import { MultipleChoiceDialogComponent } from 'src/app/components/multiple-choice-dialog/multiple-choice-dialog.component';
@@ -26,6 +16,7 @@ import { TitleService } from 'src/app/services/title/title.service';
 import { CollectionViewComponent } from '../collection/collection-view/collection-view.component';
 import { MarkingDefinitionViewComponent } from '../marking-definition/marking-definition-view/marking-definition-view.component';
 import { StixViewConfig } from '../stix-view-page';
+import { BreadcrumbService } from 'src/app/services/helpers/breadcrumb.service';
 
 @Component({
   selector: 'app-stix-page',
@@ -195,6 +186,7 @@ export class StixPageComponent implements OnInit, OnDestroy {
             else if (this.objectType  == "collection") objects$ = this.restApiService.getCollection(objectStixID, objectModified, "latest", false, true);
             else if (this.objectType  == "data-source") objects$ = this.restApiService.getDataSource(objectStixID, null, "latest", false, false, true);
             else if (this.objectType  == "data-component") objects$ = this.restApiService.getDataComponent(objectStixID);
+            else if (this.objectType  == "asset") objects$ = this.restApiService.getAsset(objectStixID);
             else if (this.objectType  == "marking-definition") objects$ = this.restApiService.getMarkingDefinition(objectStixID);
             let  subscription = objects$.subscribe({
                 next: result => {
@@ -243,6 +235,7 @@ export class StixPageComponent implements OnInit, OnDestroy {
                     case 'group': return new Group();
                     case 'collection': return new Collection();
                     case 'data-source': return new DataSource();
+                    case 'asset': return new Asset();
                     case 'marking-definition': return new MarkingDefinition();
                     default: return null;
                 }

@@ -55,8 +55,9 @@
         <div class="row" *ngIf="canEdit">
             <div class="col">
                 <app-add-relationship-button (created)="techniquesList.applyControls()" [config]="{
-                    label: 'technique',
+                    label: 'add a technique',
                     relationship_type: 'detects',
+                    targetType: 'technique',
                     source_object: data_component,
                     dialog: config.dialog? config.dialog : null}">
                 </app-add-relationship-button>

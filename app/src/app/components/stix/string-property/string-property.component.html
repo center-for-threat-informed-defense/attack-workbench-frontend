@@ -5,11 +5,10 @@
         </div>
         <label>{{config.label? config.label : config.field}}</label>
     </div>
-    <div *ngIf="config.mode && config.mode == 'edit'" class="string-property-edit grow-to-row">
+    <div *ngIf="config.mode == 'edit'" class="string-property-edit grow-to-row">
         <mat-form-field appearance="outline">
             <mat-label>{{config.label? config.label : config.field}}</mat-label>
             <input matInput [required]="config.required ? config.required : false" [(ngModel)]="config.object[config.field]">
         </mat-form-field>
     </div>
-    
 </div>

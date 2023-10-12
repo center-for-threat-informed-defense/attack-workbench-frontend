@@ -40,8 +40,6 @@ export class HistoryTimelineComponent implements OnInit, OnDestroy {
     public showObjectHistory: boolean = true;
     public showRelationshipHistory: boolean = true;
     public onEditStopSubscription: Subscription;
-    
-    
 
     constructor(private route: ActivatedRoute, 
                 private router: Router, 
@@ -155,6 +153,7 @@ export class HistoryTimelineComponent implements OnInit, OnDestroy {
         else if (objectType == "collection") objects$ = this.restAPIConnectorService.getCollection(objectStixID, null, "all");
         else if (objectType == "data-source") objects$ = this.restAPIConnectorService.getDataSource(objectStixID, null, "all");
         else if (objectType == "data-component") objects$ = this.restAPIConnectorService.getDataComponent(objectStixID, null, "all");
+        else if (objectType == "asset") objects$ = this.restAPIConnectorService.getAsset(objectStixID, null, "all");
         // set up subscribers to get relationships
         let relationships$ = this.restAPIConnectorService.getRelatedTo({sourceOrTargetRef: objectStixID, versions: "all"});
         // join subscribers
