@@ -32,7 +32,7 @@
 
 # Changelog
 
-## 21 September 2023
+## Changes Staged on Develop
 
 #### New Features in 2.1.0
 -   Added the ability to create, view, and edit Asset objects.
