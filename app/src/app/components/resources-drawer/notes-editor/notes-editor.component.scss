@@ -73,7 +73,8 @@
                 &:read-only { cursor: pointer; }
             }
             .mat-card-header-text { width: 100%; }
-            .history {
+            .note-subtitle {
+                margin-bottom: 12px;
                 font-size: 13px;
                 @extend .text-label;
             }
