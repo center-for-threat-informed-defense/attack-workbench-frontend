@@ -22,7 +22,7 @@ export class TimestampViewComponent implements OnInit {
     }
 
     ngOnInit(): void {
-      if (this.config.displayCreatorUsernameWithTimestamp) {
+      if (this.config.showDisplayName) {
         const object = Array.isArray(this.config.object) ? this.config.object[0] : this.config.object;
         const createdByAccountId = object.workflow.created_by_user_account;
         if (!createdByAccountId) { 
