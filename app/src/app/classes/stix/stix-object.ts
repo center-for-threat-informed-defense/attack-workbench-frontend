@@ -2,7 +2,7 @@ import { VersionNumber } from '../version-number';
 import { ExternalReferences } from '../external-references';
 import { v4 as uuid } from 'uuid';
 import { Serializable, ValidationData } from '../serializable';
-import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/rest-api-connector.service';
+import { Paginated, RestApiConnectorService } from 'src/app/services/connectors/rest-api/rest-api-connector.service';
 import { forkJoin, Observable, of } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
 import { logger } from "../../util/logger";
@@ -22,6 +22,7 @@ let stixTypeToAttackType = {
     "marking-definition": "marking-definition",
     "x-mitre-data-source": "data-source",
     "x-mitre-data-component": "data-component",
+    "x-mitre-asset": "asset",
     "note": "note"
 }
 export { stixTypeToAttackType };
@@ -59,7 +60,8 @@ export abstract class StixObject extends Serializable {
         "note": "notes",
         "marking-definition": "marking-definitions",
         "data-source": "datasources",
-        "data-component": "datacomponents"
+        "data-component": "datacomponents",
+        "asset": "assets"
     }
 
     private defaultMarkingDefinitionsLoaded = false; // avoid overloading of default marking definitions
@@ -215,7 +217,7 @@ export abstract class StixObject extends Serializable {
                 else logger.error("TypeError: x_mitre_version field is not a string:", sdo.x_mitre_version, "(", typeof (sdo.x_mitre_version), ")")
             } else this.version = new VersionNumber("0.1");
 
-            if ("external_references" in sdo) {
+            if ("external_references" in sdo && sdo['external_references']) {
                 if (typeof (sdo.external_references) === "object") {
                     this.external_references = new ExternalReferences(sdo.external_references);
                     let attack_sources = ['mitre-attack', 'mitre-mobile-attack', 'mitre-ics-attack'];
@@ -291,16 +293,23 @@ export abstract class StixObject extends Serializable {
                 //do not check name or attackID for relationships or marking definitions
                 if (this.attackType == "relationship" || this.attackType == "marking-definition") return of(result);
                 // check if name & ATT&CK ID is unique, record result in validation, and return validation
-                let accessor = this.attackType == "collection"? restAPIService.getAllCollections() :
-                                this.attackType == "group"? restAPIService.getAllGroups() :
-                                this.attackType == "campaign"? restAPIService.getAllCampaigns() :
-                                this.attackType == "software"? restAPIService.getAllSoftware() :
-                                this.attackType == "matrix"? restAPIService.getAllMatrices() :
-                                this.attackType == "mitigation"? restAPIService.getAllMitigations() :
-                                this.attackType == "technique"? restAPIService.getAllTechniques() :
-                                this.attackType == "data-source"? restAPIService.getAllDataSources() :
-                                this.attackType == "data-component"? restAPIService.getAllDataComponents() :
-                                restAPIService.getAllTactics();
+                let options = { // validate against revoked & deprecated objects
+                    includeRevoked: true,
+                    includeDeprecated: true
+                };
+                let accessor: Observable<Paginated<StixObject>>;
+                if (this.attackType == "collection") accessor = restAPIService.getAllCollections(options);
+                else if (this.attackType == "group") accessor = restAPIService.getAllGroups(options);
+                else if (this.attackType == "campaign") accessor = restAPIService.getAllCampaigns(options);
+                else if (this.attackType == "software") accessor = restAPIService.getAllSoftware(options);
+                else if (this.attackType == "matrix") accessor = restAPIService.getAllMatrices(options);
+                else if (this.attackType == "mitigation") accessor = restAPIService.getAllMitigations(options);
+                else if (this.attackType == "technique") accessor = restAPIService.getAllTechniques(options);
+                else if (this.attackType == "data-source") accessor = restAPIService.getAllDataSources(options);
+                else if (this.attackType == "data-component") accessor = restAPIService.getAllDataComponents(options);
+                else if (this.attackType == "asset") accessor = restAPIService.getAllAssets();
+                else accessor = restAPIService.getAllTactics(options);
+
                 return accessor.pipe(
                     map(objects => {
                         // check name
@@ -398,6 +407,7 @@ export abstract class StixObject extends Serializable {
                 // build list of fields to validate external references on according to ATT&CK type
                 let refs_fields = ['description'];
                 if (['software', 'group', 'campaign'].includes(this.attackType)) refs_fields.push('aliases');
+                if (this.attackType == 'asset') refs_fields.push('relatedAssets');
                 if (this.attackType == 'technique') refs_fields.push('detection');
                 if (this.attackType == 'campaign') refs_fields.push('first_seen_citation', 'last_seen_citation');
 
@@ -581,17 +591,19 @@ export abstract class StixObject extends Serializable {
     public getNamespaceID(restAPIConnector, orgNamespace): Observable<any> {
         let prefix = ''; // i.e. 'TA', if StixObject type is tactic
         let count = '' as any; // i.e. 1234
-        let copyID = this.attackID.slice(); // Deep copy of attack id
         this.attackID = '(generating ID)';
 
-        let accessor = this.attackType == "group" ? restAPIConnector.getAllGroups() :
-                        this.attackType == "campaign" ? restAPIConnector.getAllCampaigns() :
-                        this.attackType == "mitigation" ? restAPIConnector.getAllMitigations() :
-                        this.attackType == "software" ? restAPIConnector.getAllSoftware() :
-                        this.attackType == "tactic" ? restAPIConnector.getAllTactics() :
-                        this.attackType == "technique" ? restAPIConnector.getAllTechniques() :
-                        this.attackType == "data-source" ? restAPIConnector.getAllDataSources() :
-                        this.attackType == "matrix" ? restAPIConnector.getAllMatrices() : null;
+        let accessor: Observable<Paginated<StixObject>>;
+        if (this.attackType == "group") accessor = restAPIConnector.getAllGroups();
+        else if (this.attackType == "campaign") accessor = restAPIConnector.getAllCampaigns();
+        else if (this.attackType == "mitigation") accessor = restAPIConnector.getAllMitigations();
+        else if (this.attackType == "software") accessor = restAPIConnector.getAllSoftware();
+        else if (this.attackType == "tactic") accessor = restAPIConnector.getAllTactics();
+        else if (this.attackType == "technique") accessor = restAPIConnector.getAllTechniques();
+        else if (this.attackType == "data-source") accessor = restAPIConnector.getAllDataSources();
+        else if (this.attackType == "asset") accessor = restAPIConnector.getAllAssets();
+        else if (this.attackType == "matrix") accessor = restAPIConnector.getAllMatrices();
+        else accessor = null;
 
         // Find all other objects that have this prefix and range, and set ID to the most recent & unique ID available
         if (accessor) {

@@ -1,4 +1,4 @@
-@import '~@angular/material/theming';
+@use '@angular/material' as mat;
 @import "colors";
 @import "fonts";
 
@@ -72,17 +72,17 @@
     }
 
     // see https://github.com/angular/components/blob/master/src/material/core/typography/_typography.scss#L24
-    $custom-typography: mat-typography-config(
+    $custom-typography: mat.define-typography-config(
         $font-family: Roboto,
-        $headline: mat-typography-level(32px, 48px, 800, $letter-spacing: 0.5pt),
-        $title:    mat-typography-level(20px, 32px, 800, $letter-spacing: 0.5pt),
-        $body-1:   mat-typography-level(16px, 24px, 400, $letter-spacing: 0.25pt)
+        $headline: mat.define-typography-level(32px, 48px, 800, $letter-spacing: 0.5pt),
+        $title:    mat.define-typography-level(20px, 32px, 800, $letter-spacing: 0.5pt),
+        $body-1:   mat.define-typography-level(16px, 24px, 400, $letter-spacing: 0.25pt)
     );
 
-    @include mat-base-typography($custom-typography);
-    @include mat-checkbox-typography($custom-typography);
-    @include angular-material-typography($custom-typography);
-    @include mat-core($custom-typography);
+    @include mat.typography-hierarchy($custom-typography);
+    @include mat.checkbox-typography($custom-typography);
+    @include mat.all-component-typographies($custom-typography);
+    @include mat.core($custom-typography);
 }
 
 //custom typography theme

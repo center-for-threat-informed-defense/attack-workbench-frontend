@@ -50,7 +50,8 @@ export class ListEditComponent implements OnInit, AfterContentChecked {
         "effective_permissions": "x_mitre_effective_permissions",
         "permissions_required": "x_mitre_permissions_required",
         "collection_layers": "x_mitre_collection_layers",
-        "data_sources": "x_mitre_data_sources"
+        "data_sources": "x_mitre_data_sources",
+        "sectors": "x_mitre_sectors"
     }
     public domains = [
         "enterprise-attack",
@@ -77,7 +78,8 @@ export class ListEditComponent implements OnInit, AfterContentChecked {
          || this.config.field == 'impact_type'
          || this.config.field == 'domains'
          || this.config.field == 'collection_layers'
-         || this.config.field == 'data_sources') {
+         || this.config.field == 'data_sources'
+         || this.config.field == 'sectors') {
             if (!this.dataLoaded) {
                 let data$ = this.restAPIConnectorService.getAllAllowedValues();
                 this.sub = data$.subscribe({
@@ -117,19 +119,18 @@ export class ListEditComponent implements OnInit, AfterContentChecked {
                 complete: () => { subscription.unsubscribe(); }
             })
         } else if (this.config.field == 'parentTechnique') {
-          this.type = 'technique';
-          const subscription = this.restAPIConnectorService.getAllTechniques().subscribe({
-            next: (r: Paginated<Technique>) => {
-              this.allObjects = r.data.filter((t) => !t.is_subtechnique);
-              const selectableTechniqueIDs = r.data.map(t => t.stixID);
-              this.select = new SelectionModel<string>(false, selectableTechniqueIDs);
-              this.dataLoaded = true;
-            },
-            complete: () => {
-              subscription.unsubscribe();
-            }
-          });
-
+            this.type = 'technique';
+            const subscription = this.restAPIConnectorService.getAllTechniques().subscribe({
+                next: (r: Paginated<Technique>) => {
+                    this.allObjects = r.data.filter((t) => !t.is_subtechnique);
+                    const selectableTechniqueIDs = r.data.map(t => t.stixID);
+                    this.select = new SelectionModel<string>(false, selectableTechniqueIDs);
+                    this.dataLoaded = true;
+                },
+                complete: () => {
+                    subscription.unsubscribe();
+                }
+            });
         }
     }
 
@@ -251,12 +252,12 @@ export class ListEditComponent implements OnInit, AfterContentChecked {
 
     /** Add value to object property list */
     public add(event: MatChipInputEvent): void {
-        if (event.value && event.value.trim()) {
+        if (event.value?.trim()) {
             this.config.object[this.config.field].push(event.value.trim());
             this.inputControl.setValue(this.config.object[this.config.field]);
         }
-        if (event.input) {
-            event.input.value = ''; // reset input value
+        if (event.chipInput.inputElement.value) {
+            event.chipInput.inputElement.value = ''; // reset input value
         }
     }
 

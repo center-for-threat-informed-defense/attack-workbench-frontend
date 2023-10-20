@@ -25,15 +25,17 @@ import { DataComponent } from 'src/app/classes/stix/data-component';
 import { UserAccount } from 'src/app/classes/authn/user-account';
 import { Campaign } from 'src/app/classes/stix/campaign';
 import { Team } from 'src/app/classes/authn/team';
+import { Asset } from 'src/app/classes/stix/asset';
 
 //attack types
-type AttackType = "campaign" | "collection" | "group" | "matrix" | "mitigation" | "software" | "tactic" | "technique" | "relationship" | "note" | "identity" | "marking-definition" | "data-source" | "data-component";
+type AttackType = "asset" | "campaign" | "collection" | "group" | "matrix" | "mitigation" | "software" | "tactic" | "technique" | "relationship" | "note" | "identity" | "marking-definition" | "data-source" | "data-component";
 // pluralize AttackType
 const attackTypeToPlural = {
     "technique": "techniques",
     "tactic": "tactics",
     "group": "groups",
     "campaign": "campaigns",
+    "asset": "assets",
     "software": "software",
     "mitigation": "mitigations",
     "matrix": "matrices",
@@ -51,6 +53,7 @@ const attackTypeToClass = {
     "tactic": Tactic,
     "group": Group,
     "campaign": Campaign,
+    "asset": Asset,
     "software": Software,
     "mitigation": Mitigation,
     "matrix": Matrix,
@@ -69,6 +72,7 @@ const stixTypeToClass = {
     "x-mitre-tactic": Tactic,
     "intrusion-set": Group,
     "campaign": Campaign,
+    "x-mitre-asset": Asset,
     "tool": Software,
     "malware": Software,
     "course-of-action": Mitigation,
@@ -276,6 +280,18 @@ export class RestApiConnectorService extends ApiConnector {
      */
     public get getAllCampaigns() { return this.getStixObjectsFactory<Campaign>("campaign"); }
     /**
+     * Get all assets
+     * @param {number} [limit] the number of assets to retrieve
+     * @param {number} [offset] the number of assets to skip
+     * @param {string} [state] if specified, only get objects with this state
+     * @param {string} [lastUpdatedBy] if specified, only get objects which were last updated by these users
+     * @param {boolean} [revoked] if true, get revoked objects
+     * @param {boolean} [deprecated] if true, get deprecated objects
+     * @param {string[]} [excludeIDs] if specified, excludes these STIX IDs from the result
+     * @returns {Observable<Asset[]>} observable of retrieved objects
+     */
+    public get getAllAssets() { return this.getStixObjectsFactory<Asset>("asset"); }
+    /**
      * Get all software
      * @param {number} [limit] the number of software to retrieve
      * @param {number} [offset] the number of software to skip
@@ -462,6 +478,59 @@ export class RestApiConnectorService extends ApiConnector {
     }
 
     /**
+     * Get all recent activity
+     * @param {number} [limit] the number of collections to retrieve
+     * @param {number} [offset] the number of collections to skip
+     * @param {boolean} [revoked] if true, get revoked objects
+     * @param {boolean} [deprecated] if true, get deprecated objects
+     * @param {boolean} [deserialize] if true, deserialize objects to full STIX objects
+     * @param {string[]} [lastUpdatedBy] filter to only include objects modified by the list of given user IDs
+     * @returns {Observable<any[]>} observable of retrieved objects
+     */
+    public getRecentActivity(limit?: number, offset?: number, revoked?: boolean, deprecated?: boolean, deserialize?: boolean, lastUpdatedBy?: string[]) {
+        let query = new HttpParams({ encoder: new CustomEncoder() });
+        // pagination
+        if (limit) query = query.set("limit", limit.toString());
+        if (offset) query = query.set("offset", offset.toString());
+        if (limit || offset) query = query.set("includePagination", "true");
+        // object state
+        if (revoked) query = query.set("includeRevoked", revoked ? "true" : "false");
+        if (deprecated) query = query.set("includeDeprecated", deprecated ? "true" : "false");
+        // lastUpdatedBy
+        if (lastUpdatedBy) lastUpdatedBy.forEach(user => query = query.append('lastUpdatedBy', user));
+        return this.http.get(`${this.apiUrl}/recent-activity`, { params: query }).pipe(
+            tap(results => logger.log(`retrieved recent activity`, results)), // on success, trigger the success notification
+            map(results => {
+                if (!deserialize) return results; // skip deserialization if param not added
+                let response = results as any;
+                if (limit || offset) { // returned a paginated
+                    let data = response.data as Array<any>;
+                    data = data.filter(y => !["marking-definition", "identity"].includes(y.stix.type)).map(y => {
+                        if (y.stix.type == "malware" || y.stix.type == "tool") return new Software(y.stix.type, y);
+                        else return new stixTypeToClass[y.stix.type](y);
+                    });
+                    response.data = data;
+                    return response;
+                } else { //returned a stixObject[]
+                    return {
+                        pagination: {
+                            total: response.length,
+                            limit: -1,
+                            offset: -1
+                        },
+                        data: response.filter(y => !["marking-definition", "identity"].includes(y.stix.type)).map(y => {
+                            if (y.stix.type == "malware" || y.stix.type == "tool") return new Software(y.stix.type, y);
+                            else return new stixTypeToClass[y.stix.type](y);
+                        })
+                    }
+                }
+            }),
+            catchError(this.handleError_continue([])), // on error, trigger the error notification and continue operation without crashing (returns empty item)
+            share() // multicast so that multiple subscribers don't trigger the call twice. THIS MUST BE THE LAST LINE OF THE PIPE
+        )
+    }
+
+    /**
      * Factory to create a new STIX get by ID function
      * @template T the type to get
      * @param {AttackType} attackType the type to get
@@ -579,6 +648,14 @@ export class RestApiConnectorService extends ApiConnector {
      * @returns {Observable<Campaign>} the object with the given ID and modified date
      */
     public get getCampaign() { return this.getStixObjectFactory<Campaign>("campaign"); }
+    /**
+     * Get a single asset by STIX ID
+     * @param {string} id the object STIX ID
+     * @param {Date} [modified] if specified, get the version modified at the given date
+     * * @param {versions} [string] default "latest", if "all" returns all versions of the object instead of just the latest version.
+     * @returns {Observable<Asset>} the object with the given ID and modified date
+     */
+    public get getAsset() { return this.getStixObjectFactory<Asset>("asset"); }
     /**
      * Get a single software by STIX ID
      * @param {string} id the object STIX ID
@@ -700,6 +777,12 @@ export class RestApiConnectorService extends ApiConnector {
      */
     public get postCampaign() { return this.postStixObjectFactory<Campaign>("campaign"); }
     /**
+     * POST (create) a new asset
+     * @param {Asset} object the object to create
+     * @returns {Observable<Asset>} the created object
+     */
+    public get postAsset() { return this.postStixObjectFactory<Asset>("asset"); }
+    /**
      * POST (create) a new software
      * @param {Software} object the object to create
      * @returns {Observable<Software>} the created object
@@ -814,6 +897,13 @@ export class RestApiConnectorService extends ApiConnector {
      */
     public get putCampaign() { return this.putStixObjectFactory<Campaign>("campaign"); }
     /**
+     * PUT (update) an asset
+     * @param {Asset} object the object to update
+     * @param {Date} [modified] optional, the modified date to overwrite. If omitted, uses the modified field of the object
+     * @returns {Observable<Asset>} the updated object
+     */
+    public get putAsset() { return this.putStixObjectFactory<Asset>("asset"); }
+    /**
      * PUT (update) a software
      * @param {Software} object the object to update
      * @param {Date} [modified] optional, the modified date to overwrite. If omitted, uses the modified field of the object
@@ -908,6 +998,12 @@ export class RestApiConnectorService extends ApiConnector {
      */
     public get deleteCampaign() { return this.deleteStixObjectFactory("campaign"); }
     /**
+     * DELETE an asset
+     * @param {string} id the STIX ID of the object to delete
+     * @returns {Observable<{}>} observable of the response body
+     */
+    public get deleteAsset() { return this.deleteStixObjectFactory("asset"); }
+    /**
      * DELETE a software
      * @param {string} id the STIX ID of the object to delete
      * @returns {Observable<{}>} observable of the response body
@@ -940,9 +1036,18 @@ export class RestApiConnectorService extends ApiConnector {
     /**
      * DELETE a collection
      * @param {string} id the STIX ID of the object to delete
+     * @param {boolean} deleteAllContents whether or not to delete all of the contents of the collection
+     * @param {string} version modified date of the version to delete
      * @returns {Observable<{}>} observable of the response body
      */
-    public get deleteCollection() { return this.deleteStixObjectFactory("collection"); }
+    public get deleteCollection() { return function(id: string, deleteAllContents: boolean, version?:string): Observable<{}> {
+      let url = `${this.apiUrl}/collections/${id}${version ? `/modified/${version}`: ``}?deleteAllContents=${deleteAllContents ? 'true' : 'false'}`;
+      return this.http.delete(url).pipe(
+          tap(this.handleSuccess(`collection deleted`)),
+          catchError(this.handleError_raise()),
+          share() // multicast so that multiple subscribers don't trigger the call twice. THIS MUST BE THE LAST LINE OF THE PIPE
+      );
+  } }
     /**
      * DELETE a relationship
      * @param {string} id the STIX ID of the object to delete

@@ -1,4 +1,4 @@
-FROM node:14 as build
+FROM node:18 AS build
 
 # Create app directory
 WORKDIR /usr/src/app
@@ -21,7 +21,18 @@ COPY ./docs ../docs
 # Build the bundle
 RUN npm run build-prod
 
-FROM nginx:1.19
+FROM nginx
+
+# Set Docker labels
+LABEL org.opencontainers.image.title="ATT&CK Workbench Frontend Service" \
+    org.opencontainers.image.description="This Docker image contains the frontend service of the ATT&CK Workbench, an application for exploring, creating, annotating, and sharing extensions of the MITRE ATT&CK® knowledge base. The service handles the storage, querying, and editing of ATT&CK objects. It is an Angular SPA served by an Nginx reverse proxy." \
+    org.opencontainers.image.source="https://github.com/center-for-threat-informed-defense/attack-workbench-frontend" \
+    org.opencontainers.image.documentation="https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/README.md" \
+    org.opencontainers.image.url="https://ghcr.io/center-for-threat-informed-defense/attack-workbench-frontend" \
+    org.opencontainers.image.vendor="The MITRE Corporation" \
+    org.opencontainers.image.licenses="Apache-2.0" \
+    org.opencontainers.image.authors="MITRE ATT&CK<attack@mitre.org>" \
+    maintainer="MITRE ATT&CK<attack@mitre.org>"
 
 # Remove the default nginx website
 RUN rm -rf /usr/share/nginx/html/*
@@ -30,5 +41,4 @@ RUN rm -rf /usr/share/nginx/html/*
 
 # Copy the application bundles
 COPY --from=build  /usr/src/app/dist/app /usr/share/nginx/html
-
 

@@ -46,12 +46,7 @@ The ATT&CK Workbench application is made up of several repositories. For the ful
   The front-end user interface for the ATT&CK Workbench tool, and the primary interface through which the knowledge base is accessed.
 - [ATT&CK Workbench REST API](https://github.com/center-for-threat-informed-defense/attack-workbench-rest-api)
 
-  REST API service for storing, querying and editing ATT&CK objects.
-- [ATT&CK Workbench Collection Manager](https://github.com/center-for-threat-informed-defense/attack-workbench-collection-manager)
-
-  REST API and services for managing collections, collection indexes, and collection subscriptions. 
-  
-  The collection manager is **not** required to be installed to use the ATT&CK Workbench, but is **highly recommended**. If you opt not to install the collection-manager you will not be able to import or export data from your local knowledge base. If the collection manager is not installed, set `integrations.collection_manager.enabled` to `false` in the front-end environment. See [modifying the environment](#modifying-the-environment) for more details.
+  REST API service for storing, querying and editing ATT&CK objects, as well as  for managing collections, collection indexes, and collection subscriptions.
 
 The manual install instructions in each repository describe how each component to be deployed to a separate machine or with customized settings. 
 
@@ -62,7 +57,7 @@ Please refer to our [Docker install instructions](docs/docker-compose.md) for in
 
 #### Requirements
 
-- [Node.js](https://nodejs.org/) version `14.16.1` or greater
+- [Node.js](https://nodejs.org/) version 16 or greater
 
 #### Installing dependencies
 This step is necessary for cases where the app is deployed locally through `ng serve` or `ng build`. It can be skipped for installs using docker (above).
@@ -81,15 +76,21 @@ This step is necessary for cases where the app is deployed locally through `ng s
 If you're building the app for production, use `ng build --prod` which will use the production environment instead of the development environment. See [modifying the environment](#modifying-the-environment) for more information.
 
 #### Modifying the environment
-The ATT&CK Workbench Frontend is configured to connect to the Collection Manager and REST API running under their default configurations. If those applications are configured to run on different ports, or if the application is to be hosted for access on multiple machines, the environment must be edited to reflect their URLs and ports.
+The ATT&CK Workbench Frontend is configured to connect to the REST API running under its default configuration. If the applications is configured to run on a different port, or if the application is to be hosted for access on multiple machines, the environment must be edited to reflect the URLs and port.
 
 These environment properties can be edited under `src/environments`:
 - [src/environments/environment.ts](app/src/environments/environment.ts) is the development environment with configurations for when it is hosted on a local machine or is being actively developed. This is the default environment file used when building the application.
 - [src/environments/environment.prod.ts](app/src/environments/environment.prod.ts) is the production environment for deployment inside of an organization or in cases where the user is not developing the application. When the application is built for production deployments (`ng build --prod`) this environment file is used.
 
+#### Setting the Default Landing Page
+To allow for additional customization, the ATT&CK Workbench enables users to set a default landing page for their instance of Workbench. To set the default landing page:
+- Open up the config file, found at `src/assets/config.ts`.
+- Set the `defaultLandingPage` variable to the url path you want to set as the default landing page
+  - You can set the default to a more general page, such as the tactic list view `"defaultLandingPage": "tactic"`, or to a specific page, such as a certain matrix `"defaultLandingPage": "matrix/x-mitre-matrix--eafc1b4c-5e56-4965-bd4e-66a6a89c88cc"`
+
 #### PKI Certificates
 
-For additional troubleshooting and installation of security certificates for use by ATT&CK Workbench, pleaser refer to [PKI Certificates instructions](docs/certs.md)
+For additional troubleshooting and installation of security certificates for use by ATT&CK Workbench, pleaser refer to [PKI Certificates instructions](docs/certs.md).
 
 ## Related Work
 

@@ -1,3 +1,4 @@
+@use 'sass:math' as math;
 @import "../../../../style/layouts/matrix.scss";
 @import "../../../../style/colors.scss";
 
@@ -12,7 +13,7 @@
   min-height: $sizeunit;
   border-collapse: collapse;
   >div {
-    padding: $sizeunit /2 3px;
+    padding: math.div($sizeunit, 2) 3px;
     box-sizing: border-box;
     display: block;
     width: 100%;

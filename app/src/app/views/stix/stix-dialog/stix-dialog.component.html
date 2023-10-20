@@ -74,6 +74,11 @@
                                              (onOpenNotes)="openNotes()"
                                              (onClickRelationship)="changeDialogObject($event)">
                     </app-data-component-view>
+                    <app-asset-view        *ngIf="stixType == 'x-mitre-asset'"
+                                           [config]="config"
+                                           (onOpenHistory)="openHistory()"
+                                           (onOpenNotes)="openNotes()">
+                    </app-asset-view>
                     <app-tactic-view       *ngIf="stixType == 'x-mitre-tactic'" 
                                            [config]="config"
                                            (onOpenHistory)="openHistory()"

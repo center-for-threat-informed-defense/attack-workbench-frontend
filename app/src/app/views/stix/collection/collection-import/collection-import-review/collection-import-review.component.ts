@@ -1,20 +1,10 @@
-import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Collection, CollectionDiffCategories } from 'src/app/classes/stix/collection';
-import { Group } from 'src/app/classes/stix/group';
-import { Matrix } from 'src/app/classes/stix/matrix';
-import { Mitigation } from 'src/app/classes/stix/mitigation';
-import { Relationship } from 'src/app/classes/stix/relationship';
-import { Software } from 'src/app/classes/stix/software';
-import { Tactic } from 'src/app/classes/stix/tactic';
-import { Technique } from 'src/app/classes/stix/technique';
-import { DataSource } from 'src/app/classes/stix/data-source';
-import { DataComponent } from 'src/app/classes/stix/data-component';
+import { Asset, Campaign, DataComponent, DataSource, Group, Matrix, Mitigation, Relationship, Software, Tactic, Technique } from 'src/app/classes/stix';
 import { EditorService } from 'src/app/services/editor/editor.service';
 import { StixViewPage } from '../../../stix-view-page';
-import { logger } from "../../../../../util/logger";
 import { AuthenticationService } from 'src/app/services/connectors/authentication/authentication.service';
-import { Campaign } from 'src/app/classes/stix/campaign';
 
 @Component({
     selector: 'app-collection-import-review',
@@ -22,9 +12,10 @@ import { Campaign } from 'src/app/classes/stix/campaign';
     styleUrls: ['./collection-import-review.component.scss'],
     encapsulation: ViewEncapsulation.None
 })
-export class CollectionImportReviewComponent extends StixViewPage implements OnInit {
+export class CollectionImportReviewComponent extends StixViewPage implements OnInit, OnDestroy {
+    private deleteSubscription;
+    public deleting: boolean = false;
 
-   
     public get collection(): Collection { return this.config.object as Collection; }
 
     public collection_import_categories = {
@@ -37,16 +28,32 @@ export class CollectionImportReviewComponent extends StixViewPage implements OnI
         matrix:         new CollectionDiffCategories<Matrix>(),
         group:          new CollectionDiffCategories<Group>(),
         data_source:    new CollectionDiffCategories<DataSource>(),
-        data_component: new CollectionDiffCategories<DataComponent>()
+        data_component: new CollectionDiffCategories<DataComponent>(),
+        asset:          new CollectionDiffCategories<Asset>()
     }
 
-    constructor(private route: ActivatedRoute, public editor: EditorService, authenticationService: AuthenticationService) { super(authenticationService) }
+    constructor(private route: ActivatedRoute, public editor: EditorService, authenticationService: AuthenticationService) {
+        super(authenticationService);
+    }
 
     ngOnInit() {
+        /**
+         *  TODO: From Vince and Charissa
+         *  This is really wonky since the page load completes and then the editor service is changed, the user can click the edit button while all of the attack objects are loading
+         *  Need to find a way to figure out how to tell is a collection is imported earlier on in the chain/disable the toolbar while things are loading
+         **/
+
+        // set up delete watcher
+        this.deleting = false;
+        this.deleteSubscription = this.editor.onDeleteImportedCollection.subscribe({
+            next: (_event) => this.deleting = true
+        });
+        
         // disable editing
         this.editor.editable = false;
+        this.editor.isAnImportedCollection = true;
+
         // parse collection into object_import_categories
-        
         //build category lookup
         let idToCategory = {};
         for (let category in this.collection.import_categories) {
@@ -104,9 +111,14 @@ export class CollectionImportReviewComponent extends StixViewPage implements OnI
                 case "campaign": // campaign
                     this.collection_import_categories.campaign[category].push(object);
                 break;
+                case "asset": // asset
+                    this.collection_import_categories.asset[category].push(object);
+                break;
             }
         }
-        logger.log(this.collection_import_categories);
     }
 
+    ngOnDestroy() {
+        this.deleteSubscription.unsubscribe();
+    }
 }

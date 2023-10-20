@@ -41,7 +41,7 @@ There are multiple means through which a collection can be imported. The "import
 
 Users can import the collection in several different ways:
 - *Import from URL*: In cases where the collection has been hosted on the internet, the user may specify the URL of a collection STIX bundle for the application to download.
-<!-- - *Upload from file*: Users can also upload a STIX bundle representing the collection. -->
+- *Upload from file*: Users can upload a STIX bundle representing the collection. You can upload a collection in JSON, CSV, or XLSX format.
 - *Import from collection index*: The user can choose to import collections listed by attached _collection indexes_, which are essentially lists of collections on the internet.
 
 ##### 2. Review Contents
@@ -424,6 +424,10 @@ The Note Editor is found within the resources drawer accessible through the butt
 
 Notes have titles and descriptions, both of which must be filled in order to save the note. The description field supports markdown. Once saved, a note can be edited by clicking on it in the note editor.
 
+### Searching notes
+
+Notes are searchable through the "More" option in the dropdown menu within the notes option.  You can search notes by content, title, and which user created the note.  Clicking on a note within the list will open up the object the note is associated with, as well as the selected note.
+
 ## Sharing Your Extensions
 
 Objects you create can be published in collections. Please see the [collections document](/docs/collections.md) for more information about the representation and intention of collections.
@@ -444,6 +448,10 @@ Within each change type, two lists are shown. On the left are _potential changes
 You can move objects from the left ("potential") list to the right ("staged") list or vice versa by clicking the button on the left or right of the object row. You can also move the entire contents of the list (e.g staging all group changes) by clicking the double arrow button between the two lists.
 
 Clicking on an object within the list will open a preview dialog to show the contents of the object.
+
+#### Importing a group into a collection
+When editing a collection, there is an option to import a group and all of it's related objects into the collection being edited.
+
 ### Handling Relationships
 
 Unlike other object types, relationships are handled automatically by the system. When a collection is saved, the relationships included are determined automatically according to the other contents of the collection.
@@ -469,3 +477,20 @@ These effects will occur even if the collection you marked as release was never 
 ### Accessing Collection Data
 
 The data from a collection can be accessed as a raw STIX bundle from the collection view page. A hyperlink is provided for use in scripts or tools which are built to pull collections over HTTP, and the download button can also be used to download the collection data as a JSON file. These resources provide the means to publish your collections for other users of the ATT&CK Workbench, whether it be by uploading the JSON to GitHub, mailing a floppy disk, or some other means of data transmission.
+
+
+## Teams
+
+Workbench now supports the ability to create teams in order to allow admins to keep track of users and the changes they make within workbench.
+
+### View a team
+
+Admins have an option within the "More" dropdown option to select teams.  This brings up a list of every team present in your instance of workbench.  You can search teams by their name or description.
+
+### Creating a team
+
+Within the page showing the list of teams, there is an option to create a new team.  Teams require a name and have an optional description field.  Users can be added or removed from a team at any time.
+
+### Editing a team
+
+When viewing a team, click the edit icon in the toolbar to edit it.  You can edit the name, description, or user list of a team at any time.

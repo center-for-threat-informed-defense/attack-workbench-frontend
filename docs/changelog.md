@@ -34,24 +34,54 @@
 
 ## Changes Staged on Develop
 
+#### New Features in 2.1.0
+-   Added the ability to create, view, and edit Asset objects.
+
+#### Improvements in 2.1.0
+-   Navigation menu collapses under a separate hamburger menu rather than the identity icon. See [frontend#494](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/494).
+
+#### Fixes in 2.1.0
+-   Fixed an issue where revoking or deprecating an object would deprecate all `revoked-by` relationships with the object. See [frontend#467](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/467).
+-   Fixed an issue where first/last seen Campaign dates were parsed in local time, causing the dates to be displayed incorrectly in certain timezones. See [frontend#508](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/pull/508).
+
+## 21 September 2023
+
+### ATT&CK Workbench version 2.0.1
+
+#### Fixes in 2.0.1
+-   Fixed a crash that would occur when retrieving recent activity for large teams.
+-   Fixed the incorrect path to the REST API Docker image documented in [`docker-compose.md`](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/blob/master/docs/docker-compose.md).
+-   Fixed an issue where the version number of an object could be saved in an invalid format.
+-   Fixed object name and ATT&CK ID validation to check against revoked and deprecated objects.
+-   Fixed an issue where the `retrieveAll()` query for Relationships and ATT&CK objects would cause a "Sort exceeded memory limit" error. See [rest-api#285](https://github.com/center-for-threat-informed-defense/attack-workbench-rest-api/issues/285).
+-   Updated Angular to v14.
+
+## 16 August 2023
+
 ### ATT&CK Workbench version 2.0.0
 
-The ATT&CK Workbench features a persistent database with the use of a named volume as of version 2.0. **This change may result in data on the current anonymous volume being lost.** The [Docker Compose Migration](/docs/migration.md) document describes how to backup your existing ATT&CK Workbench data and restore it after the update.
+As of v2.0.0, the [ATT&CK Workbench Collection Manager](https://github.com/center-for-threat-informed-defense/attack-workbench-collection-manager) has been deprecated. All functionality of the Collection Manager has been absorbed into the [ATT&CK Workbench REST API](https://github.com/center-for-threat-informed-defense/attack-workbench-rest-api).
+
+The ATT&CK Workbench now features a persistent database for Docker installs with the use of a named volume. **This change may result in data on the current anonymous volume being lost.** The [Docker Install Update Guide](/docs/update.md) describes how to backup your existing ATT&CK Workbench data, update to v2.0.0, and restore your data after the update.
 
 #### New Features in 2.0.0
 -   Added an Admin interface for creating and managing teams.
 -   Added the ability to search objects by one or more users.
 -   Added a new user profile page where logged in users can view their recent activity across the Workbench and view/edit their display name.
 -   Added an option to configure an external ATT&CK Website in which to view Workbench objects, if a relevant object page exists.
--	Added functionality to create a collection from a group and its related objects.
--	Added button to import groups and their related objects into new or existing collections.
+-   Added functionality to create a collection from a group and its related objects.
+-   Added button to import groups and their related objects into new or existing collections.
 -   Added an option to deprecate Data Component objects. See [frontend#429](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/429).
 -   Added Matrix view to Matrix pages similar to the full matrix on the [ATT&CK website](https://attack.mitre.org/). See [frontend#20](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/20).
+-   Added ability to upload csv and excel files in collection imports.
+-   Added support for configuring a default landing page. The desired landing page can be specified in `assets/config.json`, which Workbench will route to upon login.
 
 #### Improvements in 2.0.0
 -   Improved error handling during collection import.
--   Added filtering to collection views
 -   Lists of objects can now be filtered when viewing or editing collections. See [frontend#393](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/393).
+-   Added a persistent database to Docker installs.
+-   Published pre-built Docker images to the Github Container Registry. See [frontend#250](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/250).
+-	Improved the collection view to display versions in the drop down rather than in the main list.
 
 #### Fixes in 2.0.0
 -   Fixed an issue where duplicate entries would be displayed in some dropdown lists for objects in multiple domains. See [frontend#454](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/454).

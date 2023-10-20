@@ -1,5 +1,4 @@
 @import "../../../../style/globals";
-@import '~@angular/material/theming';
 .stix-list {
     .controls {
         .input-group {
@@ -145,6 +144,36 @@
                             .column {
                                 &.is-narrow {
                                      flex-shrink: 1;
+                                }
+                                &.collection-table{
+                                  max-height: 16em;
+                                  overflow-y: scroll;
+                                  mat-table{
+                                    min-width: 47em;
+                                    .mat-row, .mat-header-row {
+                                        .light & { border-color: border-color(light); }
+                                        .dark &  { border-color: border-color(dark); }
+                                    }
+                                    .mat-header-row {
+                                        min-height: 42px;
+                                    }
+                                    .mat-header-cell {
+                                      .light & { background-color: color(light); }
+                                      .dark &  { background-color: color(dark); }
+                                    }
+                                    .mat-column-action {
+                                      flex: 0 0 10%;
+                                      display: flex;
+                                      flex-direction: column;
+                                      justify-content: space-around;
+                                    }
+                                    .mat-column-version {
+                                      flex: 0 0 10%;
+                                    }
+                                    .mat-column-released {
+                                      flex: 0 0 10%;
+                                    }
+                                  }
                                 }
                                 & + .column {
                                     .light & { border-color: border-color(light); }

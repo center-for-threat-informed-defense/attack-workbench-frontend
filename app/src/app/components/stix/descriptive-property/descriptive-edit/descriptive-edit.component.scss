@@ -1,7 +1,21 @@
 @import "../../../../../style/globals";
-@import '~@angular/material/theming';
 
 .descriptive-edit {
+    @-moz-document url-prefix() {
+        min-height: 40vh;
+        .moz-height {
+            min-height: 40vh !important;
+            max-height: 60vh;
+            overflow-y: auto !important;
+        }
+        .markdown-view {
+            min-height: 40vh !important;
+            display: flex;
+        }
+    }
+    .mat-input-element {
+        line-height: 1.5;
+    }
     .mat-tab-header {
         border: 0px;
     }
