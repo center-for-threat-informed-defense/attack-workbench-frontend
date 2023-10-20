@@ -3,7 +3,7 @@
         <!-- -------- -->
         <!-- CONTROLS -->
         <!-- -------- -->
-        <div class="controls">
+        <div class="controls" [ngStyle]="{'visibility': showControls ? 'visible' : 'hidden'}">
             <div class="input-group">
                 <!-- show search/filter options for non-relationship objects -->
                 <ng-container *ngIf="!(config.type && config.type == 'relationship')">

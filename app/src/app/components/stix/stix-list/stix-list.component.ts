@@ -66,6 +66,7 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
 
     // options provided to the user for grouping and filtering
     public filterOptions: FilterGroup[] = [];
+    public showControls: boolean = true;
 
     // current grouping and filtering selections
     public filter: string[] = [];
@@ -151,7 +152,7 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
                     if (values.properties) {
                         // extract domain->platforms properties from allowedValues structure
                         let properties = values.properties.find(p => p.propertyName == 'x_mitre_platforms');
-                        if (properties && properties.domains) {
+                        if (properties?.domains) {
                             properties.domains.forEach(domain => {
                                 domainMap.set(domain.domainName, domain.allowedValues);
                             });
@@ -163,6 +164,7 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
             },
             complete: () => {
                 // build the stix list table
+                this.showControls = this.config.showControls ?? true;
                 this.buildTable();
                 this.setUpControls();
                 // get objects from backend if data is not from config
@@ -941,6 +943,8 @@ export interface StixListConfig {
     showLinks?: boolean;
     /** default true, if false hides the filter dropdown menu */
     showFilters?: boolean;
+    /** default true, if false hides all search/filter/control options */
+    showControls?: boolean;
     /** display the 'show deprecated' filter, default false
      *  this may be relevant when displaying a list of embedded relationships, where
      *  the list of STIX objects is provided in the 'stixObjects' configuration

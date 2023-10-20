@@ -206,7 +206,7 @@
                     <app-stix-list (onRowAction)="close()" [config]="{
                         stixObjects: stixObjects,
                         clickBehavior: 'linkToObjectPage',
-                        showFilters: false
+                        showControls: false
                     }"></app-stix-list>
                 </ng-container>
                 <ng-container *ngIf="relationships.length > 0">
@@ -215,7 +215,7 @@
                         stixObjects: relationships,
                         type: 'relationship',
                         clickBehavior: 'dialog',
-                        showFilters: false
+                        showControls: false
                     }"></app-stix-list>
                 </ng-container>
             </ng-template>
