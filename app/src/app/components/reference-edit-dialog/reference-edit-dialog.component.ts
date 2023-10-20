@@ -14,7 +14,7 @@ import { DeleteDialogComponent } from '../delete-dialog/delete-dialog.component'
 
 export class CustomErrorStateMatcher implements ErrorStateMatcher {
     isErrorState(control: FormControl | null, form: FormGroupDirective | NgForm | null): boolean {
-        return !!(control && control.invalid && (control.dirty || control.touched));
+        return !!(control?.invalid && (control.dirty || control.touched));
     }
 }
 
@@ -26,6 +26,9 @@ export class CustomErrorStateMatcher implements ErrorStateMatcher {
 })
 export class ReferenceEditDialogComponent implements OnInit, OnDestroy {
     public reference: ExternalReference;
+    public stixObjects: StixObject[] = [];
+    public relationships: StixObject[] = [];
+
     public isNew: boolean;
     public stage: number = 0;
     public patchObjects: StixObject[];
@@ -45,6 +48,7 @@ export class ReferenceEditDialogComponent implements OnInit, OnDestroy {
     public get editing(): boolean { return this.config.mode == 'edit'; }
     public get editable(): boolean { return this.authenticationService.canEdit(); }
     public get deletable(): boolean { return this.authenticationService.canDelete(); }
+    public get numCitingObjects(): number { return this.stixObjects.length + this.relationships.length; }
 
     constructor(@Inject(MAT_DIALOG_DATA) public config: ReferenceEditConfig,
                 public dialogRef: MatDialogRef<ReferenceEditDialogComponent>,
@@ -55,6 +59,8 @@ export class ReferenceEditDialogComponent implements OnInit, OnDestroy {
         if (this.config.reference) {
             this.isNew = false;
             this.reference = this.referenceCopy;
+            this.stixObjects = this.config.objects?.filter(sdo => sdo.attackType != 'relationship');
+            this.relationships = this.config.objects?.filter(sdo => sdo.attackType == 'relationship');
         }
         else {
             this.isNew = true;
@@ -171,7 +177,7 @@ export class ReferenceEditDialogComponent implements OnInit, OnDestroy {
         this.stage = 1; //enter patching stage
         let subscription = this.restApiConnectorService.getAllObjects(null, null, null, null, true, true, true).subscribe({
             next: (results) => {
-                // build ID to [name, attackID] lookup
+                // build ID to SDO lookup
                 let idToObject = {}
                 results.data.forEach(x => { idToObject[x.stixID] = x });
                 // find objects with given reference
@@ -325,4 +331,5 @@ export interface ReferenceEditConfig {
     */
     mode?: "view" | "edit";
     reference?: ExternalReference
+    objects?: StixObject[]
 }
