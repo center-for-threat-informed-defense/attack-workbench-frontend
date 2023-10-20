@@ -24,7 +24,7 @@ export class ReferenceManagerComponent implements OnInit, AfterViewInit, OnDestr
     public references$: Observable<Paginated<ExternalReference>>;
     public totalReferences: number = 0;
     public columnDefs: string[] = ['citation', 'reference', 'count', 'open'];
-    public referenceMap: Map<string, StixObject[]> = new Map(); // reference.source_name => objects that cite the reference
+    public referenceMap: Map<string, StixObject[]> = new Map(); // reference.source_name => list of STIX objects citing the reference
     public loading: boolean = false;
     private searchSubscription: Subscription;
     public searchQuery: string = "";
@@ -134,7 +134,7 @@ export class ReferenceManagerComponent implements OnInit, AfterViewInit, OnDestr
                     // count number of objects that have this reference in its external_references list
                     let usesReference: StixObject[] = self.attackObjects.filter(o => {
                         let ext_refs = o.external_references && o.external_references.list().length > 0 ? o.external_references : undefined;
-                        return ext_refs && ext_refs.hasValue(reference.source_name);
+                        return ext_refs?.hasValue(reference.source_name);
                     });
                     return usesReference;
                 }
@@ -154,6 +154,6 @@ export class ReferenceManagerComponent implements OnInit, AfterViewInit, OnDestr
      */
     public referenceCount(source: string): number {
         if (!source) return 0;
-        return this.referenceMap[source].length;
+        return this.referenceMap[source]?.length;
     }
 }
