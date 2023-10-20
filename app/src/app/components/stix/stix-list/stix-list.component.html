@@ -4,7 +4,7 @@
         <!-- CONTROLS -->
         <!-- -------- -->
         <div class="controls" [ngStyle]="{'visibility': showControls ? 'visible' : 'hidden'}">
-            <div class="input-group">
+            <div class="input-group" [ngStyle]="{'height': showControls ? 'inherit' : '0px'}">
                 <!-- show search/filter options for non-relationship objects -->
                 <ng-container *ngIf="!(config.type && config.type == 'relationship')">
                     <mat-form-field class="search" appearance="fill">
