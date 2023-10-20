@@ -38,7 +38,6 @@
     .sticky-note {
         padding: 0px;
         margin-top: 12px;
-        cursor: pointer;
         button.mat-button-disabled { opacity: 0.5; }
 
         &.edit-outline {
@@ -67,9 +66,11 @@
         .mat-form-field-underline { display: none; }
 
         mat-card-header {
+            cursor: pointer;
             textarea {
                 margin-top: 12px;
                 overflow: hidden;
+                &:read-only { cursor: pointer; }
             }
             .mat-card-header-text { width: 100%; }
             .history {
