@@ -47,6 +47,7 @@ export class EditorService {
                 if (!(this.editable && this.hasWorkflow)) this.sidebarService.currentTab = "references";
                 this.sidebarService.setEnabled("history", this.editable && this.hasWorkflow);
                 this.sidebarService.setEnabled("notes", this.editable && this.hasWorkflow);
+                this.isGroup = false;
                 if (this.editable) {
                     // if we have a group type and it is NOT new we can create a collection from all of the objects in the group
                     this.isGroup = this.type === 'group' && !this.router.url.includes("/new");
