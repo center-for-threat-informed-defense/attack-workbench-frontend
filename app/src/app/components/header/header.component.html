@@ -48,15 +48,19 @@
     </div>
 
     <!-- Login/Register -->
-    <button mat-button class="login-register" *ngIf="!isLoggedIn else account" [ngStyle]="{'visibility': showHamburger ? 'hidden' : 'visible'}" (click)="login()">
-        login
-    </button>
-    <button mat-button *ngIf="!isLoggedIn && authnType === 'oidc'" [ngStyle]="{'visibility': showHamburger ? 'hidden' : 'visible'}" (click)="register()">register</button>
+    <ng-container *ngIf="!isLoggedIn && !showHamburger">
+        <button mat-button class="login-register" (click)="login()">
+            login
+        </button>
+        <button mat-button *ngIf="authnType === 'oidc'" (click)="register()">
+            register
+        </button>
+    </ng-container>
 
     <!-- Account Icon -->
-    <ng-template #account>
-        <button class="account" mat-icon-button [matMenuTriggerFor]="accountOptions" aria-label="account options">
+    <ng-container *ngIf="isLoggedIn">
+        <button class="account" [ngClass]="{'pad-left': showHamburger}" mat-icon-button [matMenuTriggerFor]="accountOptions" aria-label="account options">
             <svg [data-jdenticon-value]="username" [matTooltip]="username" matTooltipPosition="below"></svg>
         </button>
-    </ng-template>
+    </ng-container>
 </mat-toolbar>
