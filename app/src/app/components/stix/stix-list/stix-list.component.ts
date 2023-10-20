@@ -386,7 +386,7 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
         }
 
         // open-link icon setup
-        if (this.config.clickBehavior && this.config.clickBehavior == "linkToObjectRef") {
+        if (this.config.clickBehavior && ["linkToObjectPage", "linkToObjectRef"].includes(this.config.clickBehavior)) {
             controls_after.push("open-link")
         }
 
@@ -527,6 +527,10 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
                 },
                 complete: () => { subscription.unsubscribe(); }
             });
+        }
+        else if (this.config.clickBehavior && this.config.clickBehavior == "linkToObjectPage") {
+            this.onRowAction.emit(); // close any open dialogs
+            this.router.navigateByUrl('/' + element.attackType + '/' + element.stixID);
         }
         else if (this.config.clickBehavior && this.config.clickBehavior == "linkToSourceRef") {
             let source_ref = element['source_ref'];
@@ -950,12 +954,13 @@ export interface StixListConfig {
      * How should the table act when the row is clicked? default "expand"
      *     "expand": expand the row to show additional detail
      *     "dialog": open a dialog with the full object definition
+     *     "linkToObjectPage": clicking redirects to the object's page
      *     "linkToSourceRef": clicking redirects to the source ref object
      *     "linkToTargetRef": clicking redirects user to target ref object
-     *     "linkToObjectRef": clicking redirects user to first object in the object ref array
+     *     "linkToObjectRef": clicking redirects user to first object in a Note's object ref array
      *     "none": row is not clickable
      */
-    clickBehavior?: "expand" | "dialog" | "linkToSourceRef" | "linkToTargetRef" | "linkToObjectRef" | "none";
+    clickBehavior?: "expand" | "dialog" | "linkToObjectPage" | "linkToSourceRef" | "linkToTargetRef" | "linkToObjectRef" | "none";
     /**
      * Default false. If true, allows for edits of the objects in the table
      * when in dialog mode

@@ -48,6 +48,7 @@ export class ReferenceEditDialogComponent implements OnInit, OnDestroy {
     public get editing(): boolean { return this.config.mode == 'edit'; }
     public get editable(): boolean { return this.authenticationService.canEdit(); }
     public get deletable(): boolean { return this.authenticationService.canDelete(); }
+    public get numCitingObjects(): number { return this.stixObjects.length + this.relationships.length; }
 
     constructor(@Inject(MAT_DIALOG_DATA) public config: ReferenceEditConfig,
                 public dialogRef: MatDialogRef<ReferenceEditDialogComponent>,

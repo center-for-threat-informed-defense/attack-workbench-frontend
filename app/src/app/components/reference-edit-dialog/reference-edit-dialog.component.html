@@ -11,7 +11,7 @@
             </button>
             <button *ngIf="!editing" mat-button class="control" matTooltip="edit" (click)="startEditing()"><mat-icon aria-label="edit">edit</mat-icon></button>
             <button *ngIf="editing"  mat-button class="control" matTooltip="discard changes & stop editing" (click)="discardChanges()"><mat-icon aria-label="discard">edit_off</mat-icon></button>
-            <button *ngIf="deletable" mat-button class="control" matTooltip="delete" [disabled]="!editing || config.count > 0 || isNew" (click)="delete()"><mat-icon aria-label="delete">delete</mat-icon></button>
+            <button *ngIf="deletable" mat-button class="control" matTooltip="delete" [disabled]="!editing || numCitingObjects > 0 || isNew" (click)="delete()"><mat-icon aria-label="delete">delete</mat-icon></button>
         </ng-container>
     </mat-toolbar>
     <!-- edit page -->
@@ -194,18 +194,18 @@
                 </div>
             </div>
             <!-- objects that cite this reference -->
-            <ng-container *ngIf="stix_objects.length == 0 && relationships.length == 0; else objectList">
+            <ng-container *ngIf="numCitingObjects == 0; else objectList">
                 <h3 class="section-header">Objects citing this reference</h3>
                 <div class="center-align">
                     <span>No objects in the knowledge base cite this reference.</span>
                 </div>
             </ng-container>
             <ng-template #objectList>
-                <ng-container *ngIf="stix_objects.length > 0">
+                <ng-container *ngIf="stixObjects.length > 0">
                     <h3 class="section-header">Objects citing this reference</h3>
-                    <app-stix-list [config]="{
-                        stixObjects: stix_objects,
-                        clickBehavior: 'none',
+                    <app-stix-list (onRowAction)="close()" [config]="{
+                        stixObjects: stixObjects,
+                        clickBehavior: 'linkToObjectPage',
                         showFilters: false
                     }"></app-stix-list>
                 </ng-container>
@@ -214,7 +214,7 @@
                     <app-stix-list [config]="{
                         stixObjects: relationships,
                         type: 'relationship',
-                        clickBehavior: 'none',
+                        clickBehavior: 'dialog',
                         showFilters: false
                     }"></app-stix-list>
                 </ng-container>
