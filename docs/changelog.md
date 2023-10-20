@@ -44,6 +44,7 @@
 #### Improvements
 
 - Navigation menu collapses under a separate hamburger menu rather than the identity icon. See [frontend#494](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/494).
+- Markdown support for collection index descriptions. See [frontend#222](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/222).
 
 #### Fixes
 
