@@ -24,12 +24,13 @@
     </div>
     <div class="row">
         <div class="col">
-            <div class="labelled-box">
-                <div class="content">
-                    {{config.index.collection_index.description}}
-                </div>
-                <label>description</label>
-            </div>
+            <app-descriptive-property [config]="{
+                mode: 'view',
+                object: config.index.collection_index,
+                field: 'description',
+                firstParagraphOnly: false, 
+                label: 'description'
+            }"></app-descriptive-property>
         </div>
     </div>
     <div class="row">
