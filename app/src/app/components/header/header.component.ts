@@ -35,7 +35,7 @@ export class HeaderComponent implements AfterViewInit {
         this.allRoutes = stixRoutes;
         this.filteredRoutes = stixRoutes.filter( x => x.data.more != true );
         this.moreRoutes = stixRoutes.filter( x => x.data.more == true );
-        
+
         this.authnTypeSubscription = this.authenticationService.getAuthType().subscribe({
             next: (v) => { this.authnType = v },
             complete: () => { this.authnTypeSubscription.unsubscribe(); }
