@@ -36,6 +36,7 @@
 
 #### New Features in 2.1.0
 -   Added the ability to create, view, and edit Asset objects.
+-   Added the ability to view and route to objects that cite a given reference from the reference dialog. See [frontend#263](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/263).
 
 #### Improvements in 2.1.0
 -   Navigation menu collapses under a separate hamburger menu rather than the identity icon. See [frontend#494](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/494).
