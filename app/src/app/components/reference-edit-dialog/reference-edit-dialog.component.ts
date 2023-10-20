@@ -14,7 +14,7 @@ import { DeleteDialogComponent } from '../delete-dialog/delete-dialog.component'
 
 export class CustomErrorStateMatcher implements ErrorStateMatcher {
     isErrorState(control: FormControl | null, form: FormGroupDirective | NgForm | null): boolean {
-        return !!(control && control.invalid && (control.dirty || control.touched));
+        return !!(control?.invalid && (control.dirty || control.touched));
     }
 }
 
@@ -26,7 +26,7 @@ export class CustomErrorStateMatcher implements ErrorStateMatcher {
 })
 export class ReferenceEditDialogComponent implements OnInit, OnDestroy {
     public reference: ExternalReference;
-    public stix_objects: StixObject[] = [];
+    public stixObjects: StixObject[] = [];
     public relationships: StixObject[] = [];
 
     public isNew: boolean;
@@ -58,10 +58,8 @@ export class ReferenceEditDialogComponent implements OnInit, OnDestroy {
         if (this.config.reference) {
             this.isNew = false;
             this.reference = this.referenceCopy;
-            if (this.config.objects && this.config.objects.length > 0) {
-                this.stix_objects = this.config.objects.filter(sdo => sdo.attackType != 'relationship');
-                this.relationships = this.config.objects.filter(sdo => sdo.attackType == 'relationship');
-            }
+            this.stixObjects = this.config.objects?.filter(sdo => sdo.attackType != 'relationship');
+            this.relationships = this.config.objects?.filter(sdo => sdo.attackType == 'relationship');
         }
         else {
             this.isNew = true;
