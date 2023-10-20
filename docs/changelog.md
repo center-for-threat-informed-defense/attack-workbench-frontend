@@ -51,6 +51,7 @@
 - Fixed an issue where revoking or deprecating an object would deprecate all `revoked-by` relationships with the object. See [frontend#467](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/467).
 - Fixed an issue where first/last seen Campaign dates were parsed in local time, causing the dates to be displayed incorrectly in certain timezones. See [frontend#508](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/pull/508).
 - Fixed a bug where the "create a collection from group" button was being displayed on the group list page.
+- Notes will only start editing when the header is clicked, enabling the contents of the note to easily be clicked or copied. See [frontend#213](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/213).
 
 ## 21 September 2023
 
