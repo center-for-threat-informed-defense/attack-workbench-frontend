@@ -97,7 +97,10 @@ export class CollectionImportComponent implements OnInit {
         "course-of-action": "mitigations",
         "x-mitre-tactic": "tactics",
         "x-mitre-data-source": "datasources",
-        "x-mitre-data-component": "datacomponents"
+        "x-mitre-data-component": "datacomponents",
+        "x-mitre-asset": "assets",
+        "x-mitre-matrix": "matrices",
+
     }
 
 	constructor(public route: ActivatedRoute,
@@ -588,7 +591,7 @@ export class CollectionImportComponent implements OnInit {
 						new Campaign(raw)
 					);
 					break;
-				case 'asset': // asset
+				case 'x-mitre-asset': // asset
 					this.object_import_categories.asset[category].push(
 						new Asset(raw)
 					);
