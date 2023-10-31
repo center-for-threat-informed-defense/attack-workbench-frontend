@@ -285,7 +285,7 @@ export class Collection extends StixObject {
                     case "marking-definition": // marking definition
                         this.stix_contents.push(new MarkingDefinition(obj))
                     break;
-                    case "asset": // asset
+                    case "x-mitre-asset": // asset
                         this.stix_contents.push(new Asset(obj))
                     break;
                 }
