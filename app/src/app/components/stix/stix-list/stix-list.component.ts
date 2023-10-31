@@ -66,6 +66,7 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
 
     // options provided to the user for grouping and filtering
     public filterOptions: FilterGroup[] = [];
+    public showControls: boolean = true;
 
     // current grouping and filtering selections
     public filter: string[] = [];
@@ -100,7 +101,8 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
         "identity": "identity",
         "marking-definition": "marking-definition",
         "x-mitre-data-source": "data-source",
-        "x-mitre-data-component": "data-component"
+        "x-mitre-data-component": "data-component",
+        "x-mitre-asset": "asset"
     }
 
     // all possible each type of filter/groupBy
@@ -150,7 +152,7 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
                     if (values.properties) {
                         // extract domain->platforms properties from allowedValues structure
                         let properties = values.properties.find(p => p.propertyName == 'x_mitre_platforms');
-                        if (properties && properties.domains) {
+                        if (properties?.domains) {
                             properties.domains.forEach(domain => {
                                 domainMap.set(domain.domainName, domain.allowedValues);
                             });
@@ -162,6 +164,7 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
             },
             complete: () => {
                 // build the stix list table
+                this.showControls = this.config.showControls ?? true;
                 this.buildTable();
                 this.setUpControls();
                 // get objects from backend if data is not from config
@@ -306,6 +309,19 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
                         "display": "descriptive"
                     }]
                     break;
+                case "asset":
+                    this.addColumn("", "workflow", "icon");
+                    this.addColumn("", "state", "icon");
+                    this.addColumn("ID", "attackID", "plain", false);
+                    this.addColumn("name", "name", "plain", sticky_allowed, ["name"]);
+                    this.addColumn("platforms", "platforms", "list");
+                    this.addColumn("sectors", "sectors", "list");
+                    this.addVersionsAndDatesColumns();
+                    this.tableDetail = [{
+                        "field": "description",
+                        "display": "descriptive"
+                    }]
+                    break;
                 case "relationship":
                     this.addColumn("", "state", "icon");
                     if (this.config.relationshipType && this.config.relationshipType !== "detects") {
@@ -372,7 +388,7 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
         }
 
         // open-link icon setup
-        if (this.config.clickBehavior && this.config.clickBehavior == "linkToObjectRef") {
+        if (this.config.clickBehavior && ["linkToObjectPage", "linkToObjectRef"].includes(this.config.clickBehavior)) {
             controls_after.push("open-link")
         }
 
@@ -513,6 +529,10 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
                 },
                 complete: () => { subscription.unsubscribe(); }
             });
+        }
+        else if (this.config.clickBehavior && this.config.clickBehavior == "linkToObjectPage") {
+            this.onRowAction.emit(); // close any open dialogs
+            this.router.navigateByUrl('/' + element.attackType + '/' + element.stixID);
         }
         else if (this.config.clickBehavior && this.config.clickBehavior == "linkToSourceRef") {
             let source_ref = element['source_ref'];
@@ -786,6 +806,7 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
             else if (this.config.type == "relationship") this.data$ = this.restAPIConnectorService.getRelatedTo({ sourceRef: this.config.sourceRef, targetRef: this.config.targetRef, sourceType: this.config.sourceType, targetType: this.config.targetType, relationshipType: this.config.relationshipType, excludeSourceRefs: this.config.excludeSourceRefs, excludeTargetRefs: this.config.excludeTargetRefs, limit: limit, offset: offset, includeDeprecated: deprecated });
             else if (this.config.type == "data-source") this.data$ = this.restAPIConnectorService.getAllDataSources(options);
             else if (this.config.type == "data-component") this.data$ = this.restAPIConnectorService.getAllDataComponents(options);
+            else if (this.config.type == "asset") this.data$ = this.restAPIConnectorService.getAllAssets(options);
             else if (this.config.type == "marking-definition") this.data$ = this.restAPIConnectorService.getAllMarkingDefinitions(options);
             else if (this.config.type == "note") this.data$ = this.restAPIConnectorService.getAllNotes(options);
             let subscription = this.data$.subscribe({
@@ -886,7 +907,7 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
 }
 
 //allowed types for StixListConfig
-type type_attacktype = "collection" | "campaign" | "group" | "matrix" | "mitigation" | "software" | "tactic" | "technique" | "relationship" | "data-source" | "data-component" | "marking-definition" | "note";
+type type_attacktype = "collection" | "campaign" | "group" | "matrix" | "mitigation" | "software" | "tactic" | "technique" | "relationship" | "data-source" | "data-component" | "asset" | "marking-definition" | "note";
 type selection_types = "one" | "many" | "disabled";
 type filter_types = "state" | "workflow_status";
 export interface StixListConfig {
@@ -922,6 +943,8 @@ export interface StixListConfig {
     showLinks?: boolean;
     /** default true, if false hides the filter dropdown menu */
     showFilters?: boolean;
+    /** default true, if false hides all search/filter/control options */
+    showControls?: boolean;
     /** display the 'show deprecated' filter, default false
      *  this may be relevant when displaying a list of embedded relationships, where
      *  the list of STIX objects is provided in the 'stixObjects' configuration
@@ -935,12 +958,13 @@ export interface StixListConfig {
      * How should the table act when the row is clicked? default "expand"
      *     "expand": expand the row to show additional detail
      *     "dialog": open a dialog with the full object definition
+     *     "linkToObjectPage": clicking redirects to the object's page
      *     "linkToSourceRef": clicking redirects to the source ref object
      *     "linkToTargetRef": clicking redirects user to target ref object
-     *     "linkToObjectRef": clicking redirects user to first object in the object ref array
+     *     "linkToObjectRef": clicking redirects user to first object in a Note's object ref array
      *     "none": row is not clickable
      */
-    clickBehavior?: "expand" | "dialog" | "linkToSourceRef" | "linkToTargetRef" | "linkToObjectRef" | "none";
+    clickBehavior?: "expand" | "dialog" | "linkToObjectPage" | "linkToSourceRef" | "linkToTargetRef" | "linkToObjectRef" | "none";
     /**
      * Default false. If true, allows for edits of the objects in the table
      * when in dialog mode

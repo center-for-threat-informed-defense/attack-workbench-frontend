@@ -25,6 +25,8 @@ export class AddRelationshipButtonComponent implements OnInit {
     public createRelationship() {
         let relationship = new Relationship();
         relationship.relationship_type = this.config.relationship_type;
+        let sourceType = this.config.sourceType ? this.config.sourceType : null;
+        let targetType = this.config.targetType ? this.config.targetType : null;
         let initializer = null;
         if (this.config.source_object) initializer = relationship.set_source_object(this.config.source_object, this.restApiService);
         else if (this.config.source_ref) initializer = relationship.set_source_ref(this.config.source_ref, this.restApiService);
@@ -37,6 +39,8 @@ export class AddRelationshipButtonComponent implements OnInit {
                 this.loading = false;
                 let config: StixViewConfig = {
                     object: relationship,
+                    sourceType: sourceType,
+                    targetType: targetType,
                     editable: true,
                     is_new: true,
                     mode: "edit",
@@ -74,8 +78,10 @@ export interface AddRelationshipButtonConfig {
     relationship_type: string; //relationship type to create
     source_ref?: string; //initial relationship source ref.
     source_object?: StixObject; //initial relationship source object. Takes precedence over source_ref if both are specified, and is much faster to execute
+    sourceType?: string; // the source type of the relationship
     target_ref?: string; //initial relationship target ref
     target_object?: StixObject; //initial relationship target object. Takes precedence over target_ref if both are specified, and is much faster to execute
+    targetType?: string; // the target type of the relationship
     /**
      * reference to the current working dialog. This is relevant when adding a new relationship from within the dialog.
      * If provided, the 'create relationship' interface will replace the dialog content.

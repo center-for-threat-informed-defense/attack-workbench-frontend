@@ -57,12 +57,13 @@ export class ObjectStatusComponent implements OnInit {
             else if (this.editorService.type == "collection") data$ = this.restAPIService.getAllCollections(options);
             else if (this.editorService.type == "data-source") data$ = this.restAPIService.getAllDataSources(options);
             else if (this.editorService.type == "data-component") data$ = this.restAPIService.getAllDataComponents(options);
+            else if (this.editorService.type == "asset") data$ = this.restAPIService.getAllAssets(options);
             let objSubscription = data$.subscribe({
                 next: (data) => {
                     this.objects = data.data;
                     this.object = this.objects.find(object => object.stixID === this.editorService.stixId);
                     if (this.object) {
-                        if (this.object.workflow && this.object.workflow.state) {
+                        if (this.object.workflow?.state) {
                             this.statusControl.setValue(this.object.workflow.state);
                         }
                         this.revoked = this.object.revoked;
@@ -154,30 +155,16 @@ export class ObjectStatusComponent implements OnInit {
                 complete: () => { revokedSubscription.unsubscribe(); }
             });
         } else {
-            // deprecate the 'revoked-by' relationship
-            let revokedRelationships = this.relationships.filter(relationship => relationship.relationship_type == 'revoked-by');
-            for (let relationship of revokedRelationships) {
-                let other_obj: any;
-                if (relationship.source_object.stix.id == this.object.stixID) other_obj = relationship.target_object.stix;
-                else other_obj = relationship.source_object.stix;
-
-                if (!this.isDeprecatedOrRevoked(other_obj)) {
-                    relationship.deprecated = true;
-                    relationship.save(this.restAPIService);
-                }
+            // unrevoke object, deprecate the 'revoked-by' relationship
+            // this is the only case in which a 'revoked-by' relationship is deprecated
+            let revokedRelationship = this.relationships.find(r => r.relationship_type == 'revoked-by' && r.source_ref == this.object.stixID);
+            if (revokedRelationship) {
+                revokedRelationship.deprecated = true;
+                revokedRelationship.save(this.restAPIService);
             }
-            // un-revoke object
             this.object.revoked = false;
             this.save();
         }
-    }
-
-    /**
-     * Check if the given object is deprecated or revoked
-     * @param object source or target object of a relationship
-     */
-    private isDeprecatedOrRevoked(object: any) {
-        return ('x_mitre_deprecated' in object && object.x_mitre_deprecated) || ('revoked' in object && object.revoked);
     }
 
     /**
@@ -224,7 +211,8 @@ export class ObjectStatusComponent implements OnInit {
         
                 // update relationships with the object
                 for (let relationship of this.relationships) {
-                    if (!relationship.deprecated && relationship.relationship_type != 'subtechnique-of') {
+                    // do not deprecate 'subtechnique-of' or 'revoked-by' relationships
+                    if (!relationship.deprecated && !['subtechnique-of', 'revoked-by'].includes(relationship.relationship_type)) {
                         relationship.deprecated = true;
                         saves.push(relationship.save(this.restAPIService));
                     }
