@@ -111,7 +111,7 @@ export class CollectionImportReviewComponent extends StixViewPage implements OnI
                 case "campaign": // campaign
                     this.collection_import_categories.campaign[category].push(object);
                 break;
-                case "asset": // asset
+                case "x-mitre-asset": // asset
                     this.collection_import_categories.asset[category].push(object);
                 break;
             }
