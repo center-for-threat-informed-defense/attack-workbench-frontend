@@ -19,7 +19,7 @@ export class AliasPropertyComponent implements OnInit {
 }
 
 export interface AliasPropertyConfig {
-    /* What is the current mode? Default: 'view
+    /* What is the current mode? Default: 'view'
      *    view: viewing the alias property
      *    edit: editing the alias property
      *    diff: displaying the diff between two STIX objects. If this mode is selected, two StixObjects must be specified in the objects field

@@ -26,8 +26,8 @@
     <!-- notes -->
     <div class="notes-content">
         <ng-container *ngFor="let note of notes">
-            <mat-card (click)="startEditing(note)" class="sticky-note" [class.edit-outline]="note.editing">
-                <mat-card-header>
+            <mat-card class="sticky-note" [class.edit-outline]="note.editing">
+                <mat-card-header (click)="startEditing(note)">
                     <!-- title -->
                     <mat-card-title>
                         <mat-form-field floatLabel="never" appearance="none">
@@ -38,9 +38,9 @@
                                 [(ngModel)]="note.title"></textarea>
                         </mat-form-field>
                     </mat-card-title>
-                    <!-- history -->
-                    <mat-card-subtitle class="history">
-                            <app-timestamp-view [config]="{object: note, field: 'modified', displayCreatorUsernameWithTimestamp: 'true'}"></app-timestamp-view>
+                    <!-- subtitle -->
+                    <mat-card-subtitle class="note-subtitle">
+                            <app-timestamp-view [config]="{object: note, field: 'modified', showDisplayName: 'true'}"></app-timestamp-view>
                     </mat-card-subtitle>
                     <!-- save/delete note -->
                     <button mat-button *ngIf="note.editing" class="control" [disabled]="!note.title || !note.content" matTooltip="save note" (click)="saveNote(note)"><mat-icon aria-label="save">save</mat-icon></button>

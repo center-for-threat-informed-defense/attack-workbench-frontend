@@ -4,16 +4,7 @@ import { forkJoin, of } from 'rxjs';
 import { delay, map, switchMap, tap } from 'rxjs/operators';
 import { ValidationData } from 'src/app/classes/serializable';
 import { Collection, CollectionDiffCategories, VersionReference } from 'src/app/classes/stix/collection';
-import { Group } from 'src/app/classes/stix/group';
-import { Matrix } from 'src/app/classes/stix/matrix';
-import { Mitigation } from 'src/app/classes/stix/mitigation';
-import { Relationship } from 'src/app/classes/stix/relationship';
-import { Software } from 'src/app/classes/stix/software';
-import { StixObject } from 'src/app/classes/stix/stix-object';
-import { Tactic } from 'src/app/classes/stix/tactic';
-import { Technique } from 'src/app/classes/stix/technique';
-import { DataSource } from 'src/app/classes/stix/data-source';
-import { DataComponent } from 'src/app/classes/stix/data-component';
+import { Asset, Campaign, DataComponent, DataSource, Group, Matrix, Mitigation, Relationship, Software, StixObject, Tactic, Technique } from 'src/app/classes/stix';
 import { StixListComponent } from 'src/app/components/stix/stix-list/stix-list.component';
 import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/rest-api-connector.service';
 import { EditorService } from 'src/app/services/editor/editor.service';
@@ -24,7 +15,6 @@ import { logger } from "../../../../util/logger";
 import { AuthenticationService } from 'src/app/services/connectors/authentication/authentication.service';
 import { MatDialog } from '@angular/material/dialog';
 import { CollectionUpdateDialogComponent } from 'src/app/components/collection-update-dialog/collection-update-dialog.component';
-import { Campaign } from 'src/app/classes/stix/campaign';
 import { AddDialogComponent } from 'src/app/components/add-dialog/add-dialog.component';
 import { SelectionModel } from '@angular/cdk/collections';
 
@@ -62,6 +52,7 @@ export class CollectionViewComponent extends StixViewPage implements OnInit {
         'Intrusion-Set': 'group',
         'Data-Source': 'data_source',
         'Data-Component': 'data_component',
+        'Asset': 'asset'
     };
 
     // pluralize attackType for text display
@@ -73,7 +64,8 @@ export class CollectionViewComponent extends StixViewPage implements OnInit {
         "mitigation": "mitigations",
         "matrix": "matrices",
         "data-source": "data sources",
-        "data-component": "data components"
+        "data-component": "data components",
+        "asset": "assets"
     }
 
     public get collectionDownloadURL() {
@@ -96,7 +88,8 @@ export class CollectionViewComponent extends StixViewPage implements OnInit {
         matrix: new CollectionDiffCategories<Matrix>(),
         group: new CollectionDiffCategories<Group>(),
         data_source: new CollectionDiffCategories<DataSource>(),
-        data_component: new CollectionDiffCategories<DataComponent>()
+        data_component: new CollectionDiffCategories<DataComponent>(),
+        asset: new CollectionDiffCategories<Asset>()
     }
 
     public collectionChanges = {
@@ -109,11 +102,11 @@ export class CollectionViewComponent extends StixViewPage implements OnInit {
         matrix: new CollectionDiffCategories<Matrix>(),
         group: new CollectionDiffCategories<Group>(),
         data_source: new CollectionDiffCategories<DataSource>(),
-        data_component: new CollectionDiffCategories<DataComponent>()
+        data_component: new CollectionDiffCategories<DataComponent>(),
+        asset: new CollectionDiffCategories<Asset>()
     }
 
     public collection_import_categories = [];
-
 
     constructor(private route: ActivatedRoute,
         private router: Router,

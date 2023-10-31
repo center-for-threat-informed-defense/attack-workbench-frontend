@@ -22,6 +22,7 @@ let stixTypeToAttackType = {
     "marking-definition": "marking-definition",
     "x-mitre-data-source": "data-source",
     "x-mitre-data-component": "data-component",
+    "x-mitre-asset": "asset",
     "note": "note"
 }
 export { stixTypeToAttackType };
@@ -59,7 +60,8 @@ export abstract class StixObject extends Serializable {
         "note": "notes",
         "marking-definition": "marking-definitions",
         "data-source": "datasources",
-        "data-component": "datacomponents"
+        "data-component": "datacomponents",
+        "asset": "assets"
     }
 
     private defaultMarkingDefinitionsLoaded = false; // avoid overloading of default marking definitions
@@ -305,6 +307,7 @@ export abstract class StixObject extends Serializable {
                 else if (this.attackType == "technique") accessor = restAPIService.getAllTechniques(options);
                 else if (this.attackType == "data-source") accessor = restAPIService.getAllDataSources(options);
                 else if (this.attackType == "data-component") accessor = restAPIService.getAllDataComponents(options);
+                else if (this.attackType == "asset") accessor = restAPIService.getAllAssets();
                 else accessor = restAPIService.getAllTactics(options);
 
                 return accessor.pipe(
@@ -404,6 +407,7 @@ export abstract class StixObject extends Serializable {
                 // build list of fields to validate external references on according to ATT&CK type
                 let refs_fields = ['description'];
                 if (['software', 'group', 'campaign'].includes(this.attackType)) refs_fields.push('aliases');
+                if (this.attackType == 'asset') refs_fields.push('relatedAssets');
                 if (this.attackType == 'technique') refs_fields.push('detection');
                 if (this.attackType == 'campaign') refs_fields.push('first_seen_citation', 'last_seen_citation');
 
@@ -587,17 +591,19 @@ export abstract class StixObject extends Serializable {
     public getNamespaceID(restAPIConnector, orgNamespace): Observable<any> {
         let prefix = ''; // i.e. 'TA', if StixObject type is tactic
         let count = '' as any; // i.e. 1234
-        let copyID = this.attackID.slice(); // Deep copy of attack id
         this.attackID = '(generating ID)';
 
-        let accessor = this.attackType == "group" ? restAPIConnector.getAllGroups() :
-                        this.attackType == "campaign" ? restAPIConnector.getAllCampaigns() :
-                        this.attackType == "mitigation" ? restAPIConnector.getAllMitigations() :
-                        this.attackType == "software" ? restAPIConnector.getAllSoftware() :
-                        this.attackType == "tactic" ? restAPIConnector.getAllTactics() :
-                        this.attackType == "technique" ? restAPIConnector.getAllTechniques() :
-                        this.attackType == "data-source" ? restAPIConnector.getAllDataSources() :
-                        this.attackType == "matrix" ? restAPIConnector.getAllMatrices() : null;
+        let accessor: Observable<Paginated<StixObject>>;
+        if (this.attackType == "group") accessor = restAPIConnector.getAllGroups();
+        else if (this.attackType == "campaign") accessor = restAPIConnector.getAllCampaigns();
+        else if (this.attackType == "mitigation") accessor = restAPIConnector.getAllMitigations();
+        else if (this.attackType == "software") accessor = restAPIConnector.getAllSoftware();
+        else if (this.attackType == "tactic") accessor = restAPIConnector.getAllTactics();
+        else if (this.attackType == "technique") accessor = restAPIConnector.getAllTechniques();
+        else if (this.attackType == "data-source") accessor = restAPIConnector.getAllDataSources();
+        else if (this.attackType == "asset") accessor = restAPIConnector.getAllAssets();
+        else if (this.attackType == "matrix") accessor = restAPIConnector.getAllMatrices();
+        else accessor = null;
 
         // Find all other objects that have this prefix and range, and set ID to the most recent & unique ID available
         if (accessor) {

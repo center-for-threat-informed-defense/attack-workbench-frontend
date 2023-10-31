@@ -1,16 +1,7 @@
 import { SelectionModel } from '@angular/cdk/collections';
 import { Component, Input, OnInit, ViewEncapsulation } from '@angular/core';
-import { Campaign } from 'src/app/classes/stix/campaign';
+import { Asset, Campaign, DataComponent, DataSource, Group, Matrix, Mitigation, Relationship, Software, Tactic, Technique } from 'src/app/classes/stix';
 import { CollectionDiffCategories } from 'src/app/classes/stix/collection';
-import { DataComponent } from 'src/app/classes/stix/data-component';
-import { DataSource } from 'src/app/classes/stix/data-source';
-import { Group } from 'src/app/classes/stix/group';
-import { Matrix } from 'src/app/classes/stix/matrix';
-import { Mitigation } from 'src/app/classes/stix/mitigation';
-import { Relationship } from 'src/app/classes/stix/relationship';
-import { Software } from 'src/app/classes/stix/software';
-import { Tactic } from 'src/app/classes/stix/tactic';
-import { Technique } from 'src/app/classes/stix/technique';
 
 @Component({
   selector: 'app-collection-import-summary',
@@ -45,7 +36,8 @@ export interface CollectionImportSummaryConfig {
         matrix: CollectionDiffCategories<Matrix>,
         group: CollectionDiffCategories<Group>,
         data_source: CollectionDiffCategories<DataSource>,
-        data_component: CollectionDiffCategories<DataComponent>
+        data_component: CollectionDiffCategories<DataComponent>,
+        asset: CollectionDiffCategories<Asset>
     };
     select?: SelectionModel<string>;
 }

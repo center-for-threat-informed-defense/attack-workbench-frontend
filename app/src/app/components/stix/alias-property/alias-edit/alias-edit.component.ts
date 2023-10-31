@@ -14,7 +14,9 @@ export class AliasEditComponent implements OnInit {
     @Input() public config: AliasPropertyConfig;
     public attackType: string;
 
-    constructor(public dialog: MatDialog) { }
+    constructor(public dialog: MatDialog) {
+        // intentionally left blank
+    }
 
     ngOnInit(): void {
         let object = Array.isArray(this.config.object)? this.config.object[0] : this.config.object;

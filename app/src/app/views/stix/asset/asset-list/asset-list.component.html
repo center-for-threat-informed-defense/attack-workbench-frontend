@@ -1,0 +1,11 @@
+<div class="list-page">
+    <div class="list-page-header">
+        <h1>assets</h1>
+        <div class="button-group" *ngIf="canEdit">
+            <button mat-mini-fab class="extended-fab-button" color="primary" [routerLink]="['/asset/new']" [queryParams]="{editing: true}">
+                <mat-icon>create</mat-icon> <span class="text-label">create an asset</span>
+            </button>
+        </div>
+    </div>
+    <app-stix-list [config]="{type: 'asset', 'showLinks': true, 'showUserSearch': true}"></app-stix-list>
+</div>

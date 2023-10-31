@@ -1,19 +1,8 @@
 import { Observable, of } from 'rxjs';
 import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/rest-api-connector.service';
 import { ValidationData } from '../serializable';
-import { Group } from './group';
-import { Matrix } from './matrix';
-import { Mitigation } from './mitigation';
-import { Relationship } from './relationship';
-import { Software } from './software';
-import { StixObject } from './stix-object';
-import { Tactic } from './tactic';
-import { Technique } from './technique';
-import { DataSource } from './data-source';
-import { DataComponent } from './data-component';
+import { Asset, Campaign, DataComponent, DataSource, Group, MarkingDefinition, Matrix, Mitigation, Relationship, Software, StixObject, Tactic, Technique } from '../stix';
 import { logger } from "../../util/logger";
-import { MarkingDefinition } from './marking-definition';
-import { Campaign } from './campaign';
 
 /**
  * auto-generated changelog/report about an import
@@ -296,6 +285,9 @@ export class Collection extends StixObject {
                     case "marking-definition": // marking definition
                         this.stix_contents.push(new MarkingDefinition(obj))
                     break;
+                    case "x-mitre-asset": // asset
+                        this.stix_contents.push(new Asset(obj))
+                    break;
                 }
             }
         }
@@ -315,8 +307,9 @@ export class Collection extends StixObject {
         matrix:         CollectionDiffCategories<Matrix>,
         group:          CollectionDiffCategories<Group>,
         data_source:    CollectionDiffCategories<DataSource>,
-        data_component: CollectionDiffCategories<DataComponent>
-        marking_definition: CollectionDiffCategories<MarkingDefinition>
+        data_component: CollectionDiffCategories<DataComponent>,
+        marking_definition: CollectionDiffCategories<MarkingDefinition>,
+        asset:          CollectionDiffCategories<Asset>
     } {
         let results = {
             technique:      new CollectionDiffCategories<Technique>(),
@@ -329,7 +322,8 @@ export class Collection extends StixObject {
             group:          new CollectionDiffCategories<Group>(),
             data_source:    new CollectionDiffCategories<DataSource>(),
             data_component: new CollectionDiffCategories<DataComponent>(),
-            marking_definition: new CollectionDiffCategories<MarkingDefinition>()
+            marking_definition: new CollectionDiffCategories<MarkingDefinition>(),
+            asset:          new CollectionDiffCategories<Asset>(),
         }
         // build helper lookups to reduce complexity from n^2 to n.
         let thisStixLookup = new Map<string, StixObject>(this.stix_contents.map(sdo => [sdo.stixID, sdo]))

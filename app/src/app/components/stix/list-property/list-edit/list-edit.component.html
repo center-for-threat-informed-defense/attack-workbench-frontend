@@ -1,5 +1,5 @@
 <div class="list-edit grow-to-row">
-    <!-- input type: 'any' -->
+    <!-- edit type: 'any' -->
     <mat-form-field *ngIf="!config.editType || config.editType == 'any'" class="grow-to-row" appearance="outline">
         <mat-label>{{config.label? config.label : config.field}}</mat-label>
         <mat-chip-list #anyChipList [required]="config.required ? config.required : false" [formControl]="inputControl">
@@ -12,7 +12,7 @@
                 (matChipInputTokenEnd)="add($event)" />
         </mat-chip-list>
     </mat-form-field>
-    <!-- input type: 'select' -->
+    <!-- edit type: 'select' -->
     <mat-form-field *ngIf="config.editType == 'select'" class="grow-to-row" appearance="outline"
         [matTooltip]="selectControl.disabled && !config.disabled ? 'a valid domain must be selected' : null">
         <mat-label *ngIf="!dataLoaded" class="loading">
@@ -31,7 +31,7 @@
             <mat-option *ngFor="let item of getAllowedValues()" (onSelectionChange)="change($event)" [value]="item">{{item}}</mat-option>
         </mat-select>
     </mat-form-field>
-    <!-- input type: 'stixList' -->
+    <!-- edit type: 'stixList' -->
     <mat-form-field *ngIf="config.editType == 'stixList'" class="stix-select grow-to-row" [ngClass]="{'disabled': config.disabled || !dataLoaded}" appearance="outline" (click)="openStixList()"
         [matTooltip]="config.disabled ? 'a valid domain must be selected first' : null">
         <mat-label>{{config.label? config.label : config.field}}</mat-label>

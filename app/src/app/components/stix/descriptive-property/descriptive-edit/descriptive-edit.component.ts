@@ -11,7 +11,6 @@ import { EditorService } from 'src/app/services/editor/editor.service';
     styleUrls: ['./descriptive-edit.component.scss'],
     encapsulation: ViewEncapsulation.None
 })
-
 export class DescriptiveEditComponent implements OnDestroy, OnInit {
     @Input() public config: DescriptivePropertyConfig;
     @ViewChild('description') public description: DescriptiveViewComponent;
@@ -22,9 +21,9 @@ export class DescriptiveEditComponent implements OnDestroy, OnInit {
     constructor(public restApiConnector: RestApiConnectorService, public editorService: EditorService) { }
 
     ngOnInit(): void {
-      if (this.config && 'parseReferences' in this.config) {
-        this.parseReferences = this.config.parseReferences;
-      }
+        if (this.config && 'parseReferences' in this.config) {
+            this.parseReferences = this.config.parseReferences;
+        }
     }
 
     ngOnDestroy(): void {
@@ -46,13 +45,13 @@ export class DescriptiveEditComponent implements OnDestroy, OnInit {
      */
     public parseCitations(): void {
         if (this.parseReferences) {
-          this.parsingCitations = true;
-          this.sub = this.config.object['external_references'].parseObjectCitations(this.config.object, this.restApiConnector).subscribe({
-              next: (result) => {
-                  this.parsingCitations = false;
-                  this.editorService.onReloadReferences.emit();
-              }
-          })
+            this.parsingCitations = true;
+            this.sub = this.config.object['external_references'].parseObjectCitations(this.config.object, this.restApiConnector).subscribe({
+                next: (result) => {
+                    this.parsingCitations = false;
+                    this.editorService.onReloadReferences.emit();
+                }
+            })
         }
     }
 }
