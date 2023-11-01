@@ -1,14 +1,14 @@
 import { AfterViewInit, Component, ElementRef, ViewChild, ViewEncapsulation } from '@angular/core';
 import { MatDrawerContainer } from '@angular/material/sidenav';
 import { OverlayContainer } from '@angular/cdk/overlay';
-import { getCookie, hasCookie, setCookie } from './util/cookies';
+import { getCookie, hasCookie, setCookie } from './utils/cookies';
 import { SidebarService } from './services/sidebar/sidebar.service';
 import { NGXLogger } from 'ngx-logger';
-import { initLogger } from './util/logger';
+import { initLogger } from './utils/logger';
 import { AuthenticationService } from './services/connectors/authentication/authentication.service';
 import { NavigationEnd, Router } from '@angular/router';
 import { EditorService } from './services/editor/editor.service';
-import { Theme } from './globals';
+import { Theme } from './utils/globals';
 import { AppConfigService } from './services/config/app-config.service';
 
 @Component({

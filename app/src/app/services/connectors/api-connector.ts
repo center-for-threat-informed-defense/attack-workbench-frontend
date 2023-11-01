@@ -1,6 +1,6 @@
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { Observable, of, throwError } from "rxjs";
-import { logger } from "../../util/logger";
+import { logger } from "../../utils/logger";
 
 export abstract class ApiConnector {
     private theSnackbar: MatSnackBar; //note: constructor in super must import snackbar
