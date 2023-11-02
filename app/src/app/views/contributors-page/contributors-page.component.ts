@@ -26,11 +26,11 @@ export class ContributorsPageComponent implements OnInit {
             next: (results) => {
                 let contributors = new Set<string>();
                 results.data.forEach(obj => {
-                    if (obj.contributors) {
+                    if (obj.contributors?.length) {
                         obj.contributors.forEach(contributor => {
                             contributors.add(contributor);
-                            if (contributor in this.contributorMap) {
-                                this.contributorMap[contributor].push(obj);
+                            if (this.contributorMap.has(contributor)) {
+                                this.contributorMap.get(contributor).push(obj);
                             } else {
                                 this.contributorMap.set(contributor, [obj]);
                             }
@@ -46,6 +46,14 @@ export class ContributorsPageComponent implements OnInit {
                 if (subscription) subscription.unsubscribe();
             }
         })
+    }
+
+    /**
+     * Get the number of contributions made by the given contributor
+     * @param contributor the contributor
+     */
+    public getNumContributions(contributor: string): number {
+        return this.contributorMap.get(contributor).length;
     }
 
     /**

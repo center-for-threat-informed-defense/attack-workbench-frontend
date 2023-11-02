@@ -13,7 +13,9 @@
             <div class="col">
                 <ul>
                     <li *ngFor="let contributor of column">
-                        <a class="link" (click)="openDialog(contributor)">{{contributor}}</a>
+                        <a class="link" (click)="openDialog(contributor)">
+                            {{contributor}}&nbsp;<span class="text-deemphasis">({{getNumContributions(contributor)}})</span>
+                        </a>
                     </li>
                 </ul>
             </div>
