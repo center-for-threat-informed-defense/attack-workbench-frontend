@@ -1,1 +1,47 @@
-<p>contributors-page works!</p>
+<div class="contributors-page view-page grid">
+    <div class="list-page-header">
+        <h1 class="with-help-icon">
+            Contributors
+            <popover-content #objectDescription placement="bottom">
+                <span>The following individuals or organizations have contributed information regarding the existence of a technique, details on how to detect and/or mitigate use of a technique, or threat intelligence on adversary use.</span>
+            </popover-content>
+            <mat-icon class="help-icon" [popover]="objectDescription" aria-label="help">help_outline</mat-icon>
+        </h1>
+    </div>
+    <div *ngIf="!loading else loadingTemplate" class="row">
+        <ng-container *ngFor="let column of columns">
+            <div class="col">
+                <ul>
+                    <li *ngFor="let contributor of column">
+                        <a class="link" (click)="openDialog(contributor)">{{contributor}}</a>
+                    </li>
+                </ul>
+            </div>
+        </ng-container>
+    </div>
+</div>
+
+<ng-template #contributorsDialog let-data>
+    <div class="contributors-dialog">
+        <h2>{{data.contributor}}</h2>
+        <mat-dialog-content>
+            <h3 class="section-header">Contributions</h3>
+            <div>
+                <app-stix-list (onRowAction)="dialogRef.close()" [config]="{
+                    stixObjects: data.objects,
+                    clickBehavior: 'linkToObjectPage',
+                    showControls: false
+                }"></app-stix-list>
+            </div>
+        </mat-dialog-content>
+        <mat-dialog-actions align="center">
+            <button mat-button mat-dialog-close>
+                close
+            </button>
+        </mat-dialog-actions>
+    </div>
+</ng-template>
+
+<ng-template #loadingTemplate>
+    <app-loading-overlay></app-loading-overlay>
+</ng-template>
