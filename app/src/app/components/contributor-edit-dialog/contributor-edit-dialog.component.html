@@ -1,0 +1,32 @@
+<p>contributor-edit-dialog works!</p>
+
+<ng-template #contributorsDialog let-data>
+    <div class="contributors-dialog">
+        <mat-toolbar>
+            <button mat-button class="control" matTooltip="close" (click)="close()"><mat-icon aria-label="close">close</mat-icon></button>
+            <div class="spacer"></div>
+            <ng-container>
+                <button mat-button class="control"
+                    [matTooltip]="isNew ? 'validate & save' : 'patch & save'"
+                    [disabled]="!editing || !validCitation() || !validURL || (isNew && sourceNameControl.errors)"
+                    (click)="next()">
+                    <mat-icon aria-label="save">save</mat-icon>
+                </button>
+                <button *ngIf="!editing" mat-button class="control" matTooltip="edit" (click)="startEditing()"><mat-icon aria-label="edit">edit</mat-icon></button>
+                <button *ngIf="editing"  mat-button class="control" matTooltip="discard changes & stop editing" (click)="discardChanges()"><mat-icon aria-label="discard">edit_off</mat-icon></button>
+                <button *ngIf="deletable" mat-button class="control" matTooltip="delete" [disabled]="!editing || numCitingObjects > 0 || isNew" (click)="delete()"><mat-icon aria-label="delete">delete</mat-icon></button>
+            </ng-container>
+        </mat-toolbar>
+        <h2 class="align-center">{{data.contributor}}</h2>
+        <mat-dialog-content>
+            <h3 class="section-header">Contributions</h3>
+            <div>
+                <app-stix-list (onRowAction)="dialogRef.close()" [config]="{
+                    stixObjects: data.objects,
+                    clickBehavior: 'linkToObjectPage',
+                    showControls: false
+                }"></app-stix-list>
+            </div>
+        </mat-dialog-content>
+    </div>
+</ng-template>

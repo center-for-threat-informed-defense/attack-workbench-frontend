@@ -1,6 +1,7 @@
-import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { StixObject } from 'src/app/classes/stix';
+import { ContributorEditDialogComponent } from 'src/app/components/contributor-edit-dialog/contributor-edit-dialog.component';
 import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/rest-api-connector.service';
 
 @Component({
@@ -9,18 +10,22 @@ import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/re
 	styleUrls: ['./contributors-page.component.scss']
 })
 export class ContributorsPageComponent implements OnInit {
-    @ViewChild('contributorsDialog') public contributorsDialog: TemplateRef<any>;
-
     private contributors: string[] = [];
     private numColumns: number = 3;
     private contributorMap: Map<string, StixObject[]> = new Map(); // contributor -> list of STIX objects they contributed to
     public loading: boolean = true;
     public columns: string[][] = [];
-    public dialogRef;
 
 	constructor(private restApiConnector: RestApiConnectorService, public dialog: MatDialog) { }
 
 	ngOnInit(): void {
+        this.load();
+    }
+
+    /**
+     * Load all objects and parse contributors
+     */
+    private load(): void {
         this.loading = true;
         let subscription = this.restApiConnector.getAllObjects(null, null, null, null, true, true, true).subscribe({
             next: (results) => {
@@ -45,7 +50,7 @@ export class ContributorsPageComponent implements OnInit {
                 this.loading = false;
                 if (subscription) subscription.unsubscribe();
             }
-        })
+        });
     }
 
     /**
@@ -80,12 +85,21 @@ export class ContributorsPageComponent implements OnInit {
      * @param contributor the contributor
      */
     public openDialog(contributor: string): void {
-        this.dialogRef = this.dialog.open(this.contributorsDialog, {
+        let prompt = this.dialog.open(ContributorEditDialogComponent, {
             width: '50em',
             data: {
                 contributor: contributor,
                 objects: this.contributorMap.get(contributor)
             }
+        });
+        let subscription = prompt.afterClosed().subscribe({
+            next: (_result) => {
+                if (prompt.componentInstance.dirty) {
+                    // re-fetch values since an edit occurred
+                    this.load();
+                }
+            },
+            complete: () => subscription.unsubscribe()
         });
     }
 }

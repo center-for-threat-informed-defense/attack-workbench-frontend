@@ -13,36 +13,14 @@
             <div class="col">
                 <ul>
                     <li *ngFor="let contributor of column">
-                        <a class="link" (click)="openDialog(contributor)">
-                            {{contributor}}&nbsp;<span class="text-deemphasis">({{getNumContributions(contributor)}})</span>
-                        </a>
+                        <a class="link" (click)="openDialog(contributor)">{{contributor}}</a>
+                        <sup class="text-deemphasis">({{getNumContributions(contributor)}})</sup>
                     </li>
                 </ul>
             </div>
         </ng-container>
     </div>
 </div>
-
-<ng-template #contributorsDialog let-data>
-    <div class="contributors-dialog">
-        <h2 class="align-center">{{data.contributor}}</h2>
-        <mat-dialog-content>
-            <h3 class="section-header">Contributions</h3>
-            <div>
-                <app-stix-list (onRowAction)="dialogRef.close()" [config]="{
-                    stixObjects: data.objects,
-                    clickBehavior: 'linkToObjectPage',
-                    showControls: false
-                }"></app-stix-list>
-            </div>
-        </mat-dialog-content>
-        <mat-dialog-actions align="center">
-            <button mat-button mat-dialog-close>
-                close
-            </button>
-        </mat-dialog-actions>
-    </div>
-</ng-template>
 
 <ng-template #loadingTemplate>
     <app-loading-overlay></app-loading-overlay>
