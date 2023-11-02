@@ -4,7 +4,7 @@ import { stixRoutes } from "../../app-routing-stix.module";
 import { AuthenticationService } from 'src/app/services/connectors/authentication/authentication.service';
 import { Subscription } from "rxjs";
 import { Role } from 'src/app/classes/authn/role';
-import * as globals from "../../globals";
+import * as globals from "../../utils/globals";
 
 @Component({
   selector: 'app-header',

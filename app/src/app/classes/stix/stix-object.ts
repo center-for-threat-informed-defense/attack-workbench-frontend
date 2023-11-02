@@ -5,7 +5,7 @@ import { Serializable, ValidationData } from '../serializable';
 import { Paginated, RestApiConnectorService } from 'src/app/services/connectors/rest-api/rest-api-connector.service';
 import { forkJoin, Observable, of } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
-import { logger } from "../../util/logger";
+import { logger } from "../../utils/logger";
 
 export type workflowStates = "work-in-progress" | "awaiting-review" | "reviewed" | "";
 let stixTypeToAttackType = {

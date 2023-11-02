@@ -2,7 +2,7 @@ import { Observable, of } from 'rxjs';
 import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/rest-api-connector.service';
 import { ValidationData } from '../serializable';
 import { Asset, Campaign, DataComponent, DataSource, Group, MarkingDefinition, Matrix, Mitigation, Relationship, Software, StixObject, Tactic, Technique } from '../stix';
-import { logger } from "../../util/logger";
+import { logger } from "../../utils/logger";
 
 /**
  * auto-generated changelog/report about an import

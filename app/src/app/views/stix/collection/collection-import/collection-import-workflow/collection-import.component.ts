@@ -12,7 +12,7 @@ import { ConfirmationDialogComponent } from 'src/app/components/confirmation-dia
 import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/rest-api-connector.service';
 import { AuthenticationService } from 'src/app/services/connectors/authentication/authentication.service';
 import { UserAccount } from 'src/app/classes/authn/user-account';
-import { logger } from '../../../../../util/logger';
+import { logger } from '../../../../../utils/logger';
 import { v4 as uuid } from 'uuid';
 import * as XLSX from 'xlsx';
 import _ from 'lodash';

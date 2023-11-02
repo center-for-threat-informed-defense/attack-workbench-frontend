@@ -1,5 +1,5 @@
 import { ValidatorFn, AbstractControl } from '@angular/forms';
-import { logger } from "../util/logger";
+import { logger } from "../utils/logger";
 
 export class VersionNumber {
     private _version = [];

@@ -11,7 +11,7 @@ import { EditorService } from 'src/app/services/editor/editor.service';
 import { StixViewPage } from '../../stix-view-page';
 import { environment } from "../../../../../environments/environment";
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { logger } from "../../../../util/logger";
+import { logger } from "../../../../utils/logger";
 import { AuthenticationService } from 'src/app/services/connectors/authentication/authentication.service';
 import { MatDialog } from '@angular/material/dialog';
 import { CollectionUpdateDialogComponent } from 'src/app/components/collection-update-dialog/collection-update-dialog.component';

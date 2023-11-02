@@ -3,7 +3,7 @@ import { map } from "rxjs/operators";
 import { RestApiConnectorService } from "../services/connectors/rest-api/rest-api-connector.service";
 import { Serializable, ValidationData } from "./serializable";
 import { StixObject } from "./stix/stix-object";
-import { logger } from "../util/logger";
+import { logger } from "../utils/logger";
 import { RelatedAsset } from "./stix/asset";
 
 export class ExternalReferences extends Serializable {

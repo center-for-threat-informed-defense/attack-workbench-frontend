@@ -3,7 +3,7 @@ import { StixObject } from "./stix-object";
 import { RestApiConnectorService } from "src/app/services/connectors/rest-api/rest-api-connector.service";
 import { Observable, of } from "rxjs";
 import { ValidationData } from "../serializable";
-import { logger } from "../../util/logger";
+import { logger } from "../../utils/logger";
 
 export class MarkingDefinition extends StixObject {
     public name: string = "";
