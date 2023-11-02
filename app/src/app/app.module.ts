@@ -209,6 +209,8 @@ import { TeamsListPageComponent } from './views/admin-page/teams/teams-list-page
 import { TeamsViewPageComponent } from './views/admin-page/teams/teams-view-page/teams-view-page.component';
 import { CreateNewDialogComponent } from './components/create-new-dialog/create-new-dialog.component';
 
+import { ContributorsPageComponent } from './views/contributors-page/contributors-page.component';
+
 import { AppConfigService } from './services/config/app-config.service';
 
 export function initConfig(appConfigService: AppConfigService) {
@@ -348,7 +350,8 @@ export function initConfig(appConfigService: AppConfigService) {
 		SubtypeViewComponent,
 		SubtypeEditComponent,
 		SubtypeDialogComponent,
-  		BreadcrumbComponent
+  		BreadcrumbComponent,
+        ContributorsPageComponent
 	],
 	imports: [
 		MaterialFileInputModule,

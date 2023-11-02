@@ -20,7 +20,7 @@ export class LandingPageComponent implements OnInit, OnDestroy {
     public routes: any[] = [];
 
     constructor(private restApiConnector: RestApiConnectorService, private authenticationService: AuthenticationService, private dialog: MatDialog, private router: Router) {
-        this.routes = stixRoutes;
+        this.routes = stixRoutes.filter(route => !route.data.more);
     }
 
     public get isAdmin(): boolean { return this.authenticationService.isAuthorized([Role.ADMIN]); }
