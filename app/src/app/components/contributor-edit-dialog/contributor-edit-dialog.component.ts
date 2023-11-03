@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, EventEmitter, Inject, OnInit, Output, ViewEncapsulation } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { forkJoin } from 'rxjs';
 import { StixObject } from 'src/app/classes/stix';
@@ -12,6 +12,8 @@ import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/re
     encapsulation: ViewEncapsulation.None
 })
 export class ContributorEditDialogComponent implements OnInit {
+    @Output() public onSave = new EventEmitter();
+
     public dirty: boolean;
     public stage: number = 0;
     public contributor: string;
@@ -66,14 +68,15 @@ export class ContributorEditDialogComponent implements OnInit {
                 if (i >= 0) object['contributors'][i] = this.contributor;
                 saves.push(object.save(this.restApiConnector));
             }
-            let subscription = forkJoin(saves).subscribe({
-                complete: () => {
-                    this.dirty = true; // triggers refresh
-                    this.stopEditing();
-                    if (subscription) subscription.unsubscribe();
-                }
-            })
         }
+        let subscription = forkJoin(saves).subscribe({
+            complete: () => {
+                this.onSave.emit(this.contributor); // triggers map update
+                this.dirty = true; // triggers refresh
+                this.stopEditing();
+                if (subscription) subscription.unsubscribe();
+            }
+        });
     }
 }
 

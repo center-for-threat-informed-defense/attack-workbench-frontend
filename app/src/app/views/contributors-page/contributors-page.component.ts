@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { Subscription } from 'rxjs';
 import { StixObject } from 'src/app/classes/stix';
 import { ContributorEditDialogComponent } from 'src/app/components/contributor-edit-dialog/contributor-edit-dialog.component';
 import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/rest-api-connector.service';
@@ -13,6 +14,7 @@ export class ContributorsPageComponent implements OnInit {
     private contributors: string[] = [];
     private numColumns: number = 3;
     private contributorMap: Map<string, StixObject[]>; // contributor -> list of STIX objects they contributed to
+    private dialogSaveSubscription: Subscription;
     public loading: boolean = true;
     public columns: string[][];
 
@@ -20,6 +22,10 @@ export class ContributorsPageComponent implements OnInit {
 
 	ngOnInit(): void {
         this.load();
+    }
+
+    ngOnDestroy(): void {
+        if (this.dialogSaveSubscription) this.dialogSaveSubscription.unsubscribe();
     }
 
     /**
@@ -59,7 +65,8 @@ export class ContributorsPageComponent implements OnInit {
      * @param contributor the contributor
      */
     public getNumContributions(contributor: string): number {
-        return this.contributorMap.get(contributor).length;
+        let contributions = this.contributorMap.get(contributor);
+        return contributions ? contributions.length : 0;
     }
 
     /**
@@ -94,11 +101,23 @@ export class ContributorsPageComponent implements OnInit {
                 objects: this.contributorMap.get(contributor)
             }
         });
+        this.dialogSaveSubscription = prompt.componentInstance.onSave.subscribe((newContributor) => {
+            let contributions = this.contributorMap.get(contributor);
+            if (this.contributorMap.has(newContributor)) {
+                this.contributorMap.get(newContributor).push(...contributions);
+            } else {
+                this.contributorMap.set(newContributor, contributions);
+            }
+            // update dialog data
+            prompt.componentInstance.config = {
+                contributor: newContributor,
+                objects: this.contributorMap.get(newContributor)
+            }
+        })
         let subscription = prompt.afterClosed().subscribe({
             next: (_result) => {
                 if (prompt.componentInstance.dirty) {
-                    // re-fetch values since an edit occurred
-                    this.load();
+                    this.load(); // re-fetch values since an edit occurred
                 }
             },
             complete: () => subscription.unsubscribe()
