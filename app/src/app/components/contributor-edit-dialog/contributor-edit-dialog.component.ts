@@ -76,7 +76,7 @@ export class ContributorEditDialogComponent implements OnInit {
             complete: () => {
                 this.onSave.emit(this.contributor); // triggers map update
                 this.dirty = true; // triggers refresh
-                // this.stopEditing();
+                this.stopEditing();
                 if (subscription) subscription.unsubscribe();
             }
         });
