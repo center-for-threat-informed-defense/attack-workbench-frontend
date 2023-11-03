@@ -1,32 +1,65 @@
-<p>contributor-edit-dialog works!</p>
+<div class="contributor-dialog">
+    <!-- dialog toolbar -->
+    <mat-toolbar *ngIf="!editing || stage == 0">
+        <!-- close -->
+        <button mat-button class="control" matTooltip="close" (click)="close()">
+            <mat-icon aria-label="close">close</mat-icon>
+        </button>
+        <div class="spacer"></div>
+        <ng-container *ngIf="editable">
+            <!-- save -->
+            <button mat-button class="control" matTooltip="patch & save" [disabled]="!editing" (click)="next()">
+                <mat-icon aria-label="save">save</mat-icon>
+            </button>
+            <!-- edit -->
+            <button *ngIf="!editing" mat-button class="control" matTooltip="edit" (click)="startEditing()">
+                <mat-icon aria-label="edit">edit</mat-icon>
+            </button>
+            <!-- discard changes -->
+            <button *ngIf="editing"  mat-button class="control" matTooltip="discard changes & stop editing" (click)="discardChanges()">
+                <mat-icon aria-label="discard">edit_off</mat-icon>
+            </button>
+        </ng-container>
+    </mat-toolbar>
 
-<ng-template #contributorsDialog let-data>
-    <div class="contributors-dialog">
-        <mat-toolbar>
-            <button mat-button class="control" matTooltip="close" (click)="close()"><mat-icon aria-label="close">close</mat-icon></button>
-            <div class="spacer"></div>
-            <ng-container>
-                <button mat-button class="control"
-                    [matTooltip]="isNew ? 'validate & save' : 'patch & save'"
-                    [disabled]="!editing || !validCitation() || !validURL || (isNew && sourceNameControl.errors)"
-                    (click)="next()">
-                    <mat-icon aria-label="save">save</mat-icon>
-                </button>
-                <button *ngIf="!editing" mat-button class="control" matTooltip="edit" (click)="startEditing()"><mat-icon aria-label="edit">edit</mat-icon></button>
-                <button *ngIf="editing"  mat-button class="control" matTooltip="discard changes & stop editing" (click)="discardChanges()"><mat-icon aria-label="discard">edit_off</mat-icon></button>
-                <button *ngIf="deletable" mat-button class="control" matTooltip="delete" [disabled]="!editing || numCitingObjects > 0 || isNew" (click)="delete()"><mat-icon aria-label="delete">delete</mat-icon></button>
-            </ng-container>
-        </mat-toolbar>
-        <h2 class="align-center">{{data.contributor}}</h2>
-        <mat-dialog-content>
-            <h3 class="section-header">Contributions</h3>
-            <div>
-                <app-stix-list (onRowAction)="dialogRef.close()" [config]="{
-                    stixObjects: data.objects,
-                    clickBehavior: 'linkToObjectPage',
-                    showControls: false
-                }"></app-stix-list>
+    <!-- view page -->
+    <div class="view-contributor">
+        <div *ngIf="stage == 0">
+            <div class="align-center">
+                <!-- edit contributor -->
+                <mat-form-field class="edit-contributor" *ngIf="editing" appearance="outline">
+                    <input matInput required [(ngModel)]="contributor">
+                </mat-form-field>
+                <!-- view contributor -->
+                <h2 *ngIf="!editing" class="title padded">{{contributor}}</h2>
             </div>
-        </mat-dialog-content>
+            <!-- contributions list -->
+            <h3 class="section-header">Contributions</h3>
+            <app-stix-list (onRowAction)="dialogRef.close()" [config]="{
+                stixObjects: config.objects,
+                clickBehavior: 'linkToObjectPage',
+                showControls: false
+            }"></app-stix-list>
+        </div>
+        <div *ngIf="stage == 1">
+            <!-- confirm patches -->
+            <h2 class="title align-center">Required Patches</h2>
+            <p class="align-center">The following objects include the edited contributor and will be updated automatically.</p>
+            <app-stix-list (onRowAction)="dialogRef.close()" [config]="{
+                stixObjects: config.objects,
+                clickBehavior: 'none',
+                showControls: false
+            }"></app-stix-list>
+            <!-- actions -->
+            <mat-dialog-actions  align="center">
+                <button mat-button (click)="discardChanges()">cancel</button>
+                <button mat-stroked-button (click)="patch()">apply patches and save</button>
+            </mat-dialog-actions>
+        </div>
+        <div *ngIf="stage == 2">
+            <!-- saving objects -->
+            Patching objects.....
+            <app-loading-overlay></app-loading-overlay>
+        </div>
     </div>
-</ng-template>
+</div>

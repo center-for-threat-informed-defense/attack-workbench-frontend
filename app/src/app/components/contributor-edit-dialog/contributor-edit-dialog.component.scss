@@ -1,0 +1,33 @@
+@import "../../../style/globals.scss";
+
+.contributor-dialog {
+    margin: -24px;
+    mat-toolbar {
+        @extend %toolbar;
+        padding-left: 0;
+        .mat-icon { vertical-align: middle; } // vertically center icons
+    }
+    .view-contributor {
+        padding: 25px;
+        .title { margin-top: 0px; }
+        .align-center { text-align: center; }
+        .padded { padding: 13px 0; }
+        input {
+            font-size: 1.5em;
+            font-family: Poppins, Arial, sans-serif;
+            letter-spacing: 0.5pt;
+            font-weight: 700;
+        }
+    }
+    .edit-contributor {
+        width: 36em;
+        text-align: center;
+    }
+    mat-form-field {
+        .mat-form-field-wrapper { padding-bottom: 0px !important; }
+        .mat-form-field-infix {
+            line-height: 1.25;
+            padding: .5em 0;
+        }
+    }
+}
