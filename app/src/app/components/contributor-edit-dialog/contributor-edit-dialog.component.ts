@@ -21,7 +21,7 @@ export class ContributorEditDialogComponent implements OnInit {
     public get editing(): boolean { return this.config.mode == 'edit'; }
     public get editable(): boolean { return this.authenticationService.canEdit(); }
     public get isValid(): boolean {
-        return this.contributor?.length > 0 && this.contributor !== this.config.contributor;
+        return this.contributor?.trim().length > 0 && this.contributor.trim() !== this.config.contributor;
     }
 
     constructor(@Inject(MAT_DIALOG_DATA) public config: ContributorEditConfig,
@@ -33,32 +33,35 @@ export class ContributorEditDialogComponent implements OnInit {
         this.contributor = this.config.contributor;
     }
 
+    /** Close the dialog window */
     public close(): void {
         this.dialogRef.close(this.dirty);
     }
 
+    /** Move to 'apply patches & save' step */
     public next(): void {
-        // trim contributor field
         this.contributor = this.contributor.trim();
-
-        // parse object patches
-        this.stage = 1;
+        this.stage = 1; // next stage
     }
 
+    /** Discard any edits made to contributor and stop editing */
     public discardChanges(): void {
         this.contributor = this.config.contributor;
         this.stopEditing();
     }
 
+    /** Start editing contributor name */
     public startEditing(): void {
         this.config.mode = 'edit';
     }
 
+    /** Stop editing contributor */
     public stopEditing(): void {
         this.config.mode = 'view';
         this.stage = 0;
     }
 
+    /** Patch 'x_mitre_contributors' field on relevant objects and save */
     public patch(): void {
         this.stage = 2;
         let saves = [];
@@ -73,7 +76,7 @@ export class ContributorEditDialogComponent implements OnInit {
             complete: () => {
                 this.onSave.emit(this.contributor); // triggers map update
                 this.dirty = true; // triggers refresh
-                this.stopEditing();
+                // this.stopEditing();
                 if (subscription) subscription.unsubscribe();
             }
         });

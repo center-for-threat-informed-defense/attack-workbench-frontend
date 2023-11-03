@@ -94,6 +94,7 @@ export class ContributorsPageComponent implements OnInit {
      * @param contributor the contributor
      */
     public openDialog(contributor: string): void {
+        // open dialog
         let prompt = this.dialog.open(ContributorEditDialogComponent, {
             width: '50em',
             data: {
@@ -101,6 +102,7 @@ export class ContributorsPageComponent implements OnInit {
                 objects: this.contributorMap.get(contributor)
             }
         });
+        // subscribe to contributor changes
         this.dialogSaveSubscription = prompt.componentInstance.onSave.subscribe((newContributor) => {
             let contributions = this.contributorMap.get(contributor);
             if (this.contributorMap.has(newContributor)) {
@@ -114,10 +116,11 @@ export class ContributorsPageComponent implements OnInit {
                 objects: this.contributorMap.get(newContributor)
             }
         })
+        // re-fetch values if an edit occurs
         let subscription = prompt.afterClosed().subscribe({
             next: (_result) => {
                 if (prompt.componentInstance.dirty) {
-                    this.load(); // re-fetch values since an edit occurred
+                    this.load();
                 }
             },
             complete: () => subscription.unsubscribe()
