@@ -12,9 +12,9 @@ import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/re
 export class ContributorsPageComponent implements OnInit {
     private contributors: string[] = [];
     private numColumns: number = 3;
-    private contributorMap: Map<string, StixObject[]> = new Map(); // contributor -> list of STIX objects they contributed to
+    private contributorMap: Map<string, StixObject[]>; // contributor -> list of STIX objects they contributed to
     public loading: boolean = true;
-    public columns: string[][] = [];
+    public columns: string[][];
 
 	constructor(private restApiConnector: RestApiConnectorService, public dialog: MatDialog) { }
 
@@ -27,6 +27,7 @@ export class ContributorsPageComponent implements OnInit {
      */
     private load(): void {
         this.loading = true;
+        this.contributorMap = new Map();
         let subscription = this.restApiConnector.getAllObjects(null, null, null, null, true, true, true).subscribe({
             next: (results) => {
                 let contributors = new Set<string>();
@@ -73,6 +74,7 @@ export class ContributorsPageComponent implements OnInit {
      * @param numColumns number of columns to display
      */
     public toColumns(numColumns: number) {
+        this.columns = [];
         let chunk = Math.ceil(this.contributors.length / numColumns);
         for (let i = 0; i < numColumns; i++) {
             let start = i * chunk;
