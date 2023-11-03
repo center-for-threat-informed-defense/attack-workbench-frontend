@@ -18,6 +18,9 @@ export class ContributorEditDialogComponent implements OnInit {
 
     public get editing(): boolean { return this.config.mode == 'edit'; }
     public get editable(): boolean { return this.authenticationService.canEdit(); }
+    public get isValid(): boolean {
+        return this.contributor?.length > 0 && this.contributor !== this.config.contributor;
+    }
 
     constructor(@Inject(MAT_DIALOG_DATA) public config: ContributorEditConfig,
                 public dialogRef: MatDialogRef<ContributorEditDialogComponent>,

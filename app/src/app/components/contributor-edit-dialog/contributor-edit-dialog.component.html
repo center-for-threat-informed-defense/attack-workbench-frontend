@@ -8,7 +8,7 @@
         <div class="spacer"></div>
         <ng-container *ngIf="editable">
             <!-- save -->
-            <button mat-button class="control" matTooltip="patch & save" [disabled]="!editing" (click)="next()">
+            <button mat-button class="control" matTooltip="patch & save" [disabled]="!editing || !isValid" (click)="next()">
                 <mat-icon aria-label="save">save</mat-icon>
             </button>
             <!-- edit -->
@@ -28,6 +28,7 @@
             <div class="align-center">
                 <!-- edit contributor -->
                 <mat-form-field class="edit-contributor" *ngIf="editing" appearance="outline">
+                    <mat-label>contributor</mat-label>
                     <input matInput required [(ngModel)]="contributor">
                 </mat-form-field>
                 <!-- view contributor -->
@@ -44,7 +45,13 @@
         <div *ngIf="stage == 1">
             <!-- confirm patches -->
             <h2 class="title align-center">Required Patches</h2>
-            <p class="align-center">The following objects include the edited contributor and will be updated automatically.</p>
+            <p class="align-center">
+                You are about to update the contributor from
+                <br><b>{{config.contributor}}</b> to <b>{{contributor}}</b>
+            </p>
+            <p class="align-center">
+                The following objects include the edited contributor and will be updated automatically:
+            </p>
             <app-stix-list (onRowAction)="dialogRef.close()" [config]="{
                 stixObjects: config.objects,
                 clickBehavior: 'none',
@@ -58,7 +65,7 @@
         </div>
         <div *ngIf="stage == 2">
             <!-- saving objects -->
-            Patching objects.....
+            <h2>Patching objects...</h2>
             <app-loading-overlay></app-loading-overlay>
         </div>
     </div>
