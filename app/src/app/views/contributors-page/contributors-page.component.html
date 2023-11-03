@@ -8,12 +8,13 @@
             <mat-icon class="help-icon" [popover]="objectDescription" aria-label="help">help_outline</mat-icon>
         </h1>
     </div>
-    <div *ngIf="!loading else loadingTemplate" class="row">
-        <ng-container *ngFor="let column of columns">
-            <div class="col">
+    <div *ngIf="!loading else loadingTemplate" class="row" [ngClass]="{'no-results': !contributors.length}">
+        <ng-container *ngIf="contributors.length > 0 else nothingHere">
+            <div *ngFor="let column of columns" class="col">
                 <ul>
                     <li *ngFor="let contributor of column">
                         <a class="link" (click)="openDialog(contributor)">{{contributor}}</a>
+                        <sup class="text-deemphasis">({{getNumContributions(contributor)}})</sup>
                     </li>
                 </ul>
             </div>
@@ -21,25 +22,8 @@
     </div>
 </div>
 
-<ng-template #contributorsDialog let-data>
-    <div class="contributors-dialog">
-        <h2>{{data.contributor}}</h2>
-        <mat-dialog-content>
-            <h3 class="section-header">Contributions</h3>
-            <div>
-                <app-stix-list (onRowAction)="dialogRef.close()" [config]="{
-                    stixObjects: data.objects,
-                    clickBehavior: 'linkToObjectPage',
-                    showControls: false
-                }"></app-stix-list>
-            </div>
-        </mat-dialog-content>
-        <mat-dialog-actions align="center">
-            <button mat-button mat-dialog-close>
-                close
-            </button>
-        </mat-dialog-actions>
-    </div>
+<ng-template #nothingHere>
+    <app-empty-list-marker [message]="'No contributors found'" (onCheckAgain)="load()"></app-empty-list-marker>
 </ng-template>
 
 <ng-template #loadingTemplate>
