@@ -8,9 +8,9 @@
             <mat-icon class="help-icon" [popover]="objectDescription" aria-label="help">help_outline</mat-icon>
         </h1>
     </div>
-    <div *ngIf="!loading else loadingTemplate" class="row">
-        <ng-container *ngFor="let column of columns">
-            <div class="col">
+    <div *ngIf="!loading else loadingTemplate" class="row" [ngClass]="{'no-results': !contributors.length}">
+        <ng-container *ngIf="contributors.length > 0 else nothingHere">
+            <div *ngFor="let column of columns" class="col">
                 <ul>
                     <li *ngFor="let contributor of column">
                         <a class="link" (click)="openDialog(contributor)">{{contributor}}</a>
@@ -21,6 +21,10 @@
         </ng-container>
     </div>
 </div>
+
+<ng-template #nothingHere>
+    <app-empty-list-marker [message]="'No contributors found'" (onCheckAgain)="load()"></app-empty-list-marker>
+</ng-template>
 
 <ng-template #loadingTemplate>
     <app-loading-overlay></app-loading-overlay>
