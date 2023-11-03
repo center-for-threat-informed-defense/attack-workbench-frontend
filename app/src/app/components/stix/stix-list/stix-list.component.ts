@@ -356,6 +356,7 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
         }
         else {
             this.groupBy = ["type"];
+            this.addColumn("", "state", "icon");
             this.addColumn("type", "attackType", "plain");
             this.addColumn("ID", "attackID", "plain", false);
             this.addColumn("name", "name", "plain", true, ["name"]);
