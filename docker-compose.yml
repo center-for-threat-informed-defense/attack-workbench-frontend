@@ -17,6 +17,7 @@ services:
     build: ../attack-workbench-rest-api
     environment:
       BACKEND_PORT: "${BACKEND_PORT:-3000}"
+      DATABASE_PORT: "${DATABASE_PORT:-27017}"
       DATABASE_URL: "mongodb://attack-workbench-database:${DATABASE_PORT:-27017}/attack-workspace"
       SERVICE_ACCOUNT_APIKEY_ENABLE: "true"
       JSON_CONFIG_PATH: "./resources/rest-api-service-config.json"
