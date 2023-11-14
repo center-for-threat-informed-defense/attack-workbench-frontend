@@ -3,37 +3,43 @@ services:
   frontend:
     container_name: attack-workbench-frontend
     build: .
+    environment:
+      FRONTEND_PORT: "${FRONTEND_PORT:-80}"
     depends_on:
       - rest-api
     ports:
-      - "80:80"
+      - "${FRONTEND_PORT:-80}:80"
     volumes:
       - ./docker-compose-resources/nginx/nginx.conf:/etc/nginx/nginx.conf:ro
 
   rest-api:
     container_name: attack-workbench-rest-api
     build: ../attack-workbench-rest-api
+    environment:
+      BACKEND_PORT: "${BACKEND_PORT:-3000}"
+      DATABASE_URL: "mongodb://attack-workbench-database:${DATABASE_PORT:-27017}/attack-workspace"
+      SERVICE_ACCOUNT_APIKEY_ENABLE: "true"
+      JSON_CONFIG_PATH: "./resources/rest-api-service-config.json"
+      WORKBENCH_HOST: "http://attack-workbench-rest-api"
+      WORKBENCH_AUTHN_SERVICE_NAME: "collection-manager"
+      WORKBENCH_AUTHN_APIKEY: "sample-key"
     depends_on:
       - mongodb
     ports:
-      - "3000:3000"
+      - "${BACKEND_PORT:-3000}:3000"
     volumes:
       - ./docker-compose-resources/rest-api/rest-api-service-config.json:/usr/src/app/resources/rest-api-service-config.json:ro
-    environment:
-      - DATABASE_URL=mongodb://attack-workbench-database/attack-workspace
-      - SERVICE_ACCOUNT_APIKEY_ENABLE=true
-      - JSON_CONFIG_PATH=./resources/rest-api-service-config.json
-      - WORKBENCH_HOST=http://attack-workbench-rest-api
-      - WORKBENCH_AUTHN_SERVICE_NAME=collection-manager
-      - WORKBENCH_AUTHN_APIKEY=sample-key
 
   mongodb:
     container_name: attack-workbench-database
     image: mongo
+    environment:
+      DATABASE_PORT: "${DATABASE_PORT:-27017}"
+    ports:
+      - "${DATABASE_PORT:-27017}:${DATABASE_PORT:-27017}"
     volumes:
       - db-data:/data/db
-    ports:
-      - "27017:27017"
-      
+    command: "mongod --port ${DATABASE_PORT:-27017}"
+
 volumes:
   db-data:
