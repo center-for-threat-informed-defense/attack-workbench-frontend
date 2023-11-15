@@ -2,7 +2,7 @@ import { StixObject } from "./stix-object";
 import { RestApiConnectorService } from "src/app/services/connectors/rest-api/rest-api-connector.service";
 import { Observable } from "rxjs";
 import { ValidationData } from "../serializable";
-import { logger } from "../../util/logger";
+import { logger } from "../../utils/logger";
 
 export class Group extends StixObject {
     public name: string = "";

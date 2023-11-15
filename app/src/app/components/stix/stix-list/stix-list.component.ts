@@ -16,7 +16,7 @@ import { SidebarService } from 'src/app/services/sidebar/sidebar.service';
 import { MatSelect } from '@angular/material/select';
 import { AddDialogComponent } from '../../add-dialog/add-dialog.component';
 import { Collection } from 'src/app/classes/stix/collection';
-import { logger } from 'src/app/util/logger';
+import { logger } from 'src/app/utils/logger';
 
 @Component({
     selector: 'app-stix-list',
@@ -356,6 +356,7 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
         }
         else {
             this.groupBy = ["type"];
+            this.addColumn("", "state", "icon");
             this.addColumn("type", "attackType", "plain");
             this.addColumn("ID", "attackID", "plain", false);
             this.addColumn("name", "name", "plain", true, ["name"]);

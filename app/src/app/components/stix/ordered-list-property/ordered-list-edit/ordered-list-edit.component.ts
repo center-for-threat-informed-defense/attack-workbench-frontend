@@ -6,7 +6,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { AddDialogComponent } from 'src/app/components/add-dialog/add-dialog.component';
 import { StixObject } from 'src/app/classes/stix/stix-object';
 import { SelectionModel } from '@angular/cdk/collections';
-import { logger } from "../../../../util/logger";
+import { logger } from "../../../../utils/logger";
 @Component({
     selector: 'app-ordered-list-edit',
     templateUrl: './ordered-list-edit.component.html',
