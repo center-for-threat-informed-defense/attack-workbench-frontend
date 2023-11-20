@@ -50,7 +50,8 @@ export class DataSourceViewComponent extends StixViewPage implements OnInit {
                     apiCalls.push(this.restApiService.getRelatedTo({
                         sourceRef: c.stixID,
                         relationshipType: 'detects',
-                        targetType: 'technique'
+                        targetType: 'technique',
+                        includeDeprecated: true
                     }))
                 );
                 return forkJoin(apiCalls);
