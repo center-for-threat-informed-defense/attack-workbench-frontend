@@ -16,20 +16,20 @@ import { Relationship } from 'src/app/classes/stix';
     styleUrls: ['./data-source-view.component.scss']
 })
 export class DataSourceViewComponent extends StixViewPage implements OnInit {
-    public get data_source(): DataSource {
+    public get dataSource(): DataSource {
         return this.config.object as DataSource;
     }
 
-    public data_components: DataComponent[] = [];
-    public techniquesDetected: Relationship[] = [];
+    public dataComponents: DataComponent[];
+    public techniquesDetected: Relationship[];
     public loading = false;
 
     constructor(public dialog: MatDialog, private restApiService: RestApiConnectorService, authenticationService: AuthenticationService) { super(authenticationService); }
 
     ngOnInit(): void {
-        let data_source = this.config.object as DataSource;
-        if ( data_source.firstInitialized ) {
-            data_source.initializeWithDefaultMarkingDefinitions(this.restApiService);
+        let dataSource = this.config.object as DataSource;
+        if ( dataSource.firstInitialized ) {
+            dataSource.initializeWithDefaultMarkingDefinitions(this.restApiService);
         }
         this.loadData();
     }
@@ -39,8 +39,8 @@ export class DataSourceViewComponent extends StixViewPage implements OnInit {
             // get related data components
             map(results => {
                 let allComponents = results.data as DataComponent[];
-                let components = allComponents.filter(c => c.data_source_ref == this.data_source.stixID);
-                this.data_components = components;
+                let components = allComponents.filter(c => c.dataSourceRef == this.dataSource.stixID);
+                this.dataComponents = components;
                 return components;
             }),
             // get techniques detected by data components
@@ -77,7 +77,7 @@ export class DataSourceViewComponent extends StixViewPage implements OnInit {
 
     public createDataComponent(): void {
         let data_component = new DataComponent();
-        data_component.set_data_source_ref(this.data_source);
+        data_component.set_data_source_ref(this.dataSource);
 
         let prompt = this.dialog.open(StixDialogComponent, {
             data: {
