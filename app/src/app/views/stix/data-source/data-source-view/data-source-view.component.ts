@@ -6,6 +6,9 @@ import { StixViewPage } from '../../stix-view-page';
 import { MatDialog } from '@angular/material/dialog';
 import { StixDialogComponent } from '../../stix-dialog/stix-dialog.component';
 import { AuthenticationService } from 'src/app/services/connectors/authentication/authentication.service';
+import { forkJoin } from 'rxjs';
+import { concatMap, map } from 'rxjs/operators';
+import { Relationship } from 'src/app/classes/stix';
 
 @Component({
     selector: 'app-data-source-view',
@@ -18,28 +21,57 @@ export class DataSourceViewComponent extends StixViewPage implements OnInit {
     }
 
     public data_components: DataComponent[] = [];
+    public techniquesDetected: Relationship[] = [];
     public loading = false;
 
-    constructor(public dialog: MatDialog, private restAPIConnectorService: RestApiConnectorService, authenticationService: AuthenticationService) { super(authenticationService); }
+    constructor(public dialog: MatDialog, private restApiService: RestApiConnectorService, authenticationService: AuthenticationService) { super(authenticationService); }
 
     ngOnInit(): void {
-        this.data_components = this.data_source.data_components;
         let data_source = this.config.object as DataSource;
         if ( data_source.firstInitialized ) {
-            data_source.initializeWithDefaultMarkingDefinitions(this.restAPIConnectorService);
+            data_source.initializeWithDefaultMarkingDefinitions(this.restApiService);
         }
+        this.loadData();
     }
 
-    public getDataComponents(): void {
+    public getDataComponents() {
+        return this.restApiService.getAllDataComponents().pipe(
+            // get related data components
+            map(results => {
+                let allComponents = results.data as DataComponent[];
+                let components = allComponents.filter(c => c.data_source_ref == this.data_source.stixID);
+                this.data_components = components;
+                return components;
+            }),
+            // get techniques detected by data components
+            concatMap(components => {
+                let apiCalls = [];
+                components.forEach(c =>
+                    apiCalls.push(this.restApiService.getRelatedTo({
+                        sourceRef: c.stixID,
+                        relationshipType: 'detects',
+                        targetType: 'technique'
+                    }))
+                );
+                return forkJoin(apiCalls);
+            }),
+            // map pagination data to relationship list
+            map((results: any) => {
+                let relationshipData = results.map(r => r.data);
+                let relationships = [];
+                relationshipData.forEach(data => relationships.push(...data));
+                this.techniquesDetected = relationships;
+            })
+        )
+    }
+
+    public loadData() {
         this.loading = true;
-        let data$ = this.restAPIConnectorService.getAllDataComponents();
-        let sub = data$.subscribe({
-            next: (results) => {
-                let objects = results.data as DataComponent[];
-                this.data_components = objects.filter(obj => obj.data_source_ref == this.data_source.stixID)
+        let subscription = this.getDataComponents().subscribe({
+            complete: () => {
                 this.loading = false;
-            },
-            complete: () => {sub.unsubscribe();}
+                if (subscription) subscription.unsubscribe();
+            }
         })
     }
 
@@ -59,7 +91,10 @@ export class DataSourceViewComponent extends StixViewPage implements OnInit {
         });
         let subscription = prompt.afterClosed().subscribe({
             next: (result) => {
-                if (result) { this.getDataComponents(); } //re-fetch values since an edit occurred
+                if (result) {
+                    // re-fetch values since an edit occurred
+                    this.loadData();
+                }
             },
             complete: () => { subscription.unsubscribe(); }
         });

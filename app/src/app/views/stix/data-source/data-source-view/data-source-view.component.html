@@ -80,6 +80,7 @@
     </div>
     <!-- only show relationships if configured to show them -->
     <div *ngIf="(config.showRelationships || !config.hasOwnProperty('showRelationships')) && !editing">
+        <!-- data components -->
         <div class="row">
             <div class="col">
                 <h2 class="section-header">Data Components</h2>
@@ -96,12 +97,31 @@
         </div>
         <div class="row">
             <div class="col">
-                <app-stix-list #dataComponentsList [config]="{
+                <app-stix-list #dataComponentsList (refresh)="loadData()" [config]="{
                     'stixObjects': data_components,
                     'type': 'data-component',
                     'showDeprecatedFilter': true,
                     'clickBehavior': 'dialog',
                     'allowEdits': true
+                }"
+                (refresh)="getDataComponents()"></app-stix-list>
+            </div>
+        </div>
+
+        <!-- techniques detected -->
+        <div class="row">
+            <div class="col">
+                <h2 class="section-header">Techniques Detected</h2>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <app-stix-list #techniquesDetectedList [config]="{
+                    'stixObjects': techniquesDetected,
+                    'type': 'relationship',
+                    'showDeprecatedFilter': true,
+                    'clickBehavior': 'dialog',
+                    'allowEdits': false
                 }"
                 (refresh)="getDataComponents()"></app-stix-list>
             </div>
