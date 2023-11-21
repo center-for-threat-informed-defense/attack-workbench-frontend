@@ -167,10 +167,7 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
                 this.showControls = this.config.showControls ?? true;
                 this.buildTable();
                 this.setUpControls();
-                // get objects from backend if data is not from config
-                if (!("stixObjects" in this.config)) {
-                    this.applyControls();
-                }
+                this.applyControls();
             }
         });
     }
