@@ -601,7 +601,7 @@ export class RestApiConnectorService extends ApiConnector {
                     let x = result as any[];
                     if (x[0].attackType != "data-component") return of(result);
                     let d = x[0] as DataComponent;
-                    return this.getDataSource(d.data_source_ref).pipe( // fetch data source from REST API
+                    return this.getDataSource(d.dataSourceRef).pipe( // fetch data source from REST API
                         map(data_source => {
                             let ds = data_source as DataSource[];
                             d.data_source = ds[0];
@@ -1163,7 +1163,7 @@ export class RestApiConnectorService extends ApiConnector {
         return dataComponents$.pipe(
             map(result => { // get related data component objects
                 let dataComponents = result.data as DataComponent[];
-                return dataComponents.filter(d => d.data_source_ref == id);
+                return dataComponents.filter(d => d.dataSourceRef == id);
             }),
             mergeMap(dataComponents => { // get relationships for each data component
                 let relatedTo = dataComponents.map(dc => this.getRelatedTo({ sourceOrTargetRef: dc.stixID }));
