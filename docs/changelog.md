@@ -39,6 +39,9 @@
 #### New Features
 - Added a Contributors page which lists all contributors in the knowledge base. Users can view a list of contributions made by each individual and click on any object to navigate to its Workbench page. See [frontend#514](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/514).
 
+#### Improvements
+- Added the ability to view mapped techniques for a given data source. See [frontend#255](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/255).
+
 ## 31 October 2023
 
 ### ATT&CK Workbench version 2.1.0
