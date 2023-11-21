@@ -19,11 +19,11 @@ export class SidebarService {
         this.tabs.filter((x) => x.name == tabName)[0].enabled = enabled;
     }
     public readonly tabs: TabDefinition[] = [
-        // {
-        //     "name": "search",
-        //     "icon": "search",
-        //     "enabled": true
-        // },
+        {
+            "name": "search",
+            "icon": "search",
+            "enabled": true
+        },
         {
             "name": "references",
             "icon": "superscript",
