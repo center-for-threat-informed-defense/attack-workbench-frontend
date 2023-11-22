@@ -6,11 +6,20 @@
                 <mat-label>search</mat-label>
                 <input matInput #search [(ngModel)]="searchQuery">
             </mat-form-field>
+
+            <mat-form-field appearance="fill">
+                <mat-label>options</mat-label>
+                <mat-select multiple [(ngModel)]="filter" (selectionChange)="getResults()">
+                    <mat-optgroup *ngFor="let group of filterOptions" [label]="group.name" [disabled]="group.disabled">
+                        <mat-option *ngFor="let filter of group.values" [value]="filter.value" [disabled]="filter.disabled">{{filter.label}}</mat-option>
+                    </mat-optgroup>
+                </mat-select>
+            </mat-form-field>
         </div>
         <!-- search results -->
         <ng-container *ngIf="searchQuery != ''">
             <div class="search-results" *ngIf="(searchResults$ | async) as results; else loading">
-                <div class="results-list grid">
+                <div *ngIf="results.data.length > 0" class="results-list grid">
                     <div class="result row" *ngFor="let result of results.data">
                         <!-- link by ID -->
                         <div *ngIf="result.supportsAttackID"
@@ -32,6 +41,9 @@
                             </ng-template>
                         </div>
                     </div>
+                </div>
+                <div class="empty-list" *ngIf="!results.data.length">
+                    <app-empty-list-marker [message]="'No results found'"></app-empty-list-marker>
                 </div>
             </div>
             <ng-template #loading>

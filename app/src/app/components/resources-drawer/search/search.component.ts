@@ -5,6 +5,7 @@ import { Observable, Subscription, fromEvent } from 'rxjs';
 import { debounceTime, distinctUntilChanged, filter, tap } from 'rxjs/operators';
 import { StixObject } from 'src/app/classes/stix';
 import { Paginated, RestApiConnectorService } from 'src/app/services/connectors/rest-api/rest-api-connector.service';
+import { FilterGroup } from '../../stix/stix-list/stix-list.component';
 
 @Component({
     selector: 'app-search',
@@ -20,6 +21,17 @@ export class SearchComponent implements AfterViewInit, OnDestroy {
     public searchSubscription: Subscription;
     public searchResults$: Observable<Paginated<StixObject>>;
     public resultCount: number = 0;
+
+    public filterOptions: FilterGroup[] = [
+        {
+            "name": "state",
+            "values": [
+                { "value": "state.deprecated", "label": "include deprecated", "disabled": false },
+                { "value": "state.revoked", "label": "include revoked", "disabled": false }
+            ]
+        }
+    ];
+    public filter: string[] = [];
 
     constructor(private restApiService: RestApiConnectorService, public snackbar: MatSnackBar) { }
 
@@ -48,14 +60,14 @@ export class SearchComponent implements AfterViewInit, OnDestroy {
     public getResults() {
         let limit = this.paginator? this.paginator.pageSize : 10;
         let offset = this.paginator? this.paginator.pageIndex * limit : 0;
-
-        console.log(limit, offset)
+        let revoked = this.filter.includes("state.revoked");
+        let deprecated = this.filter.includes("state.deprecated");
 
         let options = {
             limit: limit,
             offset: offset,
-            revoked: true,
-            deprecated: true,
+            revoked: revoked,
+            deprecated: deprecated,
             search: this.searchQuery,
             deserialize: true
         }
