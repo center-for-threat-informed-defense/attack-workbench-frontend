@@ -57,7 +57,7 @@ export class SaveDialogComponent implements OnInit {
      */
     private parse_patches(): void {
         this.stage = 1; // enter patching stage
-        let objSubscription = this.restApiService.getAllObjects(null, null, null, null, null, null, true).subscribe({
+        let objSubscription = this.restApiService.getAllObjects({deserialize: true}).subscribe({
             next: (results) => {
                 // find objects with a link to the previous ID
                 let objLink = `(LinkById: ${this.config.patchID})`;

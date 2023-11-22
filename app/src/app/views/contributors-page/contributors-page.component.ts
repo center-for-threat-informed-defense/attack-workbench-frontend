@@ -34,7 +34,7 @@ export class ContributorsPageComponent implements OnInit {
     private load(): void {
         this.loading = true;
         this.contributorMap = new Map();
-        let subscription = this.restApiConnector.getAllObjects(null, null, null, null, true, true, true).subscribe({
+        let subscription = this.restApiConnector.getAllObjects({revoked: true, deprecated: true, deserialize: true}).subscribe({
             next: (results) => {
                 let contributors = new Set<string>();
                 results.data.forEach(obj => {
