@@ -1,0 +1,66 @@
+@import "../../../../style/globals";
+
+.search-drawer {
+    padding: 16px 0;
+    .search-container {
+        border-radius: 4px;
+        .dark & {  border: 1px solid border-color(dark); }
+        .light & { border: 1px solid border-color(light); }
+
+        .controls {
+            .mat-form-field-wrapper {
+                margin-bottom: -1.34375em; // remove bottom padding used for hint
+            }
+            .mat-form-field-flex {
+                padding: 12px 39px 0 39px !important; // override default padding for alignment w/ table
+            }
+            .mat-form-field-label {
+                .light & { color: on-color-deemphasis(light); }
+                .dark &  { color: on-color-deemphasis(dark); }
+            }
+        }
+
+        .search-results {
+            .results-list {
+                .dark & { border-bottom: 1px solid border-color(dark); }
+                .light & { border-bottom: 1px solid border-color(light); }
+                .result {
+                    .dark & { border-top: 1px solid border-color(dark); }
+                    .light & { border-top: 1px solid border-color(light); }
+                }
+                .col {
+                    padding: 5px;
+                    justify-content: center;
+                    mat-icon {
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                    }
+                }
+                .clickable {
+                    cursor: pointer;
+                    &:hover { 
+                        .dark & { background: color-alternate(dark); }
+                        .light & { background: color-alternate(light); }
+                    }
+                }
+                .description {
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                    display: -webkit-box;
+                    -webkit-line-clamp: 2; /* number of lines to show */
+                    -webkit-box-orient: vertical;
+                }
+                .text-label {
+                    font-size: 13px;
+                }
+            }
+        }
+    }
+    .fullwidth {
+        width: 100%;
+    }
+    .warning {
+        color: color(error);
+    }
+}

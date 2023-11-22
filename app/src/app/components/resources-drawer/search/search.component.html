@@ -1,1 +1,47 @@
-<p>search works!</p>
+<div class="search-drawer">
+    <div class="search-container">
+        <!-- search input -->
+        <div class="controls">
+            <mat-form-field class="fullwidth" appearance="fill">
+                <mat-label>search</mat-label>
+                <input matInput #search [(ngModel)]="searchQuery">
+            </mat-form-field>
+        </div>
+        <!-- search results -->
+        <ng-container *ngIf="searchQuery != ''">
+            <div class="search-results" *ngIf="(searchResults$ | async) as results; else loading">
+                <div class="results-list grid">
+                    <div class="result row" *ngFor="let result of results.data">
+                        <!-- link by ID -->
+                        <div *ngIf="result.supportsAttackID"
+                             class="col narrow clickable"
+                             matTooltip="copy LinkById"
+                             [cdkCopyToClipboard]="getLinkById(result)"
+                             (click)="showSnackbar(result)">
+                            <mat-icon>content_copy</mat-icon>
+                        </div>
+                        <div class="col">
+                            <div *ngIf="result.supportsAttackID">
+                                <a *ngIf="result.supportsAttackID" class="external-link" [href]="internalLink(result)">{{result.attackID}}: {{result.name}}</a>
+                            </div>
+                            <div *ngIf="result.deprecated || result.revoked; else description" class="description text-label warning">
+                                {{result.deprecated ? 'Deprecated' : 'Revoked'}}
+                            </div>
+                            <ng-template #description>
+                                <div class="description text-label lowercase">{{result.description}}</div>
+                            </ng-template>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <ng-template #loading>
+                <app-loading-overlay></app-loading-overlay>
+            </ng-template>
+            <mat-paginator [length]="resultCount"
+                           pageSize="10"
+                           [pageSizeOptions]="[5, 10, 25, 100]"
+                           (page)="getResults()">
+            </mat-paginator>
+        </ng-container>
+    </div>
+</div>
