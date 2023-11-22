@@ -5,7 +5,7 @@ import { EventEmitter, Injectable } from '@angular/core';
 })
 export class SidebarService {
     // sidebar tab settings
-    private _currentTab: tabOption = "references"
+    private _currentTab: tabOption = "search";
     public onTabChange = new EventEmitter();
     public get currentTab(): tabOption { return this._currentTab; }
     public set currentTab(tab: tabOption) {
