@@ -8,6 +8,10 @@
         .light & { border: 1px solid border-color(light); }
 
         .controls {
+            font-size: 16px;
+            .search {
+                width: 100%;
+            }
             .mat-form-field-wrapper {
                 margin-bottom: -1.34375em; // remove bottom padding used for hint
             }
@@ -54,15 +58,15 @@
                     display: -webkit-box;
                     -webkit-line-clamp: 2; /* number of lines to show */
                     -webkit-box-orient: vertical;
+                    p {
+                        margin-top: 0;
+                    }
                 }
                 .text-label {
                     font-size: 13px;
                 }
             }
         }
-    }
-    .fullwidth {
-        width: 100%;
     }
     .warning {
         color: color(error);

@@ -2,18 +2,9 @@
     <div class="search-container">
         <!-- search input -->
         <div class="controls">
-            <mat-form-field class="fullwidth" appearance="fill">
+            <mat-form-field class="search" appearance="fill">
                 <mat-label>search</mat-label>
                 <input matInput #search [(ngModel)]="searchQuery">
-            </mat-form-field>
-
-            <mat-form-field appearance="fill">
-                <mat-label>options</mat-label>
-                <mat-select multiple [(ngModel)]="filter" (selectionChange)="getResults()">
-                    <mat-optgroup *ngFor="let group of filterOptions" [label]="group.name" [disabled]="group.disabled">
-                        <mat-option *ngFor="let filter of group.values" [value]="filter.value" [disabled]="filter.disabled">{{filter.label}}</mat-option>
-                    </mat-optgroup>
-                </mat-select>
             </mat-form-field>
         </div>
         <!-- search results -->
@@ -31,13 +22,15 @@
                         </div>
                         <div class="col">
                             <div *ngIf="result.supportsAttackID">
-                                <a *ngIf="result.supportsAttackID" class="external-link" [href]="internalLink(result)">{{result.attackID}}: {{result.name}}</a>
+                                <a *ngIf="result.supportsAttackID" class="external-link" [href]="internalLink(result)">{{result.name}} ({{result.attackID}})</a>
                             </div>
                             <div *ngIf="result.deprecated || result.revoked; else description" class="description text-label warning">
                                 {{result.deprecated ? 'Deprecated' : 'Revoked'}}
                             </div>
                             <ng-template #description>
-                                <div class="description text-label lowercase">{{result.description}}</div>
+                                <app-descriptive-view class="description text-label lowercase"
+                                    [config]="{'object': result, 'mode': 'view', 'field': 'description', 'firstParagraphOnly': true}">
+                                </app-descriptive-view>
                             </ng-template>
                         </div>
                     </div>

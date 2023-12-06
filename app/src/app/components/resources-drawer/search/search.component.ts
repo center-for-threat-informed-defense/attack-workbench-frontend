@@ -60,14 +60,12 @@ export class SearchComponent implements AfterViewInit, OnDestroy {
     public getResults() {
         let limit = this.paginator? this.paginator.pageSize : 10;
         let offset = this.paginator? this.paginator.pageIndex * limit : 0;
-        let revoked = this.filter.includes("state.revoked");
-        let deprecated = this.filter.includes("state.deprecated");
 
         let options = {
             limit: limit,
             offset: offset,
-            revoked: revoked,
-            deprecated: deprecated,
+            revoked: true,
+            deprecated: true,
             search: this.searchQuery,
             deserialize: true
         }
