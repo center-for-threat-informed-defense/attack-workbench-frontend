@@ -5,7 +5,6 @@ import { Observable, Subscription, fromEvent } from 'rxjs';
 import { debounceTime, distinctUntilChanged, filter, tap } from 'rxjs/operators';
 import { StixObject } from 'src/app/classes/stix';
 import { Paginated, RestApiConnectorService } from 'src/app/services/connectors/rest-api/rest-api-connector.service';
-import { FilterGroup } from '../../stix/stix-list/stix-list.component';
 
 @Component({
     selector: 'app-search',
@@ -34,18 +33,36 @@ export class SearchComponent implements AfterViewInit, OnDestroy {
         searchSubscription.subscribe();
     }
 
-    public getLinkById(result: StixObject): string {
-        return `(LinkById: ${result.attackID})`;
+    ngOnDestroy(): void {
+        if (this.searchSubscription) this.searchSubscription.unsubscribe();
     }
 
-    public internalLink(result: StixObject): string {
-        return `/${result.attackType}/${result.stixID}`;
+    /**
+     * Get the LinkById tag for the given object
+     * @param obj the STIX object
+     */
+    public getLinkById(obj: StixObject): string {
+        return `(LinkById: ${obj.attackID})`;
     }
 
-    public showSnackbar(result: StixObject): void {
-        this.snackbar.open(`LinkById copied to clipboard: ${result.attackID}`, null, {duration: 1000});
+    /**
+     * Get the internal link to the object
+     * @param obj the STIX object
+     */
+    public internalLink(obj: StixObject): string {
+        return `/${obj.attackType}/${obj.stixID}`;
     }
 
+    /**
+     * Show the snackbar copy confirmation message
+     */
+    public showSnackbar(): void {
+        this.snackbar.open(`LinkById copied to clipboard`, null, {duration: 1000});
+    }
+
+    /**
+     * Retrieve the search results for the specified query
+     */
     public getResults() {
         let limit = this.paginator? this.paginator.pageSize : 10;
         let offset = this.paginator? this.paginator.pageIndex * limit : 0;
@@ -66,9 +83,5 @@ export class SearchComponent implements AfterViewInit, OnDestroy {
             },
             complete: () => { subscription.unsubscribe() }
         })
-    }
-
-    ngOnDestroy(): void {
-        if (this.searchSubscription) this.searchSubscription.unsubscribe();
     }
 }
