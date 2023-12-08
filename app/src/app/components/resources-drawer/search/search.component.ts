@@ -22,17 +22,6 @@ export class SearchComponent implements AfterViewInit, OnDestroy {
     public searchResults$: Observable<Paginated<StixObject>>;
     public resultCount: number = 0;
 
-    public filterOptions: FilterGroup[] = [
-        {
-            "name": "state",
-            "values": [
-                { "value": "state.deprecated", "label": "include deprecated", "disabled": false },
-                { "value": "state.revoked", "label": "include revoked", "disabled": false }
-            ]
-        }
-    ];
-    public filter: string[] = [];
-
     constructor(private restApiService: RestApiConnectorService, public snackbar: MatSnackBar) { }
 
     ngAfterViewInit(): void {
