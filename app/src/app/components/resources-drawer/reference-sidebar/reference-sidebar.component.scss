@@ -16,12 +16,10 @@
                 font-size: 16px;
             }
             .mat-form-field-wrapper {
-                // padding-bottom: 0px;
                 margin-bottom: -1.34375em; // remove bottom padding used for hint
-                // padding-bottom: 0;
             }
             .mat-form-field-flex {
-                padding: 12px 39px 0 39px !important; // override default padding for alignment w/ table
+                padding: 12px 42px 0 42px !important; // override default padding for alignment w/ table
             }
             .mat-form-field-label {
                 .light & { color: on-color-deemphasis(light); }
@@ -39,12 +37,11 @@
                     .dark & { border-top: 1px solid border-color(dark); }
                     .light & { border-top: 1px solid border-color(light); }
                 }
-                // flex-grow: 1;
                 .row {
                     min-height: 48px;
                 }
                 .col {
-                    padding: 5px;
+                    padding: 6px;
                     justify-content: center;
                     mat-icon {
                         display: flex;

@@ -16,7 +16,7 @@
                 margin-bottom: -1.34375em; // remove bottom padding used for hint
             }
             .mat-form-field-flex {
-                padding: 12px 39px 0 39px !important; // override default padding for alignment w/ table
+                padding: 12px 42px 0 42px !important; // override default padding for alignment w/ table
             }
             .mat-form-field-label {
                 .light & { color: on-color-deemphasis(light); }
@@ -40,7 +40,7 @@
                     overflow: hidden;
                     text-overflow: ellipsis;
                     display: -webkit-box;
-                    -webkit-line-clamp: 2; /* number of lines to show */
+                    -webkit-line-clamp: 3; /* number of lines to show */
                     -webkit-box-orient: vertical;
                     p {
                         margin-top: 0;
@@ -52,7 +52,7 @@
             }
         }
         .col {
-            padding: 5px;
+            padding: 6px;
             justify-content: center;
             mat-icon {
                 display: flex;
