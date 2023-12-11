@@ -1,10 +1,14 @@
 import { AfterViewInit, Component, ElementRef, OnDestroy, ViewChild, ViewEncapsulation } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { Router } from '@angular/router';
 import { Observable, Subscription, fromEvent } from 'rxjs';
 import { debounceTime, distinctUntilChanged, filter, tap } from 'rxjs/operators';
 import { StixObject } from 'src/app/classes/stix';
 import { Paginated, RestApiConnectorService } from 'src/app/services/connectors/rest-api/rest-api-connector.service';
+import { EditorService } from 'src/app/services/editor/editor.service';
+import { ConfirmationDialogComponent } from '../../confirmation-dialog/confirmation-dialog.component';
 
 @Component({
     selector: 'app-search',
@@ -21,7 +25,13 @@ export class SearchComponent implements AfterViewInit, OnDestroy {
     public searchResults$: Observable<Paginated<StixObject>>;
     public resultCount: number = 0;
 
-    constructor(private restApiService: RestApiConnectorService, public snackbar: MatSnackBar) { }
+    constructor(private restApiService: RestApiConnectorService,
+                public editorService: EditorService,
+                private router: Router,
+                private dialog: MatDialog,
+                public snackbar: MatSnackBar) {
+        // intentionally left blank
+    }
 
     ngAfterViewInit(): void {
         let searchSubscription = fromEvent(this.input.nativeElement, 'keyup').pipe(
@@ -46,11 +56,41 @@ export class SearchComponent implements AfterViewInit, OnDestroy {
     }
 
     /**
-     * Get the internal link to the object
-     * @param obj the STIX object
+     * Navigate to the internal object link
+     * If an object is being edited, open confirmation dialog
+     * @param obj the STIX object to navigate to
      */
-    public internalLink(obj: StixObject): string {
-        return `/${obj.attackType}/${obj.stixID}`;
+    public navigateTo(obj: StixObject): void {
+        if (this.editorService.editing) {
+            this.stopEditingAndNavigate(obj);
+        }
+        else {
+            this.router.navigate([`/${obj.attackType}/${obj.stixID}`], { queryParams: {} });
+        }
+    }
+
+    /**
+     * Opens a confirmation dialog and navigates
+     * to the search result
+     * @param obj the STIX object to navigate to
+     */
+    public stopEditingAndNavigate(obj: StixObject): void {
+        let prompt = this.dialog.open(ConfirmationDialogComponent, {
+            maxWidth: "35em",
+            data: {
+                message: '# Are you sure you want to discard changes?',
+            }
+        });
+
+        let subscription = prompt.afterClosed().subscribe({
+            next: (result) => {
+                if (result) {
+                    this.editorService.onEditingStopped.emit();
+                    this.router.navigate([`/${obj.attackType}/${obj.stixID}`], { queryParams: {} });
+                } // otherwise do nothing
+            },
+            complete: () => { subscription.unsubscribe(); } //prevent memory leaks
+        });
     }
 
     /**
