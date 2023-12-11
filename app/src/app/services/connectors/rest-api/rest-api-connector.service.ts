@@ -442,30 +442,30 @@ export class RestApiConnectorService extends ApiConnector {
         search?: string,
     }) {
         let query = new HttpParams({ encoder: new CustomEncoder() });
-        if (options) {
-            // pagination
-            if (options.limit) query = query.set("limit", options.limit.toString());
-            if (options.offset) query = query.set("offset", options.offset.toString());
-            if (options.limit || options.offset) query = query.set("includePagination", "true");
-            // ATT&CK ID filter
-            if (options.attackIDs) {
-                options.attackIDs.forEach(id => query = query.append("attackId", id));
-            }
-            // object state
-            if (options.state) query = query.set("state", options.state);
-            if (options.revoked) query = query.set("includeRevoked", options.revoked ? "true" : "false");
-            if (options.deprecated) query = query.set("includeDeprecated", options.deprecated ? "true" : "false");
-            // searching
-            if (options.search) query = query.set("search", options.search);
-            // lastUpdatedBy
-            if (options.lastUpdatedBy) options.lastUpdatedBy.forEach(user => query = query.append('lastUpdatedBy', user));
+
+        // pagination
+        if (options?.limit) query = query.set("limit", options.limit.toString());
+        if (options?.offset) query = query.set("offset", options.offset.toString());
+        if (options?.limit || options?.offset) query = query.set("includePagination", "true");
+        // ATT&CK ID filter
+        if (options?.attackIDs) {
+            options.attackIDs.forEach(id => query = query.append("attackId", id));
         }
+        // object state
+        if (options?.state) query = query.set("state", options.state);
+        if (options?.revoked) query = query.set("includeRevoked", options.revoked ? "true" : "false");
+        if (options?.deprecated) query = query.set("includeDeprecated", options.deprecated ? "true" : "false");
+        // searching
+        if (options?.search) query = query.set("search", options.search);
+        // lastUpdatedBy
+        if (options?.lastUpdatedBy) options.lastUpdatedBy.forEach(user => query = query.append('lastUpdatedBy', user));
+
         return this.http.get(`${this.apiUrl}/attack-objects`, { params: query }).pipe(
             tap(results => logger.log(`retrieved ATT&CK objects`, results)), // on success, trigger the success notification
             map(results => {
-                if (!options.deserialize) return results; //skip deserialization if param not added
+                if (!options?.deserialize) return results; //skip deserialization if param not added
                 let response = results as any;
-                if (options.limit || options.offset) { // returned a paginated
+                if (options?.limit || options?.offset) { // returned a paginated
                     let data = response.data as Array<any>;
                     data = data.filter(y => !["marking-definition", "identity"].includes(y.stix.type)).map(y => {
                         if (y.stix.type == "malware" || y.stix.type == "tool") return new Software(y.stix.type, y);
