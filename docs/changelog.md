@@ -38,6 +38,7 @@
 
 #### New Features
 - Added a Contributors page which lists all contributors in the knowledge base. Users can view a list of contributions made by each individual and click on any object to navigate to its Workbench page. See [frontend#514](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/514).
+- Added a search tab to the resources drawer. See [frontend#521](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/pull/521).
 
 #### Improvements
 - Added the ability to view mapped techniques for a given data source. See [frontend#255](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/255).
