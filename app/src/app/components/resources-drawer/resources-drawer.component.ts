@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewEncapsulation, Output, EventEmitter, Input } from '@angular/core';
+import { Component, ViewEncapsulation, Output, EventEmitter, Input } from '@angular/core';
 import { AuthenticationService } from 'src/app/services/connectors/authentication/authentication.service';
 import { SidebarService } from 'src/app/services/sidebar/sidebar.service';
 
@@ -8,7 +8,7 @@ import { SidebarService } from 'src/app/services/sidebar/sidebar.service';
     styleUrls: ['./resources-drawer.component.scss'],
     encapsulation: ViewEncapsulation.None
 })
-export class ResourcesDrawerComponent implements OnInit {
+export class ResourcesDrawerComponent {
     @Output() onClose = new EventEmitter(); 
     @Input() useService: boolean = true; //if true, control of this drawer is performed through the sidebar service. Otherwise, events and internal state are used.
     @Input() showCloseButton: boolean = true;
@@ -31,9 +31,5 @@ export class ResourcesDrawerComponent implements OnInit {
     public close() {
         if (this.useService) this.sidebarService.opened = false;
         else this.onClose.emit();
-    }
-
-    ngOnInit() {
-        // intentionally left blank
     }
 }

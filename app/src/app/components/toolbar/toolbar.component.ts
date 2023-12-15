@@ -72,10 +72,10 @@ export class ToolbarComponent implements OnInit {
     }
 
     public openExternalUrl() {
-      window.open(this.websiteIntegrationService.currentWebIntegrationStatus.url)
+        window.open(this.websiteIntegrationService.currentWebIntegrationStatus.url)
     }
 
     public createCollectionFromGroup() {
-      this.router.navigateByUrl(`/collection/new?editing=true&groupId=${this.editorService.stixId}`);
+        this.router.navigateByUrl(`/collection/new?editing=true&groupId=${this.editorService.stixId}`);
     }
 }

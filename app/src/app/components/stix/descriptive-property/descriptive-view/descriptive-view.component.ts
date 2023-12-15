@@ -103,7 +103,7 @@ export class DescriptiveViewComponent implements OnInit {
      * @param ids list of IDs to retrieve
      */
     private loadLinkedObjects(ids: string[]): Observable<any> {
-        return this.restApiConnector.getAllObjects(ids, null, null, null, true, true, true).pipe(
+        return this.restApiConnector.getAllObjects({attackIDs: ids, revoked: true, deprecated: true, deserialize: true}).pipe(
             map((results: any) => {
                 let data = results.data as StixObject[];
                 // store retrieved objects in dictionary for quick lookup

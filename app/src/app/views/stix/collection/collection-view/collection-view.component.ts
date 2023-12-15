@@ -630,7 +630,7 @@ export class CollectionViewComponent extends StixViewPage implements OnInit {
         // prepare additional data loading
         this.loading = "fetching additional data";
         let apis = {
-            "attackObjects": this.restApiConnector.getAllObjects(null, null, null, null, true, true, false)
+            "attackObjects": this.restApiConnector.getAllObjects({revoked: true, deprecated: true, deserialize: false})
         }
 
         // fetch previous version if this was not a new collection

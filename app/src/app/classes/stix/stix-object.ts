@@ -514,7 +514,7 @@ export abstract class StixObject extends Serializable {
             if(!ids.includes(id)) ids.push(id);
         }
 
-        return restAPIService.getAllObjects(ids, null, null, null, true, true, true).pipe(
+        return restAPIService.getAllObjects({attackIDs: ids, revoked: true, deprecated: true, deserialize: true}).pipe(
             map((results: any) => {
                 let retrieved_ids = (results.data as StixObject[]).map(obj => obj.attackID);
                 for (let id of ids) {

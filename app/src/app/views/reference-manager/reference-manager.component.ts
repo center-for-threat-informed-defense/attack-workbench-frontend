@@ -37,7 +37,7 @@ export class ReferenceManagerComponent implements OnInit, AfterViewInit, OnDestr
                 public snackbar: MatSnackBar) { }
 
     ngOnInit(): void {
-        let subscription = this.restApiConnector.getAllObjects(null, null, null, null, true, true, true).subscribe({
+        let subscription = this.restApiConnector.getAllObjects({revoked: true, deprecated: true, deserialize: true}).subscribe({
             next: (results) => {
                 // build ID to SDO lookup
                 let idToObject = {};
