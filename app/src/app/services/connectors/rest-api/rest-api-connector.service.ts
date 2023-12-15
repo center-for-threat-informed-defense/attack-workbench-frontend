@@ -427,30 +427,45 @@ export class RestApiConnectorService extends ApiConnector {
      * @param {boolean} [deprecated] if true, get deprecated objects
      * @param {boolean} [deserialize] if true, deserialize objects to full STIX objects
      * @param {string[]} [lastUpdatedBy] filter to only include objects modified by the list of given user IDs
+     * @param {string} [search] if specified, return objects where the query occurs in the name, description, or ATT&CK ID; the search is case-insensitive
      * @returns {Observable<any[]>} observable of retrieved objects
      */
-    public getAllObjects(attackIDs?: string[], limit?: number, offset?: number, state?: string, revoked?: boolean, deprecated?: boolean, deserialize?: boolean, lastUpdatedBy?: string[]) {
+    public getAllObjects(options?: {
+        attackIDs?: string[],
+        limit?: number,
+        offset?: number,
+        state?: string,
+        revoked?: boolean,
+        deprecated?: boolean,
+        deserialize?: boolean,
+        lastUpdatedBy?: string[],
+        search?: string,
+    }) {
         let query = new HttpParams({ encoder: new CustomEncoder() });
+
         // pagination
-        if (limit) query = query.set("limit", limit.toString());
-        if (offset) query = query.set("offset", offset.toString());
-        if (limit || offset) query = query.set("includePagination", "true");
+        if (options?.limit) query = query.set("limit", options.limit.toString());
+        if (options?.offset) query = query.set("offset", options.offset.toString());
+        if (options?.limit || options?.offset) query = query.set("includePagination", "true");
         // ATT&CK ID filter
-        if (attackIDs) {
-            attackIDs.forEach(id => query = query.append("attackId", id));
+        if (options?.attackIDs) {
+            options.attackIDs.forEach(id => query = query.append("attackId", id));
         }
         // object state
-        if (state) query = query.set("state", state);
-        if (revoked) query = query.set("includeRevoked", revoked ? "true" : "false");
-        if (deprecated) query = query.set("includeDeprecated", deprecated ? "true" : "false");
+        if (options?.state) query = query.set("state", options.state);
+        if (options?.revoked) query = query.set("includeRevoked", options.revoked ? "true" : "false");
+        if (options?.deprecated) query = query.set("includeDeprecated", options.deprecated ? "true" : "false");
+        // searching
+        if (options?.search) query = query.set("search", options.search);
         // lastUpdatedBy
-        if (lastUpdatedBy) lastUpdatedBy.forEach(user => query = query.append('lastUpdatedBy', user));
+        if (options?.lastUpdatedBy) options.lastUpdatedBy.forEach(user => query = query.append('lastUpdatedBy', user));
+
         return this.http.get(`${this.apiUrl}/attack-objects`, { params: query }).pipe(
             tap(results => logger.log(`retrieved ATT&CK objects`, results)), // on success, trigger the success notification
             map(results => {
-                if (!deserialize) return results; //skip deserialization if param not added
+                if (!options?.deserialize) return results; //skip deserialization if param not added
                 let response = results as any;
-                if (limit || offset) { // returned a paginated
+                if (options?.limit || options?.offset) { // returned a paginated
                     let data = response.data as Array<any>;
                     data = data.filter(y => !["marking-definition", "identity"].includes(y.stix.type)).map(y => {
                         if (y.stix.type == "malware" || y.stix.type == "tool") return new Software(y.stix.type, y);
