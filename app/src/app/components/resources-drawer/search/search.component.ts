@@ -118,7 +118,6 @@ export class SearchComponent implements AfterViewInit, OnDestroy {
         this.searchResults$ = this.restApiService.getAllObjects(options);
         let subscription = this.searchResults$.subscribe({
             next: (data) => {
-                console.log(data);
                 this.resultCount = data.pagination.total;
             },
             complete: () => { subscription.unsubscribe() }
