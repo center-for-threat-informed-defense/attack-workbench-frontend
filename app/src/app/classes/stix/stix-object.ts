@@ -270,6 +270,17 @@ export abstract class StixObject extends Serializable {
     }
 
     /**
+     * Validate the object's ATT&CK ID
+     * This function handles cases in which the object has an organization prefix
+     * @returns true if the ATT&CK ID is valid, false otherwise
+     */
+    public isValidAttackId(): boolean {
+        let idRegex = new RegExp("^([A-Z]+-)?" + this.attackIDValidator.regex + "$");
+        let attackIDValid = idRegex.test(this.attackID);
+        return attackIDValid;
+    }
+
+    /**
      * Validate the current object state and return information on the result of the validation
      * @abstract
      * @param {RestApiConnectorService} restAPIService: the REST API connector through which asynchronous validation can be completed
@@ -356,9 +367,7 @@ export abstract class StixObject extends Serializable {
                                         "message": "ATT&CK ID is unique"
                                     })
                                 }
-                                let idRegex = new RegExp("^([A-Z]+-)?" + this.attackIDValidator.regex + "$");
-                                let attackIDValid = idRegex.test(this.attackID);
-                                if (!attackIDValid) {
+                                if (!this.isValidAttackId()) {
                                     result.errors.push({
                                         "result": "error",
                                         "field": "attackID",
