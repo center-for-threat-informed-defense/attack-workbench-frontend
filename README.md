@@ -12,6 +12,8 @@ We developed the Workbench with the ATT&CK user community in mind. If MITRE ATT&
 
 This repository contains an Angular-based web application providing the user interface for the ATT&CK Workbench application, as well as the main documentation regarding its use. The ATT&CK Workbench application requires additional components for full operation. See the [install and run](#install-and-run) instructions for more details about setting up the entire project.
 
+The ATT&CK Workbench does not collect or share information with MITRE or any third parties.
+
 ## Frontend Documentation
 
 For more information about the ATT&CK Workbench, please see the [docs](/docs/README.md) folder. The contents of the docs folder is also available in the in-app help page.
