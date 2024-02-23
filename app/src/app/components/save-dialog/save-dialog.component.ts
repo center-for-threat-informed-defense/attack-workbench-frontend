@@ -77,7 +77,6 @@ export class SaveDialogComponent implements OnInit {
      */
     public patch() {
         let saves = [];
-        saves.push(this.config.object.save(this.restApiService));
         for (let obj of this.patch_objects) {
             // replace LinkById references with the new ATT&CK ID
             let regex = new RegExp(`\\(LinkById: (${this.config.patchID})\\)`, "gmu");
@@ -89,8 +88,11 @@ export class SaveDialogComponent implements OnInit {
         }
         this.stage = 3; // enter loading stage until patching is complete
         let saveSubscription = forkJoin(saves).subscribe({
-            complete: () => { saveSubscription.unsubscribe(); this.dialogRef.close(true); }
-        })
+            complete: () => {
+				saveSubscription.unsubscribe();
+				this.save();
+			}
+        });
     }
 
     /**
