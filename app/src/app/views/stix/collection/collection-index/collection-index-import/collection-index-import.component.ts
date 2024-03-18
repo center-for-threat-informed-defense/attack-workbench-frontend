@@ -4,7 +4,7 @@ import { CollectionIndex } from 'src/app/classes/collection-index';
 import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/rest-api-connector.service';
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { environment } from "../../../../../../environments/environment";
-import { logger } from "../../../../../util/logger";
+import { logger } from "../../../../../utils/logger";
 @Component({
     selector: 'app-collection-index-import',
     templateUrl: './collection-index-import.component.html',

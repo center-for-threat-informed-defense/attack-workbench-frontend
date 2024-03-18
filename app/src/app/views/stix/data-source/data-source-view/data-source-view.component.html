@@ -3,7 +3,7 @@
         <div class="col">
             <app-name-property [config]="{
                 mode: editing? 'edit' : 'view',
-                object: data_source
+                object: dataSource
             }"></app-name-property>
             <app-subheading [config]="config" (onOpenHistory)="openHistory()" (onOpenNotes)="openNotes()"></app-subheading>
         </div>
@@ -13,14 +13,14 @@
             <!-- ATT&CK ID -->
             <app-attackid-property class="grow-to-row" [config]="{
                 mode: editing? 'edit' : 'view',
-                object: data_source
+                object: dataSource
             }"></app-attackid-property>
         </div>
         <div class="col">
             <!-- VERSION NUMBER -->
             <app-version-property class="grow-to-row" [config]="{
                 mode: editing? 'edit' : 'view',
-                object: data_source
+                object: dataSource
             }"></app-version-property>
         </div>
     </div>
@@ -29,7 +29,7 @@
             <!-- Domains -->
             <app-list-property class="grow-to-row" [config]="{
                 mode: editing? 'edit': 'view',
-                object: data_source,
+                object: dataSource,
                 field: 'domains',
                 editType: 'select'
             }"></app-list-property>
@@ -38,7 +38,7 @@
             <!-- CONTRIBUTORS -->
             <app-list-property class="grow-to-row" [config]="{
                 mode: editing? 'edit' : 'view',
-                object: data_source,
+                object: dataSource,
                 field: 'contributors',
                 editType: 'any'
             }"></app-list-property>
@@ -49,7 +49,7 @@
             <!-- PLATFORMS -->
             <app-list-property class="grow-to-row" [config]="{
                 mode: editing? 'edit' : 'view',
-                object: data_source,
+                object: dataSource,
                 field: 'platforms',
                 editType: 'select'
             }"></app-list-property>
@@ -58,7 +58,7 @@
             <!-- COLLECTION LAYERS -->
             <app-list-property class="grow-to-row" [config]="{
                 mode: editing? 'edit' : 'view',
-                object: data_source,
+                object: dataSource,
                 field: 'collection_layers',
                 label: 'collection layers',
                 editType: 'select'
@@ -70,16 +70,17 @@
             <!-- DESCRIPTION -->
             <app-descriptive-property [config]="{
                 mode: editing? 'edit' : 'view',
-                object: data_source,
+                object: dataSource,
                 field: 'description',
                 firstParagraphOnly: false, 
-                referencesField: data_source.external_references,
+                referencesField: dataSource.external_references,
                 label: 'Description'
             }"></app-descriptive-property>
         </div>
     </div>
     <!-- only show relationships if configured to show them -->
     <div *ngIf="(config.showRelationships || !config.hasOwnProperty('showRelationships')) && !editing">
+        <!-- data components -->
         <div class="row">
             <div class="col">
                 <h2 class="section-header">Data Components</h2>
@@ -96,8 +97,8 @@
         </div>
         <div class="row">
             <div class="col">
-                <app-stix-list #dataComponentsList [config]="{
-                    'stixObjects': data_components,
+                <app-stix-list #dataComponentsList (refresh)="loadData()" [config]="{
+                    'stixObjects': dataComponents,
                     'type': 'data-component',
                     'showDeprecatedFilter': true,
                     'clickBehavior': 'dialog',
@@ -106,9 +107,28 @@
                 (refresh)="getDataComponents()"></app-stix-list>
             </div>
         </div>
+
+        <!-- techniques detected -->
+        <div class="row">
+            <div class="col">
+                <h2 class="section-header">Techniques Detected</h2>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <app-stix-list #techniquesDetectedList [config]="{
+                    'stixObjects': techniquesDetected,
+                    'type': 'relationship',
+                    'showDeprecatedFilter': true,
+                    'clickBehavior': 'dialog',
+                    'allowEdits': false
+                }"
+                (refresh)="getDataComponents()"></app-stix-list>
+            </div>
+        </div>
     </div>
     <!-- EXTERNAL REFERENCES -->
-    <div *ngIf="data_source.external_references.list().length > 0">
+    <div *ngIf="dataSource.external_references.list().length > 0">
         <div class="row">
             <div class="col">
                 <h2 class="section-header">References</h2>
@@ -118,8 +138,8 @@
             <div class="col">
                 <app-external-references-property [config]="{
                     mode: editing? 'edit': 'view',
-                    object: data_source,
-                    referencesField: data_source.external_references
+                    object: dataSource,
+                    referencesField: dataSource.external_references
                 }"></app-external-references-property>
             </div>
         </div>

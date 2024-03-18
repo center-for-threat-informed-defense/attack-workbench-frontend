@@ -14,6 +14,7 @@ import { CampaignListComponent } from './views/stix/campaign/campaign-list/campa
 import { AssetListComponent } from './views/stix/asset/asset-list/asset-list.component';
 import { NotesPageComponent } from './views/notes-page/notes-page.component';
 import { StixPageComponent } from './views/stix/stix-page/stix-page.component';
+import { ContributorsPageComponent } from './views/contributors-page/contributors-page.component';
 
 import { RouterModule, Routes } from '@angular/router';
 import { NgModule } from '@angular/core';
@@ -282,6 +283,22 @@ stixRoutes.push({
 		},
 		component: ReferenceManagerComponent
 	}]
+}, {
+    path: 'contributors',
+    canActivateChild: [AuthorizationGuard],
+    data: {
+        breadcrumb: 'contributors',
+        more: true
+    },
+    children: [{
+        path: '',
+        data: {
+            breadcrumb: 'list',
+            title: 'Contributors',
+            roles: viewRoles
+        },
+        component: ContributorsPageComponent
+    }]
 }, {
 	path: 'notes',
 	canActivateChild: [AuthorizationGuard],

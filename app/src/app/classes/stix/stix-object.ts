@@ -5,7 +5,7 @@ import { Serializable, ValidationData } from '../serializable';
 import { Paginated, RestApiConnectorService } from 'src/app/services/connectors/rest-api/rest-api-connector.service';
 import { forkJoin, Observable, of } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
-import { logger } from "../../util/logger";
+import { logger } from "../../utils/logger";
 
 export type workflowStates = "work-in-progress" | "awaiting-review" | "reviewed" | "";
 let stixTypeToAttackType = {
@@ -270,6 +270,17 @@ export abstract class StixObject extends Serializable {
     }
 
     /**
+     * Validate the object's ATT&CK ID
+     * This function handles cases in which the object has an organization prefix
+     * @returns true if the ATT&CK ID is valid, false otherwise
+     */
+    public isValidAttackId(): boolean {
+        let idRegex = new RegExp("^([A-Z]+-)?" + this.attackIDValidator.regex + "$");
+        let attackIDValid = idRegex.test(this.attackID);
+        return attackIDValid;
+    }
+
+    /**
      * Validate the current object state and return information on the result of the validation
      * @abstract
      * @param {RestApiConnectorService} restAPIService: the REST API connector through which asynchronous validation can be completed
@@ -356,9 +367,7 @@ export abstract class StixObject extends Serializable {
                                         "message": "ATT&CK ID is unique"
                                     })
                                 }
-                                let idRegex = new RegExp("^([A-Z]+-)?" + this.attackIDValidator.regex + "$");
-                                let attackIDValid = idRegex.test(this.attackID);
-                                if (!attackIDValid) {
+                                if (!this.isValidAttackId()) {
                                     result.errors.push({
                                         "result": "error",
                                         "field": "attackID",
@@ -514,9 +523,13 @@ export abstract class StixObject extends Serializable {
             if(!ids.includes(id)) ids.push(id);
         }
 
-        return restAPIService.getAllObjects(ids, null, null, null, true, true, true).pipe(
+        return restAPIService.getAllObjects({attackIDs: ids, revoked: true, deprecated: true, deserialize: true}).pipe(
             map((results: any) => {
-                let retrieved_ids = (results.data as StixObject[]).map(obj => obj.attackID);
+                // objects must be validated in cases where more than one object is 
+                // returned by the given ATT&CK ID, this occurs due to older versions 
+                // of ATT&CK in which techniques shared their IDs with mitigations
+                let validObjects = (results.data as StixObject[]).filter(obj => obj.isValidAttackId());
+                let retrieved_ids = validObjects.map(obj => obj.attackID);
                 for (let id of ids) {
                     if (!retrieved_ids.includes(id)) result.missingLinks.add(id);
                 }

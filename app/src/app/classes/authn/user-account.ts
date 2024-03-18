@@ -1,7 +1,7 @@
 import { Observable, of } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
 import { RestApiConnectorService } from '../../services/connectors/rest-api/rest-api-connector.service';
-import { logger } from '../../util/logger';
+import { logger } from '../../utils/logger';
 import { Serializable, ValidationData } from '../serializable';
 import { Role } from './role';
 import { Status } from './status';

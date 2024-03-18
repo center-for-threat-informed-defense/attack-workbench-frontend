@@ -103,11 +103,16 @@ export class DescriptiveViewComponent implements OnInit {
      * @param ids list of IDs to retrieve
      */
     private loadLinkedObjects(ids: string[]): Observable<any> {
-        return this.restApiConnector.getAllObjects(ids, null, null, null, true, true, true).pipe(
+        return this.restApiConnector.getAllObjects({attackIDs: ids, revoked: true, deprecated: true, deserialize: true}).pipe(
             map((results: any) => {
                 let data = results.data as StixObject[];
                 // store retrieved objects in dictionary for quick lookup
-                data.forEach(obj => this.objectLookup[obj.attackID] = obj);
+                data.forEach(obj => {
+                    // objects must be validated in cases where more than one object is 
+                    // returned by the given ATT&CK ID, this occurs due to older versions 
+                    // of ATT&CK in which techniques shared their IDs with mitigations
+                    if (obj.isValidAttackId()) this.objectLookup[obj.attackID] = obj;
+                });
                 return results;
             })
         );
@@ -119,7 +124,7 @@ export class DescriptiveViewComponent implements OnInit {
     private replaceLinkByIds(displayStr: string, linkedIDs: string[]): string {
         for (let id of linkedIDs) {
             let obj = this.objectLookup[id];
-            if (obj && obj.name) {
+            if (obj?.name) {
                 let rep = `(LinkById: ${obj.attackID})`;
                 let target = this.config.mode == 'edit' ? ` target="_blank"` : ``; // open linked object in new tab when editing
                 let linkHTML = `<span><a href="${obj.attackType}/${obj.stixID}"${target}>${obj.name}</a></span>`;
