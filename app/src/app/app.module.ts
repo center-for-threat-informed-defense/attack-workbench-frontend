@@ -70,6 +70,7 @@ import { AddDialogComponent } from './components/add-dialog/add-dialog.component
 import { DeleteDialogComponent } from './components/delete-dialog/delete-dialog.component';
 import { HistoryTimelineComponent } from "./components/resources-drawer/history-timeline/history-timeline.component";
 import { ReferenceSidebarComponent } from "./components/resources-drawer/reference-sidebar/reference-sidebar.component";
+import { SearchComponent } from './components/resources-drawer/search/search.component';
 import { ReferenceEditDialogComponent } from "./components/reference-edit-dialog/reference-edit-dialog.component"
 import { MultipleChoiceDialogComponent } from "./components/multiple-choice-dialog/multiple-choice-dialog.component";
 import { ValidationResultsComponent } from "./components/validation-results/validation-results.component";
@@ -208,6 +209,9 @@ import { AssetViewComponent } from './views/stix/asset/asset-view/asset-view.com
 import { TeamsListPageComponent } from './views/admin-page/teams/teams-list-page/teams-list-page.component';
 import { TeamsViewPageComponent } from './views/admin-page/teams/teams-view-page/teams-view-page.component';
 import { CreateNewDialogComponent } from './components/create-new-dialog/create-new-dialog.component';
+
+import { ContributorsPageComponent } from './views/contributors-page/contributors-page.component';
+import { ContributorEditDialogComponent } from './components/contributor-edit-dialog/contributor-edit-dialog.component';
 
 import { AppConfigService } from './services/config/app-config.service';
 
@@ -348,7 +352,10 @@ export function initConfig(appConfigService: AppConfigService) {
 		SubtypeViewComponent,
 		SubtypeEditComponent,
 		SubtypeDialogComponent,
-  		BreadcrumbComponent
+  		BreadcrumbComponent,
+        ContributorsPageComponent,
+        ContributorEditDialogComponent,
+        SearchComponent
 	],
 	imports: [
 		MaterialFileInputModule,

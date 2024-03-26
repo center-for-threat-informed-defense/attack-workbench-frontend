@@ -175,7 +175,7 @@ export class ReferenceEditDialogComponent implements OnInit, OnDestroy {
 
     public parsePatches() {
         this.stage = 1; //enter patching stage
-        let subscription = this.restApiConnectorService.getAllObjects(null, null, null, null, true, true, true).subscribe({
+        let subscription = this.restApiConnectorService.getAllObjects({revoked: true, deprecated: true, deserialize: true}).subscribe({
             next: (results) => {
                 // build ID to SDO lookup
                 let idToObject = {}
