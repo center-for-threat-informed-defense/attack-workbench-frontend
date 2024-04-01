@@ -70,7 +70,20 @@ export class HistoryTimelineComponent implements OnInit, OnDestroy {
             let objectCreated = objectVersion.created.getTime() == objectVersion.modified.getTime();
             let release = objectVersion.attackType == "collection" && (objectVersion as Collection).release;
             let objectImported = !objectCreated && !previousVersion;
-            let description = objectCreated? `${objectVersion["name"]} was created` : objectImported? `Earliest imported version of ${objectVersion["name"]}` : `${objectVersion["name"]} was edited`
+			// set up icon and tooltip
+			let description = "";
+			let icon;
+			if (objectCreated) {
+				description = `${objectVersion["name"]} was created`;
+				icon = "add";
+			} else if (objectImported) {
+				description = `Earliest imported version of ${objectVersion["name"]}`;
+				icon = "cloud_download";
+			} else {
+				description = `${objectVersion["name"]} was edited`;
+				icon = "edit";
+			}
+			// add historyEvent
             this.historyEvents.push({
                 change_types: {
                     versionChanged: versionChanged,
@@ -79,7 +92,7 @@ export class HistoryTimelineComponent implements OnInit, OnDestroy {
                     objectCreated: objectCreated,
                     release: release
                 },
-                icon: objectImported? "cloud_download" : objectCreated? "add" : "edit",
+                icon: icon,
                 name: objectVersion["name"],
                 description: description,
                 sdo: objectVersion,
@@ -104,7 +117,19 @@ export class HistoryTimelineComponent implements OnInit, OnDestroy {
                 let objectCreated = relationshipVersion.created.getTime() == relationshipVersion.modified.getTime();
                 let objectImported = !objectCreated && firstVersion;
                 let relationshipName = `${relationshipVersion.source_name} ${relationshipVersion.relationship_type} ${relationshipVersion.target_name}`
-                let description = objectCreated? `${relationshipName} was created` : objectImported? `Earliest imported version of ${relationshipName}` : `${relationshipName} was edited`
+				// set up icon and tooltip
+				let description = "";
+				let icon;
+				if (objectCreated) {
+					description = `${relationshipName} was created`;
+					icon = "add";
+				} else if (objectImported) {
+					description = `Earliest imported version of ${relationshipName}`;
+					icon = "cloud_download";
+				} else {
+					description = `${relationshipName} was edited`;
+					icon = "edit";
+				}
 
                 this.historyEvents.push({
                     change_types: {
@@ -114,7 +139,7 @@ export class HistoryTimelineComponent implements OnInit, OnDestroy {
                         objectCreated: objectCreated,
                         release: false
                     },
-                    icon: objectImported? "cloud_download" : objectCreated? "add" : "edit",
+                    icon: icon,
                     name: relationshipName,
                     description: description,
                     sdo: relationshipVersion,
