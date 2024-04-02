@@ -8,16 +8,20 @@
             <div>
                 <mat-checkbox class="secondary" [(ngModel)]="showRelationshipHistory">show relationship history</mat-checkbox>
             </div>
+			<div>
+				<mat-checkbox class="tertiary" [(ngModel)]="showCollectionHistory">show collection history</mat-checkbox>
+			</div>
         </div>
         <mat-action-list>
             <ng-container *ngFor="let historyEvent of historyEvents">
                 <button mat-list-item 
-                        *ngIf="(historyEvent.sdo.type == 'relationship' && showRelationshipHistory) || (historyEvent.sdo.type != 'relationship' && showObjectHistory)"
+                        *ngIf="(historyEvent.sdo.type == 'relationship' && showRelationshipHistory) || (historyEvent.sdo.attackType == 'collection' && showCollectionHistory) || (historyEvent.sdo.type != 'relationship' && historyEvent.sdo.attackType != 'collection' && showObjectHistory)"
                         (click)="preview(historyEvent.sdo)"
                         
                         class="history-event"
                         [class.relationship]="historyEvent.sdo.type == 'relationship'"
-                        [class.object]="historyEvent.sdo.type != 'relationship'"
+						[class.collection]="historyEvent.sdo.attackType == 'collection'"
+                        [class.object]="historyEvent.sdo.type != 'relationship' && historyEvent.sdo.attackType != 'collection'"
                         
                         [matTooltip]="historyEvent.description" 
                         matTooltipPosition="left" 

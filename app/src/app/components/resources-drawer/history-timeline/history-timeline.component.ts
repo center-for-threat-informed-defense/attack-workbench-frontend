@@ -39,6 +39,7 @@ export class HistoryTimelineComponent implements OnInit, OnDestroy {
     public hoveredHistoryEvent: HistoryEvent = null;
     public showObjectHistory: boolean = true;
     public showRelationshipHistory: boolean = true;
+	public showCollectionHistory: boolean = true;
     public onEditStopSubscription: Subscription;
 
     constructor(private route: ActivatedRoute, 
@@ -55,10 +56,11 @@ export class HistoryTimelineComponent implements OnInit, OnDestroy {
     /**
      * transform the object versions into HistoryEvent objects and add them to the HistoryEvents array
      */
-    private parseHistory(objectVersions: StixObject[], relationships: Relationship[]): void {
+    private parseHistory(stixID: string, objectVersions: StixObject[], relationships: Relationship[], collections: Collection[]): void {
         // ensure that the stix objects are sorted in ascending order of date
-        objectVersions = objectVersions.sort((a,b) => (a.modified as any) - (b.modified as any)); 
-        relationships = relationships.sort((a,b) => (a.modified as any) - (b.modified as any)); 
+        objectVersions = objectVersions.sort((a,b) => (a.modified as any) - (b.modified as any));
+        relationships = relationships.sort((a,b) => (a.modified as any) - (b.modified as any));
+		collections = collections.sort((a,b) => (a.modified as any) - (b.modified as any));
         // clear previously parsed historyEvents
         this.historyEvents = [];
         // build historyEvents for the object itself
@@ -147,6 +149,59 @@ export class HistoryTimelineComponent implements OnInit, OnDestroy {
                 firstVersion = false;
             }
         }
+
+        // group collections by ID
+        let stixIDtoCollectionVersions = {};
+        for (let collection of collections) {
+            if (collection.stixID in stixIDtoCollectionVersions) stixIDtoCollectionVersions[collection.stixID].push(collection);
+            else stixIDtoCollectionVersions[collection.stixID] = [collection];
+        }
+
+		// build historyEvents for collections
+		for (let collectionID in stixIDtoCollectionVersions) {
+			let inPreviousVersion: boolean = false;
+			let previousVersion: VersionNumber = null;
+			let collectionVersions: Collection[] = stixIDtoCollectionVersions[collectionID];
+			for (let collectionVersion of collectionVersions) {
+				let inCollection = collectionVersion.contents.filter(c => c.object_ref == stixID);
+				let versionChanged = previousVersion && collectionVersion.version.compareTo(previousVersion) != 0;
+				if (inCollection?.length && versionChanged) {
+					// object was added to or released with the collection
+					this.historyEvents.push({
+						change_types: {
+							versionChanged: false,
+							stateChanged: false,
+							objectImported: false,
+							objectCreated: false,
+							release: collectionVersion.release
+						},
+						icon: collectionVersion.release ? "verified" : "add",
+						name: collectionVersion.name,
+						description: `Added to ${collectionVersion.name} (v${collectionVersion.version.version})`,
+						sdo: collectionVersion,
+					});
+				} else if(!inCollection?.length && inPreviousVersion) {
+					// object was removed from the collection
+					this.historyEvents.push({
+						change_types: {
+							versionChanged: false,
+							stateChanged: false,
+							objectImported: false,
+							objectCreated: false,
+							release: collectionVersion.release
+						},
+						icon: "remove",
+						name: collectionVersion.name,
+						description: `Removed from ${collectionVersion.name} (v${collectionVersion.version.version})`,
+						sdo: collectionVersion
+					});
+				} else {
+					// nothing has changed between versions
+				}
+				inPreviousVersion = inCollection.length > 0;
+				previousVersion = collectionVersion.version;
+			}
+		}
         
         this.historyEvents.sort((a,b) => (b.sdo.modified as any) - (a.sdo.modified as any));
     }
@@ -179,15 +234,17 @@ export class HistoryTimelineComponent implements OnInit, OnDestroy {
         else if (objectType == "data-source") objects$ = this.restAPIConnectorService.getDataSource(objectStixID, null, "all");
         else if (objectType == "data-component") objects$ = this.restAPIConnectorService.getDataComponent(objectStixID, null, "all");
         else if (objectType == "asset") objects$ = this.restAPIConnectorService.getAsset(objectStixID, null, "all");
-        // set up subscribers to get relationships
+        // set up subscribers to get relationships and collections
         let relationships$ = this.restAPIConnectorService.getRelatedTo({sourceOrTargetRef: objectStixID, versions: "all"});
+		let collections$ = this.restAPIConnectorService.getAllCollections({versions: "all"});
         // join subscribers
         let subscription = forkJoin({
             objectVersions: objects$,
             relationships: relationships$,
+			collections: collections$,
         }).subscribe({
             next: (result) => {
-                this.parseHistory(result.objectVersions as StixObject[], result.relationships.data as Relationship[]);
+                this.parseHistory(objectStixID, result.objectVersions as StixObject[], result.relationships.data as Relationship[], result.collections.data as Collection[]);
                 this.loading = false;
             },
             complete: () => { subscription.unsubscribe() }
