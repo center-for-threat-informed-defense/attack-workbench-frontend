@@ -60,17 +60,10 @@ export class HistoryTimelineComponent implements OnInit, OnDestroy {
         this.onEditStopSubscription.unsubscribe();
     }
 
-    /**
-     * transform the object versions into HistoryEvent objects and add them to the HistoryEvents array
-     */
-    private parseHistory(stixID: string, objectVersions: StixObject[], relationships: Relationship[], collections: Collection[]): void {
+	private buildObjectHistory(objectVersions: StixObject[]): void {
         // ensure that the stix objects are sorted in ascending order of date
         objectVersions = objectVersions.sort((a,b) => (a.modified as any) - (b.modified as any));
-        relationships = relationships.sort((a,b) => (a.modified as any) - (b.modified as any));
-		collections = collections.sort((a,b) => (a.modified as any) - (b.modified as any));
-        // clear previously parsed historyEvents
-        this.historyEvents = [];
-        // build historyEvents for the object itself
+
         let previousVersion = null;
         let previousState = null;
         for (let objectVersion of objectVersions) {
@@ -79,19 +72,10 @@ export class HistoryTimelineComponent implements OnInit, OnDestroy {
             let objectCreated = objectVersion.created.getTime() == objectVersion.modified.getTime();
             let release = objectVersion.attackType == "collection" && (objectVersion as Collection).release;
             let objectImported = !objectCreated && !previousVersion;
+
 			// set up icon and tooltip
-			let description = "";
-			let icon;
-			if (objectCreated) {
-				description = `${objectVersion["name"]} was created`;
-				icon = "add";
-			} else if (objectImported) {
-				description = `Earliest imported version of ${objectVersion["name"]}`;
-				icon = "cloud_download";
-			} else {
-				description = `${objectVersion["name"]} was edited`;
-				icon = "edit";
-			}
+			let [description, icon] = this.getHistoryEventDescr(objectCreated, objectImported, objectVersion["name"]);
+			
 			// add historyEvent
             this.historyEvents.push({
                 change_types: {
@@ -111,34 +95,24 @@ export class HistoryTimelineComponent implements OnInit, OnDestroy {
             previousVersion = objectVersion.version;
             previousState = objectVersion.workflow ? objectVersion.workflow.state : 'unset';
         }
+	}
+
+	private buildRelationshipHistory(relationships: Relationship[]): void {
+		// ensure that the stix objects are sorted in ascending order of date
+		relationships = relationships.sort((a,b) => (a.modified as any) - (b.modified as any));
 
         // group relationships by ID
-        let stixIDtoRelVersions = {};
-        for (let relationship of relationships) {
-            if (relationship.stixID in stixIDtoRelVersions) stixIDtoRelVersions[relationship.stixID].push(relationship);
-            else stixIDtoRelVersions[relationship.stixID] = [relationship];
-        }
+        let stixIDtoRelVersions = this.groupObjectsById(relationships);
 
-        // build historyEvents for relationships
         for (let relationshipID in stixIDtoRelVersions) {
             let firstVersion = true;
             for (let relationshipVersion of stixIDtoRelVersions[relationshipID]) {
                 let objectCreated = relationshipVersion.created.getTime() == relationshipVersion.modified.getTime();
                 let objectImported = !objectCreated && firstVersion;
                 let relationshipName = `${relationshipVersion.source_name} ${relationshipVersion.relationship_type} ${relationshipVersion.target_name}`
+				
 				// set up icon and tooltip
-				let description = "";
-				let icon;
-				if (objectCreated) {
-					description = `${relationshipName} was created`;
-					icon = "add";
-				} else if (objectImported) {
-					description = `Earliest imported version of ${relationshipName}`;
-					icon = "cloud_download";
-				} else {
-					description = `${relationshipName} was edited`;
-					icon = "edit";
-				}
+				let [description, icon] = this.getHistoryEventDescr(objectCreated, objectImported, relationshipName);
 
                 this.historyEvents.push({
                     change_types: {
@@ -156,13 +130,14 @@ export class HistoryTimelineComponent implements OnInit, OnDestroy {
                 firstVersion = false;
             }
         }
+	}
+
+	private buildCollectionHistory(collections: Collection[], stixId): void {
+		// ensure that the stix objects are sorted in ascending order of date
+		collections = collections.sort((a,b) => (a.modified as any) - (b.modified as any));
 
         // group collections by ID
-        let stixIDtoCollectionVersions = {};
-        for (let collection of collections) {
-            if (collection.stixID in stixIDtoCollectionVersions) stixIDtoCollectionVersions[collection.stixID].push(collection);
-            else stixIDtoCollectionVersions[collection.stixID] = [collection];
-        }
+        let stixIDtoCollectionVersions = this.groupObjectsById(collections);
 
 		// build historyEvents for collections
 		for (let collectionID in stixIDtoCollectionVersions) {
@@ -171,7 +146,7 @@ export class HistoryTimelineComponent implements OnInit, OnDestroy {
 			let previousVersion: VersionNumber = null;
 			for (let collectionVersion of collectionVersions) {
                 let objectImported = collectionVersion.created.getTime() != collectionVersion.modified.getTime() && !previousVersion;
-				let inCollection = collectionVersion.contents.filter(c => c.object_ref == stixID);
+				let inCollection = collectionVersion.contents.filter(c => c.object_ref == stixId);
 				let versionChanged = previousVersion && collectionVersion.version.compareTo(previousVersion) != 0;
 				let description;
 				let icon;
@@ -212,7 +187,46 @@ export class HistoryTimelineComponent implements OnInit, OnDestroy {
 				previousVersion = collectionVersion.version;
 			}
 		}
+	}
+
+	private getHistoryEventDescr(objectCreated: boolean, objectImported: boolean, name: string): string[] {
+		let description = "";
+		let icon;
+		if (objectCreated) {
+			description = `${name} was created`;
+			icon = "add";
+		} else if (objectImported) {
+			description = `Earliest imported version of ${name}`;
+			icon = "cloud_download";
+		} else {
+			description = `${name} was edited`;
+			icon = "edit";
+		}
+		return [description, icon]
+	}
+
+	private groupObjectsById(objectVersions: StixObject[]): any {
+        let stixIDtoVersions = {};
+        for (let version of objectVersions) {
+            if (version.stixID in stixIDtoVersions) stixIDtoVersions[version.stixID].push(version);
+            else stixIDtoVersions[version.stixID] = [version];
+        }
+		return stixIDtoVersions;
+	}
+
+    /**
+     * transform the object versions into HistoryEvent objects
+     */
+    private parseHistory(stixId: string, objectVersions: StixObject[], relationships: Relationship[], collections: Collection[]): void {
+        // clear previously parsed historyEvents
+        this.historyEvents = [];
+
+        // build historyEvents
+		this.buildObjectHistory(objectVersions);
+		this.buildRelationshipHistory(relationships);
+		this.buildCollectionHistory(collections, stixId);
         
+		// sort historyEvents
         this.historyEvents.sort((a,b) => (b.sdo.modified as any) - (a.sdo.modified as any));
     }
 
