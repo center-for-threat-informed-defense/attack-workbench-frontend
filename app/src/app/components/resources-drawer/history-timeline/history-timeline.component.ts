@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { forkJoin, Subscription } from 'rxjs';
 import { Collection } from 'src/app/classes/stix/collection';
 import { Relationship } from 'src/app/classes/stix/relationship';
@@ -42,8 +42,7 @@ export class HistoryTimelineComponent implements OnInit, OnDestroy {
 	public showCollectionHistory: boolean = true;
     public onEditStopSubscription: Subscription;
 
-    constructor(private route: ActivatedRoute, 
-                private router: Router, 
+    constructor(private router: Router, 
                 private restAPIConnectorService: RestApiConnectorService,
                 private dialog: MatDialog,
                 private editorService: EditorService) {
@@ -51,6 +50,14 @@ export class HistoryTimelineComponent implements OnInit, OnDestroy {
         this.onEditStopSubscription = this.editorService.onEditingStopped.subscribe({
             next: () => { this.loadHistory(); }
         })
+    }
+
+	ngOnInit(): void {
+        this.loadHistory();
+    }
+
+    ngOnDestroy(): void {
+        this.onEditStopSubscription.unsubscribe();
     }
 
     /**
@@ -258,13 +265,4 @@ export class HistoryTimelineComponent implements OnInit, OnDestroy {
             complete: () => { subscription.unsubscribe() }
         });
     }
-
-    ngOnInit(): void {
-        this.loadHistory();
-    }
-
-    ngOnDestroy(): void {
-        this.onEditStopSubscription.unsubscribe();
-    }
-
 }
