@@ -161,42 +161,48 @@ export class HistoryTimelineComponent implements OnInit, OnDestroy {
 		for (let collectionID in stixIDtoCollectionVersions) {
 			let inPreviousVersion: boolean = false;
 			let collectionVersions: Collection[] = stixIDtoCollectionVersions[collectionID];
+			let previousVersion: VersionNumber = null;
 			for (let collectionVersion of collectionVersions) {
+                let objectImported = collectionVersion.created.getTime() != collectionVersion.modified.getTime() && !previousVersion;
 				let inCollection = collectionVersion.contents.filter(c => c.object_ref == stixID);
-				if (inCollection?.length) {
-					// object was added to or released with the collection
-					this.historyEvents.push({
-						change_types: {
-							versionChanged: false,
-							stateChanged: false,
-							objectImported: false,
-							objectCreated: false,
-							release: collectionVersion.release
-						},
-						icon: collectionVersion.release ? "verified" : "add",
-						name: collectionVersion.name,
-						description: `${collectionVersion.release? 'Released in' : 'Added to'} ${collectionVersion.name} (v${collectionVersion.version.version})`,
-						sdo: collectionVersion,
-					});
-				} else if(!inCollection?.length && inPreviousVersion) {
+				let versionChanged = previousVersion && collectionVersion.version.compareTo(previousVersion) != 0;
+				let description;
+				let icon;
+				if (inCollection?.length && objectImported) {
+					// object in imported collection
+					description = `Imported from ${collectionVersion.name} (v${collectionVersion.version.version})`;
+					icon = 'cloud_download';
+				} else if (inCollection?.length && collectionVersion.release) {
+					// object exists in release collection
+					description = `Released in ${collectionVersion.name} (v${collectionVersion.version.version})`;
+					icon = 'verified';
+				} else if (inCollection?.length && (!inPreviousVersion || versionChanged)) {
+					// object added to collection
+					description = `Added to ${collectionVersion.name} (v${collectionVersion.version.version})`;
+					icon = 'add';
+				} else if (!inCollection?.length && inPreviousVersion) {
 					// object was removed from the collection
+					description = `Removed from ${collectionVersion.name} (v${collectionVersion.version.version})`;
+					icon = 'remove';
+				}
+
+				if (description && icon) {
 					this.historyEvents.push({
 						change_types: {
 							versionChanged: false,
 							stateChanged: false,
-							objectImported: false,
+							objectImported: objectImported,
 							objectCreated: false,
 							release: collectionVersion.release
 						},
-						icon: "remove",
+						icon: icon,
 						name: collectionVersion.name,
-						description: `Removed from ${collectionVersion.name} (v${collectionVersion.version.version})`,
+						description: description,
 						sdo: collectionVersion,
 					});
-				} else {
-					// nothing has changed between versions
 				}
 				inPreviousVersion = inCollection.length > 0;
+				previousVersion = collectionVersion.version;
 			}
 		}
         
