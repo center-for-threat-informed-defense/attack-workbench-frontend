@@ -43,6 +43,7 @@
 #### Improvements
 - Added the ability to view mapped techniques for a given data source. See [frontend#255](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/255).
 - Added support for viewing Assets on a configured external ATT&CK Website. See [frontend#526](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/526).
+- Added collection events to object history in the sidebar. See [frontend#140](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/140).
 
 ## 31 October 2023
 
