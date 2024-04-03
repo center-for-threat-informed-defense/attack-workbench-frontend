@@ -28,8 +28,16 @@
         &.relationship {
             border-left: 4px solid color(secondary);
         }
+		&.collection {
+			border-left: 4px solid color(dark);
+		}
         .event-identity {
             padding-left: 16px;
         }
     }
+	// collection event checkbox style
+	.mat-checkbox.tertiary.mat-checkbox-checked .mat-checkbox-background,
+	.mat-checkbox.tertiary.mat-checkbox-indeterminate .mat-checkbox-background {
+		background-color: color(dark);
+	}
 }
