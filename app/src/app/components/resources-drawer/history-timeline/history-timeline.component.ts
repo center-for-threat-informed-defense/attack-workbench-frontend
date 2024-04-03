@@ -74,7 +74,7 @@ export class HistoryTimelineComponent implements OnInit, OnDestroy {
             let objectImported = !objectCreated && !previousVersion;
 
 			// set up icon and tooltip
-			let [description, icon] = this.getHistoryEventDescr(objectCreated, objectImported, objectVersion["name"]);
+			let [description, icon] = this.getStixObjectEventDescription(objectCreated, objectImported, objectVersion["name"]);
 			
 			// add historyEvent
             this.historyEvents.push({
@@ -112,7 +112,7 @@ export class HistoryTimelineComponent implements OnInit, OnDestroy {
                 let relationshipName = `${relationshipVersion.source_name} ${relationshipVersion.relationship_type} ${relationshipVersion.target_name}`
 				
 				// set up icon and tooltip
-				let [description, icon] = this.getHistoryEventDescr(objectCreated, objectImported, relationshipName);
+				let [description, icon] = this.getStixObjectEventDescription(objectCreated, objectImported, relationshipName);
 
                 this.historyEvents.push({
                     change_types: {
@@ -146,23 +146,25 @@ export class HistoryTimelineComponent implements OnInit, OnDestroy {
 			let previousVersion: VersionNumber = null;
 			for (let collectionVersion of collectionVersions) {
                 let objectImported = collectionVersion.created.getTime() != collectionVersion.modified.getTime() && !previousVersion;
-				let inCollection = collectionVersion.contents.filter(c => c.object_ref == stixId);
+				let objectInCollection = collectionVersion.contents.filter(c => c.object_ref == stixId);
 				let versionChanged = previousVersion && collectionVersion.version.compareTo(previousVersion) != 0;
+
+				// get icon and tooltip
 				let description;
 				let icon;
-				if (inCollection?.length && objectImported) {
+				if (objectInCollection?.length && objectImported) {
 					// object in imported collection
 					description = `Imported from ${collectionVersion.name} (v${collectionVersion.version.version})`;
 					icon = 'cloud_download';
-				} else if (inCollection?.length && collectionVersion.release) {
+				} else if (objectInCollection?.length && collectionVersion.release) {
 					// object exists in release collection
 					description = `Released in ${collectionVersion.name} (v${collectionVersion.version.version})`;
 					icon = 'verified';
-				} else if (inCollection?.length && (!inPreviousVersion || versionChanged)) {
+				} else if (objectInCollection?.length && (!inPreviousVersion || versionChanged)) {
 					// object added to collection
 					description = `Added to ${collectionVersion.name} (v${collectionVersion.version.version})`;
 					icon = 'add';
-				} else if (!inCollection?.length && inPreviousVersion) {
+				} else if (!objectInCollection?.length && inPreviousVersion) {
 					// object was removed from the collection
 					description = `Removed from ${collectionVersion.name} (v${collectionVersion.version.version})`;
 					icon = 'remove';
@@ -183,13 +185,13 @@ export class HistoryTimelineComponent implements OnInit, OnDestroy {
 						sdo: collectionVersion,
 					});
 				}
-				inPreviousVersion = inCollection.length > 0;
+				inPreviousVersion = objectInCollection.length > 0;
 				previousVersion = collectionVersion.version;
 			}
 		}
 	}
 
-	private getHistoryEventDescr(objectCreated: boolean, objectImported: boolean, name: string): string[] {
+	private getStixObjectEventDescription(objectCreated: boolean, objectImported: boolean, name: string): string[] {
 		let description = "";
 		let icon;
 		if (objectCreated) {
