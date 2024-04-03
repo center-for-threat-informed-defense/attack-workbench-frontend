@@ -98,10 +98,13 @@ The history timeline browser allows users to see the revision history of an obje
 - Events within the timeline are color-coded by type:
     - Purple events correspond to object changes
     - Blue events correspond to relationship changes
+	- Black events correspond to collection events
 - Events within the timeline are also differentiated by type, denoted by tooltip and icon:
     - A plus symbol denotes additions, such as the creation of the object itself or the addition of relationships with the object.
     - A pencil symbol denotes modifications. Modifications to the object that change the version number have additional markings.
     - A download icon denotes the first available version of the object, but that earlier versions exist outside of what the user has in their workbench. This occurs when an object has been imported from a collection.
+	- A minus symbol denotes removals, such as if the object was removed from a collection.
+	- A verified icon denotes releases, such as if the object was included in a collection marked for release.
 
 ## Creating Extensions of ATT&CK
 
