@@ -8,26 +8,29 @@
             <div>
                 <mat-checkbox class="secondary" [(ngModel)]="showRelationshipHistory">show relationship history</mat-checkbox>
             </div>
+			<div>
+				<mat-checkbox class="tertiary" [(ngModel)]="showCollectionHistory">show collection history</mat-checkbox>
+			</div>
         </div>
         <mat-action-list>
             <ng-container *ngFor="let historyEvent of historyEvents">
                 <button mat-list-item 
-                        *ngIf="(historyEvent.sdo.type == 'relationship' && showRelationshipHistory) || (historyEvent.sdo.type != 'relationship' && showObjectHistory)"
+                        *ngIf="(historyEvent.sdo.type == 'relationship' && showRelationshipHistory) || (historyEvent.sdo.attackType == 'collection' && showCollectionHistory) || (historyEvent.sdo.type != 'relationship' && historyEvent.sdo.attackType != 'collection' && showObjectHistory)"
                         (click)="preview(historyEvent.sdo)"
                         
                         class="history-event"
                         [class.relationship]="historyEvent.sdo.type == 'relationship'"
-                        [class.object]="historyEvent.sdo.type != 'relationship'"
+						[class.collection]="historyEvent.sdo.attackType == 'collection'"
+                        [class.object]="historyEvent.sdo.type != 'relationship' && historyEvent.sdo.attackType != 'collection'"
                         
                         [matTooltip]="historyEvent.description" 
                         matTooltipPosition="left" 
                         
                         (mouseover)="hoveredHistoryEvent = historyEvent" 
                         (mouseout)="hoveredHistoryEvent = null">
-                    <mat-icon mat-list-icon *ngIf="historyEvent == hoveredHistoryEvent; else historyIcon">preview</mat-icon>
-                    <ng-template #historyIcon>
-                        <mat-icon mat-list-icon>{{historyEvent.icon}}</mat-icon>
-                    </ng-template>
+					<mat-icon mat-list-icon *ngIf="historyEvent == hoveredHistoryEvent && historyEvent.sdo.attackType != 'collection'">preview</mat-icon>
+					<mat-icon mat-list-icon *ngIf="historyEvent == hoveredHistoryEvent && historyEvent.sdo.attackType == 'collection'">open_in_browser</mat-icon>
+					<mat-icon mat-list-icon *ngIf="historyEvent != hoveredHistoryEvent">{{historyEvent.icon}}</mat-icon>
                     <div mat-line>
                         <span class="name">
                             {{historyEvent.name}}

@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { forkJoin, Subscription } from 'rxjs';
 import { Collection } from 'src/app/classes/stix/collection';
 import { Relationship } from 'src/app/classes/stix/relationship';
@@ -39,10 +39,10 @@ export class HistoryTimelineComponent implements OnInit, OnDestroy {
     public hoveredHistoryEvent: HistoryEvent = null;
     public showObjectHistory: boolean = true;
     public showRelationshipHistory: boolean = true;
+	public showCollectionHistory: boolean = true;
     public onEditStopSubscription: Subscription;
 
-    constructor(private route: ActivatedRoute, 
-                private router: Router, 
+    constructor(private router: Router, 
                 private restAPIConnectorService: RestApiConnectorService,
                 private dialog: MatDialog,
                 private editorService: EditorService) {
@@ -52,16 +52,18 @@ export class HistoryTimelineComponent implements OnInit, OnDestroy {
         })
     }
 
-    /**
-     * transform the object versions into HistoryEvent objects and add them to the HistoryEvents array
-     */
-    private parseHistory(objectVersions: StixObject[], relationships: Relationship[]): void {
+	ngOnInit(): void {
+        this.loadHistory();
+    }
+
+    ngOnDestroy(): void {
+        this.onEditStopSubscription.unsubscribe();
+    }
+
+	private buildObjectHistory(objectVersions: StixObject[]): void {
         // ensure that the stix objects are sorted in ascending order of date
-        objectVersions = objectVersions.sort((a,b) => (a.modified as any) - (b.modified as any)); 
-        relationships = relationships.sort((a,b) => (a.modified as any) - (b.modified as any)); 
-        // clear previously parsed historyEvents
-        this.historyEvents = [];
-        // build historyEvents for the object itself
+        objectVersions = objectVersions.sort((a,b) => (a.modified as any) - (b.modified as any));
+
         let previousVersion = null;
         let previousState = null;
         for (let objectVersion of objectVersions) {
@@ -70,7 +72,11 @@ export class HistoryTimelineComponent implements OnInit, OnDestroy {
             let objectCreated = objectVersion.created.getTime() == objectVersion.modified.getTime();
             let release = objectVersion.attackType == "collection" && (objectVersion as Collection).release;
             let objectImported = !objectCreated && !previousVersion;
-            let description = objectCreated? `${objectVersion["name"]} was created` : objectImported? `Earliest imported version of ${objectVersion["name"]}` : `${objectVersion["name"]} was edited`
+
+			// set up icon and tooltip
+			let [description, icon] = this.getStixObjectEventDescription(objectCreated, objectImported, objectVersion["name"]);
+			
+			// add historyEvent
             this.historyEvents.push({
                 change_types: {
                     versionChanged: versionChanged,
@@ -79,7 +85,7 @@ export class HistoryTimelineComponent implements OnInit, OnDestroy {
                     objectCreated: objectCreated,
                     release: release
                 },
-                icon: objectImported? "cloud_download" : objectCreated? "add" : "edit",
+                icon: icon,
                 name: objectVersion["name"],
                 description: description,
                 sdo: objectVersion,
@@ -89,22 +95,24 @@ export class HistoryTimelineComponent implements OnInit, OnDestroy {
             previousVersion = objectVersion.version;
             previousState = objectVersion.workflow ? objectVersion.workflow.state : 'unset';
         }
+	}
+
+	private buildRelationshipHistory(relationships: Relationship[]): void {
+		// ensure that the stix objects are sorted in ascending order of date
+		relationships = relationships.sort((a,b) => (a.modified as any) - (b.modified as any));
 
         // group relationships by ID
-        let stixIDtoRelVersions = {};
-        for (let relationship of relationships) {
-            if (relationship.stixID in stixIDtoRelVersions) stixIDtoRelVersions[relationship.stixID].push(relationship);
-            else stixIDtoRelVersions[relationship.stixID] = [relationship];
-        }
+        let stixIDtoRelVersions = this.groupObjectsById(relationships);
 
-        // build historyEvents for relationships
         for (let relationshipID in stixIDtoRelVersions) {
             let firstVersion = true;
             for (let relationshipVersion of stixIDtoRelVersions[relationshipID]) {
                 let objectCreated = relationshipVersion.created.getTime() == relationshipVersion.modified.getTime();
                 let objectImported = !objectCreated && firstVersion;
                 let relationshipName = `${relationshipVersion.source_name} ${relationshipVersion.relationship_type} ${relationshipVersion.target_name}`
-                let description = objectCreated? `${relationshipName} was created` : objectImported? `Earliest imported version of ${relationshipName}` : `${relationshipName} was edited`
+				
+				// set up icon and tooltip
+				let [description, icon] = this.getStixObjectEventDescription(objectCreated, objectImported, relationshipName);
 
                 this.historyEvents.push({
                     change_types: {
@@ -114,7 +122,7 @@ export class HistoryTimelineComponent implements OnInit, OnDestroy {
                         objectCreated: objectCreated,
                         release: false
                     },
-                    icon: objectImported? "cloud_download" : objectCreated? "add" : "edit",
+                    icon: icon,
                     name: relationshipName,
                     description: description,
                     sdo: relationshipVersion,
@@ -122,19 +130,122 @@ export class HistoryTimelineComponent implements OnInit, OnDestroy {
                 firstVersion = false;
             }
         }
+	}
+
+	private buildCollectionHistory(collections: Collection[], stixId): void {
+		// ensure that the stix objects are sorted in ascending order of date
+		collections = collections.sort((a,b) => (a.modified as any) - (b.modified as any));
+
+        // group collections by ID
+        let stixIDtoCollectionVersions = this.groupObjectsById(collections);
+
+		// build historyEvents for collections
+		for (let collectionID in stixIDtoCollectionVersions) {
+			let inPreviousVersion: boolean = false;
+			let collectionVersions: Collection[] = stixIDtoCollectionVersions[collectionID];
+			let previousVersion: VersionNumber = null;
+			for (let collectionVersion of collectionVersions) {
+                let objectImported = collectionVersion.created.getTime() != collectionVersion.modified.getTime() && !previousVersion;
+				let objectInCollection = collectionVersion.contents.filter(c => c.object_ref == stixId);
+				let versionChanged = previousVersion && collectionVersion.version.compareTo(previousVersion) != 0;
+
+				// get icon and tooltip
+				let description;
+				let icon;
+				if (objectInCollection?.length && objectImported) {
+					// object in imported collection
+					description = `Imported from ${collectionVersion.name} (v${collectionVersion.version.version})`;
+					icon = 'cloud_download';
+				} else if (objectInCollection?.length && collectionVersion.release) {
+					// object exists in release collection
+					description = `Released in ${collectionVersion.name} (v${collectionVersion.version.version})`;
+					icon = 'verified';
+				} else if (objectInCollection?.length && (!inPreviousVersion || versionChanged)) {
+					// object added to collection
+					description = `Added to ${collectionVersion.name} (v${collectionVersion.version.version})`;
+					icon = 'add';
+				} else if (!objectInCollection?.length && inPreviousVersion) {
+					// object was removed from the collection
+					description = `Removed from ${collectionVersion.name} (v${collectionVersion.version.version})`;
+					icon = 'remove';
+				}
+
+				if (description && icon) {
+					this.historyEvents.push({
+						change_types: {
+							versionChanged: false,
+							stateChanged: false,
+							objectImported: objectImported,
+							objectCreated: false,
+							release: collectionVersion.release
+						},
+						icon: icon,
+						name: collectionVersion.name,
+						description: description,
+						sdo: collectionVersion,
+					});
+				}
+				inPreviousVersion = objectInCollection.length > 0;
+				previousVersion = collectionVersion.version;
+			}
+		}
+	}
+
+	private getStixObjectEventDescription(objectCreated: boolean, objectImported: boolean, name: string): string[] {
+		let description = "";
+		let icon;
+		if (objectCreated) {
+			description = `${name} was created`;
+			icon = "add";
+		} else if (objectImported) {
+			description = `Earliest imported version of ${name}`;
+			icon = "cloud_download";
+		} else {
+			description = `${name} was edited`;
+			icon = "edit";
+		}
+		return [description, icon]
+	}
+
+	private groupObjectsById(objectVersions: StixObject[]): any {
+        let stixIDtoVersions = {};
+        for (let version of objectVersions) {
+            if (version.stixID in stixIDtoVersions) stixIDtoVersions[version.stixID].push(version);
+            else stixIDtoVersions[version.stixID] = [version];
+        }
+		return stixIDtoVersions;
+	}
+
+    /**
+     * transform the object versions into HistoryEvent objects
+     */
+    private parseHistory(stixId: string, objectVersions: StixObject[], relationships: Relationship[], collections: Collection[]): void {
+        // clear previously parsed historyEvents
+        this.historyEvents = [];
+
+        // build historyEvents
+		this.buildObjectHistory(objectVersions);
+		this.buildRelationshipHistory(relationships);
+		this.buildCollectionHistory(collections, stixId);
         
+		// sort historyEvents
         this.historyEvents.sort((a,b) => (b.sdo.modified as any) - (a.sdo.modified as any));
     }
 
     public preview(sdo: StixObject) {
-        this.dialog.open(StixDialogComponent, {
-            data: {
-                object: sdo,
-                editable: false,
-                sidebarControl: "disable"
-            },
-            maxHeight: "75vh"
-        });
+		if (sdo.attackType == 'collection') {
+			// open in browser instead of dialog window
+			this.router.navigateByUrl(`/${sdo.attackType}/${sdo.stixID}/modified/${sdo.modified.toISOString()}`);
+		} else {
+			this.dialog.open(StixDialogComponent, {
+				data: {
+					object: sdo,
+					editable: false,
+					sidebarControl: "disable"
+				},
+				maxHeight: "75vh"
+			});
+		}
     }
 
     public loadHistory() {
@@ -154,27 +265,20 @@ export class HistoryTimelineComponent implements OnInit, OnDestroy {
         else if (objectType == "data-source") objects$ = this.restAPIConnectorService.getDataSource(objectStixID, null, "all");
         else if (objectType == "data-component") objects$ = this.restAPIConnectorService.getDataComponent(objectStixID, null, "all");
         else if (objectType == "asset") objects$ = this.restAPIConnectorService.getAsset(objectStixID, null, "all");
-        // set up subscribers to get relationships
+        // set up subscribers to get relationships and collections
         let relationships$ = this.restAPIConnectorService.getRelatedTo({sourceOrTargetRef: objectStixID, versions: "all"});
+		let collections$ = this.restAPIConnectorService.getAllCollections({versions: "all"});
         // join subscribers
         let subscription = forkJoin({
             objectVersions: objects$,
             relationships: relationships$,
+			collections: collections$,
         }).subscribe({
             next: (result) => {
-                this.parseHistory(result.objectVersions as StixObject[], result.relationships.data as Relationship[]);
+                this.parseHistory(objectStixID, result.objectVersions as StixObject[], result.relationships.data as Relationship[], result.collections.data as Collection[]);
                 this.loading = false;
             },
             complete: () => { subscription.unsubscribe() }
         });
     }
-
-    ngOnInit(): void {
-        this.loadHistory();
-    }
-
-    ngOnDestroy(): void {
-        this.onEditStopSubscription.unsubscribe();
-    }
-
 }
