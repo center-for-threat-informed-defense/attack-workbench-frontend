@@ -160,12 +160,10 @@ export class HistoryTimelineComponent implements OnInit, OnDestroy {
 		// build historyEvents for collections
 		for (let collectionID in stixIDtoCollectionVersions) {
 			let inPreviousVersion: boolean = false;
-			let previousVersion: VersionNumber = null;
 			let collectionVersions: Collection[] = stixIDtoCollectionVersions[collectionID];
 			for (let collectionVersion of collectionVersions) {
 				let inCollection = collectionVersion.contents.filter(c => c.object_ref == stixID);
-				let versionChanged = previousVersion && collectionVersion.version.compareTo(previousVersion) != 0;
-				if (inCollection?.length && versionChanged) {
+				if (inCollection?.length) {
 					// object was added to or released with the collection
 					this.historyEvents.push({
 						change_types: {
@@ -177,7 +175,7 @@ export class HistoryTimelineComponent implements OnInit, OnDestroy {
 						},
 						icon: collectionVersion.release ? "verified" : "add",
 						name: collectionVersion.name,
-						description: `Added to ${collectionVersion.name} (v${collectionVersion.version.version})`,
+						description: `${collectionVersion.release? 'Released in' : 'Added to'} ${collectionVersion.name} (v${collectionVersion.version.version})`,
 						sdo: collectionVersion,
 					});
 				} else if(!inCollection?.length && inPreviousVersion) {
@@ -193,13 +191,12 @@ export class HistoryTimelineComponent implements OnInit, OnDestroy {
 						icon: "remove",
 						name: collectionVersion.name,
 						description: `Removed from ${collectionVersion.name} (v${collectionVersion.version.version})`,
-						sdo: collectionVersion
+						sdo: collectionVersion,
 					});
 				} else {
 					// nothing has changed between versions
 				}
 				inPreviousVersion = inCollection.length > 0;
-				previousVersion = collectionVersion.version;
 			}
 		}
         
