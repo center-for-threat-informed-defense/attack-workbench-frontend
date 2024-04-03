@@ -204,14 +204,19 @@ export class HistoryTimelineComponent implements OnInit, OnDestroy {
     }
 
     public preview(sdo: StixObject) {
-        this.dialog.open(StixDialogComponent, {
-            data: {
-                object: sdo,
-                editable: false,
-                sidebarControl: "disable"
-            },
-            maxHeight: "75vh"
-        });
+		if (sdo.attackType == 'collection') {
+			// open in browser instead of dialog window
+			this.router.navigateByUrl(`/${sdo.attackType}/${sdo.stixID}/modified/${sdo.modified.toISOString()}`);
+		} else {
+			this.dialog.open(StixDialogComponent, {
+				data: {
+					object: sdo,
+					editable: false,
+					sidebarControl: "disable"
+				},
+				maxHeight: "75vh"
+			});
+		}
     }
 
     public loadHistory() {

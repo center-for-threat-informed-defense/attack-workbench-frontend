@@ -28,10 +28,9 @@
                         
                         (mouseover)="hoveredHistoryEvent = historyEvent" 
                         (mouseout)="hoveredHistoryEvent = null">
-                    <mat-icon mat-list-icon *ngIf="historyEvent == hoveredHistoryEvent; else historyIcon">preview</mat-icon>
-                    <ng-template #historyIcon>
-                        <mat-icon mat-list-icon>{{historyEvent.icon}}</mat-icon>
-                    </ng-template>
+					<mat-icon mat-list-icon *ngIf="historyEvent == hoveredHistoryEvent && historyEvent.sdo.attackType != 'collection'">preview</mat-icon>
+					<mat-icon mat-list-icon *ngIf="historyEvent == hoveredHistoryEvent && historyEvent.sdo.attackType == 'collection'">open_in_browser</mat-icon>
+					<mat-icon mat-list-icon *ngIf="historyEvent != hoveredHistoryEvent">{{historyEvent.icon}}</mat-icon>
                     <div mat-line>
                         <span class="name">
                             {{historyEvent.name}}
