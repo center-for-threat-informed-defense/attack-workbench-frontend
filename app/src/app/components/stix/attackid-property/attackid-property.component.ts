@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatLegacySnackBar as MatSnackBar } from '@angular/material/legacy-snack-bar';
 import { StixObject } from 'src/app/classes/stix/stix-object';
 
 @Component({

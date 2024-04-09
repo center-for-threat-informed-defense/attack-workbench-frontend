@@ -1,10 +1,10 @@
 import { AfterContentChecked, ChangeDetectorRef, Component, Input, OnInit, ViewEncapsulation } from '@angular/core';
 import { ListPropertyConfig } from '../list-property.component';
 import { ENTER } from '@angular/cdk/keycodes';
-import { MatChipInputEvent } from '@angular/material/chips';
+import { MatLegacyChipInputEvent as MatChipInputEvent } from '@angular/material/legacy-chips';
 import { FormControl, Validators } from '@angular/forms';
-import { MatOptionSelectionChange } from '@angular/material/core';
-import { MatDialog } from '@angular/material/dialog';
+import { MatLegacyOptionSelectionChange as MatOptionSelectionChange } from '@angular/material/legacy-core';
+import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
 import { Paginated, RestApiConnectorService } from 'src/app/services/connectors/rest-api/rest-api-connector.service';
 import { SelectionModel } from '@angular/cdk/collections';
 import { Tactic } from 'src/app/classes/stix/tactic';

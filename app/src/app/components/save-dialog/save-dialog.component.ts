@@ -1,5 +1,5 @@
 import { Component, Inject, OnInit, ViewEncapsulation } from '@angular/core';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatLegacyDialogRef as MatDialogRef, MAT_LEGACY_DIALOG_DATA as MAT_DIALOG_DATA } from '@angular/material/legacy-dialog';
 import { forkJoin, of } from 'rxjs';
 import { ValidationData } from 'src/app/classes/serializable';
 import { StixObject, workflowStates } from 'src/app/classes/stix/stix-object';

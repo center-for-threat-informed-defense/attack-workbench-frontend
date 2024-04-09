@@ -1,6 +1,6 @@
 import { Component, Input, ViewEncapsulation } from '@angular/core';
 import { SubtypePropertyConfig } from '../subtype-property.component';
-import { MatDialog } from '@angular/material/dialog';
+import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
 import { SubtypeDialogComponent } from '../subtype-dialog/subtype-dialog.component';
 
 @Component({

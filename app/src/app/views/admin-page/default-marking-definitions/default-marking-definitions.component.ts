@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { StixObject } from 'src/app/classes/stix/stix-object';
 import { SelectionModel } from '@angular/cdk/collections';
 import { AddDialogComponent } from 'src/app/components/add-dialog/add-dialog.component';
-import { MatDialog } from '@angular/material/dialog';
+import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
 import { Paginated, RestApiConnectorService } from "src/app/services/connectors/rest-api/rest-api-connector.service";
 import { Observable } from 'rxjs';
 

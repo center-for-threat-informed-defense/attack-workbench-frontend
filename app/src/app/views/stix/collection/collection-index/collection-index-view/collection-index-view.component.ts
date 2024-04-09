@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output, ViewEncapsulation } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
+import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
 import { Router } from '@angular/router';
 import { Role } from 'src/app/classes/authn/role';
 import { CollectionIndex, CollectionReference, CollectionVersion } from 'src/app/classes/collection-index';

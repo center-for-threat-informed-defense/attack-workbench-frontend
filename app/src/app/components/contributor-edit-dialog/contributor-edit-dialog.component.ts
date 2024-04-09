@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Inject, OnInit, Output, ViewEncapsulation } from '@angular/core';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { MAT_LEGACY_DIALOG_DATA as MAT_DIALOG_DATA, MatLegacyDialogRef as MatDialogRef } from '@angular/material/legacy-dialog';
 import { forkJoin } from 'rxjs';
 import { StixObject } from 'src/app/classes/stix';
 import { AuthenticationService } from 'src/app/services/connectors/authentication/authentication.service';

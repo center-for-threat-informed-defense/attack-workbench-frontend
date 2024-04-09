@@ -10,10 +10,10 @@ import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/re
 import { EditorService } from 'src/app/services/editor/editor.service';
 import { StixViewPage } from '../../stix-view-page';
 import { environment } from "../../../../../environments/environment";
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatLegacySnackBar as MatSnackBar } from '@angular/material/legacy-snack-bar';
 import { logger } from "../../../../utils/logger";
 import { AuthenticationService } from 'src/app/services/connectors/authentication/authentication.service';
-import { MatDialog } from '@angular/material/dialog';
+import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
 import { CollectionUpdateDialogComponent } from 'src/app/components/collection-update-dialog/collection-update-dialog.component';
 import { AddDialogComponent } from 'src/app/components/add-dialog/add-dialog.component';
 import { SelectionModel } from '@angular/cdk/collections';

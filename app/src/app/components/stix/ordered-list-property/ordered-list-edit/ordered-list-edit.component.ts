@@ -2,7 +2,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { OrderedListPropertyConfig } from '../ordered-list-property.component';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { ConfirmationDialogComponent } from 'src/app/components/confirmation-dialog/confirmation-dialog.component';
-import { MatDialog } from '@angular/material/dialog';
+import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
 import { AddDialogComponent } from 'src/app/components/add-dialog/add-dialog.component';
 import { StixObject } from 'src/app/classes/stix/stix-object';
 import { SelectionModel } from '@angular/cdk/collections';

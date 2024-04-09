@@ -2,10 +2,10 @@ import { Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { UserAccount } from 'src/app/classes/authn/user-account';
 import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/rest-api-connector.service';
 import { Role } from '../../../../classes/authn/role';
-import { MatPaginator } from '@angular/material/paginator';
+import { MatLegacyPaginator as MatPaginator } from '@angular/material/legacy-paginator';
 import { AuthenticationService } from '../../../../services/connectors/authentication/authentication.service';
 import { Team } from 'src/app/classes/authn/team';
-import { MatDialog } from '@angular/material/dialog';
+import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
 import { CreateNewDialogComponent } from 'src/app/components/create-new-dialog/create-new-dialog.component';
 import { Router } from '@angular/router';
 

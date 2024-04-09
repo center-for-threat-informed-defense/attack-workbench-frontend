@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit, ViewChild, Output, EventEmitter } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
+import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
 import { ActivatedRoute, Router, NavigationEnd } from '@angular/router';
 
 import { Observable, forkJoin } from 'rxjs';

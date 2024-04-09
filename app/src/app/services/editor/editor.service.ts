@@ -2,7 +2,7 @@ import { EventEmitter, Injectable } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { SidebarService } from '../sidebar/sidebar.service';
 import { ConfirmationDialogComponent } from 'src/app/components/confirmation-dialog/confirmation-dialog.component';
-import { MatDialog } from '@angular/material/dialog';
+import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
 import { AuthenticationService } from '../connectors/authentication/authentication.service';
 import { RestApiConnectorService } from '../connectors/rest-api/rest-api-connector.service';
 import { map } from 'rxjs/operators';

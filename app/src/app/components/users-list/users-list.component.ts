@@ -3,7 +3,7 @@ import { Observable, Subscription } from 'rxjs';
 import { UserAccount } from 'src/app/classes/authn/user-account';
 import { Paginated, RestApiConnectorService } from 'src/app/services/connectors/rest-api/rest-api-connector.service';
 import { Role } from 'src/app/classes/authn/role';
-import { MatPaginator } from '@angular/material/paginator';
+import { MatLegacyPaginator as MatPaginator } from '@angular/material/legacy-paginator';
 import { AuthenticationService } from '../../services/connectors/authentication/authentication.service';
 import { Status } from 'src/app/classes/authn/status';
 import { Team } from 'src/app/classes/authn/team';
