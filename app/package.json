@@ -43,6 +43,7 @@
     "@angular/platform-browser-dynamic": "^15.2.10",
     "@angular/router": "^15.2.10",
     "jdenticon": "^3.2.0",
+    "marked": "^4.3.0",
     "moment": "^2.29.4",
     "ngx-autosize": "^2.0.4",
     "ngx-jdenticon": "^2.0.0",
