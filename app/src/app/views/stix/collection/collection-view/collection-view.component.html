@@ -21,12 +21,14 @@
                     }"></app-version-property>
                 </div>
                 <div class="col" *ngIf="editing">
-                    <div class="labelled-box" [popover]="releaseExplanation">
+                    <div class="labelled-box" >
+						<!-- TODO: [popover]="releaseExplanation" -->
                         <div class="content no-label">
                             <mat-checkbox [(ngModel)]="release">is release version?</mat-checkbox>
                         </div>
                     </div>
-                    <popover-content #releaseExplanation placement="bottom">
+					<!-- TODO: replace with ng-boostrap popover -->
+                    <!-- <popover-content #releaseExplanation placement="bottom">
                         <div class="releaseExplanation">
                             <p>
                                 Is this version of the collection going to be released? Once a version has been marked
@@ -41,7 +43,7 @@
                                 Only mark a version as a release if you are sure you intend to publish it.
                             </p>
                         </div>
-                    </popover-content>
+                    </popover-content> -->
                 </div>
                 <div class="col" *ngIf="!editing">
                     <div class="labelled-box">

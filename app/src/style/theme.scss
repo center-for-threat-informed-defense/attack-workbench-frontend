@@ -183,7 +183,7 @@ $tooltip-color: color-alternate(dark, 4);
     }
 }
 //patch popover style
-.popover {
+.popover { // TODO: fix this
     //positioning because we didn't import bootstrap
     position: absolute;
     // add border radius

@@ -51,7 +51,7 @@ export class DefaultMarkingDefinitionsComponent implements OnInit {
         }
     }           
 
-    public updateDefaultMarkingDefs(popover?: any) {
+    public updateDefaultMarkingDefs(popover?: any) { // TODO fix this
         let rows: StixObject[] = [];
         
         // only add statements
@@ -93,7 +93,7 @@ export class DefaultMarkingDefinitionsComponent implements OnInit {
                     })
                     this.requiresDefaultMarkingDefLoad = true;
                 }
-                if (popover) setTimeout(() => popover.hide());
+                if (popover) setTimeout(() => popover.hide()); // TODO fix this
             },
             complete: () => {
                 subscriptionPrompt.unsubscribe();

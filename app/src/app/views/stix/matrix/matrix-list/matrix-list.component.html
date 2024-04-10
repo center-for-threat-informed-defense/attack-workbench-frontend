@@ -2,10 +2,12 @@
     <div class="list-page-header">
         <h1 class="with-help-icon">
             matrices
-            <popover-content #objectDescription placement="bottom">
+			<!-- TODO: replace with ng-boostrap popover -->
+            <!-- <popover-content #objectDescription placement="bottom">
                 <span>Matrices are an organized visualization depicting the relationships between tactics, techniques, and sub-techniques. ATT&CK Workbench does not support matrix visualizations at present, but you can still create and edit them for visualization in other tools.</span>
-            </popover-content>
-            <mat-icon class="help-icon" [popover]="objectDescription" aria-label="help">help_outline</mat-icon>
+            </popover-content> -->
+            <mat-icon class="help-icon" aria-label="help">help_outline</mat-icon>
+			<!-- TODO:  [popover]="objectDescription" -->
         </h1>
 
         <div class="button-group" *ngIf="canEdit">

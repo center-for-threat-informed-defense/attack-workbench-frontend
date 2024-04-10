@@ -2,10 +2,12 @@
     <div class="list-page-header">
         <h1 class="with-help-icon">
             mitigations
-            <popover-content #objectDescription placement="bottom">
+			<!-- TODO: replace with ng-boostrap popover -->
+            <!-- <popover-content #objectDescription placement="bottom">
                 <span>Mitigations represent security concepts and classes of technologies that can be used to prevent a technique or sub-technique from being successfully executed. They support the standard set of fields and must be assigned to a domain.</span>
-            </popover-content>
-            <mat-icon class="help-icon" [popover]="objectDescription" aria-label="help">help_outline</mat-icon>
+            </popover-content> -->
+            <mat-icon class="help-icon" aria-label="help">help_outline</mat-icon>
+			<!-- TODO: [popover]="objectDescription" -->
         </h1>
         
         <div class="button-group" *ngIf="canEdit">

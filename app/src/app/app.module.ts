@@ -50,7 +50,7 @@ import { MatBadgeModule } from '@angular/material/badge';
 // import { BreadcrumbModule } from "angular-crumbs";
 import { MaterialFileInputModule } from 'ngx-material-file-input';
 import { MarkdownModule } from "ngx-markdown";
-import { PopoverModule } from "ngx-smart-popover";
+// import { PopoverModule } from "ngx-smart-popover"; TODO: remove
 import { NgxJdenticonModule, JDENTICON_CONFIG } from 'ngx-jdenticon';
 import { AutosizeModule } from 'ngx-autosize';
 
@@ -373,7 +373,7 @@ export function initConfig(appConfigService: AppConfigService) {
 			level: environment.log_level,
 			disableConsoleLogging: false
 		}),
-		PopoverModule,
+		// PopoverModule, TODO: remove
 		NgxJdenticonModule,
 		AutosizeModule,
 

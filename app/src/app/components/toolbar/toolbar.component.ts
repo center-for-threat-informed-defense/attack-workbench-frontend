@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewEncapsulation, Output, EventEmitter, Input, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
-import { PopoverContentComponent } from 'ngx-smart-popover';
+// import { PopoverContentComponent } from 'ngx-smart-popover'; // TODO remove
 import { ValidationData } from 'src/app/classes/serializable';
 import { AuthenticationService } from 'src/app/services/connectors/authentication/authentication.service';
 import { EditorService } from 'src/app/services/editor/editor.service';
@@ -18,7 +18,7 @@ export class ToolbarComponent implements OnInit {
     @Output() public onToggleTheme = new EventEmitter();
     @Output() public onToggleSidebar = new EventEmitter();
     @Output() public onScrollTop = new EventEmitter();
-    @ViewChild('saveValidation') saveValidation: PopoverContentComponent;
+    // @ViewChild('saveValidation') saveValidation: PopoverContentComponent; // TODO fix this
     
     public validationData: ValidationData = null;
 

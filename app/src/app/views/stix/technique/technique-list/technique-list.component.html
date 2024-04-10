@@ -2,10 +2,12 @@
     <div class="list-page-header">
         <h1 class="with-help-icon">
             techniques
-            <popover-content #objectDescription placement="bottom">
+			<!-- TODO: replace with ng-boostrap popover -->
+            <!-- <popover-content #objectDescription placement="bottom">
                 <span>Techniques represent 'how' an adversary achieves a tactical goal by performing an action. For example, an adversary may dump credentials to achieve credential access.</span>
-            </popover-content>
-            <mat-icon class="help-icon" [popover]="objectDescription" aria-label="help">help_outline</mat-icon>
+            </popover-content> -->
+            <mat-icon class="help-icon" aria-label="help">help_outline</mat-icon>
+			<!-- TODO: [popover]="objectDescription" -->
         </h1>
 
         <div class="button-group" *ngIf="canEdit">

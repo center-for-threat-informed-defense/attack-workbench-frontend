@@ -21,7 +21,7 @@ export class StatementEditComponent implements OnInit {
   public select: SelectionModel<string>;
 
   // Update object statements with Dialog component
-  public updateStatements(popover?: any) {
+  public updateStatements(popover?: any) { // TODO fix this
 
       // Prepare rows
       let rows: StixObject[] = [];

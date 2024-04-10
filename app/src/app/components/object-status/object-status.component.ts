@@ -2,14 +2,14 @@ import { SelectionModel } from '@angular/cdk/collections';
 import { Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
-import { PopoverContentComponent } from 'ngx-smart-popover';
-import { forkJoin } from 'rxjs';
+// import { PopoverContentComponent } from 'ngx-smart-popover'; TODO: remove
 import { Relationship } from 'src/app/classes/stix/relationship';
 import { StixObject } from 'src/app/classes/stix/stix-object';
 import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/rest-api-connector.service';
 import { EditorService } from 'src/app/services/editor/editor.service';
 import { AddDialogComponent } from '../add-dialog/add-dialog.component';
 import { ConfirmationDialogComponent } from '../confirmation-dialog/confirmation-dialog.component';
+import { forkJoin } from 'rxjs';
 
 @Component({
     selector: 'app-object-status',
@@ -18,7 +18,7 @@ import { ConfirmationDialogComponent } from '../confirmation-dialog/confirmation
     encapsulation: ViewEncapsulation.None
 })
 export class ObjectStatusComponent implements OnInit {
-    @ViewChild("objectStatus", {static: false}) public popover: PopoverContentComponent;
+    // @ViewChild("objectStatus", {static: false}) public popover: PopoverContentComponent; // TODO remove
     public loaded: boolean = false;
     public statusControl: FormControl<string>;
     public select: SelectionModel<string>;
@@ -91,7 +91,7 @@ export class ObjectStatusComponent implements OnInit {
                     let relationships = data.data as Relationship[]; 
                     this.relationships = this.relationships.concat(relationships)
                     this.loaded = true;
-                    setTimeout(() => this.popover.updatePosition()); //after render cycle update popover position since it has new content
+                    // setTimeout(() => this.popover.updatePosition()); //after render cycle update popover position since it has new content // TODO remove
                 },
                 complete: () => { relSubscription.unsubscribe() }
             });
