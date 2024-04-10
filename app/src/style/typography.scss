@@ -72,7 +72,7 @@
     }
 
     // see https://github.com/angular/components/blob/master/src/material/core/typography/_typography.scss#L24
-    $custom-typography: mat.define-legacy-typography-configmat.define-legacy-typography-config(
+    $custom-typography: mat.define-legacy-typography-config(
         $font-family: Roboto,
         $headline: mat.define-typography-level(32px, 48px, 800, $letter-spacing: 0.5pt),
         $title:    mat.define-typography-level(20px, 32px, 800, $letter-spacing: 0.5pt),
