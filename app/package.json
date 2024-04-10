@@ -49,7 +49,6 @@
     "ngx-jdenticon": "^2.0.0",
     "ngx-logger": "^5.0.12",
     "ngx-markdown": "^15.1.2",
-    "ngx-material-file-input": "^4.0.1",
     "ngx-smart-popover": "^1.5.0",
     "rxjs": "^6.6.7",
     "tslib": "^2.6.2",
