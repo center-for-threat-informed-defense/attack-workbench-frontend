@@ -26,7 +26,7 @@
     <!-- notes -->
     <div class="notes-content">
         <ng-container *ngFor="let note of notes">
-            <mat-card class="sticky-note" [class.edit-outline]="note.editing">
+            <mat-card appearance="raised" class="sticky-note" [class.edit-outline]="note.editing">
                 <mat-card-header (click)="startEditing(note)">
                     <!-- title -->
                     <mat-card-title>

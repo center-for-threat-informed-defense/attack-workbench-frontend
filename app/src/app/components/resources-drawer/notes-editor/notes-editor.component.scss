@@ -64,14 +64,15 @@
         .mat-form-field { width: 100%; }
         .mat-form-field-underline { display: none; }
 
-        mat-card-header {
+        .mat-mdc-card-header {
             cursor: pointer;
+			padding: 0 0 0 16px;
             textarea {
                 margin-top: 12px;
                 overflow: hidden;
                 &:read-only { cursor: pointer; }
             }
-            .mat-card-header-text { width: 100%; }
+            .mat-mdc-card-header-text { width: 100%; }
             .note-subtitle {
                 margin-bottom: 12px;
                 font-size: 13px;
@@ -80,7 +81,7 @@
         }
 
         // style textarea and markdown consistently
-        mat-card-content { 
+        .mat-mdc-card-content { 
             padding: 16px;
             .edit-note {
                 line-height: 24px;
