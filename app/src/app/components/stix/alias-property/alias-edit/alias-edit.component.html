@@ -1,11 +1,11 @@
 <div class="alias-edit labelled-box">
     <div class="content">
-        <mat-chip-list>
+        <mat-chip-listbox>
             <mat-chip *ngFor="let value of config.object[config.field].slice(1)" [removable]="true" (removed)="removeAlias(value)" (click)="editAlias(value)">
                 {{value}} <mat-icon matChipRemove>cancel</mat-icon>
             </mat-chip>
-            <button mat-icon-button aria-label="add alias" matTooltip="add an associated {{attackType}}" matTooltipPosition="right" (click)="editAlias()"><mat-icon>add</mat-icon></button>
-        </mat-chip-list>
+            <button mat-icon-button class="small-icon-button" aria-label="add alias" matTooltip="add an associated {{attackType}}" matTooltipPosition="right" (click)="editAlias()"><mat-icon>add</mat-icon></button>
+        </mat-chip-listbox>
     </div>
     <label>{{config.label}}</label>
 </div>

@@ -1,12 +1,18 @@
 .identity-property {
     display: inline-block;
     max-width: 18em;
+	.mat-mdc-standard-chip .mdc-evolution-chip__action--primary {
+		padding: 0 8px !important;
+	}
 }
 .identity {
-    svg { vertical-align: middle; }
-    span {
-        padding: 0px 6px;
-        vertical-align: middle;
-    }
-    &.mat-chip { padding: 6px; }
+	display: inline-block;
+	padding: 5px 0;
+    svg {
+		vertical-align: middle;
+	}
+	.v-align {
+		vertical-align: middle;
+		padding-left: 6px;
+	}
 }

@@ -231,8 +231,7 @@ $tooltip-color: color-alternate(dark, 4);
     }
 
     // override mat-chip styles
-    .mat-chip.mat-standard-chip {
-        height: auto!important;
+    .mat-mdc-chip.mat-mdc-standard-chip {
         background: color-alternate(dark) !important;
         color: on-color(dark) !important;
     }
@@ -258,7 +257,7 @@ button.mat-mdc-outlined-button:disabled {
     .dark & { background: color-alternate(dark); }
 }
 
-.mat-chip.mat-standard-chip {
+.mat-mdc-chip.mat-mdc-standard-chip {
     height: auto!important;
     .light & { background: color-alternate(light); }
     .dark &  { background: color-alternate(dark); }

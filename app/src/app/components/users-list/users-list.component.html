@@ -40,20 +40,20 @@
             <td mat-cell *matCellDef="let user">
                 <mat-select *ngIf="isAdmin && user.id !== currentUser.id" [value]="user.status" (selectionChange)="updateUserStatus(user, $event.value)" [(ngModel)]="user.status">
                     <mat-select-trigger>
-                        <mat-chip-list>
+                        <mat-chip-listbox>
                             <mat-chip color="primary" class="status" [ngClass]="user.status === 'active' ? 'active' : (user.status === 'pending' ? 'pending' : '')">
                                 {{user.status}}
                             </mat-chip>
-                        </mat-chip-list>
+                        </mat-chip-listbox>
                     </mat-select-trigger>
 
                     <mat-option *ngFor="let status of filterOptions[0].values" [value]="status">{{status}}</mat-option>
                 </mat-select>
-                <mat-chip-list *ngIf="!(isAdmin && user.id !== currentUser.id)">
+                <mat-chip-listbox *ngIf="!(isAdmin && user.id !== currentUser.id)">
                     <mat-chip color="primary" class="role" [ngClass]="user.status === 'active' ? 'active' : (user.status === 'pending' ? 'pending' : '')">
                         {{user.status}}
                     </mat-chip>
-                </mat-chip-list>
+                </mat-chip-listbox>
             </td>
         </ng-container>
         <!-- role column -->
