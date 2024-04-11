@@ -12,3 +12,10 @@ button.control {
 .mat-mdc-icon-button:hover .mat-mdc-button-persistent-ripple::before {
 	background-color: transparent;
 }
+
+.mdc-checkbox {
+	padding: 10px;
+	.mdc-checkbox__background {
+		margin: 0px !important;
+	}
+}

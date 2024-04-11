@@ -5,10 +5,10 @@
 
     .status-options {
         font-weight: normal;
-        .mat-checkbox {
+        .mat-mdc-checkbox {
             padding: 0px 8px;
         }
-        .mat-checkbox.disabled {
+        .mat-mdc-checkbox.disabled {
             .dark & { color: on-color-deemphasis(dark); }
             .light & { color: on-color-deemphasis(light); }
         }

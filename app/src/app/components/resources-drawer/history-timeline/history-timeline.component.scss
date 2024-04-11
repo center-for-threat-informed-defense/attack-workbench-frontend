@@ -36,8 +36,8 @@
         }
     }
 	// collection event checkbox style
-	.mat-checkbox.tertiary.mat-checkbox-checked .mat-checkbox-background,
-	.mat-checkbox.tertiary.mat-checkbox-indeterminate .mat-checkbox-background {
+	.tertiary .mdc-checkbox .mdc-checkbox__native-control:enabled:checked~.mdc-checkbox__background {
 		background-color: color(dark);
+		border-color: color(dark);
 	}
 }

@@ -24,7 +24,7 @@
             .light & { color: on-color-deemphasis(light); }
             .dark &  { color: on-color-deemphasis(dark); }
         }
-        .mat-checkbox { padding: 12px; }
+        .mat-mdc-checkbox { padding: 12px; }
         .align-right { justify-content: flex-end ;}
         .align-center {
             display: flex;

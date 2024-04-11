@@ -27,7 +27,9 @@
                                 </mat-option>             
                             </mat-optgroup>
                             <mat-optgroup *ngFor="let group of filterOptions" [label]="group.name" [disabled]="group.disabled">
-                                <mat-option *ngFor="let filter of group.values" [value]="filter.value" [disabled]="filter.disabled">{{filter.label}}</mat-option>
+                                <mat-option *ngFor="let filter of group.values" [value]="filter.value" [disabled]="filter.disabled">
+									{{filter.label}}
+								</mat-option>
                             </mat-optgroup>
                         </mat-select>
                     </mat-form-field>

@@ -38,8 +38,12 @@
     text-transform: uppercase;
     color: color(error);
 }
-.mdc-button__label {
+.mdc-button__label, .mat-optgroup-label, .mdc-label {
 	letter-spacing: normal !important;
+}
+.mdc-label {
+	line-height: 24px;
+	padding: 0px !important;
 }
 
 %typography {
@@ -81,7 +85,7 @@
     );
 
     @include mat.typography-hierarchy($custom-typography);
-    @include mat.legacy-checkbox-typography($custom-typography);
+    @include mat.checkbox-typography($custom-typography);
     /*TODO(mdc-migration): Remove all-legacy-component-typographies once all legacy components are migrated*/
     @include mat.all-legacy-component-typographies($custom-typography);
     @include mat.all-component-typographies($custom-typography);
