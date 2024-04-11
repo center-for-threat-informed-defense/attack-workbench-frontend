@@ -39,7 +39,7 @@
 
     <div class="center">
         <div class="action-bar">
-            <button *ngIf="hasErrors" mat-mini-fab class="extended-fab-button" color="primary" (click)="onCancel.emit()">
+            <button *ngIf="hasErrors" mat-raised-button class="extended-button" color="primary" (click)="onCancel.emit()">
                 <mat-icon aria-label="add">close</mat-icon>
                 <span class="text-label">Cancel</span>
             </button>

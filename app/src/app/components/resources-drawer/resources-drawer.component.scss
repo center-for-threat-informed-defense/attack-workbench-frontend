@@ -18,15 +18,10 @@
         .spacer {
             flex: 1 1 auto;
         }
-        button.mat-button-disabled {
-            opacity: 0.5;
-        }
     }
     .content {
         flex-grow: 1;
         overflow: auto;
-        // margin-top: 5px; // separate toolbar
-        // margin-right: 5px; // separate scrollbar
         padding: 50px 20px 50px 20px;
         .center-all { // placeholder for actual sidebar content
             height: 100%;

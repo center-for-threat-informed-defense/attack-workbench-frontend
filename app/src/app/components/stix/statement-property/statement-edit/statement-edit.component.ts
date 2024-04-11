@@ -42,13 +42,13 @@ export class StatementEditComponent implements OnInit {
       }
 
       let prompt = this.dialog.open(AddDialogComponent, {
-          maxWidth: '70em',
-          maxHeight: '70em',
-          data: {
-          selectableObjects: rows,
-          select: this.select,
-          type: "marking-definition",
-          buttonLabel: buttonLabelStr
+			maxWidth: '70em',
+			maxHeight: '70em',
+			data: {
+			selectableObjects: rows,
+			select: this.select,
+			type: "marking-definition",
+			buttonLabel: buttonLabelStr
           },
       });
 

@@ -103,7 +103,8 @@ export class ReferenceManagerComponent implements OnInit, AfterViewInit, OnDestr
                 mode: reference ? 'view' : 'edit',
                 reference: reference,
                 objects: reference ? this.referenceMap[reference.source_name] : []
-            }
+            },
+			autoFocus: false, // prevents auto focus on toolbar buttons
         });
         let subscription = prompt.afterClosed().subscribe({
             next: (_result) => {

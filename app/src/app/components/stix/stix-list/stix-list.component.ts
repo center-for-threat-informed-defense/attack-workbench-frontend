@@ -490,7 +490,7 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
                 clearSelection: true,
             },
             minHeight: "50vh",
-            maxHeight: "75vh"
+            maxHeight: "75vh",
         })
         let subscription = prompt.afterClosed().subscribe({
             next: result => {
@@ -514,9 +514,10 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
                 data: {
                     object: element,
                     editable: this.config.allowEdits,
-                    sidebarControl: this.config.allowEdits ? "events" : "disable"
+                    sidebarControl: this.config.allowEdits ? "events" : "disable",
                 },
-                maxHeight: "75vh"
+                maxHeight: "75vh",
+				autoFocus: false, // prevents auto focus on toolbar buttons
             })
             let subscription = prompt.afterClosed().subscribe({
                 next: result => {

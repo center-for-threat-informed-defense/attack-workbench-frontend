@@ -88,7 +88,8 @@ export class DataSourceViewComponent extends StixViewPage implements OnInit {
                 is_new: true,
                 sidebarControl: "events"
             },
-            maxHeight: "75vh"
+            maxHeight: "75vh",
+			autoFocus: false,
         });
         let subscription = prompt.afterClosed().subscribe({
             next: (result) => {

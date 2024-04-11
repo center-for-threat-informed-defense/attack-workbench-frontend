@@ -1,17 +1,17 @@
 <div class="reference-dialog">
     <mat-toolbar *ngIf="!editing || stage == 0">
-        <button mat-button class="control" matTooltip="close" (click)="close()"><mat-icon aria-label="close">close</mat-icon></button>
+        <button mat-icon-button class="control" matTooltip="close" (click)="close()"><mat-icon aria-label="close">close</mat-icon></button>
         <div class="spacer"></div>
         <ng-container *ngIf="editable">
-            <button mat-button class="control"
+            <button mat-icon-button class="control"
                 [matTooltip]="isNew ? 'validate & save' : 'patch & save'"
                 [disabled]="!editing || !validCitation() || !validURL || (isNew && sourceNameControl.errors)"
                 (click)="next()">
                 <mat-icon aria-label="save">save</mat-icon>
             </button>
-            <button *ngIf="!editing" mat-button class="control" matTooltip="edit" (click)="startEditing()"><mat-icon aria-label="edit">edit</mat-icon></button>
-            <button *ngIf="editing"  mat-button class="control" matTooltip="discard changes & stop editing" (click)="discardChanges()"><mat-icon aria-label="discard">edit_off</mat-icon></button>
-            <button *ngIf="deletable" mat-button class="control" matTooltip="delete" [disabled]="!editing || numCitingObjects > 0 || isNew" (click)="delete()"><mat-icon aria-label="delete">delete</mat-icon></button>
+            <button *ngIf="!editing" mat-icon-button class="control" matTooltip="edit" (click)="startEditing()"><mat-icon aria-label="edit">edit</mat-icon></button>
+            <button *ngIf="editing"  mat-icon-button class="control" matTooltip="discard changes & stop editing" (click)="discardChanges()"><mat-icon aria-label="discard">edit_off</mat-icon></button>
+            <button *ngIf="deletable" mat-icon-button class="control" matTooltip="delete" [disabled]="!editing || numCitingObjects > 0 || isNew" (click)="delete()"><mat-icon aria-label="delete">delete</mat-icon></button>
         </ng-container>
     </mat-toolbar>
     <!-- edit page -->

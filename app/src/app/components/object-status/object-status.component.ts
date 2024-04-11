@@ -141,7 +141,8 @@ export class ObjectStatusComponent implements OnInit {
                     selectionType: 'one',
                     title: "Select the revoking object",
                     buttonLabel: "revoke"
-                }
+                },
+				autoFocus: false, // prevents auto focus on toolbar buttons
             });
             let revokedSubscription = revokedDialog.afterClosed().subscribe({
                 next: (result) => {
@@ -193,7 +194,8 @@ export class ObjectStatusComponent implements OnInit {
             maxWidth: "35em",
             data: { 
                 message: 'All relationships with this object will be deprecated. Do you want to continue?',
-            }
+            },
+			autoFocus: false, // prevents auto focus on toolbar buttons
         });
 
         let confirmationSub = confirmationPrompt.afterClosed().subscribe({

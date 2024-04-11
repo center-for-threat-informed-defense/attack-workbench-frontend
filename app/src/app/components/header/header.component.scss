@@ -23,12 +23,8 @@
         font-family: Roboto,Arial,sans-serif;
         font-weight: 500;
         text-transform: uppercase;
-        &.mat-button-disabled {
-            cursor: not-allowed;
-            .dark & { color: on-color-deemphasis(dark); }
-            .light & { color: on-color-deemphasis(light); }
-        }
     }
+
     .links {
         overflow: hidden;
         &.pad-right { padding-right: 12px; }
@@ -40,7 +36,7 @@
         overflow-x: visible;
         left: -40px;
     }
-    .mat-icon-button.account {
+    .mat-mdc-icon-button.account {
         vertical-align: middle;
         .dark & { background: color-alternate(dark); }
         .light & { background: color(light); }

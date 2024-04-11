@@ -17,13 +17,13 @@
           'selection': config.select
         }"></app-users-list>
         <div class="centered button-padding">
-            <button mat-mini-fab class="extended-fab-button left-button" color="primary" (click)="dialogRef.close(true)">
+            <button mat-raised-button class="extended-button left-button" color="primary" (click)="dialogRef.close(true)">
                 <span class="text-label">{{config.buttonLabel? config.buttonLabel : "ADD"}}</span>
             </button>
-            <button *ngIf="config.clearSelection" mat-mini-fab class="extended-fab-button" color="primary" (click)="clearSelections()">
+            <button *ngIf="config.clearSelection" mat-raised-button class="extended-button" color="primary" (click)="clearSelections()">
                 <span class="text-label">Clear</span>
             </button>
-            <button mat-mini-fab class="extended-fab-button right-button" color="primary" (click)="dialogRef.close()">
+            <button mat-raised-button class="extended-button right-button" color="primary" (click)="dialogRef.close()">
                 <span class="text-label">Cancel</span>
             </button>
         </div>
@@ -31,7 +31,7 @@
     <ng-template #nothing>
         <h3>No available objects to add.</h3>
         <div class="centered">
-            <button mat-mini-fab class="extended-fab-button" color="primary" (click)="dialogRef.close()">
+            <button mat-raised-button class="extended-button" color="primary" (click)="dialogRef.close()">
                 <span class="text-label">Close</span>
             </button>
         </div>

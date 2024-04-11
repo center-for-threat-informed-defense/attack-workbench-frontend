@@ -4,25 +4,25 @@
             <div class="stix-content" *ngIf="!validating">
                 <mat-toolbar>
                     <div class="section">
-                        <button *ngIf="prevObject" mat-button class="control" matTooltip="back" [disabled]="editing" (click)="revertToPreviousObject()"><mat-icon aria-label="back">arrow_back</mat-icon></button>
-                        <button mat-button class="control" matTooltip="close" (click)="close()"><mat-icon aria-label="close">close</mat-icon></button>
+                        <button *ngIf="prevObject" mat-icon-button class="control" matTooltip="back" [disabled]="editing" (click)="revertToPreviousObject()"><mat-icon aria-label="back">arrow_back</mat-icon></button>
+                        <button mat-icon-button class="control" matTooltip="close" (click)="close()"><mat-icon aria-label="close">close</mat-icon></button>
                     </div>
                     <div class="spacer"></div>
                     <ng-container *ngIf="config.editable">
                         <div class="section">
-                            <button mat-button class="control" matTooltip="validate & save" [disabled]="!editing" (click)="validate()"><mat-icon aria-label="save">save</mat-icon></button>
-                            <button *ngIf="!editing" mat-button class="control" matTooltip="edit" (click)="startEditing()"><mat-icon aria-label="edit">edit</mat-icon></button>
-                            <button *ngIf="editing"  mat-button class="control" matTooltip="discard changes & stop editing" (click)="discardChanges()"><mat-icon aria-label="discard">edit_off</mat-icon></button>
-                            <button *ngIf="canDeprecate" mat-button matTooltip="{{isDeprecated ? 'undeprecate' : 'deprecate'}}" class="control" [disabled]="editing" (click)="deprecateChanged()">
+                            <button mat-icon-button class="control" matTooltip="validate & save" [disabled]="!editing" (click)="validate()"><mat-icon aria-label="save">save</mat-icon></button>
+                            <button *ngIf="!editing" mat-icon-button class="control" matTooltip="edit" (click)="startEditing()"><mat-icon aria-label="edit">edit</mat-icon></button>
+                            <button *ngIf="editing"  mat-icon-button class="control" matTooltip="discard changes & stop editing" (click)="discardChanges()"><mat-icon aria-label="discard">edit_off</mat-icon></button>
+                            <button *ngIf="canDeprecate" mat-icon-button matTooltip="{{isDeprecated ? 'undeprecate' : 'deprecate'}}" class="control" [disabled]="editing" (click)="deprecateChanged()">
                                 <mat-icon aria-label="{{isDeprecated ? 'undeprecate': 'deprecate'}}">{{isDeprecated ? 'unarchive' : 'archive'}}</mat-icon>
                             </button>
                             <div *ngIf="canDelete" class="button-tooltip" [matTooltip]="editing && !config.is_new ? (!deletable ? 'an object with relationships cannot be deleted' : 'delete') : ''">
-                                <button mat-button class="control" [disabled]="config.is_new || !editing || !deletable" (click)="delete()"><mat-icon aria-label="delete">delete</mat-icon></button>
+                                <button mat-icon-button class="control" [disabled]="config.is_new || !editing || !deletable" (click)="delete()"><mat-icon aria-label="delete">delete</mat-icon></button>
                             </div>
                         </div>
                     </ng-container>
                     <div class="section">
-                        <button *ngIf="config.sidebarControl != 'disable'" mat-button class="control" matTooltip="view sidebar" (click)="toggleSidebar()"><mat-icon aria-label="open sidebar">view_sidebar</mat-icon></button>
+                        <button *ngIf="config.sidebarControl != 'disable'" mat-icon-button class="control" matTooltip="view sidebar" (click)="toggleSidebar()"><mat-icon aria-label="open sidebar">view_sidebar</mat-icon></button>
                     </div>
                 </mat-toolbar>
                 <div class="page-padding">

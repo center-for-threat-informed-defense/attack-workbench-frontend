@@ -1,5 +1,5 @@
 <div class="button-group centered">
-    <button mat-mini-fab class="extended-fab-button" color="primary" (click)="addRow()">
+    <button mat-raised-button class="extended-button" color="primary" (click)="addRow()">
         <mat-icon>add</mat-icon> <span class="text-label">ADD a {{config.type}}</span>
     </button>
 </div>
@@ -7,6 +7,7 @@
 <div cdkDropList class="list" (cdkDropListDropped)="drop($event)" style="margin: auto;">
     <ng-container *ngIf="list.length > 0 else nothingHere">
         <div  class="box box-move" *ngFor="let sdo of list; let i = index" cdkDrag>
+			<!-- TODO: fix me -->
             {{getLabel(sdo)}}
             <div>
                 <em class="material-icons move-icon" [ngClass]="{'enabled': i > 0}" (click)="moveRow(i, i-1)">arrow_drop_up</em>

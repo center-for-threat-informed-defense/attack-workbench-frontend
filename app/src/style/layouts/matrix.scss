@@ -80,8 +80,9 @@ $sizeunit: 14px;
   text-align: center;
   gap: 4px;
   display: flex;
-  .mat-stroked-button {
+  .mat-mdc-outlined-button {
     margin: 3.5px 10px;
     margin-bottom: 22.313px;
+	height: unset !important;
   }
 }

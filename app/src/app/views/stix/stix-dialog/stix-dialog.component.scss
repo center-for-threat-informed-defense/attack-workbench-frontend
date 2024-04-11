@@ -60,9 +60,6 @@
         .dark & { border-left: 1px solid border-color(dark); }
         .light & { border-left: 1px solid border-color(light); }
     }
-    button.mat-button-disabled {
-        cursor: not-allowed;
-    }
     .button-tooltip {
         display: inline-flex;
     }

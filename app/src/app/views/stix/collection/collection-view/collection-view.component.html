@@ -84,10 +84,8 @@
             <div class="row width-limited" *ngIf="editing">
                 <div class="col">
                     <div class="button-group">
-                        <button mat-mini-fab class="extended-fab-button" color="primary" (click)="handleImportGroups()">
-                            <span class="material-symbols-outlined">
-                                deployed_code_update
-                            </span>
+                        <button mat-raised-button class="extended-button" color="primary" (click)="handleImportGroups()">
+							<mat-icon>library_add</mat-icon>
                             <span class="text-label">
                                 Import groups and their related objects into this collection
                             </span>
@@ -117,7 +115,7 @@
                             <ng-template matExpansionPanelContent>
                                 <!-- automatically add tactics -->
                                 <div *ngIf="editing && attackType == 'tactic'" class="row apply-button">
-                                    <button mat-mini-fab class="extended-fab-button" color="primary"
+                                    <button mat-raised-button class="extended-button" color="primary"
                                         (click)="addObjectsToCollection(attackType)"
                                         [disabled]="autoAddDisabled(attackType)" matTooltipPosition="above"
                                         matTooltip="automatically find and add {{plural[attackType]}} related to {{relevantObjects(attackType)}} in this collection">

@@ -1,6 +1,6 @@
 <div class="resources-drawer">
     <mat-toolbar>
-        <button *ngFor="let tab of tabs" (click)="onTabClick(tab)"  [matTooltip]="tab.name" mat-button class="control" [disabled]="!sidebarService.tabEnabled(tab.name)">
+        <button *ngFor="let tab of tabs" (click)="onTabClick(tab)"  [matTooltip]="tab.name" mat-icon-button class="control" [disabled]="!sidebarService.tabEnabled(tab.name)">
             <mat-icon [attr.aria-label]="tab.name">{{tab.icon}}</mat-icon>
         </button>
         <ng-container *ngIf="showCloseButton">

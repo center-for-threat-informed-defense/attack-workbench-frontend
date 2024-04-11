@@ -9,9 +9,11 @@
 //  If you specify typography styles for the components you use elsewhere, you should delete this line.
 //  If you don't need the default component typographies but still want the hierarchy styles,
 //  you can delete this line and instead use:
-//    `@include mat.legacy-typography-hierarchy(mat.define-legacy-typography-config());`
+//    `@include mat.legacy-typography-hierarchy(mat.define-typography-config());`
 // @include mat.all-legacy-component-typographies();
+/* TODO(mdc-migration): Remove legacy-core once all legacy components are migrated*/
 @include mat.legacy-core();
+@include mat.core();
 
 ::-webkit-scrollbar {
     width: 8px;
@@ -25,7 +27,16 @@
 
 //custom color theme
 .light {
+    /* TODO(mdc-migration): Remove all-legacy-component-themes once all legacy components are migrated*/
     @include mat.all-legacy-component-themes((
+        primary: mat.define-palette(to-material-map(primary), 50, 100, 200),
+        accent: mat.define-palette(to-material-map(secondary), 50, 100, 200),
+        foreground: mat.define-palette(to-material-map(dark), 50, 100, 200),
+        background: mat.define-palette(to-material-map(light), 50, 100, 200),
+        warn: mat.define-palette(to-material-map(warn)),
+        is-dark: false
+    ));
+    @include mat.all-component-themes((
         primary: mat.define-palette(to-material-map(primary), 50, 100, 200),
         accent: mat.define-palette(to-material-map(secondary), 50, 100, 200),
         foreground: mat.define-palette(to-material-map(dark), 50, 100, 200),
@@ -67,7 +78,16 @@
     .matrix-container { border-color: on-color-deemphasis(light) }
 }
 .dark {
+    /* TODO(mdc-migration): Remove all-legacy-component-themes once all legacy components are migrated*/
     @include mat.all-legacy-component-themes((
+        primary: mat.define-palette(to-material-map(primary), 50, 100, 200),
+        accent: mat.define-palette(to-material-map(secondary), 50, 100, 200),
+        foreground: mat.define-palette(to-material-map(light), 50, 100, 200),
+        background: mat.define-palette(to-material-map(dark), 50, 100, 200),
+        warn: mat.define-palette(to-material-map(warn)),
+        is-dark: true
+    ));
+    @include mat.all-component-themes((
         primary: mat.define-palette(to-material-map(primary), 50, 100, 200),
         accent: mat.define-palette(to-material-map(secondary), 50, 100, 200),
         foreground: mat.define-palette(to-material-map(light), 50, 100, 200),
@@ -218,7 +238,7 @@ $tooltip-color: color-alternate(dark, 4);
     }
 }
 
-button.mat-stroked-button:disabled {
+button.mat-mdc-outlined-button:disabled {
     opacity: 0.5;
 }
 

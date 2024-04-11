@@ -7,11 +7,6 @@
         .dark & {  border: 1px solid border-color(dark); }
         .light & { border: 1px solid border-color(light); }
 
-        .mat-icon-button.mat-button-disabled {
-            .dark & { color: on-color-deemphasis(dark); }
-            .light & { color: on-color-deemphasis(light); }
-        }
-
         .controls {
             font-size: 16px;
             .search {

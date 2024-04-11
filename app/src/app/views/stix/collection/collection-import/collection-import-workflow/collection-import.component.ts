@@ -688,6 +688,7 @@ export class CollectionImportComponent implements OnInit {
 				message: `Are you sure you want to import ${this.select.selected.length} objects?`,
 				yes_suffix: 'import the collection',
 			},
+			autoFocus: false, // prevents auto focus on buttons
 		});
 		let promptSubscription = prompt.afterClosed().subscribe({
 			next: (result) => {

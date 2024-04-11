@@ -8,11 +8,6 @@
     &.pending { background-color: color(pending); }
   }
   
-  .mat-icon-button.mat-button-disabled {
-    .dark & { color: on-color-deemphasis(dark); }
-    .light & { color: on-color-deemphasis(light); }
-  }
-  
   .input-group {
     font-size: 16px;
     width: 100%;

@@ -29,7 +29,6 @@
 }
 .text-label {
     font-family: Roboto Condensed,Arial,sans-serif;
-    // font-weight: bold;
     font-size: 16px;
     &:not(.lowercase) { text-transform: uppercase; }
 }
@@ -39,10 +38,12 @@
     text-transform: uppercase;
     color: color(error);
 }
+.mdc-button__label {
+	letter-spacing: normal !important;
+}
 
 %typography {
     font-family: Roboto,serif;
-    // letter-spacing: 0.25pt;
     font-size: 18px;
     line-height: 1.5;
 
@@ -50,7 +51,7 @@
     h2, h3, h4 { @extend .subheading; }
     h5, h6 { font-size: 18px; }
 
-    a:not(.external-link):not(.mat-button):not(.mat-stroked-button) {
+    a:not(.external-link):not(.mat-mdc-button):not(.mat-mdc-outlined-button) {
         color: inherit;
         text-decoration: none;
         transition: all 0.2s ease;
@@ -72,31 +73,18 @@
     }
 
     // see https://github.com/angular/components/blob/master/src/material/core/typography/_typography.scss#L24
-    $custom-typography: mat.define-legacy-typography-config(
+    $custom-typography: mat.define-typography-config(
         $font-family: Roboto,
-        $headline: mat.define-typography-level(32px, 48px, 800, $letter-spacing: 0.5pt),
-        $title:    mat.define-typography-level(20px, 32px, 800, $letter-spacing: 0.5pt),
-        $body-1:   mat.define-typography-level(16px, 24px, 400, $letter-spacing: 0.25pt)
+        $headline-5: mat.define-typography-level(32px, 48px, 800, $letter-spacing: 0.5pt),
+        $headline-6:    mat.define-typography-level(20px, 32px, 800, $letter-spacing: 0.5pt),
+        $body-2:   mat.define-typography-level(16px, 24px, 400, $letter-spacing: 0.25pt)
     );
 
-    @include mat.legacy-typography-hierarchy($custom-typography);
+    @include mat.typography-hierarchy($custom-typography);
     @include mat.legacy-checkbox-typography($custom-typography);
+    /*TODO(mdc-migration): Remove all-legacy-component-typographies once all legacy components are migrated*/
     @include mat.all-legacy-component-typographies($custom-typography);
-    // TODO(v15): As of v15 mat.legacy-core no longer includes default typography styles.
-//  The following line adds:
-//    1. Default typography styles for all components
-//    2. Styles for typography hierarchy classes (e.g. .mat-headline-1)
-//  If you specify typography styles for the components you use elsewhere, you should delete this line.
-//  If you don't need the default component typographies but still want the hierarchy styles,
-//  you can delete this line and instead use:
-//    `@include mat.legacy-typography-hierarchy($custom-typography);`
-@include mat.all-legacy-component-typographies($custom-typography);
-@include mat.legacy-core();
+    @include mat.all-component-typographies($custom-typography);
 }
 
 //custom typography theme
-
-
-
-
-

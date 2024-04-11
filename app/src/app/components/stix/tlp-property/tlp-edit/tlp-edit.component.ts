@@ -59,15 +59,15 @@ export class TlpEditComponent implements OnInit {
       }
 
       let prompt = this.dialog.open(AddDialogComponent, {
-          maxWidth: '70em',
-          maxHeight: '70em',
-          data: {
-          selectionType: 'one',
-          selectableObjects: rows,
-          select: this.select,
-          type: "marking-definition",
-          buttonLabel: buttonLabelStr,
-          clearSelection: clearSelection
+			maxWidth: '70em',
+			maxHeight: '70em',
+			data: {
+			selectionType: 'one',
+			selectableObjects: rows,
+			select: this.select,
+			type: "marking-definition",
+			buttonLabel: buttonLabelStr,
+			clearSelection: clearSelection
           },
       });
 

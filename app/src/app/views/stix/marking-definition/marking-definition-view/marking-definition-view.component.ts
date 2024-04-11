@@ -58,7 +58,8 @@ export class MarkingDefinitionViewComponent extends StixViewPage implements OnIn
             maxWidth: "35em",
             data: { 
                 message: 'Are you sure you want to save this statement? You cannot modify it after saving',
-            }
+            },
+			autoFocus: false, // prevents auto focus on buttons
         });
   
         let subscriptionPrompt = prompt.afterClosed().subscribe({

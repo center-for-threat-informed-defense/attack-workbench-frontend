@@ -1,14 +1,14 @@
-TODO: replace with ng-bootstrap popover
-<!-- <button mat-button class="control" matTooltip="settings"
-    popoverPlacement="bottom" 
-    [popover]="objectStatus"
-    [popoverOnHover]="false"
+<!-- TODO: replace with ng-bootstrap popover -->
+<button mat-icon-button class="control" matTooltip="settings"
     [disabled]="disabled"
     (click)="loadData()">
+	<!-- popoverPlacement="bottom" 
+    [popover]="objectStatus"
+    [popoverOnHover]="false" -->
     <mat-icon aria-label="settings">settings</mat-icon>
 </button>
 
-<popover-content #objectStatus [closeOnClickOutside]="true">
+<!-- <popover-content #objectStatus [closeOnClickOutside]="true">
     <div class="workflow-status" *ngIf="loaded else loading">
         <mat-form-field class="workflow-status" appearance="outline">
             <mat-label>Workflow Status</mat-label>

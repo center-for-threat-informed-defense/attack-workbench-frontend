@@ -1,11 +1,6 @@
 @import "../../../../../style/globals";
 
 .teams-list-page {
-  .mat-icon-button.mat-button-disabled {
-    .dark & { color: on-color-deemphasis(dark); }
-    .light & { color: on-color-deemphasis(light); }
-  }
-
   .teams-page-header {
     padding-bottom: 16px;
   }

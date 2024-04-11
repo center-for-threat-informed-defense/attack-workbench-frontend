@@ -219,10 +219,6 @@
                 }
             }
         }
-        .mat-icon-button.mat-button-disabled {
-            .dark & { color: on-color-deemphasis(dark); }
-            .light & { color: on-color-deemphasis(light); }
-        }
     }
 }
 .no-checkbox {

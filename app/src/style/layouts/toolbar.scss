@@ -7,10 +7,6 @@
     button {
         transition: opacity ease 0.5s;
     }
-    button.mat-button-disabled {
-        opacity: 0.5;
-    }
-
     .section + .section {
         .light & { border-left: 1px solid border-color(light); }
         .dark &  { border-left: 1px solid border-color(dark); }

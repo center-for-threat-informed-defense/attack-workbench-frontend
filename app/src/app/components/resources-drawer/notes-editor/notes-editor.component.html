@@ -3,9 +3,9 @@
     <div class="notes-toolbar">
         <mat-toolbar>
             <!-- add new note -->
-            <button mat-button class="control" matTooltip="add a note" (click)="addNote()"><mat-icon>add</mat-icon></button>
+            <button mat-icon-button class="control" matTooltip="add a note" (click)="addNote()"><mat-icon>add</mat-icon></button>
             <!-- sorting options -->
-            <button mat-button class="control hide-selected-value" matTooltip="sorting options" (click)="sortingDropdown.open()">
+            <button mat-icon-button class="control hide-selected-value" matTooltip="sorting options" (click)="sortingDropdown.open()">
                 <mat-icon aria-label="sort">sort</mat-icon>
                 <mat-select [formControl]="selected" #sortingDropdown>
                     <mat-option value="title-ascending" (click)="sortTitle(true)">Sort alphabetically by title (ascending)</mat-option>
@@ -43,8 +43,8 @@
                             <app-timestamp-view [config]="{object: note, field: 'modified', showDisplayName: 'true'}"></app-timestamp-view>
                     </mat-card-subtitle>
                     <!-- save/delete note -->
-                    <button mat-button *ngIf="note.editing" class="control" [disabled]="!note.title || !note.content" matTooltip="save note" (click)="saveNote(note)"><mat-icon aria-label="save">save</mat-icon></button>
-                    <button mat-button class="control" matTooltip="delete note" (click)="deleteNote(note)"><mat-icon aria-label="delete">delete</mat-icon></button>
+                    <button mat-icon-button *ngIf="note.editing" class="control" [disabled]="!note.title || !note.content" matTooltip="save note" (click)="saveNote(note)"><mat-icon aria-label="save">save</mat-icon></button>
+                    <button mat-icon-button class="control" matTooltip="delete note" (click)="deleteNote(note)"><mat-icon aria-label="delete">delete</mat-icon></button>
                 </mat-card-header>
                 <mat-card-content>
                     <!-- content -->

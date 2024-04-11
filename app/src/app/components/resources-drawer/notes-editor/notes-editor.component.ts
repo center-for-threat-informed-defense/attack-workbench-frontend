@@ -106,7 +106,8 @@ export class NotesEditorComponent implements OnInit, AfterViewInit {
             maxWidth: "35em",
             data: { 
                 message: 'Are you sure you want to delete this note?',
-            }
+            },
+			autoFocus: false, // prevents auto focus on toolbar buttons
         });
   
         let subscription = prompt.afterClosed().subscribe({

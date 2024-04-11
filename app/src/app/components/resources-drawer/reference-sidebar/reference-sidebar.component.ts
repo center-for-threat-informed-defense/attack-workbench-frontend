@@ -35,7 +35,8 @@ export class ReferenceSidebarComponent implements OnInit, AfterViewInit {
     public newReference() {
         let ref = this.dialog.open(ReferenceEditDialogComponent, {
             maxHeight: "75vh",
-            data: { mode: 'edit' }
+            data: { mode: 'edit' },
+			autoFocus: false, // prevents auto focus on toolbar buttons
         });
         let subscription = ref.afterClosed().subscribe({
             complete: () => {
