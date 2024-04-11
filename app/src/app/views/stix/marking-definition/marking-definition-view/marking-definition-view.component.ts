@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { MarkingDefinition } from 'src/app/classes/stix/marking-definition';
 import { StixViewPage } from '../../stix-view-page';
-import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
+import { MatDialog } from '@angular/material/dialog';
 import { ValidationData } from 'src/app/classes/serializable';
 import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/rest-api-connector.service';
 import { Router } from '@angular/router';

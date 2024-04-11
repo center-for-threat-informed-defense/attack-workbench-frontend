@@ -1,6 +1,6 @@
 import { AfterViewInit, Component, ElementRef, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
+import { MatDialog } from '@angular/material/dialog';
 import { MatLegacySnackBar as MatSnackBar } from '@angular/material/legacy-snack-bar';
 import { Router } from '@angular/router';
 import { fromEvent } from 'rxjs';
@@ -105,7 +105,7 @@ export class NotesEditorComponent implements OnInit, AfterViewInit {
         let prompt = this.dialog.open(ConfirmationDialogComponent, {
             maxWidth: "35em",
             data: { 
-                message: 'Are you sure you want to delete this note?',
+                message: '# Are you sure you want to delete this note?',
             },
 			autoFocus: false, // prevents auto focus on toolbar buttons
         });

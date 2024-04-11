@@ -2,7 +2,7 @@ import { Component, OnInit, Input, ViewEncapsulation, ViewChild, AfterViewInit, 
 import { animate, style, transition, trigger } from '@angular/animations';
 import { MatLegacyPaginator as MatPaginator } from '@angular/material/legacy-paginator';
 import { SelectionModel } from '@angular/cdk/collections';
-import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
+import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 
 import { fromEvent, Observable, of, Subscription } from 'rxjs';

@@ -1,7 +1,6 @@
 @import "../../../style/globals.scss";
 
 .contributor-dialog {
-    margin: -24px;
     mat-toolbar {
         @extend %toolbar;
         padding-left: 0;

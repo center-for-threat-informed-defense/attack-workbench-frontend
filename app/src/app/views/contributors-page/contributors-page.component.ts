@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
+import { MatDialog } from '@angular/material/dialog';
 import { Subscription } from 'rxjs';
 import { StixObject } from 'src/app/classes/stix';
 import { ContributorEditDialogComponent } from 'src/app/components/contributor-edit-dialog/contributor-edit-dialog.component';

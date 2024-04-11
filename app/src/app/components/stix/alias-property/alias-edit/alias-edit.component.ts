@@ -1,5 +1,5 @@
 import { Component, Input, OnInit, ViewEncapsulation } from '@angular/core';
-import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
+import { MatDialog } from '@angular/material/dialog';
 import { StixObject } from 'src/app/classes/stix/stix-object';
 import { AliasPropertyConfig } from '../alias-property.component';
 import { AliasEditDialogComponent } from './alias-edit-dialog/alias-edit-dialog.component';

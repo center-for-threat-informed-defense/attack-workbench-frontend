@@ -9,7 +9,6 @@
     height: 100%;
     display: flex;
     flex-direction: column;
-    margin: -24px;
     mat-toolbar {
         @extend %toolbar;
         padding-left: 0;
@@ -24,7 +23,6 @@
         
     }
     mat-drawer {
-        // border-left: none !important;
         .light & { border-left: 1px solid border-color(light) !important; }
         .dark & { border-left: 1px solid border-color(dark) !important; }
     }

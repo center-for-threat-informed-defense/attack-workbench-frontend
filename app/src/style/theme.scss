@@ -156,11 +156,11 @@ $tooltip-color: color-alternate(dark, 4);
             color: on-color-deemphasis(light);
         }
     }
-    &.dark .mat-dialog-container {
+    &.dark .mat-mdc-dialog-surface {
         background: color(dark);
         color: on-color(dark);
     }
-    &.light .mat-dialog-container {
+    &.light .mat-mdc-dialog-surface {
         background: color(light);
         color: on-color(light);
     }

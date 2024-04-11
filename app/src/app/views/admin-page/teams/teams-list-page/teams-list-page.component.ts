@@ -5,7 +5,7 @@ import { Role } from '../../../../classes/authn/role';
 import { MatLegacyPaginator as MatPaginator } from '@angular/material/legacy-paginator';
 import { AuthenticationService } from '../../../../services/connectors/authentication/authentication.service';
 import { Team } from 'src/app/classes/authn/team';
-import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
+import { MatDialog } from '@angular/material/dialog';
 import { CreateNewDialogComponent } from 'src/app/components/create-new-dialog/create-new-dialog.component';
 import { Router } from '@angular/router';
 

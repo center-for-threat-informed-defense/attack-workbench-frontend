@@ -15,6 +15,11 @@
     min-width: 40vw;
     max-width: 80vw;
     max-height: 75vh;
+	padding: 24px;
+
+	.mdc-dialog__title {
+		padding: 0 0 9px;
+	}
 
     .centered {
         text-align: center;
