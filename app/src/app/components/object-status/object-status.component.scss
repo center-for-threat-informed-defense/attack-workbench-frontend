@@ -1,7 +1,6 @@
 @import "../../../style/globals";
 .workflow-status {
-    .mat-form-field { display: flex; }
-    .mat-form-field-wrapper { padding-bottom: 10px; }
+    .mat-mdc-form-field { display: flex; }
 
     .status-options {
         font-weight: normal;

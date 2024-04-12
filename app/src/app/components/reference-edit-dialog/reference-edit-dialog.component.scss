@@ -24,11 +24,11 @@
         .reference-date {
             display: flex;
             width: 100%;
-            .mat-form-field:not(:first-child):not(:last-child) {
+            .mat-mdc-form-field:not(:first-child):not(:last-child) {
                 padding: 0px 16px;
             }
         }
-        .stage.edit .mat-form-field {
+        .stage.edit .mat-mdc-form-field {
             width: 100%;
         }
         .stage.reviewing {
@@ -47,7 +47,6 @@
                 .dark & { border-left: 1px solid border-color(dark); }
                 .light & { border-left: 1px solid border-color(light); }
             }
-            .editor .mat-form-field-infix { width: unset; }
         }
     }
     .reference-view {

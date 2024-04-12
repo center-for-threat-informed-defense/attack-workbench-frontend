@@ -1,13 +1,9 @@
 @import "../../../style/colors.scss";
 .create-new-dialog {
     margin: 0 24px;
-	text-align: center;
     .input-form {
-        .mat-form-field {
+        .mat-mdc-form-field {
             display: block;
-        }
-        .mat-form-field-infix {
-            border-top: .2em solid transparent;
         }
     }
     .buttons {
