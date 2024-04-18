@@ -23,7 +23,7 @@ export class VersionEditComponent implements OnInit {
 
     public setVersion(event: any): void {
         let newVersion = '';
-        if (event.target.valueAsNumber) newVersion = event.target.valueAsNumber.toFixed(1);
+        if (event.target.valueAsNumber) newVersion = event.target.valueAsNumber.toString();
         this.config.object[this.field].version = newVersion;
     }
 }
