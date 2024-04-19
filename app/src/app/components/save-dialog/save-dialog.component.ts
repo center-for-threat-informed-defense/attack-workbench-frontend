@@ -66,6 +66,7 @@ export class SaveDialogComponent implements OnInit {
                             this.patch_objects.push(x);
                     }
                 });
+				this.patch_objects.push(this.config.object);
                 this.stage = 2;
             },
             complete: () => objSubscription.unsubscribe()

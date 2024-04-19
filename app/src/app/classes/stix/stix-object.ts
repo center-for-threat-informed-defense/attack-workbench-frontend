@@ -520,7 +520,7 @@ export abstract class StixObject extends Serializable {
         let ids = [];
         for (let link of links) {
             let id = link.split("(LinkById: ")[1].slice(0, -1);
-            if(!ids.includes(id)) ids.push(id);
+            if(!ids.includes(id) && id != '') ids.push(id);
         }
 
         return restAPIService.getAllObjects({attackIDs: ids, revoked: true, deprecated: true, deserialize: true}).pipe(
@@ -528,7 +528,7 @@ export abstract class StixObject extends Serializable {
                 // objects must be validated in cases where more than one object is 
                 // returned by the given ATT&CK ID, this occurs due to older versions 
                 // of ATT&CK in which techniques shared their IDs with mitigations
-                let validObjects = (results.data as StixObject[]).filter(obj => obj.isValidAttackId());
+                let validObjects = (results.data as StixObject[]).filter(obj => obj.supportsAttackID && obj.isValidAttackId());
                 let retrieved_ids = validObjects.map(obj => obj.attackID);
                 for (let id of ids) {
                     if (!retrieved_ids.includes(id)) result.missingLinks.add(id);
