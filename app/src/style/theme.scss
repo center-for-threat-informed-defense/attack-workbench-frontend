@@ -1,18 +1,6 @@
 @use '@angular/material' as mat;
 @import "./colors.scss";
 @import "./typography.scss";
-
-// TODO(v15): As of v15 mat.legacy-core no longer includes default typography styles.
-//  The following line adds:
-//    1. Default typography styles for all components
-//    2. Styles for typography hierarchy classes (e.g. .mat-headline-1)
-//  If you specify typography styles for the components you use elsewhere, you should delete this line.
-//  If you don't need the default component typographies but still want the hierarchy styles,
-//  you can delete this line and instead use:
-//    `@include mat.legacy-typography-hierarchy(mat.define-typography-config());`
-// @include mat.all-legacy-component-typographies();
-/* TODO(mdc-migration): Remove legacy-core once all legacy components are migrated*/
-@include mat.legacy-core();
 @include mat.core();
 
 ::-webkit-scrollbar {
@@ -27,15 +15,6 @@
 
 //custom color theme
 .light {
-    /* TODO(mdc-migration): Remove all-legacy-component-themes once all legacy components are migrated*/
-    @include mat.all-legacy-component-themes((
-        primary: mat.define-palette(to-material-map(primary), 50, 100, 200),
-        accent: mat.define-palette(to-material-map(secondary), 50, 100, 200),
-        foreground: mat.define-palette(to-material-map(dark), 50, 100, 200),
-        background: mat.define-palette(to-material-map(light), 50, 100, 200),
-        warn: mat.define-palette(to-material-map(warn)),
-        is-dark: false
-    ));
     @include mat.all-component-themes((
         primary: mat.define-palette(to-material-map(primary), 50, 100, 200),
         accent: mat.define-palette(to-material-map(secondary), 50, 100, 200),
@@ -78,15 +57,6 @@
     .matrix-container { border-color: on-color-deemphasis(light) }
 }
 .dark {
-    /* TODO(mdc-migration): Remove all-legacy-component-themes once all legacy components are migrated*/
-    @include mat.all-legacy-component-themes((
-        primary: mat.define-palette(to-material-map(primary), 50, 100, 200),
-        accent: mat.define-palette(to-material-map(secondary), 50, 100, 200),
-        foreground: mat.define-palette(to-material-map(light), 50, 100, 200),
-        background: mat.define-palette(to-material-map(dark), 50, 100, 200),
-        warn: mat.define-palette(to-material-map(warn)),
-        is-dark: true
-    ));
     @include mat.all-component-themes((
         primary: mat.define-palette(to-material-map(primary), 50, 100, 200),
         accent: mat.define-palette(to-material-map(secondary), 50, 100, 200),
@@ -131,28 +101,28 @@
 
 $tooltip-color: color-alternate(dark, 4);
 //patch overlays for theme compatibility
-.cdk-overlay-container, .cdk-overlay-container{ //ensure that overlay doesn't visually cover everything
+.cdk-overlay-container, .cdk-overlay-container { //ensure that overlay doesn't visually cover everything
     background: transparent;
-    .mat-tooltip { // tooltip styling
+    .mat-mdc-tooltip { // tooltip styling
         background: $tooltip-color;
     }
-    &.dark .mat-menu-panel {
+    &.dark .mat-mdc-menu-panel {
         background: color(dark);
         color: on-color(dark);
-        .mat-menu-item:hover {
+        .mat-mdc-menu-item:hover {
             background: color-alternate(dark);
         }
-        .mat-menu-item:disabled {
+        .mat-mdc-menu-item:disabled {
             color: on-color-deemphasis(dark);
         }
     }
-    &.light .mat-menu-panel {
+    &.light .mat-mdc-menu-panel {
         background: color(light);
         color: on-color(light);
-        .mat-menu-item:hover {
+        .mat-mdc-menu-item:hover {
             background: color-alternate(light);
         }
-        .mat-menu-item:disabled {
+        .mat-mdc-menu-item:disabled {
             color: on-color-deemphasis(light);
         }
     }
@@ -165,22 +135,22 @@ $tooltip-color: color-alternate(dark, 4);
         color: on-color(light);
     }
 
-    &.light .mat-snack-bar-container {
+    &.light .mat-mdc-snack-bar-container {
         background: color(light);
         color: on-color(light);
     }
-    &.dark .mat-snack-bar-container {
+    &.dark .mat-mdc-snack-bar-container {
         background: color(dark);
         color: on-color(dark);
     }
-    .mat-snack-bar-container.success {
+    .mat-mdc-snack-bar-container.success {
         background: color(success);
         color: on-color(success);
         button {
             color: on-color(success)
         }
     }
-    .mat-snack-bar-container.warn {
+    .mat-mdc-snack-bar-container.warn {
         background: color(warn);
         color: on-color(warn);
         button {
@@ -188,10 +158,10 @@ $tooltip-color: color-alternate(dark, 4);
         }
     }
 
-    &.light .mat-select-panel .mat-option.mat-active {
+    &.light .mat-mdc-select-panel .mat-mdc-option.mat-active {
         background: color-alternate(light, 2.5);
     }
-    &.dark .mat-select-panel .mat-option.mat-active {
+    &.dark .mat-mdc-select-panel .mat-mdc-option.mat-active {
         background: color-alternate(dark, 2.5);
     }
 
@@ -241,7 +211,7 @@ button.mat-mdc-outlined-button:disabled {
     opacity: 0.5;
 }
 
-.mat-select-panel {
+.mat-mdc-select-panel {
     .light & {
         color: on-color(light);
         background: color(light);
@@ -250,6 +220,30 @@ button.mat-mdc-outlined-button:disabled {
         color: on-color-alternate(dark);
         background: color-alternate(dark);
     }
+}
+
+// change initial background form field color
+.mdc-text-field--filled:not(.mdc-text-field--disabled) {
+	.light & {
+		background-color: color(light) !important;
+	}
+	.dark & {
+		background-color: color(dark) !important;
+	}
+}
+// remove form field focus overlay
+.mat-mdc-form-field-focus-overlay {
+	background-color: transparent !important;
+}
+
+.mdc-text-field--filled:not(.mdc-text-field--disabled) .mdc-line-ripple::before {
+	.light & {
+		border-bottom-color: border-color(light) !important;
+	}
+	.dark & {
+		border-bottom-color: border-color(dark) !important;
+	}
+
 }
 
 .mat-mdc-card .mat-mdc-card-header {
@@ -267,7 +261,6 @@ button.mat-mdc-outlined-button:disabled {
     .dark & { color: on-color(dark); }
     .light & { color: on-color(light); }
 }
-/* You can add global styles to this file, and also import other style files */
 html, body { height: 100%; }
 body {
     margin: 0;

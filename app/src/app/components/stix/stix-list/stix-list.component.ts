@@ -1,6 +1,6 @@
 import { Component, OnInit, Input, ViewEncapsulation, ViewChild, AfterViewInit, ElementRef, EventEmitter, Output, OnDestroy } from '@angular/core';
 import { animate, style, transition, trigger } from '@angular/animations';
-import { MatLegacyPaginator as MatPaginator } from '@angular/material/legacy-paginator';
+import { MatPaginator } from '@angular/material/paginator';
 import { SelectionModel } from '@angular/cdk/collections';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
@@ -13,7 +13,7 @@ import { StixDialogComponent } from 'src/app/views/stix/stix-dialog/stix-dialog.
 import { Paginated, RestApiConnectorService } from 'src/app/services/connectors/rest-api/rest-api-connector.service';
 import { AuthenticationService } from 'src/app/services/connectors/authentication/authentication.service';
 import { SidebarService } from 'src/app/services/sidebar/sidebar.service';
-import { MatLegacySelect as MatSelect } from '@angular/material/legacy-select';
+import { MatSelect } from '@angular/material/select';
 import { AddDialogComponent } from '../../add-dialog/add-dialog.component';
 import { Collection } from 'src/app/classes/stix/collection';
 import { logger } from 'src/app/utils/logger';
@@ -580,6 +580,10 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
     public getAccessibleRoutes(attackType: string, routes: any[],) {
         return routes.filter(route => this.canAccess(attackType, route) && this.canEdit(route));
     }
+
+	public routeTo(url, queryParams): void {
+		this.router.navigate([url], {queryParams: queryParams});
+	}
 
     private canAccess(attackType: string, route: any) {
         if (route.label && route.label == 'edit' && !this.authenticationService.canEdit(attackType)) {

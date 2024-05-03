@@ -4,7 +4,29 @@
     position: relative;
     display: flex;
     flex-direction: column;
-    padding-top: 6px;
+	&.editing {
+		> .content {
+			border: solid 1px;
+			&:hover {
+				border-width: 2px;
+				& + label::before, & + label::after {
+					border-width: 2px;
+				}
+			}
+			.dark & { border-color: white; border-top-color: transparent; }
+			.light & { border-color: black; border-top-color: transparent; }
+			& + label {
+				text-transform: lowercase !important;
+				letter-spacing: 0.5px !important;
+				.dark & { color: white; }
+				.light & { color: black; }
+				&::before, &::after {
+					.dark & { border-top-color: white; }
+					.light & { border-top-color: black; }
+				}
+			}
+		}
+	}
     > .content {
         flex: 1 0;
         display: flex;
@@ -23,10 +45,14 @@
             .light & { border-top-color: border-color(light); }
             .dark & { border-top-color: border-color(dark); }
         }
+        &.no-padding {
+            padding-top: 0;
+            padding-bottom: 0;
+        }
         & + label {
             @extend .text-label;
             position: absolute;
-            top: 0;
+            top: -6px;
             left: 0;
             display: flex;
             .dark & { border-color: border-color(dark); color: on-color-deemphasis(dark); }
@@ -67,8 +93,6 @@
             .light & { border-color: border-color(light); }
             // override parent padding with own padding
             margin: -16px -12px -16px 12px; // left margin should exist
-            // justify-self: end;
-            // margin-left: auto;
             padding: 16px 12px;
             align-self: stretch; //fill parent
             display: flex; //center contents

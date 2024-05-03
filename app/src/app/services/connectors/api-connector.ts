@@ -1,4 +1,4 @@
-import { MatLegacySnackBar as MatSnackBar } from "@angular/material/legacy-snack-bar";
+import { MatSnackBar } from "@angular/material/snack-bar";
 import { Observable, of, throwError } from "rxjs";
 import { logger } from "../../utils/logger";
 

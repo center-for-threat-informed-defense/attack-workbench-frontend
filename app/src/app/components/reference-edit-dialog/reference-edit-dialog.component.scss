@@ -33,13 +33,20 @@
         }
         .stage.reviewing {
             text-align: center;
-            .mat-list-text { flex: none; }
-            .mat-list-item-content { justify-content: center; }
+			.v-align {
+				padding: 12px 0;
+				* {
+					vertical-align: middle;
+				}
+			}
         }
         .grid {
             .editor {
                 max-width: 66% !important;
                 min-width: 66% !important;
+            }
+            .column.editor {
+                margin-top: 4px;
             }
             .column:not(.editor) { // format the rightmost columns
                 margin-bottom: 24px;

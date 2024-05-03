@@ -13,6 +13,9 @@
     letter-spacing: 0.5pt;
     font-weight: 700;
     text-transform: uppercase;
+    &.lowercase {
+		text-transform: none !important;
+	}
 }
 .subheading {
     font-family: Poppins,Arial,sans-serif;
@@ -30,6 +33,7 @@
 .text-label {
     font-family: Roboto Condensed,Arial,sans-serif;
     font-size: 16px;
+    vertical-align: middle;
     &:not(.lowercase) { text-transform: uppercase; }
 }
 .warning-text {
@@ -38,15 +42,14 @@
     text-transform: uppercase;
     color: color(error);
 }
-.mdc-button__label, .mat-optgroup-label, .mdc-label {
-	letter-spacing: normal !important;
-}
 .mdc-label {
 	line-height: 24px;
 	padding: 0px !important;
 }
 .mat-mdc-chip .mat-mdc-chip-action-label {
 	font-size: 14px !important;
+}
+.mdc-button__label {
 	letter-spacing: normal !important;
 }
 
@@ -54,6 +57,7 @@
     font-family: Roboto,serif;
     font-size: 18px;
     line-height: 1.5;
+	letter-spacing: normal !important;
 
     h1 { @extend .heading; }
     h2, h3, h4 { @extend .subheading; }
@@ -90,8 +94,6 @@
 
     @include mat.typography-hierarchy($custom-typography);
     @include mat.checkbox-typography($custom-typography);
-    /*TODO(mdc-migration): Remove all-legacy-component-typographies once all legacy components are migrated*/
-    @include mat.all-legacy-component-typographies($custom-typography);
     @include mat.all-component-typographies($custom-typography);
 }
 

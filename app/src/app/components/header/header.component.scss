@@ -2,6 +2,10 @@
 .header {
     .light & { background: color(primary); color: on-color(primary); }
     .dark & { background: color(light); }
+	.mat-mdc-button:disabled {
+		.light & { color: on-color-deemphasis(light); }
+		.dark & { color: on-color-deemphasis(dark); }
+	}
     .spacer {
         flex: 1 1 auto;
     }
@@ -21,7 +25,7 @@
     button {
         .dark & { color: on-color(light); }
         font-family: Roboto,Arial,sans-serif;
-        font-weight: 500;
+        font-weight: 600;
         text-transform: uppercase;
     }
 

@@ -4,7 +4,9 @@
         <!-- CONTROLS -->
         <!-- -------- -->
         <div class="controls" [ngStyle]="{'visibility': showControls ? 'visible' : 'hidden'}">
-            <div class="input-group" [ngStyle]="{'height': showControls ? 'inherit' : '0px'}">
+            <div class="input-group"
+				[class.bordered]="(config.type && config.type == 'relationship')"
+				[ngStyle]="{'height': showControls ? 'inherit' : '0px'}">
                 <!-- show search/filter options for non-relationship objects -->
                 <ng-container *ngIf="!(config.type && config.type == 'relationship')">
                     <mat-form-field class="search" appearance="fill">
@@ -15,7 +17,7 @@
                     <!-- don't show options for collections or if loading data not from REST API -->
                     <mat-form-field appearance="fill" *ngIf="config.showFilters">
                         <mat-label>options</mat-label>
-                        <mat-select multiple [(ngModel)]="filter" (selectionChange)="applyControls()">
+                        <mat-select multiple panelWidth="" [(ngModel)]="filter" (selectionChange)="applyControls()">
                             <mat-optgroup *ngIf="config.showUserSearch" label="users">
                                 <mat-option disabled class="no-checkbox">
                                     <div class="user-search" (click)="openUserSelectModal()">
@@ -36,7 +38,7 @@
                 </ng-container>
                 <!-- show deprecated filter -->
                 <ng-container *ngIf="(config.type && config.type == 'relationship') || config.showDeprecatedFilter">
-                    <mat-checkbox class="align-center" (change)="showDeprecated($event)">show deprecated</mat-checkbox>
+                    <mat-checkbox color="primary" class="align-center" [class.bordered]="!(config.type && config.type == 'relationship')" (change)="showDeprecated($event)">show deprecated</mat-checkbox>
                 </ng-container>
             </div>
         </div>
@@ -131,43 +133,43 @@
                                 <div class="column controls" [ngClass]="!config.type.includes('collection-') ? 'is-narrow' : 'collection-table'"*ngIf="config.showLinks">
                                     <span *ngIf="!config.type.includes('collection-')">
                                         <div *ngFor="let route of getAccessibleRoutes(element.attackType, element.routes)">
-                                        <a class="mat-button" [routerLink]="'/' + [element.attackType, element.stixID, route.route].join('/')" [queryParams]="route.query">
-                                            {{route.label}}
-                                        </a>
+											<button class="detail-button" mat-button (click)="routeTo('/' + [element.attackType, element.stixID, route.route].join('/'), route.query)">
+												{{route.label}}
+											</button>
                                         </div>
                                     </span>
                                     <span *ngIf="config.type.includes('collection-')">
                                         <mat-table mat-table multiTemplateDataRows [dataSource]="config.collectionMap.get(element.stixID)">
-                                        <ng-container matColumnDef="action">
-                                            <mat-header-cell *matHeaderCellDef></mat-header-cell>
-                                            <mat-cell *matCellDef="let collection">
-                                            <div *ngFor="let route of getAccessibleRoutes(collection.attackType, collection.routes)">
-                                                <a class="mat-button" [routerLink]="'/' + [collection.attackType, collection.stixID, route.route].join('/')" [queryParams]="route.query">
-                                                    {{route.label}}
-                                                </a>
-                                            </div>
-                                            </mat-cell>
-                                        </ng-container>
+                                            <ng-container matColumnDef="action">
+                                                <mat-header-cell *matHeaderCellDef></mat-header-cell>
+                                                <mat-cell *matCellDef="let collection">
+                                                <div *ngFor="let route of getAccessibleRoutes(collection.attackType, collection.routes)">
+                                                    <button class="detail-button" mat-button (click)="routeTo('/' + [collection.attackType, collection.stixID, route.route].join('/'), route.query)">
+                                                        {{route.label}}
+                                                    </button>
+                                                </div>
+                                                </mat-cell>
+                                            </ng-container>
 
-                                        <ng-container matColumnDef="version">
-                                            <mat-header-cell *matHeaderCellDef>Version</mat-header-cell>
-                                            <mat-cell *matCellDef="let collection">{{collection.version}}</mat-cell>
-                                        </ng-container>
+                                            <ng-container matColumnDef="version">
+                                                <mat-header-cell *matHeaderCellDef>Version</mat-header-cell>
+                                                <mat-cell *matCellDef="let collection">{{collection.version}}</mat-cell>
+                                            </ng-container>
 
-                                        <ng-container matColumnDef="released">
-                                            <mat-header-cell *matHeaderCellDef>Released?</mat-header-cell>
-                                            <mat-cell *matCellDef="let collection">{{collection.release}}</mat-cell>
-                                        </ng-container>
+                                            <ng-container matColumnDef="released">
+                                                <mat-header-cell *matHeaderCellDef>Released</mat-header-cell>
+                                                <mat-cell *matCellDef="let collection">{{collection.release}}</mat-cell>
+                                            </ng-container>
 
-                                        <ng-container matColumnDef="description">
-                                            <mat-header-cell *matHeaderCellDef>Description</mat-header-cell>
-                                            <mat-cell *matCellDef="let collection;let i = dataIndex">
-                                                <span *ngIf="i==0">{{collection.description}}</span>
-                                            </mat-cell>
-                                        </ng-container>
+                                            <ng-container matColumnDef="description">
+                                                <mat-header-cell *matHeaderCellDef>Description</mat-header-cell>
+                                                <mat-cell *matCellDef="let collection;let i = dataIndex">
+                                                    <span *ngIf="i==0">{{collection.description}}</span>
+                                                </mat-cell>
+                                            </ng-container>
 
-                                        <mat-header-row *matHeaderRowDef="collectionColumnsToDisplay; sticky: true"></mat-header-row>
-                                        <mat-row *matRowDef="let row; columns: collectionColumnsToDisplay;"></mat-row>
+                                            <mat-header-row *matHeaderRowDef="collectionColumnsToDisplay; sticky: true"></mat-header-row>
+                                            <mat-row *matRowDef="let row; columns: collectionColumnsToDisplay;"></mat-row>
                                         </mat-table>
                                     </span>
                                 </div>

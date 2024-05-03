@@ -18,7 +18,7 @@
     <div *ngIf="editing else viewReference" class="edit-reference">
         <div *ngIf="stage == 0" class="stage edit">
             <h1>Reference Editor</h1>
-            <div *ngIf="!loading else loadingDisplay" class="grid spacing-16">
+            <div *ngIf="!loading else loadingDisplay" class="grid spacing-20">
                 <div class="row">
                     <div class="column editor">
                         <!-- source name -->
@@ -115,12 +115,10 @@
         <div *ngIf="stage == 2" class="stage reviewing">
             <h1>Required Patches</h1>
             <ng-container *ngIf="patchObjects.length == 0 && patchRelationships == 0; else patches">
-                <mat-list>
-                    <mat-list-item>
-                        <mat-icon matListIcon class="text-success">check</mat-icon>
-                        <p matLine class="text-success">No objects in the knowledge base use this reference.</p>
-                    </mat-list-item>
-                </mat-list>
+				<div class="v-align text-success">
+					<mat-icon>check</mat-icon>
+					<span style="padding-left: 12px">No objects in the knowledge base use this reference.</span>
+				</div>
             </ng-container>
             <ng-template #patches>
                 <p>The following objects include the edited reference and will be updated automatically.</p>
@@ -153,7 +151,7 @@
     </div>
     <!-- view page -->
     <ng-template #viewReference>
-        <div class="reference-view grid spacing-12">
+        <div class="reference-view grid spacing-16">
             <h1>{{reference.source_name}}</h1>
             <!-- source name -->
             <div class="row">

@@ -6,8 +6,8 @@
     .subtype-table{
         width: 100%;
         padding: 8px;
-        tr.mat-header-row { height: 25px; }
-        .mat-cell, .mat-header-cell {
+        tr.mat-mdc-header-row { height: 25px; }
+        .mat-mdc-cell, .mat-mdc-header-cell {
             padding: 0 10px;
             .light & { border-color: border-color(light); }
             .dark &  { border-color: border-color(dark); }

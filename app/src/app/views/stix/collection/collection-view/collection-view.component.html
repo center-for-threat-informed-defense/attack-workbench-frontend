@@ -1,10 +1,10 @@
 <div class="collection-view">
     <div *ngIf="!validating">
-        <div class="grid spacing-12" *ngIf="!loading else loadingDisplay">
+        <div class="grid spacing-16" *ngIf="!loading else loadingDisplay">
             <div class="row width-limited">
                 <div class="col">
                     <!-- things to add to the collection -->
-                    <app-name-property class="grow-to-row" [config]="{
+                    <app-name-property class="grow-to-row c-align" [config]="{
                         mode: editing? 'edit' : 'view',
                         object: collection
                     }"></app-name-property>
@@ -23,8 +23,8 @@
                 <div class="col" *ngIf="editing">
                     <div class="labelled-box" >
 						<!-- TODO: [popover]="releaseExplanation" -->
-                        <div class="content no-label">
-                            <mat-checkbox [(ngModel)]="release">is release version?</mat-checkbox>
+                        <div class="content no-padding no-label">
+                            <mat-checkbox color="primary" [(ngModel)]="release">is release version?</mat-checkbox>
                         </div>
                     </div>
 					<!-- TODO: replace with ng-boostrap popover -->

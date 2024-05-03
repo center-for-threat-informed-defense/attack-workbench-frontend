@@ -19,3 +19,24 @@ button.control {
 		margin: 0px !important;
 	}
 }
+
+.mat-pseudo-checkbox.mat-mdc-option-pseudo-checkbox.mat-pseudo-checkbox-full.ng-star-inserted.mat-pseudo-checkbox-checked {
+	.light & {
+		color: color(light) !important;
+	}
+	.dark & {
+		color: color(light) !important;
+	}
+}
+.mdc-checkbox .mdc-checkbox__native-control[disabled]:checked~.mdc-checkbox__background {
+	.light & {
+		background-color: on-color-deemphasis(light);
+	}
+	.dark & {
+		background-color: on-color-deemphasis(dark);
+	}
+}
+
+.mat-mdc-snack-bar-container .mat-mdc-button.mat-mdc-snack-bar-action:not(:disabled) {
+	color: black !important;
+}

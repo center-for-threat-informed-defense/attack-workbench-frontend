@@ -1,6 +1,6 @@
 import { HttpClient, HttpHeaders, HttpParameterCodec, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { MatLegacySnackBar as MatSnackBar } from '@angular/material/legacy-snack-bar';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { forkJoin, Observable, of } from 'rxjs';
 import { tap, catchError, map, share, switchMap, mergeMap } from 'rxjs/operators';
 import { CollectionIndex } from 'src/app/classes/collection-index';

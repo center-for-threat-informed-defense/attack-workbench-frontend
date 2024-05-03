@@ -4,21 +4,27 @@
     padding: 16px 0;
     .search-container {
         border-radius: 4px;
-        .dark & {  border: 1px solid border-color(dark); }
-        .light & { border: 1px solid border-color(light); }
+        .dark & {
+			border: 1px solid border-color(dark);
+			border-bottom: none !important;
+		}
+        .light & {
+			border: 1px solid border-color(light);
+			border-bottom: none !important;
+		}
 
         .controls {
             font-size: 16px;
             .search {
                 width: 100%;
             }
-            .mat-form-field-wrapper {
-                margin-bottom: -1.34375em; // remove bottom padding used for hint
+            .mat-mdc-form-field-subscript-wrapper {
+                display: none; // remove bottom padding used for hint
             }
-            .mat-form-field-flex {
-                padding: 12px 42px 0 42px !important; // override default padding for alignment w/ table
+            .mat-mdc-text-field-wrapper {
+                padding: 0 42px !important; // override default padding for alignment w/ table
             }
-            .mat-form-field-label {
+            .mat-mdc-floating-label {
                 .light & { color: on-color-deemphasis(light); }
                 .dark &  { color: on-color-deemphasis(dark); }
             }

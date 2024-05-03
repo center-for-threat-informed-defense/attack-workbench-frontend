@@ -32,17 +32,22 @@
         </mat-select>
     </mat-form-field>
     <!-- edit type: 'stixList' -->
-    <mat-form-field *ngIf="config.editType == 'stixList'" class="stix-select grow-to-row" [ngClass]="{'disabled': config.disabled || !dataLoaded}" appearance="outline" (click)="openStixList()"
-        [matTooltip]="config.disabled ? 'a valid domain must be selected first' : null">
-        <mat-label>{{config.label? config.label : config.field}}</mat-label>
-        <span *ngIf="!dataLoaded && config.label === 'parent technique'" class="loading-label">
-            <mat-spinner class="spinner" diameter="20"></mat-spinner>
-        </span>
-        <span *ngIf="!(!dataLoaded && config.label === 'parent technique')">
-            <mat-icon aria-hidden="false" aria-label="open" class="icon">open_in_new</mat-icon>
-        </span>
-        <mat-chip-listbox #stixChipList [required]="config.required ? config.required : false" [disabled]="!dataLoaded || config.disabled" (blur)="onBlur()">
-            <mat-chip *ngFor="let value of selectedValues()" [removable]="false">{{value}}</mat-chip>
-        </mat-chip-listbox>
-    </mat-form-field>
+	<div *ngIf="config.editType == 'stixList'"
+		class="labelled-box grow-to-row editing stix-select"
+		[class.disabled]="config.disabled || !dataLoaded"
+		(click)="openStixList()"
+		[matTooltip]="config.disabled ? 'a valid domain must be selected first' : null">
+		<div class="content">
+			<mat-chip-listbox #stixChipList [required]="config.required ? config.required : false" [disabled]="!dataLoaded || config.disabled" (blur)="onBlur()">
+				<mat-chip *ngFor="let value of selectedValues()" [removable]="false">{{value}}</mat-chip>
+			</mat-chip-listbox>
+			<span matIconSuffix *ngIf="!dataLoaded && config.label === 'parent technique'" class="loading-label">
+				<mat-spinner class="spinner" diameter="20"></mat-spinner>
+			</span>
+			<span matIconSuffix *ngIf="!(!dataLoaded && config.label === 'parent technique')">
+				<mat-icon aria-hidden="false" aria-label="open" class="icon">open_in_new</mat-icon>
+			</span>
+		</div>
+		<label>{{config.label? config.label : config.field}}</label>
+	</div>
 </div>

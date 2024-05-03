@@ -1,8 +1,5 @@
 @import "../../../style/globals";
-.mat-list.validation-results {
-    .validation-item .mat-list-item-content {
-        padding-left: 0;
-    }
+.mat-mdc-list.validation-results {
     .validation-item.success {
         color: color(success);
     }
@@ -15,10 +12,15 @@
     .validation-item.info {
         color: color(info);
     }
-    .validation-item .mat-line {
+    .validation-item .mat-mdc-list-item-line {
         //overwrite material's text overflow settings for mat-lines
         white-space: normal;
         overflow: auto;
         text-overflow: unset;
+		display: flex;
     }
+	.validation-item .mat-icon {
+		margin: 0 !important;
+		padding: 4px !important;
+	}
 }

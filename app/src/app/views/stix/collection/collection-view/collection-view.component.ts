@@ -10,7 +10,7 @@ import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/re
 import { EditorService } from 'src/app/services/editor/editor.service';
 import { StixViewPage } from '../../stix-view-page';
 import { environment } from "../../../../../environments/environment";
-import { MatLegacySnackBar as MatSnackBar } from '@angular/material/legacy-snack-bar';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { logger } from "../../../../utils/logger";
 import { AuthenticationService } from 'src/app/services/connectors/authentication/authentication.service';
 import { MatDialog } from '@angular/material/dialog';
