@@ -319,8 +319,6 @@ export class Technique extends StixObject {
      * @returns {Observable} of the post
      */
     public save(restAPIService: RestApiConnectorService): Observable<Technique> {
-        // TODO POST if the object was just created (doesn't exist in db yet)
-
         let postObservable = restAPIService.postTechnique(this);
         let subscription = postObservable.subscribe({
             next: (result) => { this.deserialize(result.serialize()); },
