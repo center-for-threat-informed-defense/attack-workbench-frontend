@@ -122,13 +122,14 @@ export class OrderedListEditComponent implements OnInit {
         this.select = new SelectionModel(true);
 
         let prompt = this.dialog.open(AddDialogComponent, {
-				maxWidth: '70em',
-				maxHeight: '70em',
+				maxWidth: '60em',
+				maxHeight: '60em',
 				data: {
-				selectableObjects: uniqueRows,
-				select: this.select,
-				type: this.config.type,
-            },
+                    title: `add a ${this.config.type}`,
+                    selectableObjects: uniqueRows,
+                    select: this.select,
+                    type: this.config.type,
+                },
         });
 
         let subscription = prompt.afterClosed().subscribe({
