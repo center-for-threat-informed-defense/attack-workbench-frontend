@@ -19,7 +19,7 @@
                         <mat-label>options</mat-label>
                         <mat-select multiple panelWidth="" [(ngModel)]="filter" (selectionChange)="applyControls()">
                             <mat-optgroup *ngIf="config.showUserSearch" label="users">
-                                <mat-option disabled class="no-checkbox">
+                                <mat-option class="no-checkbox">
                                     <div class="user-search" (click)="openUserSelectModal()">
                                         <div>{{userSearchString}}</div>
                                         <div>

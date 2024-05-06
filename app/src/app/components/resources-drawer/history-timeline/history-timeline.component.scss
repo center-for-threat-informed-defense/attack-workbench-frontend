@@ -63,4 +63,7 @@
 			border-color: on-color(dark);
 		}
 	}
+	.mdc-checkbox .mdc-checkbox__checkmark {
+		color: color(light) !important;
+	}
 }

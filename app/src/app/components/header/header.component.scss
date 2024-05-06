@@ -23,9 +23,10 @@
         }
     }
     button {
+        .light & { color: on-color(dark); }
         .dark & { color: on-color(light); }
         font-family: Roboto,Arial,sans-serif;
-        font-weight: 600;
+        font-weight: 500;
         text-transform: uppercase;
     }
 
@@ -41,12 +42,12 @@
         left: -40px;
     }
     .mat-mdc-icon-button.account {
+        scale: .85;
         vertical-align: middle;
         .dark & { background: color-alternate(dark); }
         .light & { background: color(light); }
         svg {
-            height: 24px;
-            width: 24px;
+            scale: 1.3;
         }
     }
 }

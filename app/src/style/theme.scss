@@ -14,15 +14,36 @@
 }
 
 //custom color theme
-.light {
-    @include mat.all-component-themes((
+$light-theme: mat.define-light-theme((
+    color: (
         primary: mat.define-palette(to-material-map(primary), 50, 100, 200),
         accent: mat.define-palette(to-material-map(secondary), 50, 100, 200),
         foreground: mat.define-palette(to-material-map(dark), 50, 100, 200),
         background: mat.define-palette(to-material-map(light), 50, 100, 200),
         warn: mat.define-palette(to-material-map(warn)),
-        is-dark: false
-    ));
+    ),
+    // only include 'typography' and 'density' in default theme
+    typography: $custom-typography,
+    density: 0,
+));
+
+$dark-theme: mat.define-dark-theme((
+    color: (
+        primary: mat.define-palette(to-material-map(primary), 50, 100, 200),
+        accent: mat.define-palette(to-material-map(secondary), 50, 100, 200),
+        foreground: mat.define-palette(to-material-map(light), 50, 100, 200),
+        background: mat.define-palette(to-material-map(dark), 50, 100, 200),
+        warn: mat.define-palette(to-material-map(warn)),
+    ),
+));
+
+// apply light theme by default
+@include mat.core-theme($light-theme);
+@include mat.button-theme($light-theme);
+
+.light {
+    @include mat.all-component-themes($light-theme);
+
     background: color(light);
     color: on-color(light);
     ::-webkit-scrollbar-thumb {
@@ -57,14 +78,8 @@
     .matrix-container { border-color: on-color-deemphasis(light) }
 }
 .dark {
-    @include mat.all-component-themes((
-        primary: mat.define-palette(to-material-map(primary), 50, 100, 200),
-        accent: mat.define-palette(to-material-map(secondary), 50, 100, 200),
-        foreground: mat.define-palette(to-material-map(light), 50, 100, 200),
-        background: mat.define-palette(to-material-map(dark), 50, 100, 200),
-        warn: mat.define-palette(to-material-map(warn)),
-        is-dark: true
-    ));
+    @include mat.all-component-themes($dark-theme);
+
     background: color(dark);
     color: on-color(dark);
     ::-webkit-scrollbar-thumb {
@@ -222,8 +237,9 @@ button.mat-mdc-outlined-button:disabled {
     }
 }
 
-// change initial background form field color
-.mdc-text-field--filled:not(.mdc-text-field--disabled) {
+.mdc-text-field--filled:not(.mdc-text-field--disabled),
+.mat-mdc-paginator,
+.mat-expansion-panel {
 	.light & {
 		background-color: color(light) !important;
 	}

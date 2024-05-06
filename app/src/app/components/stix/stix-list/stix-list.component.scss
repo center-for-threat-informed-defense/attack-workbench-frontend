@@ -156,8 +156,14 @@
                                     .mat-mdc-row, .mat-mdc-header-row {
                                         border-bottom-width: 1px;
                                         border-style: solid;
-                                        .light & { border-color: border-color(light); }
-                                        .dark &  { border-color: border-color(dark); }
+                                        .light & {
+                                            background-color: color(light);
+                                            border-color: border-color(light);
+                                        }
+                                        .dark &  {
+                                            background-color: color(light);
+                                            border-color: border-color(dark);
+                                        }
                                     }
                                     .mat-mdc-header-row {
                                         min-height: 42px;

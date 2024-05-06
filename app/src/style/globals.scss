@@ -28,6 +28,9 @@ button.control {
 		color: color(light) !important;
 	}
 }
+.mat-mdc-select-panel .no-checkbox .mat-pseudo-checkbox {
+	display: none !important;
+}
 .mdc-checkbox .mdc-checkbox__native-control[disabled]:checked~.mdc-checkbox__background {
 	.light & {
 		background-color: on-color-deemphasis(light);
