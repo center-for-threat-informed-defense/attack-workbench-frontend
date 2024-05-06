@@ -49,8 +49,13 @@
 .mat-mdc-chip .mat-mdc-chip-action-label {
 	font-size: 14px !important;
 }
-.mdc-button__label {
+.mdc-button__label, textarea {
 	letter-spacing: normal !important;
+}
+textarea {
+    font-size: 18px !important;
+    font-weight: 400 !important;
+    font-family: 'Roboto';
 }
 
 // see https://github.com/angular/components/blob/master/src/material/core/typography/_typography.scss#L24

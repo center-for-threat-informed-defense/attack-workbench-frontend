@@ -51,7 +51,7 @@
                                 <mat-form-field appearance="outline" class="type_select">
                                     <mat-label>source type</mat-label>
                                     <mat-select (selectionChange)="refresh_lists()" [(ngModel)]="source_type">
-                                        <mat-option *ngFor="let objType of relationship.valid_source_types" [value]="objType">{{objType}}</mat-option>
+                                        <mat-option class="no-checkbox" *ngFor="let objType of relationship.valid_source_types" [value]="objType">{{objType}}</mat-option>
                                     </mat-select>
                                 </mat-form-field>
                                 <app-stix-list *ngIf="refresh && source_type" #source_select  (onSelect)="setSourceObject($event)" [config]="{
@@ -74,7 +74,7 @@
                                 <mat-form-field appearance="outline" class="type_select">
                                     <mat-label>target type</mat-label>
                                     <mat-select (selectionChange)="refresh_lists()" [(ngModel)]="target_type">
-                                        <mat-option *ngFor="let objType of relationship.valid_target_types" [value]="objType">{{objType}}</mat-option>
+                                        <mat-option class="no-checkbox" *ngFor="let objType of relationship.valid_target_types" [value]="objType">{{objType}}</mat-option>
                                     </mat-select>
                                 </mat-form-field>
                                 <app-stix-list *ngIf="refresh && target_type" #target_select (onSelect)="setTargetObject($event)" [config]="{
@@ -94,7 +94,7 @@
                 <div class="col">
                     <div class="labelled-box grow-to-row">
                         <div class="content no-label">
-                            <mat-checkbox [(ngModel)]="source_version.minor" (change)="source_version.major=false; onSourceVersionChange($event)">
+                            <mat-checkbox color="primary" [(ngModel)]="source_version.minor" (change)="source_version.major=false; onSourceVersionChange($event)">
                                 Minor version update
                                 <span class="text-deemphasis">(v{{relationship.source_object['stix'].x_mitre_version}} <mat-icon inline="true">east</mat-icon> v{{nextMinorVersion(relationship.source_object)}})</span>
                             </mat-checkbox>
@@ -104,7 +104,7 @@
                 <div class="col">
                     <div class="labelled-box grow-to-row">
                         <div class="content no-label">
-                            <mat-checkbox [(ngModel)]="source_version.major" (change)="source_version.minor=false; onSourceVersionChange($event)">
+                            <mat-checkbox color="primary" [(ngModel)]="source_version.major" (change)="source_version.minor=false; onSourceVersionChange($event)">
                                 Major version update
                                 <span class="text-deemphasis">(v{{relationship.source_object['stix'].x_mitre_version}} <mat-icon inline="true">east</mat-icon> v{{nextMajorVersion(relationship.source_object)}})</span>
                             </mat-checkbox>
@@ -118,7 +118,7 @@
                 <div class="col">
                     <div class="labelled-box grow-to-row">
                         <div class="content no-label">
-                            <mat-checkbox [(ngModel)]="target_version.minor" (change)="target_version.major=false; onTargetVersionChange($event)">
+                            <mat-checkbox color="primary" [(ngModel)]="target_version.minor" (change)="target_version.major=false; onTargetVersionChange($event)">
                                 Minor version update
                                 <span class="text-deemphasis">(v{{relationship.target_object['stix'].x_mitre_version}} <mat-icon inline="true">east</mat-icon> v{{nextMinorVersion(relationship.target_object)}})</span>
                             </mat-checkbox>
@@ -128,7 +128,7 @@
                 <div class="col">
                     <div class="labelled-box grow-to-row">
                         <div class="content no-label">
-                            <mat-checkbox [(ngModel)]="target_version.major" (change)="target_version.minor=false; onTargetVersionChange($event)">
+                            <mat-checkbox color="primary" [(ngModel)]="target_version.major" (change)="target_version.minor=false; onTargetVersionChange($event)">
                                 Major version update
                                 <span class="text-deemphasis">(v{{relationship.target_object['stix'].x_mitre_version}} <mat-icon inline="true">east</mat-icon> v{{nextMajorVersion(relationship.target_object)}})</span>
                             </mat-checkbox>

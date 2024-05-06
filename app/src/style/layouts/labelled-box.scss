@@ -18,6 +18,10 @@
 			& + label {
 				text-transform: lowercase !important;
 				letter-spacing: 0.5px !important;
+                font-family: 'Roboto';
+                line-height: normal !important;
+                font-size: 12px !important;
+
 				.dark & { color: white; }
 				.light & { color: black; }
 				&::before, &::after {

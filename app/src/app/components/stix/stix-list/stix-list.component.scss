@@ -242,10 +242,18 @@
 .user-search {
   display: flex;
   justify-content: space-between;
-  &:hover {
-    cursor: pointer;
-  }
-  .mat-icon {
-	margin-left: 16px;
-  }
+}
+.user-filter {
+    .clickable {
+        cursor: pointer;
+    }
+    .mat-mdc-option {
+        padding: 0 !important;
+    }
+    .mat-mdc-option.mdc-list-item--disabled .mdc-list-item__primary-text {
+        opacity: 100%;
+    }
+    .mdc-list-item__primary-text {
+        width: 100%;
+    }
 }

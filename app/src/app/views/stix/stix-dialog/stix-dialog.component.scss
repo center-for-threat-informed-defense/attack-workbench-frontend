@@ -4,6 +4,8 @@
     .page-padding {
         padding: 25px;
         overflow: auto;
+        .light & { background-color: color(light); }
+        .dark & { background-color: color(dark); }
     }
     width: 50em;
     height: 100%;

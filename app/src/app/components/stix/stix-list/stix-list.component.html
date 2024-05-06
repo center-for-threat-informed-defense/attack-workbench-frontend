@@ -18,15 +18,15 @@
                     <mat-form-field appearance="fill" *ngIf="config.showFilters">
                         <mat-label>options</mat-label>
                         <mat-select multiple panelWidth="" [(ngModel)]="filter" (selectionChange)="applyControls()">
-                            <mat-optgroup *ngIf="config.showUserSearch" label="users">
-                                <mat-option class="no-checkbox">
-                                    <div class="user-search" (click)="openUserSelectModal()">
-                                        <div>{{userSearchString}}</div>
-                                        <div>
+                            <mat-optgroup class="user-filter" *ngIf="config.showUserSearch" label="users">
+                                <div class="clickable" (click)="openUserSelectModal()">
+                                    <mat-option class="no-checkbox" disabled>
+                                        <div class="user-search">
+                                            <div>{{userSearchString}}</div>
                                             <mat-icon aria-hidden="false" aria-label="select-users" matTooltip="Select users" class="align-right">open_in_new</mat-icon>
                                         </div>
-                                    </div>
-                                </mat-option>             
+                                    </mat-option>   
+                                </div>          
                             </mat-optgroup>
                             <mat-optgroup *ngFor="let group of filterOptions" [label]="group.name" [disabled]="group.disabled">
                                 <mat-option *ngFor="let filter of group.values" [value]="filter.value" [disabled]="filter.disabled">

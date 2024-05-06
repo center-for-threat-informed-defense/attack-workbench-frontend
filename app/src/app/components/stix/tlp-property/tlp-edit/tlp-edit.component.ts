@@ -62,13 +62,14 @@ export class TlpEditComponent implements OnInit {
 			maxWidth: '70em',
 			maxHeight: '70em',
 			data: {
-			selectionType: 'one',
-			selectableObjects: rows,
-			select: this.select,
-			type: "marking-definition",
-			buttonLabel: buttonLabelStr,
-			clearSelection: clearSelection
-          },
+                selectionType: 'one',
+                selectableObjects: rows,
+                select: this.select,
+                type: "marking-definition",
+                buttonLabel: buttonLabelStr,
+                clearSelection: clearSelection,
+                title: 'add tlp marking'
+            },
       });
 
       let subscription = prompt.afterClosed().subscribe({
