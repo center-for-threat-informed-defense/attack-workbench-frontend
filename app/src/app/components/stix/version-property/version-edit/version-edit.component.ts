@@ -10,20 +10,28 @@ import { VersionPropertyConfig } from '../version-property.component';
 export class VersionEditComponent implements OnInit {
     @Input() public config: VersionPropertyConfig;
 
+    public version: string;
     public get field(): string { return this.config.field ? this.config.field : 'version'; }
-    public get version(): number { return this.config.object[this.field].version as number; }
 
     constructor() {
         // intentionally left blank
     }
 
     ngOnInit(): void {
-        // intentionally left blank
+        this.version = this.config.object[this.field].version;
     }
 
     public setVersion(event: any): void {
         let newVersion = '';
-        if (event.target.valueAsNumber) newVersion = event.target.valueAsNumber.toString();
+        let value = event.target.valueAsNumber;
+        if (value?.toString().split('.').length == 1) {
+            // does not have decimal place, add it
+            newVersion = value.toFixed(1);
+        } else {
+            // already has a decimal place, convert to string
+            newVersion = value.toString();
+        }
+        this.version = newVersion;
         this.config.object[this.field].version = newVersion;
     }
 }
