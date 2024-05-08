@@ -2,5 +2,7 @@
     <div *ngIf="config.showDisplayName && displayName">
         <b>{{displayName}}</b>
     </div>
-    <span [matTooltip]="this.config.tooltip ? timestamp : ''">{{config.humanize? humanized : timestamp}}</span>
+    <span class="timestamp-text" [matTooltip]="this.config.tooltip ? timestamp : ''">
+        {{config.humanize? humanized : timestamp}}
+    </span>
 </div>
