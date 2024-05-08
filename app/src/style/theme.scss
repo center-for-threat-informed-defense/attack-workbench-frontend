@@ -239,13 +239,22 @@ button.mat-mdc-outlined-button:disabled {
 
 .mdc-text-field--filled:not(.mdc-text-field--disabled),
 .mat-mdc-paginator,
-.mat-expansion-panel {
+.mat-expansion-panel,
+.mat-stepper-vertical {
 	.light & {
 		background-color: color(light) !important;
 	}
 	.dark & {
 		background-color: color(dark) !important;
 	}
+}
+.mat-step-icon:not(.mat-step-icon-selected) {
+    .light & {
+        background-color: border-color(light);
+    }
+    .dark & {
+        background-color: border-color(dark);
+    }
 }
 // remove form field focus overlay
 .mat-mdc-form-field-focus-overlay {
