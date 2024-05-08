@@ -5,7 +5,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatStepper } from '@angular/material/stepper';
 import { ActivatedRoute } from '@angular/router';
-import { FileInputComponent } from 'ngx-material-file-input';
+import { FileInputComponent } from 'ngx-custom-material-file-input';
 import { Asset, Campaign, DataComponent, DataSource, Group, Matrix, Mitigation, Relationship, Software, Tactic, Technique } from 'src/app/classes/stix';
 import { Collection, CollectionDiffCategories } from 'src/app/classes/stix/collection';
 import { ConfirmationDialogComponent } from 'src/app/components/confirmation-dialog/confirmation-dialog.component';
