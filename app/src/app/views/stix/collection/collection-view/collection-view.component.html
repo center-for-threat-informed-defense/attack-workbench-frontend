@@ -22,28 +22,26 @@
                 </div>
                 <div class="col" *ngIf="editing">
                     <div class="labelled-box" >
-						<!-- TODO: [popover]="releaseExplanation" -->
-                        <div class="content no-padding no-label">
+                        <div class="content no-padding no-label" cdkDrag #popoverTrigger2="mtxPopoverTrigger" [mtxPopoverTriggerFor]="popover" mtxPopoverTriggerOn="hover">
                             <mat-checkbox color="primary" [(ngModel)]="release">is release version?</mat-checkbox>
                         </div>
                     </div>
-					<!-- TODO: replace with ng-boostrap popover -->
-                    <!-- <popover-content #releaseExplanation placement="bottom">
-                        <div class="releaseExplanation">
-                            <p>
+                    <mtx-popover #popover="mtxPopover" [position]="['below', 'center']" enterDelay="25" leaveDelay="25">
+                        <div style="max-width: 26em;">
+                            <p class="help-content">
                                 Is this version of the collection going to be released? Once a version has been marked
                                 as a release, it cannot be un-marked even if you choose not to publish it.
                             </p>
-                            <p>
+                            <p class="help-content">
                                 Versions marked as releases will be considered when determining the changes between
                                 collection releases, and collection releases will show up independently within the
                                 collections list.
                             </p>
-                            <p class="text-warn">
+                            <p class="text-warn help-content">
                                 Only mark a version as a release if you are sure you intend to publish it.
                             </p>
                         </div>
-                    </popover-content> -->
+                    </mtx-popover>
                 </div>
                 <div class="col" *ngIf="!editing">
                     <div class="labelled-box">

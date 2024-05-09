@@ -1,6 +1,5 @@
 import { Component, OnInit, ViewEncapsulation, Output, EventEmitter, Input, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
-// import { PopoverContentComponent } from 'ngx-smart-popover'; // TODO remove
 import { ValidationData } from 'src/app/classes/serializable';
 import { AuthenticationService } from 'src/app/services/connectors/authentication/authentication.service';
 import { EditorService } from 'src/app/services/editor/editor.service';
@@ -18,7 +17,6 @@ export class ToolbarComponent implements OnInit {
     @Output() public onToggleTheme = new EventEmitter();
     @Output() public onToggleSidebar = new EventEmitter();
     @Output() public onScrollTop = new EventEmitter();
-    // @ViewChild('saveValidation') saveValidation: PopoverContentComponent; // TODO fix this
     
     public validationData: ValidationData = null;
 
@@ -32,7 +30,7 @@ export class ToolbarComponent implements OnInit {
 
     public get isLoggedIn(): boolean { return this.authenticationService.isLoggedIn; }
 
-    constructor(private sidebarService: SidebarService, private editorService: EditorService, private authenticationService: AuthenticationService, private websiteIntegrationService:WebsiteIntegrationService, private router: Router) {}
+    constructor(private sidebarService: SidebarService, private editorService: EditorService, private authenticationService: AuthenticationService, public websiteIntegrationService:WebsiteIntegrationService, private router: Router) {}
 
     ngOnInit() {
         // intentionally left blank

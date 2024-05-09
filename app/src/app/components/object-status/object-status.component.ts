@@ -2,7 +2,6 @@ import { SelectionModel } from '@angular/cdk/collections';
 import { Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
-// import { PopoverContentComponent } from 'ngx-smart-popover'; TODO: remove
 import { Relationship } from 'src/app/classes/stix/relationship';
 import { StixObject } from 'src/app/classes/stix/stix-object';
 import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/rest-api-connector.service';
@@ -18,7 +17,6 @@ import { forkJoin } from 'rxjs';
     encapsulation: ViewEncapsulation.None
 })
 export class ObjectStatusComponent implements OnInit {
-    // @ViewChild("objectStatus", {static: false}) public popover: PopoverContentComponent; // TODO remove
     public loaded: boolean = false;
     public statusControl: FormControl<string>;
     public select: SelectionModel<string>;
@@ -91,7 +89,6 @@ export class ObjectStatusComponent implements OnInit {
                     let relationships = data.data as Relationship[]; 
                     this.relationships = this.relationships.concat(relationships)
                     this.loaded = true;
-                    // setTimeout(() => this.popover.updatePosition()); //after render cycle update popover position since it has new content // TODO remove
                 },
                 complete: () => { relSubscription.unsubscribe() }
             });

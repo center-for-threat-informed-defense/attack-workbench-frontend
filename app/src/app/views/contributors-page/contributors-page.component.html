@@ -1,13 +1,15 @@
 <div class="contributors-page view-page list-page grid">
     <div class="list-page-header">
         <h1 class="with-help-icon">
-            Contributors
-			<!-- TODO: replace with ng-boostrap popover -->
-            <!-- <popover-content #objectDescription placement="bottom">
-                <span>Individuals or organizations that have contributed information regarding the existence of a technique, details on how to detect and/or mitigate use of a technique, or threat intelligence on adversary use.</span>
-            </popover-content> -->
-            <mat-icon class="help-icon" aria-label="help">help_outline</mat-icon>
-			<!-- [popover]="objectDescription" TODO: fix this -->
+            contributors
+            <mat-icon class="help-icon" aria-label="help" cdkDrag #popoverTrigger2="mtxPopoverTrigger" [mtxPopoverTriggerFor]="popover" mtxPopoverTriggerOn="hover">
+                help_outline
+            </mat-icon>
+            <mtx-popover #popover="mtxPopover" [position]="['below', 'center']" enterDelay="25" leaveDelay="25">
+                <div style="max-width: 26em;">
+                    <span class="help-content">Individuals or organizations that have contributed information regarding the existence of a technique, details on how to detect and/or mitigate use of a technique, or threat intelligence on adversary use.</span>
+                </div>
+            </mtx-popover>
         </h1>
     </div>
     <div *ngIf="!loading else loadingTemplate" class="row" [ngClass]="{'no-results': !contributors.length}">

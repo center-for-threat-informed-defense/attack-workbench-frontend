@@ -16,8 +16,8 @@
             </div>
             <app-object-status *ngIf="hasWorkflow"></app-object-status>
         </div>
-         <div class="controls button-list section">
-			<div *ngIf="editable || editing" class="inline">
+         <div class="controls button-list section" *ngIf="(editable || editing) && (websiteIntegrationService.websiteIntegrationEnabled && hasWorkflow)">
+			<div class="inline">
 				<span *ngIf="websiteIntegrationService.websiteIntegrationEnabled && hasWorkflow" [matTooltip]="!websiteIntegrationService.checkExternalUrlValidity(editorService.stixId) ? 'could not find object on ATT&CK website' : 'view object in ATT&CK website'">
 					<button mat-icon-button [disabled]="!websiteIntegrationService.currentWebIntegrationStatus.valid" class="control" (click)="openExternalUrl()">
 						<mat-icon>open_in_new</mat-icon>

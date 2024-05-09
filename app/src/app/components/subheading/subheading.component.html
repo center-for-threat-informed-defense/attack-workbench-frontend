@@ -1,7 +1,13 @@
 <div class="section-header">
     <div class="app-subheading">
-        <div *ngIf="config.object.hasOwnProperty('modified')" class="section-header-section" [class.clickable]="config.sidebarControl != 'disable'" (click)="openHistory()">
-			<!--TODO: [popover]="historyPeek" popoverPlacement="bottom">-->
+        <div *ngIf="config.object.hasOwnProperty('modified')"
+             class="section-header-section"
+             [class.clickable]="config.sidebarControl != 'disable'"
+             (click)="openHistory()"
+             cdkDrag
+             #popoverTrigger2="mtxPopoverTrigger"
+             [mtxPopoverTriggerFor]="popover"
+             mtxPopoverTriggerOn="hover">
             Modified <app-timestamp-view [config]="{
                 mode: 'view',
                 object: config.object,
@@ -32,9 +38,8 @@
 </div>
 
 <!-- history peek popover -->
-<!-- TODO: replace with ng-boostrap popover -->
-<!-- <popover-content #historyPeek>
-    <div class="historyPeek">
+<mtx-popover #popover="mtxPopover" [position]="['below', 'center']" enterDelay="25" leaveDelay="25">
+    <div style="max-width: 30em;" class="history-peek">
         <app-timestamp-property [config]="{
             mode: 'view',
             object: config.object,
@@ -50,4 +55,4 @@
             displayName: 'true'
         }"></app-timestamp-property>
     </div>
-</popover-content> -->
+</mtx-popover>

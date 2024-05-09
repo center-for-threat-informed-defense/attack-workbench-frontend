@@ -21,7 +21,7 @@ export class StatementEditComponent implements OnInit {
   public select: SelectionModel<string>;
 
   // Update object statements with Dialog component
-  public updateStatements(popover?: any) { // TODO fix this
+  public updateStatements() {
 
       // Prepare rows
       let rows: StixObject[] = [];
@@ -60,7 +60,6 @@ export class StatementEditComponent implements OnInit {
                   // re-add tlp
                   if (this.tlpSTIXid) this.config.object["object_marking_refs"].push(this.tlpSTIXid);
               }
-              if (popover) setTimeout(() => popover.hide()); // wait for popover to hide
           },
           complete: () => {
               subscriptionPrompt.unsubscribe();

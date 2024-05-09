@@ -49,7 +49,7 @@ import { MatBadgeModule } from '@angular/material/badge';
 // other library imports
 import { MaterialFileInputModule } from 'ngx-custom-material-file-input';
 import { MarkdownModule } from "ngx-markdown";
-// import { PopoverModule } from "ngx-smart-popover"; TODO: remove
+import { MtxPopoverModule } from "@ng-matero/extensions/popover";
 import { NgxJdenticonModule, JDENTICON_CONFIG } from 'ngx-jdenticon';
 import { AutosizeModule } from 'ngx-autosize';
 
@@ -293,7 +293,6 @@ export function initConfig(appConfigService: AppConfigService) {
 		CollectionImportComponent,
 		CollectionImportReviewComponent,
 		CollectionImportErrorComponent,
-		// CollectionExportComponent,
 
 		RelationshipViewComponent,
 
@@ -365,7 +364,7 @@ export function initConfig(appConfigService: AppConfigService) {
 			level: environment.log_level,
 			disableConsoleLogging: false
 		}),
-		// PopoverModule, TODO: remove
+		MtxPopoverModule,
 		NgxJdenticonModule,
 		AutosizeModule,
 

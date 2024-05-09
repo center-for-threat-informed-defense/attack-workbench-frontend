@@ -1,20 +1,20 @@
-TODO: popover
-<!-- <button popoverPlacement="bottom" 
-    [popover]="objectStatus"
-    [popoverOnHover]="true"
-    [disabled]="popoverDisabled"
-    >
+<button cdkDrag
+        #popoverTrigger2="mtxPopoverTrigger"
+        [mtxPopoverTriggerFor]="popover"
+        mtxPopoverTriggerOn="hover"
+        [disabled]="popoverDisabled">
     <div *ngIf="objStatements.length == 1">1 statement</div>
     <div *ngIf="objStatements.length != 1">{{objStatements.length}} statements</div>
 </button>
-
-<popover-content #objectStatus [closeOnClickOutside]="true">
-    <div class="labelled-box suffixed">
-        <div class="content">
-            <ul>
-                <li *ngFor="let objStatement of objStatements">{{objStatement.definition_string}}</li>
-            </ul>
+<mtx-popover #popover="mtxPopover" [position]="['below', 'center']" enterDelay="25" leaveDelay="25">
+    <div style="max-width: 30em;">
+        <div class="labelled-box suffixed">
+            <div class="content">
+                <ul>
+                    <li *ngFor="let objStatement of objStatements">{{objStatement.definition_string}}</li>
+                </ul>
+            </div>
+            <label>Statements</label>
         </div>
-        <label>Statements</label>
     </div>
-</popover-content> -->
+</mtx-popover>

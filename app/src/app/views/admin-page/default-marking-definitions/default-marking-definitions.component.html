@@ -17,16 +17,18 @@
         <div class="row">
             <div class="col center">
                 <div>
-					<!-- TODO: replace with ng-boostrap popover -->
-                    <button #popoverButton mat-raised-button class="extended-button" color="primary" >
-                        <!-- (click)="updateDefaultMarkingDefs(objectStatements)"> -->
-                        <!-- popoverPlacement="bottom" 
-                        [popover]="objectStatements"> -->
+                    <button mat-raised-button 
+                            class="extended-button"
+                            color="primary"
+                            (click)="updateDefaultMarkingDefs()"
+                            cdkDrag
+                            #popoverTrigger2="mtxPopoverTrigger"
+                            [mtxPopoverTriggerFor]="popover"
+                            mtxPopoverTriggerOn="hover">
                         <mat-icon>settings</mat-icon> <span class="text-label">update default marking definitions</span>
                     </button>
-
-                    <!-- <popover-content #objectStatements>
-                        <div class="grid spacing-20">
+                    <mtx-popover #popover="mtxPopover" [position]="['below', 'center']" enterDelay="25" leaveDelay="25">
+                        <div style="max-width: 30em;" class="grid spacing-20">
                             <div class="row labelled-box suffixed">
                                 <div *ngIf="defaultMarkingDefinitions && defaultMarkingDefinitions.length else noMarkingDefinitions" class="content">
                                     <ul>
@@ -41,7 +43,7 @@
                                 <label>Statements</label>
                             </div>
                         </div>
-                    </popover-content> -->
+                    </mtx-popover>
                 </div>
             </div>
         </div>
