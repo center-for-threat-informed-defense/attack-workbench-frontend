@@ -36,6 +36,7 @@
 		class="labelled-box grow-to-row editing stix-select"
 		[class.disabled]="config.disabled || !dataLoaded"
 		(click)="openStixList()"
+        (keydown)="openStixList()"
 		[matTooltip]="config.disabled ? 'a valid domain must be selected first' : null">
 		<div class="content">
 			<mat-chip-listbox #stixChipList [required]="config.required ? config.required : false" [disabled]="!dataLoaded || config.disabled" (blur)="onBlur()">
