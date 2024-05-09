@@ -1,16 +1,28 @@
 @import "../../../style/globals";
 .mat-mdc-list.validation-results {
     .validation-item.success {
-        color: color(success);
+        .mat-mdc-list-item-icon, 
+        .mat-mdc-list-item-line {
+            color: color(success);
+        }
     }
     .validation-item.warning {
-        color: color(warn);
+        .mat-mdc-list-item-icon, 
+        .mat-mdc-list-item-line {
+            color: color(warn);
+        }
     }
     .validation-item.error {
-        color: color(error);
+        .mat-mdc-list-item-icon, 
+        .mat-mdc-list-item-line {
+            color: color(error);
+        }
     }
     .validation-item.info {
-        color: color(info);
+        .mat-mdc-list-item-icon, 
+        .mat-mdc-list-item-line {
+            color: color(info);
+        }
     }
     .validation-item .mat-mdc-list-item-line {
         //overwrite material's text overflow settings for mat-lines
