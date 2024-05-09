@@ -9,16 +9,16 @@
 			border: solid 1px;
 			&:hover {
 				border-width: 2px;
-				& + label::before, & + label::after {
+				& + .labelled-box-label::before, & + .labelled-box-label::after {
 					border-width: 2px;
 				}
 			}
 			.dark & { border-color: white; border-top-color: transparent; }
 			.light & { border-color: black; border-top-color: transparent; }
-			& + label {
+			& + .labelled-box-label {
 				text-transform: lowercase !important;
 				letter-spacing: 0.5px !important;
-                font-family: 'Roboto';
+                font-family: Roboto,Arial,sans-serif;
                 line-height: normal !important;
                 font-size: 12px !important;
 
@@ -53,7 +53,7 @@
             padding-top: 0;
             padding-bottom: 0;
         }
-        & + label {
+        & + .labelled-box-label {
             @extend .text-label;
             position: absolute;
             top: -6px;

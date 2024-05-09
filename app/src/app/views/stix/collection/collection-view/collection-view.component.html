@@ -21,7 +21,7 @@
                     }"></app-version-property>
                 </div>
                 <div class="col" *ngIf="editing">
-                    <div class="labelled-box" >
+                    <div class="labelled-box">
                         <div class="content no-padding no-label" cdkDrag #popoverTrigger2="mtxPopoverTrigger" [mtxPopoverTriggerFor]="popover" mtxPopoverTriggerOn="hover">
                             <mat-checkbox color="primary" [(ngModel)]="release">is release version?</mat-checkbox>
                         </div>
@@ -63,7 +63,7 @@
                                 <mat-icon aria-label="download">download</mat-icon>
                             </div>
                         </div>
-                        <label>Collection Data</label>
+                        <span class="labelled-box-label">Collection Data</span>
                     </div>
                 </div>
             </div>

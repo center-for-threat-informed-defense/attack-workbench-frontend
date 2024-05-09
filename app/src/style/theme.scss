@@ -225,12 +225,12 @@ $tooltip-color: color-alternate(dark, 4);
         ul {
             margin: .5em 0 !important;
         }
-        &, & + label, .suffix {
+        &, & + .labelled-box-label, .suffix {
             border-right-color: on-color-deemphasis(dark) !important;
             border-left-color: on-color-deemphasis(dark)!important;
             border-bottom-color: on-color-deemphasis(dark) !important;
         }
-        & + label::before, & + label::after {
+        & + .labelled-box-label::before, & + .labelled-box-label::after {
             border-top-color: on-color-deemphasis(dark) !important;
         }
         border-top-color: transparent !important;
