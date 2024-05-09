@@ -189,6 +189,7 @@ $tooltip-color: color-alternate(dark, 4);
 }
 
 //patch popover style
+// https://ng-matero.github.io/extensions/components/popover/overview
 .mtx-popover-panel {
     padding: 0 !important;
     .mtx-popover-direction-arrow::after {
