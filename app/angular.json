@@ -39,6 +39,7 @@
                 "node_modules/prismjs/components/prism-json.min.js",
                 "node_modules/prismjs/components/prism-python.min.js"
             ],
+            "allowedCommonJsDependencies": ["moment", "lodash"],
             "vendorChunk": true,
             "extractLicenses": false,
             "buildOptimizer": false,
