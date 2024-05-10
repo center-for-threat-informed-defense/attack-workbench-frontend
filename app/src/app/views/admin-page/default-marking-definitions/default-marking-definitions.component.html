@@ -27,7 +27,12 @@
                             mtxPopoverTriggerOn="hover">
                         <mat-icon>settings</mat-icon> <span class="text-label">update default marking definitions</span>
                     </button>
-                    <mtx-popover #popover="mtxPopover" [position]="['below', 'center']" enterDelay="25" leaveDelay="25">
+                    <mtx-popover #popover="mtxPopover"
+                                 enterDelay="25"
+                                 leaveDelay="25"
+                                 [position]="['below', 'center']"
+                                 [closeOnPanelClick]="true"
+                                 [closeOnBackdropClick]="true">
                         <div style="max-width: 30em;" class="grid spacing-20">
                             <div class="row labelled-box suffixed">
                                 <div *ngIf="defaultMarkingDefinitions && defaultMarkingDefinitions.length else noMarkingDefinitions" class="content">

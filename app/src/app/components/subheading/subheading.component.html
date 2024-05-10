@@ -39,7 +39,10 @@
 </div>
 
 <!-- history peek popover -->
-<mtx-popover #popover="mtxPopover" [position]="['below', 'center']" enterDelay="25" leaveDelay="25">
+<mtx-popover #popover="mtxPopover"
+             [position]="['below', 'center']"
+             enterDelay="25"
+             leaveDelay="25">
     <div style="max-width: 30em;" class="history-peek">
         <app-timestamp-property [config]="{
             mode: 'view',
