@@ -2,8 +2,6 @@
 .footer {
     height: 48px;
     .version-info {
-        // flex: 1 1 auto;
-        // text-align: center;
         @extend .text-label;
         opacity: 0.6;
     }

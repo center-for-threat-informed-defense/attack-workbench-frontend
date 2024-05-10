@@ -13,7 +13,6 @@ import { forkJoin } from 'rxjs';
 @Component({
     selector: 'app-object-status',
     templateUrl: './object-status.component.html',
-    styleUrls: ['./object-status.component.scss'],
     encapsulation: ViewEncapsulation.None
 })
 export class ObjectStatusComponent implements OnInit {
