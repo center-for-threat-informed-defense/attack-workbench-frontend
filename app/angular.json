@@ -7,7 +7,9 @@
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
-          "style": "scss"
+          "style": "scss",
+          "standalone": false,
+          "module": "app"
         }
       },
       "root": "",
@@ -29,7 +31,6 @@
             ],
             "styles": [
                 "node_modules/prismjs/themes/prism-twilight.css",
-                "node_modules/ngx-smart-popover/scss/popover-content.component.scss",
                 "src/style/theme.scss"
             ],
             "scripts": [
@@ -38,6 +39,7 @@
                 "node_modules/prismjs/components/prism-json.min.js",
                 "node_modules/prismjs/components/prism-python.min.js"
             ],
+            "allowedCommonJsDependencies": ["moment", "lodash"],
             "vendorChunk": true,
             "extractLicenses": false,
             "buildOptimizer": false,
@@ -79,18 +81,18 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "app:build"
+            "buildTarget": "app:build"
           },
           "configurations": {
             "production": {
-              "browserTarget": "app:build:production"
+              "buildTarget": "app:build:production"
             }
           }
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "app:build"
+            "buildTarget": "app:build"
           }
         },
         "test": {

@@ -85,10 +85,11 @@ export class OrderedListEditComponent implements OnInit {
      */
     public deleteRow(index) {
         let prompt = this.dialog.open(ConfirmationDialogComponent, {
-        maxWidth: '35em',
-        data: {
-            message: '# Remove ' + this.getLabel(this.list[index]) + '?',
-        },
+			maxWidth: '35em',
+			data: {
+				message: '# Remove ' + this.getLabel(this.list[index]) + '?',
+			},
+			autoFocus: false, // prevents auto focus on toolbar buttons
         });
 
         let subscription = prompt.afterClosed().subscribe({
@@ -121,13 +122,14 @@ export class OrderedListEditComponent implements OnInit {
         this.select = new SelectionModel(true);
 
         let prompt = this.dialog.open(AddDialogComponent, {
-            maxWidth: '70em',
-            maxHeight: '70em',
-            data: {
-            selectableObjects: uniqueRows,
-            select: this.select,
-            type: this.config.type,
-            },
+				maxWidth: '60em',
+				maxHeight: '60em',
+				data: {
+                    title: `add a ${this.config.type}`,
+                    selectableObjects: uniqueRows,
+                    select: this.select,
+                    type: this.config.type,
+                },
         });
 
         let subscription = prompt.afterClosed().subscribe({

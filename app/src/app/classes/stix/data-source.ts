@@ -109,8 +109,6 @@ export class DataSource extends StixObject {
      * @returns {Observable} of the post
      */
     public save(restAPIService: RestApiConnectorService): Observable<DataSource> {
-        // TODO POST if the object was just created (doesn't exist in db yet)
-
         let postObservable = restAPIService.postDataSource(this);
         let subscription = postObservable.subscribe({
             next: (result) => { this.deserialize(result.serialize()); },

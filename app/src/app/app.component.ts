@@ -50,9 +50,12 @@ export class AppComponent implements AfterViewInit {
             next: (e) => {
                 if (e instanceof NavigationEnd && e.url.includes('register')) {
                     const registerSubscription = this.authenticationService.handleRegisterRedirect().subscribe({
-                        complete: () => { registerSubscription.unsubscribe(); }
-                    }).add(() => {
-                        this.router.navigate(['']);
+                        next: () => {
+                            this.router.navigate(['']);
+                        },
+                        complete: () => {
+                            registerSubscription.unsubscribe();
+                        }
                     });
                 } else if (e instanceof NavigationEnd) {
                     const authSubscription = this.authenticationService.getSession().subscribe({

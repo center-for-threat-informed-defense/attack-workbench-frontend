@@ -262,7 +262,8 @@ export class StixDialogComponent implements OnInit {
                 maxWidth: "35em",
                 data: { 
                     message: 'All relationships with this object will be deprecated. Do you want to continue?',
-                }
+                },
+				autoFocus: false, // prevents auto focus on buttons
             });
 
             let confirmationSub = confirmationPrompt.afterClosed().pipe(

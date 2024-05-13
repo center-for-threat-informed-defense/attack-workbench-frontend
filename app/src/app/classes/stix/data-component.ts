@@ -98,9 +98,7 @@ export class DataComponent extends StixObject {
      * @param restAPIService [RestApiConnectorService] the service to perform the POST/PUT through
      * @returns {Observable} of the post
      */
-    public save(restAPIService: RestApiConnectorService): Observable<DataComponent> {
-        // TODO POST if the object was just created (doesn't exist in db yet)
-                
+    public save(restAPIService: RestApiConnectorService): Observable<DataComponent> {                
         let postObservable = restAPIService.postDataComponent(this);
         let subscription = postObservable.subscribe({
             next: (result) => { this.deserialize(result.serialize()); },

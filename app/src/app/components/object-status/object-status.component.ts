@@ -2,23 +2,20 @@ import { SelectionModel } from '@angular/cdk/collections';
 import { Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
-import { PopoverContentComponent } from 'ngx-smart-popover';
-import { forkJoin } from 'rxjs';
 import { Relationship } from 'src/app/classes/stix/relationship';
 import { StixObject } from 'src/app/classes/stix/stix-object';
 import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/rest-api-connector.service';
 import { EditorService } from 'src/app/services/editor/editor.service';
 import { AddDialogComponent } from '../add-dialog/add-dialog.component';
 import { ConfirmationDialogComponent } from '../confirmation-dialog/confirmation-dialog.component';
+import { forkJoin } from 'rxjs';
 
 @Component({
     selector: 'app-object-status',
     templateUrl: './object-status.component.html',
-    styleUrls: ['./object-status.component.scss'],
     encapsulation: ViewEncapsulation.None
 })
 export class ObjectStatusComponent implements OnInit {
-    @ViewChild("objectStatus", {static: false}) public popover: PopoverContentComponent;
     public loaded: boolean = false;
     public statusControl: FormControl<string>;
     public select: SelectionModel<string>;
@@ -91,7 +88,6 @@ export class ObjectStatusComponent implements OnInit {
                     let relationships = data.data as Relationship[]; 
                     this.relationships = this.relationships.concat(relationships)
                     this.loaded = true;
-                    setTimeout(() => this.popover.updatePosition()); //after render cycle update popover position since it has new content
                 },
                 complete: () => { relSubscription.unsubscribe() }
             });
@@ -141,7 +137,8 @@ export class ObjectStatusComponent implements OnInit {
                     selectionType: 'one',
                     title: "Select the revoking object",
                     buttonLabel: "revoke"
-                }
+                },
+				autoFocus: false, // prevents auto focus on toolbar buttons
             });
             let revokedSubscription = revokedDialog.afterClosed().subscribe({
                 next: (result) => {
@@ -193,7 +190,8 @@ export class ObjectStatusComponent implements OnInit {
             maxWidth: "35em",
             data: { 
                 message: 'All relationships with this object will be deprecated. Do you want to continue?',
-            }
+            },
+			autoFocus: false, // prevents auto focus on toolbar buttons
         });
 
         let confirmationSub = confirmationPrompt.afterClosed().subscribe({

@@ -47,10 +47,9 @@ import { MatNativeDateModule } from '@angular/material/core';
 import { MatBadgeModule } from '@angular/material/badge';
 
 // other library imports
-// import { BreadcrumbModule } from "angular-crumbs";
-import { MaterialFileInputModule } from 'ngx-material-file-input';
+import { MaterialFileInputModule } from 'ngx-custom-material-file-input';
 import { MarkdownModule } from "ngx-markdown";
-import { PopoverModule } from "ngx-smart-popover";
+import { MtxPopoverModule } from "@ng-matero/extensions/popover";
 import { NgxJdenticonModule, JDENTICON_CONFIG } from 'ngx-jdenticon';
 import { AutosizeModule } from 'ngx-autosize';
 
@@ -294,7 +293,6 @@ export function initConfig(appConfigService: AppConfigService) {
 		CollectionImportComponent,
 		CollectionImportReviewComponent,
 		CollectionImportErrorComponent,
-		// CollectionExportComponent,
 
 		RelationshipViewComponent,
 
@@ -361,19 +359,12 @@ export function initConfig(appConfigService: AppConfigService) {
 		MaterialFileInputModule,
 		MarkdownModule.forRoot({
 			loader: HttpClient,
-			//   toggle this to disable github flavored markdown
-			//   markedOptions: {
-			//     provide: MarkedOptions,
-			//     useValue: {
-			//       pedantic: true
-			//     }
-			//   }
 		}),
 		LoggerModule.forRoot({
 			level: environment.log_level,
 			disableConsoleLogging: false
 		}),
-		PopoverModule,
+		MtxPopoverModule,
 		NgxJdenticonModule,
 		AutosizeModule,
 

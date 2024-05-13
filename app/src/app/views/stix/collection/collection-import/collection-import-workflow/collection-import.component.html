@@ -1,7 +1,8 @@
 <div class="collection-import import-workflow">
-    <mat-vertical-stepper linear>
-        <mat-step label="specify collection">
-            <div *ngIf="!loadingStep1 else loadingStep1_marker">
+    <mat-stepper orientation="vertical" linear>
+        <mat-step>
+            <ng-template matStepLabel>specify collection</ng-template>
+            <ng-container *ngIf="!loadingStep1 else loadingStep1_marker">
                 <div class="import-options">
                     <mat-form-field #fileInput appearance="outline">
                         <mat-label>specify a URL</mat-label>
@@ -21,12 +22,13 @@
                         <span class="text-label">preview</span>
                     </button>
                 </div>
-            </div>
+            </ng-container>
             <ng-template #loadingStep1_marker>
                 <app-loading-overlay message="loading collection preview"></app-loading-overlay>
             </ng-template>
         </mat-step>
-        <mat-step label="review contents">
+        <mat-step>
+            <ng-template matStepLabel>review contents</ng-template>
             <app-collection-import-error *ngIf="import_errors && !loadingStep2" [error]="import_errors" (onCancel)="cancelImport()"></app-collection-import-error>
             <div *ngIf="select && !loadingStep2 else loadingStep2_marker">
                 <p *ngIf="csvWarning" class="nomargin">
@@ -51,13 +53,13 @@
                         <button mat-stroked-button (click)="deselectAll()">deselect all</button>
                     </div>
                     <div *ngIf="changed_ids.length > 0" class="action-bar">
-                        <button mat-mini-fab class="extended-fab-button"  color="primary" (click)="import()">
+                        <button mat-raised-button class="extended-button"  color="primary" (click)="import()">
                             <mat-icon aria-label="add">save_alt</mat-icon>
                             <span class="text-label">{{import_errors ? 'Proceed with ' : ''}} Import</span>
                         </button>
                     </div>
                     <div *ngIf="changed_ids.length === 0" class="action-bar">
-                      <button mat-mini-fab class="extended-fab-button"  color="primary" (click)="cancelImport()">
+                      <button mat-raised-button class="extended-button"  color="primary" (click)="cancelImport()">
                           <mat-icon aria-label="close">close</mat-icon>
                           <span class="text-label">Cancel Import</span>
                       </button>
@@ -68,7 +70,8 @@
                 <app-loading-overlay *ngIf="loadingStep2" message="importing collection"></app-loading-overlay>
             </ng-template>
         </mat-step>
-        <mat-step label="done">
+        <mat-step>
+            <ng-template matStepLabel>done</ng-template>
             <div *ngIf="select">
                 <h3>Success! The collection has been imported into your workbench. </h3>
                 <p>
@@ -93,5 +96,5 @@
                 </p>
             </div>
         </mat-step>
-    </mat-vertical-stepper>
+    </mat-stepper>
 </div>

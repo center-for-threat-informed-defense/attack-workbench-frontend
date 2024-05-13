@@ -105,8 +105,9 @@ export class NotesEditorComponent implements OnInit, AfterViewInit {
         let prompt = this.dialog.open(ConfirmationDialogComponent, {
             maxWidth: "35em",
             data: { 
-                message: 'Are you sure you want to delete this note?',
-            }
+                message: '# Are you sure you want to delete this note?',
+            },
+			autoFocus: false, // prevents auto focus on toolbar buttons
         });
   
         let subscription = prompt.afterClosed().subscribe({

@@ -2,15 +2,12 @@
 .app-subheading {
     display: flex;
     align-items: center;
+    .mdc-button {
+        height: auto;
+    }
 
     .section-header-section.source {
         display: flex;
         align-items: center;
-    }
-}
-
-.historyPeek {
-    .labelled-box {
-        margin-bottom: 8px;
     }
 }

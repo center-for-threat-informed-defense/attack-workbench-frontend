@@ -3,7 +3,7 @@
         <div class="content">
             {{config.object[config.field]}}
         </div>
-        <label>{{config.label? config.label : config.field}}</label>
+        <span class="labelled-box-label">{{config.label? config.label : config.field}}</span>
     </div>
     <div *ngIf="config.mode == 'edit'" class="string-property-edit grow-to-row">
         <mat-form-field appearance="outline">

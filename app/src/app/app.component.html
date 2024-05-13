@@ -8,7 +8,7 @@
                     <span class="banner-text"><span *ngIf="alertStatus === 'pending'">Registration successful! </span>Your account is {{alertStatus}}, please contact your Administrator</span>
                     <button mat-icon-button (click)="alertStatus=''"><mat-icon>close</mat-icon></button>
                 </div>
-                <div class="router-padding" #scrollRef>
+                <div class="router-padding main-body" #scrollRef>
                     <router-outlet></router-outlet>
                 </div>
             </div>

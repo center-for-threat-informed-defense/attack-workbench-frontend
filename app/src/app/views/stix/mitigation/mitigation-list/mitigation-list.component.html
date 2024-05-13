@@ -2,14 +2,18 @@
     <div class="list-page-header">
         <h1 class="with-help-icon">
             mitigations
-            <popover-content #objectDescription placement="bottom">
-                <span>Mitigations represent security concepts and classes of technologies that can be used to prevent a technique or sub-technique from being successfully executed. They support the standard set of fields and must be assigned to a domain.</span>
-            </popover-content>
-            <mat-icon class="help-icon" [popover]="objectDescription" aria-label="help">help_outline</mat-icon>
+            <mat-icon class="help-icon" aria-label="help" cdkDrag #popoverTrigger2="mtxPopoverTrigger" [mtxPopoverTriggerFor]="popover" mtxPopoverTriggerOn="hover">
+                help_outline
+            </mat-icon>
+            <mtx-popover #popover="mtxPopover" [position]="['below', 'center']" enterDelay="25" leaveDelay="25">
+                <div style="max-width: 26em;">
+                    <span class="help-content">Mitigations represent security concepts and classes of technologies that can be used to prevent a technique or sub-technique from being successfully executed.</span>
+                </div>
+            </mtx-popover>
         </h1>
         
         <div class="button-group" *ngIf="canEdit">
-            <button mat-mini-fab class="extended-fab-button" color="primary" [routerLink]="['/mitigation/new']" [queryParams]="{editing: true}">
+            <button mat-raised-button class="extended-button" color="primary" [routerLink]="['/mitigation/new']" [queryParams]="{editing: true}">
                 <mat-icon>create</mat-icon> <span class="text-label">create a mitigation</span>
             </button>
         </div>

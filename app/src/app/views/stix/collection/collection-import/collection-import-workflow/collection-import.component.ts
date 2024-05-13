@@ -5,7 +5,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatStepper } from '@angular/material/stepper';
 import { ActivatedRoute } from '@angular/router';
-import { FileInputComponent } from 'ngx-material-file-input';
+import { FileInputComponent } from 'ngx-custom-material-file-input';
 import { Asset, Campaign, DataComponent, DataSource, Group, Matrix, Mitigation, Relationship, Software, Tactic, Technique } from 'src/app/classes/stix';
 import { Collection, CollectionDiffCategories } from 'src/app/classes/stix/collection';
 import { ConfirmationDialogComponent } from 'src/app/components/confirmation-dialog/confirmation-dialog.component';
@@ -688,6 +688,7 @@ export class CollectionImportComponent implements OnInit {
 				message: `Are you sure you want to import ${this.select.selected.length} objects?`,
 				yes_suffix: 'import the collection',
 			},
+			autoFocus: false, // prevents auto focus on buttons
 		});
 		let promptSubscription = prompt.afterClosed().subscribe({
 			next: (result) => {

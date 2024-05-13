@@ -12,31 +12,8 @@
             margin: 0 10px;
             flex-shrink: 1;
         }
-        .mat-form-field {
+        .mat-mdc-form-field {
             flex-grow: 1;
         }
     }
 }
-//     width: 45em;
-//     max-width: 100%;
-//     margin: 0 auto;
-//     // mat-toolbar { @extend %toolbar; }
-//     mat-form-field {
-//         width: 100%;
-//         .mat-form-field-wrapper {
-//             padding-bottom: 0px;
-//         }
-//     }
-//     .mat-vertical-stepper-header {
-//         pointer-events: none;
-//     }
-//     .action-bar {
-//         margin-top: 24px;
-//         &.center {
-//             text-align: center;
-//         }
-//         button + button {
-//             margin-left: 10px;
-//         }
-//     }
-// }
