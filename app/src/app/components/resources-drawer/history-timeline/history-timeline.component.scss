@@ -46,7 +46,7 @@
             border-left: 4px solid color(secondary);
         }
 		&.collection {
-			border-left: 4px solid;
+			border-left: 4px solid color-alternate(dark, 10);
 		}
         .event-identity {
             padding-left: 16px;
@@ -54,14 +54,8 @@
     }
 	// collection event checkbox style
 	.tertiary .mdc-checkbox .mdc-checkbox__native-control:enabled:checked~.mdc-checkbox__background {
-		.light & {
-			background-color: on-color(light);
-			border-color: on-color(light);
-		}
-		.dark & {
-			background-color: on-color(dark);
-			border-color: on-color(dark);
-		}
+		background-color: color-alternate(dark, 10);
+		border-color: color-alternate(dark, 10);
 	}
 	.mdc-checkbox .mdc-checkbox__checkmark {
 		color: color(light) !important;
