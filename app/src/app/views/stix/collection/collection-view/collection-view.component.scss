@@ -49,10 +49,6 @@
     .icon-mirror {
         transform: rotate(180deg);
     }
-
-    button.mat-button-disabled {
-        opacity: 0.5;
-    }
     .loading-display {
         text-align: center;
     }
@@ -89,7 +85,10 @@
             margin-top: 12px;
         }
     }
-    .releaseExplanation {
-        max-width: 25em;
+    .mdc-label {
+        padding: 16px 0 !important;
+    }
+    .c-align {
+        text-align: center;
     }
 }

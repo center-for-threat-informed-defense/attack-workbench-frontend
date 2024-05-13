@@ -4,7 +4,6 @@ import { AuthenticationService } from 'src/app/services/connectors/authenticatio
 @Component({
     selector: 'app-technique-list',
     templateUrl: './technique-list.component.html',
-    styleUrls: ['./technique-list.component.scss']
 })
 export class TechniqueListComponent implements OnInit {
     public get canEdit(): boolean { return this.authenticationService.canEdit(); }

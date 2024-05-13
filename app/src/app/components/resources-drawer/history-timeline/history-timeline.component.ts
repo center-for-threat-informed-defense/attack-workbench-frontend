@@ -243,7 +243,8 @@ export class HistoryTimelineComponent implements OnInit, OnDestroy {
 					editable: false,
 					sidebarControl: "disable"
 				},
-				maxHeight: "75vh"
+				maxHeight: "75vh",
+				autoFocus: false, // prevents auto focus on toolbar buttons
 			});
 		}
     }

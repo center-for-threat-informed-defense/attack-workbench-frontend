@@ -100,7 +100,8 @@ export class ContributorsPageComponent implements OnInit {
             data: {
                 contributor: contributor,
                 objects: this.contributorMap.get(contributor)
-            }
+            },
+			autoFocus: false, // prevents auto focus on buttons
         });
         // subscribe to contributor changes
         this.dialogSaveSubscription = prompt.componentInstance.onSave.subscribe((newContributor) => {

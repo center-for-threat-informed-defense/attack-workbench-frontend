@@ -1,18 +1,8 @@
 .attackid-edit {
-    mat-form-field {
+    .mat-mdc-form-field {
         width: 100%;
     }
-    .attackid {
-        .mat-form-field-label {
-          text-align: center;
-          margin-left: -3ex;
-        }
-        .mat-form-field-prefix {
-          text-transform: none;
-          top: 0 !important;
-        }
-        .mat-form-field-wrapper {
-            padding-bottom: 0 !important;
-        }
-    }
+	.mat-mdc-form-field-subscript-wrapper {
+		display: none;
+	}
 }

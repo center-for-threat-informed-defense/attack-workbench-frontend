@@ -60,7 +60,8 @@ export class AddRelationshipButtonComponent implements OnInit {
                 // open a new dialog
                 let prompt = this.dialog.open(StixDialogComponent, {
                     data: config,
-                    maxHeight: "75vh"
+                    maxHeight: "75vh",
+					autoFocus: false, // prevents auto focus on toolbar buttons
                 })
                 let subscription = prompt.afterClosed().subscribe({
                     next: result => { if (prompt.componentInstance.dirty) this.created.emit(); }, //re-fetch values since an edit occurred

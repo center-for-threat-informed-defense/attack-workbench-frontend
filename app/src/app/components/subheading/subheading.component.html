@@ -1,12 +1,46 @@
 <div class="section-header">
     <div class="app-subheading">
-        <div *ngIf="config.object.hasOwnProperty('modified')" class="section-header-section" [class.clickable]="config.sidebarControl != 'disable'" (click)="openHistory()" [popover]="historyPeek" popoverPlacement="bottom">
-            Modified <app-timestamp-view [config]="{
-                mode: 'view',
-                object: config.object,
-                field: 'modified',
-                humanize: true
-            }"></app-timestamp-view>
+        <div class="section-header-section">
+            <button mat-stroked-button
+                    *ngIf="config.object.hasOwnProperty('modified')"
+                    style="border-radius: 16px;"
+                    [disabled]="config.sidebarControl == 'disable'"
+                    (click)="openHistory()"
+                    cdkDrag
+                    #popoverTrigger2="mtxPopoverTrigger"
+                    [mtxPopoverTriggerFor]="historyPopover"
+                    mtxPopoverTriggerOn="hover">
+                Modified <app-timestamp-view [config]="{
+                    mode: 'view',
+                    object: config.object,
+                    field: 'modified',
+                    humanize: true
+                }"></app-timestamp-view>
+            </button>
+            <!-- history peek popover -->
+            <mtx-popover #historyPopover="mtxPopover"
+                        enterDelay="25"
+                        leaveDelay="25"
+                        [position]="['below', 'center']"
+                        [closeOnPanelClick]="true"
+                        [closeOnBackdropClick]="true">
+                <div style="max-width: 30em;" class="history-peek">
+                    <app-timestamp-property [config]="{
+                        mode: 'view',
+                        object: config.object,
+                        field: 'modified',
+                        attribution: 'modified_by',
+                        displayName: 'true'
+                    }"></app-timestamp-property>
+                    <app-timestamp-property [config]="{
+                        mode: 'view',
+                        object: config.object,
+                        field: 'created',
+                        attribution: 'created_by',
+                        displayName: 'true'
+                    }"></app-timestamp-property>
+                </div>
+            </mtx-popover>
         </div>
         <div class="section-header-section">
             <app-tlp-property [config]="{
@@ -30,22 +64,3 @@
     </div>
 </div>
 
-<!-- history peek popover -->
-<popover-content #historyPeek>
-    <div class="historyPeek">
-        <app-timestamp-property [config]="{
-            mode: 'view',
-            object: config.object,
-            field: 'modified',
-            attribution: 'modified_by',
-            displayName: 'true'
-        }"></app-timestamp-property>
-        <app-timestamp-property [config]="{
-            mode: 'view',
-            object: config.object,
-            field: 'created',
-            attribution: 'created_by',
-            displayName: 'true'
-        }"></app-timestamp-property>
-    </div>
-</popover-content>

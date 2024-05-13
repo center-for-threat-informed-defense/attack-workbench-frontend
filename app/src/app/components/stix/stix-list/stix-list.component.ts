@@ -490,7 +490,7 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
                 clearSelection: true,
             },
             minHeight: "50vh",
-            maxHeight: "75vh"
+            maxHeight: "75vh",
         })
         let subscription = prompt.afterClosed().subscribe({
             next: result => {
@@ -514,9 +514,10 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
                 data: {
                     object: element,
                     editable: this.config.allowEdits,
-                    sidebarControl: this.config.allowEdits ? "events" : "disable"
+                    sidebarControl: this.config.allowEdits ? "events" : "disable",
                 },
-                maxHeight: "75vh"
+                maxHeight: "75vh",
+				autoFocus: false, // prevents auto focus on toolbar buttons
             })
             let subscription = prompt.afterClosed().subscribe({
                 next: result => {
@@ -579,6 +580,10 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
     public getAccessibleRoutes(attackType: string, routes: any[],) {
         return routes.filter(route => this.canAccess(attackType, route) && this.canEdit(route));
     }
+
+	public routeTo(url, queryParams): void {
+		this.router.navigate([url], {queryParams: queryParams});
+	}
 
     private canAccess(attackType: string, route: any) {
         if (route.label && route.label == 'edit' && !this.authenticationService.canEdit(attackType)) {

@@ -10,21 +10,22 @@
             .search {
                 flex-grow: 1;
             }
-            border-bottom: 1px solid;
-            .light & { border-color: border-color(light); }
-            .dark &  { border-color: border-color(dark); }
+			.mat-mdc-floating-label {
+                .light & { color: on-color-deemphasis(light); }
+                .dark &  { color: on-color-deemphasis(dark); }
+            }
+			.mat-mdc-checkbox { padding: 8px 12px; }
         }
-        .mat-form-field-wrapper {
-            margin-bottom: -1.34375em; // remove bottom padding used for hint
+		.bordered {
+			border-bottom: 1px solid;
+			.light & { border-color: border-color(light); }
+			.dark &  { border-color: border-color(dark); }
+		}
+
+        .mat-mdc-form-field-subscript-wrapper {
+			display: none !important;
         }
-        .mat-form-field-flex {
-            padding: 12px 24px 0 24px !important; // override default padding for alignment w/ table
-        }
-        .mat-form-field-label {
-            .light & { color: on-color-deemphasis(light); }
-            .dark &  { color: on-color-deemphasis(dark); }
-        }
-        .mat-checkbox { padding: 12px; }
+
         .align-right { justify-content: flex-end ;}
         .align-center {
             display: flex;
@@ -48,6 +49,8 @@
             max-width: 100%;
             display: flex;
             flex-direction: column;
+			.dark & { border-bottom: 1px solid border-color(dark); }
+			.light & { border-bottom: 1px solid border-color(light); }
             table {
                 flex: 1 0 auto;
                 width: 100%;
@@ -87,17 +90,17 @@
                     .dark & td  { background: color-alternate(dark);  }
                 }
         
-                .mat-cell + .mat-cell, .mat-header-cell + .mat-header-cell {
+                .mat-mdc-cell + .mat-cell, .mat-mdc-header-cell + .mat-header-cell {
                     padding-left: 12px;
                 }
                 // cell with just an icon in it
-                .mat-cell.icon-cell {
+                .mat-mdc-cell.icon-cell {
                     width: 24px; //no need for text, icons are 24px wide
                     .mat-icon { vertical-align: middle; } //vertically center icons
                 }
 
                 //row action styles
-                .mat-cell.mat-column-end-action, .mat-cell.mat-column-start-action {
+                .mat-mdc-cell.mat-column-end-action, .mat-cell.mat-column-start-action {
                     cursor: pointer;
                     .dark & { background: color(dark); }
                     .light & { background: color(light); }
@@ -108,7 +111,7 @@
                 }
 
                 .mat-column-start-action {
-                    &.mat-cell {
+                    &.mat-mdc-cell {
                         .light & { outline: 1px solid border-color(light); }
                         .dark &  { outline: 1px solid border-color(dark); }
                     }
@@ -116,7 +119,7 @@
                     padding-right: 12px;
                 }
                 .mat-column-end-action {
-                    &.mat-cell {
+                    &.mat-mdc-cell {
                         .light & { outline: 1px solid border-color(light); }
                         .dark &  { outline: 1px solid border-color(dark); }
                     }
@@ -148,16 +151,25 @@
                                 &.collection-table{
                                   max-height: 16em;
                                   overflow-y: scroll;
-                                  mat-table{
+                                  .mat-mdc-table {
                                     min-width: 47em;
-                                    .mat-row, .mat-header-row {
-                                        .light & { border-color: border-color(light); }
-                                        .dark &  { border-color: border-color(dark); }
+                                    .mat-mdc-row, .mat-mdc-header-row {
+                                        border-bottom-width: 1px;
+                                        border-style: solid;
+                                        .light & {
+                                            background-color: color(light);
+                                            border-color: border-color(light);
+                                        }
+                                        .dark &  {
+                                            background-color: color(light);
+                                            border-color: border-color(dark);
+                                        }
                                     }
-                                    .mat-header-row {
+                                    .mat-mdc-header-row {
                                         min-height: 42px;
                                     }
-                                    .mat-header-cell {
+                                    .mat-mdc-header-cell {
+                                      border-bottom: none;
                                       .light & { background-color: color(light); }
                                       .dark &  { background-color: color(dark); }
                                     }
@@ -166,6 +178,7 @@
                                       display: flex;
                                       flex-direction: column;
                                       justify-content: space-around;
+                                      padding: 6px 0;
                                     }
                                     .mat-column-version {
                                       flex: 0 0 10%;
@@ -184,7 +197,7 @@
                             }
                         }
                         .controls {
-                            a { // links to pages in detail column
+                            .detail-button { // links to pages in detail column
                                 @extend .text-label;
                                 text-align: right;
                                 border-right: none;
@@ -219,21 +232,28 @@
                 }
             }
         }
-        .mat-icon-button.mat-button-disabled {
-            .dark & { color: on-color-deemphasis(dark); }
-            .light & { color: on-color-deemphasis(light); }
-        }
     }
 }
 .no-checkbox {
-  mat-pseudo-checkbox {
+  .mat-pseudo-checkbox {
     display: none !important;
   }
 }
 .user-search {
   display: flex;
   justify-content: space-between;
-  &:hover {
-    cursor: pointer;
-  }
+}
+.user-filter {
+    .clickable {
+        cursor: pointer;
+    }
+    .mat-mdc-option {
+        padding: 0 !important;
+    }
+    .mat-mdc-option.mdc-list-item--disabled .mdc-list-item__primary-text {
+        opacity: 100%;
+    }
+    .mdc-list-item__primary-text {
+        width: 100%;
+    }
 }

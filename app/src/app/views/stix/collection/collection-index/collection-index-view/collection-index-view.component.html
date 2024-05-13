@@ -1,4 +1,4 @@
-<div class="collection-index-view grid spacing-6">
+<div class="collection-index-view grid spacing-16">
     <div class="row" *ngIf="config.show_title">
         <div class="col center">
             <h1>{{config.index.collection_index.name}}</h1>
@@ -101,7 +101,7 @@
         </div>
     </div>
     <div class="row" *ngIf="showActions && isAdmin">
-        <div class="col center removeActions">
+        <div class="col center remove-actions">
             <button mat-button (click)="removeIndex()">remove index</button>
         </div>
     </div>

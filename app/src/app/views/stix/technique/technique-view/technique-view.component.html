@@ -1,4 +1,4 @@
-<div class="technique-view view-page grid spacing-12">
+<div class="technique-view view-page grid spacing-16">
     <div class="row">
         <!-- NAME -->
         <div class="col">
@@ -21,8 +21,8 @@
         <div class="col" [ngClass]="{'no-padding': editing}">
             <div class="labelled-box grow-to-row">
                 <!-- TYPE -->
-                <div class="content no-label">
-                    <mat-checkbox [(ngModel)]="technique.is_subtechnique" [disabled]="!editing">
+                <div class="content no-padding no-label">
+                    <mat-checkbox color="primary" [(ngModel)]="technique.is_subtechnique" [disabled]="!editing">
                         sub-technique?
                     </mat-checkbox>
                 </div>
@@ -173,7 +173,7 @@
             <div class="col arrow">
                 <mat-icon>arrow_forward</mat-icon>
             </div>
-            <div class="col">
+            <div class="col grid spacing-16">
                 <!-- PERMISSIONS REQUIRED -->
                 <div *ngIf="showTacticField('privilege-escalation', 'permissions_required')" class="row">
                     <app-list-property class="grow-to-row" [config]="{

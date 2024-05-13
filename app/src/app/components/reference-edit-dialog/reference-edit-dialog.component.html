@@ -1,24 +1,24 @@
 <div class="reference-dialog">
     <mat-toolbar *ngIf="!editing || stage == 0">
-        <button mat-button class="control" matTooltip="close" (click)="close()"><mat-icon aria-label="close">close</mat-icon></button>
+        <button mat-icon-button class="control" matTooltip="close" (click)="close()"><mat-icon aria-label="close">close</mat-icon></button>
         <div class="spacer"></div>
         <ng-container *ngIf="editable">
-            <button mat-button class="control"
+            <button mat-icon-button class="control"
                 [matTooltip]="isNew ? 'validate & save' : 'patch & save'"
                 [disabled]="!editing || !validCitation() || !validURL || (isNew && sourceNameControl.errors)"
                 (click)="next()">
                 <mat-icon aria-label="save">save</mat-icon>
             </button>
-            <button *ngIf="!editing" mat-button class="control" matTooltip="edit" (click)="startEditing()"><mat-icon aria-label="edit">edit</mat-icon></button>
-            <button *ngIf="editing"  mat-button class="control" matTooltip="discard changes & stop editing" (click)="discardChanges()"><mat-icon aria-label="discard">edit_off</mat-icon></button>
-            <button *ngIf="deletable" mat-button class="control" matTooltip="delete" [disabled]="!editing || numCitingObjects > 0 || isNew" (click)="delete()"><mat-icon aria-label="delete">delete</mat-icon></button>
+            <button *ngIf="!editing" mat-icon-button class="control" matTooltip="edit" (click)="startEditing()"><mat-icon aria-label="edit">edit</mat-icon></button>
+            <button *ngIf="editing"  mat-icon-button class="control" matTooltip="discard changes & stop editing" (click)="discardChanges()"><mat-icon aria-label="discard">edit_off</mat-icon></button>
+            <button *ngIf="deletable" mat-icon-button class="control" matTooltip="delete" [disabled]="!editing || numCitingObjects > 0 || isNew" (click)="delete()"><mat-icon aria-label="delete">delete</mat-icon></button>
         </ng-container>
     </mat-toolbar>
     <!-- edit page -->
     <div *ngIf="editing else viewReference" class="edit-reference">
         <div *ngIf="stage == 0" class="stage edit">
             <h1>Reference Editor</h1>
-            <div *ngIf="!loading else loadingDisplay" class="grid spacing-16">
+            <div *ngIf="!loading else loadingDisplay" class="grid spacing-20">
                 <div class="row">
                     <div class="column editor">
                         <!-- source name -->
@@ -115,12 +115,10 @@
         <div *ngIf="stage == 2" class="stage reviewing">
             <h1>Required Patches</h1>
             <ng-container *ngIf="patchObjects.length == 0 && patchRelationships == 0; else patches">
-                <mat-list>
-                    <mat-list-item>
-                        <mat-icon matListIcon class="text-success">check</mat-icon>
-                        <p matLine class="text-success">No objects in the knowledge base use this reference.</p>
-                    </mat-list-item>
-                </mat-list>
+				<div class="v-align text-success">
+					<mat-icon>check</mat-icon>
+					<span style="padding-left: 12px">No objects in the knowledge base use this reference.</span>
+				</div>
             </ng-container>
             <ng-template #patches>
                 <p>The following objects include the edited reference and will be updated automatically.</p>
@@ -153,7 +151,7 @@
     </div>
     <!-- view page -->
     <ng-template #viewReference>
-        <div class="reference-view grid spacing-12">
+        <div class="reference-view grid spacing-16">
             <h1>{{reference.source_name}}</h1>
             <!-- source name -->
             <div class="row">
@@ -167,7 +165,7 @@
                                 <mat-icon>content_copy</mat-icon>
                             </button>
                         </div>
-                        <label>In-text citation</label>
+                        <span class="labelled-box-label">In-text citation</span>
                     </div>
                 </div>
             </div>
@@ -178,7 +176,7 @@
                         <div class="content">
                             <span>{{reference.description}}</span>
                         </div>
-                        <label>Full reference text</label>
+                        <span class="labelled-box-label">Full reference text</span>
                     </div>
                 </div>
             </div>
@@ -189,7 +187,7 @@
                         <div class="content">
                             <a class="external-link" [href]="reference.url" target="_blank">{{reference.url}}</a>
                         </div>
-                        <label>URL</label>
+                        <span class="labelled-box-label">URL</span>
                     </div>
                 </div>
             </div>

@@ -83,7 +83,6 @@ export class Identity extends StixObject {
      * @returns {Observable} of the post
      */
     public save(restAPIService: RestApiConnectorService): Observable<Identity> {
-        // TODO PUT if the object was just created (doesn't exist in db yet)
         let postObservable = restAPIService.postIdentity(this);
         let subscription = postObservable.subscribe({
             next: (result) => { this.deserialize(result); },

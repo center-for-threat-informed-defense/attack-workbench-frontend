@@ -1,8 +1,18 @@
 <div class="list-page">
     <div class="list-page-header">
-        <h1>assets</h1>
+        <h1 class="with-help-icon">
+            assets
+            <mat-icon class="help-icon" aria-label="help" cdkDrag #popoverTrigger2="mtxPopoverTrigger" [mtxPopoverTriggerFor]="popover" mtxPopoverTriggerOn="hover">
+                help_outline
+            </mat-icon>
+            <mtx-popover #popover="mtxPopover" [position]="['below', 'center']" enterDelay="25" leaveDelay="25">
+                <div style="max-width: 26em;">
+                    <span class="help-content">Assets represent the devices and systems commonly found within Industrial Control System environments. Each asset object includes a mapping of technique relationships that represent the adversary actions that may target the device based on its capability and function.</span>
+                </div>
+            </mtx-popover>
+        </h1>
         <div class="button-group" *ngIf="canEdit">
-            <button mat-mini-fab class="extended-fab-button" color="primary" [routerLink]="['/asset/new']" [queryParams]="{editing: true}">
+            <button mat-raised-button class="extended-button" color="primary" [routerLink]="['/asset/new']" [queryParams]="{editing: true}">
                 <mat-icon>create</mat-icon> <span class="text-label">create an asset</span>
             </button>
         </div>

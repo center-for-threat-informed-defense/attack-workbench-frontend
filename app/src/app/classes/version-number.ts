@@ -11,7 +11,6 @@ export class VersionNumber {
      * @param version version number as string, e.g "6.0.1". Must be a set of numbers separated by .s
      */
     constructor(version: string) {
-        // TODO check string against regex
         this.version = version;
     }
 

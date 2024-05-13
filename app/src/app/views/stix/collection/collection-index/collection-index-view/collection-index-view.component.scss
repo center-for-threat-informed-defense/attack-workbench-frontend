@@ -47,7 +47,7 @@
             justify-content: flex-start;
         }
     }
-    .mat-list-item {
+    .mat-mdc-list-item {
         cursor: unset;
         &.clickable {
             cursor: pointer;
@@ -57,7 +57,7 @@
             }
         }
     }
-    .removeActions {
+    .remove-actions {
         padding-top: 20px;
     }
 }

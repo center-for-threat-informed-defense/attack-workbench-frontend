@@ -18,11 +18,11 @@
             
             <mat-select [formControl]="selectControls[field.name]" multiple [required]="field.required ? field.required : false">
                 <mat-select-trigger>
-                    <mat-chip-list>
+                    <mat-chip-listbox>
                         <mat-chip *ngFor="let value of selectControls[field.name].value" [removable]="true" (removed)="remove(field.name, value)">
                             {{value}} <mat-icon matChipRemove>cancel</mat-icon>
                         </mat-chip>
-                    </mat-chip-list>
+                    </mat-chip-listbox>
                 </mat-select-trigger>
                 <mat-option *ngFor="let item of allowedValues[field.name]" (onSelectionChange)="change($event, field.name)" [value]="item">{{item}}</mat-option>
             </mat-select>

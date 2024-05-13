@@ -61,11 +61,11 @@ export class UsersListComponent implements OnInit {
   constructor(private restAPIConnector: RestApiConnectorService, private authenticationService: AuthenticationService) {
     this.filterOptions = [
         {
-            name: 'Status',
+            name: 'status',
             values: Object.values(Status as {})
         },
         {
-            name: 'Role',
+            name: 'role',
             values: Object.values(Role as {})
         }
     ];

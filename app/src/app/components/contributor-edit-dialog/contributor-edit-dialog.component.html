@@ -2,21 +2,21 @@
     <!-- dialog toolbar -->
     <mat-toolbar *ngIf="!editing || stage == 0">
         <!-- close -->
-        <button mat-button class="control" matTooltip="close" (click)="close()">
+        <button mat-icon-button class="control" matTooltip="close" (click)="close()">
             <mat-icon aria-label="close">close</mat-icon>
         </button>
         <div class="spacer"></div>
         <ng-container *ngIf="editable">
             <!-- save -->
-            <button mat-button class="control" matTooltip="patch & save" [disabled]="!editing || !isValid" (click)="next()">
+            <button mat-icon-button class="control" matTooltip="patch & save" [disabled]="!editing || !isValid" (click)="next()">
                 <mat-icon aria-label="save">save</mat-icon>
             </button>
             <!-- edit -->
-            <button *ngIf="!editing" mat-button class="control" matTooltip="edit" (click)="startEditing()">
+            <button *ngIf="!editing" mat-icon-button class="control" matTooltip="edit" (click)="startEditing()">
                 <mat-icon aria-label="edit">edit</mat-icon>
             </button>
             <!-- discard changes -->
-            <button *ngIf="editing"  mat-button class="control" matTooltip="discard changes & stop editing" (click)="discardChanges()">
+            <button *ngIf="editing"  mat-icon-button class="control" matTooltip="discard changes & stop editing" (click)="discardChanges()">
                 <mat-icon aria-label="discard">edit_off</mat-icon>
             </button>
         </ng-container>

@@ -3,7 +3,7 @@
         <div class="content">
             <app-list-view [config]="config"></app-list-view>
         </div>
-        <label>{{config.label? config.label : config.field}}</label>
+        <span class="labelled-box-label">{{config.label? config.label : config.field}}</span>
     </div>
     <app-list-edit *ngIf="config.mode == 'edit'" class="grow-to-row" [config]="config"></app-list-edit>
 </div>

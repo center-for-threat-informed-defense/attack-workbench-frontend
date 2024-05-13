@@ -3,9 +3,6 @@
     mat-toolbar {
         @extend %toolbar;
     }
-    button.mat-button-disabled {
-        cursor: not-allowed;
-    }
     .inline {
         display: inline-flex;
     }

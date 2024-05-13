@@ -16,10 +16,8 @@ export class ListViewComponent {
 
     public get values() {
         if (this.config.field == "aliases") return this.config.object[this.config.field].slice(1); // filter out the first alias
-        return this.config.object[this.config.field];
-    }
-
-    constructor() {
-        // intentionally left blank
+        let arr = this.config.object[this.config.field];
+        arr.sort();
+        return arr;
     }
 }

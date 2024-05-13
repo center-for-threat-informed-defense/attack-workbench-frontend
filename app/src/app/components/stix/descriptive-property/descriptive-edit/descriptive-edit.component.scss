@@ -13,32 +13,27 @@
             display: flex;
         }
     }
-    .mat-input-element {
+    .mat-mdc-input-element {
         line-height: 1.5;
     }
-    .mat-tab-header {
+    .mat-mdc-tab-header {
         border: 0px;
-    }
-    .mat-tab-disabled {
-        .dark & { color: on-color-deemphasis(dark); }
-        .light & { color: on-color-deemphasis(light); }
     }
     .edit {
         width: 100%;
-
-        .mat-form-field-wrapper {
-            margin: 0;
-            padding: 0;
+        .mat-mdc-form-field-subscript-wrapper {
+			display: none;
         }
-        .mat-form-field-outline-start {
-            border-top-left-radius: 0;
-        }
-        .mat-form-field-outline-end {
-            border-top-right-radius: 0;
-        }
-        .mat-form-field-infix {
-            border-top: 5px solid transparent;
-            padding-top: 0px;
+		// squared top left border
+		.mdc-notched-outline__leading {
+			border-top-left-radius: 0 !important;
+		}
+		// squared top right border
+		.mdc-notched-outline__trailing {
+			border-top-right-radius: 0 !important;
+		}
+        .mat-mdc-form-field-infix {
+            padding-top: 0px !important;
         }
     }
     .preview {

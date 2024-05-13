@@ -1,4 +1,4 @@
-<div class="data-source-view view-page grid spacing-12" *ngIf="!loading">
+<div class="data-source-view view-page grid spacing-16" *ngIf="!loading">
     <div class="row">
         <div class="col">
             <app-name-property [config]="{
@@ -89,7 +89,7 @@
         <div class="row" *ngIf="canEdit">
             <div class="col">
                 <div class="add-button">
-                    <button mat-mini-fab class="extended-fab-button" color="primary" (click)="createDataComponent()">
+                    <button mat-raised-button class="extended-button" color="primary" (click)="createDataComponent()">
                         <mat-icon>create</mat-icon> <span class="text-label">create a data component</span>
                     </button>
                 </div>

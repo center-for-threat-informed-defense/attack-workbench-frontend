@@ -4,7 +4,7 @@
             <app-version-view [config]="config"></app-version-view>
             <span class="text-deemphasis" *ngIf="config.object.attackType == 'collection'">&nbsp;({{config.object.release? 'released' : 'unreleased'}})</span>
         </div>
-        <label>{{config.field ? config.field : 'version'}}</label>
+        <span class="labelled-box-label">{{config.field ? config.field : 'version'}}</span>
     </div>
     <app-version-edit *ngIf="config.mode == 'edit'" [config]="config"></app-version-edit>
 </div>

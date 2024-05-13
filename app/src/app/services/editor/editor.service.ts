@@ -82,7 +82,8 @@ export class EditorService {
             maxWidth: "35em",
             data: {
                 message: '# Are you sure you want to discard changes?',
-            }
+            },
+			autoFocus: false, // prevents auto focus on toolbar buttons
         });
 
         let subscription = prompt.afterClosed().subscribe({

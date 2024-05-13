@@ -83,7 +83,6 @@ export class Mitigation extends StixObject {
      * @returns {Observable} of the post
      */
     public save(restAPIService: RestApiConnectorService): Observable<Mitigation> {
-        // TODO PUT if the object was just created (doesn't exist in db yet)
         let postObservable = restAPIService.postMitigation(this);
         let subscription = postObservable.subscribe({
             next: (result) => { this.deserialize(result.serialize()); },

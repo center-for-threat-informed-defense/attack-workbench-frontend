@@ -67,5 +67,4 @@ export class AttackIDEditComponent implements OnInit {
             this.showHint = false;
         }
     }
-
 }

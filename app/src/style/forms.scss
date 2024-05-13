@@ -5,7 +5,7 @@
         margin-left: 30px;
     }
 
-    button.mat-stroked-button:disabled {
+    button.mat-mdc-outlined-button:disabled {
         opacity: 0.5;
     }
 
@@ -21,56 +21,111 @@
     }
 }
 
-.input-group { //sequential joined mat-form-fields of appearance-outline type
-    mat-form-field.mat-form-field-appearance-outline:not(:first-child) {
-        .mat-form-field-outline-start { //left border
-            border-radius: 0;
-            border-left-width: 0;
-        }
-    }
-    mat-form-field.mat-form-field-appearance-outline:not(:last-child) {
-        .mat-form-field-outline-end { //right border
-            border-radius: 0;
-        }
-    }
-
-    //border left restoration for focused and hover states
-    .mat-form-field-appearance-outline:not(:first-child):not(.mat-form-field-disabled) { .mat-form-field-flex:hover, &.mat-focused { .mat-form-field-outline-start {
-        border-left-width: 1px !important;
-    }}}
+.controls {
+	.mat-mdc-form-field {
+		.light & {
+			--mdc-filled-text-field-active-indicator-color: color(light) !important;
+		}
+		.dark & {
+			--mdc-filled-text-field-active-indicator-color: color(dark) !important;
+		}
+	}
 }
-// disabled form field style
-mat-form-field.mat-form-field-appearance-outline.mat-form-field-disabled {
-    opacity: 0.5;
+
+// form field outline colors
+.view-page {
+	.mdc-text-field--outlined:hover {
+		.mdc-notched-outline__leading,
+		.mdc-notched-outline__notch,
+		.mdc-notched-outline__trailing {
+			border-width: 2px;
+		}
+	}
+
+	// default form field outline color
+	.mdc-text-field--outlined:not(.mdc-text-field--disabled):not(.mdc-text-field--invalid) {
+		.mdc-notched-outline__leading,
+		.mdc-notched-outline__notch,
+		.mdc-notched-outline__trailing {
+			.light & {
+				border-color: black;
+			}
+			.dark & {
+				border-color: white;
+			}
+		}
+		.mat-mdc-floating-label {
+			.light & {
+				color: black;
+			}
+			.dark & {
+				color: white;
+			}
+		}
+	}
+
+	// focused field outline
+	.mdc-text-field--outlined:not(.mdc-text-field--disabled):not(.mdc-text-field--invalid).mdc-text-field--focused {
+		.mdc-notched-outline__leading,
+		.mdc-notched-outline__notch,
+		.mdc-notched-outline__trailing {
+			border-color: color(primary);
+		}
+		.mat-mdc-floating-label {
+			color: color(primary);
+		}
+	}
+
+	// disabled form field style
+	.mdc-text-field--outlined.mdc-text-field--disabled {
+		.mdc-notched-outline__leading,
+		.mdc-notched-outline__notch,
+		.mdc-notched-outline__trailing {
+			.light & {
+				border-color: on-color-deemphasis(dark);
+			}
+			.dark & {
+				border-color: on-color-deemphasis(light);
+			}
+		}
+		.mat-mdc-floating-label {
+			.light & {
+				color: on-color-deemphasis(dark);
+			}
+			.dark & {
+				color: on-color-deemphasis(light);
+			}
+		}
+	}
 }
 
 .button-group {
     // left border removed
-    .mat-button:not(:first-child),
-    .mat-raised-button:not(:first-child),
-    .mat-stroked-button:not(:first-child),
-    .mat-flat-button:not(:first-child) {
+    .mat-mdc-button:not(:first-child),
+    .mat-mdc-raised-button:not(:first-child),
+    .mat-mdc-outlined-button:not(:first-child),
+    .mat-mdc-unelevated-button:not(:first-child) {
         border-top-left-radius: 0;
         border-bottom-left-radius: 0;
         border-left-width: 0px;
     }
     // right border radius removed
-    .mat-button:not(:last-child),
-    .mat-raised-button:not(:last-child),
-    .mat-stroked-button:not(:last-child),
-    .mat-flat-button:not(:last-child) {
+    .mat-mdc-button:not(:last-child),
+    .mat-mdc-raised-button:not(:last-child),
+    .mat-mdc-outlined-button:not(:last-child),
+    .mat-mdc-unelevated-button:not(:last-child) {
         border-top-right-radius: 0;
         border-bottom-right-radius: 0;
     }
 }
 
-.mat-error {
+.mat-mdc-form-field-error {
     color: color(error) !important;
 }
-.mat-form-field {
+.mat-mdc-form-field {
     &.mat-form-field-invalid, &.ng-invalid {
         color: color(error);
-        .mat-form-field-label, 
+        .mat-mdc-floating-label, 
         .mat-input-element, 
         .mat-form-field-outline, 
         .mat-form-field-outline-thick, 
@@ -78,7 +133,7 @@ mat-form-field.mat-form-field-appearance-outline.mat-form-field-disabled {
             color: color(error) !important;
         }
     }
-    &.mat-warn .mat-input-element {
+    &.mat-warn .mat-mdc-input-element {
         color: color(error) !important;
     }
 }
