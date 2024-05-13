@@ -45,6 +45,7 @@
 - Added support for viewing Assets on a configured external ATT&CK Website. See [frontend#526](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/526).
 - Added collection events to object history in the sidebar. See [frontend#140](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/140).
 - Updated Angular to v17.
+- Updated the integration documentation to be compatible with v5.0.0 of the [ATT&CK Navigator](https://github.com/mitre-attack/attack-navigator).
 
 ## 31 October 2023
 
