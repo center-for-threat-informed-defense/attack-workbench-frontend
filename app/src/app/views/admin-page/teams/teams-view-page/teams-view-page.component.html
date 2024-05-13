@@ -1,4 +1,4 @@
-<div class="teams-view-page view-page grid spacing-16" *ngIf="team else loadingTeam">
+<div class="teams-view-page view-page grid spacing-20" *ngIf="team else loadingTeam">
 	<div class="row">
 		<div class="col">
 			<app-name-property [config]="{
@@ -30,7 +30,7 @@
 			<div class="form-row space-around">
 				<div class="col">
 					<div class="button-group">
-						<button mat-mini-fab class="extended-fab-button" color="primary" (click)="updateUsers()">
+						<button mat-raised-button class="extended-button" color="primary" (click)="updateUsers()">
 							<mat-icon>supervisor_account</mat-icon> <span class="text-label">add or remove users</span>
 						</button>
 					</div>

@@ -1,6 +1,8 @@
 .confirmation-dialog {
+	margin: 0 24px;
+	text-align: center;
     .buttons {
-        text-align: center;
+		margin: 18px 0;
         button + button {
             margin-left: 10px;
         }

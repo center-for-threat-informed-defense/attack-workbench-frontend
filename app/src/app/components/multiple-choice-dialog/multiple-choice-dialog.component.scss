@@ -6,6 +6,12 @@
     }
     .choice {
         cursor: pointer;
+		.light & {
+			color: on-color(light);
+		}
+		.dark & {
+			color: on-color(dark);
+		}
     }
     .choice:hover h3 {
         color: color(primary);

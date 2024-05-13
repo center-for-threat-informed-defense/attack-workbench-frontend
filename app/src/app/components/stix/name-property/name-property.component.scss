@@ -1,22 +1,39 @@
 
 .name-property {
-    text-transform: none;
     .name-edit {
         width: 100%;
         text-align: center;
-        .mat-form-field-prefix {
-            text-transform: none;
-            top: 0 !important;
-            margin-right: 1ex;
-            text-overflow: ellipsis;
-            overflow: hidden;
-            width: 38%;
+        .mat-mdc-form-field-subscript-wrapper {
+            display: none;
+        }
+		.mdc-notched-outline__leading {
+			// center align the name property label
+			flex: auto;
+		}
+		.mat-mdc-input-element {
+			font-size: 36px !important;
+		}
+		.mat-mdc-floating-label {
+			font-size: 28px !important;
+			top: 60px !important;
+			&.mdc-floating-label--float-above {
+				top: 22px !important;
+			}
 
-        }
-        .mat-form-field-wrapper {
-            padding-bottom: 0;
-        }
+		}
+		.mat-mdc-form-field-infix {
+			padding: 36px 0 !important;
+		}
+		.parent-name {
+			padding-bottom: 12px;
+		}
     }
+	.lowercase {
+		margin: 0 !important;
+	}
+	.c-align {
+		text-align: center !important;
+	}
 }
 
 .status {

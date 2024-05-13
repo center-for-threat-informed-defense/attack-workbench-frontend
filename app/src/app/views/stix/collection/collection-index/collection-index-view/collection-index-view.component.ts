@@ -34,7 +34,8 @@ export class CollectionIndexViewComponent implements OnInit {
             data: {
                 markdown: version.release_notes,
                 title: `${collection.name} v${version.version.toString()} Release Notes`
-            }
+            },
+			autoFocus: false, // prevents auto focus on buttons
         })
     }
 
@@ -57,7 +58,8 @@ export class CollectionIndexViewComponent implements OnInit {
             data: { 
                 message: `## Subscribe to ${collectionRef.name}?\n\n Subscribing will download the most recent version of ${collectionRef.name}. New versions of the collection will automatically download when they are released.`,
                 yes_suffix: "keep the collection updated"
-            }
+            },
+			autoFocus: false, // prevents auto focus on buttons
         });
         let subscription = prompt.afterClosed().subscribe({
             next: (result) => {
@@ -86,7 +88,8 @@ export class CollectionIndexViewComponent implements OnInit {
             data: { 
                 message: `## Unsubscribe from ${collectionRef.name}?\n\n Unsubscribing will mean you won't automatically receive updates to ${collectionRef.name}. Previously downloaded versions of this collection will **not** be deleted.`,
                 yes_suffix: "unsubscribe"
-            }
+            },
+			autoFocus: false, // prevents auto focus on buttons
         });
         prompt.afterClosed().subscribe(result => {
             // if they clicked yes, subscribe to the collection
@@ -112,7 +115,8 @@ export class CollectionIndexViewComponent implements OnInit {
             data: { 
                 message: "Are you sure you want to remove the collection index?",
                 yes_suffix: "delete it"
-            }
+            },
+			autoFocus: false, // prevents auto focus on buttons
         });
         let promptSubscription = prompt.afterClosed().subscribe({
             next: result => {

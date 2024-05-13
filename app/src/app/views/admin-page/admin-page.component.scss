@@ -7,7 +7,7 @@
     }
     button {
         width: 225px;
-        height: 175px;
+		height: fit-content !important;
         margin: 10px;
 
         h2 { white-space: normal; }

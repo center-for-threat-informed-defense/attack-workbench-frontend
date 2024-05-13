@@ -1,11 +1,13 @@
 <div *ngIf="identity || config.timeField" class="identity-property">
-    <mat-chip-list>
-        <mat-chip class="identity">
-            <div *ngIf="identity && identity.name">
-                <svg  width="24" height="24" [data-jdenticon-value]="identity.name" [matTooltip]="identity.name" matTooltipPosition="below"></svg>
-                <span *ngIf="config.displayName">{{identity.name}}</span>
-            </div>
-            <app-timestamp-view *ngIf="config.timeField" [config]="{object: config.object, field: config.timeField, mode: 'view', humanize: true}"></app-timestamp-view>
+    <mat-chip-listbox>
+        <mat-chip>
+			<div class="identity">
+				<ng-container *ngIf="identity && identity.name">
+					<svg  width="24" height="24" [data-jdenticon-value]="identity.name" [matTooltip]="identity.name" matTooltipPosition="below"></svg>
+					<span class="v-align" *ngIf="config.displayName">{{identity.name}}</span>
+				</ng-container>
+				<app-timestamp-view *ngIf="config.timeField" class="v-align" [config]="{object: config.object, field: config.timeField, mode: 'view', humanize: true}"></app-timestamp-view>
+			</div>
         </mat-chip>
-    </mat-chip-list>
+    </mat-chip-listbox>
 </div>

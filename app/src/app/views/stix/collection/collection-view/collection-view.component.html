@@ -1,10 +1,10 @@
 <div class="collection-view">
     <div *ngIf="!validating">
-        <div class="grid spacing-12" *ngIf="!loading else loadingDisplay">
+        <div class="grid spacing-16" *ngIf="!loading else loadingDisplay">
             <div class="row width-limited">
                 <div class="col">
                     <!-- things to add to the collection -->
-                    <app-name-property class="grow-to-row" [config]="{
+                    <app-name-property class="grow-to-row c-align" [config]="{
                         mode: editing? 'edit' : 'view',
                         object: collection
                     }"></app-name-property>
@@ -21,27 +21,27 @@
                     }"></app-version-property>
                 </div>
                 <div class="col" *ngIf="editing">
-                    <div class="labelled-box" [popover]="releaseExplanation">
-                        <div class="content no-label">
-                            <mat-checkbox [(ngModel)]="release">is release version?</mat-checkbox>
+                    <div class="labelled-box">
+                        <div class="content no-padding no-label" cdkDrag #popoverTrigger2="mtxPopoverTrigger" [mtxPopoverTriggerFor]="popover" mtxPopoverTriggerOn="hover">
+                            <mat-checkbox color="primary" [(ngModel)]="release">is release version?</mat-checkbox>
                         </div>
                     </div>
-                    <popover-content #releaseExplanation placement="bottom">
-                        <div class="releaseExplanation">
-                            <p>
+                    <mtx-popover #popover="mtxPopover" [position]="['below', 'center']" enterDelay="25" leaveDelay="25">
+                        <div style="max-width: 26em;">
+                            <p class="help-content">
                                 Is this version of the collection going to be released? Once a version has been marked
                                 as a release, it cannot be un-marked even if you choose not to publish it.
                             </p>
-                            <p>
+                            <p class="help-content">
                                 Versions marked as releases will be considered when determining the changes between
                                 collection releases, and collection releases will show up independently within the
                                 collections list.
                             </p>
-                            <p class="text-warn">
+                            <p class="text-warn help-content">
                                 Only mark a version as a release if you are sure you intend to publish it.
                             </p>
                         </div>
-                    </popover-content>
+                    </mtx-popover>
                 </div>
                 <div class="col" *ngIf="!editing">
                     <div class="labelled-box">
@@ -55,7 +55,7 @@
                                 </code>
                                 <!-- include notes? -->
                                 <div class="notes">
-                                    <mat-checkbox [(ngModel)]="includeNotes">Include associated notes?</mat-checkbox>
+                                    <mat-checkbox color="primary" [(ngModel)]="includeNotes">Include associated notes?</mat-checkbox>
                                 </div>
                             </div>
                             <!-- download collection -->
@@ -63,7 +63,7 @@
                                 <mat-icon aria-label="download">download</mat-icon>
                             </div>
                         </div>
-                        <label>Collection Data</label>
+                        <span class="labelled-box-label">Collection Data</span>
                     </div>
                 </div>
             </div>
@@ -82,10 +82,8 @@
             <div class="row width-limited" *ngIf="editing">
                 <div class="col">
                     <div class="button-group">
-                        <button mat-mini-fab class="extended-fab-button" color="primary" (click)="handleImportGroups()">
-                            <span class="material-symbols-outlined">
-                                deployed_code_update
-                            </span>
+                        <button mat-raised-button class="extended-button" color="primary" (click)="handleImportGroups()">
+							<mat-icon>library_add</mat-icon>
                             <span class="text-label">
                                 Import groups and their related objects into this collection
                             </span>
@@ -115,7 +113,7 @@
                             <ng-template matExpansionPanelContent>
                                 <!-- automatically add tactics -->
                                 <div *ngIf="editing && attackType == 'tactic'" class="row apply-button">
-                                    <button mat-mini-fab class="extended-fab-button" color="primary"
+                                    <button mat-raised-button class="extended-button" color="primary"
                                         (click)="addObjectsToCollection(attackType)"
                                         [disabled]="autoAddDisabled(attackType)" matTooltipPosition="above"
                                         matTooltip="automatically find and add {{plural[attackType]}} related to {{relevantObjects(attackType)}} in this collection">

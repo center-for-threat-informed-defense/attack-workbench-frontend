@@ -7,17 +7,17 @@ import { environment } from 'src/environments/environment';
 })
 export class WebsiteIntegrationService {
 	// returns the actual integration url
-	private get websiteIntegrationUrl(): string {
+	public get websiteIntegrationUrl(): string {
 		return environment.integrations.attack_website.url;
 	}
 
 	// reads if the integration is enabled
-	private get websiteIntegrationEnabled(): boolean {
+	public get websiteIntegrationEnabled(): boolean {
 		return environment.integrations.attack_website.enabled;
 	}
 
 	// route mapping based on type
-	private typeToRouteMap = {
+	public typeToRouteMap = {
 		'software': 'software',
 		'matrix': 'matrices',
 		'group': 'groups',

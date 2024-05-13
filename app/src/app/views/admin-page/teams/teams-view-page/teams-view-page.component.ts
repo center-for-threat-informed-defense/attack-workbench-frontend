@@ -112,7 +112,7 @@ export class TeamsViewPageComponent implements OnInit, OnDestroy {
 			data: {
 				select,
 				type: 'user',
-				title: `Select users you wish to be in this team`,
+				title: `Add users to this team`,
 				buttonLabel: "CONFIRM",
 				clearSelection: false,
 			},
