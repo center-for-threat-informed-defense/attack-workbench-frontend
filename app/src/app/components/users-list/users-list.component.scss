@@ -3,6 +3,9 @@
   max-width: 60em;
   margin: 0 auto;
   border-radius: 4px;
+  .mat-mdc-chip-action-label {
+    font-weight: 500 !important;
+  }
   .role, .status {
     &.active { background-color: color(active) }
     &.pending { background-color: color(pending); }
