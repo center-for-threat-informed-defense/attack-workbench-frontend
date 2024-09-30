@@ -135,6 +135,10 @@ export class ReferenceEditDialogComponent implements OnInit, OnDestroy {
             if (!this.reference.url.startsWith('https://') && !this.reference.url.startsWith('http://')) {
                 return false;
             }
+            // check new references for uniqueness
+            if (this.isNew && this.references$.some(x => x.url && this.urlExists(x.url))) {
+                return false;
+            }
             // check for other malformities
             try {
                 new URL(this.reference.url);
@@ -145,10 +149,17 @@ export class ReferenceEditDialogComponent implements OnInit, OnDestroy {
         return true;
     }
 
+    public urlExists(url) {
+        return url.replace(/\//g, '') === this.reference.url.replace(/\//g, '')
+    }
+
     public get URLError(): string {
         if (this.reference.url) {
             if (!this.reference.url.startsWith('https://') && !this.reference.url.startsWith('http://')) {
                 return "URL must begin with 'http://' or 'https://'";
+            } else if (this.references$.some(x => x.url && this.urlExists(x.url))) {
+                let citation = this.references$.find(x => x.url && this.urlExists(x.url));
+                return `a reference with this URL already exists: (Citation: ${citation.source_name})`;
             } else {
                 return "malformed URL";
             }
