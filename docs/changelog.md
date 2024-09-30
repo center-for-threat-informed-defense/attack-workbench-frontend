@@ -46,6 +46,8 @@
 - Added collection events to object history in the sidebar. See [frontend#140](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/140).
 - Updated Angular to v17.
 - Updated the [integration documentation](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/blob/master/docs/integrations.md) to be compatible with v5.0.0 of the [ATT&CK Navigator](https://github.com/mitre-attack/attack-navigator).
+- Updated the associated software, group, and campaigns to require a reference or description.
+- Added validation to new reference URLs to prevent duplicate references. See [frontend#541](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/541).
 
 ## 31 October 2023
 
