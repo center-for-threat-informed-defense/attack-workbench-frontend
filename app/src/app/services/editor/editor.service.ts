@@ -44,11 +44,12 @@ export class EditorService {
                 let attackType = this.route.root.firstChild.snapshot.data.breadcrumb;
                 this.editable = editable.length > 0 && editable.every(x => x) && this.authenticationService.canEdit(attackType);
                 this.hasWorkflow = attackType !== 'home';
-                if (!(this.editable && this.hasWorkflow)) this.sidebarService.currentTab = "references";
+                if (!(this.editable && this.hasWorkflow)) this.sidebarService.currentTab = "search";
                 this.sidebarService.setEnabled("history", this.editable && this.hasWorkflow);
                 this.sidebarService.setEnabled("notes", this.editable && this.hasWorkflow);
                 this.isGroup = false;
                 if (this.editable) {
+                    this.sidebarService.currentTab = "references";
                     // if we have a group type and it is NOT new we can create a collection from all of the objects in the group
                     this.isGroup = this.type === 'group' && !this.router.url.includes("/new");
                     if (!this.hasWorkflow) {
@@ -64,7 +65,7 @@ export class EditorService {
                         this.getRelationships().subscribe(rels => this.hasRelationships = rels > 0);
                     }
                 }
-                if (!this.editable) this.sidebarService.currentTab = "references";
+                if (!this.editable) this.sidebarService.currentTab = "search";
             }
         })
         this.route.queryParams.subscribe(params => {
@@ -81,7 +82,8 @@ export class EditorService {
             maxWidth: "35em",
             data: {
                 message: '# Are you sure you want to discard changes?',
-            }
+            },
+			autoFocus: false, // prevents auto focus on toolbar buttons
         });
 
         let subscription = prompt.afterClosed().subscribe({

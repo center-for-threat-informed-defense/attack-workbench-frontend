@@ -2,7 +2,7 @@ import { Observable, of } from "rxjs";
 import { RestApiConnectorService } from "src/app/services/connectors/rest-api/rest-api-connector.service";
 import { ValidationData } from "../serializable";
 import {StixObject} from "./stix-object";
-import { logger } from "../../util/logger";
+import { logger } from "../../utils/logger";
 import { Technique } from "./technique";
 
 export class Tactic extends StixObject {
@@ -86,8 +86,6 @@ export class Tactic extends StixObject {
      * @returns {Observable} of the post
      */
     public save(restAPIService: RestApiConnectorService): Observable<Tactic> {
-        // TODO POST if the object was just created (doesn't exist in db yet)
-
         let postObservable = restAPIService.postTactic(this);
         let subscription = postObservable.subscribe({
             next: (result) => { this.deserialize(result.serialize()); },

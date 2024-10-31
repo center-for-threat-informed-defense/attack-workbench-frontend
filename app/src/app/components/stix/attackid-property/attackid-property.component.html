@@ -4,11 +4,11 @@
             <app-attackid-view [config]="config"></app-attackid-view>
             <button mat-icon-button *ngIf="config.object['attackID']" [cdkCopyToClipboard]="linkById"
                 (click)="snackbar.open('LinkById copied to clipboard', null, {duration: 1000})"
-                matTooltip="copy linkById" aria-label="copy linkById">
+                matTooltip="copy LinkById" aria-label="copy linkById">
                 <mat-icon>content_copy</mat-icon>
             </button>
         </div>
-        <label>ID</label>
+        <span class="labelled-box-label">ID</span>
     </div>
     <app-attackid-edit *ngIf="config.mode == 'edit'" [config]="config"></app-attackid-edit>
 </div>

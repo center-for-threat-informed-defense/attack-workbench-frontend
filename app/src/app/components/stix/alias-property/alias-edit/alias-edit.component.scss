@@ -1,9 +1,6 @@
 .alias-edit {
-    .mat-chip { 
-        cursor: pointer; 
-        // :hover {
-        //     .dark & { background: color-alternate(dark, 2) !important; }
-        //     .light & { background: color-alternate(light, 2) !important; }
-        // }
+    .mat-mdc-chip { 
+        cursor: pointer;
+		padding: 4px;
     }
 }

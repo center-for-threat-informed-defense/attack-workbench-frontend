@@ -2,21 +2,23 @@ import { Observable } from "rxjs";
 import { RestApiConnectorService } from "src/app/services/connectors/rest-api/rest-api-connector.service";
 import { ValidationData } from "../serializable";
 import { StixObject } from "./stix-object";
-import { logger } from "../../util/logger";
+import { logger } from "../../utils/logger";
 import { DataSource } from "./data-source";
 
 export class DataComponent extends StixObject {
     public name: string = "";
     public description: string = "";
     public domains: string[] = [];
-    public data_source_ref: string; // stix ID of the data source
+    public dataSourceRef: string; // stix ID of the data source
 
-    // NOTE: the following field will only be populated when this object is fetched using getDataComponent()
+    // NOTE: the following field will only be populated when this object 
+    // is fetched using RestApiConnectorServicegetDataComponent()
     public data_source: DataSource = null;
 
-    public readonly supportsAttackID = false; // data components do not support ATT&CK IDs
+    // data components do not support ATT&CK IDs
+    public readonly supportsAttackID = false;
     public readonly supportsNamespace = false;
-    protected get attackIDValidator() { return null; } // data components have no ATT&CK ID
+    protected get attackIDValidator() { return null; }
 
     constructor(sdo?: any) {
         super(sdo, "x-mitre-data-component");
@@ -30,7 +32,7 @@ export class DataComponent extends StixObject {
      * @param data_source the data source this component is a part of
      */
     public set_data_source_ref(data_source: DataSource): void {
-        this.data_source_ref = data_source.stixID;
+        this.dataSourceRef = data_source.stixID;
         this.data_source = data_source;
         this.workflow = undefined;
     }
@@ -45,7 +47,7 @@ export class DataComponent extends StixObject {
 
         rep.stix.name = this.name.trim();
         rep.stix.description = this.description;
-        rep.stix.x_mitre_data_source_ref = this.data_source_ref;
+        rep.stix.x_mitre_data_source_ref = this.dataSourceRef;
         rep.stix.x_mitre_domains = this.domains;
         
         return rep;
@@ -72,9 +74,9 @@ export class DataComponent extends StixObject {
         } else this.description = "";
 
         if ("x_mitre_data_source_ref" in sdo) {
-            if (typeof(sdo.x_mitre_data_source_ref) === "string") this.data_source_ref = sdo.x_mitre_data_source_ref;
+            if (typeof(sdo.x_mitre_data_source_ref) === "string") this.dataSourceRef = sdo.x_mitre_data_source_ref;
             else logger.error("TypeError: data source ref field is not a string:", sdo.x_mitre_data_source_ref, "(",typeof(sdo.x_mitre_data_source_ref),")")
-        } else this.data_source_ref = "";
+        } else this.dataSourceRef = "";
 
         if ("x_mitre_domains" in sdo) {
             if (this.isStringArray(sdo.x_mitre_domains)) this.domains = sdo.x_mitre_domains;
@@ -96,9 +98,7 @@ export class DataComponent extends StixObject {
      * @param restAPIService [RestApiConnectorService] the service to perform the POST/PUT through
      * @returns {Observable} of the post
      */
-    public save(restAPIService: RestApiConnectorService): Observable<DataComponent> {
-        // TODO POST if the object was just created (doesn't exist in db yet)
-                
+    public save(restAPIService: RestApiConnectorService): Observable<DataComponent> {                
         let postObservable = restAPIService.postDataComponent(this);
         let subscription = postObservable.subscribe({
             next: (result) => { this.deserialize(result.serialize()); },

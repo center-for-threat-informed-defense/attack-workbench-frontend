@@ -32,6 +32,23 @@
 
 # Changelog
 
+## Staged Changes
+
+### ATT&CK Workbench version 2.2.0
+
+#### New Features
+- Added a Contributors page which lists all contributors in the knowledge base. Users can view a list of contributions made by each individual and click on any object to navigate to its Workbench page. See [frontend#514](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/514).
+- Added a search tab to the resources drawer. See [frontend#521](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/pull/521).
+
+#### Improvements
+- Added the ability to view mapped techniques for a given data source. See [frontend#255](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/255).
+- Added support for viewing Assets on a configured external ATT&CK Website. See [frontend#526](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/526).
+- Added collection events to object history in the sidebar. See [frontend#140](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/140).
+- Updated Angular to v17.
+- Updated the [integration documentation](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/blob/master/docs/integrations.md) to be compatible with v5.0.0 of the [ATT&CK Navigator](https://github.com/mitre-attack/attack-navigator).
+- Updated the associated software, group, and campaigns to require a reference or description.
+- Added validation to new reference URLs to prevent duplicate references. See [frontend#541](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/541).
+
 ## 31 October 2023
 
 ### ATT&CK Workbench version 2.1.0

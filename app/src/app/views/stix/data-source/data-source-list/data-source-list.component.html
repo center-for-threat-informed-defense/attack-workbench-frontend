@@ -2,13 +2,17 @@
     <div class="list-page-header">
         <h1 class="with-help-icon">
             data sources
-            <popover-content #objectDescription placement="bottom">
-                <span>Data sources represent relevant information that can be collected by sensors or logs to detect adversary behaviors. Data sources include data components to provide an additional layer of context and identify the specific properties of a data source that are relevant to detecting an ATT&CK technique or sub-technique.</span>
-            </popover-content>
-            <mat-icon class="help-icon" [popover]="objectDescription" aria-label="help">help_outline</mat-icon>
+            <mat-icon class="help-icon" aria-label="help" cdkDrag #popoverTrigger2="mtxPopoverTrigger" [mtxPopoverTriggerFor]="popover" mtxPopoverTriggerOn="hover">
+                help_outline
+            </mat-icon>
+            <mtx-popover #popover="mtxPopover" [position]="['below', 'center']" enterDelay="25" leaveDelay="25">
+                <div style="max-width: 26em;">
+                    <span class="help-content">Data sources represent relevant information that can be collected by sensors or logs to detect adversary behaviors. Data sources include data components to provide an additional layer of context and identify the specific properties of a data source that are relevant to detecting an ATT&CK technique or sub-technique.</span>
+                </div>
+            </mtx-popover>
         </h1>
         <div class="button-group" *ngIf="canEdit">
-            <button mat-mini-fab class="extended-fab-button" color="primary" [routerLink]="['/data-source/new']" [queryParams]="{editing: true}">
+            <button mat-raised-button class="extended-button" color="primary" [routerLink]="['/data-source/new']" [queryParams]="{editing: true}">
                 <mat-icon>create</mat-icon> <span class="text-label">create a data source</span>
             </button>
         </div>

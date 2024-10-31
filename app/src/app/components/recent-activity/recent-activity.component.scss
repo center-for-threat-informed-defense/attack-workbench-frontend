@@ -1,6 +1,21 @@
 @import "../../../style/globals";
 .recent-activity {
     h3 { margin: 0; }
+	.recent-activity-list {
+		padding: 0;
+	}
+	.event-content {
+		padding-left: 16px;
+		flex: auto;
+		margin: auto;
+	}
+	.hide-overflow {
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		display: block;
+		box-sizing: border-box;
+	}
     .activity-event {
         &:hover {
             .dark & { background: color-alternate(dark); }

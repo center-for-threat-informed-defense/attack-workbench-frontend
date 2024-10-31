@@ -11,7 +11,7 @@ import { EditorService } from 'src/app/services/editor/editor.service';
 import { StixViewPage } from '../../stix-view-page';
 import { environment } from "../../../../../environments/environment";
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { logger } from "../../../../util/logger";
+import { logger } from "../../../../utils/logger";
 import { AuthenticationService } from 'src/app/services/connectors/authentication/authentication.service';
 import { MatDialog } from '@angular/material/dialog';
 import { CollectionUpdateDialogComponent } from 'src/app/components/collection-update-dialog/collection-update-dialog.component';
@@ -630,7 +630,7 @@ export class CollectionViewComponent extends StixViewPage implements OnInit {
         // prepare additional data loading
         this.loading = "fetching additional data";
         let apis = {
-            "attackObjects": this.restApiConnector.getAllObjects(null, null, null, null, true, true, false)
+            "attackObjects": this.restApiConnector.getAllObjects({revoked: true, deprecated: true, deserialize: false})
         }
 
         // fetch previous version if this was not a new collection

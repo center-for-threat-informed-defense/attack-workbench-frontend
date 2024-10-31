@@ -51,7 +51,7 @@ export class DefaultMarkingDefinitionsComponent implements OnInit {
         }
     }           
 
-    public updateDefaultMarkingDefs(popover?: any) {
+    public updateDefaultMarkingDefs() {
         let rows: StixObject[] = [];
         
         // only add statements
@@ -74,13 +74,13 @@ export class DefaultMarkingDefinitionsComponent implements OnInit {
         if (this.select.selected.length > 0) buttonLabelStr = "UPDATE";
 
         let prompt = this.dialog.open(AddDialogComponent, {
-            maxWidth: '70em',
-            maxHeight: '70em',
-            data: {
-            selectableObjects: rows,
-            select: this.select,
-            type: "marking-definition",
-            buttonLabel: buttonLabelStr
+				maxWidth: '70em',
+				maxHeight: '70em',
+				data: {
+				selectableObjects: rows,
+				select: this.select,
+				type: "marking-definition",
+				buttonLabel: buttonLabelStr
             },
         });
 
@@ -93,7 +93,6 @@ export class DefaultMarkingDefinitionsComponent implements OnInit {
                     })
                     this.requiresDefaultMarkingDefLoad = true;
                 }
-                if (popover) setTimeout(() => popover.hide());
             },
             complete: () => {
                 subscriptionPrompt.unsubscribe();

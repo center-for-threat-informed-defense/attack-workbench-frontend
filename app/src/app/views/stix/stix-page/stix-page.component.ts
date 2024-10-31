@@ -76,7 +76,8 @@ export class StixPageComponent implements OnInit, OnDestroy {
                     // patch LinkByIds on other objects if this object's ATT&CK ID has changed
                     patchID: this.objects[0].supportsAttackID && this.objectID && this.objectID != this.objects[0].attackID ? this.objectID : undefined,
                     versionAlreadyIncremented: versionChanged
-                }
+                },
+				autoFocus: false, // prevent auto focus on form field
             });
             
             let subscription = prompt.afterClosed().subscribe({

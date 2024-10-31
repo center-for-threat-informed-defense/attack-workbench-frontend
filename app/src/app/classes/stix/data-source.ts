@@ -1,5 +1,5 @@
 import { StixObject } from "./stix-object";
-import { logger } from "../../util/logger";
+import { logger } from "../../utils/logger";
 import { RestApiConnectorService } from "src/app/services/connectors/rest-api/rest-api-connector.service";
 import { Observable } from "rxjs";
 import { ValidationData } from "../serializable";
@@ -109,8 +109,6 @@ export class DataSource extends StixObject {
      * @returns {Observable} of the post
      */
     public save(restAPIService: RestApiConnectorService): Observable<DataSource> {
-        // TODO POST if the object was just created (doesn't exist in db yet)
-
         let postObservable = restAPIService.postDataSource(this);
         let subscription = postObservable.subscribe({
             next: (result) => { this.deserialize(result.serialize()); },

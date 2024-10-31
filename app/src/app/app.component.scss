@@ -24,8 +24,6 @@
             flex: 1;
             box-sizing: border-box;
             padding: 50px 50px;
-            // margin-top: 5px; // separate toolbar
-            // margin-right: 5px; // separate scrollbar
             overflow: auto;
         }
     }
@@ -50,4 +48,13 @@
 
 ::-webkit-scrollbar-corner {
   background: rgba(0,0,0,0);
+}
+
+.main-body {
+    .light & {
+        background-color: color(light);
+    }
+    .dark & {
+        background-color: color(dark);
+    }
 }

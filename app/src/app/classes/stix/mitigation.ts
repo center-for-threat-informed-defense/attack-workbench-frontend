@@ -2,7 +2,7 @@ import { Observable } from "rxjs";
 import { RestApiConnectorService } from "src/app/services/connectors/rest-api/rest-api-connector.service";
 import { ValidationData } from "../serializable";
 import {StixObject} from "./stix-object";
-import { logger } from "../../util/logger";
+import { logger } from "../../utils/logger";
 
 export class Mitigation extends StixObject {
     public name: string = "";
@@ -83,7 +83,6 @@ export class Mitigation extends StixObject {
      * @returns {Observable} of the post
      */
     public save(restAPIService: RestApiConnectorService): Observable<Mitigation> {
-        // TODO PUT if the object was just created (doesn't exist in db yet)
         let postObservable = restAPIService.postMitigation(this);
         let subscription = postObservable.subscribe({
             next: (result) => { this.deserialize(result.serialize()); },

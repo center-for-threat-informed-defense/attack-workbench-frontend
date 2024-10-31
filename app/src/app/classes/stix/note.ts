@@ -2,7 +2,7 @@ import { Observable } from "rxjs";
 import { RestApiConnectorService } from "src/app/services/connectors/rest-api/rest-api-connector.service";
 import { ValidationData } from "../serializable";
 import { StixObject } from "./stix-object";
-import { logger } from "../../util/logger";
+import { logger } from "../../utils/logger";
 
 export class Note extends StixObject {
     public title: string = "";
@@ -75,9 +75,7 @@ export class Note extends StixObject {
      * @param restAPIService [RestApiConnectorService] the service to perform the POST/PUT through
      * @returns {Observable} of the post
      */
-    public save(restAPIService: RestApiConnectorService): Observable<Note> {
-        // TODO PUT if the object was just created (doesn't exist in db yet)
-        
+    public save(restAPIService: RestApiConnectorService): Observable<Note> {        
         let postObservable = restAPIService.postNote(this);
         let subscription = postObservable.subscribe({
             next: (result) => { this.deserialize(result.serialize()); },

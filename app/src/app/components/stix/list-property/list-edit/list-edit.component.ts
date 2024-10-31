@@ -28,6 +28,7 @@ export class ListEditComponent implements OnInit, AfterContentChecked {
     public dataLoaded: boolean = false;
 
     // selection model (editType: 'stixList')
+	public stixControl: FormControl;
     public select: SelectionModel<string>;
     public type: string;
     public allObjects: StixObject[] = [];
@@ -71,6 +72,7 @@ export class ListEditComponent implements OnInit, AfterContentChecked {
     ngOnInit(): void {
         this.selectControl = new FormControl({value: this.config.object[this.config.field], disabled: this.config.disabled ? this.config.disabled : false});
         this.inputControl = new FormControl(null, this.config.required ? [Validators.required] : undefined);
+		this.stixControl = new FormControl(this.selectedValues());
         if (this.config.field == 'platforms' 
          || this.config.field == 'tactic_type' 
          || this.config.field == 'permissions_required' 
@@ -139,7 +141,7 @@ export class ListEditComponent implements OnInit, AfterContentChecked {
     }
 
     /** Clear attack ID field if parent technique is changed */
-    private onBlur() {
+    public onBlur() {
         if (this.config.label === 'parent technique' && !(this.config.object as StixObject).firstInitialized) {
             (this.config.object as StixObject).attackID = '';
         }

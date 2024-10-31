@@ -1,7 +1,9 @@
 .view-page {
     h1, h2 {
-        // width: 100%;
         text-align: center;
+		.mat-mdc-input-element {
+			text-align: center;
+		}
     }
     h1 {
         margin: 0;

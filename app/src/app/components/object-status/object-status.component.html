@@ -1,14 +1,19 @@
-<button mat-button class="control" matTooltip="settings"
-    popoverPlacement="bottom" 
-    [popover]="objectStatus"
-    [popoverOnHover]="false"
-    [disabled]="disabled"
-    (click)="loadData()">
+<button mat-icon-button 
+        class="control"
+        matTooltip="settings"
+        [disabled]="disabled"
+        (click)="loadData()"
+
+        cdkDrag
+        #popoverTrigger2="mtxPopoverTrigger"
+        [mtxPopoverTriggerFor]="popover"
+        mtxPopoverTriggerOn="click">
     <mat-icon aria-label="settings">settings</mat-icon>
 </button>
 
-<popover-content #objectStatus [closeOnClickOutside]="true">
-    <div class="workflow-status" *ngIf="loaded else loading">
+<mtx-popover #popover="mtxPopover"
+             [position]="['below', 'before']">
+    <div style="max-width: 14em;" class="workflow-status" *ngIf="loaded else loading">
         <mat-form-field class="workflow-status" appearance="outline">
             <mat-label>Workflow Status</mat-label>
             <mat-select [formControl]="statusControl">
@@ -24,4 +29,4 @@
     <ng-template #loading>
         <app-loading-overlay></app-loading-overlay>
     </ng-template>
-</popover-content>
+</mtx-popover>

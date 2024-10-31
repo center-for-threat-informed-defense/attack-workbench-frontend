@@ -42,38 +42,41 @@ Clone the [ATT&CK Navigator](https://github.com/mitre-attack/attack-navigator) r
 
 ### 2. Update the config
 
-Edit the config file `nav-app/src/assets/config.json` by prepending a new object to the versions array connecting to the ATT&CK Workbench REST API. Refer to [Workbench REST API URLs, above](#workbench-rest-api-urls), for the values for the enterprise, mobile and ICS URLs.
+Edit the config file `nav-app/src/assets/config.json` by enabling and adding an object to the versions array connecting to the ATT&CK Workbench REST API. Refer to [Workbench REST API URLs, above](#workbench-rest-api-urls), for the values for the enterprise, mobile and ICS URLs.
 
 ```json
 {
-    "versions": [
-        {
-            "name": "ATT&CK Workbench Data",
-            "version": "11",
-            "authentication": {
-                "enabled": true,
-                "serviceName": "navigator",
-                "apiKey": "sample-navigator-apikey"
-            },
-            "domains": [
-                {
-                    "name": "Enterprise",
-                    "identifier": "enterprise-attack",
-                    "data": ["(Enterprise URL)"]
+    "versions": {
+        "enabled": true,
+        "data": [
+            {
+                "name": "ATT&CK Workbench Data",
+                "version": "14",
+                "authentication": {
+                    "enabled": true,
+                    "serviceName": "navigator",
+                    "apiKey": "sample-navigator-apikey"
                 },
-                {
-                    "name": "Mobile",
-                    "identifier": "mobile-attack",
-                    "data": ["(Mobile URL)"]
-                },
-                {
-                    "name": "ICS",
-                    "identifier": "ics-attack",
-                    "data": ["(ICS URL)"]
-                }
-            ]
-        }
-    ]
+                "domains": [
+                    {
+                        "name": "Enterprise",
+                        "identifier": "enterprise-attack",
+                        "data": ["(Enterprise URL)"]
+                    },
+                    {
+                        "name": "Mobile",
+                        "identifier": "mobile-attack",
+                        "data": ["(Mobile URL)"]
+                    },
+                    {
+                        "name": "ICS",
+                        "identifier": "ics-attack",
+                        "data": ["(ICS URL)"]
+                    }
+                ]
+            }
+        ]
+    }
 }
 ```
 
