@@ -1,5 +1,5 @@
 <div class="add-relationship-button">
-    <button *ngIf="!loading else loadingDisplay" mat-mini-fab class="extended-fab-button" color="primary" (click)="createRelationship()">
+    <button *ngIf="!loading else loadingDisplay" mat-raised-button class="extended-button" color="primary" (click)="createRelationship()">
         <mat-icon>add</mat-icon> <span class="text-label">{{config.label}}</span>
     </button>
     <ng-template #loadingDisplay>

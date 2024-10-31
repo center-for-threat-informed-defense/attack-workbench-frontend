@@ -5,7 +5,7 @@
                 <span>{{date}}</span>
             </div>
         </div>
-        <label>{{config.label? config.label : config.field}}</label>
+        <span class="labelled-box-label">{{config.label? config.label : config.field}}</span>
     </div>
     <ng-container *ngIf="config.mode == 'edit'">
         <mat-form-field class="timestamp-edit" appearance="outline">

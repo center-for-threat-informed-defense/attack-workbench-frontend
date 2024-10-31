@@ -16,7 +16,7 @@ import { SidebarService } from 'src/app/services/sidebar/sidebar.service';
 import { MatSelect } from '@angular/material/select';
 import { AddDialogComponent } from '../../add-dialog/add-dialog.component';
 import { Collection } from 'src/app/classes/stix/collection';
-import { logger } from 'src/app/util/logger';
+import { logger } from 'src/app/utils/logger';
 
 @Component({
     selector: 'app-stix-list',
@@ -167,10 +167,7 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
                 this.showControls = this.config.showControls ?? true;
                 this.buildTable();
                 this.setUpControls();
-                // get objects from backend if data is not from config
-                if (!("stixObjects" in this.config)) {
-                    this.applyControls();
-                }
+                this.applyControls();
             }
         });
     }
@@ -356,6 +353,7 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
         }
         else {
             this.groupBy = ["type"];
+            this.addColumn("", "state", "icon");
             this.addColumn("type", "attackType", "plain");
             this.addColumn("ID", "attackID", "plain", false);
             this.addColumn("name", "name", "plain", true, ["name"]);
@@ -492,7 +490,7 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
                 clearSelection: true,
             },
             minHeight: "50vh",
-            maxHeight: "75vh"
+            maxHeight: "75vh",
         })
         let subscription = prompt.afterClosed().subscribe({
             next: result => {
@@ -516,9 +514,10 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
                 data: {
                     object: element,
                     editable: this.config.allowEdits,
-                    sidebarControl: this.config.allowEdits ? "events" : "disable"
+                    sidebarControl: this.config.allowEdits ? "events" : "disable",
                 },
-                maxHeight: "75vh"
+                maxHeight: "75vh",
+				autoFocus: false, // prevents auto focus on toolbar buttons
             })
             let subscription = prompt.afterClosed().subscribe({
                 next: result => {
@@ -581,6 +580,10 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
     public getAccessibleRoutes(attackType: string, routes: any[],) {
         return routes.filter(route => this.canAccess(attackType, route) && this.canEdit(route));
     }
+
+	public routeTo(url, queryParams): void {
+		this.router.navigate([url], {queryParams: queryParams});
+	}
 
     private canAccess(attackType: string, route: any) {
         if (route.label && route.label == 'edit' && !this.authenticationService.canEdit(attackType)) {
@@ -737,22 +740,26 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
                 
                 // filter by workflow status
                 if (state) {
-                  filtered = filtered.filter((obj:any)=> obj.workflow && obj.workflow.state == state)
+                    filtered = filtered.filter((obj:any)=> obj.workflow && obj.workflow.state == state)
                 }
 
                 // filter by deprecation status
                 if (exclusiveDeprecated) {
-                  filtered = filtered.filter((obj:any)=> obj.deprecated)
+                    filtered = filtered.filter((obj:any)=> obj.deprecated)
+                } else if (deprecated) {
+                    filtered = filtered.filter((obj: any) => obj || obj.deprecated);
+                } else {
+                    filtered = filtered.filter((obj: any) => !obj.deprecated);
                 }
 
-                // filter by deprecation status
+                // filter by revocation status
                 if (exclusiveRevoked) {
-                  filtered = filtered.filter((obj:any)=> obj.revoked)
+                    filtered = filtered.filter((obj:any)=> obj.revoked)
                 }
 
                 // filter by users
                 if (Array.isArray(this.userIdsUsedInSearch) && this.userIdsUsedInSearch.length > 0) {
-                  filtered = filtered.filter((obj:any)=> obj.workflow && this.userIdsUsedInSearch.includes(obj.workflow.created_by_user_account));
+                    filtered = filtered.filter((obj:any)=> obj.workflow && this.userIdsUsedInSearch.includes(obj.workflow.created_by_user_account));
                 }
 
                 // filter to objects matching searchString

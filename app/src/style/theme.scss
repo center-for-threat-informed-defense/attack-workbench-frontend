@@ -1,7 +1,6 @@
 @use '@angular/material' as mat;
 @import "./colors.scss";
 @import "./typography.scss";
-
 @include mat.core();
 
 ::-webkit-scrollbar {
@@ -15,15 +14,35 @@
 }
 
 //custom color theme
-.light {
-    @include mat.all-component-themes((
+$light-theme: mat.define-light-theme((
+    color: (
         primary: mat.define-palette(to-material-map(primary), 50, 100, 200),
         accent: mat.define-palette(to-material-map(secondary), 50, 100, 200),
         foreground: mat.define-palette(to-material-map(dark), 50, 100, 200),
         background: mat.define-palette(to-material-map(light), 50, 100, 200),
         warn: mat.define-palette(to-material-map(warn)),
-        is-dark: false
-    ));
+    ),
+    // only include 'typography' and 'density' in default theme
+    typography: $custom-typography,
+    density: 0,
+));
+
+$dark-theme: mat.define-dark-theme((
+    color: (
+        primary: mat.define-palette(to-material-map(primary), 50, 100, 200),
+        accent: mat.define-palette(to-material-map(secondary), 50, 100, 200),
+        foreground: mat.define-palette(to-material-map(light), 50, 100, 200),
+        background: mat.define-palette(to-material-map(dark), 50, 100, 200),
+        warn: mat.define-palette(to-material-map(warn)),
+    ),
+));
+
+// apply light theme by default
+@include mat.core-theme($light-theme);
+@include mat.button-theme($light-theme);
+
+@include mat.all-component-themes($light-theme);
+.light {
     background: color(light);
     color: on-color(light);
     ::-webkit-scrollbar-thumb {
@@ -58,14 +77,8 @@
     .matrix-container { border-color: on-color-deemphasis(light) }
 }
 .dark {
-    @include mat.all-component-themes((
-        primary: mat.define-palette(to-material-map(primary), 50, 100, 200),
-        accent: mat.define-palette(to-material-map(secondary), 50, 100, 200),
-        foreground: mat.define-palette(to-material-map(light), 50, 100, 200),
-        background: mat.define-palette(to-material-map(dark), 50, 100, 200),
-        warn: mat.define-palette(to-material-map(warn)),
-        is-dark: true
-    ));
+    @include mat.all-component-colors($dark-theme);
+
     background: color(dark);
     color: on-color(dark);
     ::-webkit-scrollbar-thumb {
@@ -102,56 +115,56 @@
 
 $tooltip-color: color-alternate(dark, 4);
 //patch overlays for theme compatibility
-.cdk-overlay-container, .cdk-overlay-container{ //ensure that overlay doesn't visually cover everything
+.cdk-overlay-container, .cdk-overlay-container { //ensure that overlay doesn't visually cover everything
     background: transparent;
-    .mat-tooltip { // tooltip styling
+    .mat-mdc-tooltip { // tooltip styling
         background: $tooltip-color;
     }
-    &.dark .mat-menu-panel {
+    &.dark .mat-mdc-menu-panel {
         background: color(dark);
         color: on-color(dark);
-        .mat-menu-item:hover {
+        .mat-mdc-menu-item:hover {
             background: color-alternate(dark);
         }
-        .mat-menu-item:disabled {
+        .mat-mdc-menu-item:disabled {
             color: on-color-deemphasis(dark);
         }
     }
-    &.light .mat-menu-panel {
+    &.light .mat-mdc-menu-panel {
         background: color(light);
         color: on-color(light);
-        .mat-menu-item:hover {
+        .mat-mdc-menu-item:hover {
             background: color-alternate(light);
         }
-        .mat-menu-item:disabled {
+        .mat-mdc-menu-item:disabled {
             color: on-color-deemphasis(light);
         }
     }
-    &.dark .mat-dialog-container {
+    &.dark .mat-mdc-dialog-surface {
         background: color(dark);
         color: on-color(dark);
     }
-    &.light .mat-dialog-container {
+    &.light .mat-mdc-dialog-surface {
         background: color(light);
         color: on-color(light);
     }
 
-    &.light .mat-snack-bar-container {
+    &.light .mat-mdc-snack-bar-container {
         background: color(light);
         color: on-color(light);
     }
-    &.dark .mat-snack-bar-container {
+    &.dark .mat-mdc-snack-bar-container {
         background: color(dark);
         color: on-color(dark);
     }
-    .mat-snack-bar-container.success {
+    .mat-mdc-snack-bar-container.success {
         background: color(success);
         color: on-color(success);
         button {
             color: on-color(success)
         }
     }
-    .mat-snack-bar-container.warn {
+    .mat-mdc-snack-bar-container.warn {
         background: color(warn);
         color: on-color(warn);
         button {
@@ -159,10 +172,10 @@ $tooltip-color: color-alternate(dark, 4);
         }
     }
 
-    &.light .mat-select-panel .mat-option.mat-active {
+    &.light .mat-mdc-select-panel .mat-mdc-option.mat-active {
         background: color-alternate(light, 2.5);
     }
-    &.dark .mat-select-panel .mat-option.mat-active {
+    &.dark .mat-mdc-select-panel .mat-mdc-option.mat-active {
         background: color-alternate(dark, 2.5);
     }
 
@@ -173,47 +186,131 @@ $tooltip-color: color-alternate(dark, 4);
         background: color-alternate(dark);
     }
 }
+
 //patch popover style
-.popover {
-    //positioning because we didn't import bootstrap
-    position: absolute;
-    // add border radius
+// https://ng-matero.github.io/extensions/components/popover/overview
+.mtx-popover-panel {
+    padding: 0 !important;
+    .mtx-popover-direction-arrow::after, .mtx-popover-direction-arrow::before {
+        color: $tooltip-color !important;
+    }
+}
+.mtx-popover-content {
     border-radius: 4px !important;
-    //don't force 20rem width, conform to content of popover
-    width: unset !important;
-    //override default colors
+    padding: 1.5em;
+    color: color(light);
     background-color: $tooltip-color !important;
-    .arrow::before, .arrow::after {
-        border-bottom-color: $tooltip-color !important;
+
+    .c-align-popover {
+        text-transform: lowercase;
+        text-align: center;
+    }
+    .history-peek {
+        .labelled-box {
+            margin-bottom: 8px;
+        }
+    }
+    .help-content {
+        width: 100% !important;
+        display: block !important;
+        text-align: justify !important;
+        line-height: 1.25 !important;
+        font-size: 17px !important;
+        word-spacing: .25px !important;
     }
 
-    //override child labelled-box borders for visibility
+    // override child labelled-box borders for visibility
     .labelled-box .content {
-        &, & + label, .suffix {
+        ul {
+            margin: .5em 0 !important;
+        }
+        &, & + .labelled-box-label, .suffix {
             border-right-color: on-color-deemphasis(dark) !important;
             border-left-color: on-color-deemphasis(dark)!important;
             border-bottom-color: on-color-deemphasis(dark) !important;
         }
-        & + label::before, & + label::after {
+        & + .labelled-box-label::before, & + .labelled-box-label::after {
             border-top-color: on-color-deemphasis(dark) !important;
         }
         border-top-color: transparent !important;
-
     }
 
     // override mat-chip styles
-    .mat-chip.mat-standard-chip {
-        height: auto!important;
+    .mat-mdc-chip.mat-mdc-standard-chip {
         background: color-alternate(dark) !important;
-        color: on-color(dark) !important;
+        .v-align {
+            color: on-color(dark) !important;
+        }
+    }
+
+    // override styles for object status popover
+    .workflow-status {
+        .mat-mdc-form-field { display: flex; }
+        .mdc-text-field--outlined:not(.mdc-text-field--disabled):not(.mdc-text-field--invalid),
+        .mdc-text-field--outlined:not(.mdc-text-field--disabled):not(.mdc-text-field--invalid):hover {
+            .mdc-notched-outline__leading,
+            .mdc-notched-outline__notch,
+            .mdc-notched-outline__trailing {
+                border-color: color(light);
+            }
+            .mat-mdc-floating-label {
+                color: color(light);
+            }
+        }
+        .mdc-text-field--outlined:hover {
+            .mdc-notched-outline__leading,
+            .mdc-notched-outline__notch,
+            .mdc-notched-outline__trailing {
+                border-width: 2px;
+            }
+        }
+        .mat-mdc-floating-label {
+            text-transform: lowercase;
+        }
+        .mat-mdc-select,
+        .mat-mdc-select-arrow {
+            color: color(light);
+        }
+        .status-options {
+            .mat-mdc-checkbox:not(.mat-mdc-checkbox-checked) {
+                &:not(.disabled) {
+                    .mdc-checkbox__background {
+                        border-color: color(light) !important;
+                    }
+                }
+                &.disabled {
+                    .mdc-checkbox__background {
+                        border-color: on-color-deemphasis(light) !important;
+                    }
+                }
+            }
+            .mat-mdc-checkbox {
+                &:not(.disabled) {
+                    .mdc-label {
+                        color: color(light)
+                    }
+                }
+                &.disabled {
+                    .mdc-label {
+                        color: on-color-deemphasis(light) !important;
+                    }
+                }
+            }
+            .mat-mdc-checkbox.mat-mdc-checkbox-checked .mdc-checkbox__checkmark {
+                color: color(light);
+            }
+            .mat-mdc-checkbox + .mat-mdc-checkbox {
+                padding-left: 10px !important;
+            }
+        }
     }
 }
 
-button.mat-stroked-button:disabled {
+button.mat-mdc-outlined-button:disabled {
     opacity: 0.5;
 }
 
-.mat-select-panel {
+.mat-mdc-select-panel {
     .light & {
         color: on-color(light);
         background: color(light);
@@ -224,12 +321,46 @@ button.mat-stroked-button:disabled {
     }
 }
 
-.mat-card .mat-card-header {
+.mdc-text-field--filled:not(.mdc-text-field--disabled),
+.mat-mdc-paginator,
+.mat-expansion-panel,
+.mat-stepper-vertical {
+	.light & {
+		background-color: color(light) !important;
+	}
+	.dark & {
+		background-color: color(dark) !important;
+	}
+}
+.mat-step-icon:not(.mat-step-icon-selected) {
+    .light & {
+        background-color: border-color(light);
+    }
+    .dark & {
+        background-color: border-color(dark);
+    }
+}
+// remove form field focus overlay
+.mat-mdc-form-field-focus-overlay {
+	background-color: transparent !important;
+}
+
+.mdc-text-field--filled:not(.mdc-text-field--disabled) .mdc-line-ripple::before {
+	.light & {
+		border-bottom-color: border-color(light) !important;
+	}
+	.dark & {
+		border-bottom-color: border-color(dark) !important;
+	}
+
+}
+
+.mat-mdc-card .mat-mdc-card-header {
     .light & { background: color-alternate(light); }
     .dark & { background: color-alternate(dark); }
 }
 
-.mat-chip.mat-standard-chip {
+.mat-mdc-chip.mat-mdc-standard-chip {
     height: auto!important;
     .light & { background: color-alternate(light); }
     .dark &  { background: color-alternate(dark); }
@@ -239,7 +370,6 @@ button.mat-stroked-button:disabled {
     .dark & { color: on-color(dark); }
     .light & { color: on-color(light); }
 }
-/* You can add global styles to this file, and also import other style files */
 html, body { height: 100%; }
 body {
     margin: 0;

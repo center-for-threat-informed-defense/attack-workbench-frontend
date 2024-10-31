@@ -2,7 +2,7 @@ import { Observable } from "rxjs";
 import { RestApiConnectorService } from "src/app/services/connectors/rest-api/rest-api-connector.service";
 import { ValidationData } from "../serializable";
 import { StixObject } from "./stix-object";
-import { logger } from "../../util/logger";
+import { logger } from "../../utils/logger";
 
 type type_software = "malware" | "tool"
 export class Software extends StixObject {

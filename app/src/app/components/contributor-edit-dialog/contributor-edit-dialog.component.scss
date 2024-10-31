@@ -1,0 +1,32 @@
+@import "../../../style/globals.scss";
+
+.contributor-dialog {
+    mat-toolbar {
+        @extend %toolbar;
+        padding-left: 0;
+        .mat-icon { vertical-align: middle; } // vertically center icons
+    }
+    .view-contributor {
+        padding: 25px;
+        .title { margin-top: 0px; }
+        .align-center { text-align: center; }
+        .padded { padding: 13px 0; }
+        input {
+            font-size: 1.5em;
+            font-family: Poppins, Arial, sans-serif;
+            letter-spacing: 0.5pt;
+            font-weight: 700;
+        }
+    }
+    .edit-contributor {
+        width: 36em;
+        text-align: center;
+
+		input {
+			text-align: center;
+		}
+    }
+    .mat-mdc-form-field .mat-mdc-form-field-subscript-wrapper {
+		display: none;
+    }
+}

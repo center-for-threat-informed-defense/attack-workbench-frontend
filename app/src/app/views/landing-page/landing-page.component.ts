@@ -20,7 +20,7 @@ export class LandingPageComponent implements OnInit, OnDestroy {
     public routes: any[] = [];
 
     constructor(private restApiConnector: RestApiConnectorService, private authenticationService: AuthenticationService, private dialog: MatDialog, private router: Router) {
-        this.routes = stixRoutes;
+        this.routes = stixRoutes.filter(route => !route.data.more);
     }
 
     public get isAdmin(): boolean { return this.authenticationService.isAuthorized([Role.ADMIN]); }
@@ -60,7 +60,8 @@ export class LandingPageComponent implements OnInit, OnDestroy {
                                 message: '### Your organization identity has not yet been set.\n\nYour organization identity is used for attribution of edits you make to objects in the knowledge base and is attached to published collections. Currently, a placeholder is being used.\n\nUpdate your organization identity now?',
                                 yes_suffix: "edit my identity now",
                                 no_suffix: "edit my identity later"
-                            }
+                            },
+							autoFocus: false, // prevents auto focus on buttons
                         })
                         let prompt_subscription = prompt.afterClosed().subscribe({
                             next: (prompt_result) => {

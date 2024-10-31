@@ -19,7 +19,7 @@ import { Tactic } from 'src/app/classes/stix/tactic';
 import { Technique } from 'src/app/classes/stix/technique';
 import { environment } from "../../../../environments/environment";
 import { ApiConnector } from '../api-connector';
-import { logger } from "../../../util/logger";
+import { logger } from "../../../utils/logger";
 import { DataSource } from 'src/app/classes/stix/data-source';
 import { DataComponent } from 'src/app/classes/stix/data-component';
 import { UserAccount } from 'src/app/classes/authn/user-account';
@@ -427,30 +427,45 @@ export class RestApiConnectorService extends ApiConnector {
      * @param {boolean} [deprecated] if true, get deprecated objects
      * @param {boolean} [deserialize] if true, deserialize objects to full STIX objects
      * @param {string[]} [lastUpdatedBy] filter to only include objects modified by the list of given user IDs
+     * @param {string} [search] if specified, return objects where the query occurs in the name, description, or ATT&CK ID; the search is case-insensitive
      * @returns {Observable<any[]>} observable of retrieved objects
      */
-    public getAllObjects(attackIDs?: string[], limit?: number, offset?: number, state?: string, revoked?: boolean, deprecated?: boolean, deserialize?: boolean, lastUpdatedBy?: string[]) {
+    public getAllObjects(options?: {
+        attackIDs?: string[],
+        limit?: number,
+        offset?: number,
+        state?: string,
+        revoked?: boolean,
+        deprecated?: boolean,
+        deserialize?: boolean,
+        lastUpdatedBy?: string[],
+        search?: string,
+    }) {
         let query = new HttpParams({ encoder: new CustomEncoder() });
+
         // pagination
-        if (limit) query = query.set("limit", limit.toString());
-        if (offset) query = query.set("offset", offset.toString());
-        if (limit || offset) query = query.set("includePagination", "true");
+        if (options?.limit) query = query.set("limit", options.limit.toString());
+        if (options?.offset) query = query.set("offset", options.offset.toString());
+        if (options?.limit || options?.offset) query = query.set("includePagination", "true");
         // ATT&CK ID filter
-        if (attackIDs) {
-            attackIDs.forEach(id => query = query.append("attackId", id));
+        if (options?.attackIDs) {
+            options.attackIDs.forEach(id => query = query.append("attackId", id));
         }
         // object state
-        if (state) query = query.set("state", state);
-        if (revoked) query = query.set("includeRevoked", revoked ? "true" : "false");
-        if (deprecated) query = query.set("includeDeprecated", deprecated ? "true" : "false");
+        if (options?.state) query = query.set("state", options.state);
+        if (options?.revoked) query = query.set("includeRevoked", options.revoked ? "true" : "false");
+        if (options?.deprecated) query = query.set("includeDeprecated", options.deprecated ? "true" : "false");
+        // searching
+        if (options?.search) query = query.set("search", options.search);
         // lastUpdatedBy
-        if (lastUpdatedBy) lastUpdatedBy.forEach(user => query = query.append('lastUpdatedBy', user));
+        if (options?.lastUpdatedBy) options.lastUpdatedBy.forEach(user => query = query.append('lastUpdatedBy', user));
+
         return this.http.get(`${this.apiUrl}/attack-objects`, { params: query }).pipe(
             tap(results => logger.log(`retrieved ATT&CK objects`, results)), // on success, trigger the success notification
             map(results => {
-                if (!deserialize) return results; //skip deserialization if param not added
+                if (!options?.deserialize) return results; //skip deserialization if param not added
                 let response = results as any;
-                if (limit || offset) { // returned a paginated
+                if (options?.limit || options?.offset) { // returned a paginated
                     let data = response.data as Array<any>;
                     data = data.filter(y => !["marking-definition", "identity"].includes(y.stix.type)).map(y => {
                         if (y.stix.type == "malware" || y.stix.type == "tool") return new Software(y.stix.type, y);
@@ -601,7 +616,7 @@ export class RestApiConnectorService extends ApiConnector {
                     let x = result as any[];
                     if (x[0].attackType != "data-component") return of(result);
                     let d = x[0] as DataComponent;
-                    return this.getDataSource(d.data_source_ref).pipe( // fetch data source from REST API
+                    return this.getDataSource(d.dataSourceRef).pipe( // fetch data source from REST API
                         map(data_source => {
                             let ds = data_source as DataSource[];
                             d.data_source = ds[0];
@@ -1163,7 +1178,7 @@ export class RestApiConnectorService extends ApiConnector {
         return dataComponents$.pipe(
             map(result => { // get related data component objects
                 let dataComponents = result.data as DataComponent[];
-                return dataComponents.filter(d => d.data_source_ref == id);
+                return dataComponents.filter(d => d.dataSourceRef == id);
             }),
             mergeMap(dataComponents => { // get relationships for each data component
                 let relatedTo = dataComponents.map(dc => this.getRelatedTo({ sourceOrTargetRef: dc.stixID }));

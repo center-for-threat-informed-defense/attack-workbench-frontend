@@ -2,7 +2,7 @@ import { Observable, of } from 'rxjs';
 import { RestApiConnectorService } from '../services/connectors/rest-api/rest-api-connector.service';
 import { Serializable, ValidationData } from './serializable';
 import { VersionNumber } from './version-number';
-import { logger } from "../util/logger";
+import { logger } from "../utils/logger";
 
 // https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/blob/develop/docs/collections.md#collection-version-properties
 export class CollectionVersion extends Serializable  {

@@ -6,10 +6,10 @@
     </mat-form-field>
     <mat-form-field appearance="outline">
         <mat-label>associated {{config.object.attackType}} description or citation</mat-label>
-        <input matInput [(ngModel)]="aliasDescription">
+        <input matInput required [(ngModel)]="aliasDescription">
     </mat-form-field>
     <div class="buttons">
         <button mat-button matDialogClose>cancel</button>
-        <button mat-stroked-button [disabled]="config.aliasName.length < 1" (click)="setAlias()">confirm</button>
+        <button mat-stroked-button [disabled]="!config.aliasName.length || !aliasDescription.length" (click)="setAlias()">confirm</button>
     </div>
 </div>

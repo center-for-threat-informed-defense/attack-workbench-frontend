@@ -12,6 +12,8 @@ We developed the Workbench with the ATT&CK user community in mind. If MITRE ATT&
 
 This repository contains an Angular-based web application providing the user interface for the ATT&CK Workbench application, as well as the main documentation regarding its use. The ATT&CK Workbench application requires additional components for full operation. See the [install and run](#install-and-run) instructions for more details about setting up the entire project.
 
+The ATT&CK Workbench does not collect or share information with MITRE or any third parties.
+
 ## Frontend Documentation
 
 For more information about the ATT&CK Workbench, please see the [docs](/docs/README.md) folder. The contents of the docs folder is also available in the in-app help page.
@@ -57,7 +59,7 @@ Please refer to our [Docker install instructions](docs/docker-compose.md) for in
 
 #### Requirements
 
-- [Node.js](https://nodejs.org/) version 16 or greater
+- [Node.js](https://nodejs.org/) version `18.20.2` or greater
 
 #### Installing dependencies
 This step is necessary for cases where the app is deployed locally through `ng serve` or `ng build`. It can be skipped for installs using docker (above).
@@ -118,7 +120,7 @@ https://github.com/mitre-attack/attack-navigator/
 
 ## Notice 
 
-Copyright 2020-2023 MITRE Engenuity. Approved for public release. Document number CT0020 and public release case number 22-3206.
+Copyright 2020-2024 MITRE Engenuity. Approved for public release. Document number CT0020 and public release case number 22-3206.
 
 Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at 
 

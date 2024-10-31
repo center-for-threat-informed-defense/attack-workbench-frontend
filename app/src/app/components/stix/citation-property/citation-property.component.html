@@ -3,7 +3,7 @@
         <div class="content">
             <app-citation-view [config]="config"></app-citation-view>
         </div>
-        <label>{{config.label}}</label>
+        <span class="labelled-box-label">{{config.label}}</span>
     </div>
     <div *ngIf="config.mode == 'edit'" class="grow-to-row">
         <app-citation-edit [config]="config"></app-citation-edit>

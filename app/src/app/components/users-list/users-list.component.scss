@@ -3,14 +3,12 @@
   max-width: 60em;
   margin: 0 auto;
   border-radius: 4px;
+  .mat-mdc-chip-action-label {
+    font-weight: 500 !important;
+  }
   .role, .status {
     &.active { background-color: color(active) }
     &.pending { background-color: color(pending); }
-  }
-  
-  .mat-icon-button.mat-button-disabled {
-    .dark & { color: on-color-deemphasis(dark); }
-    .light & { color: on-color-deemphasis(light); }
   }
   
   .input-group {
@@ -22,9 +20,12 @@
     .search {
       flex-grow: 1;
     }
-  
-    border-bottom: 1px solid;
-  
+
+	.mat-mdc-floating-label {
+		.light & { color: on-color-deemphasis(light); }
+		.dark &  { color: on-color-deemphasis(dark); }
+	}
+    
     .light & {
       border-color: border-color(light);
     }
@@ -32,23 +33,12 @@
     .dark & {
       border-color: border-color(dark);
     }
-  
-    .mat-form-field-wrapper {
-      margin-bottom: -1.34375em; // remove bottom padding used for hint
+    .mat-mdc-form-field-subscript-wrapper {
+      display: none;
     }
   }
   
-  .mat-form-field-label {
-    .light & {
-      color: on-color-deemphasis(light);
-    }
-  
-    .dark & {
-      color: on-color-deemphasis(dark);
-    }
-  }
-  
-  .mat-checkbox {
+  .mat-mdc-checkbox {
     padding: 12px;
   }
   
@@ -70,6 +60,8 @@
     max-width: 100%;
     display: flex;
     flex-direction: column;
+	.dark & { border-bottom: 1px solid border-color(dark); }
+	.light & { border-bottom: 1px solid border-color(light); }
 
     table {
       flex: 1 0 auto;
@@ -106,26 +98,12 @@
         }
       }
 
-      .mat-cell + .mat-cell, .mat-header-cell + .mat-header-cell {
+      .mat-mdc-cell + .mat-cell, .mat-mdc-header-cell + .mat-header-cell {
         padding-left: 12px;
       }
 
-      .mat-column-status .mat-select-value {
-        width: 85%;
-      }
-
-      // cell with just an icon in it
-      .mat-cell.icon-cell {
-        width: 24px; //no need for text, icons are 24px wide
-        .mat-icon {
-          vertical-align: middle;
-        }
-
-        //vertically center icons
-      }
-
       //row action styles
-      .mat-cell.mat-column-end-action, .mat-cell.mat-column-start-action {
+      .mat-mdc-cell.mat-column-end-action, .mat-cell.mat-column-start-action {
         cursor: pointer;
 
         .dark & {
@@ -143,7 +121,7 @@
       }
 
       .mat-column-start-action {
-        &.mat-cell {
+        &.mat-mdc-cell {
           .light & {
             outline: 1px solid border-color(light);
           }
@@ -158,7 +136,7 @@
       }
 
       .mat-column-end-action {
-        &.mat-cell {
+        &.mat-mdc-cell {
           .light & {
             outline: 1px solid border-color(light);
           }

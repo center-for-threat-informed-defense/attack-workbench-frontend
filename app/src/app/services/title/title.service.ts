@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { Router, ActivatedRoute, NavigationEnd } from '@angular/router';
 import { filter, map, mergeMap } from 'rxjs/operators';
-import { logger } from "../../util/logger";
+import { logger } from "../../utils/logger";
 
 @Injectable({
   providedIn: 'root'

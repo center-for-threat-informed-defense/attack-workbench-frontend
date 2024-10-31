@@ -3,7 +3,7 @@
         <div class="content">
             <app-descriptive-view [config]="config"></app-descriptive-view>
         </div>
-        <label>{{config.label}}</label>
+        <span class="labelled-box-label">{{config.label}}</span>
     </div>
     <div *ngIf="config.mode == 'diff'">
         <app-descriptive-diff [config]="config"></app-descriptive-diff>

@@ -47,10 +47,9 @@ import { MatNativeDateModule } from '@angular/material/core';
 import { MatBadgeModule } from '@angular/material/badge';
 
 // other library imports
-// import { BreadcrumbModule } from "angular-crumbs";
-import { MaterialFileInputModule } from 'ngx-material-file-input';
+import { MaterialFileInputModule } from 'ngx-custom-material-file-input';
 import { MarkdownModule } from "ngx-markdown";
-import { PopoverModule } from "ngx-smart-popover";
+import { MtxPopoverModule } from "@ng-matero/extensions/popover";
 import { NgxJdenticonModule, JDENTICON_CONFIG } from 'ngx-jdenticon';
 import { AutosizeModule } from 'ngx-autosize';
 
@@ -70,6 +69,7 @@ import { AddDialogComponent } from './components/add-dialog/add-dialog.component
 import { DeleteDialogComponent } from './components/delete-dialog/delete-dialog.component';
 import { HistoryTimelineComponent } from "./components/resources-drawer/history-timeline/history-timeline.component";
 import { ReferenceSidebarComponent } from "./components/resources-drawer/reference-sidebar/reference-sidebar.component";
+import { SearchComponent } from './components/resources-drawer/search/search.component';
 import { ReferenceEditDialogComponent } from "./components/reference-edit-dialog/reference-edit-dialog.component"
 import { MultipleChoiceDialogComponent } from "./components/multiple-choice-dialog/multiple-choice-dialog.component";
 import { ValidationResultsComponent } from "./components/validation-results/validation-results.component";
@@ -209,6 +209,9 @@ import { TeamsListPageComponent } from './views/admin-page/teams/teams-list-page
 import { TeamsViewPageComponent } from './views/admin-page/teams/teams-view-page/teams-view-page.component';
 import { CreateNewDialogComponent } from './components/create-new-dialog/create-new-dialog.component';
 
+import { ContributorsPageComponent } from './views/contributors-page/contributors-page.component';
+import { ContributorEditDialogComponent } from './components/contributor-edit-dialog/contributor-edit-dialog.component';
+
 import { AppConfigService } from './services/config/app-config.service';
 
 export function initConfig(appConfigService: AppConfigService) {
@@ -290,7 +293,6 @@ export function initConfig(appConfigService: AppConfigService) {
 		CollectionImportComponent,
 		CollectionImportReviewComponent,
 		CollectionImportErrorComponent,
-		// CollectionExportComponent,
 
 		RelationshipViewComponent,
 
@@ -348,25 +350,21 @@ export function initConfig(appConfigService: AppConfigService) {
 		SubtypeViewComponent,
 		SubtypeEditComponent,
 		SubtypeDialogComponent,
-  		BreadcrumbComponent
+  		BreadcrumbComponent,
+        ContributorsPageComponent,
+        ContributorEditDialogComponent,
+        SearchComponent
 	],
 	imports: [
 		MaterialFileInputModule,
 		MarkdownModule.forRoot({
 			loader: HttpClient,
-			//   toggle this to disable github flavored markdown
-			//   markedOptions: {
-			//     provide: MarkedOptions,
-			//     useValue: {
-			//       pedantic: true
-			//     }
-			//   }
 		}),
 		LoggerModule.forRoot({
 			level: environment.log_level,
 			disableConsoleLogging: false
 		}),
-		PopoverModule,
+		MtxPopoverModule,
 		NgxJdenticonModule,
 		AutosizeModule,
 

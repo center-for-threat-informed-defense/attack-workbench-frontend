@@ -97,7 +97,6 @@ export class TeamsListPageComponent implements OnInit {
 			maxWidth: "40em",
 			minWidth: "40em",
 			disableClose: true,
-			autoFocus: false, // disables auto focus on the dialog form field
 			data: {
 				config: {
 					objectName: 'team',

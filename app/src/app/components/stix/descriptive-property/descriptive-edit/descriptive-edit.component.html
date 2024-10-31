@@ -1,7 +1,7 @@
 <div class="descriptive-edit">
-    <mat-tab-group (selectedTabChange)="selectionChanged($event)">
+    <mat-tab-group mat-stretch-tabs="false" mat-align-tabs="start" (selectedTabChange)="selectionChanged($event)">
         <mat-tab label="Write">
-            <mat-form-field class="edit" floatLabel="never" appearance="outline">
+            <mat-form-field class="edit" appearance="outline">
                 <div class="vertical-centered">
                     <h3>{{config.label}}</h3>
                     <mat-icon class="info-icon" [matTooltip]="config.referencesField? 'markdown & citations supported' : 'markdown supported'" matTooltipPosition="above" aria-label="info">info_outline</mat-icon>

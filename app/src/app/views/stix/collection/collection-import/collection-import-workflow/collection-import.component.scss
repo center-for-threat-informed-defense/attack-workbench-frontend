@@ -1,5 +1,8 @@
 @import "../../../../../../style/globals";
 .collection-import {
+    .mat-vertical-content {
+        padding-top: 6px;
+    }
     p.nomargin { margin-top: 0; }
     .warn {
         color: color(warn);
@@ -22,7 +25,7 @@
             margin: 0 10px;
             flex-shrink: 1;
         }
-        .mat-form-field {
+        .mat-mdc-form-field {
             flex-grow: 1;
         }
     }

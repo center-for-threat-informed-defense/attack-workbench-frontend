@@ -5,8 +5,8 @@
     // mat-toolbar { @extend %toolbar; }
     mat-form-field.fullwidth {
         width: 100%;
-        .mat-form-field-wrapper {
-            padding-bottom: 0px;
+        .mat-mdc-form-field-subscript-wrapper {
+            display: none;
         }
     }
     .mat-vertical-stepper-header {

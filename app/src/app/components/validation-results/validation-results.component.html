@@ -1,18 +1,18 @@
 <mat-list class="validation-results">
     <mat-list-item class="validation-item success" *ngFor="let success of validation.successes">
-        <mat-icon mat-list-icon>check</mat-icon>
-        <div mat-line>{{success.message}}</div>
+        <mat-icon matListItemIcon>check</mat-icon>
+        <div matListItemLine>{{success.message}}</div>
     </mat-list-item>
     <mat-list-item class="validation-item error" *ngFor="let error of validation.errors">
-        <mat-icon mat-list-icon>close</mat-icon>
-        <div mat-line>{{error.message}}</div>
+        <mat-icon matListItemIcon>close</mat-icon>
+        <div matListItemLine>{{error.message}}</div>
     </mat-list-item>
     <mat-list-item class="validation-item warning" *ngFor="let warning of validation.warnings">
-        <mat-icon mat-list-icon>warning</mat-icon>
-        <div mat-line>{{warning.message}}</div>
+        <mat-icon matListItemIcon>warning</mat-icon>
+        <div matListItemLine>{{warning.message}}</div>
     </mat-list-item>
     <mat-list-item class="validation-item info" *ngFor="let info of validation.info">
-        <mat-icon mat-list-icon>info</mat-icon>
-        <div mat-line>{{info.message}}</div>
+        <mat-icon matListItemIcon>info</mat-icon>
+        <div matListItemLine>{{info.message}}</div>
     </mat-list-item>
 </mat-list>

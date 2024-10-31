@@ -7,6 +7,7 @@ $sizeunit: 14px;
   height: min-content;
   overflow-x: scroll;
   border: 1px solid;
+  border-radius: 4px;
 }
 .matrix {
   padding: 0;
@@ -78,10 +79,10 @@ $sizeunit: 14px;
   width: max-content;
   font-size: 14px;
   text-align: center;
-  gap: 4px;
+  gap: 12px;
   display: flex;
-  .mat-stroked-button {
-    margin: 3.5px 10px;
-    margin-bottom: 22.313px;
+  .mat-mdc-outlined-button {
+    margin: 0 0 22.313px 0;
+	height: unset !important;
   }
 }

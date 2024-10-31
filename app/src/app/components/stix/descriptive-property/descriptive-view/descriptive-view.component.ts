@@ -18,6 +18,7 @@ export class DescriptiveViewComponent implements OnInit {
 
     private reReference = /\(Citation: (.*?)\)/gmu;
     private reLinkById = /\(LinkById: (.*?)\)/gmu;
+	private notFound = '[linked object not found]';
     private objectLookup = {};
     private sub: Subscription = new Subscription(); // prevent async issues
     private parseReferences = true;
@@ -103,11 +104,18 @@ export class DescriptiveViewComponent implements OnInit {
      * @param ids list of IDs to retrieve
      */
     private loadLinkedObjects(ids: string[]): Observable<any> {
-        return this.restApiConnector.getAllObjects(ids, null, null, null, true, true, true).pipe(
+        return this.restApiConnector.getAllObjects({attackIDs: ids, revoked: true, deprecated: true, deserialize: true}).pipe(
             map((results: any) => {
                 let data = results.data as StixObject[];
                 // store retrieved objects in dictionary for quick lookup
-                data.forEach(obj => this.objectLookup[obj.attackID] = obj);
+				if (data?.length > 0) {
+					data.forEach(obj => {
+						// objects must be validated in cases where more than one object is 
+						// returned by the given ATT&CK ID, this occurs due to older versions 
+						// of ATT&CK in which techniques shared their IDs with mitigations
+						if (obj.isValidAttackId()) this.objectLookup[obj.attackID] = obj;
+					});
+				}
                 return results;
             })
         );
@@ -119,12 +127,19 @@ export class DescriptiveViewComponent implements OnInit {
     private replaceLinkByIds(displayStr: string, linkedIDs: string[]): string {
         for (let id of linkedIDs) {
             let obj = this.objectLookup[id];
-            if (obj && obj.name) {
-                let rep = `(LinkById: ${obj.attackID})`;
-                let target = this.config.mode == 'edit' ? ` target="_blank"` : ``; // open linked object in new tab when editing
-                let linkHTML = `<span><a href="${obj.attackType}/${obj.stixID}"${target}>${obj.name}</a></span>`;
-                displayStr = displayStr.replace(rep, linkHTML);
-            }
+
+			let rep = `(LinkById: ${id})`;
+
+			let linkHTML;
+			if (obj?.name) {
+				let url = `${obj.attackType}/${obj.stixID}`;
+				let target = this.config.mode == 'edit' ? ` target="_blank"` : ``; // open linked object in new tab when editing
+				linkHTML = `<a href="${url}"${target}>${obj.name}</a>`
+			} else {
+				linkHTML = this.notFound;
+			}
+			let newStr = `<span>${linkHTML}</span>`;
+			displayStr = displayStr.replace(rep, newStr);
         }
         return displayStr;
     }
@@ -163,6 +178,7 @@ export class DescriptiveViewComponent implements OnInit {
 
         // Check for LinkById tags
         let linkedIDs = this.getLinkedIds(this.preview);
+		linkedIDs = linkedIDs.filter(id => id != '');
         if (!linkedIDs) {
             this.loading = false;
             return;
@@ -175,13 +191,13 @@ export class DescriptiveViewComponent implements OnInit {
                 this.loading = false;
             } else {
                 let missing = linkedIDs.filter(id => Object.keys(this.objectLookup).indexOf(id) < 0);
-                this.sub = this.loadLinkedObjects(missing).subscribe({
-                    next: (results: any) => {
-                        this.preview = this.replaceLinkByIds(this.preview, linkedIDs);
-                        this.loading = false;
-                    },
-                    complete: () => { this.sub.unsubscribe(); }
-                })
+				this.sub = this.loadLinkedObjects(missing).subscribe({
+					next: (results: any) => {
+						this.preview = this.replaceLinkByIds(this.preview, linkedIDs);
+						this.loading = false;
+					},
+					complete: () => { this.sub.unsubscribe(); }
+				});
             }
         }
     }
