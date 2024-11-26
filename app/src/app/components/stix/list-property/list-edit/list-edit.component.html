@@ -37,16 +37,16 @@
 		[class.disabled]="config.disabled || !dataLoaded"
 		(click)="openStixList()"
         (keydown)="openStixList()"
-		[matTooltip]="config.disabled ? 'a valid domain must be selected first' : null">
+		[matTooltip]="config.disabled ? (config.object.is_subtechnique ? 'sub-technique tactics are automatically synced with its parent' : 'a valid domain must be selected first') : null">
 		<div class="content">
 			<mat-chip-listbox #stixChipList [required]="config.required ? config.required : false" [disabled]="!dataLoaded || config.disabled" (blur)="onBlur()">
 				<mat-chip *ngFor="let value of selectedValues()" [removable]="false">{{value}}</mat-chip>
 			</mat-chip-listbox>
-			<span matIconSuffix *ngIf="!dataLoaded && config.label === 'parent technique'" class="loading-label">
+			<span matIconSuffix *ngIf="!dataLoaded && config.field === 'parentTechnique'" class="loading-label">
 				<mat-spinner class="spinner" diameter="20"></mat-spinner>
 			</span>
-			<span matIconSuffix *ngIf="!(!dataLoaded && config.label === 'parent technique')">
-				<mat-icon aria-hidden="false" aria-label="open" class="icon">open_in_new</mat-icon>
+			<span matIconSuffix *ngIf="dataLoaded">
+				<mat-icon aria-hidden="false" aria-label="open" class="icon" [class.disabled]="config.disabled">open_in_new</mat-icon>
 			</span>
 		</div>
         <span class="labelled-box-label">{{config.label? config.label : config.field}}</span>

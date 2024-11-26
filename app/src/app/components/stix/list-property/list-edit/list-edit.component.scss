@@ -26,7 +26,17 @@
     input { font-size: 14px; }
 
     // stix list object selection dialog
-    .icon { float: right; }
+    .icon {
+        float: right;
+        &.disabled {
+            .dark & {
+                color: border-color(dark) !important;
+            }
+            .light & {
+                color: border-color(light) !important;
+            }
+        }
+    }
     .stix-select {
         &:not(.disabled) { cursor: pointer; }
     }
