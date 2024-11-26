@@ -6,11 +6,11 @@
     flex-direction: column;
     &.editing.disabled {
         .dark & {
-            border-color: border-color(dark) !important;
+            border-color: on-color-deemphasis(light) !important;
             border-top-color: transparent;
         }
         .light & {
-            border-color: border-color(light) !important;
+            border-color: on-color-deemphasis(dark) !important;
             border-top-color: transparent;
         }
     }

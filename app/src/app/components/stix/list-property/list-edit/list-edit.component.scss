@@ -30,10 +30,10 @@
         float: right;
         &.disabled {
             .dark & {
-                color: border-color(dark) !important;
+                color: on-color-deemphasis(light) !important;
             }
             .light & {
-                color: border-color(light) !important;
+                color: on-color-deemphasis(dark) !important;
             }
         }
     }
