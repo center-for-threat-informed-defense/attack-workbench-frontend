@@ -303,15 +303,65 @@ export class ListEditComponent implements OnInit, AfterContentChecked {
     /** Open stix list selection window */
     public openStixList() {
         if (this.config.disabled) return; // cannot open stix list if field is disabled
-        if (this.config.label === 'parent technique' && !this.dataLoaded) return;
-        let selectableObjects = this.allObjects;
-        if (this.config.field !== 'parentTechnique') {
-            // filter tactic objects by domain
-            let tactics = this.allObjects as Tactic[];
-            selectableObjects = tactics.filter(tactic => this.tacticInDomain(tactic));
-        }
+        if (this.config.field == 'parentTechnique') this.openParentTechniqueList();
+        if (this.config.field == 'tactics') this.openTacticList();
+    }
 
-        let dialogRef = this.dialog.open(AddDialogComponent, {
+    /** Open tactic list */
+    public openTacticList(): void {
+        // get list of tactics in current domain
+        let tactics = this.allObjects as Tactic[];
+        let selectableObjects = tactics.filter(tactic => this.tacticInDomain(tactic));
+
+        // open dialog window for user selection
+        let dialogRef = this.openDialogComponent(selectableObjects);
+
+        // copy user selection
+        let selectCopy = new SelectionModel(true, this.select.selected);
+        let subscription = dialogRef.afterClosed().subscribe({
+            next: (result) => {
+                if (result) {
+                    let tacticShortnames = this.select.selected.map(id => this.stixIDToShortname(id));
+                    this.config.object[this.config.field] = tacticShortnames;
+
+                    // reset tactic selection state
+                    this.tacticState = [];
+                    let tactic_selection = this.select.selected.map(tacticID => tactics.find(tactic => tactic.stixID == tacticID));
+                    tactic_selection.forEach(tactic => this.tacticState.push(tactic));
+                } else { // user cancel
+                    this.select = selectCopy; // reset selection
+                }
+            },
+            complete: () => { subscription.unsubscribe(); }
+        });
+    }
+
+    /** Open parent technique list */
+    public openParentTechniqueList(): void {
+        // check if parent techniques have been loaded, if not, do nothing
+        if (this.config.label === 'parent technique' && !this.dataLoaded) return;
+        // otherwise, open the dialog window for user selection
+        let dialogRef = this.openDialogComponent(this.allObjects);
+
+        // copy the user selection
+        let selectCopy = new SelectionModel(false, this.select.selected);
+        let subscription = dialogRef.afterClosed().subscribe({
+            next: (result) => {
+                if (result) { // update parent technique
+                    let allObjects = this.allObjects as Technique[];
+                    let selection = this.select.selected.length > 0 ? allObjects.find(t => t.stixID === this.select.selected[0]) : null;
+                    this.config.object[this.config.field] = selection;
+                } else { // user cancelled
+                    this.select = selectCopy; // reset selection
+                }
+            },
+            complete: () => { subscription.unsubscribe(); }
+        });
+    }
+
+    /** Open the AddDialogComponent with the given list of selectable objects */
+    public openDialogComponent(selectableObjects) {
+        return this.dialog.open(AddDialogComponent, {
             maxWidth: "70em",
             maxHeight: "70em",
             data: {
@@ -320,28 +370,6 @@ export class ListEditComponent implements OnInit, AfterContentChecked {
                 type: this.type,
                 buttonLabel: "OK"
             }
-        });
-
-        let selectCopy = this.config.field != 'parentTechnique' ? new SelectionModel(true, this.select.selected) : new SelectionModel(false, this.select.selected);
-        let subscription = dialogRef.afterClosed().subscribe({
-            next: (result) => {
-                if (result && this.config.field != 'parentTechnique') {
-                    let tacticShortnames = this.select.selected.map(id => this.stixIDToShortname(id));
-                    this.config.object[this.config.field] = tacticShortnames;
-
-                    // reset tactic selection state
-                    this.tacticState = [];
-                    let allObjects = this.allObjects as Tactic[];
-                    let tactic_selection = this.select.selected.map(tacticID => allObjects.find(tactic => tactic.stixID == tacticID));
-                    tactic_selection.forEach(tactic => this.tacticState.push(tactic));
-                } else if (result && this.config.field == 'parentTechnique') {
-                    let allObjects = this.allObjects as Technique[];
-                    this.config.object[this.config.field] = this.select.selected.length > 0 ? allObjects.find(t => t.stixID === this.select.selected[0]) : null;
-                } else { // user cancel
-                    this.select = selectCopy; // reset selection
-                }
-            },
-            complete: () => { subscription.unsubscribe(); }
         });
     }
 }
