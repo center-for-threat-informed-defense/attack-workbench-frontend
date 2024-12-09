@@ -337,6 +337,11 @@ export class ListEditComponent implements OnInit, AfterContentChecked {
     }
 
     /** Open parent technique list */
+    private killChainMap = {
+        "mitre-attack": "enterprise-attack",
+        "mitre-mobile-attack": "mobile-attack",
+        "mitre-ics-attack": "ics-attack"
+    }
     public openParentTechniqueList(): void {
         // check if parent techniques have been loaded, if not, do nothing
         if (this.config.label === 'parent technique' && !this.dataLoaded) return;
@@ -351,6 +356,14 @@ export class ListEditComponent implements OnInit, AfterContentChecked {
                     let allObjects = this.allObjects as Technique[];
                     let selection = this.select.selected.length > 0 ? allObjects.find(t => t.stixID === this.select.selected[0]) : null;
                     this.config.object[this.config.field] = selection;
+                    if (selection) {
+                        // sync sub-technique tactics with parent
+                        let parentTactics = selection.kill_chain_phases.map(kcp => {
+                            return [kcp.phase_name, this.killChainMap[kcp.kill_chain_name]]
+                        })
+                        this.config.object['tactics'] = parentTactics;
+                        // once saved, any irrelevant tactic-specific fields will be removed from the sub-technique
+                    }
                 } else { // user cancelled
                     this.select = selectCopy; // reset selection
                 }
