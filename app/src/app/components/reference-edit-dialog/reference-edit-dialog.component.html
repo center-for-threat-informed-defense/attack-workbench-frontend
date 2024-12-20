@@ -204,7 +204,8 @@
                     <app-stix-list (onRowAction)="close()" [config]="{
                         stixObjects: stixObjects,
                         clickBehavior: 'linkToObjectPage',
-                        showControls: false
+                        showControls: false,
+                        includeDeprecatedObjects: true
                     }"></app-stix-list>
                 </ng-container>
                 <ng-container *ngIf="relationships.length > 0">
@@ -213,7 +214,8 @@
                         stixObjects: relationships,
                         type: 'relationship',
                         clickBehavior: 'dialog',
-                        showControls: false
+                        showControls: false,
+                        includeDeprecatedObjects: true
                     }"></app-stix-list>
                 </ng-container>
             </ng-template>
