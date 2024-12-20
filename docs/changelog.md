@@ -36,6 +36,9 @@
 
 ### ATT&CK Workbench version 2.2.1
 
+#### Improvements
+- Implemented automatic synchronization of tactics between parent and sub-techniques to ensure consistency upon saving.
+
 #### Fixes
 - Fixed an issue where deprecated objects were not displayed in the "Objects citing this reference" section in the Reference Manager. The `includeDeprecatedObjects` property was added to the `stix-list` component, allowing these objects to be included in the list.
 
