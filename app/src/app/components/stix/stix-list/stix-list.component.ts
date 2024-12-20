@@ -746,7 +746,7 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
                 // filter by deprecation status
                 if (exclusiveDeprecated) {
                     filtered = filtered.filter((obj:any)=> obj.deprecated)
-                } else if (deprecated) {
+                } else if (deprecated || this.config.includeDeprecatedObjects) {
                     filtered = filtered.filter((obj: any) => obj || obj.deprecated);
                 } else {
                     filtered = filtered.filter((obj: any) => !obj.deprecated);
@@ -957,6 +957,8 @@ export interface StixListConfig {
      *  the list of STIX objects is provided in the 'stixObjects' configuration
      */
     showDeprecatedFilter?: boolean;
+    /** include deprecated objects in list of STIX objects, default false*/
+    includeDeprecatedObjects?: boolean;
     /** default ['state','workflow_status'], if decides which filters to show */
     filterList?: Array<filter_types>;
     /** default: false, if false hides the user search in the filters*/
