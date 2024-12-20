@@ -34,6 +34,13 @@
 
 ## Staged Changes
 
+### ATT&CK Workbench version 2.2.1
+
+#### Fixes
+- Fixed an issue where deprecated objects were not displayed in the "Objects citing this reference" section in the Reference Manager. The `includeDeprecatedObjects` property was added to the `stix-list` component, allowing these objects to be included in the list.
+
+## 31 October 2024
+
 ### ATT&CK Workbench version 2.2.0
 
 #### New Features
