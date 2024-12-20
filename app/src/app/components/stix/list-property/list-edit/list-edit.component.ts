@@ -321,6 +321,7 @@ export class ListEditComponent implements OnInit, AfterContentChecked {
         let subscription = dialogRef.afterClosed().subscribe({
             next: (result) => {
                 if (result) {
+                    // update object tactic list
                     let tacticShortnames = this.select.selected.map(id => this.stixIDToShortname(id));
                     this.config.object[this.config.field] = tacticShortnames;
 
@@ -363,6 +364,9 @@ export class ListEditComponent implements OnInit, AfterContentChecked {
                         })
                         this.config.object['tactics'] = parentTactics;
                         // once saved, any irrelevant tactic-specific fields will be removed from the sub-technique
+                    } else {
+                        // parent removed, clear tactics list
+                        this.config.object['tactics'] = [];
                     }
                 } else { // user cancelled
                     this.select = selectCopy; // reset selection
