@@ -126,47 +126,7 @@ export class SaveDialogComponent implements OnInit {
     }
 
     private saveObject() {
-        return this.config.object.save(this.restApiService).pipe( // save this object
-            map(result => {
-                if (result.attackType !== 'technique') return result;
-                let technique = this.config.object as Technique;
-
-                if (technique.is_subtechnique && technique.parentTechnique) {
-                    // retrieve 'subtechnique-of' relationship, if any
-                    const sub$ = this.restApiService.getRelatedTo({sourceRef: technique.stixID, relationshipType: "subtechnique-of"})
-                    const sub = sub$.subscribe({
-                        next: (r) => {
-                            let createRelationship = function(source, target, restApiService): Relationship {
-                                // create a new 'subtechnique-of' relationship with the given source and target object
-                                let newRelationship = new Relationship();
-                                newRelationship.relationship_type = 'subtechnique-of';
-                                newRelationship.set_source_object(source, restApiService);
-                                newRelationship.set_target_object(target, restApiService);
-                                return newRelationship;
-                            }
-
-                            if (r.data.length > 0 && r.data[0]) {
-                                // relationship exists, check if parent has changed
-                                let relationship = r.data[0] as Relationship;
-                                if (relationship.target_ref !== technique.parentTechnique.stixID) {
-                                    // parent technique has changed, revoke previous 'subtechnique-of' relationship and create a new one
-                                    relationship.revoked = true;
-                                    relationship.save(this.restApiService);
-                                    const newRelationship = createRelationship(technique, technique.parentTechnique, this.restApiService);
-                                    newRelationship.save(this.restApiService);
-                                } // otherwise parent has not changed, do nothing
-                            } else {
-                                // 'subtechnique-of' relationship does not exist, create a new one
-                                const newRelationship = createRelationship(technique, technique.parentTechnique, this.restApiService);
-                                newRelationship.save(this.restApiService);
-                            }
-                        },
-                        complete: () => sub.unsubscribe()
-                    });
-                }
-                return of(result);
-            })
-        );
+        return this.config.object.save(this.restApiService); // save this object
     }
 
     /**
