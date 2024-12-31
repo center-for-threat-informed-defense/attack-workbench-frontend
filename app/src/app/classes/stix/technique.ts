@@ -310,8 +310,7 @@ export class Technique extends StixObject {
                         });
 
                         // added tactic syncing information
-                        if ((this.is_subtechnique && relationships.sub_of.data.length > 0)
-                            || (!this.is_subtechnique && relationships.super_of.data.length > 0)) {
+                        if (!this.is_subtechnique && relationships.super_of.data.length > 0) {
                             // sub-technique with assigned parent or parent with sub-techniques
                             validationResult.info.push({
                                 "field": "tactics",
@@ -406,7 +405,7 @@ export class Technique extends StixObject {
                     // case: parent technique with sub-techniques
                     if (r.data.length > 0) {
                         // sync all sub-techniques' tactics with this object's tactics
-                        const subTechniqueUpdates = r.data.map(sr => {
+                        const subtechniqueUpdates = r.data.map(sr => {
                             let subRelationship = sr as Relationship;
                             // get latest sub-technique object from relationship (source_ref)
                             return restApiService.getTechnique(subRelationship.source_ref, null, "latest").pipe(
@@ -414,17 +413,19 @@ export class Technique extends StixObject {
                                     let subtechnique: Technique = subData?.[0];
                                     if (subtechnique && !this.killChainPhasesSynced(subtechnique.kill_chain_phases, this.kill_chain_phases)) {
                                         // sub-technique tactics are not synced with this parent
-                                        let parentTactics = this.kill_chain_phases.map(kcp => [kcp.phase_name, this.killChainMap[kcp.kill_chain_name]])
+                                        let parentTactics = this.kill_chain_phases.map(kcp => {
+                                            let killChainName = Object.keys(this.killChainMap).find(key => this.killChainMap[key] === kcp.kill_chain_name);
+                                            return [kcp.phase_name, killChainName]
+                                        })
                                         subtechnique.tactics = parentTactics;
-                                        // NOTE: do not use subtechnique.save(restApiService)
-                                        return restApiService.postTechnique(subtechnique);
+                                        return restApiService.postTechnique(subtechnique); // NOTE: do not use subtechnique.save(restApiService)
                                     }
                                     // tactics already synced
                                     return of(null);
                                 })
                             )
                         })
-                        return forkJoin(subTechniqueUpdates)
+                        return forkJoin(subtechniqueUpdates);
                     }
                     // case: parent technique with no sub-techniques
                     return of(null);
