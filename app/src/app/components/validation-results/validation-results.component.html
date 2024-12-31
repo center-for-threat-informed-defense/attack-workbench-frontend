@@ -11,6 +11,11 @@
         <mat-icon matListItemIcon>warning</mat-icon>
         <div matListItemLine>{{warning.message}}</div>
     </mat-list-item>
+    <mat-list-item class="validation-item warning" *ngIf="patchId">
+        <mat-icon matListItemIcon>warning</mat-icon>
+        <div matListItemLine>ATT&CK ID changed</div>
+        <div matListItemLine>knowledge base patches will be determined in next step</div>
+    </mat-list-item>
     <mat-list-item class="validation-item info" *ngFor="let info of validation.info">
         <mat-icon matListItemIcon>info</mat-icon>
         <div matListItemLine>{{info.message}}</div>

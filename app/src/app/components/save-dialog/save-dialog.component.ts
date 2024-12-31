@@ -60,7 +60,7 @@ export class SaveDialogComponent implements OnInit {
         let objSubscription = this.restApiService.getAllObjects({deserialize: true}).subscribe({
             next: (results) => {
                 // find objects with a link to the previous ID
-                let objLink = `(LinkById: ${this.config.patchID})`;
+                let objLink = `(LinkById: ${this.config.patchId})`;
                 results.data.forEach(x => {
                     if ((x.description && x.description.indexOf(objLink) !== -1) || ("detection" in x && x.detection && x.detection.indexOf(objLink) !== -1)) {
                             this.patch_objects.push(x);
@@ -80,7 +80,7 @@ export class SaveDialogComponent implements OnInit {
         let saves = [];
         for (let obj of this.patch_objects) {
             // replace LinkById references with the new ATT&CK ID
-            let regex = new RegExp(`\\(LinkById: (${this.config.patchID})\\)`, "gmu");
+            let regex = new RegExp(`\\(LinkById: (${this.config.patchId})\\)`, "gmu");
             obj.description = obj.description.replace(regex, `(LinkById: ${this.config.object.attackID})`);
             if (obj.hasOwnProperty("detection") && obj.detection) {
                 obj.detection = obj.detection.replace(regex, `(LinkById: ${this.config.object.attackID})`);
@@ -101,7 +101,7 @@ export class SaveDialogComponent implements OnInit {
      */
     public saveCurrentVersion() {
         this.config.object.workflow = this.newState ? {state: this.newState } : undefined;
-        if (this.config.patchID) this.parse_patches();
+        if (this.config.patchId) this.parse_patches();
         else this.save();
     }
 
@@ -111,7 +111,7 @@ export class SaveDialogComponent implements OnInit {
      public saveNextMinorVersion() {
         this.config.object.version = new VersionNumber(this.nextMinorVersion);
         this.config.object.workflow = this.newState ? {state: this.newState } : undefined;
-        if (this.config.patchID) this.parse_patches();
+        if (this.config.patchId) this.parse_patches();
         else this.save();
     }
 
@@ -121,7 +121,7 @@ export class SaveDialogComponent implements OnInit {
     public saveNextMajorVersion() {
         this.config.object.version = new VersionNumber(this.nextMajorVersion);
         this.config.object.workflow = this.newState ? {state: this.newState } : undefined;
-        if (this.config.patchID) this.parse_patches();
+        if (this.config.patchId) this.parse_patches();
         else this.save();
     }
 
@@ -149,6 +149,6 @@ export class SaveDialogComponent implements OnInit {
 
 export interface SaveDialogConfig {
     object: StixObject;
-    patchID?: string; // previous object ID to patch in LinkByID tags
+    patchId?: string; // previous object ID to patch in LinkByID tags
     versionAlreadyIncremented: boolean;
 }
