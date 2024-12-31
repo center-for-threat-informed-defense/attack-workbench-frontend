@@ -1,13 +1,10 @@
 import { Component, Inject, OnInit, ViewEncapsulation } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { forkJoin, of } from 'rxjs';
+import { forkJoin } from 'rxjs';
 import { ValidationData } from 'src/app/classes/serializable';
 import { StixObject, workflowStates } from 'src/app/classes/stix/stix-object';
 import { VersionNumber } from 'src/app/classes/version-number';
 import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/rest-api-connector.service';
-import { Relationship } from '../../classes/stix/relationship';
-import { Technique } from '../../classes/stix/technique';
-import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-save-dialog',
@@ -62,15 +59,31 @@ export class SaveDialogComponent implements OnInit {
                 // find objects with a link to the previous ID
                 let objLink = `(LinkById: ${this.config.patchId})`;
                 results.data.forEach(x => {
-                    if ((x.description && x.description.indexOf(objLink) !== -1) || ("detection" in x && x.detection && x.detection.indexOf(objLink) !== -1)) {
+                    if ((x.description?.indexOf(objLink) !== -1) ||
+                        ("detection" in x && x.detection?.indexOf(objLink) !== -1)) {
                             this.patch_objects.push(x);
                     }
                 });
-				this.patch_objects.push(this.config.object);
+
+                // check if the object iself needs to be patched
+                if ((this.config.object.description?.indexOf(objLink) !== -1) ||
+                    ("detection" in this.config.object && (this.config.object.detection as string)?.indexOf(objLink) !== -1)) {
+                        this.patchObject(this.config.object); // calls patchObject() directly to avoid saving the object twice
+                }
+
                 this.stage = 2;
             },
             complete: () => objSubscription.unsubscribe()
         })
+    }
+
+    private patchObject(obj: any): void {
+        // replace LinkById references with the new ATT&CK ID
+        let regex = new RegExp(`\\(LinkById: (${this.config.patchId})\\)`, "gmu");
+        obj.description = obj.description.replace(regex, `(LinkById: ${this.config.object.attackID})`);
+        if (obj.hasOwnProperty("detection") && obj.detection) {
+            obj.detection = obj.detection.replace(regex, `(LinkById: ${this.config.object.attackID})`);
+        }
     }
 
     /**
@@ -79,13 +92,8 @@ export class SaveDialogComponent implements OnInit {
     public patch() {
         let saves = [];
         for (let obj of this.patch_objects) {
-            // replace LinkById references with the new ATT&CK ID
-            let regex = new RegExp(`\\(LinkById: (${this.config.patchId})\\)`, "gmu");
-            obj.description = obj.description.replace(regex, `(LinkById: ${this.config.object.attackID})`);
-            if (obj.hasOwnProperty("detection") && obj.detection) {
-                obj.detection = obj.detection.replace(regex, `(LinkById: ${this.config.object.attackID})`);
-            }
-            saves.push(obj.save(this.restApiService));
+            this.patchObject(obj);
+            if (obj.stixID !== this.config.object.stixID) saves.push(obj.save(this.restApiService));
         }
         this.stage = 3; // enter loading stage until patching is complete
         let saveSubscription = forkJoin(saves).subscribe({
