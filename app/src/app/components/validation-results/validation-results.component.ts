@@ -9,6 +9,7 @@ import { ValidationData } from 'src/app/classes/serializable';
 })
 export class ValidationResultsComponent implements OnInit {
     @Input() validation: ValidationData;
+    @Input() patchId: Boolean;
 
     constructor() {
         // intentionally left blank

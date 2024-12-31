@@ -36,9 +36,6 @@
             margin-bottom: 0px;
         }
     }
-    .validation-item.warning {
-		color: color(warn);
-    }
     .column + .column {
         padding-left: 16px;
         .dark & { border-left: 1px solid border-color(dark); }

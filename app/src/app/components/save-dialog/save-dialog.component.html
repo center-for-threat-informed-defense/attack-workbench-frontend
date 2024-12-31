@@ -3,14 +3,7 @@
         <div class="column validation">
             <h3>Validation</h3>
             <div *ngIf="validation else validating">
-                <app-validation-results [validation]="validation"></app-validation-results>
-                <mat-list class="patch-warning" *ngIf="config.patchID">
-                    <mat-list-item class="validation-item warning">
-                        <mat-icon matListItemIcon>warning</mat-icon>
-                        <div matListItemLine>ATT&CK ID changed</div>
-                        <div matListItemLine>knowledge base patches will be determined in next step</div>
-                    </mat-list-item>
-                </mat-list>
+                <app-validation-results [validation]="validation" [patchId]="config.patchId"></app-validation-results>
             </div>
             <ng-template #validating>
                 <app-loading-overlay></app-loading-overlay>

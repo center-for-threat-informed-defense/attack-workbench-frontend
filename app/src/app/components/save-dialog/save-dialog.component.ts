@@ -1,13 +1,10 @@
 import { Component, Inject, OnInit, ViewEncapsulation } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { forkJoin, of } from 'rxjs';
+import { forkJoin } from 'rxjs';
 import { ValidationData } from 'src/app/classes/serializable';
 import { StixObject, workflowStates } from 'src/app/classes/stix/stix-object';
 import { VersionNumber } from 'src/app/classes/version-number';
 import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/rest-api-connector.service';
-import { Relationship } from '../../classes/stix/relationship';
-import { Technique } from '../../classes/stix/technique';
-import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-save-dialog',
@@ -60,17 +57,33 @@ export class SaveDialogComponent implements OnInit {
         let objSubscription = this.restApiService.getAllObjects({deserialize: true}).subscribe({
             next: (results) => {
                 // find objects with a link to the previous ID
-                let objLink = `(LinkById: ${this.config.patchID})`;
+                let objLink = `(LinkById: ${this.config.patchId})`;
                 results.data.forEach(x => {
-                    if ((x.description && x.description.indexOf(objLink) !== -1) || ("detection" in x && x.detection && x.detection.indexOf(objLink) !== -1)) {
+                    if ((x.description?.indexOf(objLink) !== -1) ||
+                        ("detection" in x && x.detection?.indexOf(objLink) !== -1)) {
                             this.patch_objects.push(x);
                     }
                 });
-				this.patch_objects.push(this.config.object);
+
+                // check if the object iself needs to be patched
+                if ((this.config.object.description?.indexOf(objLink) !== -1) ||
+                    ("detection" in this.config.object && (this.config.object.detection as string)?.indexOf(objLink) !== -1)) {
+                        this.patchObject(this.config.object); // calls patchObject() directly to avoid saving the object twice
+                }
+
                 this.stage = 2;
             },
             complete: () => objSubscription.unsubscribe()
         })
+    }
+
+    private patchObject(obj: any): void {
+        // replace LinkById references with the new ATT&CK ID
+        let regex = new RegExp(`\\(LinkById: (${this.config.patchId})\\)`, "gmu");
+        obj.description = obj.description.replace(regex, `(LinkById: ${this.config.object.attackID})`);
+        if (obj.hasOwnProperty("detection") && obj.detection) {
+            obj.detection = obj.detection.replace(regex, `(LinkById: ${this.config.object.attackID})`);
+        }
     }
 
     /**
@@ -79,13 +92,8 @@ export class SaveDialogComponent implements OnInit {
     public patch() {
         let saves = [];
         for (let obj of this.patch_objects) {
-            // replace LinkById references with the new ATT&CK ID
-            let regex = new RegExp(`\\(LinkById: (${this.config.patchID})\\)`, "gmu");
-            obj.description = obj.description.replace(regex, `(LinkById: ${this.config.object.attackID})`);
-            if (obj.hasOwnProperty("detection") && obj.detection) {
-                obj.detection = obj.detection.replace(regex, `(LinkById: ${this.config.object.attackID})`);
-            }
-            saves.push(obj.save(this.restApiService));
+            this.patchObject(obj);
+            if (obj.stixID !== this.config.object.stixID) saves.push(obj.save(this.restApiService));
         }
         this.stage = 3; // enter loading stage until patching is complete
         let saveSubscription = forkJoin(saves).subscribe({
@@ -101,7 +109,7 @@ export class SaveDialogComponent implements OnInit {
      */
     public saveCurrentVersion() {
         this.config.object.workflow = this.newState ? {state: this.newState } : undefined;
-        if (this.config.patchID) this.parse_patches();
+        if (this.config.patchId) this.parse_patches();
         else this.save();
     }
 
@@ -111,7 +119,7 @@ export class SaveDialogComponent implements OnInit {
      public saveNextMinorVersion() {
         this.config.object.version = new VersionNumber(this.nextMinorVersion);
         this.config.object.workflow = this.newState ? {state: this.newState } : undefined;
-        if (this.config.patchID) this.parse_patches();
+        if (this.config.patchId) this.parse_patches();
         else this.save();
     }
 
@@ -121,52 +129,12 @@ export class SaveDialogComponent implements OnInit {
     public saveNextMajorVersion() {
         this.config.object.version = new VersionNumber(this.nextMajorVersion);
         this.config.object.workflow = this.newState ? {state: this.newState } : undefined;
-        if (this.config.patchID) this.parse_patches();
+        if (this.config.patchId) this.parse_patches();
         else this.save();
     }
 
     private saveObject() {
-        return this.config.object.save(this.restApiService).pipe( // save this object
-            map(result => {
-                if (result.attackType !== 'technique') return result;
-                let technique = this.config.object as Technique;
-
-                if (technique.is_subtechnique && technique.parentTechnique) {
-                    // retrieve 'subtechnique-of' relationship, if any
-                    const sub$ = this.restApiService.getRelatedTo({sourceRef: technique.stixID, relationshipType: "subtechnique-of"})
-                    const sub = sub$.subscribe({
-                        next: (r) => {
-                            let createRelationship = function(source, target, restApiService): Relationship {
-                                // create a new 'subtechnique-of' relationship with the given source and target object
-                                let newRelationship = new Relationship();
-                                newRelationship.relationship_type = 'subtechnique-of';
-                                newRelationship.set_source_object(source, restApiService);
-                                newRelationship.set_target_object(target, restApiService);
-                                return newRelationship;
-                            }
-
-                            if (r.data.length > 0 && r.data[0]) {
-                                // relationship exists, check if parent has changed
-                                let relationship = r.data[0] as Relationship;
-                                if (relationship.target_ref !== technique.parentTechnique.stixID) {
-                                    // parent technique has changed, revoke previous 'subtechnique-of' relationship and create a new one
-                                    relationship.revoked = true;
-                                    relationship.save(this.restApiService);
-                                    const newRelationship = createRelationship(technique, technique.parentTechnique, this.restApiService);
-                                    newRelationship.save(this.restApiService);
-                                } // otherwise parent has not changed, do nothing
-                            } else {
-                                // 'subtechnique-of' relationship does not exist, create a new one
-                                const newRelationship = createRelationship(technique, technique.parentTechnique, this.restApiService);
-                                newRelationship.save(this.restApiService);
-                            }
-                        },
-                        complete: () => sub.unsubscribe()
-                    });
-                }
-                return of(result);
-            })
-        );
+        return this.config.object.save(this.restApiService); // save this object
     }
 
     /**
@@ -189,6 +157,6 @@ export class SaveDialogComponent implements OnInit {
 
 export interface SaveDialogConfig {
     object: StixObject;
-    patchID?: string; // previous object ID to patch in LinkByID tags
+    patchId?: string; // previous object ID to patch in LinkByID tags
     versionAlreadyIncremented: boolean;
 }

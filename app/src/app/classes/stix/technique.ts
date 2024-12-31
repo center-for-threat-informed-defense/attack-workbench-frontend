@@ -1,13 +1,14 @@
-import { forkJoin, Observable } from "rxjs";
-import { map, switchMap } from "rxjs/operators";
+import { forkJoin, Observable, of } from "rxjs";
+import { concatMap, map, shareReplay, switchMap } from "rxjs/operators";
 import { RestApiConnectorService } from "src/app/services/connectors/rest-api/rest-api-connector.service";
 import { ValidationData } from "../serializable";
 import { StixObject } from "./stix-object";
 import { logger } from "../../utils/logger";
+import { Relationship } from "./relationship";
 
 export class Technique extends StixObject {
     public name: string = "";
-    public kill_chain_phases: any = [];
+    public kill_chain_phases: any[] = [];
     public domains: string[] = [];
     public platforms: string[] = [];
     public detection: string = "";
@@ -42,7 +43,7 @@ export class Technique extends StixObject {
     }
 
     public get tactics(): string[] { return this.kill_chain_phases.map(tactic => tactic.phase_name); }
-    public set tactics(values) {
+    public set tactics(values: any[]) {
         let killChainPhases = [];
         for (let i in values) {
             let phaseName = values[i][0];
@@ -296,16 +297,28 @@ export class Technique extends StixObject {
                     super_of: restAPIService.getRelatedTo({targetRef: this.stixID, relationshipType: "subtechnique-of"})
                 }).pipe(
                     map(relationships => {
+                        // validate technique <-> sub-technique conversion
                         if (this.is_subtechnique && relationships.super_of.data.length > 0) validationResult.errors.push({
                             "field": "is_subtechnique",
                             "result": "error",
                             "message": "technique with sub-techniques cannot be converted to sub-technique"
-                        })
+                        });
                         if (!this.is_subtechnique && relationships.sub_of.data.length > 0) validationResult.errors.push({
                             "field": "is_subtechnique",
                             "result": "error",
                             "message": "sub-technique with parent cannot be converted to technique"
-                        })
+                        });
+
+                        // added tactic syncing information
+                        if (!this.is_subtechnique && relationships.super_of.data.length > 0) {
+                            // sub-technique with assigned parent or parent with sub-techniques
+                            validationResult.info.push({
+                                "field": "tactics",
+                                "result": "info",
+                                "message": "sub-technique tactics will sync with parent technique"
+                            })
+                        }
+
                         return validationResult;
                     })
                 )
@@ -313,17 +326,144 @@ export class Technique extends StixObject {
         );
     }
 
+    private updateParentRelationship(restApiService: RestApiConnectorService): Observable<any> {
+        if (this.is_subtechnique && this.parentTechnique) {
+            // retrieve 'subtechnique-of' relationship, if any
+            return restApiService.getRelatedTo({sourceRef: this.stixID, relationshipType: "subtechnique-of"}).pipe(
+                switchMap(r => {
+                    let createRelationship = function(source, target): Relationship {
+                        // function to create a new 'subtechnique-of' relationship
+                        // with the given source and target object
+                        let newRelationship = new Relationship();
+                        newRelationship.relationship_type = 'subtechnique-of';
+                        newRelationship.set_source_object(source, restApiService);
+                        newRelationship.set_target_object(target, restApiService);
+                        return newRelationship;
+                    };
+
+                    let relationshipUpdates = [];
+
+                    if (r.data.length > 0 && r.data[0]) {
+                        // relationship exists, check if parent has changed
+                        let relationship = r.data[0] as Relationship;
+                        if (relationship.target_ref !== this.parentTechnique.stixID) {
+                            // parent technique changed, revoke previous 'subtechnique-of'
+                            // relationship and create a new one
+                            relationship.revoked = true;
+                            relationshipUpdates.push(relationship.save(restApiService));
+                            const newRelationship = createRelationship(this, this.parentTechnique);
+                            relationshipUpdates.push(newRelationship.save(restApiService));
+                        } // otherwise parent has not changed, do nothing
+                    } else {
+                        // 'subtechnique-of' relationship does not exist, create a new one
+                        const newRelationship = createRelationship(this, this.parentTechnique);
+                        relationshipUpdates.push(newRelationship.save(restApiService));
+                    }
+
+                    return forkJoin(relationshipUpdates.length ? relationshipUpdates : [of(null)])
+                })
+            );
+        } else {
+            return of(null);
+        }
+    }
+
+    private syncTacticsWithParentOrSubs(restApiService: RestApiConnectorService): Observable<any> {
+        // case: sub-technique with assigned parent technique
+        if (this.is_subtechnique && this.parentTechnique) {
+            // sync this sub-technique's tactics with its parent
+            return restApiService.getRelatedTo({sourceRef: this.stixID, relationshipType: 'subtechnique-of'}).pipe(
+                switchMap(r => {
+                    if (r.data.length > 0) {
+                        let relationship = r.data[0] as Relationship;
+                        return restApiService.getTechnique(relationship.target_ref, null, "latest").pipe(
+                            switchMap(parentData => {
+                                let parent: Technique = parentData?.[0];
+                                if (parent && !this.killChainPhasesSynced(parent.kill_chain_phases, this.kill_chain_phases)) {
+                                    // this sub-technique's tactics are not synced with its parent
+                                    let parentTactics = parent.kill_chain_phases.map(kcp => [kcp.phase_name, this.killChainMap[kcp.kill_chain_name]])
+                                    this.tactics = parentTactics;
+                                    // the saving of this update occurs in the save() function and is not needed here
+                                }
+                                return of(null);
+                            })
+                        )
+                    }
+                    return of(null);
+                })
+            );
+        }
+
+        // case: sub-technique without assigned parent
+        else if (this.is_subtechnique && !this.parentTechnique) return of(null);
+
+        // case: parent technique, need to check if parent has sub-techniques
+        else {
+            // get any related "subtechnique-of" relationships, where the parent is this object (target_ref)
+            return restApiService.getRelatedTo({targetRef: this.stixID, relationshipType: 'subtechnique-of'}).pipe(
+                switchMap(r => {
+                    // case: parent technique with sub-techniques
+                    if (r.data.length > 0) {
+                        // sync all sub-techniques' tactics with this object's tactics
+                        const subtechniqueUpdates = r.data.map(sr => {
+                            let subRelationship = sr as Relationship;
+                            // get latest sub-technique object from relationship (source_ref)
+                            return restApiService.getTechnique(subRelationship.source_ref, null, "latest").pipe(
+                                switchMap(subData => {
+                                    let subtechnique: Technique = subData?.[0];
+                                    if (subtechnique && !this.killChainPhasesSynced(subtechnique.kill_chain_phases, this.kill_chain_phases)) {
+                                        // sub-technique tactics are not synced with this parent
+                                        let parentTactics = this.kill_chain_phases.map(kcp => {
+                                            let killChainName = Object.keys(this.killChainMap).find(key => this.killChainMap[key] === kcp.kill_chain_name);
+                                            return [kcp.phase_name, killChainName]
+                                        })
+                                        subtechnique.tactics = parentTactics;
+                                        return restApiService.postTechnique(subtechnique); // NOTE: do not use subtechnique.save(restApiService)
+                                    }
+                                    // tactics already synced
+                                    return of(null);
+                                })
+                            )
+                        })
+                        return forkJoin(subtechniqueUpdates);
+                    }
+                    // case: parent technique with no sub-techniques
+                    return of(null);
+                })
+            )
+        }
+    }
+
+    private killChainPhasesSynced(tacticsA: any[], tacticsB: any[]) {
+        if (tacticsA.length !== tacticsB.length) return false;
+
+        // sort kcps to ensure a consistent order for comparison
+        const sortedA = [...tacticsA].sort((a, b) => a.phase_name.localeCompare(b.phase_name));
+        const sortedB = [...tacticsB].sort((a, b) => a.phase_name.localeCompare(b.phase_name));
+
+        return sortedA.every((kcpA, i) => {
+            let kcpB = sortedB[i];
+            return kcpA.phase_name == kcpB.phase_name && kcpA.kill_chain_name == kcpB.kill_chain_name;
+        })
+    }
+
     /**
      * Save the current state of the STIX object in the database. Update the current object from the response
      * @param restAPIService [RestApiConnectorService] the service to perform the POST/PUT through
      * @returns {Observable} of the post
      */
-    public save(restAPIService: RestApiConnectorService): Observable<Technique> {
-        let postObservable = restAPIService.postTechnique(this);
+    public save(restApiService: RestApiConnectorService): Observable<Technique> {
+        const postObservable = this.updateParentRelationship(restApiService).pipe(
+            concatMap(() => this.syncTacticsWithParentOrSubs(restApiService)),
+            concatMap(() => restApiService.postTechnique(this)),
+            shareReplay(1) // share the result and ensure only the last POST result is emitted
+        );
+
         let subscription = postObservable.subscribe({
             next: (result) => { this.deserialize(result.serialize()); },
             complete: () => { subscription.unsubscribe(); }
         });
+
         return postObservable;
     }
 

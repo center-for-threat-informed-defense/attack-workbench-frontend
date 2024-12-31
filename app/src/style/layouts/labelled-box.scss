@@ -4,7 +4,17 @@
     position: relative;
     display: flex;
     flex-direction: column;
-	&.editing {
+    &.editing.disabled {
+        .dark & {
+            border-color: on-color-deemphasis(light) !important;
+            border-top-color: transparent;
+        }
+        .light & {
+            border-color: on-color-deemphasis(dark) !important;
+            border-top-color: transparent;
+        }
+    }
+	&.editing:not(.disabled) {
 		> .content {
 			border: solid 1px;
 			&:hover {
