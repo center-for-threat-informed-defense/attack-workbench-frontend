@@ -36,6 +36,14 @@
             }"></app-version-property>
         </div>
     </div>
+    <div class="row">
+        <div class="col">
+            <!-- STIX ID -->
+            <app-stixid-property class="grow-to-row" [config]="{
+                object: technique
+            }"></app-stixid-property>
+        </div>
+    </div>
     <!-- PARENT SUBTECHNIQUE FIELDS -->
     <div class="row" *ngIf="technique.is_subtechnique && editing">
         <div class="col">

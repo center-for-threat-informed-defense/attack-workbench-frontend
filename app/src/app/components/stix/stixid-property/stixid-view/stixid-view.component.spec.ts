@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { AttackIDViewComponent } from './attackid-view.component';
+import { StixIDViewComponent } from './stixid-view.component';
 
-describe('AttackidViewComponent', () => {
-  let component: AttackIDViewComponent;
-  let fixture: ComponentFixture<AttackIDViewComponent>;
+describe('StixidViewComponent', () => {
+  let component: StixIDViewComponent;
+  let fixture: ComponentFixture<StixIDViewComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ AttackIDViewComponent ]
+      declarations: [ StixIDViewComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(AttackIDViewComponent);
+    fixture = TestBed.createComponent(StixIDViewComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

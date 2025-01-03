@@ -26,6 +26,14 @@
     </div>
     <div class="row">
         <div class="col">
+            <!-- STIX ID -->
+            <app-stixid-property class="grow-to-row" [config]="{
+                object: dataSource
+            }"></app-stixid-property>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
             <!-- Domains -->
             <app-list-property class="grow-to-row" [config]="{
                 mode: editing? 'edit': 'view',
