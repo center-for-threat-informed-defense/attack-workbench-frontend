@@ -124,7 +124,7 @@ https://github.com/mitre-attack/attack-navigator/
 
 ## Notice 
 
-Copyright 2020-2024 MITRE Engenuity. Approved for public release. Document number CT0020 and public release case number 22-3206.
+Copyright 2020-2025 MITRE Engenuity. Approved for public release. Document number CT0020 and public release case number 22-3206.
 
 Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at 
 
