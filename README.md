@@ -53,7 +53,7 @@ The ATT&CK Workbench application is made up of several repositories. For the ful
 The manual install instructions in each repository describe how each component to be deployed to a separate machine or with customized settings. 
 
 ### Installing using Docker
-Please refer to our [Docker install instructions](docs/docker-compose.md) for information on installing and deploying the the full application using Docker. The docker setup is the easiest way to deploy the application.
+Please refer to our [Docker install instructions](docs/docker-compose.md) for information on installing and deploying the full application using Docker. The docker setup is the easiest way to deploy the application.
 
 ### Manual Installation
 
@@ -93,6 +93,10 @@ To allow for additional customization, the ATT&CK Workbench enables users to set
 #### PKI Certificates
 
 For additional troubleshooting and installation of security certificates for use by ATT&CK Workbench, pleaser refer to [PKI Certificates instructions](docs/certs.md).
+
+### Developer Setup
+
+Please refer to our [local development instructions](docs/local-dev.md) for information on installing and running the application for local development and testing. 
 
 ## Related Work
 
