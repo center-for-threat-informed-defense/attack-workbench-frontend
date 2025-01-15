@@ -40,6 +40,7 @@
     "@angular/platform-browser-dynamic": "^17.3.7",
     "@angular/router": "^17.3.7",
     "@ng-matero/extensions": "^17.3.0",
+    "diff-match-patch-ts": "^0.6.0",
     "jdenticon": "^3.2.0",
     "marked": "^12.0.2",
     "moment": "^2.29.4",
