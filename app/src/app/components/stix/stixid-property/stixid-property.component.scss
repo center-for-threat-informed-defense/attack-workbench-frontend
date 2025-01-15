@@ -1,3 +1,25 @@
 .content.icon-button {
-    padding: 10px 12px !important;
+    padding-top: 12px !important;
+}
+
+.button-select {
+    padding: 2px 2px;
+    height: 30px;
+    width: 30px;
+}
+
+.stix-header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    margin-top: -16px;
+    .material-icons{
+        font-size: 13px;
+    }
+    .mat-icon {
+        height: 13px;
+        width: 15px;
+    }
+
 }

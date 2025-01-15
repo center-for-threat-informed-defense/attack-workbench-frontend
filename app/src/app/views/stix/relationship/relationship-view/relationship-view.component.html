@@ -33,14 +33,6 @@
             </div>
         </div>
     </div>
-    <div class="row" *ngIf="config.mode == 'view'">
-        <div class="col">
-            <!-- STIX ID -->
-            <app-stixid-property class="grow-to-row" [config]="{
-                object: relationship
-            }"></app-stixid-property>
-        </div>
-    </div>
     <ng-container *ngIf="config.mode == 'edit'">
         <div class="row">
             <!-- edit source/target -->
