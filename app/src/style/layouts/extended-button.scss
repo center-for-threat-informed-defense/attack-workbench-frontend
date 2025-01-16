@@ -32,3 +32,9 @@
 	   height: 24px !important;
 	}
 }
+
+.mini-icon-button {
+	@extend .small-icon-button;
+	width: 25px !important;
+	height: 25px !important;
+}
