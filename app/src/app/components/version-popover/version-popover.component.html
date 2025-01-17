@@ -1,0 +1,9 @@
+<mat-icon class="info-icon align-icon" aria-label="help" cdkDrag #popoverTrigger2="mtxPopoverTrigger"
+    [mtxPopoverTriggerFor]="popover" mtxPopoverTriggerOn="hover">
+    info_outline
+</mat-icon>
+<mtx-popover #popover="mtxPopover" [position]="['below', 'center']" enterDelay="25" leaveDelay="25">
+    <div style="max-width: 26em; font-size: 0.75em">
+        <markdown [data]="markdownContent"></markdown>
+    </div>
+</mtx-popover>
