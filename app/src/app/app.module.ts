@@ -103,6 +103,8 @@ import { AttackIDPropertyComponent } from "./components/stix/attackid-property/a
 import { AttackIDEditComponent } from "./components/stix/attackid-property/attackid-edit/attackid-edit.component";
 import { AttackIDViewComponent } from "./components/stix/attackid-property/attackid-view/attackid-view.component";
 
+import { StixIDPropertyComponent } from "./components/stix/stixid-property/stixid-property.component";
+
 import { ListPropertyComponent } from "./components/stix/list-property/list-property.component";
 import { ListEditComponent } from "./components/stix/list-property/list-edit/list-edit.component";
 import { ListViewComponent } from "./components/stix/list-property/list-view/list-view.component";
@@ -262,6 +264,7 @@ export function initConfig(appConfigService: AppConfigService) {
 		AttackIDPropertyComponent,
 		AttackIDEditComponent,
 		AttackIDViewComponent,
+		StixIDPropertyComponent,
 		ListPropertyComponent,
 		ListEditComponent,
 		ListViewComponent,
