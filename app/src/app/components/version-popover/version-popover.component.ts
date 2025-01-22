@@ -14,12 +14,6 @@ export class VersionPopoverComponent implements OnInit {
     // General guidelines applicable to all objects
     private generalGuidelines: string = `
 ### **General Versioning Guidelines**
-#### **Goals**:
-- ATT&CK moves to incremental updates.
-- Users can track when an item has changed between releases.
-- Users have a reliable indication of the degree of change to an item.
-- Published items remain stable references.
-
 #### **Incrementing Version Numbers**:
 - Version increments only once between releases (e.g., 1.0 → 1.1, not 1.3).
 - Major version increments override minor increments (e.g., 1.1 → 2.0, not 2.1).
