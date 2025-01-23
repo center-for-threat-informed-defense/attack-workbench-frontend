@@ -70,6 +70,7 @@ import { DeleteDialogComponent } from './components/delete-dialog/delete-dialog.
 import { HistoryTimelineComponent } from "./components/resources-drawer/history-timeline/history-timeline.component";
 import { ReferenceSidebarComponent } from "./components/resources-drawer/reference-sidebar/reference-sidebar.component";
 import { SearchComponent } from './components/resources-drawer/search/search.component';
+import { VersionPopoverComponent } from "./components/version-popover/version-popover.component";
 import { ReferenceEditDialogComponent } from "./components/reference-edit-dialog/reference-edit-dialog.component"
 import { MultipleChoiceDialogComponent } from "./components/multiple-choice-dialog/multiple-choice-dialog.component";
 import { ValidationResultsComponent } from "./components/validation-results/validation-results.component";
@@ -356,7 +357,8 @@ export function initConfig(appConfigService: AppConfigService) {
   		BreadcrumbComponent,
         ContributorsPageComponent,
         ContributorEditDialogComponent,
-        SearchComponent
+        SearchComponent,
+		VersionPopoverComponent
 	],
 	imports: [
 		MaterialFileInputModule,
