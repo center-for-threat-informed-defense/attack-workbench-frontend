@@ -1,8 +1,13 @@
-<div class="diff-view col grow-to-row">
-	<div class="labelled-box grow-to-row">
+<div class="property-diff col grow-to-row">
+	<div *ngIf="!isHeader; else header" class="labelled-box grow-to-row">
 		<div class="content">
 			 <div [innerHTML]="prettyHtmlDiff"></div>
 		</div>
 		<span class="labelled-box-label">{{ config.label ? config.label : config.field }}</span>
 	</div>
+    <ng-template #header>
+        <h1 class="lowercase">
+            <div [innerHTML]="prettyHtmlDiff"></div>
+        </h1>
+    </ng-template>
 </div>

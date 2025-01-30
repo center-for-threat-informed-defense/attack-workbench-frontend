@@ -1,14 +1,20 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, ViewEncapsulation } from '@angular/core';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { DiffMatchPatch } from 'diff-match-patch-ts';
 
 @Component({
   selector: 'app-property-diff',
-  templateUrl: './property-diff.component.html'
+  templateUrl: './property-diff.component.html',
+  styleUrls: ['./property-diff.component.scss'],
+  encapsulation: ViewEncapsulation.None
 })
 export class PropertyDiffComponent implements OnInit  {
   @Input() public config: PropertyDiffConfig;
   public prettyHtmlDiff: SafeHtml;
+
+  public get isHeader() {
+    return this.config.header ? this.config.header : false;
+  }
 
   constructor(public sanitizer: DomSanitizer) {
     // intentionally left blank
@@ -39,4 +45,6 @@ export interface PropertyDiffConfig {
     field: string;
     /* label; label for labelled box */
     label?: string;
+    /* whether field should be displayed as a header; default false */
+    header?: boolean;
 }

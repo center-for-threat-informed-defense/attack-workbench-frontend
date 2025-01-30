@@ -121,8 +121,3 @@ $colors: (
 .text-warn {    color: color(warn); }
 .text-error {   color: color(error); }
 .text-info {    color: color(info); }
-
-.diff-view {
-    del { background: #ffcdcd !important; }
-    ins { background: #c0f8c0 !important; }
-}
