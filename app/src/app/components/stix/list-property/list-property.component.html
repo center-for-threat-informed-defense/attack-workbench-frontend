@@ -6,4 +6,5 @@
         <span class="labelled-box-label">{{config.label? config.label : config.field}}</span>
     </div>
     <app-list-edit *ngIf="config.mode == 'edit'" class="grow-to-row" [config]="config"></app-list-edit>
+    <app-list-diff *ngIf="config.mode == 'diff'" class="grow-to-row" [config]="config"></app-list-diff>
 </div>
