@@ -7,4 +7,5 @@
         <span class="labelled-box-label">{{config.field ? config.field : 'version'}}</span>
     </div>
     <app-version-edit *ngIf="config.mode == 'edit'" [config]="config"></app-version-edit>
+    <app-version-diff *ngIf="config.mode == 'diff'" [config]="config"></app-version-diff>
 </div>
