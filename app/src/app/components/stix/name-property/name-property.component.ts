@@ -15,6 +15,19 @@ export class NamePropertyComponent implements OnInit {
     public target_obj?: StixObject;
     public loaded: boolean = false;
 
+    public get field() {
+        return this.config.field ? this.config.field : 'name';
+    }
+
+    // TODO: parent name changes
+    public get before() {
+        return this.config.object[0]?.[this.field];
+    }
+
+    public get after() {
+        return this.config.object[1]?.[this.field];
+    }
+
     constructor(private restAPIService: RestApiConnectorService) { }
 
     ngOnInit(): void {
