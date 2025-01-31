@@ -124,7 +124,7 @@ export class ListEditComponent implements OnInit, AfterContentChecked {
             this.type = 'technique';
             const subscription = this.restAPIConnectorService.getAllTechniques().subscribe({
                 next: (r: Paginated<Technique>) => {
-                    this.allObjects = r.data.filter((t) => !t.is_subtechnique);
+                    this.allObjects = r.data.filter((t) => !t.is_subtechnique && t.stixID !== (this.config.object as Technique).stixID);
                     const selectableTechniqueIDs = r.data.map(t => t.stixID);
                     this.select = new SelectionModel<string>(false, selectableTechniqueIDs);
                     this.dataLoaded = true;
