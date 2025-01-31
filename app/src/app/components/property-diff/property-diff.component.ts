@@ -9,20 +9,17 @@ import { DiffMatchPatch } from 'diff-match-patch-ts';
   encapsulation: ViewEncapsulation.None
 })
 export class PropertyDiffComponent implements OnInit  {
-  @Input() public config: PropertyDiffConfig;
-  public prettyHtmlDiff: SafeHtml;
+  @Input() public before: string;
+  @Input() public after: string;
 
-  public get isHeader() {
-    return this.config.header ? this.config.header : false;
-  }
+  public prettyHtmlDiff: SafeHtml;
 
   constructor(public sanitizer: DomSanitizer) {
     // intentionally left blank
   }
 
   ngOnInit(): void {
-    console.log('** property diff component', this.config)
-    this.generateDiffHtml(this.config.before, this.config.after)
+    this.generateDiffHtml(this.before, this.after)
   }
 
   public generateDiffHtml(newValue, oldValue) {
@@ -32,19 +29,4 @@ export class PropertyDiffComponent implements OnInit  {
     const rawHtml = dmp.diff_prettyHtml(diffs);
     this.prettyHtmlDiff = this.sanitizer.bypassSecurityTrustHtml(rawHtml);
   }
-}
-
-export interface PropertyDiffConfig {
-    /* mode; displaying the diff between two STIX objects. Two StixObjects must be specified in the objects field */
-    mode?: "diff";
-    /* before; the StixObject version pre-change */
-    before: string;
-    /* objAfter; the StixObject version post-change */
-    after: string;
-    /* field; field of object to be displayed */
-    field: string;
-    /* label; label for labelled box */
-    label?: string;
-    /* whether field should be displayed as a header; default false */
-    header?: boolean;
 }
