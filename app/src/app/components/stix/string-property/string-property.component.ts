@@ -10,6 +10,9 @@ import { StixObject } from 'src/app/classes/stix/stix-object';
 export class StringPropertyComponent {
     @Input() public config: StringPropertyConfig;
 
+    public get before() { return this.config.object[0]?.[this.config.field]}
+    public get after() { return this.config.object[1]?.[this.config.field]}
+
     constructor() {
         // intentionally left blank
     }
@@ -21,7 +24,7 @@ export interface StringPropertyConfig {
      *    edit: editing the property
      *    diff: displaying the diff between two STIX objects. If this mode is selected, two StixObjects must be specified in the objects field
      */
-    mode?: "view" | "edit";
+    mode?: "view" | "edit" | "diff";
     /* The object to show the field of
      * Note: if mode is diff, pass an array of two objects to diff
      */
