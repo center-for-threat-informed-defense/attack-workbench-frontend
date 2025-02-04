@@ -46,13 +46,7 @@ export class SaveDialogComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        if(this.config.object.workflow){
-            this.newState = this.config.object.workflow.state? this.config.object.workflow.state: "awaiting-review";
-        }
-        else{
-            this.newState = "awaiting-review";
-        }
-        //this.newState = this.config.object.workflow? this.config.object.workflow.state : "awaiting-review";
+        this.newState = "work-in-progress";
     }
 
     /**

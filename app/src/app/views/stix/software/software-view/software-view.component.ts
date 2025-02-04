@@ -17,6 +17,33 @@ export class SoftwareViewComponent extends StixViewPage implements OnInit {
         super(authenticationService);
     }
 
+    handleRelationshipChange() {
+        console.log('A change in relationships has occurred.');
+        let updatedSoftware: Software;
+        updatedSoftware = this.software;
+        updatedSoftware.workflow = {state: "work-in-progress"};
+        let rep = updatedSoftware.serialize();
+        rep.stix.modified = this.software.modified;
+        // Emit the reload event
+        this.updateSoftwareObject(this.software.stixID, this.software.modified.toISOString(), rep)
+        this.onReload.emit();
+        window.location.reload();
+    }
+
+    updateSoftwareObject(stixId: string, modified: string, updatedSoftware: Software) {
+        this.restApiConnector.updateSoftware(stixId, modified, updatedSoftware).subscribe({
+          next: (response) => {
+            console.log('Software object updated successfully:', response);
+          },
+          error: (error) => {
+            console.error('Error updating software object:', error);
+          },
+          complete: () => {
+            console.log('Complete');
+          }
+        });
+    }
+
     ngOnInit() {
         if (this.software.firstInitialized ) {
             this.software.initializeWithDefaultMarkingDefinitions(this.restApiConnector);

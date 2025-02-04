@@ -227,6 +227,11 @@ export class RestApiConnectorService extends ApiConnector {
         }
     }
 
+    updateSoftware(stixId: string, modified: string, software: Software): Observable<Software> {
+        let url = `${this.apiUrl}/software/${stixId}/modified/${modified}`
+        return this.http.put<Software>(url, software);
+    }
+
     /**
      * Get all techniques
      * @param {number} [limit] the number of techniques to retrieve
