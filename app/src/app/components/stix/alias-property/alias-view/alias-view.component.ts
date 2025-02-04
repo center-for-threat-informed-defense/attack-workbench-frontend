@@ -24,6 +24,10 @@ export class AliasViewComponent implements OnInit {
     @Input() public config: AliasPropertyConfig;
     private reReference = /\(Citation: (.*?)\)/gmu;
     public showMore: boolean = false;
+    public expandedDetails: {
+        name: string,
+        description: string
+    }[] = [];
 
     public toggleMore(): void { this.showMore = !this.showMore; }
 
@@ -34,7 +38,7 @@ export class AliasViewComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        // intentionally left blank
+        this.formatExpandedDetails();
     }
 
     /**
@@ -78,10 +82,10 @@ export class AliasViewComponent implements OnInit {
     /**
      * return list of aliases with descriptive text
      */
-    public get description(): Array<[string, string]> {
+    public formatExpandedDetails(): void {
         if (this.config.referencesField) {
             let value: string;
-            let descriptionArray: Array<[string, string]> = [];
+            this.expandedDetails = [];
 
             for (value of this.config.object[this.config.field]) {
                 let displayStr = ""
@@ -98,12 +102,10 @@ export class AliasViewComponent implements OnInit {
                             displayStr = this.replaceCitationHTML(displayStr, referenceNames[i], referenceNamesFromDescr[i]);
                         }
                     }
-                    if (this.hasDescriptiveProperty(displayStr, referenceNamesFromDescr)) descriptionArray.push([value, displayStr]);
+                    if (this.hasDescriptiveProperty(displayStr, referenceNamesFromDescr)) this.expandedDetails.push({name: value, description: displayStr});
                 }
             }
-            return descriptionArray
         }
-        return []
     }
 
     /**
