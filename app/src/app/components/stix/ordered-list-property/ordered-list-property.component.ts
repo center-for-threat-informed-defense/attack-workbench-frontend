@@ -20,10 +20,12 @@ export interface OrderedListPropertyConfig {
      *    view: viewing the ordered list property
      *    edit: editing the ordered list property
      */
-    mode?: "view" | "edit";
+    mode?: "view" | "edit" | "diff";
     /* Field from ordered list objects to be displayed; e.g., 'name'
     */
     field: string;
+    /* if specified, label with this string instead of field */
+    label?: string;
     /* Object to be edited
     */
     object: StixObject;
