@@ -102,14 +102,17 @@ import { TlpEditComponent } from "./components/stix/tlp-property/tlp-edit/tlp-ed
 import { AttackIDPropertyComponent } from "./components/stix/attackid-property/attackid-property.component";
 import { AttackIDEditComponent } from "./components/stix/attackid-property/attackid-edit/attackid-edit.component";
 import { AttackIDViewComponent } from "./components/stix/attackid-property/attackid-view/attackid-view.component";
+import { AttackidDiffComponent } from './components/stix/attackid-property/attackid-diff/attackid-diff.component';
 
 import { ListPropertyComponent } from "./components/stix/list-property/list-property.component";
 import { ListEditComponent } from "./components/stix/list-property/list-edit/list-edit.component";
 import { ListViewComponent } from "./components/stix/list-property/list-view/list-view.component";
+import { ListDiffComponent } from './components/stix/list-property/list-diff/list-diff.component';
 
 import { VersionPropertyComponent } from "./components/stix/version-property/version-property.component";
 import { VersionEditComponent } from "./components/stix/version-property/version-edit/version-edit.component";
 import { VersionViewComponent } from "./components/stix/version-property/version-view/version-view.component";
+import { VersionDiffComponent } from './components/stix/version-property/version-diff/version-diff.component';
 
 import { NamePropertyComponent } from "./components/stix/name-property/name-property.component";
 
@@ -121,6 +124,7 @@ import { AliasPropertyComponent } from './components/stix/alias-property/alias-p
 import { AliasViewComponent } from './components/stix/alias-property/alias-view/alias-view.component';
 import { AliasEditComponent } from './components/stix/alias-property/alias-edit/alias-edit.component';
 import { AliasEditDialogComponent } from './components/stix/alias-property/alias-edit/alias-edit-dialog/alias-edit-dialog.component';
+import { AliasDiffComponent } from './components/stix/alias-property/alias-diff/alias-diff.component';
 
 import { SubtypePropertyComponent } from './components/stix/subtype-property/subtype-property.component';
 import { SubtypeViewComponent } from './components/stix/subtype-property/subtype-view/subtype-view.component';
@@ -134,7 +138,7 @@ import { OrderedListEditComponent } from './components/stix/ordered-list-propert
 import { NotesEditorComponent } from './components/resources-drawer/notes-editor/notes-editor.component';
 import { ObjectStatusComponent } from './components/object-status/object-status.component';
 import { RecentActivityComponent } from './components/recent-activity/recent-activity.component';
-import { IconViewComponent } from './components/stix/icon-view/icon-view.component';
+import { IconViewComponent } from './components/icon-view/icon-view.component';
 import { IdentityPropertyComponent } from './components/stix/identity-property/identity-property.component';
 
 import { CitationPropertyComponent } from './components/stix/citation-property/citation-property.component';
@@ -213,6 +217,11 @@ import { ContributorsPageComponent } from './views/contributors-page/contributor
 import { ContributorEditDialogComponent } from './components/contributor-edit-dialog/contributor-edit-dialog.component';
 
 import { AppConfigService } from './services/config/app-config.service';
+import { DescriptiveDiffComponent } from './components/stix/descriptive-property/descriptive-diff/descriptive-diff.component';
+import { PropertyDiffComponent } from './components/property-diff/property-diff.component';
+import { CitationDiffComponent } from './components/stix/citation-property/citation-diff/citation-diff.component';
+import { OrderedListDiffComponent } from './components/stix/ordered-list-property/ordered-list-diff/ordered-list-diff.component';
+import { SubtypeDiffComponent } from './components/stix/subtype-property/subtype-diff/subtype-diff.component';
 
 export function initConfig(appConfigService: AppConfigService) {
 	return () => appConfigService.loadAppConfig();
@@ -262,12 +271,15 @@ export function initConfig(appConfigService: AppConfigService) {
 		AttackIDPropertyComponent,
 		AttackIDEditComponent,
 		AttackIDViewComponent,
+		AttackidDiffComponent,
 		ListPropertyComponent,
 		ListEditComponent,
 		ListViewComponent,
+		ListDiffComponent,
 		VersionPropertyComponent,
 		VersionEditComponent,
 		VersionViewComponent,
+		VersionDiffComponent,
 		NamePropertyComponent,
 		DatepickerPropertyComponent,
 		IconViewComponent,
@@ -320,6 +332,7 @@ export function initConfig(appConfigService: AppConfigService) {
 		AliasPropertyComponent,
 		AliasViewComponent,
 		AliasEditComponent,
+		AliasDiffComponent,
 		AliasEditDialogComponent,
 		OrderedListPropertyComponent,
 		OrderedListViewComponent,
@@ -353,7 +366,12 @@ export function initConfig(appConfigService: AppConfigService) {
   		BreadcrumbComponent,
         ContributorsPageComponent,
         ContributorEditDialogComponent,
-        SearchComponent
+        SearchComponent,
+        DescriptiveDiffComponent,
+        PropertyDiffComponent,
+        CitationDiffComponent,
+        OrderedListDiffComponent,
+        SubtypeDiffComponent
 	],
 	imports: [
 		MaterialFileInputModule,
