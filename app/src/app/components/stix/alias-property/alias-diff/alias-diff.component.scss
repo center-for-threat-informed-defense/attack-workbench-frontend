@@ -1,0 +1,37 @@
+@import "../../../../../style/globals";
+
+.alias-diff {
+    @extend .labelled-box;
+
+    > .showMore {
+        border-radius: 4px 4px 0px 0px;
+    }
+
+    .centered {
+        display: flex;
+        justify-content: center;
+        align-content: center;
+    }
+
+    .clickable {
+        cursor: pointer;
+    }
+    
+    > .description-box {
+        overflow:hidden;
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        box-sizing: border-box;
+        border: solid 1px; 
+        .dark & { border-color: border-color(dark); border-top-color: transparent; }
+        .light & { border-color: border-color(light); border-top-color: transparent; }
+        border-radius: 0px 0px 4px 4px;
+        padding: 16px 12px;
+        font-size: 16px;
+    }
+
+    .descr {
+        padding: 10px;
+    }
+}

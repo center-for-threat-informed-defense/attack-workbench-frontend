@@ -70,7 +70,7 @@ export class AliasViewComponent implements OnInit {
 
                 // Add ',' if it is not the last iteration
                 if (--arraySize) {
-                    alias = alias + ","
+                    alias = alias + ";"
                 }
                 aliasArray.push(alias);
             }

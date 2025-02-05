@@ -31,7 +31,7 @@ export interface AliasPropertyConfig {
     object: StixObject | [StixObject, StixObject];
     /* the field of the object(s) to visualize as a alias
      */
-    field?: string;
+    field: string;
     /* referencesField; references field. 
      * References will be removed if not included 
      */
