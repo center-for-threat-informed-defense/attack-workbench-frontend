@@ -26,9 +26,7 @@ export class SubtypeDiffComponent implements OnInit {
     let merged = new Map();
 
     // add before state to map
-    for (let item of this.before) {
-      merged.set(item.name, {before: item, after: null});
-    }
+    this.before.forEach(item => merged.set(item.name, {before: item, after: null}));
 
     // add after state to map
     for (let item of this.after) {

@@ -56,8 +56,9 @@ export class DescriptiveViewComponent implements OnInit {
      * @param completeReference complete reference e.g., (Citation: Source Name)
      */
     private replaceCitationHTML(displayStr: string, sourceName: string, completeReference: string): string {
-        let reference = this.config.referencesField.getReference(sourceName);
-        let reference_number = this.config.referencesField.getIndexOfReference(sourceName);
+        let referencesField = this.config.object[this.config.referencesField];
+        let reference = referencesField.getReference(sourceName);
+        let reference_number = referencesField.getIndexOfReference(sourceName);
 
         if (reference && reference_number) {
             let refHTML = ""

@@ -46,7 +46,7 @@ export class DescriptiveEditComponent implements OnDestroy, OnInit {
     public parseCitations(): void {
         if (this.parseReferences) {
             this.parsingCitations = true;
-            this.sub = this.config.object['external_references'].parseObjectCitations(this.config.object, this.restApiConnector).subscribe({
+            this.sub = this.config.object[this.config.referencesField].parseObjectCitations(this.config.object, this.restApiConnector).subscribe({
                 next: (result) => {
                     this.parsingCitations = false;
                     this.editorService.onReloadReferences.emit();
