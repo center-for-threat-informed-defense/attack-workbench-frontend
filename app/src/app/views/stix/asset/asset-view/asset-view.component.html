@@ -107,7 +107,7 @@
         </div>
         <div class="row" *ngIf="canEdit">
             <div class="col">
-                <app-add-relationship-button (created)="techniqueList.applyControls(); onReload.emit()" [config]="{
+                <app-add-relationship-button (created)="techniqueList.applyControls(); handleRelationshipChangeObject()" [config]="{
                     label: 'add a technique',
                     relationship_type: 'targets',
                     sourceType: 'technique',

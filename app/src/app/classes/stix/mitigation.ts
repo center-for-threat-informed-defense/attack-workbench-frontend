@@ -82,7 +82,7 @@ export class Mitigation extends StixObject {
      * @param restAPIService [RestApiConnectorService] the service to perform the POST/PUT through
      * @returns {Observable} of the post
      */
-    public save(restAPIService: RestApiConnectorService): Observable<Mitigation> {
+    public save(restAPIService: RestApiConnectorService) : Observable<Mitigation> {
         let postObservable = restAPIService.postMitigation(this);
         let subscription = postObservable.subscribe({
             next: (result) => { this.deserialize(result.serialize()); },
@@ -102,4 +102,20 @@ export class Mitigation extends StixObject {
         });
         return deleteObservable;
     }
+
+    /**
+     * Update the state of the STIX object in the database.
+     * @param restAPIService [RestApiConnectorService] the service to perform the PUT through
+     * @returns {Observable} of the put
+     */
+    public update(restAPIService: RestApiConnectorService) : Observable<Mitigation> {
+        let putObservable = restAPIService.putMitigation(this);
+        let subscription = putObservable.subscribe({
+            next: (result) => { this.deserialize(result.serialize()); },
+            complete: () => { subscription.unsubscribe(); }
+        });
+        return putObservable;
+    }
+
+    
 }

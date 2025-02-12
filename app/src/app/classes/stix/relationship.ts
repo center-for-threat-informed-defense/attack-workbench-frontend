@@ -419,7 +419,7 @@ export class Relationship extends StixObject {
      * @param restAPIService [RestApiConnectorService] the service to perform the POST/PUT through
      * @returns {Observable} of the post
      */
-    public save(restAPIService: RestApiConnectorService): Observable<Relationship> {        
+    public save(restAPIService: RestApiConnectorService) : Observable<Relationship> {        
         let postObservable = restAPIService.postRelationship(this);
         let subscription = postObservable.subscribe({
             next: (result) => { this.deserialize(result.serialize()); },
@@ -439,5 +439,19 @@ export class Relationship extends StixObject {
             complete: () => { subscription.unsubscribe(); }
         });
         return deleteObservable;
+    }
+
+    /**
+     * Update the state of the STIX object in the database.
+     * @param restAPIService [RestApiConnectorService] the service to perform the PUT through
+     * @returns {Observable} of the put
+     */
+    public update(restAPIService: RestApiConnectorService) : Observable<Relationship> { 
+        let putObservable = restAPIService.putRelationship(this);
+        let subscription = putObservable.subscribe({
+            next: (result) => { this.deserialize(result.serialize()); },
+            complete: () => { subscription.unsubscribe(); }
+        });
+        return putObservable;
     }
 }

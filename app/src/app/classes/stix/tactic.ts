@@ -85,7 +85,7 @@ export class Tactic extends StixObject {
      * @param restAPIService [RestApiConnectorService] the service to perform the POST/PUT through
      * @returns {Observable} of the post
      */
-    public save(restAPIService: RestApiConnectorService): Observable<Tactic> {
+    public save(restAPIService: RestApiConnectorService) : Observable<Tactic> {
         let postObservable = restAPIService.postTactic(this);
         let subscription = postObservable.subscribe({
             next: (result) => { this.deserialize(result.serialize()); },
@@ -97,5 +97,19 @@ export class Tactic extends StixObject {
     public delete(_restAPIService: RestApiConnectorService): Observable<{}> {
         // deletion is not supported on Tactic objects
         return of({});
+    }
+
+    /**
+     * Update the state of the STIX object in the database.
+     * @param restAPIService [RestApiConnectorService] the service to perform the PUT through
+     * @returns {Observable} of the put
+     */
+    public update(restAPIService: RestApiConnectorService) : Observable<Tactic> {
+        let putObservable = restAPIService.putTactic(this);
+        let subscription = putObservable.subscribe({
+            next: (result) => { this.deserialize(result.serialize()); },
+            complete: () => { subscription.unsubscribe(); }
+        });
+        return putObservable;
     }
 }

@@ -131,6 +131,20 @@ export class Asset extends StixObject {
         });
         return deleteObservable;
     }
+
+    /**
+     * Update the state of the STIX object in the database.
+     * @param restAPIService [RestApiConnectorService] the service to perform the PUT through
+     * @returns {Observable} of the put
+     */
+    public update(restAPIService: RestApiConnectorService) : Observable<Asset> {
+        let putObservable = restAPIService.putAsset(this);
+        let subscription = putObservable.subscribe({
+            next: (result) => { this.deserialize(result.serialize()); },
+            complete: () => { subscription.unsubscribe(); }
+        });
+        return putObservable;
+    }
 }
 
 export interface RelatedAsset {

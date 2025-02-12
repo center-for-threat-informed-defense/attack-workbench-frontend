@@ -15,8 +15,8 @@ export class TacticViewComponent extends StixViewPage implements OnInit {
     public get tactic(): Tactic { return this.config.object as Tactic; }
     public techniques: StixObject[] = [];
 
-    constructor(authenticationService: AuthenticationService, private restApiConnector: RestApiConnectorService) {
-        super(authenticationService);
+    constructor(authenticationService: AuthenticationService, restApiConnector: RestApiConnectorService) {
+        super(authenticationService, restApiConnector);
     }
 
     ngOnInit() {

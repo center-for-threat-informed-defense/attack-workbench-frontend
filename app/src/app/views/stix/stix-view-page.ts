@@ -3,10 +3,11 @@ import { MatDialogRef } from '@angular/material/dialog';
 import { StixObject } from 'src/app/classes/stix/stix-object';
 import { AuthenticationService } from 'src/app/services/connectors/authentication/authentication.service';
 import { StixDialogComponent } from './stix-dialog/stix-dialog.component';
+import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/rest-api-connector.service';
 
 @Component({template: ''})
 export abstract class StixViewPage {
-    constructor(private authenticationService: AuthenticationService) { }
+    constructor(private authenticationService: AuthenticationService, protected restApiConnector?: RestApiConnectorService) { }
 
     //configuration for the view page behavior
     @Input() public config: StixViewConfig;
@@ -18,6 +19,31 @@ export abstract class StixViewPage {
     public openHistory():void { this.onOpenHistory.emit(); }
     @Output() public onOpenNotes = new EventEmitter();
     public openNotes(): void { this.onOpenNotes.emit(); }
+    @Output() public onReload = new EventEmitter();
+
+    handleRelationshipChangeObject() {
+        if (this.restApiConnector.isRelationshipPosted()){
+            let updatedObject = this.config.object;
+                if (updatedObject instanceof StixObject){
+                    updatedObject.workflow = {state: "work-in-progress"};
+                }
+                if (updatedObject instanceof StixObject){
+                    updatedObject.update(this.restApiConnector).subscribe({
+                        next: (response) => {
+                          console.log('Software object updated successfully:', response);
+                          this.onReload.emit();
+                          window.location.reload();
+                        },
+                        error: (error) => {
+                          console.error('Error updating software object:', error);
+                        },
+                        complete: () => {
+                          console.log('Complete');
+                        }
+                    });
+                }
+        }
+    }
 }
 
 export interface StixViewConfig {

@@ -13,8 +13,8 @@ export class CampaignViewComponent extends StixViewPage implements OnInit {
     @Output() public onReload = new EventEmitter();
     public get campaign(): Campaign { return this.config.object as Campaign; }
 
-    constructor(authenticationService: AuthenticationService, private restApiConnector: RestApiConnectorService) {
-        super(authenticationService);
+    constructor(authenticationService: AuthenticationService, restApiConnector: RestApiConnectorService) {
+        super(authenticationService, restApiConnector);
     }
 
     ngOnInit(): void {

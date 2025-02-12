@@ -130,4 +130,18 @@ export class Campaign extends StixObject {
         });
         return deleteObservable;
     }
+
+    /**
+     * Update the state of the STIX object in the database.
+     * @param restAPIService [RestApiConnectorService] the service to perform the PUT through
+     * @returns {Observable} of the put
+     */
+    public update(restAPIService: RestApiConnectorService) : Observable<Campaign> {
+        let putObservable = restAPIService.putCampaign(this);
+        let subscription = putObservable.subscribe({
+            next: (result) => { this.deserialize(result.serialize()); },
+            complete: () => { subscription.unsubscribe(); }
+        });
+        return putObservable;
+    }
 }

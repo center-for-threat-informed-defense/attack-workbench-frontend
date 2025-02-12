@@ -13,35 +13,8 @@ export class SoftwareViewComponent extends StixViewPage implements OnInit {
     @Output() public onReload = new EventEmitter();
     public get software(): Software { return this.config.object as Software; }
 
-    constructor(authenticationService: AuthenticationService, private restApiConnector: RestApiConnectorService) {
-        super(authenticationService);
-    }
-
-    handleRelationshipChange() {
-        console.log('A change in relationships has occurred.');
-        let updatedSoftware: Software;
-        updatedSoftware = this.software;
-        updatedSoftware.workflow = {state: "work-in-progress"};
-        let rep = updatedSoftware.serialize();
-        rep.stix.modified = this.software.modified;
-        // Emit the reload event
-        this.updateSoftwareObject(this.software.stixID, this.software.modified.toISOString(), rep)
-        this.onReload.emit();
-        window.location.reload();
-    }
-
-    updateSoftwareObject(stixId: string, modified: string, updatedSoftware: Software) {
-        this.restApiConnector.updateSoftware(stixId, modified, updatedSoftware).subscribe({
-          next: (response) => {
-            console.log('Software object updated successfully:', response);
-          },
-          error: (error) => {
-            console.error('Error updating software object:', error);
-          },
-          complete: () => {
-            console.log('Complete');
-          }
-        });
+    constructor(authenticationService: AuthenticationService, restApiConnector: RestApiConnectorService) {
+        super(authenticationService, restApiConnector);
     }
 
     ngOnInit() {
@@ -50,4 +23,27 @@ export class SoftwareViewComponent extends StixViewPage implements OnInit {
         }
     }
 
+    // handleRelationshipChangeObject() {
+    //     if (this.restApiConnector.isRelationshipPosted()){
+    //         let updatedObject = this.config.object;
+    //             if (updatedObject instanceof Software){
+    //                 updatedObject.workflow = {state: "work-in-progress"};
+    //             }
+    //             if (updatedObject instanceof Software){
+    //                 updatedObject.update(this.restApiConnector).subscribe({
+    //                     next: (response) => {
+    //                       console.log('Software object updated successfully:', response);
+    //                       this.onReload.emit();
+    //                       window.location.reload();
+    //                     },
+    //                     error: (error) => {
+    //                       console.error('Error updating software object:', error);
+    //                     },
+    //                     complete: () => {
+    //                       console.log('Complete');
+    //                     }
+    //                 });
+    //             }
+    //     }
+    // }
 }

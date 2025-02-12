@@ -75,7 +75,7 @@ export class Matrix extends StixObject {
      * @param restAPIService [RestApiConnectorService] the service to perform the POST/PUT through
      * @returns {Observable} of the post
      */
-    public save(restAPIService: RestApiConnectorService): Observable<Matrix> {
+    public save(restAPIService: RestApiConnectorService) : Observable<Matrix> {
         let postObservable = restAPIService.postMatrix(this);
         let subscription = postObservable.subscribe({
             next: (result) => { this.deserialize(result.serialize()); },
@@ -87,5 +87,19 @@ export class Matrix extends StixObject {
     public delete(_restAPIService: RestApiConnectorService): Observable<{}> {
         // deletion is not supported on Matrix objects
         return of({});
+    }
+
+    /**
+     * Update the state of the STIX object in the database.
+     * @param restAPIService [RestApiConnectorService] the service to perform the PUT through
+     * @returns {Observable} of the put
+     */
+    public update(restAPIService: RestApiConnectorService) : Observable<Matrix> {
+        let putObservable = restAPIService.putMatrix(this);
+        let subscription = putObservable.subscribe({
+            next: (result) => { this.deserialize(result.serialize()); },
+            complete: () => { subscription.unsubscribe(); }
+        });
+        return putObservable;
     }
 }

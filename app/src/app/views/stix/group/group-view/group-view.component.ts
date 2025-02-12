@@ -16,8 +16,8 @@ export class GroupViewComponent extends StixViewPage implements OnInit {
     public relationships_techniques: Relationship[] = [];
     public relationships_software: Relationship[] = [];
 
-    constructor(authenticationService: AuthenticationService, private restApiConnector: RestApiConnectorService) {
-        super(authenticationService);
+    constructor(authenticationService: AuthenticationService, restApiConnector: RestApiConnectorService) {
+        super(authenticationService, restApiConnector);
     }
 
     ngOnInit() {

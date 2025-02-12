@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, EventEmitter, Inject, OnInit, Output, ViewEncapsulation } from '@angular/core';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { forkJoin, Observable, of } from 'rxjs';
 import { filter, map, switchMap } from 'rxjs/operators';
@@ -39,7 +39,6 @@ const stixTypeToClass = {
     encapsulation: ViewEncapsulation.None,
 })
 export class StixDialogComponent implements OnInit {
-
     constructor(public dialogRef: MatDialogRef<StixDialogComponent>,
                 @Inject(MAT_DIALOG_DATA) public _config: StixViewConfig,
                 public sidebarService: SidebarService,
@@ -49,6 +48,7 @@ export class StixDialogComponent implements OnInit {
                 private dialog: MatDialog) {
         if (this._config.mode && this._config.mode == "edit" && this.authenticationService.canEdit()) this.startEditing();
     }
+    @Output() public saveClicked = new EventEmitter();
 
     public get canDelete(): boolean { return this.authenticationService.canDelete(); }
 
@@ -122,6 +122,7 @@ export class StixDialogComponent implements OnInit {
     }
 
     public save() {
+        this.saveClicked.emit();
         let object = Array.isArray(this.config.object) ? this.config.object[0] : this.config.object;
         let subscription = object.save(this.restApiService).subscribe({
             next: (result) => {

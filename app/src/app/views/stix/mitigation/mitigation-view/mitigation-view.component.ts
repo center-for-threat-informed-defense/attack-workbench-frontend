@@ -16,8 +16,8 @@ export class MitigationViewComponent extends StixViewPage implements OnInit {
 
     public relationships: Relationship[] = [];
 
-    constructor(authenticationService: AuthenticationService, private restApiConnector: RestApiConnectorService) {
-        super(authenticationService);
+    constructor(authenticationService: AuthenticationService, restApiConnector: RestApiConnectorService) {
+        super(authenticationService, restApiConnector);
     }
 
     ngOnInit() {
