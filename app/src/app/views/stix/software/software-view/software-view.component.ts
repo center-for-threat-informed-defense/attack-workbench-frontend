@@ -22,28 +22,4 @@ export class SoftwareViewComponent extends StixViewPage implements OnInit {
             this.software.initializeWithDefaultMarkingDefinitions(this.restApiConnector);
         }
     }
-
-    // handleRelationshipChangeObject() {
-    //     if (this.restApiConnector.isRelationshipPosted()){
-    //         let updatedObject = this.config.object;
-    //             if (updatedObject instanceof Software){
-    //                 updatedObject.workflow = {state: "work-in-progress"};
-    //             }
-    //             if (updatedObject instanceof Software){
-    //                 updatedObject.update(this.restApiConnector).subscribe({
-    //                     next: (response) => {
-    //                       console.log('Software object updated successfully:', response);
-    //                       this.onReload.emit();
-    //                       window.location.reload();
-    //                     },
-    //                     error: (error) => {
-    //                       console.error('Error updating software object:', error);
-    //                     },
-    //                     complete: () => {
-    //                       console.log('Complete');
-    //                     }
-    //                 });
-    //             }
-    //     }
-    // }
 }

@@ -20,30 +20,6 @@ export abstract class StixViewPage {
     @Output() public onOpenNotes = new EventEmitter();
     public openNotes(): void { this.onOpenNotes.emit(); }
     @Output() public onReload = new EventEmitter();
-
-    handleRelationshipChangeObject() {
-        if (this.restApiConnector.isRelationshipPosted()){
-            let updatedObject = this.config.object;
-                if (updatedObject instanceof StixObject){
-                    updatedObject.workflow = {state: "work-in-progress"};
-                }
-                if (updatedObject instanceof StixObject){
-                    updatedObject.update(this.restApiConnector).subscribe({
-                        next: (response) => {
-                          console.log('Software object updated successfully:', response);
-                          this.onReload.emit();
-                          window.location.reload();
-                        },
-                        error: (error) => {
-                          console.error('Error updating software object:', error);
-                        },
-                        complete: () => {
-                          console.log('Complete');
-                        }
-                    });
-                }
-        }
-    }
 }
 
 export interface StixViewConfig {

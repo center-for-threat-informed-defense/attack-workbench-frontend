@@ -128,7 +128,7 @@
         </div>
         <div class="row" *ngIf="canEdit">
             <div class="col">
-                <app-add-relationship-button (created)="groupList.applyControls(); handleRelationshipChangeObject()" [config]="{
+                <app-add-relationship-button (created)="groupList.applyControls(); onReload.emit()" [config]="{
                     label: 'add a group',
                     relationship_type: 'uses',
                     sourceType: 'group',
@@ -157,7 +157,7 @@
         </div>
         <div class="row" *ngIf="canEdit">
             <div class="col">
-                <app-add-relationship-button (created)="campaignList.applyControls(); handleRelationshipChangeObject()" [config]="{
+                <app-add-relationship-button (created)="campaignList.applyControls(); onReload.emit()" [config]="{
                     label: 'add a campaign',
                     relationship_type: 'uses',
                     sourceType: 'campaign',

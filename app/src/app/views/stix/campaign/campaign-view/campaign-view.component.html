@@ -115,7 +115,7 @@
         </div>
         <div class="row" *ngIf="canEdit">
             <div class="col">
-                <app-add-relationship-button (created)="groupsList.applyControls(); handleRelationshipChangeObject()" [config]="{
+                <app-add-relationship-button (created)="groupsList.applyControls(); onReload.emit()" [config]="{
                     label: 'add a group',
                     relationship_type: 'attributed-to',
                     targetType: 'group',
@@ -144,7 +144,7 @@
         </div>
         <div class="row" *ngIf="canEdit">
             <div class="col">
-                <app-add-relationship-button (created)="techniqueList.applyControls(); handleRelationshipChangeObject()" [config]="{
+                <app-add-relationship-button (created)="techniqueList.applyControls(); onReload.emit()" [config]="{
                     label: 'add a technique',
                     relationship_type: 'uses',
                     targetType: 'technique',
@@ -154,7 +154,7 @@
         </div>
         <div class="row">
             <div class="col">
-                <app-stix-list (created)="handleRelationshipChangeObject()" #techniqueList [config]="{
+                <app-stix-list (created)="onReload.emit()" #techniqueList [config]="{
                     'type': 'relationship', 
                     'sourceRef': campaign.stixID,
                     'targetType': 'technique',
@@ -173,7 +173,7 @@
         </div>
         <div class="row" *ngIf="canEdit">
             <div class="col">
-                <app-add-relationship-button (created)="softwareList.applyControls(); handleRelationshipChangeObject()" [config]="{
+                <app-add-relationship-button (created)="softwareList.applyControls(); onReload.emit()" [config]="{
                     label: 'add a software',
                     relationship_type: 'uses',
                     targetType: 'software',

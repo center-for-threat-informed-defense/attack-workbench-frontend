@@ -111,7 +111,7 @@ export class RestApiConnectorService extends ApiConnector {
     /**
      * boolean to keep track of relationship changes for a source object
      */
-    private relationshipPosted = false;
+    public relationshipPosted = false;
 
 
     constructor(private http: HttpClient, private snackbar: MatSnackBar) {

@@ -251,7 +251,7 @@
             </div>
             <div class="row" *ngIf="canEdit">
                 <div class="col">
-                    <app-add-relationship-button (created)="subTechniquesList.applyControls(); handleRelationshipChangeObject()" [config]="{
+                    <app-add-relationship-button (created)="subTechniquesList.applyControls(); onReload.emit()" [config]="{
                         label: 'add a sub-technique',
                         relationship_type: 'subtechnique-of',
                         target_object: technique
@@ -299,7 +299,7 @@
         </div>
         <div class="row" *ngIf="canEdit">
             <div class="col">
-                <app-add-relationship-button (created)="campaignList.applyControls(); handleRelationshipChangeObject()" [config]="{
+                <app-add-relationship-button (created)="campaignList.applyControls();" [config]="{
                     label: 'add a campaign',
                     relationship_type: 'uses',
                     sourceType: 'campaign',
@@ -327,7 +327,7 @@
         </div>
         <div class="row" *ngIf="canEdit">
             <div class="col">
-                <app-add-relationship-button (created)="mitigatesList.applyControls(); handleRelationshipChangeObject()" [config]="{
+                <app-add-relationship-button (created)="mitigatesList.applyControls(); onReload.emit()" [config]="{
                     label: 'add a mitigation',
                     relationship_type: 'mitigates',
                     target_object: technique
@@ -353,7 +353,7 @@
         </div>
         <div class="row" *ngIf="canEdit">
             <div class="col">
-                <app-add-relationship-button (created)="usesList.applyControls(); handleRelationshipChangeObject()" [config]="{
+                <app-add-relationship-button (created)="usesList.applyControls(); onReload.emit()" [config]="{
                     label: 'add a procedure example',
                     relationship_type: 'uses',
                     target_object: technique
@@ -379,7 +379,7 @@
         </div>
         <div class="row" *ngIf="canEdit">
             <div class="col">
-                <app-add-relationship-button (created)="detectsList.applyControls(); handleRelationshipChangeObject()" [config]="{
+                <app-add-relationship-button (created)="detectsList.applyControls(); onReload.emit()" [config]="{
                     label: 'add a data source',
                     relationship_type: 'detects',
                     target_object: technique
@@ -405,7 +405,7 @@
         </div>
         <div class="row" *ngIf="canEdit">
             <div class="col">
-                <app-add-relationship-button (created)="assetList.applyControls(); handleRelationshipChangeObject()" [config]="{
+                <app-add-relationship-button (created)="assetList.applyControls(); onReload.emit()" [config]="{
                     label: 'add an asset',
                     relationship_type: 'targets',
                     source_object: technique
