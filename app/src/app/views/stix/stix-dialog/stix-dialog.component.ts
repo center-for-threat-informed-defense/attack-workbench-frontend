@@ -128,7 +128,12 @@ export class StixDialogComponent implements OnInit {
             next: (result) => {
                 this.editorService.onEditingStopped.emit();
                 this._config.is_new = false;
-                if (object.attackType == 'relationship') this.updateRelationshipObjects(object as Relationship); // update source/target object versions
+                if (object.attackType == 'relationship' && object instanceof Relationship)
+                {
+                    this.updateRelationshipObjects(object as Relationship); // update source/target object versions
+                    let source_object = this.getObject(object.source_object.stix.type, object.source_object);
+                    this.updateSourceObject(this.restApiService, source_object,object)
+                }
                 if (this.prevObject) this.revertToPreviousObject();
                 else if (object.attackType == 'data-component') { // view data component on save
                     this.validating = false;
@@ -189,6 +194,11 @@ export class StixDialogComponent implements OnInit {
                 if (confirm) {
                     // delete the object
                     object.delete(this.restApiService);
+                    if (object.attackType == 'relationship' && object instanceof Relationship)
+                    {
+                        let source_object = this.getObject(object.source_object.stix.type, object.source_object);
+                        this.updateSourceObject(this.restApiService, source_object,object)
+                    }
                     this.discardChanges();
                 }
             },
@@ -242,6 +252,23 @@ export class StixDialogComponent implements OnInit {
             });
         }
     }
+
+       public updateSourceObject(restAPIService: RestApiConnectorService, object: StixObject, relationship: Relationship) {
+        object.workflow = {state: "work-in-progress"};
+            object.update(restAPIService).subscribe({
+                next: (response) => {
+                  console.log('Object updated successfully:', response);
+                  window.location.reload();
+                },
+                error: (error) => {
+                  console.error('Error updating object:', error);
+                },
+                complete: () => {
+                  console.log('Complete');
+                }
+            });
+    }
+
 
     /**
      * Creates and returns the deserialized object

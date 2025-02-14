@@ -107,7 +107,7 @@ export interface Namespace {
 })
 export class RestApiConnectorService extends ApiConnector {
     private get apiUrl(): string { return environment.integrations.rest_api.url; }
-
+    
     /**
      * boolean to keep track of relationship changes for a source object
      */
