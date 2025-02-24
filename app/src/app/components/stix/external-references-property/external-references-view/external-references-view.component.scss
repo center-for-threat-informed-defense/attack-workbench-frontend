@@ -22,12 +22,10 @@
     li {
         padding-bottom: 10px;
         padding-top: 0px;
-        padding-left: 10px;
+        padding-left: 8px;
     }
 
-
     li::marker {
-        font-size: 22px;
         content: "[" attr(value) "]";
     }
 

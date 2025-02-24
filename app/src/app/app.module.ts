@@ -222,6 +222,8 @@ import { PropertyDiffComponent } from './components/property-diff/property-diff.
 import { CitationDiffComponent } from './components/stix/citation-property/citation-diff/citation-diff.component';
 import { OrderedListDiffComponent } from './components/stix/ordered-list-property/ordered-list-diff/ordered-list-diff.component';
 import { SubtypeDiffComponent } from './components/stix/subtype-property/subtype-diff/subtype-diff.component';
+import { ExternalReferencesDiffComponent } from './components/stix/external-references-property/external-references-diff/external-references-diff.component';
+import { BooleanPropertyComponent } from './components/stix/boolean-property/boolean-property.component';
 
 export function initConfig(appConfigService: AppConfigService) {
 	return () => appConfigService.loadAppConfig();
@@ -371,7 +373,9 @@ export function initConfig(appConfigService: AppConfigService) {
         PropertyDiffComponent,
         CitationDiffComponent,
         OrderedListDiffComponent,
-        SubtypeDiffComponent
+        SubtypeDiffComponent,
+        ExternalReferencesDiffComponent,
+        BooleanPropertyComponent
 	],
 	imports: [
 		MaterialFileInputModule,
