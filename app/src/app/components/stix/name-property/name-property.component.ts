@@ -19,12 +19,12 @@ export class NamePropertyComponent implements OnInit {
         return this.config.field ? this.config.field : 'name';
     }
 
-    // TODO: parent name changes
-    public get before() {
+    // TODO: parent name / parent name changes
+    public get current() {
         return this.config.object[0]?.[this.field];
     }
 
-    public get after() {
+    public get previous() {
         return this.config.object[1]?.[this.field];
     }
 

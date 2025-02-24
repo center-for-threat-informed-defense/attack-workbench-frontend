@@ -9,10 +9,8 @@ export class BooleanPropertyComponent {
   @Input() public config: BooleanPropertyConfig;
 
   public get object() { return Array.isArray(this.config.object) ? this.config.object[0] : this.config.object; }
-
-  public get before(): string { return this.config.object[0]?.[this.config.field]; }
-  
-  public get after(): string { return this.config.object[1]?.[this.config.field]; }
+  public get current(): string { return this.config.object[0]?.[this.config.field]; }
+  public get previous(): string { return this.config.object[1]?.[this.config.field]; }
 }
 
 export interface BooleanPropertyConfig {

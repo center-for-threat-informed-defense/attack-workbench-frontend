@@ -9,8 +9,6 @@ export class VersionDiffComponent {
   @Input() public config: VersionPropertyConfig;
 
   public get field(): string { return this.config.field ? this.config.field : 'version'; }
-  
-  public get before(): string { return this.config.object[0]?.[this.field]?.version; }
-  
-  public get after(): string { return this.config.object[1]?.[this.field]?.version; }
+  public get current(): string { return this.config.object[0]?.[this.field]?.version; }
+  public get previous(): string { return this.config.object[1]?.[this.field]?.version; }
 }

@@ -56,12 +56,12 @@ export class DatepickerPropertyComponent {
         return null;
     }
 
-    public get before() {
+    public get current() {
       let d = this.config.object[0]?.[this.config.field];
       return moment.utc(d).format('MMMM YYYY');
     }
 
-    public get after() {
+    public get previous() {
       let d = this.config.object[1]?.[this.config.field];
       return moment.utc(d).format('MMMM YYYY');
     }

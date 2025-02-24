@@ -27,7 +27,7 @@
 	</div>
 	<div *ngIf="config.mode == 'diff'">
 		<h1 class="lowercase">
-			<app-property-diff [before]="before" [after]="after"></app-property-diff>
+			<app-property-diff [before]="previous" [after]="current"></app-property-diff>
 		</h1>
 		<h3 class="status">
 			<span class="warning-text" *ngIf="config.object[0]['deprecated']">deprecated</span>

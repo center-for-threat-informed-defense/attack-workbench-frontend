@@ -8,8 +8,8 @@ import { SubtypePropertyConfig } from '../subtype-property.component';
 export class SubtypeDiffComponent implements OnInit {
   @Input() public config: SubtypePropertyConfig;
 
-  public get before() { return this.config.object[0]?.[this.config.field] || []; }
-  public get after() { return this.config.object[1]?.[this.config.field] || []; }
+  public get current() { return this.config.object[0]?.[this.config.field] || []; }
+  public get previous() { return this.config.object[1]?.[this.config.field] || []; }
 
   public detailTable: any[] = [];
 
@@ -26,10 +26,10 @@ export class SubtypeDiffComponent implements OnInit {
     let merged = new Map();
 
     // add before state to map
-    this.before.forEach(item => merged.set(item.name, {before: item, after: null}));
+    this.previous.forEach(item => merged.set(item.name, {before: item, after: null}));
 
     // add after state to map
-    for (let item of this.after) {
+    for (let item of this.current) {
       if (merged.has(item.name)) merged.get(item.name).after = item;
       else merged.set(item.name, {before: null, after: item});
     }

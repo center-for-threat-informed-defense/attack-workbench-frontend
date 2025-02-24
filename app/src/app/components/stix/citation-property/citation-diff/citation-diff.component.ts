@@ -8,7 +8,6 @@ import { CitationPropertyConfig } from '../citation-property.component';
 export class CitationDiffComponent {
   @Input() public config: CitationPropertyConfig;
 
-  public get before(): string { return this.config.object[0]?.[this.config.field]; }
-  
-  public get after(): string { return this.config.object[1]?.[this.config.field]; }
+  public get current(): string { return this.config.object[0]?.[this.config.field]; }
+  public get previous(): string { return this.config.object[1]?.[this.config.field]; }
 }

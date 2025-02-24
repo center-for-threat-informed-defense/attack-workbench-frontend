@@ -20,7 +20,7 @@ export class PropertyDiffComponent implements OnInit  {
     this.generateDiffHtml(this.before, this.after)
   }
 
-  public generateDiffHtml(newValue, oldValue) {
+  public generateDiffHtml(oldValue, newValue) {
     const dmp = new DiffMatchPatch();
     const diffs = dmp.diff_main(oldValue, newValue);
     dmp.diff_cleanupSemantic(diffs);

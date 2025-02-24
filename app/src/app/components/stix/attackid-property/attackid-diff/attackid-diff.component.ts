@@ -8,9 +8,6 @@ import { AttackIDPropertyConfig } from '../attackid-property.component';
 export class AttackidDiffComponent {
   @Input() public config: AttackIDPropertyConfig;
 
-  public get before(): string { return this.config.object[0]?.['attackID']; }
-
-  public get after(): string { return this.config.object[1]?.['attackID']}
-
-
+  public get current(): string { return this.config.object[0]?.['attackID']; }
+  public get previous(): string { return this.config.object[1]?.['attackID']}
 }

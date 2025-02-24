@@ -13,7 +13,7 @@
     </div>
     <div *ngIf="config.mode == 'diff'" class="labelled-box grow-to-row">
         <div class="content">
-            <app-property-diff [before]="before" [after]="after"></app-property-diff>
+            <app-property-diff [before]="previous" [after]="current"></app-property-diff>
         </div>
         <span class="labelled-box-label">{{ config.label ? config.label : config.field }}</span>
     </div>

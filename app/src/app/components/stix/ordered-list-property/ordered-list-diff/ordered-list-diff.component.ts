@@ -9,11 +9,11 @@ export class OrderedListDiffComponent {
   @Input() public config: OrderedListPropertyConfig;
   private _idToLabel: Map<string, string>;
 
-  public get before() {
+  public get current() {
     let list = this.config.object[0]?.[this.config.objectOrderedListField];
     return list.map(tid => this.getLabel(tid)).join('; ')
   }
-  public get after() {
+  public get previous() {
     let list = this.config.object[1]?.[this.config.objectOrderedListField];
     return list.map(tid => this.getLabel(tid)).join('; ')
   }

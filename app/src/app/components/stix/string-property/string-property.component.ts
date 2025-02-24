@@ -10,8 +10,8 @@ import { StixObject } from 'src/app/classes/stix/stix-object';
 export class StringPropertyComponent {
     @Input() public config: StringPropertyConfig;
 
-    public get before() { return this.config.object[0]?.[this.config.field]}
-    public get after() { return this.config.object[1]?.[this.config.field]}
+    public get current() { return this.config.object[0]?.[this.config.field]}
+    public get previous() { return this.config.object[1]?.[this.config.field]}
 
     constructor() {
         // intentionally left blank

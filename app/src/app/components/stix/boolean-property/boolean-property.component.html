@@ -20,13 +20,13 @@
     <ng-container *ngIf="config.mode == 'diff'">
         <div class="labelled-box grow-to-row property-diff">
             <div class="content no-padding">
-                <span *ngIf="before !== after; else noChange">
-                    <span class="before">{{ before }}</span>
+                <span *ngIf="previous !== current; else noChange">
+                    <span class="before">{{ previous }}</span>
                     &rarr;
-                    <span class="after">{{ after }}</span>
+                    <span class="after">{{ current }}</span>
                 </span>
                 <ng-template #noChange>
-                    <span>{{ after }}</span>
+                    <span>{{ current }}</span>
                 </ng-template>
             </div>
             <span class="labelled-box-label">{{ config.label }}</span>

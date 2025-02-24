@@ -21,7 +21,7 @@ import { animate, style, transition, trigger } from '@angular/animations';
 })
 export class AliasDiffComponent implements OnInit {
   @Input() public config: AliasPropertyConfig;
-  private reReference = /\(Citation: (.*?)\)/gmu;
+
   public showMore: boolean = false;
   public expandedDetails: {
     name: string,
@@ -34,11 +34,11 @@ export class AliasDiffComponent implements OnInit {
 
   public get wrap() { return this.config.hasOwnProperty('wrap') ? this.config.wrap : true; }
 
-  public get before() { return this.config.object[0]; }
-  public get aliasesBefore() { return this.before?.[this.config.field].slice(1).join('; ') || ''; }
+  public get current() { return this.config.object[0]; }
+  public get currentAliases() { return this.current?.[this.config.field].slice(1).join('; ') || ''; }
 
-  public get after() { return this.config.object[1]; }
-  public get aliasesAfter() { return this.after?.[this.config.field].slice(1).join('; ') || ''; }
+  public get previous() { return this.config.object[1]; }
+  public get previousAliases() { return this.previous?.[this.config.field].slice(1).join('; ') || ''; }
 
   constructor() {
       // intentionally left blank
@@ -55,23 +55,23 @@ export class AliasDiffComponent implements OnInit {
     this.expandedDetails = [];
     this.showMore = false;
 
-    let beforeList = this.before?.[this.config.field].slice(1) || [];
-    let afterList = this.after?.[this.config.field].slice(1) || [];
+    let beforeList = this.previous?.[this.config.field].slice(1) || [];
+    let afterList = this.current?.[this.config.field].slice(1) || [];
 
     let allAliases = new Set([...beforeList, ...afterList]);
 
     allAliases.forEach(alias => {
-      let beforeDescr = this.getDescription(alias, 0);
-      let afterDescr = this.getDescription(alias, 1);
+      let currDescr = this.getDescription(alias, 0);
+      let prevDescr = this.getDescription(alias, 1);
 
-      if (beforeDescr || afterDescr) {
+      if (prevDescr || currDescr) {
         this.expandedDetails.push({
           name: alias,
-          before: beforeDescr,
-          after: afterDescr
+          before: prevDescr,
+          after: currDescr
         });
 
-        if (beforeDescr !== afterDescr) this.showMore = true;
+        if (prevDescr !== currDescr) this.showMore = true;
       }
     });
   }
@@ -81,12 +81,8 @@ export class AliasDiffComponent implements OnInit {
     return this.config.object[index][this.config.referencesField].getDescription(alias);
   }
 
-  public getBeforeName(alias: string): string {
-    return this.before?.[this.config.field]?.includes(alias) ? alias : '';
-  }
-
-  public getAfterName(alias: string): string {
-    return this.after?.[this.config.field]?.includes(alias) ? alias : '';
+  public getAliasName(obj, alias): string {
+    return obj?.[this.config.field]?.includes(alias) ? alias : '';
   }
 
   /**
