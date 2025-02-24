@@ -1,0 +1,15 @@
+.property-diff {
+    // custom property diff text
+    .before {
+        background-color: #ffcdcd !important;
+        text-decoration: line-through;
+    }
+    .after {
+        background-color: #c0f8c0 !important;
+        text-decoration: underline;
+    }
+
+    // innerHtml DiffMatchPatch
+    del { background: #ffcdcd !important; }
+    ins { background: #c0f8c0 !important; }
+}

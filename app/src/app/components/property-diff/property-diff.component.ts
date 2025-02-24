@@ -1,12 +1,10 @@
-import { Component, Input, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { DiffMatchPatch } from 'diff-match-patch-ts';
 
 @Component({
   selector: 'app-property-diff',
-  templateUrl: './property-diff.component.html',
-  styleUrls: ['./property-diff.component.scss'],
-  encapsulation: ViewEncapsulation.None
+  templateUrl: './property-diff.component.html'
 })
 export class PropertyDiffComponent implements OnInit  {
   @Input() public before: string;
