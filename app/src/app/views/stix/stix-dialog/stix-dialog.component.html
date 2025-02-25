@@ -31,7 +31,8 @@
                                            [config]="config"
                                            (onVersionChange)="versionChange($event)"
                                            (onOpenHistory)="openHistory()"
-                                           (onOpenNotes)="openNotes()">
+                                           (onOpenNotes)="openNotes()"
+                                           (closeDialogEvent)="close()">
                     </app-relationship-view>
                     <app-group-view        *ngIf="stixType == 'intrusion-set'" 
                                            [config]="config"

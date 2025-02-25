@@ -1,4 +1,5 @@
 import { Component, EventEmitter, OnInit, Output, ViewEncapsulation } from '@angular/core';
+import { Router } from '@angular/router';
 import { Relationship } from 'src/app/classes/stix/relationship';
 import { StixObject, stixTypeToAttackType } from 'src/app/classes/stix/stix-object';
 import { AuthenticationService } from 'src/app/services/connectors/authentication/authentication.service';
@@ -17,6 +18,7 @@ import * as moment from 'moment';
 })
 export class RelationshipViewComponent extends StixViewPage implements OnInit {
     @Output() public onVersionChange = new EventEmitter();
+    @Output() closeDialogEvent = new EventEmitter<void>();
     public get relationship() { return this.config.object as Relationship; }
     public source_type: string;
     public target_type: string;
@@ -40,7 +42,7 @@ export class RelationshipViewComponent extends StixViewPage implements OnInit {
         major: false
     }
 
-    constructor(private restApiService: RestApiConnectorService, private editorService: EditorService, authenticationService: AuthenticationService) { 
+    constructor(private restApiService: RestApiConnectorService, private editorService: EditorService, authenticationService: AuthenticationService, private router: Router) {
         super(authenticationService);
     }
 
@@ -139,5 +141,27 @@ export class RelationshipViewComponent extends StixViewPage implements OnInit {
      */
     public onTargetVersionChange($event) {
         this.onVersionChange.emit({target: this.target_version});
+    }
+
+    /**
+     * Navigate to the source object's page
+     * @param {any} obj the raw STIX object
+     */
+    public navigateToSource(obj: any): void {
+        if (!obj || !obj.stix || !obj.stix.type || !obj.stix.id) {
+            console.warn("Invalid object passed to navigateToSource:", obj);
+            return;
+        }
+
+        let targetRoute: string;
+
+        if (stixTypeToAttackType[obj.stix.type] === 'data-component') {
+            targetRoute = `/data-source/${obj.stix.x_mitre_data_source_ref}`;
+        } else {
+            const formattedType = stixTypeToAttackType[obj.stix.type].toLowerCase().replace(/\s+/g, '-');
+            targetRoute = `/${formattedType}/${obj.stix.id}`;
+            this.closeDialogEvent.emit();
+        }
+        this.router.navigate([targetRoute]);
     }
 }
