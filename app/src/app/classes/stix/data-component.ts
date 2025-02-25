@@ -127,7 +127,6 @@ export class DataComponent extends StixObject {
     public update(restAPIService: RestApiConnectorService) : Observable<DataComponent> {
         let putObservable = restAPIService.putDataComponent(this);
         let subscription = putObservable.subscribe({
-            next: (result) => { this.deserialize(result.serialize()); },
             complete: () => { subscription.unsubscribe(); }
         });
         return putObservable;

@@ -4,6 +4,7 @@ import { RestApiConnectorService } from "src/app/services/connectors/rest-api/re
 import { ValidationData } from "../serializable";
 import { StixObject } from "./stix-object";
 import { logger } from "../../utils/logger";
+import { Asset, Campaign, DataComponent, DataSource, Group, Matrix, Mitigation, Software, Tactic, Technique } from 'src/app/classes/stix';
 
 export class Relationship extends StixObject {
 
@@ -30,6 +31,31 @@ export class Relationship extends StixObject {
     public readonly supportsAttackID = false; // relationships do not have ATT&CK IDs
     public readonly supportsNamespace = false; // relationships do not support namespacing
     protected get attackIDValidator() { return null; } // relationships have no ATT&CK ID
+
+    /**
+     * Creates and returns the deserialized object
+     * @param type the stix type of the object
+     * @param raw the raw STIX object
+     */
+    private getObject(type: string, raw: any) {
+        // transform AttackType to the relevant class
+        const stixTypeToClass = {
+            "attack-pattern": Technique,
+            "x-mitre-tactic": Tactic,
+            "campaign": Campaign,
+            "intrusion-set": Group,
+            "tool": Software,
+            "malware": Software,
+            "course-of-action": Mitigation,
+            "x-mitre-matrix": Matrix,
+            "x-mitre-data-source": DataSource,
+            "x-mitre-data-component": DataComponent,
+            "x-mitre-asset": Asset,
+        }
+        if (type == "attack-pattern") return new Technique(raw);
+        if (type == "malware" || type == "tool") return new Software(type, raw);
+        return new stixTypeToClass[type](raw);
+    }
     /**
      * The valid source types according to relationship_type
      * null if any type is valid or relationship_type is not recognized
@@ -422,7 +448,11 @@ export class Relationship extends StixObject {
     public save(restAPIService: RestApiConnectorService) : Observable<Relationship> {        
         let postObservable = restAPIService.postRelationship(this);
         let subscription = postObservable.subscribe({
-            next: (result) => { this.deserialize(result.serialize()); },
+            next: (result) => { 
+                this.deserialize(result.serialize());
+                let source_object = this.getObject(this.source_object.stix.type, this.source_object);
+                this.updateSourceObject(restAPIService, source_object)
+            },
             complete: () => { subscription.unsubscribe(); }
         });
         return postObservable;
@@ -449,9 +479,35 @@ export class Relationship extends StixObject {
     public update(restAPIService: RestApiConnectorService) : Observable<Relationship> { 
         let putObservable = restAPIService.putRelationship(this);
         let subscription = putObservable.subscribe({
-            next: (result) => { this.deserialize(result.serialize()); },
             complete: () => { subscription.unsubscribe(); }
         });
         return putObservable;
     }
+
+        /**
+     * Helper function to update the workflow status of the source object of the relationship,
+     * @param restAPIService the rest api service
+     * @param object the relationship source object
+     */
+        public updateSourceObject(restAPIService: RestApiConnectorService, object: StixObject) {
+            // Check if the workflow object exists
+            if (!object.workflow) {
+                // Initialize the workflow object if it doesn't exist
+                object.workflow = {state: ""};
+            }
+            object.workflow.state = "work-in-progress";
+            restAPIService.relationshipPosted = true
+            object.update(restAPIService).subscribe({
+                next: (response) => {
+                    console.log('Object updated successfully:', response);
+                    window.location.reload();
+                },
+                error: (error) => {
+                    console.error('Error updating object:', error);
+                },
+                complete: () => {
+                    console.log('Complete');
+                }
+            });
+        }
 }

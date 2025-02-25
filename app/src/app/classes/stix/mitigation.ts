@@ -111,7 +111,6 @@ export class Mitigation extends StixObject {
     public update(restAPIService: RestApiConnectorService) : Observable<Mitigation> {
         let putObservable = restAPIService.putMitigation(this);
         let subscription = putObservable.subscribe({
-            next: (result) => { this.deserialize(result.serialize()); },
             complete: () => { subscription.unsubscribe(); }
         });
         return putObservable;

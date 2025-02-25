@@ -919,6 +919,10 @@ export class RestApiConnectorService extends ApiConnector {
      * @param {Date} [modified] optional, the modified date to overwrite. If omitted, uses the modified field of the object
      * @returns {Observable<Technique>} the updated object
      */
+    
+    // public putTechnique(keepModified: boolean) {
+    //     return this.putStixObjectFactory<Technique>("technique", keepModified);
+    // }
     public get putTechnique() { return this.putStixObjectFactory<Technique>("technique"); }
     /**
      * PUT (update) a tactic

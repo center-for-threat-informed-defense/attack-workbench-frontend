@@ -104,7 +104,6 @@ export class Identity extends StixObject {
     public update(restAPIService: RestApiConnectorService) : Observable<Identity> {
         let putObservable = restAPIService.putIdentity(this);
         let subscription = putObservable.subscribe({
-            next: (result) => { this.deserialize(result.serialize()); },
             complete: () => { subscription.unsubscribe(); }
         });
         return putObservable;

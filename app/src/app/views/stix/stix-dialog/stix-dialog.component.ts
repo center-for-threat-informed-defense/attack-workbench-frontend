@@ -129,8 +129,6 @@ export class StixDialogComponent implements OnInit {
                 if (object.attackType == 'relationship' && object instanceof Relationship)
                 {
                     this.updateRelationshipObjects(object as Relationship); // update source/target object versions
-                    let source_object = this.getObject(object.source_object.stix.type, object.source_object);
-                    this.updateSourceObject(this.restApiService, source_object)
                 }
                 if (this.prevObject) this.revertToPreviousObject();
                 else if (object.attackType == 'data-component') { // view data component on save
@@ -195,7 +193,6 @@ export class StixDialogComponent implements OnInit {
                     if (object.attackType == 'relationship' && object instanceof Relationship)
                     {
                         let source_object = this.getObject(object.source_object.stix.type, object.source_object);
-                        this.updateSourceObject(this.restApiService, source_object)
                     }
                     this.discardChanges();
                 }
@@ -249,28 +246,6 @@ export class StixDialogComponent implements OnInit {
                 complete: () => { if (subscription) subscription.unsubscribe(); }
             });
         }
-    }
-
-    /**
-     * Helper function to update the workflow status of the source object of the relationship,
-     * @param restAPIService the rest api service
-     * @param object the relationship source object
-     */
-    public updateSourceObject(restAPIService: RestApiConnectorService, object: StixObject) {
-        object.workflow = {state: "work-in-progress"};
-        restAPIService.relationshipPosted = true
-        object.update(restAPIService).subscribe({
-            next: (response) => {
-                console.log('Object updated successfully:', response);
-                window.location.reload();
-            },
-            error: (error) => {
-                console.error('Error updating object:', error);
-            },
-            complete: () => {
-                console.log('Complete');
-            }
-        });
     }
 
 

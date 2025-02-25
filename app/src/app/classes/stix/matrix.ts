@@ -97,7 +97,6 @@ export class Matrix extends StixObject {
     public update(restAPIService: RestApiConnectorService) : Observable<Matrix> {
         let putObservable = restAPIService.putMatrix(this);
         let subscription = putObservable.subscribe({
-            next: (result) => { this.deserialize(result.serialize()); },
             complete: () => { subscription.unsubscribe(); }
         });
         return putObservable;

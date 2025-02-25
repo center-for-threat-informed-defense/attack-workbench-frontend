@@ -107,7 +107,6 @@ export class Tactic extends StixObject {
     public update(restAPIService: RestApiConnectorService) : Observable<Tactic> {
         let putObservable = restAPIService.putTactic(this);
         let subscription = putObservable.subscribe({
-            next: (result) => { this.deserialize(result.serialize()); },
             complete: () => { subscription.unsubscribe(); }
         });
         return putObservable;
