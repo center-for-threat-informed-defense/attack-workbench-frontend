@@ -19,7 +19,7 @@
     </ng-container>
     <ng-container *ngIf="config.mode == 'diff'">
         <div class="labelled-box grow-to-row property-diff">
-            <div class="content no-padding">
+            <div class="content">
                 <span *ngIf="previous !== current; else noChange">
                     <span class="before">{{ previous }}</span>
                     &rarr;
