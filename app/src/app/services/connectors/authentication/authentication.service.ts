@@ -18,7 +18,7 @@ import { AppConfigService } from '../../config/app-config.service';
 export class AuthenticationService extends ApiConnector {
     public currentUser: UserAccount;
     public get isLoggedIn(): boolean { return this.currentUser && this.currentUser.status == Status.ACTIVE; }
-    public activeRoles: Role[] = [Role.ADMIN, Role.EDITOR, Role.VISITOR];
+    public activeRoles: Role[] = [Role.ADMIN, Role.EDITOR, Role.VISITOR, Role.TEAM_LEAD];
     public inactiveRoles: Role[] = [Role.NONE];
     private get apiUrl(): string { return environment.integrations.rest_api.url; }
     public onLogin = new EventEmitter(); // event emitter for admin organization identity pop-up
@@ -53,7 +53,7 @@ export class AuthenticationService extends ApiConnector {
             // restrict collection editing to admin only
             return this.isAuthorized([Role.ADMIN]);
         }
-        return this.isAuthorized([Role.EDITOR, Role.ADMIN]);
+        return this.isAuthorized([Role.EDITOR, Role.ADMIN, Role.TEAM_LEAD]);
     }
 
     /**

@@ -12,7 +12,7 @@ import { Role } from './classes/authn/role';
 import { TeamsListPageComponent } from './views/admin-page/teams/teams-list-page/teams-list-page.component';
 import { TeamsViewPageComponent } from './views/admin-page/teams/teams-view-page/teams-view-page.component';
 
-const editRoles = [Role.EDITOR, Role.ADMIN];
+const editRoles = [Role.EDITOR, Role.ADMIN, Role.TEAM_LEAD];
 
 const routes: Routes = [
     {
@@ -176,8 +176,8 @@ const routes: Routes = [
                 data: {
                     breadcrumb: "profile",
                     title: "Profile",
-                    roles: [Role.VISITOR, Role.EDITOR, Role.ADMIN],
-                    editRoles: [Role.VISITOR, Role.EDITOR, Role.ADMIN]
+                    roles: [Role.VISITOR, Role.EDITOR, Role.ADMIN, Role.TEAM_LEAD],
+                    editRoles: [Role.VISITOR, Role.EDITOR, Role.ADMIN, Role.TEAM_LEAD]
                 },
                 children: [
                     {
