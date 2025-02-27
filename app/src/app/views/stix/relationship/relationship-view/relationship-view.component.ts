@@ -9,6 +9,7 @@ import { VersionNumber } from 'src/app/classes/version-number';
 import { EditorService } from 'src/app/services/editor/editor.service';
 import { forkJoin } from 'rxjs';
 import * as moment from 'moment';
+import { DataComponent } from 'src/app/classes/stix';
 
 @Component({
   selector: 'app-relationship-view',
@@ -19,6 +20,7 @@ import * as moment from 'moment';
 export class RelationshipViewComponent extends StixViewPage implements OnInit {
     @Output() public onVersionChange = new EventEmitter();
     @Output() closeDialogEvent = new EventEmitter<void>();
+    @Output() changeDialogToDataComponent = new EventEmitter<any>();
     public get relationship() { return this.config.object as Relationship; }
     public source_type: string;
     public target_type: string;
@@ -157,6 +159,9 @@ export class RelationshipViewComponent extends StixViewPage implements OnInit {
 
         if (stixTypeToAttackType[obj.stix.type] === 'data-component') {
             targetRoute = `/data-source/${obj.stix.x_mitre_data_source_ref}`;
+            const dataComponent = new DataComponent(obj)
+            dataComponent.deserialize(obj)
+            this.changeDialogToDataComponent.emit(dataComponent);
         } else {
             const formattedType = stixTypeToAttackType[obj.stix.type].toLowerCase().replace(/\s+/g, '-');
             targetRoute = `/${formattedType}/${obj.stix.id}`;
