@@ -28,9 +28,11 @@ export class Group extends StixObject {
      * @abstract
      * @returns {*} the raw object to send
      */
-    public serialize(): any {
+    public serialize(keepModified?:string): any {
         let rep = super.base_serialize();
-
+        if(keepModified){
+            rep.stix.modified = keepModified;
+        }
         rep.stix.name = this.name.trim();
         rep.stix.aliases = this.aliases.map(x => x.trim());
         rep.stix.x_mitre_contributors = this.contributors.map(x => x.trim());

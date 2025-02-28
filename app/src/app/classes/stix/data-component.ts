@@ -42,9 +42,11 @@ export class DataComponent extends StixObject {
      * @abstract
      * @returns {*} the raw object to send
      */
-    public serialize(): any {
+    public serialize(keepModified?: string): any {
         let rep = super.base_serialize();
-
+        if(keepModified){
+            rep.stix.modified = keepModified;
+        }
         rep.stix.name = this.name.trim();
         rep.stix.description = this.description;
         rep.stix.x_mitre_data_source_ref = this.dataSourceRef;

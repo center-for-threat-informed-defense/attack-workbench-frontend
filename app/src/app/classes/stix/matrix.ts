@@ -30,8 +30,11 @@ export class Matrix extends StixObject {
      * @abstract
      * @returns {*} the raw object to send
      */
-    public serialize(): any {
+    public serialize(keepModified?: string): any {
         let rep = super.base_serialize();
+        if(keepModified){
+            rep.stix.modified = keepModified;
+        }
 
         rep.stix.name = this.name.trim();
         rep.stix.tactic_refs = this.tactic_refs;

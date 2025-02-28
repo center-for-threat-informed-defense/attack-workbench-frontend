@@ -290,8 +290,11 @@ export class Relationship extends StixObject {
      * @abstract
      * @returns {*} the raw object to send
      */
-    public serialize(): any {
+    public serialize(keepModified?: string): any {
         let rep = super.base_serialize();
+        if(keepModified){
+            rep.stix.modified = keepModified;
+        }
         
         rep.stix.relationship_type = this.relationship_type;
         rep.stix.source_ref = this.source_ref;
@@ -451,7 +454,9 @@ export class Relationship extends StixObject {
             next: (result) => { 
                 this.deserialize(result.serialize());
                 let source_object = this.getObject(this.source_object.stix.type, this.source_object);
-                this.updateSourceObject(restAPIService, source_object)
+                this.updateSourceTargetObject(restAPIService, source_object);
+                let target_object = this.getObject(this.target_object.stix.type, this.target_object);
+                this.updateSourceTargetObject(restAPIService, target_object)
             },
             complete: () => { subscription.unsubscribe(); }
         });
@@ -489,14 +494,13 @@ export class Relationship extends StixObject {
      * @param restAPIService the rest api service
      * @param object the relationship source object
      */
-        public updateSourceObject(restAPIService: RestApiConnectorService, object: StixObject) {
+        public updateSourceTargetObject(restAPIService: RestApiConnectorService, object: StixObject) {
             // Check if the workflow object exists
             if (!object.workflow) {
                 // Initialize the workflow object if it doesn't exist
                 object.workflow = {state: ""};
             }
             object.workflow.state = "work-in-progress";
-            restAPIService.relationshipPosted = true
             object.update(restAPIService).subscribe({
                 next: (response) => {
                     console.log('Object updated successfully:', response);

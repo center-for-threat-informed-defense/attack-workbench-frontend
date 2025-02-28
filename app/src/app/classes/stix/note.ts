@@ -26,8 +26,11 @@ export class Note extends StixObject {
      * @abstract
      * @returns {*} the raw object to send
      */
-    public serialize(): any {
+    public serialize(keepModified?: string): any {
         let rep = super.base_serialize();
+        if(keepModified){
+            rep.stix.modified = keepModified;
+        }
         if (this.title) rep.stix.abstract = this.title;
         rep.stix.content = this.content;
         rep.stix.object_refs = this.object_refs;

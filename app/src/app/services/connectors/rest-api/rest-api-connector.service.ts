@@ -107,11 +107,6 @@ export interface Namespace {
 })
 export class RestApiConnectorService extends ApiConnector {
     private get apiUrl(): string { return environment.integrations.rest_api.url; }
-    
-    /**
-     * boolean to keep track of relationship changes for a source object
-     */
-    public relationshipPosted = false;
 
 
     constructor(private http: HttpClient, private snackbar: MatSnackBar) {
@@ -771,9 +766,6 @@ export class RestApiConnectorService extends ApiConnector {
                     let x = result as any;
                     if (x.stix.type == "malware" || x.stix.type == "tool") return new Software(x.stix.type, x);
                     else {
-                        if (x.stix.type === 'relationship') {
-                            this.relationshipPosted = true;
-                        }
                         return new attackClass(x);
                     }
                 }),
@@ -781,14 +773,6 @@ export class RestApiConnectorService extends ApiConnector {
                 share() // multicast so that multiple subscribers don't trigger the call twice. THIS MUST BE THE LAST LINE OF THE PIPE
             )
         }
-    }
-
-    /**
-     * Check if a relationship change has occurred for the source object
-     * @returns boolean depending on whether the relationship has changed
-     */
-    public isRelationshipPosted(): boolean {
-        return this.relationshipPosted;
     }
 
     /**
@@ -894,12 +878,7 @@ export class RestApiConnectorService extends ApiConnector {
         return function <P extends T>(object: T, modified?: Date): Observable<P> {
             if (!modified) modified = object.modified; //infer modified from STIX object modified date
             let url = `${this.apiUrl}/${plural}/${object.stixID}/modified/${modified.toISOString()}`;
-            let rep = object.serialize()
-            if (this.isRelationshipPosted()){
-                if (rep.stix.modified) {
-                    rep.stix.modified = modified;
-                }   
-            }
+            let rep = object.serialize(modified.toISOString());
             return this.http.put(url, rep, { headers: this.headers }).pipe(
                 tap(this.handleSuccess(`${this.getObjectName(object)} saved`)),
                 map(result => {
