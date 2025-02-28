@@ -1,5 +1,5 @@
 import { Component, EventEmitter, OnInit, Output, ViewEncapsulation } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { Relationship } from 'src/app/classes/stix/relationship';
 import { StixObject, stixTypeToAttackType } from 'src/app/classes/stix/stix-object';
 import { AuthenticationService } from 'src/app/services/connectors/authentication/authentication.service';
@@ -26,6 +26,7 @@ export class RelationshipViewComponent extends StixViewPage implements OnInit {
     public target_type: string;
     public refresh: boolean = true;
     public loaded: boolean = false;
+    public currentPageStixID: string;
     /** refresh the list of source objects if the type changes 
      *  This is bad code and should be done a better way.
      */
@@ -44,7 +45,7 @@ export class RelationshipViewComponent extends StixViewPage implements OnInit {
         major: false
     }
 
-    constructor(private restApiService: RestApiConnectorService, private editorService: EditorService, authenticationService: AuthenticationService, private router: Router) {
+    constructor(private restApiService: RestApiConnectorService, private editorService: EditorService, authenticationService: AuthenticationService, private router: Router, private route: ActivatedRoute) {
         super(authenticationService);
     }
 
@@ -78,6 +79,11 @@ export class RelationshipViewComponent extends StixViewPage implements OnInit {
                 }
             });
         } else this.loaded = true;
+
+        const fullUrl: string = this.route.snapshot['_routerState'].url;
+
+        const segments = fullUrl.split('/');
+        this.currentPageStixID = segments[segments.length -1];
     }
 
     public setSourceObject(object: StixObject) {

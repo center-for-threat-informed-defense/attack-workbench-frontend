@@ -2,11 +2,23 @@
     <div class="row">
         <div class="col">
             <h1 *ngIf="!relationship.updating_refs; else updatingRefs">
-                <a (click)="navigateToSource(relationship.source_object, $event)">
+                <span *ngIf="relationship.source_object.stix.id === currentPageStixID; else showSourceLink">
                     {{ relationship.source_name }}
-                </a>
+                </span>
+                <ng-template #showSourceLink>
+                    <a (click)="navigateToSource(relationship.source_object, $event)">
+                        {{ relationship.source_name }}
+                    </a>
+                </ng-template>
                 <span class="text-deemphasis">{{ relationship.relationship_type }}</span>
+                <span *ngIf="relationship.target_object.stix.id === currentPageStixID; else showTargetLink">
                     {{ relationship.target_name }}
+                </span>
+                <ng-template #showTargetLink>
+                    <a (click)="navigateToSource(relationship.target_object, $event)">
+                        {{ relationship.target_name }}
+                    </a>
+                </ng-template>
             </h1>
             <h3 class="status" *ngIf="!relationship.updating_refs; else updatingRefs">
                 <span class="warning-text" *ngIf="config.object['deprecated']">deprecated</span>
