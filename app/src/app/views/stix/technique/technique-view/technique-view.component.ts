@@ -12,7 +12,8 @@ import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/re
 })
 export class TechniqueViewComponent extends StixViewPage implements OnInit, AfterContentChecked {
     @Output() public onReload = new EventEmitter();
-    public get technique(): Technique { return this.config.object as Technique; }
+    public get technique(): Technique { return this.configCurrentObject as Technique; }
+    public get previous(): Technique | null { return this.configPreviousObject as Technique; }
 
     constructor(private ref: ChangeDetectorRef, authenticationService: AuthenticationService, private restApiConnector: RestApiConnectorService) {
         super(authenticationService);
@@ -22,29 +23,24 @@ export class TechniqueViewComponent extends StixViewPage implements OnInit, Afte
         if (this.technique.firstInitialized) {
             this.technique.initializeWithDefaultMarkingDefinitions(this.restApiConnector);
         }
-      }
+    }
 
     ngAfterContentChecked() {
         this.ref.detectChanges();
     }
 
-    /**
-     * Get label for the data sources field.
-     * Appends 'ics' for clarification if the object is cross-domain
-     */
-    public dataSourcesLabel(): string {
-        let label = 'data sources';
-        if (this.technique.domains.includes('ics-attack') && this.technique.domains.length > 1) {
-            label = 'ics ' + label;
-        }
-        return label;
+    public showCapecIdsField(): boolean {
+        if (!this.config.mode || this.config.mode == 'view') return this.technique.capec_ids.length > 0;
+        return this.technique.supportsCapecIds || this.previous?.supportsCapecIds;
     }
 
-    public showDomainField(domain: string, field: string): boolean {
-        return this.technique.domains.includes(domain) && (this.technique[field].length > 0 || this.editing);
+    public showMtcIdsField(): boolean {
+        if (!this.config.mode || this.config.mode == 'view') return this.technique.mtc_ids.length > 0;
+        return this.technique.supportsMtcIds || this.previous?.supportsMtcIds;
     }
 
-    public showTacticField(tactic: string, field: string): boolean {
-        return this.technique.tactics.includes(tactic) && (this.technique[field].length > 0 || this.editing);
+    public showParentField(): boolean {
+        if (!this.config.mode || this.config.mode == 'view') return false;
+        return this.technique.is_subtechnique || this.previous?.is_subtechnique;
     }
 }

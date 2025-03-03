@@ -3,8 +3,8 @@
         <!-- NAME -->
         <div class="col">
             <app-name-property [config]="{
-                mode: editing? 'edit' : 'view',
-                object: technique,
+                mode: config.mode,
+                object: config.object,
                 parent: technique.is_subtechnique && technique.parentTechnique ? technique.parentTechnique : null
             }"></app-name-property>
             <app-subheading [config]="config" (onOpenHistory)="openHistory()" (onOpenNotes)="openNotes()"></app-subheading>
@@ -14,34 +14,32 @@
         <div class="col">
             <!-- ATT&CK ID -->
             <app-attackid-property class="grow-to-row" [config]="{
-                mode: editing? 'edit' : 'view',
-                object: technique
+                mode: config.mode,
+                object: config.object
             }"></app-attackid-property>
         </div>
-        <div class="col" [ngClass]="{'no-padding': editing}">
-            <div class="labelled-box grow-to-row">
-                <!-- SUB-TECHNIQUE? -->
-                <div class="content no-padding no-label">
-                    <mat-checkbox color="primary" [(ngModel)]="technique.is_subtechnique" [disabled]="!editing">
-                        sub-technique?
-                    </mat-checkbox>
-                </div>
-            </div>
+        <div class="col">
+            <app-boolean-property class="grow-to-row" [config]="{
+                mode: config.mode,
+                object: config.object,
+                field: 'is_subtechnique',
+                label: 'sub-technique?'
+            }"></app-boolean-property>
         </div>
         <div class="col">
             <!-- VERSION NUMBER -->
             <app-version-property class="grow-to-row" [config]="{
-                mode: editing? 'edit' : 'view',
-                object: technique
+                mode: config.mode,
+                object: config.object
             }"></app-version-property>
         </div>
     </div>
     <!-- PARENT SUBTECHNIQUE FIELDS -->
-    <div class="row" *ngIf="technique.is_subtechnique && editing">
+    <div class="row" *ngIf="showParentField()">
         <div class="col">
             <app-list-property class="grow-to-row" [config]="{
-                mode: editing? 'edit': 'view',
-                object: technique,
+                mode: config.mode,
+                object: config.object,
                 field: 'parentTechnique',
                 label: 'parent technique',
                 editType: 'stixList',
@@ -50,48 +48,46 @@
         </div>
     </div>
     <!-- DOMAIN SPECIFIC FIELDS -->
-    <div *ngIf="technique.domains.length > 0 || editing" class="row">
+    <div class="row">
         <div class="col">
             <app-list-property class="grow-to-row" [config]="{
-                mode: editing? 'edit': 'view',
-                object: technique,
+                mode: config.mode,
+                object: config.object,
                 field: 'domains',
                 editType: 'select'
             }"></app-list-property>
         </div>
-        <ng-container *ngIf="showDomainField('ics-attack', 'data_sources')
-                            || showDomainField('enterprise-attack', 'system_requirements')
-                            || showDomainField('mobile-attack', 'tactic_type')">
+        <ng-container *ngIf="technique.supportsDomainSpecificFields || previous?.supportsDomainSpecificFields">
             <!-- Display only if domain specific fields exist or if in 'edit' mode -->
             <div class="col arrow">
                 <mat-icon>arrow_forward</mat-icon>
             </div>
-            <div class="col">
+            <div class="col grid spacing-16">
                 <!-- DATA SOURCES (string array representation) -->
-                <div *ngIf="showDomainField('ics-attack', 'data_sources')" class="row">
+                <div *ngIf="technique.supportsDataSources || previous?.supportsDataSources" class="row">
                     <app-list-property class="grow-to-row" [config]="{
-                        mode: editing? 'edit': 'view',
-                        object: technique,
+                        mode: config.mode,
+                        object: config.object,
                         field: 'data_sources',
-                        label: dataSourcesLabel(),
+                        label: 'ics data sources',
                         editType: 'select'
                     }"></app-list-property>
                 </div>
                 <!-- SYSTEM REQUIREMENTS -->
-                <div *ngIf="showDomainField('enterprise-attack', 'system_requirements')" class="row">
+                <div *ngIf="technique.supportsSystemRequirements || previous?.supportsSystemRequirements" class="row">
                     <app-list-property class="grow-to-row" [config]="{
-                        mode: editing? 'edit': 'view',
-                        object: technique,
+                        mode: config.mode,
+                        object: config.object,
                         field: 'system_requirements',
                         label: 'system requirements',
                         editType: 'any'
                     }"></app-list-property>
                 </div>
                 <!-- TACTIC TYPES -->
-                <div *ngIf="showDomainField('mobile-attack', 'tactic_type')" class="row">
+                <div *ngIf="technique.supportsTacticTypes || previous?.supportsTacticTypes" class="row">
                     <app-list-property class="grow-to-row" [config]="{
-                        mode: editing? 'edit': 'view',
-                        object: technique,
+                        mode: config.mode,
+                        object: config.object,
                         field: 'tactic_type',
                         label: 'tactic type',
                         editType: 'select'
@@ -104,8 +100,8 @@
         <div class="col">
             <!-- PLATFORMS -->
             <app-list-property class="grow-to-row" [config]="{
-                mode: editing? 'edit': 'view',
-                object: technique,
+                mode: config.mode,
+                object: config.object,
                 field: 'platforms',
                 editType: 'select'
             }"></app-list-property>
@@ -113,30 +109,30 @@
         <div class="col">
             <!-- CONTRIBUTORS -->
             <app-list-property class="grow-to-row" [config]="{
-                mode: editing? 'edit' : 'view',
-                object: technique,
+                mode: config.mode,
+                object: config.object,
                 field: 'contributors',
                 editType: 'any'
             }"></app-list-property>
         </div>
     </div>
     <!-- ADDITIONAL IDs -->
-    <div *ngIf="technique.capec_ids.length || (editing && technique.domains.includes('enterprise-attack'))" class="row">
+    <div *ngIf="showCapecIdsField()" class="row">
         <div class="col">
             <app-list-property class="grow-to-row" [config]="{
-                mode: editing? 'edit': 'view',
-                object: technique,
+                mode: config.mode,
+                object: config.object,
                 field: 'capec_ids',
                 label: 'CAPEC IDs',
                 editType: 'any'
             }"></app-list-property>
         </div>
     </div>
-    <div *ngIf="technique.mtc_ids.length || (editing && technique.domains.includes('mobile-attack'))" class="row">
+    <div *ngIf="showMtcIdsField()" class="row">
         <div class="col">
             <app-list-property class="grow-to-row" [config]="{
-                mode: editing? 'edit': 'view',
-                object: technique,
+                mode: config.mode,
+                object: config.object,
                 field: 'mtc_ids',
                 label: 'MTC IDs',
                 editType: 'any'
@@ -147,82 +143,80 @@
         <div class="col">
             <!-- DESCRIPTION -->
             <app-descriptive-property [config]="{
-                mode: editing? 'edit' : 'view',
-                object: technique,
+                mode: config.mode,
+                object: config.object,
                 field: 'description',
                 firstParagraphOnly: false,
-                referencesField: technique.external_references,
+                referencesField: 'external_references',
                 label: 'Description'
             }"></app-descriptive-property>
         </div>
     </div>
     <!-- TACTIC SPECIFIC FIELDS -->
-    <div *ngIf="technique.tactics.length > 0 || editing" class="row">
+    <div class="row">
         <div class="col">
             <app-list-property class="grow-to-row" [config]="{
-                mode: editing? 'edit': 'view',
-                object: technique,
+                mode: config.mode,
+                object: config.object,
                 field: 'tactics',
                 editType: 'stixList',
-                disabled: technique.domains.length == 0 || technique.is_subtechnique
+                disabled: editing && (technique.domains.length == 0 || technique.is_subtechnique)
             }"></app-list-property>
         </div>
-        <ng-container *ngIf="showTacticField('privilege-escalation', 'permissions_required') || showTacticField('privilege-escalation', 'effective_permissions')
-                            || showTacticField('impact', 'impact_type') || showTacticField('defense-evasion', 'defense_bypassed') || technique.tactics.includes('execution')">
+        <ng-container *ngIf="technique.supportsTacticSpecificFields || previous?.supportsTacticSpecificFields">
             <!-- Display only if tactic specific fields exist -->
             <div class="col arrow">
                 <mat-icon>arrow_forward</mat-icon>
             </div>
             <div class="col grid spacing-16">
                 <!-- PERMISSIONS REQUIRED -->
-                <div *ngIf="showTacticField('privilege-escalation', 'permissions_required')" class="row">
+                <div *ngIf="technique.supportsPermissionsRequired || previous?.supportsPermissionsRequired" class="row">
                     <app-list-property class="grow-to-row" [config]="{
-                        mode: editing? 'edit': 'view',
-                        object: technique,
+                        mode: config.mode,
+                        object: config.object,
                         field: 'permissions_required',
                         label: 'permissions required',
                         editType: 'select'
                     }"></app-list-property>
                 </div>
                 <!-- EFFECTIVE PERMISSIONS -->
-                <div *ngIf="showTacticField('privilege-escalation', 'effective_permissions')" class="row">
+                <div *ngIf="technique.supportsEffectivePermissions || previous?.supportsEffectivePermissions" class="row">
                     <app-list-property class="grow-to-row" [config]="{
-                        mode: editing? 'edit': 'view',
-                        object: technique,
+                        mode: config.mode,
+                        object: config.object,
                         field: 'effective_permissions',
                         label: 'effective permissions',
                         editType: 'select'
                     }"></app-list-property>
                 </div>
                 <!-- IMPACT TYPE -->
-                <div *ngIf="showTacticField('impact', 'impact_type')" class="row">
+                <div *ngIf="technique.supportsImpactType || previous?.supportsImpactType" class="row">
                     <app-list-property class="grow-to-row" [config]="{
-                        mode: editing? 'edit': 'view',
-                        object: technique,
+                        mode: config.mode,
+                        object: config.object,
                         field: 'impact_type',
                         label: 'impact type',
                         editType: 'select'
                     }"></app-list-property>
                 </div>
-                <!-- DEFENSE BYPASSED -->
-                <div *ngIf="showTacticField('defense-evasion', 'defense_bypassed')" class="row">
+                <!-- DEFENSEs BYPASSED -->
+                <div *ngIf="technique.supportsDefensesBypassed || previous?.supportsDefensesBypassed" class="row">
                     <app-list-property class="grow-to-row" [config]="{
-                        mode: editing? 'edit': 'view',
-                        object: technique,
+                        mode: config.mode,
+                        object: config.object,
                         field: 'defense_bypassed',
                         label: 'defenses bypassed',
                         editType: 'any'
                     }"></app-list-property>
                 </div>
                 <!-- SUPPORTS REMOTE -->
-                <div *ngIf="technique.tactics.includes('execution')" class="row">
-                    <div class="labelled-box grow-to-row">
-                        <div class="content no-label">
-                            <mat-checkbox [(ngModel)]="technique.supports_remote"  [disabled]="!editing">
-                                Supports Remote?
-                            </mat-checkbox>
-                        </div>
-                    </div>
+                <div *ngIf="technique.supportsRemoteSupport || previous?.supportsRemoteSupport" class="row grow-to-row">
+                    <app-boolean-property class="grow-to-row" [config]="{
+                        mode: config.mode,
+                        object: config.object,
+                        field: 'supports_remote',
+                        label: 'Supports Remote?'
+                    }"></app-boolean-property>
                 </div>
             </div>
         </ng-container>
@@ -231,16 +225,16 @@
         <div class="col">
             <!-- DETECTION -->
             <app-descriptive-property [config]="{
-                mode: editing? 'edit' : 'view',
-                object: technique,
+                mode: config.mode,
+                object: config.object,
                 field: 'detection',
                 firstParagraphOnly: false,
-                referencesField: technique.external_references,
-                label: 'Detection'
+                referencesField: 'external_references',
+                label: 'detection'
             }"></app-descriptive-property>
         </div>
     </div>
-    <!-- RELATIONSHIPS -->
+    <!-- RELATIONSHIPS - NOTE: these are only shown in 'view' mode -->
     <div *ngIf="(config.showRelationships || !config.hasOwnProperty('showRelationships')) && !editing">
         <!-- SUBTECHNIQUES -->
         <div *ngIf="!technique.is_subtechnique; else othersubs">
@@ -426,7 +420,7 @@
         </div>
     </div>
     <!-- EXTERNAL REFERENCES -->
-    <div *ngIf="technique.external_references.list().length > 0">
+    <div *ngIf="technique.external_references.list().length > 0 || previous?.external_references.list().length > 0">
         <div class="row">
             <div class="col">
                 <h2 class="section-header">References</h2>
@@ -435,9 +429,9 @@
         <div class="row">
             <div class="col">
                 <app-external-references-property [config]="{
-                    mode: editing? 'edit': 'view',
-                    object: technique,
-                    referencesField: technique.external_references
+                    mode: config.mode,
+                    object: config.object,
+                    referencesField: 'external_references'
                 }"></app-external-references-property>
             </div>
         </div>

@@ -2,13 +2,12 @@
     <div class="row">
         <div class="col">
             <app-name-property [config]="{
-                mode: editing? 'edit' : 'view',
-                object: data_component,
-                parent: data_component.data_source}">
-            </app-name-property>
-            <app-subheading [config]="{
-                mode: editing? 'edit' : 'view',
-                object: data_component}"
+                mode: config.mode,
+                object: config.object,
+                parent: dataComponent.data_source
+            }"></app-name-property>
+            <app-subheading
+                [config]="{mode: config.mode, object: config.object}"
                 (onOpenHistory)="openHistory()"
                 (onOpenNotes)="openNotes()">
             </app-subheading>
@@ -18,8 +17,8 @@
         <div class="col">
             <!-- Domains -->
             <app-list-property class="grow-to-row" [config]="{
-                mode: editing? 'edit': 'view',
-                object: data_component,
+                mode: config.mode,
+                object: config.object,
                 field: 'domains',
                 editType: 'select'
             }"></app-list-property>
@@ -27,8 +26,8 @@
         <div class="col">
             <!-- VERSION NUMBER -->
             <app-version-property class="grow-to-row" [config]="{
-                mode: editing? 'edit' : 'view',
-                object: data_component
+                mode: config.mode,
+                object: config.object
             }"></app-version-property>
         </div>
     </div>
@@ -36,16 +35,16 @@
         <div class="col">
             <!-- DESCRIPTION -->
             <app-descriptive-property [config]="{
-                mode: editing? 'edit' : 'view',
-                object: data_component,
+                mode: config.mode,
+                object: config.object,
                 field: 'description',
                 firstParagraphOnly: false, 
-                referencesField: data_component.external_references,
-                label: 'Description'}">
-            </app-descriptive-property>
+                referencesField: 'external_references',
+                label: 'Description'
+            }"></app-descriptive-property>
         </div>
     </div>
-    <!-- only show relationships if configured to show them -->
+    <!-- RELATIONSHIPS - NOTE: these are only shown in 'view' mode -->
     <div *ngIf="(config.showRelationships || !config.hasOwnProperty('showRelationships')) && !editing">
         <div class="row">
             <div class="col">
@@ -58,7 +57,7 @@
                     label: 'add a technique',
                     relationship_type: 'detects',
                     targetType: 'technique',
-                    source_object: data_component,
+                    source_object: dataComponent,
                     dialog: config.dialog? config.dialog : null}">
                 </app-add-relationship-button>
             </div>
@@ -67,7 +66,7 @@
             <div class="col">
                 <app-stix-list #techniquesList [config]="{
                     'type': 'relationship',
-                    'sourceRef': data_component.stixID,
+                    'sourceRef': dataComponent.stixID,
                     'relationshipType': 'detects',
                     'clickBehavior': 'none',
                     'rowAction': !editing ? {
@@ -81,7 +80,7 @@
         </div>
     </div>
     <!-- EXTERNAL REFERENCES -->
-    <div *ngIf="data_component.external_references.list().length > 0">
+    <div *ngIf="dataComponent.external_references.list().length > 0 || previous?.external_references.list().length > 0">
         <div class="row">
             <div class="col">
                 <h2 class="section-header">References</h2>
@@ -90,10 +89,10 @@
         <div class="row">
             <div class="col">
                 <app-external-references-property [config]="{
-                    mode: editing? 'edit': 'view',
-                    object: data_component,
-                    referencesField: data_component.external_references}">
-                </app-external-references-property>
+                    mode: config.mode,
+                    object: config.object,
+                    referencesField: 'external_references'
+                }"></app-external-references-property>
             </div>
         </div>
     </div>

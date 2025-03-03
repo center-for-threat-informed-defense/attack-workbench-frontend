@@ -2,8 +2,8 @@
     <div class="row">
         <div class="col">
             <app-name-property [config]="{
-                mode: editing? 'edit' : 'view',
-                object: software
+                mode: config.mode,
+                object: config.object
             }"></app-name-property>
             <app-subheading [config]="config" (onOpenHistory)="openHistory()" (onOpenNotes)="openNotes()"></app-subheading>
         </div>
@@ -12,15 +12,15 @@
         <div class="col">
             <!-- ATT&CK ID -->
             <app-attackid-property class="grow-to-row" [config]="{
-                mode: editing? 'edit' : 'view',
-                object: software
+                mode: config.mode,
+                object: config.object
             }"></app-attackid-property>
         </div>
         <div class="col">
             <!-- VERSION NUMBER -->
             <app-version-property class="grow-to-row" [config]="{
-                mode: editing? 'edit' : 'view',
-                object: software
+                mode: config.mode,
+                object: config.object
             }"></app-version-property>
         </div>
     </div>
@@ -28,8 +28,8 @@
         <div class="col">
             <!-- DOMAINS-->
             <app-list-property class="grow-to-row" [config]="{
-                mode: editing? 'edit': 'view',
-                object: software,
+                mode: config.mode,
+                object: config.object,
                 field: 'domains',
                 editType: 'select'
             }"></app-list-property>
@@ -38,18 +38,17 @@
     <div class="row">
         <div class="col">
             <!-- TYPE -->
-            <div class="labelled-box grow-to-row" matTooltip="this field cannot be edited" [matTooltipDisabled]="!editing">
-                <div class="content capitalize">
-                    {{software.type}}
-                </div>
-                <span class="labelled-box-label">type</span>
-            </div>
+            <app-string-property matTooltip="this field cannot be edited" [matTooltipDisabled]="!editing" class="grow-to-row" [config]="{
+                mode: config.mode == 'diff' ? 'diff' : 'view',
+                object: config.object,
+                field: 'type'
+            }"></app-string-property>
         </div>
         <div class="col">
             <!-- PLATFORMS -->
             <app-list-property class="grow-to-row" [config]="{
-                mode: editing? 'edit' : 'view',
-                object: software,
+                mode: config.mode,
+                object: config.object,
                 field: 'platforms',
                 editType: 'select'
             }"></app-list-property>
@@ -59,8 +58,8 @@
         <div class="col">
             <!-- CONTRIBUTORS -->
             <app-list-property class="grow-to-row" [config]="{
-                mode: editing? 'edit' : 'view',
-                object: software,
+                mode: config.mode,
+                object: config.object,
                 field: 'contributors',
                 editType: 'any'
             }"></app-list-property>
@@ -68,8 +67,8 @@
         <div class="col">
             <!-- SOFTWARE ALIASES -->
             <app-alias-property class="grow-to-row" [config]="{
-                mode: editing? 'edit' : 'view',
-                object: software,
+                mode: config.mode,
+                object: config.object,
                 field: 'aliases',
                 referencesField: 'external_references',
                 label: 'Associated Software'
@@ -80,16 +79,16 @@
         <div class="col">
             <!-- DESCRIPTION -->
             <app-descriptive-property [config]="{
-                mode: editing? 'edit' : 'view',
-                object: software,
+                mode: config.mode,
+                object: config.object,
                 field: 'description',
                 firstParagraphOnly: false, 
-                referencesField: software.external_references,
+                referencesField: 'external_references',
                 label: 'Description'
             }"></app-descriptive-property>
         </div>
     </div>
-    <!-- only show relationships if configured to show them -->
+    <!-- RELATIONSHIPS - NOTE: these are only shown in 'view' mode -->
     <div *ngIf="(config.showRelationships || !config.hasOwnProperty('showRelationships')) && !editing">
         <!-- techniques used -->
         <div class="row">
@@ -179,7 +178,7 @@
         </div>
     </div>
     <!-- EXTERNAL REFERENCES -->
-    <div *ngIf="software.external_references.list().length > 0">
+    <div *ngIf="software.external_references.list().length > 0 || previous?.external_references.list().length > 0">
         <div class="row">
             <div class="col">
                 <h2 class="section-header">References</h2>
@@ -188,9 +187,9 @@
         <div class="row">
             <div class="col">
                 <app-external-references-property [config]="{
-                    mode: editing? 'edit': 'view',
-                    object: software,
-                    referencesField: software.external_references
+                    mode: config.mode,
+                    object: config.object,
+                    referencesField: 'external_references'
                 }"></app-external-references-property>
             </div>
         </div>

@@ -12,7 +12,8 @@ import { StixObject } from 'src/app/classes/stix/stix-object';
 })
 export class TacticViewComponent extends StixViewPage implements OnInit {
     public loading: boolean = false;
-    public get tactic(): Tactic { return this.config.object as Tactic; }
+    public get tactic(): Tactic { return this.configCurrentObject as Tactic; }
+    public get previous(): Tactic | null { return this.configPreviousObject as Tactic; }
     public techniques: StixObject[] = [];
 
     constructor(authenticationService: AuthenticationService, private restApiConnector: RestApiConnectorService) {

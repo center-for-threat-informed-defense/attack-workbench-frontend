@@ -16,9 +16,8 @@ import { Relationship } from 'src/app/classes/stix';
     styleUrls: ['./data-source-view.component.scss']
 })
 export class DataSourceViewComponent extends StixViewPage implements OnInit {
-    public get dataSource(): DataSource {
-        return this.config.object as DataSource;
-    }
+    public get dataSource(): DataSource { return this.configCurrentObject as DataSource; }
+    public get previous(): DataSource { return this.configPreviousObject as DataSource; }
 
     public dataComponents: DataComponent[];
     public techniquesDetected: Relationship[];
@@ -27,9 +26,8 @@ export class DataSourceViewComponent extends StixViewPage implements OnInit {
     constructor(public dialog: MatDialog, private restApiService: RestApiConnectorService, authenticationService: AuthenticationService) { super(authenticationService); }
 
     ngOnInit(): void {
-        let dataSource = this.config.object as DataSource;
-        if ( dataSource.firstInitialized ) {
-            dataSource.initializeWithDefaultMarkingDefinitions(this.restApiService);
+        if ( this.dataSource.firstInitialized ) {
+            this.dataSource.initializeWithDefaultMarkingDefinitions(this.restApiService);
         }
         this.loadData();
     }
