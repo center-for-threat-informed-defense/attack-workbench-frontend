@@ -22,7 +22,6 @@ export class ExternalReferencesDiffComponent implements OnInit {
 
   ngOnInit(): void {
     this.referenceDiffList = this.mergeReferences();
-    console.log(this.referenceDiffList)
   }
   
   public mergeReferences(): any[] {
@@ -53,6 +52,13 @@ export class ExternalReferencesDiffComponent implements OnInit {
       }
     }
 
-    return Array.from(merged.values());
+    let referenceArr = Array.from(merged.values());
+    referenceArr.sort((a, b) => {
+      // sort by afterIndex, if available, otherwise use beforeIndex
+      const aIndex = a.afterIndex ?? a.beforeIndex;
+      const bIndex = b.afterIndex ?? b.beforeIndex;
+      return aIndex - bIndex;
+    })
+    return referenceArr;
   }
 }
