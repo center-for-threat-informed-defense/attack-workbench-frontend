@@ -15,6 +15,11 @@ export class StatementViewComponent implements OnInit {
     return true;
   }
 
+  public get popoverTrigger() {
+    if (this.objStatements.length > 0) return 'hover';
+    return 'none';
+  }
+
   constructor() {
       // empty constructor
   }
