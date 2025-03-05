@@ -448,7 +448,12 @@ export class Relationship extends StixObject {
      * @param restAPIService [RestApiConnectorService] the service to perform the POST/PUT through
      * @returns {Observable} of the post
      */
-    public save(restAPIService: RestApiConnectorService) : Observable<Relationship> {        
+    public save(restAPIService: RestApiConnectorService) : Observable<Relationship> {
+        if (!this.workflow) {
+            // Initialize the workflow object if it doesn't exist
+            this.workflow = {state: ""};
+        }
+        this.workflow.state = "work-in-progress";
         let postObservable = restAPIService.postRelationship(this);
         let subscription = postObservable.subscribe({
             next: (result) => { 
