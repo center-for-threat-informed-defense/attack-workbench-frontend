@@ -110,12 +110,12 @@ export class CollectionViewComponent extends StixViewPage implements OnInit {
 
     constructor(private route: ActivatedRoute,
         private router: Router,
-        restApiConnector: RestApiConnectorService,
+        private restApiConnector: RestApiConnectorService,
         private snackbar: MatSnackBar,
         private editor: EditorService,
         public dialog: MatDialog,
         authenticationService: AuthenticationService,) {
-        super(authenticationService, restApiConnector);
+        super(authenticationService);
     }
 
     /**

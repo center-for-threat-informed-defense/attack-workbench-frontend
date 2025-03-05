@@ -12,8 +12,8 @@ export class AssetViewComponent extends StixViewPage implements OnInit {
 	@Output() public onReload = new EventEmitter();
 	public get asset(): Asset { return this.config.object as Asset; }
 
-	constructor(authenticationService: AuthenticationService, restApiConnector: RestApiConnectorService) {
-		super(authenticationService, restApiConnector)
+	constructor(authenticationService: AuthenticationService, private restApiConnector: RestApiConnectorService) {
+		super(authenticationService)
 	}
 
 	ngOnInit(): void {

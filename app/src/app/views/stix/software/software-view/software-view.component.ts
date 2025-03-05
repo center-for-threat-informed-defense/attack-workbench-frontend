@@ -13,8 +13,8 @@ export class SoftwareViewComponent extends StixViewPage implements OnInit {
     @Output() public onReload = new EventEmitter();
     public get software(): Software { return this.config.object as Software; }
 
-    constructor(authenticationService: AuthenticationService, restApiConnector: RestApiConnectorService) {
-        super(authenticationService, restApiConnector);
+    constructor(authenticationService: AuthenticationService, private restApiConnector: RestApiConnectorService) {
+        super(authenticationService);
     }
 
     ngOnInit() {

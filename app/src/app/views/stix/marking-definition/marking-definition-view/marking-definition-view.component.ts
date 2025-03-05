@@ -19,8 +19,8 @@ export class MarkingDefinitionViewComponent extends StixViewPage implements OnIn
     public validating: boolean = false;
     public validationData: ValidationData = null;
 
-    constructor(public dialog: MatDialog, private router: Router, restApiConnector: RestApiConnectorService, authenticationService: AuthenticationService) {
-        super(authenticationService, restApiConnector);
+    constructor(public dialog: MatDialog, private router: Router, private restApiConnector: RestApiConnectorService, authenticationService: AuthenticationService) {
+        super(authenticationService);
     }
 
     ngOnInit(): void {

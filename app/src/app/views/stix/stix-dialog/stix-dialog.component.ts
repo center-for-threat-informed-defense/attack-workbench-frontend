@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Inject, OnInit, Output, ViewEncapsulation } from '@angular/core';
+import { Component, Inject, OnInit, ViewEncapsulation } from '@angular/core';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { forkJoin, Observable, of } from 'rxjs';
 import { filter, map, switchMap } from 'rxjs/operators';
@@ -126,10 +126,7 @@ export class StixDialogComponent implements OnInit {
             next: (result) => {
                 this.editorService.onEditingStopped.emit();
                 this._config.is_new = false;
-                if (object.attackType == 'relationship' && object instanceof Relationship)
-                {
-                    this.updateRelationshipObjects(object as Relationship); // update source/target object versions
-                }
+                if (object.attackType == 'relationship') this.updateRelationshipObjects(object as Relationship);
                 if (this.prevObject) this.revertToPreviousObject();
                 else if (object.attackType == 'data-component') { // view data component on save
                     this.validating = false;
@@ -190,10 +187,6 @@ export class StixDialogComponent implements OnInit {
                 if (confirm) {
                     // delete the object
                     object.delete(this.restApiService);
-                    if (object.attackType == 'relationship' && object instanceof Relationship)
-                    {
-                        let source_object = this.getObject(object.source_object.stix.type, object.source_object);
-                    }
                     this.discardChanges();
                 }
             },

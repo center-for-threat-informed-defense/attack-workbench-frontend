@@ -14,8 +14,8 @@ export class TechniqueViewComponent extends StixViewPage implements OnInit, Afte
     @Output() public onReload = new EventEmitter();
     public get technique(): Technique { return this.config.object as Technique; }
 
-    constructor(private ref: ChangeDetectorRef, authenticationService: AuthenticationService, restApiConnector: RestApiConnectorService) {
-        super(authenticationService, restApiConnector);
+    constructor(private ref: ChangeDetectorRef, authenticationService: AuthenticationService, private restApiConnector: RestApiConnectorService) {
+        super(authenticationService);
     }
 
     ngOnInit() {

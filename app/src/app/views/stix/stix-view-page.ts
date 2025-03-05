@@ -7,7 +7,7 @@ import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/re
 
 @Component({template: ''})
 export abstract class StixViewPage {
-    constructor(private authenticationService: AuthenticationService, protected restApiConnector?: RestApiConnectorService) { }
+    constructor(private authenticationService: AuthenticationService) { }
 
     //configuration for the view page behavior
     @Input() public config: StixViewConfig;

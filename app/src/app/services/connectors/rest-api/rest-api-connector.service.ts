@@ -228,11 +228,6 @@ export class RestApiConnectorService extends ApiConnector {
         }
     }
 
-    updateObject(stixId: string, modified: string, stixObject: StixObject, objectType: string): Observable<StixObject> {
-        let url = `${this.apiUrl}/${attackTypeToPlural[objectType]}/${stixId}/modified/${modified}`
-        return this.http.put<StixObject>(url, stixObject);
-    }
-
     /**
      * Get all techniques
      * @param {number} [limit] the number of techniques to retrieve
@@ -765,9 +760,7 @@ export class RestApiConnectorService extends ApiConnector {
                 map(result => {
                     let x = result as any;
                     if (x.stix.type == "malware" || x.stix.type == "tool") return new Software(x.stix.type, x);
-                    else {
-                        return new attackClass(x);
-                    }
+                    else return new attackClass(x);
                 }),
                 catchError(this.handleError_raise()),
                 share() // multicast so that multiple subscribers don't trigger the call twice. THIS MUST BE THE LAST LINE OF THE PIPE
