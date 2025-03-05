@@ -10,7 +10,7 @@ Before running the application locally, ensure you have the following set up:
     - [attack-workbench-frontend](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend) repository
     - [attack-workbench-rest-api](https://github.com/center-for-threat-informed-defense/attack-workbench-rest-api) repository alongside the frontend
 
-2. Install [Node.js](https://nodejs.org/) v18 or greater
+2. Install the [recommended version](../README.md#requirements) of [Node.js](https://nodejs.org/)
 
 3. Install MongoDB
 
