@@ -10,12 +10,12 @@ export class OrderedListDiffComponent {
   private _idToLabel: Map<string, string>;
 
   public get current() {
-    let list = this.config.object[0]?.[this.config.objectOrderedListField];
-    return list.map(tid => this.getLabel(tid)).join('; ')
+    let list = this.config.object[0]?.[this.config.objectOrderedListField] || [];
+    return list.map(tid => this.getLabel(tid)).join('; ');
   }
   public get previous() {
-    let list = this.config.object[1]?.[this.config.objectOrderedListField];
-    return list.map(tid => this.getLabel(tid)).join('; ')
+    let list = this.config.object[1]?.[this.config.objectOrderedListField] || [];
+    return list.map(tid => this.getLabel(tid)).join('; ');
   }
 
   /**

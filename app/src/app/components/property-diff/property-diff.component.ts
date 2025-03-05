@@ -21,6 +21,7 @@ export class PropertyDiffComponent implements OnInit  {
   }
 
   public generateDiffHtml(oldValue, newValue) {
+    // console.log('** old', oldValue, ', new', newValue)
     const dmp = new DiffMatchPatch();
     const diffs = dmp.diff_main(oldValue, newValue);
     dmp.diff_cleanupSemantic(diffs);
