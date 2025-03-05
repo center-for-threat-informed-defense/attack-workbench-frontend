@@ -1,38 +1,62 @@
 <div class="grid spacing-16 view-page relationship-view" *ngIf="loaded else loading">
     <div class="row">
         <div class="col">
-            <h1 *ngIf="!relationship.updating_refs; else updatingRefs">{{relationship.source_name}} <span class="text-deemphasis">{{relationship.relationship_type}}</span> {{relationship.target_name}}</h1>
+            <ng-container *ngIf="!relationship.updating_refs; else updatingRefs">
+                <h1 *ngIf="config.mode != 'diff'">
+                    {{relationship.source_name}} <span class="text-deemphasis">{{relationship.relationship_type}}</span> {{relationship.target_name}}
+                </h1>
+
+                <h1 *ngIf="config.mode == 'diff'">
+                    <app-property-diff [before]="previous.source_name" [after]="relationship.source_name"></app-property-diff>
+                    <!-- relationship type should never change -->
+                    <span class="text-deemphasis">{{relationship.relationship_type}}</span>
+                    <app-property-diff [before]="previous.target_name" [after]="relationship.target_name"></app-property-diff>
+                </h1>
+            </ng-container>
+            
+            <!-- STATUS -->
             <h3 class="status" *ngIf="!relationship.updating_refs; else updatingRefs">
-                <span class="warning-text" *ngIf="config.object['deprecated']">deprecated</span>
-                <span class="warning-text" *ngIf="config.object['revoked'] && loaded">revoked by: {{target_obj.stix.name}}</span>
+                <span *ngIf="config.mode != 'diff'">
+                    <span class="warning-text" *ngIf="config.object['deprecated']">deprecated</span>
+                    <span class="warning-text" *ngIf="config.object['revoked'] && loaded">revoked by: {{target_obj.stix.name}}</span>
+                </span>
+
+                <span *ngIf="config.mode == 'diff'" class="warning-text">
+                    <app-property-diff [before]="getStatus(previous)" [after]="getStatus(current)"></app-property-diff>
+                </span>
             </h3>
+
+            <!-- async loading source/target objects -->
             <ng-template #updatingRefs>
                 <app-loading-overlay></app-loading-overlay>
             </ng-template>
-            <app-subheading *ngIf="config.mode != 'edit'" [config]="config" (onOpenHistory)="openHistory()" (onOpenNotes)="openNotes()"></app-subheading>
+
+            <app-subheading [config]="config" (onOpenHistory)="openHistory()" (onOpenNotes)="openNotes()"></app-subheading>
         </div>
     </div>
-    <div class="row" *ngIf="config.mode == 'view'">
-        <!-- view source and target -->
+
+    <div class="row" *ngIf="config.mode != 'edit'">
         <!-- SOURCE ID -->
-        <div class="col" *ngIf="relationship.source_ID">
-            <div class="labelled-box grow-to-row">
-                <div class="content">
-                    {{relationship.source_ID}}
-                </div>
-                <span class="labelled-box-label">source id</span>
-            </div>
+        <div class="col">
+            <app-string-property class="grow-to-row" [config]="{
+                mode: config.mode,
+                object: config.object,
+                field: 'source_ID',
+                label: 'source id'
+            }"></app-string-property>
         </div>
         <!-- TARGET ID -->
         <div class="col">
-            <div class="labelled-box grow-to-row">
-                <div class="content">
-                    {{relationship.target_ID}}
-                </div>
-                <span class="labelled-box-label">target id</span>
-            </div>
+            <app-string-property class="grow-to-row" [config]="{
+                mode: config.mode,
+                object: config.object,
+                field: 'target_ID',
+                label: 'target id'
+            }"></app-string-property>
         </div>
     </div>
+
+    <!-- EDITING (current relationship only) -->
     <ng-container *ngIf="config.mode == 'edit'">
         <div class="row">
             <!-- edit source/target -->
@@ -41,6 +65,7 @@
                     <mat-expansion-panel [expanded]="relationship.target_object && !relationship.source_object" class="mat-elevation-z0">
                         <mat-expansion-panel-header>
                             <mat-panel-title>
+                                <span style="font-weight: normal; margin-right: 10px;">SOURCE</span>
                                 <span *ngIf="!relationship.source_object">select a source object</span>
                                 <span *ngIf="relationship.source_object">
                                     {{relationship.source_name}}
@@ -64,6 +89,7 @@
                     <mat-expansion-panel [expanded]="relationship.source_object && !relationship.target_object" class="mat-elevation-z0">
                         <mat-expansion-panel-header>
                             <mat-panel-title>
+                                <span style="font-weight: normal; margin-right: 10px;">TARGET</span>
                                 <span *ngIf="!relationship.target_object">select a target object</span>
                                 <span *ngIf="relationship.target_object">
                                     {{relationship.target_name}}
@@ -87,6 +113,8 @@
                 </mat-accordion>
             </div>
         </div>
+
+        <!-- VERSION UPDATES -->
         <ng-container *ngIf="config.is_new">
             <!-- source object version -->
             <h4 *ngIf="relationship.source_object && source_type !== 'data-component'" class="section-header">Update version of {{relationship.source_name}}?</h4>
@@ -138,22 +166,24 @@
             </div>
         </ng-container>
     </ng-container>
+
+    <!-- subtechnique relationships do not support descriptions -->
     <ng-container *ngIf="relationship.relationship_type != 'subtechnique-of'">
         <div class="row">
             <div class="col">
                 <!-- DESCRIPTION -->
                 <app-descriptive-property [config]="{
-                    mode: config.mode == 'edit' ? 'edit' : 'view',
-                    object: relationship,
+                    mode: config.mode,
+                    object: config.object,
                     field: 'description',
                     firstParagraphOnly: false, 
-                    referencesField: relationship.external_references,
+                    referencesField: 'external_references',
                     label: 'Description'
                 }"></app-descriptive-property>
             </div>
         </div>
         <!-- EXTERNAL REFERENCES -->
-        <div *ngIf="relationship.external_references.list().length > 0">
+        <div *ngIf="relationship.external_references.list().length > 0 || previous?.external_references.list().length > 0">
             <div class="row">
                 <div class="col">
                     <h2 class="section-header">References</h2>
@@ -162,9 +192,9 @@
             <div class="row">
                 <div class="col">
                     <app-external-references-property [config]="{
-                        mode: editing? 'edit': 'view',
-                        object: relationship,
-                        referencesField: relationship.external_references
+                        mode: config.mode,
+                        object: config.object,
+                        referencesField: 'external_references'
                     }"></app-external-references-property>
                 </div>
             </div>

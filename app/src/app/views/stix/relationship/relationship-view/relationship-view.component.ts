@@ -17,11 +17,14 @@ import * as moment from 'moment';
 })
 export class RelationshipViewComponent extends StixViewPage implements OnInit {
     @Output() public onVersionChange = new EventEmitter();
-    public get relationship() { return this.config.object as Relationship; }
+    public get relationship() { return this.configCurrentObject as Relationship; }
+    public get previous() { return this.configPreviousObject as Relationship; }
+
     public source_type: string;
     public target_type: string;
     public refresh: boolean = true;
     public loaded: boolean = false;
+
     /** refresh the list of source objects if the type changes 
      *  This is bad code and should be done a better way.
      */
@@ -45,16 +48,17 @@ export class RelationshipViewComponent extends StixViewPage implements OnInit {
     }
 
     ngOnInit(): void {
-        // initialize source/target types if there is a source/target object, or if there is only one possible value
+        // initialize source types if there is a source object, or if there is only one possible value
         if (this.relationship.source_object) this.source_type = stixTypeToAttackType[this.relationship.source_object.stix.type];
         else if (this.config.sourceType) this.source_type = this.config.sourceType;
         else if (this.relationship.valid_source_types.length == 1) this.source_type = this.relationship.valid_source_types[0];
 
+        // initialize target types if there is a target object, or if there is only one possible value
         if (this.relationship.target_object) this.target_type = stixTypeToAttackType[this.relationship.target_object.stix.type];
         else if (this.config.targetType) this.target_type = this.config.targetType;
         else if (this.relationship.valid_target_types.length == 1) this.target_type = this.relationship.valid_target_types[0];
 
-        // fetch parent of source and/or target objects
+        // fetch parent of source/target objects of current object (utilized for displaying the full name of subtechniques and data components)
         let parent_calls = [];
         if (this.relationship.source_object) {
             if (this.relationship.source_object.stix.x_mitre_is_subtechnique || this.source_type == 'data-component') {
@@ -66,8 +70,19 @@ export class RelationshipViewComponent extends StixViewPage implements OnInit {
                 parent_calls.push(this.relationship.update_target_parent(this.restApiService));
             }
         }
+        // fetch parent of source/target objects of previous object (iff config.mode == 'diff')
+        if (this.previous?.source_object) {
+            if (this.previous?.source_object.stix.x_mitre_is_subtechnique || this.previous?.source_object.stix.type == 'data-component') {
+                parent_calls.push(this.previous.update_source_parent(this.restApiService));
+            }
+        }
+        if (this.previous?.target_object) {
+            if (this.previous?.target_object.stix.x_mitre_is_subtechnique || this.previous?.target_object.stix.type == 'data-component') {
+                parent_calls.push(this.previous.update_target_parent(this.restApiService));
+            }
+        }
         if (parent_calls.length) {
-            var pSubscription = forkJoin(parent_calls).subscribe({
+            let pSubscription = forkJoin(parent_calls).subscribe({
                 complete: () => {
                     this.loaded = true;
                     if (pSubscription) pSubscription.unsubscribe(); 
@@ -139,5 +154,11 @@ export class RelationshipViewComponent extends StixViewPage implements OnInit {
      */
     public onTargetVersionChange($event) {
         this.onVersionChange.emit({target: this.target_version});
+    }
+
+    public getStatus(obj: StixObject): string {
+        if (obj?.['revoked']) return 'revoked';
+        else if (obj?.['deprecated']) return 'deprecated';
+        return '';
     }
 }
