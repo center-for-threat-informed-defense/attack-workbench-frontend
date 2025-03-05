@@ -1,5 +1,6 @@
 import { Component, Input, OnInit, ViewEncapsulation } from '@angular/core';
 import { CitationPropertyConfig } from '../citation-property.component';
+import { ExternalReferences } from 'src/app/classes/external-references';
 
 @Component({
     selector: 'app-citation-view',
@@ -12,7 +13,11 @@ export class CitationViewComponent implements OnInit {
     public loading: boolean = false;
     public display: string;
 
-    private reReference = /\(Citation: (.*?)\)/gmu;
+    public get object() {
+        return Array.isArray(this.config.object) ? this.config.object[0] : this.config.object;
+    }
+
+    private readonly reReference = /\(Citation: (.*?)\)/gmu;
 
     constructor() {
         // intentionally left blank
@@ -63,8 +68,9 @@ export class CitationViewComponent implements OnInit {
      * @param {string} citation complete citation string, e.g. (Citation: sourceName)
      */
     private citationToHTML(displayStr: string, sourceName: string, citation: string): string {
-        let reference = this.config.referencesField.getReference(sourceName);
-        let referenceNum = this.config.referencesField.getIndexOfReference(sourceName);
+        let externalReferences: ExternalReferences = this.object[this.config.referencesField];
+        let reference = externalReferences.getReference(sourceName);
+        let referenceNum = externalReferences.getIndexOfReference(sourceName);
         if (reference && referenceNum) {
             let html = "";
             if (reference.url) {
