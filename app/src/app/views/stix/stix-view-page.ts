@@ -3,7 +3,6 @@ import { MatDialogRef } from '@angular/material/dialog';
 import { StixObject } from 'src/app/classes/stix/stix-object';
 import { AuthenticationService } from 'src/app/services/connectors/authentication/authentication.service';
 import { StixDialogComponent } from './stix-dialog/stix-dialog.component';
-import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/rest-api-connector.service';
 
 @Component({template: ''})
 export abstract class StixViewPage {
@@ -19,7 +18,6 @@ export abstract class StixViewPage {
     public openHistory():void { this.onOpenHistory.emit(); }
     @Output() public onOpenNotes = new EventEmitter();
     public openNotes(): void { this.onOpenNotes.emit(); }
-    @Output() public onReload = new EventEmitter();
 }
 
 export interface StixViewConfig {

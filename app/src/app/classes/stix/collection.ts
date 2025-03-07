@@ -403,4 +403,5 @@ export class Collection extends StixObject {
     public update(_restAPIService: RestApiConnectorService): Observable<{}> {
         // update is not supported on Collections
         return of({});
-    }}
+    }
+}

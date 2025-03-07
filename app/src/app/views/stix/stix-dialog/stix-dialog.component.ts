@@ -126,7 +126,7 @@ export class StixDialogComponent implements OnInit {
             next: (result) => {
                 this.editorService.onEditingStopped.emit();
                 this._config.is_new = false;
-                if (object.attackType == 'relationship') this.updateRelationshipObjects(object as Relationship);
+                if (object.attackType == 'relationship') this.updateRelationshipObjects(object as Relationship); // update source/target object versions
                 if (this.prevObject) this.revertToPreviousObject();
                 else if (object.attackType == 'data-component') { // view data component on save
                     this.validating = false;
