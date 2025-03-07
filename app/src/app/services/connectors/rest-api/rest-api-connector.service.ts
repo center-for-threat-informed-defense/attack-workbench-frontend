@@ -108,7 +108,6 @@ export interface Namespace {
 export class RestApiConnectorService extends ApiConnector {
     private get apiUrl(): string { return environment.integrations.rest_api.url; }
 
-
     constructor(private http: HttpClient, private snackbar: MatSnackBar) {
         super(snackbar);
     }

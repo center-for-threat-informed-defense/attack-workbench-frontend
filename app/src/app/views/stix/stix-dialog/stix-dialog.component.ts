@@ -39,6 +39,7 @@ const stixTypeToClass = {
     encapsulation: ViewEncapsulation.None,
 })
 export class StixDialogComponent implements OnInit {
+
     constructor(public dialogRef: MatDialogRef<StixDialogComponent>,
                 @Inject(MAT_DIALOG_DATA) public _config: StixViewConfig,
                 public sidebarService: SidebarService,
@@ -240,7 +241,6 @@ export class StixDialogComponent implements OnInit {
             });
         }
     }
-
 
     /**
      * Creates and returns the deserialized object
