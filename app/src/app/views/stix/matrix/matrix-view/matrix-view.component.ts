@@ -6,7 +6,7 @@ import { AuthenticationService } from 'src/app/services/connectors/authenticatio
 import { Tactic } from 'src/app/classes/stix/tactic';
 import { StixObject } from 'src/app/classes/stix/stix-object';
 import { EditorService } from 'src/app/services/editor/editor.service';
-import { Observable, of } from 'rxjs';
+import { forkJoin, Observable, of, Subscription } from 'rxjs';
 
 @Component({
 	selector: 'app-matrix-view',
@@ -17,9 +17,12 @@ export class MatrixViewComponent extends StixViewPage implements OnInit, OnDestr
 	public all_tactics: Array<StixObject> = [];
 	public matrix_tactics: Array<Tactic> = [];
 	public view: string = "side";
-	public get matrix(): Matrix { return this.config.object as Matrix; }
+
+	public get matrix(): Matrix { return this.configCurrentObject as Matrix; }
+	public get previous(): Matrix { return this.configPreviousObject as Matrix; }
+
 	public loading = false;
-	private reloadSubscription;
+	private reloadSubscription: Subscription;
 
 	constructor(private restAPIConnectorService: RestApiConnectorService,
 				authenticationService: AuthenticationService,
@@ -35,15 +38,6 @@ export class MatrixViewComponent extends StixViewPage implements OnInit, OnDestr
 
 	ngOnInit() {
 		this.loadMatrix();
-		if (!this.config.hasOwnProperty('showRelationships') || this.config.showRelationships) {
-			// all tactics used for adding any possible tactic to matrix
-			let allTacticSubscription = this.restAPIConnectorService.getAllTactics().subscribe({
-				next: (all_tactics) => {
-					this.all_tactics = all_tactics.data;
-				},
-				complete: () => { allTacticSubscription.unsubscribe(); } //prevent memory leaks
-			});
-		}
 		if (this.matrix.firstInitialized) {
 			this.matrix.initializeWithDefaultMarkingDefinitions(this.restAPIConnectorService);
 		}
@@ -58,16 +52,17 @@ export class MatrixViewComponent extends StixViewPage implements OnInit, OnDestr
 	 */
 	public loadMatrix(): void {
 		this.loading = true;
-		this.getMatrixObjects().subscribe({
-			next: (matrix) => {
-				this.matrix_tactics = matrix.tactic_objects;
-				this.loading = false;
+
+		const matrix$ = this.getMatrixObjects();
+		const allTactics$ = this.restAPIConnectorService.getAllTactics();
+		
+		forkJoin({matrix: matrix$, tactics: allTactics$}).subscribe({
+			next: (result) => {
+				this.matrix_tactics = result.matrix.tactic_objects || [];
+				this.all_tactics = result.tactics.data;
 			},
-			error: (err) => {
-				this.matrix_tactics = [];
-				this.loading = false;
-			}
-		})
+			complete: () => { this.loading = false; }
+		});
 	}
 
 	/**

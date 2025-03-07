@@ -1,11 +1,10 @@
-<div class="list">
-    <div *ngIf="list.length > 0 else nothingHere">
-        <div class="box" *ngFor="let stixID of list">
-            <a *ngIf="(config.clickBehavior && config.clickBehavior == 'link') else label" rel="noopener nofollow" [href]="internalLink(stixID)">{{getLabel(stixID)}}</a>
-            <ng-template #label>{{getLabel(stixID)}}</ng-template>
-        </div>
+<div class="ordered-list-view labelled-box grow-to-row">
+    <div class="content">
+        <ul class="list-view">
+            <li class="list-item" *ngFor="let stixID of list">
+                <a class="external-link" [href]="internalLink(stixID)" target="_blank" rel="nofollow noopener">{{ getLabel(stixID) }}</a>
+            </li>
+        </ul>
     </div>
-    <ng-template #nothingHere>
-        <app-empty-list-marker [checkAgain]="false"></app-empty-list-marker>
-    </ng-template>
+    <span class="labelled-box-label">{{ config.label ? config.label : config.objectOrderedListField }}</span>
 </div>
