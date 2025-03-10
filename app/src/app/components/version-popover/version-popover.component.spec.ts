@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { AttackIDViewComponent } from './attackid-view.component';
+import { VersionPopoverComponent } from './version-popover.component';
 
-describe('AttackidViewComponent', () => {
-  let component: AttackIDViewComponent;
-  let fixture: ComponentFixture<AttackIDViewComponent>;
+describe('VersionPopoverComponent', () => {
+  let component: VersionPopoverComponent;
+  let fixture: ComponentFixture<VersionPopoverComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ AttackIDViewComponent ]
+      declarations: [ VersionPopoverComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(AttackIDViewComponent);
+    fixture = TestBed.createComponent(VersionPopoverComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

@@ -70,6 +70,7 @@ import { DeleteDialogComponent } from './components/delete-dialog/delete-dialog.
 import { HistoryTimelineComponent } from "./components/resources-drawer/history-timeline/history-timeline.component";
 import { ReferenceSidebarComponent } from "./components/resources-drawer/reference-sidebar/reference-sidebar.component";
 import { SearchComponent } from './components/resources-drawer/search/search.component';
+import { VersionPopoverComponent } from "./components/version-popover/version-popover.component";
 import { ReferenceEditDialogComponent } from "./components/reference-edit-dialog/reference-edit-dialog.component"
 import { MultipleChoiceDialogComponent } from "./components/multiple-choice-dialog/multiple-choice-dialog.component";
 import { ValidationResultsComponent } from "./components/validation-results/validation-results.component";
@@ -103,6 +104,8 @@ import { AttackIDPropertyComponent } from "./components/stix/attackid-property/a
 import { AttackIDEditComponent } from "./components/stix/attackid-property/attackid-edit/attackid-edit.component";
 import { AttackIDViewComponent } from "./components/stix/attackid-property/attackid-view/attackid-view.component";
 import { AttackidDiffComponent } from './components/stix/attackid-property/attackid-diff/attackid-diff.component';
+
+import { StixIDPropertyComponent } from "./components/stix/stixid-property/stixid-property.component";
 
 import { ListPropertyComponent } from "./components/stix/list-property/list-property.component";
 import { ListEditComponent } from "./components/stix/list-property/list-edit/list-edit.component";
@@ -276,6 +279,7 @@ export function initConfig(appConfigService: AppConfigService) {
 		AttackIDEditComponent,
 		AttackIDViewComponent,
 		AttackidDiffComponent,
+		StixIDPropertyComponent,
 		ListPropertyComponent,
 		ListEditComponent,
 		ListViewComponent,
@@ -379,7 +383,8 @@ export function initConfig(appConfigService: AppConfigService) {
         ExternalReferencesDiffComponent,
         BooleanPropertyComponent,
         StatementDiffComponent,
-        TlpDiffComponent
+        TlpDiffComponent,
+		VersionPopoverComponent
 	],
 	imports: [
 		MaterialFileInputModule,
