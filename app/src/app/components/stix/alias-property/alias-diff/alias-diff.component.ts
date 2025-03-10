@@ -34,10 +34,10 @@ export class AliasDiffComponent implements OnInit {
 
   public get wrap() { return this.config.hasOwnProperty('wrap') ? this.config.wrap : true; }
 
-  public get current() { return this.config.object[0]; }
+  public get current() { return this.config.object[0] || null; }
   public get currentAliases() { return this.current?.[this.config.field].slice(1).join('; ') || ''; }
 
-  public get previous() { return this.config.object[1]; }
+  public get previous() { return this.config.object[1] || null; }
   public get previousAliases() { return this.previous?.[this.config.field].slice(1).join('; ') || ''; }
 
   constructor() {

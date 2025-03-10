@@ -16,15 +16,17 @@ export class TlpPropertyComponent implements OnInit {
   private statementsMap = {};
   public data$: Observable<Paginated<StixObject>>;
 
+  public get object() { return Array.isArray(this.config.object) ? this.config.object[0]: this.config.object; }
+
   constructor(private restAPIConnectorService: RestApiConnectorService) { 
       // empty constructor
   }
 
-  // Retrieves statements of current Object
+  // Retrieves statements of current object
   public get objStatementsSTIXids(): any[] {
       let objStatementsSTIXidList = []
-      if (this.config.object["object_marking_refs"]){
-          let objMarkingDefsStixIdList = this.config.object["object_marking_refs"];
+      if (this.object["object_marking_refs"]){
+          let objMarkingDefsStixIdList = this.object["object_marking_refs"];
 
           for (let index in objMarkingDefsStixIdList) {
               if (this.statementsMap[objMarkingDefsStixIdList[index]]) {
@@ -36,8 +38,8 @@ export class TlpPropertyComponent implements OnInit {
   }
 
   public get tlp(): string {
-      if (this.config.object["object_marking_refs"]){
-          let objMarkingDefinitionsStixIdList = this.config.object["object_marking_refs"];
+      if (this.object["object_marking_refs"]){
+          let objMarkingDefinitionsStixIdList = this.object["object_marking_refs"];
 
           for (let index in objMarkingDefinitionsStixIdList) {
               if (objMarkingDefinitionsStixIdList[index] in this.tlpMarkingDefinitionsMap) {
@@ -80,7 +82,7 @@ export interface TlpPropertyConfig {
    *    view: viewing the TLP property
    *    diff: displaying the diff between two STIX objects. If this mode is selected, two StixObjects must be specified in the objects field
    */
-  mode?: "view" | "diff";
+  mode?: "edit" | "view" | "diff";
   /* The object to show the TLP marking of
    * Note: if mode is diff, pass an array of two objects to diff
    */

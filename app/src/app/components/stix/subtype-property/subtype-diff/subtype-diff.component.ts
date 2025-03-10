@@ -22,7 +22,7 @@ export class SubtypeDiffComponent implements OnInit {
     this.detailTable = this.mergeTable();
   }
 
-  public mergeTable(): any[] {
+  private mergeTable(): any[] {
     let merged = new Map();
 
     // add before state to map
