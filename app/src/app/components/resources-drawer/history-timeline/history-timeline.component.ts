@@ -241,21 +241,16 @@ export class HistoryTimelineComponent implements OnInit, OnDestroy {
     }
 
     public preview(sdo: StixObject, prior_sdo: StixObject) {
-		if (sdo.attackType == 'collection') {
-			// open in browser instead of dialog window
-			this.router.navigateByUrl(`/${sdo.attackType}/${sdo.stixID}/modified/${sdo.modified.toISOString()}`);
-		} else {
-			this.dialog.open(StixDialogComponent, {
-				data: {
-					object: [sdo, prior_sdo],
-                    mode: "diff",
-					editable: false,
-					sidebarControl: "disable"
-				},
-				maxHeight: "75vh",
-				autoFocus: false, // prevents auto focus on toolbar buttons
-			});
-		}
+        this.dialog.open(StixDialogComponent, {
+            data: {
+                object: [sdo, prior_sdo],
+                mode: "diff",
+                editable: false,
+                sidebarControl: "disable"
+            },
+            maxHeight: "75vh",
+            autoFocus: false, // prevents auto focus on toolbar buttons
+        });
     }
 
     public loadHistory() {
