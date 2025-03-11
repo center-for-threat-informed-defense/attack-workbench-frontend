@@ -1,5 +1,5 @@
 import { Component, EventEmitter, OnInit, Output, ViewEncapsulation } from '@angular/core';
-import { Router, ActivatedRoute } from '@angular/router';
+import { Router } from '@angular/router';
 import { Relationship } from 'src/app/classes/stix/relationship';
 import { StixObject, stixTypeToAttackType } from 'src/app/classes/stix/stix-object';
 import { AuthenticationService } from 'src/app/services/connectors/authentication/authentication.service';
@@ -45,11 +45,13 @@ export class RelationshipViewComponent extends StixViewPage implements OnInit {
         major: false
     }
 
-    constructor(private restApiService: RestApiConnectorService, private editorService: EditorService, authenticationService: AuthenticationService, private router: Router, private route: ActivatedRoute) {
+    constructor(private restApiService: RestApiConnectorService, private editorService: EditorService, authenticationService: AuthenticationService, private router: Router) {
         super(authenticationService);
     }
 
     ngOnInit(): void {
+        this.currentPageStixID = this.editorService.stixId;
+
         // initialize source/target types if there is a source/target object, or if there is only one possible value
         if (this.relationship.source_object) this.source_type = stixTypeToAttackType[this.relationship.source_object.stix.type];
         else if (this.config.sourceType) this.source_type = this.config.sourceType;
@@ -79,11 +81,6 @@ export class RelationshipViewComponent extends StixViewPage implements OnInit {
                 }
             });
         } else this.loaded = true;
-
-        const fullUrl: string = this.route.snapshot['_routerState'].url;
-
-        const segments = fullUrl.split('/');
-        this.currentPageStixID = segments[segments.length -1];
     }
 
     public setSourceObject(object: StixObject) {
@@ -152,17 +149,16 @@ export class RelationshipViewComponent extends StixViewPage implements OnInit {
     }
 
     /**
-     * Navigate to the source object's page
+     * Navigate to the given object's page
      * @param {any} obj the raw STIX object
      */
-    public navigateToSource(obj: any): void {
-        if (!obj || !obj.stix || !obj.stix.type || !obj.stix.id) {
-            console.warn("Invalid object passed to navigateToSource:", obj);
+    public navigateTo(obj: any): void {
+        if (!(obj?.stix?.type && obj?.stix?.id)) {
+            console.warn("Invalid object passed to navigateTo:", obj);
             return;
         }
 
         let targetRoute: string;
-
         if (stixTypeToAttackType[obj.stix.type] === 'data-component') {
             targetRoute = `/data-source/${obj.stix.x_mitre_data_source_ref}`;
             const dataComponent = new DataComponent(obj)
