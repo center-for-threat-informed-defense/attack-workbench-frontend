@@ -1,5 +1,5 @@
 <!-- view stix id -->
-<app-stixid-property class="grow-to-row" *ngIf="object['stixID']" [config]="{
+<app-stixid-property class="stixid-property grow-to-row" [class.editing]="editing" *ngIf="object['stixID']" [config]="{
     object: config.object
 }"></app-stixid-property>
 
