@@ -59,7 +59,7 @@ Please refer to our [Docker install instructions](docs/docker-compose.md) for in
 
 #### Requirements
 
-- [Node.js](https://nodejs.org/) version `18.20.2` or greater
+- [Node.js](https://nodejs.org/) version `18.x` or greater
 
 #### Installing dependencies
 This step is necessary for cases where the app is deployed locally through `ng serve` or `ng build`. It can be skipped for installs using docker (above).
