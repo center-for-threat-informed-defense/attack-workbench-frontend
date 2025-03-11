@@ -155,7 +155,7 @@ export abstract class StixObject extends Serializable {
 
         return {
             workspace: {
-                workflow: this.workflow
+                workflow: this.workflow || {}
             },
             stix: stix
         }
