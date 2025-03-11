@@ -31,7 +31,7 @@ export class CitationEditComponent implements OnDestroy {
      * On input blur, parse citations into the external references field
      */
     public parseCitations(): void {
-        let externalReferences: ExternalReferences = this.config.object[this.config.referencesField];
+        let externalReferences: ExternalReferences = this.object[this.config.referencesField];
         this.sub = externalReferences.parseObjectCitations(this.object, this.restApiService).subscribe({
             complete: () => this.editorService.onReloadReferences.emit()
         })

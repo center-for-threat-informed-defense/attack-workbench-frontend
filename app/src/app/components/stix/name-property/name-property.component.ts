@@ -26,10 +26,8 @@ export class NamePropertyComponent implements OnInit {
         return `/${this.config.parent.attackType}/${this.config.parent.stixID}`;
     }
 
-    // TODO: parent name / parent name changes
     public get current() { return this.config.object[0] || null; }
     public get currentName() { return this.current?.[this.field] || ''; }
-
     public get previous() { return this.config.object[1] || null; }
     public get previousName() { return this.previous?.[this.field] || ''; }
 

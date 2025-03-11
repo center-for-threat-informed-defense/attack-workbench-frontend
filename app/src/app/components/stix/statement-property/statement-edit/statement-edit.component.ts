@@ -82,6 +82,6 @@ export class StatementEditComponent {
   }
 
   constructor(public dialog: MatDialog) { 
-      // empty constructor
+      // intentionally left blank
   }
 }
