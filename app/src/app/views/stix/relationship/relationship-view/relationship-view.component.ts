@@ -1,4 +1,5 @@
 import { Component, EventEmitter, OnInit, Output, ViewEncapsulation } from '@angular/core';
+import { Router } from '@angular/router';
 import { Relationship } from 'src/app/classes/stix/relationship';
 import { StixObject, stixTypeToAttackType } from 'src/app/classes/stix/stix-object';
 import { AuthenticationService } from 'src/app/services/connectors/authentication/authentication.service';
@@ -8,6 +9,7 @@ import { VersionNumber } from 'src/app/classes/version-number';
 import { EditorService } from 'src/app/services/editor/editor.service';
 import { forkJoin } from 'rxjs';
 import * as moment from 'moment';
+import { DataComponent } from 'src/app/classes/stix';
 
 @Component({
   selector: 'app-relationship-view',
@@ -17,6 +19,9 @@ import * as moment from 'moment';
 })
 export class RelationshipViewComponent extends StixViewPage implements OnInit {
     @Output() public onVersionChange = new EventEmitter();
+    @Output() closeDialogEvent = new EventEmitter<void>();
+    @Output() changeDialogToDataComponent = new EventEmitter<any>();
+
     public get relationship() { return this.configCurrentObject as Relationship; }
     public get previous() { return this.configPreviousObject as Relationship; }
 
@@ -24,6 +29,7 @@ export class RelationshipViewComponent extends StixViewPage implements OnInit {
     public target_type: string;
     public refresh: boolean = true;
     public loaded: boolean = false;
+    public currentPageStixID: string;
 
     /** refresh the list of source objects if the type changes 
      *  This is bad code and should be done a better way.
@@ -43,11 +49,13 @@ export class RelationshipViewComponent extends StixViewPage implements OnInit {
         major: false
     }
 
-    constructor(private restApiService: RestApiConnectorService, private editorService: EditorService, authenticationService: AuthenticationService) { 
+    constructor(private restApiService: RestApiConnectorService, private editorService: EditorService, authenticationService: AuthenticationService, private router: Router) {
         super(authenticationService);
     }
 
     ngOnInit(): void {
+        this.currentPageStixID = this.editorService.stixId;
+
         // initialize source types if there is a source object, or if there is only one possible value
         if (this.relationship.source_object) this.source_type = stixTypeToAttackType[this.relationship.source_object.stix.type];
         else if (this.config.sourceType) this.source_type = this.config.sourceType;
@@ -160,5 +168,29 @@ export class RelationshipViewComponent extends StixViewPage implements OnInit {
         if (obj?.['revoked']) return 'revoked';
         else if (obj?.['deprecated']) return 'deprecated';
         return '';
+    }
+
+    /**
+     * Navigate to the given object's page
+     * @param {any} obj the raw STIX object
+     */
+    public navigateTo(obj: any): void {
+        if (!(obj?.stix?.type && obj?.stix?.id)) {
+            console.warn("Invalid object passed to navigateTo:", obj);
+            return;
+        }
+
+        let targetRoute: string;
+        if (stixTypeToAttackType[obj.stix.type] === 'data-component') {
+            targetRoute = `/data-source/${obj.stix.x_mitre_data_source_ref}`;
+            const dataComponent = new DataComponent(obj)
+            dataComponent.deserialize(obj)
+            this.changeDialogToDataComponent.emit(dataComponent);
+        } else {
+            const formattedType = stixTypeToAttackType[obj.stix.type].toLowerCase().replace(/\s+/g, '-');
+            targetRoute = `/${formattedType}/${obj.stix.id}`;
+            this.closeDialogEvent.emit();
+        }
+        this.router.navigate([targetRoute]);
     }
 }
