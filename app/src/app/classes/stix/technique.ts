@@ -490,6 +490,7 @@ export class Technique extends StixObject {
     public update(restAPIService: RestApiConnectorService) : Observable<Technique> {
         let putObservable = restAPIService.putTechnique(this);
         let subscription = putObservable.subscribe({
+            next: (result) => { this.deserialize(result.serialize()); },
             complete: () => { subscription.unsubscribe(); }
         });
         return putObservable;

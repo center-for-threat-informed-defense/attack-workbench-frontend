@@ -136,6 +136,7 @@ export class Software extends StixObject {
     public update(restAPIService: RestApiConnectorService) : Observable<Software> {
         let putObservable = restAPIService.putSoftware(this);
         let subscription = putObservable.subscribe({
+            next: (result) => { this.deserialize(result.serialize()); },
             complete: () => { subscription.unsubscribe(); }
         });
         return putObservable;

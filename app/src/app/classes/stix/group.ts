@@ -111,6 +111,7 @@ export class Group extends StixObject {
     public update(restAPIService: RestApiConnectorService) : Observable<Group> {
         let putObservable = restAPIService.putGroup(this);
         let subscription = putObservable.subscribe({
+            next: (result) => { this.deserialize(result.serialize()); },
             complete: () => { subscription.unsubscribe(); }
         });
         return putObservable;

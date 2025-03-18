@@ -142,6 +142,7 @@ export class Asset extends StixObject {
     public update(restAPIService: RestApiConnectorService) : Observable<Asset> {
         let putObservable = restAPIService.putAsset(this);
         let subscription = putObservable.subscribe({
+            next: (result) => { this.deserialize(result.serialize()); },
             complete: () => { subscription.unsubscribe(); }
         });
         return putObservable;

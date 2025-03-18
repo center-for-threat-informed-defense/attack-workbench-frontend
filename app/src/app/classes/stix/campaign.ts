@@ -142,6 +142,7 @@ export class Campaign extends StixObject {
     public update(restAPIService: RestApiConnectorService) : Observable<Campaign> {
         let putObservable = restAPIService.putCampaign(this);
         let subscription = putObservable.subscribe({
+            next: (result) => { this.deserialize(result.serialize()); },
             complete: () => { subscription.unsubscribe(); }
         });
         return putObservable;
