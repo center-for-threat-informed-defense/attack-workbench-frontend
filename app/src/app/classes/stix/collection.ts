@@ -399,4 +399,9 @@ export class Collection extends StixObject {
         // deletion is not supported on Collections
         return of({});
     }
+
+    public update(_restAPIService: RestApiConnectorService): Observable<{}> {
+        // update is not supported on Collections
+        return of({});
+    }
 }

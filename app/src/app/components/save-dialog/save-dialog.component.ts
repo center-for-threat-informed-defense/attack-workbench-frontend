@@ -46,7 +46,7 @@ export class SaveDialogComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        this.newState = this.config.object.workflow? this.config.object.workflow.state : "";
+        this.newState = "work-in-progress";
     }
 
     /**

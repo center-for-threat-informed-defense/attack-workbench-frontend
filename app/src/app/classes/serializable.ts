@@ -10,7 +10,7 @@ export abstract class Serializable {
      * @abstract
      * @returns {*} the raw object to send
      */
-    public abstract serialize(): any;
+    public abstract serialize(keepModified?: string): any;
     /**
      * Parse the object from the record returned from the back-end
      * @abstract

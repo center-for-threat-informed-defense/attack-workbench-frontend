@@ -26,8 +26,11 @@ export class Note extends StixObject {
      * @abstract
      * @returns {*} the raw object to send
      */
-    public serialize(): any {
+    public serialize(keepModified?: string): any {
         let rep = super.base_serialize();
+        if(keepModified){
+            rep.stix.modified = keepModified;
+        }
         if (this.title) rep.stix.abstract = this.title;
         rep.stix.content = this.content;
         rep.stix.object_refs = this.object_refs;
@@ -75,7 +78,7 @@ export class Note extends StixObject {
      * @param restAPIService [RestApiConnectorService] the service to perform the POST/PUT through
      * @returns {Observable} of the post
      */
-    public save(restAPIService: RestApiConnectorService): Observable<Note> {        
+    public save(restAPIService: RestApiConnectorService) : Observable<Note> {        
         let postObservable = restAPIService.postNote(this);
         let subscription = postObservable.subscribe({
             next: (result) => { this.deserialize(result.serialize()); },
@@ -94,5 +97,19 @@ export class Note extends StixObject {
             complete: () => { subscription.unsubscribe(); }
         });
         return deleteObservable;
+    }
+
+    /**
+     * Update the state of the STIX object in the database.
+     * @param restAPIService [RestApiConnectorService] the service to perform the PUT through
+     * @returns {Observable} of the put
+     */
+    public update(restAPIService: RestApiConnectorService) : Observable<Note> {
+        let putObservable = restAPIService.putNote(this);
+        let subscription = putObservable.subscribe({
+            next: (result) => { this.deserialize(result.serialize()); },
+            complete: () => { subscription.unsubscribe(); }
+        });
+        return putObservable;
     }
 }
