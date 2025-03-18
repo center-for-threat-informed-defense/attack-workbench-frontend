@@ -22,5 +22,4 @@ export class SoftwareViewComponent extends StixViewPage implements OnInit {
             this.software.initializeWithDefaultMarkingDefinitions(this.restApiConnector);
         }
     }
-
 }

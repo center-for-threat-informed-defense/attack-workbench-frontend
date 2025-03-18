@@ -28,9 +28,11 @@ export class Group extends StixObject {
      * @abstract
      * @returns {*} the raw object to send
      */
-    public serialize(): any {
+    public serialize(keepModified?:string): any {
         let rep = super.base_serialize();
-
+        if(keepModified){
+            rep.stix.modified = keepModified;
+        }
         rep.stix.name = this.name.trim();
         rep.stix.aliases = this.aliases.map(x => x.trim());
         rep.stix.x_mitre_contributors = this.contributors.map(x => x.trim());
@@ -78,7 +80,7 @@ export class Group extends StixObject {
      * @param restAPIService [RestApiConnectorService] the service to perform the POST/PUT through
      * @returns {Observable} of the post
      */
-    public save(restAPIService: RestApiConnectorService): Observable<Group> {
+    public save(restAPIService: RestApiConnectorService) : Observable<Group> {
         // update first index of aliases field to group name
         this.aliases[0] = this.name;
         let postObservable = restAPIService.postGroup(this);
@@ -99,5 +101,19 @@ export class Group extends StixObject {
             complete: () => { subscription.unsubscribe(); }
         });
         return deleteObservable;
+    }
+
+    /**
+     * Update the state of the STIX object in the database.
+     * @param restAPIService [RestApiConnectorService] the service to perform the PUT through
+     * @returns {Observable} of the put
+     */
+    public update(restAPIService: RestApiConnectorService) : Observable<Group> {
+        let putObservable = restAPIService.putGroup(this);
+        let subscription = putObservable.subscribe({
+            next: (result) => { this.deserialize(result.serialize()); },
+            complete: () => { subscription.unsubscribe(); }
+        });
+        return putObservable;
     }
 }
