@@ -34,8 +34,11 @@ export class Campaign extends StixObject {
      * @abstract
      * @returns {*} the raw object to send
      */
-    public serialize(): any {
+    public serialize(keepModified?: string): any {
         let rep = super.base_serialize();
+        if(keepModified){
+            rep.stix.modified = keepModified;
+        }
 
         rep.stix.name = this.name.trim();
         rep.stix.first_seen = this.first_seen.toISOString();
@@ -129,5 +132,19 @@ export class Campaign extends StixObject {
             complete: () => { subscription.unsubscribe(); }
         });
         return deleteObservable;
+    }
+
+    /**
+     * Update the state of the STIX object in the database.
+     * @param restAPIService [RestApiConnectorService] the service to perform the PUT through
+     * @returns {Observable} of the put
+     */
+    public update(restAPIService: RestApiConnectorService) : Observable<Campaign> {
+        let putObservable = restAPIService.putCampaign(this);
+        let subscription = putObservable.subscribe({
+            next: (result) => { this.deserialize(result.serialize()); },
+            complete: () => { subscription.unsubscribe(); }
+        });
+        return putObservable;
     }
 }

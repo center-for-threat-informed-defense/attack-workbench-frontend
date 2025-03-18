@@ -869,8 +869,9 @@ export class RestApiConnectorService extends ApiConnector {
         let plural = attackTypeToPlural[attackType];
         return function <P extends T>(object: T, modified?: Date): Observable<P> {
             if (!modified) modified = object.modified; //infer modified from STIX object modified date
-            let url = `${this.apiUrl}/${plural}/${object.stixID}/modified/${modified}`;
-            return this.http.put(url, object.serialize(), { headers: this.headers }).pipe(
+            let url = `${this.apiUrl}/${plural}/${object.stixID}/modified/${modified.toISOString()}`;
+            let rep = object.serialize(modified.toISOString());
+            return this.http.put(url, rep, { headers: this.headers }).pipe(
                 tap(this.handleSuccess(`${this.getObjectName(object)} saved`)),
                 map(result => {
                     let x = result as any;

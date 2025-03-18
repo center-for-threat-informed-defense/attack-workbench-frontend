@@ -153,8 +153,11 @@ export class Technique extends StixObject {
      * @abstract
      * @returns {*} the raw object to send
      */
-    public serialize(): any {
+    public serialize(keepModified?: string): any {
         let rep = super.base_serialize();
+        if(keepModified){
+            rep.stix.modified = keepModified;
+        }
 
         rep.stix.name = this.name.trim();
         rep.stix.x_mitre_domains = this.domains;
@@ -515,7 +518,7 @@ export class Technique extends StixObject {
      * @param restAPIService [RestApiConnectorService] the service to perform the POST/PUT through
      * @returns {Observable} of the post
      */
-    public save(restApiService: RestApiConnectorService): Observable<Technique> {
+    public save(restApiService: RestApiConnectorService) : Observable<Technique> {
         const postObservable = this.updateParentRelationship(restApiService).pipe(
             concatMap(() => this.syncTacticsWithParentOrSubs(restApiService)),
             concatMap(() => restApiService.postTechnique(this)),
@@ -540,5 +543,19 @@ export class Technique extends StixObject {
             complete: () => { subscription.unsubscribe(); }
         });
         return deleteObservable;
+    }
+
+    /**
+     * Update the state of the STIX object in the database.
+     * @param restAPIService [RestApiConnectorService] the service to perform the PUT through
+     * @returns {Observable} of the put
+     */
+    public update(restAPIService: RestApiConnectorService) : Observable<Technique> {
+        let putObservable = restAPIService.putTechnique(this);
+        let subscription = putObservable.subscribe({
+            next: (result) => { this.deserialize(result.serialize()); },
+            complete: () => { subscription.unsubscribe(); }
+        });
+        return putObservable;
     }
 }

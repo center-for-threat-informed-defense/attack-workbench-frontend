@@ -82,7 +82,7 @@ export class Identity extends StixObject {
      * @param restAPIService [RestApiConnectorService] the service to perform the POST/PUT through
      * @returns {Observable} of the post
      */
-    public save(restAPIService: RestApiConnectorService): Observable<Identity> {
+    public save(restAPIService: RestApiConnectorService) : Observable<Identity> {
         let postObservable = restAPIService.postIdentity(this);
         let subscription = postObservable.subscribe({
             next: (result) => { this.deserialize(result); },
@@ -94,5 +94,19 @@ export class Identity extends StixObject {
     public delete(_restAPIService: RestApiConnectorService): Observable<{}> {
         // deletion is not supported on Identity objects
         return of({});
+    }
+
+    /**
+     * Update the state of the STIX object in the database.
+     * @param restAPIService [RestApiConnectorService] the service to perform the PUT through
+     * @returns {Observable} of the put
+     */
+    public update(restAPIService: RestApiConnectorService) : Observable<Identity> {
+        let putObservable = restAPIService.putIdentity(this);
+        let subscription = putObservable.subscribe({
+            next: (result) => { this.deserialize(result.serialize()); },
+            complete: () => { subscription.unsubscribe(); }
+        });
+        return putObservable;
     }
 }
