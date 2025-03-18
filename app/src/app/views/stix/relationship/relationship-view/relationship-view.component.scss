@@ -20,5 +20,10 @@
     .text-deemphasis h3 {
         margin-bottom: 0px;
     }
-    .mat-icon { vertical-align: middle; }
+    .mat-icon {
+        vertical-align: middle;
+    }
+    a {
+        cursor: pointer;
+    }
 }
