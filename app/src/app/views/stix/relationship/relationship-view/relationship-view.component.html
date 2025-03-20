@@ -23,13 +23,13 @@
 
             <!-- STATUS -->
             <h3 class="status" *ngIf="!relationship.updating_refs && !previous?.updating_refs; else updatingRefs">
-                <span *ngIf="config.mode != 'diff'">
+                <span *ngIf="config.mode !== 'diff'">
                     <span class="warning-text" *ngIf="config.object['deprecated']">deprecated</span>
                     <span class="warning-text" *ngIf="config.object['revoked'] && loaded">revoked by: {{target_obj.stix.name}}</span>
                 </span>
 
                 <span *ngIf="config.mode == 'diff'" class="warning-text">
-                    <app-property-diff [before]="getStatus(previous)" [after]="getStatus(current)"></app-property-diff>
+                    <app-property-diff [before]="getStatus(previous)" [after]="getStatus(relationship)"></app-property-diff>
                 </span>
             </h3>
 

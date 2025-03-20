@@ -70,7 +70,7 @@ export class HistoryTimelineComponent implements OnInit, OnDestroy {
         let previousState = null;
         for (let objectVersion of objectVersions) {
             let versionChanged = previousVersion && objectVersion.version.compareTo(previousVersion) != 0;
-            let stateChanged = previousState && objectVersion.workflow && objectVersion.workflow.state ? objectVersion.workflow.state != previousState : false;
+            let stateChanged = previousState && objectVersion.workflow?.state ? objectVersion.workflow.state != previousState : false;
             let objectCreated = objectVersion.created.getTime() == objectVersion.modified.getTime();
             let release = objectVersion.attackType == "collection" && (objectVersion as Collection).release;
             let objectImported = !objectCreated && !previousVersion;
@@ -91,7 +91,7 @@ export class HistoryTimelineComponent implements OnInit, OnDestroy {
                 name: objectVersion["name"],
                 description: description,
                 sdo: objectVersion,
-                prior_sdo: previousSdo? previousSdo : null,
+                prior_sdo: previousSdo ?? null,
                 prior_version: versionChanged? previousVersion : null,
                 prior_state: stateChanged ? previousState : 'unset'
             })
@@ -271,7 +271,7 @@ export class HistoryTimelineComponent implements OnInit, OnDestroy {
         else if (objectType == "data-component") objects$ = this.restAPIConnectorService.getDataComponent(objectStixID, null, "all");
         else if (objectType == "asset") objects$ = this.restAPIConnectorService.getAsset(objectStixID, null, "all");
         // set up subscribers to get relationships and collections
-        let relationships$ = this.restAPIConnectorService.getRelatedTo({sourceOrTargetRef: objectStixID, versions: "all"});
+        let relationships$ = this.restAPIConnectorService.getRelatedTo({sourceOrTargetRef: objectStixID, versions: "all", includeDeprecated: true});
 		let collections$ = this.restAPIConnectorService.getAllCollections({versions: "all"});
         // join subscribers
         let subscription = forkJoin({
