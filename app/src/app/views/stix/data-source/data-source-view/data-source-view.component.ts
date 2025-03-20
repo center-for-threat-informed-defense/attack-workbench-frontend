@@ -33,7 +33,7 @@ export class DataSourceViewComponent extends StixViewPage implements OnInit {
     }
 
     public getDataComponents() {
-        return this.restApiService.getAllDataComponents().pipe(
+        return this.restApiService.getAllDataComponents({includeDeprecated: true}).pipe(
             // get related data components
             map(results => {
                 let allComponents = results.data as DataComponent[];
