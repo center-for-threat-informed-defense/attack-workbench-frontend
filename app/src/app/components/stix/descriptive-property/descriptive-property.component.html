@@ -5,10 +5,6 @@
         </div>
         <span class="labelled-box-label">{{config.label}}</span>
     </div>
-    <div *ngIf="config.mode == 'diff'">
-        <app-descriptive-diff [config]="config"></app-descriptive-diff>
-    </div>
-    <div class="grow-to-row" *ngIf="config.mode == 'edit'">
-        <app-descriptive-edit [config]="config"></app-descriptive-edit>
-    </div>
+    <app-descriptive-edit *ngIf="config.mode == 'edit'" class="grow-to-row" [config]="config"></app-descriptive-edit>
+    <app-descriptive-diff *ngIf="config.mode == 'diff'" class="grow-to-row" [config]="config"></app-descriptive-diff>
 </div>

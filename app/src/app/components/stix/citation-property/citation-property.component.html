@@ -5,7 +5,6 @@
         </div>
         <span class="labelled-box-label">{{config.label}}</span>
     </div>
-    <div *ngIf="config.mode == 'edit'" class="grow-to-row">
-        <app-citation-edit [config]="config"></app-citation-edit>
-    </div>
+    <app-citation-edit *ngIf="config.mode == 'edit'" class="grow-to-row" [config]="config"></app-citation-edit>
+    <app-citation-diff *ngIf="config.mode == 'diff'" class="grow-to-row" [config]="config"></app-citation-diff>
 </div>

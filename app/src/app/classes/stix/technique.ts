@@ -56,6 +56,69 @@ export class Technique extends StixObject {
         this.kill_chain_phases = killChainPhases;
     }
 
+    /** domain specific fields */
+    public get isEnterpriseObject(): boolean {
+        return this.domains.includes('enterprise-attack');
+    }
+    public get isMobileObject(): boolean {
+        return this.domains.includes('mobile-attack');
+    }
+    public get isIcsObject(): boolean {
+        return this.domains.includes('ics-attack');
+    }
+    public get supportsDataSources(): boolean {
+        return this.isIcsObject;
+    }
+    public get supportsTacticTypes(): boolean {
+        return this.isMobileObject;
+    }
+    public get supportsSystemRequirements(): boolean {
+        return this.isEnterpriseObject;
+    }
+    public get supportsCapecIds(): boolean {
+        return this.isEnterpriseObject;
+    }
+    public get supportsMtcIds(): boolean {
+        return this.isMobileObject;
+    }
+    /** Used for enabling domain-specific fields on technique page
+     *  - x_mitre_data_sources (ICS)
+     *  - x_mitre_tactic_type (Mobile)
+     *  - x_mitre_system_requirements (Enterprise)
+     */
+    public get supportsDomainSpecificFields(): boolean {
+        return this.supportsDataSources || this.supportsTacticTypes || this.supportsSystemRequirements;
+    }
+
+    /** tactic-specific fields */
+    public get supportsPermissionsRequired(): boolean {
+        return this.isEnterpriseObject && this.tactics.includes('privilege-escalation');
+    }
+    public get supportsEffectivePermissions(): boolean {
+        return this.isEnterpriseObject && this.tactics.includes('privilege-escalation');
+    }
+    public get supportsDefensesBypassed(): boolean {
+        return this.isEnterpriseObject && this.tactics.includes('defense-evasion');
+    }
+    public get supportsRemoteSupport(): boolean {
+        return this.isEnterpriseObject && this.tactics.includes('execution');
+    }
+    public get supportsImpactType(): boolean {
+        return this.isEnterpriseObject && this.tactics.includes('impact');
+    }
+    /** Used for enabling tactic-specific fields on technique page
+     *  - x_mitre_permissions_required  (Enterprise/Privilege Escalation)
+     *  - x_mitre_effective_permissions (Enterprise/Privilege Escalation)
+     *  - x_mitre_defense_bypassed      (Enterprise/Defense Evasion)
+     *  - x_mitre_remote_support        (Enterprise/Execution)
+     *  - x_mitre_impact_type           (Enterprise/Impact)
+     */
+    public get supportsTacticSpecificFields(): boolean {
+        return this.supportsPermissionsRequired || this.supportsEffectivePermissions
+               || this.supportsDefensesBypassed || this.supportsRemoteSupport
+               || this.supportsImpactType;
+    }
+
     public capec_ids: string[] = [];
     public mtc_ids: string[] = [];
 
@@ -112,7 +175,7 @@ export class Technique extends StixObject {
             rep.stix.x_mitre_tactic_type = this.tactic_type;
         }
         if (this.domains.includes('enterprise-attack')) {
-            rep.stix.x_mitre_data_sources = this.data_sources;
+            rep.stix.x_mitre_data_sources = this.data_sources; // retain old data, but no longer editable
             rep.stix.x_mitre_system_requirements = this.system_requirements.map(x => x.trim());
 
             // tactic specific fields

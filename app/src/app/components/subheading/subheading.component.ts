@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output, ViewEncapsulation } from '@angular/core';
+import { Component, EventEmitter, Input, Output, ViewEncapsulation } from '@angular/core';
 import { SidebarService } from 'src/app/services/sidebar/sidebar.service';
 import { StixViewConfig } from 'src/app/views/stix/stix-view-page';
 import { EditorService } from 'src/app/services/editor/editor.service';
@@ -9,11 +9,12 @@ import { EditorService } from 'src/app/services/editor/editor.service';
   styleUrls: ['./subheading.component.scss'],
   encapsulation: ViewEncapsulation.None
 })
-export class SubheadingComponent implements OnInit {
+export class SubheadingComponent {
     @Input() public config: StixViewConfig;
     @Output() public onOpenHistory = new EventEmitter();
     @Output() public onOpenNotes = new EventEmitter();
 
+    public get object() { return Array.isArray(this.config.object) ? this.config.object[0] : this.config.object }
     public get editing(): boolean { return this.editorService.editing; }
 
     public openHistory() {
@@ -33,9 +34,7 @@ export class SubheadingComponent implements OnInit {
         }
     }
 
-    constructor(private sidebarService: SidebarService, private editorService: EditorService) { }
-
-    ngOnInit(): void {
+    constructor(private sidebarService: SidebarService, private editorService: EditorService) {
         // intentionally left blank
     }
 }

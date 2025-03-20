@@ -5,19 +5,18 @@
                 <div class="col">
                     <!-- things to add to the collection -->
                     <app-name-property class="grow-to-row c-align" [config]="{
-                        mode: editing? 'edit' : 'view',
-                        object: collection
+                        mode: config.mode,
+                        object: config.object
                     }"></app-name-property>
-                    <app-subheading *ngIf="!editing" [config]="config" (onOpenHistory)="openHistory()"
-                        (onOpenNotes)="openNotes()"></app-subheading>
+                    <app-subheading *ngIf="!editing" [config]="config" (onOpenHistory)="openHistory()" (onOpenNotes)="openNotes()"></app-subheading>
                 </div>
             </div>
             <div class="row width-limited">
                 <div class="col">
                     <!-- VERSION NUMBER -->
                     <app-version-property class="grow-to-row" [config]="{
-                        mode: editing? 'edit' : 'view',
-                        object: collection
+                        mode: config.mode,
+                        object: config.object
                     }"></app-version-property>
                 </div>
                 <div class="col" *ngIf="editing">
@@ -71,10 +70,11 @@
                 <div class="col">
                     <!-- DESCRIPTION -->
                     <app-descriptive-property [config]="{
-                        mode: editing? 'edit' : 'view',
-                        object: collection,
+                        mode: config.mode,
+                        object: config.object,
                         field: 'description',
-                        firstParagraphOnly: false, 
+                        firstParagraphOnly: false,
+                        referencesField: 'external_references',
                         label: 'Description'
                     }"></app-descriptive-property>
                 </div>

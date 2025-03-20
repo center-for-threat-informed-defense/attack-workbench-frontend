@@ -6,7 +6,7 @@ import { StixViewPage } from '../../stix-view-page';
 import { MatDialog } from '@angular/material/dialog';
 import { StixDialogComponent } from '../../stix-dialog/stix-dialog.component';
 import { AuthenticationService } from 'src/app/services/connectors/authentication/authentication.service';
-import { forkJoin } from 'rxjs';
+import { forkJoin, of } from 'rxjs';
 import { concatMap, map } from 'rxjs/operators';
 import { Relationship } from 'src/app/classes/stix';
 
@@ -16,9 +16,8 @@ import { Relationship } from 'src/app/classes/stix';
     styleUrls: ['./data-source-view.component.scss']
 })
 export class DataSourceViewComponent extends StixViewPage implements OnInit {
-    public get dataSource(): DataSource {
-        return this.config.object as DataSource;
-    }
+    public get dataSource(): DataSource { return this.configCurrentObject as DataSource; }
+    public get previous(): DataSource { return this.configPreviousObject as DataSource; }
 
     public dataComponents: DataComponent[];
     public techniquesDetected: Relationship[];
@@ -27,15 +26,14 @@ export class DataSourceViewComponent extends StixViewPage implements OnInit {
     constructor(public dialog: MatDialog, private restApiService: RestApiConnectorService, authenticationService: AuthenticationService) { super(authenticationService); }
 
     ngOnInit(): void {
-        let dataSource = this.config.object as DataSource;
-        if ( dataSource.firstInitialized ) {
-            dataSource.initializeWithDefaultMarkingDefinitions(this.restApiService);
+        if ( this.dataSource.firstInitialized ) {
+            this.dataSource.initializeWithDefaultMarkingDefinitions(this.restApiService);
         }
         this.loadData();
     }
 
     public getDataComponents() {
-        return this.restApiService.getAllDataComponents().pipe(
+        return this.restApiService.getAllDataComponents({includeDeprecated: true}).pipe(
             // get related data components
             map(results => {
                 let allComponents = results.data as DataComponent[];
@@ -54,7 +52,8 @@ export class DataSourceViewComponent extends StixViewPage implements OnInit {
                         includeDeprecated: true
                     }))
                 );
-                return forkJoin(apiCalls);
+                if (apiCalls.length) return forkJoin(apiCalls);
+                else return of([])
             }),
             // map pagination data to relationship list
             map((results: any) => {

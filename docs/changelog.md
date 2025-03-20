@@ -39,6 +39,7 @@
 #### New Features
 - Added the ability to view and copy an object's STIX ID directly from its view page. See [frontend#555](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/555).
 - Added an informational popover to the version field for version bump guidelines based on the corresponding object type. See [frontend#588](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/588).
+- Added a diff view to the object history sidebar to show a detailed change log of what was changed on an object. See [frontend#575](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/575).
 
 #### Improvements
 - Implemented automatic synchronization of tactics between parent and sub-techniques to ensure consistency upon saving. See [frontend#583](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/pull/583).
@@ -49,6 +50,9 @@
 #### Fixes
 - Fixed an issue where deprecated objects were not displayed in the "Objects citing this reference" section in the Reference Manager. The `includeDeprecatedObjects` property was added to the `stix-list` component, allowing these objects to be included in the list. See [frontend#582](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/pull/582).
 - Fixed a bug that allowed users to assign a technique as a subtechnique of itself. See [frontend#586](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/586).
+- Fixed a bug where tactic names would not be displayed when editing a matrix due to asynchronous tactic loading. See [frontend#535](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/issues/535).
+- Fixed a bug where removing an item from the `related_asset_sectors` list on a related asset would not actually remove it from the field.
+- Fixed a bug where clicking "show more" on an alias property would cause the application to crash when both an alias description and citation are present.
 
 ## 31 October 2024
 

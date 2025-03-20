@@ -12,25 +12,11 @@ import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/re
 })
 export class NamePropertyComponent implements OnInit {
     @Input() public config: NamePropertyConfig;
-    public target_obj?: StixObject;
+    public currentTargetObj?: any;
     public loaded: boolean = false;
 
-    constructor(private restAPIService: RestApiConnectorService) { }
-
-    ngOnInit(): void {
-        let object = Array.isArray(this.config.object)? this.config.object[0] : this.config.object;
-        if (object.revoked) {
-            // retrieve revoking object
-            let data$ = this.restAPIService.getRelatedTo({sourceRef: object.stixID, relationshipType: 'revoked-by'});
-            let relSubscription = data$.subscribe({
-                next: (data) => {
-                    let relationship = data.data[0] as Relationship;
-                    this.target_obj = relationship.target_object as Technique;
-                    this.loaded = true;
-                },
-                complete: () => { relSubscription.unsubscribe() }
-            });
-        }
+    public get field() {
+        return this.config.field ? this.config.field : 'name';
     }
 
     /**
@@ -38,6 +24,35 @@ export class NamePropertyComponent implements OnInit {
      */
     public get internalParentLink(): string {
         return `/${this.config.parent.attackType}/${this.config.parent.stixID}`;
+    }
+
+    public get current() { return this.config.object[0] || null; }
+    public get currentName() { return this.current?.[this.field] || ''; }
+    public get previous() { return this.config.object[1] || null; }
+    public get previousName() { return this.previous?.[this.field] || ''; }
+
+    constructor(private restAPIService: RestApiConnectorService) { }
+
+    ngOnInit(): void {
+        let object = Array.isArray(this.config.object)? this.config.object[0] : this.config.object;
+        if (this.config.mode !== 'diff' && object.revoked) {
+            // retrieve revoking object
+            let data$ = this.restAPIService.getRelatedTo({sourceRef: object.stixID, relationshipType: 'revoked-by'});
+            let relSubscription = data$.subscribe({
+                next: (data) => {
+                    let relationship = data.data[0] as Relationship;
+                    this.currentTargetObj = relationship.target_object as Technique;
+                    this.loaded = true;
+                },
+                complete: () => { relSubscription.unsubscribe() }
+            });
+        }
+    }
+
+    public getStatus(obj: StixObject): string {
+        if (obj?.['revoked']) return 'revoked';
+        else if (obj?.['deprecated']) return 'deprecated';
+        return '';
     }
 }
 

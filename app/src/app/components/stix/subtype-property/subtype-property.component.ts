@@ -11,9 +11,9 @@ export class SubtypePropertyComponent {
 
 export interface SubtypePropertyConfig {
     /* What is the current mode? Default: 'view' */
-    mode?: "view" | "edit";
+    mode?: "view" | "edit" | "diff";
     /* The object to show the field of */
-    object: StixObject;
+    object: StixObject | [StixObject, StixObject];
     /* The field of the object to visualize */
     field: string;
     /* The label for labelled box */

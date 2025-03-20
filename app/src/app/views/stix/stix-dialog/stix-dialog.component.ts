@@ -51,17 +51,21 @@ export class StixDialogComponent implements OnInit {
     }
 
     public get canDelete(): boolean { return this.authenticationService.canDelete(); }
-
     public get canDeprecate(): boolean { return this.stixType == 'relationship' || this.stixType == 'x-mitre-data-component'; }
+    public get showRelationships() {
+        if (this._config.mode == 'diff') return false;
+        let obj = this._config.object as StixObject;
+        return obj.attackType == 'data-component' ? true : false;
+    }
 
     public get config(): StixViewConfig {
-        let object = Array.isArray(this._config.object) ? this._config.object[0] : this._config.object;
+        let mode = this.editing && this.authenticationService.canEdit() ? "edit" : this._config.mode;
         return {
-            mode: this.editing && this.authenticationService.canEdit() ? "edit" : "view",
-            object: object,
+            mode: mode,
+            object: this._config.object,
             sourceType: this._config.sourceType ? this._config.sourceType : null,
             targetType: this._config.targetType ? this._config.targetType : null,
-            showRelationships: object.attackType == "data-component" ? true : false,
+            showRelationships: this.showRelationships,
             editable: this._config.editable && this.authenticationService.canEdit(),
             is_new: this._config.is_new ? true : false,
             sidebarControl: this._config.sidebarControl == "disable" ? "disable" : "events",
