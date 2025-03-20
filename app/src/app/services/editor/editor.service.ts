@@ -45,7 +45,7 @@ export class EditorService {
                 this.editable = editable.length > 0 && editable.every(x => x) && this.authenticationService.canEdit(attackType);
                 this.hasWorkflow = attackType !== 'home';
                 if (!(this.editable && this.hasWorkflow)) this.sidebarService.currentTab = "search";
-                this.sidebarService.setEnabled("history", this.editable && this.hasWorkflow);
+                this.sidebarService.setEnabled("history", this.editable && this.hasWorkflow && !this.router.url.includes("/new"));
                 this.sidebarService.setEnabled("notes", this.editable && this.hasWorkflow);
                 this.isGroup = false;
                 if (this.editable) {
