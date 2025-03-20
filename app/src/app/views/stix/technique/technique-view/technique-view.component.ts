@@ -40,7 +40,7 @@ export class TechniqueViewComponent extends StixViewPage implements OnInit, Afte
     }
 
     public showParentField(): boolean {
-        if (!this.config.mode || this.config.mode == 'view') return false;
+        if (!this.config.mode || this.config.mode !== 'edit') return false;
         return this.technique.is_subtechnique || this.previous?.is_subtechnique;
     }
 }
