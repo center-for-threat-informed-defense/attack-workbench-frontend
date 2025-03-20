@@ -3,8 +3,8 @@
         <div class="col">
             <!-- NAME -->
             <app-name-property [config]="{
-                mode: editing? 'edit' : 'view',
-                object: campaign
+                mode: config.mode,
+                object: config.object
             }"></app-name-property>
             <app-subheading [config]="config" (onOpenHistory)="openHistory()" (onOpenNotes)="openNotes()"></app-subheading>
         </div>
@@ -13,15 +13,15 @@
         <div class="col">
             <!-- ATT&CK ID -->
             <app-attackid-property class="grow-to-row" [config]="{
-                mode: editing? 'edit' : 'view',
-                object: campaign
+                mode: config.mode,
+                object: config.object
             }"></app-attackid-property>
         </div>
         <div class="col">
             <!-- VERSION NUMBER -->
             <app-version-property class="grow-to-row" [config]="{
-                mode: editing? 'edit' : 'view',
-                object: campaign
+                mode: config.mode,
+                object: config.object
             }"></app-version-property>
         </div>
     </div>
@@ -29,8 +29,8 @@
         <div class="col">
             <!-- FIRST SEEN -->
             <app-datepicker-property class="datepicker" [config]="{
-                mode: editing? 'edit': 'view',
-                object: campaign,
+                mode: config.mode,
+                object: config.object,
                 field: 'first_seen',
                 label: 'first seen',
                 required: true
@@ -39,8 +39,8 @@
         <div class="col">
             <!-- LAST SEEN -->
             <app-datepicker-property class="datepicker" [config]="{
-                mode: editing? 'edit': 'view',
-                object: campaign,
+                mode: config.mode,
+                object: config.object,
                 field: 'last_seen',
                 label: 'last seen',
                 required: true
@@ -51,10 +51,10 @@
         <div class="col">
             <!-- FIRST SEEN CITATION -->
             <app-citation-property [config]="{
-                mode: editing? 'edit': 'view',
-                object: campaign,
+                mode: config.mode,
+                object: config.object,
                 field: 'first_seen_citation',
-                referencesField: campaign.external_references,
+                referencesField: 'external_references',
                 label: 'first seen citation',
                 required: true
             }"></app-citation-property>
@@ -62,10 +62,10 @@
         <div class="col">
             <!-- LAST SEEN CITATION -->
             <app-citation-property [config]="{
-                mode: editing? 'edit': 'view',
-                object: campaign,
+                mode: config.mode,
+                object: config.object,
                 field: 'last_seen_citation',
-                referencesField: campaign.external_references,
+                referencesField: 'external_references',
                 label: 'last seen citation',
                 required: true
             }"></app-citation-property>
@@ -75,8 +75,8 @@
         <div class="col">
             <!-- CONTRIBUTORS -->
             <app-list-property class="grow-to-row" [config]="{
-                mode: editing? 'edit' : 'view',
-                object: campaign,
+                mode: config.mode,
+                object: config.object,
                 field: 'contributors',
                 editType: 'any'
             }"></app-list-property>
@@ -84,8 +84,8 @@
         <div class="col">
             <!-- CAMPAIGN ALIASES -->
             <app-alias-property class="grow-to-row" [config]="{
-                mode: editing? 'edit' : 'view',
-                object: campaign,
+                mode: config.mode,
+                object: config.object,
                 field: 'aliases',
                 referencesField: 'external_references',
                 label: 'Associated Campaigns'
@@ -96,16 +96,16 @@
         <div class="col">
             <!-- DESCRIPTION -->
             <app-descriptive-property [config]="{
-                mode: editing? 'edit' : 'view',
-                object: campaign,
+                mode: config.mode,
+                object: config.object,
                 field: 'description',
                 firstParagraphOnly: false, 
-                referencesField: campaign.external_references,
+                referencesField: 'external_references',
                 label: 'Description'
             }"></app-descriptive-property>
         </div>
     </div>
-    <!-- only show relationships if configured to show them -->
+    <!-- RELATIONSHIPS - NOTE: these are only shown in 'view' mode -->
     <div *ngIf="(config.showRelationships || !config.hasOwnProperty('showRelationships')) && !editing">    
         <!-- GROUPS -->
         <div class="row">
@@ -195,7 +195,7 @@
         </div>
     </div>
     <!-- EXTERNAL REFERENCES -->
-    <div *ngIf="campaign.external_references.list().length > 0">
+    <div *ngIf="campaign.external_references.list().length > 0 || previous?.external_references.list().length > 0">
         <div class="row">
             <div class="col">
                 <h2 class="section-header">References</h2>
@@ -204,9 +204,9 @@
         <div class="row">
             <div class="col">
                 <app-external-references-property [config]="{
-                    mode: editing? 'edit': 'view',
-                    object: campaign,
-                    referencesField: campaign.external_references
+                    mode: config.mode,
+                    object: config.object,
+                    referencesField: 'external_references'
                 }"></app-external-references-property>
             </div>
         </div>

@@ -54,3 +54,25 @@
 	   height: 12px !important;
 	}
 }
+
+.tiny-icon-button {
+	@extend .small-icon-button;
+	width: 12px !important;
+	height: 12px !important;
+ 
+	& > *[role=img] {
+	   width: 7px;
+	   height: 7px;
+	   font-size: 7px;
+ 
+	   svg {
+		  width: 7px;
+		  height: 7px;
+	   }
+	}
+	
+	.mat-mdc-button-touch-target {
+	   width: 7px !important;
+	   height: 7px !important;
+	}
+}

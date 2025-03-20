@@ -1,6 +1,5 @@
 <div class="ordered-list-property">
-    <div *ngIf="!config.mode || config.mode == 'view'">
-        <app-ordered-list-view [config]="config"></app-ordered-list-view>
-    </div>
+    <app-ordered-list-view *ngIf="!config.mode || config.mode == 'view'" [config]="config"></app-ordered-list-view>
     <app-ordered-list-edit *ngIf="config.mode == 'edit'" [config]="config"></app-ordered-list-edit>
+    <app-ordered-list-diff *ngIf="config.mode == 'diff'" [config]="config"></app-ordered-list-diff>
 </div>

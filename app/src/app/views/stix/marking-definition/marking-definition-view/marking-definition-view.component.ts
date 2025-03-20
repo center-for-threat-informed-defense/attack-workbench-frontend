@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, ViewEncapsulation } from '@angular/core';
 import { MarkingDefinition } from 'src/app/classes/stix/marking-definition';
 import { StixViewPage } from '../../stix-view-page';
 import { MatDialog } from '@angular/material/dialog';
@@ -14,17 +14,13 @@ import { AuthenticationService } from 'src/app/services/connectors/authenticatio
     styleUrls: ['./marking-definition-view.component.scss'],
     encapsulation: ViewEncapsulation.None
 })
-export class MarkingDefinitionViewComponent extends StixViewPage implements OnInit {
-    public get marking_definition(): MarkingDefinition { return this.config.object as MarkingDefinition; }
+export class MarkingDefinitionViewComponent extends StixViewPage {
+    public get markingDefinition(): MarkingDefinition { return this.configCurrentObject as MarkingDefinition; }
     public validating: boolean = false;
     public validationData: ValidationData = null;
 
     constructor(public dialog: MatDialog, private router: Router, private restApiConnector: RestApiConnectorService, authenticationService: AuthenticationService) {
         super(authenticationService);
-    }
-
-    ngOnInit(): void {
-        // empty on init
     }
 
     /**
@@ -42,7 +38,7 @@ export class MarkingDefinitionViewComponent extends StixViewPage implements OnIn
     public validate() {
         this.validating = true;
         this.validationData = null;
-        let subscription = this.marking_definition.validate(this.restApiConnector).subscribe({
+        let subscription = this.markingDefinition.validate(this.restApiConnector).subscribe({
             next: (results) => this.validationData = results,
             complete: () => subscription.unsubscribe()
         })
@@ -53,7 +49,6 @@ export class MarkingDefinitionViewComponent extends StixViewPage implements OnIn
      *
      */
     public save() {
-
         let prompt = this.dialog.open(ConfirmationDialogComponent, {
             maxWidth: "35em",
             data: { 
@@ -65,7 +60,7 @@ export class MarkingDefinitionViewComponent extends StixViewPage implements OnIn
         let subscriptionPrompt = prompt.afterClosed().subscribe({
             next: (result) => {
                 if (result) {
-                    let subscriptionSave = this.marking_definition.save(this.restApiConnector).subscribe({
+                    let subscriptionSave = this.markingDefinition.save(this.restApiConnector).subscribe({
                         next: (saveResult) => {
                             this.router.navigate([saveResult.attackType, saveResult.stixID]);
                             this.validating = false;

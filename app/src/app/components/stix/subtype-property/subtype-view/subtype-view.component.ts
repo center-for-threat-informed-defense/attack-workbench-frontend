@@ -11,7 +11,6 @@ export class SubtypeViewComponent implements OnInit {
 	@Input() public config: SubtypePropertyConfig;
 
     private citationRegex = /\(Citation: (.*?)\)/gmu;
-    public showMore: boolean = false;
 	public detailTable: any[] = [];
 
 	public get subtypeFields() { return this.config.subtypeFields; }

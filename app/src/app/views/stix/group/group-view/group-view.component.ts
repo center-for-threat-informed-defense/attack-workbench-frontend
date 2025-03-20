@@ -12,7 +12,9 @@ import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/re
 })
 export class GroupViewComponent extends StixViewPage implements OnInit {
     @Output() public onReload = new EventEmitter();
-    public get group(): Group { return this.config.object as Group; }
+    public get group(): Group { return this.configCurrentObject as Group; }
+    public get previous(): Group { return this.configPreviousObject as Group; }
+
     public relationships_techniques: Relationship[] = [];
     public relationships_software: Relationship[] = [];
 

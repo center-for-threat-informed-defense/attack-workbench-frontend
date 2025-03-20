@@ -34,10 +34,8 @@ export interface DescriptivePropertyConfig {
     field: string;
     /** firstParagraphOnly; force descriptive field to show first paragraph only */
     firstParagraphOnly?: boolean;
-    /* referencesField; external references object. 
-     * References will be removed if not included 
-     */
-    referencesField?: ExternalReferences;
+    /** referencesField; external references field */
+    referencesField?: string;
     /* label; label for labelled box
      * Required when using view mode
      */

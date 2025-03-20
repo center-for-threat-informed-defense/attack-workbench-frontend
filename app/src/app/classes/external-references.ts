@@ -21,11 +21,11 @@ export class ExternalReferences extends Serializable {
     /**
      * Return list of external references in order
      */
-    public list() : Array<[number, ExternalReference]> {
-        let externalRefList : Array<[number, ExternalReference]> = [];
+    public list() : Array<[number, ExternalReference, string]> {
+        let externalRefList : Array<[number, ExternalReference, string]> = [];
 
         for (let [key, value] of this._externalReferencesIndex) {
-            if (this.getReference(key)) externalRefList.push([value, this.getReference(key)]);
+            if (this.getReference(key)) externalRefList.push([value, this.getReference(key), key]);
         }
 
         return externalRefList;

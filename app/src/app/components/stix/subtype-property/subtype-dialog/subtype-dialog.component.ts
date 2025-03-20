@@ -110,6 +110,7 @@ export class SubtypeDialogComponent implements OnInit, OnDestroy {
 		let i = values.indexOf(value);
 		if (i >= 0) values.splice(i, 1);
 		this.selectControls[fieldName].setValue(values);
+		this.data[fieldName] = this.selectControls[fieldName].value;
 	}
 }
 
