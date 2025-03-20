@@ -6,7 +6,7 @@ import { StixViewPage } from '../../stix-view-page';
 import { MatDialog } from '@angular/material/dialog';
 import { StixDialogComponent } from '../../stix-dialog/stix-dialog.component';
 import { AuthenticationService } from 'src/app/services/connectors/authentication/authentication.service';
-import { forkJoin } from 'rxjs';
+import { forkJoin, of } from 'rxjs';
 import { concatMap, map } from 'rxjs/operators';
 import { Relationship } from 'src/app/classes/stix';
 
@@ -52,7 +52,8 @@ export class DataSourceViewComponent extends StixViewPage implements OnInit {
                         includeDeprecated: true
                     }))
                 );
-                return forkJoin(apiCalls);
+                if (apiCalls.length) return forkJoin(apiCalls);
+                else return of([])
             }),
             // map pagination data to relationship list
             map((results: any) => {
