@@ -64,7 +64,7 @@
             </div>
             <div class="col grid spacing-16">
                 <!-- DATA SOURCES (string array representation) -->
-                <div *ngIf="technique.supportsDataSources || previous?.supportsDataSources" class="row">
+                <div *ngIf="technique.supportsDataSources || previous?.supportsDataSources" class="row grow-to-row">
                     <app-list-property class="grow-to-row" [config]="{
                         mode: config.mode,
                         object: config.object,
@@ -74,7 +74,7 @@
                     }"></app-list-property>
                 </div>
                 <!-- SYSTEM REQUIREMENTS -->
-                <div *ngIf="technique.supportsSystemRequirements || previous?.supportsSystemRequirements" class="row">
+                <div *ngIf="technique.supportsSystemRequirements || previous?.supportsSystemRequirements" class="row grow-to-row">
                     <app-list-property class="grow-to-row" [config]="{
                         mode: config.mode,
                         object: config.object,
@@ -84,7 +84,7 @@
                     }"></app-list-property>
                 </div>
                 <!-- TACTIC TYPES -->
-                <div *ngIf="technique.supportsTacticTypes || previous?.supportsTacticTypes" class="row">
+                <div *ngIf="technique.supportsTacticTypes || previous?.supportsTacticTypes" class="row grow-to-row">
                     <app-list-property class="grow-to-row" [config]="{
                         mode: config.mode,
                         object: config.object,
@@ -170,7 +170,7 @@
             </div>
             <div class="col grid spacing-16">
                 <!-- PERMISSIONS REQUIRED -->
-                <div *ngIf="technique.supportsPermissionsRequired || previous?.supportsPermissionsRequired" class="row">
+                <div *ngIf="technique.supportsPermissionsRequired || previous?.supportsPermissionsRequired" class="row grow-to-row">
                     <app-list-property class="grow-to-row" [config]="{
                         mode: config.mode,
                         object: config.object,
@@ -180,7 +180,7 @@
                     }"></app-list-property>
                 </div>
                 <!-- EFFECTIVE PERMISSIONS -->
-                <div *ngIf="technique.supportsEffectivePermissions || previous?.supportsEffectivePermissions" class="row">
+                <div *ngIf="technique.supportsEffectivePermissions || previous?.supportsEffectivePermissions" class="row grow-to-row">
                     <app-list-property class="grow-to-row" [config]="{
                         mode: config.mode,
                         object: config.object,
@@ -190,7 +190,7 @@
                     }"></app-list-property>
                 </div>
                 <!-- IMPACT TYPE -->
-                <div *ngIf="technique.supportsImpactType || previous?.supportsImpactType" class="row">
+                <div *ngIf="technique.supportsImpactType || previous?.supportsImpactType" class="row grow-to-row">
                     <app-list-property class="grow-to-row" [config]="{
                         mode: config.mode,
                         object: config.object,
@@ -200,7 +200,7 @@
                     }"></app-list-property>
                 </div>
                 <!-- DEFENSEs BYPASSED -->
-                <div *ngIf="technique.supportsDefensesBypassed || previous?.supportsDefensesBypassed" class="row">
+                <div *ngIf="technique.supportsDefensesBypassed || previous?.supportsDefensesBypassed" class="row grow-to-row">
                     <app-list-property class="grow-to-row" [config]="{
                         mode: config.mode,
                         object: config.object,
