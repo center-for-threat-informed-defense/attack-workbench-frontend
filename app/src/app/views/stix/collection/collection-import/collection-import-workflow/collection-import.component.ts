@@ -127,26 +127,37 @@ export class CollectionImportComponent implements OnInit {
 	 * @param event file input event
 	 */
 	public getCollectionFromFile(event: any) {
-		const filename = event.target.files[0].name.split('.')[0];
+		const file = event.target.files[0];
+		const filename = file.name.split('.')[0];
+		const fileExtension = file.name.split('.').pop()?.toLowerCase();
+		const validExtensions = ['json', 'csv', 'xlsx'];
+
+		if (!fileExtension || !validExtensions.includes(fileExtension)) {
+			this.snackbar.open(`Unsupported file format: ${fileExtension}`, 'dismiss', {
+				duration: 2000,
+				panelClass: 'warn',
+			});
+			return;
+		}
+
 		this.loadingStep1 = true;
 		this.errorObjects = [];
-		const target: DataTransfer = <DataTransfer>event.target;
 		const reader = new FileReader();
-		reader.readAsBinaryString(target.files[0]);
+
 		reader.onload = (e: any) => {
 			let str = String(e.target.result);
-			let collectionBundle;
 			try {
-				if (event.target.files[0].type === 'application/json') {
-					// parse JSON file input
-					collectionBundle = JSON.parse(str);
-				}
-				else {
-					// parse .csv/.xlsx file input
-					const bstr: string = e.target.result;
-					const wb: XLSX.WorkBook = XLSX.read(bstr, { type: 'binary' });
-					collectionBundle = this.buildXlsxRequest(wb, filename);
+				const result = e.target.result;
+				if (fileExtension === 'json') {
+					// parse .json
+					let collectionBundle = JSON.parse(str);
+					this.previewCollection(collectionBundle);
+				} else {
+					// parse .csv or .xlsx
+					const workbook: XLSX.WorkBook = XLSX.read(result, { type: 'binary' });
+					let collectionBundle = this.buildXlsxRequest(workbook, filename);
 					this.csvWarning = true;
+					this.previewCollection(collectionBundle);
 				}
 			} catch (exception) {
 				this.snackbar.open(exception.message, 'dismiss', {
@@ -155,8 +166,19 @@ export class CollectionImportComponent implements OnInit {
 				});
 				this.loadingStep1 = false;
 			}
-			this.previewCollection(collectionBundle);
-		};
+		}
+
+		reader.onerror = () => {
+			this.snackbar.open('Error reading file.', 'dismiss', {
+				duration: 2000,
+				panelClass: 'warn',
+			});
+			this.loadingStep1 = false;
+		}
+
+		if (fileExtension === 'json') {
+			reader.readAsText(file, 'utf-8');
+		} else reader.readAsArrayBuffer(file);
 	}
 
 	/**
