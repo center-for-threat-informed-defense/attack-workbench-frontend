@@ -1,10 +1,10 @@
 #!/bin/bash
 #####################################################################
-# Docker Build Script for ATT&CK Workbench REST API
+# Docker Build Script for ATT&CK Workbench Frontend
 #
 # Purpose:
 #   This script builds and pushes Docker images for the ATT&CK Workbench
-#   REST API. It's designed to be called by semantic-release during
+#   Frontend. It's designed to be called by semantic-release during
 #   the GitHub Actions CI/CD pipeline.
 #
 # Usage:
@@ -31,7 +31,7 @@ VERSION=$1
 RELEASE_TYPE=$2
 REVISION=$3
 BUILDTIME=$(date -u +'%Y-%m-%dT%H:%M:%SZ')
-IMAGE_NAME="ghcr.io/center-for-threat-informed-defense/attack-workbench-rest-api"
+IMAGE_NAME="ghcr.io/center-for-threat-informed-defense/attack-workbench-frontend"
 
 echo "Building Docker image for version: $VERSION (release type: $RELEASE_TYPE)"
 
