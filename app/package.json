@@ -25,7 +25,8 @@
     "build-prod": "ng build --configuration production",
     "test": "ng test",
     "lint": "ng lint",
-    "e2e": "ng e2e"
+    "e2e": "ng e2e",
+    "prepare": "husky"
   },
   "dependencies": {
     "@angular/animations": "^17.3.7",
@@ -58,10 +59,13 @@
     "@angular-devkit/build-angular": "^17.3.11",
     "@angular/cli": "^17.3.6",
     "@angular/compiler-cli": "^17.3.7",
+    "@commitlint/cli": "^19.8.0",
+    "@commitlint/config-conventional": "^19.8.0",
     "@types/jasmine": "^5.1.4",
     "@types/jasminewd2": "^2.0.10",
     "@types/node": "^20.12.11",
     "codelyzer": "^6.0.0",
+    "husky": "^9.1.7",
     "jasmine-core": "^5.1.1",
     "jasmine-spec-reporter": "^7.0.0",
     "karma": "~6.4.2",
@@ -69,6 +73,7 @@
     "karma-coverage-istanbul-reporter": "~3.0.2",
     "karma-jasmine": "^5.1.0",
     "karma-jasmine-html-reporter": "^2.1.0",
+    "semantic-release": "^24.2.3",
     "ts-node": "^10.9.1",
     "tslint": "~6.1.0",
     "typescript": "^5.4.5"
