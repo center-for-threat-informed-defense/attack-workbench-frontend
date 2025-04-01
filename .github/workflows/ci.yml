@@ -1,0 +1,92 @@
+name: CI and Release
+
+on:
+  push:
+    branches:
+      - main
+      - master
+      - develop
+      - next
+      - next-major
+      - beta
+      - alpha
+      - '*.*.x'   # Matches branches like '1.2.x', '2.3.x'
+      - '*.x'     # Matches branches like '1.x', '2.x'
+  pull_request: # Run on all PRs regardless of target branch
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  # Job 1: Commit Linting
+  commitlint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Fetch full history to check commit differences
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22.x'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Validate all commits
+        run: npx commitlint --from ${{ github.event.pull_request.base.sha || github.event.before }} --to ${{ github.event.pull_request.head.sha || github.sha }} --verbose
+
+  # Job 2: Semantic Release and Docker Build
+  release:
+    needs: [commitlint]
+    # Only run on pushes (not PRs) - semantic-release will determine whether to release
+    if: github.event_name == 'push'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write         # To publish a GitHub release
+      packages: write         # To publish to GitHub Package registry
+      issues: write           # To comment on released issues
+      pull-requests: write    # To comment on released pull requests
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22.x'
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+        with:
+          install: true # Sets up docker build command as an alias to docker buildx
+          driver-opts: image=moby/buildkit:latest
+          platforms: linux/amd64,linux/arm64
+
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Install dependencies
+        run: npm ci
+        
+      # Install semantic-release plugins
+      - name: Install semantic-release plugins
+        run: npm install -D @semantic-release/exec
+
+      - name: Semantic Release
+        id: semantic
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          DOCKER_USERNAME: ${{ github.repository_owner }}
+          DOCKER_PASSWORD: ${{ secrets.GITHUB_TOKEN }}
+          HUSKY: 0  # Temporarily disables all Git hooks
+        run: npx semantic-release
