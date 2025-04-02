@@ -8,6 +8,12 @@
             <input matInput [required]="field.required ? field.required : false" [(ngModel)]="data[field.name]"/>
         </mat-form-field>
 
+        <!-- edit type: 'description' -->
+        <mat-form-field *ngIf="field.editType == 'description'" appearance="outline">
+            <mat-label>{{field.name}}</mat-label>
+            <textarea autosize matInput [required]="field.required ? field.required : false" [(ngModel)]="data[field.name]"></textarea>
+        </mat-form-field>
+
         <!-- edit type: 'select' -->
         <mat-form-field *ngIf="field.editType == 'select'" class="grow-to-row" appearance="outline">
             <mat-label *ngIf="!dataLoaded" class="loading">

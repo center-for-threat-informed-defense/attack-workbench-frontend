@@ -1,20 +1,15 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { StixObject } from 'src/app/classes/stix/stix-object';
 
 @Component({
     selector: 'app-version-property',
-    templateUrl: './version-property.component.html',
-    styleUrls: ['./version-property.component.scss']
+    templateUrl: './version-property.component.html'
 })
-export class VersionPropertyComponent implements OnInit {
+export class VersionPropertyComponent {
     @Input() public config: VersionPropertyConfig;
 
-    constructor() {
-        // intentionally left blank
-    }
-
-    ngOnInit(): void {
-        // intentionally left blank
+    public get object(): StixObject {
+        return Array.isArray(this.config.object) ? this.config.object[1] : this.config.object;
     }
 }
 

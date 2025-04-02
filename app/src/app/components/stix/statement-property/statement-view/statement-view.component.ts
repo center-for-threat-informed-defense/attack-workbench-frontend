@@ -1,13 +1,17 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { StatementPropertyConfig } from '../statement-property.component';
 
 @Component({
   selector: 'app-statement-view',
   templateUrl: './statement-view.component.html'
 })
-export class StatementViewComponent implements OnInit {
-  @Input() public objStatements: any[];
+export class StatementViewComponent {
+  @Input() public statementsMap: any;
   @Input() public config: StatementPropertyConfig;
+
+  public get object() {
+    return Array.isArray(this.config.object) ? this.config.object[0] : this.config.object;
+  }
 
   // return false if object has a statements 
   public get popoverDisabled() {
@@ -15,12 +19,19 @@ export class StatementViewComponent implements OnInit {
     return true;
   }
 
-  constructor() {
-      // empty constructor
+  public get popoverTrigger() {
+    if (this.objStatements.length > 0) return 'hover';
+    return 'none';
   }
 
-  ngOnInit(): void {
-      // empty on init
+  // Retrieves statements of current Object
+  public get objStatements(): any[] {
+    let objectStatements = []
+    if (this.object["object_marking_refs"]){
+      for (let stixId of this.object["object_marking_refs"]) {
+        if (this.statementsMap[stixId]) objectStatements.push(this.statementsMap[stixId]);
+      }
+    }
+    return objectStatements;
   }
-
 }

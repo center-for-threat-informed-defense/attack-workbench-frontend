@@ -44,12 +44,26 @@ export class DatepickerPropertyComponent {
     @Input() public config: DatepickerPropertyConfig;
     public maxDate: Date;
 
+    public get object() {
+      return Array.isArray(this.config.object) ? this.config.object[0] : this.config.object;
+    }
+
     public get formatHint() { return DATE_FORMATS.parse.dateInput; }
     public get date() { // get date in view display format (i.e. January 2022)
-        if (this.config.object[this.config.field]) {
-            return moment.utc(this.config.object[this.config.field]).format('MMMM YYYY');
+        if (this.object[this.config.field]) {
+            return moment.utc(this.object[this.config.field]).format('MMMM YYYY');
         }
         return null;
+    }
+
+    public get current() {
+      let d = this.object?.[this.config.field] || '';
+      return moment.utc(d).format('MMMM YYYY');
+    }
+
+    public get previous() {
+      let d = this.config.object[1]?.[this.config.field] || '';
+      return moment.utc(d).format('MMMM YYYY');
     }
 
     constructor() {
@@ -69,7 +83,7 @@ export interface DatepickerPropertyConfig {
      *    view: viewing the date property
      *    edit: editing the date property
      */
-    mode?: "view" | "edit";
+    mode?: "view" | "edit" | "diff";
     /* The object to show the date of */
     object: StixObject | [StixObject, StixObject];
     /* the field of the object(s) to show as a date */

@@ -26,8 +26,7 @@ export class IdentityPropertyComponent implements OnInit {
         if (object[this.config.field]) this.identity = object[this.config.field] as Identity;
 
         // if logged in, show individual user attribution
-        if (this.authenticationService.isLoggedIn && this.config.field.includes('modified') && 
-            object && 'workflow' in object && object.workflow && 'created_by_user_account' in object.workflow) {
+        if (this.authenticationService.isLoggedIn && this.config.field.includes('modified') && object?.['workflow']?.['created_by_user_account']) {
             const userID = object.workflow.created_by_user_account;
             this.userSubscription$ = this.restAPIConnector.getUserAccount(userID).subscribe({
                 next: (account) => {

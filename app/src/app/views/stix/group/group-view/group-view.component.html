@@ -2,8 +2,8 @@
     <div class="row">
         <div class="col">
             <app-name-property [config]="{
-                mode: editing? 'edit' : 'view',
-                object: group
+                mode: config.mode,
+                object: config.object
             }"></app-name-property>
             <app-subheading [config]="config" (onOpenHistory)="openHistory()" (onOpenNotes)="openNotes()"></app-subheading>
         </div>
@@ -12,15 +12,15 @@
         <div class="col">
             <!-- ATT&CK ID -->
             <app-attackid-property class="grow-to-row" [config]="{
-                mode: editing? 'edit' : 'view',
-                object: group
+                mode: config.mode,
+                object: config.object
             }"></app-attackid-property>
         </div>
         <div class="col">
             <!-- VERSION NUMBER -->
             <app-version-property class="grow-to-row" [config]="{
-                mode: editing? 'edit' : 'view',
-                object: group
+                mode: config.mode,
+                object: config.object
             }"></app-version-property>
         </div>
     </div>
@@ -28,8 +28,8 @@
         <div class="col">
             <!-- CONTRIBUTORS -->
             <app-list-property class="grow-to-row" [config]="{
-                mode: editing? 'edit' : 'view',
-                object: group,
+                mode: config.mode,
+                object: config.object,
                 field: 'contributors',
                 editType: 'any'
             }"></app-list-property>
@@ -37,8 +37,8 @@
         <div class="col">
             <!-- GROUP ALIASES -->
             <app-alias-property class="grow-to-row" [config]="{
-                mode: editing? 'edit' : 'view',
-                object: group,
+                mode: config.mode,
+                object: config.object,
                 field: 'aliases',
                 referencesField: 'external_references',
                 label: 'Associated Groups'
@@ -49,16 +49,16 @@
         <div class="col">
             <!-- DESCRIPTION -->
             <app-descriptive-property [config]="{
-                mode: editing? 'edit' : 'view',
-                object: group,
+                mode: config.mode,
+                object: config.object,
                 field: 'description',
                 firstParagraphOnly: false, 
-                referencesField: group.external_references,
+                referencesField: 'external_references',
                 label: 'Description'
             }"></app-descriptive-property>
         </div>
     </div>
-    <!-- only show relationships if configured to show them -->
+    <!-- RELATIONSHIPS - NOTE: these are only shown in 'view' mode -->
     <div *ngIf="(config.showRelationships || !config.hasOwnProperty('showRelationships')) && !editing">
         <!-- campaign relationships -->
         <div class="row">
@@ -146,7 +146,7 @@
         </div>
     </div>
     <!-- EXTERNAL REFERENCES -->
-    <div *ngIf="group.external_references.list().length > 0">
+    <div *ngIf="group.external_references.list().length > 0 || previous?.external_references.list().length > 0">
         <div class="row">
             <div class="col">
                 <h2 class="section-header">References</h2>
@@ -155,9 +155,9 @@
         <div class="row">
             <div class="col">
                 <app-external-references-property [config]="{
-                    mode: editing? 'edit': 'view',
-                    object: group,
-                    referencesField: group.external_references
+                    mode: config.mode,
+                    object: config.object,
+                    referencesField: 'external_references'
                 }"></app-external-references-property>
             </div>
         </div>

@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, Input, ViewEncapsulation } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { AddDialogComponent } from 'src/app/components/add-dialog/add-dialog.component';
 import { StixObject } from 'src/app/classes/stix/stix-object';
@@ -12,11 +12,14 @@ import { StatementPropertyConfig } from '../statement-property.component';
   encapsulation: ViewEncapsulation.None
 })
 
-export class StatementEditComponent implements OnInit {
+export class StatementEditComponent {
   @Input() public statementsMap: any;
-  @Input() public objStatements: any[];
-  @Input() public tlpSTIXid: string;
+  @Input() public tlpStixId: string;
   @Input() public config: StatementPropertyConfig;
+
+  public get object() {
+    return Array.isArray(this.config.object) ? this.config.object[0] : this.config.object;
+  }
 
   public select: SelectionModel<string>;
 
@@ -56,9 +59,9 @@ export class StatementEditComponent implements OnInit {
           next: (promptResult) => {
               if (promptResult && this.select.selected) {
                   // Set marking refs to selection
-                  this.config.object["object_marking_refs"] = this.select.selected;
-                  // re-add tlp
-                  if (this.tlpSTIXid) this.config.object["object_marking_refs"].push(this.tlpSTIXid);
+                  this.object["object_marking_refs"] = this.select.selected;
+                  // re-add tlp, if one exists
+                  if (this.tlpStixId) this.object["object_marking_refs"].push(this.tlpStixId);
               }
           },
           complete: () => {
@@ -67,12 +70,18 @@ export class StatementEditComponent implements OnInit {
       });
   }
 
+  // Retrieves statements of current Object
+  public get objStatements(): any[] {
+    let objectStatements = []
+    if (this.object["object_marking_refs"]){
+      for (let stixId of this.object["object_marking_refs"]) {
+        if (this.statementsMap[stixId]) objectStatements.push(this.statementsMap[stixId]);
+      }
+    }
+    return objectStatements;
+  }
+
   constructor(public dialog: MatDialog) { 
-      // empty constructor
+      // intentionally left blank
   }
-
-  ngOnInit(): void {
-      // empty on init
-  }
-
 }

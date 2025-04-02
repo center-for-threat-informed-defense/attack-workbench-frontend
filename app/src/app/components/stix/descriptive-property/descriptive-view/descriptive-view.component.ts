@@ -21,14 +21,11 @@ export class DescriptiveViewComponent implements OnInit {
 	private notFound = '[linked object not found]';
     private objectLookup = {};
     private sub: Subscription = new Subscription(); // prevent async issues
-    private parseReferences = true;
+    private get parseReferences(): boolean { return this.config.parseReferences ?? true; }
 
     constructor(private restApiConnector: RestApiConnectorService) { }
 
     ngOnInit(): void {
-      if (this.config && 'parseReferences' in this.config) {
-        this.parseReferences = this.config.parseReferences;
-      }
       this.renderPreview();
     }
 
@@ -56,8 +53,9 @@ export class DescriptiveViewComponent implements OnInit {
      * @param completeReference complete reference e.g., (Citation: Source Name)
      */
     private replaceCitationHTML(displayStr: string, sourceName: string, completeReference: string): string {
-        let reference = this.config.referencesField.getReference(sourceName);
-        let reference_number = this.config.referencesField.getIndexOfReference(sourceName);
+        let referencesField = this.config.object[this.config.referencesField];
+        let reference = referencesField.getReference(sourceName);
+        let reference_number = referencesField.getIndexOfReference(sourceName);
 
         if (reference && reference_number) {
             let refHTML = ""

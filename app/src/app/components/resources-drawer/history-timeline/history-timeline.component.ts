@@ -22,6 +22,7 @@ interface HistoryEvent {
     name: string; //name of the object being changed
     description: string; // description of what happened in the event
     sdo: StixObject; // StixObject version corresponding to the event (post-change)
+    prior_sdo: StixObject; // StixObject version corresponding to the event (pre-change)
     prior_version?: VersionNumber; // if specified, the version number changed; this field is the prior version number
     prior_state?: string; // if specified, the workflow state changed; this field is the prior workflow state
 }
@@ -64,11 +65,12 @@ export class HistoryTimelineComponent implements OnInit, OnDestroy {
         // ensure that the stix objects are sorted in ascending order of date
         objectVersions = objectVersions.sort((a,b) => (a.modified as any) - (b.modified as any));
 
+        let previousSdo = null;
         let previousVersion = null;
         let previousState = null;
         for (let objectVersion of objectVersions) {
             let versionChanged = previousVersion && objectVersion.version.compareTo(previousVersion) != 0;
-            let stateChanged = previousState && objectVersion.workflow && objectVersion.workflow.state ? objectVersion.workflow.state != previousState : false;
+            let stateChanged = previousState && objectVersion.workflow?.state ? objectVersion.workflow.state != previousState : false;
             let objectCreated = objectVersion.created.getTime() == objectVersion.modified.getTime();
             let release = objectVersion.attackType == "collection" && (objectVersion as Collection).release;
             let objectImported = !objectCreated && !previousVersion;
@@ -89,9 +91,11 @@ export class HistoryTimelineComponent implements OnInit, OnDestroy {
                 name: objectVersion["name"],
                 description: description,
                 sdo: objectVersion,
+                prior_sdo: previousSdo ?? null,
                 prior_version: versionChanged? previousVersion : null,
                 prior_state: stateChanged ? previousState : 'unset'
             })
+            previousSdo = objectVersion;
             previousVersion = objectVersion.version;
             previousState = objectVersion.workflow ? objectVersion.workflow.state : 'unset';
         }
@@ -105,10 +109,10 @@ export class HistoryTimelineComponent implements OnInit, OnDestroy {
         let stixIDtoRelVersions = this.groupObjectsById(relationships);
 
         for (let relationshipID in stixIDtoRelVersions) {
-            let firstVersion = true;
+            let previousSdo = null;
             for (let relationshipVersion of stixIDtoRelVersions[relationshipID]) {
                 let objectCreated = relationshipVersion.created.getTime() == relationshipVersion.modified.getTime();
-                let objectImported = !objectCreated && firstVersion;
+                let objectImported = !objectCreated && !previousSdo;
                 let relationshipName = `${relationshipVersion.source_name} ${relationshipVersion.relationship_type} ${relationshipVersion.target_name}`
 				
 				// set up icon and tooltip
@@ -126,8 +130,9 @@ export class HistoryTimelineComponent implements OnInit, OnDestroy {
                     name: relationshipName,
                     description: description,
                     sdo: relationshipVersion,
+                    prior_sdo: previousSdo
                 })
-                firstVersion = false;
+                previousSdo = relationshipVersion;
             }
         }
 	}
@@ -144,6 +149,7 @@ export class HistoryTimelineComponent implements OnInit, OnDestroy {
 			let inPreviousVersion: boolean = false;
 			let collectionVersions: Collection[] = stixIDtoCollectionVersions[collectionID];
 			let previousVersion: VersionNumber = null;
+            let previousSdo: Collection = null;
 			for (let collectionVersion of collectionVersions) {
                 let objectImported = collectionVersion.created.getTime() != collectionVersion.modified.getTime() && !previousVersion;
 				let objectInCollection = collectionVersion.contents.filter(c => c.object_ref == stixId);
@@ -183,8 +189,10 @@ export class HistoryTimelineComponent implements OnInit, OnDestroy {
 						name: collectionVersion.name,
 						description: description,
 						sdo: collectionVersion,
+                        prior_sdo: previousSdo
 					});
 				}
+                previousSdo = collectionVersion;
 				inPreviousVersion = objectInCollection.length > 0;
 				previousVersion = collectionVersion.version;
 			}
@@ -232,21 +240,17 @@ export class HistoryTimelineComponent implements OnInit, OnDestroy {
         this.historyEvents.sort((a,b) => (b.sdo.modified as any) - (a.sdo.modified as any));
     }
 
-    public preview(sdo: StixObject) {
-		if (sdo.attackType == 'collection') {
-			// open in browser instead of dialog window
-			this.router.navigateByUrl(`/${sdo.attackType}/${sdo.stixID}/modified/${sdo.modified.toISOString()}`);
-		} else {
-			this.dialog.open(StixDialogComponent, {
-				data: {
-					object: sdo,
-					editable: false,
-					sidebarControl: "disable"
-				},
-				maxHeight: "75vh",
-				autoFocus: false, // prevents auto focus on toolbar buttons
-			});
-		}
+    public preview(sdo: StixObject, prior_sdo: StixObject) {
+        this.dialog.open(StixDialogComponent, {
+            data: {
+                object: [sdo, prior_sdo],
+                mode: "diff",
+                editable: false,
+                sidebarControl: "disable"
+            },
+            maxHeight: "75vh",
+            autoFocus: false, // prevents auto focus on toolbar buttons
+        });
     }
 
     public loadHistory() {
@@ -267,7 +271,7 @@ export class HistoryTimelineComponent implements OnInit, OnDestroy {
         else if (objectType == "data-component") objects$ = this.restAPIConnectorService.getDataComponent(objectStixID, null, "all");
         else if (objectType == "asset") objects$ = this.restAPIConnectorService.getAsset(objectStixID, null, "all");
         // set up subscribers to get relationships and collections
-        let relationships$ = this.restAPIConnectorService.getRelatedTo({sourceOrTargetRef: objectStixID, versions: "all"});
+        let relationships$ = this.restAPIConnectorService.getRelatedTo({sourceOrTargetRef: objectStixID, versions: "all", includeDeprecated: true});
 		let collections$ = this.restAPIConnectorService.getAllCollections({versions: "all"});
         // join subscribers
         let subscription = forkJoin({

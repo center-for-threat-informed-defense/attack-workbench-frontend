@@ -11,4 +11,5 @@
         <span class="labelled-box-label">ATT&CK ID</span>
     </div>
     <app-attackid-edit *ngIf="config.mode == 'edit'" [config]="config"></app-attackid-edit>
+    <app-attackid-diff *ngIf="config.mode == 'diff'" [config]="config"></app-attackid-diff>
 </div>
