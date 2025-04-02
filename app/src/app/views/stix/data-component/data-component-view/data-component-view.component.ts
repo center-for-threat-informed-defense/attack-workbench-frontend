@@ -12,29 +12,27 @@ import { StixViewPage } from '../../stix-view-page';
 export class DataComponentViewComponent extends StixViewPage implements OnInit {
     @Output() onClickRelationship = new EventEmitter();
     public loading = false;
-    public get data_component(): DataComponent {
-        return this.config.object as DataComponent; 
-    }
+    public get dataComponent(): DataComponent { return this.configCurrentObject as DataComponent; }
+    public get previous(): DataComponent { return this.configPreviousObject as DataComponent; }
 
     constructor(private restAPIConnectorService: RestApiConnectorService, authenticationService: AuthenticationService) { super(authenticationService); }
 
     ngOnInit(): void {
-        if (!this.data_component.data_source) {
+        if (!this.dataComponent.data_source) {
             // fetch parent data source
             this.loading = true;
-            let objects$ = this.restAPIConnectorService.getDataComponent(this.data_component.stixID);
+            let objects$ = this.restAPIConnectorService.getDataComponent(this.dataComponent.stixID);
             let subscription = objects$.subscribe({
                 next: (result) => {
                     let objects = result as DataComponent[];
-                    this.data_component.data_source = objects[0].data_source;
+                    this.dataComponent.data_source = objects[0].data_source;
                     this.loading = false;
                 },
                 complete: () => { subscription.unsubscribe(); }
             });
         }
-        let data_component = this.config.object as DataComponent;
-        if ( data_component.firstInitialized ) {
-            data_component.initializeWithDefaultMarkingDefinitions(this.restAPIConnectorService)
+        if ( this.dataComponent.firstInitialized ) {
+            this.dataComponent.initializeWithDefaultMarkingDefinitions(this.restAPIConnectorService)
         }
     }
 

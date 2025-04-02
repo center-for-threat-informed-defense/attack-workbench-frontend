@@ -12,9 +12,15 @@ import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/re
 })
 export class MitigationViewComponent extends StixViewPage implements OnInit {
     @Output() public onReload = new EventEmitter();
-    public get mitigation(): Mitigation { return this.config.object as Mitigation; }
+    public get mitigation(): Mitigation { return this.configCurrentObject as Mitigation; }
+    public get previous(): Mitigation { return this.configPreviousObject as Mitigation; }
 
-    public relationships: Relationship[] = [];
+    public get showSecurityControls(): boolean {
+        if (!this.config.mode || this.config.mode == 'view') return this.mitigation.securityControls.length > 0;
+        if (this.config.mode == 'edit') return this.editing && this.mitigation.domains.includes('ics-attack');
+        if (this.config.mode == 'diff') return this.mitigation?.securityControls?.length > 0 || this.previous?.securityControls?.length > 0;
+        return false;
+    }
 
     constructor(authenticationService: AuthenticationService, private restApiConnector: RestApiConnectorService) {
         super(authenticationService);

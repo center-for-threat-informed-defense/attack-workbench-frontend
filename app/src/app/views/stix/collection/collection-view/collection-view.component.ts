@@ -27,7 +27,7 @@ type changeCategory = "additions" | "changes" | "minor_changes" | "revocations" 
     encapsulation: ViewEncapsulation.None
 })
 export class CollectionViewComponent extends StixViewPage implements OnInit {
-    public get collection(): Collection { return this.config.object as Collection; }
+    public get collection(): Collection { return this.configCurrentObject as Collection; }
     public previousRelease: Collection;
     public attackObjects: any[]; //all objects in the knowledge base, unserialized
     public knowledgeBaseCollection: Collection;

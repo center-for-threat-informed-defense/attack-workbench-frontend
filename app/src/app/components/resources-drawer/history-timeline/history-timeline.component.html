@@ -16,7 +16,7 @@
             <ng-container *ngFor="let historyEvent of historyEvents">
                 <button mat-list-item
                         *ngIf="(historyEvent.sdo.type == 'relationship' && showRelationshipHistory) || (historyEvent.sdo.attackType == 'collection' && showCollectionHistory) || (historyEvent.sdo.type != 'relationship' && historyEvent.sdo.attackType != 'collection' && showObjectHistory)"
-                        (click)="preview(historyEvent.sdo)"
+                        (click)="preview(historyEvent.sdo, historyEvent.prior_sdo)"
                         
                         class="history-event"
                         [class.relationship]="historyEvent.sdo.type == 'relationship'"

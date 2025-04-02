@@ -9,7 +9,8 @@ import { StixObject } from 'src/app/classes/stix/stix-object';
 })
 export class StixIDPropertyComponent {
     @Input() public config: StixIDPropertyConfig;
-    public get stixIdLink(): string { return `${this.config.object["stixID"]}`; }
+    public get stixIdLink(): string { return `${this.object["stixID"]}`; }
+    public get object(): StixObject { return Array.isArray(this.config.object) ? this.config.object[0] : this.config.object; }
 
     constructor(public snackbar: MatSnackBar) {
         // intentionally left blank

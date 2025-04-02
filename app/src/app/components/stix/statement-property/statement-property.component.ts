@@ -16,30 +16,15 @@ export class StatementPropertyComponent implements OnInit {
     private statementsMap = {}; // map of marking definitions with STIX id as key to object
     private tlpMap = {};
 
-    // Retrieves statements of current Object
-    public get objStatements(): any[] {
-        let objectStatements = []
-        if (this.config.object["object_marking_refs"]){
-            let objStatementsStixIdList = this.config.object["object_marking_refs"];
-
-            for (let index in objStatementsStixIdList) {
-                if (this.statementsMap[objStatementsStixIdList[index]]) {
-                    objectStatements.push(this.statementsMap[objStatementsStixIdList[index]]);
-                }
-            }
-        }
-        return objectStatements;
-    }
+    public get object() {
+        return Array.isArray(this.config.object) ? this.config.object[0] : this.config.object;
+      }
 
     // Retrieves tlp marking definition of current Object
-    public get tlpSTIXid(): string {
-        if (this.config.object["object_marking_refs"]){
-            let objStatementsStixIdList = this.config.object["object_marking_refs"];
-
-            for (let index in objStatementsStixIdList) {
-                if (this.tlpMap[objStatementsStixIdList[index]]) {
-                    return objStatementsStixIdList[index];
-                }
+    public get tlpStixId(): string {
+        if (this.object["object_marking_refs"]){
+            for (let stixId of this.object["object_marking_refs"]) {
+                if (this.tlpMap[stixId]) return stixId;
             }
         }
         return "";

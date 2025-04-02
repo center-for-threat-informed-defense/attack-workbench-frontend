@@ -1,5 +1,4 @@
 import { Component, Input } from '@angular/core';
-import { ExternalReferences } from 'src/app/classes/external-references';
 import { StixObject } from 'src/app/classes/stix/stix-object';
 
 @Component({
@@ -28,10 +27,8 @@ export interface CitationPropertyConfig {
     object: StixObject | [StixObject, StixObject];
     /** The field of the object to be displayed */
     field: string;
-    /* Theexternal references object. 
-     * References will be removed if not included 
-     */
-    referencesField?: ExternalReferences;
+    /** referencesField; external references field */
+    referencesField: string;
     /* The label for labelled box */
     label: string;
     /* Is this field required? Default false */

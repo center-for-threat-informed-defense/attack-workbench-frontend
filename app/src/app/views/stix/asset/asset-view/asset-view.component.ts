@@ -10,7 +10,8 @@ import { StixViewPage } from '../../stix-view-page';
 })
 export class AssetViewComponent extends StixViewPage implements OnInit {
 	@Output() public onReload = new EventEmitter();
-	public get asset(): Asset { return this.config.object as Asset; }
+	public get asset(): Asset { return this.configCurrentObject as Asset; }
+	public get previous(): Asset { return this.configPreviousObject as Asset; }
 
 	constructor(authenticationService: AuthenticationService, private restApiConnector: RestApiConnectorService) {
 		super(authenticationService)

@@ -38,7 +38,9 @@ $colors: (
     info: (color: $balanced-blue, on-color: black),
     // role colors
     active: (color: #66BB6A, on-color: black),
-    pending: (color: #F5D466, on-color: black)
+    pending: (color: #F5D466, on-color: black),
+    // notification colors
+    alert: (color: #ff9f32, on-color: black),
 );
 
 // accessor helper for $colors. Gets the color of the named pair

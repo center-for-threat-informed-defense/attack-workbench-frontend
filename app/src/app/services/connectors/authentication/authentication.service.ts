@@ -205,7 +205,7 @@ export class AuthenticationService extends ApiConnector {
             map(results => {
                 if (results.mechanisms) {
                     let authnMechanism = results.mechanisms.find(m => m.authnType);
-                    if (authnMechanism && authnMechanism.authnType) {
+                    if (authnMechanism?.authnType) {
                         return authnMechanism.authnType;
                     }
                 }

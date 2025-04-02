@@ -83,7 +83,8 @@ export class RecentActivityComponent implements OnInit {
     public getUserActivity() {
         return this.restAPIService.getRecentActivity(1000, null, true, true, true, this.identities).pipe(
             map(results => {
-                return results.data as StixObject[];
+                if (results?.data) return results.data as StixObject[];
+                else return results;
             })
         );
     }

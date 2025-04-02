@@ -1,7 +1,7 @@
 <button cdkDrag
         #popoverTrigger2="mtxPopoverTrigger"
         [mtxPopoverTriggerFor]="popover"
-        mtxPopoverTriggerOn="hover"
+        [mtxPopoverTriggerOn]="popoverTrigger"
         [disabled]="popoverDisabled">
     <div *ngIf="objStatements.length == 1">1 statement</div>
     <div *ngIf="objStatements.length != 1">{{objStatements.length}} statements</div>

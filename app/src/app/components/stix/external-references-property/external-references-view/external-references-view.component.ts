@@ -1,6 +1,6 @@
 import { Component, OnInit, Input, ViewEncapsulation, OnDestroy } from '@angular/core';
 import { Subscription } from 'rxjs';
-import { ExternalReference } from 'src/app/classes/external-references';
+import { ExternalReference, ExternalReferences } from 'src/app/classes/external-references';
 import { EditorService } from 'src/app/services/editor/editor.service';
 import { ExternalReferencesPropertyConfig } from '../external-references-property.component';
 
@@ -14,7 +14,11 @@ export class ExternalReferencesViewComponent implements OnInit, OnDestroy {
     @Input() public config: ExternalReferencesPropertyConfig;
     public onEditStopSubscription: Subscription;
     public onReloadReferencesSub: Subscription;
-    public referenceList: Array<[number, ExternalReference]> = [];
+    public referenceList: Array<[number, ExternalReference, string]> = [];
+
+    public get object() {
+        return Array.isArray(this.config.object) ? this.config.object[0] : this.config.object;
+    }
 
     constructor(private editorService: EditorService) {
         this.onEditStopSubscription = this.editorService.onEditingStopped.subscribe({
@@ -35,6 +39,7 @@ export class ExternalReferencesViewComponent implements OnInit, OnDestroy {
     }
 
     public loadReferences(): void {
-        this.referenceList = this.config.referencesField.list();
+        let objReferences: ExternalReferences = this.object[this.config.referencesField];
+        this.referenceList = objReferences.list();
     }
 }

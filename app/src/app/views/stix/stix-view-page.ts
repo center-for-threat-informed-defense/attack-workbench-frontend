@@ -12,6 +12,12 @@ export abstract class StixViewPage {
     @Input() public config: StixViewConfig;
     public get editing(): boolean { return this.config.mode == "edit"; }
     public get canEdit(): boolean { return this.authenticationService.canEdit(); }
+    public get configCurrentObject(): StixObject {
+        return Array.isArray(this.config.object) ? this.config.object[0] : this.config.object;
+    }
+    public get configPreviousObject(): StixObject | null {
+        return this.config.mode == 'diff' ? this.config.object[1] || null : null;
+    }
 
     //outputs to use if config.sidebarControl == "events"
     @Output() public onOpenHistory = new EventEmitter();

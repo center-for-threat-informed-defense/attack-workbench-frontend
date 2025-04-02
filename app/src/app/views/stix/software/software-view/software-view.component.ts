@@ -11,7 +11,8 @@ import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/re
 })
 export class SoftwareViewComponent extends StixViewPage implements OnInit {
     @Output() public onReload = new EventEmitter();
-    public get software(): Software { return this.config.object as Software; }
+    public get software(): Software { return this.configCurrentObject as Software; }
+    public get previous(): Software { return this.configPreviousObject as Software; }
 
     constructor(authenticationService: AuthenticationService, private restApiConnector: RestApiConnectorService) {
         super(authenticationService);
