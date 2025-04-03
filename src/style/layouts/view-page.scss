@@ -1,15 +1,16 @@
 .view-page {
-    h1, h2 {
-        text-align: center;
-		.mat-mdc-input-element {
-			text-align: center;
-		}
+  h1,
+  h2 {
+    text-align: center;
+    .mat-mdc-input-element {
+      text-align: center;
     }
-    h1 {
-        margin: 0;
-    }
-    width: 45em;
-    max-width: 100%;
-    margin: 0 auto;
-    padding-bottom: 3em;
+  }
+  h1 {
+    margin: 0;
+  }
+  width: 45em;
+  max-width: 100%;
+  margin: 0 auto;
+  padding-bottom: 3em;
 }

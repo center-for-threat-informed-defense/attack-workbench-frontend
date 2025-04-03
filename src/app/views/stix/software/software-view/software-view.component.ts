@@ -5,22 +5,29 @@ import { StixViewPage } from '../../stix-view-page';
 import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/rest-api-connector.service';
 
 @Component({
-    selector: 'app-software-view',
-    templateUrl: './software-view.component.html',
-    styleUrls: ['./software-view.component.scss']
+  selector: 'app-software-view',
+  templateUrl: './software-view.component.html',
+  styleUrls: ['./software-view.component.scss'],
 })
 export class SoftwareViewComponent extends StixViewPage implements OnInit {
-    @Output() public onReload = new EventEmitter();
-    public get software(): Software { return this.configCurrentObject as Software; }
-    public get previous(): Software { return this.configPreviousObject as Software; }
+  @Output() public onReload = new EventEmitter();
+  public get software(): Software {
+    return this.configCurrentObject as Software;
+  }
+  public get previous(): Software {
+    return this.configPreviousObject as Software;
+  }
 
-    constructor(authenticationService: AuthenticationService, private restApiConnector: RestApiConnectorService) {
-        super(authenticationService);
-    }
+  constructor(
+    authenticationService: AuthenticationService,
+    private restApiConnector: RestApiConnectorService,
+  ) {
+    super(authenticationService);
+  }
 
-    ngOnInit() {
-        if (this.software.firstInitialized ) {
-            this.software.initializeWithDefaultMarkingDefinitions(this.restApiConnector);
-        }
+  ngOnInit() {
+    if (this.software.firstInitialized) {
+      this.software.initializeWithDefaultMarkingDefinitions(this.restApiConnector);
     }
+  }
 }

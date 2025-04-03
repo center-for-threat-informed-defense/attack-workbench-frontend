@@ -8,9 +8,8 @@ describe('GroupViewComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ GroupViewComponent ]
-    })
-    .compileComponents();
+      declarations: [GroupViewComponent],
+    }).compileComponents();
   }));
 
   beforeEach(() => {

@@ -1,7 +1,9 @@
 <div class="labelled-box grow-to-row">
-    <div class="content">
-        <app-property-diff [before]="previous" [after]="current"></app-property-diff>
-        <span class="text-deemphasis" *ngIf="attackType == 'collection'">&nbsp;({{released ? 'released' : 'unreleased'}})</span>
-    </div>
-    <span class="labelled-box-label">{{ config.field ? config.field : 'version' }}</span>
+  <div class="content">
+    <app-property-diff [before]="previous" [after]="current"></app-property-diff>
+    <span class="text-deemphasis" *ngIf="attackType === 'collection'"
+      >&nbsp;({{ released ? 'released' : 'unreleased' }})</span
+    >
+  </div>
+  <span class="labelled-box-label">{{ config.field ? config.field : 'version' }}</span>
 </div>

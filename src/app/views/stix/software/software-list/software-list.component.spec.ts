@@ -8,9 +8,8 @@ describe('SoftwareListComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ SoftwareListComponent ]
-    })
-    .compileComponents();
+      declarations: [SoftwareListComponent],
+    }).compileComponents();
   }));
 
   beforeEach(() => {

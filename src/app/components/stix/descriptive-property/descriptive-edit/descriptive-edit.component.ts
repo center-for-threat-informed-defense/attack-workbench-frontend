@@ -6,46 +6,53 @@ import { Subscription } from 'rxjs';
 import { EditorService } from 'src/app/services/editor/editor.service';
 
 @Component({
-    selector: 'app-descriptive-edit',
-    templateUrl: './descriptive-edit.component.html',
-    styleUrls: ['./descriptive-edit.component.scss'],
-    encapsulation: ViewEncapsulation.None
+  selector: 'app-descriptive-edit',
+  templateUrl: './descriptive-edit.component.html',
+  styleUrls: ['./descriptive-edit.component.scss'],
+  encapsulation: ViewEncapsulation.None,
 })
 export class DescriptiveEditComponent implements OnDestroy {
-    @Input() public config: DescriptivePropertyConfig;
-    @ViewChild('description') public description: DescriptiveViewComponent;
+  @Input() public config: DescriptivePropertyConfig;
+  @ViewChild('description') public description: DescriptiveViewComponent;
 
-    public parsingCitations: boolean = false;
-    private sub: Subscription = new Subscription(); // prevent async issues
-    private get parseReferences(): boolean { return this.config.parseReferences ?? true; }
+  public parsingCitations = false;
+  private sub: Subscription = new Subscription(); // prevent async issues
+  private get parseReferences(): boolean {
+    return this.config.parseReferences ?? true;
+  }
 
-    constructor(public restApiConnector: RestApiConnectorService, public editorService: EditorService) { }
+  constructor(
+    public restApiConnector: RestApiConnectorService,
+    public editorService: EditorService,
+  ) {}
 
-    ngOnDestroy(): void {
-        if (this.sub) this.sub.unsubscribe();
+  ngOnDestroy(): void {
+    if (this.sub) this.sub.unsubscribe();
+  }
+
+  /**
+   * Handle tab selection change to render preview in "Preview" tab
+   * @param {MatTabChangeEvent} $event tab change event
+   */
+  public selectionChanged($event): void {
+    if ($event && $event.index == 1) {
+      this.description.renderPreview();
     }
+  }
 
-    /**
-     * Handle tab selection change to render preview in "Preview" tab
-     * @param {MatTabChangeEvent} $event tab change event
-     */
-    public selectionChanged($event): void {
-        if ($event && $event.index == 1) {
-            this.description.renderPreview();
-        }
-    }
-
-    /**
-     * Parse external reference citations
-     */
-    public parseCitations(): void {
-        if (!this.parseReferences) return;
-        this.parsingCitations = true;
-        this.sub = this.config.object[this.config.referencesField].parseObjectCitations(this.config.object, this.restApiConnector).subscribe({
-            next: (result) => {
-                this.parsingCitations = false;
-                this.editorService.onReloadReferences.emit();
-            }
-        })
-    }
+  /**
+   * Parse external reference citations
+   */
+  public parseCitations(): void {
+    if (!this.parseReferences) return;
+    this.parsingCitations = true;
+    this.sub = this.config.object[this.config.referencesField]
+      .parseObjectCitations(this.config.object, this.restApiConnector)
+      .subscribe({
+        next: (result) => {
+          this.parsingCitations = false;
+          this.editorService.onReloadReferences.emit();
+        },
+      });
+  }
 }

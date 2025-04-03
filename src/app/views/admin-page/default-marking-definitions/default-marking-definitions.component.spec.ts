@@ -8,9 +8,8 @@ describe('DefaultMarkingDefinitionsComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ DefaultMarkingDefinitionsComponent ]
-    })
-    .compileComponents();
+      declarations: [DefaultMarkingDefinitionsComponent],
+    }).compileComponents();
   });
 
   beforeEach(() => {

@@ -8,9 +8,8 @@ describe('TacticCellComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ TacticCellComponent ]
-    })
-    .compileComponents();
+      declarations: [TacticCellComponent],
+    }).compileComponents();
   }));
 
   beforeEach(() => {

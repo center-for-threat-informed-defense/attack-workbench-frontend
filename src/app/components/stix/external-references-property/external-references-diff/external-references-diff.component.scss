@@ -1,27 +1,27 @@
-@import "../../../../../style/globals";
+@import '../../../../../style/globals';
 
 .external-references-diff {
-    span a.external-link {
-        white-space: normal;
-        word-break: break-all;
-        transition: none;
-    }
-    
-    ol {
-        padding-inline-start: 1.3em;
-    }
+  span a.external-link {
+    white-space: normal;
+    word-break: break-all;
+    transition: none;
+  }
 
-    li {
-        padding-bottom: 10px;
-        padding-top: 0px;
-        padding-left: 8px;
-    }
+  ol {
+    padding-inline-start: 1.3em;
+  }
 
-    li::marker {
-        content: "[" attr(value) "]";
-    }
+  li {
+    padding-bottom: 10px;
+    padding-top: 0px;
+    padding-left: 8px;
+  }
 
-    li.external-link::marker {
-        color: color(link);
-    }
+  li::marker {
+    content: '[' attr(value) ']';
+  }
+
+  li.external-link::marker {
+    color: color(link);
+  }
 }

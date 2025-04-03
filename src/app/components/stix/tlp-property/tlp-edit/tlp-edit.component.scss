@@ -1,9 +1,13 @@
-@import "../../../../../style/globals";
+@import '../../../../../style/globals';
 
 button.tlp-edit {
-    &:hover {
-        cursor: pointer;
-        .dark &  { border-color: on-color-deemphasis(dark) !important; }
-        .light & { border-color: on-color-deemphasis(light) !important; }
+  &:hover {
+    cursor: pointer;
+    .dark & {
+      border-color: on-color-deemphasis(dark) !important;
     }
+    .light & {
+      border-color: on-color-deemphasis(light) !important;
+    }
+  }
 }

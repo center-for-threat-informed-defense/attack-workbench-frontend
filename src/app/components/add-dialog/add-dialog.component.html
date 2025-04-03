@@ -1,41 +1,65 @@
 <div class="add-dialog">
-    <h1 *ngIf="config.title" mat-dialog-title>{{config.title}}</h1>
-    <mat-dialog-content>
-        <div *ngIf="config.type == 'user' || config.selectableObjects.length > 0 else nothing">
-            <app-stix-list *ngIf="config.type !== 'user'" [config]="{
-                'select': config.selectionType ? config.selectionType : config.select? 'many' : 'disabled',
-                'selectionModel' : config.select,
-                'type': config.type,
-                'clickBehavior': 'expand',
-                'stixObjects': config.selectableObjects,
-                'showFilters': false
-            }"></app-stix-list>
-            <app-users-list *ngIf="config.type === 'user'" [config]="{
-              'mode':'select',
-              'columnsToDisplay':['username','email'],
-              'showFilters': false,
-              'showSearch' : true,
-              'selection': config.select
-            }"></app-users-list>
-        </div>
-        <ng-template #nothing>
-            <h3>No available objects to add.</h3>
-        </ng-template>
-    </mat-dialog-content>
-    <mat-dialog-actions align="center">
-        <ng-container *ngIf="config.type == 'user' || config.selectableObjects.length > 0 else closeDialog">
-            <button mat-raised-button class="extended-button left-button" color="primary" (click)="dialogRef.close(true)">
-                <span class="text-label">{{config.buttonLabel? config.buttonLabel : "ADD"}}</span>
-            </button>
-            <button *ngIf="config.clearSelection" mat-raised-button class="extended-button" color="primary" (click)="clearSelections()">
-                <span class="text-label">Clear</span>
-            </button>
-            <button mat-raised-button class="extended-button right-button" color="primary" (click)="dialogRef.close()">
-                <span class="text-label">Cancel</span>
-            </button>
-        </ng-container>
-        <ng-template #closeDialog>
-            <button class="extended-button" mat-raised-button mat-dialog-close>close</button>
-        </ng-template>
-    </mat-dialog-actions>
+  <h1 *ngIf="config.title" mat-dialog-title>{{ config.title }}</h1>
+  <mat-dialog-content>
+    <div *ngIf="config.type === 'user' || config.selectableObjects.length > 0; else nothing">
+      <app-stix-list
+        *ngIf="config.type !== 'user'"
+        [config]="{
+          select: config.selectionType ? config.selectionType : config.select ? 'many' : 'disabled',
+          selectionModel: config.select,
+          type: config.type,
+          clickBehavior: 'expand',
+          stixObjects: config.selectableObjects,
+          showFilters: false,
+        }"
+      ></app-stix-list>
+      <app-users-list
+        *ngIf="config.type === 'user'"
+        [config]="{
+          mode: 'select',
+          columnsToDisplay: ['username', 'email'],
+          showFilters: false,
+          showSearch: true,
+          selection: config.select,
+        }"
+      ></app-users-list>
+    </div>
+    <ng-template #nothing>
+      <h3>No available objects to add.</h3>
+    </ng-template>
+  </mat-dialog-content>
+  <mat-dialog-actions align="center">
+    <ng-container
+      *ngIf="config.type === 'user' || config.selectableObjects.length > 0; else closeDialog"
+    >
+      <button
+        mat-raised-button
+        class="extended-button left-button"
+        color="primary"
+        (click)="dialogRef.close(true)"
+      >
+        <span class="text-label">{{ config.buttonLabel ? config.buttonLabel : 'ADD' }}</span>
+      </button>
+      <button
+        *ngIf="config.clearSelection"
+        mat-raised-button
+        class="extended-button"
+        color="primary"
+        (click)="clearSelections()"
+      >
+        <span class="text-label">Clear</span>
+      </button>
+      <button
+        mat-raised-button
+        class="extended-button right-button"
+        color="primary"
+        (click)="dialogRef.close()"
+      >
+        <span class="text-label">Cancel</span>
+      </button>
+    </ng-container>
+    <ng-template #closeDialog>
+      <button class="extended-button" mat-raised-button mat-dialog-close>close</button>
+    </ng-template>
+  </mat-dialog-actions>
 </div>

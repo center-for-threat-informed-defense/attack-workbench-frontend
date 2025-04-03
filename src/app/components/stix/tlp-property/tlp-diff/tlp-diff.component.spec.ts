@@ -8,10 +8,9 @@ describe('TlpDiffComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [TlpDiffComponent]
-    })
-    .compileComponents();
-    
+      declarations: [TlpDiffComponent],
+    }).compileComponents();
+
     fixture = TestBed.createComponent(TlpDiffComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

@@ -8,9 +8,8 @@ describe('OrderedListPropertyComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ OrderedListPropertyComponent ]
-    })
-    .compileComponents();
+      declarations: [OrderedListPropertyComponent],
+    }).compileComponents();
   });
 
   beforeEach(() => {

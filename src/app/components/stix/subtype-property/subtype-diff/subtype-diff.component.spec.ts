@@ -8,10 +8,9 @@ describe('SubtypeDiffComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [SubtypeDiffComponent]
-    })
-    .compileComponents();
-    
+      declarations: [SubtypeDiffComponent],
+    }).compileComponents();
+
     fixture = TestBed.createComponent(SubtypeDiffComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

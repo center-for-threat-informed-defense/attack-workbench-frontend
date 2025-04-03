@@ -1,73 +1,104 @@
 <div class="history-timeline">
-    <app-loading-overlay *ngIf="loading; else timeline"></app-loading-overlay>
-    <ng-template #timeline>
-        <div class="timeline-controls">
-            <div>
-                <mat-checkbox color="primary" [(ngModel)]="showObjectHistory">show object history</mat-checkbox>
-            </div>
-            <div>
-                <mat-checkbox color="secondary" [(ngModel)]="showRelationshipHistory">show relationship history</mat-checkbox>
-            </div>
-			<div>
-				<mat-checkbox class="tertiary" [(ngModel)]="showCollectionHistory">show collection history</mat-checkbox>
-			</div>
-        </div>
-        <mat-action-list class="history-list">
-            <ng-container *ngFor="let historyEvent of historyEvents">
-                <button mat-list-item
-                        *ngIf="(historyEvent.sdo.type == 'relationship' && showRelationshipHistory) || (historyEvent.sdo.attackType == 'collection' && showCollectionHistory) || (historyEvent.sdo.type != 'relationship' && historyEvent.sdo.attackType != 'collection' && showObjectHistory)"
-                        (click)="preview(historyEvent.sdo, historyEvent.prior_sdo)"
-                        
-                        class="history-event"
-                        [class.relationship]="historyEvent.sdo.type == 'relationship'"
-						[class.collection]="historyEvent.sdo.attackType == 'collection'"
-                        [class.object]="historyEvent.sdo.type != 'relationship' && historyEvent.sdo.attackType != 'collection'"
-                        
-                        [matTooltip]="historyEvent.description" 
-                        matTooltipPosition="left" 
-                        
-                        (mouseover)="hoveredHistoryEvent = historyEvent" 
-                        (mouseout)="hoveredHistoryEvent = null">
+  <app-loading-overlay *ngIf="loading; else timeline"></app-loading-overlay>
+  <ng-template #timeline>
+    <div class="timeline-controls">
+      <div>
+        <mat-checkbox color="primary" [(ngModel)]="showObjectHistory"
+          >show object history</mat-checkbox
+        >
+      </div>
+      <div>
+        <mat-checkbox color="secondary" [(ngModel)]="showRelationshipHistory"
+          >show relationship history</mat-checkbox
+        >
+      </div>
+      <div>
+        <mat-checkbox class="tertiary" [(ngModel)]="showCollectionHistory"
+          >show collection history</mat-checkbox
+        >
+      </div>
+    </div>
+    <mat-action-list class="history-list">
+      <ng-container *ngFor="let historyEvent of historyEvents">
+        <button
+          mat-list-item
+          *ngIf="
+            (historyEvent.sdo.type === 'relationship' && showRelationshipHistory) ||
+            (historyEvent.sdo.attackType === 'collection' && showCollectionHistory) ||
+            (historyEvent.sdo.type !== 'relationship' &&
+              historyEvent.sdo.attackType !== 'collection' &&
+              showObjectHistory)
+          "
+          (click)="preview(historyEvent.sdo, historyEvent.prior_sdo)"
+          class="history-event"
+          [class.relationship]="historyEvent.sdo.type === 'relationship'"
+          [class.collection]="historyEvent.sdo.attackType === 'collection'"
+          [class.object]="
+            historyEvent.sdo.type !== 'relationship' && historyEvent.sdo.attackType !== 'collection'
+          "
+          [matTooltip]="historyEvent.description"
+          matTooltipPosition="left"
+          (mouseover)="hoveredHistoryEvent = historyEvent"
+          (mouseout)="hoveredHistoryEvent = null"
+        >
+          <div style="display: flex">
+            <mat-icon
+              matListItemIcon
+              *ngIf="
+                historyEvent == hoveredHistoryEvent && historyEvent.sdo.attackType !== 'collection'
+              "
+              >preview</mat-icon
+            >
+            <mat-icon
+              matListItemIcon
+              *ngIf="
+                historyEvent == hoveredHistoryEvent && historyEvent.sdo.attackType === 'collection'
+              "
+              >open_in_browser</mat-icon
+            >
+            <mat-icon matListItemIcon *ngIf="historyEvent != hoveredHistoryEvent">{{
+              historyEvent.icon
+            }}</mat-icon>
 
-					<div style="display: flex;">
-						<mat-icon matListItemIcon *ngIf="historyEvent == hoveredHistoryEvent && historyEvent.sdo.attackType != 'collection'">preview</mat-icon>
-						<mat-icon matListItemIcon *ngIf="historyEvent == hoveredHistoryEvent && historyEvent.sdo.attackType == 'collection'">open_in_browser</mat-icon>
-						<mat-icon matListItemIcon *ngIf="historyEvent != hoveredHistoryEvent">{{historyEvent.icon}}</mat-icon>
-						
-						<span class="history-event-content">
-							<div class="hide-overflow">
-								<span class="name">
-									{{historyEvent.name}}
-								</span>
-								<ng-container *ngIf="historyEvent.sdo.type != 'relationship'">
-									<span class="text-deemphasis" *ngIf="historyEvent.change_types.versionChanged">
-										v{{historyEvent.prior_version}} &#8594;
-									</span>
-									<span>
-										v{{historyEvent.sdo.version}}
-									</span>
-									<span *ngIf="historyEvent.change_types.stateChanged">
-										<span class="text-deemphasis">{{historyEvent.prior_state}} &#8594;</span>
-										{{historyEvent.sdo.workflow && historyEvent.sdo.workflow.state ? historyEvent.sdo.workflow.state : 'unset'}}
-									</span>
-									<span *ngIf="historyEvent.change_types.release">
-										(release)
-									</span>
-								</ng-container>
-							</div>
-							<div class="hide-overflow">
-								<app-timestamp-view [config]="{
-									'mode': 'view',
-									'humanize': true,
-									'object': historyEvent.sdo,
-									'field': 'modified'
-								}"></app-timestamp-view>
-							</div>
-						</span>
-						<app-identity-property class="event-identity" [config]="{object: historyEvent.sdo, field: 'modified_by'}"></app-identity-property>
-					</div>
-                </button>
-            </ng-container>
-        </mat-action-list>
-    </ng-template>
+            <span class="history-event-content">
+              <div class="hide-overflow">
+                <span class="name">
+                  {{ historyEvent.name }}
+                </span>
+                <ng-container *ngIf="historyEvent.sdo.type !== 'relationship'">
+                  <span class="text-deemphasis" *ngIf="historyEvent.change_types.versionChanged">
+                    v{{ historyEvent.prior_version }} &#8594;
+                  </span>
+                  <span> v{{ historyEvent.sdo.version }} </span>
+                  <span *ngIf="historyEvent.change_types.stateChanged">
+                    <span class="text-deemphasis">{{ historyEvent.prior_state }} &#8594;</span>
+                    {{
+                      historyEvent.sdo.workflow && historyEvent.sdo.workflow.state
+                        ? historyEvent.sdo.workflow.state
+                        : 'unset'
+                    }}
+                  </span>
+                  <span *ngIf="historyEvent.change_types.release"> (release) </span>
+                </ng-container>
+              </div>
+              <div class="hide-overflow">
+                <app-timestamp-view
+                  [config]="{
+                    mode: 'view',
+                    humanize: true,
+                    object: historyEvent.sdo,
+                    field: 'modified',
+                  }"
+                ></app-timestamp-view>
+              </div>
+            </span>
+            <app-identity-property
+              class="event-identity"
+              [config]="{ object: historyEvent.sdo, field: 'modified_by' }"
+            ></app-identity-property>
+          </div>
+        </button>
+      </ng-container>
+    </mat-action-list>
+  </ng-template>
 </div>

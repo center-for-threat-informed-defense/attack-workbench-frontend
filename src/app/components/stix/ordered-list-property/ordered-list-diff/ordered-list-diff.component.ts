@@ -3,19 +3,19 @@ import { OrderedListPropertyConfig } from '../ordered-list-property.component';
 
 @Component({
   selector: 'app-ordered-list-diff',
-  templateUrl: './ordered-list-diff.component.html'
+  templateUrl: './ordered-list-diff.component.html',
 })
 export class OrderedListDiffComponent {
   @Input() public config: OrderedListPropertyConfig;
   private _idToLabel: Map<string, string>;
 
   public get current() {
-    let list = this.config.object[0]?.[this.config.objectOrderedListField] || [];
-    return list.map(tid => this.getLabel(tid)).join('; ');
+    const list = this.config.object[0]?.[this.config.objectOrderedListField] || [];
+    return list.map((tid) => this.getLabel(tid)).join('; ');
   }
   public get previous() {
-    let list = this.config.object[1]?.[this.config.objectOrderedListField] || [];
-    return list.map(tid => this.getLabel(tid)).join('; ');
+    const list = this.config.object[1]?.[this.config.objectOrderedListField] || [];
+    return list.map((tid) => this.getLabel(tid)).join('; ');
   }
 
   /**
@@ -24,10 +24,10 @@ export class OrderedListDiffComponent {
    */
   private getLabel(stixID: string): string {
     if (!this._idToLabel) {
-        this._idToLabel = new Map();
-        for (let object of this.config.globalObjects) {
-            this._idToLabel.set(object.stixID, object[this.config.field]);
-        }
+      this._idToLabel = new Map();
+      for (const object of this.config.globalObjects) {
+        this._idToLabel.set(object.stixID, object[this.config.field]);
+      }
     }
     return this._idToLabel.get(stixID);
   }

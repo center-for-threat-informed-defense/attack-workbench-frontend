@@ -1,4 +1,4 @@
-@import "../../../../../style/globals";
+@import '../../../../../style/globals';
 
 .teams-list-page {
   .teams-page-header {
@@ -23,7 +23,7 @@
       border-color: border-color(dark);
     }
     .mat-mdc-form-field-subscript-wrapper {
-	  display: none; // remove bottom padding used for hint
+      display: none; // remove bottom padding used for hint
     }
   }
   .mat-mdc-floating-label {
@@ -62,8 +62,12 @@
       max-width: 100%;
       display: flex;
       flex-direction: column;
-	  .dark & { border-bottom: 1px solid border-color(dark); }
-	  .light & { border-bottom: 1px solid border-color(light); }
+      .dark & {
+        border-bottom: 1px solid border-color(dark);
+      }
+      .light & {
+        border-bottom: 1px solid border-color(light);
+      }
 
       table {
         flex: 1 0 auto;
@@ -73,7 +77,8 @@
           white-space: nowrap;
         }
 
-        th, td {
+        th,
+        td {
           .light & {
             background: color(light);
             border-color: border-color(light);
@@ -89,7 +94,7 @@
           font-size: 20px;
           @extend .text-label;
         }
-        tbody tr:hover{
+        tbody tr:hover {
           cursor: pointer;
         }
 
@@ -103,7 +108,8 @@
           }
         }
 
-        .mat-mdc-cell + .mat-cell, .mat-mdc-header-cell + .mat-header-cell {
+        .mat-mdc-cell + .mat-cell,
+        .mat-mdc-header-cell + .mat-header-cell {
           padding-left: 12px;
         }
 
@@ -116,7 +122,8 @@
         }
 
         //row action styles
-        .mat-mdc-cell.mat-column-end-action, .mat-cell.mat-column-start-action {
+        .mat-mdc-cell.mat-column-end-action,
+        .mat-cell.mat-column-start-action {
           cursor: pointer;
 
           .dark & {

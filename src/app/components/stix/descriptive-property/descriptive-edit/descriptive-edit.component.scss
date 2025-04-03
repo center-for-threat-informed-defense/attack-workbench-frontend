@@ -1,61 +1,69 @@
-@import "../../../../../style/globals";
+@import '../../../../../style/globals';
 
 .descriptive-edit {
-    @-moz-document url-prefix() {
-        min-height: 40vh;
-        .moz-height {
-            min-height: 40vh !important;
-            max-height: 60vh;
-            overflow-y: auto !important;
-        }
-        .markdown-view {
-            min-height: 40vh !important;
-            display: flex;
-        }
+  @-moz-document url-prefix() {
+    min-height: 40vh;
+    .moz-height {
+      min-height: 40vh !important;
+      max-height: 60vh;
+      overflow-y: auto !important;
     }
-    .mat-mdc-input-element {
-        line-height: 1.5;
+    .markdown-view {
+      min-height: 40vh !important;
+      display: flex;
     }
-    .mat-mdc-tab-header {
-        border: 0px;
+  }
+  .mat-mdc-input-element {
+    line-height: 1.5;
+  }
+  .mat-mdc-tab-header {
+    border: 0px;
+  }
+  .edit {
+    width: 100%;
+    .mat-mdc-form-field-subscript-wrapper {
+      display: none;
     }
-    .edit {
-        width: 100%;
-        .mat-mdc-form-field-subscript-wrapper {
-			display: none;
-        }
-		// squared top left border
-		.mdc-notched-outline__leading {
-			border-top-left-radius: 0 !important;
-		}
-		// squared top right border
-		.mdc-notched-outline__trailing {
-			border-top-right-radius: 0 !important;
-		}
-        .mat-mdc-form-field-infix {
-            padding-top: 0px !important;
-        }
+    // squared top left border
+    .mdc-notched-outline__leading {
+      border-top-left-radius: 0 !important;
     }
-    .preview {
-        min-height: 16px;
-        .dark & { border: 1px solid border-color(dark); }
-        .light & { border: 1px solid border-color(light); }
-        border-bottom-right-radius: 4px;
-        border-bottom-left-radius: 4px;
-        padding: 16px 12px;
-        :first-child { margin-top: 0px; }
-        :last-child { margin-bottom: 0px; }
+    // squared top right border
+    .mdc-notched-outline__trailing {
+      border-top-right-radius: 0 !important;
     }
+    .mat-mdc-form-field-infix {
+      padding-top: 0px !important;
+    }
+  }
+  .preview {
+    min-height: 16px;
+    .dark & {
+      border: 1px solid border-color(dark);
+    }
+    .light & {
+      border: 1px solid border-color(light);
+    }
+    border-bottom-right-radius: 4px;
+    border-bottom-left-radius: 4px;
+    padding: 16px 12px;
+    :first-child {
+      margin-top: 0px;
+    }
+    :last-child {
+      margin-bottom: 0px;
+    }
+  }
 
-    .vertical-centered {
-        display:flex; 
-        align-items:center;
-    }
+  .vertical-centered {
+    display: flex;
+    align-items: center;
+  }
 
-    .info-icon {
-        font-size: 18px; 
-        display:flex; 
-        align-items:center; 
-        justify-content:center;
-    }
+  .info-icon {
+    font-size: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
 }

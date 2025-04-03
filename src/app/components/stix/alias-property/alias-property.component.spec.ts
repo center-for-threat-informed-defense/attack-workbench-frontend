@@ -8,9 +8,8 @@ describe('AliasPropertyComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ AliasPropertyComponent ]
-    })
-    .compileComponents();
+      declarations: [AliasPropertyComponent],
+    }).compileComponents();
   });
 
   beforeEach(() => {

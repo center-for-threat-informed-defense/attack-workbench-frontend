@@ -8,10 +8,9 @@ describe('PropertyDiffComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [PropertyDiffComponent]
-    })
-    .compileComponents();
-    
+      declarations: [PropertyDiffComponent],
+    }).compileComponents();
+
     fixture = TestBed.createComponent(PropertyDiffComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

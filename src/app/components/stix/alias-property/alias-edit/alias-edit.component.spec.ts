@@ -8,9 +8,8 @@ describe('AliasEditComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ AliasEditComponent ]
-    })
-    .compileComponents();
+      declarations: [AliasEditComponent],
+    }).compileComponents();
   });
 
   beforeEach(() => {

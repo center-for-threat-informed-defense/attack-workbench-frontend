@@ -8,9 +8,8 @@ describe('TlpEditComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ TlpEditComponent ]
-    })
-    .compileComponents();
+      declarations: [TlpEditComponent],
+    }).compileComponents();
   });
 
   beforeEach(() => {

@@ -8,9 +8,8 @@ describe('WorkflowPropertyComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ IconViewComponent ]
-    })
-    .compileComponents();
+      declarations: [IconViewComponent],
+    }).compileComponents();
   });
 
   beforeEach(() => {

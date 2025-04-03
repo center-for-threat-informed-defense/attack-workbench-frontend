@@ -8,9 +8,8 @@ describe('OrderedListEditComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ OrderedListEditComponent ]
-    })
-    .compileComponents();
+      declarations: [OrderedListEditComponent],
+    }).compileComponents();
   });
 
   beforeEach(() => {

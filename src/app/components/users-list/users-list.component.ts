@@ -1,7 +1,18 @@
-import { Component, OnInit, ViewChild, ViewEncapsulation, Input, EventEmitter, Output } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  ViewChild,
+  ViewEncapsulation,
+  Input,
+  EventEmitter,
+  Output,
+} from '@angular/core';
 import { Observable, Subscription } from 'rxjs';
 import { UserAccount } from 'src/app/classes/authn/user-account';
-import { Paginated, RestApiConnectorService } from 'src/app/services/connectors/rest-api/rest-api-connector.service';
+import {
+  Paginated,
+  RestApiConnectorService,
+} from 'src/app/services/connectors/rest-api/rest-api-connector.service';
 import { Role } from 'src/app/classes/authn/role';
 import { MatPaginator } from '@angular/material/paginator';
 import { AuthenticationService } from '../../services/connectors/authentication/authentication.service';
@@ -16,18 +27,18 @@ import { SelectionModel } from '@angular/cdk/collections';
   encapsulation: ViewEncapsulation.None,
 })
 export class UsersListComponent implements OnInit {
-  @Input() config:UsersListConfig;
+  @Input() config: UsersListConfig;
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @Output() public onSelect = new EventEmitter<string>();
   public userAccounts$: Observable<Paginated<UserAccount>>;
   public userAccounts: UserAccount[];
   public columnsToDisplay: string[];
   public filterOptions: any[];
-  public totalObjectCount: number = 0;
+  public totalObjectCount = 0;
   public userSubscription: Subscription;
   public selectedFilters: string[];
   public searchQuery: '';
-  public team:Team;
+  public team: Team;
   public selection: SelectionModel<string>;
 
   /**
@@ -55,51 +66,64 @@ export class UsersListComponent implements OnInit {
    * Checks if user is an admin
    */
   public get isAdmin(): boolean {
-      return this.authenticationService.isAuthorized([Role.ADMIN]);
+    return this.authenticationService.isAuthorized([Role.ADMIN]);
   }
 
-  constructor(private restAPIConnector: RestApiConnectorService, private authenticationService: AuthenticationService) {
+  constructor(
+    private restAPIConnector: RestApiConnectorService,
+    private authenticationService: AuthenticationService,
+  ) {
     this.filterOptions = [
-        {
-            name: 'status',
-            values: Object.values(Status as {})
-        },
-        {
-            name: 'role',
-            values: Object.values(Role as {})
-        }
+      {
+        name: 'status',
+        values: Object.values(Status as {}),
+      },
+      {
+        name: 'role',
+        values: Object.values(Role as {}),
+      },
     ];
   }
 
-
   ngOnInit(): void {
-    this.columnsToDisplay = this.config && this.config.columnsToDisplay && Array.isArray(this.config.columnsToDisplay) ? this.config.columnsToDisplay : ['username', 'email'];
-    this.team = this.config && this.config.team? this.config.team : null;
+    this.columnsToDisplay =
+      this.config && this.config.columnsToDisplay && Array.isArray(this.config.columnsToDisplay)
+        ? this.config.columnsToDisplay
+        : ['username', 'email'];
+    this.team = this.config && this.config.team ? this.config.team : null;
     this.applyControls();
-    if (this.config.mode=='select') {
+    if (this.config.mode == 'select') {
       this.columnsToDisplay = ['select'].concat(this.columnsToDisplay);
-      this.selection = this.config.selection ? this.config.selection : new SelectionModel<string>(true)
+      this.selection = this.config.selection
+        ? this.config.selection
+        : new SelectionModel<string>(true);
     }
   }
 
   /**
    * Gets a list of all user accounts from REST API (if a team is passed in, only get accounts within the team)
    */
-  public getAccounts(options: { limit: number, offset: number, status?: string[], role?: string[], search?: string }) {
-      if (this.team) {
-        this.userAccounts$ = this.restAPIConnector.getUserAccountsByTeamId(this.team.id, options);
-      } else {
-        this.userAccounts$ = this.restAPIConnector.getAllUserAccounts(options);
-      }
-      this.userSubscription = this.userAccounts$.subscribe({
-        next: (data) => {
-            this.userAccounts = data.data;
-            this.totalObjectCount = data.pagination.total;
-        },
-        complete: () => {
-            this.userSubscription.unsubscribe();
-        }
-      });
+  public getAccounts(options: {
+    limit: number;
+    offset: number;
+    status?: string[];
+    role?: string[];
+    search?: string;
+  }) {
+    if (this.team) {
+      this.userAccounts$ = this.restAPIConnector.getUserAccountsByTeamId(this.team.id, options);
+    } else {
+      this.userAccounts$ = this.restAPIConnector.getAllUserAccounts(options);
+    }
+    this.userSubscription = this.userAccounts$.subscribe({
+      next: (data) => {
+        this.userAccounts = data.data;
+        this.totalObjectCount = data.pagination.total;
+      },
+      complete: () => {
+        this.userSubscription.unsubscribe();
+      },
+    });
   }
 
   /**
@@ -108,45 +132,47 @@ export class UsersListComponent implements OnInit {
    * @param applyControls Whether or not to apply controls to the search
    */
   public applyFilters(filters, applyControls = false): void {
-      let roleFilters = [];
-      let statusFilters = [];
-      let limit = this.paginator ? this.paginator.pageSize : 10;
-      let offset = this.paginator || applyControls ? this.paginator.pageIndex * limit : 0;
-      if (!applyControls && this.paginator) this.paginator.pageIndex = 0;
-      this.selectedFilters = filters;
-      filters.forEach((filter) => {
-          if (this.filterOptions[0].values.includes(filter)) { // Status
-              statusFilters.push(filter)
-          } else if (this.filterOptions[1].values.includes(filter)) { // Role
-              roleFilters.push(filter)
-          }
-      })
-      this.getAccounts({limit: limit, offset: offset, status: statusFilters, role: roleFilters});
+    const roleFilters = [];
+    const statusFilters = [];
+    const limit = this.paginator ? this.paginator.pageSize : 10;
+    const offset = this.paginator || applyControls ? this.paginator.pageIndex * limit : 0;
+    if (!applyControls && this.paginator) this.paginator.pageIndex = 0;
+    this.selectedFilters = filters;
+    filters.forEach((filter) => {
+      if (this.filterOptions[0].values.includes(filter)) {
+        // Status
+        statusFilters.push(filter);
+      } else if (this.filterOptions[1].values.includes(filter)) {
+        // Role
+        roleFilters.push(filter);
+      }
+    });
+    this.getAccounts({ limit: limit, offset: offset, status: statusFilters, role: roleFilters });
   }
 
   /**
    * Apply search to user search
    * @param query query string
    * @param applyControls Whether or not to apply controls to the search
-   */ 
+   */
   public applySearch(query, applyControls = false): void {
-      let limit = this.paginator ? this.paginator.pageSize : 10;
-      let offset = this.paginator || applyControls ? this.paginator.pageIndex * limit : 0;
-      if (!applyControls && this.paginator) this.paginator.pageIndex = 0;
-      this.getAccounts({limit: limit, offset: offset, search: query});
+    const limit = this.paginator ? this.paginator.pageSize : 10;
+    const offset = this.paginator || applyControls ? this.paginator.pageIndex * limit : 0;
+    if (!applyControls && this.paginator) this.paginator.pageIndex = 0;
+    this.getAccounts({ limit: limit, offset: offset, search: query });
   }
 
   /**
    * Apply controls to the search
-   */ 
+   */
   public applyControls(): void {
-      if (this.searchQuery) this.applySearch(this.searchQuery, true);
-      if (this.selectedFilters) this.applyFilters(this.selectedFilters, true);
-      if (!this.searchQuery && !this.selectedFilters) {
-          let limit = this.paginator ? this.paginator.pageSize : 10;
-          let offset = this.paginator ? this.paginator.pageIndex * limit : 0;
-          this.getAccounts({limit: limit, offset: offset});
-      }
+    if (this.searchQuery) this.applySearch(this.searchQuery, true);
+    if (this.selectedFilters) this.applyFilters(this.selectedFilters, true);
+    if (!this.searchQuery && !this.selectedFilters) {
+      const limit = this.paginator ? this.paginator.pageSize : 10;
+      const offset = this.paginator ? this.paginator.pageIndex * limit : 0;
+      this.getAccounts({ limit: limit, offset: offset });
+    }
   }
 
   /**
@@ -155,19 +181,21 @@ export class UsersListComponent implements OnInit {
    * @param newRole Role to be set
    */
   public updateUserRole(userAccount: UserAccount, newRole: string): void {
-      newRole = newRole.toUpperCase();
-      if (Role[newRole]) {
-          let user = new UserAccount(userAccount);
-          user.role = Role[newRole];
-          // update user status based on active roles
-          user.status = this.authenticationService.activeRoles.includes(user.role) ? Status.ACTIVE : Status.INACTIVE;
-          const subscription = user.save(this.restAPIConnector).subscribe({
-              complete: () => {
-                  this.applyControls(); // refresh list
-                  subscription.unsubscribe();
-              }
-          });
-      }
+    newRole = newRole.toUpperCase();
+    if (Role[newRole]) {
+      const user = new UserAccount(userAccount);
+      user.role = Role[newRole];
+      // update user status based on active roles
+      user.status = this.authenticationService.activeRoles.includes(user.role)
+        ? Status.ACTIVE
+        : Status.INACTIVE;
+      const subscription = user.save(this.restAPIConnector).subscribe({
+        complete: () => {
+          this.applyControls(); // refresh list
+          subscription.unsubscribe();
+        },
+      });
+    }
   }
 
   /**
@@ -176,29 +204,29 @@ export class UsersListComponent implements OnInit {
    * @param newStatus Status to be set
    */
   public updateUserStatus(userAccount: UserAccount, newStatus: string): void {
-      newStatus = newStatus.toUpperCase();
-      if (Status[newStatus]) {
-          let user = new UserAccount(userAccount);
-          user.status = Status[newStatus];
+    newStatus = newStatus.toUpperCase();
+    if (Status[newStatus]) {
+      const user = new UserAccount(userAccount);
+      user.status = Status[newStatus];
 
-          // update user role based on status
-          if ([Status.INACTIVE, Status.PENDING].includes(user.status)) user.role = Role.NONE;
+      // update user role based on status
+      if ([Status.INACTIVE, Status.PENDING].includes(user.status)) user.role = Role.NONE;
 
-          const subscription = user.save(this.restAPIConnector).subscribe({
-              complete: () => {
-                  this.applyControls(); // refresh list
-                  subscription.unsubscribe();
-              }
-          });
-      }
+      const subscription = user.save(this.restAPIConnector).subscribe({
+        complete: () => {
+          this.applyControls(); // refresh list
+          subscription.unsubscribe();
+        },
+      });
+    }
   }
 
   /**
    * Removes a user from a team
    * @param user User to be removed
    */
-  public removeUser(user:UserAccount): void {
-    this.team.userIDs = this.team.userIDs.filter((userElement)=>userElement!==user.id);
+  public removeUser(user: UserAccount): void {
+    this.team.userIDs = this.team.userIDs.filter((userElement) => userElement !== user.id);
     this.restAPIConnector.putTeam(this.team);
     this.applyControls();
   }
@@ -207,19 +235,19 @@ export class UsersListComponent implements OnInit {
 export interface UsersListConfig {
   // Columns to display
   // defaults to username and email columns
-  columnsToDisplay:string[],
+  columnsToDisplay: string[];
   // team which we are fetching user accounts for
   // if not specified, fetches all user accounts
-  team:Team,
+  team: Team;
   // whether or not to display the search bar
-  // defaults to true 
-  showSearch: boolean,
+  // defaults to true
+  showSearch: boolean;
   // whether or not to show the filters in the list
   // defaults to true
-  showFilters: boolean,
+  showFilters: boolean;
   // mode the list is being used 'view' or 'select'
   // default is 'view'
-  mode:string,
+  mode: string;
   // selection object used in 'select' mode
-  selection: SelectionModel<string>,
+  selection: SelectionModel<string>;
 }

@@ -8,9 +8,8 @@ describe('ResourcesDrawerComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ ResourcesDrawerComponent ]
-    })
-    .compileComponents();
+      declarations: [ResourcesDrawerComponent],
+    }).compileComponents();
   }));
 
   beforeEach(() => {

@@ -7,21 +7,22 @@ import { SelectionModel } from '@angular/cdk/collections';
   selector: 'app-add-dialog',
   templateUrl: './add-dialog.component.html',
   styleUrls: ['./add-dialog.component.scss'],
-  encapsulation: ViewEncapsulation.None
+  encapsulation: ViewEncapsulation.None,
 })
 export class AddDialogComponent implements OnInit {
-
-  constructor(public dialogRef: MatDialogRef<AddDialogComponent>, @Inject(MAT_DIALOG_DATA) public config: AddDialogConfig) { }
+  constructor(
+    public dialogRef: MatDialogRef<AddDialogComponent>,
+    @Inject(MAT_DIALOG_DATA) public config: AddDialogConfig,
+  ) {}
 
   public clearSelections() {
     this.config.select.clear();
-    this.dialogRef.close(true)
+    this.dialogRef.close(true);
   }
 
   ngOnInit(): void {
     // intentionally left blank
   }
-
 }
 
 export interface AddDialogConfig {

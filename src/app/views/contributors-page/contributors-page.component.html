@@ -1,35 +1,58 @@
 <div class="contributors-page view-page list-page grid">
-    <div class="list-page-header">
-        <h1 class="with-help-icon">
-            contributors
-            <mat-icon class="help-icon" aria-label="help" cdkDrag #popoverTrigger2="mtxPopoverTrigger" [mtxPopoverTriggerFor]="popover" mtxPopoverTriggerOn="hover">
-                help_outline
-            </mat-icon>
-            <mtx-popover #popover="mtxPopover" [position]="['below', 'center']" enterDelay="25" leaveDelay="25">
-                <div style="max-width: 26em;">
-                    <span class="help-content">Individuals or organizations that have contributed information regarding the existence of a technique, details on how to detect and/or mitigate use of a technique, or threat intelligence on adversary use.</span>
-                </div>
-            </mtx-popover>
-        </h1>
-    </div>
-    <div *ngIf="!loading else loadingTemplate" class="row" [ngClass]="{'no-results': !contributors.length}">
-        <ng-container *ngIf="contributors.length > 0 else nothingHere">
-            <div *ngFor="let column of columns" class="col">
-                <ul>
-                    <li *ngFor="let contributor of column">
-                        <a class="link" (click)="openDialog(contributor)">{{contributor}}</a>
-                        <sup class="text-deemphasis">({{getNumContributions(contributor)}})</sup>
-                    </li>
-                </ul>
-            </div>
-        </ng-container>
-    </div>
+  <div class="list-page-header">
+    <h1 class="with-help-icon">
+      contributors
+      <mat-icon
+        class="help-icon"
+        aria-label="help"
+        cdkDrag
+        #popoverTrigger2="mtxPopoverTrigger"
+        [mtxPopoverTriggerFor]="popover"
+        mtxPopoverTriggerOn="hover"
+      >
+        help_outline
+      </mat-icon>
+      <mtx-popover
+        #popover="mtxPopover"
+        [position]="['below', 'center']"
+        enterDelay="25"
+        leaveDelay="25"
+      >
+        <div style="max-width: 26em">
+          <span class="help-content"
+            >Individuals or organizations that have contributed information regarding the existence
+            of a technique, details on how to detect and/or mitigate use of a technique, or threat
+            intelligence on adversary use.</span
+          >
+        </div>
+      </mtx-popover>
+    </h1>
+  </div>
+  <div
+    *ngIf="!loading; else loadingTemplate"
+    class="row"
+    [ngClass]="{ 'no-results': !contributors.length }"
+  >
+    <ng-container *ngIf="contributors.length > 0; else nothingHere">
+      <div *ngFor="let column of columns" class="col">
+        <ul>
+          <li *ngFor="let contributor of column">
+            <a class="link" (click)="openDialog(contributor)">{{ contributor }}</a>
+            <sup class="text-deemphasis">({{ getNumContributions(contributor) }})</sup>
+          </li>
+        </ul>
+      </div>
+    </ng-container>
+  </div>
 </div>
 
 <ng-template #nothingHere>
-    <app-empty-list-marker [message]="'No contributors found'" (onCheckAgain)="load()"></app-empty-list-marker>
+  <app-empty-list-marker
+    [message]="'No contributors found'"
+    (onCheckAgain)="load()"
+  ></app-empty-list-marker>
 </ng-template>
 
 <ng-template #loadingTemplate>
-    <app-loading-overlay></app-loading-overlay>
+  <app-loading-overlay></app-loading-overlay>
 </ng-template>

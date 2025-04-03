@@ -8,9 +8,8 @@ describe('MarkdownViewDialogComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ MarkdownViewDialogComponent ]
-    })
-    .compileComponents();
+      declarations: [MarkdownViewDialogComponent],
+    }).compileComponents();
   });
 
   beforeEach(() => {

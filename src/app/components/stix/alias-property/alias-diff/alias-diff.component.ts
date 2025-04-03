@@ -8,39 +8,51 @@ import { animate, style, transition, trigger } from '@angular/animations';
   styleUrl: './alias-diff.component.scss',
   encapsulation: ViewEncapsulation.None,
   animations: [
-      trigger("detailExpand", [
-          transition(":enter", [
-              style({ height: '0px', minHeight: '0px' }),
-              animate("100ms cubic-bezier(0.4, 0.0, 0.2, 1)", style({ height: '*' }))
-          ]),
-          transition(':leave', [
-              animate('100ms cubic-bezier(0.4, 0.0, 0.2, 1)', style({ height: '0px', minHeight: '0px' }))
-          ])
-      ])
-  ]
+    trigger('detailExpand', [
+      transition(':enter', [
+        style({ height: '0px', minHeight: '0px' }),
+        animate('100ms cubic-bezier(0.4, 0.0, 0.2, 1)', style({ height: '*' })),
+      ]),
+      transition(':leave', [
+        animate('100ms cubic-bezier(0.4, 0.0, 0.2, 1)', style({ height: '0px', minHeight: '0px' })),
+      ]),
+    ]),
+  ],
 })
 export class AliasDiffComponent implements OnInit {
   @Input() public config: AliasPropertyConfig;
 
-  public showMore: boolean = false;
+  public showMore = false;
   public expandedDetails: {
-    name: string,
-    before: string,
-    after: string
+    name: string;
+    before: string;
+    after: string;
   }[] = [];
   public inlineCitations;
 
-  public get wrap() { return this.config.hasOwnProperty('wrap') ? this.config.wrap : true; }
-  public get current() { return this.config.object[0] || null; }
-  public get currentAliases() { return this.current?.[this.config.field].slice(1).join('; ') || ''; }
-  public get previous() { return this.config.object[1] || null; }
-  public get previousAliases() { return this.previous?.[this.config.field].slice(1).join('; ') || ''; }
-
-  ngOnInit(): void {
-      this.formatExpandedDetails();
+  public get wrap() {
+    return this.config.hasOwnProperty('wrap') ? this.config.wrap : true;
+  }
+  public get current() {
+    return this.config.object[0] || null;
+  }
+  public get currentAliases() {
+    return this.current?.[this.config.field].slice(1).join('; ') || '';
+  }
+  public get previous() {
+    return this.config.object[1] || null;
+  }
+  public get previousAliases() {
+    return this.previous?.[this.config.field].slice(1).join('; ') || '';
   }
 
-  public toggleMore(): void { this.showMore = !this.showMore; }
+  ngOnInit(): void {
+    this.formatExpandedDetails();
+  }
+
+  public toggleMore(): void {
+    this.showMore = !this.showMore;
+  }
 
   /**
    * return alias descriptions with diffs
@@ -49,20 +61,20 @@ export class AliasDiffComponent implements OnInit {
     this.expandedDetails = [];
     this.showMore = false;
 
-    let beforeList = this.previous?.[this.config.field].slice(1) || [];
-    let afterList = this.current?.[this.config.field].slice(1) || [];
+    const beforeList = this.previous?.[this.config.field].slice(1) || [];
+    const afterList = this.current?.[this.config.field].slice(1) || [];
 
-    let allAliases = new Set([...beforeList, ...afterList]);
+    const allAliases = new Set([...beforeList, ...afterList]);
 
-    allAliases.forEach(alias => {
-      let currDescr = this.getDescription(alias, 0);
-      let prevDescr = this.getDescription(alias, 1);
+    allAliases.forEach((alias) => {
+      const currDescr = this.getDescription(alias, 0);
+      const prevDescr = this.getDescription(alias, 1);
 
       if (prevDescr || currDescr) {
         this.expandedDetails.push({
           name: alias,
           before: prevDescr,
-          after: currDescr
+          after: currDescr,
         });
 
         if (prevDescr !== currDescr) this.showMore = true;
@@ -71,7 +83,11 @@ export class AliasDiffComponent implements OnInit {
   }
 
   private getDescription(alias: string, index: number): string {
-    if (!this.config.referencesField || !this.config.object[index]?.[this.config.referencesField]?.hasValue(alias)) return '';
+    if (
+      !this.config.referencesField ||
+      !this.config.object[index]?.[this.config.referencesField]?.hasValue(alias)
+    )
+      return '';
     return this.config.object[index][this.config.referencesField].getDescription(alias);
   }
 

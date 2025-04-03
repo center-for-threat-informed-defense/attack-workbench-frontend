@@ -8,10 +8,9 @@ describe('BooleanPropertyComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [BooleanPropertyComponent]
-    })
-    .compileComponents();
-    
+      declarations: [BooleanPropertyComponent],
+    }).compileComponents();
+
     fixture = TestBed.createComponent(BooleanPropertyComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

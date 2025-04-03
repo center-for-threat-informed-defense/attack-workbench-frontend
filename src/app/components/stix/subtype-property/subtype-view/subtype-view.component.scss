@@ -1,28 +1,39 @@
-@import "../../../../../style/globals";
+@import '../../../../../style/globals';
 
 .subtype-view {
-    @extend .labelled-box;
+  @extend .labelled-box;
 
-    .subtype-table{
-        width: 100%;
-        padding: 8px;
-        .light & { background-color: color(light); }
-        .dark &  { background-color: color(dark); }
-        tr.mat-mdc-header-row { height: 25px; }
-        .mat-mdc-cell, .mat-mdc-header-cell {
-            padding: 0 10px;
-            .light & { border-color: border-color(light); }
-            .dark &  { border-color: border-color(dark); }
-        }
+  .subtype-table {
+    width: 100%;
+    padding: 8px;
+    .light & {
+      background-color: color(light);
     }
-    .subtype-markdown {
-        p {
-            padding: 0;
-            margin: 0;
-        }
-        sup {
-            vertical-align: top;
-            position: relative;
-        }
+    .dark & {
+      background-color: color(dark);
     }
+    tr.mat-mdc-header-row {
+      height: 25px;
+    }
+    .mat-mdc-cell,
+    .mat-mdc-header-cell {
+      padding: 0 10px;
+      .light & {
+        border-color: border-color(light);
+      }
+      .dark & {
+        border-color: border-color(dark);
+      }
+    }
+  }
+  .subtype-markdown {
+    p {
+      padding: 0;
+      margin: 0;
+    }
+    sup {
+      vertical-align: top;
+      position: relative;
+    }
+  }
 }

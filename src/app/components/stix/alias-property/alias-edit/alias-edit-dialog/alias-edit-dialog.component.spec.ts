@@ -8,9 +8,8 @@ describe('AliasAddDialogComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ AliasEditDialogComponent ]
-    })
-    .compileComponents();
+      declarations: [AliasEditDialogComponent],
+    }).compileComponents();
   });
 
   beforeEach(() => {

@@ -1,102 +1,119 @@
 @use '@angular/material' as mat;
-@import "colors";
-@import "fonts";
+@import 'colors';
+@import 'fonts';
 
-.superheading { //super big display text
-    font-size: 60px;
-    letter-spacing: 2pt;
-    text-transform: uppercase;
-    text-align: center;
+.superheading {
+  //super big display text
+  font-size: 60px;
+  letter-spacing: 2pt;
+  text-transform: uppercase;
+  text-align: center;
 }
 .heading {
-    font-family: Poppins,Arial,sans-serif;
-    letter-spacing: 0.5pt;
-    font-weight: 700;
-    text-transform: uppercase;
-    &.lowercase {
-		text-transform: none !important;
-	}
+  font-family: Poppins, Arial, sans-serif;
+  letter-spacing: 0.5pt;
+  font-weight: 700;
+  text-transform: uppercase;
+  &.lowercase {
+    text-transform: none !important;
+  }
 }
 .subheading {
-    font-family: Poppins,Arial,sans-serif;
-    letter-spacing: 0.5pt;
-    font-weight: 700;
+  font-family: Poppins, Arial, sans-serif;
+  letter-spacing: 0.5pt;
+  font-weight: 700;
 }
 .subheading.alt {
-    font-family: Roboto,Georgia,serif;
+  font-family: Roboto, Georgia, serif;
 }
 .subsubheading {
-    font-family: Poppins,Arial,sans-serif;
-    letter-spacing: 0.5pt;
-    font-weight: normal;
+  font-family: Poppins, Arial, sans-serif;
+  letter-spacing: 0.5pt;
+  font-weight: normal;
 }
 .text-label {
-    font-family: Roboto Condensed,Arial,sans-serif;
-    font-size: 16px;
-    vertical-align: middle;
-    &:not(.lowercase) { text-transform: uppercase; }
+  font-family:
+    Roboto Condensed,
+    Arial,
+    sans-serif;
+  font-size: 16px;
+  vertical-align: middle;
+  &:not(.lowercase) {
+    text-transform: uppercase;
+  }
 }
 .warning-text {
-    font-family: Poppins,Arial,sans-serif;
-    font-weight: 700;
-    text-transform: uppercase;
-    color: color(error);
+  font-family: Poppins, Arial, sans-serif;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: color(error);
 }
 .mdc-label {
-	line-height: 24px;
-	padding: 0px !important;
+  line-height: 24px;
+  padding: 0px !important;
 }
 .mat-mdc-chip .mat-mdc-chip-action-label {
-	font-size: 14px !important;
+  font-size: 14px !important;
 }
-.mdc-button__label, textarea, .mat-mdc-menu-item-text {
-	letter-spacing: normal !important;
+.mdc-button__label,
+textarea,
+.mat-mdc-menu-item-text {
+  letter-spacing: normal !important;
 }
 textarea {
-    font-size: 18px !important;
-    font-weight: 400 !important;
-    font-family: Roboto, Arial, sans-serif;
+  font-size: 18px !important;
+  font-weight: 400 !important;
+  font-family: Roboto, Arial, sans-serif;
 }
 
 $custom-typography: mat.define-typography-config(
-    $font-family: Roboto,
-    $headline-5: mat.define-typography-level(32px, 48px, 800, $letter-spacing: 0.5pt),
-    $headline-6:    mat.define-typography-level(20px, 32px, 800, $letter-spacing: 0.5pt),
-    $body-2:   mat.define-typography-level(16px, 24px, 400, $letter-spacing: normal),
+  $font-family: Roboto,
+  $headline-5: mat.define-typography-level(32px, 48px, 800, $letter-spacing: 0.5pt),
+  $headline-6: mat.define-typography-level(20px, 32px, 800, $letter-spacing: 0.5pt),
+  $body-2: mat.define-typography-level(16px, 24px, 400, $letter-spacing: normal),
 );
 
 %typography {
-    font-family: Roboto,serif;
+  font-family: Roboto, serif;
+  font-size: 18px;
+  line-height: 1.5;
+  letter-spacing: normal !important;
+
+  h1 {
+    @extend .heading;
+  }
+  h2,
+  h3,
+  h4 {
+    @extend .subheading;
+  }
+  h5,
+  h6 {
     font-size: 18px;
-    line-height: 1.5;
-	letter-spacing: normal !important;
+  }
 
-    h1 { @extend .heading; }
-    h2, h3, h4 { @extend .subheading; }
-    h5, h6 { font-size: 18px; }
-
-    a:not(.external-link):not(.mat-mdc-button):not(.mat-mdc-outlined-button) {
-        color: inherit;
-        text-decoration: none;
-        transition: all 0.2s ease;
-        border-bottom: 2px solid color(balanced-blue);
-        &:hover {
-            color: color(balanced-blue);
-        }
+  a:not(.external-link):not(.mat-mdc-button):not(.mat-mdc-outlined-button) {
+    color: inherit;
+    text-decoration: none;
+    transition: all 0.2s ease;
+    border-bottom: 2px solid color(balanced-blue);
+    &:hover {
+      color: color(balanced-blue);
     }
+  }
 
-    a.external-link {
-        border-bottom: none;
-        color: color(link);
-        transition: none;
-        text-decoration: none;
-        &:hover {
-            border-bottom: 2px solid color(link);
-            color: color(balanced-blue);
-        }
+  a.external-link {
+    border-bottom: none;
+    color: color(link);
+    transition: none;
+    text-decoration: none;
+    &:hover {
+      border-bottom: 2px solid color(link);
+      color: color(balanced-blue);
     }
+  }
 
-    @include mat.typography-hierarchy($custom-typography);
-    @include mat.checkbox-typography($custom-typography);
-    @include mat.all-component-typographies($custom-typography);
+  @include mat.typography-hierarchy($custom-typography);
+  @include mat.checkbox-typography($custom-typography);
+  @include mat.all-component-typographies($custom-typography);
 }

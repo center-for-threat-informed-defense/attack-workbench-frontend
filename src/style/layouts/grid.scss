@@ -1,40 +1,45 @@
 @mixin grid($spacing: 0) {
-    >.row {
-        display: flex;
-        &+.row {
-            margin-top: #{$spacing}px;
-        }
-        >.column, >.col { // either col or column works
-            max-width: 100%;
-            display: inline-flex;
-            &:not(.narrow) { flex: 1 0 0; }
-            &+.col, &+.column {
-                margin-left: #{$spacing}px;
-            }
-            // grow children to fit
-            flex-direction: column;
-            &.center {
-                text-align: center;
-            }
-            &.vertical-center {
-                justify-content: center;
-            }
-        }
+  > .row {
+    display: flex;
+    & + .row {
+      margin-top: #{$spacing}px;
     }
+    > .column,
+    > .col {
+      // either col or column works
+      max-width: 100%;
+      display: inline-flex;
+      &:not(.narrow) {
+        flex: 1 0 0;
+      }
+      & + .col,
+      & + .column {
+        margin-left: #{$spacing}px;
+      }
+      // grow children to fit
+      flex-direction: column;
+      &.center {
+        text-align: center;
+      }
+      &.vertical-center {
+        justify-content: center;
+      }
+    }
+  }
 }
 
 .grid {
-    @include grid();
-    $spacings: 0, 8, 12, 16, 20;
-    @each $spacing in $spacings {
-        &.spacing-#{$spacing} {
-            @include grid($spacing);
-        }
+  @include grid();
+  $spacings: 0, 8, 12, 16, 20;
+  @each $spacing in $spacings {
+    &.spacing-#{$spacing} {
+      @include grid($spacing);
     }
+  }
 }
 
 .grow-to-row {
-    flex: 1 0; 
-    display: flex;
-    flex-direction: column;
+  flex: 1 0;
+  display: flex;
+  flex-direction: column;
 }

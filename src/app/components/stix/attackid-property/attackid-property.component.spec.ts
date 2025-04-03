@@ -8,9 +8,8 @@ describe('AttackidPropertyComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ AttackidPropertyComponent ]
-    })
-    .compileComponents();
+      declarations: [AttackidPropertyComponent],
+    }).compileComponents();
   });
 
   beforeEach(() => {

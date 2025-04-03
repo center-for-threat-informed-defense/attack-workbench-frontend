@@ -8,10 +8,9 @@ describe('VersionDiffComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [VersionDiffComponent]
-    })
-    .compileComponents();
-    
+      declarations: [VersionDiffComponent],
+    }).compileComponents();
+
     fixture = TestBed.createComponent(VersionDiffComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

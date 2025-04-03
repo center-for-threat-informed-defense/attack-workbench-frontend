@@ -8,10 +8,9 @@ describe('ExternalReferencesDiffComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ExternalReferencesDiffComponent]
-    })
-    .compileComponents();
-    
+      declarations: [ExternalReferencesDiffComponent],
+    }).compileComponents();
+
     fixture = TestBed.createComponent(ExternalReferencesDiffComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

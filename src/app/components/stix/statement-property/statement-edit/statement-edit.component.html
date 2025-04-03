@@ -1,33 +1,35 @@
 <div class="statement-edit">
-    <button *ngIf="objStatements.length > 0 else noStatements"
-        cdkDrag
-        matTooltip="click to update"
-        matTooltipPosition="above"
-        [mtxPopoverTriggerFor]="popover"
-        mtxPopoverTriggerOn="hover"
-        (click)="updateStatements()">
-        <mat-icon class="tiny-icon-button">edit</mat-icon>
-        <div *ngIf="objStatements.length == 1">1 statement</div>
-        <div *ngIf="objStatements.length > 1">{{objStatements.length}} statements</div>
+  <button
+    *ngIf="objStatements.length > 0; else noStatements"
+    cdkDrag
+    matTooltip="click to update"
+    matTooltipPosition="above"
+    [mtxPopoverTriggerFor]="popover"
+    mtxPopoverTriggerOn="hover"
+    (click)="updateStatements()"
+  >
+    <mat-icon class="tiny-icon-button">edit</mat-icon>
+    <div *ngIf="objStatements.length == 1">1 statement</div>
+    <div *ngIf="objStatements.length > 1">{{ objStatements.length }} statements</div>
+  </button>
+
+  <ng-template #noStatements>
+    <button (click)="updateStatements()">
+      <mat-icon class="tiny-icon-button">add</mat-icon>
+      add statement
     </button>
+  </ng-template>
 
-    <ng-template #noStatements>
-        <button (click)="updateStatements()">
-            <mat-icon class="tiny-icon-button">add</mat-icon>
-            add statement
-        </button>
-    </ng-template>
-
-    <mtx-popover #popover="mtxPopover" [position]="['below', 'center']">
-        <div style="max-width: 30em;" class="grid spacing-20">
-            <div class="row labelled-box suffixed">
-                <div class="content">
-                    <ul>
-                        <li *ngFor="let objStatement of objStatements">{{objStatement.definition_string}}</li>
-                    </ul>
-                </div>
-                <span class="labelled-box-label">Statements</span>
-            </div>
+  <mtx-popover #popover="mtxPopover" [position]="['below', 'center']">
+    <div style="max-width: 30em" class="grid spacing-20">
+      <div class="row labelled-box suffixed">
+        <div class="content">
+          <ul>
+            <li *ngFor="let objStatement of objStatements">{{ objStatement.definition_string }}</li>
+          </ul>
         </div>
-    </mtx-popover>
+        <span class="labelled-box-label">Statements</span>
+      </div>
+    </div>
+  </mtx-popover>
 </div>

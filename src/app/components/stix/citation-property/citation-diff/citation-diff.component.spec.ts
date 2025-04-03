@@ -8,10 +8,9 @@ describe('CitationDiffComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [CitationDiffComponent]
-    })
-    .compileComponents();
-    
+      declarations: [CitationDiffComponent],
+    }).compileComponents();
+
     fixture = TestBed.createComponent(CitationDiffComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

@@ -1,21 +1,23 @@
 .matrix.flat {
-	.tactic .supertechnique {
-		vertical-align: middle !important;
-	}
-	.subtechniques-row.hidden { display: none; }
-	.angle-top {
-		position: relative;
-		border-right: 3px solid #707070;
-		svg {
-			position: absolute;
-			top: 0;
-			right: 0;
-			fill: #707070;
-		}
-	}
-	td.sidebar {
-		border: 1px solid #707070;
-		border-left: none;
-		border-right: 3px solid #707070;
-	}
+  .tactic .supertechnique {
+    vertical-align: middle !important;
+  }
+  .subtechniques-row.hidden {
+    display: none;
+  }
+  .angle-top {
+    position: relative;
+    border-right: 3px solid #707070;
+    svg {
+      position: absolute;
+      top: 0;
+      right: 0;
+      fill: #707070;
+    }
+  }
+  td.sidebar {
+    border: 1px solid #707070;
+    border-left: none;
+    border-right: 3px solid #707070;
+  }
 }

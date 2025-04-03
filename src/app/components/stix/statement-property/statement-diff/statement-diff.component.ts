@@ -5,27 +5,27 @@ import { MarkingDefinition } from 'src/app/classes/stix';
 @Component({
   selector: 'app-statement-diff',
   templateUrl: './statement-diff.component.html',
-  styleUrl: './statement-diff.component.scss'
+  styleUrl: './statement-diff.component.scss',
 })
 export class StatementDiffComponent implements OnInit {
   @Input() public statementsMap: any;
   @Input() public config: StatementPropertyConfig;
 
   public statementDiffList: any[] = [];
-  public showChangeIndicator: boolean = false;
+  public showChangeIndicator = false;
 
   public get current() {
-    let statements: any[] = this.config.object[0]?.["object_marking_refs"] || [];
+    const statements: any[] = this.config.object[0]?.['object_marking_refs'] || [];
     // ignore tlp markings
-    return statements.filter(id => this.statementsMap[id]);
+    return statements.filter((id) => this.statementsMap[id]);
   }
   public get previous() {
-    let statements: any[] = this.config.object[1]?.["object_marking_refs"] || [];
+    const statements: any[] = this.config.object[1]?.['object_marking_refs'] || [];
     // ignore tlp markings
-    return statements.filter(id => this.statementsMap[id]);
+    return statements.filter((id) => this.statementsMap[id]);
   }
 
-  // return false if object has a statements 
+  // return false if object has a statements
   public get popoverDisabled() {
     if (this.current.length > 0 || this.previous.length > 0) return false;
     return true;
@@ -53,26 +53,27 @@ export class StatementDiffComponent implements OnInit {
   }
 
   private mergeStatements() {
-    let merged = new Map();
+    const merged = new Map();
 
     // add before state to map
-    this.previous.forEach(stixId => {
+    this.previous.forEach((stixId) => {
       merged.set(stixId, {
         before: this.statementsMap[stixId] || null,
-        after: null
+        after: null,
       });
     });
 
     // add after state to map
-    for (let stixId of this.current) {
+    for (const stixId of this.current) {
       if (merged.has(stixId)) merged.get(stixId).after = this.statementsMap[stixId] || null;
-      else merged.set(stixId, {
-        before: null,
-        after: this.statementsMap[stixId] || null
-      });
+      else
+        merged.set(stixId, {
+          before: null,
+          after: this.statementsMap[stixId] || null,
+        });
     }
 
-    return Array.from(merged.values())
+    return Array.from(merged.values());
   }
 
   public getDefinition(statement: MarkingDefinition) {

@@ -8,9 +8,8 @@ describe('MitigationListComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ MitigationListComponent ]
-    })
-    .compileComponents();
+      declarations: [MitigationListComponent],
+    }).compileComponents();
   }));
 
   beforeEach(() => {

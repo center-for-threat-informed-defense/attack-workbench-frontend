@@ -8,9 +8,8 @@ describe('VersionPopoverComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ VersionPopoverComponent ]
-    })
-    .compileComponents();
+      declarations: [VersionPopoverComponent],
+    }).compileComponents();
   });
 
   beforeEach(() => {

@@ -8,9 +8,8 @@ describe('StixPageComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ StixPageComponent ]
-    })
-    .compileComponents();
+      declarations: [StixPageComponent],
+    }).compileComponents();
   });
 
   beforeEach(() => {

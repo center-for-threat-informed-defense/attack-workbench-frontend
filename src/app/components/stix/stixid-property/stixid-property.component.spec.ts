@@ -8,9 +8,8 @@ describe('StixidPropertyComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ StixIDPropertyComponent ]
-    })
-    .compileComponents();
+      declarations: [StixIDPropertyComponent],
+    }).compileComponents();
   });
 
   beforeEach(() => {

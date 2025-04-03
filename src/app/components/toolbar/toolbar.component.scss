@@ -1,9 +1,9 @@
-@import "../../../style/globals";
+@import '../../../style/globals';
 .object-toolbar {
-    mat-toolbar {
-        @extend %toolbar;
-    }
-    .inline {
-        display: inline-flex;
-    }
+  mat-toolbar {
+    @extend %toolbar;
+  }
+  .inline {
+    display: inline-flex;
+  }
 }

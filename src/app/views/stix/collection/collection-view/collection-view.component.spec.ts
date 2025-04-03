@@ -8,9 +8,8 @@ describe('CollectionViewComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ CollectionViewComponent ]
-    })
-    .compileComponents();
+      declarations: [CollectionViewComponent],
+    }).compileComponents();
   }));
 
   beforeEach(() => {

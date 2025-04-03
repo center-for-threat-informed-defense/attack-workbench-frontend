@@ -8,9 +8,8 @@ describe('TimestampPropertyComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ TimestampPropertyComponent ]
-    })
-    .compileComponents();
+      declarations: [TimestampPropertyComponent],
+    }).compileComponents();
   });
 
   beforeEach(() => {
