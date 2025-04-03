@@ -1,0 +1,1089 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>attack-workbench-frontend documentation</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+	   <link rel="stylesheet" href="../styles/style.css">
+        <link rel="stylesheet" href="../styles/dark.css">
+    </head>
+    <body>
+
+        <div class="navbar navbar-default navbar-fixed-top visible-xs">
+            <a href="../" class="navbar-brand">attack-workbench-frontend documentation</a>
+            <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+        </div>
+
+        <div class="xs-menu menu" id="mobile-menu">
+                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+        </div>
+
+        <div class="container-fluid main">
+           <div class="row main">
+               <div class="hidden-xs menu">
+                   <compodoc-menu mode="normal"></compodoc-menu>
+               </div>
+               <!-- START CONTENT -->
+               <div class="content class">
+                   <div class="content-data">
+
+
+
+
+
+
+
+
+
+
+
+
+<ol class="breadcrumb">
+  <li>Classes</li>
+  <li >LinkByIdParseResult</li>
+</ol>
+
+<ul class="nav nav-tabs" role="tablist">
+        <li class="active">
+            <a href="#info" role="tab" id="info-tab" data-toggle="tab" data-link="info">Info</a>
+        </li>
+        <li >
+            <a href="#source" role="tab" id="source-tab" data-toggle="tab" data-link="source">Source</a>
+        </li>
+</ul>
+
+<div class="tab-content">
+    <div class="tab-pane fade active in" id="c-info">
+        <p class="comment">
+            <h3>File</h3>
+        </p>
+        <p class="comment">
+            <code>src/app/classes/stix/stix-object.ts</code>
+        </p>
+
+
+            <p class="comment">
+                <h3>Description</h3>
+            </p>
+            <p class="comment">
+                <p>The results of parsing LinkByIds in a single field</p>
+
+            </p>
+
+
+
+
+            <section>
+    <h3 id="index">Index</h3>
+    <table class="table table-sm table-bordered index-table">
+        <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Properties</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                    <span class="modifier">Public</span>
+                                <a href="#brokenLinks" >brokenLinks</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Public</span>
+                                <a href="#missingLinks" >missingLinks</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Methods</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                    <span class="modifier">Public</span>
+                                <a href="#merge" >merge</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+
+
+
+
+        </tbody>
+    </table>
+</section>
+
+            <section>
+    <h3 id="constructor">Constructor</h3>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+<code>constructor(initData?: literal type)</code>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="663" class="link-to-prism">src/app/classes/stix/stix-object.ts:663</a></div>
+                            </td>
+                        </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                            <div>
+                                    <b>Parameters :</b>
+                                    <table class="params">
+                                        <thead>
+                                            <tr>
+                                                <td>Name</td>
+                                                    <td>Type</td>
+                                                <td>Optional</td>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                                <tr>
+                                                        <td>initData</td>
+                                                  
+                                                        <td>
+                                                                    <code>literal type</code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            Yes
+                                                    </td>
+                                                    
+                                                </tr>
+                                        </tbody>
+                                    </table>
+                            </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+</section>
+
+            <section>
+    
+    <h3 id="inputs">
+        Properties
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="brokenLinks"></a>
+                    <span class="name">
+                            <span class="modifier">Public</span>
+                        <span ><b>brokenLinks</b></span>
+                        <a href="#brokenLinks"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>Set&lt;string&gt;</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>new Set()</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="663" class="link-to-prism">src/app/classes/stix/stix-object.ts:663</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="missingLinks"></a>
+                    <span class="name">
+                            <span class="modifier">Public</span>
+                        <span ><b>missingLinks</b></span>
+                        <a href="#missingLinks"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>Set&lt;string&gt;</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>new Set()</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="662" class="link-to-prism">src/app/classes/stix/stix-object.ts:662</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+</section>
+
+            <section>
+    
+    <h3 id="methods">
+        Methods
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="merge"></a>
+                    <span class="name">
+                        <span class="modifier">Public</span>
+                        <span ><b>merge</b></span>
+                        <a href="#merge"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>merge(that: <a href="../classes/LinkByIdParseResult.html" target="_self">LinkByIdParseResult</a>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="674"
+                            class="link-to-prism">src/app/classes/stix/stix-object.ts:674</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Merge results from another LinkByIdParseResult into this object</p>
+</div>
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                    <td>Description</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>that</td>
+                                    <td>
+                                                <code><a href="../classes/LinkByIdParseResult.html" target="_self" >LinkByIdParseResult</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                    <td>
+                                        <p>results from other object</p>
+
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>
+
+
+
+
+
+    </div>
+
+
+    <div class="tab-pane fade  tab-source-code" id="c-source">
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { VersionNumber } from &#x27;../version-number&#x27;;
+import { ExternalReferences } from &#x27;../external-references&#x27;;
+import { v4 as uuid } from &#x27;uuid&#x27;;
+import { Serializable, ValidationData } from &#x27;../serializable&#x27;;
+import { RestApiConnectorService } from &#x27;src/app/services/connectors/rest-api/rest-api-connector.service&#x27;;
+import { forkJoin, Observable, of } from &#x27;rxjs&#x27;;
+import { map, switchMap } from &#x27;rxjs/operators&#x27;;
+import { logger } from &quot;../../util/logger&quot;;
+
+export type workflowStates &#x3D; &quot;work-in-progress&quot; | &quot;awaiting-review&quot; | &quot;reviewed&quot; | &quot;&quot;;
+let stixTypeToAttackType &#x3D; {
+    &quot;x-mitre-collection&quot;: &quot;collection&quot;,
+    &quot;attack-pattern&quot;: &quot;technique&quot;,
+    &quot;malware&quot;: &quot;software&quot;,
+    &quot;tool&quot;: &quot;software&quot;,
+    &quot;intrusion-set&quot;: &quot;group&quot;,
+    &quot;campaign&quot;: &quot;campaign&quot;,
+    &quot;course-of-action&quot;: &quot;mitigation&quot;,
+    &quot;x-mitre-matrix&quot;: &quot;matrix&quot;,
+    &quot;x-mitre-tactic&quot;: &quot;tactic&quot;,
+    &quot;relationship&quot;: &quot;relationship&quot;,
+    &quot;marking-definition&quot;: &quot;marking-definition&quot;,
+    &quot;x-mitre-data-source&quot;: &quot;data-source&quot;,
+    &quot;x-mitre-data-component&quot;: &quot;data-component&quot;
+}
+export { stixTypeToAttackType };
+
+export abstract class StixObject extends Serializable {
+    public stixID: string; // STIX ID
+    public type: string;   // STIX type
+    public attackType: string; // ATT&amp;CK type
+    public attackID: string; // ATT&amp;CK ID
+    public description: string;
+
+    public created_by_ref: string; //embedded relationship
+    public created_by?: any;
+    public modified_by_ref: string; //embedded relationship
+    public modified_by?: any;
+    public firstInitialized: boolean; // boolean to track if it is a newly created object
+
+    public object_marking_refs: string[] &#x3D; []; //list of embedded relationships to marking_defs
+
+    public abstract readonly supportsAttackID: boolean; // boolean to determine if object supports ATT&amp;CK IDs
+    public abstract readonly supportsNamespace: boolean; // boolean to determine if object supports namespacing of ATT&amp;CK ID
+    protected abstract get attackIDValidator(): {
+        regex: string, // regex to validate the ID
+        format: string // format to display to user
+    };
+
+    private typeUrlMap &#x3D; {
+        &quot;technique&quot;: &quot;techniques&quot;,
+        &quot;software&quot;: &quot;software&quot;,
+        &quot;group&quot;: &quot;groups&quot;,
+        &quot;campaign&quot;: &quot;campaigns&quot;,
+        &quot;mitigation&quot;: &quot;mitigations&quot;,
+        &quot;matrix&quot;: &quot;matrices&quot;,
+        &quot;tactic&quot;: &quot;tactics&quot;,
+        &quot;note&quot;: &quot;notes&quot;,
+        &quot;marking-definition&quot;: &quot;marking-definitions&quot;,
+        &quot;data-source&quot;: &quot;datasources&quot;,
+        &quot;data-component&quot;: &quot;datacomponents&quot;
+    }
+
+    private defaultMarkingDefinitionsLoaded &#x3D; false; // avoid overloading of default marking definitions
+
+    public get routes(): any[] { // route to view the object
+        // let baseRoute &#x3D; &quot;/&quot; + [this.attackType, this.stixID].join(&quot;/&quot;)
+        return [
+            {
+                &quot;label&quot;: &quot;view&quot;,
+                &quot;route&quot;: &quot;&quot;
+            }, {
+                &quot;label&quot;: &quot;edit&quot;,
+                &quot;route&quot;: &quot;&quot;,
+                &quot;query&quot;: { &quot;editing&quot;: true }
+            }
+        ]
+    }
+
+    public created: Date;  // object created date
+    public modified: Date; // object modified date
+    public version: VersionNumber;  // version number of the object
+    public external_references: ExternalReferences;
+    public workflow: {
+        state: workflowStates,
+        created_by_user_account?: string
+    };
+
+    public deprecated: boolean &#x3D; false; //is object deprecated?
+    public revoked: boolean &#x3D; false;    //is object revoked?
+
+    /**
+     * Initialize the STIX object
+     * @param sdo the STIX domain object to initialize data from
+     */
+    constructor(sdo?: any, type?: string) {
+        super();
+        if (sdo) {
+            this.base_deserialize(sdo);
+            this.firstInitialized &#x3D; false;
+        } else {
+            // create new SDO
+            this.stixID &#x3D; type + &quot;--&quot; + uuid();
+            this.type &#x3D; type;
+            this.version &#x3D; new VersionNumber(&quot;0.1&quot;);
+            this.attackID &#x3D; &#x27;&#x27;;
+            this.external_references &#x3D; new ExternalReferences();
+            if (this.type !&#x3D;&#x3D; &#x27;x-mitre-collection&#x27;) {
+                this.workflow &#x3D; {
+                    state: &quot;work-in-progress&quot;
+                };
+            }
+            this.description &#x3D; &quot;&quot;;
+            this.firstInitialized &#x3D; true;
+        }
+        this.attackType &#x3D; stixTypeToAttackType[this.type]
+    }
+
+    /**
+     * Transform the current object into a raw object for sending to the back-end, stripping any unnecessary fields
+     * @abstract
+     * @returns {*} the raw object to send
+     */
+    public base_serialize(): any {
+        let serialized_external_references &#x3D; this.external_references.serialize();
+
+        // Add attackID for
+        if (this.attackID &amp;&amp; this.typeUrlMap[this.attackType]) {
+          let new_ext_ref &#x3D; {
+                &quot;source_name&quot;: &quot;mitre-attack&quot;,
+                &quot;external_id&quot;: this.attackID,
+                &quot;url&quot;: &#x60;https://attack.mitre.org/${this.typeUrlMap[this.attackType]}/${this.attackID.replace(/\./g, &#x27;/&#x27;)}&#x60;
+            }
+            serialized_external_references.unshift(new_ext_ref);
+        }
+
+        let stix: any &#x3D; {
+            &quot;type&quot;: this.type,
+            &quot;id&quot;: this.stixID,
+            &quot;created&quot;: this.created ? this.created.toISOString() : new Date().toISOString(),
+            &quot;x_mitre_version&quot;: this.version.toString(),
+            &quot;external_references&quot;: serialized_external_references,
+            &quot;x_mitre_deprecated&quot;: this.deprecated,
+            &quot;revoked&quot;: this.revoked,
+            &quot;description&quot;: this.description,
+            &quot;object_marking_refs&quot;: this.object_marking_refs,
+            &quot;spec_version&quot;: &quot;2.1&quot;
+        }
+        // Add modified date if type is not marking-definition
+        if (this.type !&#x3D; &quot;marking-definition&quot;) stix[&quot;modified&quot;] &#x3D; new Date().toISOString();
+        if (this.created_by_ref) stix.created_by_ref &#x3D; this.created_by_ref;
+        // do not set modified by ref since we don&#x27;t know who we are, but the REST API knows
+
+        return {
+            workspace: {
+                workflow: this.workflow
+            },
+            stix: stix
+        }
+    }
+
+    /**
+     * Parse the object from the record returned from the back-end
+     * @abstract
+     * @param {*} raw the raw object to parse
+     */
+    public base_deserialize(raw: any) {
+        if (&quot;stix&quot; in raw) {
+            let sdo &#x3D; raw.stix;
+
+            // initialize common fields from SDO stix
+            if (&quot;id&quot; in sdo) {
+                if (typeof (sdo.id) &#x3D;&#x3D;&#x3D; &quot;string&quot;) this.stixID &#x3D; sdo.id;
+                else logger.error(&quot;TypeError: id field is not a string:&quot;, sdo.id, &quot;(&quot;, typeof (sdo.id), &quot;)&quot;)
+            }
+
+            if (&quot;object_marking_refs&quot; in sdo) {
+                if (this.isStringArray(sdo.object_marking_refs)) this.object_marking_refs &#x3D; sdo.object_marking_refs;
+                else logger.error(&quot;TypeError, object_marking_refs field is not a string array&quot;, this.object_marking_refs, &quot;(&quot;, typeof (this.object_marking_refs), &quot;)&quot;);
+            }
+
+            if (&quot;type&quot; in sdo) {
+                if (typeof (sdo.type) &#x3D;&#x3D;&#x3D; &quot;string&quot;) this.type &#x3D; sdo.type;
+                else logger.error(&quot;TypeError: type field is not a string:&quot;, sdo.type, &quot;(&quot;, typeof (sdo.type), &quot;)&quot;)
+            }
+
+            if (&quot;description&quot; in sdo) {
+                if (typeof (sdo.description) &#x3D;&#x3D;&#x3D; &quot;string&quot;) this.description &#x3D; sdo.description;
+                else logger.error(&quot;TypeError: description field is not a string:&quot;, sdo.description, &quot;(&quot;, typeof (sdo.description), &quot;)&quot;)
+            } else this.description &#x3D; &quot;&quot;;
+
+            if (&quot;created&quot; in sdo) {
+                if (typeof (sdo.created) &#x3D;&#x3D;&#x3D; &quot;string&quot;) this.created &#x3D; new Date(sdo.created);
+                else logger.error(&quot;TypeError: created field is not a string:&quot;, sdo.created, &quot;(&quot;, typeof (sdo.created), &quot;)&quot;)
+            } else this.created &#x3D; new Date();
+
+            if (&quot;created_by_ref&quot; in sdo) {
+                if (typeof (sdo.created) &#x3D;&#x3D;&#x3D; &quot;string&quot;) this.created_by_ref &#x3D; sdo.created_by_ref
+                else logger.error(&quot;TypeError: created_by_Ref field is not a string:&quot;, sdo.created_by_ref, &quot;(&quot;, typeof (sdo.created_by_ref), &quot;)&quot;)
+            }
+
+            if (&quot;modified&quot; in sdo) {
+                if (typeof (sdo.modified) &#x3D;&#x3D;&#x3D; &quot;string&quot;) this.modified &#x3D; new Date(sdo.modified);
+                else logger.error(&quot;TypeError: modified field is not a string:&quot;, sdo.modified, &quot;(&quot;, typeof (sdo.modified), &quot;)&quot;)
+            }
+            else if (&quot;type&quot; in sdo &amp;&amp; sdo.type !&#x3D; &quot;marking-definition&quot;) this.modified &#x3D; new Date();
+
+            if (&quot;x_mitre_modified_by_ref&quot; in sdo) {
+                if (typeof (sdo.created) &#x3D;&#x3D;&#x3D; &quot;string&quot;) this.modified_by_ref &#x3D; sdo.x_mitre_modified_by_ref;
+                else logger.error(&quot;TypeError: x_mitre_modified_by_ref field is not a string:&quot;, sdo.x_mitre_modified_by_ref, &quot;(&quot;, typeof (sdo.x_mitre_modified_by_ref), &quot;)&quot;)
+            }
+
+            if (&quot;x_mitre_version&quot; in sdo) {
+                if (typeof (sdo.x_mitre_version) &#x3D;&#x3D;&#x3D; &quot;string&quot;) this.version &#x3D; new VersionNumber(sdo.x_mitre_version);
+                else logger.error(&quot;TypeError: x_mitre_version field is not a string:&quot;, sdo.x_mitre_version, &quot;(&quot;, typeof (sdo.x_mitre_version), &quot;)&quot;)
+            } else this.version &#x3D; new VersionNumber(&quot;0.1&quot;);
+
+            if (&quot;external_references&quot; in sdo) {
+                if (typeof (sdo.external_references) &#x3D;&#x3D;&#x3D; &quot;object&quot;) {
+                    this.external_references &#x3D; new ExternalReferences(sdo.external_references);
+                    let attack_sources &#x3D; [&#x27;mitre-attack&#x27;, &#x27;mitre-mobile-attack&#x27;, &#x27;mitre-ics-attack&#x27;];
+                    if (sdo.external_references.length &gt; 0 &amp;&amp; this.type !&#x3D; &quot;relationship&quot; &amp;&amp; sdo.external_references[0].hasOwnProperty(&quot;external_id&quot;) &amp;&amp; sdo.external_references[0].hasOwnProperty(&quot;source_name&quot;) &amp;&amp; attack_sources.includes(sdo.external_references[0].source_name)) {
+                        if (typeof (sdo.external_references[0].external_id) &#x3D;&#x3D;&#x3D; &quot;string&quot;) this.attackID &#x3D; sdo.external_references[0].external_id;
+                        else logger.error(&quot;TypeError: attackID field is not a string:&quot;, sdo.external_references[0].external_id, &quot;(&quot;, typeof (sdo.external_references[0].external_id), &quot;)&quot;)
+                    }
+                    else this.attackID &#x3D; &quot;&quot;;
+                }
+                else logger.error(&quot;TypeError: external_references field is not an object:&quot;, sdo.external_references, &quot;(&quot;, typeof (sdo.external_references), &quot;)&quot;)
+            }
+            else {
+                this.external_references &#x3D; new ExternalReferences();
+                this.attackID &#x3D; &quot;&quot;;
+            }
+
+            if (&quot;x_mitre_deprecated&quot; in sdo) {
+                if (typeof (sdo.x_mitre_deprecated) &#x3D;&#x3D;&#x3D; &quot;boolean&quot;) this.deprecated &#x3D; sdo.x_mitre_deprecated;
+                else logger.error(&quot;TypeError: x_mitre_deprecated field is not a boolean:&quot;, sdo.x_mitre_deprecated, &quot;(&quot;, typeof (sdo.x_mitre_deprecated), &quot;)&quot;)
+            }
+            if (&quot;revoked&quot; in sdo) {
+                if (typeof (sdo.revoked) &#x3D;&#x3D;&#x3D; &quot;boolean&quot;) this.revoked &#x3D; sdo.revoked;
+                else logger.error(&quot;TypeError: revoked field is not a boolean:&quot;, sdo.revoked, &quot;(&quot;, typeof (sdo.revoked), &quot;)&quot;)
+            }
+        }
+        else logger.error(&quot;ObjectError: &#x27;stix&#x27; field does not exist in object&quot;);
+
+        if (&quot;created_by_identity&quot; in raw &amp;&amp; raw.created_by_identity) {
+            let identityData &#x3D; raw.created_by_identity;
+            if (&quot;stix&quot; in identityData) {
+                this.created_by &#x3D; identityData.stix;
+            } else logger.error(&quot;ObjectError: &#x27;stix&#x27; field does not exist in created_by_identity object&quot;);
+        }
+        if (&quot;modified_by_identity&quot; in raw &amp;&amp; raw.modified_by_identity) {
+            let identityData &#x3D; raw.modified_by_identity;
+            if (&quot;stix&quot; in identityData) {
+                this.modified_by &#x3D; identityData.stix;
+            } else logger.error(&quot;ObjectError: &#x27;stix&#x27; field does not exist in modified_by_identity object&quot;);
+        }
+
+        if (&quot;workspace&quot; in raw) {
+            // parse workspace fields
+            let workspaceData &#x3D; raw.workspace;
+            if (&quot;workflow&quot; in workspaceData &amp;&amp; workspaceData.workflow !&#x3D;&#x3D; undefined) {
+                if (typeof (workspaceData.workflow) &#x3D;&#x3D; &quot;object&quot;) {
+                    this.workflow &#x3D; workspaceData.workflow;
+                } else logger.error(&quot;TypeError: workflow field is not an object&quot;, workspaceData)
+            }
+        }
+    }
+
+    /**
+     * Validate the current object state and return information on the result of the validation
+     * @abstract
+     * @param {RestApiConnectorService} restAPIService: the REST API connector through which asynchronous validation can be completed
+     * @returns {Observable&lt;ValidationData&gt;} the validation warnings and errors once validation is complete.
+     */
+    public base_validate(restAPIService: RestApiConnectorService): Observable&lt;ValidationData&gt; {
+        let validation &#x3D; new ValidationData();
+
+        // test version number format
+        if (!this.version.valid()) {
+            validation.errors.push({
+                result: &quot;error&quot;,
+                field: &quot;version&quot;,
+                message: &quot;version number is not formatted properly&quot;
+            })
+        }
+        // check any asynchronous validators
+        return of(validation).pipe(
+            // check if the name is unique if it has a name
+            switchMap(result &#x3D;&gt; {
+                //do not check name or attackID for relationships or marking definitions
+                if (this.attackType &#x3D;&#x3D; &quot;relationship&quot; || this.attackType &#x3D;&#x3D; &quot;marking-definition&quot;) return of(result);
+                // check if name &amp; ATT&amp;CK ID is unique, record result in validation, and return validation
+                let accessor &#x3D; this.attackType &#x3D;&#x3D; &quot;collection&quot;? restAPIService.getAllCollections() :
+                                this.attackType &#x3D;&#x3D; &quot;group&quot;? restAPIService.getAllGroups() :
+                                this.attackType &#x3D;&#x3D; &quot;campaign&quot;? restAPIService.getAllCampaigns() :
+                                this.attackType &#x3D;&#x3D; &quot;software&quot;? restAPIService.getAllSoftware() :
+                                this.attackType &#x3D;&#x3D; &quot;matrix&quot;? restAPIService.getAllMatrices() :
+                                this.attackType &#x3D;&#x3D; &quot;mitigation&quot;? restAPIService.getAllMitigations() :
+                                this.attackType &#x3D;&#x3D; &quot;technique&quot;? restAPIService.getAllTechniques() :
+                                this.attackType &#x3D;&#x3D; &quot;data-source&quot;? restAPIService.getAllDataSources() :
+                                this.attackType &#x3D;&#x3D; &quot;data-component&quot;? restAPIService.getAllDataComponents() :
+                                restAPIService.getAllTactics();
+                return accessor.pipe(
+                    map(objects &#x3D;&gt; {
+                        // check name
+                        if (this.hasOwnProperty(&quot;name&quot;)) {
+                            if (this[&quot;name&quot;] &#x3D;&#x3D; &quot;&quot;) {
+                                result.errors.push({
+                                    &quot;result&quot;: &quot;error&quot;,
+                                    &quot;field&quot;: &quot;name&quot;,
+                                    &quot;message&quot;: &quot;object has no name&quot;
+                                })
+                            } else if (objects.data.some(x &#x3D;&gt; x[&quot;name&quot;].toLowerCase() &#x3D;&#x3D; this[&#x27;name&#x27;].toLowerCase() &amp;&amp; x.stixID !&#x3D; this.stixID)) {
+                                result.warnings.push({
+                                    &quot;result&quot;: &quot;warning&quot;,
+                                    &quot;field&quot;: &quot;name&quot;,
+                                    &quot;message&quot;: &quot;name is not unique&quot;
+                                })
+                            } else {
+                                result.successes.push({
+                                    &quot;result&quot;: &quot;success&quot;,
+                                    &quot;field&quot;: &quot;name&quot;,
+                                    &quot;message&quot;: &quot;name is unique&quot;
+                                })
+                            }
+                        }
+                        // check ATT&amp;CK ID, ignoring collections and matrices
+                        if (this.attackType !&#x3D;&#x3D; &quot;matrix&quot; &amp;&amp; this.hasOwnProperty(&quot;supportsAttackID&quot;) &amp;&amp; this.supportsAttackID) {
+                            if (this.attackID &#x3D;&#x3D; &quot;&quot;) {
+                                result.warnings.push({
+                                    &quot;result&quot;: &quot;warning&quot;,
+                                    &quot;field&quot;: &quot;attackID&quot;,
+                                    &quot;message&quot;: &quot;object does not have ATT&amp;CK ID&quot;
+                                })
+                            } else {
+                                if (objects.data.some(x &#x3D;&gt; x.attackID &#x3D;&#x3D; this.attackID &amp;&amp; x.stixID !&#x3D; this.stixID)) {
+                                    result.errors.push({
+                                        &quot;result&quot;: &quot;error&quot;,
+                                        &quot;field&quot;: &quot;attackID&quot;,
+                                        &quot;message&quot;: &quot;ATT&amp;CK ID is not unique&quot;
+                                    })
+                                } else {
+                                    result.successes.push({
+                                        &quot;result&quot;: &quot;success&quot;,
+                                        &quot;field&quot;: &quot;attackID&quot;,
+                                        &quot;message&quot;: &quot;ATT&amp;CK ID is unique&quot;
+                                    })
+                                }
+                                let idRegex &#x3D; new RegExp(&quot;^([A-Z]+-)?&quot; + this.attackIDValidator.regex + &quot;$&quot;);
+                                let attackIDValid &#x3D; idRegex.test(this.attackID);
+                                if (!attackIDValid) {
+                                    result.errors.push({
+                                        &quot;result&quot;: &quot;error&quot;,
+                                        &quot;field&quot;: &quot;attackID&quot;,
+                                        &quot;message&quot;: &#x60;ATT&amp;CK ID does not match the format ${this.attackIDValidator.format}&#x60;
+                                    })
+                                }
+                            }
+                        }
+                        // check required first/last seen fields for campaigns
+                        if (this.attackType &#x3D;&#x3D; &quot;campaign&quot;) {
+                            if (!this.hasOwnProperty(&#x27;first_seen&#x27;) || this[&#x27;first_seen&#x27;] &#x3D;&#x3D; null) {
+                                result.errors.push({
+                                    &quot;result&quot;: &quot;error&quot;,
+                                    &quot;field&quot;: &quot;first_seen&quot;,
+                                    &quot;message&quot;: &quot;object does not have a first seen date&quot;
+                                })
+                            }
+                            if (!this.hasOwnProperty(&#x27;first_seen_citation&#x27;) || this[&#x27;first_seen_citation&#x27;] &#x3D;&#x3D; &quot;&quot;) {
+                                result.errors.push({
+                                    &quot;result&quot;: &quot;error&quot;,
+                                    &quot;field&quot;: &quot;first_seen_citation&quot;,
+                                    &quot;message&quot;: &quot;object is missing a citation for the first seen date&quot;
+                                })
+                            }
+                            if (!this.hasOwnProperty(&#x27;last_seen&#x27;) || this[&#x27;last_seen&#x27;] &#x3D;&#x3D; null) {
+                                result.errors.push({
+                                    &quot;result&quot;: &quot;error&quot;,
+                                    &quot;field&quot;: &quot;last_seen&quot;,
+                                    &quot;message&quot;: &quot;object does not have a last seen date&quot;
+                                })
+                            }
+                            if (!this.hasOwnProperty(&#x27;last_seen_citation&#x27;) || this[&#x27;last_seen_citation&#x27;] &#x3D;&#x3D; &quot;&quot;) {
+                                result.errors.push({
+                                    &quot;result&quot;: &quot;error&quot;,
+                                    &quot;field&quot;: &quot;last_seen_citation&quot;,
+                                    &quot;message&quot;: &quot;object is missing a citation for the last seen date&quot;
+                                })
+                            }
+                        }
+                        return result;
+                    })
+                )
+            }), //end switchmap
+            // validate external references
+            switchMap(result &#x3D;&gt; {
+                // build list of fields to validate external references on according to ATT&amp;CK type
+                let refs_fields &#x3D; [&#x27;description&#x27;];
+                if ([&#x27;software&#x27;, &#x27;group&#x27;, &#x27;campaign&#x27;].includes(this.attackType)) refs_fields.push(&#x27;aliases&#x27;);
+                if (this.attackType &#x3D;&#x3D; &#x27;technique&#x27;) refs_fields.push(&#x27;detection&#x27;);
+                if (this.attackType &#x3D;&#x3D; &#x27;campaign&#x27;) refs_fields.push(&#x27;first_seen_citation&#x27;, &#x27;last_seen_citation&#x27;);
+
+                return this.external_references.validate(restAPIService, { object: this, fields: refs_fields }).pipe(
+                    map(refs_result &#x3D;&gt; {
+                        result.merge(refs_result);
+                        return result;
+                    })
+                )
+            }),
+            // validate LinkByIDs
+            switchMap(result &#x3D;&gt; {
+                // build list of fields supporting LinkByIDs
+                let refs_fields &#x3D; [&quot;description&quot;];
+                if (this.attackType &#x3D;&#x3D; &quot;technique&quot;) refs_fields.push(&quot;detection&quot;);
+
+                let parse_apis &#x3D; [];
+                for (let field of refs_fields) {
+                    parse_apis.push(this.parseLinkByIds(this[field], restAPIService));
+                }
+
+                return forkJoin(parse_apis).pipe(
+                    map(api_results &#x3D;&gt; {
+                        let validation_results &#x3D; api_results as LinkByIdParseResult[];
+                        let linkResult &#x3D; new LinkByIdParseResult();
+                        for (let validation_result of validation_results) {
+                            linkResult.merge(validation_result); // merge all results to a single object
+                        }
+
+                        // broken links
+                        let brokenLinks &#x3D; Array.from(linkResult.brokenLinks);
+                        if (brokenLinks.length &#x3D;&#x3D; 1) result.errors.push({
+                            result: &quot;error&quot;,
+                            field: &quot;description&quot;,
+                            message: &#x60;LinkById ${brokenLinks[0]} does not match format (LinkById: ATT&amp;CK ID)&#x60;
+                        });
+                        else if (brokenLinks.length &gt; 1) result.errors.push({
+                            result: &quot;error&quot;,
+                            field: &quot;description&quot;,
+                            message: &#x60;LinkByIds ${brokenLinks.join(&quot;, &quot;)} do not match format (LinkById: ATT&amp;CK ID)&#x60;
+                        });
+
+                        // missing links
+                        let missingLinks &#x3D; Array.from(linkResult.missingLinks);
+                        if (missingLinks.length &#x3D;&#x3D; 1) result.errors.push({
+                            result: &quot;error&quot;,
+                            field: &quot;description&quot;,
+                            message: &#x60;Cannot find linked object: ${missingLinks[0]}&#x60;
+                        });
+                        else if (missingLinks.length &gt; 1) result.errors.push({
+                            result: &quot;error&quot;,
+                            field: &quot;description&quot;,
+                            message: &#x60;Cannot find linked objects: ${missingLinks.join(&quot;, &quot;)}&#x60;
+                        });
+                        return result;
+                    })
+                );
+            }),
+            // validate &#x27;revoked-by&#x27; relationship exists
+            switchMap(result &#x3D;&gt; {
+                if (!this.revoked) return of(result); // do not check for revoked-by relationship
+
+                let accessor &#x3D; restAPIService.getRelatedTo({ sourceRef: this.stixID });
+                return accessor.pipe(
+                    map(objects &#x3D;&gt; {
+                        if (!objects.data.find(relationship &#x3D;&gt; relationship[&#x27;relationship_type&#x27;] &#x3D;&#x3D; &#x27;revoked-by&#x27;)) {
+                            result.errors.push({
+                                &quot;result&quot;: &quot;error&quot;,
+                                &quot;field&quot;: &quot;revoked&quot;,
+                                &quot;message&quot;: &quot;&#x27;revoked-by&#x27; relationship does not exist&quot;
+                            })
+                        } else {
+                            result.successes.push({
+                                &quot;result&quot;: &quot;success&quot;,
+                                &quot;field&quot;: &quot;revoked&quot;,
+                                &quot;message&quot;: &quot;&#x27;revoked-by&#x27; relationship exists&quot;
+                            })
+                        }
+                        return result;
+                    })
+                )
+
+            })
+        ) //end pipe
+
+    }
+
+    /**
+     * parses given field for linked objects
+     * @param field the field in which to parse LinkByIds
+     */
+    private parseLinkByIds(field: string, restAPIService: RestApiConnectorService): Observable&lt;LinkByIdParseResult&gt; {
+        let reLinkById &#x3D; /\(LinkById: (.*?)\)/gmu;
+        let links &#x3D; field.match(reLinkById);
+        let result &#x3D; new LinkByIdParseResult({
+            brokenLinks: this.validateBrokenLinks(field, [/\(LinkById:([^ ].*?)\)/gmu, /\(LinkByID:(.*?)\)/gmu, /\(linkById:(.*?)\)/gmu])
+        });
+
+        if (!links) return of(result); // no LinkByIds found
+
+        let ids &#x3D; [];
+        for (let link of links) {
+            let id &#x3D; link.split(&quot;(LinkById: &quot;)[1].slice(0, -1);
+            if(!ids.includes(id)) ids.push(id);
+        }
+
+        return restAPIService.getAllObjects(ids, null, null, null, true, true, true).pipe(
+            map((results: any) &#x3D;&gt; {
+                let retrieved_ids &#x3D; (results.data as StixObject[]).map(obj &#x3D;&gt; obj.attackID);
+                for (let id of ids) {
+                    if (!retrieved_ids.includes(id)) result.missingLinks.add(id);
+                }
+                return result;
+            })
+        );
+    }
+
+    /**
+     * validate the given field for broken LinkByIds found via regex
+     * @param field field that may have LinkByIds
+     * @param {regex[]} regExes regular expressions matching potential invalid tags
+     */
+    private validateBrokenLinks(field: string, regExes): Set&lt;string&gt; {
+        let result &#x3D; new Set&lt;string&gt;();
+        for (let regex of regExes) {
+            let brokenLinks &#x3D; field.match(regex);
+            if (brokenLinks) {
+                brokenLinks.forEach(l &#x3D;&gt; result.add(l));
+            }
+        }
+        return result;
+    }
+
+    public isStringArray &#x3D; function (arr): boolean {
+        for (let i &#x3D; 0; i &lt; arr.length; i++) {
+            if (typeof (arr[i]) !&#x3D;&#x3D; &quot;string&quot;) {
+                logger.error(&quot;TypeError:&quot;, arr[i], &quot;(&quot;, typeof (arr[i]), &quot;)&quot;, &quot;is not a string&quot;)
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
+     * Save the current state of the STIX object in the database. Update the current object from the response
+     * @param restAPIService [RestApiConnectorService] the service to perform the POST/PUT through
+     * @returns {Observable} of the post
+     */
+    abstract save(restAPIService: RestApiConnectorService): Observable&lt;StixObject&gt;;
+
+    /**
+     * Updates the object&#x27;s marking definitions with the default the first time an object is created
+     * @param restAPIService [RestApiConnectorService] the service to perform the POST/PUT through
+     */
+    public initializeWithDefaultMarkingDefinitions(restAPIService: RestApiConnectorService) {
+        let data$ &#x3D; restAPIService.getDefaultMarkingDefinitions();
+        let sub &#x3D; data$.subscribe({
+            next: (data) &#x3D;&gt; {
+                let marking_refs &#x3D; []
+                for (let i in data) {
+                    marking_refs.push(data[i].stix.id); // Select current statements by default
+                }
+                this.object_marking_refs &#x3D; marking_refs;
+                this.defaultMarkingDefinitionsLoaded &#x3D; true;
+            },
+            complete: () &#x3D;&gt; { sub.unsubscribe(); }
+        });
+    }
+
+    public getNamespaceID(restAPIConnector, orgNamespace): Observable&lt;any&gt; {
+        let prefix &#x3D; &#x27;&#x27;; // i.e. &#x27;TA&#x27;, if StixObject type is tactic
+        let count &#x3D; &#x27;&#x27; as any; // i.e. 1234
+        let copyID &#x3D; this.attackID.slice(); // Deep copy of attack id
+        this.attackID &#x3D; &#x27;(generating ID)&#x27;;
+
+        let accessor &#x3D; this.attackType &#x3D;&#x3D; &quot;group&quot; ? restAPIConnector.getAllGroups() :
+                        this.attackType &#x3D;&#x3D; &quot;campaign&quot; ? restAPIConnector.getAllCampaigns() :
+                        this.attackType &#x3D;&#x3D; &quot;mitigation&quot; ? restAPIConnector.getAllMitigations() :
+                        this.attackType &#x3D;&#x3D; &quot;software&quot; ? restAPIConnector.getAllSoftware() :
+                        this.attackType &#x3D;&#x3D; &quot;tactic&quot; ? restAPIConnector.getAllTactics() :
+                        this.attackType &#x3D;&#x3D; &quot;technique&quot; ? restAPIConnector.getAllTechniques() :
+                        this.attackType &#x3D;&#x3D; &quot;data-source&quot; ? restAPIConnector.getAllDataSources() :
+                        this.attackType &#x3D;&#x3D; &quot;matrix&quot; ? restAPIConnector.getAllMatrices() : null;
+
+        // Find all other objects that have this prefix and range, and set ID to the most recent &amp; unique ID available
+        if (accessor) {
+            // Get object identifier, i.e. &#x27;TA&#x27; for Tactic
+            prefix +&#x3D; this.attackIDValidator.format.includes(&#x27;#&#x27;) ? this.attackIDValidator.format.split(&#x27;#&#x27;)[0] : &#x27;&#x27;;
+            let familyPrefix &#x3D; orgNamespace.prefix ? orgNamespace.prefix + prefix : prefix;
+
+            return accessor.pipe(
+                map(stixObjects &#x3D;&gt; stixObjects),
+                switchMap(objects &#x3D;&gt; {
+                    if (this.hasOwnProperty(&#x27;is_subtechnique&#x27;) &amp;&amp; this[&#x27;is_subtechnique&#x27;]) {
+                        if (this.hasOwnProperty(&#x27;parentTechnique&#x27;) &amp;&amp; this[&#x27;parentTechnique&#x27;]) {
+                            const found &#x3D; this[&#x27;parentTechnique&#x27;].attackID.match(/[0-9]{4}/g); // Get 4-digit ID of parent technique
+                            if (found &amp;&amp; found.length &gt; 0) {
+                                familyPrefix +&#x3D; found[0];
+                                count &#x3D; 1;
+                                return restAPIConnector.getTechnique(this[&#x27;parentTechnique&#x27;].stixID, null, &quot;latest&quot;, true).pipe(map(
+                                    technique &#x3D;&gt; {
+                                        if (technique[0] &amp;&amp; technique[0].subTechniques) {
+                                            let children &#x3D; technique[0].subTechniques;
+                                            if (children.length &gt; 0) {
+                                                const childIds &#x3D; children.reduce((ids, obj) &#x3D;&gt; {
+                                                    if (obj.attackID.startsWith(familyPrefix)) {
+                                                        const match &#x3D; obj.attackID.match(/[^.]([0-9]*)$/g);
+                                                        if (match &amp;&amp; match.length &gt; 0) {
+                                                            ids.push(match[0]);
+                                                        }
+                                                    }
+                                                    return ids;
+                                                }, []);
+                                                count &#x3D; childIds?.length &gt; 0 ? Number(childIds.sort().pop()) + 1 : 1;
+                                            }
+                                        }
+                                        return (prefix + found[0] + &#x27;.&#x27; + count.toString().padStart(3, &#x27;0&#x27;));
+                                    }
+                                ))
+                            }
+                        } else {
+                            return of(&#x27;(parent technique missing)&#x27;);
+                        }
+                    }
+                    else return of(objects)
+                }),
+                switchMap(objects &#x3D;&gt; {
+                    if (!this.hasOwnProperty(&#x27;is_subtechnique&#x27;) || !this[&#x27;is_subtechnique&#x27;]) {
+                        // Get ids of existing objects that have the same prefix
+                        const relatedIDs &#x3D; objects[&#x27;data&#x27;].reduce((ids, obj) &#x3D;&gt; {
+                            if (obj.attackID.startsWith(familyPrefix)) {
+                                // Remove non-digits and decimals
+                                ids.push(obj.attackID.replace(familyPrefix, &quot;&quot;).replace(/[.](\d{3})/, &quot;&quot;));
+                            }
+                            return ids;
+                        }, []);
+                        if (this.firstInitialized) { // If creating a new object
+                            if (!orgNamespace.range_start) {
+                                count &#x3D; relatedIDs.length &gt; 0 ? Number(relatedIDs.sort().pop()) + 1 : 1;
+                            } else {
+                              const range &#x3D; Number(orgNamespace.range_start);
+                              const latest &#x3D; relatedIDs.length &gt; 0 ? Number(relatedIDs.sort().pop()) + 1 : 1;
+                                count &#x3D; range &gt; latest ? range : latest;
+                            }
+                        } else { // If editing an existing object
+                            count &#x3D; relatedIDs.length &gt; 0 ? Number(relatedIDs.sort().pop()) + 1 : 1;
+                        }
+                        return of((prefix + (count.toString().padStart(4, &#x27;0&#x27;))));
+                    }
+                    return of(objects);
+                })
+            )
+        }
+
+    }
+}
+
+/**
+ * The results of parsing LinkByIds in a single field
+ */
+export class LinkByIdParseResult {
+    public missingLinks: Set&lt;string&gt; &#x3D; new Set(); // LinkByIds that could not be found
+    public brokenLinks: Set&lt;string&gt; &#x3D; new Set();  // list of broken LinkByIds detected in the field
+
+    constructor(initData?: { missingLinks?: Set&lt;string&gt;, brokenLinks: Set&lt;string&gt; }) {
+        if (initData &amp;&amp; initData.missingLinks) this.missingLinks &#x3D; initData.missingLinks;
+        if (initData &amp;&amp; initData.brokenLinks) this.brokenLinks &#x3D; initData.brokenLinks;
+    }
+
+    /**
+     * Merge results from another LinkByIdParseResult into this object
+     * @param {LinkByIdParseResult} that results from other object
+     */
+    public merge(that: LinkByIdParseResult) {
+        this.missingLinks &#x3D; new Set([...this.missingLinks, ...that.missingLinks]);
+        this.brokenLinks &#x3D; new Set([...this.brokenLinks, ...that.brokenLinks]);
+    }
+}
+</code></pre>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+                   </div><div class="search-results">
+    <div class="has-results">
+        <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+        <ul class="search-results-list"></ul>
+    </div>
+    <div class="no-results">
+        <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+    </div>
+</div>
+</div>
+               <!-- END CONTENT -->
+           </div>
+       </div>
+
+          <label class="dark-mode-switch">
+               <input type="checkbox">
+               <span class="slider">
+                    <svg class="slider-icon" viewBox="0 0 24 24" fill="none" height="20" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" width="20" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+                    </svg>
+               </span>
+          </label>
+
+       <script>
+            var COMPODOC_CURRENT_PAGE_DEPTH = 1;
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'class';
+            var COMPODOC_CURRENT_PAGE_URL = 'LinkByIdParseResult.html';
+            var MAX_SEARCH_RESULTS = 15;
+       </script>
+
+       <script src="../js/libs/custom-elements.min.js"></script>
+       <script src="../js/libs/lit-html.js"></script>
+
+       <script src="../js/menu-wc.js" defer></script>
+       <script nomodule src="../js/menu-wc_es5.js" defer></script>
+
+       <script src="../js/libs/bootstrap-native.js"></script>
+
+       <script src="../js/libs/es6-shim.min.js"></script>
+       <script src="../js/libs/EventDispatcher.js"></script>
+       <script src="../js/libs/promise.min.js"></script>
+       <script src="../js/libs/zepto.min.js"></script>
+
+       <script src="../js/compodoc.js"></script>
+
+       <script src="../js/tabs.js"></script>
+       <script src="../js/menu.js"></script>
+       <script src="../js/libs/clipboard.min.js"></script>
+       <script src="../js/libs/prism.js"></script>
+       <script src="../js/sourceCode.js"></script>
+          <script src="../js/search/search.js"></script>
+          <script src="../js/search/lunr.min.js"></script>
+          <script src="../js/search/search-lunr.js"></script>
+          <script src="../js/search/search_index.js"></script>
+       <script src="../js/lazy-load-graphs.js"></script>
+
+
+    </body>
+</html>

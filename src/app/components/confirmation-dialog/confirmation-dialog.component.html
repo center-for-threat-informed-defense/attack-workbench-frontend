@@ -1,0 +1,17 @@
+<div class="confirmation-dialog">
+  <markdown [data]="config.message"></markdown>
+  <div class="buttons">
+    <button mat-button [mat-dialog-close]="false" class="text-label">
+      <span>no</span
+      ><span *ngIf="config.no_suffix">, {{ config.no_suffix }}</span>
+    </button>
+    <button
+      mat-stroked-button
+      color="warn"
+      [mat-dialog-close]="true"
+      class="text-label">
+      <span>Yes</span
+      ><span *ngIf="config.yes_suffix">, {{ config.yes_suffix }}</span>
+    </button>
+  </div>
+</div>

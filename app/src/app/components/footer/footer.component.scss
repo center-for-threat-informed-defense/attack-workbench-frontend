@@ -1,8 +1,0 @@
-@import "../../../style/globals";
-.footer {
-    height: 48px;
-    .version-info {
-        @extend .text-label;
-        opacity: 0.6;
-    }
-}

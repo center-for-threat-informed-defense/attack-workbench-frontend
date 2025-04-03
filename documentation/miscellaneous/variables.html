@@ -1,0 +1,841 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>attack-workbench-frontend documentation</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+	   <link rel="stylesheet" href="../styles/style.css">
+        <link rel="stylesheet" href="../styles/dark.css">
+    </head>
+    <body>
+
+        <div class="navbar navbar-default navbar-fixed-top visible-xs">
+            <a href="../" class="navbar-brand">attack-workbench-frontend documentation</a>
+            <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+        </div>
+
+        <div class="xs-menu menu" id="mobile-menu">
+                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+        </div>
+
+        <div class="container-fluid main">
+           <div class="row main">
+               <div class="hidden-xs menu">
+                   <compodoc-menu mode="normal"></compodoc-menu>
+               </div>
+               <!-- START CONTENT -->
+               <div class="content miscellaneous-variables">
+                   <div class="content-data">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<ol class="breadcrumb">
+  <li>Miscellaneous</li>
+  <li>Variables</li>
+</ol>
+
+<section>
+    <h3 id="index">Index</h3>
+    <table class="table table-sm table-bordered index-table">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <ul class="index-list">
+                        <li>
+                            <a href="#attackTypeToClass" title="src/app/services/connectors/rest-api/rest-api-connector.service.ts" ><b>attackTypeToClass</b>&nbsp;&nbsp;&nbsp;(src/.../rest-api-connector.service.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#attackTypeToPlural" title="src/app/services/connectors/rest-api/rest-api-connector.service.ts" ><b>attackTypeToPlural</b>&nbsp;&nbsp;&nbsp;(src/.../rest-api-connector.service.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#context" title="src/test.ts" ><b>context</b>&nbsp;&nbsp;&nbsp;(src/.../test.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#DATE_FORMATS" title="src/app/components/stix/datepicker-property/datepicker-property.component.ts" ><b>DATE_FORMATS</b>&nbsp;&nbsp;&nbsp;(src/.../datepicker-property.component.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#deleteCookie" title="src/app/util/cookies.ts" ><b>deleteCookie</b>&nbsp;&nbsp;&nbsp;(src/.../cookies.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#editRoles" title="src/app/app-routing-stix.module.ts" ><b>editRoles</b>&nbsp;&nbsp;&nbsp;(src/.../app-routing-stix.module.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#environment" title="src/environments/environment.prod.ts" ><b>environment</b>&nbsp;&nbsp;&nbsp;(src/.../environment.prod.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#environment" title="src/environments/environment.ts" ><b>environment</b>&nbsp;&nbsp;&nbsp;(src/.../environment.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#getCookie" title="src/app/util/cookies.ts" ><b>getCookie</b>&nbsp;&nbsp;&nbsp;(src/.../cookies.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#hasCookie" title="src/app/util/cookies.ts" ><b>hasCookie</b>&nbsp;&nbsp;&nbsp;(src/.../cookies.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#initLogger" title="src/app/util/logger.ts" ><b>initLogger</b>&nbsp;&nbsp;&nbsp;(src/.../logger.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#isAbsolute" title="src/app/views/help-page/help-page.component.ts" ><b>isAbsolute</b>&nbsp;&nbsp;&nbsp;(src/.../help-page.component.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#logger" title="src/app/util/logger.ts" ><b>logger</b>&nbsp;&nbsp;&nbsp;(src/.../logger.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#require" title="src/test.ts" ><b>require</b>&nbsp;&nbsp;&nbsp;(src/.../test.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#setCookie" title="src/app/util/cookies.ts" ><b>setCookie</b>&nbsp;&nbsp;&nbsp;(src/.../cookies.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#stixTypeToAttackType" title="src/app/classes/stix/stix-object.ts" ><b>stixTypeToAttackType</b>&nbsp;&nbsp;&nbsp;(src/.../stix-object.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#stixTypeToClass" title="src/app/services/connectors/rest-api/rest-api-connector.service.ts" ><b>stixTypeToClass</b>&nbsp;&nbsp;&nbsp;(src/.../rest-api-connector.service.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#stixTypeToClass" title="src/app/views/stix/stix-dialog/stix-dialog.component.ts" ><b>stixTypeToClass</b>&nbsp;&nbsp;&nbsp;(src/.../stix-dialog.component.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#viewRoles" title="src/app/app-routing-stix.module.ts" ><b>viewRoles</b>&nbsp;&nbsp;&nbsp;(src/.../app-routing-stix.module.ts)</a>
+                        </li>
+                    </ul>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>
+
+    <h3>src/app/services/connectors/rest-api/rest-api-connector.service.ts</h3>
+    <section>
+    <h3></h3>    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="attackTypeToClass"></a>
+                    <span class="name">
+                        <span ><b>attackTypeToClass</b></span>
+                        <a href="#attackTypeToClass"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/object" target="_blank" >object</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>{
+    &quot;technique&quot;: Technique,
+    &quot;tactic&quot;: Tactic,
+    &quot;group&quot;: Group,
+    &quot;campaign&quot;: Campaign,
+    &quot;software&quot;: Software,
+    &quot;mitigation&quot;: Mitigation,
+    &quot;matrix&quot;: Matrix,
+    &quot;collection&quot;: Collection,
+    &quot;relationship&quot;: Relationship,
+    &quot;note&quot;: Note,
+    &quot;identity&quot;: Identity,
+    &quot;marking-definition&quot;: MarkingDefinition,
+    &quot;data-source&quot;: DataSource,
+    &quot;data-component&quot;: DataComponent
+}</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="attackTypeToPlural"></a>
+                    <span class="name">
+                        <span ><b>attackTypeToPlural</b></span>
+                        <a href="#attackTypeToPlural"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/object" target="_blank" >object</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>{
+    &quot;technique&quot;: &quot;techniques&quot;,
+    &quot;tactic&quot;: &quot;tactics&quot;,
+    &quot;group&quot;: &quot;groups&quot;,
+    &quot;campaign&quot;: &quot;campaigns&quot;,
+    &quot;software&quot;: &quot;software&quot;,
+    &quot;mitigation&quot;: &quot;mitigations&quot;,
+    &quot;matrix&quot;: &quot;matrices&quot;,
+    &quot;collection&quot;: &quot;collections&quot;,
+    &quot;relationship&quot;: &quot;relationships&quot;,
+    &quot;note&quot;: &quot;notes&quot;,
+    &quot;identity&quot;: &quot;identities&quot;,
+    &quot;marking-definition&quot;: &quot;marking-definitions&quot;,
+    &quot;data-source&quot;: &quot;data-sources&quot;,
+    &quot;data-component&quot;: &quot;data-components&quot;
+}</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="stixTypeToClass"></a>
+                    <span class="name">
+                        <span ><b>stixTypeToClass</b></span>
+                        <a href="#stixTypeToClass"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/object" target="_blank" >object</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>{
+    &quot;attack-pattern&quot;: Technique,
+    &quot;x-mitre-tactic&quot;: Tactic,
+    &quot;intrusion-set&quot;: Group,
+    &quot;campaign&quot;: Campaign,
+    &quot;tool&quot;: Software,
+    &quot;malware&quot;: Software,
+    &quot;course-of-action&quot;: Mitigation,
+    &quot;x-mitre-matrix&quot;: Matrix,
+    &quot;x-mitre-collection&quot;: Collection,
+    &quot;relationship&quot;: Relationship,
+    &quot;identity&quot;: Identity,
+    &quot;marking-definition&quot;: MarkingDefinition,
+    &quot;x-mitre-data-source&quot;: DataSource,
+    &quot;x-mitre-data-component&quot;: DataComponent,
+    &quot;note&quot;: Note
+}</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+</section>
+    <h3>src/test.ts</h3>
+    <section>
+    <h3></h3>    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="context"></a>
+                    <span class="name">
+                        <span ><b>context</b></span>
+                        <a href="#context"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>require.context(&#x27;./&#x27;, true, /\.spec\.ts$/)</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="require"></a>
+                    <span class="name">
+                        <span ><b>require</b></span>
+                        <a href="#require"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>literal type</code>
+
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+</section>
+    <h3>src/app/components/stix/datepicker-property/datepicker-property.component.ts</h3>
+    <section>
+    <h3></h3>    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="DATE_FORMATS"></a>
+                    <span class="name">
+                        <span ><b>DATE_FORMATS</b></span>
+                        <a href="#DATE_FORMATS"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/object" target="_blank" >object</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>{
+  parse: {
+    dateInput: &#x27;MM/YYYY&#x27;, // date input format
+  },
+  display: {
+    dateInput: &#x27;MM/YYYY&#x27;, // format for displaying selected date
+    monthYearLabel: &#x27;MMM YYYY&#x27;, // datepicker display format
+    dateA11yLabel: &#x27;LL&#x27;, // format read by screen readers during day selection
+    monthYearA11yLabel: &#x27;MMMM YYYY&#x27;, // format read by screen readers during month selection
+  },
+}</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+</section>
+    <h3>src/app/util/cookies.ts</h3>
+    <section>
+    <h3></h3>    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="deleteCookie"></a>
+                    <span class="name">
+                        <span ><b>deleteCookie</b></span>
+                        <a href="#deleteCookie"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>function(key: string) {
+    document.cookie &#x3D; key + &#x27;&#x3D;; expires&#x3D;Thu, 01 Jan 1970 00:00:01 GMT;path&#x3D;/;SameSite&#x3D;Strict&#x27;;
+}</code>
+                    </td>
+                </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Delete the given cookie</p>
+</div>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="getCookie"></a>
+                    <span class="name">
+                        <span ><b>getCookie</b></span>
+                        <a href="#getCookie"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>function(key: string): string {
+    let name &#x3D; key + &quot;&#x3D;&quot;;
+    let decodedCookie &#x3D; decodeURIComponent(document.cookie);
+    let ca &#x3D; decodedCookie.split(&#x27;;&#x27;);
+    for(let i &#x3D; 0; i &lt;ca.length; i++) {
+        let c &#x3D; ca[i];
+        while (c.charAt(0) &#x3D;&#x3D; &#x27; &#x27;) {
+            c &#x3D; c.substring(1);
+        }
+        if (c.indexOf(name) &#x3D;&#x3D; 0) {
+            return c.substring(name.length, c.length);
+        }
+    }
+    return &quot;&quot;;
+}</code>
+                    </td>
+                </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Get the value of the cookie under the given key</p>
+</div>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="hasCookie"></a>
+                    <span class="name">
+                        <span ><b>hasCookie</b></span>
+                        <a href="#hasCookie"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>function(key: string): boolean {
+    return getCookie(key) !&#x3D;&#x3D; &quot;&quot;;
+}</code>
+                    </td>
+                </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Does a cookie exist under the given key?</p>
+</div>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="setCookie"></a>
+                    <span class="name">
+                        <span ><b>setCookie</b></span>
+                        <a href="#setCookie"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>function(key: string, value: string, expirationDays: number) {
+    let d &#x3D; new Date();
+    d.setTime(d.getTime() + (expirationDays*24*60*60*1000));
+    let expires &#x3D; &quot;expires&#x3D;&quot;+ d.toUTCString();
+    document.cookie &#x3D; key + &quot;&#x3D;&quot; + value + &quot;;&quot; + expires + &quot;;path&#x3D;/;SameSite&#x3D;Strict&quot;;
+}</code>
+                    </td>
+                </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Set a cookie</p>
+</div>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+</section>
+    <h3>src/app/app-routing-stix.module.ts</h3>
+    <section>
+    <h3></h3>    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="editRoles"></a>
+                    <span class="name">
+                        <span ><b>editRoles</b></span>
+                        <a href="#editRoles"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>[]</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>[Role.EDITOR, Role.ADMIN]</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="viewRoles"></a>
+                    <span class="name">
+                        <span ><b>viewRoles</b></span>
+                        <a href="#viewRoles"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>[]</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>[Role.VISITOR, Role.EDITOR, Role.ADMIN]</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+</section>
+    <h3>src/environments/environment.prod.ts</h3>
+    <section>
+    <h3></h3>    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="environment"></a>
+                    <span class="name">
+                        <span ><b>environment</b></span>
+                        <a href="#environment"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/object" target="_blank" >object</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>{
+    production: true,
+    log_level: NgxLoggerLevel.ERROR,
+    recommended_indexes: [ //recommended collection indexes shown to user if they have no indexes loaded
+        {
+            &quot;name&quot;: &quot;MITRE ATT&amp;CK&quot;, //index name
+            &quot;url&quot;: &quot;https://raw.githubusercontent.com/mitre-attack/attack-stix-data/master/index.json&quot; //index url
+        }
+    ],
+    integrations: {
+        rest_api: {
+            // configuration for the ATT&amp;CK Workbench REST API
+            // https://github.com/center-for-threat-informed-defense/attack-workbench-rest-api
+            enabled: true, // MUST be true for application operation
+            url: &quot;api&quot;
+        },
+        collection_manager: {
+            // configuration for the ATT&amp;CK Workbench Collection Manager
+            // https://github.com/center-for-threat-informed-defense/attack-workbench-collection-manager
+            enabled: true, //if false, all systems for collection management will be disabled
+            url: &quot;cm-api&quot;
+        }
+    }
+}</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+</section>
+    <h3>src/environments/environment.ts</h3>
+    <section>
+    <h3></h3>    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="environment"></a>
+                    <span class="name">
+                        <span ><b>environment</b></span>
+                        <a href="#environment"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/object" target="_blank" >object</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>{
+    production: false,
+    log_level: NgxLoggerLevel.INFO,
+    recommended_indexes: [ //recommended collection indexes shown to user if they have no indexes loaded
+        {
+            &quot;name&quot;: &quot;MITRE ATT&amp;CK&quot;, //index name
+            &quot;url&quot;: &quot;https://raw.githubusercontent.com/mitre-attack/attack-stix-data/master/index.json&quot; //index url
+        }
+    ],
+    integrations: {
+        rest_api: {
+            // configuration for the ATT&amp;CK Workbench REST API
+            // https://github.com/center-for-threat-informed-defense/attack-workbench-rest-api
+            enabled: true, // MUST be true for application operation
+            url: &quot;http://localhost:3000/api&quot;
+        },
+        collection_manager: {
+            // configuration for the ATT&amp;CK Workbench Collection Manager
+            // https://github.com/center-for-threat-informed-defense/attack-workbench-collection-manager
+            enabled: true, //if false, all systems for collection management will be disabled
+            url: &quot;http://localhost:3001/cm-api&quot;
+        }
+    }
+}</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+</section>
+    <h3>src/app/util/logger.ts</h3>
+    <section>
+    <h3></h3>    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="initLogger"></a>
+                    <span class="name">
+                        <span ><b>initLogger</b></span>
+                        <a href="#initLogger"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>(newLogger: NGXLogger) &#x3D;&gt; logger &#x3D; newLogger</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="logger"></a>
+                    <span class="name">
+                        <span ><b>logger</b></span>
+                        <a href="#logger"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>NGXLogger</code>
+
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+</section>
+    <h3>src/app/views/help-page/help-page.component.ts</h3>
+    <section>
+    <h3></h3>    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="isAbsolute"></a>
+                    <span class="name">
+                        <span ><b>isAbsolute</b></span>
+                        <a href="#isAbsolute"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>new RegExp(&#x27;(?:^[a-z][a-z0-9+.-]*:|\/\/)&#x27;, &#x27;i&#x27;)</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+</section>
+    <h3>src/app/classes/stix/stix-object.ts</h3>
+    <section>
+    <h3></h3>    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="stixTypeToAttackType"></a>
+                    <span class="name">
+                        <span ><b>stixTypeToAttackType</b></span>
+                        <a href="#stixTypeToAttackType"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/object" target="_blank" >object</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>{
+    &quot;x-mitre-collection&quot;: &quot;collection&quot;,
+    &quot;attack-pattern&quot;: &quot;technique&quot;,
+    &quot;malware&quot;: &quot;software&quot;,
+    &quot;tool&quot;: &quot;software&quot;,
+    &quot;intrusion-set&quot;: &quot;group&quot;,
+    &quot;campaign&quot;: &quot;campaign&quot;,
+    &quot;course-of-action&quot;: &quot;mitigation&quot;,
+    &quot;x-mitre-matrix&quot;: &quot;matrix&quot;,
+    &quot;x-mitre-tactic&quot;: &quot;tactic&quot;,
+    &quot;relationship&quot;: &quot;relationship&quot;,
+    &quot;marking-definition&quot;: &quot;marking-definition&quot;,
+    &quot;x-mitre-data-source&quot;: &quot;data-source&quot;,
+    &quot;x-mitre-data-component&quot;: &quot;data-component&quot;
+}</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+</section>
+    <h3>src/app/views/stix/stix-dialog/stix-dialog.component.ts</h3>
+    <section>
+    <h3></h3>    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="stixTypeToClass"></a>
+                    <span class="name">
+                        <span ><b>stixTypeToClass</b></span>
+                        <a href="#stixTypeToClass"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/object" target="_blank" >object</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>{
+    &quot;attack-pattern&quot;: Technique,
+    &quot;x-mitre-tactic&quot;: Tactic,
+    &quot;campaign&quot;: Campaign,
+    &quot;intrusion-set&quot;: Group,
+    &quot;tool&quot;: Software,
+    &quot;malware&quot;: Software,
+    &quot;course-of-action&quot;: Mitigation,
+    &quot;x-mitre-matrix&quot;: Matrix,
+    &quot;x-mitre-collection&quot;: Collection,
+    &quot;relationship&quot;: Relationship,
+    &quot;identity&quot;: Identity,
+    &quot;marking-definition&quot;: MarkingDefinition,
+    &quot;x-mitre-data-source&quot;: DataSource,
+    &quot;x-mitre-data-component&quot;: DataComponent
+}</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+</section>
+
+
+
+                   </div><div class="search-results">
+    <div class="has-results">
+        <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+        <ul class="search-results-list"></ul>
+    </div>
+    <div class="no-results">
+        <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+    </div>
+</div>
+</div>
+               <!-- END CONTENT -->
+           </div>
+       </div>
+
+          <label class="dark-mode-switch">
+               <input type="checkbox">
+               <span class="slider">
+                    <svg class="slider-icon" viewBox="0 0 24 24" fill="none" height="20" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" width="20" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+                    </svg>
+               </span>
+          </label>
+
+       <script>
+            var COMPODOC_CURRENT_PAGE_DEPTH = 1;
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'miscellaneous-variables';
+            var COMPODOC_CURRENT_PAGE_URL = 'variables.html';
+            var MAX_SEARCH_RESULTS = 15;
+       </script>
+
+       <script src="../js/libs/custom-elements.min.js"></script>
+       <script src="../js/libs/lit-html.js"></script>
+
+       <script src="../js/menu-wc.js" defer></script>
+       <script nomodule src="../js/menu-wc_es5.js" defer></script>
+
+       <script src="../js/libs/bootstrap-native.js"></script>
+
+       <script src="../js/libs/es6-shim.min.js"></script>
+       <script src="../js/libs/EventDispatcher.js"></script>
+       <script src="../js/libs/promise.min.js"></script>
+       <script src="../js/libs/zepto.min.js"></script>
+
+       <script src="../js/compodoc.js"></script>
+
+       <script src="../js/tabs.js"></script>
+       <script src="../js/menu.js"></script>
+       <script src="../js/libs/clipboard.min.js"></script>
+       <script src="../js/libs/prism.js"></script>
+       <script src="../js/sourceCode.js"></script>
+          <script src="../js/search/search.js"></script>
+          <script src="../js/search/lunr.min.js"></script>
+          <script src="../js/search/search-lunr.js"></script>
+          <script src="../js/search/search_index.js"></script>
+       <script src="../js/lazy-load-graphs.js"></script>
+
+
+    </body>
+</html>

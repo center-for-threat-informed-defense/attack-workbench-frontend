@@ -1,0 +1,69 @@
+<div class="view-page grid spacing-20">
+  <div class="row">
+    <div class="col">
+      <h1>Default Marking Definition Statements</h1>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col">
+      <p>
+        Default Marking Definition Statements are statements that will be
+        applied by default to newly created objects. The default marking
+        definition statements will also be applied to objected that were saved
+        and did not have the default statements.
+      </p>
+    </div>
+  </div>
+  <div class="grid">
+    <hr />
+    <div class="row">
+      <div class="col center">
+        <div>
+          <button
+            mat-raised-button
+            class="extended-button"
+            color="primary"
+            (click)="updateDefaultMarkingDefs()"
+            cdkDrag
+            #popoverTrigger2="mtxPopoverTrigger"
+            [mtxPopoverTriggerFor]="popover"
+            mtxPopoverTriggerOn="hover">
+            <mat-icon>settings</mat-icon>
+            <span class="text-label">update default marking definitions</span>
+          </button>
+          <mtx-popover
+            #popover="mtxPopover"
+            enterDelay="25"
+            leaveDelay="25"
+            [position]="['below', 'center']"
+            [closeOnPanelClick]="true"
+            [closeOnBackdropClick]="true">
+            <div style="max-width: 30em" class="grid spacing-20">
+              <div class="row labelled-box suffixed">
+                <div
+                  *ngIf="
+                    defaultMarkingDefinitions &&
+                      defaultMarkingDefinitions.length;
+                    else noMarkingDefinitions
+                  "
+                  class="content">
+                  <ul>
+                    <li *ngFor="let object of defaultMarkingDefinitions">
+                      {{ object.stix.definition.statement }}
+                    </li>
+                  </ul>
+                </div>
+                <ng-template #noMarkingDefinitions>
+                  <div class="content">
+                    No default marking definitions have been set
+                  </div>
+                </ng-template>
+                <span class="labelled-box-label">Statements</span>
+              </div>
+            </div>
+          </mtx-popover>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

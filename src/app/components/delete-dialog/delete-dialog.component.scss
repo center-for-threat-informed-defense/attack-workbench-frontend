@@ -1,0 +1,18 @@
+@import '../../../style/colors.scss';
+.delete-dialog {
+  margin: 0 24px;
+  .confirm-form {
+    .mat-mdc-form-field {
+      display: block;
+    }
+  }
+  .buttons {
+    margin: 18px 0;
+    button + button {
+      margin-left: 10px;
+    }
+    .warn {
+      color: color(error);
+    }
+  }
+}

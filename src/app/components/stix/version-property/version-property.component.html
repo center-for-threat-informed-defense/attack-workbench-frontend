@@ -1,0 +1,24 @@
+<div class="version-property grow-to-row">
+  <div
+    class="labelled-box grow-to-row"
+    *ngIf="!config.mode || config.mode === 'view'">
+    <div class="content">
+      <app-version-view [config]="config"></app-version-view>
+      <span class="text-deemphasis" *ngIf="object.attackType === 'collection'"
+        >&nbsp;({{ object.release ? 'released' : 'unreleased' }})</span
+      >
+    </div>
+    <span class="labelled-box-label"
+      >{{ config.field ? config.field : 'version' }}
+      <app-version-popover [config]="{ object: object }"></app-version-popover>
+    </span>
+  </div>
+  <app-version-edit
+    class="grow-to-row"
+    *ngIf="config.mode === 'edit'"
+    [config]="config"></app-version-edit>
+  <app-version-diff
+    class="grow-to-row"
+    *ngIf="config.mode === 'diff'"
+    [config]="config"></app-version-diff>
+</div>

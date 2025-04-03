@@ -1,0 +1,90 @@
+<!-- view stix id -->
+<app-stixid-property
+  class="stixid-property grow-to-row"
+  [class.editing]="editing"
+  *ngIf="object['stixID']"
+  [config]="{
+    object: config.object,
+  }"></app-stixid-property>
+
+<div class="section-header">
+  <div class="app-subheading">
+    <div class="section-header-section">
+      <!-- modified date -->
+      <button
+        mat-stroked-button
+        *ngIf="object.hasOwnProperty('modified')"
+        style="border-radius: 16px"
+        [disabled]="config.sidebarControl === 'disable'"
+        (click)="openHistory()"
+        cdkDrag
+        #popoverTrigger2="mtxPopoverTrigger"
+        [mtxPopoverTriggerFor]="historyPopover"
+        mtxPopoverTriggerOn="hover">
+        Modified
+        <app-timestamp-view
+          [config]="{
+            mode: 'view',
+            object: object,
+            field: 'modified',
+            humanize: config.mode === 'diff' ? false : true,
+          }"></app-timestamp-view>
+      </button>
+      <!-- history peek popover / created/modified dates and user attribution -->
+      <mtx-popover
+        #historyPopover="mtxPopover"
+        enterDelay="25"
+        leaveDelay="25"
+        [position]="['below', 'center']"
+        [closeOnPanelClick]="true"
+        [closeOnBackdropClick]="true">
+        <div style="max-width: 30em" class="history-peek">
+          <app-timestamp-property
+            [config]="{
+              mode: 'view',
+              object: object,
+              field: 'modified',
+              attribution: 'modified_by',
+              displayName: 'true',
+            }"></app-timestamp-property>
+          <app-timestamp-property
+            [config]="{
+              mode: 'view',
+              object: object,
+              field: 'created',
+              attribution: 'created_by',
+              displayName: 'true',
+            }"></app-timestamp-property>
+        </div>
+      </mtx-popover>
+    </div>
+    <!-- tlp property -->
+    <div class="section-header-section">
+      <app-tlp-property
+        [config]="{
+          mode: config.mode,
+          object: config.object,
+        }"></app-tlp-property>
+    </div>
+    <!-- marking definitions popover -->
+    <div class="section-header-section">
+      <app-statement-property
+        [config]="{
+          mode: config.mode,
+          object: config.object,
+        }"></app-statement-property>
+    </div>
+    <!-- organization attribution - 'view' mode only -->
+    <div
+      *ngIf="object.hasOwnProperty('created')"
+      class="section-header-section source">
+      <app-identity-property
+        [config]="{
+          mode: 'view',
+          object: object,
+          field: 'created_by',
+          displayName: true,
+        }"></app-identity-property>
+    </div>
+  </div>
+</div>

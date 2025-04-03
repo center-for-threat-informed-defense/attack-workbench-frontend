@@ -1,0 +1,38 @@
+@import '../../../style/globals';
+.mat-mdc-list.validation-results {
+  .validation-item.success {
+    .mat-mdc-list-item-icon,
+    .mat-mdc-list-item-line {
+      color: color(success);
+    }
+  }
+  .validation-item.warning {
+    .mat-mdc-list-item-icon,
+    .mat-mdc-list-item-line {
+      color: color(warn);
+    }
+  }
+  .validation-item.error {
+    .mat-mdc-list-item-icon,
+    .mat-mdc-list-item-line {
+      color: color(error);
+    }
+  }
+  .validation-item.info {
+    .mat-mdc-list-item-icon,
+    .mat-mdc-list-item-line {
+      color: color(info);
+    }
+  }
+  .validation-item .mat-mdc-list-item-line {
+    //overwrite material's text overflow settings for mat-lines
+    white-space: normal;
+    overflow: auto;
+    text-overflow: unset;
+    display: flex;
+  }
+  .validation-item .mat-icon {
+    margin: 0 !important;
+    padding: 4px !important;
+  }
+}
