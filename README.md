@@ -64,15 +64,14 @@ Please refer to our [Docker install instructions](docs/docker-compose.md) for in
 #### Installing dependencies
 This step is necessary for cases where the app is deployed locally through `ng serve` or `ng build`. It can be skipped for installs using docker (above).
 
-1. Navigate to `app`
-2. Run `npm install` to install required packages
+1. Run `npm install` to install required packages
 
 #### Serve on local machine
-1. Run `ng serve` within the `app` directory
+1. Run `ng serve`
 2. Navigate to `localhost:4200` in your browser
 
 #### Compile for use elsewhere
-1. Run `ng build` within the `app` directory
+1. Run `ng build`
 2. Copy files from the `app/dist` directory
 
 If you're building the app for production, use `ng build --prod` which will use the production environment instead of the development environment. See [modifying the environment](#modifying-the-environment) for more information.

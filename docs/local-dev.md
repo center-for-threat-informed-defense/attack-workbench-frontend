@@ -64,7 +64,7 @@ node ./bin/www &
 
 #### 1. Install dependencies
 
-Navigate to the `attack-workbench-frontend/app` directory and run
+Navigate to the project's root directory and run
 
 ```
 npm install
@@ -113,7 +113,7 @@ Example VS Code Workspace configuration:
                     {
                         "name": "rest-api",
                         "commands": [
-                            "cd ../attack-workbench-rest-api/",
+                            "cd ../../attack-workbench-rest-api/",
                             "git checkout develop",
                             "git pull",
                             "npm ci",
@@ -128,7 +128,7 @@ Example VS Code Workspace configuration:
                     {
                         "name": "frontend",
                         "commands": [
-                            "cd ../attack-workbench-frontend/app/",
+                            "cd ../attack-workbench-frontend/",
                             "git checkout develop",
                             "git pull",
                             "npm ci",
