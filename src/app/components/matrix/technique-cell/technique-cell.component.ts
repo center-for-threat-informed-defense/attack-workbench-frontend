@@ -5,7 +5,7 @@ import { Technique } from 'src/app/classes/stix/technique';
   selector: 'app-technique-cell',
   templateUrl: './technique-cell.component.html',
   styleUrls: ['./technique-cell.component.scss'],
-  encapsulation: ViewEncapsulation.None
+  encapsulation: ViewEncapsulation.None,
 })
 export class TechniqueCellComponent implements OnInit {
   @Input() technique: Technique;
@@ -21,7 +21,7 @@ export class TechniqueCellComponent implements OnInit {
   }
 
   public onLeftClick() {
-    window.open("technique/"+this.technique.stixID)
+    window.open('technique/' + this.technique.stixID);
     return false;
   }
 }

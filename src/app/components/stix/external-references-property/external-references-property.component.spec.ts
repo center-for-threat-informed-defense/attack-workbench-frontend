@@ -8,9 +8,8 @@ describe('ExternalReferencesPropertyComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ ExternalReferencesPropertyComponent ]
-    })
-    .compileComponents();
+      declarations: [ExternalReferencesPropertyComponent],
+    }).compileComponents();
   });
 
   beforeEach(() => {

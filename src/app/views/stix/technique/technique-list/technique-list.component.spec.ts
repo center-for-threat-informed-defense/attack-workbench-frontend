@@ -8,9 +8,8 @@ describe('TechniqueListComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ TechniqueListComponent ]
-    })
-    .compileComponents();
+      declarations: [TechniqueListComponent],
+    }).compileComponents();
   }));
 
   beforeEach(() => {

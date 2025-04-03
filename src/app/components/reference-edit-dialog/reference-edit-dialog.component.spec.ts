@@ -8,9 +8,8 @@ describe('ReferenceEditDialogComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ ReferenceEditDialogComponent ]
-    })
-    .compileComponents();
+      declarations: [ReferenceEditDialogComponent],
+    }).compileComponents();
   });
 
   beforeEach(() => {

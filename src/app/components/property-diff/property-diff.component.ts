@@ -4,9 +4,9 @@ import { DiffMatchPatch } from 'diff-match-patch-ts';
 
 @Component({
   selector: 'app-property-diff',
-  templateUrl: './property-diff.component.html'
+  templateUrl: './property-diff.component.html',
 })
-export class PropertyDiffComponent implements OnInit  {
+export class PropertyDiffComponent implements OnInit {
   @Input() public before: string;
   @Input() public after: string;
 
@@ -17,7 +17,7 @@ export class PropertyDiffComponent implements OnInit  {
   }
 
   ngOnInit(): void {
-    this.generateDiffHtml(this.before, this.after)
+    this.generateDiffHtml(this.before, this.after);
   }
 
   public generateDiffHtml(oldValue, newValue) {

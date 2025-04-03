@@ -8,9 +8,8 @@ describe('OrderedListViewComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ OrderedListViewComponent ]
-    })
-    .compileComponents();
+      declarations: [OrderedListViewComponent],
+    }).compileComponents();
   });
 
   beforeEach(() => {

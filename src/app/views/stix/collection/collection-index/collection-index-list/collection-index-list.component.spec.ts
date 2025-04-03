@@ -8,9 +8,8 @@ describe('CollectionIndexListComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ CollectionIndexListComponent ]
-    })
-    .compileComponents();
+      declarations: [CollectionIndexListComponent],
+    }).compileComponents();
   });
 
   beforeEach(() => {

@@ -8,9 +8,8 @@ describe('StixListComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ StixListComponent ]
-    })
-    .compileComponents();
+      declarations: [StixListComponent],
+    }).compileComponents();
   }));
 
   beforeEach(() => {

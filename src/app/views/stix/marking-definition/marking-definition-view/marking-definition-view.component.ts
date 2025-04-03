@@ -9,67 +9,78 @@ import { ConfirmationDialogComponent } from 'src/app/components/confirmation-dia
 import { AuthenticationService } from 'src/app/services/connectors/authentication/authentication.service';
 
 @Component({
-    selector: 'app-marking-definition-view',
-    templateUrl: './marking-definition-view.component.html',
-    styleUrls: ['./marking-definition-view.component.scss'],
-    encapsulation: ViewEncapsulation.None
+  selector: 'app-marking-definition-view',
+  templateUrl: './marking-definition-view.component.html',
+  styleUrls: ['./marking-definition-view.component.scss'],
+  encapsulation: ViewEncapsulation.None,
 })
 export class MarkingDefinitionViewComponent extends StixViewPage {
-    public get markingDefinition(): MarkingDefinition { return this.configCurrentObject as MarkingDefinition; }
-    public validating: boolean = false;
-    public validationData: ValidationData = null;
+  public get markingDefinition(): MarkingDefinition {
+    return this.configCurrentObject as MarkingDefinition;
+  }
+  public validating = false;
+  public validationData: ValidationData = null;
 
-    constructor(public dialog: MatDialog, private router: Router, private restApiConnector: RestApiConnectorService, authenticationService: AuthenticationService) {
-        super(authenticationService);
-    }
+  constructor(
+    public dialog: MatDialog,
+    private router: Router,
+    private restApiConnector: RestApiConnectorService,
+    authenticationService: AuthenticationService,
+  ) {
+    super(authenticationService);
+  }
 
-    /**
-     * Enable save only during creation of marking definition
-     */
-    public get saveEnabled() {
-        return this.validationData && this.validationData.errors.length == 0;
-    }
+  /**
+   * Enable save only during creation of marking definition
+   */
+  public get saveEnabled() {
+    return this.validationData && this.validationData.errors.length == 0;
+  }
 
-    /**
-     * Trigger marking definition validation and save behaviors
-     *
-     * @memberof MarkingDefinitionViewComponent
-     */
-    public validate() {
-        this.validating = true;
-        this.validationData = null;
-        let subscription = this.markingDefinition.validate(this.restApiConnector).subscribe({
-            next: (results) => this.validationData = results,
-            complete: () => subscription.unsubscribe()
-        })
-    }
+  /**
+   * Trigger marking definition validation and save behaviors
+   *
+   * @memberof MarkingDefinitionViewComponent
+   */
+  public validate() {
+    this.validating = true;
+    this.validationData = null;
+    const subscription = this.markingDefinition.validate(this.restApiConnector).subscribe({
+      next: (results) => (this.validationData = results),
+      complete: () => subscription.unsubscribe(),
+    });
+  }
 
-    /**
-     * Trigger save of marking definition after validation
-     *
-     */
-    public save() {
-        let prompt = this.dialog.open(ConfirmationDialogComponent, {
-            maxWidth: "35em",
-            data: { 
-                message: 'Are you sure you want to save this statement? You cannot modify it after saving',
+  /**
+   * Trigger save of marking definition after validation
+   *
+   */
+  public save() {
+    const prompt = this.dialog.open(ConfirmationDialogComponent, {
+      maxWidth: '35em',
+      data: {
+        message: 'Are you sure you want to save this statement? You cannot modify it after saving',
+      },
+      autoFocus: false, // prevents auto focus on buttons
+    });
+
+    const subscriptionPrompt = prompt.afterClosed().subscribe({
+      next: (result) => {
+        if (result) {
+          const subscriptionSave = this.markingDefinition.save(this.restApiConnector).subscribe({
+            next: (saveResult) => {
+              this.router.navigate([saveResult.attackType, saveResult.stixID]);
+              this.validating = false;
             },
-			autoFocus: false, // prevents auto focus on buttons
-        });
-  
-        let subscriptionPrompt = prompt.afterClosed().subscribe({
-            next: (result) => {
-                if (result) {
-                    let subscriptionSave = this.markingDefinition.save(this.restApiConnector).subscribe({
-                        next: (saveResult) => {
-                            this.router.navigate([saveResult.attackType, saveResult.stixID]);
-                            this.validating = false;
-                        },
-                        complete: () => { subscriptionSave.unsubscribe(); }
-                    })
-                }
+            complete: () => {
+              subscriptionSave.unsubscribe();
             },
-            complete: () => { subscriptionPrompt.unsubscribe(); } //prevent memory leaks
-        });
-    }
+          });
+        }
+      },
+      complete: () => {
+        subscriptionPrompt.unsubscribe();
+      }, //prevent memory leaks
+    });
+  }
 }

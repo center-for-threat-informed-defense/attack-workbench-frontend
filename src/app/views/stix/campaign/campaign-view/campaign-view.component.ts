@@ -5,23 +5,29 @@ import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/re
 import { StixViewPage } from '../../stix-view-page';
 
 @Component({
-    selector: 'app-campaign-view',
-    templateUrl: './campaign-view.component.html',
-    styleUrls: ['./campaign-view.component.scss']
+  selector: 'app-campaign-view',
+  templateUrl: './campaign-view.component.html',
+  styleUrls: ['./campaign-view.component.scss'],
 })
 export class CampaignViewComponent extends StixViewPage implements OnInit {
-    @Output() public onReload = new EventEmitter();
-    public get campaign(): Campaign { return this.configCurrentObject as Campaign; }
-    public get previous(): Campaign { return this.configPreviousObject as Campaign; }
+  @Output() public onReload = new EventEmitter();
+  public get campaign(): Campaign {
+    return this.configCurrentObject as Campaign;
+  }
+  public get previous(): Campaign {
+    return this.configPreviousObject as Campaign;
+  }
 
-    constructor(authenticationService: AuthenticationService, private restApiConnector: RestApiConnectorService) {
-        super(authenticationService);
+  constructor(
+    authenticationService: AuthenticationService,
+    private restApiConnector: RestApiConnectorService,
+  ) {
+    super(authenticationService);
+  }
+
+  ngOnInit(): void {
+    if (this.campaign.firstInitialized) {
+      this.campaign.initializeWithDefaultMarkingDefinitions(this.restApiConnector);
     }
-
-    ngOnInit(): void {
-        if (this.campaign.firstInitialized ) {
-            this.campaign.initializeWithDefaultMarkingDefinitions(this.restApiConnector);
-        }
-    }
-
+  }
 }

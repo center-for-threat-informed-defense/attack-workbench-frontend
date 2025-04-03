@@ -8,9 +8,8 @@ describe('EmptyListMarkerComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ EmptyListMarkerComponent ]
-    })
-    .compileComponents();
+      declarations: [EmptyListMarkerComponent],
+    }).compileComponents();
   });
 
   beforeEach(() => {

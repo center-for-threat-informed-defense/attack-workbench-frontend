@@ -8,9 +8,8 @@ describe('OrgSettingsPageComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ OrgSettingsPageComponent ]
-    })
-    .compileComponents();
+      declarations: [OrgSettingsPageComponent],
+    }).compileComponents();
   });
 
   beforeEach(() => {

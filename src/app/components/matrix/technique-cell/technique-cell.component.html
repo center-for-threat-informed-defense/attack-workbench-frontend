@@ -1,16 +1,15 @@
 <div class="technique-cell">
-  <div  (click)="onLeftClick()"
-        matTooltip="{{technique.attackID}}"
-        matTooltipPosition="above"
-        matTooltipClass="technique-cell-tooltip">
+  <div
+    (click)="onLeftClick()"
+    matTooltip="{{ technique.attackID }}"
+    matTooltipPosition="above"
+    matTooltipClass="technique-cell-tooltip"
+  >
     <span>
-      {{technique.name}}
+      {{ technique.name }}
     </span>
     <ng-container *ngIf="technique.subTechniques.length > 0">
-      <sub>
-        ({{technique.subTechniques.length}})
-      </sub>
+      <sub> ({{ technique.subTechniques.length }}) </sub>
     </ng-container>
-
   </div>
 </div>

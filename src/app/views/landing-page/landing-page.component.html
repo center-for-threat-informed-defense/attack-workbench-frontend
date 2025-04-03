@@ -1,48 +1,68 @@
 <div class="landing-page grid">
-    <div class="row">
-        <div class="col">
-            <h1 class="superheading">ATT&CK Workbench</h1>
-        </div>
+  <div class="row">
+    <div class="col">
+      <h1 class="superheading">ATT&CK Workbench</h1>
     </div>
-    <div class="row">
-        <div class="col">
-            <!-- About -->
-        </div>
-        <div class="col border-left">
-            <h2 class="explore-label">Explore</h2>
-        </div>
+  </div>
+  <div class="row">
+    <div class="col">
+      <!-- About -->
     </div>
-    <div class="row">
-        <div class="col">
-            <div class="learn-block">
-                <p>
-                    MITRE ATT&CK&reg; is a globally-accessible knowledge base of adversary tactics and techniques based on real-world observations.
-                </p>
-                <p>
-                    ATT&CK Workbench is a tool designed to containerize the ATT&CK knowledge base, making ATT&CK easier to use and extend throughout the community.
-                    This application is your own customized instance of the knowledge base where you can explore, extend, and annotate ATT&CK data.
-                </p>
-                <div class="learnmore">
-                    <button mat-raised-button class="extended-button" color="primary" routerLink="/docs/usage">
-                        <span class="text-label">learn more</span>
-                        <mat-icon aria-label="help">help_outline</mat-icon>
-                    </button>
-                </div>
-            </div>
-        </div>
-        <div class="col border-left">
-            <div class="explore-links grow-to-row">
-                <div class="explore-link grow-to-row" [ngClass]="{'button-slide-left' : isLoggedIn, 'disabled': !isLoggedIn}" *ngFor="let stixRoute of routes" [routerLink]='"/" + stixRoute.path'>
-                    <span class="text-label">{{stixRoute.data.breadcrumb}}</span>
-                </div>
-            </div>
-        </div>
+    <div class="col border-left">
+      <h2 class="explore-label">Explore</h2>
     </div>
-    <div class="row" *ngIf="isAdmin">
-        <div class="col center admin-link">
-            <div class="text-deemphasis text-label">
-                <a class="a" routerLink="/admin" [matBadge]="pendingUsers" matBadgeDescription="pending users" matBadgeOverlap="false">admin</a>
-            </div>
+  </div>
+  <div class="row">
+    <div class="col">
+      <div class="learn-block">
+        <p>
+          MITRE ATT&CK&reg; is a globally-accessible knowledge base of adversary tactics and
+          techniques based on real-world observations.
+        </p>
+        <p>
+          ATT&CK Workbench is a tool designed to containerize the ATT&CK knowledge base, making
+          ATT&CK easier to use and extend throughout the community. This application is your own
+          customized instance of the knowledge base where you can explore, extend, and annotate
+          ATT&CK data.
+        </p>
+        <div class="learnmore">
+          <button
+            mat-raised-button
+            class="extended-button"
+            color="primary"
+            routerLink="/docs/usage"
+          >
+            <span class="text-label">learn more</span>
+            <mat-icon aria-label="help">help_outline</mat-icon>
+          </button>
         </div>
+      </div>
     </div>
+    <div class="col border-left">
+      <div class="explore-links grow-to-row">
+        <div
+          class="explore-link grow-to-row"
+          [ngClass]="{ 'button-slide-left': isLoggedIn, disabled: !isLoggedIn }"
+          *ngFor="let stixRoute of routes"
+          [routerLink]="'/' + stixRoute.path"
+        >
+          <span class="text-label">{{ stixRoute.data.breadcrumb }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row" *ngIf="isAdmin">
+    <div class="col center admin-link">
+      <div class="text-deemphasis text-label">
+        <a
+          class="a"
+          routerLink="/admin"
+          [matBadge]="pendingUsers"
+          matBadgeDescription="pending users"
+          matBadgeOverlap="false"
+          >admin</a
+        >
+      </div>
+    </div>
+  </div>
 </div>

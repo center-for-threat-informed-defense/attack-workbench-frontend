@@ -8,10 +8,9 @@ describe('AliasDiffComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [AliasDiffComponent]
-    })
-    .compileComponents();
-    
+      declarations: [AliasDiffComponent],
+    }).compileComponents();
+
     fixture = TestBed.createComponent(AliasDiffComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

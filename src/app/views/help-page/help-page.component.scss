@@ -1,53 +1,67 @@
-@import "../../../style/globals";
+@import '../../../style/globals';
 .help-page {
-    &, .grid, .grid .row { height: 100%; }
-    .col {
-        overflow-y: scroll;
-        height: 100%;
-    }
-    
-    h1:first-child {
-        margin-top: 0;
-    }
-    .markdown-wrapper { 
-        margin: 0 auto;
-        width: 36em;
-    }
-    max-width: 100%;
-    // margin: 0 auto;
-    // padding: 0 20%;
-    table {
-        @extend .app-table;
-        width: 100%;
-    }
+  &,
+  .grid,
+  .grid .row {
+    height: 100%;
+  }
+  .col {
+    overflow-y: scroll;
+    height: 100%;
+  }
 
-    .col.toc {
-        padding: 0px 21px;
-        .dark & { border: 1px solid border-color(dark); background: color-alternate(dark); }
-        .light & { border: 1px solid border-color(light); background: color-alternate(light); }
-        // position: sticky;
+  h1:first-child {
+    margin-top: 0;
+  }
+  .markdown-wrapper {
+    margin: 0 auto;
+    width: 36em;
+  }
+  max-width: 100%;
+  // margin: 0 auto;
+  // padding: 0 20%;
+  table {
+    @extend .app-table;
+    width: 100%;
+  }
+
+  .col.toc {
+    padding: 0px 21px;
+    .dark & {
+      border: 1px solid border-color(dark);
+      background: color-alternate(dark);
     }
-    .table-of-contents {
-        list-style: none;
-        margin: 0;
-        padding: 0px 25px 0 0;
-        li.toc-heading {
-            margin-bottom: 1ex;
-            a { 
-                cursor: pointer;
-                border-bottom-color: transparent;
-                &:hover { border-bottom-color: color(link); }
-            }
-            &.level-2 { font-weight: bold; }
-            @for $level from 1 through 6 {
-                &.level-#{$level} {
-                    margin-left: #{2 * ($level - 2)}ex;
-                }
-            }
+    .light & {
+      border: 1px solid border-color(light);
+      background: color-alternate(light);
+    }
+    // position: sticky;
+  }
+  .table-of-contents {
+    list-style: none;
+    margin: 0;
+    padding: 0px 25px 0 0;
+    li.toc-heading {
+      margin-bottom: 1ex;
+      a {
+        cursor: pointer;
+        border-bottom-color: transparent;
+        &:hover {
+          border-bottom-color: color(link);
         }
+      }
+      &.level-2 {
+        font-weight: bold;
+      }
+      @for $level from 1 through 6 {
+        &.level-#{$level} {
+          margin-left: #{2 * ($level - 2)}ex;
+        }
+      }
     }
+  }
 
-    pre code {
-        font-size: 14px;
-    }
+  pre code {
+    font-size: 14px;
+  }
 }

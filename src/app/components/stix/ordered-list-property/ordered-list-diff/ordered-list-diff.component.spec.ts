@@ -8,10 +8,9 @@ describe('OrderedListDiffComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [OrderedListDiffComponent]
-    })
-    .compileComponents();
-    
+      declarations: [OrderedListDiffComponent],
+    }).compileComponents();
+
     fixture = TestBed.createComponent(OrderedListDiffComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

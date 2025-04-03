@@ -8,9 +8,8 @@ describe('TechniqueViewComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ TechniqueViewComponent ]
-    })
-    .compileComponents();
+      declarations: [TechniqueViewComponent],
+    }).compileComponents();
   }));
 
   beforeEach(() => {

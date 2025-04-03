@@ -8,9 +8,8 @@ describe('TlpViewComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ TlpViewComponent ]
-    })
-    .compileComponents();
+      declarations: [TlpViewComponent],
+    }).compileComponents();
   });
 
   beforeEach(() => {

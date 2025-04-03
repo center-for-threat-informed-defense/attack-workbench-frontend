@@ -8,9 +8,8 @@ describe('StixDialogComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ StixDialogComponent ]
-    })
-    .compileComponents();
+      declarations: [StixDialogComponent],
+    }).compileComponents();
   });
 
   beforeEach(() => {

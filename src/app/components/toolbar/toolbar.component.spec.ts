@@ -8,9 +8,8 @@ describe('ObjectHeaderComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ ToolbarComponent ]
-    })
-    .compileComponents();
+      declarations: [ToolbarComponent],
+    }).compileComponents();
   }));
 
   beforeEach(() => {

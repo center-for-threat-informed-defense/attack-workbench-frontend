@@ -1,66 +1,96 @@
-@import "../../../style/globals";
+@import '../../../style/globals';
 
 .reference-manager {
-    max-width: 60em;
-    margin: 0 auto;
-    border-radius: 4px;
-    .dark & { border: 1px solid border-color(dark); }
-    .light & { border: 1px solid border-color(light); }
+  max-width: 60em;
+  margin: 0 auto;
+  border-radius: 4px;
+  .dark & {
+    border: 1px solid border-color(dark);
+  }
+  .light & {
+    border: 1px solid border-color(light);
+  }
 
-    .search {
-        .fullwidth {
-            width: 100%;
-            font-size: 16px;
-        }
-        .mat-mdc-form-field-subscript-wrapper {
-            display: none;
-        }
-        .mat-mdc-floating-label {
-            .light & { color: on-color-deemphasis(light); }
-            .dark & { color: on-color-deemphasis(dark); }
-        }
+  .search {
+    .fullwidth {
+      width: 100%;
+      font-size: 16px;
     }
-
-    .scroll-container {
-        width: 100%;
-        overflow: auto;
-        max-width: 100%;
-        display: flex;
-        flex-direction: column;
-        table {
-            flex: 1 0 auto;
-            width: 100%;
-			.dark & { border-bottom: 1px solid border-color(dark); }
-			.light & { border-bottom: 1px solid border-color(light); }
-            th, td { 
-                .light & { background: color(light); border-color: border-color(light); }
-                .dark &  { background: color(dark); border-color: border-color(dark); }
-            } 
-            th {
-                font-size: 20px;
-                @extend .text-label;
-            }
-    
-            tr:hover {
-                cursor: pointer;
-                .light & td { background: color-alternate(light); }
-                .dark & td  { background: color-alternate(dark);  }
-            }
-    
-            .mat-mdc-cell + .mat-cell, .mat-mdc-header-cell + .mat-header-cell {
-                padding: 4px 4px 4px 12px;
-            }
-
-            .mat-mdc-cell.icon-cell {
-                width: 24px;
-                padding-right: 12px;
-                .mat-icon { vertical-align: middle; }
-                cursor: pointer;
-                &:hover {
-                    .light & { background: color-alternate(light); }
-                    .dark & { background: color-alternate(dark);  }
-                }
-            }
-        }
+    .mat-mdc-form-field-subscript-wrapper {
+      display: none;
     }
+    .mat-mdc-floating-label {
+      .light & {
+        color: on-color-deemphasis(light);
+      }
+      .dark & {
+        color: on-color-deemphasis(dark);
+      }
+    }
+  }
+
+  .scroll-container {
+    width: 100%;
+    overflow: auto;
+    max-width: 100%;
+    display: flex;
+    flex-direction: column;
+    table {
+      flex: 1 0 auto;
+      width: 100%;
+      .dark & {
+        border-bottom: 1px solid border-color(dark);
+      }
+      .light & {
+        border-bottom: 1px solid border-color(light);
+      }
+      th,
+      td {
+        .light & {
+          background: color(light);
+          border-color: border-color(light);
+        }
+        .dark & {
+          background: color(dark);
+          border-color: border-color(dark);
+        }
+      }
+      th {
+        font-size: 20px;
+        @extend .text-label;
+      }
+
+      tr:hover {
+        cursor: pointer;
+        .light & td {
+          background: color-alternate(light);
+        }
+        .dark & td {
+          background: color-alternate(dark);
+        }
+      }
+
+      .mat-mdc-cell + .mat-cell,
+      .mat-mdc-header-cell + .mat-header-cell {
+        padding: 4px 4px 4px 12px;
+      }
+
+      .mat-mdc-cell.icon-cell {
+        width: 24px;
+        padding-right: 12px;
+        .mat-icon {
+          vertical-align: middle;
+        }
+        cursor: pointer;
+        &:hover {
+          .light & {
+            background: color-alternate(light);
+          }
+          .dark & {
+            background: color-alternate(dark);
+          }
+        }
+      }
+    }
+  }
 }

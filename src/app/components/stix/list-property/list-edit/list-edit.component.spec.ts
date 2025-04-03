@@ -8,9 +8,8 @@ describe('ListEditComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ ListEditComponent ]
-    })
-    .compileComponents();
+      declarations: [ListEditComponent],
+    }).compileComponents();
   });
 
   beforeEach(() => {

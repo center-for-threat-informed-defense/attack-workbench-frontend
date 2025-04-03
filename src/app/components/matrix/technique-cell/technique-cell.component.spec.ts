@@ -8,9 +8,8 @@ describe('TechniqueCellComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ TechniqueCellComponent ]
-    })
-    .compileComponents();
+      declarations: [TechniqueCellComponent],
+    }).compileComponents();
   }));
 
   beforeEach(() => {

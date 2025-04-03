@@ -8,10 +8,9 @@ describe('ListDiffComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ListDiffComponent]
-    })
-    .compileComponents();
-    
+      declarations: [ListDiffComponent],
+    }).compileComponents();
+
     fixture = TestBed.createComponent(ListDiffComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

@@ -15,7 +15,8 @@ $sizeunit: 14px;
   tr.tactic {
     margin-left: 14px;
     border-bottom: 1px solid;
-    td, th {
+    td,
+    th {
       padding: 0;
       vertical-align: middle;
       min-width: 180px;
@@ -83,6 +84,6 @@ $sizeunit: 14px;
   display: flex;
   .mat-mdc-outlined-button {
     margin: 0 0 22.313px 0;
-	height: unset !important;
+    height: unset !important;
   }
 }

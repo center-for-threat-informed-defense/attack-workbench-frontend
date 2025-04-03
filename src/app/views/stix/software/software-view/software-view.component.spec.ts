@@ -8,9 +8,8 @@ describe('SoftwareViewComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ SoftwareViewComponent ]
-    })
-    .compileComponents();
+      declarations: [SoftwareViewComponent],
+    }).compileComponents();
   }));
 
   beforeEach(() => {

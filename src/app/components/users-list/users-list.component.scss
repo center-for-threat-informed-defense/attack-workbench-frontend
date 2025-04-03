@@ -1,4 +1,4 @@
-@import "../../../style/globals";
+@import '../../../style/globals';
 .table-container {
   max-width: 60em;
   margin: 0 auto;
@@ -6,30 +6,39 @@
   .mat-mdc-chip-action-label {
     font-weight: 500 !important;
   }
-  .role, .status {
-    &.active { background-color: color(active) }
-    &.pending { background-color: color(pending); }
+  .role,
+  .status {
+    &.active {
+      background-color: color(active);
+    }
+    &.pending {
+      background-color: color(pending);
+    }
   }
-  
+
   .input-group {
     font-size: 16px;
     width: 100%;
     display: flex;
     flex-direction: row;
-  
+
     .search {
       flex-grow: 1;
     }
 
-	.mat-mdc-floating-label {
-		.light & { color: on-color-deemphasis(light); }
-		.dark &  { color: on-color-deemphasis(dark); }
-	}
-    
+    .mat-mdc-floating-label {
+      .light & {
+        color: on-color-deemphasis(light);
+      }
+      .dark & {
+        color: on-color-deemphasis(dark);
+      }
+    }
+
     .light & {
       border-color: border-color(light);
     }
-  
+
     .dark & {
       border-color: border-color(dark);
     }
@@ -37,11 +46,11 @@
       display: none;
     }
   }
-  
+
   .mat-mdc-checkbox {
     padding: 12px;
   }
-  
+
   .align-right {
     justify-content: flex-end;
   }
@@ -60,8 +69,12 @@
     max-width: 100%;
     display: flex;
     flex-direction: column;
-	.dark & { border-bottom: 1px solid border-color(dark); }
-	.light & { border-bottom: 1px solid border-color(light); }
+    .dark & {
+      border-bottom: 1px solid border-color(dark);
+    }
+    .light & {
+      border-bottom: 1px solid border-color(light);
+    }
 
     table {
       flex: 1 0 auto;
@@ -71,7 +84,8 @@
         white-space: nowrap;
       }
 
-      th, td {
+      th,
+      td {
         .light & {
           background: color(light);
           border-color: border-color(light);
@@ -98,12 +112,14 @@
         }
       }
 
-      .mat-mdc-cell + .mat-cell, .mat-mdc-header-cell + .mat-header-cell {
+      .mat-mdc-cell + .mat-cell,
+      .mat-mdc-header-cell + .mat-header-cell {
         padding-left: 12px;
       }
 
       //row action styles
-      .mat-mdc-cell.mat-column-end-action, .mat-cell.mat-column-start-action {
+      .mat-mdc-cell.mat-column-end-action,
+      .mat-cell.mat-column-start-action {
         cursor: pointer;
 
         .dark & {

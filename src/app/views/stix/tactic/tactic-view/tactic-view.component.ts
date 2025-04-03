@@ -6,40 +6,52 @@ import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/re
 import { StixObject } from 'src/app/classes/stix/stix-object';
 
 @Component({
-    selector: 'app-tactic-view',
-    templateUrl: './tactic-view.component.html',
-    styleUrls: ['./tactic-view.component.scss']
+  selector: 'app-tactic-view',
+  templateUrl: './tactic-view.component.html',
+  styleUrls: ['./tactic-view.component.scss'],
 })
 export class TacticViewComponent extends StixViewPage implements OnInit {
-    public loading: boolean = false;
-    public get tactic(): Tactic { return this.configCurrentObject as Tactic; }
-    public get previous(): Tactic | null { return this.configPreviousObject as Tactic; }
-    public techniques: StixObject[] = [];
+  public loading = false;
+  public get tactic(): Tactic {
+    return this.configCurrentObject as Tactic;
+  }
+  public get previous(): Tactic | null {
+    return this.configPreviousObject as Tactic;
+  }
+  public techniques: StixObject[] = [];
 
-    constructor(authenticationService: AuthenticationService, private restApiConnector: RestApiConnectorService) {
-        super(authenticationService);
-    }
+  constructor(
+    authenticationService: AuthenticationService,
+    private restApiConnector: RestApiConnectorService,
+  ) {
+    super(authenticationService);
+  }
 
-    ngOnInit() {
-        if (this.tactic.firstInitialized) {
-            this.tactic.initializeWithDefaultMarkingDefinitions(this.restApiConnector);
-        } else {
-            this.getTechniques();
-        }
+  ngOnInit() {
+    if (this.tactic.firstInitialized) {
+      this.tactic.initializeWithDefaultMarkingDefinitions(this.restApiConnector);
+    } else {
+      this.getTechniques();
     }
+  }
 
-    /**
-     * Get techniques under this tactic
-     */
-    public getTechniques(): void {
-        this.loading = true;
-        let data$: any = this.restApiConnector.getTechniquesInTactic(this.tactic.stixID, this.tactic.modified);
-        let subscription = data$.subscribe({
-            next: (result) => {
-                this.techniques = result;
-                this.loading = false;
-            },
-            complete: () => { subscription.unsubscribe() }
-        })
-    }
+  /**
+   * Get techniques under this tactic
+   */
+  public getTechniques(): void {
+    this.loading = true;
+    const data$: any = this.restApiConnector.getTechniquesInTactic(
+      this.tactic.stixID,
+      this.tactic.modified,
+    );
+    const subscription = data$.subscribe({
+      next: (result) => {
+        this.techniques = result;
+        this.loading = false;
+      },
+      complete: () => {
+        subscription.unsubscribe();
+      },
+    });
+  }
 }

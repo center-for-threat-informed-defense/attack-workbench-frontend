@@ -1,74 +1,86 @@
 <div class="profile-page view-page grid spacing-16">
-    <!-- jdenticon -->
+  <!-- jdenticon -->
+  <div class="row">
+    <div class="col">
+      <svg class="profile-icon" [data-jdenticon-value]="user.displayName"></svg>
+    </div>
+  </div>
+  <!-- display name -->
+  <div class="row">
+    <div class="col">
+      <h2 class="display-name">{{ user.displayName }}</h2>
+    </div>
+  </div>
+  <!-- subheader -->
+  <div class="profile-subheader">
+    Joined
+    <app-timestamp-view
+      [config]="{
+        mode: 'view',
+        object: user,
+        field: 'created',
+        humanize: true,
+        tooltip: true,
+      }"
+    ></app-timestamp-view>
+  </div>
+  <div class="row">
+    <div class="col">
+      <!-- display name -->
+      <app-string-property
+        class="grow-to-row"
+        [config]="{
+          mode: editing ? 'edit' : 'view',
+          object: user,
+          field: 'displayName',
+          label: 'display name',
+        }"
+      ></app-string-property>
+    </div>
+    <div class="col">
+      <!-- username -->
+      <app-string-property
+        class="grow-to-row"
+        [config]="{
+          mode: 'view',
+          object: user,
+          field: 'username',
+        }"
+      ></app-string-property>
+    </div>
+    <div class="col">
+      <!-- email -->
+      <app-string-property
+        class="grow-to-row"
+        [config]="{
+          mode: 'view',
+          object: user,
+          field: 'email',
+        }"
+      ></app-string-property>
+    </div>
+  </div>
+  <!-- teams -->
+  <div class="row">
+    <div class="col" class="labelled-box grow-to-row">
+      <div class="content">
+        <span *ngIf="!loading">{{ teamNames.join(', ') }}</span>
+        <mat-spinner *ngIf="loading" diameter="20"></mat-spinner>
+      </div>
+      <span class="labelled-box-label">Teams</span>
+    </div>
+  </div>
+  <!-- recent activity -->
+  <ng-container *ngIf="canEdit">
     <div class="row">
-        <div class="col">
-            <svg class="profile-icon" [data-jdenticon-value]="user.displayName"></svg>
-        </div>
-    </div>
-    <!-- display name -->
-    <div class="row">
-        <div class="col">
-            <h2 class="display-name">{{user.displayName}}</h2>
-        </div>
-    </div>
-    <!-- subheader -->
-    <div class="profile-subheader">
-        Joined <app-timestamp-view [config]="{
-            mode: 'view',
-            object: user,
-            field: 'created',
-            humanize: true,
-            tooltip: true
-        }"></app-timestamp-view>
+      <div class="col">
+        <h2 class="section-header">Recent Activity</h2>
+      </div>
     </div>
     <div class="row">
-        <div class="col">
-            <!-- display name -->
-            <app-string-property class="grow-to-row" [config]="{
-                mode: editing? 'edit': 'view',
-                object: user,
-                field: 'displayName',
-                label: 'display name'
-            }"></app-string-property>
-        </div>
-        <div class="col">
-            <!-- username -->
-            <app-string-property class="grow-to-row" [config]="{
-                mode: 'view',
-                object: user,
-                field: 'username'
-            }"></app-string-property>
-        </div>
-        <div class="col">
-            <!-- email -->
-            <app-string-property class="grow-to-row" [config]="{
-                mode: 'view',
-                object: user,
-                field: 'email'
-            }"></app-string-property>
-        </div>
+      <div class="col">
+        <app-recent-activity [identities]="[user.id]" [showIdentity]="false"></app-recent-activity>
+      </div>
     </div>
-    <!-- teams -->
-    <div class="row">
-        <div class="col" class="labelled-box grow-to-row">
-            <div class="content">
-                <span *ngIf="!loading">{{teamNames.join(', ')}}</span>
-                <mat-spinner *ngIf="loading" diameter="20"></mat-spinner>
-            </div>
-            <span class="labelled-box-label">Teams</span>
-        </div>
-    </div>
-    <!-- recent activity -->
-    <ng-container *ngIf="canEdit">
-        <div class="row">
-            <div class="col">
-                <h2 class="section-header">Recent Activity</h2>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col">
-                <app-recent-activity [identities]="[user.id]" [showIdentity]="false"></app-recent-activity>
-            </div>
-        </div>
-    </ng-container>
+  </ng-container>
 </div>

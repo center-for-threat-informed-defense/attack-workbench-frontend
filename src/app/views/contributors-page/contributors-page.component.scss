@@ -1,11 +1,11 @@
-@import "../../../style/globals";
+@import '../../../style/globals';
 
 .contributors-page {
-    width: 68em !important;
-    .link {
-        cursor: pointer;
-    }
-    .no-results {
-        justify-content: center;
-    }
+  width: 68em !important;
+  .link {
+    cursor: pointer;
+  }
+  .no-results {
+    justify-content: center;
+  }
 }
