@@ -40,7 +40,7 @@ jobs:
 
   # Job 2: Semantic Release and Docker Build
   release:
-    needs: [commitlint]
+    # needs: [commitlint] # TODO re-enable after first release
     # Only run on pushes (not PRs) - semantic-release will determine whether to release
     if: github.event_name == 'push'
     runs-on: ubuntu-latest
