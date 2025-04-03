@@ -27,11 +27,13 @@ git clone https://github.com/center-for-threat-informed-defense/attack-workbench
 Docker images can either be built locally or pulled from the Github Container Registry. 
 
 ### Build docker images
-1. Navigate to the `attack-workbench-frontend` directory (containing the `docker-compose.yml` file)
-2. Run the command:
+1. Navigate to the `attack-workbench-frontend/docker/compose` directory (containing the `compose.yml` file)
+2. Run the command<sup>1</sup>:
 ```shell
-docker-compose up
+docker compose up
 ```
+
+<sup>1</sup>NOTE: Older versions of docker may need to use `docker-compose` (with the hyphen).
 
 This command will build all of the necessary Docker images and run the corresponding Docker containers.
 
@@ -41,7 +43,7 @@ This command will build all of the necessary Docker images and run the correspon
 docker pull ghcr.io/center-for-threat-informed-defense/attack-workbench-frontend:<TAG>
 docker pull ghcr.io/center-for-threat-informed-defense/attack-workbench-rest-api:<TAG>
 ```
-2. Navigate to the `attack-workbench-frontend` directory, and modify the `docker-compose.yml` file. Replace the `build` attribute with the corresponding `image`. 
+1. Navigate to the `attack-workbench-frontend/docker/compose` directory, and modify the `compose.yml` file. Replace the `build` attribute with the corresponding `image`. 
 ```
 version: "3.9"
 services:
@@ -56,9 +58,9 @@ services:
     depends_on:
 ...
 ```
-3. Run the command:
+1. Run the command<sup>1</sup>:
 ```shell
-docker-compose up
+docker compose up
 ```
 
 ## 3. Access Docker instance
@@ -71,12 +73,12 @@ With the docker-compose running you can access the ATT&CK Workbench application 
 If you have previously built the Workbench and want to rebuild based on a newer release of the codebase, the following command can be used to force a rebuild of the data. Before running it, make sure that all three repositories are up-to-date with the head of the branch (typically `develop` or `master`) to ensure that compatibility issues don't occur between the components.
 
 ```
-docker-compose up --build
+docker compose up --build
 ```
 
 ## Containers
 
-When deployed using Docker Compose, an ATT&CK Workbench installation will include four containers:
+When deployed using Docker Compose, an ATT&CK Workbench installation will include three containers:
 * frontend
 * rest-api
 * mongodb
@@ -87,7 +89,7 @@ It also acts as a reverse proxy for the `rest-api` service.
 
 ![Workbench Configuration](images/workbench-configuration-docker-compose.png)
 
-Note that the `docker-compose.yml` file exposes the ATT&CK Workbench web application on port 80.
+Note that the `compose.yml` file exposes the ATT&CK Workbench web application on port 80.
 The `nginx` configuration file (`nginx/nginx.conf`) can be modified to use HTTPS and port 443, depending on your operational requirements.
 
 ## PKI Certificates
