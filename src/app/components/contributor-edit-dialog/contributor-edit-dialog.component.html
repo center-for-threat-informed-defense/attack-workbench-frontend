@@ -2,7 +2,11 @@
   <!-- dialog toolbar -->
   <mat-toolbar *ngIf="!editing || stage == 0">
     <!-- close -->
-    <button mat-icon-button class="control" matTooltip="close" (click)="close()">
+    <button
+      mat-icon-button
+      class="control"
+      matTooltip="close"
+      (click)="close()">
       <mat-icon aria-label="close">close</mat-icon>
     </button>
     <div class="spacer"></div>
@@ -13,8 +17,7 @@
         class="control"
         matTooltip="patch & save"
         [disabled]="!editing || !isValid"
-        (click)="next()"
-      >
+        (click)="next()">
         <mat-icon aria-label="save">save</mat-icon>
       </button>
       <!-- edit -->
@@ -23,8 +26,7 @@
         mat-icon-button
         class="control"
         matTooltip="edit"
-        (click)="startEditing()"
-      >
+        (click)="startEditing()">
         <mat-icon aria-label="edit">edit</mat-icon>
       </button>
       <!-- discard changes -->
@@ -33,8 +35,7 @@
         mat-icon-button
         class="control"
         matTooltip="discard changes & stop editing"
-        (click)="discardChanges()"
-      >
+        (click)="discardChanges()">
         <mat-icon aria-label="discard">edit_off</mat-icon>
       </button>
     </ng-container>
@@ -45,7 +46,10 @@
     <div *ngIf="stage == 0">
       <div class="align-center">
         <!-- edit contributor -->
-        <mat-form-field class="edit-contributor" *ngIf="editing" appearance="outline">
+        <mat-form-field
+          class="edit-contributor"
+          *ngIf="editing"
+          appearance="outline">
           <mat-label>contributor</mat-label>
           <input matInput required [(ngModel)]="contributor" />
         </mat-form-field>
@@ -60,8 +64,7 @@
           stixObjects: config.objects,
           clickBehavior: 'linkToObjectPage',
           showControls: false,
-        }"
-      ></app-stix-list>
+        }"></app-stix-list>
     </div>
     <div *ngIf="stage == 1">
       <!-- confirm patches -->
@@ -71,7 +74,8 @@
         <br /><b>{{ config.contributor }}</b> to <b>{{ contributor }}</b>
       </p>
       <p class="align-center">
-        The following objects include the edited contributor and will be updated automatically:
+        The following objects include the edited contributor and will be updated
+        automatically:
       </p>
       <app-stix-list
         (onRowAction)="dialogRef.close()"
@@ -79,12 +83,13 @@
           stixObjects: config.objects,
           clickBehavior: 'none',
           showControls: false,
-        }"
-      ></app-stix-list>
+        }"></app-stix-list>
       <!-- actions -->
       <mat-dialog-actions align="center">
         <button mat-button (click)="discardChanges()">cancel</button>
-        <button mat-stroked-button (click)="patch()">apply patches and save</button>
+        <button mat-stroked-button (click)="patch()">
+          apply patches and save
+        </button>
       </mat-dialog-actions>
     </div>
     <div *ngIf="stage == 2">

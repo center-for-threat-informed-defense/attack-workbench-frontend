@@ -3,12 +3,13 @@
     <!-- -------- -->
     <!-- CONTROLS -->
     <!-- -------- -->
-    <div class="controls" [ngStyle]="{ visibility: showControls ? 'visible' : 'hidden' }">
+    <div
+      class="controls"
+      [ngStyle]="{ visibility: showControls ? 'visible' : 'hidden' }">
       <div
         class="input-group"
         [class.bordered]="config.type && config.type === 'relationship'"
-        [ngStyle]="{ height: showControls ? 'inherit' : '0px' }"
-      >
+        [ngStyle]="{ height: showControls ? 'inherit' : '0px' }">
         <!-- show search/filter options for non-relationship objects -->
         <ng-container *ngIf="!(config.type && config.type === 'relationship')">
           <mat-form-field class="search" appearance="fill">
@@ -23,14 +24,15 @@
               multiple
               panelWidth=""
               [(ngModel)]="filter"
-              (selectionChange)="applyControls()"
-            >
-              <mat-optgroup class="user-filter" *ngIf="config.showUserSearch" label="users">
+              (selectionChange)="applyControls()">
+              <mat-optgroup
+                class="user-filter"
+                *ngIf="config.showUserSearch"
+                label="users">
                 <div
                   class="clickable"
                   (click)="openUserSelectModal()"
-                  (keydown)="openUserSelectModal()"
-                >
+                  (keydown)="openUserSelectModal()">
                   <mat-option class="no-checkbox" disabled>
                     <div class="user-search">
                       <div>{{ userSearchString }}</div>
@@ -48,13 +50,11 @@
               <mat-optgroup
                 *ngFor="let group of filterOptions"
                 [label]="group.name"
-                [disabled]="group.disabled"
-              >
+                [disabled]="group.disabled">
                 <mat-option
                   *ngFor="let filter of group.values"
                   [value]="filter.value"
-                  [disabled]="filter.disabled"
-                >
+                  [disabled]="filter.disabled">
                   {{ filter.label }}
                 </mat-option>
               </mat-optgroup>
@@ -63,8 +63,10 @@
         </ng-container>
         <!-- show deprecated filter -->
         <ng-container
-          *ngIf="(config.type && config.type === 'relationship') || config.showDeprecatedFilter"
-        >
+          *ngIf="
+            (config.type && config.type === 'relationship') ||
+            config.showDeprecatedFilter
+          ">
           <mat-checkbox
             color="primary"
             class="align-center"
@@ -79,13 +81,15 @@
     <!-- ----- -->
     <!-- TABLE -->
     <!-- ----- -->
-    <div class="scroll-container" *ngIf="data$ | async as data; else loading" @fadeIn>
+    <div
+      class="scroll-container"
+      *ngIf="data$ | async as data; else loading"
+      @fadeIn>
       <table
         mat-table
         multiTemplateDataRows
         *ngIf="data.data.length > 0; else noObjects"
-        [dataSource]="data.data"
-      >
+        [dataSource]="data.data">
         <caption hidden aria-hidden="false" aria-label="object table">
           Object List
         </caption>
@@ -94,8 +98,7 @@
         <ng-container
           matColumnDef="{{ column }}"
           *ngFor="let column of tableColumns"
-          [sticky]="tableColumns_settings.get(column)['sticky']"
-        >
+          [sticky]="tableColumns_settings.get(column)['sticky']">
           <th mat-header-cell *matHeaderCellDef class="nowrap">
             {{ tableColumns_settings.get(column)['label'] }}
           </th>
@@ -104,39 +107,53 @@
             *matCellDef="let element"
             [ngClass]="tableColumns_settings.get(column)['classes']"
             (click)="rowClick(element)"
-            [class.clickable]="!config.clickBehavior || config.clickBehavior !== 'none'"
-          >
+            [class.clickable]="
+              !config.clickBehavior || config.clickBehavior !== 'none'
+            ">
             <app-version-view
               *ngIf="tableColumns_settings.get(column)['display'] === 'version'"
-              [config]="{ object: element, field: column }"
-            ></app-version-view>
-            <div *ngIf="tableColumns_settings.get(column)['display'] === 'timestamp'">
+              [config]="{ object: element, field: column }"></app-version-view>
+            <div
+              *ngIf="
+                tableColumns_settings.get(column)['display'] === 'timestamp'
+              ">
               <app-identity-property
-                [config]="{ object: element, field: column + '_by', timeField: column }"
-              ></app-identity-property>
+                [config]="{
+                  object: element,
+                  field: column + '_by',
+                  timeField: column,
+                }"></app-identity-property>
             </div>
             <div
               class="width-limited-sm"
-              *ngIf="tableColumns_settings.get(column)['display'] === 'list'"
-            >
+              *ngIf="tableColumns_settings.get(column)['display'] === 'list'">
               <app-list-view
-                [config]="{ object: element, field: column, mode: 'view', wrap: false }"
-              ></app-list-view>
+                [config]="{
+                  object: element,
+                  field: column,
+                  mode: 'view',
+                  wrap: false,
+                }"></app-list-view>
             </div>
-            <div *ngIf="tableColumns_settings.get(column)['display'] === 'descriptive'">
+            <div
+              *ngIf="
+                tableColumns_settings.get(column)['display'] === 'descriptive'
+              ">
               <app-descriptive-view
                 [config]="{
                   object: element,
                   mode: 'view',
                   field: column,
                   firstParagraphOnly: true,
-                }"
-              ></app-descriptive-view>
+                }"></app-descriptive-view>
             </div>
-            <div *ngIf="tableColumns_settings.get(column)['display'] === 'icon'">
-              <app-icon-view [config]="{ object: element, field: column }"></app-icon-view>
+            <div
+              *ngIf="tableColumns_settings.get(column)['display'] === 'icon'">
+              <app-icon-view
+                [config]="{ object: element, field: column }"></app-icon-view>
             </div>
-            <div *ngIf="tableColumns_settings.get(column)['display'] === 'plain'">
+            <div
+              *ngIf="tableColumns_settings.get(column)['display'] === 'plain'">
               {{ element[column] }}
             </div>
           </td>
@@ -153,16 +170,14 @@
               color="primary"
               (click)="onSelect.emit(element); $event.stopPropagation()"
               (change)="$event ? selection.toggle(element.stixID) : null"
-              [checked]="selection.isSelected(element.stixID)"
-            >
+              [checked]="selection.isSelected(element.stixID)">
             </mat-checkbox>
             <mat-radio-button
               *ngIf="config.select && config.select === 'one'"
               color="primary"
               (click)="onSelect.emit(element); $event.stopPropagation()"
               (change)="$event ? selection.toggle(element.stixID) : null"
-              [checked]="selection.isSelected(element.stixID)"
-            >
+              [checked]="selection.isSelected(element.stixID)">
             </mat-radio-button>
           </td>
         </ng-container>
@@ -176,9 +191,10 @@
             *matCellDef="let element"
             class="icon-cell"
             [matTooltip]="config.rowAction.tooltip"
-            (click)="onRowAction.emit(element)"
-          >
-            <mat-icon [aria-label]="config.rowAction.tooltip">{{ config.rowAction.icon }}</mat-icon>
+            (click)="onRowAction.emit(element)">
+            <mat-icon [aria-label]="config.rowAction.tooltip">{{
+              config.rowAction.icon
+            }}</mat-icon>
           </td>
         </ng-container>
         <!-- row action: after -->
@@ -190,9 +206,10 @@
             *matCellDef="let element"
             class="icon-cell"
             [matTooltip]="config.rowAction.tooltip"
-            (click)="onRowAction.emit(element)"
-          >
-            <mat-icon [aria-label]="config.rowAction.tooltip">{{ config.rowAction.icon }}</mat-icon>
+            (click)="onRowAction.emit(element)">
+            <mat-icon [aria-label]="config.rowAction.tooltip">{{
+              config.rowAction.icon
+            }}</mat-icon>
           </td>
         </ng-container>
 
@@ -215,7 +232,10 @@
           <th mat-header-cell *matHeaderCellDef></th>
           <!-- nothing in header -->
           <td mat-cell *matCellDef="let element" class="icon-cell">
-            <mat-icon aria-hidden="false" aria-label="open-link" matTooltip="View object page"
+            <mat-icon
+              aria-hidden="false"
+              aria-label="open-link"
+              matTooltip="View object page"
               >open_in_browser</mat-icon
             >
           </td>
@@ -223,30 +243,45 @@
 
         <!-- expanded content formatting -->
         <ng-container matColumnDef="expandedDetail">
-          <td mat-cell *matCellDef="let element" [attr.colspan]="tableColumns_controls.length">
-            <div class="element-detail" @detailExpand *ngIf="expandedElement === element">
+          <td
+            mat-cell
+            *matCellDef="let element"
+            [attr.colspan]="tableColumns_controls.length">
+            <div
+              class="element-detail"
+              @detailExpand
+              *ngIf="expandedElement === element">
               <div class="element-description columns">
                 <div
                   class="column controls"
                   [ngClass]="
-                    !config.type.includes('collection-') ? 'is-narrow' : 'collection-table'
+                    !config.type.includes('collection-')
+                      ? 'is-narrow'
+                      : 'collection-table'
                   "
-                  *ngIf="config.showLinks"
-                >
+                  *ngIf="config.showLinks">
                   <span *ngIf="!config.type.includes('collection-')">
                     <div
-                      *ngFor="let route of getAccessibleRoutes(element.attackType, element.routes)"
-                    >
+                      *ngFor="
+                        let route of getAccessibleRoutes(
+                          element.attackType,
+                          element.routes
+                        )
+                      ">
                       <button
                         class="detail-button"
                         mat-button
                         (click)="
                           routeTo(
-                            '/' + [element.attackType, element.stixID, route.route].join('/'),
+                            '/' +
+                              [
+                                element.attackType,
+                                element.stixID,
+                                route.route,
+                              ].join('/'),
                             route.query
                           )
-                        "
-                      >
+                        ">
                         {{ route.label }}
                       </button>
                     </div>
@@ -255,8 +290,7 @@
                     <mat-table
                       mat-table
                       multiTemplateDataRows
-                      [dataSource]="config.collectionMap.get(element.stixID)"
-                    >
+                      [dataSource]="config.collectionMap.get(element.stixID)">
                       <ng-container matColumnDef="action">
                         <mat-header-cell *matHeaderCellDef></mat-header-cell>
                         <mat-cell *matCellDef="let collection">
@@ -266,21 +300,21 @@
                                 collection.attackType,
                                 collection.routes
                               )
-                            "
-                          >
+                            ">
                             <button
                               class="detail-button"
                               mat-button
                               (click)="
                                 routeTo(
                                   '/' +
-                                    [collection.attackType, collection.stixID, route.route].join(
-                                      '/'
-                                    ),
+                                    [
+                                      collection.attackType,
+                                      collection.stixID,
+                                      route.route,
+                                    ].join('/'),
                                   route.query
                                 )
-                              "
-                            >
+                              ">
                               {{ route.label }}
                             </button>
                           </div>
@@ -288,30 +322,51 @@
                       </ng-container>
 
                       <ng-container matColumnDef="version">
-                        <mat-header-cell *matHeaderCellDef>Version</mat-header-cell>
-                        <mat-cell *matCellDef="let collection">{{ collection.version }}</mat-cell>
+                        <mat-header-cell *matHeaderCellDef
+                          >Version</mat-header-cell
+                        >
+                        <mat-cell *matCellDef="let collection">{{
+                          collection.version
+                        }}</mat-cell>
                       </ng-container>
 
                       <ng-container matColumnDef="released">
-                        <mat-header-cell *matHeaderCellDef>Released</mat-header-cell>
-                        <mat-cell *matCellDef="let collection">{{ collection.release }}</mat-cell>
+                        <mat-header-cell *matHeaderCellDef
+                          >Released</mat-header-cell
+                        >
+                        <mat-cell *matCellDef="let collection">{{
+                          collection.release
+                        }}</mat-cell>
                       </ng-container>
 
                       <ng-container matColumnDef="description">
-                        <mat-header-cell *matHeaderCellDef>Description</mat-header-cell>
-                        <mat-cell *matCellDef="let collection; let i = dataIndex">
-                          <span *ngIf="i == 0">{{ collection.description }}</span>
+                        <mat-header-cell *matHeaderCellDef
+                          >Description</mat-header-cell
+                        >
+                        <mat-cell
+                          *matCellDef="let collection; let i = dataIndex">
+                          <span *ngIf="i == 0">{{
+                            collection.description
+                          }}</span>
                         </mat-cell>
                       </ng-container>
 
                       <mat-header-row
-                        *matHeaderRowDef="collectionColumnsToDisplay; sticky: true"
-                      ></mat-header-row>
-                      <mat-row *matRowDef="let row; columns: collectionColumnsToDisplay"></mat-row>
+                        *matHeaderRowDef="
+                          collectionColumnsToDisplay;
+                          sticky: true
+                        "></mat-header-row>
+                      <mat-row
+                        *matRowDef="
+                          let row;
+                          columns: collectionColumnsToDisplay
+                        "></mat-row>
                     </mat-table>
                   </span>
                 </div>
-                <div class="column description" *ngIf="!config.type.includes('collection-')">
+                <div
+                  class="column description"
+                  *ngIf="!config.type.includes('collection-')">
                   <div *ngFor="let property of tableDetail">
                     <app-descriptive-view
                       [config]="{
@@ -319,8 +374,7 @@
                         mode: 'view',
                         field: property.field,
                         firstParagraphOnly: true,
-                      }"
-                    ></app-descriptive-view>
+                      }"></app-descriptive-view>
                   </div>
                 </div>
               </div>
@@ -334,12 +388,15 @@
           mat-row
           *matRowDef="let element; columns: tableColumns_controls"
           class="element-row"
-          [class.expanded]="expandedElement === element"
-        ></tr>
-        <tr mat-row *matRowDef="let row; columns: ['expandedDetail']" class="detail-row"></tr>
+          [class.expanded]="expandedElement === element"></tr>
+        <tr
+          mat-row
+          *matRowDef="let row; columns: ['expandedDetail']"
+          class="detail-row"></tr>
       </table>
       <ng-template #noObjects>
-        <app-empty-list-marker (onCheckAgain)="applyControls()"></app-empty-list-marker>
+        <app-empty-list-marker
+          (onCheckAgain)="applyControls()"></app-empty-list-marker>
       </ng-template>
     </div>
     <ng-template #loading>
@@ -352,7 +409,6 @@
       [pageSizeOptions]="[5, 10, 25, 100]"
       pageSize="10"
       (page)="applyControls()"
-      [length]="totalObjectCount"
-    ></mat-paginator>
+      [length]="totalObjectCount"></mat-paginator>
   </div>
 </div>

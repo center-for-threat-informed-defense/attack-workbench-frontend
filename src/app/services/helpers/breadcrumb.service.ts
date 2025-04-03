@@ -1,5 +1,10 @@
 import { Injectable, EventEmitter } from '@angular/core';
-import { ActivatedRouteSnapshot, NavigationEnd, Router, Route } from '@angular/router';
+import {
+  ActivatedRouteSnapshot,
+  NavigationEnd,
+  Router,
+  Route,
+} from '@angular/router';
 
 // see https://github.com/emilol/angular-crumbs
 @Injectable({
@@ -10,7 +15,7 @@ export class BreadcrumbService {
   private breadcrumbs: Breadcrumb[] = [];
 
   constructor(private router: Router) {
-    this.router.events.subscribe((routeEvent) => {
+    this.router.events.subscribe(routeEvent => {
       this.buildBreadcrumbs(routeEvent);
     });
   }
@@ -50,7 +55,9 @@ export class BreadcrumbService {
   // change the breadcrumb name
   public changeBreadcrumb(route: ActivatedRouteSnapshot, name: string): void {
     const resolvedUrl = this.getResolvedUrl(route);
-    const breadcrumb = this.breadcrumbs.find((breadcrumb) => breadcrumb.url === resolvedUrl);
+    const breadcrumb = this.breadcrumbs.find(
+      breadcrumb => breadcrumb.url === resolvedUrl
+    );
     if (!breadcrumb) return;
 
     // update existing breadcrumb
@@ -61,15 +68,15 @@ export class BreadcrumbService {
   // get resolved url from activated route snapshot
   private getResolvedUrl(route: ActivatedRouteSnapshot): string {
     const resolvedUrl = route.pathFromRoot
-      .map((value) => this.getBreadcrumbUrl(value))
-      .filter((value) => value)
+      .map(value => this.getBreadcrumbUrl(value))
+      .filter(value => value)
       .join('/');
     return `/${resolvedUrl}`;
   }
 
   // get breadcrumb url
   private getBreadcrumbUrl(route: ActivatedRouteSnapshot) {
-    return route.url.map((segment) => segment.toString()).join('/');
+    return route.url.map(segment => segment.toString()).join('/');
   }
 }
 

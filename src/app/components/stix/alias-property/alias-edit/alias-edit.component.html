@@ -5,8 +5,7 @@
         *ngFor="let value of config.object[config.field].slice(1)"
         [removable]="true"
         (removed)="removeAlias(value)"
-        (click)="editAlias(value)"
-      >
+        (click)="editAlias(value)">
         {{ value }} <mat-icon matChipRemove>cancel</mat-icon>
       </mat-chip>
       <button
@@ -15,8 +14,7 @@
         aria-label="add alias"
         matTooltip="add an associated {{ attackType }}"
         matTooltipPosition="right"
-        (click)="editAlias()"
-      >
+        (click)="editAlias()">
         <mat-icon>add</mat-icon>
       </button>
     </mat-chip-listbox>

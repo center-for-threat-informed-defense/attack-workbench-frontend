@@ -15,10 +15,10 @@ export class SidebarService {
     setTimeout(() => this.onTabChange.emit()); //emit after render loop
   }
   public tabEnabled(tabName: tabOption): boolean {
-    return this.tabs.filter((x) => x.name == tabName)[0].enabled;
+    return this.tabs.filter(x => x.name == tabName)[0].enabled;
   }
   public setEnabled(tabName: tabOption, enabled: boolean) {
-    this.tabs.filter((x) => x.name == tabName)[0].enabled = enabled;
+    this.tabs.filter(x => x.name == tabName)[0].enabled = enabled;
   }
   public readonly tabs: TabDefinition[] = [
     {

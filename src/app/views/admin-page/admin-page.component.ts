@@ -16,7 +16,7 @@ export class AdminPageComponent implements OnInit {
     const userSubscription = this.restApiConnector
       .getAllUserAccounts({ status: ['pending'] })
       .subscribe({
-        next: (results) => {
+        next: results => {
           const users = results as any;
           if (users && users.length) this.pendingUsers = users.length;
         },

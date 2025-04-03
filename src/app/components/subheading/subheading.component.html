@@ -5,8 +5,7 @@
   *ngIf="object['stixID']"
   [config]="{
     object: config.object,
-  }"
-></app-stixid-property>
+  }"></app-stixid-property>
 
 <div class="section-header">
   <div class="app-subheading">
@@ -21,8 +20,7 @@
         cdkDrag
         #popoverTrigger2="mtxPopoverTrigger"
         [mtxPopoverTriggerFor]="historyPopover"
-        mtxPopoverTriggerOn="hover"
-      >
+        mtxPopoverTriggerOn="hover">
         Modified
         <app-timestamp-view
           [config]="{
@@ -30,8 +28,7 @@
             object: object,
             field: 'modified',
             humanize: config.mode === 'diff' ? false : true,
-          }"
-        ></app-timestamp-view>
+          }"></app-timestamp-view>
       </button>
       <!-- history peek popover / created/modified dates and user attribution -->
       <mtx-popover
@@ -40,8 +37,7 @@
         leaveDelay="25"
         [position]="['below', 'center']"
         [closeOnPanelClick]="true"
-        [closeOnBackdropClick]="true"
-      >
+        [closeOnBackdropClick]="true">
         <div style="max-width: 30em" class="history-peek">
           <app-timestamp-property
             [config]="{
@@ -50,8 +46,7 @@
               field: 'modified',
               attribution: 'modified_by',
               displayName: 'true',
-            }"
-          ></app-timestamp-property>
+            }"></app-timestamp-property>
           <app-timestamp-property
             [config]="{
               mode: 'view',
@@ -59,8 +54,7 @@
               field: 'created',
               attribution: 'created_by',
               displayName: 'true',
-            }"
-          ></app-timestamp-property>
+            }"></app-timestamp-property>
         </div>
       </mtx-popover>
     </div>
@@ -70,8 +64,7 @@
         [config]="{
           mode: config.mode,
           object: config.object,
-        }"
-      ></app-tlp-property>
+        }"></app-tlp-property>
     </div>
     <!-- marking definitions popover -->
     <div class="section-header-section">
@@ -79,19 +72,19 @@
         [config]="{
           mode: config.mode,
           object: config.object,
-        }"
-      ></app-statement-property>
+        }"></app-statement-property>
     </div>
     <!-- organization attribution - 'view' mode only -->
-    <div *ngIf="object.hasOwnProperty('created')" class="section-header-section source">
+    <div
+      *ngIf="object.hasOwnProperty('created')"
+      class="section-header-section source">
       <app-identity-property
         [config]="{
           mode: 'view',
           object: object,
           field: 'created_by',
           displayName: true,
-        }"
-      ></app-identity-property>
+        }"></app-identity-property>
     </div>
   </div>
 </div>

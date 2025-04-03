@@ -26,11 +26,14 @@ import { AppConfigService } from './services/config/app-config.service';
 })
 export class AppComponent implements AfterViewInit, OnDestroy {
   // Drawer container to resize when contents change size
-  @ViewChild(MatDrawerContainer, { static: true }) private container: MatDrawerContainer;
+  @ViewChild(MatDrawerContainer, { static: true })
+  private container: MatDrawerContainer;
 
   // Elements for scroll behavior
-  @ViewChild('header', { static: false, read: ElementRef }) private header: ElementRef;
-  @ViewChild('scrollRef', { static: false, read: ElementRef }) private scrollRef: ElementRef;
+  @ViewChild('header', { static: false, read: ElementRef })
+  private header: ElementRef;
+  @ViewChild('scrollRef', { static: false, read: ElementRef })
+  private scrollRef: ElementRef;
 
   public theme;
   public alertStatus;
@@ -47,7 +50,7 @@ export class AppComponent implements AfterViewInit, OnDestroy {
     private editorService: EditorService,
     private router: Router,
     private configService: AppConfigService,
-    private logger: NGXLogger,
+    private logger: NGXLogger
   ) {
     // Note: this isn't used directly, but it MUST be imported to work properly
 
@@ -57,7 +60,7 @@ export class AppComponent implements AfterViewInit, OnDestroy {
       this.setDefaultTheme();
     }
     const routerSubscription = this.router.events.subscribe({
-      next: (e) => {
+      next: e => {
         if (e instanceof NavigationEnd && e.url.includes('register')) {
           const registerSubscription = this.authenticationService
             .handleRegisterRedirect()
@@ -70,14 +73,16 @@ export class AppComponent implements AfterViewInit, OnDestroy {
               },
             });
         } else if (e instanceof NavigationEnd) {
-          const authSubscription = this.authenticationService.getSession().subscribe({
-            next: (res) => {
-              this.checkStatus();
-            },
-            complete: () => {
-              authSubscription.unsubscribe();
-            },
-          });
+          const authSubscription = this.authenticationService
+            .getSession()
+            .subscribe({
+              next: res => {
+                this.checkStatus();
+              },
+              complete: () => {
+                authSubscription.unsubscribe();
+              },
+            });
         }
       },
       complete: () => {
@@ -91,8 +96,8 @@ export class AppComponent implements AfterViewInit, OnDestroy {
     // header hiding with scroll
     this.scrollRef.nativeElement.addEventListener(
       'scroll',
-      (e) => this.adjustHeaderPlacement(),
-      true,
+      e => this.adjustHeaderPlacement(),
+      true
     );
     // to fix rare cases that the page has resized without scroll events triggering, recompute the offset every 5 seconds
     setInterval(() => this.adjustHeaderPlacement(), 5000);
@@ -101,8 +106,8 @@ export class AppComponent implements AfterViewInit, OnDestroy {
   ngOnDestroy(): void {
     this.scrollRef.nativeElement.removeEventListener(
       'scroll',
-      (e) => this.adjustHeaderPlacement(),
-      true,
+      e => this.adjustHeaderPlacement(),
+      true
     );
   }
 
@@ -155,7 +160,9 @@ export class AppComponent implements AfterViewInit, OnDestroy {
 
   // Toggle the current theme
   public toggleTheme(): void {
-    this.setTheme(this.theme == Theme.LightMode ? Theme.DarkMode : Theme.LightMode);
+    this.setTheme(
+      this.theme == Theme.LightMode ? Theme.DarkMode : Theme.LightMode
+    );
   }
 
   // Set the initial/default theme based on the operating system/browser settings
@@ -168,7 +175,7 @@ export class AppComponent implements AfterViewInit, OnDestroy {
 
     // use the addEventListener method of the MediaQueryList object to set up a listener that will be called
     // whenever the light/dark mode setting changes
-    mediaQueryList.addEventListener('change', (event) => {
+    mediaQueryList.addEventListener('change', event => {
       if (hasCookie('theme')) {
         // User has set the theme using the app's toggle button, ignore changes in system/browser mode
       } else {
@@ -186,7 +193,8 @@ export class AppComponent implements AfterViewInit, OnDestroy {
   }
 
   private setThemeOnOverlayContainerElement(): void {
-    const overlayContainerClasses = this.overlayContainer.getContainerElement().classList;
+    const overlayContainerClasses =
+      this.overlayContainer.getContainerElement().classList;
     overlayContainerClasses.remove(Theme.DarkMode, Theme.LightMode);
     overlayContainerClasses.add(this.theme);
   }
@@ -196,7 +204,10 @@ export class AppComponent implements AfterViewInit, OnDestroy {
     const headerHeight = this.header.nativeElement.offsetHeight;
     // constrain amount of hidden to bounds, round up because decimal scroll causes flicker
     this.hiddenHeaderPX = Math.floor(
-      Math.min(Math.max(0, this.scrollRef.nativeElement.scrollTop / 2), headerHeight),
+      Math.min(
+        Math.max(0, this.scrollRef.nativeElement.scrollTop / 2),
+        headerHeight
+      )
     );
   }
 

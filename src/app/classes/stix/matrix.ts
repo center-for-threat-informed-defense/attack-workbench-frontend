@@ -61,19 +61,20 @@ export class Matrix extends StixObject {
             sdo.name,
             '(',
             typeof sdo.name,
-            ')',
+            ')'
           );
       } else this.name = '';
 
       if ('tactic_refs' in sdo) {
-        if (this.isStringArray(sdo.tactic_refs)) this.tactic_refs = sdo.tactic_refs;
+        if (this.isStringArray(sdo.tactic_refs))
+          this.tactic_refs = sdo.tactic_refs;
         else
           logger.error(
             'TypeError: tactic_refs field is not a string array:',
             sdo.tactic_refs,
             '(',
             typeof sdo.tactic_refs,
-            ')',
+            ')'
           );
       } else this.tactic_refs = [];
     }
@@ -84,7 +85,9 @@ export class Matrix extends StixObject {
    * @param {RestApiConnectorService} restAPIService: the REST API connector through which asynchronous validation can be completed
    * @returns {Observable<ValidationData>} the validation warnings and errors once validation is complete.
    */
-  public validate(restAPIService: RestApiConnectorService): Observable<ValidationData> {
+  public validate(
+    restAPIService: RestApiConnectorService
+  ): Observable<ValidationData> {
     // TODO verify all tactics exist
     return this.base_validate(restAPIService);
   }
@@ -97,7 +100,7 @@ export class Matrix extends StixObject {
   public save(restAPIService: RestApiConnectorService): Observable<Matrix> {
     const postObservable = restAPIService.postMatrix(this);
     const subscription = postObservable.subscribe({
-      next: (result) => {
+      next: result => {
         this.deserialize(result.serialize());
       },
       complete: () => {
@@ -120,7 +123,7 @@ export class Matrix extends StixObject {
   public update(restAPIService: RestApiConnectorService): Observable<Matrix> {
     const putObservable = restAPIService.putMatrix(this);
     const subscription = putObservable.subscribe({
-      next: (result) => {
+      next: result => {
         this.deserialize(result.serialize());
       },
       complete: () => {

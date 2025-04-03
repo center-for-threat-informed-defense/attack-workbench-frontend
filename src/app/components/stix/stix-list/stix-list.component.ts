@@ -17,7 +17,12 @@ import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 
 import { fromEvent, Observable, of, Subscription } from 'rxjs';
-import { debounceTime, distinctUntilChanged, filter, tap } from 'rxjs/operators';
+import {
+  debounceTime,
+  distinctUntilChanged,
+  filter,
+  tap,
+} from 'rxjs/operators';
 
 import { StixObject } from 'src/app/classes/stix/stix-object';
 import { StixDialogComponent } from 'src/app/views/stix/stix-dialog/stix-dialog.component';
@@ -44,13 +49,19 @@ import { logger } from 'src/app/utils/logger';
         animate('100ms cubic-bezier(0.4, 0.0, 0.2, 1)', style({ height: '*' })),
       ]),
       transition(':leave', [
-        animate('100ms cubic-bezier(0.4, 0.0, 0.2, 1)', style({ height: '0px', minHeight: '0px' })),
+        animate(
+          '100ms cubic-bezier(0.4, 0.0, 0.2, 1)',
+          style({ height: '0px', minHeight: '0px' })
+        ),
       ]),
     ]),
     trigger('fadeIn', [
       transition(':enter', [
         style({ opacity: 0 }),
-        animate('500ms cubic-bezier(0.4, 0.0, 0.2, 1)', style({ opacity: '1' })),
+        animate(
+          '500ms cubic-bezier(0.4, 0.0, 0.2, 1)',
+          style({ opacity: '1' })
+        ),
       ]),
     ]),
   ],
@@ -128,8 +139,16 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
     { value: 'domain.ics-attack', label: 'ics', disabled: false },
   ];
   private statuses: FilterValue[] = [
-    { value: 'status.work-in-progress', label: 'show only work in progress', disabled: false },
-    { value: 'status.awaiting-review', label: 'show only awaiting review', disabled: false },
+    {
+      value: 'status.work-in-progress',
+      label: 'show only work in progress',
+      disabled: false,
+    },
+    {
+      value: 'status.awaiting-review',
+      label: 'show only awaiting review',
+      disabled: false,
+    },
     { value: 'status.reviewed', label: 'show only reviewed', disabled: false },
   ];
   private states: FilterValue[] = [
@@ -138,8 +157,16 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
   ];
 
   private statesExclusive: FilterValue[] = [
-    { value: 'state.exclusive.deprecated', label: 'show only deprecated', disabled: false },
-    { value: 'state.exclusive.revoked', label: 'show only revoked', disabled: false },
+    {
+      value: 'state.exclusive.deprecated',
+      label: 'show only deprecated',
+      disabled: false,
+    },
+    {
+      value: 'state.exclusive.revoked',
+      label: 'show only revoked',
+      disabled: false,
+    },
   ];
 
   public get userSearchString(): string {
@@ -155,37 +182,41 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
     private restAPIConnectorService: RestApiConnectorService,
     private router: Router,
     private authenticationService: AuthenticationService,
-    private sidebarService: SidebarService,
+    private sidebarService: SidebarService
   ) {}
 
   ngOnInit(): void {
     // build query options for platforms
-    this.platformSubscription = this.restAPIConnectorService.getAllAllowedValues().subscribe({
-      next: (data) => {
-        for (const values of data) {
-          // setup domain map (domainName->platforms)
-          const domainMap = new Map<string, string[]>();
-          if (values.properties) {
-            // extract domain->platforms properties from allowedValues structure
-            const properties = values.properties.find((p) => p.propertyName == 'x_mitre_platforms');
-            if (properties?.domains) {
-              properties.domains.forEach((domain) => {
-                domainMap.set(domain.domainName, domain.allowedValues);
-              });
+    this.platformSubscription = this.restAPIConnectorService
+      .getAllAllowedValues()
+      .subscribe({
+        next: data => {
+          for (const values of data) {
+            // setup domain map (domainName->platforms)
+            const domainMap = new Map<string, string[]>();
+            if (values.properties) {
+              // extract domain->platforms properties from allowedValues structure
+              const properties = values.properties.find(
+                p => p.propertyName == 'x_mitre_platforms'
+              );
+              if (properties?.domains) {
+                properties.domains.forEach(domain => {
+                  domainMap.set(domain.domainName, domain.allowedValues);
+                });
+              }
             }
+            // set attackType->domainMap
+            this.platformMap.set(values['objectType'], domainMap);
           }
-          // set attackType->domainMap
-          this.platformMap.set(values['objectType'], domainMap);
-        }
-      },
-      complete: () => {
-        // build the stix list table
-        this.showControls = this.config.showControls ?? true;
-        this.buildTable();
-        this.setUpControls();
-        this.applyControls();
-      },
-    });
+        },
+        complete: () => {
+          // build the stix list table
+          this.showControls = this.config.showControls ?? true;
+          this.buildTable();
+          this.setUpControls();
+          this.applyControls();
+        },
+      });
   }
 
   ngAfterViewInit() {
@@ -196,10 +227,10 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
           filter(Boolean),
           debounceTime(250),
           distinctUntilChanged(),
-          tap((_) => {
+          tap(_ => {
             if (this.paginator) this.paginator.pageIndex = 0;
             this.applyControls();
-          }),
+          })
         )
         .subscribe();
     }
@@ -214,7 +245,9 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
     if (!('showFilters' in this.config)) this.config.showFilters = true;
 
     // parse the config
-    const sticky_allowed = !(this.config.rowAction && this.config.rowAction.position == 'start');
+    const sticky_allowed = !(
+      this.config.rowAction && this.config.rowAction.position == 'start'
+    );
     if ('type' in this.config) {
       // set columns according to type
       switch (this.config.type.replace(/_/g, '-')) {
@@ -230,7 +263,12 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
               display: 'descriptive',
             },
           ];
-          this.collectionColumnsToDisplay = ['action', 'version', 'released', 'description'];
+          this.collectionColumnsToDisplay = [
+            'action',
+            'version',
+            'released',
+            'description',
+          ];
           break;
         case 'collection-imported':
           this.addColumn('name', 'name', 'plain', sticky_allowed, ['name']);
@@ -243,7 +281,11 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
               display: 'descriptive',
             },
           ];
-          this.collectionColumnsToDisplay = ['action', 'version', 'description'];
+          this.collectionColumnsToDisplay = [
+            'action',
+            'version',
+            'description',
+          ];
           break;
         case 'mitigation':
         case 'tactic':
@@ -359,14 +401,17 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
           break;
         case 'relationship':
           this.addColumn('', 'state', 'icon');
-          if (this.config.relationshipType && this.config.relationshipType !== 'detects') {
+          if (
+            this.config.relationshipType &&
+            this.config.relationshipType !== 'detects'
+          ) {
             this.addColumn('source', 'source_ID', 'plain');
             this.addColumn(
               '',
               'source_name',
               'plain',
               this.config.targetRef ? sticky_allowed : false,
-              ['relationship-name'],
+              ['relationship-name']
             );
           } else
             this.addColumn(
@@ -374,7 +419,7 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
               'source_name',
               'plain',
               this.config.targetRef ? sticky_allowed : false,
-              ['relationship-name'],
+              ['relationship-name']
             );
           this.addColumn('type', 'relationship_type', 'plain', false, [
             'text-deemphasis',
@@ -386,9 +431,14 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
             'target_name',
             'plain',
             this.config.sourceRef ? sticky_allowed : false,
-            ['relationship-name'],
+            ['relationship-name']
           );
-          if (!(this.config.relationshipType && this.config.relationshipType == 'subtechnique-of'))
+          if (
+            !(
+              this.config.relationshipType &&
+              this.config.relationshipType == 'subtechnique-of'
+            )
+          )
             this.addColumn('description', 'description', 'descriptive', false);
           break;
         case 'marking-definition':
@@ -437,7 +487,9 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
       if ('selectionModel' in this.config) {
         this.selection = this.config.selectionModel;
       } else {
-        this.selection = new SelectionModel<string>(this.config.select == 'many');
+        this.selection = new SelectionModel<string>(
+          this.config.select == 'many'
+        );
       }
       controls_before.unshift('select'); // add select column to view
     }
@@ -450,19 +502,27 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
     // open-link icon setup
     if (
       this.config.clickBehavior &&
-      ['linkToObjectPage', 'linkToObjectRef'].includes(this.config.clickBehavior)
+      ['linkToObjectPage', 'linkToObjectRef'].includes(
+        this.config.clickBehavior
+      )
     ) {
       controls_after.push('open-link');
     }
 
     // row action setup
     if (this.config.rowAction) {
-      if (this.config.rowAction.position == 'start') controls_before.push('start-action');
+      if (this.config.rowAction.position == 'start')
+        controls_before.push('start-action');
       else controls_after.push('end-action');
     }
-    this.tableColumns_controls = controls_before.concat(this.tableColumns, controls_after);
+    this.tableColumns_controls = controls_before.concat(
+      this.tableColumns,
+      controls_after
+    );
 
-    let filterList = this.config.filterList ? this.config.filterList : ['state', 'workflow_status'];
+    let filterList = this.config.filterList
+      ? this.config.filterList
+      : ['state', 'workflow_status'];
     if (filterList.includes('workflow_status')) {
       this.filterOptions.push({
         name: 'workflow status',
@@ -470,10 +530,13 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
         values: this.statuses,
       });
     }
-    if (filterList.includes('state') && filterList.includes('state_exclusive')) {
-      filterList = filterList.filter((obj) => obj != 'state_exclusive');
+    if (
+      filterList.includes('state') &&
+      filterList.includes('state_exclusive')
+    ) {
+      filterList = filterList.filter(obj => obj != 'state_exclusive');
       logger.error(
-        "Cannot have both 'state' and 'state_exclusive' filters active.  Defaulting to 'state'",
+        "Cannot have both 'state' and 'state_exclusive' filters active.  Defaulting to 'state'"
       );
     }
     if (filterList.includes('state')) {
@@ -491,7 +554,13 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
       });
     }
     const filterByDomain: boolean = this.config.type
-      ? ['data-source', 'mitigation', 'software', 'tactic', 'technique'].includes(this.config.type)
+      ? [
+          'data-source',
+          'mitigation',
+          'software',
+          'tactic',
+          'technique',
+        ].includes(this.config.type)
       : false;
     const filterByPlatform: boolean = this.config.type
       ? ['data-source', 'software', 'technique'].includes(this.config.type)
@@ -505,7 +574,9 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
     }
     if (filterByPlatform) {
       // only build platform filters if config.type is defined and object has 'x_mitre_platforms' field
-      const platforms: FilterValue[] = this.buildPlatformFilter(this.config.type);
+      const platforms: FilterValue[] = this.buildPlatformFilter(
+        this.config.type
+      );
       if (platforms.length) {
         this.filterOptions.push({
           name: 'platform',
@@ -516,7 +587,10 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     // get data from config (if we are not connecting to back-end)
-    if ('stixObjects' in this.config && !(this.config.stixObjects instanceof Observable)) {
+    if (
+      'stixObjects' in this.config &&
+      !(this.config.stixObjects instanceof Observable)
+    ) {
       this.totalObjectCount = this.config.stixObjects.length;
       this.applyControls();
     }
@@ -542,7 +616,7 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
       | 'relationship_name'
       | 'icon',
     sticky?: boolean,
-    classes?: string[],
+    classes?: string[]
   ) {
     this.tableColumns.push(field);
     this.tableColumns_settings.set(field, { label, display, sticky, classes });
@@ -577,7 +651,7 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
       maxHeight: '75vh',
     });
     const subscription = prompt.afterClosed().subscribe({
-      next: (result) => {
+      next: result => {
         if (result) {
           this.userIdsUsedInSearch = select.selected;
           this.applyControls();
@@ -594,7 +668,8 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
    * @param {StixObject} object of the row that was clicked
    */
   public rowClick(element: StixObject) {
-    if (this.config.clickBehavior && this.config.clickBehavior == 'none') return;
+    if (this.config.clickBehavior && this.config.clickBehavior == 'none')
+      return;
     if (this.config.clickBehavior && this.config.clickBehavior == 'dialog') {
       //open modal
       const prompt = this.dialog.open(StixDialogComponent, {
@@ -607,7 +682,7 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
         autoFocus: false, // prevents auto focus on toolbar buttons
       });
       const subscription = prompt.afterClosed().subscribe({
-        next: (result) => {
+        next: result => {
           if (prompt.componentInstance.dirty) {
             //re-fetch values since an edit occurred
             this.applyControls();
@@ -618,21 +693,35 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
           subscription.unsubscribe();
         },
       });
-    } else if (this.config.clickBehavior && this.config.clickBehavior == 'linkToObjectPage') {
+    } else if (
+      this.config.clickBehavior &&
+      this.config.clickBehavior == 'linkToObjectPage'
+    ) {
       this.onRowAction.emit(); // close any open dialogs
-      this.router.navigateByUrl('/' + element.attackType + '/' + element.stixID);
-    } else if (this.config.clickBehavior && this.config.clickBehavior == 'linkToSourceRef') {
+      this.router.navigateByUrl(
+        '/' + element.attackType + '/' + element.stixID
+      );
+    } else if (
+      this.config.clickBehavior &&
+      this.config.clickBehavior == 'linkToSourceRef'
+    ) {
       const source_ref = element['source_ref'];
       // Get type to navigate from source_ref
       const type = this.typeMap[source_ref.split('--')[0]];
 
       this.router.navigateByUrl('/' + type + '/' + source_ref);
-    } else if (this.config.clickBehavior && this.config.clickBehavior == 'linkToTargetRef') {
+    } else if (
+      this.config.clickBehavior &&
+      this.config.clickBehavior == 'linkToTargetRef'
+    ) {
       const target_ref = element['target_ref'];
       // Get type to navigate from target_ref
       const type = this.typeMap[target_ref.split('--')[0]];
       this.router.navigateByUrl('/' + type + '/' + target_ref);
-    } else if (this.config.clickBehavior && this.config.clickBehavior == 'linkToObjectRef') {
+    } else if (
+      this.config.clickBehavior &&
+      this.config.clickBehavior == 'linkToObjectRef'
+    ) {
       // technically a note can be linked to many objects, we will select the first object
       const object_ref = element['object_refs'][0];
       // Get type to navigate from target_ref
@@ -644,15 +733,17 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
       // collection objs have a different URL structure
       let url = `/${type}/${object_ref}`;
       if (type === 'collection') {
-        const collectionSub = this.restAPIConnectorService.getCollection(object_ref).subscribe({
-          next: (result) => {
-            url = `${url}/modified/${result[0].modified.toISOString()}`;
-            this.router.navigateByUrl(url);
-          },
-          complete: () => {
-            collectionSub.unsubscribe();
-          },
-        });
+        const collectionSub = this.restAPIConnectorService
+          .getCollection(object_ref)
+          .subscribe({
+            next: result => {
+              url = `${url}/modified/${result[0].modified.toISOString()}`;
+              this.router.navigateByUrl(url);
+            },
+            complete: () => {
+              collectionSub.unsubscribe();
+            },
+          });
       } else {
         this.router.navigateByUrl(url);
       }
@@ -665,7 +756,9 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
   // AUTHENTICATION FUNCTIONS
 
   public getAccessibleRoutes(attackType: string, routes: any[]) {
-    return routes.filter((route) => this.canAccess(attackType, route) && this.canEdit(route));
+    return routes.filter(
+      route => this.canAccess(attackType, route) && this.canEdit(route)
+    );
   }
 
   public routeTo(url, queryParams): void {
@@ -673,7 +766,11 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   private canAccess(attackType: string, route: any) {
-    if (route.label && route.label == 'edit' && !this.authenticationService.canEdit(attackType)) {
+    if (
+      route.label &&
+      route.label == 'edit' &&
+      !this.authenticationService.canEdit(attackType)
+    ) {
       // user not authorized
       return false;
     }
@@ -697,12 +794,12 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
    * @memberof StixListComponent
    */
   private filterObjects<T>(query: string, objects: T[]): T[] {
-    return objects.filter((obj) => {
-      return Object.keys(obj).some((key) => {
+    return objects.filter(obj => {
+      return Object.keys(obj).some(key => {
         if (typeof obj[key] === 'string')
           return obj[key].toLowerCase().includes(query.toLowerCase());
         else if (Array.isArray(obj[key])) {
-          return obj[key].some((val) => {
+          return obj[key].some(val => {
             if (typeof val === 'string') {
               return val.toLowerCase().includes(query.toLowerCase());
             }
@@ -719,7 +816,7 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
   private enableAllFilters(name: string) {
     for (const group of this.filterOptions) {
       if (group.name == name) {
-        group.values.forEach((option) => (option.disabled = false));
+        group.values.forEach(option => (option.disabled = false));
       }
     }
   }
@@ -734,7 +831,7 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
       // add platforms related to this attackType
       const values = new Set<string>();
       for (const platforms of domainMap.values()) {
-        platforms.forEach((platform) => values.add(platform));
+        platforms.forEach(platform => values.add(platform));
       }
       for (const value of values) {
         platforms.push({
@@ -761,7 +858,7 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
     for (const domain of domains) {
       const platforms = domainMap.get(domain);
       if (platforms) {
-        platforms.forEach((p) => validPlatforms.add(p));
+        platforms.forEach(p => validPlatforms.add(p));
       }
     }
     // set enabledness of platform filters
@@ -789,7 +886,7 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
     if (!domainMap) return; // domains not supported for this attack type
     for (const [domain, domainPlatforms] of domainMap.entries()) {
       // get intersection of selected platforms and the domain platforms
-      const filtered = domainPlatforms.filter((p) => platforms.includes(p));
+      const filtered = domainPlatforms.filter(p => platforms.includes(p));
       if (filtered.length) validDomains.add(domain);
     }
     // set enabledness of domain filters
@@ -827,20 +924,26 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
         //filter by domains
         if (Array.isArray(domains) && domains.length > 0) {
           filtered = filtered.filter((obj: any) =>
-            obj.domains.some((object_domain: any) => domains.includes(object_domain)),
+            obj.domains.some((object_domain: any) =>
+              domains.includes(object_domain)
+            )
           );
         }
 
         //filter by platforms
         if (Array.isArray(platforms) && platforms.length > 0) {
           filtered = filtered.filter((obj: any) =>
-            obj.platforms.some((object_platform: any) => platforms.includes(object_platform)),
+            obj.platforms.some((object_platform: any) =>
+              platforms.includes(object_platform)
+            )
           );
         }
 
         // filter by workflow status
         if (state) {
-          filtered = filtered.filter((obj: any) => obj.workflow && obj.workflow.state == state);
+          filtered = filtered.filter(
+            (obj: any) => obj.workflow && obj.workflow.state == state
+          );
         }
 
         // filter by deprecation status
@@ -858,11 +961,16 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
         }
 
         // filter by users
-        if (Array.isArray(this.userIdsUsedInSearch) && this.userIdsUsedInSearch.length > 0) {
+        if (
+          Array.isArray(this.userIdsUsedInSearch) &&
+          this.userIdsUsedInSearch.length > 0
+        ) {
           filtered = filtered.filter(
             (obj: any) =>
               obj.workflow &&
-              this.userIdsUsedInSearch.includes(obj.workflow.created_by_user_account),
+              this.userIdsUsedInSearch.includes(
+                obj.workflow.created_by_user_account
+              )
           );
         }
 
@@ -879,8 +987,12 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
         if (this.paginator) this.totalObjectCount = filtered.length;
 
         // filter to only ones within the correct index range
-        const startIndex = this.paginator ? this.paginator.pageIndex * this.paginator.pageSize : 0;
-        const endIndex = this.paginator ? startIndex + this.paginator.pageSize : 10;
+        const startIndex = this.paginator
+          ? this.paginator.pageIndex * this.paginator.pageSize
+          : 0;
+        const endIndex = this.paginator
+          ? startIndex + this.paginator.pageSize
+          : 10;
         filtered = filtered.slice(startIndex, endIndex);
         this.data$ = of({
           data: filtered,
@@ -947,11 +1059,12 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
       else if (this.config.type == 'asset')
         this.data$ = this.restAPIConnectorService.getAllAssets(options);
       else if (this.config.type == 'marking-definition')
-        this.data$ = this.restAPIConnectorService.getAllMarkingDefinitions(options);
+        this.data$ =
+          this.restAPIConnectorService.getAllMarkingDefinitions(options);
       else if (this.config.type == 'note')
         this.data$ = this.restAPIConnectorService.getAllNotes(options);
       const subscription = this.data$.subscribe({
-        next: (data) => {
+        next: data => {
           this.totalObjectCount = data.pagination.total;
         },
         complete: () => {
@@ -987,13 +1100,17 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
     const revoked = this.filter.includes('state.revoked');
 
     // exclusive deprecated filter
-    const exclusiveDeprecated = this.filter.includes('state.exclusive.deprecated');
+    const exclusiveDeprecated = this.filter.includes(
+      'state.exclusive.deprecated'
+    );
     // exclusive revoked filter
     const exclusiveRevoked = this.filter.includes('state.exclusive.revoked');
 
     // state exclusive logic
     if (exclusiveDeprecated || exclusiveRevoked) {
-      const search = exclusiveDeprecated ? 'state.exclusive.revoked' : 'state.exclusive.deprecated';
+      const search = exclusiveDeprecated
+        ? 'state.exclusive.revoked'
+        : 'state.exclusive.deprecated';
       for (const group of this.filterOptions) {
         for (const option of group.values) {
           if (option.value == search) option.disabled = true;
@@ -1004,13 +1121,16 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     // state filter
-    let state = this.filter.find((x) => x.startsWith('status.'));
+    let state = this.filter.find(x => x.startsWith('status.'));
     if (state) {
       state = state.split('status.')[1];
       // disable other states
       for (const group of this.filterOptions) {
         for (const option of group.values) {
-          if (option.value.startsWith('status.') && !option.value.endsWith(state))
+          if (
+            option.value.startsWith('status.') &&
+            !option.value.endsWith(state)
+          )
             option.disabled = true;
         }
       }
@@ -1020,9 +1140,11 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     // platform filter
-    let platforms: string[] = this.filter.filter((x) => x.startsWith('platform.'));
+    let platforms: string[] = this.filter.filter(x =>
+      x.startsWith('platform.')
+    );
     if (platforms.length) {
-      platforms = platforms.map((p) => p.split('platform.')[1]);
+      platforms = platforms.map(p => p.split('platform.')[1]);
       // disable domains that do not support selected platforms
       this.disableDomainFilters(platforms);
     } else {
@@ -1031,9 +1153,9 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     // domain filter
-    let domains: string[] = this.filter.filter((x) => x.startsWith('domain.'));
+    let domains: string[] = this.filter.filter(x => x.startsWith('domain.'));
     if (domains.length) {
-      domains = domains.map((d) => d.split('domain.')[1]);
+      domains = domains.map(d => d.split('domain.')[1]);
       // disable platforms not in selected domains
       this.disablePlatformFilters(domains);
     } else {

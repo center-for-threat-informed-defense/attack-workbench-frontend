@@ -19,7 +19,9 @@ export class AliasEditComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    const object = Array.isArray(this.config.object) ? this.config.object[0] : this.config.object;
+    const object = Array.isArray(this.config.object)
+      ? this.config.object[0]
+      : this.config.object;
     this.attackType = object.attackType;
   }
 
@@ -42,10 +44,10 @@ export class AliasEditComponent implements OnInit {
   public removeAlias(aliasName: string) {
     const obj = this.config.object as StixObject;
     // remove from alias field
-    obj[this.config.field] = obj[this.config.field].filter((x) => x != aliasName);
+    obj[this.config.field] = obj[this.config.field].filter(x => x != aliasName);
     // remove external reference citation
     let references = obj.external_references.serialize();
-    references = references.filter((ref) => {
+    references = references.filter(ref => {
       if (ref.source_name == aliasName) {
         return false;
       }

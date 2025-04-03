@@ -82,7 +82,8 @@ export class VersionNumber {
    */
   public compareTo(that: VersionNumber): number {
     for (let i = 0; i < Math.max(this.granularity, that.granularity); i++) {
-      if (this.granularity == that.granularity && this.granularity < i) return 0; //same version
+      if (this.granularity == that.granularity && this.granularity < i)
+        return 0; //same version
       if (this.granularity < i) return -1;
       if (that.granularity < i) return 1;
       if (this.getSubVersion(i) == that.getSubVersion(i)) continue;
@@ -101,9 +102,14 @@ export class VersionNumber {
     // sum up increments of each index
     let timesIncremented = 0; //track the number of times it has been incremented
     for (let i = 0; i < Math.max(this.granularity, that.granularity); i++) {
-      const thisVersionIndex = this.granularity >= i ? this.getSubVersion(i) : 0;
+      const thisVersionIndex =
+        this.granularity >= i ? this.getSubVersion(i) : 0;
       const thatVersionIndex =
-        timesIncremented > 0 ? 0 : that.granularity >= i ? that.getSubVersion(i) : 0; //if it has been incremented at a higher index, expect later indexes to be 0
+        timesIncremented > 0
+          ? 0
+          : that.granularity >= i
+            ? that.getSubVersion(i)
+            : 0; //if it has been incremented at a higher index, expect later indexes to be 0
       timesIncremented += Math.max(thisVersionIndex - thatVersionIndex, 0);
       if (timesIncremented > 1) return true;
     }
@@ -133,9 +139,12 @@ export function versionNumberFormatValidator(): ValidatorFn {
  * form field validator checking if the version has been incremented
  * @param previousVersion the version the object was previously, for comparison
  */
-export function versionNumberIncrementValidator(previousVersion: VersionNumber): ValidatorFn {
+export function versionNumberIncrementValidator(
+  previousVersion: VersionNumber
+): ValidatorFn {
   return (control: AbstractControl): Record<string, any> | null => {
-    const valid = new VersionNumber(control.value).compareTo(previousVersion) > 0;
+    const valid =
+      new VersionNumber(control.value).compareTo(previousVersion) > 0;
     return !valid ? { versionNotIncremented: { value: control.value } } : null;
   };
 }

@@ -27,7 +27,7 @@ export abstract class Serializable {
    */
   public abstract validate(
     restAPIService: RestApiConnectorService,
-    options?: any,
+    options?: any
   ): Observable<ValidationData>;
 }
 

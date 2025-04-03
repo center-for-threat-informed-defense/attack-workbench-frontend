@@ -20,13 +20,16 @@ export class IdentityPropertyComponent implements OnInit {
 
   constructor(
     private authenticationService: AuthenticationService,
-    private restAPIConnector: RestApiConnectorService,
+    private restAPIConnector: RestApiConnectorService
   ) {}
 
   ngOnInit(): void {
-    const object = Array.isArray(this.config.object) ? this.config.object[0] : this.config.object;
+    const object = Array.isArray(this.config.object)
+      ? this.config.object[0]
+      : this.config.object;
 
-    if (object[this.config.field]) this.identity = object[this.config.field] as Identity;
+    if (object[this.config.field])
+      this.identity = object[this.config.field] as Identity;
 
     // if logged in, show individual user attribution
     if (
@@ -35,14 +38,16 @@ export class IdentityPropertyComponent implements OnInit {
       object?.['workflow']?.['created_by_user_account']
     ) {
       const userID = object.workflow.created_by_user_account;
-      this.userSubscription$ = this.restAPIConnector.getUserAccount(userID).subscribe({
-        next: (account) => {
-          const user = new UserAccount(account);
-          if (!this.identity) this.identity = new Identity();
-          this.identity.name = user.displayName;
-        },
-        complete: () => this.userSubscription$.unsubscribe(),
-      });
+      this.userSubscription$ = this.restAPIConnector
+        .getUserAccount(userID)
+        .subscribe({
+          next: account => {
+            const user = new UserAccount(account);
+            if (!this.identity) this.identity = new Identity();
+            this.identity.name = user.displayName;
+          },
+          complete: () => this.userSubscription$.unsubscribe(),
+        });
     }
   }
 }

@@ -20,14 +20,16 @@ export class SoftwareViewComponent extends StixViewPage implements OnInit {
 
   constructor(
     authenticationService: AuthenticationService,
-    private restApiConnector: RestApiConnectorService,
+    private restApiConnector: RestApiConnectorService
   ) {
     super(authenticationService);
   }
 
   ngOnInit() {
     if (this.software.firstInitialized) {
-      this.software.initializeWithDefaultMarkingDefinitions(this.restApiConnector);
+      this.software.initializeWithDefaultMarkingDefinitions(
+        this.restApiConnector
+      );
     }
   }
 }

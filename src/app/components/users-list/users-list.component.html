@@ -6,13 +6,18 @@
     <div class="input-group">
       <mat-form-field class="search" appearance="fill" *ngIf="showSearch">
         <mat-label>search</mat-label>
-        <input matInput (keyup)="applySearch($event.target.value)" [(ngModel)]="searchQuery" />
+        <input
+          matInput
+          (keyup)="applySearch($event.target.value)"
+          [(ngModel)]="searchQuery" />
       </mat-form-field>
 
       <mat-form-field appearance="fill" *ngIf="showFilters">
         <mat-label>options</mat-label>
         <mat-select multiple (selectionChange)="applyFilters($event.value)">
-          <mat-optgroup *ngFor="let group of filterOptions" [label]="group.name">
+          <mat-optgroup
+            *ngFor="let group of filterOptions"
+            [label]="group.name">
             <mat-option *ngFor="let filter of group.values" [value]="filter">{{
               filter
             }}</mat-option>
@@ -29,8 +34,7 @@
       mat-table
       *ngIf="userAccounts.length > 0; else nothingHere"
       [dataSource]="userAccounts"
-      aria-label="user accounts table"
-    >
+      aria-label="user accounts table">
       <!-- username column -->
       <ng-container matColumnDef="username">
         <th scope="col" mat-header-cell *matHeaderCellDef>Username</th>
@@ -51,17 +55,19 @@
             *ngIf="isAdmin && user.id !== currentUser.id"
             [value]="user.status"
             (selectionChange)="updateUserStatus(user, $event.value)"
-            [(ngModel)]="user.status"
-          >
+            [(ngModel)]="user.status">
             <mat-select-trigger>
               <mat-chip-listbox>
                 <mat-chip
                   color="primary"
                   class="status"
                   [ngClass]="
-                    user.status === 'active' ? 'active' : user.status === 'pending' ? 'pending' : ''
-                  "
-                >
+                    user.status === 'active'
+                      ? 'active'
+                      : user.status === 'pending'
+                        ? 'pending'
+                        : ''
+                  ">
                   {{ user.status }}
                 </mat-chip>
               </mat-chip-listbox>
@@ -79,9 +85,12 @@
               color="primary"
               class="role"
               [ngClass]="
-                user.status === 'active' ? 'active' : user.status === 'pending' ? 'pending' : ''
-              "
-            >
+                user.status === 'active'
+                  ? 'active'
+                  : user.status === 'pending'
+                    ? 'pending'
+                    : ''
+              ">
               {{ user.status }}
             </mat-chip>
           </mat-chip-listbox>
@@ -95,8 +104,7 @@
             *ngIf="isAdmin && user.id !== currentUser.id"
             [value]="user.role"
             (selectionChange)="updateUserRole(user, $event.value)"
-            [(ngModel)]="user.role"
-          >
+            [(ngModel)]="user.role">
             <mat-option
               class="no-checkbox"
               *ngFor="let role of filterOptions[1].values"
@@ -113,7 +121,11 @@
       <ng-container matColumnDef="options" stickyEnd>
         <th mat-header-cell *matHeaderCellDef></th>
         <!-- nothing in header -->
-        <td mat-cell *matCellDef="let user" class="icon-cell" (click)="removeUser(user)">
+        <td
+          mat-cell
+          *matCellDef="let user"
+          class="icon-cell"
+          (click)="removeUser(user)">
           <mat-icon
             aria-hidden="false"
             aria-label="remove-user-from-team"
@@ -132,19 +144,20 @@
             color="primary"
             (click)="onSelect.emit(user.id); $event.stopPropagation()"
             (change)="$event ? selection.toggle(user.id) : null"
-            [checked]="selection.isSelected(user.id)"
-          >
+            [checked]="selection.isSelected(user.id)">
           </mat-checkbox>
         </td>
       </ng-container>
       <tr mat-header-row *matHeaderRowDef="columnsToDisplay"></tr>
-      <tr mat-row *matRowDef="let myRowData; columns: columnsToDisplay" class="element-row"></tr>
+      <tr
+        mat-row
+        *matRowDef="let myRowData; columns: columnsToDisplay"
+        class="element-row"></tr>
     </table>
     <ng-template #nothingHere>
       <app-empty-list-marker
         [message]="'Nothing here'"
-        (onCheckAgain)="applyControls()"
-      ></app-empty-list-marker>
+        (onCheckAgain)="applyControls()"></app-empty-list-marker>
     </ng-template>
   </div>
   <!-- ---------- -->
@@ -154,9 +167,10 @@
     [pageSizeOptions]="[5, 10, 25, 100]"
     pageSize="10"
     (page)="applyControls()"
-    [length]="totalObjectCount"
-  ></mat-paginator>
+    [length]="totalObjectCount"></mat-paginator>
 </div>
 <ng-template #loading>
-  <app-loading-overlay *ngIf="!userAccounts" message="loading user accounts"></app-loading-overlay>
+  <app-loading-overlay
+    *ngIf="!userAccounts"
+    message="loading user accounts"></app-loading-overlay>
 </ng-template>

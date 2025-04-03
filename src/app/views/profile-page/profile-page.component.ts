@@ -31,7 +31,7 @@ export class ProfilePageComponent implements OnInit, OnDestroy {
     private authenticationService: AuthenticationService,
     private editorService: EditorService,
     private restApiService: RestApiConnectorService,
-    private router: Router,
+    private router: Router
   ) {
     // intentionally left blank
   }
@@ -39,7 +39,7 @@ export class ProfilePageComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.getTeams();
     this.saveSubscription = this.editorService.onSave.subscribe({
-      next: (_event) => this.save(),
+      next: _event => this.save(),
     });
   }
 
@@ -50,21 +50,23 @@ export class ProfilePageComponent implements OnInit, OnDestroy {
   /** get list of teams the user is in */
   private getTeams() {
     this.loading = true;
-    const teamSubscription = this.restApiService.getTeamsByUserId(this.user.id).subscribe({
-      next: (teams) => {
-        this.teamNames = teams.map((team) => team.name);
-        this.loading = false;
-      },
-      complete: () => {
-        teamSubscription.unsubscribe();
-      },
-    });
+    const teamSubscription = this.restApiService
+      .getTeamsByUserId(this.user.id)
+      .subscribe({
+        next: teams => {
+          this.teamNames = teams.map(team => team.name);
+          this.loading = false;
+        },
+        complete: () => {
+          teamSubscription.unsubscribe();
+        },
+      });
   }
 
   /** save profile changes */
   private save(): void {
     const saveUser = this.user.save(this.restApiService).subscribe({
-      next: (_saveResult) => this.router.navigate(['/profile']),
+      next: _saveResult => this.router.navigate(['/profile']),
       complete: () => {
         saveUser.unsubscribe();
       },

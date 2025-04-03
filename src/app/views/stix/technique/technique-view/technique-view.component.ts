@@ -18,7 +18,10 @@ import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/re
   styleUrls: ['./technique-view.component.scss'],
   encapsulation: ViewEncapsulation.None,
 })
-export class TechniqueViewComponent extends StixViewPage implements OnInit, AfterContentChecked {
+export class TechniqueViewComponent
+  extends StixViewPage
+  implements OnInit, AfterContentChecked
+{
   @Output() public onReload = new EventEmitter();
   public get technique(): Technique {
     return this.configCurrentObject as Technique;
@@ -30,14 +33,16 @@ export class TechniqueViewComponent extends StixViewPage implements OnInit, Afte
   constructor(
     private ref: ChangeDetectorRef,
     authenticationService: AuthenticationService,
-    private restApiConnector: RestApiConnectorService,
+    private restApiConnector: RestApiConnectorService
   ) {
     super(authenticationService);
   }
 
   ngOnInit() {
     if (this.technique.firstInitialized) {
-      this.technique.initializeWithDefaultMarkingDefinitions(this.restApiConnector);
+      this.technique.initializeWithDefaultMarkingDefinitions(
+        this.restApiConnector
+      );
     }
   }
 
@@ -46,12 +51,14 @@ export class TechniqueViewComponent extends StixViewPage implements OnInit, Afte
   }
 
   public showCapecIdsField(): boolean {
-    if (!this.config.mode || this.config.mode == 'view') return this.technique.capec_ids.length > 0;
+    if (!this.config.mode || this.config.mode == 'view')
+      return this.technique.capec_ids.length > 0;
     return this.technique.supportsCapecIds || this.previous?.supportsCapecIds;
   }
 
   public showMtcIdsField(): boolean {
-    if (!this.config.mode || this.config.mode == 'view') return this.technique.mtc_ids.length > 0;
+    if (!this.config.mode || this.config.mode == 'view')
+      return this.technique.mtc_ids.length > 0;
     return this.technique.supportsMtcIds || this.previous?.supportsMtcIds;
   }
 

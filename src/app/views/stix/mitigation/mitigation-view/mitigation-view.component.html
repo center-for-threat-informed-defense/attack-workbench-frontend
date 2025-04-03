@@ -5,13 +5,11 @@
         [config]="{
           mode: config.mode,
           object: config.object,
-        }"
-      ></app-name-property>
+        }"></app-name-property>
       <app-subheading
         [config]="config"
         (onOpenHistory)="openHistory()"
-        (onOpenNotes)="openNotes()"
-      ></app-subheading>
+        (onOpenNotes)="openNotes()"></app-subheading>
     </div>
   </div>
   <div class="row">
@@ -22,8 +20,7 @@
         [config]="{
           mode: config.mode,
           object: config.object,
-        }"
-      ></app-attackid-property>
+        }"></app-attackid-property>
     </div>
     <div class="col">
       <!-- VERSION NUMBER -->
@@ -32,8 +29,7 @@
         [config]="{
           mode: config.mode,
           object: config.object,
-        }"
-      ></app-version-property>
+        }"></app-version-property>
     </div>
   </div>
   <!-- DOMAIN -->
@@ -46,8 +42,7 @@
           object: config.object,
           field: 'domains',
           editType: 'select',
-        }"
-      ></app-list-property>
+        }"></app-list-property>
     </div>
   </div>
   <!-- SECURITY CONTROLS -->
@@ -61,8 +56,7 @@
           field: 'securityControls',
           label: 'security controls',
           editType: 'any',
-        }"
-      ></app-list-property>
+        }"></app-list-property>
     </div>
   </div>
   <div class="row">
@@ -76,14 +70,16 @@
           firstParagraphOnly: false,
           referencesField: 'external_references',
           label: 'Description',
-        }"
-      ></app-descriptive-property>
+        }"></app-descriptive-property>
     </div>
   </div>
   <!-- RELATIONSHIPS - NOTE: these are only shown in 'view' mode -->
   <div
-    *ngIf="(config.showRelationships || !config.hasOwnProperty('showRelationships')) && !editing"
-  >
+    *ngIf="
+      (config.showRelationships ||
+        !config.hasOwnProperty('showRelationships')) &&
+      !editing
+    ">
     <div class="row">
       <div class="col">
         <h2 class="section-header">Techniques Addressed by Mitigation</h2>
@@ -98,8 +94,7 @@
             relationship_type: 'mitigates',
             targetType: 'technique',
             source_object: mitigation,
-          }"
-        ></app-add-relationship-button>
+          }"></app-add-relationship-button>
       </div>
     </div>
     <div class="row">
@@ -112,8 +107,7 @@
             relationshipType: 'mitigates',
             clickBehavior: 'dialog',
             allowEdits: true,
-          }"
-        ></app-stix-list>
+          }"></app-stix-list>
       </div>
     </div>
   </div>
@@ -122,8 +116,7 @@
     *ngIf="
       mitigation.external_references.list().length > 0 ||
       previous?.external_references.list().length > 0
-    "
-  >
+    ">
     <div class="row">
       <div class="col">
         <h2 class="section-header">References</h2>
@@ -136,8 +129,7 @@
             mode: config.mode,
             object: config.object,
             referencesField: 'external_references',
-          }"
-        ></app-external-references-property>
+          }"></app-external-references-property>
       </div>
     </div>
   </div>

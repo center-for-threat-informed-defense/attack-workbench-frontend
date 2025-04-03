@@ -8,22 +8,21 @@
         cdkDrag
         #popoverTrigger2="mtxPopoverTrigger"
         [mtxPopoverTriggerFor]="popover"
-        mtxPopoverTriggerOn="hover"
-      >
+        mtxPopoverTriggerOn="hover">
         help_outline
       </mat-icon>
       <mtx-popover
         #popover="mtxPopover"
         [position]="['below', 'center']"
         enterDelay="25"
-        leaveDelay="25"
-      >
+        leaveDelay="25">
         <div style="max-width: 26em">
           <span class="help-content"
-            >Assets represent the devices and systems commonly found within Industrial Control
-            System environments. Each asset object includes a mapping of technique relationships
-            that represent the adversary actions that may target the device based on its capability
-            and function.</span
+            >Assets represent the devices and systems commonly found within
+            Industrial Control System environments. Each asset object includes a
+            mapping of technique relationships that represent the adversary
+            actions that may target the device based on its capability and
+            function.</span
           >
         </div>
       </mtx-popover>
@@ -34,13 +33,16 @@
         class="extended-button"
         color="primary"
         [routerLink]="['/asset/new']"
-        [queryParams]="{ editing: true }"
-      >
-        <mat-icon>create</mat-icon> <span class="text-label">create an asset</span>
+        [queryParams]="{ editing: true }">
+        <mat-icon>create</mat-icon>
+        <span class="text-label">create an asset</span>
       </button>
     </div>
   </div>
   <app-stix-list
-    [config]="{ type: 'asset', showLinks: true, showUserSearch: true }"
-  ></app-stix-list>
+    [config]="{
+      type: 'asset',
+      showLinks: true,
+      showUserSearch: true,
+    }"></app-stix-list>
 </div>

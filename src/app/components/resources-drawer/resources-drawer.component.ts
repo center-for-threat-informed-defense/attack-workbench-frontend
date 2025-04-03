@@ -1,4 +1,10 @@
-import { Component, ViewEncapsulation, Output, EventEmitter, Input } from '@angular/core';
+import {
+  Component,
+  ViewEncapsulation,
+  Output,
+  EventEmitter,
+  Input,
+} from '@angular/core';
 import { AuthenticationService } from 'src/app/services/connectors/authentication/authentication.service';
 import { SidebarService } from 'src/app/services/sidebar/sidebar.service';
 
@@ -27,7 +33,7 @@ export class ResourcesDrawerComponent {
 
   constructor(
     public sidebarService: SidebarService,
-    public authenticationService: AuthenticationService,
+    public authenticationService: AuthenticationService
   ) {}
 
   public onTabClick(tab: any) {

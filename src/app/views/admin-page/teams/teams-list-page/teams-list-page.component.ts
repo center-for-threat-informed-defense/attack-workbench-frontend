@@ -34,7 +34,7 @@ export class TeamsListPageComponent implements OnInit {
     private restAPIConnector: RestApiConnectorService,
     private authenticationService: AuthenticationService,
     private dialog: MatDialog,
-    private router: Router,
+    private router: Router
   ) {
     this.columnsToDisplay = ['name', 'description', 'members', 'open_link'];
   }
@@ -49,7 +49,7 @@ export class TeamsListPageComponent implements OnInit {
    */
   public getTeams(options: { limit: number; offset: number; search?: string }) {
     const subscription = this.restAPIConnector.getAllTeams(options).subscribe({
-      next: (response) => {
+      next: response => {
         this.teams = response.data;
         this.totalObjectCount = response.pagination.total;
       },
@@ -63,7 +63,8 @@ export class TeamsListPageComponent implements OnInit {
    */
   public applyFilters(applyControls = false): void {
     const limit = this.paginator ? this.paginator.pageSize : 10;
-    const offset = this.paginator || applyControls ? this.paginator.pageIndex * limit : 0;
+    const offset =
+      this.paginator || applyControls ? this.paginator.pageIndex * limit : 0;
     if (!applyControls && this.paginator) this.paginator.pageIndex = 0;
     this.getTeams({ limit: limit, offset: offset });
   }
@@ -74,7 +75,8 @@ export class TeamsListPageComponent implements OnInit {
    */
   public applySearch(query, applyControls = false): void {
     const limit = this.paginator ? this.paginator.pageSize : 10;
-    const offset = this.paginator || applyControls ? this.paginator.pageIndex * limit : 0;
+    const offset =
+      this.paginator || applyControls ? this.paginator.pageIndex * limit : 0;
     if (!applyControls && this.paginator) this.paginator.pageIndex = 0;
     this.searchQuery = query;
     this.getTeams({ limit: limit, offset: offset, search: query });
@@ -121,19 +123,21 @@ export class TeamsListPageComponent implements OnInit {
       },
     });
     const subscription = prompt.afterClosed().subscribe({
-      next: (responseObj) => {
+      next: responseObj => {
         if (responseObj.createObject) {
           const { name, description } = responseObj.newObject;
           const newTeam = new Team({ name, description, userIDs: [] });
-          const createTeamSub = this.restAPIConnector.postTeam(newTeam).subscribe({
-            next: (response) => {
-              if (response) {
-                this.applyControls();
-                this.router.navigateByUrl('/admin/teams/' + response.id);
-              }
-            },
-            complete: () => createTeamSub.unsubscribe(),
-          });
+          const createTeamSub = this.restAPIConnector
+            .postTeam(newTeam)
+            .subscribe({
+              next: response => {
+                if (response) {
+                  this.applyControls();
+                  this.router.navigateByUrl('/admin/teams/' + response.id);
+                }
+              },
+              complete: () => createTeamSub.unsubscribe(),
+            });
         }
       },
       complete: () => {

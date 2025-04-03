@@ -9,8 +9,7 @@
             <input
               matInput
               [(ngModel)]="url"
-              (keyup.enter)="url.length > 0 ? previewCollection() : null"
-            />
+              (keyup.enter)="url.length > 0 ? previewCollection() : null" />
             <mat-icon matSuffix>cloud_download</mat-icon>
           </mat-form-field>
           <div class="spacer">or</div>
@@ -19,8 +18,7 @@
             <ngx-mat-file-input
               [disabled]="url.length > 0"
               accept=".json, .csv, .xlsx"
-              (change)="getCollectionFromFile($event)"
-            ></ngx-mat-file-input>
+              (change)="getCollectionFromFile($event)"></ngx-mat-file-input>
             <mat-icon matSuffix>attach_file</mat-icon>
             <mat-hint>supported formats: .json, .csv, .xlsx</mat-hint>
           </mat-form-field>
@@ -30,14 +28,14 @@
             mat-raised-button
             color="primary"
             (click)="getCollectionFromURL()"
-            *ngIf="url.length > 0"
-          >
+            *ngIf="url.length > 0">
             <span class="text-label">preview</span>
           </button>
         </div>
       </ng-container>
       <ng-template #loadingStep1_marker>
-        <app-loading-overlay message="loading collection preview"></app-loading-overlay>
+        <app-loading-overlay
+          message="loading collection preview"></app-loading-overlay>
       </ng-template>
     </mat-step>
     <mat-step>
@@ -45,38 +43,47 @@
       <app-collection-import-error
         *ngIf="import_errors && !loadingStep2"
         [error]="import_errors"
-        (onCancel)="cancelImport()"
-      ></app-collection-import-error>
+        (onCancel)="cancelImport()"></app-collection-import-error>
       <div *ngIf="select && !loadingStep2; else loadingStep2_marker">
         <p *ngIf="csvWarning" class="nomargin">
-          <span class="warn">WARNING</span>: some data may be lost when importing from a CSV or XLSX
-          file.
+          <span class="warn">WARNING</span>: some data may be lost when
+          importing from a CSV or XLSX file.
         </p>
         <p class="nomargin">
-          Below are the objects of the collection as compared to the current contents of your
-          workbench. Select the objects you want to import into your knowledge base.
+          Below are the objects of the collection as compared to the current
+          contents of your workbench. Select the objects you want to import into
+          your knowledge base.
         </p>
         <app-collection-import-summary
           [config]="{
             object_import_categories: object_import_categories,
             select: select,
-          }"
-        ></app-collection-import-summary>
+          }"></app-collection-import-summary>
         <div class="center">
           <p class="text-deemphasis">
-            Importing {{ select.selected.length }}/{{ changed_ids.length }} objects
+            Importing {{ select.selected.length }}/{{ changed_ids.length }}
+            objects
           </p>
           <p *ngIf="errorObjects.length > 0" class="error">
-            {{ errorObjects.length }} rows cannot be imported due to missing or malformed fields
+            {{ errorObjects.length }} rows cannot be imported due to missing or
+            malformed fields
           </p>
           <div class="action-bar nomargin">
             <button mat-stroked-button (click)="selectAll()">select all</button>
-            <button mat-stroked-button (click)="deselectAll()">deselect all</button>
+            <button mat-stroked-button (click)="deselectAll()">
+              deselect all
+            </button>
           </div>
           <div *ngIf="changed_ids.length > 0" class="action-bar">
-            <button mat-raised-button class="extended-button" color="primary" (click)="import()">
+            <button
+              mat-raised-button
+              class="extended-button"
+              color="primary"
+              (click)="import()">
               <mat-icon aria-label="add">save_alt</mat-icon>
-              <span class="text-label">{{ import_errors ? 'Proceed with ' : '' }} Import</span>
+              <span class="text-label"
+                >{{ import_errors ? 'Proceed with ' : '' }} Import</span
+              >
             </button>
           </div>
           <div *ngIf="changed_ids.length === 0" class="action-bar">
@@ -84,8 +91,7 @@
               mat-raised-button
               class="extended-button"
               color="primary"
-              (click)="cancelImport()"
-            >
+              (click)="cancelImport()">
               <mat-icon aria-label="close">close</mat-icon>
               <span class="text-label">Cancel Import</span>
             </button>
@@ -95,8 +101,7 @@
       <ng-template #loadingStep2_marker>
         <app-loading-overlay
           *ngIf="loadingStep2"
-          message="importing collection"
-        ></app-loading-overlay>
+          message="importing collection"></app-loading-overlay>
       </ng-template>
     </mat-step>
     <mat-step>
@@ -104,8 +109,9 @@
       <div *ngIf="select">
         <h3>Success! The collection has been imported into your workbench.</h3>
         <p>
-          {{ successfully_saved.size }} new objects were added. You can review the imported objects
-          at any time on the <span class="text-label">imported collections</span> section of the
+          {{ successfully_saved.size }} new objects were added. You can review
+          the imported objects at any time on the
+          <span class="text-label">imported collections</span> section of the
           collection page.
         </p>
         <ng-container *ngIf="save_errors.length > 0">

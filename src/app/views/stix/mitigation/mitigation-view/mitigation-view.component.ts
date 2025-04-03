@@ -1,7 +1,6 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { Mitigation } from 'src/app/classes/stix/mitigation';
 import { StixViewPage } from '../../stix-view-page';
-import { Relationship } from 'src/app/classes/stix/relationship';
 import { AuthenticationService } from 'src/app/services/connectors/authentication/authentication.service';
 import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/rest-api-connector.service';
 
@@ -26,21 +25,24 @@ export class MitigationViewComponent extends StixViewPage implements OnInit {
       return this.editing && this.mitigation.domains.includes('ics-attack');
     if (this.config.mode == 'diff')
       return (
-        this.mitigation?.securityControls?.length > 0 || this.previous?.securityControls?.length > 0
+        this.mitigation?.securityControls?.length > 0 ||
+        this.previous?.securityControls?.length > 0
       );
     return false;
   }
 
   constructor(
     authenticationService: AuthenticationService,
-    private restApiConnector: RestApiConnectorService,
+    private restApiConnector: RestApiConnectorService
   ) {
     super(authenticationService);
   }
 
   ngOnInit() {
     if (this.mitigation.firstInitialized) {
-      this.mitigation.initializeWithDefaultMarkingDefinitions(this.restApiConnector);
+      this.mitigation.initializeWithDefaultMarkingDefinitions(
+        this.restApiConnector
+      );
     }
   }
 }

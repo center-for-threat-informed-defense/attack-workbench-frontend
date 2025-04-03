@@ -25,7 +25,7 @@ export class MarkingDefinitionViewComponent extends StixViewPage {
     public dialog: MatDialog,
     private router: Router,
     private restApiConnector: RestApiConnectorService,
-    authenticationService: AuthenticationService,
+    authenticationService: AuthenticationService
   ) {
     super(authenticationService);
   }
@@ -45,10 +45,12 @@ export class MarkingDefinitionViewComponent extends StixViewPage {
   public validate() {
     this.validating = true;
     this.validationData = null;
-    const subscription = this.markingDefinition.validate(this.restApiConnector).subscribe({
-      next: (results) => (this.validationData = results),
-      complete: () => subscription.unsubscribe(),
-    });
+    const subscription = this.markingDefinition
+      .validate(this.restApiConnector)
+      .subscribe({
+        next: results => (this.validationData = results),
+        complete: () => subscription.unsubscribe(),
+      });
   }
 
   /**
@@ -59,23 +61,29 @@ export class MarkingDefinitionViewComponent extends StixViewPage {
     const prompt = this.dialog.open(ConfirmationDialogComponent, {
       maxWidth: '35em',
       data: {
-        message: 'Are you sure you want to save this statement? You cannot modify it after saving',
+        message:
+          'Are you sure you want to save this statement? You cannot modify it after saving',
       },
       autoFocus: false, // prevents auto focus on buttons
     });
 
     const subscriptionPrompt = prompt.afterClosed().subscribe({
-      next: (result) => {
+      next: result => {
         if (result) {
-          const subscriptionSave = this.markingDefinition.save(this.restApiConnector).subscribe({
-            next: (saveResult) => {
-              this.router.navigate([saveResult.attackType, saveResult.stixID]);
-              this.validating = false;
-            },
-            complete: () => {
-              subscriptionSave.unsubscribe();
-            },
-          });
+          const subscriptionSave = this.markingDefinition
+            .save(this.restApiConnector)
+            .subscribe({
+              next: saveResult => {
+                this.router.navigate([
+                  saveResult.attackType,
+                  saveResult.stixID,
+                ]);
+                this.validating = false;
+              },
+              complete: () => {
+                subscriptionSave.unsubscribe();
+              },
+            });
         }
       },
       complete: () => {

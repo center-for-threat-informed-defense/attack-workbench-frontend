@@ -9,7 +9,9 @@
     </div>
     <!-- search results -->
     <ng-container *ngIf="searchQuery !== ''">
-      <div class="search-results" *ngIf="searchResults$ | async as results; else loading">
+      <div
+        class="search-results"
+        *ngIf="searchResults$ | async as results; else loading">
         <div *ngIf="results.data.length > 0" class="results-list grid">
           <div class="result row" *ngFor="let result of results.data">
             <!-- link by ID -->
@@ -18,18 +20,18 @@
               class="col narrow clickable"
               matTooltip="copy LinkById"
               [cdkCopyToClipboard]="getLinkById(result)"
-              (click)="showSnackbar()"
-            >
+              (click)="showSnackbar()">
               <mat-icon>content_copy</mat-icon>
             </div>
             <div class="col">
               <div *ngIf="result.supportsAttackID">
-                <a (click)="navigateTo(result)">{{ result.name }} ({{ result.attackID }})</a>
+                <a (click)="navigateTo(result)"
+                  >{{ result.name }} ({{ result.attackID }})</a
+                >
               </div>
               <div
                 *ngIf="result.deprecated || result.revoked; else description"
-                class="description text-label warning"
-              >
+                class="description text-label warning">
                 {{ result.deprecated ? 'Deprecated' : 'Revoked' }}
               </div>
               <ng-template #description>
@@ -40,15 +42,15 @@
                     mode: 'view',
                     field: 'description',
                     firstParagraphOnly: true,
-                  }"
-                >
+                  }">
                 </app-descriptive-view>
               </ng-template>
             </div>
           </div>
         </div>
         <div class="empty-list" *ngIf="!results.data.length">
-          <app-empty-list-marker [message]="'No results found'"></app-empty-list-marker>
+          <app-empty-list-marker
+            [message]="'No results found'"></app-empty-list-marker>
         </div>
       </div>
       <ng-template #loading>
@@ -58,8 +60,7 @@
         [length]="resultCount"
         pageSize="10"
         [pageSizeOptions]="[5, 10, 25, 100]"
-        (page)="getResults()"
-      >
+        (page)="getResults()">
       </mat-paginator>
     </ng-container>
   </div>

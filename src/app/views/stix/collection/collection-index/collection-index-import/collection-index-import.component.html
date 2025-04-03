@@ -7,22 +7,27 @@
           <input
             matInput
             [(ngModel)]="url"
-            (keyup.enter)="url.length > 0 ? previewIndex() : null"
-          />
+            (keyup.enter)="url.length > 0 ? previewIndex() : null" />
           <mat-icon matSuffix>cloud_download</mat-icon>
         </mat-form-field>
         <div class="spacer">or</div>
         <mat-form-field appearance="outline">
           <mat-label>select a recommended index</mat-label>
           <mat-select [(ngModel)]="url">
-            <mat-option *ngFor="let index of recommended_indexes" [value]="index.url">
+            <mat-option
+              *ngFor="let index of recommended_indexes"
+              [value]="index.url">
               {{ index.name }}
             </mat-option>
           </mat-select>
         </mat-form-field>
       </div>
       <div class="action-bar">
-        <button mat-raised-button color="primary" (click)="previewIndex()" *ngIf="url.length > 0">
+        <button
+          mat-raised-button
+          color="primary"
+          (click)="previewIndex()"
+          *ngIf="url.length > 0">
           <span class="text-label">preview</span>
         </button>
       </div>
@@ -34,8 +39,7 @@
           index: index,
           show_title: true,
           show_actions: false,
-        }"
-      ></app-collection-index-view>
+        }"></app-collection-index-view>
       <div class="action-bar center">
         <button mat-button routerLink="/collection">
           <span class="text-label">cancel</span>
@@ -48,9 +52,10 @@
     <mat-step label="done">
       <h3>Success!</h3>
       <p>
-        The collection index has been added to your workbench. You can now configure subscriptions
-        within the index using the collection index browser. Subscribed collections will
-        automatically update when new versions are published by the index maintainer.
+        The collection index has been added to your workbench. You can now
+        configure subscriptions within the index using the collection index
+        browser. Subscribed collections will automatically update when new
+        versions are published by the index maintainer.
       </p>
       <button mat-raised-button color="primary" routerLink="/collection">
         back to collections

@@ -1,5 +1,5 @@
 import { SelectionModel } from '@angular/cdk/collections';
-import { Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { Relationship } from 'src/app/classes/stix/relationship';
@@ -19,7 +19,12 @@ export class ObjectStatusComponent implements OnInit {
   public loaded = false;
   public statusControl: FormControl<string>;
   public select: SelectionModel<string>;
-  public workflows: string[] = ['none', 'work-in-progress', 'awaiting-review', 'reviewed'];
+  public workflows: string[] = [
+    'none',
+    'work-in-progress',
+    'awaiting-review',
+    'reviewed',
+  ];
   public objects: StixObject[];
   public object: StixObject;
   public relationships = [];
@@ -27,13 +32,15 @@ export class ObjectStatusComponent implements OnInit {
   public deprecated = false;
 
   public get disabled(): boolean {
-    return this.editorService.editing || this.editorService.type == 'collection';
+    return (
+      this.editorService.editing || this.editorService.type == 'collection'
+    );
   }
 
   constructor(
     public editorService: EditorService,
     private restAPIService: RestApiConnectorService,
-    private dialog: MatDialog,
+    private dialog: MatDialog
   ) {}
 
   ngOnInit(): void {
@@ -72,9 +79,11 @@ export class ObjectStatusComponent implements OnInit {
       else if (this.editorService.type == 'asset')
         data$ = this.restAPIService.getAllAssets(options);
       const objSubscription = data$.subscribe({
-        next: (data) => {
+        next: data => {
           this.objects = data.data;
-          this.object = this.objects.find((object) => object.stixID === this.editorService.stixId);
+          this.object = this.objects.find(
+            object => object.stixID === this.editorService.stixId
+          );
           if (this.object) {
             if (this.object.workflow?.state) {
               this.statusControl.setValue(this.object.workflow.state);
@@ -90,9 +99,11 @@ export class ObjectStatusComponent implements OnInit {
 
       if (this.editorService.type == 'data-source') {
         // retrieve related data components & their relationships
-        data$ = this.restAPIService.getAllRelatedToDataSource(this.editorService.stixId);
+        data$ = this.restAPIService.getAllRelatedToDataSource(
+          this.editorService.stixId
+        );
         const dataSubscription = data$.subscribe({
-          next: (results) => {
+          next: results => {
             this.relationships = this.relationships.concat(results);
           },
           complete: () => {
@@ -102,9 +113,11 @@ export class ObjectStatusComponent implements OnInit {
       }
 
       // retrieve relationships with the object
-      data$ = this.restAPIService.getRelatedTo({ sourceOrTargetRef: this.editorService.stixId });
+      data$ = this.restAPIService.getRelatedTo({
+        sourceOrTargetRef: this.editorService.stixId,
+      });
       const relSubscription = data$.subscribe({
-        next: (data) => {
+        next: data => {
           const relationships = data.data as Relationship[];
           this.relationships = this.relationships.concat(relationships);
           this.loaded = true;
@@ -154,7 +167,7 @@ export class ObjectStatusComponent implements OnInit {
         maxWidth: '70em',
         maxHeight: '70em',
         data: {
-          selectableObjects: this.objects.filter((object) => {
+          selectableObjects: this.objects.filter(object => {
             return object.stixID !== this.editorService.stixId;
           }),
           type: this.editorService.type,
@@ -166,7 +179,7 @@ export class ObjectStatusComponent implements OnInit {
         autoFocus: false, // prevents auto focus on toolbar buttons
       });
       const revokedSubscription = revokedDialog.afterClosed().subscribe({
-        next: (result) => {
+        next: result => {
           if (result && this.select.selected.length) {
             // target object selected
             const target_id = this.select.selected[0];
@@ -184,7 +197,9 @@ export class ObjectStatusComponent implements OnInit {
       // unrevoke object, deprecate the 'revoked-by' relationship
       // this is the only case in which a 'revoked-by' relationship is deprecated
       const revokedRelationship = this.relationships.find(
-        (r) => r.relationship_type == 'revoked-by' && r.source_ref == this.object.stixID,
+        r =>
+          r.relationship_type == 'revoked-by' &&
+          r.source_ref == this.object.stixID
       );
       if (revokedRelationship) {
         revokedRelationship.deprecated = true;
@@ -219,13 +234,14 @@ export class ObjectStatusComponent implements OnInit {
     const confirmationPrompt = this.dialog.open(ConfirmationDialogComponent, {
       maxWidth: '35em',
       data: {
-        message: 'All relationships with this object will be deprecated. Do you want to continue?',
+        message:
+          'All relationships with this object will be deprecated. Do you want to continue?',
       },
       autoFocus: false, // prevents auto focus on toolbar buttons
     });
 
     const confirmationSub = confirmationPrompt.afterClosed().subscribe({
-      next: (result) => {
+      next: result => {
         if (!result) {
           // user cancelled
           if (revoked) this.revoked = false;
@@ -243,7 +259,9 @@ export class ObjectStatusComponent implements OnInit {
           // do not deprecate 'subtechnique-of' or 'revoked-by' relationships
           if (
             !relationship.deprecated &&
-            !['subtechnique-of', 'revoked-by'].includes(relationship.relationship_type)
+            !['subtechnique-of', 'revoked-by'].includes(
+              relationship.relationship_type
+            )
           ) {
             relationship.deprecated = true;
             saves.push(relationship.save(this.restAPIService));

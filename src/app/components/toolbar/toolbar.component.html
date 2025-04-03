@@ -4,28 +4,24 @@
     <div class="spacer"></div>
     <div
       class="controls button-list section"
-      *ngIf="isAnImportedCollection && !editable && !editing"
-    >
+      *ngIf="isAnImportedCollection && !editable && !editing">
       <button
         mat-icon-button
         class="control"
         (click)="delete()"
-        matTooltip="delete collection and all associated objects"
-      >
+        matTooltip="delete collection and all associated objects">
         <mat-icon aria-label="delete">delete</mat-icon>
       </button>
     </div>
     <div
       class="controls button-list section"
-      *ngIf="(editable || editing) && !isAnImportedCollection"
-    >
+      *ngIf="(editable || editing) && !isAnImportedCollection">
       <button
         mat-icon-button
         class="control"
         matTooltip="validate & save"
         [disabled]="!editing"
-        (click)="saveEdits()"
-      >
+        (click)="saveEdits()">
         <mat-icon aria-label="save">save</mat-icon>
       </button>
       <button
@@ -33,8 +29,7 @@
         mat-icon-button
         class="control"
         matTooltip="edit"
-        (click)="startEditing()"
-      >
+        (click)="startEditing()">
         <mat-icon aria-label="edit">edit</mat-icon>
       </button>
       <button
@@ -42,8 +37,7 @@
         mat-icon-button
         class="control"
         matTooltip="discard changes & stop editing"
-        (click)="stopEditing()"
-      >
+        (click)="stopEditing()">
         <mat-icon aria-label="discard">edit_off</mat-icon>
       </button>
       <div
@@ -55,14 +49,12 @@
               ? 'an object with relationships cannot be deleted'
               : 'delete'
             : ''
-        "
-      >
+        ">
         <button
           mat-icon-button
           class="control"
           [disabled]="!editing || hasRelationships"
-          (click)="delete()"
-        >
+          (click)="delete()">
           <mat-icon aria-label="delete">delete</mat-icon>
         </button>
       </div>
@@ -71,24 +63,29 @@
     <div
       class="controls button-list section"
       *ngIf="
-        (editable || editing) && websiteIntegrationService.websiteIntegrationEnabled && hasWorkflow
-      "
-    >
+        (editable || editing) &&
+        websiteIntegrationService.websiteIntegrationEnabled &&
+        hasWorkflow
+      ">
       <div class="inline">
         <span
-          *ngIf="websiteIntegrationService.websiteIntegrationEnabled && hasWorkflow"
+          *ngIf="
+            websiteIntegrationService.websiteIntegrationEnabled && hasWorkflow
+          "
           [matTooltip]="
-            !websiteIntegrationService.checkExternalUrlValidity(editorService.stixId)
+            !websiteIntegrationService.checkExternalUrlValidity(
+              editorService.stixId
+            )
               ? 'could not find object on ATT&CK website'
               : 'view object in ATT&CK website'
-          "
-        >
+          ">
           <button
             mat-icon-button
-            [disabled]="!websiteIntegrationService.currentWebIntegrationStatus.valid"
+            [disabled]="
+              !websiteIntegrationService.currentWebIntegrationStatus.valid
+            "
             class="control"
-            (click)="openExternalUrl()"
-          >
+            (click)="openExternalUrl()">
             <mat-icon>open_in_new</mat-icon>
           </button>
         </span>
@@ -99,13 +96,16 @@
         class="control"
         matTooltip="create a collection from this group"
         [disabled]="editing"
-        (click)="createCollectionFromGroup()"
-      >
+        (click)="createCollectionFromGroup()">
         <span class="material-symbols-outlined">deployed_code</span>
       </button>
     </div>
     <div class="controls button-list section">
-      <button mat-icon-button class="control" matTooltip="toggle theme" (click)="emitToggleTheme()">
+      <button
+        mat-icon-button
+        class="control"
+        matTooltip="toggle theme"
+        (click)="emitToggleTheme()">
         <mat-icon aria-label="help">invert_colors</mat-icon>
       </button>
       <button
@@ -113,8 +113,7 @@
         class="control"
         matTooltip="toggle resources drawer"
         [disabled]="!isLoggedIn || !sidebarEnabled"
-        (click)="toggleSidebar()"
-      >
+        (click)="toggleSidebar()">
         <mat-icon aria-label="sidebar">view_sidebar</mat-icon>
       </button>
     </div>

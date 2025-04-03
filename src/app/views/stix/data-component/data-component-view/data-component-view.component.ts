@@ -21,7 +21,7 @@ export class DataComponentViewComponent extends StixViewPage implements OnInit {
 
   constructor(
     private restAPIConnectorService: RestApiConnectorService,
-    authenticationService: AuthenticationService,
+    authenticationService: AuthenticationService
   ) {
     super(authenticationService);
   }
@@ -30,9 +30,11 @@ export class DataComponentViewComponent extends StixViewPage implements OnInit {
     if (!this.dataComponent.data_source) {
       // fetch parent data source
       this.loading = true;
-      const objects$ = this.restAPIConnectorService.getDataComponent(this.dataComponent.stixID);
+      const objects$ = this.restAPIConnectorService.getDataComponent(
+        this.dataComponent.stixID
+      );
       const subscription = objects$.subscribe({
-        next: (result) => {
+        next: result => {
           const objects = result as DataComponent[];
           this.dataComponent.data_source = objects[0].data_source;
           this.loading = false;
@@ -43,7 +45,9 @@ export class DataComponentViewComponent extends StixViewPage implements OnInit {
       });
     }
     if (this.dataComponent.firstInitialized) {
-      this.dataComponent.initializeWithDefaultMarkingDefinitions(this.restAPIConnectorService);
+      this.dataComponent.initializeWithDefaultMarkingDefinitions(
+        this.restAPIConnectorService
+      );
     }
   }
 

@@ -1,6 +1,8 @@
 <div class="breadcrumb-nav">
   <div class="breadcrumb" *ngFor="let breadcrumb of breadcrumbs">
-    <a *ngIf="!breadcrumb.end" [routerLink]="[breadcrumb.url]">{{ breadcrumb.name }}</a>
+    <a *ngIf="!breadcrumb.end" [routerLink]="[breadcrumb.url]">{{
+      breadcrumb.name
+    }}</a>
     <span *ngIf="breadcrumb.end">{{ breadcrumb.name }}</span>
   </div>
 </div>

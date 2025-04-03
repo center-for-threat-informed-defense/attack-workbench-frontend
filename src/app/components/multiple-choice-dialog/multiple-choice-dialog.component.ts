@@ -10,7 +10,7 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 export class MultipleChoiceDialogComponent implements OnInit {
   constructor(
     public dialogRef: MatDialogRef<MultipleChoiceDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) public config: MultipleChoiceDialogConfig,
+    @Inject(MAT_DIALOG_DATA) public config: MultipleChoiceDialogConfig
   ) {}
 
   ngOnInit(): void {

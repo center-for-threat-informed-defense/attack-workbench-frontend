@@ -11,7 +11,12 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { fromEvent, Observable, Subscription } from 'rxjs';
-import { debounceTime, distinctUntilChanged, filter, tap } from 'rxjs/operators';
+import {
+  debounceTime,
+  distinctUntilChanged,
+  filter,
+  tap,
+} from 'rxjs/operators';
 import { ExternalReference } from 'src/app/classes/external-references';
 import { Relationship } from 'src/app/classes/stix/relationship';
 import { StixObject } from 'src/app/classes/stix/stix-object';
@@ -28,7 +33,9 @@ import {
   styleUrls: ['./reference-manager.component.scss'],
   encapsulation: ViewEncapsulation.None,
 })
-export class ReferenceManagerComponent implements OnInit, AfterViewInit, OnDestroy {
+export class ReferenceManagerComponent
+  implements OnInit, AfterViewInit, OnDestroy
+{
   @ViewChild('search') search: ElementRef;
   @ViewChild(MatPaginator) paginator: MatPaginator;
   public attackObjects: StixObject[] = []; // all objects in the knowledge base
@@ -48,26 +55,28 @@ export class ReferenceManagerComponent implements OnInit, AfterViewInit, OnDestr
     private authenticationService: AuthenticationService,
     private restApiConnector: RestApiConnectorService,
     public dialog: MatDialog,
-    public snackbar: MatSnackBar,
+    public snackbar: MatSnackBar
   ) {}
 
   ngOnInit(): void {
     const subscription = this.restApiConnector
       .getAllObjects({ revoked: true, deprecated: true, deserialize: true })
       .subscribe({
-        next: (results) => {
+        next: results => {
           // build ID to SDO lookup
           const idToObject = {};
-          results.data.forEach((x) => (idToObject[x.stixID] = x));
+          results.data.forEach(x => (idToObject[x.stixID] = x));
 
-          results.data.forEach((sdo) => {
+          results.data.forEach(sdo => {
             if (sdo.attackType == 'relationship') {
               // serialize relationship source/target objects
               const rel = sdo as Relationship;
               if (idToObject[rel.source_ref] && idToObject[rel.target_ref]) {
                 const serialized = rel.serialize();
-                serialized.source_object = idToObject[rel.source_ref].serialize();
-                serialized.target_object = idToObject[rel.target_ref].serialize();
+                serialized.source_object =
+                  idToObject[rel.source_ref].serialize();
+                serialized.target_object =
+                  idToObject[rel.target_ref].serialize();
                 rel.deserialize(serialized);
                 this.attackObjects.push(rel);
               }
@@ -88,10 +97,10 @@ export class ReferenceManagerComponent implements OnInit, AfterViewInit, OnDestr
         filter(Boolean),
         debounceTime(250),
         distinctUntilChanged(),
-        tap((_) => {
+        tap(_ => {
           if (this.paginator) this.paginator.pageIndex = 0;
           this.applyControls();
-        }),
+        })
       )
       .subscribe();
   }
@@ -126,7 +135,7 @@ export class ReferenceManagerComponent implements OnInit, AfterViewInit, OnDestr
       autoFocus: false, // prevents auto focus on toolbar buttons
     });
     const subscription = prompt.afterClosed().subscribe({
-      next: (_result) => {
+      next: _result => {
         if (prompt.componentInstance.dirty) {
           // re-fetch values since an edit occurred
           this.applyControls();
@@ -143,16 +152,20 @@ export class ReferenceManagerComponent implements OnInit, AfterViewInit, OnDestr
     this.loading = true;
     const limit = this.paginator ? this.paginator.pageSize : 10;
     const offset = this.paginator ? this.paginator.pageIndex * limit : 0;
-    this.references$ = this.restApiConnector.getAllReferences(limit, offset, this.searchQuery);
+    this.references$ = this.restApiConnector.getAllReferences(
+      limit,
+      offset,
+      this.searchQuery
+    );
     const subscription = this.references$.subscribe({
-      next: (data) => {
+      next: data => {
         this.totalReferences = data.pagination.total;
 
         // build reference lookup map
         const self = this;
         const uses = function (reference: ExternalReference) {
           // count number of objects that have this reference in its external_references list
-          const usesReference: StixObject[] = self.attackObjects.filter((o) => {
+          const usesReference: StixObject[] = self.attackObjects.filter(o => {
             const ext_refs =
               o.external_references && o.external_references.list().length > 0
                 ? o.external_references

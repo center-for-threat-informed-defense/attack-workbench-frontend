@@ -84,7 +84,7 @@ const stixRouteData = [
 ];
 
 const stixRoutes: Routes = [];
-stixRouteData.forEach((stixRoute) => {
+stixRouteData.forEach(stixRoute => {
   stixRoutes.push({
     path: stixRoute.attackType,
     canActivateChild: [AuthorizationGuard],
@@ -354,7 +354,7 @@ stixRoutes.push(
         component: NotesPageComponent,
       },
     ],
-  },
+  }
 );
 
 @NgModule({

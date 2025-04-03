@@ -2,7 +2,10 @@
   <ng-container *ngIf="!config.mode || config.mode === 'view'">
     <div class="labelled-box grow-to-row">
       <div class="content no-label">
-        <mat-checkbox color="primary" [(ngModel)]="object[config.field]" disabled>
+        <mat-checkbox
+          color="primary"
+          [(ngModel)]="object[config.field]"
+          disabled>
           {{ config.label }}
         </mat-checkbox>
       </div>

@@ -19,7 +19,10 @@ import {
   Tactic,
   Technique,
 } from 'src/app/classes/stix';
-import { Collection, CollectionDiffCategories } from 'src/app/classes/stix/collection';
+import {
+  Collection,
+  CollectionDiffCategories,
+} from 'src/app/classes/stix/collection';
 import { ConfirmationDialogComponent } from 'src/app/components/confirmation-dialog/confirmation-dialog.component';
 import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/rest-api-connector.service';
 import { AuthenticationService } from 'src/app/services/connectors/authentication/authentication.service';
@@ -120,7 +123,7 @@ export class CollectionImportComponent implements OnInit {
     public snackbar: MatSnackBar,
     public restAPIConnectorService: RestApiConnectorService,
     private dialog: MatDialog,
-    private authenticationService: AuthenticationService,
+    private authenticationService: AuthenticationService
   ) {
     // intentionally left blank
   }
@@ -145,10 +148,14 @@ export class CollectionImportComponent implements OnInit {
     const validExtensions = ['json', 'csv', 'xlsx'];
 
     if (!fileExtension || !validExtensions.includes(fileExtension)) {
-      this.snackbar.open(`Unsupported file format: ${fileExtension}`, 'dismiss', {
-        duration: 2000,
-        panelClass: 'warn',
-      });
+      this.snackbar.open(
+        `Unsupported file format: ${fileExtension}`,
+        'dismiss',
+        {
+          duration: 2000,
+          panelClass: 'warn',
+        }
+      );
       return;
     }
 
@@ -234,10 +241,12 @@ export class CollectionImportComponent implements OnInit {
     const sourceLookup = new Map<string, string>(); // data source name => stixId
 
     for (const sheetname of wb.SheetNames) {
-      const data: string[][] = XLSX.utils.sheet_to_json(wb.Sheets[sheetname], { header: 1 });
+      const data: string[][] = XLSX.utils.sheet_to_json(wb.Sheets[sheetname], {
+        header: 1,
+      });
       const headerRow = this.getHeader(data);
 
-      data.forEach((row) => {
+      data.forEach(row => {
         // create an object for the row
         const i = _.zipObject(headerRow, row);
 
@@ -262,7 +271,11 @@ export class CollectionImportComponent implements OnInit {
           if (sdo.type && sdo.type == 'x-mitre-data-source' && sdo.name) {
             sourceLookup.set(sdo.name, sdo.id);
           }
-        } else if (sdo.type && sdo.type == 'x-mitre-data-component' && sdo.name) {
+        } else if (
+          sdo.type &&
+          sdo.type == 'x-mitre-data-component' &&
+          sdo.name
+        ) {
           // attempt to parse data component name
           let name = sdo.name.split(':');
           if (name.length > 1) name = name[1].trim();
@@ -272,7 +285,8 @@ export class CollectionImportComponent implements OnInit {
 
         // add objects to relevant lists
         if (sdo.type && sdo.type == 'relationship') relationships.push(sdo);
-        else if (sdo.type && sdo.type == 'x-mitre-data-component') components.push(sdo);
+        else if (sdo.type && sdo.type == 'x-mitre-data-component')
+          components.push(sdo);
         else {
           attackObjects.push(sdo);
         }
@@ -280,15 +294,18 @@ export class CollectionImportComponent implements OnInit {
     }
 
     // parse relationship source/target objects
-    relationships.forEach((r) => {
+    relationships.forEach(r => {
       // source
       if (r.source_id && objectLookup.get(r.source_id)) {
         r.source_ref = objectLookup.get(r.source_id);
       } else if (
         r.source_type &&
-        ['x-mitre-data-component', 'datacomponent', 'data-component', 'data component'].includes(
-          r.source_type,
-        ) &&
+        [
+          'x-mitre-data-component',
+          'datacomponent',
+          'data-component',
+          'data component',
+        ].includes(r.source_type) &&
         r.source_name &&
         componentLookup.get(r.source_name)
       ) {
@@ -310,7 +327,7 @@ export class CollectionImportComponent implements OnInit {
     });
 
     // try to parse data component source references
-    components.forEach((d) => {
+    components.forEach(d => {
       // attempt to parse data component/data source name
       const names = d.name.split(':');
       if (names.length > 1) {
@@ -330,7 +347,7 @@ export class CollectionImportComponent implements OnInit {
     collection[0].x_mitre_domains = Array.from(domains.values());
 
     // add objects to collection contents
-    attackObjects.forEach((obj) => {
+    attackObjects.forEach(obj => {
       collection[0].x_mitre_contents.push({
         object_ref: obj.id,
         object_modified: obj.modified,
@@ -357,7 +374,7 @@ export class CollectionImportComponent implements OnInit {
     const header: string[] = data.splice(0, 1)[0];
 
     // update headers to transfer between excel spreadsheet and variables
-    this.replacementList.forEach((i) => {
+    this.replacementList.forEach(i => {
       if (header.includes(i[0])) {
         header[header.indexOf(i[0])] = i[1];
       }
@@ -383,7 +400,9 @@ export class CollectionImportComponent implements OnInit {
     i.attack_id = i.attack_id ? i.attack_id : '';
     i.description = i.description ? i.description : '';
     i.type = i.id ? i.id.split('--')[0] : '';
-    i.x_mitre_version = i.x_mitre_version ? i.x_mitre_version.toString() : '1.0';
+    i.x_mitre_version = i.x_mitre_version
+      ? i.x_mitre_version.toString()
+      : '1.0';
     i.spec_version = '2.1';
     i.x_mitre_is_subtechnique = Boolean(i.x_mitre_is_subtechnique);
     i.created = i.created ? new Date(i.created).toISOString() : timestamp;
@@ -436,14 +455,18 @@ export class CollectionImportComponent implements OnInit {
 
     // group aliases
     if (i['associated groups'] && i.type == 'intrusion-set') {
-      i.aliases = i['associated groups'].split(',').map((g: string) => g.trim());
+      i.aliases = i['associated groups']
+        .split(',')
+        .map((g: string) => g.trim());
       i.aliases.splice(0, 0, i.name);
     }
 
     // campaign aliases
     if (i.type == 'campaign') {
       if (i['associated campaigns']) {
-        i.aliases = i['associated campaigns'].split(',').map((c: string) => c.trim());
+        i.aliases = i['associated campaigns']
+          .split(',')
+          .map((c: string) => c.trim());
         i.aliases.splice(0, 0, i.name);
       }
       if (
@@ -464,22 +487,26 @@ export class CollectionImportComponent implements OnInit {
    */
   public getCollectionFromURL() {
     this.loadingStep1 = true;
-    const headers: HttpHeaders = new HttpHeaders({ ExcludeCredentials: 'true' });
-    const subscription_getBundle = this.http.get(this.url, { headers: headers }).subscribe({
-      //get the raw collection bundle from the endpoint
-      next: (collectionBundle) => this.previewCollection(collectionBundle),
-      error: (err) => {
-        logger.error(err);
-        this.snackbar.open(err.message, 'dismiss', {
-          duration: 2000,
-          panelClass: 'warn',
-        });
-        this.loadingStep1 = false;
-      },
-      complete: () => {
-        subscription_getBundle.unsubscribe();
-      }, //prevent memory leaks
+    const headers: HttpHeaders = new HttpHeaders({
+      ExcludeCredentials: 'true',
     });
+    const subscription_getBundle = this.http
+      .get(this.url, { headers: headers })
+      .subscribe({
+        //get the raw collection bundle from the endpoint
+        next: collectionBundle => this.previewCollection(collectionBundle),
+        error: err => {
+          logger.error(err);
+          this.snackbar.open(err.message, 'dismiss', {
+            duration: 2000,
+            panelClass: 'warn',
+          });
+          this.loadingStep1 = false;
+        },
+        complete: () => {
+          subscription_getBundle.unsubscribe();
+        }, //prevent memory leaks
+      });
   }
 
   /**
@@ -491,7 +518,7 @@ export class CollectionImportComponent implements OnInit {
     const subscription_preview = this.restAPIConnectorService
       .previewCollectionBundle(collectionBundle)
       .subscribe({
-        next: (preview_results) => {
+        next: preview_results => {
           if (preview_results.error) {
             // errors occurred when fetching collection preview
             this.import_errors = preview_results.error;
@@ -506,7 +533,7 @@ export class CollectionImportComponent implements OnInit {
             this.parsePreview(collectionBundle, preview_results.preview);
           }
         },
-        error: (err) => {
+        error: err => {
           this.loadingStep1 = false;
         },
         complete: () => {
@@ -527,7 +554,8 @@ export class CollectionImportComponent implements OnInit {
     const idToCategory = {};
 
     for (const category in preview.import_categories) {
-      for (const stixId of preview.import_categories[category]) idToCategory[stixId] = category;
+      for (const stixId of preview.import_categories[category])
+        idToCategory[stixId] = category;
     }
     //build ID to name lookup
     const idToSdo = {};
@@ -551,14 +579,18 @@ export class CollectionImportComponent implements OnInit {
       // parse the object & add it to the appropriate category for rendering
       switch (object.type) {
         case 'attack-pattern': //technique
-          this.object_import_categories.technique[category].push(new Technique(raw));
+          this.object_import_categories.technique[category].push(
+            new Technique(raw)
+          );
           break;
         case 'x-mitre-tactic': //tactic
           this.object_import_categories.tactic[category].push(new Tactic(raw));
           break;
         case 'malware': //software
         case 'tool':
-          this.object_import_categories.software[category].push(new Software(object.type, raw));
+          this.object_import_categories.software[category].push(
+            new Software(object.type, raw)
+          );
           break;
         case 'relationship': //relationship
           // build source and target objects if the source/target objects aren't being uploaded simultaneously (in case where only relationships are uploaded)
@@ -614,7 +646,9 @@ export class CollectionImportComponent implements OnInit {
           this.object_import_categories.relationship[category].push(rel);
           break;
         case 'course-of-action': //mitigation
-          this.object_import_categories.mitigation[category].push(new Mitigation(raw));
+          this.object_import_categories.mitigation[category].push(
+            new Mitigation(raw)
+          );
           break;
         case 'x-mitre-matrix': //matrix
           this.object_import_categories.matrix[category].push(new Matrix(raw));
@@ -623,13 +657,19 @@ export class CollectionImportComponent implements OnInit {
           this.object_import_categories.group[category].push(new Group(raw));
           break;
         case 'x-mitre-data-source': // data source
-          this.object_import_categories.data_source[category].push(new DataSource(raw));
+          this.object_import_categories.data_source[category].push(
+            new DataSource(raw)
+          );
           break;
         case 'x-mitre-data-component': // data component
-          this.object_import_categories.data_component[category].push(new DataComponent(raw));
+          this.object_import_categories.data_component[category].push(
+            new DataComponent(raw)
+          );
           break;
         case 'campaign': // campaign
-          this.object_import_categories.campaign[category].push(new Campaign(raw));
+          this.object_import_categories.campaign[category].push(
+            new Campaign(raw)
+          );
           break;
         case 'x-mitre-asset': // asset
           this.object_import_categories.asset[category].push(new Asset(raw));
@@ -732,7 +772,7 @@ export class CollectionImportComponent implements OnInit {
       autoFocus: false, // prevents auto focus on buttons
     });
     const promptSubscription = prompt.afterClosed().subscribe({
-      next: (result) => {
+      next: result => {
         if (result) {
           // filter bundle for objects that were not selected
           this.loadingStep2 = true;
@@ -755,19 +795,22 @@ export class CollectionImportComponent implements OnInit {
             const subscription = this.restAPIConnectorService
               .postCollectionBundle(newBundle, false, force)
               .subscribe({
-                next: (results) => {
+                next: results => {
                   if (results.import_categories.errors.length > 0) {
                     logger.warn(
                       'Collection import completed with errors:',
-                      results.import_categories.errors,
+                      results.import_categories.errors
                     );
                   }
                   this.save_errors = results.import_categories.errors;
-                  const save_error_ids = new Set(this.save_errors.map((err) => err['object_ref']));
+                  const save_error_ids = new Set(
+                    this.save_errors.map(err => err['object_ref'])
+                  );
                   for (const category in results.import_categories) {
                     if (category == 'errors') continue;
                     for (const id of results.import_categories[category])
-                      if (!save_error_ids.has(id)) this.successfully_saved.add(id);
+                      if (!save_error_ids.has(id))
+                        this.successfully_saved.add(id);
                   }
                   this.stepper.next();
                 },
@@ -800,6 +843,9 @@ export class CollectionImportComponent implements OnInit {
    * Download a log of errors from the import
    */
   public downloadErrorLog() {
-    this.restAPIConnectorService.triggerBrowserDownload(this.save_errors, 'import-errors.json');
+    this.restAPIConnectorService.triggerBrowserDownload(
+      this.save_errors,
+      'import-errors.json'
+    );
   }
 }

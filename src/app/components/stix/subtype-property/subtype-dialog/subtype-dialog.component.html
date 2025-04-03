@@ -8,41 +8,44 @@
       <input
         matInput
         [required]="field.required ? field.required : false"
-        [(ngModel)]="data[field.name]"
-      />
+        [(ngModel)]="data[field.name]" />
     </mat-form-field>
 
     <!-- edit type: 'description' -->
-    <mat-form-field *ngIf="field.editType === 'description'" appearance="outline">
+    <mat-form-field
+      *ngIf="field.editType === 'description'"
+      appearance="outline">
       <mat-label>{{ field.name }}</mat-label>
       <textarea
         autosize
         matInput
         [required]="field.required ? field.required : false"
-        [(ngModel)]="data[field.name]"
-      ></textarea>
+        [(ngModel)]="data[field.name]"></textarea>
     </mat-form-field>
 
     <!-- edit type: 'select' -->
-    <mat-form-field *ngIf="field.editType === 'select'" class="grow-to-row" appearance="outline">
+    <mat-form-field
+      *ngIf="field.editType === 'select'"
+      class="grow-to-row"
+      appearance="outline">
       <mat-label *ngIf="!dataLoaded" class="loading">
         <mat-spinner class="spinner" diameter="20"></mat-spinner>&nbsp;
         <span>Loading {{ field.label ? field.label : field.name }}...</span>
       </mat-label>
-      <mat-label *ngIf="dataLoaded">{{ field.label ? field.label : field.name }}</mat-label>
+      <mat-label *ngIf="dataLoaded">{{
+        field.label ? field.label : field.name
+      }}</mat-label>
 
       <mat-select
         [formControl]="selectControls[field.name]"
         multiple
-        [required]="field.required ? field.required : false"
-      >
+        [required]="field.required ? field.required : false">
         <mat-select-trigger>
           <mat-chip-listbox>
             <mat-chip
               *ngFor="let value of selectControls[field.name].value"
               [removable]="true"
-              (removed)="remove(field.name, value)"
-            >
+              (removed)="remove(field.name, value)">
               {{ value }} <mat-icon matChipRemove>cancel</mat-icon>
             </mat-chip>
           </mat-chip-listbox>
@@ -60,6 +63,8 @@
   <!-- cancel/confirm -->
   <div class="buttons">
     <button mat-button matDialogClose>cancel</button>
-    <button mat-stroked-button [disabled]="!isValid" (click)="add()">confirm</button>
+    <button mat-stroked-button [disabled]="!isValid" (click)="add()">
+      confirm
+    </button>
   </div>
 </div>

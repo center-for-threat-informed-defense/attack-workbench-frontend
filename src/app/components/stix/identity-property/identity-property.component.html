@@ -8,9 +8,10 @@
             height="24"
             [data-jdenticon-value]="identity.name"
             [matTooltip]="identity.name"
-            matTooltipPosition="below"
-          ></svg>
-          <span class="v-align" *ngIf="config.displayName">{{ identity.name }}</span>
+            matTooltipPosition="below"></svg>
+          <span class="v-align" *ngIf="config.displayName">{{
+            identity.name
+          }}</span>
         </ng-container>
         <app-timestamp-view
           *ngIf="config.timeField"
@@ -20,8 +21,7 @@
             field: config.timeField,
             mode: 'view',
             humanize: true,
-          }"
-        ></app-timestamp-view>
+          }"></app-timestamp-view>
       </div>
     </mat-chip>
   </mat-chip-listbox>

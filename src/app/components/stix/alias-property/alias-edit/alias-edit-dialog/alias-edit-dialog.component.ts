@@ -13,12 +13,15 @@ export class AliasEditDialogComponent implements OnInit {
 
   constructor(
     public dialogRef: MatDialogRef<AliasEditDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) public config: AliasEditDialogConfig,
+    @Inject(MAT_DIALOG_DATA) public config: AliasEditDialogConfig
   ) {
     if (config.aliasName) {
       this.is_new = false;
-      this.aliasDescription = this.config.object.external_references.hasValue(config.aliasName)
-        ? this.config.object.external_references.getReference(config.aliasName).description
+      this.aliasDescription = this.config.object.external_references.hasValue(
+        config.aliasName
+      )
+        ? this.config.object.external_references.getReference(config.aliasName)
+            .description
         : '';
     } else {
       this.is_new = true;
@@ -42,7 +45,7 @@ export class AliasEditDialogComponent implements OnInit {
     // step 2: add alias description to external reference if a description has been set
     let refs = this.config.object.external_references.serialize();
     // remove previous alias reference if it exists
-    refs = refs.filter((ref) => ref.source_name != this.config.aliasName);
+    refs = refs.filter(ref => ref.source_name != this.config.aliasName);
     // append the updated alias if it has a description
     if (this.aliasDescription) {
       refs.push({

@@ -11,7 +11,12 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { fromEvent } from 'rxjs';
-import { debounceTime, distinctUntilChanged, filter, tap } from 'rxjs/operators';
+import {
+  debounceTime,
+  distinctUntilChanged,
+  filter,
+  tap,
+} from 'rxjs/operators';
 import { Note } from 'src/app/classes/stix/note';
 import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/rest-api-connector.service';
 import { ConfirmationDialogComponent } from '../../confirmation-dialog/confirmation-dialog.component';
@@ -34,7 +39,7 @@ export class NotesEditorComponent implements OnInit, AfterViewInit {
     private router: Router,
     private restAPIConnectorService: RestApiConnectorService,
     private dialog: MatDialog,
-    private snackbar: MatSnackBar,
+    private snackbar: MatSnackBar
   ) {}
 
   ngOnInit(): void {
@@ -50,9 +55,9 @@ export class NotesEditorComponent implements OnInit, AfterViewInit {
         filter(Boolean),
         debounceTime(250),
         distinctUntilChanged(),
-        tap((_) => {
+        tap(_ => {
           this.parseNotes();
-        }),
+        })
       )
       .subscribe();
   }
@@ -60,18 +65,23 @@ export class NotesEditorComponent implements OnInit, AfterViewInit {
   /** Retrieve objects from backend */
   private parseNotes(): void {
     this.loading = true;
-    const query = this.search ? this.search.nativeElement.value.toLowerCase() : '';
+    const query = this.search
+      ? this.search.nativeElement.value.toLowerCase()
+      : '';
 
     const objects$ = this.restAPIConnectorService.getAllNotes();
     const subscription = objects$.subscribe({
-      next: (result) => {
+      next: result => {
         const notes = result.data as Note[];
-        this.notes = notes.filter((note) => note.object_refs.includes(this.objectStixID));
+        this.notes = notes.filter(note =>
+          note.object_refs.includes(this.objectStixID)
+        );
 
         if (query) {
-          this.notes = this.notes.filter((note) => {
+          this.notes = this.notes.filter(note => {
             return (
-              note.title.toLowerCase().includes(query) || note.content.toLowerCase().includes(query)
+              note.title.toLowerCase().includes(query) ||
+              note.content.toLowerCase().includes(query)
             );
           });
         }
@@ -100,7 +110,7 @@ export class NotesEditorComponent implements OnInit, AfterViewInit {
 
   /** Check if editing a note */
   public isEditing(): boolean {
-    return this.notes.filter((note) => note.editing).length > 0;
+    return this.notes.filter(note => note.editing).length > 0;
   }
 
   /** Add new note */
@@ -130,7 +140,7 @@ export class NotesEditorComponent implements OnInit, AfterViewInit {
     });
 
     const subscription = prompt.afterClosed().subscribe({
-      next: (result) => {
+      next: result => {
         if (result) {
           // remove note from list
           const i = this.notes.indexOf(note);
@@ -167,7 +177,8 @@ export class NotesEditorComponent implements OnInit, AfterViewInit {
 
   /** Sort notes by date */
   public sortDate(ascending?: boolean): void {
-    if (ascending) this.notes.sort((a, b) => a.modified.getTime() - b.modified.getTime());
+    if (ascending)
+      this.notes.sort((a, b) => a.modified.getTime() - b.modified.getTime());
     else this.notes.sort((a, b) => b.modified.getTime() - a.modified.getTime());
   }
 
@@ -179,7 +190,7 @@ export class NotesEditorComponent implements OnInit, AfterViewInit {
       {
         duration: 3000,
         panelClass: 'warn',
-      },
+      }
     );
   }
 }

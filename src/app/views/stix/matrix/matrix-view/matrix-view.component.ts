@@ -13,7 +13,10 @@ import { forkJoin, Observable, of, Subscription } from 'rxjs';
   templateUrl: './matrix-view.component.html',
   styleUrls: ['./matrix-view.component.scss'],
 })
-export class MatrixViewComponent extends StixViewPage implements OnInit, OnDestroy {
+export class MatrixViewComponent
+  extends StixViewPage
+  implements OnInit, OnDestroy
+{
   public all_tactics: StixObject[] = [];
   public matrix_tactics: Tactic[] = [];
   public view = 'side';
@@ -31,7 +34,7 @@ export class MatrixViewComponent extends StixViewPage implements OnInit, OnDestr
   constructor(
     private restAPIConnectorService: RestApiConnectorService,
     authenticationService: AuthenticationService,
-    public editorService: EditorService,
+    public editorService: EditorService
   ) {
     super(authenticationService);
     this.reloadSubscription = this.editorService.onEditingStopped.subscribe({
@@ -47,7 +50,9 @@ export class MatrixViewComponent extends StixViewPage implements OnInit, OnDestr
   ngOnInit() {
     this.loadMatrix();
     if (this.matrix.firstInitialized) {
-      this.matrix.initializeWithDefaultMarkingDefinitions(this.restAPIConnectorService);
+      this.matrix.initializeWithDefaultMarkingDefinitions(
+        this.restAPIConnectorService
+      );
     }
   }
 
@@ -65,7 +70,7 @@ export class MatrixViewComponent extends StixViewPage implements OnInit, OnDestr
     const allTactics$ = this.restAPIConnectorService.getAllTactics();
 
     forkJoin({ matrix: matrix$, tactics: allTactics$ }).subscribe({
-      next: (result) => {
+      next: result => {
         this.matrix_tactics = result.matrix.tactic_objects || [];
         this.all_tactics = result.tactics.data;
       },

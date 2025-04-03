@@ -11,7 +11,8 @@ export class TlpDiffComponent {
   @Input() public tlpMarkingDefinitionsMap: any;
 
   public get current(): string {
-    const markingRefs: any[] = this.config.object[0]?.['object_marking_refs'] || [];
+    const markingRefs: any[] =
+      this.config.object[0]?.['object_marking_refs'] || [];
     for (const stixId of markingRefs) {
       if (stixId in this.tlpMarkingDefinitionsMap)
         return this.tlpMarkingDefinitionsMap[stixId].definition_string;
@@ -19,7 +20,8 @@ export class TlpDiffComponent {
     return 'none';
   }
   public get previous(): string {
-    const markingRefs: any[] = this.config.object[1]?.['object_marking_refs'] || [];
+    const markingRefs: any[] =
+      this.config.object[1]?.['object_marking_refs'] || [];
     for (const stixId of markingRefs) {
       if (stixId in this.tlpMarkingDefinitionsMap)
         return this.tlpMarkingDefinitionsMap[stixId].definition_string;

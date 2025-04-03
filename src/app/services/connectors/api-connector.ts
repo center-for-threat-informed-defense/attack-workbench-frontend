@@ -14,13 +14,15 @@ export abstract class ApiConnector {
    */
   private errorSnack(error: any) {
     // show error field if it's a string (for some error's it's a string, for some it's an Object)
-    if ('error' in error && typeof error.error == 'string') this.snack(error.error, 'warn');
+    if ('error' in error && typeof error.error == 'string')
+      this.snack(error.error, 'warn');
     // otherwise, try showing the message
     else if ('message' in error) this.snack(error.message, 'warn');
     // otherwise, show the status text
     else if ('statusText' in error) this.snack(error.statusText, 'warn');
     // otherwise show generic error
-    else this.snack('Unknown error, check javascript console for details', 'warn');
+    else
+      this.snack('Unknown error, check javascript console for details', 'warn');
   }
 
   /**

@@ -18,16 +18,20 @@ export class CollectionIndexListComponent implements OnInit {
 
   ngOnInit(): void {
     this.refreshIndexes();
-    const subscription = this.restAPIConnector.getAllCollections({ versions: 'all' }).subscribe({
-      next: (results) => {
-        for (const collection of results.data) {
-          this.subscribed_collections.push(`${collection.stixID}@${collection.modified}`);
-        }
-      },
-      complete: () => {
-        subscription.unsubscribe();
-      },
-    });
+    const subscription = this.restAPIConnector
+      .getAllCollections({ versions: 'all' })
+      .subscribe({
+        next: results => {
+          for (const collection of results.data) {
+            this.subscribed_collections.push(
+              `${collection.stixID}@${collection.modified}`
+            );
+          }
+        },
+        complete: () => {
+          subscription.unsubscribe();
+        },
+      });
   }
 
   public refreshIndexes() {

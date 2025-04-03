@@ -45,7 +45,7 @@ export class DataSource extends StixObject {
     rep.stix.description = this.description;
     rep.stix.x_mitre_platforms = this.platforms;
     rep.stix.x_mitre_collection_layers = this.collection_layers;
-    rep.stix.x_mitre_contributors = this.contributors.map((x) => x.trim());
+    rep.stix.x_mitre_contributors = this.contributors.map(x => x.trim());
     rep.stix.x_mitre_domains = this.domains;
 
     return rep;
@@ -69,30 +69,41 @@ export class DataSource extends StixObject {
     if ('name' in sdo) {
       if (typeof sdo.name === 'string') this.name = sdo.name;
       else
-        logger.error('TypeError: name field is not a string:', sdo.name, '(', typeof sdo.name, ')');
+        logger.error(
+          'TypeError: name field is not a string:',
+          sdo.name,
+          '(',
+          typeof sdo.name,
+          ')'
+        );
     } else this.name = '';
 
     if ('description' in sdo) {
-      if (typeof sdo.description === 'string') this.description = sdo.description;
+      if (typeof sdo.description === 'string')
+        this.description = sdo.description;
       else
         logger.error(
           'TypeError: description field is not a string:',
           sdo.description,
           '(',
           typeof sdo.description,
-          ')',
+          ')'
         );
     } else this.description = '';
 
     if ('x_mitre_platforms' in sdo) {
-      if (this.isStringArray(sdo.x_mitre_platforms)) this.platforms = sdo.x_mitre_platforms;
+      if (this.isStringArray(sdo.x_mitre_platforms))
+        this.platforms = sdo.x_mitre_platforms;
       else logger.error('TypeError: platforms field is not a string array.');
     } else this.platforms = [];
 
     if ('x_mitre_collection_layers' in sdo) {
       if (this.isStringArray(sdo.x_mitre_collection_layers))
         this.collection_layers = sdo.x_mitre_collection_layers;
-      else logger.error('TypeError: collection layers field is not a string array.');
+      else
+        logger.error(
+          'TypeError: collection layers field is not a string array.'
+        );
     } else this.collection_layers = [];
 
     if ('x_mitre_contributors' in sdo) {
@@ -104,12 +115,13 @@ export class DataSource extends StixObject {
           sdo.x_mitre_contributors,
           '(',
           typeof sdo.x_mitre_contributors,
-          ')',
+          ')'
         );
     } else this.contributors = [];
 
     if ('x_mitre_domains' in sdo) {
-      if (this.isStringArray(sdo.x_mitre_domains)) this.domains = sdo.x_mitre_domains;
+      if (this.isStringArray(sdo.x_mitre_domains))
+        this.domains = sdo.x_mitre_domains;
       else logger.error('TypeError: domains field is not a string array.');
     } else this.domains = [];
   }
@@ -119,7 +131,9 @@ export class DataSource extends StixObject {
    * @param {RestApiConnectorService} restAPIService: the REST API connector through which asynchronous validation can be completed
    * @returns {Observable<ValidationData>} the validation warnings and errors once validation is complete.
    */
-  public validate(restAPIService: RestApiConnectorService): Observable<ValidationData> {
+  public validate(
+    restAPIService: RestApiConnectorService
+  ): Observable<ValidationData> {
     return this.base_validate(restAPIService);
   }
 
@@ -131,7 +145,7 @@ export class DataSource extends StixObject {
   public save(restAPIService: RestApiConnectorService): Observable<DataSource> {
     const postObservable = restAPIService.postDataSource(this);
     const subscription = postObservable.subscribe({
-      next: (result) => {
+      next: result => {
         this.deserialize(result.serialize());
       },
       complete: () => {
@@ -160,10 +174,12 @@ export class DataSource extends StixObject {
    * @param restAPIService [RestApiConnectorService] the service to perform the PUT through
    * @returns {Observable} of the put
    */
-  public update(restAPIService: RestApiConnectorService): Observable<DataSource> {
+  public update(
+    restAPIService: RestApiConnectorService
+  ): Observable<DataSource> {
     const putObservable = restAPIService.putDataSource(this);
     const subscription = putObservable.subscribe({
-      next: (result) => {
+      next: result => {
         this.deserialize(result.serialize());
       },
       complete: () => {

@@ -1,7 +1,16 @@
-import { Component, EventEmitter, OnInit, Output, ViewEncapsulation } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  OnInit,
+  Output,
+  ViewEncapsulation,
+} from '@angular/core';
 import { Router } from '@angular/router';
 import { Relationship } from 'src/app/classes/stix/relationship';
-import { StixObject, stixTypeToAttackType } from 'src/app/classes/stix/stix-object';
+import {
+  StixObject,
+  stixTypeToAttackType,
+} from 'src/app/classes/stix/stix-object';
 import { AuthenticationService } from 'src/app/services/connectors/authentication/authentication.service';
 import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/rest-api-connector.service';
 import { StixViewPage } from '../../stix-view-page';
@@ -57,7 +66,7 @@ export class RelationshipViewComponent extends StixViewPage implements OnInit {
     private restApiService: RestApiConnectorService,
     private editorService: EditorService,
     authenticationService: AuthenticationService,
-    private router: Router,
+    private router: Router
   ) {
     super(authenticationService);
   }
@@ -67,14 +76,16 @@ export class RelationshipViewComponent extends StixViewPage implements OnInit {
 
     // initialize source types if there is a source object, or if there is only one possible value
     if (this.relationship.source_object)
-      this.source_type = stixTypeToAttackType[this.relationship.source_object.stix.type];
+      this.source_type =
+        stixTypeToAttackType[this.relationship.source_object.stix.type];
     else if (this.config.sourceType) this.source_type = this.config.sourceType;
     else if (this.relationship.valid_source_types.length == 1)
       this.source_type = this.relationship.valid_source_types[0];
 
     // initialize target types if there is a target object, or if there is only one possible value
     if (this.relationship.target_object)
-      this.target_type = stixTypeToAttackType[this.relationship.target_object.stix.type];
+      this.target_type =
+        stixTypeToAttackType[this.relationship.target_object.stix.type];
     else if (this.config.targetType) this.target_type = this.config.targetType;
     else if (this.relationship.valid_target_types.length == 1)
       this.target_type = this.relationship.valid_target_types[0];
@@ -86,7 +97,9 @@ export class RelationshipViewComponent extends StixViewPage implements OnInit {
         this.relationship.source_object.stix.x_mitre_is_subtechnique ||
         this.source_type == 'data-component'
       ) {
-        parent_calls.push(this.relationship.update_source_parent(this.restApiService));
+        parent_calls.push(
+          this.relationship.update_source_parent(this.restApiService)
+        );
       }
     }
     if (this.relationship.target_object) {
@@ -94,7 +107,9 @@ export class RelationshipViewComponent extends StixViewPage implements OnInit {
         this.relationship.target_object.stix.x_mitre_is_subtechnique ||
         this.target_type == 'data-component'
       ) {
-        parent_calls.push(this.relationship.update_target_parent(this.restApiService));
+        parent_calls.push(
+          this.relationship.update_target_parent(this.restApiService)
+        );
       }
     }
     // fetch parent of source/target objects of previous object (iff config.mode == 'diff')
@@ -103,7 +118,9 @@ export class RelationshipViewComponent extends StixViewPage implements OnInit {
         this.previous?.source_object.stix.x_mitre_is_subtechnique ||
         this.previous?.source_object.stix.type == 'data-component'
       ) {
-        parent_calls.push(this.previous.update_source_parent(this.restApiService));
+        parent_calls.push(
+          this.previous.update_source_parent(this.restApiService)
+        );
       }
     }
     if (this.previous?.target_object) {
@@ -111,7 +128,9 @@ export class RelationshipViewComponent extends StixViewPage implements OnInit {
         this.previous?.target_object.stix.x_mitre_is_subtechnique ||
         this.previous?.target_object.stix.type == 'data-component'
       ) {
-        parent_calls.push(this.previous.update_target_parent(this.restApiService));
+        parent_calls.push(
+          this.previous.update_target_parent(this.restApiService)
+        );
       }
     }
     if (parent_calls.length) {
@@ -125,19 +144,23 @@ export class RelationshipViewComponent extends StixViewPage implements OnInit {
   }
 
   public setSourceObject(object: StixObject) {
-    var subscription = this.relationship.set_source_object(object, this.restApiService).subscribe({
-      complete: () => {
-        if (subscription) subscription.unsubscribe();
-      }, //subscription doesn't exist for some reason in this case
-    });
+    var subscription = this.relationship
+      .set_source_object(object, this.restApiService)
+      .subscribe({
+        complete: () => {
+          if (subscription) subscription.unsubscribe();
+        }, //subscription doesn't exist for some reason in this case
+      });
   }
 
   public setTargetObject(object: StixObject) {
-    var subscription = this.relationship.set_target_object(object, this.restApiService).subscribe({
-      complete: () => {
-        if (subscription) subscription.unsubscribe();
-      }, //subscription doesn't exist for some reason in this case
-    });
+    var subscription = this.relationship
+      .set_target_object(object, this.restApiService)
+      .subscribe({
+        complete: () => {
+          if (subscription) subscription.unsubscribe();
+        }, //subscription doesn't exist for some reason in this case
+      });
   }
 
   /**
@@ -165,7 +188,9 @@ export class RelationshipViewComponent extends StixViewPage implements OnInit {
    */
   public nextMinorVersion(obj: any): string {
     if (!obj || !obj['stix'] || !obj['stix'].x_mitre_version) return '';
-    const nextMinorVersion = new VersionNumber(obj['stix'].x_mitre_version).nextMinorVersion();
+    const nextMinorVersion = new VersionNumber(
+      obj['stix'].x_mitre_version
+    ).nextMinorVersion();
     return nextMinorVersion.toString();
   }
 
@@ -175,7 +200,9 @@ export class RelationshipViewComponent extends StixViewPage implements OnInit {
    */
   public nextMajorVersion(obj: any): string {
     if (!obj || !obj['stix'] || !obj['stix'].x_mitre_version) return '';
-    const nextMajorVersion = new VersionNumber(obj['stix'].x_mitre_version).nextMajorVersion();
+    const nextMajorVersion = new VersionNumber(
+      obj['stix'].x_mitre_version
+    ).nextMajorVersion();
     return nextMajorVersion.toString();
   }
 
@@ -218,7 +245,9 @@ export class RelationshipViewComponent extends StixViewPage implements OnInit {
       dataComponent.deserialize(obj);
       this.changeDialogToDataComponent.emit(dataComponent);
     } else {
-      const formattedType = stixTypeToAttackType[obj.stix.type].toLowerCase().replace(/\s+/g, '-');
+      const formattedType = stixTypeToAttackType[obj.stix.type]
+        .toLowerCase()
+        .replace(/\s+/g, '-');
       targetRoute = `/${formattedType}/${obj.stix.id}`;
       this.closeDialogEvent.emit();
     }

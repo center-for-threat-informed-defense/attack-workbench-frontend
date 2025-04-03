@@ -56,7 +56,7 @@ export class MarkingDefinition extends StixObject {
             sdo.name,
             '(',
             typeof sdo.name,
-            ')',
+            ')'
           );
       } else this.name = '';
 
@@ -73,7 +73,7 @@ export class MarkingDefinition extends StixObject {
                 sdo.definition_type,
                 '(',
                 sdo.definition,
-                ')',
+                ')'
               );
           }
         } else
@@ -82,7 +82,7 @@ export class MarkingDefinition extends StixObject {
             sdo.definition_type,
             '(',
             typeof sdo.definition_type,
-            ')',
+            ')'
           );
       } else {
         this.definition_type = 'statement'; // type will be statement by default
@@ -96,9 +96,11 @@ export class MarkingDefinition extends StixObject {
    * @param {RestApiConnectorService} restAPIService: the REST API connector through which asynchronous validation can be completed
    * @returns {Observable<ValidationData>} the validation warnings and errors once validation is complete.
    */
-  public validate(restAPIService: RestApiConnectorService): Observable<ValidationData> {
+  public validate(
+    restAPIService: RestApiConnectorService
+  ): Observable<ValidationData> {
     return this.base_validate(restAPIService).pipe(
-      map((result) => {
+      map(result => {
         // presence of statement
         if (!this.definition_string) {
           result.errors.push({
@@ -107,7 +109,8 @@ export class MarkingDefinition extends StixObject {
             message: 'definition string is not specified',
           });
         } else {
-          const successmsg = 'definition string specified: ' + this.definition_string;
+          const successmsg =
+            'definition string specified: ' + this.definition_string;
           result.successes.push({
             field: 'definition_string',
             result: 'success',
@@ -116,10 +119,10 @@ export class MarkingDefinition extends StixObject {
         }
         return result;
       }),
-      switchMap((result) => {
+      switchMap(result => {
         // validate that the marking definition is unique
         return restAPIService.getAllMarkingDefinitions().pipe(
-          map((objects) => {
+          map(objects => {
             if (this.definition_string) {
               for (const object of objects.data) {
                 if ('definition_string' in object) {
@@ -134,9 +137,9 @@ export class MarkingDefinition extends StixObject {
               }
             }
             return result;
-          }),
+          })
         );
-      }),
+      })
     );
   }
 
@@ -145,10 +148,12 @@ export class MarkingDefinition extends StixObject {
    * @param restAPIService [RestApiConnectorService] the service to perform the POST/PUT through
    * @returns {Observable} of the post
    */
-  public save(restAPIService: RestApiConnectorService): Observable<MarkingDefinition> {
+  public save(
+    restAPIService: RestApiConnectorService
+  ): Observable<MarkingDefinition> {
     const postObservable = restAPIService.postMarkingDefinition(this);
     const subscription = postObservable.subscribe({
-      next: (result) => {
+      next: result => {
         this.deserialize(result.serialize());
       },
       complete: () => {

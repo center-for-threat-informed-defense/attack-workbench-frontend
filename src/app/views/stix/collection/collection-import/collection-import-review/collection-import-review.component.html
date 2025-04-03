@@ -1,7 +1,6 @@
 <div
   class="collection-import-review view-page grid spacing-16"
-  *ngIf="!deleting; else loadingOverlay"
->
+  *ngIf="!deleting; else loadingOverlay">
   <div class="row">
     <div class="col">
       <h1>{{ collection.name }} v{{ collection.version.toString() }}</h1>
@@ -18,8 +17,7 @@
               object: collection,
               field: 'imported',
               humanize: true,
-            }"
-          ></app-timestamp-view>
+            }"></app-timestamp-view>
         </div>
         <div class="section-header-section">
           Released
@@ -29,8 +27,7 @@
               object: collection,
               field: 'modified',
               humanize: true,
-            }"
-          ></app-timestamp-view>
+            }"></app-timestamp-view>
         </div>
       </div>
     </div>
@@ -44,8 +41,7 @@
           field: 'description',
           firstParagraphOnly: false,
           label: 'Description',
-        }"
-      ></app-descriptive-property>
+        }"></app-descriptive-property>
     </div>
   </div>
 
@@ -59,8 +55,7 @@
       <app-collection-import-summary
         [config]="{
           object_import_categories: collection_import_categories,
-        }"
-      ></app-collection-import-summary>
+        }"></app-collection-import-summary>
     </div>
   </div>
 </div>

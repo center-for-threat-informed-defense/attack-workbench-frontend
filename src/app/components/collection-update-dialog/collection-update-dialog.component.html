@@ -12,25 +12,34 @@
         <mat-list-item>
           <mat-icon matListIcon class="text-success">check</mat-icon>
           <p matLine class="text-success">
-            No additional tactics are referenced by techniques in this collection.
+            No additional tactics are referenced by techniques in this
+            collection.
           </p>
         </mat-list-item>
       </mat-list>
     </ng-container>
     <ng-template #objectList>
       <p>
-        The following tactics are referenced by techniques in this collection and will be added
-        automatically.
+        The following tactics are referenced by techniques in this collection
+        and will be added automatically.
       </p>
       <ng-container>
         <app-stix-list
-          [config]="{ stixObjects: tacticsToAdd, type: config.attackType, clickBehavior: 'none' }"
-        ></app-stix-list>
+          [config]="{
+            stixObjects: tacticsToAdd,
+            type: config.attackType,
+            clickBehavior: 'none',
+          }"></app-stix-list>
       </ng-container>
     </ng-template>
     <div class="buttons">
-      <button mat-button matDialogClose>{{ tacticsToAdd.length == 0 ? 'close' : 'cancel' }}</button>
-      <button mat-stroked-button *ngIf="tacticsToAdd.length > 0" (click)="update()">
+      <button mat-button matDialogClose>
+        {{ tacticsToAdd.length == 0 ? 'close' : 'cancel' }}
+      </button>
+      <button
+        mat-stroked-button
+        *ngIf="tacticsToAdd.length > 0"
+        (click)="update()">
         update collection
       </button>
     </div>

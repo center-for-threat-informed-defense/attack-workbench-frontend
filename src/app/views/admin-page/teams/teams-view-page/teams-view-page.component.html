@@ -1,12 +1,13 @@
-<div class="teams-view-page view-page grid spacing-20" *ngIf="team; else loadingTeam">
+<div
+  class="teams-view-page view-page grid spacing-20"
+  *ngIf="team; else loadingTeam">
   <div class="row">
     <div class="col">
       <app-name-property
         [config]="{
           mode: editing ? 'edit' : 'view',
           object: team,
-        }"
-      ></app-name-property>
+        }"></app-name-property>
     </div>
   </div>
   <div class="row">
@@ -20,8 +21,7 @@
           firstParagraphOnly: false,
           parseReferences: false,
           label: 'Description',
-        }"
-      ></app-descriptive-property>
+        }"></app-descriptive-property>
     </div>
   </div>
   <span *ngIf="!editing">
@@ -38,8 +38,7 @@
               mat-raised-button
               class="extended-button"
               color="primary"
-              (click)="updateUsers()"
-            >
+              (click)="updateUsers()">
               <mat-icon>supervisor_account</mat-icon>
               <span class="text-label">add or remove users</span>
             </button>
@@ -55,8 +54,7 @@
           showSearch: false,
           showFilters: false,
           mode: 'view',
-        }"
-      ></app-users-list>
+        }"></app-users-list>
     </div>
     <div class="col">
       <div class="row">
@@ -64,7 +62,8 @@
           <mat-expansion-panel-header>
             <mat-panel-title>Team Recent Activity</mat-panel-title>
           </mat-expansion-panel-header>
-          <app-recent-activity [identities]="team.userIDs"></app-recent-activity>
+          <app-recent-activity
+            [identities]="team.userIDs"></app-recent-activity>
         </mat-expansion-panel>
       </div>
     </div>

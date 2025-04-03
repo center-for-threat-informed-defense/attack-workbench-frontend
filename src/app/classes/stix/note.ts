@@ -56,7 +56,7 @@ export class Note extends StixObject {
             sdo.abstract,
             '(',
             typeof sdo.abstract,
-            ')',
+            ')'
           );
       } else this.title = '';
 
@@ -68,13 +68,15 @@ export class Note extends StixObject {
             sdo.content,
             '(',
             typeof sdo.content,
-            ')',
+            ')'
           );
       } else this.content = '';
 
       if ('object_refs' in sdo) {
-        if (this.isStringArray(sdo.object_refs)) this.object_refs = sdo.object_refs;
-        else logger.error('TypeError: object_refs field is not a string array.');
+        if (this.isStringArray(sdo.object_refs))
+          this.object_refs = sdo.object_refs;
+        else
+          logger.error('TypeError: object_refs field is not a string array.');
       } else this.object_refs = [];
     }
   }
@@ -84,7 +86,9 @@ export class Note extends StixObject {
    * @param {RestApiConnectorService} restAPIService: the REST API connector through which asynchronous validation can be completed
    * @returns {Observable<ValidationData>} the validation warnings and errors once validation is complete.
    */
-  public validate(restAPIService: RestApiConnectorService): Observable<ValidationData> {
+  public validate(
+    restAPIService: RestApiConnectorService
+  ): Observable<ValidationData> {
     return this.base_validate(restAPIService);
   }
 
@@ -97,7 +101,7 @@ export class Note extends StixObject {
   public save(restAPIService: RestApiConnectorService): Observable<Note> {
     const postObservable = restAPIService.postNote(this);
     const subscription = postObservable.subscribe({
-      next: (result) => {
+      next: result => {
         this.deserialize(result.serialize());
       },
       complete: () => {
@@ -129,7 +133,7 @@ export class Note extends StixObject {
   public update(restAPIService: RestApiConnectorService): Observable<Note> {
     const putObservable = restAPIService.putNote(this);
     const subscription = putObservable.subscribe({
-      next: (result) => {
+      next: result => {
         this.deserialize(result.serialize());
       },
       complete: () => {

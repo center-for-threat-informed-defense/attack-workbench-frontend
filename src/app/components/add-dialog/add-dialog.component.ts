@@ -12,7 +12,7 @@ import { SelectionModel } from '@angular/cdk/collections';
 export class AddDialogComponent implements OnInit {
   constructor(
     public dialogRef: MatDialogRef<AddDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) public config: AddDialogConfig,
+    @Inject(MAT_DIALOG_DATA) public config: AddDialogConfig
   ) {}
 
   public clearSelections() {

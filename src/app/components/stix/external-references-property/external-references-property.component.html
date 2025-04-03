@@ -1,9 +1,10 @@
 <div class="external-references">
   <app-external-references-view
     *ngIf="!config.mode || config.mode === 'view'"
-    [config]="config"
-  ></app-external-references-view>
-  <div *ngIf="config.mode === 'edit'" class="centered text-label text-deemphasis">
+    [config]="config"></app-external-references-view>
+  <div
+    *ngIf="config.mode === 'edit'"
+    class="centered text-label text-deemphasis">
     <mat-icon
       class="info-icon"
       matTooltip="markdown & citations supported"
@@ -15,6 +16,5 @@
   </div>
   <app-external-references-diff
     *ngIf="config.mode === 'diff'"
-    [config]="config"
-  ></app-external-references-diff>
+    [config]="config"></app-external-references-diff>
 </div>

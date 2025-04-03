@@ -22,7 +22,9 @@ export class IconViewComponent implements OnInit {
 
   ngOnInit(): void {
     if (this.config.field == 'workflow') {
-      const workflow = this.config.object['workflow'] ? this.config.object['workflow'] : null;
+      const workflow = this.config.object['workflow']
+        ? this.config.object['workflow']
+        : null;
       this.state = workflow ? workflow['state'] : null;
 
       switch (this.state) {

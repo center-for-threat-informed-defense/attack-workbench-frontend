@@ -22,7 +22,7 @@ export class DefaultMarkingDefinitionsComponent implements OnInit {
   private defaultMarkingDefinitionsArr: any;
   constructor(
     public dialog: MatDialog,
-    private restAPIConnectorService: RestApiConnectorService,
+    private restAPIConnectorService: RestApiConnectorService
   ) {}
 
   ngOnInit(): void {
@@ -34,7 +34,7 @@ export class DefaultMarkingDefinitionsComponent implements OnInit {
     };
     this.data$ = this.restAPIConnectorService.getAllMarkingDefinitions(options);
     const subscription = this.data$.subscribe({
-      next: (data) => {
+      next: data => {
         if (data) this.markingDefinitions = data;
       },
       complete: () => {
@@ -48,7 +48,7 @@ export class DefaultMarkingDefinitionsComponent implements OnInit {
       const subscriptionGet = this.restAPIConnectorService
         .getDefaultMarkingDefinitions()
         .subscribe({
-          next: (getResult) => {
+          next: getResult => {
             this.requiresDefaultMarkingDefLoad = false;
             this.defaultMarkingDefinitionsArr = getResult;
             return this.defaultMarkingDefinitionsArr;
@@ -94,7 +94,7 @@ export class DefaultMarkingDefinitionsComponent implements OnInit {
     });
 
     const subscriptionPrompt = prompt.afterClosed().subscribe({
-      next: (promptResult) => {
+      next: promptResult => {
         if (promptResult && this.select.selected) {
           // Set default marking refs to selection
           const subscriptionPost = this.restAPIConnectorService

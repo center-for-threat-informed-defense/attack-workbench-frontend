@@ -65,7 +65,12 @@ export class OrderedListEditComponent implements OnInit {
    * @param {int} to the 2nd index to swap
    */
   public moveRow(from, to) {
-    if (from < 0 || from > this.list.length - 1 || to < 0 || to > this.list.length - 1) {
+    if (
+      from < 0 ||
+      from > this.list.length - 1 ||
+      to < 0 ||
+      to > this.list.length - 1
+    ) {
       logger.warn('invalid indexes for tactic reorder', from, to);
       return;
     }
@@ -90,7 +95,7 @@ export class OrderedListEditComponent implements OnInit {
     });
 
     const subscription = prompt.afterClosed().subscribe({
-      next: (result) => {
+      next: result => {
         if (result) {
           // Remove from ordered list by index
           this.list.splice(index, 1);
@@ -110,7 +115,9 @@ export class OrderedListEditComponent implements OnInit {
     let uniqueRows: StixObject[] = [];
 
     // Check if field of global objects is already in ordered list
-    uniqueRows = this.config.globalObjects.filter((x) => !this.list.includes(x.stixID));
+    uniqueRows = this.config.globalObjects.filter(
+      x => !this.list.includes(x.stixID)
+    );
 
     if (uniqueRows) {
       // set up selection
@@ -128,7 +135,7 @@ export class OrderedListEditComponent implements OnInit {
       });
 
       const subscription = prompt.afterClosed().subscribe({
-        next: (result) => {
+        next: result => {
           if (result && this.select.selected) {
             for (const stixID of this.select.selected) {
               this.list.push(stixID);

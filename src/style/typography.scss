@@ -68,8 +68,18 @@ textarea {
 
 $custom-typography: mat.define-typography-config(
   $font-family: Roboto,
-  $headline-5: mat.define-typography-level(32px, 48px, 800, $letter-spacing: 0.5pt),
-  $headline-6: mat.define-typography-level(20px, 32px, 800, $letter-spacing: 0.5pt),
+  $headline-5: mat.define-typography-level(
+      32px,
+      48px,
+      800,
+      $letter-spacing: 0.5pt
+    ),
+  $headline-6: mat.define-typography-level(
+      20px,
+      32px,
+      800,
+      $letter-spacing: 0.5pt
+    ),
   $body-2: mat.define-typography-level(16px, 24px, 400, $letter-spacing: normal),
 );
 

@@ -18,7 +18,7 @@ export class CollectionListComponent implements OnInit {
 
   ngOnInit() {
     // filter based on editing status
-    const hold = this.config.collections.filter((collection) => {
+    const hold = this.config.collections.filter(collection => {
       if (this.config.mode == 'created') {
         return !collection.imported;
       } else {
@@ -33,7 +33,10 @@ export class CollectionListComponent implements OnInit {
         // if the key already exists, append to array and sort
         const newArr = this.collectionMap.get(collection.stixID);
         newArr.push(collection);
-        newArr.sort((a: Collection, b: Collection) => b.modified.valueOf() - a.modified.valueOf());
+        newArr.sort(
+          (a: Collection, b: Collection) =>
+            b.modified.valueOf() - a.modified.valueOf()
+        );
         this.collectionMap.set(collection.stixID, newArr);
       } else {
         // if the key does not exist, add it
@@ -48,7 +51,7 @@ export class CollectionListComponent implements OnInit {
         for (const collection of initialArr) {
           if (
             uniqueVersionArr.findIndex(
-              (element) => element.version.version == collection.version.version,
+              element => element.version.version == collection.version.version
             ) == -1
           ) {
             uniqueVersionArr.push(collection);

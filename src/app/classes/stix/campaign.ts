@@ -45,8 +45,8 @@ export class Campaign extends StixObject {
     rep.stix.last_seen = this.last_seen.toISOString();
     rep.stix.x_mitre_first_seen_citation = this.first_seen_citation.trim();
     rep.stix.x_mitre_last_seen_citation = this.last_seen_citation.trim();
-    rep.stix.aliases = this.aliases.map((x) => x.trim());
-    rep.stix.x_mitre_contributors = this.contributors.map((x) => x.trim());
+    rep.stix.aliases = this.aliases.map(x => x.trim());
+    rep.stix.x_mitre_contributors = this.contributors.map(x => x.trim());
 
     return rep;
   }
@@ -68,31 +68,33 @@ export class Campaign extends StixObject {
             sdo.name,
             '(',
             typeof sdo.name,
-            ')',
+            ')'
           );
       } else this.name = '';
 
       if ('first_seen' in sdo) {
-        if (typeof sdo.first_seen === 'string') this.first_seen = new Date(sdo.first_seen);
+        if (typeof sdo.first_seen === 'string')
+          this.first_seen = new Date(sdo.first_seen);
         else
           logger.error(
             'TypeError: first_seen field is not a string:',
             sdo.first_seen,
             '(',
             typeof sdo.first_seen,
-            ')',
+            ')'
           );
       }
 
       if ('last_seen' in sdo) {
-        if (typeof sdo.last_seen === 'string') this.last_seen = new Date(sdo.last_seen);
+        if (typeof sdo.last_seen === 'string')
+          this.last_seen = new Date(sdo.last_seen);
         else
           logger.error(
             'TypeError: last_seen field is not a string:',
             sdo.last_seen,
             '(',
             typeof sdo.last_seen,
-            ')',
+            ')'
           );
       }
 
@@ -105,7 +107,7 @@ export class Campaign extends StixObject {
             sdo.first_seen_citation,
             '(',
             typeof sdo.first_seen_citation,
-            ')',
+            ')'
           );
       }
 
@@ -118,7 +120,7 @@ export class Campaign extends StixObject {
             sdo.last_seen_citation,
             '(',
             typeof sdo.last_seen_citation,
-            ')',
+            ')'
           );
       }
 
@@ -130,7 +132,7 @@ export class Campaign extends StixObject {
             sdo.aliases,
             '(',
             typeof sdo.aliases,
-            ')',
+            ')'
           );
       } else this.aliases = [];
 
@@ -143,7 +145,7 @@ export class Campaign extends StixObject {
             sdo.x_mitre_contributors,
             '(',
             typeof sdo.x_mitre_contributors,
-            ')',
+            ')'
           );
       } else this.contributors = [];
     }
@@ -154,7 +156,9 @@ export class Campaign extends StixObject {
    * @param {RestApiConnectorService} restAPIService: the REST API connector through which asynchronous validation can be completed
    * @returns {Observable<ValidationData>} the validation warnings and errors once validation is complete.
    */
-  public validate(restAPIService: RestApiConnectorService): Observable<ValidationData> {
+  public validate(
+    restAPIService: RestApiConnectorService
+  ): Observable<ValidationData> {
     return this.base_validate(restAPIService);
   }
 
@@ -168,7 +172,7 @@ export class Campaign extends StixObject {
     this.aliases[0] = this.name;
     const postObservable = restAPIService.postCampaign(this);
     const subscription = postObservable.subscribe({
-      next: (result) => {
+      next: result => {
         this.deserialize(result.serialize());
       },
       complete: () => {
@@ -200,7 +204,7 @@ export class Campaign extends StixObject {
   public update(restAPIService: RestApiConnectorService): Observable<Campaign> {
     const putObservable = restAPIService.putCampaign(this);
     const subscription = putObservable.subscribe({
-      next: (result) => {
+      next: result => {
         this.deserialize(result.serialize());
       },
       complete: () => {

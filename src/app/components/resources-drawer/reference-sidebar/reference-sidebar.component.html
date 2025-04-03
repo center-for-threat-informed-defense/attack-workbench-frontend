@@ -1,6 +1,10 @@
 <div class="reference-sidebar">
   <div class="add-container" *ngIf="editable && canEdit">
-    <button mat-raised-button class="extended-button" color="primary" (click)="newReference()">
+    <button
+      mat-raised-button
+      class="extended-button"
+      color="primary"
+      (click)="newReference()">
       <mat-icon>add</mat-icon> <span class="text-label">add a reference</span>
     </button>
   </div>
@@ -11,15 +15,20 @@
         <input matInput #search />
       </mat-form-field>
     </div>
-    <div class="references" *ngIf="references$ | async as references; else loading">
+    <div
+      class="references"
+      *ngIf="references$ | async as references; else loading">
       <div class="reference-list grid">
         <div class="reference row" *ngFor="let reference of references.data">
           <div
             class="col narrow clickable"
             matTooltip="copy in-text citation"
             [cdkCopyToClipboard]="getCitation(reference.source_name)"
-            (click)="snackbar.open('Citation copied to clipboard', null, { duration: 1000 })"
-          >
+            (click)="
+              snackbar.open('Citation copied to clipboard', null, {
+                duration: 1000,
+              })
+            ">
             <mat-icon aria-label="copy">content_copy</mat-icon>
           </div>
           <div class="col">
@@ -52,8 +61,7 @@
       [length]="totalObjectCount"
       pageSize="10"
       [pageSizeOptions]="[5, 10, 25, 100]"
-      (page)="applyControls()"
-    >
+      (page)="applyControls()">
     </mat-paginator>
   </div>
 </div>

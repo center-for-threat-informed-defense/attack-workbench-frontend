@@ -71,7 +71,7 @@ export class UsersListComponent implements OnInit {
 
   constructor(
     private restAPIConnector: RestApiConnectorService,
-    private authenticationService: AuthenticationService,
+    private authenticationService: AuthenticationService
   ) {
     this.filterOptions = [
       {
@@ -87,7 +87,9 @@ export class UsersListComponent implements OnInit {
 
   ngOnInit(): void {
     this.columnsToDisplay =
-      this.config && this.config.columnsToDisplay && Array.isArray(this.config.columnsToDisplay)
+      this.config &&
+      this.config.columnsToDisplay &&
+      Array.isArray(this.config.columnsToDisplay)
         ? this.config.columnsToDisplay
         : ['username', 'email'];
     this.team = this.config && this.config.team ? this.config.team : null;
@@ -111,12 +113,15 @@ export class UsersListComponent implements OnInit {
     search?: string;
   }) {
     if (this.team) {
-      this.userAccounts$ = this.restAPIConnector.getUserAccountsByTeamId(this.team.id, options);
+      this.userAccounts$ = this.restAPIConnector.getUserAccountsByTeamId(
+        this.team.id,
+        options
+      );
     } else {
       this.userAccounts$ = this.restAPIConnector.getAllUserAccounts(options);
     }
     this.userSubscription = this.userAccounts$.subscribe({
-      next: (data) => {
+      next: data => {
         this.userAccounts = data.data;
         this.totalObjectCount = data.pagination.total;
       },
@@ -135,10 +140,11 @@ export class UsersListComponent implements OnInit {
     const roleFilters = [];
     const statusFilters = [];
     const limit = this.paginator ? this.paginator.pageSize : 10;
-    const offset = this.paginator || applyControls ? this.paginator.pageIndex * limit : 0;
+    const offset =
+      this.paginator || applyControls ? this.paginator.pageIndex * limit : 0;
     if (!applyControls && this.paginator) this.paginator.pageIndex = 0;
     this.selectedFilters = filters;
-    filters.forEach((filter) => {
+    filters.forEach(filter => {
       if (this.filterOptions[0].values.includes(filter)) {
         // Status
         statusFilters.push(filter);
@@ -147,7 +153,12 @@ export class UsersListComponent implements OnInit {
         roleFilters.push(filter);
       }
     });
-    this.getAccounts({ limit: limit, offset: offset, status: statusFilters, role: roleFilters });
+    this.getAccounts({
+      limit: limit,
+      offset: offset,
+      status: statusFilters,
+      role: roleFilters,
+    });
   }
 
   /**
@@ -157,7 +168,8 @@ export class UsersListComponent implements OnInit {
    */
   public applySearch(query, applyControls = false): void {
     const limit = this.paginator ? this.paginator.pageSize : 10;
-    const offset = this.paginator || applyControls ? this.paginator.pageIndex * limit : 0;
+    const offset =
+      this.paginator || applyControls ? this.paginator.pageIndex * limit : 0;
     if (!applyControls && this.paginator) this.paginator.pageIndex = 0;
     this.getAccounts({ limit: limit, offset: offset, search: query });
   }
@@ -210,7 +222,8 @@ export class UsersListComponent implements OnInit {
       user.status = Status[newStatus];
 
       // update user role based on status
-      if ([Status.INACTIVE, Status.PENDING].includes(user.status)) user.role = Role.NONE;
+      if ([Status.INACTIVE, Status.PENDING].includes(user.status))
+        user.role = Role.NONE;
 
       const subscription = user.save(this.restAPIConnector).subscribe({
         complete: () => {
@@ -226,7 +239,9 @@ export class UsersListComponent implements OnInit {
    * @param user User to be removed
    */
   public removeUser(user: UserAccount): void {
-    this.team.userIDs = this.team.userIDs.filter((userElement) => userElement !== user.id);
+    this.team.userIDs = this.team.userIDs.filter(
+      userElement => userElement !== user.id
+    );
     this.restAPIConnector.putTeam(this.team);
     this.applyControls();
   }

@@ -10,13 +10,11 @@
             technique.is_subtechnique && technique.parentTechnique
               ? technique.parentTechnique
               : null,
-        }"
-      ></app-name-property>
+        }"></app-name-property>
       <app-subheading
         [config]="config"
         (onOpenHistory)="openHistory()"
-        (onOpenNotes)="openNotes()"
-      ></app-subheading>
+        (onOpenNotes)="openNotes()"></app-subheading>
     </div>
   </div>
   <div class="row">
@@ -27,8 +25,7 @@
         [config]="{
           mode: config.mode,
           object: config.object,
-        }"
-      ></app-attackid-property>
+        }"></app-attackid-property>
     </div>
     <div class="col">
       <app-boolean-property
@@ -38,8 +35,7 @@
           object: config.object,
           field: 'is_subtechnique',
           label: 'sub-technique?',
-        }"
-      ></app-boolean-property>
+        }"></app-boolean-property>
     </div>
     <div class="col">
       <!-- VERSION NUMBER -->
@@ -48,8 +44,7 @@
         [config]="{
           mode: config.mode,
           object: config.object,
-        }"
-      ></app-version-property>
+        }"></app-version-property>
     </div>
   </div>
   <!-- PARENT SUBTECHNIQUE FIELDS -->
@@ -64,8 +59,7 @@
           label: 'parent technique',
           editType: 'stixList',
           required: true,
-        }"
-      ></app-list-property>
+        }"></app-list-property>
     </div>
   </div>
   <!-- DOMAIN SPECIFIC FIELDS -->
@@ -78,12 +72,13 @@
           object: config.object,
           field: 'domains',
           editType: 'select',
-        }"
-      ></app-list-property>
+        }"></app-list-property>
     </div>
     <ng-container
-      *ngIf="technique.supportsDomainSpecificFields || previous?.supportsDomainSpecificFields"
-    >
+      *ngIf="
+        technique.supportsDomainSpecificFields ||
+        previous?.supportsDomainSpecificFields
+      ">
       <!-- Display only if domain specific fields exist or if in 'edit' mode -->
       <div class="col arrow">
         <mat-icon>arrow_forward</mat-icon>
@@ -92,8 +87,7 @@
         <!-- DATA SOURCES (string array representation) -->
         <div
           *ngIf="technique.supportsDataSources || previous?.supportsDataSources"
-          class="row grow-to-row"
-        >
+          class="row grow-to-row">
           <app-list-property
             class="grow-to-row"
             [config]="{
@@ -102,14 +96,15 @@
               field: 'data_sources',
               label: 'ics data sources',
               editType: 'select',
-            }"
-          ></app-list-property>
+            }"></app-list-property>
         </div>
         <!-- SYSTEM REQUIREMENTS -->
         <div
-          *ngIf="technique.supportsSystemRequirements || previous?.supportsSystemRequirements"
-          class="row grow-to-row"
-        >
+          *ngIf="
+            technique.supportsSystemRequirements ||
+            previous?.supportsSystemRequirements
+          "
+          class="row grow-to-row">
           <app-list-property
             class="grow-to-row"
             [config]="{
@@ -118,14 +113,12 @@
               field: 'system_requirements',
               label: 'system requirements',
               editType: 'any',
-            }"
-          ></app-list-property>
+            }"></app-list-property>
         </div>
         <!-- TACTIC TYPES -->
         <div
           *ngIf="technique.supportsTacticTypes || previous?.supportsTacticTypes"
-          class="row grow-to-row"
-        >
+          class="row grow-to-row">
           <app-list-property
             class="grow-to-row"
             [config]="{
@@ -134,8 +127,7 @@
               field: 'tactic_type',
               label: 'tactic type',
               editType: 'select',
-            }"
-          ></app-list-property>
+            }"></app-list-property>
         </div>
       </div>
     </ng-container>
@@ -150,8 +142,7 @@
           object: config.object,
           field: 'platforms',
           editType: 'select',
-        }"
-      ></app-list-property>
+        }"></app-list-property>
     </div>
     <div class="col">
       <!-- CONTRIBUTORS -->
@@ -162,8 +153,7 @@
           object: config.object,
           field: 'contributors',
           editType: 'any',
-        }"
-      ></app-list-property>
+        }"></app-list-property>
     </div>
   </div>
   <!-- ADDITIONAL IDs -->
@@ -177,8 +167,7 @@
           field: 'capec_ids',
           label: 'CAPEC IDs',
           editType: 'any',
-        }"
-      ></app-list-property>
+        }"></app-list-property>
     </div>
   </div>
   <div *ngIf="showMtcIdsField()" class="row">
@@ -191,8 +180,7 @@
           field: 'mtc_ids',
           label: 'MTC IDs',
           editType: 'any',
-        }"
-      ></app-list-property>
+        }"></app-list-property>
     </div>
   </div>
   <div class="row">
@@ -206,8 +194,7 @@
           firstParagraphOnly: false,
           referencesField: 'external_references',
           label: 'Description',
-        }"
-      ></app-descriptive-property>
+        }"></app-descriptive-property>
     </div>
   </div>
   <!-- TACTIC SPECIFIC FIELDS -->
@@ -220,13 +207,16 @@
           object: config.object,
           field: 'tactics',
           editType: 'stixList',
-          disabled: editing && (technique.domains.length == 0 || technique.is_subtechnique),
-        }"
-      ></app-list-property>
+          disabled:
+            editing &&
+            (technique.domains.length == 0 || technique.is_subtechnique),
+        }"></app-list-property>
     </div>
     <ng-container
-      *ngIf="technique.supportsTacticSpecificFields || previous?.supportsTacticSpecificFields"
-    >
+      *ngIf="
+        technique.supportsTacticSpecificFields ||
+        previous?.supportsTacticSpecificFields
+      ">
       <!-- Display only if tactic specific fields exist -->
       <div class="col arrow">
         <mat-icon>arrow_forward</mat-icon>
@@ -234,9 +224,11 @@
       <div class="col grid spacing-16">
         <!-- PERMISSIONS REQUIRED -->
         <div
-          *ngIf="technique.supportsPermissionsRequired || previous?.supportsPermissionsRequired"
-          class="row grow-to-row"
-        >
+          *ngIf="
+            technique.supportsPermissionsRequired ||
+            previous?.supportsPermissionsRequired
+          "
+          class="row grow-to-row">
           <app-list-property
             class="grow-to-row"
             [config]="{
@@ -245,14 +237,15 @@
               field: 'permissions_required',
               label: 'permissions required',
               editType: 'select',
-            }"
-          ></app-list-property>
+            }"></app-list-property>
         </div>
         <!-- EFFECTIVE PERMISSIONS -->
         <div
-          *ngIf="technique.supportsEffectivePermissions || previous?.supportsEffectivePermissions"
-          class="row grow-to-row"
-        >
+          *ngIf="
+            technique.supportsEffectivePermissions ||
+            previous?.supportsEffectivePermissions
+          "
+          class="row grow-to-row">
           <app-list-property
             class="grow-to-row"
             [config]="{
@@ -261,14 +254,12 @@
               field: 'effective_permissions',
               label: 'effective permissions',
               editType: 'select',
-            }"
-          ></app-list-property>
+            }"></app-list-property>
         </div>
         <!-- IMPACT TYPE -->
         <div
           *ngIf="technique.supportsImpactType || previous?.supportsImpactType"
-          class="row grow-to-row"
-        >
+          class="row grow-to-row">
           <app-list-property
             class="grow-to-row"
             [config]="{
@@ -277,14 +268,15 @@
               field: 'impact_type',
               label: 'impact type',
               editType: 'select',
-            }"
-          ></app-list-property>
+            }"></app-list-property>
         </div>
         <!-- DEFENSEs BYPASSED -->
         <div
-          *ngIf="technique.supportsDefensesBypassed || previous?.supportsDefensesBypassed"
-          class="row grow-to-row"
-        >
+          *ngIf="
+            technique.supportsDefensesBypassed ||
+            previous?.supportsDefensesBypassed
+          "
+          class="row grow-to-row">
           <app-list-property
             class="grow-to-row"
             [config]="{
@@ -293,14 +285,14 @@
               field: 'defense_bypassed',
               label: 'defenses bypassed',
               editType: 'any',
-            }"
-          ></app-list-property>
+            }"></app-list-property>
         </div>
         <!-- SUPPORTS REMOTE -->
         <div
-          *ngIf="technique.supportsRemoteSupport || previous?.supportsRemoteSupport"
-          class="row grow-to-row"
-        >
+          *ngIf="
+            technique.supportsRemoteSupport || previous?.supportsRemoteSupport
+          "
+          class="row grow-to-row">
           <app-boolean-property
             class="grow-to-row"
             [config]="{
@@ -308,8 +300,7 @@
               object: config.object,
               field: 'supports_remote',
               label: 'Supports Remote?',
-            }"
-          ></app-boolean-property>
+            }"></app-boolean-property>
         </div>
       </div>
     </ng-container>
@@ -325,14 +316,16 @@
           firstParagraphOnly: false,
           referencesField: 'external_references',
           label: 'Detection',
-        }"
-      ></app-descriptive-property>
+        }"></app-descriptive-property>
     </div>
   </div>
   <!-- RELATIONSHIPS - NOTE: these are only shown in 'view' mode -->
   <div
-    *ngIf="(config.showRelationships || !config.hasOwnProperty('showRelationships')) && !editing"
-  >
+    *ngIf="
+      (config.showRelationships ||
+        !config.hasOwnProperty('showRelationships')) &&
+      !editing
+    ">
     <!-- SUBTECHNIQUES -->
     <div *ngIf="!technique.is_subtechnique; else othersubs">
       <div class="row">
@@ -348,8 +341,7 @@
               label: 'add a sub-technique',
               relationship_type: 'subtechnique-of',
               target_object: technique,
-            }"
-          ></app-add-relationship-button>
+            }"></app-add-relationship-button>
         </div>
       </div>
       <div class="row">
@@ -362,8 +354,7 @@
               relationshipType: 'subtechnique-of',
               allowEdits: true,
               clickBehavior: 'none',
-            }"
-          ></app-stix-list>
+            }"></app-stix-list>
         </div>
       </div>
     </div>
@@ -386,8 +377,7 @@
                 clickBehavior: 'none',
                 allowEdits: true,
                 excludeSourceRefs: [technique.stixID],
-              }"
-            ></app-stix-list>
+              }"></app-stix-list>
           </div>
         </div>
       </ng-container>
@@ -407,8 +397,7 @@
             relationship_type: 'uses',
             sourceType: 'campaign',
             target_object: technique,
-          }"
-        ></app-add-relationship-button>
+          }"></app-add-relationship-button>
       </div>
     </div>
     <div class="row">
@@ -422,8 +411,7 @@
             relationshipType: 'uses',
             clickBehavior: 'dialog',
             allowEdits: true,
-          }"
-        ></app-stix-list>
+          }"></app-stix-list>
       </div>
     </div>
     <!-- MITIGATIONS -->
@@ -440,8 +428,7 @@
             label: 'add a mitigation',
             relationship_type: 'mitigates',
             target_object: technique,
-          }"
-        ></app-add-relationship-button>
+          }"></app-add-relationship-button>
       </div>
     </div>
     <div class="row">
@@ -454,8 +441,7 @@
             relationshipType: 'mitigates',
             clickBehavior: 'dialog',
             allowEdits: true,
-          }"
-        ></app-stix-list>
+          }"></app-stix-list>
       </div>
     </div>
     <!-- procedure examples -->
@@ -472,8 +458,7 @@
             label: 'add a procedure example',
             relationship_type: 'uses',
             target_object: technique,
-          }"
-        ></app-add-relationship-button>
+          }"></app-add-relationship-button>
       </div>
     </div>
     <div class="row">
@@ -486,8 +471,7 @@
             relationshipType: 'uses',
             clickBehavior: 'dialog',
             allowEdits: true,
-          }"
-        ></app-stix-list>
+          }"></app-stix-list>
       </div>
     </div>
     <!-- data sources (source/component object representation) -->
@@ -504,8 +488,7 @@
             label: 'add a data source',
             relationship_type: 'detects',
             target_object: technique,
-          }"
-        ></app-add-relationship-button>
+          }"></app-add-relationship-button>
       </div>
     </div>
     <div class="row">
@@ -518,8 +501,7 @@
             relationshipType: 'detects',
             clickBehavior: 'dialog',
             allowEdits: true,
-          }"
-        ></app-stix-list>
+          }"></app-stix-list>
       </div>
     </div>
     <!-- assets -->
@@ -536,8 +518,7 @@
             label: 'add an asset',
             relationship_type: 'targets',
             source_object: technique,
-          }"
-        ></app-add-relationship-button>
+          }"></app-add-relationship-button>
       </div>
     </div>
     <div class="row">
@@ -551,8 +532,7 @@
             relationshipType: 'targets',
             clickBehavior: 'dialog',
             allowEdits: true,
-          }"
-        ></app-stix-list>
+          }"></app-stix-list>
       </div>
     </div>
   </div>
@@ -561,8 +541,7 @@
     *ngIf="
       technique.external_references.list().length > 0 ||
       previous?.external_references.list().length > 0
-    "
-  >
+    ">
     <div class="row">
       <div class="col">
         <h2 class="section-header">References</h2>
@@ -575,8 +554,7 @@
             mode: config.mode,
             object: config.object,
             referencesField: 'external_references',
-          }"
-        ></app-external-references-property>
+          }"></app-external-references-property>
       </div>
     </div>
   </div>

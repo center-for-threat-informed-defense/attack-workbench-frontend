@@ -6,11 +6,12 @@
     matTooltipPosition="above"
     [mtxPopoverTriggerFor]="popover"
     mtxPopoverTriggerOn="hover"
-    (click)="updateStatements()"
-  >
+    (click)="updateStatements()">
     <mat-icon class="tiny-icon-button">edit</mat-icon>
     <div *ngIf="objStatements.length == 1">1 statement</div>
-    <div *ngIf="objStatements.length > 1">{{ objStatements.length }} statements</div>
+    <div *ngIf="objStatements.length > 1">
+      {{ objStatements.length }} statements
+    </div>
   </button>
 
   <ng-template #noStatements>
@@ -25,7 +26,9 @@
       <div class="row labelled-box suffixed">
         <div class="content">
           <ul>
-            <li *ngFor="let objStatement of objStatements">{{ objStatement.definition_string }}</li>
+            <li *ngFor="let objStatement of objStatements">
+              {{ objStatement.definition_string }}
+            </li>
           </ul>
         </div>
         <span class="labelled-box-label">Statements</span>

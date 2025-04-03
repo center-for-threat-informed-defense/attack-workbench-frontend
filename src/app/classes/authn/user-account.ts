@@ -58,7 +58,10 @@ export class UserAccount extends Serializable {
   public deserialize(raw: any) {
     if (!('id' in raw)) this.id = '';
     else if (typeof raw.id === 'string') this.id = raw.id;
-    else logger.error(`TypeError: id field is not a string: ${raw.id} (${typeof raw.id})`);
+    else
+      logger.error(
+        `TypeError: id field is not a string: ${raw.id} (${typeof raw.id})`
+      );
 
     if ('email' in raw && raw.email !== null) {
       if (typeof raw.email === 'string') {
@@ -69,7 +72,7 @@ export class UserAccount extends Serializable {
           raw.email,
           '(',
           typeof raw.email,
-          ')',
+          ')'
         );
       }
     } else {
@@ -80,7 +83,7 @@ export class UserAccount extends Serializable {
     else if (typeof raw.username === 'string') this.username = raw.username;
     else
       logger.error(
-        `TypeError: username field is not a string: ${raw.username} (${typeof raw.username})`,
+        `TypeError: username field is not a string: ${raw.username} (${typeof raw.username})`
       );
 
     if ('displayName' in raw && raw.displayName) {
@@ -92,7 +95,7 @@ export class UserAccount extends Serializable {
           raw.displayName,
           '(',
           typeof raw.displayName,
-          ')',
+          ')'
         );
       }
     }
@@ -100,24 +103,31 @@ export class UserAccount extends Serializable {
     if (!('status' in raw)) this.status = Status.PENDING;
     else if (typeof raw.status === 'string') this.status = raw.status;
     else
-      logger.error(`TypeError: status field is not a string: ${raw.status} (${typeof raw.status})`);
+      logger.error(
+        `TypeError: status field is not a string: ${raw.status} (${typeof raw.status})`
+      );
 
     if (!('role' in raw)) this.role = Role.NONE;
     else if (typeof raw.role === 'string') this.role = raw.role;
-    else logger.error(`TypeError: role field is not a string: ${raw.role} (${typeof raw.role})`);
-
-    if (!('created' in raw)) this.created = new Date();
-    else if (typeof raw.created === 'string') this.created = new Date(raw.created);
     else
       logger.error(
-        `TypeError: created field is not a string: ${raw.created} (${typeof raw.created})`,
+        `TypeError: role field is not a string: ${raw.role} (${typeof raw.role})`
+      );
+
+    if (!('created' in raw)) this.created = new Date();
+    else if (typeof raw.created === 'string')
+      this.created = new Date(raw.created);
+    else
+      logger.error(
+        `TypeError: created field is not a string: ${raw.created} (${typeof raw.created})`
       );
 
     if (!('modified' in raw)) this.modified = new Date();
-    else if (typeof raw.modified === 'string') this.modified = new Date(raw.modified);
+    else if (typeof raw.modified === 'string')
+      this.modified = new Date(raw.modified);
     else
       logger.error(
-        `TypeError: modified field is not a string: ${raw.modified} (${typeof raw.modified})`,
+        `TypeError: modified field is not a string: ${raw.modified} (${typeof raw.modified})`
       );
   }
 
@@ -126,14 +136,16 @@ export class UserAccount extends Serializable {
    * @param {RestApiConnectorService} restAPIService: the REST API connector through which asynchronous validation can be completed
    * @returns {Observable<ValidationData>} the validation warnings and errors once validation is complete.
    */
-  public validate(restAPIService: RestApiConnectorService): Observable<ValidationData> {
+  public validate(
+    restAPIService: RestApiConnectorService
+  ): Observable<ValidationData> {
     const validation = new ValidationData();
 
     return of(validation).pipe(
       // check if username is unique
-      switchMap((result) => {
+      switchMap(result => {
         return restAPIService.getAllUserAccounts().pipe(
-          map((users) => {
+          map(users => {
             if (this.hasOwnProperty('username')) {
               if (this.username == '') {
                 result.errors.push({
@@ -143,7 +155,9 @@ export class UserAccount extends Serializable {
                 });
               } else if (
                 users.data.some(
-                  (x) => x.username.toLowerCase() == this.username.toLowerCase() && x.id != this.id,
+                  x =>
+                    x.username.toLowerCase() == this.username.toLowerCase() &&
+                    x.id != this.id
                 )
               ) {
                 result.errors.push({
@@ -160,9 +174,9 @@ export class UserAccount extends Serializable {
               }
             }
             return result;
-          }),
+          })
         );
-      }), // end switchmap
+      }) // end switchmap
     );
   }
 
@@ -171,10 +185,12 @@ export class UserAccount extends Serializable {
    * @param restAPIService [RestApiConnectorService] the service to perform the POST/PUT through
    * @returns {Observable} of the post
    */
-  public save(restAPIService: RestApiConnectorService): Observable<UserAccount> {
+  public save(
+    restAPIService: RestApiConnectorService
+  ): Observable<UserAccount> {
     const putObservable = restAPIService.putUserAccount(this);
     const subscription = putObservable.subscribe({
-      next: (result) => {
+      next: result => {
         this.deserialize(this.serialize());
       },
       complete: () => {

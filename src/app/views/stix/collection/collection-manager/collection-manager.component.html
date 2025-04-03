@@ -10,8 +10,7 @@
               mat-raised-button
               class="extended-button"
               color="primary"
-              routerLink="import-collection-index"
-            >
+              routerLink="import-collection-index">
               <mat-icon aria-label="add">add</mat-icon>
               <span class="text-label">Add a collection index</span>
             </button>
@@ -29,8 +28,7 @@
               mat-raised-button
               class="extended-button"
               color="primary"
-              routerLink="import-collection"
-            >
+              routerLink="import-collection">
               <mat-icon aria-label="import">get_app</mat-icon>
               <span class="text-label">import a collection</span>
             </button>
@@ -40,8 +38,7 @@
             [config]="{
               mode: 'imported',
               collections: collections,
-            }"
-          ></app-collection-list>
+            }"></app-collection-list>
           <ng-template #loadingImported>
             <app-loading-overlay></app-loading-overlay>
           </ng-template>
@@ -58,8 +55,7 @@
               class="extended-button"
               color="primary"
               [routerLink]="['/collection/new']"
-              [queryParams]="{ editing: true }"
-            >
+              [queryParams]="{ editing: true }">
               <mat-icon aria-label="edit">edit</mat-icon>
               <span class="text-label">create a collection</span>
             </button>
@@ -69,8 +65,7 @@
             [config]="{
               mode: 'created',
               collections: collections,
-            }"
-          ></app-collection-list>
+            }"></app-collection-list>
           <ng-template #loadingCreated>
             <app-loading-overlay></app-loading-overlay>
           </ng-template>

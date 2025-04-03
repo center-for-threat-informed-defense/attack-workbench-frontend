@@ -13,19 +13,23 @@
     <div class="row">
       <div class="col">
         <p>
-          Your organization identity is used for attribution of edits you make to objects in the
-          knowledge base. Objects you create will be marked with your organization as the creator,
-          new versions of existing objects will likewise be marked with your organization as the
+          Your organization identity is used for attribution of edits you make
+          to objects in the knowledge base. Objects you create will be marked
+          with your organization as the creator, new versions of existing
+          objects will likewise be marked with your organization as the
           modifier.
         </p>
         <p>
-          Organization identity will be shown to anyone downloading collections that you publish.
-          Updates to your organization identity will automatically update the contents of your
-          knowledge base, but published collections will not be affected.
+          Organization identity will be shown to anyone downloading collections
+          that you publish. Updates to your organization identity will
+          automatically update the contents of your knowledge base, but
+          published collections will not be affected.
         </p>
       </div>
     </div>
-    <div *ngIf="organizationIdentity; else loadingIdentity" class="identity-edit grid">
+    <div
+      *ngIf="organizationIdentity; else loadingIdentity"
+      class="identity-edit grid">
       <hr />
       <div class="row">
         <div class="col narrow vertical-center identity-icon">
@@ -33,8 +37,7 @@
             [config]="{
               object: { identity: organizationIdentity },
               field: 'identity',
-            }"
-          ></app-identity-property>
+            }"></app-identity-property>
         </div>
         <div class="col">
           <mat-form-field appearance="outline">
@@ -59,8 +62,7 @@
               mat-stroked-button
               (click)="saveIdentity()"
               class="text-label"
-              [disabled]="organizationIdentity.name.length == 0"
-            >
+              [disabled]="organizationIdentity.name.length == 0">
               save
             </button>
           </div>
@@ -78,24 +80,29 @@
     <div class="row">
       <div class="col">
         <p>
-          You can optionally configure a namespace for your ATT&CK IDs to prevent conflicts with
-          objects created by ATT&CK or other organizations and to uniquely identify any objects
-          created by your organization.
+          You can optionally configure a namespace for your ATT&CK IDs to
+          prevent conflicts with objects created by ATT&CK or other
+          organizations and to uniquely identify any objects created by your
+          organization.
         </p>
         <p>
-          The namespace prefix will appear in upper-case letters and will be prepended to the ATT&CK
-          ID of newly-created objects. The namespace range is a 4-digit number that specifies the
-          lower-bound from which to start generating new object IDs.
+          The namespace prefix will appear in upper-case letters and will be
+          prepended to the ATT&CK ID of newly-created objects. The namespace
+          range is a 4-digit number that specifies the lower-bound from which to
+          start generating new object IDs.
         </p>
         <p>
-          Your namespace prefix will be shown to anyone who downloads collections that you publish.
-          Subsequent changes by others to those objects will not modify the prefix. Updates to your
-          organization namespace prefix will not automatically update the contents of your knowledge
-          base and will only apply to new objects.
+          Your namespace prefix will be shown to anyone who downloads
+          collections that you publish. Subsequent changes by others to those
+          objects will not modify the prefix. Updates to your organization
+          namespace prefix will not automatically update the contents of your
+          knowledge base and will only apply to new objects.
         </p>
       </div>
     </div>
-    <div *ngIf="organizationNamespace; else loadingNamespace" class="identity-edit grid spacing-16">
+    <div
+      *ngIf="organizationNamespace; else loadingNamespace"
+      class="identity-edit grid spacing-16">
       <hr />
       <div class="row">
         <div class="col">
@@ -104,9 +111,10 @@
             <input
               matInput
               [pattern]="idRegex"
-              (keyup)="organizationNamespace.prefix = $event.target.value.toUpperCase()"
-              [ngModel]="organizationNamespace.prefix"
-            />
+              (keyup)="
+                organizationNamespace.prefix = $event.target.value.toUpperCase()
+              "
+              [ngModel]="organizationNamespace.prefix" />
             <mat-hint>prefix must be all upper-case letters only</mat-hint>
           </mat-form-field>
         </div>
@@ -118,9 +126,11 @@
               [pattern]="rangeRegex"
               type="number"
               (blur)="onBlur()"
-              [(ngModel)]="organizationNamespace.range_start"
-            />
-            <mat-hint>range must be 4 digits; this field can be left blank if desired</mat-hint>
+              [(ngModel)]="organizationNamespace.range_start" />
+            <mat-hint
+              >range must be 4 digits; this field can be left blank if
+              desired</mat-hint
+            >
           </mat-form-field>
         </div>
       </div>
@@ -131,8 +141,7 @@
               [disabled]="isNamespaceInvalid"
               mat-stroked-button
               (click)="saveNamespace()"
-              class="text-label"
-            >
+              class="text-label">
               save
             </button>
           </div>
@@ -141,9 +150,11 @@
     </div>
   </div>
   <ng-template #loadingIdentity>
-    <app-loading-overlay message="loading organization identity"></app-loading-overlay>
+    <app-loading-overlay
+      message="loading organization identity"></app-loading-overlay>
   </ng-template>
   <ng-template #loadingNamespace>
-    <app-loading-overlay message="loading organization namespace"></app-loading-overlay>
+    <app-loading-overlay
+      message="loading organization namespace"></app-loading-overlay>
   </ng-template>
 </div>

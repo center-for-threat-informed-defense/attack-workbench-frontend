@@ -10,14 +10,19 @@ import { Observable } from 'rxjs';
 
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
-  private headers: HttpHeaders = new HttpHeaders({ 'Content-Type': 'application/json' });
+  private headers: HttpHeaders = new HttpHeaders({
+    'Content-Type': 'application/json',
+  });
 
   constructor() {
     // intentionally left blank
   }
 
   // intercept outgoing requests to include headers & credentials
-  intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
+  intercept(
+    request: HttpRequest<any>,
+    next: HttpHandler
+  ): Observable<HttpEvent<any>> {
     const excludeCredentials = request.headers.get('ExcludeCredentials');
     const newHeaders = excludeCredentials
       ? request.headers.delete('ExcludeCredentials')

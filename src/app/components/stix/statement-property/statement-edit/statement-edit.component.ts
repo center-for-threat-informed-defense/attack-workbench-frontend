@@ -17,7 +17,9 @@ export class StatementEditComponent {
   @Input() public config: StatementPropertyConfig;
 
   public get object() {
-    return Array.isArray(this.config.object) ? this.config.object[0] : this.config.object;
+    return Array.isArray(this.config.object)
+      ? this.config.object[0]
+      : this.config.object;
   }
 
   public select: SelectionModel<string>;
@@ -54,12 +56,13 @@ export class StatementEditComponent {
     });
 
     const subscriptionPrompt = prompt.afterClosed().subscribe({
-      next: (promptResult) => {
+      next: promptResult => {
         if (promptResult && this.select.selected) {
           // Set marking refs to selection
           this.object['object_marking_refs'] = this.select.selected;
           // re-add tlp, if one exists
-          if (this.tlpStixId) this.object['object_marking_refs'].push(this.tlpStixId);
+          if (this.tlpStixId)
+            this.object['object_marking_refs'].push(this.tlpStixId);
         }
       },
       complete: () => {
@@ -73,7 +76,8 @@ export class StatementEditComponent {
     const objectStatements = [];
     if (this.object['object_marking_refs']) {
       for (const stixId of this.object['object_marking_refs']) {
-        if (this.statementsMap[stixId]) objectStatements.push(this.statementsMap[stixId]);
+        if (this.statementsMap[stixId])
+          objectStatements.push(this.statementsMap[stixId]);
       }
     }
     return objectStatements;

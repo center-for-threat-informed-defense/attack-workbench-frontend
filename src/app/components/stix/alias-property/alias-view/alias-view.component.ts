@@ -14,7 +14,10 @@ import { animate, style, transition, trigger } from '@angular/animations';
         animate('100ms cubic-bezier(0.4, 0.0, 0.2, 1)', style({ height: '*' })),
       ]),
       transition(':leave', [
-        animate('100ms cubic-bezier(0.4, 0.0, 0.2, 1)', style({ height: '0px', minHeight: '0px' })),
+        animate(
+          '100ms cubic-bezier(0.4, 0.0, 0.2, 1)',
+          style({ height: '0px', minHeight: '0px' })
+        ),
       ]),
     ]),
   ],
@@ -58,15 +61,25 @@ export class AliasViewComponent implements OnInit {
         let alias = value;
         if (this.config.object[this.config.referencesField].hasValue(value)) {
           // Get citations from description
-          const descr = this.config.object[this.config.referencesField].getDescription(value);
-          const referenceNamesFromDescr = this.getReferencesFromDescription(descr);
+          const descr =
+            this.config.object[this.config.referencesField].getDescription(
+              value
+            );
+          const referenceNamesFromDescr =
+            this.getReferencesFromDescription(descr);
           let referencesStr = '';
           const referenceNames = [];
           if (referenceNamesFromDescr) {
             for (let i = 0; i < referenceNamesFromDescr.length; i++) {
-              referenceNames[i] = referenceNamesFromDescr[i].split('(Citation: ')[1].slice(0, -1);
+              referenceNames[i] = referenceNamesFromDescr[i]
+                .split('(Citation: ')[1]
+                .slice(0, -1);
               referencesStr =
-                referencesStr + this.getReferenceStr(referenceNames[i], referenceNamesFromDescr[i]);
+                referencesStr +
+                this.getReferenceStr(
+                  referenceNames[i],
+                  referenceNamesFromDescr[i]
+                );
             }
           }
           alias = alias + referencesStr;
@@ -96,8 +109,12 @@ export class AliasViewComponent implements OnInit {
 
         if (this.config.object[this.config.referencesField].hasValue(value)) {
           // Get citations from description
-          displayStr = this.config.object[this.config.referencesField].getDescription(value);
-          const referenceNamesFromDescr: string[] = this.getReferencesFromDescription(displayStr);
+          displayStr =
+            this.config.object[this.config.referencesField].getDescription(
+              value
+            );
+          const referenceNamesFromDescr: string[] =
+            this.getReferencesFromDescription(displayStr);
           const referenceNames: string[] = [];
 
           if (
@@ -105,11 +122,13 @@ export class AliasViewComponent implements OnInit {
             this.hasDescriptiveProperty(displayStr, referenceNamesFromDescr)
           ) {
             for (let i = 0; i < referenceNamesFromDescr.length; i++) {
-              referenceNames[i] = referenceNamesFromDescr[i].split('(Citation: ')[1].slice(0, -1);
+              referenceNames[i] = referenceNamesFromDescr[i]
+                .split('(Citation: ')[1]
+                .slice(0, -1);
               displayStr = this.replaceCitationHTML(
                 displayStr,
                 referenceNames[i],
-                referenceNamesFromDescr[i],
+                referenceNamesFromDescr[i]
               );
             }
           }
@@ -128,11 +147,14 @@ export class AliasViewComponent implements OnInit {
   private replaceCitationHTML(
     displayStr: string,
     sourceName: string,
-    completeReference: string,
+    completeReference: string
   ): string {
-    const reference = this.config.object[this.config.referencesField].getReference(sourceName);
+    const reference =
+      this.config.object[this.config.referencesField].getReference(sourceName);
     const reference_number =
-      this.config.object[this.config.referencesField].getIndexOfReference(sourceName);
+      this.config.object[this.config.referencesField].getIndexOfReference(
+        sourceName
+      );
 
     if (reference && reference_number) {
       let refHTML = '';
@@ -157,7 +179,10 @@ export class AliasViewComponent implements OnInit {
    * @param displayStr string to be verified
    * @param completeReferences list of complete reference names
    */
-  private hasDescriptiveProperty(displayStr: string, completeReferences: string[]): boolean {
+  private hasDescriptiveProperty(
+    displayStr: string,
+    completeReferences: string[]
+  ): boolean {
     if (!completeReferences && displayStr) return true;
     let displayStrCopy = displayStr;
 
@@ -189,10 +214,16 @@ export class AliasViewComponent implements OnInit {
    * @param sourceName source name of the reference
    * @param completeReference complete reference e.g., (Citation: Source Name)
    */
-  private getReferenceStr(sourceName: string, completeReference: string): string {
-    const reference = this.config.object[this.config.referencesField].getReference(sourceName);
+  private getReferenceStr(
+    sourceName: string,
+    completeReference: string
+  ): string {
+    const reference =
+      this.config.object[this.config.referencesField].getReference(sourceName);
     const reference_number =
-      this.config.object[this.config.referencesField].getIndexOfReference(sourceName);
+      this.config.object[this.config.referencesField].getIndexOfReference(
+        sourceName
+      );
 
     if (reference && reference_number) {
       if (reference.url) {
@@ -219,8 +250,10 @@ export class AliasViewComponent implements OnInit {
     for (value of this.config.object[this.config.field]) {
       if (this.config.object[this.config.referencesField].hasValue(value)) {
         // Get citations from description
-        const displayStr = this.config.object[this.config.referencesField].getDescription(value);
-        const referenceNamesFromDescr: string[] = this.getReferencesFromDescription(displayStr);
+        const displayStr =
+          this.config.object[this.config.referencesField].getDescription(value);
+        const referenceNamesFromDescr: string[] =
+          this.getReferencesFromDescription(displayStr);
 
         if (this.hasDescriptiveProperty(displayStr, referenceNamesFromDescr)) {
           return true;

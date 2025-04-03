@@ -46,13 +46,15 @@ export class HistoryTimelineComponent implements OnInit, OnDestroy {
     private router: Router,
     private restAPIConnectorService: RestApiConnectorService,
     private dialog: MatDialog,
-    private editorService: EditorService,
+    private editorService: EditorService
   ) {
-    this.onEditStopSubscription = this.editorService.onEditingStopped.subscribe({
-      next: () => {
-        this.loadHistory();
-      },
-    });
+    this.onEditStopSubscription = this.editorService.onEditingStopped.subscribe(
+      {
+        next: () => {
+          this.loadHistory();
+        },
+      }
+    );
   }
 
   ngOnInit(): void {
@@ -65,28 +67,33 @@ export class HistoryTimelineComponent implements OnInit, OnDestroy {
 
   private buildObjectHistory(objectVersions: StixObject[]): void {
     // ensure that the stix objects are sorted in ascending order of date
-    objectVersions = objectVersions.sort((a, b) => (a.modified as any) - (b.modified as any));
+    objectVersions = objectVersions.sort(
+      (a, b) => (a.modified as any) - (b.modified as any)
+    );
 
     let previousSdo = null;
     let previousVersion = null;
     let previousState = null;
     for (const objectVersion of objectVersions) {
       const versionChanged =
-        previousVersion && objectVersion.version.compareTo(previousVersion) != 0;
+        previousVersion &&
+        objectVersion.version.compareTo(previousVersion) != 0;
       const stateChanged =
         previousState && objectVersion.workflow?.state
           ? objectVersion.workflow.state != previousState
           : false;
-      const objectCreated = objectVersion.created.getTime() == objectVersion.modified.getTime();
+      const objectCreated =
+        objectVersion.created.getTime() == objectVersion.modified.getTime();
       const release =
-        objectVersion.attackType == 'collection' && (objectVersion as Collection).release;
+        objectVersion.attackType == 'collection' &&
+        (objectVersion as Collection).release;
       const objectImported = !objectCreated && !previousVersion;
 
       // set up icon and tooltip
       const [description, icon] = this.getStixObjectEventDescription(
         objectCreated,
         objectImported,
-        objectVersion['name'],
+        objectVersion['name']
       );
 
       // add historyEvent
@@ -108,13 +115,17 @@ export class HistoryTimelineComponent implements OnInit, OnDestroy {
       });
       previousSdo = objectVersion;
       previousVersion = objectVersion.version;
-      previousState = objectVersion.workflow ? objectVersion.workflow.state : 'unset';
+      previousState = objectVersion.workflow
+        ? objectVersion.workflow.state
+        : 'unset';
     }
   }
 
   private buildRelationshipHistory(relationships: Relationship[]): void {
     // ensure that the stix objects are sorted in ascending order of date
-    relationships = relationships.sort((a, b) => (a.modified as any) - (b.modified as any));
+    relationships = relationships.sort(
+      (a, b) => (a.modified as any) - (b.modified as any)
+    );
 
     // group relationships by ID
     const stixIDtoRelVersions = this.groupObjectsById(relationships);
@@ -123,7 +134,8 @@ export class HistoryTimelineComponent implements OnInit, OnDestroy {
       let previousSdo = null;
       for (const relationshipVersion of stixIDtoRelVersions[relationshipID]) {
         const objectCreated =
-          relationshipVersion.created.getTime() == relationshipVersion.modified.getTime();
+          relationshipVersion.created.getTime() ==
+          relationshipVersion.modified.getTime();
         const objectImported = !objectCreated && !previousSdo;
         const relationshipName = `${relationshipVersion.source_name} ${relationshipVersion.relationship_type} ${relationshipVersion.target_name}`;
 
@@ -131,7 +143,7 @@ export class HistoryTimelineComponent implements OnInit, OnDestroy {
         const [description, icon] = this.getStixObjectEventDescription(
           objectCreated,
           objectImported,
-          relationshipName,
+          relationshipName
         );
 
         this.historyEvents.push({
@@ -155,7 +167,9 @@ export class HistoryTimelineComponent implements OnInit, OnDestroy {
 
   private buildCollectionHistory(collections: Collection[], stixId): void {
     // ensure that the stix objects are sorted in ascending order of date
-    collections = collections.sort((a, b) => (a.modified as any) - (b.modified as any));
+    collections = collections.sort(
+      (a, b) => (a.modified as any) - (b.modified as any)
+    );
 
     // group collections by ID
     const stixIDtoCollectionVersions = this.groupObjectsById(collections);
@@ -163,16 +177,20 @@ export class HistoryTimelineComponent implements OnInit, OnDestroy {
     // build historyEvents for collections
     for (const collectionID in stixIDtoCollectionVersions) {
       let inPreviousVersion = false;
-      const collectionVersions: Collection[] = stixIDtoCollectionVersions[collectionID];
+      const collectionVersions: Collection[] =
+        stixIDtoCollectionVersions[collectionID];
       let previousVersion: VersionNumber = null;
       let previousSdo: Collection = null;
       for (const collectionVersion of collectionVersions) {
         const objectImported =
-          collectionVersion.created.getTime() != collectionVersion.modified.getTime() &&
-          !previousVersion;
-        const objectInCollection = collectionVersion.contents.filter((c) => c.object_ref == stixId);
+          collectionVersion.created.getTime() !=
+            collectionVersion.modified.getTime() && !previousVersion;
+        const objectInCollection = collectionVersion.contents.filter(
+          c => c.object_ref == stixId
+        );
         const versionChanged =
-          previousVersion && collectionVersion.version.compareTo(previousVersion) != 0;
+          previousVersion &&
+          collectionVersion.version.compareTo(previousVersion) != 0;
 
         // get icon and tooltip
         let description;
@@ -185,7 +203,10 @@ export class HistoryTimelineComponent implements OnInit, OnDestroy {
           // object exists in release collection
           description = `Released in ${collectionVersion.name} (v${collectionVersion.version.version})`;
           icon = 'verified';
-        } else if (objectInCollection?.length && (!inPreviousVersion || versionChanged)) {
+        } else if (
+          objectInCollection?.length &&
+          (!inPreviousVersion || versionChanged)
+        ) {
           // object added to collection
           description = `Added to ${collectionVersion.name} (v${collectionVersion.version.version})`;
           icon = 'add';
@@ -221,7 +242,7 @@ export class HistoryTimelineComponent implements OnInit, OnDestroy {
   private getStixObjectEventDescription(
     objectCreated: boolean,
     objectImported: boolean,
-    name: string,
+    name: string
   ): string[] {
     let description = '';
     let icon;
@@ -241,7 +262,8 @@ export class HistoryTimelineComponent implements OnInit, OnDestroy {
   private groupObjectsById(objectVersions: StixObject[]): any {
     const stixIDtoVersions = {};
     for (const version of objectVersions) {
-      if (version.stixID in stixIDtoVersions) stixIDtoVersions[version.stixID].push(version);
+      if (version.stixID in stixIDtoVersions)
+        stixIDtoVersions[version.stixID].push(version);
       else stixIDtoVersions[version.stixID] = [version];
     }
     return stixIDtoVersions;
@@ -254,7 +276,7 @@ export class HistoryTimelineComponent implements OnInit, OnDestroy {
     stixId: string,
     objectVersions: StixObject[],
     relationships: Relationship[],
-    collections: Collection[],
+    collections: Collection[]
   ): void {
     // clear previously parsed historyEvents
     this.historyEvents = [];
@@ -265,7 +287,9 @@ export class HistoryTimelineComponent implements OnInit, OnDestroy {
     this.buildCollectionHistory(collections, stixId);
 
     // sort historyEvents
-    this.historyEvents.sort((a, b) => (b.sdo.modified as any) - (a.sdo.modified as any));
+    this.historyEvents.sort(
+      (a, b) => (b.sdo.modified as any) - (a.sdo.modified as any)
+    );
   }
 
   public preview(sdo: StixObject, prior_sdo: StixObject) {
@@ -288,46 +312,92 @@ export class HistoryTimelineComponent implements OnInit, OnDestroy {
     // set up subscribers to get object versions
     let objects$;
     if (objectType == 'software')
-      objects$ = this.restAPIConnectorService.getSoftware(objectStixID, null, 'all');
+      objects$ = this.restAPIConnectorService.getSoftware(
+        objectStixID,
+        null,
+        'all'
+      );
     else if (objectType == 'group')
-      objects$ = this.restAPIConnectorService.getGroup(objectStixID, null, 'all');
+      objects$ = this.restAPIConnectorService.getGroup(
+        objectStixID,
+        null,
+        'all'
+      );
     else if (objectType == 'matrix')
-      objects$ = this.restAPIConnectorService.getMatrix(objectStixID, null, 'all');
+      objects$ = this.restAPIConnectorService.getMatrix(
+        objectStixID,
+        null,
+        'all'
+      );
     else if (objectType == 'mitigation')
-      objects$ = this.restAPIConnectorService.getMitigation(objectStixID, null, 'all');
+      objects$ = this.restAPIConnectorService.getMitigation(
+        objectStixID,
+        null,
+        'all'
+      );
     else if (objectType == 'tactic')
-      objects$ = this.restAPIConnectorService.getTactic(objectStixID, null, 'all');
+      objects$ = this.restAPIConnectorService.getTactic(
+        objectStixID,
+        null,
+        'all'
+      );
     else if (objectType == 'campaign')
-      objects$ = this.restAPIConnectorService.getCampaign(objectStixID, null, 'all');
+      objects$ = this.restAPIConnectorService.getCampaign(
+        objectStixID,
+        null,
+        'all'
+      );
     else if (objectType == 'technique')
-      objects$ = this.restAPIConnectorService.getTechnique(objectStixID, null, 'all');
+      objects$ = this.restAPIConnectorService.getTechnique(
+        objectStixID,
+        null,
+        'all'
+      );
     else if (objectType == 'collection')
-      objects$ = this.restAPIConnectorService.getCollection(objectStixID, null, 'all');
+      objects$ = this.restAPIConnectorService.getCollection(
+        objectStixID,
+        null,
+        'all'
+      );
     else if (objectType == 'data-source')
-      objects$ = this.restAPIConnectorService.getDataSource(objectStixID, null, 'all');
+      objects$ = this.restAPIConnectorService.getDataSource(
+        objectStixID,
+        null,
+        'all'
+      );
     else if (objectType == 'data-component')
-      objects$ = this.restAPIConnectorService.getDataComponent(objectStixID, null, 'all');
+      objects$ = this.restAPIConnectorService.getDataComponent(
+        objectStixID,
+        null,
+        'all'
+      );
     else if (objectType == 'asset')
-      objects$ = this.restAPIConnectorService.getAsset(objectStixID, null, 'all');
+      objects$ = this.restAPIConnectorService.getAsset(
+        objectStixID,
+        null,
+        'all'
+      );
     // set up subscribers to get relationships and collections
     const relationships$ = this.restAPIConnectorService.getRelatedTo({
       sourceOrTargetRef: objectStixID,
       versions: 'all',
       includeDeprecated: true,
     });
-    const collections$ = this.restAPIConnectorService.getAllCollections({ versions: 'all' });
+    const collections$ = this.restAPIConnectorService.getAllCollections({
+      versions: 'all',
+    });
     // join subscribers
     const subscription = forkJoin({
       objectVersions: objects$,
       relationships: relationships$,
       collections: collections$,
     }).subscribe({
-      next: (result) => {
+      next: result => {
         this.parseHistory(
           objectStixID,
           result.objectVersions as StixObject[],
           result.relationships.data as Relationship[],
-          result.collections.data as Collection[],
+          result.collections.data as Collection[]
         );
         this.loading = false;
       },

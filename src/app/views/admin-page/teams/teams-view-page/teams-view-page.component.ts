@@ -27,7 +27,7 @@ export class TeamsViewPageComponent implements OnInit, OnDestroy {
     private editorService: EditorService,
     private router: Router,
     private dialog: MatDialog,
-    private snackbar: MatSnackBar,
+    private snackbar: MatSnackBar
   ) {
     // intentionally left blank
   }
@@ -35,50 +35,54 @@ export class TeamsViewPageComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     // Basically recreating the STIX object code but dumbing it down
     this.subscriptions.push(
-      this.route.params.subscribe((params) => {
+      this.route.params.subscribe(params => {
         this.teamId = params.id;
-      }),
+      })
     );
     this.subscriptions.push(
-      this.route.queryParams.subscribe((queryParams) => {
+      this.route.queryParams.subscribe(queryParams => {
         this.editing = queryParams.editing ? queryParams.editing : false;
-      }),
+      })
     );
     this.subscriptions.push(
       this.editorService.onSave.subscribe(() => {
-        const validateTeamSub = this.team.validate(this.restAPIConnector).subscribe({
-          next: (result) => {
-            if (result.errors.length != 0) {
-              this.snackbar.open(result.errors[0].message, null, {
-                duration: 2000,
-                panelClass: 'warn',
-              });
-            } else {
-              const putRequest = this.restAPIConnector.putTeam(this.team).subscribe({
-                next: () => {
-                  this.router.navigate([]);
-                },
-                complete: () => {
-                  putRequest.unsubscribe();
-                },
-              });
-            }
-          },
-          complete: () => {
-            validateTeamSub.unsubscribe();
-          },
-        });
-      }),
+        const validateTeamSub = this.team
+          .validate(this.restAPIConnector)
+          .subscribe({
+            next: result => {
+              if (result.errors.length != 0) {
+                this.snackbar.open(result.errors[0].message, null, {
+                  duration: 2000,
+                  panelClass: 'warn',
+                });
+              } else {
+                const putRequest = this.restAPIConnector
+                  .putTeam(this.team)
+                  .subscribe({
+                    next: () => {
+                      this.router.navigate([]);
+                    },
+                    complete: () => {
+                      putRequest.unsubscribe();
+                    },
+                  });
+              }
+            },
+            complete: () => {
+              validateTeamSub.unsubscribe();
+            },
+          });
+      })
     );
     this.subscriptions.push(
       this.editorService.onDelete.subscribe(() => {
         this.delete();
-      }),
+      })
     );
     this.subscriptions.push(
       this.editorService.onEditingStopped.subscribe(() => {
         this.loadTeam();
-      }),
+      })
     );
     this.loadTeam();
   }
@@ -99,16 +103,18 @@ export class TeamsViewPageComponent implements OnInit, OnDestroy {
       autoFocus: false,
     });
     const closeSubscription = prompt.afterClosed().subscribe({
-      next: (confirm) => {
+      next: confirm => {
         if (confirm) {
-          const deleteRequest = this.restAPIConnector.deleteTeam(this.team).subscribe({
-            next: () => {
-              this.router.navigate(['..'], { relativeTo: this.route });
-            },
-            complete: () => {
-              deleteRequest.unsubscribe();
-            },
-          });
+          const deleteRequest = this.restAPIConnector
+            .deleteTeam(this.team)
+            .subscribe({
+              next: () => {
+                this.router.navigate(['..'], { relativeTo: this.route });
+              },
+              complete: () => {
+                deleteRequest.unsubscribe();
+              },
+            });
         }
       },
       complete: () => closeSubscription.unsubscribe(),
@@ -121,7 +127,7 @@ export class TeamsViewPageComponent implements OnInit, OnDestroy {
   public loadTeam(): void {
     this.team = null;
     const subscription = this.restAPIConnector.getTeam(this.teamId).subscribe({
-      next: (team) => {
+      next: team => {
         this.team = new Team(team);
       },
       complete: () => {
@@ -152,17 +158,19 @@ export class TeamsViewPageComponent implements OnInit, OnDestroy {
       },
     });
     const subscription = prompt.afterClosed().subscribe({
-      next: (response) => {
+      next: response => {
         if (response) {
           this.team.userIDs = select.selected;
-          const putRequest = this.restAPIConnector.putTeam(this.team).subscribe({
-            next: () => {
-              this.loadTeam();
-            },
-            complete: () => {
-              putRequest.unsubscribe();
-            },
-          });
+          const putRequest = this.restAPIConnector
+            .putTeam(this.team)
+            .subscribe({
+              next: () => {
+                this.loadTeam();
+              },
+              complete: () => {
+                putRequest.unsubscribe();
+              },
+            });
         }
       },
       complete: () => {

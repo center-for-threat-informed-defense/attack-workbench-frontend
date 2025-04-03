@@ -1,4 +1,11 @@
-import { Component, OnDestroy, OnInit, ViewChild, Output, EventEmitter } from '@angular/core';
+import {
+  Component,
+  OnDestroy,
+  OnInit,
+  ViewChild,
+  Output,
+  EventEmitter,
+} from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router, NavigationEnd } from '@angular/router';
 
@@ -48,7 +55,8 @@ export class StixPageComponent implements OnInit, OnDestroy {
 
   @Output() created = new EventEmitter();
 
-  @ViewChild(CollectionViewComponent) private collectionViewComponent: CollectionViewComponent;
+  @ViewChild(CollectionViewComponent)
+  private collectionViewComponent: CollectionViewComponent;
   @ViewChild(MarkingDefinitionViewComponent)
   private markingDefinitionViewComponent: MarkingDefinitionViewComponent;
 
@@ -59,7 +67,7 @@ export class StixPageComponent implements OnInit, OnDestroy {
     private breadcrumbService: BreadcrumbService,
     private editorService: EditorService,
     private dialog: MatDialog,
-    private titleService: TitleService,
+    private titleService: TitleService
   ) {}
 
   /**
@@ -83,7 +91,8 @@ export class StixPageComponent implements OnInit, OnDestroy {
       // pass into marking definition property component
       this.markingDefinitionViewComponent.validate();
     } else {
-      const versionChanged = this.objects[0].version.compareTo(this.initialVersion) != 0;
+      const versionChanged =
+        this.objects[0].version.compareTo(this.initialVersion) != 0;
       const prompt = this.dialog.open(SaveDialogComponent, {
         // increment version number save panel
         data: {
@@ -101,9 +110,12 @@ export class StixPageComponent implements OnInit, OnDestroy {
       });
 
       const subscription = prompt.afterClosed().subscribe({
-        next: (result) => {
+        next: result => {
           if (result) {
-            this.router.navigate([this.objects[0].attackType, this.objects[0].stixID]);
+            this.router.navigate([
+              this.objects[0].attackType,
+              this.objects[0].stixID,
+            ]);
             setTimeout(() => {
               this.loadObjects();
             }, 500);
@@ -127,7 +139,7 @@ export class StixPageComponent implements OnInit, OnDestroy {
       },
     });
     const closeSubscription = prompt.afterClosed().subscribe({
-      next: (confirm) => {
+      next: confirm => {
         if (confirm) {
           const deleteSubscription = this.deleteObjects().subscribe({
             complete: () => {
@@ -143,60 +155,78 @@ export class StixPageComponent implements OnInit, OnDestroy {
 
   private deleteObjects() {
     return this.restApiService.getAllNotes().pipe(
-      concatMap((notes) => {
+      concatMap(notes => {
         const delObject = this.objects[0];
-        const relatedNotes = (notes.data as Note[]).filter((note) =>
-          note.object_refs.includes(delObject.stixID),
+        const relatedNotes = (notes.data as Note[]).filter(note =>
+          note.object_refs.includes(delObject.stixID)
         );
-        if (delObject.attackType == 'technique' && delObject['is_subtechnique']) {
+        if (
+          delObject.attackType == 'technique' &&
+          delObject['is_subtechnique']
+        ) {
           // if sub-technique, delete the 'subtechnique-of' relationship
           return this.restApiService
-            .getRelatedTo({ sourceRef: delObject.stixID, relationshipType: 'subtechnique-of' })
+            .getRelatedTo({
+              sourceRef: delObject.stixID,
+              relationshipType: 'subtechnique-of',
+            })
             .pipe(
-              concatMap((sub_relationship) => {
-                const noteSubs = relatedNotes.map((note) => note.delete(this.restApiService));
-                const relSubs = sub_relationship.data.map((r) => r.delete(this.restApiService));
+              concatMap(sub_relationship => {
+                const noteSubs = relatedNotes.map(note =>
+                  note.delete(this.restApiService)
+                );
+                const relSubs = sub_relationship.data.map(r =>
+                  r.delete(this.restApiService)
+                );
                 const sub_api_calls = [
                   ...noteSubs,
                   ...relSubs,
                   delObject.delete(this.restApiService),
                 ];
                 return forkJoin(sub_api_calls);
-              }),
+              })
             );
         }
-        const noteSubscribers = relatedNotes.map((note) => note.delete(this.restApiService));
-        const api_calls = [...noteSubscribers, delObject.delete(this.restApiService)];
-        if (delObject.attackType == 'collection' && (delObject as Collection).imported) {
+        const noteSubscribers = relatedNotes.map(note =>
+          note.delete(this.restApiService)
+        );
+        const api_calls = [
+          ...noteSubscribers,
+          delObject.delete(this.restApiService),
+        ];
+        if (
+          delObject.attackType == 'collection' &&
+          (delObject as Collection).imported
+        ) {
           this.editorService.onDeleteImportedCollection.emit();
           api_calls.push(
             this.restApiService.deleteCollection(
               delObject.stixID,
               true,
-              delObject.modified.toISOString(),
-            ),
+              delObject.modified.toISOString()
+            )
           );
         }
         return forkJoin(api_calls);
-      }),
+      })
     );
   }
 
   ngOnInit(): void {
     this.loadObjects();
     this.saveSubscription = this.editorService.onSave.subscribe({
-      next: (_event) => this.save(),
+      next: _event => this.save(),
     });
     this.deleteSubscription = this.editorService.onDelete.subscribe({
-      next: (_event) => this.delete(),
+      next: _event => this.delete(),
     });
     this.reloadSubscription = this.editorService.onReload.subscribe({
-      next: (_event) => {
+      next: _event => {
         this.objects = undefined;
         this.loadObjects();
       },
     });
-    this.routerEvents = this.router.events.subscribe((event) => {
+    this.routerEvents = this.router.events.subscribe(event => {
       if (event instanceof NavigationEnd) {
         // Load objects when navigation ends successfully
         this.loadObjects();
@@ -215,23 +245,32 @@ export class StixPageComponent implements OnInit, OnDestroy {
     if (objectStixID && objectStixID != 'new') {
       // get objects at REST API
       let objects$: Observable<StixObject[]>;
-      if (this.objectType == 'software') objects$ = this.restApiService.getSoftware(objectStixID);
-      else if (this.objectType == 'group') objects$ = this.restApiService.getGroup(objectStixID);
+      if (this.objectType == 'software')
+        objects$ = this.restApiService.getSoftware(objectStixID);
+      else if (this.objectType == 'group')
+        objects$ = this.restApiService.getGroup(objectStixID);
       else if (this.objectType == 'campaign')
         objects$ = this.restApiService.getCampaign(objectStixID);
-      else if (this.objectType == 'matrix') objects$ = this.restApiService.getMatrix(objectStixID);
+      else if (this.objectType == 'matrix')
+        objects$ = this.restApiService.getMatrix(objectStixID);
       else if (this.objectType == 'mitigation')
         objects$ = this.restApiService.getMitigation(objectStixID);
-      else if (this.objectType == 'tactic') objects$ = this.restApiService.getTactic(objectStixID);
+      else if (this.objectType == 'tactic')
+        objects$ = this.restApiService.getTactic(objectStixID);
       else if (this.objectType == 'technique')
-        objects$ = this.restApiService.getTechnique(objectStixID, null, 'latest', true);
+        objects$ = this.restApiService.getTechnique(
+          objectStixID,
+          null,
+          'latest',
+          true
+        );
       else if (this.objectType == 'collection')
         objects$ = this.restApiService.getCollection(
           objectStixID,
           objectModified,
           'latest',
           false,
-          true,
+          true
         );
       else if (this.objectType == 'data-source')
         objects$ = this.restApiService.getDataSource(
@@ -240,22 +279,29 @@ export class StixPageComponent implements OnInit, OnDestroy {
           'latest',
           false,
           false,
-          true,
+          true
         );
       else if (this.objectType == 'data-component')
         objects$ = this.restApiService.getDataComponent(objectStixID);
-      else if (this.objectType == 'asset') objects$ = this.restApiService.getAsset(objectStixID);
+      else if (this.objectType == 'asset')
+        objects$ = this.restApiService.getAsset(objectStixID);
       else if (this.objectType == 'marking-definition')
         objects$ = this.restApiService.getMarkingDefinition(objectStixID);
       const subscription = objects$.subscribe({
-        next: (result) => {
+        next: result => {
           this.updateBreadcrumbs(result, this.objectType);
           this.objects = result;
           if (objectModified)
-            this.objects = this.objects.filter((x) => x.modified.toISOString() == objectModified); //filter to just the object with that date
+            this.objects = this.objects.filter(
+              x => x.modified.toISOString() == objectModified
+            ); //filter to just the object with that date
           if (this.objects.length > 0)
-            this.initialVersion = new VersionNumber(this.objects[0].version.toString());
-          this.objectID = this.objects[0].supportsAttackID ? this.objects[0].attackID : null;
+            this.initialVersion = new VersionNumber(
+              this.objects[0].version.toString()
+            );
+          this.objectID = this.objects[0].supportsAttackID
+            ? this.objects[0].attackID
+            : null;
         },
         complete: () => {
           subscription.unsubscribe();
@@ -283,9 +329,11 @@ export class StixPageComponent implements OnInit, OnDestroy {
         },
       });
       const subscription = prompt.afterClosed().subscribe({
-        next: (result) => {
+        next: result => {
           this.objects = [new Software(result)];
-          this.initialVersion = new VersionNumber(this.objects[0].version.toString());
+          this.initialVersion = new VersionNumber(
+            this.objects[0].version.toString()
+          );
           this.updateBreadcrumbs(this.objects, this.objectType);
         },
         complete: () => {
@@ -322,7 +370,9 @@ export class StixPageComponent implements OnInit, OnDestroy {
         }
       };
       this.objects.push(attackTypeToClass(this.objectType));
-      this.initialVersion = new VersionNumber(this.objects[0].version.toString());
+      this.initialVersion = new VersionNumber(
+        this.objects[0].version.toString()
+      );
       this.updateBreadcrumbs(this.objects, this.objectType);
     }
   }
@@ -336,26 +386,35 @@ export class StixPageComponent implements OnInit, OnDestroy {
 
   private updateBreadcrumbs(result, objectType) {
     if (result.length == 0) {
-      this.breadcrumbService.changeBreadcrumb(this.route.snapshot, 'object not found');
+      this.breadcrumbService.changeBreadcrumb(
+        this.route.snapshot,
+        'object not found'
+      );
       this.titleService.setTitle('object not found', true);
     } else if ('name' in result[0] && result[0].name) {
-      this.breadcrumbService.changeBreadcrumb(this.route.snapshot, result[0].name);
+      this.breadcrumbService.changeBreadcrumb(
+        this.route.snapshot,
+        result[0].name
+      );
       this.titleService.setTitle(result[0].name, false);
     } else if (objectType == 'marking-definition') {
       if ('definition_string' in result[0] && result[0].definition_string) {
-        this.breadcrumbService.changeBreadcrumb(this.route.snapshot, `marking definition`);
+        this.breadcrumbService.changeBreadcrumb(
+          this.route.snapshot,
+          `marking definition`
+        );
         this.titleService.setTitle(`Marking Definition`);
       } else {
         this.breadcrumbService.changeBreadcrumb(
           this.route.snapshot,
-          `new ${objectType.replace(/-/g, ' ')}`,
+          `new ${objectType.replace(/-/g, ' ')}`
         );
         this.titleService.setTitle(`New Marking Definition`);
       }
     } else {
       this.breadcrumbService.changeBreadcrumb(
         this.route.snapshot,
-        `new ${objectType.replace(/-/g, ' ')}`,
+        `new ${objectType.replace(/-/g, ' ')}`
       );
       this.titleService.setTitle(`new ${objectType}`);
     }

@@ -1,4 +1,11 @@
-import { Component, EventEmitter, Input, OnInit, Output, ViewEncapsulation } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  OnInit,
+  Output,
+  ViewEncapsulation,
+} from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { Role } from 'src/app/classes/authn/role';
@@ -29,7 +36,7 @@ export class CollectionIndexViewComponent implements OnInit {
     private authenticationService: AuthenticationService,
     private restAPIConnector: RestApiConnectorService,
     private dialog: MatDialog,
-    private router: Router,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -37,10 +44,15 @@ export class CollectionIndexViewComponent implements OnInit {
   }
 
   public get showActions(): boolean {
-    return !this.config.hasOwnProperty('show_actions') || this.config.show_actions;
+    return (
+      !this.config.hasOwnProperty('show_actions') || this.config.show_actions
+    );
   }
 
-  public showReleaseNotes(version: CollectionVersion, collection: CollectionReference) {
+  public showReleaseNotes(
+    version: CollectionVersion,
+    collection: CollectionReference
+  ) {
     this.dialog.open(MarkdownViewDialogComponent, {
       data: {
         markdown: version.release_notes,
@@ -50,8 +62,11 @@ export class CollectionIndexViewComponent implements OnInit {
     });
   }
 
-  public versionDownloaded(version: CollectionVersion, ref: CollectionReference): boolean {
-    return this.config.subscribed_collections.some((subscribed) => {
+  public versionDownloaded(
+    version: CollectionVersion,
+    ref: CollectionReference
+  ): boolean {
+    return this.config.subscribed_collections.some(subscribed => {
       const matcher = `${ref.id}@${version.modified}`;
       return matcher == subscribed;
     });
@@ -73,21 +88,25 @@ export class CollectionIndexViewComponent implements OnInit {
       autoFocus: false, // prevents auto focus on buttons
     });
     const subscription = prompt.afterClosed().subscribe({
-      next: (result) => {
+      next: result => {
         // if they clicked yes, subscribe to the collection
         if (result) {
           const subscribedCollections = new Set<string>(
-            this.config.index.workspace.update_policy.subscriptions,
+            this.config.index.workspace.update_policy.subscriptions
           );
           const subscriptionID = collectionRef.id; //id to toggle
           // add subscription
           subscribedCollections.add(subscriptionID);
           // set in object
-          this.config.index.workspace.update_policy.subscriptions =
-            Array.from(subscribedCollections);
+          this.config.index.workspace.update_policy.subscriptions = Array.from(
+            subscribedCollections
+          );
           // PUT result to backend
           this.restAPIConnector
-            .putCollectionIndex(this.config.index, `subscribed to ${collectionRef.name}`)
+            .putCollectionIndex(
+              this.config.index,
+              `subscribed to ${collectionRef.name}`
+            )
             .subscribe(() => {
               this.onCollectionsModified.emit();
             });
@@ -109,20 +128,25 @@ export class CollectionIndexViewComponent implements OnInit {
       },
       autoFocus: false, // prevents auto focus on buttons
     });
-    prompt.afterClosed().subscribe((result) => {
+    prompt.afterClosed().subscribe(result => {
       // if they clicked yes, subscribe to the collection
       if (result) {
         const subscribedCollections = new Set<string>(
-          this.config.index.workspace.update_policy.subscriptions,
+          this.config.index.workspace.update_policy.subscriptions
         );
         const subscriptionID = collectionRef.id; //id to toggle
         // remove subscription
         subscribedCollections.delete(subscriptionID);
         // set in object
-        this.config.index.workspace.update_policy.subscriptions = Array.from(subscribedCollections);
+        this.config.index.workspace.update_policy.subscriptions = Array.from(
+          subscribedCollections
+        );
         // PUT result to backend
         this.restAPIConnector
-          .putCollectionIndex(this.config.index, `unsubscribed from ${collectionRef.name}`)
+          .putCollectionIndex(
+            this.config.index,
+            `unsubscribed from ${collectionRef.name}`
+          )
           .subscribe(() => {
             this.onCollectionsModified.emit();
           });
@@ -141,7 +165,7 @@ export class CollectionIndexViewComponent implements OnInit {
       autoFocus: false, // prevents auto focus on buttons
     });
     const promptSubscription = prompt.afterClosed().subscribe({
-      next: (result) => {
+      next: result => {
         // if they clicked yes, delete the index
         if (result) {
           const subscription = this.restAPIConnector
@@ -165,7 +189,9 @@ export class CollectionIndexViewComponent implements OnInit {
   public onVersionClick(version: CollectionVersion, ref: CollectionReference) {
     if (this.versionDownloaded(version, ref)) {
       //view prior import
-      this.router.navigate([`/collection/${ref.id}/modified/${version.modified.toISOString()}`]);
+      this.router.navigate([
+        `/collection/${ref.id}/modified/${version.modified.toISOString()}`,
+      ]);
     } else {
       // go to download page
       if (this.isAdmin)

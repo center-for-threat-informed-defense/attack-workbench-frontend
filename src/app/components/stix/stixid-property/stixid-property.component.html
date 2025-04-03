@@ -5,10 +5,11 @@
       mat-icon-button
       class="mini-icon-button"
       [cdkCopyToClipboard]="stixIdLink"
-      (click)="snackbar.open('STIX ID copied to clipboard', null, { duration: 1000 })"
+      (click)="
+        snackbar.open('STIX ID copied to clipboard', null, { duration: 1000 })
+      "
       matTooltip="copy STIX ID"
-      aria-label="copy stixID"
-    >
+      aria-label="copy stixID">
       <mat-icon>content_copy</mat-icon>
     </button>
   </div>

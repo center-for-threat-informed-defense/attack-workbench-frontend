@@ -84,7 +84,9 @@ export class VersionPopoverComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    const object = Array.isArray(this.config.object) ? this.config.object[0] : this.config.object;
+    const object = Array.isArray(this.config.object)
+      ? this.config.object[0]
+      : this.config.object;
     const attackType = object?.attackType;
 
     const objectGuidelines = this.versionGuidelinesMap[attackType] || '';

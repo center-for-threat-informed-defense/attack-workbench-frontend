@@ -56,19 +56,20 @@ export class Identity extends StixObject {
             sdo.name,
             '(',
             typeof sdo.name,
-            ')',
+            ')'
           );
       } else this.name = '';
 
       if ('identity_class' in sdo) {
-        if (typeof sdo.identity_class === 'string') this.identity_class = sdo.identity_class;
+        if (typeof sdo.identity_class === 'string')
+          this.identity_class = sdo.identity_class;
         else
           logger.error(
             'TypeError: identity_class field is not a string:',
             sdo.identity_class,
             '(',
             typeof sdo.identity_class,
-            ')',
+            ')'
           );
       } else this.identity_class = '';
 
@@ -78,14 +79,15 @@ export class Identity extends StixObject {
       }
 
       if ('contact_information' in sdo) {
-        if (typeof sdo.contact_information === 'string') this.contact = sdo.contact_information;
+        if (typeof sdo.contact_information === 'string')
+          this.contact = sdo.contact_information;
         else
           logger.error(
             'TypeError: contact_information field is not a string:',
             sdo.contact_information,
             '(',
             typeof sdo.contact_information,
-            ')',
+            ')'
           );
       }
     }
@@ -96,7 +98,9 @@ export class Identity extends StixObject {
    * @param {RestApiConnectorService} restAPIService: the REST API connector through which asynchronous validation can be completed
    * @returns {Observable<ValidationData>} the validation warnings and errors once validation is complete.
    */
-  public validate(restAPIService: RestApiConnectorService): Observable<ValidationData> {
+  public validate(
+    restAPIService: RestApiConnectorService
+  ): Observable<ValidationData> {
     return this.base_validate(restAPIService);
   }
 
@@ -109,7 +113,7 @@ export class Identity extends StixObject {
   public save(restAPIService: RestApiConnectorService): Observable<Identity> {
     const postObservable = restAPIService.postIdentity(this);
     const subscription = postObservable.subscribe({
-      next: (result) => {
+      next: result => {
         this.deserialize(result);
       },
       complete: () => {
@@ -132,7 +136,7 @@ export class Identity extends StixObject {
   public update(restAPIService: RestApiConnectorService): Observable<Identity> {
     const putObservable = restAPIService.putIdentity(this);
     const subscription = putObservable.subscribe({
-      next: (result) => {
+      next: result => {
         this.deserialize(result.serialize());
       },
       complete: () => {

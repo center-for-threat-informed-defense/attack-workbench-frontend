@@ -1,53 +1,69 @@
-<div class="grid spacing-16 view-page relationship-view" *ngIf="loaded; else loading">
+<div
+  class="grid spacing-16 view-page relationship-view"
+  *ngIf="loaded; else loading">
   <div class="row">
     <div class="col">
       <ng-container
-        *ngIf="!relationship.updating_refs && !previous?.updating_refs; else updatingRefs"
-      >
+        *ngIf="
+          !relationship.updating_refs && !previous?.updating_refs;
+          else updatingRefs
+        ">
         <h1 *ngIf="config.mode !== 'diff'">
           <span
             *ngIf="
-              relationship.source_object.stix.id === currentPageStixID || editing;
+              relationship.source_object.stix.id === currentPageStixID ||
+                editing;
               else showSourceLink
             "
             >{{ relationship.source_name }}</span
           >
           <ng-template #showSourceLink>
-            <a (click)="navigateTo(relationship.source_object)">{{ relationship.source_name }}</a>
+            <a (click)="navigateTo(relationship.source_object)">{{
+              relationship.source_name
+            }}</a>
           </ng-template>
-          <span class="text-deemphasis">&nbsp;{{ relationship.relationship_type }}&nbsp;</span>
+          <span class="text-deemphasis"
+            >&nbsp;{{ relationship.relationship_type }}&nbsp;</span
+          >
           <span
             *ngIf="
-              relationship.target_object.stix.id === currentPageStixID || editing;
+              relationship.target_object.stix.id === currentPageStixID ||
+                editing;
               else showTargetLink
             "
             >{{ relationship.target_name }}</span
           >
           <ng-template #showTargetLink>
-            <a (click)="navigateTo(relationship.target_object)">{{ relationship.target_name }}</a>
+            <a (click)="navigateTo(relationship.target_object)">{{
+              relationship.target_name
+            }}</a>
           </ng-template>
         </h1>
 
         <h1 *ngIf="config.mode === 'diff'">
           <app-property-diff
             [before]="previous?.source_name || ''"
-            [after]="relationship.source_name"
-          ></app-property-diff>
-          <span class="text-deemphasis">{{ relationship.relationship_type }}</span>
+            [after]="relationship.source_name"></app-property-diff>
+          <span class="text-deemphasis">{{
+            relationship.relationship_type
+          }}</span>
           <app-property-diff
             [before]="previous?.target_name || ''"
-            [after]="relationship.target_name"
-          ></app-property-diff>
+            [after]="relationship.target_name"></app-property-diff>
         </h1>
       </ng-container>
 
       <!-- STATUS -->
       <h3
         class="status"
-        *ngIf="!relationship.updating_refs && !previous?.updating_refs; else updatingRefs"
-      >
+        *ngIf="
+          !relationship.updating_refs && !previous?.updating_refs;
+          else updatingRefs
+        ">
         <span *ngIf="config.mode !== 'diff'">
-          <span class="warning-text" *ngIf="config.object['deprecated']">deprecated</span>
+          <span class="warning-text" *ngIf="config.object['deprecated']"
+            >deprecated</span
+          >
           <span class="warning-text" *ngIf="config.object['revoked'] && loaded"
             >revoked by: {{ target_obj.stix.name }}</span
           >
@@ -56,8 +72,7 @@
         <span *ngIf="config.mode === 'diff'" class="warning-text">
           <app-property-diff
             [before]="getStatus(previous)"
-            [after]="getStatus(relationship)"
-          ></app-property-diff>
+            [after]="getStatus(relationship)"></app-property-diff>
         </span>
       </h3>
 
@@ -69,8 +84,7 @@
       <app-subheading
         [config]="config"
         (onOpenHistory)="openHistory()"
-        (onOpenNotes)="openNotes()"
-      ></app-subheading>
+        (onOpenNotes)="openNotes()"></app-subheading>
     </div>
   </div>
 
@@ -84,8 +98,7 @@
           object: config.object,
           field: 'source_ID',
           label: 'source id',
-        }"
-      ></app-string-property>
+        }"></app-string-property>
     </div>
     <!-- TARGET ID -->
     <div class="col">
@@ -96,8 +109,7 @@
           object: config.object,
           field: 'target_ID',
           label: 'target id',
-        }"
-      ></app-string-property>
+        }"></app-string-property>
     </div>
   </div>
 
@@ -108,13 +120,18 @@
       <div class="col">
         <mat-accordion>
           <mat-expansion-panel
-            [expanded]="relationship.target_object && !relationship.source_object"
-            class="mat-elevation-z0"
-          >
+            [expanded]="
+              relationship.target_object && !relationship.source_object
+            "
+            class="mat-elevation-z0">
             <mat-expansion-panel-header>
               <mat-panel-title>
-                <span style="font-weight: normal; margin-right: 10px">SOURCE</span>
-                <span *ngIf="!relationship.source_object">select a source object</span>
+                <span style="font-weight: normal; margin-right: 10px"
+                  >SOURCE</span
+                >
+                <span *ngIf="!relationship.source_object"
+                  >select a source object</span
+                >
                 <span *ngIf="relationship.source_object">
                   {{ relationship.source_name }}
                   <span class="text-deemphasis">{{
@@ -125,7 +142,9 @@
               <ng-template matExpansionPanelContent>
                 <mat-form-field appearance="outline" class="type_select">
                   <mat-label>source type</mat-label>
-                  <mat-select (selectionChange)="refresh_lists()" [(ngModel)]="source_type">
+                  <mat-select
+                    (selectionChange)="refresh_lists()"
+                    [(ngModel)]="source_type">
                     <mat-option
                       class="no-checkbox"
                       *ngFor="let objType of relationship.valid_source_types"
@@ -141,19 +160,23 @@
                   [config]="{
                     type: source_type,
                     select: 'one',
-                  }"
-                ></app-stix-list>
+                  }"></app-stix-list>
               </ng-template>
             </mat-expansion-panel-header>
           </mat-expansion-panel>
           <mat-expansion-panel
-            [expanded]="relationship.source_object && !relationship.target_object"
-            class="mat-elevation-z0"
-          >
+            [expanded]="
+              relationship.source_object && !relationship.target_object
+            "
+            class="mat-elevation-z0">
             <mat-expansion-panel-header>
               <mat-panel-title>
-                <span style="font-weight: normal; margin-right: 10px">TARGET</span>
-                <span *ngIf="!relationship.target_object">select a target object</span>
+                <span style="font-weight: normal; margin-right: 10px"
+                  >TARGET</span
+                >
+                <span *ngIf="!relationship.target_object"
+                  >select a target object</span
+                >
                 <span *ngIf="relationship.target_object">
                   {{ relationship.target_name }}
                   <span class="text-deemphasis">{{
@@ -164,7 +187,9 @@
               <ng-template matExpansionPanelContent>
                 <mat-form-field appearance="outline" class="type_select">
                   <mat-label>target type</mat-label>
-                  <mat-select (selectionChange)="refresh_lists()" [(ngModel)]="target_type">
+                  <mat-select
+                    (selectionChange)="refresh_lists()"
+                    [(ngModel)]="target_type">
                     <mat-option
                       class="no-checkbox"
                       *ngFor="let objType of relationship.valid_target_types"
@@ -180,8 +205,7 @@
                   [config]="{
                     type: target_type,
                     select: 'one',
-                  }"
-                ></app-stix-list>
+                  }"></app-stix-list>
               </ng-template>
             </mat-expansion-panel-header>
           </mat-expansion-panel>
@@ -194,19 +218,21 @@
       <!-- source object version -->
       <h4
         *ngIf="relationship.source_object && source_type !== 'data-component'"
-        class="section-header"
-      >
+        class="section-header">
         Update version of {{ relationship.source_name }}?
       </h4>
-      <div class="row" *ngIf="relationship.source_object && source_type !== 'data-component'">
+      <div
+        class="row"
+        *ngIf="relationship.source_object && source_type !== 'data-component'">
         <div class="col">
           <div class="labelled-box grow-to-row">
             <div class="content no-label">
               <mat-checkbox
                 color="primary"
                 [(ngModel)]="source_version.minor"
-                (change)="source_version.major = false; onSourceVersionChange($event)"
-              >
+                (change)="
+                  source_version.major = false; onSourceVersionChange($event)
+                ">
                 Minor version update
                 <span class="text-deemphasis"
                   >(v{{ relationship.source_object['stix'].x_mitre_version }}
@@ -224,8 +250,9 @@
               <mat-checkbox
                 color="primary"
                 [(ngModel)]="source_version.major"
-                (change)="source_version.minor = false; onSourceVersionChange($event)"
-              >
+                (change)="
+                  source_version.minor = false; onSourceVersionChange($event)
+                ">
                 Major version update
                 <span class="text-deemphasis"
                   >(v{{ relationship.source_object['stix'].x_mitre_version }}
@@ -249,8 +276,9 @@
               <mat-checkbox
                 color="primary"
                 [(ngModel)]="target_version.minor"
-                (change)="target_version.major = false; onTargetVersionChange($event)"
-              >
+                (change)="
+                  target_version.major = false; onTargetVersionChange($event)
+                ">
                 Minor version update
                 <span class="text-deemphasis"
                   >(v{{ relationship.target_object['stix'].x_mitre_version }}
@@ -268,8 +296,9 @@
               <mat-checkbox
                 color="primary"
                 [(ngModel)]="target_version.major"
-                (change)="target_version.minor = false; onTargetVersionChange($event)"
-              >
+                (change)="
+                  target_version.minor = false; onTargetVersionChange($event)
+                ">
                 Major version update
                 <span class="text-deemphasis"
                   >(v{{ relationship.target_object['stix'].x_mitre_version }}
@@ -298,8 +327,7 @@
             firstParagraphOnly: false,
             referencesField: 'external_references',
             label: 'Description',
-          }"
-        ></app-descriptive-property>
+          }"></app-descriptive-property>
       </div>
     </div>
     <!-- EXTERNAL REFERENCES -->
@@ -307,8 +335,7 @@
       *ngIf="
         relationship.external_references.list().length > 0 ||
         previous?.external_references.list().length > 0
-      "
-    >
+      ">
       <div class="row">
         <div class="col">
           <h2 class="section-header">References</h2>
@@ -321,8 +348,7 @@
               mode: config.mode,
               object: config.object,
               referencesField: 'external_references',
-            }"
-          ></app-external-references-property>
+            }"></app-external-references-property>
         </div>
       </div>
     </div>

@@ -67,14 +67,15 @@ export class ListEditComponent implements OnInit, AfterContentChecked {
   public domains = ['enterprise-attack', 'mobile-attack', 'ics-attack'];
 
   public get values() {
-    if (this.config.field == 'aliases') return this.config.object[this.config.field].slice(1); // filter out the first alias
+    if (this.config.field == 'aliases')
+      return this.config.object[this.config.field].slice(1); // filter out the first alias
     return this.config.object[this.config.field];
   }
 
   constructor(
     public dialog: MatDialog,
     private restAPIConnectorService: RestApiConnectorService,
-    private ref: ChangeDetectorRef,
+    private ref: ChangeDetectorRef
   ) {
     // intentionally left blank
   }
@@ -86,7 +87,7 @@ export class ListEditComponent implements OnInit, AfterContentChecked {
     });
     this.inputControl = new FormControl(
       null,
-      this.config.required ? [Validators.required] : undefined,
+      this.config.required ? [Validators.required] : undefined
     );
     this.stixControl = new FormControl(this.selectedValues());
     if (
@@ -103,9 +104,9 @@ export class ListEditComponent implements OnInit, AfterContentChecked {
       if (!this.dataLoaded) {
         const data$ = this.restAPIConnectorService.getAllAllowedValues();
         this.sub = data$.subscribe({
-          next: (data) => {
+          next: data => {
             const stixObject = this.config.object as StixObject;
-            this.allAllowedValues = data.find((obj) => {
+            this.allAllowedValues = data.find(obj => {
               return obj.objectType == stixObject.attackType;
             });
             this.dataLoaded = true;
@@ -123,44 +124,55 @@ export class ListEditComponent implements OnInit, AfterContentChecked {
       //any
     } else if (this.config.field == 'tactics') {
       this.type = 'tactic';
-      const subscription = this.restAPIConnectorService.getAllTactics().subscribe({
-        next: (tactics) => {
-          this.allObjects = tactics.data;
+      const subscription = this.restAPIConnectorService
+        .getAllTactics()
+        .subscribe({
+          next: tactics => {
+            this.allObjects = tactics.data;
 
-          // retrieve currently selected tactics
-          const object = this.config.object as any;
-          const selectedTactics = this.shortnameToTactic(object.domains);
-          const selectedTacticIDs = selectedTactics.map((tactic) => tactic.stixID);
+            // retrieve currently selected tactics
+            const object = this.config.object as any;
+            const selectedTactics = this.shortnameToTactic(object.domains);
+            const selectedTacticIDs = selectedTactics.map(
+              tactic => tactic.stixID
+            );
 
-          // set up domain & tactic tracking
-          this.domainState = [];
-          this.tacticState = [];
-          object.domains.forEach((domain) => this.domainState.push(domain));
-          selectedTactics.forEach((tactic) => this.tacticState.push(tactic));
+            // set up domain & tactic tracking
+            this.domainState = [];
+            this.tacticState = [];
+            object.domains.forEach(domain => this.domainState.push(domain));
+            selectedTactics.forEach(tactic => this.tacticState.push(tactic));
 
-          // set selection model with initial values
-          this.select = new SelectionModel<string>(true, selectedTacticIDs);
-          this.dataLoaded = true;
-        },
-        complete: () => {
-          subscription.unsubscribe();
-        },
-      });
+            // set selection model with initial values
+            this.select = new SelectionModel<string>(true, selectedTacticIDs);
+            this.dataLoaded = true;
+          },
+          complete: () => {
+            subscription.unsubscribe();
+          },
+        });
     } else if (this.config.field == 'parentTechnique') {
       this.type = 'technique';
-      const subscription = this.restAPIConnectorService.getAllTechniques().subscribe({
-        next: (r: Paginated<Technique>) => {
-          this.allObjects = r.data.filter(
-            (t) => !t.is_subtechnique && t.stixID !== (this.config.object as Technique).stixID,
-          );
-          const selectableTechniqueIDs = r.data.map((t) => t.stixID);
-          this.select = new SelectionModel<string>(false, selectableTechniqueIDs);
-          this.dataLoaded = true;
-        },
-        complete: () => {
-          subscription.unsubscribe();
-        },
-      });
+      const subscription = this.restAPIConnectorService
+        .getAllTechniques()
+        .subscribe({
+          next: (r: Paginated<Technique>) => {
+            this.allObjects = r.data.filter(
+              t =>
+                !t.is_subtechnique &&
+                t.stixID !== (this.config.object as Technique).stixID
+            );
+            const selectableTechniqueIDs = r.data.map(t => t.stixID);
+            this.select = new SelectionModel<string>(
+              false,
+              selectableTechniqueIDs
+            );
+            this.dataLoaded = true;
+          },
+          complete: () => {
+            subscription.unsubscribe();
+          },
+        });
     }
   }
 
@@ -181,9 +193,11 @@ export class ListEditComponent implements OnInit, AfterContentChecked {
   /** Retrieves a list of selected tactics */
   private shortnameToTactic(domains: string[]): Tactic[] {
     const allObjects = this.allObjects as Tactic[];
-    const tactics = this.config.object[this.config.field].map((shortname) => {
-      return allObjects.find((tactic) => {
-        return tactic.shortname == shortname && this.tacticInDomain(tactic, domains);
+    const tactics = this.config.object[this.config.field].map(shortname => {
+      return allObjects.find(tactic => {
+        return (
+          tactic.shortname == shortname && this.tacticInDomain(tactic, domains)
+        );
       });
     });
     return tactics;
@@ -192,7 +206,7 @@ export class ListEditComponent implements OnInit, AfterContentChecked {
   /** Retrieves a list of selected tactic shortnames */
   private stixIDToShortname(tacticID: string): string[] {
     const allObjects = this.allObjects as Tactic[];
-    const tactic = allObjects.find((object) => object.stixID == tacticID);
+    const tactic = allObjects.find(object => object.stixID == tacticID);
     return [tactic.shortname, tactic.domains[0]];
   }
 
@@ -217,24 +231,33 @@ export class ListEditComponent implements OnInit, AfterContentChecked {
         if (object.domains.length < this.domainState.length) {
           // a domain was removed
           // filter selected tactics with updated domain selection
-          selectedTactics = selectedTactics.filter((tactic) => this.tacticInDomain(tactic));
-          const selectedTacticIDs = selectedTactics.map((tactic) => tactic.stixID);
-          const tacticShortnames = selectedTacticIDs.map((id) => this.stixIDToShortname(id));
+          selectedTactics = selectedTactics.filter(tactic =>
+            this.tacticInDomain(tactic)
+          );
+          const selectedTacticIDs = selectedTactics.map(
+            tactic => tactic.stixID
+          );
+          const tacticShortnames = selectedTacticIDs.map(id =>
+            this.stixIDToShortname(id)
+          );
 
           // udpate object & selection model
           this.config.object[this.config.field] = tacticShortnames;
           this.select.clear();
-          selectedTacticIDs.forEach((tactic) => this.select.select(tactic));
+          selectedTacticIDs.forEach(tactic => this.select.select(tactic));
         }
 
         // reset domain & tactic selection state with a copy of current state
         this.domainState = [];
         this.tacticState = [];
-        object.domains.forEach((domain) => this.domainState.push(domain));
-        selectedTactics.forEach((tactic) => this.tacticState.push(tactic));
+        object.domains.forEach(domain => this.domainState.push(domain));
+        selectedTactics.forEach(tactic => this.tacticState.push(tactic));
       }
     }
-    if (this.config.field == 'parentTechnique' && this.config.object[this.config.field]) {
+    if (
+      this.config.field == 'parentTechnique' &&
+      this.config.object[this.config.field]
+    ) {
       return [this.config.object[this.config.field]?.name];
     }
     return this.config.object[this.config.field];
@@ -250,7 +273,7 @@ export class ListEditComponent implements OnInit, AfterContentChecked {
 
     // filter values
     const values = new Set<string>();
-    const property = this.allAllowedValues.properties.find((p) => {
+    const property = this.allAllowedValues.properties.find(p => {
       return p.propertyName == this.fieldToStix[this.config.field];
     });
     if (!property) {
@@ -261,14 +284,14 @@ export class ListEditComponent implements OnInit, AfterContentChecked {
 
     if ('domains' in this.config.object) {
       const object = this.config.object as any;
-      property.domains.forEach((domain) => {
+      property.domains.forEach(domain => {
         if (object.domains.includes(domain.domainName)) {
           domain.allowedValues.forEach(values.add, values);
         }
       });
     } else {
       // domains not specified on object
-      property.domains.forEach((domain) => {
+      property.domains.forEach(domain => {
         domain.allowedValues.forEach(values.add, values);
       });
     }
@@ -323,7 +346,8 @@ export class ListEditComponent implements OnInit, AfterContentChecked {
   /** Add or remove selection from object property list via select-list */
   public change(event: MatOptionSelectionChange): void {
     if (event.isUserInput) {
-      if (event.source.selected) this.config.object[this.config.field].push(event.source.value);
+      if (event.source.selected)
+        this.config.object[this.config.field].push(event.source.value);
       else this.remove(event.source.value);
     }
   }
@@ -348,7 +372,9 @@ export class ListEditComponent implements OnInit, AfterContentChecked {
   public openTacticList(): void {
     // get list of tactics in current domain
     const tactics = this.allObjects as Tactic[];
-    const selectableObjects = tactics.filter((tactic) => this.tacticInDomain(tactic));
+    const selectableObjects = tactics.filter(tactic =>
+      this.tacticInDomain(tactic)
+    );
 
     // open dialog window for user selection
     const dialogRef = this.openDialogComponent(selectableObjects);
@@ -356,18 +382,20 @@ export class ListEditComponent implements OnInit, AfterContentChecked {
     // copy user selection
     const selectCopy = new SelectionModel(true, this.select.selected);
     const subscription = dialogRef.afterClosed().subscribe({
-      next: (result) => {
+      next: result => {
         if (result) {
           // update object tactic list
-          const tacticShortnames = this.select.selected.map((id) => this.stixIDToShortname(id));
+          const tacticShortnames = this.select.selected.map(id =>
+            this.stixIDToShortname(id)
+          );
           this.config.object[this.config.field] = tacticShortnames;
 
           // reset tactic selection state
           this.tacticState = [];
-          const tactic_selection = this.select.selected.map((tacticID) =>
-            tactics.find((tactic) => tactic.stixID == tacticID),
+          const tactic_selection = this.select.selected.map(tacticID =>
+            tactics.find(tactic => tactic.stixID == tacticID)
           );
-          tactic_selection.forEach((tactic) => this.tacticState.push(tactic));
+          tactic_selection.forEach(tactic => this.tacticState.push(tactic));
         } else {
           // user cancel
           this.select = selectCopy; // reset selection
@@ -394,18 +422,18 @@ export class ListEditComponent implements OnInit, AfterContentChecked {
     // copy the user selection
     const selectCopy = new SelectionModel(false, this.select.selected);
     const subscription = dialogRef.afterClosed().subscribe({
-      next: (result) => {
+      next: result => {
         if (result) {
           // update parent technique
           const allObjects = this.allObjects as Technique[];
           const selection =
             this.select.selected.length > 0
-              ? allObjects.find((t) => t.stixID === this.select.selected[0])
+              ? allObjects.find(t => t.stixID === this.select.selected[0])
               : null;
           this.config.object[this.config.field] = selection;
           if (selection) {
             // sync sub-technique tactics with parent
-            const parentTactics = selection.kill_chain_phases.map((kcp) => {
+            const parentTactics = selection.kill_chain_phases.map(kcp => {
               return [kcp.phase_name, this.killChainMap[kcp.kill_chain_name]];
             });
             this.config.object['tactics'] = parentTactics;

@@ -19,7 +19,7 @@ export class CollectionUpdateDialogComponent implements OnInit {
   constructor(
     public dialogRef: MatDialogRef<CollectionUpdateDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public config: CollectionUpdateConfig,
-    public restApiService: RestApiConnectorService,
+    public restApiService: RestApiConnectorService
   ) {
     // intentionally left blank
   }
@@ -35,17 +35,20 @@ export class CollectionUpdateDialogComponent implements OnInit {
    */
   private loadObjects(): void {
     // get tactics related to techniques
-    const techniques: Technique[] = this.config.collectionChanges.technique.flatten(true);
+    const techniques: Technique[] =
+      this.config.collectionChanges.technique.flatten(true);
     const api_calls = [];
-    techniques.forEach((t) =>
-      api_calls.push(this.restApiService.getTacticsRelatedToTechnique(t.stixID, t.modified)),
+    techniques.forEach(t =>
+      api_calls.push(
+        this.restApiService.getTacticsRelatedToTechnique(t.stixID, t.modified)
+      )
     );
     if (!api_calls.length) {
       this.stage = 1;
       return;
     } // no techniques found in collection, move to next stage
     const objSubscription = forkJoin(api_calls).subscribe({
-      next: (results) => {
+      next: results => {
         // merge the results of forkJoin
         let tactics: Tactic[] = [];
         results.forEach((arr: Tactic[]) => {
@@ -53,11 +56,12 @@ export class CollectionUpdateDialogComponent implements OnInit {
         });
 
         // filter out duplicates and tactics already in the collection
-        const staged_tactics = this.config.collectionChanges.tactic.flatten(true);
-        const staged_tactic_ids: string[] = staged_tactics.map((t) => t.stixID); // list of tactic stixIDs already in collection
+        const staged_tactics =
+          this.config.collectionChanges.tactic.flatten(true);
+        const staged_tactic_ids: string[] = staged_tactics.map(t => t.stixID); // list of tactic stixIDs already in collection
         tactics = tactics.filter((tactic, index, self) => {
           return (
-            index === self.findIndex((t) => tactic.stixID === t.stixID) &&
+            index === self.findIndex(t => tactic.stixID === t.stixID) &&
             !staged_tactic_ids.includes(tactic.stixID)
           );
         });
@@ -81,9 +85,15 @@ export class CollectionUpdateDialogComponent implements OnInit {
       const changeType = this.getChangeType(object);
       if (changeType) {
         // add objects to collection
-        this.config.collectionChanges.tactic.add_objects(this.tacticsToAdd, changeType);
+        this.config.collectionChanges.tactic.add_objects(
+          this.tacticsToAdd,
+          changeType
+        );
         // remove objects from potential changes
-        this.config.potentialChanges.tactic.remove_objects(this.tacticsToAdd, changeType);
+        this.config.potentialChanges.tactic.remove_objects(
+          this.tacticsToAdd,
+          changeType
+        );
       }
     }
     this.dialogRef.close(true); // trigger reinitialization stix lists in collection view

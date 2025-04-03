@@ -13,7 +13,9 @@ export class StixIDPropertyComponent {
     return `${this.object['stixID']}`;
   }
   public get object(): StixObject {
-    return Array.isArray(this.config.object) ? this.config.object[0] : this.config.object;
+    return Array.isArray(this.config.object)
+      ? this.config.object[0]
+      : this.config.object;
   }
 
   constructor(public snackbar: MatSnackBar) {

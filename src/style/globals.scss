@@ -31,7 +31,9 @@ button.control {
 .mat-mdc-select-panel .no-checkbox .mat-pseudo-checkbox {
   display: none !important;
 }
-.mdc-checkbox .mdc-checkbox__native-control[disabled]:checked ~ .mdc-checkbox__background {
+.mdc-checkbox
+  .mdc-checkbox__native-control[disabled]:checked
+  ~ .mdc-checkbox__background {
   .light & {
     background-color: on-color-deemphasis(light);
   }
@@ -40,6 +42,7 @@ button.control {
   }
 }
 
-.mat-mdc-snack-bar-container .mat-mdc-button.mat-mdc-snack-bar-action:not(:disabled) {
+.mat-mdc-snack-bar-container
+  .mat-mdc-button.mat-mdc-snack-bar-action:not(:disabled) {
   color: black !important;
 }

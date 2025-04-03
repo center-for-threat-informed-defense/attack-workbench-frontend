@@ -22,14 +22,16 @@ export class TacticViewComponent extends StixViewPage implements OnInit {
 
   constructor(
     authenticationService: AuthenticationService,
-    private restApiConnector: RestApiConnectorService,
+    private restApiConnector: RestApiConnectorService
   ) {
     super(authenticationService);
   }
 
   ngOnInit() {
     if (this.tactic.firstInitialized) {
-      this.tactic.initializeWithDefaultMarkingDefinitions(this.restApiConnector);
+      this.tactic.initializeWithDefaultMarkingDefinitions(
+        this.restApiConnector
+      );
     } else {
       this.getTechniques();
     }
@@ -42,10 +44,10 @@ export class TacticViewComponent extends StixViewPage implements OnInit {
     this.loading = true;
     const data$: any = this.restApiConnector.getTechniquesInTactic(
       this.tactic.stixID,
-      this.tactic.modified,
+      this.tactic.modified
     );
     const subscription = data$.subscribe({
-      next: (result) => {
+      next: result => {
         this.techniques = result;
         this.loading = false;
       },

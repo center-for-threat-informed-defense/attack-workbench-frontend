@@ -1,4 +1,10 @@
-import { Component, OnInit, QueryList, ViewChildren, ViewEncapsulation } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  QueryList,
+  ViewChildren,
+  ViewEncapsulation,
+} from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { forkJoin, of } from 'rxjs';
 import { delay, map, switchMap, tap } from 'rxjs/operators';
@@ -35,7 +41,12 @@ import { CollectionUpdateDialogComponent } from 'src/app/components/collection-u
 import { AddDialogComponent } from 'src/app/components/add-dialog/add-dialog.component';
 import { SelectionModel } from '@angular/cdk/collections';
 
-type changeCategory = 'additions' | 'changes' | 'minor_changes' | 'revocations' | 'deprecations';
+type changeCategory =
+  | 'additions'
+  | 'changes'
+  | 'minor_changes'
+  | 'revocations'
+  | 'deprecations';
 
 @Component({
   selector: 'app-collection-view',
@@ -134,7 +145,7 @@ export class CollectionViewComponent extends StixViewPage implements OnInit {
     private snackbar: MatSnackBar,
     private editor: EditorService,
     public dialog: MatDialog,
-    authenticationService: AuthenticationService,
+    authenticationService: AuthenticationService
   ) {
     super(authenticationService);
   }
@@ -150,7 +161,7 @@ export class CollectionViewComponent extends StixViewPage implements OnInit {
     const subscription = this.collection
       .validate(this.restApiConnector)
       .pipe(
-        map((results) => {
+        map(results => {
           // add extra results here
           // must have incremented version number compared to prior release
           if (this.release) {
@@ -162,14 +173,21 @@ export class CollectionViewComponent extends StixViewPage implements OnInit {
           }
 
           if (this.previousRelease) {
-            if (this.collection.version.compareTo(this.previousRelease.version) <= 0) {
+            if (
+              this.collection.version.compareTo(this.previousRelease.version) <=
+              0
+            ) {
               results.errors.push({
                 result: 'error',
                 field: 'version',
                 message:
                   'version number of the collection must be incremented from previous release',
               });
-            } else if (this.collection.version.isDoubleIncrement(this.previousRelease.version)) {
+            } else if (
+              this.collection.version.isDoubleIncrement(
+                this.previousRelease.version
+              )
+            ) {
               results.warnings.push({
                 result: 'warning',
                 field: 'version',
@@ -191,7 +209,9 @@ export class CollectionViewComponent extends StixViewPage implements OnInit {
           const collectionStixIDToObject = new Map<string, StixObject>();
           for (const attackType in this.collectionChanges) {
             if (attackType == 'relationship') continue;
-            for (const object of this.collectionChanges[attackType].flatten(true))
+            for (const object of this.collectionChanges[attackType].flatten(
+              true
+            ))
               collectionStixIDToObject.set(object.stixID, object);
           }
           // compare to values in old collection
@@ -199,7 +219,9 @@ export class CollectionViewComponent extends StixViewPage implements OnInit {
             for (const oldObject of this.previousRelease.stix_contents) {
               if (collectionStixIDToObject.has(oldObject.stixID)) {
                 //only if was in collection previously
-                const newObject = collectionStixIDToObject.get(oldObject.stixID);
+                const newObject = collectionStixIDToObject.get(
+                  oldObject.stixID
+                );
                 const objectName = newObject.hasOwnProperty('name')
                   ? newObject['name']
                   : newObject.stixID;
@@ -209,7 +231,9 @@ export class CollectionViewComponent extends StixViewPage implements OnInit {
                     field: 'version',
                     message: `version number of ${objectName} has been decremented (v${oldObject.version.toString()} → v${newObject.version.toString()})`,
                   });
-                } else if (newObject.version.isDoubleIncrement(oldObject.version)) {
+                } else if (
+                  newObject.version.isDoubleIncrement(oldObject.version)
+                ) {
                   results.warnings.push({
                     result: 'warning',
                     field: 'version',
@@ -241,7 +265,8 @@ export class CollectionViewComponent extends StixViewPage implements OnInit {
             // record associated identities/marking defs
             if (object.created_by_ref) identities.add(object.created_by_ref);
             if (object.modified_by_ref) identities.add(object.modified_by_ref);
-            for (const marking_ref of object.object_marking_refs) marking_defs.add(marking_ref);
+            for (const marking_ref of object.object_marking_refs)
+              marking_defs.add(marking_ref);
 
             if (object.type == 'marking-definition') continue;
 
@@ -249,14 +274,14 @@ export class CollectionViewComponent extends StixViewPage implements OnInit {
               new VersionReference({
                 object_ref: object.stixID,
                 object_modified: object.modified.toISOString(),
-              }),
+              })
             );
           }
           const previousRelationships = this.previousRelease
             ? new Map<string, StixObject>(
                 this.previousRelease.stix_contents
-                  .filter((x) => x.type == 'relationship')
-                  .map((x) => [x.stixID, x]),
+                  .filter(x => x.type == 'relationship')
+                  .map(x => [x.stixID, x])
               )
             : new Map<string, StixObject>(); // empty if there was nothing here previously
           // stage relationships for saving and determine stats
@@ -269,14 +294,16 @@ export class CollectionViewComponent extends StixViewPage implements OnInit {
             excluded_both: 0,
           };
           for (const relationship of this.attackObjects.filter(
-            (x) => x.stix.type == 'relationship',
+            x => x.stix.type == 'relationship'
           )) {
             const rel_id = relationship.stix.id;
             const rel_modified = relationship.stix.modified;
 
             // record associated identities/marking defs
-            if (relationship.created_by_ref) identities.add(relationship.stix.created_by_ref);
-            if (relationship.modified_by_ref) identities.add(relationship.stix.modified_by_ref);
+            if (relationship.created_by_ref)
+              identities.add(relationship.stix.created_by_ref);
+            if (relationship.modified_by_ref)
+              identities.add(relationship.stix.modified_by_ref);
             for (const marking_ref of relationship.stix.object_marking_refs)
               marking_defs.add(marking_ref);
 
@@ -291,11 +318,14 @@ export class CollectionViewComponent extends StixViewPage implements OnInit {
                 new VersionReference({
                   object_ref: rel_id,
                   object_modified: rel_modified,
-                }),
+                })
               );
               // track stats
               if (previousRelationships.has(rel_id)) {
-                if (previousRelationships.get(rel_id).modified.toISOString() != rel_modified) {
+                if (
+                  previousRelationships.get(rel_id).modified.toISOString() !=
+                  rel_modified
+                ) {
                   // new version/updated
                   relationship_stats.updated++;
                 } else {
@@ -382,27 +412,29 @@ export class CollectionViewComponent extends StixViewPage implements OnInit {
             marking_defs: Array.from(marking_defs),
           };
         }),
-        switchMap((results_and_extras) => {
+        switchMap(results_and_extras => {
           //stage misc objects
           logger.log('staging identities and marking_defs', results_and_extras);
           const apis = {
             identities:
               results_and_extras.identities.length > 0
                 ? forkJoin(
-                    results_and_extras.identities.map((x) => this.restApiConnector.getIdentity(x)),
+                    results_and_extras.identities.map(x =>
+                      this.restApiConnector.getIdentity(x)
+                    )
                   )
                 : of([]),
             marking_defs:
               results_and_extras.marking_defs.length > 0
                 ? forkJoin(
-                    results_and_extras.marking_defs.map((x) =>
-                      this.restApiConnector.getMarkingDefinition(x),
-                    ),
+                    results_and_extras.marking_defs.map(x =>
+                      this.restApiConnector.getMarkingDefinition(x)
+                    )
                   )
                 : of([]),
           };
           return forkJoin(apis).pipe(
-            map((results) => {
+            map(results => {
               const any_results = results as any;
               // add resultant identities and marking defs to staged objects
               for (const identity of any_results.identities) {
@@ -411,7 +443,7 @@ export class CollectionViewComponent extends StixViewPage implements OnInit {
                   new VersionReference({
                     object_ref: identity[0].stixID,
                     object_modified: identity[0].modified.toISOString(),
-                  }),
+                  })
                 );
                 results_and_extras.results.info.push({
                   result: 'info',
@@ -423,7 +455,7 @@ export class CollectionViewComponent extends StixViewPage implements OnInit {
                 this.stagedData.push(
                   new VersionReference({
                     object_ref: marking_def[0].stixID,
-                  }),
+                  })
                 );
                 results_and_extras.results.info.push({
                   result: 'info',
@@ -434,12 +466,12 @@ export class CollectionViewComponent extends StixViewPage implements OnInit {
 
               // now return the validation results
               return results_and_extras.results;
-            }),
+            })
           );
-        }),
+        })
       )
       .subscribe({
-        next: (results) => (this.validationData = results),
+        next: results => (this.validationData = results),
         complete: () => subscription.unsubscribe(),
       });
   }
@@ -452,7 +484,7 @@ export class CollectionViewComponent extends StixViewPage implements OnInit {
     this.collection.contents = this.stagedData;
     this.collection.release = this.release;
     const subscription = this.collection.save(this.restApiConnector).subscribe({
-      next: (result) => {
+      next: result => {
         this.router.navigate([
           result.attackType,
           result.stixID,
@@ -472,7 +504,7 @@ export class CollectionViewComponent extends StixViewPage implements OnInit {
       this.collection.stixID,
       this.collection.modified,
       `${this.collection.name.toLowerCase().replace(' ', '-')}-${this.collection.version.toString()}.json`,
-      this.includeNotes,
+      this.includeNotes
     );
   }
 
@@ -488,7 +520,7 @@ export class CollectionViewComponent extends StixViewPage implements OnInit {
     objects: StixObject[],
     attackType: string,
     category: changeCategory,
-    direction: 'stage' | 'unstage',
+    direction: 'stage' | 'unstage'
   ): void {
     // Addition: stage
     if (category == 'additions' && direction == 'stage') {
@@ -513,7 +545,10 @@ export class CollectionViewComponent extends StixViewPage implements OnInit {
       // - Remove from unchanged
       this.collectionChanges[attackType].remove_objects(objects, 'duplicates');
       // remove from minor changes (upgrade type)
-      this.collectionChanges[attackType].remove_objects(objects, 'minor_changes');
+      this.collectionChanges[attackType].remove_objects(
+        objects,
+        'minor_changes'
+      );
       // sort object changes into following overwrite categories
       const updates = {
         revocations: [],
@@ -522,11 +557,15 @@ export class CollectionViewComponent extends StixViewPage implements OnInit {
       };
       for (const object of objects) {
         // - If object present in revocations, update presence in revocations
-        if (this.collectionChanges[attackType].has_object(object, 'revocations')) {
+        if (
+          this.collectionChanges[attackType].has_object(object, 'revocations')
+        ) {
           updates['revocations'].push(object);
         }
         // - Else If object is present in deprecations, update presence in deprecations
-        else if (this.collectionChanges[attackType].has_object(object, 'deprecations')) {
+        else if (
+          this.collectionChanges[attackType].has_object(object, 'deprecations')
+        ) {
           updates['deprecations'].push(object);
         }
         // - Else update presence /add in changes
@@ -552,7 +591,10 @@ export class CollectionViewComponent extends StixViewPage implements OnInit {
     // Minor Change: stage
     else if (category == 'minor_changes' && direction == 'stage') {
       // - Remove from potential minor changes
-      this.potentialChanges[attackType].remove_objects(objects, 'minor_changes');
+      this.potentialChanges[attackType].remove_objects(
+        objects,
+        'minor_changes'
+      );
       // - Remove from unchanged
       this.collectionChanges[attackType].remove_objects(objects, 'duplicates');
       // sort object changes into following overwrite categories
@@ -564,15 +606,21 @@ export class CollectionViewComponent extends StixViewPage implements OnInit {
       };
       for (const object of objects) {
         // - If object present in revocations, update presence in revocations
-        if (this.collectionChanges[attackType].has_object(object, 'revocations')) {
+        if (
+          this.collectionChanges[attackType].has_object(object, 'revocations')
+        ) {
           updates['revocations'].push(object);
         }
         // - Else If object is present in deprecations, update presence in deprecations
-        else if (this.collectionChanges[attackType].has_object(object, 'deprecations')) {
+        else if (
+          this.collectionChanges[attackType].has_object(object, 'deprecations')
+        ) {
           updates['deprecations'].push(object);
         }
         // - Else If object present in changes, update presence in changes
-        else if (this.collectionChanges[attackType].has_object(object, 'changes')) {
+        else if (
+          this.collectionChanges[attackType].has_object(object, 'changes')
+        ) {
           updates['changes'].push(object);
         }
         // - Else update presence /add in minor changes
@@ -588,7 +636,10 @@ export class CollectionViewComponent extends StixViewPage implements OnInit {
     // Minor Change: unstage
     else if (category == 'minor_changes' && direction == 'unstage') {
       // - Remove from minor changes
-      this.collectionChanges[attackType].remove_objects(objects, 'minor_changes');
+      this.collectionChanges[attackType].remove_objects(
+        objects,
+        'minor_changes'
+      );
       // - Add to potential minor changes
       this.potentialChanges[attackType].add_objects(objects, 'minor_changes');
       // - Add to unchanged
@@ -604,7 +655,10 @@ export class CollectionViewComponent extends StixViewPage implements OnInit {
       // - If object present in changes, remove presence from changes
       this.collectionChanges[attackType].remove_objects(objects, 'changes');
       // - Else If object is present in minor changes, remove presence from minor changes
-      this.collectionChanges[attackType].remove_objects(objects, 'minor_changes');
+      this.collectionChanges[attackType].remove_objects(
+        objects,
+        'minor_changes'
+      );
       // - Add to revocations
       this.collectionChanges[attackType].add_objects(objects, 'revocations');
     }
@@ -628,7 +682,10 @@ export class CollectionViewComponent extends StixViewPage implements OnInit {
       // - If object present in changes, remove presence from changes
       this.collectionChanges[attackType].remove_objects(objects, 'changes');
       // - Else If object is present in minor changes, remove presence from minor changes
-      this.collectionChanges[attackType].remove_objects(objects, 'minor_changes');
+      this.collectionChanges[attackType].remove_objects(
+        objects,
+        'minor_changes'
+      );
       // - Add to deprecations
       this.collectionChanges[attackType].add_objects(objects, 'deprecations');
     }
@@ -636,7 +693,10 @@ export class CollectionViewComponent extends StixViewPage implements OnInit {
     // Deprecation: unstage
     else if (category == 'deprecations' && direction == 'unstage') {
       // - Remove from deprecations
-      this.collectionChanges[attackType].remove_objects(objects, 'deprecations');
+      this.collectionChanges[attackType].remove_objects(
+        objects,
+        'deprecations'
+      );
       // - Add to potential deprecations
       this.potentialChanges[attackType].add_objects(objects, 'deprecations');
       // - Add to unchanged
@@ -646,7 +706,7 @@ export class CollectionViewComponent extends StixViewPage implements OnInit {
     // after any update, update the lists since contents may have changed
     setTimeout(() => {
       //update lists after a render cycle
-      this.stixLists.forEach((list) => {
+      this.stixLists.forEach(list => {
         list.applyControls();
       });
     });
@@ -683,7 +743,7 @@ export class CollectionViewComponent extends StixViewPage implements OnInit {
       maxHeight: '75vh',
     });
     const subscription = prompt.afterClosed().subscribe({
-      next: (result) => {
+      next: result => {
         if (result) {
           // reinitialize stix lists
           this.editingReloadToggle = false;
@@ -709,7 +769,7 @@ export class CollectionViewComponent extends StixViewPage implements OnInit {
 
   ngOnInit() {
     //set up subscription to route query params to reinitialize stix lists
-    this.route.queryParams.subscribe((params) => {
+    this.route.queryParams.subscribe(params => {
       //reinitialize stix lists in case editing has changed and they have different configs now
       this.editingReloadToggle = false;
       setTimeout(() => (this.editingReloadToggle = true));
@@ -731,63 +791,86 @@ export class CollectionViewComponent extends StixViewPage implements OnInit {
       apis['previousRelease'] = this.restApiConnector
         .getCollection(this.collection.stixID, null, 'all', false)
         .pipe(
-          switchMap((collections) => {
+          switchMap(collections => {
             // are there newer versions? if so, disable editing
             if (
               collections.some(
-                (collection) =>
-                  collection.modified.toISOString() > this.collection.modified.toISOString(),
+                collection =>
+                  collection.modified.toISOString() >
+                  this.collection.modified.toISOString()
               )
             ) {
               this.collection.editable = false;
               this.editor.editable = false;
             }
             // get the most recent version which was released for comparison
-            const last_version = collections.find((collection) => collection.release);
+            const last_version = collections.find(
+              collection => collection.release
+            );
             if (last_version) {
               return this.restApiConnector
-                .getCollection(this.collection.stixID, last_version.modified, 'latest', null, true)
-                .pipe(map((full_collection) => full_collection[0]));
+                .getCollection(
+                  this.collection.stixID,
+                  last_version.modified,
+                  'latest',
+                  null,
+                  true
+                )
+                .pipe(map(full_collection => full_collection[0]));
             } else {
               logger.log('no prior release of this collection');
               return of(null); //no prior release
             }
-          }),
+          })
         );
     }
 
     // fetch previous collection and objects in knowledge base
     const subscription = forkJoin(apis)
       .pipe(
-        tap((_) => {
+        tap(_ => {
           this.loading = 'Preparing change lists';
         }),
-        delay(1), // allow render cycle to display loading text
+        delay(1) // allow render cycle to display loading text
       )
       .subscribe({
-        next: (result) => {
+        next: result => {
           const anyResult = result as any;
           this.attackObjects = result['attackObjects'];
           //make sure "previous" release wasn't this release
-          if (anyResult.hasOwnProperty('previousRelease') && anyResult['previousRelease']) {
+          if (
+            anyResult.hasOwnProperty('previousRelease') &&
+            anyResult['previousRelease']
+          ) {
             this.previousRelease = result['previousRelease'];
-            this.collectionChanges = this.collection.compareTo(this.previousRelease);
+            this.collectionChanges = this.collection.compareTo(
+              this.previousRelease
+            );
           } else {
-            this.collectionChanges = this.collection.compareTo(new Collection()); // compare to empty
+            this.collectionChanges = this.collection.compareTo(
+              new Collection()
+            ); // compare to empty
           }
           // initialize potentialChanges based off diff of attackObjects vs contents of collection
           // create a "collection" to represent the entire ATT&CK dataset
           this.knowledgeBaseCollection = new Collection({
             stix: {
               x_mitre_contents: this.attackObjects
-                .filter((x) => x.stix.hasOwnProperty('modified') && x.stix.modified)
-                .map((x) => {
-                  return { object_ref: x.stix.id, object_modified: x.stix.modified };
+                .filter(
+                  x => x.stix.hasOwnProperty('modified') && x.stix.modified
+                )
+                .map(x => {
+                  return {
+                    object_ref: x.stix.id,
+                    object_modified: x.stix.modified,
+                  };
                 }),
             },
             contents: this.attackObjects,
           });
-          this.potentialChanges = this.knowledgeBaseCollection.compareTo(this.collection);
+          this.potentialChanges = this.knowledgeBaseCollection.compareTo(
+            this.collection
+          );
           this.loading = null;
           // for a new collection we not have to option to create it from a groupId
           // stixObjectID is not set to 'new' for some reason
@@ -810,7 +893,7 @@ export class CollectionViewComponent extends StixViewPage implements OnInit {
   private handleImportGroups(): void {
     // add the list of all groups currently and potentially in the collection and we have a list of all the possible groups to import to our selection w/o making any API calls
     const allGroups = this.potentialChanges['group'].additions.concat(
-      this.collectionChanges['group'].additions,
+      this.collectionChanges['group'].additions
     );
     const select = new SelectionModel(true);
     const prompt = this.dialog.open(AddDialogComponent, {
@@ -826,7 +909,7 @@ export class CollectionViewComponent extends StixViewPage implements OnInit {
     });
     let numOfGroups = 0;
     const subscription = prompt.afterClosed().subscribe({
-      next: (response) => {
+      next: response => {
         if (response) {
           const newSelectedGroupStixIds = select.selected;
           numOfGroups = newSelectedGroupStixIds.length;
@@ -839,7 +922,7 @@ export class CollectionViewComponent extends StixViewPage implements OnInit {
         this.snackbar.open(
           `Added ${numOfGroups} group${numOfGroups > 1 ? 's' : ''} and their related objects to collection`,
           null,
-          { duration: 5000, panelClass: 'success' },
+          { duration: 5000, panelClass: 'success' }
         );
         subscription.unsubscribe(); //prevent memory leaks
       },
@@ -859,7 +942,9 @@ export class CollectionViewComponent extends StixViewPage implements OnInit {
 
     const apiCalls = {
       group: this.restApiConnector.getGroup(groupId),
-      relationships: this.restApiConnector.getRelatedTo({ sourceOrTargetRef: groupId }),
+      relationships: this.restApiConnector.getRelatedTo({
+        sourceOrTargetRef: groupId,
+      }),
     };
 
     const subscription = forkJoin(apiCalls)

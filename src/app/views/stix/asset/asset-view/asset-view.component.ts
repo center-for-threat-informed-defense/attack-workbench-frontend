@@ -19,7 +19,7 @@ export class AssetViewComponent extends StixViewPage implements OnInit {
 
   constructor(
     authenticationService: AuthenticationService,
-    private restApiConnector: RestApiConnectorService,
+    private restApiConnector: RestApiConnectorService
   ) {
     super(authenticationService);
   }

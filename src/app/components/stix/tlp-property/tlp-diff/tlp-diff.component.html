@@ -7,8 +7,7 @@
   matBadgeDescription="statements changed"
   matBadgeOverlap="true"
   matBadgeSize="small"
-  [matBadgeHidden]="previous == current"
->
+  [matBadgeHidden]="previous == current">
   TLP: {{ current }}
   <mat-icon class="small-icon" *ngIf="tlpChangeIndicator()">
     {{ tlpChangeIndicator() }}

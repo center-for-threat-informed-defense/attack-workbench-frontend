@@ -24,26 +24,28 @@ export class CollectionVersion extends Serializable {
     const version = raw;
 
     if ('version' in version) {
-      if (typeof version.version === 'string') this.version = new VersionNumber(version.version);
+      if (typeof version.version === 'string')
+        this.version = new VersionNumber(version.version);
       else
         logger.error(
           'TypeError: version field is not a string:',
           version.version,
           '(',
           typeof version.version,
-          ')',
+          ')'
         );
     } else this.version = new VersionNumber('0.1');
 
     if ('modified' in version) {
-      if (typeof version.modified === 'string') this.modified = new Date(version.modified);
+      if (typeof version.modified === 'string')
+        this.modified = new Date(version.modified);
       else
         logger.error(
           'TypeError: modified field is not a string:',
           version.modified,
           '(',
           typeof version.modified,
-          ')',
+          ')'
         );
     } else this.modified = new Date();
 
@@ -55,33 +57,35 @@ export class CollectionVersion extends Serializable {
           version.url,
           '(',
           typeof version.url,
-          ')',
+          ')'
         );
     } else if ('taxii_url' in version) {
-      if (typeof version.taxii_url === 'string') this.taxii_url = version.taxii_url;
+      if (typeof version.taxii_url === 'string')
+        this.taxii_url = version.taxii_url;
       else
         logger.error(
           'TypeError: taxii_url field is not a string:',
           version.taxii_url,
           '(',
           typeof version.taxii_url,
-          ')',
+          ')'
         );
     } else
       throw new Error(
         "error deserializing CollectionVersion: either 'url' or 'taxii_url' must be specified\n" +
-          JSON.stringify(version),
+          JSON.stringify(version)
       );
 
     if ('release_notes' in version) {
-      if (typeof version.release_notes === 'string') this.release_notes = version.release_notes;
+      if (typeof version.release_notes === 'string')
+        this.release_notes = version.release_notes;
       else
         logger.error(
           'TypeError: release_notes field is not a string:',
           version.release_notes,
           '(',
           typeof version.release_notes,
-          ')',
+          ')'
         );
     }
   }
@@ -104,7 +108,9 @@ export class CollectionVersion extends Serializable {
    * @param {RestApiConnectorService} restAPIService: the REST API connector through which asynchronous validation can be completed
    * @returns {Observable<ValidationData>} the validation warnings and errors once validation is complete.
    */
-  public validate(restAPIService: RestApiConnectorService): Observable<ValidationData> {
+  public validate(
+    restAPIService: RestApiConnectorService
+  ): Observable<ValidationData> {
     return of(new ValidationData());
   }
 }
@@ -130,22 +136,36 @@ export class CollectionReference extends Serializable {
 
     if ('id' in ref) {
       if (typeof ref.id === 'string') this.id = ref.id;
-      else logger.error('TypeError: id field is not a string:', ref.id, '(', typeof ref.id, ')');
+      else
+        logger.error(
+          'TypeError: id field is not a string:',
+          ref.id,
+          '(',
+          typeof ref.id,
+          ')'
+        );
     }
     if ('name' in ref) {
       if (typeof ref.name === 'string') this.name = ref.name;
       else
-        logger.error('TypeError: name field is not a string:', ref.name, '(', typeof ref.name, ')');
+        logger.error(
+          'TypeError: name field is not a string:',
+          ref.name,
+          '(',
+          typeof ref.name,
+          ')'
+        );
     }
     if ('description' in ref) {
-      if (typeof ref.description === 'string') this.description = ref.description;
+      if (typeof ref.description === 'string')
+        this.description = ref.description;
       else
         logger.error(
           'TypeError: description field is not a string:',
           ref.description,
           '(',
           typeof ref.description,
-          ')',
+          ')'
         );
     }
     if ('created' in ref) {
@@ -156,15 +176,17 @@ export class CollectionReference extends Serializable {
           ref.created,
           '(',
           typeof ref.created,
-          ')',
+          ')'
         );
     } else this.created = new Date();
 
     if ('versions' in ref) {
       if (typeof ref.versions === 'object') {
-        this.versions = ref.versions.map((version) => new CollectionVersion(version));
+        this.versions = ref.versions.map(
+          version => new CollectionVersion(version)
+        );
         this.versions.sort((a: CollectionVersion, b: CollectionVersion) =>
-          b.version.compareTo(a.version),
+          b.version.compareTo(a.version)
         ); //sort by modified date
         this.lastModified = this.versions[0].modified;
       } else
@@ -173,7 +195,7 @@ export class CollectionReference extends Serializable {
           ref.versions,
           '(',
           typeof ref.versions,
-          ')',
+          ')'
         );
     }
   }
@@ -187,7 +209,7 @@ export class CollectionReference extends Serializable {
       name: this.name,
       description: this.description,
       created: this.created,
-      versions: this.versions.map((version) => version.serialize()),
+      versions: this.versions.map(version => version.serialize()),
     };
   }
 
@@ -196,7 +218,9 @@ export class CollectionReference extends Serializable {
    * @param {RestApiConnectorService} restAPIService: the REST API connector through which asynchronous validation can be completed
    * @returns {Observable<ValidationData>} the validation warnings and errors once validation is complete.
    */
-  public validate(restAPIService: RestApiConnectorService): Observable<ValidationData> {
+  public validate(
+    restAPIService: RestApiConnectorService
+  ): Observable<ValidationData> {
     return of(new ValidationData());
   }
 }
@@ -240,7 +264,7 @@ export class CollectionIndex extends Serializable {
             raw.collection_index.id,
             '(',
             typeof raw.collection_index.id,
-            ')',
+            ')'
           );
       }
       if ('name' in raw.collection_index) {
@@ -252,7 +276,7 @@ export class CollectionIndex extends Serializable {
             raw.collection_index.name,
             '(',
             typeof raw.collection_index.name,
-            ')',
+            ')'
           );
       }
       if ('description' in raw.collection_index) {
@@ -264,7 +288,7 @@ export class CollectionIndex extends Serializable {
             raw.collection_index.description,
             '(',
             typeof raw.collection_index.description,
-            ')',
+            ')'
           );
       }
       if ('created' in raw.collection_index) {
@@ -276,7 +300,7 @@ export class CollectionIndex extends Serializable {
             raw.collection_index.created,
             '(',
             typeof raw.collection_index.created,
-            ')',
+            ')'
           );
       } else collection_index.created = new Date();
 
@@ -289,26 +313,29 @@ export class CollectionIndex extends Serializable {
             raw.collection_index.modified,
             '(',
             typeof raw.collection_index.modified,
-            ')',
+            ')'
           );
       } else collection_index.modified = new Date();
 
       if ('collections' in raw.collection_index) {
         if (typeof raw.collection_index.collections === 'object') {
-          collection_index.collections = raw.collection_index.collections.map((rawRef) => {
-            const ref = new CollectionReference();
-            ref.deserialize(rawRef);
-            if (raw.workspace && 'update_policy' in raw.workspace)
-              ref.subscribed = raw.workspace.update_policy.subscriptions.includes(ref.id);
-            return ref;
-          });
+          collection_index.collections = raw.collection_index.collections.map(
+            rawRef => {
+              const ref = new CollectionReference();
+              ref.deserialize(rawRef);
+              if (raw.workspace && 'update_policy' in raw.workspace)
+                ref.subscribed =
+                  raw.workspace.update_policy.subscriptions.includes(ref.id);
+              return ref;
+            }
+          );
         } else
           logger.error(
             'TypeError: collections field is not an object:',
             raw.collection_index.collections,
             '(',
             typeof raw.collection_index.collections,
-            ')',
+            ')'
           );
       }
 
@@ -327,7 +354,7 @@ export class CollectionIndex extends Serializable {
             raw.workspace.remote_url,
             '(',
             typeof raw.workspace.remote_url,
-            ')',
+            ')'
           );
       }
       if ('update_policy' in raw.workspace) {
@@ -343,7 +370,7 @@ export class CollectionIndex extends Serializable {
               update_policy.automatic,
               '(',
               typeof update_policy.automatic,
-              ')',
+              ')'
             );
         }
         if ('interval' in update_policy) {
@@ -355,7 +382,7 @@ export class CollectionIndex extends Serializable {
               update_policy.interval,
               '(',
               typeof update_policy.interval,
-              ')',
+              ')'
             );
         }
         if ('last_retrieval' in update_policy) {
@@ -367,7 +394,7 @@ export class CollectionIndex extends Serializable {
               update_policy.last_retrieval,
               '(',
               typeof update_policy.last_retrieval,
-              ')',
+              ')'
             );
         }
         if ('subscriptions' in update_policy) {
@@ -379,7 +406,7 @@ export class CollectionIndex extends Serializable {
               update_policy.subscriptions,
               '(',
               typeof update_policy.subscriptions,
-              ')',
+              ')'
             );
         }
         workspace.update_policy = tmp_policy;
@@ -397,9 +424,8 @@ export class CollectionIndex extends Serializable {
       collection_index: this.collection_index,
       workspace: this.workspace,
     };
-    representation.collection_index.collections = representation.collection_index.collections.map(
-      (ref) => ref.serialize(),
-    );
+    representation.collection_index.collections =
+      representation.collection_index.collections.map(ref => ref.serialize());
     return representation;
   }
 
@@ -408,7 +434,9 @@ export class CollectionIndex extends Serializable {
    * @param {RestApiConnectorService} restAPIService: the REST API connector through which asynchronous validation can be completed
    * @returns {Observable<ValidationData>} the validation warnings and errors once validation is complete.
    */
-  public validate(restAPIService: RestApiConnectorService): Observable<ValidationData> {
+  public validate(
+    restAPIService: RestApiConnectorService
+  ): Observable<ValidationData> {
     return of(new ValidationData());
   }
 
