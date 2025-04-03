@@ -1,0 +1,1250 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>attack-workbench-frontend documentation</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+	   <link rel="stylesheet" href="../styles/style.css">
+        <link rel="stylesheet" href="../styles/dark.css">
+    </head>
+    <body>
+
+        <div class="navbar navbar-default navbar-fixed-top visible-xs">
+            <a href="../" class="navbar-brand">attack-workbench-frontend documentation</a>
+            <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+        </div>
+
+        <div class="xs-menu menu" id="mobile-menu">
+                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+        </div>
+
+        <div class="container-fluid main">
+           <div class="row main">
+               <div class="hidden-xs menu">
+                   <compodoc-menu mode="normal"></compodoc-menu>
+               </div>
+               <!-- START CONTENT -->
+               <div class="content component">
+                   <div class="content-data">
+
+
+
+
+<ol class="breadcrumb">
+  <li>Components</li>
+  <li
+  >
+  ReferenceManagerComponent</li>
+</ol>
+
+<ul class="nav nav-tabs" role="tablist">
+        <li class="active">
+            <a href="#info" role="tab" id="info-tab" data-toggle="tab" data-link="info">Info</a>
+        </li>
+        <li >
+            <a href="#source" role="tab" id="source-tab" data-toggle="tab" data-link="source">Source</a>
+        </li>
+        <li >
+            <a href="#templateData" role="tab" id="templateData-tab" data-toggle="tab" data-link="template">Template</a>
+        </li>
+        <li >
+            <a href="#styleData" role="tab" id="styleData-tab" data-toggle="tab" data-link="style">Styles</a>
+        </li>
+        <li >
+            <a href="#tree" role="tab" id="tree-tab" data-toggle="tab" data-link="dom-tree">DOM Tree</a>
+        </li>
+</ul>
+
+<div class="tab-content">
+    <div class="tab-pane fade active in" id="c-info"><p class="comment">
+    <h3>File</h3>
+</p>
+<p class="comment">
+    <code>src/app/components/resources-drawer/reference-manager/reference-manager.component.ts</code>
+</p>
+
+
+
+
+    <p class="comment">
+        <h3>Implements</h3>
+    </p>
+    <p class="comment">
+                    <code><a href="https://angular.io/api/core/OnInit" target="_blank" >OnInit</a></code>
+                    <code><a href="https://angular.io/api/core/AfterViewInit" target="_blank" >AfterViewInit</a></code>
+    </p>
+
+
+<section>
+    <h3>Metadata</h3>
+    <table class="table table-sm table-hover metadata">
+        <tbody>
+
+
+            <tr>
+                <td class="col-md-3">encapsulation</td>
+                <td class="col-md-9"><code>ViewEncapsulation.None</code></td>
+            </tr>
+
+
+
+
+
+
+
+
+
+            <tr>
+                <td class="col-md-3">selector</td>
+                <td class="col-md-9"><code>app-reference-manager</code></td>
+            </tr>
+
+            <tr>
+                <td class="col-md-3">styleUrls</td>
+                <td class="col-md-9"><code>./reference-manager.component.scss</code></td>
+            </tr>
+
+
+
+            <tr>
+                <td class="col-md-3">templateUrl</td>
+                <td class="col-md-9"><code>./reference-manager.component.html</code></td>
+            </tr>
+
+
+
+
+
+
+
+
+        </tbody>
+    </table>
+</section>
+
+    <section>
+    <h3 id="index">Index</h3>
+    <table class="table table-sm table-bordered index-table">
+        <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Properties</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                    <span class="modifier">Public</span>
+                                <a href="#dialog" >dialog</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Public</span>
+                                <a href="#newRef" >newRef</a>
+                            </li>
+                            <li>
+                                <a href="#paginator" >paginator</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Public</span>
+                                <a href="#references$" >references$</a>
+                            </li>
+                            <li>
+                                <a href="#search" >search</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Public</span>
+                                <a href="#snackbar" >snackbar</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Public</span>
+                                <a href="#totalObjectCount" >totalObjectCount</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Methods</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                    <span class="modifier">Public</span>
+                                <a href="#applyControls" >applyControls</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Public</span>
+                                <a href="#getCitation" >getCitation</a>
+                            </li>
+                            <li>
+                                <a href="#ngAfterViewInit" >ngAfterViewInit</a>
+                            </li>
+                            <li>
+                                <a href="#ngOnInit" >ngOnInit</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Public</span>
+                                <a href="#openReference" >openReference</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Inputs</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                <a href="#editable" >editable</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <h6><b>Accessors</b></h6>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <ul class="index-list">
+                                <li>
+                                    <a href="#canEdit" >canEdit</a>
+                                </li>
+                            </ul>
+                        </td>
+                    </tr>
+        </tbody>
+    </table>
+</section>
+
+    <section>
+    <h3 id="constructor">Constructor</h3>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+<code>constructor(restApiConnector: <a href="../injectables/RestApiConnectorService.html" target="_self">RestApiConnectorService</a>, snackbar: MatSnackBar, dialog: MatDialog, authenticationService: <a href="../injectables/AuthenticationService.html" target="_self">AuthenticationService</a>)</code>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="31" class="link-to-prism">src/app/components/resources-drawer/reference-manager/reference-manager.component.ts:31</a></div>
+                            </td>
+                        </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                            <div>
+                                    <b>Parameters :</b>
+                                    <table class="params">
+                                        <thead>
+                                            <tr>
+                                                <td>Name</td>
+                                                    <td>Type</td>
+                                                <td>Optional</td>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                                <tr>
+                                                        <td>restApiConnector</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="../injectables/RestApiConnectorService.html" target="_self" >RestApiConnectorService</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>snackbar</td>
+                                                  
+                                                        <td>
+                                                                    <code>MatSnackBar</code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>dialog</td>
+                                                  
+                                                        <td>
+                                                                    <code>MatDialog</code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>authenticationService</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="../injectables/AuthenticationService.html" target="_self" >AuthenticationService</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                        </tbody>
+                                    </table>
+                            </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+</section>
+
+    <section>
+    <h3 id="inputs">Inputs</h3>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="editable"></a>
+                        <b>editable</b>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>true</code>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-2" colspan="2">
+                                    <div class="io-line">Defined in <a href="" data-line="25" class="link-to-prism">src/app/components/resources-drawer/reference-manager/reference-manager.component.ts:25</a></div>
+                            </td>
+                        </tr>
+            </tbody>
+        </table>
+</section>
+
+
+
+    <section>
+    
+    <h3 id="methods">
+        Methods
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="applyControls"></a>
+                    <span class="name">
+                        <span class="modifier">Public</span>
+                        <span ><b>applyControls</b></span>
+                        <a href="#applyControls"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>applyControls(search?: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="60"
+                            class="link-to-prism">src/app/components/resources-drawer/reference-manager/reference-manager.component.ts:60</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>search</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                    </td>
+
+                                    <td>
+                                        Yes
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="getCitation"></a>
+                    <span class="name">
+                        <span class="modifier">Public</span>
+                        <span ><b>getCitation</b></span>
+                        <a href="#getCitation"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>getCitation(source_name)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="56"
+                            class="link-to-prism">src/app/components/resources-drawer/reference-manager/reference-manager.component.ts:56</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Given a source_name, get the citation text</p>
+</div>
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Optional</td>
+                                    <td>Description</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>source_name</td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                    <td>
+                                        <p>the source_name of the reference</p>
+
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        <p>the citation text</p>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="ngAfterViewInit"></a>
+                    <span class="name">
+                        <span ><b>ngAfterViewInit</b></span>
+                        <a href="#ngAfterViewInit"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>ngAfterViewInit()</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="74"
+                            class="link-to-prism">src/app/components/resources-drawer/reference-manager/reference-manager.component.ts:74</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="ngOnInit"></a>
+                    <span class="name">
+                        <span ><b>ngOnInit</b></span>
+                        <a href="#ngOnInit"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>ngOnInit()</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="70"
+                            class="link-to-prism">src/app/components/resources-drawer/reference-manager/reference-manager.component.ts:70</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="openReference"></a>
+                    <span class="name">
+                        <span class="modifier">Public</span>
+                        <span ><b>openReference</b></span>
+                        <a href="#openReference"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>openReference(edit: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank">boolean</a>, reference?: <a href="../interfaces/ExternalReference.html" target="_self">ExternalReference</a>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="35"
+                            class="link-to-prism">src/app/components/resources-drawer/reference-manager/reference-manager.component.ts:35</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                    <td>Default value</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>edit</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+                                    <td>
+                                        <code>false</code>
+                                    </td>
+
+                                </tr>
+                                <tr>
+                                    <td>reference</td>
+                                    <td>
+                                                <code><a href="../interfaces/ExternalReference.html" target="_self" >ExternalReference</a></code>
+                                    </td>
+
+                                    <td>
+                                        Yes
+                                    </td>
+
+                                    <td>
+                                    </td>
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>
+    <section>
+    
+    <h3 id="inputs">
+        Properties
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="dialog"></a>
+                    <span class="name">
+                            <span class="modifier">Public</span>
+                        <span ><b>dialog</b></span>
+                        <a href="#dialog"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>MatDialog</code>
+
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="33" class="link-to-prism">src/app/components/resources-drawer/reference-manager/reference-manager.component.ts:33</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="newRef"></a>
+                    <span class="name">
+                            <span class="modifier">Public</span>
+                        <span ><b>newRef</b></span>
+                        <a href="#newRef"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="../interfaces/ExternalReference.html" target="_self" >ExternalReference</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>{
+        source_name: &quot;&quot;,
+        description: &quot;&quot;,
+        url: &quot;&quot;
+    }</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="19" class="link-to-prism">src/app/components/resources-drawer/reference-manager/reference-manager.component.ts:19</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="paginator"></a>
+                    <span class="name">
+                        <span ><b>paginator</b></span>
+                        <a href="#paginator"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>MatPaginator</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <b>Decorators : </b>
+                        <br />
+                        <code>
+                            @ViewChild(MatPaginator)<br />
+                        </code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="27" class="link-to-prism">src/app/components/resources-drawer/reference-manager/reference-manager.component.ts:27</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="references$"></a>
+                    <span class="name">
+                            <span class="modifier">Public</span>
+                        <span ><b>references$</b></span>
+                        <a href="#references$"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>Observable&lt;Paginated&lt;ExternalReference&gt;&gt;</code>
+
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="29" class="link-to-prism">src/app/components/resources-drawer/reference-manager/reference-manager.component.ts:29</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="search"></a>
+                    <span class="name">
+                        <span ><b>search</b></span>
+                        <a href="#search"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://angular.io/api/core/ElementRef" target="_blank" >ElementRef</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <b>Decorators : </b>
+                        <br />
+                        <code>
+                            @ViewChild(&#x27;search&#x27;)<br />
+                        </code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="26" class="link-to-prism">src/app/components/resources-drawer/reference-manager/reference-manager.component.ts:26</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="snackbar"></a>
+                    <span class="name">
+                            <span class="modifier">Public</span>
+                        <span ><b>snackbar</b></span>
+                        <a href="#snackbar"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>MatSnackBar</code>
+
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="33" class="link-to-prism">src/app/components/resources-drawer/reference-manager/reference-manager.component.ts:33</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="totalObjectCount"></a>
+                    <span class="name">
+                            <span class="modifier">Public</span>
+                        <span ><b>totalObjectCount</b></span>
+                        <a href="#totalObjectCount"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>0</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="30" class="link-to-prism">src/app/components/resources-drawer/reference-manager/reference-manager.component.ts:30</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+</section>
+
+    <section>
+    <h3 id="accessors">
+        Accessors
+    </h3>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="canEdit"></a>
+                        <span class="name"><b>canEdit</b><a href="#canEdit"><span class="icon ion-ios-link"></span></a></span>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <span class="accessor"><b>get</b><code>canEdit()</code></span>
+                    </td>
+                </tr>
+                            <tr>
+                                <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="31" class="link-to-prism">src/app/components/resources-drawer/reference-manager/reference-manager.component.ts:31</a></div>
+                                </td>
+                            </tr>
+
+            </tbody>
+        </table>
+</section>
+</div>
+
+
+    <div class="tab-pane fade  tab-source-code" id="c-source">
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { AfterViewInit, Component, ElementRef, Input, OnInit, ViewChild, ViewEncapsulation } from &#x27;@angular/core&#x27;;
+import { MatDialog } from &#x27;@angular/material/dialog&#x27;;
+import { MatPaginator } from &#x27;@angular/material/paginator&#x27;;
+import { MatSnackBar } from &#x27;@angular/material/snack-bar&#x27;;
+import { fromEvent, Observable } from &#x27;rxjs&#x27;;
+import { debounceTime, distinctUntilChanged, filter, tap } from &#x27;rxjs/operators&#x27;;
+import { ExternalReference } from &#x27;src/app/classes/external-references&#x27;;
+import { AuthenticationService } from &#x27;src/app/services/connectors/authentication/authentication.service&#x27;;
+import { Paginated, RestApiConnectorService } from &#x27;src/app/services/connectors/rest-api/rest-api-connector.service&#x27;;
+import { ReferenceEditDialogComponent } from &#x27;./reference-edit-dialog/reference-edit-dialog.component&#x27;;
+
+@Component({
+  selector: &#x27;app-reference-manager&#x27;,
+  templateUrl: &#x27;./reference-manager.component.html&#x27;,
+  styleUrls: [&#x27;./reference-manager.component.scss&#x27;],
+  encapsulation: ViewEncapsulation.None
+})
+export class ReferenceManagerComponent implements OnInit, AfterViewInit {
+    public newRef: ExternalReference &#x3D; {
+        source_name: &quot;&quot;,
+        description: &quot;&quot;,
+        url: &quot;&quot;
+    }
+
+    @Input() editable: boolean &#x3D; true;
+    @ViewChild(&#x27;search&#x27;) search: ElementRef;
+    @ViewChild(MatPaginator) paginator: MatPaginator;
+
+    public references$: Observable&lt;Paginated&lt;ExternalReference&gt;&gt;;
+    public totalObjectCount: number &#x3D; 0;
+    public get canEdit(): boolean { return this.authenticationService.canEdit(); }
+    
+    constructor(private restApiConnector: RestApiConnectorService, public snackbar: MatSnackBar, public dialog: MatDialog, private authenticationService: AuthenticationService) { }
+
+    public openReference(edit: boolean &#x3D; false, reference?: ExternalReference) {
+        let ref &#x3D; this.dialog.open(ReferenceEditDialogComponent, {
+            maxHeight: &quot;75vh&quot;,
+            data: {
+                mode: edit ? &#x27;edit&#x27; : &#x27;view&#x27;,
+                reference: reference
+            }
+        });
+        let subscription &#x3D; ref.afterClosed().subscribe({
+            complete: () &#x3D;&gt; {
+                this.applyControls(this.search.nativeElement.value);
+                subscription.unsubscribe();
+            }
+        });
+    }
+
+    /**
+     * Given a source_name, get the citation text
+     * @param {*} source_name the source_name of the reference
+     * @returns the citation text
+     */
+    public getCitation(source_name) {
+        return &#x60;(Citation: ${source_name})&#x60;
+    }
+
+    public applyControls(search?: string) {
+        let limit &#x3D; this.paginator? this.paginator.pageSize : 10;
+        let offset &#x3D; this.paginator? this.paginator.pageIndex * limit : 0;
+        this.references$ &#x3D; this.restApiConnector.getAllReferences(limit, offset, search);
+        let subscription &#x3D; this.references$.subscribe({
+            next: (data) &#x3D;&gt; { this.totalObjectCount &#x3D; data.pagination.total; },
+            complete: () &#x3D;&gt; { subscription.unsubscribe() }
+        })
+    }
+
+    ngOnInit(): void {
+        // intentionally left blank
+    }
+
+    ngAfterViewInit() {
+        this.applyControls();
+        fromEvent(this.search.nativeElement, &#x27;keyup&#x27;).pipe(
+            filter(Boolean),
+            debounceTime(250),
+            distinctUntilChanged(),
+            tap(_ &#x3D;&gt; {
+                if (this.paginator) this.paginator.pageIndex &#x3D; 0;
+                let el &#x3D; _ as any;
+                let query &#x3D; el.target.value? el.target.value : null;
+                this.applyControls(query)
+            })
+        ).subscribe()
+    }
+
+}
+</code></pre>
+    </div>
+
+    <div class="tab-pane fade " id="c-templateData">
+        <pre class="line-numbers"><code class="language-html">&lt;div class&#x3D;&quot;references-manager&quot;&gt;
+    &lt;div class&#x3D;&quot;add-container&quot; *ngIf&#x3D;&quot;editable &amp;&amp; canEdit&quot;&gt;
+        &lt;button mat-mini-fab class&#x3D;&quot;extended-fab-button&quot; color&#x3D;&quot;primary&quot; (click)&#x3D;&quot;openReference(true)&quot;&gt;
+            &lt;mat-icon&gt;add&lt;/mat-icon&gt; &lt;span class&#x3D;&quot;text-label&quot;&gt;add a reference&lt;/span&gt;
+        &lt;/button&gt;
+    &lt;/div&gt;
+    &lt;div class&#x3D;&quot;references-container&quot;&gt;
+        &lt;div class&#x3D;&quot;controls&quot;&gt;
+            &lt;mat-form-field appearance&#x3D;&quot;fill&quot; class&#x3D;&quot;fullwidth&quot;&gt;
+                &lt;mat-label&gt;search&lt;/mat-label&gt;
+                &lt;input matInput #search&gt;
+            &lt;/mat-form-field&gt;
+        &lt;/div&gt;
+        &lt;div class&#x3D;&quot;references&quot; *ngIf&#x3D;&quot;(references$ | async) as references; else loading&quot;&gt;
+            &lt;div class&#x3D;&quot;reference-list grid&quot;&gt;
+                &lt;div class&#x3D;&quot;reference row&quot; *ngFor&#x3D;&quot;let reference of references.data&quot;&gt;
+                    &lt;div class&#x3D;&quot;col narrow clickable&quot; [cdkCopyToClipboard]&#x3D;&quot;getCitation(reference.source_name)&quot; (click)&#x3D;&quot;snackbar.open(&#x27;Citation copied to clipboard&#x27;, null, {duration: 500})&quot;&gt;
+                        &lt;mat-icon aria-label&#x3D;&quot;copy&quot;&gt;content_copy&lt;/mat-icon&gt;
+                    &lt;/div&gt;
+                    &lt;div class&#x3D;&quot;col&quot;&gt;
+                        &lt;div class&#x3D;&quot;description&quot;&gt;
+                            &lt;span *ngIf&#x3D;&quot;!reference.url&quot; [matTooltip]&#x3D;&quot;reference.description&quot; matTooltipPosition&#x3D;&quot;above&quot;&gt;{{reference.description}}&lt;/span&gt;
+                            &lt;a *ngIf&#x3D;&quot;reference.url&quot; class&#x3D;&quot;external-link&quot; [href]&#x3D;&quot;reference.url&quot; target&#x3D;&quot;_blank&quot; [matTooltip]&#x3D;&quot;reference.description&quot; matTooltipPosition&#x3D;&quot;above&quot;&gt;{{reference.description}}&lt;/a&gt;
+                        &lt;/div&gt;
+                        &lt;div class&#x3D;&quot;text-label lowercase&quot;&gt;{{reference.source_name}}&lt;/div&gt;
+                    &lt;/div&gt;
+                    &lt;div class&#x3D;&quot;col narrow clickable&quot; (click)&#x3D;&quot;openReference(false, reference)&quot;&gt;
+                        &lt;mat-icon aria-label&#x3D;&quot;view/edit reference&quot;&gt;edit&lt;/mat-icon&gt;
+                    &lt;/div&gt;
+                &lt;/div&gt;
+            &lt;/div&gt;
+        &lt;/div&gt;
+        &lt;ng-template #loading&gt;
+            &lt;app-loading-overlay&gt;&lt;/app-loading-overlay&gt;
+        &lt;/ng-template&gt;
+        &lt;mat-paginator [length]&#x3D;&quot;totalObjectCount&quot;
+                       pageSize&#x3D;&quot;10&quot;
+                       [pageSizeOptions]&#x3D;&quot;[5, 10, 25, 100]&quot;
+                       (page)&#x3D;&quot;applyControls()&quot;&gt;
+        &lt;/mat-paginator&gt;
+    &lt;/div&gt;
+&lt;/div&gt;</code></pre>
+    </div>
+
+    <div class="tab-pane fade " id="c-styleData">
+                <p class="comment">
+                    <code>./reference-manager.component.scss</code>
+                </p>
+                <pre class="line-numbers"><code class="language-scss">@import &quot;../../../../style/globals&quot;;
+
+.references-manager {
+    .add-container {
+        padding: 16px;
+        text-align: center;
+    }
+    
+    .references-container {
+        border-radius: 4px;
+        .dark &amp; {  border: 1px solid border-color(dark); }
+        .light &amp; { border: 1px solid border-color(light); }
+        .controls {
+            .fullwidth {
+                width: 100%;
+                font-size: 16px;
+            }
+            .mat-form-field-wrapper {
+                // padding-bottom: 0px;
+                margin-bottom: -1.34375em; // remove bottom padding used for hint
+                // padding-bottom: 0;
+            }
+            .mat-form-field-flex {
+                padding: 12px 39px 0 39px !important; // override default padding for alignment w/ table
+            }
+            .mat-form-field-label {
+                .light &amp; { color: on-color-deemphasis(light); }
+                .dark &amp;  { color: on-color-deemphasis(dark); }
+            }
+        } 
+
+        .references {
+            display: flex;
+            flex-direction: column;
+            .reference-list {
+                .dark &amp; { border-bottom: 1px solid border-color(dark); }
+                .light &amp; { border-bottom: 1px solid border-color(light); }
+                .reference {
+                    .dark &amp; { border-top: 1px solid border-color(dark); }
+                    .light &amp; { border-top: 1px solid border-color(light); }
+                }
+                // flex-grow: 1;
+                .row {
+                    min-height: 48px;
+                }
+                .col {
+                    padding: 5px;
+                    justify-content: center;
+                    mat-icon {
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                    }
+                }
+                .clickable {
+                    cursor: pointer;
+                    &amp;:hover { 
+                        .dark &amp; { background: color-alternate(dark); }
+                        .light &amp; { background: color-alternate(light); }
+                    }
+                }
+                .description {
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                    display: -webkit-box;
+                    -webkit-line-clamp: 2; /* number of lines to show */
+                    -webkit-box-orient: vertical;
+                }
+                .text-label {
+                    font-size: 13px;
+                }
+            }
+        }
+    }
+}</code></pre>
+    </div>
+
+    <div class="tab-pane fade " id="c-tree">
+        <div id="tree-container"></div>
+        <div class="tree-legend">
+            <div class="title">
+                <b>Legend</b>
+            </div>
+            <div>
+                <div class="color htmlelement"></div><span>Html element</span>
+            </div>
+            <div>
+                <div class="color component"></div><span>Component</span>
+            </div>
+            <div>
+                <div class="color directive"></div><span>Html element with directive</span>
+            </div>
+        </div>
+    </div>
+
+    
+</div>
+
+<script src="../js/libs/vis.min.js"></script>
+<script src="../js/libs/htmlparser.js"></script>
+<script src="../js/libs/deep-iterator.js"></script>
+<script>
+        var COMPONENT_TEMPLATE = '<div><div class="references-manager">    <div class="add-container" *ngIf="editable && canEdit">        <button mat-mini-fab class="extended-fab-button" color="primary" (click)="openReference(true)">            <mat-icon>add</mat-icon> <span class="text-label">add a reference</span>        </button>    </div>    <div class="references-container">        <div class="controls">            <mat-form-field appearance="fill" class="fullwidth">                <mat-label>search</mat-label>                <input matInput #search>            </mat-form-field>        </div>        <div class="references" *ngIf="(references$ | async) as references; else loading">            <div class="reference-list grid">                <div class="reference row" *ngFor="let reference of references.data">                    <div class="col narrow clickable" [cdkCopyToClipboard]="getCitation(reference.source_name)" (click)="snackbar.open(\'Citation copied to clipboard\', null, {duration: 500})">                        <mat-icon aria-label="copy">content_copy</mat-icon>                    </div>                    <div class="col">                        <div class="description">                            <span *ngIf="!reference.url" [matTooltip]="reference.description" matTooltipPosition="above">{{reference.description}}</span>                            <a *ngIf="reference.url" class="external-link" [href]="reference.url" target="_blank" [matTooltip]="reference.description" matTooltipPosition="above">{{reference.description}}</a>                        </div>                        <div class="text-label lowercase">{{reference.source_name}}</div>                    </div>                    <div class="col narrow clickable" (click)="openReference(false, reference)">                        <mat-icon aria-label="view/edit reference">edit</mat-icon>                    </div>                </div>            </div>        </div>        <ng-template #loading>            <app-loading-overlay></app-loading-overlay>        </ng-template>        <mat-paginator [length]="totalObjectCount"                       pageSize="10"                       [pageSizeOptions]="[5, 10, 25, 100]"                       (page)="applyControls()">        </mat-paginator>    </div></div></div>'
+    var COMPONENTS = [{'name': 'AddDialogComponent', 'selector': 'app-add-dialog'},{'name': 'AddRelationshipButtonComponent', 'selector': 'app-add-relationship-button'},{'name': 'AdminPageComponent', 'selector': 'app-admin-page'},{'name': 'AliasEditComponent', 'selector': 'app-alias-edit'},{'name': 'AliasEditDialogComponent', 'selector': 'app-alias-edit-dialog'},{'name': 'AliasPropertyComponent', 'selector': 'app-alias-property'},{'name': 'AliasViewComponent', 'selector': 'app-alias-view'},{'name': 'AppComponent', 'selector': 'app-root'},{'name': 'AttackIDEditComponent', 'selector': 'app-attackid-edit'},{'name': 'AttackIDPropertyComponent', 'selector': 'app-attackid-property'},{'name': 'AttackIDViewComponent', 'selector': 'app-attackid-view'},{'name': 'CampaignListComponent', 'selector': 'app-campaign-list'},{'name': 'CampaignViewComponent', 'selector': 'app-campaign-view'},{'name': 'CitationEditComponent', 'selector': 'app-citation-edit'},{'name': 'CitationPropertyComponent', 'selector': 'app-citation-property'},{'name': 'CitationViewComponent', 'selector': 'app-citation-view'},{'name': 'CollectionImportComponent', 'selector': 'app-collection-import'},{'name': 'CollectionImportedListComponent', 'selector': 'app-collection-imported-list'},{'name': 'CollectionImportErrorComponent', 'selector': 'app-collection-import-error'},{'name': 'CollectionImportReviewComponent', 'selector': 'app-collection-import-review'},{'name': 'CollectionImportSummaryComponent', 'selector': 'app-collection-import-summary'},{'name': 'CollectionIndexImportComponent', 'selector': 'app-collection-index-import'},{'name': 'CollectionIndexListComponent', 'selector': 'app-collection-index-list'},{'name': 'CollectionIndexViewComponent', 'selector': 'app-collection-index-view'},{'name': 'CollectionListComponent', 'selector': 'app-collection-list'},{'name': 'CollectionManagerComponent', 'selector': 'app-collection-manager'},{'name': 'CollectionUpdateDialogComponent', 'selector': 'app-collection-update-dialog'},{'name': 'CollectionViewComponent', 'selector': 'app-collection-view'},{'name': 'ConfirmationDialogComponent', 'selector': 'app-confirmation-dialog'},{'name': 'DataComponentViewComponent', 'selector': 'app-data-component-view'},{'name': 'DataSourceListComponent', 'selector': 'app-data-source-list'},{'name': 'DataSourceViewComponent', 'selector': 'app-data-source-view'},{'name': 'DatepickerPropertyComponent', 'selector': 'app-datepicker-property'},{'name': 'DefaultMarkingDefinitionsComponent', 'selector': 'app-default-marking-definitions'},{'name': 'DescriptiveDiffComponent', 'selector': 'app-descriptive-diff'},{'name': 'DescriptiveEditComponent', 'selector': 'app-descriptive-edit'},{'name': 'DescriptivePropertyComponent', 'selector': 'app-descriptive-property'},{'name': 'DescriptiveViewComponent', 'selector': 'app-descriptive-view'},{'name': 'EmptyListMarkerComponent', 'selector': 'app-empty-list-marker'},{'name': 'ExternalReferencesDiffComponent', 'selector': 'app-external-references-diff'},{'name': 'ExternalReferencesPropertyComponent', 'selector': 'app-external-references-property'},{'name': 'ExternalReferencesViewComponent', 'selector': 'app-external-references-view'},{'name': 'FooterComponent', 'selector': 'app-footer'},{'name': 'GroupListComponent', 'selector': 'app-group-list'},{'name': 'GroupViewComponent', 'selector': 'app-group-view'},{'name': 'HeaderComponent', 'selector': 'app-header'},{'name': 'HelpPageComponent', 'selector': 'app-help-page'},{'name': 'HistoryTimelineComponent', 'selector': 'app-history-timeline'},{'name': 'IconViewComponent', 'selector': 'app-icon-view'},{'name': 'IdentityPropertyComponent', 'selector': 'app-identity-property'},{'name': 'LandingPageComponent', 'selector': 'app-landing-page'},{'name': 'ListEditComponent', 'selector': 'app-list-edit'},{'name': 'ListPropertyComponent', 'selector': 'app-list-property'},{'name': 'ListViewComponent', 'selector': 'app-list-view'},{'name': 'LoadingOverlayComponent', 'selector': 'app-loading-overlay'},{'name': 'MarkdownViewDialogComponent', 'selector': 'app-markdown-view-dialog'},{'name': 'MarkingDefinitionListComponent', 'selector': 'app-marking-definition-list'},{'name': 'MarkingDefinitionViewComponent', 'selector': 'app-marking-definition-view'},{'name': 'MatrixListComponent', 'selector': 'app-matrix-list'},{'name': 'MatrixViewComponent', 'selector': 'app-matrix-view'},{'name': 'MitigationListComponent', 'selector': 'app-mitigation-list'},{'name': 'MitigationViewComponent', 'selector': 'app-mitigation-view'},{'name': 'MultipleChoiceDialogComponent', 'selector': 'app-multiple-choice-dialog'},{'name': 'NamePropertyComponent', 'selector': 'app-name-property'},{'name': 'NotesEditorComponent', 'selector': 'app-notes-editor'},{'name': 'ObjectStatusComponent', 'selector': 'app-object-status'},{'name': 'OrderedListEditComponent', 'selector': 'app-ordered-list-edit'},{'name': 'OrderedListPropertyComponent', 'selector': 'app-ordered-list-property'},{'name': 'OrderedListViewComponent', 'selector': 'app-ordered-list-view'},{'name': 'OrgSettingsPageComponent', 'selector': 'app-org-settings-page'},{'name': 'ReferenceEditDialogComponent', 'selector': 'app-reference-edit-dialog'},{'name': 'ReferenceManagerComponent', 'selector': 'app-reference-manager'},{'name': 'RelationshipViewComponent', 'selector': 'app-relationship-view'},{'name': 'ResourcesDrawerComponent', 'selector': 'app-resources-drawer'},{'name': 'SaveDialogComponent', 'selector': 'app-save-dialog'},{'name': 'SoftwareListComponent', 'selector': 'app-software-list'},{'name': 'SoftwareViewComponent', 'selector': 'app-software-view'},{'name': 'StatementEditComponent', 'selector': 'app-statement-edit'},{'name': 'StatementPropertyComponent', 'selector': 'app-statement-property'},{'name': 'StatementViewComponent', 'selector': 'app-statement-view'},{'name': 'StixDialogComponent', 'selector': 'app-stix-dialog'},{'name': 'StixListComponent', 'selector': 'app-stix-list'},{'name': 'StixPageComponent', 'selector': 'app-stix-page'},{'name': 'StixViewPage', 'selector': ''},{'name': 'SubheadingComponent', 'selector': 'app-subheading'},{'name': 'TacticListComponent', 'selector': 'app-tactic-list'},{'name': 'TacticViewComponent', 'selector': 'app-tactic-view'},{'name': 'TechniqueListComponent', 'selector': 'app-technique-list'},{'name': 'TechniqueViewComponent', 'selector': 'app-technique-view'},{'name': 'TimestampDiffComponent', 'selector': 'app-timestamp-diff'},{'name': 'TimestampPropertyComponent', 'selector': 'app-timestamp-property'},{'name': 'TimestampViewComponent', 'selector': 'app-timestamp-view'},{'name': 'TlpEditComponent', 'selector': 'app-tlp-edit'},{'name': 'TlpPropertyComponent', 'selector': 'app-tlp-property'},{'name': 'TlpViewComponent', 'selector': 'app-tlp-view'},{'name': 'ToolbarComponent', 'selector': 'app-toolbar'},{'name': 'UserAccountsPageComponent', 'selector': 'app-user-accounts-page'},{'name': 'ValidationResultsComponent', 'selector': 'app-validation-results'},{'name': 'VersionEditComponent', 'selector': 'app-version-edit'},{'name': 'VersionPropertyComponent', 'selector': 'app-version-property'},{'name': 'VersionViewComponent', 'selector': 'app-version-view'}];
+    var DIRECTIVES = [];
+    var ACTUAL_COMPONENT = {'name': 'ReferenceManagerComponent'};
+</script>
+<script src="../js/tree.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                   </div><div class="search-results">
+    <div class="has-results">
+        <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+        <ul class="search-results-list"></ul>
+    </div>
+    <div class="no-results">
+        <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+    </div>
+</div>
+</div>
+               <!-- END CONTENT -->
+           </div>
+       </div>
+
+          <label class="dark-mode-switch">
+               <input type="checkbox">
+               <span class="slider">
+                    <svg class="slider-icon" viewBox="0 0 24 24" fill="none" height="20" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" width="20" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+                    </svg>
+               </span>
+          </label>
+
+       <script>
+            var COMPODOC_CURRENT_PAGE_DEPTH = 1;
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'component';
+            var COMPODOC_CURRENT_PAGE_URL = 'ReferenceManagerComponent.html';
+            var MAX_SEARCH_RESULTS = 15;
+       </script>
+
+       <script src="../js/libs/custom-elements.min.js"></script>
+       <script src="../js/libs/lit-html.js"></script>
+
+       <script src="../js/menu-wc.js" defer></script>
+       <script nomodule src="../js/menu-wc_es5.js" defer></script>
+
+       <script src="../js/libs/bootstrap-native.js"></script>
+
+       <script src="../js/libs/es6-shim.min.js"></script>
+       <script src="../js/libs/EventDispatcher.js"></script>
+       <script src="../js/libs/promise.min.js"></script>
+       <script src="../js/libs/zepto.min.js"></script>
+
+       <script src="../js/compodoc.js"></script>
+
+       <script src="../js/tabs.js"></script>
+       <script src="../js/menu.js"></script>
+       <script src="../js/libs/clipboard.min.js"></script>
+       <script src="../js/libs/prism.js"></script>
+       <script src="../js/sourceCode.js"></script>
+          <script src="../js/search/search.js"></script>
+          <script src="../js/search/lunr.min.js"></script>
+          <script src="../js/search/search-lunr.js"></script>
+          <script src="../js/search/search_index.js"></script>
+       <script src="../js/lazy-load-graphs.js"></script>
+
+
+    </body>
+</html>

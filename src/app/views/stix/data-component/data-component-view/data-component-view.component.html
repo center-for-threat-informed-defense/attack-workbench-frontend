@@ -1,0 +1,128 @@
+<div
+  class="data-component-view view-page grid spacing-16"
+  *ngIf="!loading; else loadingDisplay">
+  <div class="row">
+    <div class="col">
+      <app-name-property
+        [config]="{
+          mode: config.mode,
+          object: config.object,
+          parent: dataComponent.data_source,
+        }"></app-name-property>
+      <app-subheading
+        [config]="{ mode: config.mode, object: config.object }"
+        (onOpenHistory)="openHistory()"
+        (onOpenNotes)="openNotes()">
+      </app-subheading>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col">
+      <!-- Domains -->
+      <app-list-property
+        class="grow-to-row"
+        [config]="{
+          mode: config.mode,
+          object: config.object,
+          field: 'domains',
+          editType: 'select',
+        }"></app-list-property>
+    </div>
+    <div class="col">
+      <!-- VERSION NUMBER -->
+      <app-version-property
+        class="grow-to-row"
+        [config]="{
+          mode: config.mode,
+          object: config.object,
+        }"></app-version-property>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col">
+      <!-- DESCRIPTION -->
+      <app-descriptive-property
+        [config]="{
+          mode: config.mode,
+          object: config.object,
+          field: 'description',
+          firstParagraphOnly: false,
+          referencesField: 'external_references',
+          label: 'Description',
+        }"></app-descriptive-property>
+    </div>
+  </div>
+  <!-- RELATIONSHIPS - NOTE: these are only shown in 'view' mode -->
+  <div
+    *ngIf="
+      (config.showRelationships ||
+        !config.hasOwnProperty('showRelationships')) &&
+      !editing
+    ">
+    <div class="row">
+      <div class="col">
+        <h2 class="section-header">Techniques Detected</h2>
+      </div>
+    </div>
+    <div class="row" *ngIf="canEdit">
+      <div class="col">
+        <app-add-relationship-button
+          (created)="techniquesList.applyControls()"
+          [config]="{
+            label: 'add a technique',
+            relationship_type: 'detects',
+            targetType: 'technique',
+            source_object: dataComponent,
+            dialog: config.dialog ? config.dialog : null,
+          }">
+        </app-add-relationship-button>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col">
+        <app-stix-list
+          #techniquesList
+          [config]="{
+            type: 'relationship',
+            sourceRef: dataComponent.stixID,
+            relationshipType: 'detects',
+            clickBehavior: 'none',
+            rowAction: !editing
+              ? {
+                  icon: 'open_in_new',
+                  tooltip: 'view relationship',
+                  position: 'end',
+                }
+              : null,
+          }"
+          (onRowAction)="viewRelationship($event)">
+        </app-stix-list>
+      </div>
+    </div>
+  </div>
+  <!-- EXTERNAL REFERENCES -->
+  <div
+    *ngIf="
+      dataComponent.external_references.list().length > 0 ||
+      previous?.external_references.list().length > 0
+    ">
+    <div class="row">
+      <div class="col">
+        <h2 class="section-header">References</h2>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col">
+        <app-external-references-property
+          [config]="{
+            mode: config.mode,
+            object: config.object,
+            referencesField: 'external_references',
+          }"></app-external-references-property>
+      </div>
+    </div>
+  </div>
+</div>
+<ng-template #loadingDisplay>
+  <app-loading-overlay></app-loading-overlay>
+</ng-template>

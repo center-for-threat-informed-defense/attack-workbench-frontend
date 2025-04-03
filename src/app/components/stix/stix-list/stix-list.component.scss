@@ -1,0 +1,326 @@
+@import '../../../../style/globals';
+.stix-list {
+  .controls {
+    .input-group {
+      font-size: 16px;
+      width: 100%;
+      display: flex;
+      flex-direction: row;
+      justify-content: flex-end;
+      .search {
+        flex-grow: 1;
+      }
+      .mat-mdc-floating-label {
+        .light & {
+          color: on-color-deemphasis(light);
+        }
+        .dark & {
+          color: on-color-deemphasis(dark);
+        }
+      }
+      .mat-mdc-checkbox {
+        padding: 8px 12px;
+      }
+    }
+    .bordered {
+      border-bottom: 1px solid;
+      .light & {
+        border-color: border-color(light);
+      }
+      .dark & {
+        border-color: border-color(dark);
+      }
+    }
+
+    .mat-mdc-form-field-subscript-wrapper {
+      display: none !important;
+    }
+
+    .align-right {
+      justify-content: flex-end;
+    }
+    .align-center {
+      display: flex;
+      align-items: center;
+    }
+  }
+
+  .table-container {
+    max-width: 75em;
+    margin: 0 auto;
+    border-radius: 4px;
+    .dark & {
+      border: 1px solid border-color(dark);
+    }
+    .light & {
+      border: 1px solid border-color(light);
+    }
+    .scroll-container {
+      width: 100%;
+      overflow: auto;
+      max-width: 100%;
+      display: flex;
+      flex-direction: column;
+      .dark & {
+        border-bottom: 1px solid border-color(dark);
+      }
+      .light & {
+        border-bottom: 1px solid border-color(light);
+      }
+      table {
+        flex: 1 0 auto;
+        width: 100%;
+
+        .nowrap {
+          white-space: nowrap;
+        }
+
+        th,
+        td {
+          .light & {
+            background: color(light);
+            border-color: border-color(light);
+          }
+          .dark & {
+            background: color(dark);
+            border-color: border-color(dark);
+          }
+        }
+        th {
+          font-size: 20px;
+          @extend .text-label;
+        }
+
+        tr.detail-row {
+          height: 0;
+        }
+
+        // utilities for forcing different sizes of columns
+        .width-limited-lg {
+          min-width: 30em;
+          max-width: 60em;
+        }
+        .width-limited-md {
+          min-width: 15em;
+          max-width: 30em;
+        }
+        .width-limited-sm {
+          min-width: 10em;
+          max-width: 20em;
+        }
+
+        .name {
+          @extend .width-limited-md;
+        }
+        .relationship-name {
+          min-width: 8em;
+          max-width: 18em;
+        }
+
+        tr.element-row:not(.expanded):hover {
+          .light & td {
+            background: color-alternate(light);
+          }
+          .dark & td {
+            background: color-alternate(dark);
+          }
+        }
+
+        .mat-mdc-cell + .mat-cell,
+        .mat-mdc-header-cell + .mat-header-cell {
+          padding-left: 12px;
+        }
+        // cell with just an icon in it
+        .mat-mdc-cell.icon-cell {
+          width: 24px; //no need for text, icons are 24px wide
+          .mat-icon {
+            vertical-align: middle;
+          } //vertically center icons
+        }
+
+        //row action styles
+        .mat-mdc-cell.mat-column-end-action,
+        .mat-cell.mat-column-start-action {
+          cursor: pointer;
+          .dark & {
+            background: color(dark);
+          }
+          .light & {
+            background: color(light);
+          }
+          &:hover {
+            background: color(primary) !important;
+            color: on-color(primary);
+          }
+        }
+
+        .mat-column-start-action {
+          &.mat-mdc-cell {
+            .light & {
+              outline: 1px solid border-color(light);
+            }
+            .dark & {
+              outline: 1px solid border-color(dark);
+            }
+          }
+          padding-left: 12px;
+          padding-right: 12px;
+        }
+        .mat-column-end-action {
+          &.mat-mdc-cell {
+            .light & {
+              outline: 1px solid border-color(light);
+            }
+            .dark & {
+              outline: 1px solid border-color(dark);
+            }
+          }
+          padding-right: 12px;
+        }
+
+        .mat-column-select {
+          &.many {
+            width: 28px;
+          }
+          &.one {
+            width: 30px;
+          }
+        }
+
+        .element-detail {
+          overflow: hidden;
+          display: flex;
+
+          .element-description {
+            padding: 16px 0;
+
+            &.columns {
+              display: flex;
+              .column {
+                &.is-narrow {
+                  flex-shrink: 1;
+                }
+                &.collection-table {
+                  max-height: 16em;
+                  overflow-y: scroll;
+                  .mat-mdc-table {
+                    min-width: 47em;
+                    .mat-mdc-row,
+                    .mat-mdc-header-row {
+                      border-bottom-width: 1px;
+                      border-style: solid;
+                      .light & {
+                        background-color: color(light);
+                        border-color: border-color(light);
+                      }
+                      .dark & {
+                        background-color: color(light);
+                        border-color: border-color(dark);
+                      }
+                    }
+                    .mat-mdc-header-row {
+                      min-height: 42px;
+                    }
+                    .mat-mdc-header-cell {
+                      border-bottom: none;
+                      .light & {
+                        background-color: color(light);
+                      }
+                      .dark & {
+                        background-color: color(dark);
+                      }
+                    }
+                    .mat-column-action {
+                      flex: 0 0 10%;
+                      display: flex;
+                      flex-direction: column;
+                      justify-content: space-around;
+                      padding: 6px 0;
+                    }
+                    .mat-column-version {
+                      flex: 0 0 10%;
+                    }
+                    .mat-column-released {
+                      flex: 0 0 10%;
+                    }
+                  }
+                }
+                & + .column {
+                  .light & {
+                    border-color: border-color(light);
+                  }
+                  .dark & {
+                    border-color: border-color(dark);
+                  }
+                  border-left: 1px solid;
+                  padding-left: 16px;
+                }
+              }
+            }
+            .controls {
+              .detail-button {
+                // links to pages in detail column
+                @extend .text-label;
+                text-align: right;
+                border-right: none;
+                border-top-right-radius: 0;
+                border-bottom-right-radius: 0;
+                width: 100%;
+                &:hover {
+                  .light & {
+                    background: color-alternate(light);
+                  }
+                  .dark & {
+                    background: rgba(border-color(dark), 0.25);
+                  }
+                }
+              }
+            }
+            .description {
+              display: flex;
+              align-items: center;
+              p:first-child {
+                margin-top: 6px;
+              }
+              p:last-child {
+                margin-bottom: 6px;
+              }
+            }
+          }
+        }
+
+        .element-row {
+          td {
+            border-bottom-width: 0;
+          }
+          td.clickable {
+            cursor: pointer;
+          }
+        }
+      }
+    }
+  }
+}
+.no-checkbox {
+  .mat-pseudo-checkbox {
+    display: none !important;
+  }
+}
+.user-search {
+  display: flex;
+  justify-content: space-between;
+}
+.user-filter {
+  .clickable {
+    cursor: pointer;
+  }
+  .mat-mdc-option {
+    padding: 0 !important;
+  }
+  .mat-mdc-option.mdc-list-item--disabled .mdc-list-item__primary-text {
+    opacity: 100%;
+  }
+  .mdc-list-item__primary-text {
+    width: 100%;
+  }
+}

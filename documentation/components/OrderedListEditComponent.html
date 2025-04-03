@@ -1,0 +1,1203 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>attack-workbench-frontend documentation</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+	   <link rel="stylesheet" href="../styles/style.css">
+        <link rel="stylesheet" href="../styles/dark.css">
+    </head>
+    <body>
+
+        <div class="navbar navbar-default navbar-fixed-top visible-xs">
+            <a href="../" class="navbar-brand">attack-workbench-frontend documentation</a>
+            <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+        </div>
+
+        <div class="xs-menu menu" id="mobile-menu">
+                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+        </div>
+
+        <div class="container-fluid main">
+           <div class="row main">
+               <div class="hidden-xs menu">
+                   <compodoc-menu mode="normal"></compodoc-menu>
+               </div>
+               <!-- START CONTENT -->
+               <div class="content component">
+                   <div class="content-data">
+
+
+
+
+<ol class="breadcrumb">
+  <li>Components</li>
+  <li
+  >
+  OrderedListEditComponent</li>
+</ol>
+
+<ul class="nav nav-tabs" role="tablist">
+        <li class="active">
+            <a href="#info" role="tab" id="info-tab" data-toggle="tab" data-link="info">Info</a>
+        </li>
+        <li >
+            <a href="#source" role="tab" id="source-tab" data-toggle="tab" data-link="source">Source</a>
+        </li>
+        <li >
+            <a href="#templateData" role="tab" id="templateData-tab" data-toggle="tab" data-link="template">Template</a>
+        </li>
+        <li >
+            <a href="#styleData" role="tab" id="styleData-tab" data-toggle="tab" data-link="style">Styles</a>
+        </li>
+        <li >
+            <a href="#tree" role="tab" id="tree-tab" data-toggle="tab" data-link="dom-tree">DOM Tree</a>
+        </li>
+</ul>
+
+<div class="tab-content">
+    <div class="tab-pane fade active in" id="c-info"><p class="comment">
+    <h3>File</h3>
+</p>
+<p class="comment">
+    <code>src/app/components/stix/ordered-list-property/ordered-list-edit/ordered-list-edit.component.ts</code>
+</p>
+
+
+
+
+    <p class="comment">
+        <h3>Implements</h3>
+    </p>
+    <p class="comment">
+                    <code><a href="https://angular.io/api/core/OnInit" target="_blank" >OnInit</a></code>
+    </p>
+
+
+<section>
+    <h3>Metadata</h3>
+    <table class="table table-sm table-hover metadata">
+        <tbody>
+
+
+
+
+
+
+
+
+
+
+
+            <tr>
+                <td class="col-md-3">selector</td>
+                <td class="col-md-9"><code>app-ordered-list-edit</code></td>
+            </tr>
+
+            <tr>
+                <td class="col-md-3">styleUrls</td>
+                <td class="col-md-9"><code>./ordered-list-edit.component.scss</code></td>
+            </tr>
+
+
+
+            <tr>
+                <td class="col-md-3">templateUrl</td>
+                <td class="col-md-9"><code>./ordered-list-edit.component.html</code></td>
+            </tr>
+
+
+
+
+
+
+
+
+        </tbody>
+    </table>
+</section>
+
+    <section>
+    <h3 id="index">Index</h3>
+    <table class="table table-sm table-bordered index-table">
+        <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Properties</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#_idToLabel" >_idToLabel</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#listMap" >listMap</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Public</span>
+                                <a href="#orderedList" >orderedList</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Public</span>
+                                <a href="#select" >select</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Methods</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                    <span class="modifier">Public</span>
+                                <a href="#addRow" >addRow</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Public</span>
+                                <a href="#deleteRow" >deleteRow</a>
+                            </li>
+                            <li>
+                                <a href="#drop" >drop</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Public</span>
+                                <a href="#getLabel" >getLabel</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Public</span>
+                                <a href="#moveRow" >moveRow</a>
+                            </li>
+                            <li>
+                                <a href="#ngOnInit" >ngOnInit</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Inputs</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                <a href="#config" >config</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <h6><b>Accessors</b></h6>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <ul class="index-list">
+                                <li>
+                                    <a href="#list" >list</a>
+                                </li>
+                            </ul>
+                        </td>
+                    </tr>
+        </tbody>
+    </table>
+</section>
+
+    <section>
+    <h3 id="constructor">Constructor</h3>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+<code>constructor(dialog: MatDialog)</code>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="20" class="link-to-prism">src/app/components/stix/ordered-list-property/ordered-list-edit/ordered-list-edit.component.ts:20</a></div>
+                            </td>
+                        </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                            <div>
+                                    <b>Parameters :</b>
+                                    <table class="params">
+                                        <thead>
+                                            <tr>
+                                                <td>Name</td>
+                                                    <td>Type</td>
+                                                <td>Optional</td>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                                <tr>
+                                                        <td>dialog</td>
+                                                  
+                                                        <td>
+                                                                    <code>MatDialog</code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                        </tbody>
+                                    </table>
+                            </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+</section>
+
+    <section>
+    <h3 id="inputs">Inputs</h3>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="config"></a>
+                        <b>config</b>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="../interfaces/OrderedListPropertyConfig.html" target="_self" >OrderedListPropertyConfig</a></code>
+
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-2" colspan="2">
+                                    <div class="io-line">Defined in <a href="" data-line="16" class="link-to-prism">src/app/components/stix/ordered-list-property/ordered-list-edit/ordered-list-edit.component.ts:16</a></div>
+                            </td>
+                        </tr>
+            </tbody>
+        </table>
+</section>
+
+
+
+    <section>
+    
+    <h3 id="methods">
+        Methods
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="addRow"></a>
+                    <span class="name">
+                        <span class="modifier">Public</span>
+                        <span ><b>addRow</b></span>
+                        <a href="#addRow"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>addRow()</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="110"
+                            class="link-to-prism">src/app/components/stix/ordered-list-property/ordered-list-edit/ordered-list-edit.component.ts:110</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Add row to the end of ordered list</p>
+</div>
+
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="deleteRow"></a>
+                    <span class="name">
+                        <span class="modifier">Public</span>
+                        <span ><b>deleteRow</b></span>
+                        <a href="#deleteRow"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>deleteRow(index)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="85"
+                            class="link-to-prism">src/app/components/stix/ordered-list-property/ordered-list-edit/ordered-list-edit.component.ts:85</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Removes row from ordered list with index</p>
+</div>
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Optional</td>
+                                    <td>Description</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>index</td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                    <td>
+                                        <p>array index of item to be deleted from list</p>
+
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="drop"></a>
+                    <span class="name">
+                        <span ><b>drop</b></span>
+                        <a href="#drop"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>drop(event: CdkDragDrop<string[]>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="29"
+                            class="link-to-prism">src/app/components/stix/ordered-list-property/ordered-list-edit/ordered-list-edit.component.ts:29</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Updates ordered list on drag and drop</p>
+</div>
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                    <td>Description</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>event</td>
+                                    <td>
+                                            <code>CdkDragDrop&lt;string[]&gt;</code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                    <td>
+                                        <p>indexes of where the element got moved to and from</p>
+
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="getLabel"></a>
+                    <span class="name">
+                        <span class="modifier">Public</span>
+                        <span ><b>getLabel</b></span>
+                        <a href="#getLabel"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>getLabel(id: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="42"
+                            class="link-to-prism">src/app/components/stix/ordered-list-property/ordered-list-edit/ordered-list-edit.component.ts:42</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Get a human readable label for the given object</p>
+</div>
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                    <td>Description</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>id</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                    <td>
+                                        <p>the stix ID to get</p>
+
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="moveRow"></a>
+                    <span class="name">
+                        <span class="modifier">Public</span>
+                        <span ><b>moveRow</b></span>
+                        <a href="#moveRow"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>moveRow(from, to)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="66"
+                            class="link-to-prism">src/app/components/stix/ordered-list-property/ordered-list-edit/ordered-list-edit.component.ts:66</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Reorders the orderedList array according to params. Swaps the two elements in the params</p>
+</div>
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Optional</td>
+                                    <td>Description</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>from</td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                    <td>
+                                        <p>the 1st index to swap</p>
+
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>to</td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                    <td>
+                                        <p>the 2nd index to swap</p>
+
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="ngOnInit"></a>
+                    <span class="name">
+                        <span ><b>ngOnInit</b></span>
+                        <a href="#ngOnInit"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>ngOnInit()</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="34"
+                            class="link-to-prism">src/app/components/stix/ordered-list-property/ordered-list-edit/ordered-list-edit.component.ts:34</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>
+    <section>
+    
+    <h3 id="inputs">
+        Properties
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="_idToLabel"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                        <span ><b>_idToLabel</b></span>
+                        <a href="#_idToLabel"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>Map&lt;string | string&gt;</code>
+
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="36" class="link-to-prism">src/app/components/stix/ordered-list-property/ordered-list-edit/ordered-list-edit.component.ts:36</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="listMap"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                        <span ><b>listMap</b></span>
+                        <a href="#listMap"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="../classes/StixObject.html" target="_self" >Map&lt;string | StixObject&gt;</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>new Map()</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="20" class="link-to-prism">src/app/components/stix/ordered-list-property/ordered-list-edit/ordered-list-edit.component.ts:20</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="orderedList"></a>
+                    <span class="name">
+                            <span class="modifier">Public</span>
+                        <span ><b>orderedList</b></span>
+                        <a href="#orderedList"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>string[]</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>[]</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="18" class="link-to-prism">src/app/components/stix/ordered-list-property/ordered-list-edit/ordered-list-edit.component.ts:18</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="select"></a>
+                    <span class="name">
+                            <span class="modifier">Public</span>
+                        <span ><b>select</b></span>
+                        <a href="#select"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>SelectionModel&lt;string&gt;</code>
+
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="19" class="link-to-prism">src/app/components/stix/ordered-list-property/ordered-list-edit/ordered-list-edit.component.ts:19</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+</section>
+
+    <section>
+    <h3 id="accessors">
+        Accessors
+    </h3>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="list"></a>
+                        <span class="name"><b>list</b><a href="#list"><span class="icon ion-ios-link"></span></a></span>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <span class="accessor"><b>get</b><code>list()</code></span>
+                    </td>
+                </tr>
+                            <tr>
+                                <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="56" class="link-to-prism">src/app/components/stix/ordered-list-property/ordered-list-edit/ordered-list-edit.component.ts:56</a></div>
+                                </td>
+                            </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-description"><p>helper getter for the list being ordered</p>
+</div>
+
+                                <div class="io-description">
+                                    <b>Returns : </b>    <code>string[]</code>
+
+                                </div>
+                        </td>
+                    </tr>
+
+            </tbody>
+        </table>
+</section>
+</div>
+
+
+    <div class="tab-pane fade  tab-source-code" id="c-source">
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Component, Input, OnInit } from &#x27;@angular/core&#x27;;
+import { OrderedListPropertyConfig } from &#x27;../ordered-list-property.component&#x27;;
+import { CdkDragDrop, moveItemInArray } from &#x27;@angular/cdk/drag-drop&#x27;;
+import { ConfirmationDialogComponent } from &#x27;src/app/components/confirmation-dialog/confirmation-dialog.component&#x27;;
+import { MatDialog } from &#x27;@angular/material/dialog&#x27;;
+import { AddDialogComponent } from &#x27;src/app/components/add-dialog/add-dialog.component&#x27;;
+import { StixObject } from &#x27;src/app/classes/stix/stix-object&#x27;;
+import { SelectionModel } from &#x27;@angular/cdk/collections&#x27;;
+import { logger } from &quot;../../../../util/logger&quot;;
+@Component({
+selector: &#x27;app-ordered-list-edit&#x27;,
+templateUrl: &#x27;./ordered-list-edit.component.html&#x27;,
+styleUrls: [&#x27;./ordered-list-edit.component.scss&#x27;],
+})
+export class OrderedListEditComponent implements OnInit {
+    @Input() public config: OrderedListPropertyConfig;
+
+    public orderedList: string[] &#x3D; [];
+    public select: SelectionModel&lt;string&gt;;
+    private listMap: Map&lt;string, StixObject&gt; &#x3D; new Map(); // Dictionary to quickly find stix objects by the config field
+
+    constructor(private dialog: MatDialog) {}
+
+    /**
+     *
+     * Updates ordered list on drag and drop
+     * @param event indexes of where the element got moved to and from
+     */
+    drop(event: CdkDragDrop&lt;string[]&gt;) {
+        moveItemInArray(this.list, event.previousIndex, event.currentIndex);
+        // this.applyUpdates();
+    }
+
+    ngOnInit(): void {}
+
+    private _idToLabel: Map&lt;string, string&gt;;
+    /**
+     * Get a human readable label for the given object
+     *
+     * @param {string} id the stix ID to get
+     */
+    public getLabel(id: string) {
+        if (!this._idToLabel) {
+            this._idToLabel &#x3D; new Map();
+            for (let object of this.config.globalObjects) {
+                this._idToLabel.set(object.stixID, object[this.config.field]);
+            }
+        } 
+        return this._idToLabel.get(id);
+    }
+
+    /**
+     *
+     * helper getter for the list being ordered
+     */
+    public get list(): string[] {
+        return this.config.object[this.config.objectOrderedListField];
+    }
+
+    /**
+     *
+     * Reorders the orderedList array according to params. Swaps the two elements in the params
+     * @param {int} from the 1st index to swap
+     * @param {int} to the 2nd index to swap
+     */
+    public moveRow(from, to) {
+        if (from &lt; 0 ||
+            from &gt; this.list.length - 1 ||
+            to &lt; 0 ||
+            to &gt; this.list.length - 1) {
+            logger.warn(&#x27;invalid indexes for tactic reorder&#x27;, from, to);
+            return;
+        }
+        let fromRow &#x3D; this.list[from];
+        let toRow &#x3D; this.list[to];
+        this.list[from] &#x3D; toRow;
+        this.list[to] &#x3D; fromRow;
+    }
+
+    /**
+     *
+     * Removes row from ordered list with index
+     * @param {int} index array index of item to be deleted from list
+     */
+    public deleteRow(index) {
+        let prompt &#x3D; this.dialog.open(ConfirmationDialogComponent, {
+        maxWidth: &#x27;35em&#x27;,
+        data: {
+            message: &#x27;# Remove &#x27; + this.getLabel(this.list[index]) + &#x27;?&#x27;,
+        },
+        });
+
+        let subscription &#x3D; prompt.afterClosed().subscribe({
+        next: (result) &#x3D;&gt; {
+            if (result) {
+            // Remove from ordered list by index
+            this.list.splice(index, 1);
+            }
+        },
+        complete: () &#x3D;&gt; {
+            subscription.unsubscribe();
+        }, //prevent memory leaks
+        });
+    }
+
+     /**
+     *
+     * Add row to the end of ordered list
+     */
+    public addRow() {
+        let uniqueRows: StixObject[] &#x3D; [];
+
+        // Check if field of global objects is already in ordered list
+        uniqueRows &#x3D; this.config.globalObjects.filter(
+        (x) &#x3D;&gt; !this.list.includes(x.stixID)
+        );
+
+        if (uniqueRows) {
+        // set up selection
+        this.select &#x3D; new SelectionModel(true);
+
+        let prompt &#x3D; this.dialog.open(AddDialogComponent, {
+            maxWidth: &#x27;70em&#x27;,
+            maxHeight: &#x27;70em&#x27;,
+            data: {
+            selectableObjects: uniqueRows,
+            select: this.select,
+            type: this.config.type,
+            },
+        });
+
+        let subscription &#x3D; prompt.afterClosed().subscribe({
+            next: (result) &#x3D;&gt; {
+            if (result &amp;&amp; this.select.selected) {
+                for (let stixID of this.select.selected) {
+                this.list.push(stixID);
+                }
+            }
+            },
+            complete: () &#x3D;&gt; {
+            subscription.unsubscribe();
+            }, //prevent memory leaks
+        });
+        }
+    }
+}
+</code></pre>
+    </div>
+
+    <div class="tab-pane fade " id="c-templateData">
+        <pre class="line-numbers"><code class="language-html">&lt;div class&#x3D;&quot;button-group centered&quot;&gt;
+    &lt;button mat-mini-fab class&#x3D;&quot;extended-fab-button&quot; color&#x3D;&quot;primary&quot; (click)&#x3D;&quot;addRow()&quot;&gt;
+        &lt;mat-icon&gt;add&lt;/mat-icon&gt; &lt;span class&#x3D;&quot;text-label&quot;&gt;ADD a {{config.type}}&lt;/span&gt;
+    &lt;/button&gt;
+&lt;/div&gt;
+&lt;br&gt;
+&lt;div cdkDropList class&#x3D;&quot;list&quot; (cdkDropListDropped)&#x3D;&quot;drop($event)&quot;&gt;
+    &lt;ng-container *ngIf&#x3D;&quot;list.length &gt; 0 else nothingHere&quot;&gt;
+        &lt;div  class&#x3D;&quot;box box-move&quot; *ngFor&#x3D;&quot;let sdo of list; let i &#x3D; index&quot; cdkDrag&gt;
+            {{getLabel(sdo)}}
+            &lt;div&gt;
+                &lt;i class&#x3D;&quot;material-icons move-icon&quot; [ngClass]&#x3D;&quot;{&#x27;enabled&#x27;: i &gt; 0}&quot; (click)&#x3D;&quot;moveRow(i, i-1)&quot;&gt;arrow_drop_up&lt;/i&gt;
+                &lt;i class&#x3D;&quot;material-icons move-icon&quot; [ngClass]&#x3D;&quot;{&#x27;enabled&#x27;: i &lt; list.length - 1}&quot; (click)&#x3D;&quot;moveRow(i, i+1)&quot; &gt;arrow_drop_down&lt;/i&gt;
+                &lt;i class&#x3D;&quot;material-icons move-icon enabled&quot; (click)&#x3D;&quot;deleteRow(i)&quot;&gt;delete&lt;/i&gt;
+            &lt;/div&gt;
+        &lt;/div&gt;
+    &lt;/ng-container&gt;
+    &lt;ng-template #nothingHere&gt;
+        &lt;app-empty-list-marker [checkAgain]&#x3D;&quot;false&quot;&gt;&lt;/app-empty-list-marker&gt;
+    &lt;/ng-template&gt;
+&lt;/div&gt;</code></pre>
+    </div>
+
+    <div class="tab-pane fade " id="c-styleData">
+                <p class="comment">
+                    <code>./ordered-list-edit.component.scss</code>
+                </p>
+                <pre class="line-numbers"><code class="language-scss">.box-move {
+    cursor: move;
+    padding: 20px 10px;
+    border-bottom: solid 1px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    box-sizing: border-box;
+    font-size: 16px;
+}
+  
+.cdk-drag-preview {
+    box-sizing: border-box;
+    border-radius: 4px;
+    box-shadow: 0 5px 5px -3px rgba(0, 0, 0, 0.2),
+                0 8px 10px 1px rgba(0, 0, 0, 0.14),
+                0 3px 14px 2px rgba(0, 0, 0, 0.12);
+    color: #1d252c;
+    background: #f0f1f2;
+}
+  
+.cdk-drag-placeholder {
+    opacity: 0;
+}
+  
+.cdk-drag-animating {
+    transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+}
+  
+.box:last-child {
+    border: none;
+}
+  
+.list.cdk-drop-list-dragging .box:not(.cdk-drag-placeholder) {
+    transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+}
+
+.move-icon {
+    color: transparent;
+    &amp;.enabled {
+        cursor: pointer;
+        color: inherit;
+    }
+}
+
+.centered {
+    text-align: center;
+}
+</code></pre>
+    </div>
+
+    <div class="tab-pane fade " id="c-tree">
+        <div id="tree-container"></div>
+        <div class="tree-legend">
+            <div class="title">
+                <b>Legend</b>
+            </div>
+            <div>
+                <div class="color htmlelement"></div><span>Html element</span>
+            </div>
+            <div>
+                <div class="color component"></div><span>Component</span>
+            </div>
+            <div>
+                <div class="color directive"></div><span>Html element with directive</span>
+            </div>
+        </div>
+    </div>
+
+    
+</div>
+
+<script src="../js/libs/vis.min.js"></script>
+<script src="../js/libs/htmlparser.js"></script>
+<script src="../js/libs/deep-iterator.js"></script>
+<script>
+        var COMPONENT_TEMPLATE = '<div><div class="button-group centered">    <button mat-mini-fab class="extended-fab-button" color="primary" (click)="addRow()">        <mat-icon>add</mat-icon> <span class="text-label">ADD a {{config.type}}</span>    </button></div><br><div cdkDropList class="list" (cdkDropListDropped)="drop($event)">    <ng-container *ngIf="list.length > 0 else nothingHere">        <div  class="box box-move" *ngFor="let sdo of list; let i = index" cdkDrag>            {{getLabel(sdo)}}            <div>                <i class="material-icons move-icon" [ngClass]="{\'enabled\': i > 0}" (click)="moveRow(i, i-1)">arrow_drop_up</i>                <i class="material-icons move-icon" [ngClass]="{\'enabled\': i < list.length - 1}" (click)="moveRow(i, i+1)" >arrow_drop_down</i>                <i class="material-icons move-icon enabled" (click)="deleteRow(i)">delete</i>            </div>        </div>    </ng-container>    <ng-template #nothingHere>        <app-empty-list-marker [checkAgain]="false"></app-empty-list-marker>    </ng-template></div></div>'
+    var COMPONENTS = [{'name': 'AddDialogComponent', 'selector': 'app-add-dialog'},{'name': 'AddRelationshipButtonComponent', 'selector': 'app-add-relationship-button'},{'name': 'AdminPageComponent', 'selector': 'app-admin-page'},{'name': 'AliasEditComponent', 'selector': 'app-alias-edit'},{'name': 'AliasEditDialogComponent', 'selector': 'app-alias-edit-dialog'},{'name': 'AliasPropertyComponent', 'selector': 'app-alias-property'},{'name': 'AliasViewComponent', 'selector': 'app-alias-view'},{'name': 'AppComponent', 'selector': 'app-root'},{'name': 'AttackIDEditComponent', 'selector': 'app-attackid-edit'},{'name': 'AttackIDPropertyComponent', 'selector': 'app-attackid-property'},{'name': 'AttackIDViewComponent', 'selector': 'app-attackid-view'},{'name': 'CampaignListComponent', 'selector': 'app-campaign-list'},{'name': 'CampaignViewComponent', 'selector': 'app-campaign-view'},{'name': 'CitationEditComponent', 'selector': 'app-citation-edit'},{'name': 'CitationPropertyComponent', 'selector': 'app-citation-property'},{'name': 'CitationViewComponent', 'selector': 'app-citation-view'},{'name': 'CollectionImportComponent', 'selector': 'app-collection-import'},{'name': 'CollectionImportedListComponent', 'selector': 'app-collection-imported-list'},{'name': 'CollectionImportErrorComponent', 'selector': 'app-collection-import-error'},{'name': 'CollectionImportReviewComponent', 'selector': 'app-collection-import-review'},{'name': 'CollectionImportSummaryComponent', 'selector': 'app-collection-import-summary'},{'name': 'CollectionIndexImportComponent', 'selector': 'app-collection-index-import'},{'name': 'CollectionIndexListComponent', 'selector': 'app-collection-index-list'},{'name': 'CollectionIndexViewComponent', 'selector': 'app-collection-index-view'},{'name': 'CollectionListComponent', 'selector': 'app-collection-list'},{'name': 'CollectionManagerComponent', 'selector': 'app-collection-manager'},{'name': 'CollectionUpdateDialogComponent', 'selector': 'app-collection-update-dialog'},{'name': 'CollectionViewComponent', 'selector': 'app-collection-view'},{'name': 'ConfirmationDialogComponent', 'selector': 'app-confirmation-dialog'},{'name': 'DataComponentViewComponent', 'selector': 'app-data-component-view'},{'name': 'DataSourceListComponent', 'selector': 'app-data-source-list'},{'name': 'DataSourceViewComponent', 'selector': 'app-data-source-view'},{'name': 'DatepickerPropertyComponent', 'selector': 'app-datepicker-property'},{'name': 'DefaultMarkingDefinitionsComponent', 'selector': 'app-default-marking-definitions'},{'name': 'DescriptiveDiffComponent', 'selector': 'app-descriptive-diff'},{'name': 'DescriptiveEditComponent', 'selector': 'app-descriptive-edit'},{'name': 'DescriptivePropertyComponent', 'selector': 'app-descriptive-property'},{'name': 'DescriptiveViewComponent', 'selector': 'app-descriptive-view'},{'name': 'EmptyListMarkerComponent', 'selector': 'app-empty-list-marker'},{'name': 'ExternalReferencesDiffComponent', 'selector': 'app-external-references-diff'},{'name': 'ExternalReferencesPropertyComponent', 'selector': 'app-external-references-property'},{'name': 'ExternalReferencesViewComponent', 'selector': 'app-external-references-view'},{'name': 'FooterComponent', 'selector': 'app-footer'},{'name': 'GroupListComponent', 'selector': 'app-group-list'},{'name': 'GroupViewComponent', 'selector': 'app-group-view'},{'name': 'HeaderComponent', 'selector': 'app-header'},{'name': 'HelpPageComponent', 'selector': 'app-help-page'},{'name': 'HistoryTimelineComponent', 'selector': 'app-history-timeline'},{'name': 'IconViewComponent', 'selector': 'app-icon-view'},{'name': 'IdentityPropertyComponent', 'selector': 'app-identity-property'},{'name': 'LandingPageComponent', 'selector': 'app-landing-page'},{'name': 'ListEditComponent', 'selector': 'app-list-edit'},{'name': 'ListPropertyComponent', 'selector': 'app-list-property'},{'name': 'ListViewComponent', 'selector': 'app-list-view'},{'name': 'LoadingOverlayComponent', 'selector': 'app-loading-overlay'},{'name': 'MarkdownViewDialogComponent', 'selector': 'app-markdown-view-dialog'},{'name': 'MarkingDefinitionListComponent', 'selector': 'app-marking-definition-list'},{'name': 'MarkingDefinitionViewComponent', 'selector': 'app-marking-definition-view'},{'name': 'MatrixListComponent', 'selector': 'app-matrix-list'},{'name': 'MatrixViewComponent', 'selector': 'app-matrix-view'},{'name': 'MitigationListComponent', 'selector': 'app-mitigation-list'},{'name': 'MitigationViewComponent', 'selector': 'app-mitigation-view'},{'name': 'MultipleChoiceDialogComponent', 'selector': 'app-multiple-choice-dialog'},{'name': 'NamePropertyComponent', 'selector': 'app-name-property'},{'name': 'NotesEditorComponent', 'selector': 'app-notes-editor'},{'name': 'ObjectStatusComponent', 'selector': 'app-object-status'},{'name': 'OrderedListEditComponent', 'selector': 'app-ordered-list-edit'},{'name': 'OrderedListPropertyComponent', 'selector': 'app-ordered-list-property'},{'name': 'OrderedListViewComponent', 'selector': 'app-ordered-list-view'},{'name': 'OrgSettingsPageComponent', 'selector': 'app-org-settings-page'},{'name': 'ReferenceEditDialogComponent', 'selector': 'app-reference-edit-dialog'},{'name': 'ReferenceManagerComponent', 'selector': 'app-reference-manager'},{'name': 'RelationshipViewComponent', 'selector': 'app-relationship-view'},{'name': 'ResourcesDrawerComponent', 'selector': 'app-resources-drawer'},{'name': 'SaveDialogComponent', 'selector': 'app-save-dialog'},{'name': 'SoftwareListComponent', 'selector': 'app-software-list'},{'name': 'SoftwareViewComponent', 'selector': 'app-software-view'},{'name': 'StatementEditComponent', 'selector': 'app-statement-edit'},{'name': 'StatementPropertyComponent', 'selector': 'app-statement-property'},{'name': 'StatementViewComponent', 'selector': 'app-statement-view'},{'name': 'StixDialogComponent', 'selector': 'app-stix-dialog'},{'name': 'StixListComponent', 'selector': 'app-stix-list'},{'name': 'StixPageComponent', 'selector': 'app-stix-page'},{'name': 'StixViewPage', 'selector': ''},{'name': 'SubheadingComponent', 'selector': 'app-subheading'},{'name': 'TacticListComponent', 'selector': 'app-tactic-list'},{'name': 'TacticViewComponent', 'selector': 'app-tactic-view'},{'name': 'TechniqueListComponent', 'selector': 'app-technique-list'},{'name': 'TechniqueViewComponent', 'selector': 'app-technique-view'},{'name': 'TimestampDiffComponent', 'selector': 'app-timestamp-diff'},{'name': 'TimestampPropertyComponent', 'selector': 'app-timestamp-property'},{'name': 'TimestampViewComponent', 'selector': 'app-timestamp-view'},{'name': 'TlpEditComponent', 'selector': 'app-tlp-edit'},{'name': 'TlpPropertyComponent', 'selector': 'app-tlp-property'},{'name': 'TlpViewComponent', 'selector': 'app-tlp-view'},{'name': 'ToolbarComponent', 'selector': 'app-toolbar'},{'name': 'UserAccountsPageComponent', 'selector': 'app-user-accounts-page'},{'name': 'ValidationResultsComponent', 'selector': 'app-validation-results'},{'name': 'VersionEditComponent', 'selector': 'app-version-edit'},{'name': 'VersionPropertyComponent', 'selector': 'app-version-property'},{'name': 'VersionViewComponent', 'selector': 'app-version-view'}];
+    var DIRECTIVES = [];
+    var ACTUAL_COMPONENT = {'name': 'OrderedListEditComponent'};
+</script>
+<script src="../js/tree.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                   </div><div class="search-results">
+    <div class="has-results">
+        <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+        <ul class="search-results-list"></ul>
+    </div>
+    <div class="no-results">
+        <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+    </div>
+</div>
+</div>
+               <!-- END CONTENT -->
+           </div>
+       </div>
+
+          <label class="dark-mode-switch">
+               <input type="checkbox">
+               <span class="slider">
+                    <svg class="slider-icon" viewBox="0 0 24 24" fill="none" height="20" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" width="20" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+                    </svg>
+               </span>
+          </label>
+
+       <script>
+            var COMPODOC_CURRENT_PAGE_DEPTH = 1;
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'component';
+            var COMPODOC_CURRENT_PAGE_URL = 'OrderedListEditComponent.html';
+            var MAX_SEARCH_RESULTS = 15;
+       </script>
+
+       <script src="../js/libs/custom-elements.min.js"></script>
+       <script src="../js/libs/lit-html.js"></script>
+
+       <script src="../js/menu-wc.js" defer></script>
+       <script nomodule src="../js/menu-wc_es5.js" defer></script>
+
+       <script src="../js/libs/bootstrap-native.js"></script>
+
+       <script src="../js/libs/es6-shim.min.js"></script>
+       <script src="../js/libs/EventDispatcher.js"></script>
+       <script src="../js/libs/promise.min.js"></script>
+       <script src="../js/libs/zepto.min.js"></script>
+
+       <script src="../js/compodoc.js"></script>
+
+       <script src="../js/tabs.js"></script>
+       <script src="../js/menu.js"></script>
+       <script src="../js/libs/clipboard.min.js"></script>
+       <script src="../js/libs/prism.js"></script>
+       <script src="../js/sourceCode.js"></script>
+          <script src="../js/search/search.js"></script>
+          <script src="../js/search/lunr.min.js"></script>
+          <script src="../js/search/search-lunr.js"></script>
+          <script src="../js/search/search_index.js"></script>
+       <script src="../js/lazy-load-graphs.js"></script>
+
+
+    </body>
+</html>

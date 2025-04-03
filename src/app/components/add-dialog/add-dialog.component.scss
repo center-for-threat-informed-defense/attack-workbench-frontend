@@ -1,0 +1,31 @@
+@import '../../../style/globals';
+.add-dialog {
+  .mat-mdc-list-item:hover h3 {
+    color: color(primary);
+  }
+  .mat-mdc-list-item h3 {
+    @extend .subheading;
+    font-weight: 700 !important;
+  }
+  .mat-mdc-list-item + .mat-list-item {
+    .dark & {
+      border-top: 1px solid border-color(dark);
+    }
+    .light & {
+      border-top: 1px solid border-color(light);
+    }
+  }
+
+  min-width: 40vw;
+  max-width: 80vw;
+  max-height: 75vh;
+  padding: 24px;
+
+  .left-button {
+    margin-right: 12px;
+  }
+
+  .right-button {
+    margin-left: 12px;
+  }
+}

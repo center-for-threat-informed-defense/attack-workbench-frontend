@@ -1,0 +1,33 @@
+@use '@angular/material' as mat;
+// @import "../globals";
+
+.app-table {
+  // border-collapse: collapse;
+  border-spacing: 0px;
+
+  .light & {
+    @include mat.elevation(8);
+  }
+  .dark & {
+    border-radius: 4px;
+    border: 1px solid border-color(dark);
+  }
+  tbody tr td {
+    .light & {
+      border-top: 1px solid border-color(light);
+    }
+    .dark & {
+      border-top: 1px solid border-color(dark);
+    }
+  }
+  th {
+    @extend .text-label;
+  }
+  td {
+    font-size: 16px;
+  }
+  th,
+  td {
+    padding: 12px 12px;
+  }
+}

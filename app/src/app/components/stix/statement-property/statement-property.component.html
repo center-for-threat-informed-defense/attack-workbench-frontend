@@ -1,9 +1,0 @@
-<div class="statement-property">
-    <div class="content">
-        <div *ngIf="(data$ | async)">
-            <app-statement-view *ngIf="!config.mode || config.mode == 'view'" [config]="config" [statementsMap]="statementsMap"></app-statement-view>
-            <app-statement-edit *ngIf="config.mode == 'edit'" [config]="config" [statementsMap]="statementsMap" [tlpStixId]="tlpStixId"></app-statement-edit>
-            <app-statement-diff *ngIf="config.mode == 'diff'" [config]="config" [statementsMap]="statementsMap"></app-statement-diff>
-        </div>
-    </div>
-</div>

@@ -1,0 +1,893 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>attack-workbench-frontend documentation</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+	   <link rel="stylesheet" href="../styles/style.css">
+        <link rel="stylesheet" href="../styles/dark.css">
+    </head>
+    <body>
+
+        <div class="navbar navbar-default navbar-fixed-top visible-xs">
+            <a href="../" class="navbar-brand">attack-workbench-frontend documentation</a>
+            <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+        </div>
+
+        <div class="xs-menu menu" id="mobile-menu">
+                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+        </div>
+
+        <div class="container-fluid main">
+           <div class="row main">
+               <div class="hidden-xs menu">
+                   <compodoc-menu mode="normal"></compodoc-menu>
+               </div>
+               <!-- START CONTENT -->
+               <div class="content component">
+                   <div class="content-data">
+
+
+
+
+<ol class="breadcrumb">
+  <li>Components</li>
+  <li
+  >
+  SoftwareViewComponent</li>
+</ol>
+
+<ul class="nav nav-tabs" role="tablist">
+        <li class="active">
+            <a href="#info" role="tab" id="info-tab" data-toggle="tab" data-link="info">Info</a>
+        </li>
+        <li >
+            <a href="#source" role="tab" id="source-tab" data-toggle="tab" data-link="source">Source</a>
+        </li>
+        <li >
+            <a href="#templateData" role="tab" id="templateData-tab" data-toggle="tab" data-link="template">Template</a>
+        </li>
+        <li >
+            <a href="#styleData" role="tab" id="styleData-tab" data-toggle="tab" data-link="style">Styles</a>
+        </li>
+        <li >
+            <a href="#tree" role="tab" id="tree-tab" data-toggle="tab" data-link="dom-tree">DOM Tree</a>
+        </li>
+</ul>
+
+<div class="tab-content">
+    <div class="tab-pane fade active in" id="c-info"><p class="comment">
+    <h3>File</h3>
+</p>
+<p class="comment">
+    <code>src/app/views/stix/software/software-view/software-view.component.ts</code>
+</p>
+
+
+
+    <p class="comment">
+        <h3>Extends</h3>
+    </p>
+    <p class="comment">
+                <code><a href="../components/StixViewPage.html" target="_self" >StixViewPage</a></code>
+    </p>
+
+    <p class="comment">
+        <h3>Implements</h3>
+    </p>
+    <p class="comment">
+                    <code><a href="https://angular.io/api/core/OnInit" target="_blank" >OnInit</a></code>
+    </p>
+
+
+<section>
+    <h3>Metadata</h3>
+    <table class="table table-sm table-hover metadata">
+        <tbody>
+
+
+
+
+
+
+
+
+
+
+
+            <tr>
+                <td class="col-md-3">selector</td>
+                <td class="col-md-9"><code>app-software-view</code></td>
+            </tr>
+
+            <tr>
+                <td class="col-md-3">styleUrls</td>
+                <td class="col-md-9"><code>./software-view.component.scss</code></td>
+            </tr>
+
+
+
+            <tr>
+                <td class="col-md-3">templateUrl</td>
+                <td class="col-md-9"><code>./software-view.component.html</code></td>
+            </tr>
+
+
+
+
+
+
+
+
+        </tbody>
+    </table>
+</section>
+
+    <section>
+    <h3 id="index">Index</h3>
+    <table class="table table-sm table-bordered index-table">
+        <tbody>
+
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Methods</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                <a href="#ngOnInit" >ngOnInit</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Public</span>
+                                <a href="#openHistory" >openHistory</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Public</span>
+                                <a href="#openNotes" >openNotes</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Inputs</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                <a href="#config" >config</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Outputs</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                <a href="#onReload" >onReload</a>
+                            </li>
+                            <li>
+                                <a href="#onOpenHistory" >onOpenHistory</a>
+                            </li>
+                            <li>
+                                <a href="#onOpenNotes" >onOpenNotes</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <h6><b>Accessors</b></h6>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <ul class="index-list">
+                                <li>
+                                    <a href="#software" >software</a>
+                                </li>
+                            </ul>
+                        </td>
+                    </tr>
+        </tbody>
+    </table>
+</section>
+
+    <section>
+    <h3 id="constructor">Constructor</h3>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+<code>constructor(authenticationService: <a href="../injectables/AuthenticationService.html" target="_self">AuthenticationService</a>, restApiConnector: <a href="../injectables/RestApiConnectorService.html" target="_self">RestApiConnectorService</a>)</code>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="14" class="link-to-prism">src/app/views/stix/software/software-view/software-view.component.ts:14</a></div>
+                            </td>
+                        </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                            <div>
+                                    <b>Parameters :</b>
+                                    <table class="params">
+                                        <thead>
+                                            <tr>
+                                                <td>Name</td>
+                                                    <td>Type</td>
+                                                <td>Optional</td>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                                <tr>
+                                                        <td>authenticationService</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="../injectables/AuthenticationService.html" target="_self" >AuthenticationService</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>restApiConnector</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="../injectables/RestApiConnectorService.html" target="_self" >RestApiConnectorService</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                        </tbody>
+                                    </table>
+                            </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+</section>
+
+    <section>
+    <h3 id="inputs">Inputs</h3>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="config"></a>
+                        <b>config</b>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="../interfaces/StixViewConfig.html" target="_self" >StixViewConfig</a></code>
+
+                    </td>
+                </tr>
+                            <tr>
+                                <td class="col-md-4" colspan="2">
+                                    <div class="io-line">Inherited from         <code><a href="../components/StixViewPage.html" target="_self" >StixViewPage</a></code>
+</div>
+                                </td>
+                            </tr>
+                        <tr>
+                            <td class="col-md-2" colspan="2">
+                                    <div class="io-line">Defined in         <code><a href="../components/StixViewPage.html#source" target="_self" >StixViewPage:12</a></code>
+</div>
+                            </td>
+                        </tr>
+            </tbody>
+        </table>
+</section>
+    <section>
+    <h3 id="outputs">Outputs</h3>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="onReload"></a>
+                        <b>onReload</b>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://angular.io/api/core/EventEmitter" target="_blank" >EventEmitter</a></code>
+
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-2" colspan="2">
+                                    <div class="io-line">Defined in <a href="" data-line="13" class="link-to-prism">src/app/views/stix/software/software-view/software-view.component.ts:13</a></div>
+                            </td>
+                        </tr>
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="onOpenHistory"></a>
+                        <b>onOpenHistory</b>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://angular.io/api/core/EventEmitter" target="_blank" >EventEmitter</a></code>
+
+                    </td>
+                </tr>
+                            <tr>
+                                <td class="col-md-4" colspan="2">
+                                    <div class="io-line">Inherited from         <code><a href="../components/StixViewPage.html" target="_self" >StixViewPage</a></code>
+</div>
+                                </td>
+                            </tr>
+                        <tr>
+                            <td class="col-md-2" colspan="2">
+                                    <div class="io-line">Defined in         <code><a href="../components/StixViewPage.html#source" target="_self" >StixViewPage:17</a></code>
+</div>
+                            </td>
+                        </tr>
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="onOpenNotes"></a>
+                        <b>onOpenNotes</b>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://angular.io/api/core/EventEmitter" target="_blank" >EventEmitter</a></code>
+
+                    </td>
+                </tr>
+                            <tr>
+                                <td class="col-md-4" colspan="2">
+                                    <div class="io-line">Inherited from         <code><a href="../components/StixViewPage.html" target="_self" >StixViewPage</a></code>
+</div>
+                                </td>
+                            </tr>
+                        <tr>
+                            <td class="col-md-2" colspan="2">
+                                    <div class="io-line">Defined in         <code><a href="../components/StixViewPage.html#source" target="_self" >StixViewPage:19</a></code>
+</div>
+                            </td>
+                        </tr>
+            </tbody>
+        </table>
+</section>
+
+
+    <section>
+    
+    <h3 id="methods">
+        Methods
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="ngOnInit"></a>
+                    <span class="name">
+                        <span ><b>ngOnInit</b></span>
+                        <a href="#ngOnInit"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>ngOnInit()</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="20"
+                            class="link-to-prism">src/app/views/stix/software/software-view/software-view.component.ts:20</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="openHistory"></a>
+                    <span class="name">
+                        <span class="modifier">Public</span>
+                        <span ><b>openHistory</b></span>
+                        <a href="#openHistory"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>openHistory()</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Inherited from         <code><a href="../components/StixViewPage.html" target="_self" >StixViewPage</a></code>
+</div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-line">Defined in         <code><a href="../components/StixViewPage.html#source" target="_self" >StixViewPage:18</a></code>
+</div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="openNotes"></a>
+                    <span class="name">
+                        <span class="modifier">Public</span>
+                        <span ><b>openNotes</b></span>
+                        <a href="#openNotes"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>openNotes()</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Inherited from         <code><a href="../components/StixViewPage.html" target="_self" >StixViewPage</a></code>
+</div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-line">Defined in         <code><a href="../components/StixViewPage.html#source" target="_self" >StixViewPage:20</a></code>
+</div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>
+
+    <section>
+    <h3 id="accessors">
+        Accessors
+    </h3>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="software"></a>
+                        <span class="name"><b>software</b><a href="#software"><span class="icon ion-ios-link"></span></a></span>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <span class="accessor"><b>get</b><code>software()</code></span>
+                    </td>
+                </tr>
+                            <tr>
+                                <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="14" class="link-to-prism">src/app/views/stix/software/software-view/software-view.component.ts:14</a></div>
+                                </td>
+                            </tr>
+
+            </tbody>
+        </table>
+</section>
+</div>
+
+
+    <div class="tab-pane fade  tab-source-code" id="c-source">
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Component, EventEmitter, OnInit, Output } from &#x27;@angular/core&#x27;;
+import { Software } from &#x27;src/app/classes/stix/software&#x27;;
+import { AuthenticationService } from &#x27;src/app/services/connectors/authentication/authentication.service&#x27;;
+import { StixViewPage } from &#x27;../../stix-view-page&#x27;;
+import { RestApiConnectorService } from &#x27;src/app/services/connectors/rest-api/rest-api-connector.service&#x27;;
+
+@Component({
+    selector: &#x27;app-software-view&#x27;,
+    templateUrl: &#x27;./software-view.component.html&#x27;,
+    styleUrls: [&#x27;./software-view.component.scss&#x27;]
+})
+export class SoftwareViewComponent extends StixViewPage implements OnInit {
+    @Output() public onReload &#x3D; new EventEmitter();
+    public get software(): Software { return this.config.object as Software; }
+
+    constructor(authenticationService: AuthenticationService, private restApiConnector: RestApiConnectorService) {
+        super(authenticationService);
+    }
+
+    ngOnInit() {
+        if (this.software.firstInitialized ) {
+            this.software.initializeWithDefaultMarkingDefinitions(this.restApiConnector);
+        }
+    }
+
+}
+</code></pre>
+    </div>
+
+    <div class="tab-pane fade " id="c-templateData">
+        <pre class="line-numbers"><code class="language-html">&lt;div class&#x3D;&quot;software-view view-page grid spacing-12&quot;&gt;
+    &lt;div class&#x3D;&quot;row&quot;&gt;
+        &lt;div class&#x3D;&quot;col&quot;&gt;
+            &lt;app-name-property [config]&#x3D;&quot;{
+                mode: editing? &#x27;edit&#x27; : &#x27;view&#x27;,
+                object: software
+            }&quot;&gt;&lt;/app-name-property&gt;
+            &lt;app-subheading [config]&#x3D;&quot;config&quot; (onOpenHistory)&#x3D;&quot;openHistory()&quot; (onOpenNotes)&#x3D;&quot;openNotes()&quot;&gt;&lt;/app-subheading&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+    &lt;div class&#x3D;&quot;row&quot;&gt;
+        &lt;div class&#x3D;&quot;col&quot;&gt;
+            &lt;!-- ATT&amp;CK ID --&gt;
+            &lt;app-attackid-property class&#x3D;&quot;grow-to-row&quot; [config]&#x3D;&quot;{
+                mode: editing? &#x27;edit&#x27; : &#x27;view&#x27;,
+                object: software
+            }&quot;&gt;&lt;/app-attackid-property&gt;
+        &lt;/div&gt;
+        &lt;div class&#x3D;&quot;col&quot;&gt;
+            &lt;!-- VERSION NUMBER --&gt;
+            &lt;app-version-property class&#x3D;&quot;grow-to-row&quot; [config]&#x3D;&quot;{
+                mode: editing? &#x27;edit&#x27; : &#x27;view&#x27;,
+                object: software
+            }&quot;&gt;&lt;/app-version-property&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+    &lt;div class&#x3D;&quot;row&quot;&gt;
+        &lt;div class&#x3D;&quot;col&quot;&gt;
+            &lt;!-- DOMAINS--&gt;
+            &lt;app-list-property class&#x3D;&quot;grow-to-row&quot; [config]&#x3D;&quot;{
+                mode: editing? &#x27;edit&#x27;: &#x27;view&#x27;,
+                object: software,
+                field: &#x27;domains&#x27;,
+                editType: &#x27;select&#x27;
+            }&quot;&gt;&lt;/app-list-property&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+    &lt;div class&#x3D;&quot;row&quot;&gt;
+        &lt;div class&#x3D;&quot;col&quot;&gt;
+            &lt;!-- TYPE --&gt;
+            &lt;div class&#x3D;&quot;labelled-box grow-to-row&quot; matTooltip&#x3D;&quot;this field cannot be edited&quot; [matTooltipDisabled]&#x3D;&quot;!editing&quot;&gt;
+                &lt;div class&#x3D;&quot;content capitalize&quot;&gt;
+                    {{software.type}}
+                &lt;/div&gt;
+                &lt;label&gt;type&lt;/label&gt;
+            &lt;/div&gt;
+        &lt;/div&gt;
+        &lt;div class&#x3D;&quot;col&quot;&gt;
+            &lt;!-- PLATFORMS --&gt;
+            &lt;app-list-property class&#x3D;&quot;grow-to-row&quot; [config]&#x3D;&quot;{
+                mode: editing? &#x27;edit&#x27; : &#x27;view&#x27;,
+                object: software,
+                field: &#x27;platforms&#x27;,
+                editType: &#x27;select&#x27;
+            }&quot;&gt;&lt;/app-list-property&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+    &lt;div class&#x3D;&quot;row&quot;&gt;
+        &lt;div class&#x3D;&quot;col&quot;&gt;
+            &lt;!-- CONTRIBUTORS --&gt;
+            &lt;app-list-property class&#x3D;&quot;grow-to-row&quot; [config]&#x3D;&quot;{
+                mode: editing? &#x27;edit&#x27; : &#x27;view&#x27;,
+                object: software,
+                field: &#x27;contributors&#x27;,
+                editType: &#x27;any&#x27;
+            }&quot;&gt;&lt;/app-list-property&gt;
+        &lt;/div&gt;
+        &lt;div class&#x3D;&quot;col&quot;&gt;
+            &lt;!-- SOFTWARE ALIASES --&gt;
+            &lt;app-alias-property class&#x3D;&quot;grow-to-row&quot; [config]&#x3D;&quot;{
+                mode: editing? &#x27;edit&#x27; : &#x27;view&#x27;,
+                object: software,
+                field: &#x27;aliases&#x27;,
+                referencesField: &#x27;external_references&#x27;,
+                label: &#x27;Associated Software&#x27;
+            }&quot;&gt;&lt;/app-alias-property&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+    &lt;div class&#x3D;&quot;row&quot;&gt;
+        &lt;div class&#x3D;&quot;col&quot;&gt;
+            &lt;!-- DESCRIPTION --&gt;
+            &lt;app-descriptive-property [config]&#x3D;&quot;{
+                mode: editing? &#x27;edit&#x27; : &#x27;view&#x27;,
+                object: software,
+                field: &#x27;description&#x27;,
+                firstParagraphOnly: false, 
+                referencesField: software.external_references,
+                label: &#x27;Description&#x27;
+            }&quot;&gt;&lt;/app-descriptive-property&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+    &lt;!-- only show relationships if configured to show them --&gt;
+    &lt;div *ngIf&#x3D;&quot;(config.showRelationships || !config.hasOwnProperty(&#x27;showRelationships&#x27;)) &amp;&amp; !editing&quot;&gt;
+        &lt;!-- techniques used --&gt;
+        &lt;div class&#x3D;&quot;row&quot;&gt;
+            &lt;div class&#x3D;&quot;col&quot;&gt;
+                &lt;h2 class&#x3D;&quot;section-header&quot;&gt;Techniques Used&lt;/h2&gt;
+            &lt;/div&gt;
+        &lt;/div&gt;
+        &lt;div class&#x3D;&quot;row&quot; *ngIf&#x3D;&quot;canEdit&quot;&gt;
+            &lt;div class&#x3D;&quot;col&quot;&gt;
+                &lt;app-add-relationship-button (created)&#x3D;&quot;techniquesList.applyControls(); onReload.emit()&quot; [config]&#x3D;&quot;{
+                    label: &#x27;technique&#x27;,
+                    relationship_type: &#x27;uses&#x27;,
+                    source_object: software
+                }&quot;&gt;&lt;/app-add-relationship-button&gt;
+            &lt;/div&gt;
+        &lt;/div&gt;
+        &lt;div class&#x3D;&quot;row&quot;&gt;
+            &lt;div class&#x3D;&quot;col&quot;&gt;
+                &lt;app-stix-list #techniquesList [config]&#x3D;&quot;{
+                    &#x27;type&#x27;: &#x27;relationship&#x27;, 
+                    &#x27;sourceRef&#x27;: software.stixID,
+                    &#x27;targetType&#x27;: &#x27;technique&#x27;,
+                    &#x27;relationshipType&#x27;: &#x27;uses&#x27;,
+                    &#x27;clickBehavior&#x27;: &#x27;dialog&#x27;,
+                    &#x27;allowEdits&#x27;: true
+                }&quot;&gt;&lt;/app-stix-list&gt;
+            &lt;/div&gt;
+        &lt;/div&gt;
+        
+        &lt;!-- associated groups --&gt;
+        &lt;div class&#x3D;&quot;row&quot;&gt;
+            &lt;div class&#x3D;&quot;col&quot;&gt;
+                &lt;h2 class&#x3D;&quot;section-header&quot;&gt;Associated Groups&lt;/h2&gt;
+            &lt;/div&gt;
+        &lt;/div&gt;
+        &lt;div class&#x3D;&quot;row&quot; *ngIf&#x3D;&quot;canEdit&quot;&gt;
+            &lt;div class&#x3D;&quot;col&quot;&gt;
+                &lt;app-add-relationship-button (created)&#x3D;&quot;groupList.applyControls(); onReload.emit()&quot; [config]&#x3D;&quot;{
+                    label: &#x27;group&#x27;,
+                    relationship_type: &#x27;uses&#x27;,
+                    target_object: software
+                }&quot;&gt;&lt;/app-add-relationship-button&gt;
+            &lt;/div&gt;
+        &lt;/div&gt;
+        &lt;div class&#x3D;&quot;row&quot;&gt;
+            &lt;div class&#x3D;&quot;col&quot;&gt;
+                &lt;app-stix-list #groupList [config]&#x3D;&quot;{
+                    &#x27;type&#x27;: &#x27;relationship&#x27;, 
+                    &#x27;targetRef&#x27;: software.stixID,
+                    &#x27;sourceType&#x27;: &#x27;group&#x27;,
+                    &#x27;relationshipType&#x27;: &#x27;uses&#x27;,
+                    &#x27;clickBehavior&#x27;: &#x27;dialog&#x27;,
+                    &#x27;allowEdits&#x27;: true
+                }&quot;&gt;&lt;/app-stix-list&gt;
+            &lt;/div&gt;
+        &lt;/div&gt;
+
+        &lt;!-- campaigns --&gt;
+        &lt;div class&#x3D;&quot;row&quot;&gt;
+            &lt;div class&#x3D;&quot;col&quot;&gt;
+                &lt;h2 class&#x3D;&quot;section-header&quot;&gt;Campaigns&lt;/h2&gt;
+            &lt;/div&gt;
+        &lt;/div&gt;
+        &lt;div class&#x3D;&quot;row&quot; *ngIf&#x3D;&quot;canEdit&quot;&gt;
+            &lt;div class&#x3D;&quot;col&quot;&gt;
+                &lt;app-add-relationship-button (created)&#x3D;&quot;campaignList.applyControls(); onReload.emit()&quot; [config]&#x3D;&quot;{
+                    label: &#x27;campaign&#x27;,
+                    relationship_type: &#x27;uses&#x27;,
+                    target_object: software
+                }&quot;&gt;&lt;/app-add-relationship-button&gt;
+            &lt;/div&gt;
+        &lt;/div&gt;
+        &lt;div class&#x3D;&quot;row&quot;&gt;
+            &lt;div class&#x3D;&quot;col&quot;&gt;
+                &lt;app-stix-list #campaignList [config]&#x3D;&quot;{
+                    &#x27;type&#x27;: &#x27;relationship&#x27;, 
+                    &#x27;targetRef&#x27;: software.stixID,
+                    &#x27;sourceType&#x27;: &#x27;campaign&#x27;,
+                    &#x27;relationshipType&#x27;: &#x27;uses&#x27;,
+                    &#x27;clickBehavior&#x27;: &#x27;dialog&#x27;,
+                    &#x27;allowEdits&#x27;: true
+                }&quot;&gt;&lt;/app-stix-list&gt;
+            &lt;/div&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+    &lt;!-- EXTERNAL REFERENCES --&gt;
+    &lt;div *ngIf&#x3D;&quot;software.external_references.list().length &gt; 0&quot;&gt;
+        &lt;div class&#x3D;&quot;row&quot;&gt;
+            &lt;div class&#x3D;&quot;col&quot;&gt;
+                &lt;h2 class&#x3D;&quot;section-header&quot;&gt;References&lt;/h2&gt;
+            &lt;/div&gt;
+        &lt;/div&gt;
+        &lt;div class&#x3D;&quot;row&quot;&gt;
+            &lt;div class&#x3D;&quot;col&quot;&gt;
+                &lt;app-external-references-property [config]&#x3D;&quot;{
+                    mode: editing? &#x27;edit&#x27;: &#x27;view&#x27;,
+                    object: software,
+                    referencesField: software.external_references
+                }&quot;&gt;&lt;/app-external-references-property&gt;
+            &lt;/div&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+&lt;/div&gt;</code></pre>
+    </div>
+
+    <div class="tab-pane fade " id="c-styleData">
+                <p class="comment">
+                    <code>./software-view.component.scss</code>
+                </p>
+                <pre class="line-numbers"><code class="language-scss"></code></pre>
+    </div>
+
+    <div class="tab-pane fade " id="c-tree">
+        <div id="tree-container"></div>
+        <div class="tree-legend">
+            <div class="title">
+                <b>Legend</b>
+            </div>
+            <div>
+                <div class="color htmlelement"></div><span>Html element</span>
+            </div>
+            <div>
+                <div class="color component"></div><span>Component</span>
+            </div>
+            <div>
+                <div class="color directive"></div><span>Html element with directive</span>
+            </div>
+        </div>
+    </div>
+
+    
+</div>
+
+<script src="../js/libs/vis.min.js"></script>
+<script src="../js/libs/htmlparser.js"></script>
+<script src="../js/libs/deep-iterator.js"></script>
+<script>
+        var COMPONENT_TEMPLATE = '<div><div class="software-view view-page grid spacing-12">    <div class="row">        <div class="col">            <app-name-property [config]="{                mode: editing? \'edit\' : \'view\',                object: software            }"></app-name-property>            <app-subheading [config]="config" (onOpenHistory)="openHistory()" (onOpenNotes)="openNotes()"></app-subheading>        </div>    </div>    <div class="row">        <div class="col">            <!-- ATT&CK ID -->            <app-attackid-property class="grow-to-row" [config]="{                mode: editing? \'edit\' : \'view\',                object: software            }"></app-attackid-property>        </div>        <div class="col">            <!-- VERSION NUMBER -->            <app-version-property class="grow-to-row" [config]="{                mode: editing? \'edit\' : \'view\',                object: software            }"></app-version-property>        </div>    </div>    <div class="row">        <div class="col">            <!-- DOMAINS-->            <app-list-property class="grow-to-row" [config]="{                mode: editing? \'edit\': \'view\',                object: software,                field: \'domains\',                editType: \'select\'            }"></app-list-property>        </div>    </div>    <div class="row">        <div class="col">            <!-- TYPE -->            <div class="labelled-box grow-to-row" matTooltip="this field cannot be edited" [matTooltipDisabled]="!editing">                <div class="content capitalize">                    {{software.type}}                </div>                <label>type</label>            </div>        </div>        <div class="col">            <!-- PLATFORMS -->            <app-list-property class="grow-to-row" [config]="{                mode: editing? \'edit\' : \'view\',                object: software,                field: \'platforms\',                editType: \'select\'            }"></app-list-property>        </div>    </div>    <div class="row">        <div class="col">            <!-- CONTRIBUTORS -->            <app-list-property class="grow-to-row" [config]="{                mode: editing? \'edit\' : \'view\',                object: software,                field: \'contributors\',                editType: \'any\'            }"></app-list-property>        </div>        <div class="col">            <!-- SOFTWARE ALIASES -->            <app-alias-property class="grow-to-row" [config]="{                mode: editing? \'edit\' : \'view\',                object: software,                field: \'aliases\',                referencesField: \'external_references\',                label: \'Associated Software\'            }"></app-alias-property>        </div>    </div>    <div class="row">        <div class="col">            <!-- DESCRIPTION -->            <app-descriptive-property [config]="{                mode: editing? \'edit\' : \'view\',                object: software,                field: \'description\',                firstParagraphOnly: false,                 referencesField: software.external_references,                label: \'Description\'            }"></app-descriptive-property>        </div>    </div>    <!-- only show relationships if configured to show them -->    <div *ngIf="(config.showRelationships || !config.hasOwnProperty(\'showRelationships\')) && !editing">        <!-- techniques used -->        <div class="row">            <div class="col">                <h2 class="section-header">Techniques Used</h2>            </div>        </div>        <div class="row" *ngIf="canEdit">            <div class="col">                <app-add-relationship-button (created)="techniquesList.applyControls(); onReload.emit()" [config]="{                    label: \'technique\',                    relationship_type: \'uses\',                    source_object: software                }"></app-add-relationship-button>            </div>        </div>        <div class="row">            <div class="col">                <app-stix-list #techniquesList [config]="{                    \'type\': \'relationship\',                     \'sourceRef\': software.stixID,                    \'targetType\': \'technique\',                    \'relationshipType\': \'uses\',                    \'clickBehavior\': \'dialog\',                    \'allowEdits\': true                }"></app-stix-list>            </div>        </div>                <!-- associated groups -->        <div class="row">            <div class="col">                <h2 class="section-header">Associated Groups</h2>            </div>        </div>        <div class="row" *ngIf="canEdit">            <div class="col">                <app-add-relationship-button (created)="groupList.applyControls(); onReload.emit()" [config]="{                    label: \'group\',                    relationship_type: \'uses\',                    target_object: software                }"></app-add-relationship-button>            </div>        </div>        <div class="row">            <div class="col">                <app-stix-list #groupList [config]="{                    \'type\': \'relationship\',                     \'targetRef\': software.stixID,                    \'sourceType\': \'group\',                    \'relationshipType\': \'uses\',                    \'clickBehavior\': \'dialog\',                    \'allowEdits\': true                }"></app-stix-list>            </div>        </div>        <!-- campaigns -->        <div class="row">            <div class="col">                <h2 class="section-header">Campaigns</h2>            </div>        </div>        <div class="row" *ngIf="canEdit">            <div class="col">                <app-add-relationship-button (created)="campaignList.applyControls(); onReload.emit()" [config]="{                    label: \'campaign\',                    relationship_type: \'uses\',                    target_object: software                }"></app-add-relationship-button>            </div>        </div>        <div class="row">            <div class="col">                <app-stix-list #campaignList [config]="{                    \'type\': \'relationship\',                     \'targetRef\': software.stixID,                    \'sourceType\': \'campaign\',                    \'relationshipType\': \'uses\',                    \'clickBehavior\': \'dialog\',                    \'allowEdits\': true                }"></app-stix-list>            </div>        </div>    </div>    <!-- EXTERNAL REFERENCES -->    <div *ngIf="software.external_references.list().length > 0">        <div class="row">            <div class="col">                <h2 class="section-header">References</h2>            </div>        </div>        <div class="row">            <div class="col">                <app-external-references-property [config]="{                    mode: editing? \'edit\': \'view\',                    object: software,                    referencesField: software.external_references                }"></app-external-references-property>            </div>        </div>    </div></div></div>'
+    var COMPONENTS = [{'name': 'AddDialogComponent', 'selector': 'app-add-dialog'},{'name': 'AddRelationshipButtonComponent', 'selector': 'app-add-relationship-button'},{'name': 'AdminPageComponent', 'selector': 'app-admin-page'},{'name': 'AliasEditComponent', 'selector': 'app-alias-edit'},{'name': 'AliasEditDialogComponent', 'selector': 'app-alias-edit-dialog'},{'name': 'AliasPropertyComponent', 'selector': 'app-alias-property'},{'name': 'AliasViewComponent', 'selector': 'app-alias-view'},{'name': 'AppComponent', 'selector': 'app-root'},{'name': 'AttackIDEditComponent', 'selector': 'app-attackid-edit'},{'name': 'AttackIDPropertyComponent', 'selector': 'app-attackid-property'},{'name': 'AttackIDViewComponent', 'selector': 'app-attackid-view'},{'name': 'CampaignListComponent', 'selector': 'app-campaign-list'},{'name': 'CampaignViewComponent', 'selector': 'app-campaign-view'},{'name': 'CitationEditComponent', 'selector': 'app-citation-edit'},{'name': 'CitationPropertyComponent', 'selector': 'app-citation-property'},{'name': 'CitationViewComponent', 'selector': 'app-citation-view'},{'name': 'CollectionImportComponent', 'selector': 'app-collection-import'},{'name': 'CollectionImportedListComponent', 'selector': 'app-collection-imported-list'},{'name': 'CollectionImportErrorComponent', 'selector': 'app-collection-import-error'},{'name': 'CollectionImportReviewComponent', 'selector': 'app-collection-import-review'},{'name': 'CollectionImportSummaryComponent', 'selector': 'app-collection-import-summary'},{'name': 'CollectionIndexImportComponent', 'selector': 'app-collection-index-import'},{'name': 'CollectionIndexListComponent', 'selector': 'app-collection-index-list'},{'name': 'CollectionIndexViewComponent', 'selector': 'app-collection-index-view'},{'name': 'CollectionListComponent', 'selector': 'app-collection-list'},{'name': 'CollectionManagerComponent', 'selector': 'app-collection-manager'},{'name': 'CollectionUpdateDialogComponent', 'selector': 'app-collection-update-dialog'},{'name': 'CollectionViewComponent', 'selector': 'app-collection-view'},{'name': 'ConfirmationDialogComponent', 'selector': 'app-confirmation-dialog'},{'name': 'DataComponentViewComponent', 'selector': 'app-data-component-view'},{'name': 'DataSourceListComponent', 'selector': 'app-data-source-list'},{'name': 'DataSourceViewComponent', 'selector': 'app-data-source-view'},{'name': 'DatepickerPropertyComponent', 'selector': 'app-datepicker-property'},{'name': 'DefaultMarkingDefinitionsComponent', 'selector': 'app-default-marking-definitions'},{'name': 'DescriptiveDiffComponent', 'selector': 'app-descriptive-diff'},{'name': 'DescriptiveEditComponent', 'selector': 'app-descriptive-edit'},{'name': 'DescriptivePropertyComponent', 'selector': 'app-descriptive-property'},{'name': 'DescriptiveViewComponent', 'selector': 'app-descriptive-view'},{'name': 'EmptyListMarkerComponent', 'selector': 'app-empty-list-marker'},{'name': 'ExternalReferencesDiffComponent', 'selector': 'app-external-references-diff'},{'name': 'ExternalReferencesPropertyComponent', 'selector': 'app-external-references-property'},{'name': 'ExternalReferencesViewComponent', 'selector': 'app-external-references-view'},{'name': 'FooterComponent', 'selector': 'app-footer'},{'name': 'GroupListComponent', 'selector': 'app-group-list'},{'name': 'GroupViewComponent', 'selector': 'app-group-view'},{'name': 'HeaderComponent', 'selector': 'app-header'},{'name': 'HelpPageComponent', 'selector': 'app-help-page'},{'name': 'HistoryTimelineComponent', 'selector': 'app-history-timeline'},{'name': 'IconViewComponent', 'selector': 'app-icon-view'},{'name': 'IdentityPropertyComponent', 'selector': 'app-identity-property'},{'name': 'LandingPageComponent', 'selector': 'app-landing-page'},{'name': 'ListEditComponent', 'selector': 'app-list-edit'},{'name': 'ListPropertyComponent', 'selector': 'app-list-property'},{'name': 'ListViewComponent', 'selector': 'app-list-view'},{'name': 'LoadingOverlayComponent', 'selector': 'app-loading-overlay'},{'name': 'MarkdownViewDialogComponent', 'selector': 'app-markdown-view-dialog'},{'name': 'MarkingDefinitionListComponent', 'selector': 'app-marking-definition-list'},{'name': 'MarkingDefinitionViewComponent', 'selector': 'app-marking-definition-view'},{'name': 'MatrixListComponent', 'selector': 'app-matrix-list'},{'name': 'MatrixViewComponent', 'selector': 'app-matrix-view'},{'name': 'MitigationListComponent', 'selector': 'app-mitigation-list'},{'name': 'MitigationViewComponent', 'selector': 'app-mitigation-view'},{'name': 'MultipleChoiceDialogComponent', 'selector': 'app-multiple-choice-dialog'},{'name': 'NamePropertyComponent', 'selector': 'app-name-property'},{'name': 'NotesEditorComponent', 'selector': 'app-notes-editor'},{'name': 'ObjectStatusComponent', 'selector': 'app-object-status'},{'name': 'OrderedListEditComponent', 'selector': 'app-ordered-list-edit'},{'name': 'OrderedListPropertyComponent', 'selector': 'app-ordered-list-property'},{'name': 'OrderedListViewComponent', 'selector': 'app-ordered-list-view'},{'name': 'OrgSettingsPageComponent', 'selector': 'app-org-settings-page'},{'name': 'ReferenceEditDialogComponent', 'selector': 'app-reference-edit-dialog'},{'name': 'ReferenceManagerComponent', 'selector': 'app-reference-manager'},{'name': 'RelationshipViewComponent', 'selector': 'app-relationship-view'},{'name': 'ResourcesDrawerComponent', 'selector': 'app-resources-drawer'},{'name': 'SaveDialogComponent', 'selector': 'app-save-dialog'},{'name': 'SoftwareListComponent', 'selector': 'app-software-list'},{'name': 'SoftwareViewComponent', 'selector': 'app-software-view'},{'name': 'StatementEditComponent', 'selector': 'app-statement-edit'},{'name': 'StatementPropertyComponent', 'selector': 'app-statement-property'},{'name': 'StatementViewComponent', 'selector': 'app-statement-view'},{'name': 'StixDialogComponent', 'selector': 'app-stix-dialog'},{'name': 'StixListComponent', 'selector': 'app-stix-list'},{'name': 'StixPageComponent', 'selector': 'app-stix-page'},{'name': 'StixViewPage', 'selector': ''},{'name': 'SubheadingComponent', 'selector': 'app-subheading'},{'name': 'TacticListComponent', 'selector': 'app-tactic-list'},{'name': 'TacticViewComponent', 'selector': 'app-tactic-view'},{'name': 'TechniqueListComponent', 'selector': 'app-technique-list'},{'name': 'TechniqueViewComponent', 'selector': 'app-technique-view'},{'name': 'TimestampDiffComponent', 'selector': 'app-timestamp-diff'},{'name': 'TimestampPropertyComponent', 'selector': 'app-timestamp-property'},{'name': 'TimestampViewComponent', 'selector': 'app-timestamp-view'},{'name': 'TlpEditComponent', 'selector': 'app-tlp-edit'},{'name': 'TlpPropertyComponent', 'selector': 'app-tlp-property'},{'name': 'TlpViewComponent', 'selector': 'app-tlp-view'},{'name': 'ToolbarComponent', 'selector': 'app-toolbar'},{'name': 'UserAccountsPageComponent', 'selector': 'app-user-accounts-page'},{'name': 'ValidationResultsComponent', 'selector': 'app-validation-results'},{'name': 'VersionEditComponent', 'selector': 'app-version-edit'},{'name': 'VersionPropertyComponent', 'selector': 'app-version-property'},{'name': 'VersionViewComponent', 'selector': 'app-version-view'}];
+    var DIRECTIVES = [];
+    var ACTUAL_COMPONENT = {'name': 'SoftwareViewComponent'};
+</script>
+<script src="../js/tree.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                   </div><div class="search-results">
+    <div class="has-results">
+        <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+        <ul class="search-results-list"></ul>
+    </div>
+    <div class="no-results">
+        <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+    </div>
+</div>
+</div>
+               <!-- END CONTENT -->
+           </div>
+       </div>
+
+          <label class="dark-mode-switch">
+               <input type="checkbox">
+               <span class="slider">
+                    <svg class="slider-icon" viewBox="0 0 24 24" fill="none" height="20" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" width="20" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+                    </svg>
+               </span>
+          </label>
+
+       <script>
+            var COMPODOC_CURRENT_PAGE_DEPTH = 1;
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'component';
+            var COMPODOC_CURRENT_PAGE_URL = 'SoftwareViewComponent.html';
+            var MAX_SEARCH_RESULTS = 15;
+       </script>
+
+       <script src="../js/libs/custom-elements.min.js"></script>
+       <script src="../js/libs/lit-html.js"></script>
+
+       <script src="../js/menu-wc.js" defer></script>
+       <script nomodule src="../js/menu-wc_es5.js" defer></script>
+
+       <script src="../js/libs/bootstrap-native.js"></script>
+
+       <script src="../js/libs/es6-shim.min.js"></script>
+       <script src="../js/libs/EventDispatcher.js"></script>
+       <script src="../js/libs/promise.min.js"></script>
+       <script src="../js/libs/zepto.min.js"></script>
+
+       <script src="../js/compodoc.js"></script>
+
+       <script src="../js/tabs.js"></script>
+       <script src="../js/menu.js"></script>
+       <script src="../js/libs/clipboard.min.js"></script>
+       <script src="../js/libs/prism.js"></script>
+       <script src="../js/sourceCode.js"></script>
+          <script src="../js/search/search.js"></script>
+          <script src="../js/search/lunr.min.js"></script>
+          <script src="../js/search/search-lunr.js"></script>
+          <script src="../js/search/search_index.js"></script>
+       <script src="../js/lazy-load-graphs.js"></script>
+
+
+    </body>
+</html>

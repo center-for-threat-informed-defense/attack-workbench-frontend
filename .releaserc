@@ -1,0 +1,32 @@
+{
+    "branches": [
+        "+([0-9])?(.{+([0-9]),x}).x",
+        "master",
+        "main",
+        "next",
+        "next-major",
+        {
+            "name": "beta",
+            "prerelease": true
+        },
+        {
+            "name": "alpha",
+            "prerelease": true
+        },
+        {
+            "name": "project-orion",
+            "prerelease": true
+        }
+    ],
+    "plugins": [
+        "@semantic-release/commit-analyzer",
+        "@semantic-release/release-notes-generator",
+        [
+            "@semantic-release/exec",
+            {
+                "prepareCmd": "./docker/build-Dockerfile.sh ${nextRelease.version} ${nextRelease.type} ${process.env.GITHUB_SHA}"
+            }
+        ],
+        "@semantic-release/github"
+    ]
+}

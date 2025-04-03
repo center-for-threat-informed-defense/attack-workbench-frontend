@@ -1,0 +1,11 @@
+@import '../../../style/globals';
+
+.collection-update-dialog {
+  padding: 24px;
+  .buttons {
+    margin: 18px 0;
+    button + button {
+      margin-left: 10px;
+    }
+  }
+}
