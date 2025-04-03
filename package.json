@@ -72,6 +72,7 @@
     "@typescript-eslint/eslint-plugin": "^8.29.0",
     "@typescript-eslint/eslint-plugin-tslint": "^7.0.2",
     "@typescript-eslint/parser": "^8.29.0",
+    "angular-eslint": "^19.3.0",
     "codelyzer": "^6.0.0",
     "commitlint": "^19.8.0",
     "eslint-plugin-import": "^2.31.0",
@@ -88,6 +89,7 @@
     "semantic-release": "^24.2.3",
     "ts-node": "^10.9.1",
     "tslint": "~6.1.0",
-    "typescript": "^5.4.5"
+    "typescript": "^5.4.5",
+    "typescript-eslint": "^8.29.0"
   }
 }
