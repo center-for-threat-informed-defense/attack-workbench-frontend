@@ -25,21 +25,28 @@
             "polyfills": "src/polyfills.ts",
             "tsConfig": "tsconfig.app.json",
             "assets": [
-              { "glob": "**/*", "input": "../docs", "output": "/assets/docs" },
+              {
+                "glob": "**/*",
+                "input": "../docs",
+                "output": "/assets/docs"
+              },
               "src/favicon.ico",
               "src/assets"
             ],
             "styles": [
-                "node_modules/prismjs/themes/prism-twilight.css",
-                "src/style/theme.scss"
+              "node_modules/prismjs/themes/prism-twilight.css",
+              "src/style/theme.scss"
             ],
             "scripts": [
-                "node_modules/marked/marked.min.js",
-                "node_modules/prismjs/prism.js",
-                "node_modules/prismjs/components/prism-json.min.js",
-                "node_modules/prismjs/components/prism-python.min.js"
+              "node_modules/marked/marked.min.js",
+              "node_modules/prismjs/prism.js",
+              "node_modules/prismjs/components/prism-json.min.js",
+              "node_modules/prismjs/components/prism-python.min.js"
             ],
-            "allowedCommonJsDependencies": ["moment", "lodash"],
+            "allowedCommonJsDependencies": [
+              "moment",
+              "lodash"
+            ],
             "vendorChunk": true,
             "extractLicenses": false,
             "buildOptimizer": false,
@@ -123,11 +130,23 @@
               "devServerTarget": "app:serve:production"
             }
           }
+        },
+        "lint": {
+          "builder": "@angular-eslint/builder:lint",
+          "options": {
+            "lintFilePatterns": [
+              "src/**/*.ts",
+              "src/**/*.html"
+            ]
+          }
         }
       }
     }
   },
   "cli": {
-    "analytics": false
+    "analytics": false,
+    "schematicCollections": [
+      "angular-eslint"
+    ]
   }
 }

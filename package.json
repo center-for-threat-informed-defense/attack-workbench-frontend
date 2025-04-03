@@ -62,19 +62,21 @@
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "^17.3.11",
+    "@angular-eslint/eslint-plugin": "^19.3.0",
+    "@angular-eslint/eslint-plugin-template": "^19.3.0",
     "@angular/cli": "^17.3.6",
     "@angular/compiler-cli": "^17.3.7",
     "@types/jasmine": "^5.1.4",
     "@types/jasminewd2": "^2.0.10",
     "@types/node": "^20.12.11",
     "@typescript-eslint/eslint-plugin": "^8.29.0",
+    "@typescript-eslint/eslint-plugin-tslint": "^7.0.2",
     "@typescript-eslint/parser": "^8.29.0",
     "codelyzer": "^6.0.0",
     "commitlint": "^19.8.0",
-    "eslint": "^9.23.0",
-    "eslint-config-prettier": "^10.1.1",
-    "eslint-plugin-jasmine": "^4.2.2",
-    "eslint-plugin-prettier": "^5.2.6",
+    "eslint-plugin-import": "^2.31.0",
+    "eslint-plugin-jsdoc": "^50.6.9",
+    "eslint-plugin-prefer-arrow": "^1.2.3",
     "husky": "^9.1.7",
     "jasmine-core": "^5.1.1",
     "jasmine-spec-reporter": "^7.0.0",
@@ -83,11 +85,9 @@
     "karma-coverage-istanbul-reporter": "~3.0.2",
     "karma-jasmine": "^5.1.0",
     "karma-jasmine-html-reporter": "^2.1.0",
-    "prettier": "^3.5.3",
     "semantic-release": "^24.2.3",
     "ts-node": "^10.9.1",
     "tslint": "~6.1.0",
-    "typescript": "^5.4.5",
-    "typescript-eslint": "^8.29.0"
+    "typescript": "^5.4.5"
   }
 }
