@@ -12,7 +12,7 @@ services:
 
   rest-api:
     container_name: attack-workbench-rest-api
-    build: ../../attack-workbench-rest-api
+    build: ../../../attack-workbench-rest-api
     depends_on:
       - mongodb
     ports:
