@@ -91,6 +91,6 @@ certs/
 .idea/
 
 # Angular build artifacts
-app/documentation/
-app/dist/
-app/node_modules/
+documentation/
+dist/
+node_modules/
