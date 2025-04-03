@@ -1,0 +1,15 @@
+@import "../../../../../style/globals.scss";
+.tlp-diff {
+    .small-icon {
+        height: 12px;
+        line-height: 12px;
+    }
+
+    .mat-badge-content.mat-badge-active {
+        color: on-color(alert);
+        background-color: color(alert);
+    }
+    &.hide-badge-text .mat-badge-content {
+        color: transparent;
+    }
+}

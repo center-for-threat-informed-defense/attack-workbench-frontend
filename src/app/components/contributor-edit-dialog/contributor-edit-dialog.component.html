@@ -1,0 +1,72 @@
+<div class="contributor-dialog">
+    <!-- dialog toolbar -->
+    <mat-toolbar *ngIf="!editing || stage == 0">
+        <!-- close -->
+        <button mat-icon-button class="control" matTooltip="close" (click)="close()">
+            <mat-icon aria-label="close">close</mat-icon>
+        </button>
+        <div class="spacer"></div>
+        <ng-container *ngIf="editable">
+            <!-- save -->
+            <button mat-icon-button class="control" matTooltip="patch & save" [disabled]="!editing || !isValid" (click)="next()">
+                <mat-icon aria-label="save">save</mat-icon>
+            </button>
+            <!-- edit -->
+            <button *ngIf="!editing" mat-icon-button class="control" matTooltip="edit" (click)="startEditing()">
+                <mat-icon aria-label="edit">edit</mat-icon>
+            </button>
+            <!-- discard changes -->
+            <button *ngIf="editing"  mat-icon-button class="control" matTooltip="discard changes & stop editing" (click)="discardChanges()">
+                <mat-icon aria-label="discard">edit_off</mat-icon>
+            </button>
+        </ng-container>
+    </mat-toolbar>
+
+    <!-- view page -->
+    <div class="view-contributor">
+        <div *ngIf="stage == 0">
+            <div class="align-center">
+                <!-- edit contributor -->
+                <mat-form-field class="edit-contributor" *ngIf="editing" appearance="outline">
+                    <mat-label>contributor</mat-label>
+                    <input matInput required [(ngModel)]="contributor">
+                </mat-form-field>
+                <!-- view contributor -->
+                <h2 *ngIf="!editing" class="title padded">{{contributor}}</h2>
+            </div>
+            <!-- contributions list -->
+            <h3 class="section-header">Contributions</h3>
+            <app-stix-list (onRowAction)="dialogRef.close()" [config]="{
+                stixObjects: config.objects,
+                clickBehavior: 'linkToObjectPage',
+                showControls: false
+            }"></app-stix-list>
+        </div>
+        <div *ngIf="stage == 1">
+            <!-- confirm patches -->
+            <h2 class="title align-center">Required Patches</h2>
+            <p class="align-center">
+                You are about to update the contributor from
+                <br><b>{{config.contributor}}</b> to <b>{{contributor}}</b>
+            </p>
+            <p class="align-center">
+                The following objects include the edited contributor and will be updated automatically:
+            </p>
+            <app-stix-list (onRowAction)="dialogRef.close()" [config]="{
+                stixObjects: config.objects,
+                clickBehavior: 'none',
+                showControls: false
+            }"></app-stix-list>
+            <!-- actions -->
+            <mat-dialog-actions align="center">
+                <button mat-button (click)="discardChanges()">cancel</button>
+                <button mat-stroked-button (click)="patch()">apply patches and save</button>
+            </mat-dialog-actions>
+        </div>
+        <div *ngIf="stage == 2">
+            <!-- saving objects -->
+            <h2 class="title align-center">Patching objects...</h2>
+            <app-loading-overlay></app-loading-overlay>
+        </div>
+    </div>
+</div>

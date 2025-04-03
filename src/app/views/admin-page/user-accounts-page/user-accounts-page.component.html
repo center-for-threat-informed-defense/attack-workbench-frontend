@@ -1,0 +1,11 @@
+<div class="user-accounts-page list-page grid spacing-20">
+    <div class="list-page-header">
+        <h1>User Accounts</h1>
+    </div>
+    <app-users-list [config]="{
+      'mode':'view',
+      'columnsToDisplay':['username','email', 'status', 'role'],
+      'showSearch': true,
+      'showFilters': true
+    }"></app-users-list>
+</div>

@@ -1,0 +1,53 @@
+@import "../../../style/globals";
+.header {
+    .light & { background: color(primary); color: on-color(primary); }
+    .dark & { background: color(light); }
+	.mat-mdc-button:disabled {
+		.light & { color: on-color-deemphasis(light); }
+		.dark & { color: on-color-deemphasis(dark); }
+	}
+    .spacer {
+        flex: 1 1 auto;
+    }
+    .app-title {
+        a {
+            @extend .heading;
+            border-bottom-width: 0 !important;
+            .dark &, .dark &:hover { color: color(primary) !important; }
+            .light &, .light &:hover { color: color(light) !important; }
+        }
+        .app-version {
+            text-transform: none;
+            @extend .text-label;
+            font-size: 10px;
+        }
+    }
+    button {
+        .light & { color: on-color(dark); }
+        .dark & { color: on-color(light); }
+        font-family: Roboto,Arial,sans-serif;
+        font-weight: 500;
+        text-transform: uppercase;
+    }
+
+    .links {
+        overflow: hidden;
+        &.pad-right { padding-right: 12px; }
+    }
+    .account.pad-left { margin-left: 12px; }
+    .hamburger {
+        position: relative;
+        width: 0;
+        overflow-x: visible;
+        left: -40px;
+    }
+    .mat-mdc-icon-button.account {
+        scale: .85;
+        vertical-align: middle;
+        .dark & { background: color-alternate(dark); }
+        .light & { background: color(light); }
+        svg {
+            scale: 1.3;
+        }
+    }
+}

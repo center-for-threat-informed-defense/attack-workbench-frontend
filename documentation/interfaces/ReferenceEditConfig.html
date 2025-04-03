@@ -1,0 +1,480 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>attack-workbench-frontend documentation</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+	   <link rel="stylesheet" href="../styles/style.css">
+        <link rel="stylesheet" href="../styles/dark.css">
+    </head>
+    <body>
+
+        <div class="navbar navbar-default navbar-fixed-top visible-xs">
+            <a href="../" class="navbar-brand">attack-workbench-frontend documentation</a>
+            <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+        </div>
+
+        <div class="xs-menu menu" id="mobile-menu">
+                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+        </div>
+
+        <div class="container-fluid main">
+           <div class="row main">
+               <div class="hidden-xs menu">
+                   <compodoc-menu mode="normal"></compodoc-menu>
+               </div>
+               <!-- START CONTENT -->
+               <div class="content interface">
+                   <div class="content-data">
+
+
+
+
+
+
+
+
+
+
+
+
+
+<ol class="breadcrumb">
+  <li>Interfaces</li>
+  <li
+  >
+  ReferenceEditConfig</li>
+</ol>
+
+<ul class="nav nav-tabs" role="tablist">
+        <li class="active">
+            <a href="#info" role="tab" id="info-tab" data-toggle="tab" data-link="info">Info</a>
+        </li>
+        <li >
+            <a href="#source" role="tab" id="source-tab" data-toggle="tab" data-link="source">Source</a>
+        </li>
+</ul>
+
+<div class="tab-content">
+    <div class="tab-pane fade active in" id="c-info">
+        <p class="comment">
+            <h3>File</h3>
+        </p>
+        <p class="comment">
+            <code>src/app/components/resources-drawer/reference-manager/reference-edit-dialog/reference-edit-dialog.component.ts</code>
+        </p>
+
+
+
+
+        <section>
+            <h3 id="index">Index</h3>
+            <table class="table table-sm table-bordered index-table">
+                <tbody>
+                    <tr>
+                        <td class="col-md-4">
+                            <h6><b>Properties</b></h6>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <ul class="index-list">
+                                <li>
+                                            <span class="modifier">Optional</span>
+                                        <a href="#mode" 
+>
+                                            mode
+                                        </a>
+                                </li>
+                                <li>
+                                            <span class="modifier">Optional</span>
+                                        <a href="#reference" 
+>
+                                            reference
+                                        </a>
+                                </li>
+                            </ul>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+
+
+            <section>
+                <h3 id="inputs">Properties</h3>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <a name="mode"></a>
+                                        <span class="name "><b>mode</b>
+                                            <a href="#mode">
+                                                <span class="icon ion-ios-link"></span>
+                                            </a>
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <code>mode:     <code>&quot;view&quot; | &quot;edit&quot;</code>
+</code>
+                                    </td>
+                                </tr>
+
+
+                                    <tr>
+                                        <td class="col-md-4">
+                                            <i>Type : </i>    <code>&quot;view&quot; | &quot;edit&quot;</code>
+
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+                                        <td class="col-md-4">
+                                            <i>Optional</i>
+                                        </td>
+                                    </tr>
+
+
+
+
+                        </tbody>
+                    </table>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <a name="reference"></a>
+                                        <span class="name "><b>reference</b>
+                                            <a href="#reference">
+                                                <span class="icon ion-ios-link"></span>
+                                            </a>
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <code>reference:         <code><a href="../interfaces/ExternalReference.html" target="_self" >ExternalReference</a></code>
+</code>
+                                    </td>
+                                </tr>
+
+
+                                    <tr>
+                                        <td class="col-md-4">
+                                            <i>Type : </i>        <code><a href="../interfaces/ExternalReference.html" target="_self" >ExternalReference</a></code>
+
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+                                        <td class="col-md-4">
+                                            <i>Optional</i>
+                                        </td>
+                                    </tr>
+
+
+
+
+                        </tbody>
+                    </table>
+            </section>
+    </div>
+
+
+    <div class="tab-pane fade  tab-source-code" id="c-source">
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Component, Inject, OnInit, ViewEncapsulation } from &#x27;@angular/core&#x27;;
+import { FormControl, Validators } from &#x27;@angular/forms&#x27;;
+import { MatDialogRef, MAT_DIALOG_DATA } from &#x27;@angular/material/dialog&#x27;;
+import { MatSnackBar } from &#x27;@angular/material/snack-bar&#x27;;
+import { forkJoin } from &#x27;rxjs&#x27;;
+import { ExternalReference } from &#x27;src/app/classes/external-references&#x27;;
+import { Relationship } from &#x27;src/app/classes/stix/relationship&#x27;;
+import { StixObject } from &#x27;src/app/classes/stix/stix-object&#x27;;
+import { RestApiConnectorService } from &#x27;src/app/services/connectors/rest-api/rest-api-connector.service&#x27;;
+
+@Component({
+  selector: &#x27;app-reference-edit-dialog&#x27;,
+  templateUrl: &#x27;./reference-edit-dialog.component.html&#x27;,
+  styleUrls: [&#x27;./reference-edit-dialog.component.scss&#x27;],
+  encapsulation: ViewEncapsulation.None
+})
+export class ReferenceEditDialogComponent implements OnInit {
+    public reference: ExternalReference;
+    public is_new: boolean;
+    public stage: number &#x3D; 0;
+    public patch_objects: StixObject[];
+    public patch_relationships: Relationship[];
+
+    public months: string[] &#x3D; [&#x27;January&#x27;, &#x27;February&#x27;, &#x27;March&#x27;, &#x27;April&#x27;, &#x27;May&#x27;, &#x27;June&#x27;, &#x27;July&#x27;, &#x27;August&#x27;, &#x27;September&#x27;, &#x27;October&#x27;, &#x27;November&#x27;, &#x27;December&#x27;];
+    public citation: any &#x3D; {};
+
+    public get citationTag(): string { return &#x60;(Citation: ${this.reference.source_name})&#x60;; }
+
+    constructor(public dialogRef: MatDialogRef&lt;ReferenceEditDialogComponent&gt;, @Inject(MAT_DIALOG_DATA) public config: ReferenceEditConfig, public restApiConnectorService: RestApiConnectorService, public snackbar: MatSnackBar) {
+        if (this.config.reference) {
+            this.is_new &#x3D; false;
+            this.reference &#x3D; this.referenceCopy;
+        }
+        else {
+            this.is_new &#x3D; true;
+            this.citation.day &#x3D; new FormControl(null, [Validators.max(31), Validators.min(1)]);
+            this.citation.year &#x3D; new FormControl(null, [Validators.max(2100), Validators.min(1970)]);
+            this.citation.retrieved &#x3D; new Date(); // default to current date
+            this.reference &#x3D; {
+                source_name: &quot;&quot;,
+                url: &quot;&quot;,
+                description: &quot;&quot;
+            }
+        }
+    }
+
+    ngOnInit(): void {
+    } 
+
+    public next() {
+        // trim reference fields
+        this.reference.url &#x3D; this.reference.url.trim();
+
+        if (this.is_new) { // save new reference
+            this.reference.source_name &#x3D; this.reference.source_name.trim(); // trim source_name only if this is a new reference
+            this.reference.description &#x3D; this.getRefDescription();
+            this.save();
+        } else this.parse_patches(); // check for necessary patches on STIX objects
+    }
+
+    public validDate(): boolean {
+        if (this.is_new) {
+            if (this.citation.day.value &amp;&amp; !this.citation.day.valid) return false;
+            if (this.citation.year.value &amp;&amp; !this.citation.year.valid) return false;
+            if (this.citation.day.value &amp;&amp; !this.citation.month) return false;
+            if (this.citation.month &amp;&amp; !this.citation.year.value) return false;
+        }
+        return true;
+    }
+
+    public get validURL(): boolean {
+        if (this.reference.url) {
+            // check for protocol
+            if (!this.reference.url.startsWith(&#x27;https://&#x27;) &amp;&amp; !this.reference.url.startsWith(&#x27;http://&#x27;)) {
+                return false;
+            }
+            // check for other malformities
+            try {
+                new URL(this.reference.url);
+            } catch (_) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public get URLError(): string {
+        if (this.reference.url) {
+            if (!this.reference.url.startsWith(&#x27;https://&#x27;) &amp;&amp; !this.reference.url.startsWith(&#x27;http://&#x27;)) {
+                return &quot;URL must begin with &#x27;http://&#x27; or &#x27;https://&#x27;&quot;;
+            } else {
+                return &quot;malformed URL&quot;;
+            }
+        }
+        return &#x27;&#x27;;
+    }
+
+    public getRefDescription(): string {
+        let description &#x3D; &#x27;&#x27;;
+        if (this.citation.authors) description &#x3D; &#x60;${this.citation.authors}. &#x60;;
+        description +&#x3D; &#x27;(&#x27;;
+        if (this.citation.year.value || this.citation.month || this.citation.day.value) {
+            if (this.citation.year.value) description +&#x3D; &#x60;${this.citation.year.value}&#x60;;
+            if (this.citation.year.value &amp;&amp; this.citation.month) description +&#x3D; &#x27;, &#x27;;
+            if (this.citation.month) description +&#x3D; this.citation.month;
+            if (this.citation.day.value) description +&#x3D; &#x60; ${this.citation.day.value}&#x60;;
+        } else description +&#x3D; &#x27;n.d.&#x27;;
+        description +&#x3D; (&#x27;). &#x27;)
+
+        if (this.citation.title) description +&#x3D; &#x60;${this.citation.title}. &#x60;;
+        if (this.citation.retrieved) description +&#x3D; &#x60;Retrieved ${this.months[this.citation.retrieved.getMonth()]} ${this.citation.retrieved.getDate()}, ${this.citation.retrieved.getFullYear()}.&#x60;;
+        return description;
+    }
+
+    public parse_patches() {
+        this.stage &#x3D; 1; //enter patching stage
+        // retrieve all objects, including revoked &amp; deprecated to create object lookup map
+        let subscription &#x3D; this.restApiConnectorService.getAllObjects(null, null, null, null, true, true, true).subscribe({
+            next: (results) &#x3D;&gt; {
+                // build ID to [name, attackID] lookup
+                let idToObject &#x3D; {}
+                results.data.forEach(x &#x3D;&gt; { idToObject[x.stixID] &#x3D; x });
+                // find objects with given reference
+                this.patch_objects &#x3D; [];
+                this.patch_relationships &#x3D; [];
+                results.data.forEach(x &#x3D;&gt; {
+                    if (x.revoked || x.deprecated) return; // do not patch revoked/deprecated objects
+                    if (x.external_references.hasValue(this.reference.source_name)) {
+                        if (x.attackType &#x3D;&#x3D; &#x27;relationship&#x27;) this.patch_relationships.push(x);
+                        else this.patch_objects.push(x);
+                    }
+                });
+                // patch relationship source/target names and IDs
+                this.patch_relationships.map(x &#x3D;&gt; {
+                    let serialized &#x3D; x.serialize();
+                    serialized.source_object &#x3D; idToObject[x.source_ref].serialize();
+                    serialized.target_object &#x3D; idToObject[x.target_ref].serialize();
+                    return x.deserialize(serialized);
+                });
+                this.stage &#x3D; 2;
+            },
+            complete: () &#x3D;&gt; { subscription.unsubscribe(); }
+        })
+    }
+
+    /**
+     * Apply patches and save the reference
+     */
+    public patch() {
+        let saves &#x3D; []
+        saves.push(this.restApiConnectorService.putReference(this.reference));
+        for (let object of this.patch_objects) {
+            let raw &#x3D; object.external_references.serialize();
+            for (let reference of raw) {
+                if (reference.source_name &#x3D;&#x3D; this.reference.source_name) {
+                    reference.url &#x3D; this.reference.url;
+                    reference.description &#x3D; this.reference.description
+                }
+            }
+            object.external_references.deserialize(raw);
+            saves.push(object.save(this.restApiConnectorService));
+        }
+        for (let relationship of this.patch_relationships) {
+            let raw &#x3D; relationship.external_references.serialize();
+            raw &#x3D; raw.map(x &#x3D;&gt; {
+                if (x.source_name &#x3D;&#x3D; this.reference.source_name) return this.reference;
+                else return x;
+            })
+            relationship.external_references.deserialize(raw);
+            saves.push(relationship.save(this.restApiConnectorService));
+        }
+        this.stage &#x3D; 3;
+        let subscription &#x3D; forkJoin(saves).subscribe({
+            complete: () &#x3D;&gt; {
+                this.toggle(&#x27;view&#x27;);
+                subscription.unsubscribe();
+            }
+        })
+    }
+
+    /**
+     * Save the reference without patching objects using the reference
+     */
+    public save() {
+        let api &#x3D; this.is_new? this.restApiConnectorService.postReference(this.reference) : this.restApiConnectorService.putReference(this.reference);
+        let subscription &#x3D; api.subscribe({
+            complete: () &#x3D;&gt; {
+                this.is_new &#x3D; false;
+                this.toggle(&#x27;view&#x27;);
+                subscription.unsubscribe();
+            }
+        });
+    }
+
+    /**
+     * change the current mode
+     * @param mode &#x27;view&#x27; or &#x27;edit&#x27;
+     */
+    public toggle(mode: &#x27;view&#x27; | &#x27;edit&#x27;) {
+        this.config.mode &#x3D; mode;
+    }
+
+    public get referenceCopy() {
+        return JSON.parse(JSON.stringify(this.config.reference)); //deep copy
+    }
+
+    public cancel(): void {
+        this.reference &#x3D; this.referenceCopy; // discard any changes
+        this.toggle(&#x27;view&#x27;);
+    }
+}
+
+export interface ReferenceEditConfig {
+    /* What is the current mode? Default: &#x27;view&#x27;
+    *    view: viewing the reference
+    *    edit: editing the reference
+    */
+    mode?: &quot;view&quot; | &quot;edit&quot;;
+    reference?: ExternalReference
+}</code></pre>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+                   </div><div class="search-results">
+    <div class="has-results">
+        <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+        <ul class="search-results-list"></ul>
+    </div>
+    <div class="no-results">
+        <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+    </div>
+</div>
+</div>
+               <!-- END CONTENT -->
+           </div>
+       </div>
+
+          <label class="dark-mode-switch">
+               <input type="checkbox">
+               <span class="slider">
+                    <svg class="slider-icon" viewBox="0 0 24 24" fill="none" height="20" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" width="20" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+                    </svg>
+               </span>
+          </label>
+
+       <script>
+            var COMPODOC_CURRENT_PAGE_DEPTH = 1;
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'interface';
+            var COMPODOC_CURRENT_PAGE_URL = 'ReferenceEditConfig.html';
+            var MAX_SEARCH_RESULTS = 15;
+       </script>
+
+       <script src="../js/libs/custom-elements.min.js"></script>
+       <script src="../js/libs/lit-html.js"></script>
+
+       <script src="../js/menu-wc.js" defer></script>
+       <script nomodule src="../js/menu-wc_es5.js" defer></script>
+
+       <script src="../js/libs/bootstrap-native.js"></script>
+
+       <script src="../js/libs/es6-shim.min.js"></script>
+       <script src="../js/libs/EventDispatcher.js"></script>
+       <script src="../js/libs/promise.min.js"></script>
+       <script src="../js/libs/zepto.min.js"></script>
+
+       <script src="../js/compodoc.js"></script>
+
+       <script src="../js/tabs.js"></script>
+       <script src="../js/menu.js"></script>
+       <script src="../js/libs/clipboard.min.js"></script>
+       <script src="../js/libs/prism.js"></script>
+       <script src="../js/sourceCode.js"></script>
+          <script src="../js/search/search.js"></script>
+          <script src="../js/search/lunr.min.js"></script>
+          <script src="../js/search/search-lunr.js"></script>
+          <script src="../js/search/search_index.js"></script>
+       <script src="../js/lazy-load-graphs.js"></script>
+
+
+    </body>
+</html>

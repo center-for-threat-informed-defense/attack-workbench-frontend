@@ -1,0 +1,23 @@
+.property-diff {
+    // custom property diff colors
+    .before {
+        text-decoration: line-through;
+        .light & { background-color: #ffb9b9b6 !important; }
+        .dark & { background-color: #f851494D !important; }
+    }
+    .after {
+        text-decoration: underline;
+        .light & { background-color: #c0f8c0 !important; }
+        .dark & { background-color: #3abc4c56 !important }
+    }
+
+    // innerHtml DiffMatchPatch
+    del {
+        .light & { background: #ffb9b9b6 !important; }
+        .dark & { background: #f851494D !important; }
+    }
+    ins {
+        .light & { background: #c0f8c0 !important; }
+        .dark & { background: #3abc4c56 !important }
+    }
+}

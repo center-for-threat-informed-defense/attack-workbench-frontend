@@ -1,0 +1,79 @@
+<div class="matrix-container">
+	<table class="matrix side">
+		<caption hidden>Matrix view displaying the nested structure of techniques and tactics</caption>
+		<thead>
+			<tr class="tactic">
+				<th *ngFor="let tactic of tactics">
+					<app-tactic-cell [tactic]="tactic" [showID]="showID"></app-tactic-cell>
+				</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td *ngFor="let tactic of tactics" class="tactic" style="vertical-align: top">
+					<table class="techniques-table">
+						<caption hidden>Technique with no associated subtechniques</caption>
+						<th hidden></th>
+						<ng-container *ngFor="let technique of tactic.technique_objects">
+							<tr *ngIf="!technique.subTechniques.length">
+								<table class="regularTechnique">
+									<caption hidden>Technique with no subtechniques</caption>
+									<th hidden></th>
+									<tr>
+										<td class="technique">
+											<app-technique-cell [technique]="technique" [tactic]="tactic"
+												[showID]="showID"
+												(leftclick)="onTechniqueLeftClick($event, technique, tactic)">
+											</app-technique-cell>
+										</td>
+									</tr>
+								</table>
+							</tr>
+							<tr *ngIf="technique.subTechniques.length > 0"
+								[ngStyle]="{'width': technique.show_subtechniques ? '400px' : '170px'}">
+								<td>
+									<table class="supertechnique">
+										<caption hidden>Technique with subtechniques</caption>
+										<th hidden></th>
+										<tr>
+											<td class="technique">
+												<app-technique-cell [technique]="technique" [tactic]="tactic"
+													[showID]="showID"
+													(leftclick)="onTechniqueLeftClick($event, technique, tactic)">
+												</app-technique-cell>
+											</td>
+										</tr>
+									</table>
+								</td>
+								<td class="sidebar" (click)="onToggleSubtechniquesVisible(technique)"
+									[class.expanded]="technique.show_subtechniques">
+									<div class="angle top">
+										<svg width="12px" height="12px">
+											<path d="M0 0H12V12Z" />
+										</svg>
+									</div>
+									<div class="handle"> = </div>
+									<div class="angle bottom">
+										<svg width="12px" height="12px">
+											<path d="M0 12H12V0Z" />
+										</svg>
+									</div>
+								</td>
+								<td class="subtechniques-td">
+									<div class="subtechniques" [class.hidden]="!technique.show_subtechniques">
+										<div *ngFor="let subtechnique of technique.subTechniques" class="subtechnique">
+											<app-technique-cell [technique]="subtechnique" [tactic]="tactic"
+												[showID]="showID"
+												(leftclick)="onTechniqueLeftClick($event, technique, tacticList[i])">
+											</app-technique-cell>
+										</div>
+									</div>
+								</td>
+							</tr>
+						</ng-container>
+					</table>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+</div>

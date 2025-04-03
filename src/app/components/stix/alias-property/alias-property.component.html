@@ -1,0 +1,5 @@
+<div class="alias-property grow-to-row">
+    <app-alias-view *ngIf="!config.mode || config.mode == 'view'" class="grow-to-row" [config]="config"></app-alias-view>
+    <app-alias-edit *ngIf="config.mode == 'edit'" class="grow-to-row" [config]="config"></app-alias-edit>
+    <app-alias-diff *ngIf="config.mode == 'diff'" class="grow-to-row" [config]="config"></app-alias-diff>
+</div>

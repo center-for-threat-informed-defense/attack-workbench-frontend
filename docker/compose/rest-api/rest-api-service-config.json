@@ -1,0 +1,14 @@
+{
+  "serviceAuthn": {
+    "challengeApikey": {
+      "enable": true,
+      "serviceAccounts": [
+        {
+          "name": "collection-manager",
+          "apikey": "sample-key",
+          "serviceRole": "collection-manager"
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,15 @@
+<div class="alias-edit-dialog">
+    <h1>{{is_new ? 'Add' : 'Edit'}} an associated {{config.object.attackType}}</h1>
+    <mat-form-field appearance="outline">
+        <mat-label>associated {{config.object.attackType}} name</mat-label>
+        <input matInput required [disabled]="!is_new" [(ngModel)]="config.aliasName">
+    </mat-form-field>
+    <mat-form-field appearance="outline">
+        <mat-label>associated {{config.object.attackType}} description or citation</mat-label>
+        <input matInput required [(ngModel)]="aliasDescription">
+    </mat-form-field>
+    <div class="buttons">
+        <button mat-button matDialogClose>cancel</button>
+        <button mat-stroked-button [disabled]="!config.aliasName.length || !aliasDescription.length" (click)="setAlias()">confirm</button>
+    </div>
+</div>

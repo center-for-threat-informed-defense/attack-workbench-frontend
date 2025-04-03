@@ -1,0 +1,165 @@
+<div class="group-view view-page grid spacing-16">
+    <div class="row">
+        <div class="col">
+            <app-name-property [config]="{
+                mode: config.mode,
+                object: config.object
+            }"></app-name-property>
+            <app-subheading [config]="config" (onOpenHistory)="openHistory()" (onOpenNotes)="openNotes()"></app-subheading>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <!-- ATT&CK ID -->
+            <app-attackid-property class="grow-to-row" [config]="{
+                mode: config.mode,
+                object: config.object
+            }"></app-attackid-property>
+        </div>
+        <div class="col">
+            <!-- VERSION NUMBER -->
+            <app-version-property class="grow-to-row" [config]="{
+                mode: config.mode,
+                object: config.object
+            }"></app-version-property>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <!-- CONTRIBUTORS -->
+            <app-list-property class="grow-to-row" [config]="{
+                mode: config.mode,
+                object: config.object,
+                field: 'contributors',
+                editType: 'any'
+            }"></app-list-property>
+        </div>
+        <div class="col">
+            <!-- GROUP ALIASES -->
+            <app-alias-property class="grow-to-row" [config]="{
+                mode: config.mode,
+                object: config.object,
+                field: 'aliases',
+                referencesField: 'external_references',
+                label: 'Associated Groups'
+            }"></app-alias-property>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <!-- DESCRIPTION -->
+            <app-descriptive-property [config]="{
+                mode: config.mode,
+                object: config.object,
+                field: 'description',
+                firstParagraphOnly: false, 
+                referencesField: 'external_references',
+                label: 'Description'
+            }"></app-descriptive-property>
+        </div>
+    </div>
+    <!-- RELATIONSHIPS - NOTE: these are only shown in 'view' mode -->
+    <div *ngIf="(config.showRelationships || !config.hasOwnProperty('showRelationships')) && !editing">
+        <!-- campaign relationships -->
+        <div class="row">
+            <div class="col">
+                <h2 class="section-header">Campaigns</h2>
+            </div>
+        </div>
+        <div class="row" *ngIf="canEdit">
+            <div class="col">
+                <app-add-relationship-button (created)="campaignList.applyControls(); onReload.emit()" [config]="{
+                    label: 'add a campaign',
+                    relationship_type: 'attributed-to',
+                    target_object: group
+                }"></app-add-relationship-button>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <app-stix-list #campaignList [config]="{
+                    'type': 'relationship', 
+                    'targetRef': group.stixID,
+                    'sourceType': 'campaign',
+                    'relationshipType': 'attributed-to',
+                    'clickBehavior': 'dialog',
+                    'allowEdits': true
+                }"></app-stix-list>
+            </div>
+        </div>
+        <!-- technique relationships -->
+        <div class="row">
+            <div class="col">
+                <h2 class="section-header">Techniques Used</h2>
+            </div>
+        </div>
+        <div class="row" *ngIf="canEdit">
+            <div class="col">
+                <app-add-relationship-button (created)="techniqueList.applyControls(); onReload.emit()" [config]="{
+                    label: 'add a technique',
+                    relationship_type: 'uses',
+                    targetType: 'technique',
+                    source_object: group
+                }"></app-add-relationship-button>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <app-stix-list #techniqueList [config]="{
+                    'type': 'relationship', 
+                    'sourceRef': group.stixID,
+                    'targetType': 'technique',
+                    'relationshipType': 'uses',
+                    'clickBehavior': 'dialog',
+                    'allowEdits': true
+                }"></app-stix-list>
+            </div>
+        </div>
+
+        <!-- software relationships -->
+        <div class="row">
+            <div class="col">
+                <h2 class="section-header">Software Used</h2>
+            </div>
+        </div>
+        <div class="row" *ngIf="canEdit">
+            <div class="col">
+                <app-add-relationship-button (created)="softwareList.applyControls(); onReload.emit()" [config]="{
+                    label: 'add a software',
+                    relationship_type: 'uses',
+                    targetType: 'software',
+                    source_object: group
+                }"></app-add-relationship-button>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <app-stix-list #softwareList [config]="{
+                    'type': 'relationship', 
+                    'sourceRef': group.stixID,
+                    'targetType': 'software',
+                    'relationshipType': 'uses',
+                    'clickBehavior': 'dialog',
+                    'allowEdits': true
+                }"></app-stix-list>
+            </div>
+        </div>
+    </div>
+    <!-- EXTERNAL REFERENCES -->
+    <div *ngIf="group.external_references.list().length > 0 || previous?.external_references.list().length > 0">
+        <div class="row">
+            <div class="col">
+                <h2 class="section-header">References</h2>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <app-external-references-property [config]="{
+                    mode: config.mode,
+                    object: config.object,
+                    referencesField: 'external_references'
+                }"></app-external-references-property>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,14 @@
+.alias-edit-dialog {
+    min-width: 75vw;
+    padding: 24px;
+    .mat-mdc-form-field {
+        width: 100%;
+    }
+    .buttons {
+        button + button {
+            margin-left: 10px;
+        }
+        margin-top: 24px;
+        margin-bottom: 24px;
+    }
+}

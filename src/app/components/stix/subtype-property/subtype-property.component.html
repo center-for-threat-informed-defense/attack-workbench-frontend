@@ -1,0 +1,5 @@
+<div class="subtype-property grow-to-row">
+    <app-subtype-view *ngIf="!config.mode || config.mode == 'view'" class="grow-to-row" [config]="config"></app-subtype-view>
+    <app-subtype-edit *ngIf="config.mode == 'edit'" class="grow-to-row" [config]="config"></app-subtype-edit>
+    <app-subtype-diff *ngIf="config.mode == 'diff'" class="grow-to-row" [config]="config"></app-subtype-diff>
+</div>
