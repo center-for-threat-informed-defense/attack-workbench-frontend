@@ -17,6 +17,10 @@
             "name": "project-orion",
             "prerelease": true
         }
+        {
+            "name": "608-integrate-semantic-release",
+            "prerelease": true
+        }
     ],
     "plugins": [
         "@semantic-release/commit-analyzer",

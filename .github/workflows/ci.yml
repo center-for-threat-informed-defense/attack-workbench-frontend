@@ -3,6 +3,7 @@ name: CI and Release
 on:
   push:
     branches:
+      - 608-integrate-semantic-release
       - main
       - master
       - develop
