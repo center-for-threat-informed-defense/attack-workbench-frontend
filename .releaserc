@@ -16,10 +16,6 @@
         {
             "name": "project-orion",
             "prerelease": true
-        },
-        {
-            "name": "608-integrate-semantic-release",
-            "prerelease": true
         }
     ],
     "plugins": [
@@ -28,7 +24,7 @@
         [
             "@semantic-release/exec",
             {
-                "prepareCmd": "./docker/docker-build.sh ${nextRelease.version} ${nextRelease.type} ${process.env.GITHUB_SHA}"
+                "prepareCmd": "./docker/build-Dockerfile.sh ${nextRelease.version} ${nextRelease.type} ${process.env.GITHUB_SHA}"
             }
         ],
         "@semantic-release/github"
