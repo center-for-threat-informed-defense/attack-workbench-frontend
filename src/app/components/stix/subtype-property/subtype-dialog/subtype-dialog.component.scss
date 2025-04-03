@@ -1,0 +1,14 @@
+.subtype-edit-dialog {
+	margin: 0 24px;
+    min-width: 75vw;
+	text-align: center;
+    .mat-mdc-form-field {
+        width: 100%;
+    }
+    .buttons {
+		margin: 18px 0;
+        button + button {
+            margin-left: 10px;
+        }
+    }
+}

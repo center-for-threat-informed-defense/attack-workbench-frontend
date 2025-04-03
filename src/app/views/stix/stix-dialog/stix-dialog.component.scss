@@ -1,0 +1,66 @@
+@import "../../../../style/globals";
+
+.stix-dialog {
+    .page-padding {
+        padding: 25px;
+        overflow: auto;
+        .light & { background-color: color(light); }
+        .dark & { background-color: color(dark); }
+    }
+    width: 50em;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    mat-toolbar {
+        @extend %toolbar;
+        padding-left: 0;
+        .mat-icon { vertical-align: middle; } //vertically center icons
+    }
+    .stix-dialog-body {
+         flex: 1;
+    }
+    .stix-content {
+        display: flex;
+        flex-direction: column;
+        
+    }
+    mat-drawer {
+        .light & { border-left: 1px solid border-color(light) !important; }
+        .dark & { border-left: 1px solid border-color(dark) !important; }
+    }
+    .mat-drawer  {
+        width: 40%;
+        overflow: hidden;
+        .mat-drawer-inner-container {
+            box-sizing: border-box;
+            padding: 20px;
+            padding-top: 0px;
+            .references-label {
+                .light & { background: color-alternate(light); }
+                .dark &  { background: color-alternate(dark); }
+                box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.25);
+                line-height:48px;
+                
+                margin-top: 0px;
+                margin-left: -20px;
+                margin-right: -20px;
+                padding-left: 20px;
+            }
+            overflow-x: hidden;
+            overflow-y: scroll;
+        }
+    }
+    .validation {
+        h3 {
+            margin: 0px;
+        }
+    }
+    .validation + .save-buttons {
+        padding-left: 16px;
+        .dark & { border-left: 1px solid border-color(dark); }
+        .light & { border-left: 1px solid border-color(light); }
+    }
+    .button-tooltip {
+        display: inline-flex;
+    }
+}

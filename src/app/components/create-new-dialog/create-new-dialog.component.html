@@ -1,0 +1,23 @@
+<div class="create-new-dialog">
+	<h2>Create new {{objectType}}</h2>
+	<div class="input-form">
+		<span *ngFor="let formObject of formObjects">
+			<div *ngIf="formObject.type==='text'">
+				<mat-form-field appearance="outline">
+					<mat-label>{{formObject.name}}</mat-label>
+					<input matInput [required]="formObject.required" [(ngModel)]="newObject[formObject.name]">
+				</mat-form-field>
+			</div>
+			<div *ngIf="formObject.type==='textBox'">
+				<mat-form-field appearance="outline">
+					<mat-label>{{formObject.name}}</mat-label>
+					<textarea matInput [required]="formObject.required" [(ngModel)]="newObject[formObject.name]"></textarea>
+				</mat-form-field>
+			</div>
+		</span>
+	</div>
+	<div class="buttons">
+		<button mat-button matDialogClose>cancel</button>
+		<button mat-stroked-button [disabled]="invalid" class="success" (click)="confirm()">create</button>
+	</div>
+</div>

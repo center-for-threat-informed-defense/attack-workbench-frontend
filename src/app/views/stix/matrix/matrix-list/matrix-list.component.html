@@ -1,0 +1,22 @@
+<div class="list-page">
+    <div class="list-page-header">
+        <h1 class="with-help-icon">
+            matrices
+            <mat-icon class="help-icon" aria-label="help" cdkDrag #popoverTrigger2="mtxPopoverTrigger" [mtxPopoverTriggerFor]="popover" mtxPopoverTriggerOn="hover">
+                help_outline
+            </mat-icon>
+            <mtx-popover #popover="mtxPopover" [position]="['below', 'center']" enterDelay="25" leaveDelay="25">
+                <div style="max-width: 26em;">
+                    <span class="help-content">Matrices are an organized visualization depicting the relationships between tactics, techniques, and sub-techniques. ATT&CK Workbench does not support matrix visualizations at present, but you can still create and edit them for visualization in other tools.</span>
+                </div>
+            </mtx-popover>
+        </h1>
+
+        <div class="button-group" *ngIf="canEdit">
+            <button mat-raised-button class="extended-button" color="primary" [routerLink]="['/matrix/new']" [queryParams]="{editing: true}">
+                <mat-icon>create</mat-icon> <span class="text-label">create a matrix</span>
+            </button>
+        </div>
+    </div>
+    <app-stix-list [config]="{'type': 'matrix', 'showLinks': true, 'showUserSearch': true}"></app-stix-list>
+</div>

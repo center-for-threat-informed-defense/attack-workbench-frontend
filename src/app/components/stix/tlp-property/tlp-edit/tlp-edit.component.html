@@ -1,0 +1,16 @@
+<button *ngIf="tlp != 'none' else noStatements"
+    (click)="updateTlpMarking()"
+    class="tlp-edit"
+    [ngClass]="tlpClass()"
+    matTooltip="click to update"
+    matTooltipPosition="above">
+    TLP: {{tlp}}
+</button>
+
+<ng-template #noStatements>
+    <button class="tlp-edit"
+        (click)="updateTlpMarking()">
+        <mat-icon class="tiny-icon-button">add</mat-icon>
+        add tlp marking
+    </button>
+</ng-template>

@@ -1,0 +1,70 @@
+@import "../../../../style/globals";
+
+.reference-sidebar {
+    .add-container {
+        padding: 16px;
+        text-align: center;
+    }
+    
+    .references-container {
+        border-radius: 4px;
+        .dark & {  border: 1px solid border-color(dark); }
+        .light & { border: 1px solid border-color(light); }
+        .controls {
+            .fullwidth {
+                width: 100%;
+                font-size: 16px;
+            }
+            .mat-mdc-form-field-subscript-wrapper {
+                display: none; // remove bottom padding used for hint
+            }
+            .mat-mdc-text-field-wrapper {
+                padding: 0 42px !important; // override default padding for alignment w/ table
+            }
+            .mat-mdc-floating-label {
+                .light & { color: on-color-deemphasis(light); }
+                .dark &  { color: on-color-deemphasis(dark); }
+            }
+        }
+
+        .references {
+            display: flex;
+            flex-direction: column;
+            .reference-list {
+                .reference {
+                    .dark & { border-bottom: 1px solid border-color(dark); }
+                    .light & { border-bottom: 1px solid border-color(light); }
+                }
+                .row {
+                    min-height: 48px;
+                }
+                .col {
+                    padding: 6px;
+                    justify-content: center;
+                    mat-icon {
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                    }
+                }
+                .clickable {
+                    cursor: pointer;
+                    &:hover { 
+                        .dark & { background: color-alternate(dark); }
+                        .light & { background: color-alternate(light); }
+                    }
+                }
+                .description {
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                    display: -webkit-box;
+                    -webkit-line-clamp: 2; /* number of lines to show */
+                    -webkit-box-orient: vertical;
+                }
+                .text-label {
+                    font-size: 13px;
+                }
+            }
+        }
+    }
+}

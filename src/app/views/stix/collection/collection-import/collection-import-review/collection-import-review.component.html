@@ -1,0 +1,56 @@
+<div class="collection-import-review view-page grid spacing-16" *ngIf="!deleting else loadingOverlay">
+    <div class="row">
+        <div class="col">
+            <h1>{{collection.name}} v{{collection.version.toString()}}</h1>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <div class="section-header">
+                <div class="section-header-section">
+                    Imported <app-timestamp-view [config]="{
+                        mode: 'view',
+                        object: collection,
+                        field: 'imported',
+                        humanize: true
+                    }"></app-timestamp-view>
+                </div>
+                <div class="section-header-section">
+                    Released <app-timestamp-view [config]="{
+                        mode: 'view',
+                        object: collection,
+                        field: 'modified',
+                        humanize: true
+                    }"></app-timestamp-view>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <app-descriptive-property [config]="{
+                mode: 'view',
+                object: collection,
+                field: 'description',
+                firstParagraphOnly: false, 
+                label: 'Description'
+            }"></app-descriptive-property>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col">
+            <h2 class="section-header">Changes</h2>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <app-collection-import-summary [config]="{
+                'object_import_categories': collection_import_categories
+            }"></app-collection-import-summary>
+        </div>
+    </div>
+</div>
+<ng-template #loadingOverlay>
+    <app-loading-overlay message="deleting collection"></app-loading-overlay>
+</ng-template>

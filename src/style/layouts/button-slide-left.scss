@@ -1,0 +1,29 @@
+@mixin button-slide-left($thecolor) {
+    transition: all 0.3s;
+    position: relative;
+    * { // any child  
+        z-index: 2;
+        position: relative;
+        // border-bottom: 3px solid color(primary);
+    } 
+    &:not(.disabled) { cursor: pointer; }
+    &.disabled { opacity: 0.5; }
+
+    &:after {
+        content: '';
+        position: absolute;
+        z-index: 1;
+        transition: all 0.3s;
+        width: 0%;
+        height: 100%;
+        left: 0;
+        top: 0;
+        background: color($thecolor);
+    }
+    &:not(.disabled):active, &:not(.disabled):hover { 
+        color: on-color($thecolor); 
+    }
+    &:not(.disabled):hover:after, &:not(.disabled):active:after {
+        width: 100%;
+    }
+}

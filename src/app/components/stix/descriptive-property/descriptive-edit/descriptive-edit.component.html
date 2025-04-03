@@ -1,0 +1,22 @@
+<div class="descriptive-edit">
+    <mat-tab-group mat-stretch-tabs="false" mat-align-tabs="start" (selectedTabChange)="selectionChanged($event)">
+        <mat-tab label="Write">
+            <mat-form-field class="edit" appearance="outline">
+                <div class="vertical-centered">
+                    <h3>{{config.label}}</h3>
+                    <mat-icon class="info-icon" [matTooltip]="config.referencesField? 'markdown & citations supported' : 'markdown supported'" matTooltipPosition="above" aria-label="info">info_outline</mat-icon>
+                </div>
+                <textarea class="moz-height" autosize matInput placeholder="{{config.label}}" (blur)="parseCitations()" [(ngModel)]="config.object[config.field]"></textarea>
+            </mat-form-field>
+        </mat-tab>
+        <mat-tab label="Preview" [disabled]="config.object[config.field] === undefined || config.object[config.field].length == 0">
+            <div class="preview padding">
+                <h3>{{config.label}}</h3>
+                <app-loading-overlay *ngIf="parsingCitations else preview"></app-loading-overlay>
+                <ng-template #preview>
+                    <app-descriptive-view #description class="markdown-view" [config]="config"></app-descriptive-view>
+                </ng-template>
+            </div>
+        </mat-tab>
+    </mat-tab-group>
+</div>

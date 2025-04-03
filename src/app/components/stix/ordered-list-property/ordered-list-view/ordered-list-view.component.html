@@ -1,0 +1,10 @@
+<div class="ordered-list-view labelled-box grow-to-row">
+    <div class="content">
+        <ul class="list-view">
+            <li class="list-item" *ngFor="let stixID of list">
+                <a class="external-link" [href]="internalLink(stixID)" target="_blank" rel="nofollow noopener">{{ getLabel(stixID) }}</a>
+            </li>
+        </ul>
+    </div>
+    <span class="labelled-box-label">{{ config.label ? config.label : config.objectOrderedListField }}</span>
+</div>

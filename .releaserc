@@ -24,7 +24,7 @@
         [
             "@semantic-release/exec",
             {
-                "prepareCmd": "./scripts/docker-build.sh ${nextRelease.version} ${nextRelease.type} ${process.env.GITHUB_SHA}"
+                "prepareCmd": "./docker/docker-build.sh ${nextRelease.version} ${nextRelease.type} ${process.env.GITHUB_SHA}"
             }
         ],
         "@semantic-release/github"

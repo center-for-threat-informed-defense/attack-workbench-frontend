@@ -1,0 +1,3711 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>attack-workbench-frontend documentation</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+	   <link rel="stylesheet" href="../styles/style.css">
+        <link rel="stylesheet" href="../styles/dark.css">
+    </head>
+    <body>
+
+        <div class="navbar navbar-default navbar-fixed-top visible-xs">
+            <a href="../" class="navbar-brand">attack-workbench-frontend documentation</a>
+            <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+        </div>
+
+        <div class="xs-menu menu" id="mobile-menu">
+                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+        </div>
+
+        <div class="container-fluid main">
+           <div class="row main">
+               <div class="hidden-xs menu">
+                   <compodoc-menu mode="normal"></compodoc-menu>
+               </div>
+               <!-- START CONTENT -->
+               <div class="content class">
+                   <div class="content-data">
+
+
+
+
+
+
+
+
+
+
+
+
+<ol class="breadcrumb">
+  <li>Classes</li>
+  <li >Relationship</li>
+</ol>
+
+<ul class="nav nav-tabs" role="tablist">
+        <li class="active">
+            <a href="#info" role="tab" id="info-tab" data-toggle="tab" data-link="info">Info</a>
+        </li>
+        <li >
+            <a href="#source" role="tab" id="source-tab" data-toggle="tab" data-link="source">Source</a>
+        </li>
+</ul>
+
+<div class="tab-content">
+    <div class="tab-pane fade active in" id="c-info">
+        <p class="comment">
+            <h3>File</h3>
+        </p>
+        <p class="comment">
+            <code>src/app/classes/stix/relationship.ts</code>
+        </p>
+
+
+
+            <p class="comment">
+                <h3>Extends</h3>
+            </p>
+            <p class="comment">
+                        <code><a href="../classes/StixObject.html" target="_self" >StixObject</a></code>
+            </p>
+
+
+
+            <section>
+    <h3 id="index">Index</h3>
+    <table class="table table-sm table-bordered index-table">
+        <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Properties</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                    <span class="modifier">Public</span>
+                                <a href="#relationship_type" >relationship_type</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Public</span>
+                                <a href="#source_ID" >source_ID</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Public</span>
+                                <a href="#source_object" >source_object</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Public</span>
+                                <a href="#source_parent" >source_parent</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Public</span>
+                                <a href="#source_ref" >source_ref</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Public</span>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#supportsAttackID" >supportsAttackID</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Public</span>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#supportsNamespace" >supportsNamespace</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Public</span>
+                                <a href="#target_ID" >target_ID</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Public</span>
+                                <a href="#target_object" >target_object</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Public</span>
+                                <a href="#target_parent" >target_parent</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Public</span>
+                                <a href="#target_ref" >target_ref</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Public</span>
+                                <a href="#updating_refs" >updating_refs</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Public</span>
+                                <a href="#attackID" >attackID</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Public</span>
+                                <a href="#attackType" >attackType</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Public</span>
+                                <a href="#created" >created</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Public</span>
+                                    <span class="modifier">Optional</span>
+                                <a href="#created_by" >created_by</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Public</span>
+                                <a href="#created_by_ref" >created_by_ref</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#defaultMarkingDefinitionsLoaded" >defaultMarkingDefinitionsLoaded</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Public</span>
+                                <a href="#deprecated" >deprecated</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Public</span>
+                                <a href="#description" >description</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Public</span>
+                                <a href="#external_references" >external_references</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Public</span>
+                                <a href="#firstInitialized" >firstInitialized</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Public</span>
+                                <a href="#isStringArray" >isStringArray</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Public</span>
+                                <a href="#modified" >modified</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Public</span>
+                                    <span class="modifier">Optional</span>
+                                <a href="#modified_by" >modified_by</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Public</span>
+                                <a href="#modified_by_ref" >modified_by_ref</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Public</span>
+                                <a href="#object_marking_refs" >object_marking_refs</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Public</span>
+                                <a href="#revoked" >revoked</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Public</span>
+                                <a href="#stixID" >stixID</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Public</span>
+                                <a href="#type" >type</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#typeUrlMap" >typeUrlMap</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Public</span>
+                                <a href="#version" >version</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Public</span>
+                                <a href="#workflow" >workflow</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Methods</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                    <span class="modifier">Public</span>
+                                <a href="#deserialize" >deserialize</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Public</span>
+                                <a href="#get_parent_object" >get_parent_object</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Public</span>
+                                <a href="#save" >save</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Public</span>
+                                <a href="#serialize" >serialize</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Public</span>
+                                <a href="#set_source_object" >set_source_object</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Public</span>
+                                <a href="#set_source_ref" >set_source_ref</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Public</span>
+                                <a href="#set_target_object" >set_target_object</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Public</span>
+                                <a href="#set_target_ref" >set_target_ref</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Public</span>
+                                <a href="#update_source_parent" >update_source_parent</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Public</span>
+                                <a href="#update_target_parent" >update_target_parent</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Public</span>
+                                <a href="#validate" >validate</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Public</span>
+                                <a href="#base_deserialize" >base_deserialize</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Public</span>
+                                <a href="#base_serialize" >base_serialize</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Public</span>
+                                <a href="#base_validate" >base_validate</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Public</span>
+                                <a href="#getNamespaceID" >getNamespaceID</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Public</span>
+                                <a href="#initializeWithDefaultMarkingDefinitions" >initializeWithDefaultMarkingDefinitions</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#parseLinkByIds" >parseLinkByIds</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#validateBrokenLinks" >validateBrokenLinks</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+
+
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <h6><b>Accessors</b></h6>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <ul class="index-list">
+                                <li>
+                                    <a href="#source_name" >source_name</a>
+                                </li>
+                                <li>
+                                    <a href="#target_name" >target_name</a>
+                                </li>
+                                <li>
+                                    <a href="#attackIDValidator" >attackIDValidator</a>
+                                </li>
+                                <li>
+                                    <a href="#valid_source_types" >valid_source_types</a>
+                                </li>
+                                <li>
+                                    <a href="#valid_target_types" >valid_target_types</a>
+                                </li>
+                            </ul>
+                        </td>
+                    </tr>
+        </tbody>
+    </table>
+</section>
+
+            <section>
+    <h3 id="constructor">Constructor</h3>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+<code>constructor(sdo?: <a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank">any</a>)</code>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="62" class="link-to-prism">src/app/classes/stix/relationship.ts:62</a></div>
+                            </td>
+                        </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                            <div>
+                                    <b>Parameters :</b>
+                                    <table class="params">
+                                        <thead>
+                                            <tr>
+                                                <td>Name</td>
+                                                    <td>Type</td>
+                                                <td>Optional</td>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                                <tr>
+                                                        <td>sdo</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            Yes
+                                                    </td>
+                                                    
+                                                </tr>
+                                        </tbody>
+                                    </table>
+                            </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+</section>
+
+            <section>
+    
+    <h3 id="inputs">
+        Properties
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="relationship_type"></a>
+                    <span class="name">
+                            <span class="modifier">Public</span>
+                        <span ><b>relationship_type</b></span>
+                        <a href="#relationship_type"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>&quot;&quot;</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="28" class="link-to-prism">src/app/classes/stix/relationship.ts:28</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="source_ID"></a>
+                    <span class="name">
+                            <span class="modifier">Public</span>
+                        <span ><b>source_ID</b></span>
+                        <a href="#source_ID"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>&quot;&quot;</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="14" class="link-to-prism">src/app/classes/stix/relationship.ts:14</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="source_object"></a>
+                    <span class="name">
+                            <span class="modifier">Public</span>
+                        <span ><b>source_object</b></span>
+                        <a href="#source_object"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="15" class="link-to-prism">src/app/classes/stix/relationship.ts:15</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="source_parent"></a>
+                    <span class="name">
+                            <span class="modifier">Public</span>
+                        <span ><b>source_parent</b></span>
+                        <a href="#source_parent"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="16" class="link-to-prism">src/app/classes/stix/relationship.ts:16</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="source_ref"></a>
+                    <span class="name">
+                            <span class="modifier">Public</span>
+                        <span ><b>source_ref</b></span>
+                        <a href="#source_ref"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>&quot;&quot;</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="10" class="link-to-prism">src/app/classes/stix/relationship.ts:10</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="supportsAttackID"></a>
+                    <span class="name">
+                            <span class="modifier">Public</span>
+                            <span class="modifier">Readonly</span>
+                        <span ><b>supportsAttackID</b></span>
+                        <a href="#supportsAttackID"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>false</code>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <div class="io-line">Inherited from         <code><a href="../classes/StixObject.html" target="_self" >StixObject</a></code>
+</div>
+                            </td>
+                        </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in         <code><a href="../classes/StixObject.html#source" target="_self" >StixObject:30</a></code>
+</div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="supportsNamespace"></a>
+                    <span class="name">
+                            <span class="modifier">Public</span>
+                            <span class="modifier">Readonly</span>
+                        <span ><b>supportsNamespace</b></span>
+                        <a href="#supportsNamespace"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>false</code>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <div class="io-line">Inherited from         <code><a href="../classes/StixObject.html" target="_self" >StixObject</a></code>
+</div>
+                            </td>
+                        </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in         <code><a href="../classes/StixObject.html#source" target="_self" >StixObject:31</a></code>
+</div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="target_ID"></a>
+                    <span class="name">
+                            <span class="modifier">Public</span>
+                        <span ><b>target_ID</b></span>
+                        <a href="#target_ID"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>&quot;&quot;</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="22" class="link-to-prism">src/app/classes/stix/relationship.ts:22</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="target_object"></a>
+                    <span class="name">
+                            <span class="modifier">Public</span>
+                        <span ><b>target_object</b></span>
+                        <a href="#target_object"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="23" class="link-to-prism">src/app/classes/stix/relationship.ts:23</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="target_parent"></a>
+                    <span class="name">
+                            <span class="modifier">Public</span>
+                        <span ><b>target_parent</b></span>
+                        <a href="#target_parent"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="24" class="link-to-prism">src/app/classes/stix/relationship.ts:24</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="target_ref"></a>
+                    <span class="name">
+                            <span class="modifier">Public</span>
+                        <span ><b>target_ref</b></span>
+                        <a href="#target_ref"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>&quot;&quot;</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="18" class="link-to-prism">src/app/classes/stix/relationship.ts:18</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="updating_refs"></a>
+                    <span class="name">
+                            <span class="modifier">Public</span>
+                        <span ><b>updating_refs</b></span>
+                        <a href="#updating_refs"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>false</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="26" class="link-to-prism">src/app/classes/stix/relationship.ts:26</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="attackID"></a>
+                    <span class="name">
+                            <span class="modifier">Public</span>
+                        <span ><b>attackID</b></span>
+                        <a href="#attackID"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <div class="io-line">Inherited from         <code><a href="../classes/StixObject.html" target="_self" >StixObject</a></code>
+</div>
+                            </td>
+                        </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in         <code><a href="../classes/StixObject.html#source" target="_self" >StixObject:32</a></code>
+</div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="attackType"></a>
+                    <span class="name">
+                            <span class="modifier">Public</span>
+                        <span ><b>attackType</b></span>
+                        <a href="#attackType"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <div class="io-line">Inherited from         <code><a href="../classes/StixObject.html" target="_self" >StixObject</a></code>
+</div>
+                            </td>
+                        </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in         <code><a href="../classes/StixObject.html#source" target="_self" >StixObject:31</a></code>
+</div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="created"></a>
+                    <span class="name">
+                            <span class="modifier">Public</span>
+                        <span ><b>created</b></span>
+                        <a href="#created"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date" target="_blank" >Date</a></code>
+
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <div class="io-line">Inherited from         <code><a href="../classes/StixObject.html" target="_self" >StixObject</a></code>
+</div>
+                            </td>
+                        </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in         <code><a href="../classes/StixObject.html#source" target="_self" >StixObject:80</a></code>
+</div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="created_by"></a>
+                    <span class="name">
+                            <span class="modifier">Public</span>
+                            <span class="modifier">Optional</span>
+                        <span ><b>created_by</b></span>
+                        <a href="#created_by"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <div class="io-line">Inherited from         <code><a href="../classes/StixObject.html" target="_self" >StixObject</a></code>
+</div>
+                            </td>
+                        </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in         <code><a href="../classes/StixObject.html#source" target="_self" >StixObject:36</a></code>
+</div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="created_by_ref"></a>
+                    <span class="name">
+                            <span class="modifier">Public</span>
+                        <span ><b>created_by_ref</b></span>
+                        <a href="#created_by_ref"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <div class="io-line">Inherited from         <code><a href="../classes/StixObject.html" target="_self" >StixObject</a></code>
+</div>
+                            </td>
+                        </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in         <code><a href="../classes/StixObject.html#source" target="_self" >StixObject:35</a></code>
+</div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="defaultMarkingDefinitionsLoaded"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                        <span ><b>defaultMarkingDefinitionsLoaded</b></span>
+                        <a href="#defaultMarkingDefinitionsLoaded"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>false</code>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <div class="io-line">Inherited from         <code><a href="../classes/StixObject.html" target="_self" >StixObject</a></code>
+</div>
+                            </td>
+                        </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in         <code><a href="../classes/StixObject.html#source" target="_self" >StixObject:64</a></code>
+</div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="deprecated"></a>
+                    <span class="name">
+                            <span class="modifier">Public</span>
+                        <span ><b>deprecated</b></span>
+                        <a href="#deprecated"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>false</code>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <div class="io-line">Inherited from         <code><a href="../classes/StixObject.html" target="_self" >StixObject</a></code>
+</div>
+                            </td>
+                        </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in         <code><a href="../classes/StixObject.html#source" target="_self" >StixObject:89</a></code>
+</div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="description"></a>
+                    <span class="name">
+                            <span class="modifier">Public</span>
+                        <span ><b>description</b></span>
+                        <a href="#description"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <div class="io-line">Inherited from         <code><a href="../classes/StixObject.html" target="_self" >StixObject</a></code>
+</div>
+                            </td>
+                        </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in         <code><a href="../classes/StixObject.html#source" target="_self" >StixObject:33</a></code>
+</div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="external_references"></a>
+                    <span class="name">
+                            <span class="modifier">Public</span>
+                        <span ><b>external_references</b></span>
+                        <a href="#external_references"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="../interfaces/ExternalReference.html" target="_self" >ExternalReferences</a></code>
+
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <div class="io-line">Inherited from         <code><a href="../classes/StixObject.html" target="_self" >StixObject</a></code>
+</div>
+                            </td>
+                        </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in         <code><a href="../classes/StixObject.html#source" target="_self" >StixObject:83</a></code>
+</div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="firstInitialized"></a>
+                    <span class="name">
+                            <span class="modifier">Public</span>
+                        <span ><b>firstInitialized</b></span>
+                        <a href="#firstInitialized"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
+
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <div class="io-line">Inherited from         <code><a href="../classes/StixObject.html" target="_self" >StixObject</a></code>
+</div>
+                            </td>
+                        </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in         <code><a href="../classes/StixObject.html#source" target="_self" >StixObject:39</a></code>
+</div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="isStringArray"></a>
+                    <span class="name">
+                            <span class="modifier">Public</span>
+                        <span ><b>isStringArray</b></span>
+                        <a href="#isStringArray"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>function (arr): boolean {
+        for (let i &#x3D; 0; i &lt; arr.length; i++) {
+            if (typeof (arr[i]) !&#x3D;&#x3D; &quot;string&quot;) {
+                logger.error(&quot;TypeError:&quot;, arr[i], &quot;(&quot;, typeof (arr[i]), &quot;)&quot;, &quot;is not a string&quot;)
+                return false;
+            }
+        }
+        return true;
+    }</code>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <div class="io-line">Inherited from         <code><a href="../classes/StixObject.html" target="_self" >StixObject</a></code>
+</div>
+                            </td>
+                        </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in         <code><a href="../classes/StixObject.html#source" target="_self" >StixObject:534</a></code>
+</div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="modified"></a>
+                    <span class="name">
+                            <span class="modifier">Public</span>
+                        <span ><b>modified</b></span>
+                        <a href="#modified"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date" target="_blank" >Date</a></code>
+
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <div class="io-line">Inherited from         <code><a href="../classes/StixObject.html" target="_self" >StixObject</a></code>
+</div>
+                            </td>
+                        </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in         <code><a href="../classes/StixObject.html#source" target="_self" >StixObject:81</a></code>
+</div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="modified_by"></a>
+                    <span class="name">
+                            <span class="modifier">Public</span>
+                            <span class="modifier">Optional</span>
+                        <span ><b>modified_by</b></span>
+                        <a href="#modified_by"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <div class="io-line">Inherited from         <code><a href="../classes/StixObject.html" target="_self" >StixObject</a></code>
+</div>
+                            </td>
+                        </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in         <code><a href="../classes/StixObject.html#source" target="_self" >StixObject:38</a></code>
+</div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="modified_by_ref"></a>
+                    <span class="name">
+                            <span class="modifier">Public</span>
+                        <span ><b>modified_by_ref</b></span>
+                        <a href="#modified_by_ref"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <div class="io-line">Inherited from         <code><a href="../classes/StixObject.html" target="_self" >StixObject</a></code>
+</div>
+                            </td>
+                        </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in         <code><a href="../classes/StixObject.html#source" target="_self" >StixObject:37</a></code>
+</div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="object_marking_refs"></a>
+                    <span class="name">
+                            <span class="modifier">Public</span>
+                        <span ><b>object_marking_refs</b></span>
+                        <a href="#object_marking_refs"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>string[]</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>[]</code>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <div class="io-line">Inherited from         <code><a href="../classes/StixObject.html" target="_self" >StixObject</a></code>
+</div>
+                            </td>
+                        </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in         <code><a href="../classes/StixObject.html#source" target="_self" >StixObject:41</a></code>
+</div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="revoked"></a>
+                    <span class="name">
+                            <span class="modifier">Public</span>
+                        <span ><b>revoked</b></span>
+                        <a href="#revoked"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>false</code>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <div class="io-line">Inherited from         <code><a href="../classes/StixObject.html" target="_self" >StixObject</a></code>
+</div>
+                            </td>
+                        </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in         <code><a href="../classes/StixObject.html#source" target="_self" >StixObject:90</a></code>
+</div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="stixID"></a>
+                    <span class="name">
+                            <span class="modifier">Public</span>
+                        <span ><b>stixID</b></span>
+                        <a href="#stixID"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <div class="io-line">Inherited from         <code><a href="../classes/StixObject.html" target="_self" >StixObject</a></code>
+</div>
+                            </td>
+                        </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in         <code><a href="../classes/StixObject.html#source" target="_self" >StixObject:29</a></code>
+</div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="type"></a>
+                    <span class="name">
+                            <span class="modifier">Public</span>
+                        <span ><b>type</b></span>
+                        <a href="#type"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <div class="io-line">Inherited from         <code><a href="../classes/StixObject.html" target="_self" >StixObject</a></code>
+</div>
+                            </td>
+                        </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in         <code><a href="../classes/StixObject.html#source" target="_self" >StixObject:30</a></code>
+</div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="typeUrlMap"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                        <span ><b>typeUrlMap</b></span>
+                        <a href="#typeUrlMap"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/object" target="_blank" >object</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>{
+        &quot;technique&quot;: &quot;techniques&quot;,
+        &quot;software&quot;: &quot;software&quot;,
+        &quot;group&quot;: &quot;groups&quot;,
+        &quot;campaign&quot;: &quot;campaigns&quot;,
+        &quot;mitigation&quot;: &quot;mitigations&quot;,
+        &quot;matrix&quot;: &quot;matrices&quot;,
+        &quot;tactic&quot;: &quot;tactics&quot;,
+        &quot;note&quot;: &quot;notes&quot;,
+        &quot;marking-definition&quot;: &quot;marking-definitions&quot;,
+        &quot;data-source&quot;: &quot;datasources&quot;,
+        &quot;data-component&quot;: &quot;datacomponents&quot;
+    }</code>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <div class="io-line">Inherited from         <code><a href="../classes/StixObject.html" target="_self" >StixObject</a></code>
+</div>
+                            </td>
+                        </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in         <code><a href="../classes/StixObject.html#source" target="_self" >StixObject:50</a></code>
+</div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="version"></a>
+                    <span class="name">
+                            <span class="modifier">Public</span>
+                        <span ><b>version</b></span>
+                        <a href="#version"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="../classes/VersionNumber.html" target="_self" >VersionNumber</a></code>
+
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <div class="io-line">Inherited from         <code><a href="../classes/StixObject.html" target="_self" >StixObject</a></code>
+</div>
+                            </td>
+                        </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in         <code><a href="../classes/StixObject.html#source" target="_self" >StixObject:82</a></code>
+</div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="workflow"></a>
+                    <span class="name">
+                            <span class="modifier">Public</span>
+                        <span ><b>workflow</b></span>
+                        <a href="#workflow"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>literal type</code>
+
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <div class="io-line">Inherited from         <code><a href="../classes/StixObject.html" target="_self" >StixObject</a></code>
+</div>
+                            </td>
+                        </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in         <code><a href="../classes/StixObject.html#source" target="_self" >StixObject:84</a></code>
+</div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+</section>
+
+            <section>
+    
+    <h3 id="methods">
+        Methods
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="deserialize"></a>
+                    <span class="name">
+                        <span class="modifier">Public</span>
+                        <span ><b>deserialize</b></span>
+                        <a href="#deserialize"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>deserialize(raw: <a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank">any</a>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Inherited from         <code><a href="../classes/Serializable.html" target="_self" >Serializable</a></code>
+</div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-line">Defined in         <code><a href="../classes/Serializable.html#source" target="_self" >Serializable:280</a></code>
+</div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Parse the object from the record returned from the back-end</p>
+</div>
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                    <td>Description</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>raw</td>
+                                    <td>
+                                                <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                    <td>
+                                        <p>the raw object to parse</p>
+
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="get_parent_object"></a>
+                    <span class="name">
+                        <span class="modifier">Public</span>
+                        <span ><b>get_parent_object</b></span>
+                        <a href="#get_parent_object"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>get_parent_object(object: <a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank">any</a>, restAPIService: <a href="../injectables/RestApiConnectorService.html" target="_self">RestApiConnectorService</a>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="209"
+                            class="link-to-prism">src/app/classes/stix/relationship.ts:209</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Retrieve parent object from the REST API, if applicable.
+Fetches the parent technique of a sub-technique and the parent data source of
+a data component.</p>
+</div>
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                    <td>Description</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>object</td>
+                                    <td>
+                                                <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                    <td>
+                                        <p>the raw source or target object</p>
+
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>restAPIService</td>
+                                    <td>
+                                                <code><a href="../injectables/RestApiConnectorService.html" target="_self" >RestApiConnectorService</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                    <td>
+                                        <p>the REST API connector through which the parent can be fetched</p>
+
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="../classes/StixObject.html" target="_self" >Observable&lt;StixObject&gt;</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        <p>of the parent object</p>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="save"></a>
+                    <span class="name">
+                        <span class="modifier">Public</span>
+                        <span ><b>save</b></span>
+                        <a href="#save"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>save(restAPIService: <a href="../injectables/RestApiConnectorService.html" target="_self">RestApiConnectorService</a>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Inherited from         <code><a href="../classes/StixObject.html" target="_self" >StixObject</a></code>
+</div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-line">Defined in         <code><a href="../classes/StixObject.html#source" target="_self" >StixObject:422</a></code>
+</div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Save the current state of the STIX object in the database. Update the current object from the response</p>
+</div>
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                    <td>Description</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>restAPIService</td>
+                                    <td>
+                                                <code><a href="../injectables/RestApiConnectorService.html" target="_self" >RestApiConnectorService</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                    <td>
+                                        <p>[RestApiConnectorService] the service to perform the POST/PUT through</p>
+
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="../classes/Relationship.html" target="_self" >Observable&lt;Relationship&gt;</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        <p>of the post</p>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="serialize"></a>
+                    <span class="name">
+                        <span class="modifier">Public</span>
+                        <span ><b>serialize</b></span>
+                        <a href="#serialize"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>serialize()</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Inherited from         <code><a href="../classes/Serializable.html" target="_self" >Serializable</a></code>
+</div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-line">Defined in         <code><a href="../classes/Serializable.html#source" target="_self" >Serializable:265</a></code>
+</div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Transform the current object into a raw object for sending to the back-end, stripping any unnecessary fields</p>
+</div>
+
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        <p>the raw object to send</p>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="set_source_object"></a>
+                    <span class="name">
+                        <span class="modifier">Public</span>
+                        <span ><b>set_source_object</b></span>
+                        <a href="#set_source_object"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>set_source_object(new_source_object: <a href="../classes/StixObject.html" target="_self">StixObject</a>, restAPIService: <a href="../injectables/RestApiConnectorService.html" target="_self">RestApiConnectorService</a>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="114"
+                            class="link-to-prism">src/app/classes/stix/relationship.ts:114</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Set the source object</p>
+</div>
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                    <td>Description</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>new_source_object</td>
+                                    <td>
+                                                <code><a href="../classes/StixObject.html" target="_self" >StixObject</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                    <td>
+                                        <p>the object to set</p>
+
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>restAPIService</td>
+                                    <td>
+                                                <code><a href="../injectables/RestApiConnectorService.html" target="_self" >RestApiConnectorService</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                    <td>
+                                        <p>: the REST API connector through which the parent of the source can be fetched</p>
+
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="../classes/Relationship.html" target="_self" >Observable&lt;Relationship&gt;</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        <p>of this object after the data has been updated</p>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="set_source_ref"></a>
+                    <span class="name">
+                        <span class="modifier">Public</span>
+                        <span ><b>set_source_ref</b></span>
+                        <a href="#set_source_ref"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>set_source_ref(new_source_ref: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, restAPIService: <a href="../injectables/RestApiConnectorService.html" target="_self">RestApiConnectorService</a>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="79"
+                            class="link-to-prism">src/app/classes/stix/relationship.ts:79</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>set the source ref, and set the source_object and source_id to the new values</p>
+</div>
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                    <td>Description</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>new_source_ref</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                    <td>
+                                        <p>the new source ref</p>
+
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>restAPIService</td>
+                                    <td>
+                                                <code><a href="../injectables/RestApiConnectorService.html" target="_self" >RestApiConnectorService</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                    <td>
+                                        <p>: the REST API connector through which the source can be fetched</p>
+
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="../classes/Relationship.html" target="_self" >Observable&lt;Relationship&gt;</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        <p>of this object after the data has been updated</p>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="set_target_object"></a>
+                    <span class="name">
+                        <span class="modifier">Public</span>
+                        <span ><b>set_target_object</b></span>
+                        <a href="#set_target_object"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>set_target_object(new_target_object: <a href="../classes/StixObject.html" target="_self">StixObject</a>, restAPIService: <a href="../injectables/RestApiConnectorService.html" target="_self">RestApiConnectorService</a>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="178"
+                            class="link-to-prism">src/app/classes/stix/relationship.ts:178</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Set the target object</p>
+</div>
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                    <td>Description</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>new_target_object</td>
+                                    <td>
+                                                <code><a href="../classes/StixObject.html" target="_self" >StixObject</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                    <td>
+                                        <p>the object to set</p>
+
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>restAPIService</td>
+                                    <td>
+                                                <code><a href="../injectables/RestApiConnectorService.html" target="_self" >RestApiConnectorService</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                    <td>
+                                        <p>: the REST API connector through which the parent of the target can be fetched</p>
+
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="../classes/Relationship.html" target="_self" >Observable&lt;Relationship&gt;</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        <p>of this object after the data has been updated</p>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="set_target_ref"></a>
+                    <span class="name">
+                        <span class="modifier">Public</span>
+                        <span ><b>set_target_ref</b></span>
+                        <a href="#set_target_ref"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>set_target_ref(new_target_ref: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, restAPIService: <a href="../injectables/RestApiConnectorService.html" target="_self">RestApiConnectorService</a>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="143"
+                            class="link-to-prism">src/app/classes/stix/relationship.ts:143</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>set the target ref, and set the target_object and target_id to the new values</p>
+</div>
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                    <td>Description</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>new_target_ref</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                    <td>
+                                        <p>the new target ref</p>
+
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>restAPIService</td>
+                                    <td>
+                                                <code><a href="../injectables/RestApiConnectorService.html" target="_self" >RestApiConnectorService</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                    <td>
+                                        <p>: the REST API connector through which the target can be fetched</p>
+
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="../classes/Relationship.html" target="_self" >Observable&lt;Relationship&gt;</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        <p>of this object after the data has been updated</p>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="update_source_parent"></a>
+                    <span class="name">
+                        <span class="modifier">Public</span>
+                        <span ><b>update_source_parent</b></span>
+                        <a href="#update_source_parent"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>update_source_parent(restAPIService: <a href="../injectables/RestApiConnectorService.html" target="_self">RestApiConnectorService</a>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="233"
+                            class="link-to-prism">src/app/classes/stix/relationship.ts:233</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Retrieve the parent object of this source object</p>
+</div>
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                    <td>Description</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>restAPIService</td>
+                                    <td>
+                                                <code><a href="../injectables/RestApiConnectorService.html" target="_self" >RestApiConnectorService</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                    <td>
+                                        <p>the REST API connector through which the parent can be fetched</p>
+
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="../classes/Relationship.html" target="_self" >Observable&lt;Relationship&gt;</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        <p>of this object after the source parent has been updated</p>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="update_target_parent"></a>
+                    <span class="name">
+                        <span class="modifier">Public</span>
+                        <span ><b>update_target_parent</b></span>
+                        <a href="#update_target_parent"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>update_target_parent(restAPIService: <a href="../injectables/RestApiConnectorService.html" target="_self">RestApiConnectorService</a>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="249"
+                            class="link-to-prism">src/app/classes/stix/relationship.ts:249</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Retrieve the parent object of this target object</p>
+</div>
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                    <td>Description</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>restAPIService</td>
+                                    <td>
+                                                <code><a href="../injectables/RestApiConnectorService.html" target="_self" >RestApiConnectorService</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                    <td>
+                                        <p>the REST API connector through which the parent can be fetched</p>
+
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="../classes/Relationship.html" target="_self" >Observable&lt;Relationship&gt;</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        <p>of this object after the target parent has been updated</p>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="validate"></a>
+                    <span class="name">
+                        <span class="modifier">Public</span>
+                        <span ><b>validate</b></span>
+                        <a href="#validate"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>validate(restAPIService: <a href="../injectables/RestApiConnectorService.html" target="_self">RestApiConnectorService</a>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Inherited from         <code><a href="../classes/Serializable.html" target="_self" >Serializable</a></code>
+</div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-line">Defined in         <code><a href="../classes/Serializable.html#source" target="_self" >Serializable:327</a></code>
+</div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Validate the current object state and return information on the result of the validation</p>
+</div>
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                    <td>Description</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>restAPIService</td>
+                                    <td>
+                                                <code><a href="../injectables/RestApiConnectorService.html" target="_self" >RestApiConnectorService</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                    <td>
+                                        <p>: the REST API connector through which asynchronous validation can be completed</p>
+
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="../classes/ValidationData.html" target="_self" >Observable&lt;ValidationData&gt;</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        <p>the validation warnings and errors once validation is complete.</p>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="base_deserialize"></a>
+                    <span class="name">
+                        <span class="modifier">Public</span>
+                        <span ><b>base_deserialize</b></span>
+                        <a href="#base_deserialize"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>base_deserialize(raw: <a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank">any</a>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Inherited from         <code><a href="../classes/StixObject.html" target="_self" >StixObject</a></code>
+</div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-line">Defined in         <code><a href="../classes/StixObject.html#source" target="_self" >StixObject:167</a></code>
+</div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Parse the object from the record returned from the back-end</p>
+</div>
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                    <td>Description</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>raw</td>
+                                    <td>
+                                                <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                    <td>
+                                        <p>the raw object to parse</p>
+
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="base_serialize"></a>
+                    <span class="name">
+                        <span class="modifier">Public</span>
+                        <span ><b>base_serialize</b></span>
+                        <a href="#base_serialize"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>base_serialize()</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Inherited from         <code><a href="../classes/StixObject.html" target="_self" >StixObject</a></code>
+</div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-line">Defined in         <code><a href="../classes/StixObject.html#source" target="_self" >StixObject:124</a></code>
+</div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Transform the current object into a raw object for sending to the back-end, stripping any unnecessary fields</p>
+</div>
+
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        <p>the raw object to send</p>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="base_validate"></a>
+                    <span class="name">
+                        <span class="modifier">Public</span>
+                        <span ><b>base_validate</b></span>
+                        <a href="#base_validate"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>base_validate(restAPIService: <a href="../injectables/RestApiConnectorService.html" target="_self">RestApiConnectorService</a>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Inherited from         <code><a href="../classes/StixObject.html" target="_self" >StixObject</a></code>
+</div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-line">Defined in         <code><a href="../classes/StixObject.html#source" target="_self" >StixObject:276</a></code>
+</div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Validate the current object state and return information on the result of the validation</p>
+</div>
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                    <td>Description</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>restAPIService</td>
+                                    <td>
+                                                <code><a href="../injectables/RestApiConnectorService.html" target="_self" >RestApiConnectorService</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                    <td>
+                                        <p>: the REST API connector through which asynchronous validation can be completed</p>
+
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="../classes/ValidationData.html" target="_self" >Observable&lt;ValidationData&gt;</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        <p>the validation warnings and errors once validation is complete.</p>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="getNamespaceID"></a>
+                    <span class="name">
+                        <span class="modifier">Public</span>
+                        <span ><b>getNamespaceID</b></span>
+                        <a href="#getNamespaceID"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>getNamespaceID(restAPIConnector, orgNamespace)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Inherited from         <code><a href="../classes/StixObject.html" target="_self" >StixObject</a></code>
+</div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-line">Defined in         <code><a href="../classes/StixObject.html#source" target="_self" >StixObject:570</a></code>
+</div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>restAPIConnector</td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                                <tr>
+                                    <td>orgNamespace</td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>    <code>Observable&lt;any&gt;</code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="initializeWithDefaultMarkingDefinitions"></a>
+                    <span class="name">
+                        <span class="modifier">Public</span>
+                        <span ><b>initializeWithDefaultMarkingDefinitions</b></span>
+                        <a href="#initializeWithDefaultMarkingDefinitions"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>initializeWithDefaultMarkingDefinitions(restAPIService: <a href="../injectables/RestApiConnectorService.html" target="_self">RestApiConnectorService</a>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Inherited from         <code><a href="../classes/StixObject.html" target="_self" >StixObject</a></code>
+</div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-line">Defined in         <code><a href="../classes/StixObject.html#source" target="_self" >StixObject:555</a></code>
+</div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Updates the object&#39;s marking definitions with the default the first time an object is created</p>
+</div>
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                    <td>Description</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>restAPIService</td>
+                                    <td>
+                                                <code><a href="../injectables/RestApiConnectorService.html" target="_self" >RestApiConnectorService</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                    <td>
+                                        <p>[RestApiConnectorService] the service to perform the POST/PUT through</p>
+
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="parseLinkByIds"></a>
+                    <span class="name">
+                        <span class="modifier">Private</span>
+                        <span ><b>parseLinkByIds</b></span>
+                        <a href="#parseLinkByIds"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>parseLinkByIds(field: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, restAPIService: <a href="../injectables/RestApiConnectorService.html" target="_self">RestApiConnectorService</a>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Inherited from         <code><a href="../classes/StixObject.html" target="_self" >StixObject</a></code>
+</div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-line">Defined in         <code><a href="../classes/StixObject.html#source" target="_self" >StixObject:492</a></code>
+</div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>parses given field for linked objects</p>
+</div>
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                    <td>Description</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>field</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                    <td>
+                                        <p>the field in which to parse LinkByIds</p>
+
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>restAPIService</td>
+                                    <td>
+                                                <code><a href="../injectables/RestApiConnectorService.html" target="_self" >RestApiConnectorService</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                    <td>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="../classes/LinkByIdParseResult.html" target="_self" >Observable&lt;LinkByIdParseResult&gt;</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="validateBrokenLinks"></a>
+                    <span class="name">
+                        <span class="modifier">Private</span>
+                        <span ><b>validateBrokenLinks</b></span>
+                        <a href="#validateBrokenLinks"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>validateBrokenLinks(field: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, regExes)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Inherited from         <code><a href="../classes/StixObject.html" target="_self" >StixObject</a></code>
+</div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-line">Defined in         <code><a href="../classes/StixObject.html#source" target="_self" >StixObject:523</a></code>
+</div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>validate the given field for broken LinkByIds found via regex</p>
+</div>
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                    <td>Description</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>field</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                    <td>
+                                        <p>field that may have LinkByIds</p>
+
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>regExes</td>
+                                    <td>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                    <td>
+                                        <p>regular expressions matching potential invalid tags</p>
+
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>    <code>Set&lt;string&gt;</code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>
+
+
+
+
+
+            <section>
+    <h3 id="accessors">
+        Accessors
+    </h3>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="source_name"></a>
+                        <span class="name"><b>source_name</b><a href="#source_name"><span class="icon ion-ios-link"></span></a></span>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <span class="accessor"><b>get</b><code>source_name()</code></span>
+                    </td>
+                </tr>
+                            <tr>
+                                <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="11" class="link-to-prism">src/app/classes/stix/relationship.ts:11</a></div>
+                                </td>
+                            </tr>
+
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="target_name"></a>
+                        <span class="name"><b>target_name</b><a href="#target_name"><span class="icon ion-ios-link"></span></a></span>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <span class="accessor"><b>get</b><code>target_name()</code></span>
+                    </td>
+                </tr>
+                            <tr>
+                                <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="19" class="link-to-prism">src/app/classes/stix/relationship.ts:19</a></div>
+                                </td>
+                            </tr>
+
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="attackIDValidator"></a>
+                        <span class="name"><b>attackIDValidator</b><a href="#attackIDValidator"><span class="icon ion-ios-link"></span></a></span>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <span class="accessor"><b>get</b><code>attackIDValidator()</code></span>
+                    </td>
+                </tr>
+                            <tr>
+                                <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="32" class="link-to-prism">src/app/classes/stix/relationship.ts:32</a></div>
+                                </td>
+                            </tr>
+
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="valid_source_types"></a>
+                        <span class="name"><b>valid_source_types</b><a href="#valid_source_types"><span class="icon ion-ios-link"></span></a></span>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <span class="accessor"><b>get</b><code>valid_source_types()</code></span>
+                    </td>
+                </tr>
+                            <tr>
+                                <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="37" class="link-to-prism">src/app/classes/stix/relationship.ts:37</a></div>
+                                </td>
+                            </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-description"><p>The valid source types according to relationship_type
+null if any type is valid or relationship_type is not recognized</p>
+</div>
+
+                                <div class="io-description">
+                                    <b>Returns : </b>    <code>string[]</code>
+
+                                </div>
+                        </td>
+                    </tr>
+
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="valid_target_types"></a>
+                        <span class="name"><b>valid_target_types</b><a href="#valid_target_types"><span class="icon ion-ios-link"></span></a></span>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <span class="accessor"><b>get</b><code>valid_target_types()</code></span>
+                    </td>
+                </tr>
+                            <tr>
+                                <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="52" class="link-to-prism">src/app/classes/stix/relationship.ts:52</a></div>
+                                </td>
+                            </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-description"><p>The valid source types according to relationship_type
+null if any type is valid or relationship_type is not recognized</p>
+</div>
+
+                                <div class="io-description">
+                                    <b>Returns : </b>    <code>string[]</code>
+
+                                </div>
+                        </td>
+                    </tr>
+
+            </tbody>
+        </table>
+</section>
+    </div>
+
+
+    <div class="tab-pane fade  tab-source-code" id="c-source">
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Observable, of } from &quot;rxjs&quot;;
+import { map, switchMap } from &quot;rxjs/operators&quot;;
+import { RestApiConnectorService } from &quot;src/app/services/connectors/rest-api/rest-api-connector.service&quot;;
+import { ValidationData } from &quot;../serializable&quot;;
+import { StixObject } from &quot;./stix-object&quot;;
+import { logger } from &quot;../../util/logger&quot;;
+
+export class Relationship extends StixObject {
+
+    public source_ref: string &#x3D; &quot;&quot;;
+    public get source_name(): string {
+        return &#x60;${this.source_parent ? this.source_parent.stix.name + &#x27;: &#x27; : &#x27;&#x27;}${this.source_object ? this.source_object.stix.name : &#x27;[unknown object]&#x27;}&#x60;;
+    }
+    public source_ID: string &#x3D; &quot;&quot;;
+    public source_object: any;
+    public source_parent: any;
+
+    public target_ref: string &#x3D; &quot;&quot;;
+    public get target_name(): string {
+        return &#x60;${this.target_parent ? this.target_parent.stix.name + &#x27;: &#x27; : &#x27;&#x27;}${this.target_object ? this.target_object.stix.name : &#x27;[unknown object]&#x27;}&#x60;;
+    }
+    public target_ID: string &#x3D; &quot;&quot;;
+    public target_object: any;
+    public target_parent: any;
+    
+    public updating_refs: boolean &#x3D; false; //becomes true while source and target refs are being asynchronously updated.
+    
+    public relationship_type: string &#x3D; &quot;&quot;;
+
+    public readonly supportsAttackID &#x3D; false; // relationships do not have ATT&amp;CK IDs
+    public readonly supportsNamespace &#x3D; false; // relationships do not support namespacing
+    protected get attackIDValidator() { return null; } // relationships have no ATT&amp;CK ID
+    /**
+     * The valid source types according to relationship_type
+     * null if any type is valid or relationship_type is not recognized
+     */
+    public get valid_source_types(): string[] {
+        if (this.relationship_type &#x3D;&#x3D; &quot;uses&quot;) {
+            if (this.target_object &amp;&amp; (this.target_object.stix.type &#x3D;&#x3D; &quot;malware&quot; || this.target_object.stix.type &#x3D;&#x3D; &quot;tool&quot;)) return [&quot;group&quot;, &quot;campaign&quot;];
+            else return [&quot;software&quot;, &quot;group&quot;, &quot;campaign&quot;];
+        }
+        if (this.relationship_type &#x3D;&#x3D; &quot;mitigates&quot;) return [&quot;mitigation&quot;];
+        if (this.relationship_type &#x3D;&#x3D; &quot;subtechnique-of&quot;) return [&quot;technique&quot;];
+        if (this.relationship_type &#x3D;&#x3D; &quot;detects&quot;) return [&quot;data-component&quot;];
+        if (this.relationship_type &#x3D;&#x3D; &quot;attributed-to&quot;) return [&quot;campaign&quot;];
+        else return null;
+    }
+    /**
+     * The valid source types according to relationship_type
+     * null if any type is valid or relationship_type is not recognized
+     */
+    public get valid_target_types(): string[] {
+        if (this.relationship_type &#x3D;&#x3D; &quot;uses&quot;) {
+            if (this.source_object &amp;&amp; (this.source_object.stix.type &#x3D;&#x3D; &quot;malware&quot; || this.source_object.stix.type &#x3D;&#x3D; &quot;tool&quot;)) return [&quot;technique&quot;];
+            else return [&quot;software&quot;, &quot;technique&quot;];
+        }
+        if (this.relationship_type &#x3D;&#x3D; &quot;mitigates&quot;) return [&quot;technique&quot;];
+        if (this.relationship_type &#x3D;&#x3D; &quot;subtechnique-of&quot;) return [&quot;technique&quot;];
+        if (this.relationship_type &#x3D;&#x3D; &quot;detects&quot;) return [&quot;technique&quot;];
+        if (this.relationship_type &#x3D;&#x3D; &quot;attributed-to&quot;) return [&quot;group&quot;];
+        else return null;
+    }
+
+    constructor(sdo?: any) {
+        super(sdo, &quot;relationship&quot;);
+        if (sdo) {
+            if (&quot;stix&quot; in sdo) {
+                this.deserialize(sdo);
+            }
+        }
+    }
+    
+    /**
+     * set the source ref, and set the source_object and source_id to the new values
+     * @param {string} new_source_ref the new source ref
+     * @param {RestApiConnectorService} restAPIService: the REST API connector through which the source can be fetched
+     * @returns {Observable&lt;Relationship&gt;} of this object after the data has been updated
+     */
+    public set_source_ref(new_source_ref: string, restAPIService: RestApiConnectorService): Observable&lt;Relationship&gt; {
+        this.source_ref &#x3D; new_source_ref;
+        this.updating_refs &#x3D; true;
+        return restAPIService.getAllObjects().pipe(
+            map(results &#x3D;&gt; {
+                let x &#x3D; results as any;
+                let serialized &#x3D; this.serialize();
+                serialized.source_object &#x3D; x.find(result &#x3D;&gt; result.stix.id &#x3D;&#x3D; new_source_ref);
+                this.deserialize(serialized);
+                return this;
+            }),
+            switchMap(relationship &#x3D;&gt; {
+                if (relationship.source_object.stix.x_mitre_is_subtechnique || relationship.source_object.stix.type &#x3D;&#x3D; &#x27;x-mitre-data-component&#x27;) {
+                    return this.get_parent_object(relationship.source_object, restAPIService).pipe(
+                        map(res &#x3D;&gt; {
+                            this.source_parent &#x3D; res;
+                            this.updating_refs &#x3D; false;
+                            return this;
+                        })
+                    )
+                } else {
+                    this.source_parent &#x3D; undefined; // source object has no parent
+                    this.updating_refs &#x3D; false;
+                    return of(this);
+                }
+            })
+        )
+    }
+
+    /**
+     * Set the source object
+     * @param {StixObject} new_source_object the object to set
+     * @param {RestApiConnectorService} restAPIService: the REST API connector through which the parent of the source can be fetched
+     * @returns {Observable&lt;Relationship&gt;} of this object after the data has been updated
+     */
+    public set_source_object(new_source_object: StixObject, restAPIService: RestApiConnectorService): Observable&lt;Relationship&gt;  {
+        this.updating_refs &#x3D; true;
+        this.source_ref &#x3D; new_source_object.stixID;
+        let serialized &#x3D; this.serialize();
+        let modified &#x3D; new_source_object.modified;
+        serialized.source_object &#x3D; new_source_object.serialize();
+        serialized.source_object[&quot;stix&quot;].modified &#x3D; modified ? modified.toISOString() : undefined; // fix modified date overwrite by serialization
+        this.deserialize(serialized);
+
+        if (this.source_object.stix.x_mitre_is_subtechnique || this.source_object.stix.type &#x3D;&#x3D; &#x27;x-mitre-data-component&#x27;) {
+            return this.get_parent_object(this.source_object, restAPIService).pipe(
+                map(result &#x3D;&gt; {
+                    this.source_parent &#x3D; result;
+                    this.updating_refs &#x3D; false;
+                    return this;
+                })
+            );
+        } else this.source_parent &#x3D; undefined; // source object has no parent
+
+        this.updating_refs &#x3D; false;
+        return of(this);
+    }
+
+    /**
+     * set the target ref, and set the target_object and target_id to the new values
+     * @param {string} new_target_ref the new target ref
+     * @param {RestApiConnectorService} restAPIService: the REST API connector through which the target can be fetched
+     * @returns {Observable&lt;Relationship&gt;} of this object after the data has been updated
+     */
+    public set_target_ref(new_target_ref: string, restAPIService: RestApiConnectorService): Observable&lt;Relationship&gt; {
+        this.target_ref &#x3D; new_target_ref;
+        this.updating_refs &#x3D; true;
+        return restAPIService.getAllObjects().pipe(
+            map(results &#x3D;&gt; {
+                let x &#x3D; results as any;
+                let serialized &#x3D; this.serialize();
+                serialized.target_object &#x3D; x.find(result &#x3D;&gt; result.stix.id &#x3D;&#x3D; new_target_ref);
+                this.deserialize(serialized);
+                return this;
+            }),
+            switchMap(relationship &#x3D;&gt; {
+                if (relationship.target_object.stix.x_mitre_is_subtechnique || relationship.target_object.stix.type &#x3D;&#x3D; &#x27;x-mitre-data-component&#x27;) {
+                    return this.get_parent_object(relationship.target_object, restAPIService).pipe(
+                        map(res &#x3D;&gt; {
+                            this.target_parent &#x3D; res;
+                            this.updating_refs &#x3D; false;
+                            return this;
+                        })
+                    )
+                } else {
+                    this.target_parent &#x3D; undefined; // target object has no parent
+                    this.updating_refs &#x3D; false;
+                    return of(this);
+                }
+            })
+        )
+    }
+
+    /**
+     * Set the target object
+     * @param {StixObject} new_target_object the object to set
+     * @param {RestApiConnectorService} restAPIService: the REST API connector through which the parent of the target can be fetched
+     * @returns {Observable&lt;Relationship&gt;} of this object after the data has been updated
+     */
+    public set_target_object(new_target_object: StixObject, restAPIService: RestApiConnectorService): Observable&lt;Relationship&gt;  {
+        this.updating_refs &#x3D; true;
+        this.target_ref &#x3D; new_target_object.stixID;
+        let serialized &#x3D; this.serialize();
+        let modified &#x3D; new_target_object.modified;
+        serialized.target_object &#x3D; new_target_object.serialize();
+        serialized.target_object[&quot;stix&quot;].modified &#x3D; modified ? modified.toISOString() : undefined; // fix modified date overwrite by serialization
+        this.deserialize(serialized);
+
+        if (this.target_object.stix.x_mitre_is_subtechnique || this.target_object.stix.type &#x3D;&#x3D; &#x27;x-mitre-data-component&#x27;) {
+            return this.get_parent_object(this.target_object, restAPIService).pipe(
+                map(result &#x3D;&gt; {
+                    this.target_parent &#x3D; result;
+                    this.updating_refs &#x3D; false;
+                    return this;
+                })
+            );
+        } else this.target_parent &#x3D; undefined; // target object has no parent
+
+        this.updating_refs &#x3D; false;
+        return of(this);
+    }
+
+    /**
+     * Retrieve parent object from the REST API, if applicable.
+     * Fetches the parent technique of a sub-technique and the parent data source of
+     * a data component.
+     * @param {any} object the raw source or target object
+     * @param {RestApiConnectorService} restAPIService the REST API connector through which the parent can be fetched
+     * @returns {Observable&lt;StixObject&gt;} of the parent object
+     */
+    public get_parent_object(object: any, restAPIService: RestApiConnectorService): Observable&lt;StixObject&gt; {
+        if (object.stix.x_mitre_is_subtechnique) { // sub-technique
+            return restAPIService.getRelatedTo({sourceRef: object.stix.id, relationshipType: &quot;subtechnique-of&quot;}).pipe( // fetch parent from REST API
+                map(relationship &#x3D;&gt; {
+                    if (!relationship || relationship.data.length &#x3D;&#x3D; 0) return null; // no parent technique found
+                    let p &#x3D; relationship.data[0] as Relationship;
+                    return p.target_object;
+                })
+            );
+        } else { // data component
+            return restAPIService.getDataSource(object.stix.x_mitre_data_source_ref).pipe( // fetch data source from REST API
+                map(data_sources &#x3D;&gt; {
+                    if (!data_sources || data_sources.length &#x3D;&#x3D; 0) return null; // no data source found
+                    return data_sources[0].serialize();
+                })
+            );
+        }
+    }
+
+    /**
+     * Retrieve the parent object of this source object
+     * @param {RestApiConnectorService} restAPIService the REST API connector through which the parent can be fetched
+     * @returns {Observable&lt;Relationship&gt;} of this object after the source parent has been updated
+     */
+    public update_source_parent(restAPIService: RestApiConnectorService): Observable&lt;Relationship&gt; {
+        this.updating_refs &#x3D; true;
+        return this.get_parent_object(this.source_object, restAPIService).pipe(
+            map(result &#x3D;&gt; {
+                this.source_parent &#x3D; result;
+                this.updating_refs &#x3D; false;
+                return this;
+            })
+        );
+    }
+
+    /**
+     * Retrieve the parent object of this target object
+     * @param {RestApiConnectorService} restAPIService the REST API connector through which the parent can be fetched
+     * @returns {Observable&lt;Relationship&gt;} of this object after the target parent has been updated
+     */
+    public update_target_parent(restAPIService: RestApiConnectorService): Observable&lt;Relationship&gt; {
+        this.updating_refs &#x3D; true;
+        return this.get_parent_object(this.target_object, restAPIService).pipe(
+            map(result &#x3D;&gt; {
+                this.target_parent &#x3D; result;
+                this.updating_refs &#x3D; false;
+                return this;
+            })
+        )
+    }
+
+    /**
+     * Transform the current object into a raw object for sending to the back-end, stripping any unnecessary fields
+     * @abstract
+     * @returns {*} the raw object to send
+     */
+    public serialize(): any {
+        let rep &#x3D; super.base_serialize();
+        
+        rep.stix.relationship_type &#x3D; this.relationship_type;
+        rep.stix.source_ref &#x3D; this.source_ref;
+        rep.stix.target_ref &#x3D; this.target_ref;
+
+        return rep;
+    }
+
+    /**
+     * Parse the object from the record returned from the back-end
+     * @abstract
+     * @param {*} raw the raw object to parse
+     */
+    public deserialize(raw: any) {
+        let sdoStix &#x3D; raw.stix;
+        if (&quot;source_ref&quot; in sdoStix) {
+            if (typeof(sdoStix.source_ref) &#x3D;&#x3D;&#x3D; &quot;string&quot;) this.source_ref &#x3D; sdoStix.source_ref;
+            else logger.error(&quot;TypeError: source_ref field is not a string:&quot;, sdoStix.source_ref, &quot;(&quot;,typeof(sdoStix.source_ref),&quot;)&quot;)
+        }
+        if (&quot;target_ref&quot; in sdoStix) {
+            if (typeof(sdoStix.target_ref) &#x3D;&#x3D;&#x3D; &quot;string&quot;) this.target_ref &#x3D; sdoStix.target_ref;
+            else logger.error(&quot;TypeError: target_ref field is not a string:&quot;, sdoStix.target_ref, &quot;(&quot;,typeof(sdoStix.target_ref),&quot;)&quot;)
+        }
+        if (&quot;relationship_type&quot; in sdoStix) {
+            if (typeof(sdoStix.relationship_type) &#x3D;&#x3D;&#x3D; &quot;string&quot;) this.relationship_type &#x3D; sdoStix.relationship_type;
+            else logger.error(&quot;TypeError: relationship_type field is not a string:&quot;, sdoStix.relationship_type, &quot;(&quot;,typeof(sdoStix.relationship_type),&quot;)&quot;)
+        }
+        if (&quot;source_object&quot; in raw) {
+            this.source_object &#x3D; raw.source_object;
+            // this.source_name &#x3D; raw.source_object.stix.name;
+            
+            let src_sdo &#x3D; raw.source_object.stix;
+            if (&quot;external_references&quot; in src_sdo) {
+                if (src_sdo.external_references.length &gt; 0 &amp;&amp; src_sdo.external_references[0].hasOwnProperty(&quot;external_id&quot;)) {
+                    if (typeof(src_sdo.external_references[0].external_id) &#x3D;&#x3D;&#x3D; &quot;string&quot;) this.source_ID &#x3D; src_sdo.external_references[0].external_id;
+                    else logger.error(&quot;TypeError: attackID field is not a string:&quot;, src_sdo.external_references[0].external_id, &quot;(&quot;, typeof(src_sdo.external_references[0].external_id), &quot;)&quot;);
+                }
+                else logger.warn(&quot;ObjectWarning: cannot find attackID for source object&quot;);
+            } else this.source_ID &#x3D; &quot;&quot;;
+        }
+        if (&quot;target_object&quot; in raw) {
+            this.target_object &#x3D; raw.target_object;
+            // this.target_name &#x3D; raw.target_object.stix.name;
+
+            let tgt_sdo &#x3D; raw.target_object.stix;
+            if (&quot;external_references&quot; in tgt_sdo) {
+                if (tgt_sdo.external_references.length &gt; 0 &amp;&amp; tgt_sdo.external_references[0].hasOwnProperty(&quot;external_id&quot;)) {
+                    if (typeof(tgt_sdo.external_references[0].external_id) &#x3D;&#x3D;&#x3D; &quot;string&quot;) this.target_ID &#x3D; tgt_sdo.external_references[0].external_id;
+                    else logger.error(&quot;TypeError: attackID field is not a string:&quot;, tgt_sdo.external_references[0].external_id, &quot;(&quot;, typeof(tgt_sdo.external_references[0].external_id), &quot;)&quot;);
+                }
+                else logger.warn(&quot;ObjectWarning: cannot find attackID for target object&quot;);
+            } else this.target_ID &#x3D; &quot;&quot;;
+        }
+    }
+
+    /**
+     * Validate the current object state and return information on the result of the validation
+     * @param {RestApiConnectorService} restAPIService: the REST API connector through which asynchronous validation can be completed
+     * @returns {Observable&lt;ValidationData&gt;} the validation warnings and errors once validation is complete.
+     */
+    public validate(restAPIService: RestApiConnectorService): Observable&lt;ValidationData&gt; {
+        return this.base_validate(restAPIService).pipe(
+            map(result &#x3D;&gt; {
+                // presence of source-ref
+                if (!this.source_ref) { result.errors.push({
+                    &quot;field&quot;: &quot;source_ref&quot;,
+                    &quot;result&quot;: &quot;error&quot;,
+                    &quot;message&quot;: &quot;source object is not specified&quot;
+                })} else { result.successes.push({
+                    &quot;field&quot;: &quot;source_ref&quot;,
+                    &quot;result&quot;: &quot;error&quot;,
+                    &quot;message&quot;: &quot;source object specified&quot;
+                })}
+                //presence of target ref
+                if (!this.target_ref) { result.errors.push({
+                    &quot;field&quot;: &quot;target_ref&quot;,
+                    &quot;result&quot;: &quot;error&quot;,
+                    &quot;message&quot;: &quot;target object is not specified&quot;
+                })} else { result.successes.push({
+                    &quot;field&quot;: &quot;target_ref&quot;,
+                    &quot;result&quot;: &quot;error&quot;,
+                    &quot;message&quot;: &quot;target object specified&quot;
+                })}
+                // is this a valid sub-technique-of relationship?
+                if (this.source_ref &amp;&amp; this.target_ref &amp;&amp; this.relationship_type &#x3D;&#x3D; &quot;subtechnique-of&quot;) {
+                    if (!this.source_object.stix.hasOwnProperty(&quot;x_mitre_is_subtechnique&quot;) || this.source_object.stix.x_mitre_is_subtechnique &#x3D;&#x3D; false) {
+                        result.errors.push({
+                            &quot;field&quot;: &quot;source_ref&quot;,
+                            &quot;result&quot;: &quot;error&quot;,
+                            &quot;message&quot;: &quot;source is not a sub-technique&quot;
+                        })
+                    }
+                    if (this.target_object.stix.x_mitre_is_subtechnique &#x3D;&#x3D; true) {
+                        result.errors.push({
+                            &quot;field&quot;: &quot;target_ref&quot;,
+                            &quot;result&quot;: &quot;error&quot;,
+                            &quot;message&quot;: &quot;target is a sub-technique&quot;
+                        })
+                    }
+                } 
+                
+                return result;
+            }),
+            //check for parallel relationships
+            switchMap(result &#x3D;&gt; {
+                // find all objects connected to the source or target ref
+                return restAPIService.getRelatedTo({sourceRef: this.source_ref, targetRef: this.target_ref}).pipe( 
+                    map(objects &#x3D;&gt; {
+                        let relationships &#x3D; objects.data as Relationship[];
+                        if (relationships.find(relationship &#x3D;&gt; { //parallel relationship
+                            return relationship.stixID !&#x3D; this.stixID &amp;&amp;
+                                   relationship.source_ref &#x3D;&#x3D; this.source_ref &amp;&amp;
+                                   relationship.target_ref &#x3D;&#x3D; this.target_ref
+                        })) {
+                            result.errors.push({
+                                &quot;field&quot;: &quot;source_ref&quot;,
+                                &quot;result&quot;: &quot;error&quot;,
+                                &quot;message&quot;: &quot;a relationship already exists between these objects&quot;
+                            })
+                            
+                        } else {
+                            result.successes.push({
+                                &quot;field&quot;: &quot;source_ref&quot;,
+                                &quot;result&quot;: &quot;success&quot;,
+                                &quot;message&quot;: &quot;relationship is unique&quot;
+                            })
+                        }
+                        return result;
+                    })
+                )
+            }),
+            switchMap(result &#x3D;&gt; { // check for existing sub-technique-of for targeted technique
+                if (this.relationship_type &#x3D;&#x3D; &quot;subtechnique-of&quot;) {
+                    return restAPIService.getRelatedTo({sourceRef: this.source_ref, relationshipType: &quot;subtechnique-of&quot;}).pipe(
+                        map(objects &#x3D;&gt; {
+                            if (objects.data.length &gt; 0) { //already has a parent
+                                result.errors.push({
+                                    &quot;field&quot;: &quot;source_ref&quot;,
+                                    &quot;result&quot;: &quot;error&quot;,
+                                    &quot;message&quot;: &quot;sub-technique already has a parent&quot;
+                                })
+                            }
+                            return result;
+                        })
+                    )
+                } else { return of(result); }
+            })
+        );
+    }
+
+    /**
+     * Save the current state of the STIX object in the database. Update the current object from the response
+     * @param restAPIService [RestApiConnectorService] the service to perform the POST/PUT through
+     * @returns {Observable} of the post
+     */
+    public save(restAPIService: RestApiConnectorService): Observable&lt;Relationship&gt; {
+        // TODO POST if the object was just created (doesn&#x27;t exist in db yet)
+        
+        let postObservable &#x3D; restAPIService.postRelationship(this);
+        let subscription &#x3D; postObservable.subscribe({
+            next: (result) &#x3D;&gt; { this.deserialize(result.serialize()); },
+            complete: () &#x3D;&gt; { subscription.unsubscribe(); }
+        });
+        return postObservable;
+        
+    }
+}
+</code></pre>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+                   </div><div class="search-results">
+    <div class="has-results">
+        <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+        <ul class="search-results-list"></ul>
+    </div>
+    <div class="no-results">
+        <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+    </div>
+</div>
+</div>
+               <!-- END CONTENT -->
+           </div>
+       </div>
+
+          <label class="dark-mode-switch">
+               <input type="checkbox">
+               <span class="slider">
+                    <svg class="slider-icon" viewBox="0 0 24 24" fill="none" height="20" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" width="20" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+                    </svg>
+               </span>
+          </label>
+
+       <script>
+            var COMPODOC_CURRENT_PAGE_DEPTH = 1;
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'class';
+            var COMPODOC_CURRENT_PAGE_URL = 'Relationship.html';
+            var MAX_SEARCH_RESULTS = 15;
+       </script>
+
+       <script src="../js/libs/custom-elements.min.js"></script>
+       <script src="../js/libs/lit-html.js"></script>
+
+       <script src="../js/menu-wc.js" defer></script>
+       <script nomodule src="../js/menu-wc_es5.js" defer></script>
+
+       <script src="../js/libs/bootstrap-native.js"></script>
+
+       <script src="../js/libs/es6-shim.min.js"></script>
+       <script src="../js/libs/EventDispatcher.js"></script>
+       <script src="../js/libs/promise.min.js"></script>
+       <script src="../js/libs/zepto.min.js"></script>
+
+       <script src="../js/compodoc.js"></script>
+
+       <script src="../js/tabs.js"></script>
+       <script src="../js/menu.js"></script>
+       <script src="../js/libs/clipboard.min.js"></script>
+       <script src="../js/libs/prism.js"></script>
+       <script src="../js/sourceCode.js"></script>
+          <script src="../js/search/search.js"></script>
+          <script src="../js/search/lunr.min.js"></script>
+          <script src="../js/search/search-lunr.js"></script>
+          <script src="../js/search/search_index.js"></script>
+       <script src="../js/lazy-load-graphs.js"></script>
+
+
+    </body>
+</html>

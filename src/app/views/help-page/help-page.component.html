@@ -1,0 +1,20 @@
+<div class="help-page">
+    <!-- import usage documentation from markdown according to route config-->
+    <div class="grid spacing-20">
+        <div class="row">
+            <div class="col toc narrow">
+                <h3>Table of Contents</h3>
+                <ul class="table-of-contents" *ngIf="headingAnchors.length > 0">
+                    <li *ngFor="let heading of headingAnchors" class="toc-heading level-{{heading.level}}">
+                        <a (click)="scrollTo(heading.anchor)">{{heading.label}}</a>
+                    </li>
+                </ul>
+            </div>
+            <div class="col main-content">
+                <div class="markdown-wrapper">
+                    <markdown #markdownElement [src]="route.snapshot.data.markdown" (load)="onMarkdownLoad($event)"></markdown>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

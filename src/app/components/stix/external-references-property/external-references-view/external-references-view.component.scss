@@ -1,0 +1,35 @@
+@import "../../../../../style/globals";
+
+.external-references-view {
+    span {
+        a.external-link {
+            border-bottom: none;
+            transition: none;
+            &:hover {
+                color: color(link);
+                border-bottom: 2px solid color(link);
+            }
+        }
+    }
+    ol {
+        padding-inline-start: 1.3em;
+    }
+    ol.twocol {
+        columns: 2;
+        column-gap: 10%;
+    }
+
+    li {
+        padding-bottom: 10px;
+        padding-top: 0px;
+        padding-left: 8px;
+    }
+
+    li::marker {
+        content: "[" attr(value) "]";
+    }
+
+    li.external-link::marker {
+        color: color(link);
+    }
+}

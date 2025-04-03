@@ -1,0 +1,22 @@
+<div class="list-page">
+    <div class="list-page-header">
+        <h1 class="with-help-icon">
+            mitigations
+            <mat-icon class="help-icon" aria-label="help" cdkDrag #popoverTrigger2="mtxPopoverTrigger" [mtxPopoverTriggerFor]="popover" mtxPopoverTriggerOn="hover">
+                help_outline
+            </mat-icon>
+            <mtx-popover #popover="mtxPopover" [position]="['below', 'center']" enterDelay="25" leaveDelay="25">
+                <div style="max-width: 26em;">
+                    <span class="help-content">Mitigations represent security concepts and classes of technologies that can be used to prevent a technique or sub-technique from being successfully executed.</span>
+                </div>
+            </mtx-popover>
+        </h1>
+        
+        <div class="button-group" *ngIf="canEdit">
+            <button mat-raised-button class="extended-button" color="primary" [routerLink]="['/mitigation/new']" [queryParams]="{editing: true}">
+                <mat-icon>create</mat-icon> <span class="text-label">create a mitigation</span>
+            </button>
+        </div>
+    </div>
+    <app-stix-list [config]="{type: 'mitigation', 'showLinks': true, 'showUserSearch': true}"></app-stix-list>
+</div>

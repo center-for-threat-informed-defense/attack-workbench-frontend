@@ -1,0 +1,147 @@
+<div class="data-source-view view-page grid spacing-16" *ngIf="!loading">
+    <div class="row">
+        <div class="col">
+            <app-name-property [config]="{
+                mode: config.mode,
+                object: config.object
+            }"></app-name-property>
+            <app-subheading [config]="config" (onOpenHistory)="openHistory()" (onOpenNotes)="openNotes()"></app-subheading>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <!-- ATT&CK ID -->
+            <app-attackid-property class="grow-to-row" [config]="{
+                mode: config.mode,
+                object: config.object
+            }"></app-attackid-property>
+        </div>
+        <div class="col">
+            <!-- VERSION NUMBER -->
+            <app-version-property class="grow-to-row" [config]="{
+                mode: config.mode,
+                object: config.object
+            }"></app-version-property>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <!-- Domains -->
+            <app-list-property class="grow-to-row" [config]="{
+                mode: config.mode,
+                object: config.object,
+                field: 'domains',
+                editType: 'select'
+            }"></app-list-property>
+        </div>
+        <div class="col">
+            <!-- CONTRIBUTORS -->
+            <app-list-property class="grow-to-row" [config]="{
+                mode: config.mode,
+                object: config.object,
+                field: 'contributors',
+                editType: 'any'
+            }"></app-list-property>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <!-- PLATFORMS -->
+            <app-list-property class="grow-to-row" [config]="{
+                mode: config.mode,
+                object: config.object,
+                field: 'platforms',
+                editType: 'select'
+            }"></app-list-property>
+        </div>
+        <div class="col">
+            <!-- COLLECTION LAYERS -->
+            <app-list-property class="grow-to-row" [config]="{
+                mode: config.mode,
+                object: config.object,
+                field: 'collection_layers',
+                label: 'collection layers',
+                editType: 'select'
+            }"></app-list-property>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <!-- DESCRIPTION -->
+            <app-descriptive-property [config]="{
+                mode: config.mode,
+                object: config.object,
+                field: 'description',
+                firstParagraphOnly: false, 
+                referencesField: 'external_references',
+                label: 'Description'
+            }"></app-descriptive-property>
+        </div>
+    </div>
+    <!-- RELATIONSHIPS - NOTE: these are only shown in 'view' mode -->
+    <div *ngIf="(config.showRelationships || !config.hasOwnProperty('showRelationships')) && !editing">
+        <!-- data components -->
+        <div class="row">
+            <div class="col">
+                <h2 class="section-header">Data Components</h2>
+            </div>
+        </div>
+        <div class="row" *ngIf="canEdit">
+            <div class="col">
+                <div class="add-button">
+                    <button mat-raised-button class="extended-button" color="primary" (click)="createDataComponent()">
+                        <mat-icon>create</mat-icon> <span class="text-label">create a data component</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <app-stix-list #dataComponentsList (refresh)="loadData()" [config]="{
+                    'stixObjects': dataComponents,
+                    'type': 'data-component',
+                    'showDeprecatedFilter': true,
+                    'clickBehavior': 'dialog',
+                    'allowEdits': true
+                }"
+                (refresh)="getDataComponents()"></app-stix-list>
+            </div>
+        </div>
+
+        <!-- techniques detected -->
+        <div class="row">
+            <div class="col">
+                <h2 class="section-header">Techniques Detected</h2>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <app-stix-list #techniquesDetectedList [config]="{
+                    'stixObjects': techniquesDetected,
+                    'type': 'relationship',
+                    'showDeprecatedFilter': true,
+                    'clickBehavior': 'dialog',
+                    'allowEdits': false
+                }"
+                (refresh)="getDataComponents()"></app-stix-list>
+            </div>
+        </div>
+    </div>
+    <!-- EXTERNAL REFERENCES -->
+    <div *ngIf="dataSource.external_references.list().length > 0 || previous?.external_references.list().length > 0">
+        <div class="row">
+            <div class="col">
+                <h2 class="section-header">References</h2>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <app-external-references-property [config]="{
+                    mode: config.mode,
+                    object: config.object,
+                    referencesField: 'external_references'
+                }"></app-external-references-property>
+            </div>
+        </div>
+    </div>
+</div>

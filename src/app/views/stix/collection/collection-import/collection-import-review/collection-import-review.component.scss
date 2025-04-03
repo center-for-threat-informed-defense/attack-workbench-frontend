@@ -1,0 +1,15 @@
+@import "../../../../../../style/globals";
+.collection-import-review {
+    .version-select {
+        @extend .heading;
+        text-transform: none;
+        padding: 0px 5px;
+        border-radius: 4px;
+        font-size: 36px;
+        background: transparent;
+        -webkit-appearance:none;
+        cursor: pointer;
+        .dark & { color: on-color(dark); border-color: on-color(dark);}
+        .light & { color: on-color(light); border-color: on-color(light);}
+    }
+}

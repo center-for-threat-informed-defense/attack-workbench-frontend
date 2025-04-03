@@ -1,0 +1,26 @@
+<div class="list-page">
+	<div class="list-page-header">
+		<h1 class="with-help-icon">
+			notes
+            <mat-icon class="help-icon" aria-label="help" cdkDrag #popoverTrigger2="mtxPopoverTrigger" [mtxPopoverTriggerFor]="popover" mtxPopoverTriggerOn="hover">
+                help_outline
+            </mat-icon>
+            <mtx-popover #popover="mtxPopover" [position]="['below', 'center']" enterDelay="25" leaveDelay="25">
+                <div style="max-width: 26em;">
+                    <span class="help-content">Notes allow users to add additional information about an object in the dataset without extending
+						it directly. They are associated with objects within the knowledge base and cannot exist without an
+						attached object. Notes can be searched by title or content and viewed in the context of the object
+						they are associated with.
+					</span>
+                </div>
+            </mtx-popover>
+		</h1>
+	</div>
+	<app-stix-list [config]="{
+		'type': 'note',
+		'showLinks': true,
+		'showUserSearch':true,
+		'clickBehavior': 'linkToObjectRef',
+		'filterList': []
+	}"></app-stix-list>
+</div>

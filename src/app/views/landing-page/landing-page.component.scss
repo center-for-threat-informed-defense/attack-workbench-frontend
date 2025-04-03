@@ -1,0 +1,45 @@
+@import "../../../style/globals";
+.landing-page {
+    max-width: 50em;
+    margin: 0 auto;
+    
+    .learnmore { text-align: center; }
+
+    
+    .learn-block, h2 {
+        padding: 10px 20px;
+        text-align: justify;
+    }
+    
+    .explore-label {
+        .dark & { border-bottom: 1px solid border-color(dark); }
+        .light & { border-bottom: 1px solid border-color(light); }
+    }
+    
+    .explore-link, .explore-label {
+        padding: 10px 20px;
+        margin-bottom: 0;
+    }
+    p, h1 { margin-top: 0; }
+    h2 {margin: 0; }
+
+    .explore-link {
+        @include button-slide-left(primary);
+        justify-content: center;
+    }
+    .explore-links .disabled {
+        cursor: not-allowed;
+    }
+    .col.border-left {
+        .dark & { border-left: 1px solid border-color(dark); }
+        .light & { border-left: 1px solid border-color(light); }
+    }
+
+    .admin-link {
+        margin-top: 40px;
+        .mat-badge-content.mat-badge-active {
+            color: on-color(pending);
+            background-color: color(pending);
+        }
+    }
+}

@@ -1,0 +1,27 @@
+<div class="alias-diff grow-to-row">
+    <div [ngClass]="{'showMore' : showMore, 'content': true}">
+        <app-property-diff [before]="previousAliases" [after]="currentAliases"></app-property-diff>
+        <div *ngIf="includeMoreSection()" @detailExpand class="suffix centered clickable" (click)="toggleMore()">
+            <mat-icon *ngIf="!showMore">keyboard_arrow_down</mat-icon>
+            <mat-icon *ngIf="showMore">keyboard_arrow_up</mat-icon>
+        </div>
+    </div>
+    <span class="labelled-box-label">{{ config.label }}</span>
+
+    <div *ngIf="showMore && includeMoreSection()" @detailExpand class="description-box">
+        <div class="descriptions">
+            <table role="presentation">
+                <tr *ngFor="let item of expandedDetails">
+                    <td>
+                        <strong>
+                            <app-property-diff [before]="getAliasName(previous, item.name)" [after]="getAliasName(current, item.name)"></app-property-diff>
+                        </strong>
+                    </td>
+                    <td class="descr">
+                        <app-property-diff [before]="item.before" [after]="item.after"></app-property-diff>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>

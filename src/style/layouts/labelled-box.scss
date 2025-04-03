@@ -1,0 +1,116 @@
+// adapted from https://codepen.io/finnhvman/pen/xyOORQ
+
+.labelled-box {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    &.editing.disabled {
+        .dark & {
+            border-color: on-color-deemphasis(light) !important;
+            border-top-color: transparent;
+        }
+        .light & {
+            border-color: on-color-deemphasis(dark) !important;
+            border-top-color: transparent;
+        }
+    }
+	&.editing:not(.disabled) {
+		> .content {
+			border: solid 1px;
+			&:hover {
+				border-width: 2px;
+				& + .labelled-box-label::before, & + .labelled-box-label::after {
+					border-width: 2px;
+				}
+			}
+			.dark & { border-color: white; border-top-color: transparent; }
+			.light & { border-color: black; border-top-color: transparent; }
+			& + .labelled-box-label {
+				text-transform: lowercase !important;
+				letter-spacing: 0.5px !important;
+                font-family: Roboto,Arial,sans-serif;
+                line-height: normal !important;
+                font-size: 12px !important;
+
+				.dark & { color: white; }
+				.light & { color: black; }
+				&::before, &::after {
+					.dark & { border-top-color: white; }
+					.light & { border-top-color: black; }
+				}
+			}
+		}
+	}
+    > .content {
+        flex: 1 0;
+        display: flex;
+        justify-content: space-between;
+        align-items:center;
+        box-sizing: border-box;
+        margin: 0;
+        border: solid 1px; 
+        .dark & { border-color: border-color(dark); border-top-color: transparent; }
+        .light & { border-color: border-color(light); border-top-color: transparent; }
+        border-radius: 4px;
+        padding: 16px 12px;
+        width: 100%;
+        font-size: 16px;
+        &.no-label {
+            .light & { border-top-color: border-color(light); }
+            .dark & { border-top-color: border-color(dark); }
+        }
+        &.no-padding {
+            padding-top: 0;
+            padding-bottom: 0;
+        }
+        & + .labelled-box-label {
+            @extend .text-label;
+            position: absolute;
+            top: -6px;
+            left: 0;
+            display: flex;
+            .dark & { border-color: border-color(dark); color: on-color-deemphasis(dark); }
+            .light & { border-color: border-color(light); color: on-color-deemphasis(light); }
+            width: 100%;
+            max-height: 100%;
+            font-size: 13px !important; // override 16 px font size from text-label
+            line-height: 15px;
+            &::before, &::after {
+                content: "";
+                display: block;
+                box-sizing: border-box;
+                margin-top: 6px;
+                border-top: solid 1px;
+                .dark & { border-top-color: border-color(dark); }
+                .light & { border-top-color: border-color(light); }
+                min-width: 10px;
+                height: 8px;
+                pointer-events: none;
+                box-shadow: inset 0 1px transparent;
+            }
+            &::before {
+                margin-right: 4px;
+                border-left: solid 1px transparent;
+                border-radius: 4px 0;
+            }
+            &::after {
+                flex-grow: 1;
+                margin-left: 4px;
+                border-right: solid 1px transparent;
+                border-radius: 0 4px;
+            }
+        }
+        > .suffix {
+            // left border
+            border-left: 1px solid;
+            .dark & { border-color: border-color(dark); }
+            .light & { border-color: border-color(light); }
+            // override parent padding with own padding
+            margin: -16px -12px -16px 12px; // left margin should exist
+            padding: 16px 12px;
+            align-self: stretch; //fill parent
+            display: flex; //center contents
+            align-items: center;
+        }
+    }
+}
