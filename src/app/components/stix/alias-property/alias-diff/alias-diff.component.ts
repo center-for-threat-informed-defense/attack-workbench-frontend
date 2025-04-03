@@ -14,7 +14,10 @@ import { animate, style, transition, trigger } from '@angular/animations';
         animate('100ms cubic-bezier(0.4, 0.0, 0.2, 1)', style({ height: '*' })),
       ]),
       transition(':leave', [
-        animate('100ms cubic-bezier(0.4, 0.0, 0.2, 1)', style({ height: '0px', minHeight: '0px' })),
+        animate(
+          '100ms cubic-bezier(0.4, 0.0, 0.2, 1)',
+          style({ height: '0px', minHeight: '0px' })
+        ),
       ]),
     ]),
   ],
@@ -66,7 +69,7 @@ export class AliasDiffComponent implements OnInit {
 
     const allAliases = new Set([...beforeList, ...afterList]);
 
-    allAliases.forEach((alias) => {
+    allAliases.forEach(alias => {
       const currDescr = this.getDescription(alias, 0);
       const prevDescr = this.getDescription(alias, 1);
 
@@ -88,7 +91,9 @@ export class AliasDiffComponent implements OnInit {
       !this.config.object[index]?.[this.config.referencesField]?.hasValue(alias)
     )
       return '';
-    return this.config.object[index][this.config.referencesField].getDescription(alias);
+    return this.config.object[index][
+      this.config.referencesField
+    ].getDescription(alias);
   }
 
   public getAliasName(obj, alias): string {

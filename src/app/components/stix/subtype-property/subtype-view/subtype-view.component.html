@@ -5,26 +5,24 @@
       *ngIf="detailTable.length"
       mat-table
       [dataSource]="detailTable"
-      class="subtype-table"
-    >
+      class="subtype-table">
       <ng-container
         [matColumnDef]="column.label ? column.label : column.name"
-        *ngFor="let column of subtypeFields"
-      >
+        *ngFor="let column of subtypeFields">
         <th mat-header-cell *matHeaderCellDef>
           {{ (column.label ? column.label : column.name) | titlecase }}
         </th>
         <td
           mat-cell
           *matCellDef="let element"
-          [ngClass]="{ 'ref-column': column.supportsReferences }"
-        >
-          <span *ngIf="!column.supportsReferences">{{ format(element[column.name]) }}</span>
+          [ngClass]="{ 'ref-column': column.supportsReferences }">
+          <span *ngIf="!column.supportsReferences">{{
+            format(element[column.name])
+          }}</span>
           <markdown
             *ngIf="column.supportsReferences"
             [data]="element[column.name]"
-            class="subtype-markdown"
-          ></markdown>
+            class="subtype-markdown"></markdown>
         </td>
       </ng-container>
 

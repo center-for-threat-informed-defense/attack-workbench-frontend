@@ -8,8 +8,7 @@
           <input
             matInput
             [required]="formObject.required"
-            [(ngModel)]="newObject[formObject.name]"
-          />
+            [(ngModel)]="newObject[formObject.name]" />
         </mat-form-field>
       </div>
       <div *ngIf="formObject.type === 'textBox'">
@@ -18,15 +17,18 @@
           <textarea
             matInput
             [required]="formObject.required"
-            [(ngModel)]="newObject[formObject.name]"
-          ></textarea>
+            [(ngModel)]="newObject[formObject.name]"></textarea>
         </mat-form-field>
       </div>
     </span>
   </div>
   <div class="buttons">
     <button mat-button matDialogClose>cancel</button>
-    <button mat-stroked-button [disabled]="invalid" class="success" (click)="confirm()">
+    <button
+      mat-stroked-button
+      [disabled]="invalid"
+      class="success"
+      (click)="confirm()">
       create
     </button>
   </div>

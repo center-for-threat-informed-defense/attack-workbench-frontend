@@ -44,9 +44,9 @@ export class Software extends StixObject {
     rep.stix.name = this.name.trim();
     rep.stix.type = this.type;
     rep.stix.x_mitre_domains = this.domains;
-    rep.stix.x_mitre_aliases = this.aliases.map((x) => x.trim());
+    rep.stix.x_mitre_aliases = this.aliases.map(x => x.trim());
     rep.stix.x_mitre_platforms = this.platforms;
-    rep.stix.x_mitre_contributors = this.contributors.map((x) => x.trim());
+    rep.stix.x_mitre_contributors = this.contributors.map(x => x.trim());
     if (this.type == 'malware') rep.stix.is_family = true; // add is_family to malware type SDOs
 
     return rep;
@@ -69,7 +69,7 @@ export class Software extends StixObject {
             sdo.name,
             '(',
             typeof sdo.name,
-            ')',
+            ')'
           );
       } else this.name = '';
 
@@ -81,36 +81,39 @@ export class Software extends StixObject {
             sdo.type,
             '(',
             typeof sdo.type,
-            ')',
+            ')'
           );
       } else this.type = '';
 
       if ('x_mitre_aliases' in sdo) {
-        if (this.isStringArray(sdo.x_mitre_aliases)) this.aliases = sdo.x_mitre_aliases;
+        if (this.isStringArray(sdo.x_mitre_aliases))
+          this.aliases = sdo.x_mitre_aliases;
         else
           logger.error(
             'TypeError: aliases is not a string array:',
             sdo.x_mitre_aliases,
             '(',
             typeof sdo.x_mitre_aliases,
-            ')',
+            ')'
           );
       } else this.aliases = [];
 
       if ('x_mitre_domains' in sdo) {
-        if (this.isStringArray(sdo.x_mitre_domains)) this.domains = sdo.x_mitre_domains;
+        if (this.isStringArray(sdo.x_mitre_domains))
+          this.domains = sdo.x_mitre_domains;
         else logger.error('TypeError: domains field is not a string array.');
       } else this.domains = [];
 
       if ('x_mitre_platforms' in sdo) {
-        if (this.isStringArray(sdo.x_mitre_platforms)) this.platforms = sdo.x_mitre_platforms;
+        if (this.isStringArray(sdo.x_mitre_platforms))
+          this.platforms = sdo.x_mitre_platforms;
         else
           logger.error(
             'TypeError: x_mitre_platforms is not a string array:',
             sdo.x_mitre_platforms,
             '(',
             typeof sdo.x_mitre_platforms,
-            ')',
+            ')'
           );
       } else this.platforms = [];
 
@@ -123,7 +126,7 @@ export class Software extends StixObject {
             sdo.x_mitre_contributors,
             '(',
             typeof sdo.x_mitre_contributors,
-            ')',
+            ')'
           );
       } else this.contributors = [];
     }
@@ -134,7 +137,9 @@ export class Software extends StixObject {
    * @param {RestApiConnectorService} restAPIService: the REST API connector through which asynchronous validation can be completed
    * @returns {Observable<ValidationData>} the validation warnings and errors once validation is complete.
    */
-  public validate(restAPIService: RestApiConnectorService): Observable<ValidationData> {
+  public validate(
+    restAPIService: RestApiConnectorService
+  ): Observable<ValidationData> {
     return this.base_validate(restAPIService);
   }
 
@@ -148,7 +153,7 @@ export class Software extends StixObject {
     this.aliases[0] = this.name;
     const postObservable = restAPIService.postSoftware(this);
     const subscription = postObservable.subscribe({
-      next: (result) => {
+      next: result => {
         this.deserialize(result.serialize());
       },
       complete: () => {
@@ -180,7 +185,7 @@ export class Software extends StixObject {
   public update(restAPIService: RestApiConnectorService): Observable<Software> {
     const putObservable = restAPIService.putSoftware(this);
     const subscription = putObservable.subscribe({
-      next: (result) => {
+      next: result => {
         this.deserialize(result.serialize());
       },
       complete: () => {

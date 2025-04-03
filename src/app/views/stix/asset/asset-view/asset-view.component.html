@@ -6,13 +6,11 @@
         [config]="{
           mode: config.mode,
           object: config.object,
-        }"
-      ></app-name-property>
+        }"></app-name-property>
       <app-subheading
         [config]="config"
         (onOpenHistory)="openHistory()"
-        (onOpenNotes)="openNotes()"
-      ></app-subheading>
+        (onOpenNotes)="openNotes()"></app-subheading>
     </div>
   </div>
   <div class="row">
@@ -23,8 +21,7 @@
         [config]="{
           mode: config.mode,
           object: config.object,
-        }"
-      ></app-attackid-property>
+        }"></app-attackid-property>
     </div>
     <div class="col">
       <!-- VERSION NUMBER -->
@@ -33,8 +30,7 @@
         [config]="{
           mode: config.mode,
           object: config.object,
-        }"
-      ></app-version-property>
+        }"></app-version-property>
     </div>
   </div>
   <div class="row">
@@ -47,8 +43,7 @@
           object: config.object,
           field: 'sectors',
           editType: 'select',
-        }"
-      ></app-list-property>
+        }"></app-list-property>
     </div>
     <div class="col">
       <!-- PLATFORMS -->
@@ -59,8 +54,7 @@
           object: config.object,
           field: 'platforms',
           editType: 'select',
-        }"
-      ></app-list-property>
+        }"></app-list-property>
     </div>
   </div>
   <div class="row">
@@ -74,8 +68,7 @@
           field: 'domains',
           disabled: true,
           editType: 'select',
-        }"
-      ></app-list-property>
+        }"></app-list-property>
     </div>
     <div class="col">
       <!-- CONTRIBUTORS -->
@@ -86,8 +79,7 @@
           object: config.object,
           field: 'contributors',
           editType: 'any',
-        }"
-      ></app-list-property>
+        }"></app-list-property>
     </div>
   </div>
   <div class="row">
@@ -103,12 +95,19 @@
           label: 'related assets',
           subtypeFields: [
             { name: 'name', editType: 'string', required: true, key: true },
-            { name: 'related_asset_sectors', label: 'sectors', editType: 'select' },
-            { name: 'description', supportsReferences: true, editType: 'description' },
+            {
+              name: 'related_asset_sectors',
+              label: 'sectors',
+              editType: 'select',
+            },
+            {
+              name: 'description',
+              supportsReferences: true,
+              editType: 'description',
+            },
           ],
           tooltip: 'a related asset',
-        }"
-      ></app-subtype-property>
+        }"></app-subtype-property>
     </div>
   </div>
   <div class="row">
@@ -122,14 +121,16 @@
           firstParagraphOnly: false,
           referencesField: 'external_references',
           label: 'Description',
-        }"
-      ></app-descriptive-property>
+        }"></app-descriptive-property>
     </div>
   </div>
   <!-- RELATIONSHIPS - NOTE: these are only shown in 'view' mode -->
   <div
-    *ngIf="(config.showRelationships || !config.hasOwnProperty('showRelationships')) && !editing"
-  >
+    *ngIf="
+      (config.showRelationships ||
+        !config.hasOwnProperty('showRelationships')) &&
+      !editing
+    ">
     <!-- TECHNIQUES USED -->
     <div class="row">
       <div class="col">
@@ -145,8 +146,7 @@
             relationship_type: 'targets',
             sourceType: 'technique',
             target_object: asset,
-          }"
-        ></app-add-relationship-button>
+          }"></app-add-relationship-button>
       </div>
     </div>
     <div class="row">
@@ -160,17 +160,16 @@
             relationshipType: 'targets',
             clickBehavior: 'dialog',
             allowEdits: true,
-          }"
-        ></app-stix-list>
+          }"></app-stix-list>
       </div>
     </div>
   </div>
   <!-- EXTERNAL REFERENCES -->
   <div
     *ngIf="
-      asset.external_references.list().length > 0 || previous?.external_references.list().length > 0
-    "
-  >
+      asset.external_references.list().length > 0 ||
+      previous?.external_references.list().length > 0
+    ">
     <div class="row">
       <div class="col">
         <h2 class="section-header">References</h2>
@@ -183,8 +182,7 @@
             mode: config.mode,
             object: config.object,
             referencesField: 'external_references',
-          }"
-        ></app-external-references-property>
+          }"></app-external-references-property>
       </div>
     </div>
   </div>

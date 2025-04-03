@@ -43,21 +43,25 @@ export class Asset extends StixObject {
     rep.stix.name = this.name.trim();
     rep.stix.x_mitre_domains = this.domains;
     rep.stix.x_mitre_sectors = this.sectors;
-    rep.stix.x_mitre_related_assets = this.relatedAssets.map((asset: RelatedAsset) => {
-      return {
-        name: asset.name.trim(),
-        related_asset_sectors: asset.related_asset_sectors ? asset.related_asset_sectors : [],
-        description: asset.description ? asset.description : '',
-      };
-    });
+    rep.stix.x_mitre_related_assets = this.relatedAssets.map(
+      (asset: RelatedAsset) => {
+        return {
+          name: asset.name.trim(),
+          related_asset_sectors: asset.related_asset_sectors
+            ? asset.related_asset_sectors
+            : [],
+          description: asset.description ? asset.description : '',
+        };
+      }
+    );
     rep.stix.x_mitre_platforms = this.platforms;
-    rep.stix.x_mitre_contributors = this.contributors.map((x) => x.trim());
+    rep.stix.x_mitre_contributors = this.contributors.map(x => x.trim());
 
     return rep;
   }
 
   public isRelatedAssetArray(arr: any[]): boolean {
-    return arr.every((a) => this.instanceOfRelatedAsset(a));
+    return arr.every(a => this.instanceOfRelatedAsset(a));
   }
 
   public instanceOfRelatedAsset(object: any): boolean {
@@ -76,23 +80,33 @@ export class Asset extends StixObject {
 
     if (!('name' in sdo)) this.name = '';
     else if (typeof sdo.name === 'string') this.name = sdo.name;
-    else logger.error(`TypeError: name field is not a string: ${sdo.name} (${typeof sdo.name})`);
+    else
+      logger.error(
+        `TypeError: name field is not a string: ${sdo.name} (${typeof sdo.name})`
+      );
 
     if (!('x_mitre_sectors' in sdo)) this.sectors = [];
-    else if (this.isStringArray(sdo.x_mitre_sectors)) this.sectors = sdo.x_mitre_sectors;
-    else logger.error(`TypeError: x_mitre_sectors field is not a string array.`);
+    else if (this.isStringArray(sdo.x_mitre_sectors))
+      this.sectors = sdo.x_mitre_sectors;
+    else
+      logger.error(`TypeError: x_mitre_sectors field is not a string array.`);
 
     if (!('x_mitre_related_assets' in sdo)) this.relatedAssets = [];
     else if (this.isRelatedAssetArray(sdo.x_mitre_related_assets))
       this.relatedAssets = sdo.x_mitre_related_assets;
-    else logger.error(`TypeError: x_mitre_related_assets field is not an array of related assets.`);
+    else
+      logger.error(
+        `TypeError: x_mitre_related_assets field is not an array of related assets.`
+      );
 
     if (!('x_mitre_platforms' in sdo)) this.platforms = [];
-    else if (this.isStringArray(sdo.x_mitre_platforms)) this.platforms = sdo.x_mitre_platforms;
+    else if (this.isStringArray(sdo.x_mitre_platforms))
+      this.platforms = sdo.x_mitre_platforms;
     else logger.error(`TypeError: platforms field is not a string array.`);
 
     if (!('x_mitre_domains' in sdo)) this.domains = ['ics-attack'];
-    else if (this.isStringArray(sdo.x_mitre_domains)) this.domains = sdo.x_mitre_domains;
+    else if (this.isStringArray(sdo.x_mitre_domains))
+      this.domains = sdo.x_mitre_domains;
     else logger.error(`TypeError: domains field is not a string array.`);
 
     if (!('x_mitre_contributors' in sdo)) this.contributors = [];
@@ -106,7 +120,9 @@ export class Asset extends StixObject {
    * @param {RestApiConnectorService} restAPIService: the REST API connector through which asynchronous validation can be completed
    * @returns {Observable<ValidationData>} the validation warnings and errors once validation is complete.
    */
-  public validate(restAPIService: RestApiConnectorService): Observable<ValidationData> {
+  public validate(
+    restAPIService: RestApiConnectorService
+  ): Observable<ValidationData> {
     return this.base_validate(restAPIService);
   }
 
@@ -118,7 +134,7 @@ export class Asset extends StixObject {
   public save(restAPIService: RestApiConnectorService): Observable<Asset> {
     const postObservable = restAPIService.postAsset(this);
     const subscription = postObservable.subscribe({
-      next: (result) => {
+      next: result => {
         this.deserialize(result.serialize());
       },
       complete: () => {
@@ -150,7 +166,7 @@ export class Asset extends StixObject {
   public update(restAPIService: RestApiConnectorService): Observable<Asset> {
     const putObservable = restAPIService.putAsset(this);
     const subscription = putObservable.subscribe({
-      next: (result) => {
+      next: result => {
         this.deserialize(result.serialize());
       },
       complete: () => {

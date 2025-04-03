@@ -1,8 +1,20 @@
-import { HttpClient, HttpHeaders, HttpParameterCodec, HttpParams } from '@angular/common/http';
+import {
+  HttpClient,
+  HttpHeaders,
+  HttpParameterCodec,
+  HttpParams,
+} from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { forkJoin, Observable, of } from 'rxjs';
-import { tap, catchError, map, share, switchMap, mergeMap } from 'rxjs/operators';
+import {
+  tap,
+  catchError,
+  map,
+  share,
+  switchMap,
+  mergeMap,
+} from 'rxjs/operators';
 import { CollectionIndex } from 'src/app/classes/collection-index';
 import { ExternalReference } from 'src/app/classes/external-references';
 import { Collection } from 'src/app/classes/stix/collection';
@@ -125,7 +137,7 @@ export class RestApiConnectorService extends ApiConnector {
 
   constructor(
     private http: HttpClient,
-    private snackbar: MatSnackBar,
+    private snackbar: MatSnackBar
   ) {
     super(snackbar);
   }
@@ -187,50 +199,68 @@ export class RestApiConnectorService extends ApiConnector {
       if (options) {
         // pagination
         if (options.limit) query = query.set('limit', options.limit.toString());
-        if (options.offset) query = query.set('offset', options.offset.toString());
-        if (options.limit || options.offset) query = query.set('includePagination', 'true');
+        if (options.offset)
+          query = query.set('offset', options.offset.toString());
+        if (options.limit || options.offset)
+          query = query.set('includePagination', 'true');
         // state/workflow
         if (options.state) query = query.set('state', options.state);
         if (options.includeRevoked)
-          query = query.set('includeRevoked', options.includeRevoked ? 'true' : 'false');
+          query = query.set(
+            'includeRevoked',
+            options.includeRevoked ? 'true' : 'false'
+          );
         if (options.includeDeprecated)
-          query = query.set('includeDeprecated', options.includeDeprecated ? 'true' : 'false');
+          query = query.set(
+            'includeDeprecated',
+            options.includeDeprecated ? 'true' : 'false'
+          );
         // versions selector
         if (options.versions) query = query.set('versions', options.versions);
         // searching
         if (options.search) query = query.set('search', options.search);
         // platforms/domains
         if (options.platforms)
-          options.platforms.forEach((platform) => (query = query.append('platform', platform)));
+          options.platforms.forEach(
+            platform => (query = query.append('platform', platform))
+          );
         if (options.domains)
-          options.domains.forEach((domain) => (query = query.append('domain', domain)));
+          options.domains.forEach(
+            domain => (query = query.append('domain', domain))
+          );
         // lastUpdatedBy
         if (options.lastUpdatedBy)
-          options.lastUpdatedBy.forEach((user) => (query = query.append('lastUpdatedBy', user)));
+          options.lastUpdatedBy.forEach(
+            user => (query = query.append('lastUpdatedBy', user))
+          );
       }
       // perform the request
       const url = `${this.apiUrl}/${plural}`;
       return this.http.get(url, { headers: this.headers, params: query }).pipe(
-        tap((results) => logger.log(`retrieved ${plural}`, results)), // on success, trigger the success notification
-        map((results) => {
+        tap(results => logger.log(`retrieved ${plural}`, results)), // on success, trigger the success notification
+        map(results => {
           if (!options || !options.excludeIDs) return results; // only filter if param is present
           let response = results as any;
           if (options && (options.limit || options.offset)) {
             // returned a paginated
-            response.data = response.data.filter((d) => !options.excludeIDs.includes(d.stix.id)); //remove any matches to excludeIDs
+            response.data = response.data.filter(
+              d => !options.excludeIDs.includes(d.stix.id)
+            ); //remove any matches to excludeIDs
             return response;
           } else {
             //returned a stixObject[]
-            response = response.filter((d) => !options.excludeIDs.includes(d.stix.id)); //remove any matches to excludeIDs
+            response = response.filter(
+              d => !options.excludeIDs.includes(d.stix.id)
+            ); //remove any matches to excludeIDs
             return response;
           }
         }),
-        map((results) => {
+        map(results => {
           const response = results as any;
           if (options && (options.limit || options.offset)) {
             // returned a paginated
             let data = response.data as any[];
-            data = data.map((y) => {
+            data = data.map(y => {
               if (y.stix.type == 'malware' || y.stix.type == 'tool')
                 return new Software(y.stix.type, y);
               else return new attackClass(y);
@@ -245,7 +275,7 @@ export class RestApiConnectorService extends ApiConnector {
                 limit: -1,
                 offset: -1,
               },
-              data: response.map((y) => {
+              data: response.map(y => {
                 if (y.stix.type == 'malware' || y.stix.type == 'tool')
                   return new Software(y.stix.type, y);
                 else return new attackClass(y);
@@ -254,7 +284,7 @@ export class RestApiConnectorService extends ApiConnector {
           }
         }),
         catchError(this.handleError_continue([])), // on error, trigger the error notification and continue operation without crashing (returns empty item)
-        share(), // multicast so that multiple subscribers don't trigger the call twice. THIS MUST BE THE LAST LINE OF THE PIPE
+        share() // multicast so that multiple subscribers don't trigger the call twice. THIS MUST BE THE LAST LINE OF THE PIPE
       );
     };
   }
@@ -508,60 +538,73 @@ export class RestApiConnectorService extends ApiConnector {
     // pagination
     if (options?.limit) query = query.set('limit', options.limit.toString());
     if (options?.offset) query = query.set('offset', options.offset.toString());
-    if (options?.limit || options?.offset) query = query.set('includePagination', 'true');
+    if (options?.limit || options?.offset)
+      query = query.set('includePagination', 'true');
     // ATT&CK ID filter
     if (options?.attackIDs) {
-      options.attackIDs.forEach((id) => (query = query.append('attackId', id)));
+      options.attackIDs.forEach(id => (query = query.append('attackId', id)));
     }
     // object state
     if (options?.state) query = query.set('state', options.state);
-    if (options?.revoked) query = query.set('includeRevoked', options.revoked ? 'true' : 'false');
+    if (options?.revoked)
+      query = query.set('includeRevoked', options.revoked ? 'true' : 'false');
     if (options?.deprecated)
-      query = query.set('includeDeprecated', options.deprecated ? 'true' : 'false');
+      query = query.set(
+        'includeDeprecated',
+        options.deprecated ? 'true' : 'false'
+      );
     // searching
     if (options?.search) query = query.set('search', options.search);
     // lastUpdatedBy
     if (options?.lastUpdatedBy)
-      options.lastUpdatedBy.forEach((user) => (query = query.append('lastUpdatedBy', user)));
+      options.lastUpdatedBy.forEach(
+        user => (query = query.append('lastUpdatedBy', user))
+      );
 
-    return this.http.get(`${this.apiUrl}/attack-objects`, { params: query }).pipe(
-      tap((results) => logger.log(`retrieved ATT&CK objects`, results)), // on success, trigger the success notification
-      map((results) => {
-        if (!options?.deserialize) return results; //skip deserialization if param not added
-        const response = results as any;
-        if (options?.limit || options?.offset) {
-          // returned a paginated
-          let data = response.data as any[];
-          data = data
-            .filter((y) => !['marking-definition', 'identity'].includes(y.stix.type))
-            .map((y) => {
-              if (y.stix.type == 'malware' || y.stix.type == 'tool')
-                return new Software(y.stix.type, y);
-              else return new stixTypeToClass[y.stix.type](y);
-            });
-          response.data = data;
-          return response;
-        } else {
-          //returned a stixObject[]
-          return {
-            pagination: {
-              total: response.length,
-              limit: -1,
-              offset: -1,
-            },
-            data: response
-              .filter((y) => !['marking-definition', 'identity'].includes(y.stix.type))
-              .map((y) => {
+    return this.http
+      .get(`${this.apiUrl}/attack-objects`, { params: query })
+      .pipe(
+        tap(results => logger.log(`retrieved ATT&CK objects`, results)), // on success, trigger the success notification
+        map(results => {
+          if (!options?.deserialize) return results; //skip deserialization if param not added
+          const response = results as any;
+          if (options?.limit || options?.offset) {
+            // returned a paginated
+            let data = response.data as any[];
+            data = data
+              .filter(
+                y => !['marking-definition', 'identity'].includes(y.stix.type)
+              )
+              .map(y => {
                 if (y.stix.type == 'malware' || y.stix.type == 'tool')
                   return new Software(y.stix.type, y);
                 else return new stixTypeToClass[y.stix.type](y);
-              }),
-          };
-        }
-      }),
-      catchError(this.handleError_continue([])), // on error, trigger the error notification and continue operation without crashing (returns empty item)
-      share(), // multicast so that multiple subscribers don't trigger the call twice. THIS MUST BE THE LAST LINE OF THE PIPE
-    );
+              });
+            response.data = data;
+            return response;
+          } else {
+            //returned a stixObject[]
+            return {
+              pagination: {
+                total: response.length,
+                limit: -1,
+                offset: -1,
+              },
+              data: response
+                .filter(
+                  y => !['marking-definition', 'identity'].includes(y.stix.type)
+                )
+                .map(y => {
+                  if (y.stix.type == 'malware' || y.stix.type == 'tool')
+                    return new Software(y.stix.type, y);
+                  else return new stixTypeToClass[y.stix.type](y);
+                }),
+            };
+          }
+        }),
+        catchError(this.handleError_continue([])), // on error, trigger the error notification and continue operation without crashing (returns empty item)
+        share() // multicast so that multiple subscribers don't trigger the call twice. THIS MUST BE THE LAST LINE OF THE PIPE
+      );
   }
 
   /**
@@ -580,7 +623,7 @@ export class RestApiConnectorService extends ApiConnector {
     revoked?: boolean,
     deprecated?: boolean,
     deserialize?: boolean,
-    lastUpdatedBy?: string[],
+    lastUpdatedBy?: string[]
   ) {
     let query = new HttpParams({ encoder: new CustomEncoder() });
     // pagination
@@ -588,49 +631,59 @@ export class RestApiConnectorService extends ApiConnector {
     if (offset) query = query.set('offset', offset.toString());
     if (limit || offset) query = query.set('includePagination', 'true');
     // object state
-    if (revoked) query = query.set('includeRevoked', revoked ? 'true' : 'false');
-    if (deprecated) query = query.set('includeDeprecated', deprecated ? 'true' : 'false');
+    if (revoked)
+      query = query.set('includeRevoked', revoked ? 'true' : 'false');
+    if (deprecated)
+      query = query.set('includeDeprecated', deprecated ? 'true' : 'false');
     // lastUpdatedBy
     if (lastUpdatedBy)
-      lastUpdatedBy.forEach((user) => (query = query.append('lastUpdatedBy', user)));
-    return this.http.get(`${this.apiUrl}/recent-activity`, { params: query }).pipe(
-      tap((results) => logger.log(`retrieved recent activity`, results)), // on success, trigger the success notification
-      map((results) => {
-        if (!deserialize) return results; // skip deserialization if param not added
-        const response = results as any;
-        if (limit || offset) {
-          // returned a paginated
-          let data = response.data as any[];
-          data = data
-            .filter((y) => !['marking-definition', 'identity'].includes(y.stix.type))
-            .map((y) => {
-              if (y.stix.type == 'malware' || y.stix.type == 'tool')
-                return new Software(y.stix.type, y);
-              else return new stixTypeToClass[y.stix.type](y);
-            });
-          response.data = data;
-          return response;
-        } else {
-          //returned a stixObject[]
-          return {
-            pagination: {
-              total: response.length,
-              limit: -1,
-              offset: -1,
-            },
-            data: response
-              .filter((y) => !['marking-definition', 'identity'].includes(y.stix.type))
-              .map((y) => {
+      lastUpdatedBy.forEach(
+        user => (query = query.append('lastUpdatedBy', user))
+      );
+    return this.http
+      .get(`${this.apiUrl}/recent-activity`, { params: query })
+      .pipe(
+        tap(results => logger.log(`retrieved recent activity`, results)), // on success, trigger the success notification
+        map(results => {
+          if (!deserialize) return results; // skip deserialization if param not added
+          const response = results as any;
+          if (limit || offset) {
+            // returned a paginated
+            let data = response.data as any[];
+            data = data
+              .filter(
+                y => !['marking-definition', 'identity'].includes(y.stix.type)
+              )
+              .map(y => {
                 if (y.stix.type == 'malware' || y.stix.type == 'tool')
                   return new Software(y.stix.type, y);
                 else return new stixTypeToClass[y.stix.type](y);
-              }),
-          };
-        }
-      }),
-      catchError(this.handleError_continue([])), // on error, trigger the error notification and continue operation without crashing (returns empty item)
-      share(), // multicast so that multiple subscribers don't trigger the call twice. THIS MUST BE THE LAST LINE OF THE PIPE
-    );
+              });
+            response.data = data;
+            return response;
+          } else {
+            //returned a stixObject[]
+            return {
+              pagination: {
+                total: response.length,
+                limit: -1,
+                offset: -1,
+              },
+              data: response
+                .filter(
+                  y => !['marking-definition', 'identity'].includes(y.stix.type)
+                )
+                .map(y => {
+                  if (y.stix.type == 'malware' || y.stix.type == 'tool')
+                    return new Software(y.stix.type, y);
+                  else return new stixTypeToClass[y.stix.type](y);
+                }),
+            };
+          }
+        }),
+        catchError(this.handleError_continue([])), // on error, trigger the error notification and continue operation without crashing (returns empty item)
+        share() // multicast so that multiple subscribers don't trigger the call twice. THIS MUST BE THE LAST LINE OF THE PIPE
+      );
   }
 
   /**
@@ -648,11 +701,12 @@ export class RestApiConnectorService extends ApiConnector {
       versions = 'latest',
       includeSubs?: boolean,
       retrieveContents?: boolean,
-      retrieveDataComponents?: boolean,
+      retrieveDataComponents?: boolean
     ): Observable<P[]> {
       let url = `${this.apiUrl}/${plural}/${id}`;
       if (modified) {
-        const modifiedString = typeof modified == 'string' ? modified : modified.toISOString();
+        const modifiedString =
+          typeof modified == 'string' ? modified : modified.toISOString();
         url += `/modified/${modifiedString}`;
       }
       let query = new HttpParams();
@@ -662,21 +716,21 @@ export class RestApiConnectorService extends ApiConnector {
       if (attackType == 'data-source' && retrieveDataComponents)
         query = query.set('retrieveDataComponents', 'true');
       return this.http.get(url, { headers: this.headers, params: query }).pipe(
-        tap((result) => logger.log(`retrieved ${attackType}`, result)), // on success, trigger the success notification
-        map((result) => {
+        tap(result => logger.log(`retrieved ${attackType}`, result)), // on success, trigger the success notification
+        map(result => {
           let x = result as any;
           if (Array.isArray(result) && result.length == 0) {
             logger.warn('empty result');
             return [];
           }
           if (!Array.isArray(result)) x = [x];
-          return x.map((y) => {
+          return x.map(y => {
             if (y.stix.type == 'malware' || y.stix.type == 'tool')
               return new Software(y.stix.type, y);
             else return new attackClass(y);
           });
         }),
-        switchMap((result) => {
+        switchMap(result => {
           // add sub-technique or parent-technique but only if it's a technique
           if (!includeSubs) return of(result);
           const x = result as any[];
@@ -689,21 +743,25 @@ export class RestApiConnectorService extends ApiConnector {
               relationshipType: 'subtechnique-of',
             }).pipe(
               // fetch from REST API
-              map((rel) => {
+              map(rel => {
                 //extract the parent from the relationship
                 const p = rel as any;
                 if (!p || p.data.length == 0) return null; // no parent technique
                 return new Technique(p.data[0].target_object); //transform it to a Technique
               }),
-              map((parent) => {
+              map(parent => {
                 //add the parent to the sub-technique
                 const p = parent as any;
                 t.parentTechnique = p;
                 return [t];
               }),
-              tap((result) =>
-                logger.log('fetched parent technique of', result, result[0]['parentTechnique']),
-              ),
+              tap(result =>
+                logger.log(
+                  'fetched parent technique of',
+                  result,
+                  result[0]['parentTechnique']
+                )
+              )
             );
           } else {
             // add subtechniques
@@ -712,40 +770,46 @@ export class RestApiConnectorService extends ApiConnector {
               relationshipType: 'subtechnique-of',
             }).pipe(
               // fetch from REST API
-              map((rel) => {
+              map(rel => {
                 //extract the sub-techniques from the relationships
                 const s = rel as any;
-                return s.data.map((rel) => new Technique(rel.source_object)); //transform them to Techniques
+                return s.data.map(rel => new Technique(rel.source_object)); //transform them to Techniques
               }),
-              map((subs) => {
+              map(subs => {
                 //add the sub-techniques to the parent
                 const s = subs as any[];
                 t.subTechniques = s;
                 return [t];
               }),
-              tap((result) =>
-                logger.log('fetched sub-techniques of', result, result[0]['subTechniques']),
-              ),
+              tap(result =>
+                logger.log(
+                  'fetched sub-techniques of',
+                  result,
+                  result[0]['subTechniques']
+                )
+              )
             );
           }
         }),
-        switchMap((result) => {
+        switchMap(result => {
           // fetch parent data source of data component
           const x = result as any[];
           if (x[0].attackType != 'data-component') return of(result);
           const d = x[0] as DataComponent;
           return this.getDataSource(d.dataSourceRef).pipe(
             // fetch data source from REST API
-            map((data_source) => {
+            map(data_source => {
               const ds = data_source as DataSource[];
               d.data_source = ds[0];
               return [d];
             }),
-            tap((data_component) => logger.log('fetched data source of', data_component)),
+            tap(data_component =>
+              logger.log('fetched data source of', data_component)
+            )
           );
         }),
         catchError(this.handleError_continue([])), // on error, trigger the error notification and continue operation without crashing (returns empty item)
-        share(), // multicast so that multiple subscribers don't trigger the call twice. THIS MUST BE THE LAST LINE OF THE PIPE
+        share() // multicast so that multiple subscribers don't trigger the call twice. THIS MUST BE THE LAST LINE OF THE PIPE
       );
     };
   }
@@ -901,17 +965,19 @@ export class RestApiConnectorService extends ApiConnector {
     const plural = attackTypeToPlural[attackType];
     return function <P extends T>(object: P): Observable<P> {
       const url = `${this.apiUrl}/${plural}`;
-      return this.http.post(url, object.serialize(), { headers: this.headers }).pipe(
-        tap(this.handleSuccess(`${this.getObjectName(object)} saved`)),
-        map((result) => {
-          const x = result as any;
-          if (x.stix.type == 'malware' || x.stix.type == 'tool')
-            return new Software(x.stix.type, x);
-          else return new attackClass(x);
-        }),
-        catchError(this.handleError_raise()),
-        share(), // multicast so that multiple subscribers don't trigger the call twice. THIS MUST BE THE LAST LINE OF THE PIPE
-      );
+      return this.http
+        .post(url, object.serialize(), { headers: this.headers })
+        .pipe(
+          tap(this.handleSuccess(`${this.getObjectName(object)} saved`)),
+          map(result => {
+            const x = result as any;
+            if (x.stix.type == 'malware' || x.stix.type == 'tool')
+              return new Software(x.stix.type, x);
+            else return new attackClass(x);
+          }),
+          catchError(this.handleError_raise()),
+          share() // multicast so that multiple subscribers don't trigger the call twice. THIS MUST BE THE LAST LINE OF THE PIPE
+        );
     };
   }
 
@@ -1051,14 +1117,14 @@ export class RestApiConnectorService extends ApiConnector {
       const rep = object.serialize(modified.toISOString());
       return this.http.put(url, rep, { headers: this.headers }).pipe(
         tap(this.handleSuccess(`${this.getObjectName(object)} saved`)),
-        map((result) => {
+        map(result => {
           const x = result as any;
           if (x.stix.type == 'malware' || x.stix.type == 'tool')
             return new Software(x.stix.type, x);
           else return new attackClass(x);
         }),
         catchError(this.handleError_raise()),
-        share(), // multicast so that multiple subscribers don't trigger the call twice. THIS MUST BE THE LAST LINE OF THE PIPE
+        share() // multicast so that multiple subscribers don't trigger the call twice. THIS MUST BE THE LAST LINE OF THE PIPE
       );
     };
   }
@@ -1188,7 +1254,7 @@ export class RestApiConnectorService extends ApiConnector {
       return this.http.delete(url).pipe(
         tap(this.handleSuccess(`${attackType} deleted`)),
         catchError(this.handleError_raise()),
-        share(), // multicast so that multiple subscribers don't trigger the call twice. THIS MUST BE THE LAST LINE OF THE PIPE
+        share() // multicast so that multiple subscribers don't trigger the call twice. THIS MUST BE THE LAST LINE OF THE PIPE
       );
     };
   }
@@ -1281,12 +1347,16 @@ export class RestApiConnectorService extends ApiConnector {
    * @returns {Observable<{}>} observable of the response body
    */
   public get deleteCollection() {
-    return function (id: string, deleteAllContents: boolean, version?: string): Observable<{}> {
+    return function (
+      id: string,
+      deleteAllContents: boolean,
+      version?: string
+    ): Observable<{}> {
       const url = `${this.apiUrl}/collections/${id}${version ? `/modified/${version}` : ``}?deleteAllContents=${deleteAllContents ? 'true' : 'false'}`;
       return this.http.delete(url).pipe(
         tap(this.handleSuccess(`collection deleted`)),
         catchError(this.handleError_raise()),
-        share(), // multicast so that multiple subscribers don't trigger the call twice. THIS MUST BE THE LAST LINE OF THE PIPE
+        share() // multicast so that multiple subscribers don't trigger the call twice. THIS MUST BE THE LAST LINE OF THE PIPE
       );
     };
   }
@@ -1306,7 +1376,11 @@ export class RestApiConnectorService extends ApiConnector {
   public deleteNote(id: string) {
     return this.http
       .delete(`${this.apiUrl}/notes/${id}`)
-      .pipe(tap(this.handleSuccess('note removed')), catchError(this.handleError_raise()), share());
+      .pipe(
+        tap(this.handleSuccess('note removed')),
+        catchError(this.handleError_raise()),
+        share()
+      );
   }
 
   //   ___ ___ _      _ _____ ___ ___  _  _ ___ _  _ ___ ___  ___
@@ -1354,22 +1428,28 @@ export class RestApiConnectorService extends ApiConnector {
     if (args.sourceType) query = query.set('sourceType', args.sourceType);
     if (args.targetType) query = query.set('targetType', args.targetType);
 
-    if (args.sourceOrTargetRef) query = query.set('sourceOrTargetRef', args.sourceOrTargetRef);
+    if (args.sourceOrTargetRef)
+      query = query.set('sourceOrTargetRef', args.sourceOrTargetRef);
 
-    if (args.relationshipType) query = query.set('relationshipType', args.relationshipType);
+    if (args.relationshipType)
+      query = query.set('relationshipType', args.relationshipType);
 
     if (args.includeDeprecated)
-      query = query.set('includeDeprecated', args.includeDeprecated ? 'true' : 'false');
+      query = query.set(
+        'includeDeprecated',
+        args.includeDeprecated ? 'true' : 'false'
+      );
 
     if (args.versions) query = query.set('versions', args.versions);
 
     if (args.limit) query = query.set('limit', args.limit.toString());
     if (args.offset) query = query.set('offset', args.offset.toString());
-    if (args.limit || args.offset) query = query.set('includePagination', 'true');
+    if (args.limit || args.offset)
+      query = query.set('includePagination', 'true');
     const url = `${this.apiUrl}/relationships`;
     return this.http.get(url, { params: query }).pipe(
-      tap((results) => logger.log('retrieved relationships', results)),
-      map((results) => {
+      tap(results => logger.log('retrieved relationships', results)),
+      map(results => {
         if (!args.excludeSourceRefs && !args.excludeTargetRefs) return results; // only filter if params are present
         let response = results as any;
         if (args.limit || args.offset) {
@@ -1377,31 +1457,39 @@ export class RestApiConnectorService extends ApiConnector {
           const pre_filter = response.data.length;
           if (args.excludeSourceRefs)
             response.data = response.data.filter(
-              (d) => !args.excludeSourceRefs.includes(d.stix.source_ref),
+              d => !args.excludeSourceRefs.includes(d.stix.source_ref)
             );
           if (args.excludeTargetRefs)
             response.data = response.data.filter(
-              (d) => !args.excludeTargetRefs.includes(d.stix.target_ref),
+              d => !args.excludeTargetRefs.includes(d.stix.target_ref)
             );
-          logger.log('filtered', pre_filter - response.data.length, 'results by ID');
+          logger.log(
+            'filtered',
+            pre_filter - response.data.length,
+            'results by ID'
+          );
           return response;
         } else {
           //returned a stixObject[]
           const pre_filter = response.length;
           if (args.excludeSourceRefs)
-            response = response.filter((d) => !args.excludeSourceRefs.includes(d.stix.source_ref));
+            response = response.filter(
+              d => !args.excludeSourceRefs.includes(d.stix.source_ref)
+            );
           if (args.excludeTargetRefs)
-            response = response.filter((d) => !args.excludeTargetRefs.includes(d.stix.target_ref));
+            response = response.filter(
+              d => !args.excludeTargetRefs.includes(d.stix.target_ref)
+            );
           logger.log('filtered', pre_filter - response.length, 'results by ID');
           return response;
         }
       }),
-      map((results) => {
+      map(results => {
         const response = results as any;
         if (args.limit || args.offset) {
           //returned paginated
           let data = response.data as any[];
-          data = data.map((y) => new Relationship(y));
+          data = data.map(y => new Relationship(y));
           response.data = data;
           return response;
         } else {
@@ -1412,12 +1500,12 @@ export class RestApiConnectorService extends ApiConnector {
               limit: -1,
               offset: -1,
             },
-            data: response.map((y) => new Relationship(y)),
+            data: response.map(y => new Relationship(y)),
           };
         }
       }),
       catchError(this.handleError_continue([])),
-      share(),
+      share()
     );
   }
 
@@ -1429,29 +1517,29 @@ export class RestApiConnectorService extends ApiConnector {
   public getAllRelatedToDataSource(id: string): Observable<StixObject[]> {
     const dataComponents$ = this.getAllDataComponents();
     return dataComponents$.pipe(
-      map((result) => {
+      map(result => {
         // get related data component objects
         const dataComponents = result.data as DataComponent[];
-        return dataComponents.filter((d) => d.dataSourceRef == id);
+        return dataComponents.filter(d => d.dataSourceRef == id);
       }),
-      mergeMap((dataComponents) => {
+      mergeMap(dataComponents => {
         // get relationships for each data component
-        const relatedTo = dataComponents.map((dc) =>
-          this.getRelatedTo({ sourceOrTargetRef: dc.stixID }),
+        const relatedTo = dataComponents.map(dc =>
+          this.getRelatedTo({ sourceOrTargetRef: dc.stixID })
         );
         if (!relatedTo.length) return of(dataComponents);
         return forkJoin(relatedTo).pipe(
-          map((relationships) => {
+          map(relationships => {
             let all_results: StixObject[] = [];
             for (const relationship_result of relationships) {
               all_results = all_results.concat(relationship_result.data);
             }
             return all_results.concat(dataComponents);
-          }),
+          })
         );
       }),
       catchError(this.handleError_continue([])),
-      share(),
+      share()
     );
   }
 
@@ -1461,19 +1549,22 @@ export class RestApiConnectorService extends ApiConnector {
    * @param {Date} modified the modified date of the tactic
    * @returns {Technique[]} a list of techniques that reference the tactic
    */
-  public getTechniquesInTactic(tactic_id: string, modified: Date): Observable<Technique[]> {
+  public getTechniquesInTactic(
+    tactic_id: string,
+    modified: Date
+  ): Observable<Technique[]> {
     const url = `${this.apiUrl}/tactics/${tactic_id}/modified/${modified.toISOString()}/techniques`;
     return this.http.get(url).pipe(
-      tap((results) => logger.log('retrieved techniques', results)),
-      map((response) => {
+      tap(results => logger.log('retrieved techniques', results)),
+      map(response => {
         const data = response as any[];
-        const techniques: Technique[] = data.map((sdo) => {
+        const techniques: Technique[] = data.map(sdo => {
           return new Technique(sdo);
         });
         return techniques;
       }),
       catchError(this.handleError_continue([])),
-      share(),
+      share()
     );
   }
   /**
@@ -1484,34 +1575,34 @@ export class RestApiConnectorService extends ApiConnector {
   public getTechniquesInMatrix(matrix: Matrix): Observable<any> {
     const url = `${this.apiUrl}/matrices/${matrix.stixID}/modified/${matrix.modified.toISOString()}/techniques`;
     return this.http.get(url).pipe(
-      tap((results) => logger.log('retrieved techniques', results)),
-      map((response) => {
+      tap(results => logger.log('retrieved techniques', results)),
+      map(response => {
         const data = response as any[];
         const entries = Object.entries(data);
-        entries.forEach((item) => {
+        entries.forEach(item => {
           const tactic = new Tactic(item[1]);
           const techniqueList = item[1].techniques;
-          techniqueList.forEach((item) => {
+          techniqueList.forEach(item => {
             const technique = new Technique(item);
             if (item.subtechniques.length > 0) {
-              item.subtechniques.forEach((subtechnique) => {
+              item.subtechniques.forEach(subtechnique => {
                 technique.subTechniques.push(new Technique(subtechnique));
               });
             }
             technique.subTechniques.sort((a, b) =>
-              a.name.toLowerCase().localeCompare(b.name.toLowerCase()),
+              a.name.toLowerCase().localeCompare(b.name.toLowerCase())
             );
             tactic.technique_objects.push(technique);
           });
           tactic.technique_objects.sort((a, b) =>
-            a.name.toLowerCase().localeCompare(b.name.toLowerCase()),
+            a.name.toLowerCase().localeCompare(b.name.toLowerCase())
           );
           matrix.tactic_objects.push(tactic);
         });
         return matrix;
       }),
       catchError(this.handleError_continue([])),
-      share(),
+      share()
     );
   }
 
@@ -1521,19 +1612,22 @@ export class RestApiConnectorService extends ApiConnector {
    * @param {Date} modified the modified date of the technique
    * @returns {Tactic[]} a list of tactics that are referenced by the technique
    */
-  public getTacticsRelatedToTechnique(technique_id: string, modified: Date): Observable<Tactic[]> {
+  public getTacticsRelatedToTechnique(
+    technique_id: string,
+    modified: Date
+  ): Observable<Tactic[]> {
     const url = `${this.apiUrl}/techniques/${technique_id}/modified/${modified.toISOString()}/tactics`;
     return this.http.get(url).pipe(
-      tap((results) => logger.log('retrieved tactics', results)),
-      map((response) => {
+      tap(results => logger.log('retrieved tactics', results)),
+      map(response => {
         const data = response as any[];
-        const tactics: Tactic[] = data.map((sdo) => {
+        const tactics: Tactic[] = data.map(sdo => {
           return new Tactic(sdo);
         });
         return tactics;
       }),
       catchError(this.handleError_continue([])),
-      share(),
+      share()
     );
   }
 
@@ -1552,7 +1646,7 @@ export class RestApiConnectorService extends ApiConnector {
   public getAllReferences(
     limit?: number,
     offset?: number,
-    search?: string,
+    search?: string
   ): Observable<Paginated<ExternalReference>> {
     const url = `${this.apiUrl}/references`;
     // parse params into query string
@@ -1562,16 +1656,18 @@ export class RestApiConnectorService extends ApiConnector {
     if (offset) query = query.set('offset', offset.toString());
     if (search) query = query.set('search', search);
     /*if (limit || offset) */ query = query.set('includePagination', 'true');
-    return this.http.get<Paginated<ExternalReference>>(url, { params: query }).pipe(
-      tap((results) => logger.log('retrieved references', results)),
-      catchError(
-        this.handleError_continue<Paginated<ExternalReference>>({
-          data: [],
-          pagination: { total: 0, limit: 0, offset: 0 },
-        }),
-      ), // on error, trigger the error notification and continue operation without crashing (returns empty item)
-      share(), // multicast so that multiple subscribers don't trigger the call twice. THIS MUST BE THE LAST LINE OF THE PIPE
-    );
+    return this.http
+      .get<Paginated<ExternalReference>>(url, { params: query })
+      .pipe(
+        tap(results => logger.log('retrieved references', results)),
+        catchError(
+          this.handleError_continue<Paginated<ExternalReference>>({
+            data: [],
+            pagination: { total: 0, limit: 0, offset: 0 },
+          })
+        ), // on error, trigger the error notification and continue operation without crashing (returns empty item)
+        share() // multicast so that multiple subscribers don't trigger the call twice. THIS MUST BE THE LAST LINE OF THE PIPE
+      );
   }
 
   /**
@@ -1585,9 +1681,9 @@ export class RestApiConnectorService extends ApiConnector {
     let query = new HttpParams({ encoder: new CustomEncoder() });
     query = query.set('sourceName', source_name);
     return this.http.get<ExternalReference>(url, { params: query }).pipe(
-      tap((results) => logger.log('retrieved reference', results)),
+      tap(results => logger.log('retrieved reference', results)),
       catchError(this.handleError_continue<ExternalReference>()), // on error, trigger the error notification and continue operation without crashing (returns empty item)
-      share(), // multicast so that multiple subscribers don't trigger the call twice. THIS MUST BE THE LAST LINE OF THE PIPE
+      share() // multicast so that multiple subscribers don't trigger the call twice. THIS MUST BE THE LAST LINE OF THE PIPE
     );
   }
 
@@ -1596,12 +1692,14 @@ export class RestApiConnectorService extends ApiConnector {
    * @param {ExternalReference} reference the reference to create
    * @returns {Observable<ExternalReference>} the created reference
    */
-  public postReference(reference: ExternalReference): Observable<ExternalReference> {
+  public postReference(
+    reference: ExternalReference
+  ): Observable<ExternalReference> {
     const url = `${this.apiUrl}/references`;
     return this.http.post<ExternalReference>(url, reference).pipe(
       tap(this.handleSuccess(`${reference.source_name} saved`)),
       catchError(this.handleError_raise<ExternalReference>()), // on error, trigger the error notification and continue operation without crashing (returns empty item)
-      share(), // multicast so that multiple subscribers don't trigger the call twice. THIS MUST BE THE LAST LINE OF THE PIPE
+      share() // multicast so that multiple subscribers don't trigger the call twice. THIS MUST BE THE LAST LINE OF THE PIPE
     );
   }
 
@@ -1610,12 +1708,14 @@ export class RestApiConnectorService extends ApiConnector {
    * @param {ExternalReference} reference the reference to update
    * @returns {Observable<ExternalReference>} the updated reference
    */
-  public putReference(reference: ExternalReference): Observable<ExternalReference> {
+  public putReference(
+    reference: ExternalReference
+  ): Observable<ExternalReference> {
     const url = `${this.apiUrl}/references`;
     return this.http.put<ExternalReference>(url, reference).pipe(
       tap(this.handleSuccess(`${reference.source_name} saved`)),
       catchError(this.handleError_raise<ExternalReference>()), // on error, trigger the error notification and continue operation without crashing (returns empty item)
-      share(), // multicast so that multiple subscribers don't trigger the call twice. THIS MUST BE THE LAST LINE OF THE PIPE
+      share() // multicast so that multiple subscribers don't trigger the call twice. THIS MUST BE THE LAST LINE OF THE PIPE
     );
   }
 
@@ -1633,7 +1733,7 @@ export class RestApiConnectorService extends ApiConnector {
       .pipe(
         tap(this.handleSuccess('reference removed')),
         catchError(this.handleError_raise()),
-        share(),
+        share()
       );
   }
 
@@ -1655,7 +1755,7 @@ export class RestApiConnectorService extends ApiConnector {
     collectionBundle: any,
     preview = false,
     force = false,
-    suppressErrors = false,
+    suppressErrors = false
   ): Observable<Collection> {
     // add query params for preview
     let query = new HttpParams();
@@ -1663,17 +1763,19 @@ export class RestApiConnectorService extends ApiConnector {
     if (force) query = query.set('forceImport', 'all');
     // perform the request
     return this.http
-      .post(`${this.apiUrl}/collection-bundles`, collectionBundle, { params: query })
+      .post(`${this.apiUrl}/collection-bundles`, collectionBundle, {
+        params: query,
+      })
       .pipe(
-        tap((result) => {
+        tap(result => {
           if (preview) logger.log('previewed collection import', result);
           else this.handleSuccess('imported collection')(result);
         }),
-        map((result) => {
+        map(result => {
           return new Collection(result);
         }),
         catchError(this.handleError_raise<Collection>(!suppressErrors)),
-        share(),
+        share()
       );
   }
 
@@ -1688,23 +1790,28 @@ export class RestApiConnectorService extends ApiConnector {
   public previewCollectionBundle(collectionBundle: any): Observable<any> {
     // perform preview request
     return this.postCollectionBundle(collectionBundle, true, false, true).pipe(
-      map((result) => {
+      map(result => {
         return { error: undefined, preview: result };
       }),
-      catchError((err) => {
+      catchError(err => {
         // check if import can be forced
         if (this.cannotForceImport(err)) {
           return of({ error: err.error, preview: undefined });
         }
         // force request
-        return this.postCollectionBundle(collectionBundle, true, true, true).pipe(
-          map((force_result) => {
+        return this.postCollectionBundle(
+          collectionBundle,
+          true,
+          true,
+          true
+        ).pipe(
+          map(force_result => {
             return { error: err.error, preview: force_result };
           }),
-          catchError(this.handleError_raise<Collection>()),
+          catchError(this.handleError_raise<Collection>())
         );
       }),
-      share(),
+      share()
     );
   }
 
@@ -1747,16 +1854,22 @@ export class RestApiConnectorService extends ApiConnector {
    * @param {boolean} includeNotes if true, include relevant Note objects
    * @returns {Observable<any>} collection STIX bundle
    */
-  public getCollectionBundle(id: string, modified: Date, includeNotes?: boolean): Observable<any> {
+  public getCollectionBundle(
+    id: string,
+    modified: Date,
+    includeNotes?: boolean
+  ): Observable<any> {
     let query = new HttpParams();
     query = query.set('collectionId', id);
     query = query.set('collectionModified', modified.toISOString());
     if (includeNotes) query = query.set('includeNotes', 'true');
-    return this.http.get(`${this.apiUrl}/collection-bundles`, { params: query }).pipe(
-      tap((results) => logger.log('retrieved collection bundle')),
-      catchError(this.handleError_continue<any>({})),
-      share(), //multicast
-    );
+    return this.http
+      .get(`${this.apiUrl}/collection-bundles`, { params: query })
+      .pipe(
+        tap(results => logger.log('retrieved collection bundle')),
+        catchError(this.handleError_continue<any>({})),
+        share() //multicast
+      );
   }
 
   //    ___ ___  _    _    ___ ___ _____ ___ ___  _  _      ___ _  _ ___  _____  __       _   ___ ___ ___
@@ -1770,12 +1883,16 @@ export class RestApiConnectorService extends ApiConnector {
    * @param {CollectionIndex} index record to write
    * @returns {Observable<CollectionIndex>} posted index if successful
    */
-  public postCollectionIndex(index: CollectionIndex): Observable<CollectionIndex> {
-    return this.http.post<CollectionIndex>(`${this.apiUrl}/collection-indexes`, index).pipe(
-      tap(this.handleSuccess('collection index added')),
-      map((result) => result as CollectionIndex),
-      catchError(this.handleError_raise<CollectionIndex>()),
-    );
+  public postCollectionIndex(
+    index: CollectionIndex
+  ): Observable<CollectionIndex> {
+    return this.http
+      .post<CollectionIndex>(`${this.apiUrl}/collection-indexes`, index)
+      .pipe(
+        tap(this.handleSuccess('collection index added')),
+        map(result => result as CollectionIndex),
+        catchError(this.handleError_raise<CollectionIndex>())
+      );
   }
 
   /**
@@ -1786,18 +1903,18 @@ export class RestApiConnectorService extends ApiConnector {
    */
   public putCollectionIndex(
     index: CollectionIndex,
-    successMessage = 'collection index updated',
+    successMessage = 'collection index updated'
   ): Observable<CollectionIndex> {
     const serialized = index.serialize();
     return this.http
       .put<CollectionIndex>(
         `${this.apiUrl}/collection-indexes/${index.collection_index.id}`,
-        serialized,
+        serialized
       )
       .pipe(
         tap(this.handleSuccess(successMessage)),
-        map((result) => new CollectionIndex(result)),
-        catchError(this.handleError_raise<CollectionIndex>()),
+        map(result => new CollectionIndex(result)),
+        catchError(this.handleError_raise<CollectionIndex>())
       );
   }
 
@@ -1807,14 +1924,19 @@ export class RestApiConnectorService extends ApiConnector {
    * @param {number} offset optional, number to skip
    * @returns {Observable<CollectionIndex>} collection indexes
    */
-  public getCollectionIndexes(limit?: number, offset?: number): Observable<CollectionIndex[]> {
-    return this.http.get<CollectionIndex[]>(`${this.apiUrl}/collection-indexes`).pipe(
-      tap((_) => logger.log('retrieved collection indexes')), // on success, trigger the success notification
-      map((results) => {
-        return results.map((raw) => new CollectionIndex(raw));
-      }),
-      catchError(this.handleError_continue<CollectionIndex[]>([])), // on error, trigger the error notification and continue operation without crashing (returns empty item)
-    );
+  public getCollectionIndexes(
+    limit?: number,
+    offset?: number
+  ): Observable<CollectionIndex[]> {
+    return this.http
+      .get<CollectionIndex[]>(`${this.apiUrl}/collection-indexes`)
+      .pipe(
+        tap(_ => logger.log('retrieved collection indexes')), // on success, trigger the success notification
+        map(results => {
+          return results.map(raw => new CollectionIndex(raw));
+        }),
+        catchError(this.handleError_continue<CollectionIndex[]>([])) // on error, trigger the error notification and continue operation without crashing (returns empty item)
+      );
   }
 
   /**
@@ -1826,7 +1948,7 @@ export class RestApiConnectorService extends ApiConnector {
       .delete(`${this.apiUrl}/collection-indexes/${id}`)
       .pipe(
         tap(this.handleSuccess('collection index removed')),
-        catchError(this.handleError_raise()),
+        catchError(this.handleError_raise())
       );
   }
 
@@ -1837,16 +1959,18 @@ export class RestApiConnectorService extends ApiConnector {
    */
   public getRemoteIndex(url: string): Observable<CollectionIndex> {
     const params = new HttpParams({ encoder: new CustomEncoder() });
-    const headers: HttpHeaders = new HttpHeaders({ ExcludeCredentials: 'true' });
+    const headers: HttpHeaders = new HttpHeaders({
+      ExcludeCredentials: 'true',
+    });
     return this.http.get(url, { headers: headers, params: params }).pipe(
-      tap((_) => logger.log('downloaded index at', url)), // on success, trigger the success notification
-      map((index) => {
+      tap(_ => logger.log('downloaded index at', url)), // on success, trigger the success notification
+      map(index => {
         return {
           collection_index: index,
           workspace: { remote_url: url },
         } as CollectionIndex;
       }),
-      catchError(this.handleError_continue<CollectionIndex>()), // on error, trigger the error notification and continue operation without crashing (returns empty item)
+      catchError(this.handleError_continue<CollectionIndex>()) // on error, trigger the error notification and continue operation without crashing (returns empty item)
     );
   }
 
@@ -1866,13 +1990,15 @@ export class RestApiConnectorService extends ApiConnector {
       return of(this.allowedValues);
     }
 
-    const data$ = this.http.get<any>(`${this.apiUrl}/config/allowed-values`).pipe(
-      tap((_) => logger.log('retrieved allowed values')),
-      map((result) => result as any),
-      catchError(this.handleError_continue<string[]>([])),
-    );
+    const data$ = this.http
+      .get<any>(`${this.apiUrl}/config/allowed-values`)
+      .pipe(
+        tap(_ => logger.log('retrieved allowed values')),
+        map(result => result as any),
+        catchError(this.handleError_continue<string[]>([]))
+      );
     const subscription = data$.subscribe({
-      next: (data) => {
+      next: data => {
         this.allowedValues = data;
       },
       complete: () => {
@@ -1887,26 +2013,33 @@ export class RestApiConnectorService extends ApiConnector {
    * @returns {Observable<any>} default marking definitions
    */
   public getDefaultMarkingDefinitions(): Observable<any> {
-    return this.http.get(`${this.apiUrl}/config/default-marking-definitions`).pipe(
-      tap((_) => logger.log('retrieved default marking definitions')),
-      map((result) => {
-        return result;
-      }),
-      catchError(this.handleError_continue<string[]>()),
-    );
+    return this.http
+      .get(`${this.apiUrl}/config/default-marking-definitions`)
+      .pipe(
+        tap(_ => logger.log('retrieved default marking definitions')),
+        map(result => {
+          return result;
+        }),
+        catchError(this.handleError_continue<string[]>())
+      );
   }
 
   /**
    * Set the default marking definitions
    * @returns {Observable<any>} default marking definitions
    */
-  public postDefaultMarkingDefinitions(defaultMarkingDefs: string[]): Observable<any> {
+  public postDefaultMarkingDefinitions(
+    defaultMarkingDefs: string[]
+  ): Observable<any> {
     return this.http
-      .post(`${this.apiUrl}/config/default-marking-definitions`, defaultMarkingDefs)
+      .post(
+        `${this.apiUrl}/config/default-marking-definitions`,
+        defaultMarkingDefs
+      )
       .pipe(
         tap(this.handleSuccess(`saved default marking definitions`)),
         catchError(this.handleError_raise<string[]>()),
-        share(), //multicast to subscribers
+        share() //multicast to subscribers
       );
   }
 
@@ -1916,12 +2049,12 @@ export class RestApiConnectorService extends ApiConnector {
    */
   public getOrganizationIdentity(): Observable<Identity> {
     return this.http.get(`${this.apiUrl}/config/organization-identity`).pipe(
-      tap((_) => logger.log('retrieved organization identity')),
-      map((result) => {
+      tap(_ => logger.log('retrieved organization identity')),
+      map(result => {
         return new Identity(result);
       }),
       catchError(this.handleError_continue<Identity>()),
-      share(), //multicast to subscribers
+      share() //multicast to subscribers
     );
   }
 
@@ -1934,20 +2067,22 @@ export class RestApiConnectorService extends ApiConnector {
   public setOrganizationIdentity(object: Identity): Observable<Identity> {
     return this.postIdentity(object).pipe(
       //create/save the identity
-      switchMap((result) => {
+      switchMap(result => {
         logger.log(result);
         // set the organization identity to be this identity's ID after it was created/updated
         return this.http
-          .post(`${this.apiUrl}/config/organization-identity`, { id: result.stixID })
+          .post(`${this.apiUrl}/config/organization-identity`, {
+            id: result.stixID,
+          })
           .pipe(
             tap(this.handleSuccess('Organization Identity Updated')),
-            map((_) => {
+            map(_ => {
               return new Identity(result);
             }),
             catchError(this.handleError_raise<Identity>()),
-            share(), // multicast so that multiple subscribers don't trigger the call twice. THIS MUST BE THE LAST LINE OF THE PIPE
+            share() // multicast so that multiple subscribers don't trigger the call twice. THIS MUST BE THE LAST LINE OF THE PIPE
           );
-      }),
+      })
     );
   }
 
@@ -1957,12 +2092,12 @@ export class RestApiConnectorService extends ApiConnector {
    */
   public getOrganizationNamespace(): Observable<Namespace> {
     return this.http.get(`${this.apiUrl}/config/organization-namespace`).pipe(
-      tap((_) => logger.log('retrieved organization namespace configurations')),
-      map((result) => {
+      tap(_ => logger.log('retrieved organization namespace configurations')),
+      map(result => {
         return result;
       }),
       catchError(this.handleError_continue<any>()),
-      share(), //multicast to subscribers
+      share() //multicast to subscribers
     );
   }
 
@@ -1972,8 +2107,12 @@ export class RestApiConnectorService extends ApiConnector {
    * @memberof RestApiConnectorService
    * @param namespaceSettings the namespace object to save
    */
-  public setOrganizationNamespace(namespaceSettings: Namespace): Observable<Namespace> {
-    const range = namespaceSettings.range_start ? Number(namespaceSettings.range_start) : 0;
+  public setOrganizationNamespace(
+    namespaceSettings: Namespace
+  ): Observable<Namespace> {
+    const range = namespaceSettings.range_start
+      ? Number(namespaceSettings.range_start)
+      : 0;
     return this.http
       .post(`${this.apiUrl}/config/organization-namespace`, {
         ...namespaceSettings,
@@ -1982,11 +2121,11 @@ export class RestApiConnectorService extends ApiConnector {
       .pipe(
         // set the organization identity to be this identity's ID after it was created/updated
         tap(this.handleSuccess('Organization Namespace Updated')),
-        map((_) => {
+        map(_ => {
           return namespaceSettings;
         }),
         catchError(this.handleError_raise<any>()),
-        share(), // multicast so that multiple subscribers don't trigger the call twice. THIS MUST BE THE LAST LINE OF THE PIPE
+        share() // multicast so that multiple subscribers don't trigger the call twice. THIS MUST BE THE LAST LINE OF THE PIPE
       );
   }
 
@@ -2015,25 +2154,29 @@ export class RestApiConnectorService extends ApiConnector {
     // parse params into query string
     let query = new HttpParams({ encoder: new CustomEncoder() });
     // pagination
-    if (options && options.limit) query = query.set('limit', options.limit.toString());
-    if (options && options.offset) query = query.set('offset', options.offset.toString());
+    if (options && options.limit)
+      query = query.set('limit', options.limit.toString());
+    if (options && options.offset)
+      query = query.set('offset', options.offset.toString());
     if (options && (options.limit || options.offset))
       query = query.set('includePagination', 'true');
     // search
     if (options && options.search) query = query.set('search', options.search);
     // status/role
     if (options && options.status)
-      options.status.forEach((status) => (query = query.append('status', status)));
+      options.status.forEach(
+        status => (query = query.append('status', status))
+      );
     if (options && options.role)
-      options.role.forEach((role) => (query = query.append('role', role)));
+      options.role.forEach(role => (query = query.append('role', role)));
     return this.http.get<Paginated<UserAccount>>(url, { params: query }).pipe(
       catchError(
         this.handleError_continue<Paginated<UserAccount>>({
           data: [],
           pagination: { total: 0, limit: 0, offset: 0 },
-        }),
+        })
       ),
-      share(), //multicast to subscribers
+      share() //multicast to subscribers
     );
   }
 
@@ -2046,7 +2189,7 @@ export class RestApiConnectorService extends ApiConnector {
     const url = `${this.apiUrl}/user-accounts/${id}`;
     return this.http.get<UserAccount>(url).pipe(
       catchError(this.handleError_continue<UserAccount>()),
-      share(), // multicast to subscribers
+      share() // multicast to subscribers
     );
   }
 
@@ -2059,7 +2202,7 @@ export class RestApiConnectorService extends ApiConnector {
     const url = `${this.apiUrl}/user-accounts/${userAccount.id}`;
     return this.http.post<UserAccount>(url, userAccount.serialize()).pipe(
       catchError(this.handleError_raise<UserAccount>()),
-      share(), // multicast to subscribers
+      share() // multicast to subscribers
     );
   }
 
@@ -2072,7 +2215,7 @@ export class RestApiConnectorService extends ApiConnector {
     const url = `${this.apiUrl}/user-accounts/${userAccount.id}`;
     return this.http.put<UserAccount>(url, userAccount.serialize()).pipe(
       catchError(this.handleError_raise<UserAccount>()),
-      share(), // multicast to subscribers
+      share() // multicast to subscribers
     );
   }
 
@@ -2099,9 +2242,14 @@ export class RestApiConnectorService extends ApiConnector {
     // parse params into query string
     let query = new HttpParams({ encoder: new CustomEncoder() });
     // pagination
-    if (options && options.limit) query = query.set('limit', options.limit.toString());
-    if (options && options.offset) query = query.set('offset', options.offset.toString());
-    if (options && (options.includePagination || options.limit || options.offset))
+    if (options && options.limit)
+      query = query.set('limit', options.limit.toString());
+    if (options && options.offset)
+      query = query.set('offset', options.offset.toString());
+    if (
+      options &&
+      (options.includePagination || options.limit || options.offset)
+    )
       query = query.set('includePagination', 'true');
     // search
     if (options && options.search) query = query.set('search', options.search);
@@ -2110,9 +2258,9 @@ export class RestApiConnectorService extends ApiConnector {
         this.handleError_continue<Paginated<Team>>({
           data: [],
           pagination: { total: 0, limit: 0, offset: 0 },
-        }),
+        })
       ),
-      share(), //multicast to subscribers
+      share() //multicast to subscribers
     );
   }
 
@@ -2126,14 +2274,16 @@ export class RestApiConnectorService extends ApiConnector {
    */
   public getUserAccountsByTeamId(
     id: string,
-    options?: { limit?: number; offset?: number; search?: string },
+    options?: { limit?: number; offset?: number; search?: string }
   ): Observable<Paginated<UserAccount>> {
     const url = `${this.apiUrl}/teams/${id}/users`;
     // parse params into query string
     let query = new HttpParams({ encoder: new CustomEncoder() });
     // pagination
-    if (options && options.limit) query = query.set('limit', options.limit.toString());
-    if (options && options.offset) query = query.set('offset', options.offset.toString());
+    if (options && options.limit)
+      query = query.set('limit', options.limit.toString());
+    if (options && options.offset)
+      query = query.set('offset', options.offset.toString());
     if (options && (options.limit || options.offset))
       query = query.set('includePagination', 'true');
     // search
@@ -2143,9 +2293,9 @@ export class RestApiConnectorService extends ApiConnector {
         this.handleError_continue<Paginated<UserAccount>>({
           data: [],
           pagination: { total: 0, limit: 0, offset: 0 },
-        }),
+        })
       ),
-      share(), //multicast to subscribers
+      share() //multicast to subscribers
     );
   }
 
@@ -2158,20 +2308,22 @@ export class RestApiConnectorService extends ApiConnector {
    */
   public getTeamsByUserId(
     id: string,
-    options?: { limit?: number; offset?: number },
+    options?: { limit?: number; offset?: number }
   ): Observable<Team[]> {
     const url = `${this.apiUrl}/user-accounts/${id}/teams`;
     // parse params into query string
     let query = new HttpParams({ encoder: new CustomEncoder() });
     // pagination
-    if (options && options.limit) query = query.set('limit', options.limit.toString());
-    if (options && options.offset) query = query.set('offset', options.offset.toString());
+    if (options && options.limit)
+      query = query.set('limit', options.limit.toString());
+    if (options && options.offset)
+      query = query.set('offset', options.offset.toString());
     if (options && (options.limit || options.offset))
       query = query.set('includePagination', 'true');
     return this.http.get<Team[]>(url, { params: query }).pipe(
-      tap((_) => console.log(`retrieved`, _)),
+      tap(_ => console.log(`retrieved`, _)),
       catchError(this.handleError_continue([])), // on error, trigger the error notification and continue operation without crashing (returns empty item)
-      share(), // multicast so that multiple subscribers don't trigger the call twice
+      share() // multicast so that multiple subscribers don't trigger the call twice
     );
   }
 
@@ -2184,7 +2336,7 @@ export class RestApiConnectorService extends ApiConnector {
     const url = `${this.apiUrl}/teams/${id}`;
     return this.http.get<Team>(url).pipe(
       catchError(this.handleError_continue<Team>()),
-      share(), //multicast to subscribers
+      share() //multicast to subscribers
     );
   }
 
@@ -2197,7 +2349,7 @@ export class RestApiConnectorService extends ApiConnector {
     const url = `${this.apiUrl}/teams`;
     return this.http.post<Team>(url, team).pipe(
       catchError(this.handleError_continue<Team>()),
-      share(), //multicast to subscribers
+      share() //multicast to subscribers
     );
   }
 
@@ -2210,7 +2362,7 @@ export class RestApiConnectorService extends ApiConnector {
     const url = `${this.apiUrl}/teams/${team.id}`;
     return this.http.put<Team>(url, team).pipe(
       catchError(this.handleError_continue<Team>()),
-      share(), //multicast to subscribers
+      share() //multicast to subscribers
     );
   }
 
@@ -2223,7 +2375,7 @@ export class RestApiConnectorService extends ApiConnector {
     const url = `${this.apiUrl}/teams/${team.id}`;
     return this.http.delete<object>(url).pipe(
       catchError(this.handleError_continue<object>()),
-      share(), //multicast to subscribers
+      share() //multicast to subscribers
     );
   }
 
@@ -2239,7 +2391,7 @@ export class RestApiConnectorService extends ApiConnector {
    */
   public triggerBrowserDownload(data: any, filename: string) {
     const url = URL.createObjectURL(
-      new Blob([JSON.stringify(data, null, 4)], { type: 'text/json' }),
+      new Blob([JSON.stringify(data, null, 4)], { type: 'text/json' })
     );
     const downloadLink = document.createElement('a');
     downloadLink.href = url;
@@ -2258,9 +2410,9 @@ export class RestApiConnectorService extends ApiConnector {
     let query = new HttpParams();
     query = query.set('domain', domain);
     return this.http.get(`${this.apiUrl}/stix-bundles`, { params: query }).pipe(
-      tap((results) => logger.log('retrieved stix bundle')),
+      tap(results => logger.log('retrieved stix bundle')),
       catchError(this.handleError_continue<any>({})),
-      share(), //multicast
+      share() //multicast
     );
   }
 
@@ -2273,7 +2425,7 @@ export class RestApiConnectorService extends ApiConnector {
   public downloadStixBundle(domain: string, filename: string): Observable<any> {
     const getter = this.getStixBundle(domain);
     const subscription = getter.subscribe({
-      next: (result) => {
+      next: result => {
         this.triggerBrowserDownload(result, filename);
       },
       complete: () => {
@@ -2295,11 +2447,11 @@ export class RestApiConnectorService extends ApiConnector {
     id: string,
     modified: Date,
     filename: string,
-    includeNotes?: boolean,
+    includeNotes?: boolean
   ): Observable<any> {
     const getter = this.getCollectionBundle(id, modified, includeNotes);
     const subscription = getter.subscribe({
-      next: (result) => {
+      next: result => {
         logger.log(result);
         this.triggerBrowserDownload(result, filename);
       },

@@ -1,6 +1,9 @@
 import { Component, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Collection, CollectionDiffCategories } from 'src/app/classes/stix/collection';
+import {
+  Collection,
+  CollectionDiffCategories,
+} from 'src/app/classes/stix/collection';
 import {
   Asset,
   Campaign,
@@ -24,7 +27,10 @@ import { AuthenticationService } from 'src/app/services/connectors/authenticatio
   styleUrls: ['./collection-import-review.component.scss'],
   encapsulation: ViewEncapsulation.None,
 })
-export class CollectionImportReviewComponent extends StixViewPage implements OnInit, OnDestroy {
+export class CollectionImportReviewComponent
+  extends StixViewPage
+  implements OnInit, OnDestroy
+{
   private deleteSubscription;
   public deleting = false;
 
@@ -49,7 +55,7 @@ export class CollectionImportReviewComponent extends StixViewPage implements OnI
   constructor(
     private route: ActivatedRoute,
     public editor: EditorService,
-    authenticationService: AuthenticationService,
+    authenticationService: AuthenticationService
   ) {
     super(authenticationService);
   }
@@ -64,7 +70,7 @@ export class CollectionImportReviewComponent extends StixViewPage implements OnI
     // set up delete watcher
     this.deleting = false;
     this.deleteSubscription = this.editor.onDeleteImportedCollection.subscribe({
-      next: (_event) => (this.deleting = true),
+      next: _event => (this.deleting = true),
     });
 
     // disable editing
@@ -108,10 +114,12 @@ export class CollectionImportReviewComponent extends StixViewPage implements OnI
           // add source and target objects
           const serialized = x.serialize();
           serialized.workspace.workflow = {};
-          if (x.source_ref in idToSdo) serialized.source_object = idToSdo[x.source_ref];
-          if (x.target_ref in idToSdo) serialized.target_object = idToSdo[x.target_ref];
+          if (x.source_ref in idToSdo)
+            serialized.source_object = idToSdo[x.source_ref];
+          if (x.target_ref in idToSdo)
+            serialized.target_object = idToSdo[x.target_ref];
           this.collection_import_categories.relationship[category].push(
-            new Relationship(serialized),
+            new Relationship(serialized)
           );
           break;
         case 'course-of-action': //mitigation
@@ -127,7 +135,9 @@ export class CollectionImportReviewComponent extends StixViewPage implements OnI
           this.collection_import_categories.data_source[category].push(object);
           break;
         case 'x-mitre-data-component': // data component
-          this.collection_import_categories.data_component[category].push(object);
+          this.collection_import_categories.data_component[category].push(
+            object
+          );
           break;
         case 'campaign': // campaign
           this.collection_import_categories.campaign[category].push(object);

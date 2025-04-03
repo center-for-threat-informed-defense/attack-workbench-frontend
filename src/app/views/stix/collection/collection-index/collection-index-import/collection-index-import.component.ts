@@ -16,7 +16,7 @@ export class CollectionIndexImportComponent implements OnInit {
 
   constructor(
     private restAPIConnector: RestApiConnectorService,
-    private snackbar: MatSnackBar,
+    private snackbar: MatSnackBar
   ) {}
 
   ngOnInit(): void {
@@ -34,21 +34,23 @@ export class CollectionIndexImportComponent implements OnInit {
    * download the collection index at this.url and move to the next step in the stepper
    */
   public previewIndex(): void {
-    const subscription = this.restAPIConnector.getRemoteIndex(this.url).subscribe({
-      next: (index) => {
-        if (index) {
-          this.index = new CollectionIndex(index);
-          if (this.index.valid()) {
-            this.stepper.next();
-          } else {
-            this.error('Invalid collection index.');
-          } //show snackbar
-        }
-      },
-      complete: () => {
-        subscription.unsubscribe();
-      }, //prevent memory leaks
-    });
+    const subscription = this.restAPIConnector
+      .getRemoteIndex(this.url)
+      .subscribe({
+        next: index => {
+          if (index) {
+            this.index = new CollectionIndex(index);
+            if (this.index.valid()) {
+              this.stepper.next();
+            } else {
+              this.error('Invalid collection index.');
+            } //show snackbar
+          }
+        },
+        complete: () => {
+          subscription.unsubscribe();
+        }, //prevent memory leaks
+      });
   }
   /**
    * Save the downloaded collection index to the REST API
@@ -63,14 +65,16 @@ export class CollectionIndexImportComponent implements OnInit {
       last_retrieval: new Date(),
       // interval: 10, // allow REST API to define the update interval according to the app config
     };
-    const subscription = this.restAPIConnector.postCollectionIndex(serialized).subscribe({
-      next: (result) => {
-        this.stepper.next();
-      },
-      complete: () => {
-        subscription.unsubscribe();
-      }, // prevent memory leaks
-    });
+    const subscription = this.restAPIConnector
+      .postCollectionIndex(serialized)
+      .subscribe({
+        next: result => {
+          this.stepper.next();
+        },
+        complete: () => {
+          subscription.unsubscribe();
+        }, // prevent memory leaks
+      });
   }
 
   /**

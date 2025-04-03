@@ -11,21 +11,21 @@ export class TitleService {
   constructor(
     private angularTitleService: Title,
     private router: Router,
-    private route: ActivatedRoute,
+    private route: ActivatedRoute
   ) {
     //subscribe to router events and update the title
     this.router.events
       .pipe(
-        filter((event) => event instanceof NavigationEnd),
+        filter(event => event instanceof NavigationEnd),
         map(() => this.route),
-        map((route) => {
+        map(route => {
           while (route.firstChild) route = route.firstChild;
           return route;
         }),
-        filter((route) => route.outlet === 'primary'),
-        mergeMap((route) => route.data),
+        filter(route => route.outlet === 'primary'),
+        mergeMap(route => route.data)
       )
-      .subscribe((event) => this.setTitle(event['title']));
+      .subscribe(event => this.setTitle(event['title']));
   }
 
   public setTitle(newTitle?: string, autocase = true) {

@@ -25,17 +25,23 @@ export class AttackIDEditComponent implements OnInit {
     // Get namespace settings and prepend, if creating a new object
     if ((this.config.object as StixObject).firstInitialized) {
       let organizationNamespace = {};
-      const namespaceSub = this.restApiConnector.getOrganizationNamespace().subscribe({
-        next: (namespaceSettings) => {
-          organizationNamespace = namespaceSettings;
-          this.prefix = namespaceSettings.prefix ? namespaceSettings.prefix + '-' : '';
-          this.namespaceRange = namespaceSettings.range_start;
-        },
-        complete: () => namespaceSub.unsubscribe(),
-      });
+      const namespaceSub = this.restApiConnector
+        .getOrganizationNamespace()
+        .subscribe({
+          next: namespaceSettings => {
+            organizationNamespace = namespaceSettings;
+            this.prefix = namespaceSettings.prefix
+              ? namespaceSettings.prefix + '-'
+              : '';
+            this.namespaceRange = namespaceSettings.range_start;
+          },
+          complete: () => namespaceSub.unsubscribe(),
+        });
     } else {
       // Otherwise extract existing prefix, if any
-      const found = (this.config.object as StixObject).attackID.match(/[A-Z]+-/g);
+      const found = (this.config.object as StixObject).attackID.match(
+        /[A-Z]+-/g
+      );
       if (found) {
         this.prefix = found[0];
       }
@@ -50,7 +56,7 @@ export class AttackIDEditComponent implements OnInit {
           range_start: this.namespaceRange,
         })
         .subscribe({
-          next: (val) => {
+          next: val => {
             (this.config.object as StixObject).attackID = val;
           },
           complete: () => {
@@ -62,7 +68,8 @@ export class AttackIDEditComponent implements OnInit {
   }
 
   prependPrefix(): void {
-    if ((this.config.object as StixObject).attackID.startsWith(this.prefix)) return; // If prefix is already present, exit
+    if ((this.config.object as StixObject).attackID.startsWith(this.prefix))
+      return; // If prefix is already present, exit
     const ID =
       (this.config.object as StixObject).attackType === 'matrix'
         ? (this.config.object as StixObject).attackID

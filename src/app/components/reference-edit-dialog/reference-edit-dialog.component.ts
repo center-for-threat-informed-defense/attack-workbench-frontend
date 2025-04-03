@@ -1,7 +1,22 @@
-import { Component, Inject, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
-import { FormControl, FormGroupDirective, NgForm, Validators } from '@angular/forms';
+import {
+  Component,
+  Inject,
+  OnDestroy,
+  OnInit,
+  ViewEncapsulation,
+} from '@angular/core';
+import {
+  FormControl,
+  FormGroupDirective,
+  NgForm,
+  Validators,
+} from '@angular/forms';
 import { ErrorStateMatcher } from '@angular/material/core';
-import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import {
+  MatDialog,
+  MatDialogRef,
+  MAT_DIALOG_DATA,
+} from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { forkJoin, Observable, of, Subscription } from 'rxjs';
 import { debounceTime, switchMap, tap } from 'rxjs/operators';
@@ -13,7 +28,10 @@ import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/re
 import { DeleteDialogComponent } from '../delete-dialog/delete-dialog.component';
 
 export class CustomErrorStateMatcher implements ErrorStateMatcher {
-  isErrorState(control: FormControl | null, form: FormGroupDirective | NgForm | null): boolean {
+  isErrorState(
+    control: FormControl | null,
+    form: FormGroupDirective | NgForm | null
+  ): boolean {
     return !!(control?.invalid && (control.dirty || control.touched));
   }
 }
@@ -79,16 +97,23 @@ export class ReferenceEditDialogComponent implements OnInit, OnDestroy {
     public restApiConnectorService: RestApiConnectorService,
     public snackbar: MatSnackBar,
     private authenticationService: AuthenticationService,
-    private dialog: MatDialog,
+    private dialog: MatDialog
   ) {
     if (this.config.reference) {
       this.isNew = false;
       this.reference = this.referenceCopy;
-      this.stixObjects = this.config.objects?.filter((sdo) => sdo.attackType != 'relationship');
-      this.relationships = this.config.objects?.filter((sdo) => sdo.attackType == 'relationship');
+      this.stixObjects = this.config.objects?.filter(
+        sdo => sdo.attackType != 'relationship'
+      );
+      this.relationships = this.config.objects?.filter(
+        sdo => sdo.attackType == 'relationship'
+      );
     } else {
       this.isNew = true;
-      this.citation.day = new FormControl(null, [Validators.max(31), Validators.min(1)]);
+      this.citation.day = new FormControl(null, [
+        Validators.max(31),
+        Validators.min(1),
+      ]);
       this.citation.year = new FormControl(null, [
         Validators.max(new Date().getFullYear()),
         Validators.min(1970),
@@ -109,21 +134,23 @@ export class ReferenceEditDialogComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     // retrieve all references
-    const referenceSubscription = this.restApiConnectorService.getAllReferences().subscribe({
-      next: (data) => {
-        this.references$ = data.data;
-        this.loading = false;
-      },
-      complete: () => referenceSubscription.unsubscribe(),
-    });
+    const referenceSubscription = this.restApiConnectorService
+      .getAllReferences()
+      .subscribe({
+        next: data => {
+          this.references$ = data.data;
+          this.loading = false;
+        },
+        complete: () => referenceSubscription.unsubscribe(),
+      });
 
     if (this.isNew) {
       // listen to source_name input changes for validation
       this.validationSubscription = this.sourceNameControl.valueChanges
         .pipe(
           debounceTime(250),
-          tap((sourceName) => (this.reference.source_name = sourceName)),
-          switchMap((sourceName) => this.validate(sourceName)),
+          tap(sourceName => (this.reference.source_name = sourceName)),
+          switchMap(sourceName => this.validate(sourceName))
         )
         .subscribe();
     }
@@ -146,10 +173,17 @@ export class ReferenceEditDialogComponent implements OnInit, OnDestroy {
   }
 
   public validCitation(): boolean {
-    if (!this.isNew) return this.reference.description && this.reference.description.length > 0;
+    if (!this.isNew)
+      return (
+        this.reference.description && this.reference.description.length > 0
+      );
     else {
       // new reference
-      return this.citation.authors && this.citation.retrieved && this.validPublishedDate();
+      return (
+        this.citation.authors &&
+        this.citation.retrieved &&
+        this.validPublishedDate()
+      );
     }
   }
 
@@ -166,11 +200,17 @@ export class ReferenceEditDialogComponent implements OnInit, OnDestroy {
   public get validURL(): boolean {
     if (this.reference.url) {
       // check for protocol
-      if (!this.reference.url.startsWith('https://') && !this.reference.url.startsWith('http://')) {
+      if (
+        !this.reference.url.startsWith('https://') &&
+        !this.reference.url.startsWith('http://')
+      ) {
         return false;
       }
       // check new references for uniqueness
-      if (this.isNew && this.references$.some((x) => x.url && this.urlExists(x.url))) {
+      if (
+        this.isNew &&
+        this.references$.some(x => x.url && this.urlExists(x.url))
+      ) {
         return false;
       }
       // check for other malformities
@@ -189,10 +229,15 @@ export class ReferenceEditDialogComponent implements OnInit, OnDestroy {
 
   public get URLError(): string {
     if (this.reference.url) {
-      if (!this.reference.url.startsWith('https://') && !this.reference.url.startsWith('http://')) {
+      if (
+        !this.reference.url.startsWith('https://') &&
+        !this.reference.url.startsWith('http://')
+      ) {
         return "URL must begin with 'http://' or 'https://'";
-      } else if (this.references$.some((x) => x.url && this.urlExists(x.url))) {
-        const citation = this.references$.find((x) => x.url && this.urlExists(x.url));
+      } else if (this.references$.some(x => x.url && this.urlExists(x.url))) {
+        const citation = this.references$.find(
+          x => x.url && this.urlExists(x.url)
+        );
         return `a reference with this URL already exists: (Citation: ${citation.source_name})`;
       } else {
         return 'malformed URL';
@@ -205,8 +250,13 @@ export class ReferenceEditDialogComponent implements OnInit, OnDestroy {
     let description = '';
     if (this.citation.authors) description = `${this.citation.authors}. `;
     description += '(';
-    if (this.citation.year.value || this.citation.month || this.citation.day.value) {
-      if (this.citation.year.value) description += `${this.citation.year.value}`;
+    if (
+      this.citation.year.value ||
+      this.citation.month ||
+      this.citation.day.value
+    ) {
+      if (this.citation.year.value)
+        description += `${this.citation.year.value}`;
       if (this.citation.year.value && this.citation.month) description += ', ';
       if (this.citation.month) description += this.citation.month;
       if (this.citation.day.value) description += ` ${this.citation.day.value}`;
@@ -224,27 +274,30 @@ export class ReferenceEditDialogComponent implements OnInit, OnDestroy {
     const subscription = this.restApiConnectorService
       .getAllObjects({ revoked: true, deprecated: true, deserialize: true })
       .subscribe({
-        next: (results) => {
+        next: results => {
           // build ID to SDO lookup
           const idToObject = {};
-          results.data.forEach((x) => {
+          results.data.forEach(x => {
             idToObject[x.stixID] = x;
           });
           // find objects with given reference
           this.patchObjects = [];
           this.patchRelationships = [];
-          results.data.forEach((x) => {
+          results.data.forEach(x => {
             if (x.revoked || x.deprecated) return; // do not patch revoked/deprecated objects
             if (x.external_references.hasValue(this.reference.source_name)) {
-              if (x.attackType == 'relationship') this.patchRelationships.push(x);
+              if (x.attackType == 'relationship')
+                this.patchRelationships.push(x);
               else this.patchObjects.push(x);
             }
           });
           // patch relationship source/target names and IDs
-          this.patchRelationships.forEach((relationship) => {
+          this.patchRelationships.forEach(relationship => {
             const serialized = relationship.serialize();
-            serialized.source_object = idToObject[relationship.source_ref].serialize();
-            serialized.target_object = idToObject[relationship.target_ref].serialize();
+            serialized.source_object =
+              idToObject[relationship.source_ref].serialize();
+            serialized.target_object =
+              idToObject[relationship.target_ref].serialize();
             relationship.deserialize(serialized);
           });
           this.stage = 2;
@@ -274,7 +327,7 @@ export class ReferenceEditDialogComponent implements OnInit, OnDestroy {
     }
     for (const relationship of this.patchRelationships) {
       let raw = relationship.external_references.serialize();
-      raw = raw.map((x) => {
+      raw = raw.map(x => {
         if (x.source_name == this.reference.source_name) return this.reference;
         else return x;
       });
@@ -320,7 +373,7 @@ export class ReferenceEditDialogComponent implements OnInit, OnDestroy {
     if (!sourceName) this.sourceNameControl.setErrors({ required: true });
 
     // uniqueness
-    if (this.references$.some((x) => x.source_name == sourceName))
+    if (this.references$.some(x => x.source_name == sourceName))
       this.sourceNameControl.setErrors({ nonUnique: true });
 
     // cannot contain special characters
@@ -359,7 +412,7 @@ export class ReferenceEditDialogComponent implements OnInit, OnDestroy {
       autoFocus: false, // disables auto focus on the dialog form field
     });
     const subscription = prompt.afterClosed().subscribe({
-      next: (confirm) => {
+      next: confirm => {
         if (confirm) {
           // delete the reference
           const sub = this.restApiConnectorService

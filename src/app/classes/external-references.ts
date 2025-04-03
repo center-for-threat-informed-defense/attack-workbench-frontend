@@ -27,7 +27,8 @@ export class ExternalReferences extends Serializable {
     const externalRefList: [number, ExternalReference, string][] = [];
 
     for (const [key, value] of this._externalReferencesIndex) {
-      if (this.getReference(key)) externalRefList.push([value, this.getReference(key), key]);
+      if (this.getReference(key))
+        externalRefList.push([value, this.getReference(key), key]);
     }
 
     return externalRefList;
@@ -41,8 +42,8 @@ export class ExternalReferences extends Serializable {
     // Sort map by alphabetical order on descriptions
     this._externalReferences = new Map(
       [...this._externalReferences.entries()].sort((a, b) =>
-        a[1].description.localeCompare(b[1].description),
-      ),
+        a[1].description.localeCompare(b[1].description)
+      )
     );
 
     // Restart _externalReferencesIndex map
@@ -113,7 +114,10 @@ export class ExternalReferences extends Serializable {
    * @param sourceName source name of reference
    * @param externalReference external reference object
    */
-  private addReference(sourceName: string, externalReference: ExternalReference) {
+  private addReference(
+    sourceName: string,
+    externalReference: ExternalReference
+  ) {
     if (sourceName && externalReference) {
       this._externalReferences.set(sourceName, externalReference);
       // Sort references by description and update index map
@@ -130,18 +134,18 @@ export class ExternalReferences extends Serializable {
    */
   private checkAndAddReference(
     sourceName: string,
-    restApiConnector: RestApiConnectorService,
+    restApiConnector: RestApiConnectorService
   ): Observable<boolean> {
     if (this.getReference(sourceName)) return of(true);
     return restApiConnector.getReference(sourceName).pipe(
-      map((result) => {
+      map(result => {
         const x = result as any[];
         if (x.length > 0) {
           this.addReference(sourceName, x[0]);
           return true;
         }
         return false;
-      }),
+      })
     );
   }
 
@@ -154,11 +158,12 @@ export class ExternalReferences extends Serializable {
    */
   public parseObjectCitations(
     object: StixObject,
-    restAPIConnector: RestApiConnectorService,
+    restAPIConnector: RestApiConnectorService
   ): Observable<CitationParseResult> {
     // get list of descriptive fields that support citations
     const refs_fields = ['description'];
-    if (['software', 'group', 'campaign'].includes(object.attackType)) refs_fields.push('aliases');
+    if (['software', 'group', 'campaign'].includes(object.attackType))
+      refs_fields.push('aliases');
     if (object.attackType == 'asset') refs_fields.push('relatedAssets');
     if (object.attackType == 'technique') refs_fields.push('detection');
     if (object.attackType == 'campaign')
@@ -168,10 +173,15 @@ export class ExternalReferences extends Serializable {
     const parse_apis = [];
     for (const field of refs_fields) {
       if (field == 'aliases')
-        parse_apis.push(this.parseCitationsFromAliases(object[field], restAPIConnector));
+        parse_apis.push(
+          this.parseCitationsFromAliases(object[field], restAPIConnector)
+        );
       else if (field == 'relatedAssets')
-        parse_apis.push(this.parseCitationsFromRelatedAssets(object[field], restAPIConnector));
-      else parse_apis.push(this.parseCitations(object[field], restAPIConnector));
+        parse_apis.push(
+          this.parseCitationsFromRelatedAssets(object[field], restAPIConnector)
+        );
+      else
+        parse_apis.push(this.parseCitations(object[field], restAPIConnector));
     }
 
     return forkJoin(parse_apis).pipe(
@@ -184,7 +194,7 @@ export class ExternalReferences extends Serializable {
         // remove unused citations from external reference list
         this.removeUnusedReferences(Array.from(citationResult.usedCitations));
         return citationResult;
-      }),
+      })
     );
   }
 
@@ -195,7 +205,7 @@ export class ExternalReferences extends Serializable {
    */
   public parseCitations(
     value: string,
-    restApiConnector: RestApiConnectorService,
+    restApiConnector: RestApiConnectorService
   ): Observable<CitationParseResult> {
     const reReference = /\(Citation: (.*?)\)/gmu;
     const citations = value.match(reReference);
@@ -212,11 +222,14 @@ export class ExternalReferences extends Serializable {
       for (const citation of citations) {
         // Split to get source name from citation
         const sourceName = citation.split('(Citation: ')[1].slice(0, -1);
-        api_map[sourceName] = this.checkAndAddReference(sourceName, restApiConnector);
+        api_map[sourceName] = this.checkAndAddReference(
+          sourceName,
+          restApiConnector
+        );
       }
       // check/add each citation
       return forkJoin(api_map).pipe(
-        map((api_results) => {
+        map(api_results => {
           const citation_results = api_results as any;
           for (const key of Object.keys(citation_results)) {
             // was the result able to be found/added?
@@ -224,7 +237,7 @@ export class ExternalReferences extends Serializable {
             else result.missingCitations.add(key);
           }
           return result;
-        }),
+        })
       );
     } else {
       return of(result);
@@ -257,7 +270,7 @@ export class ExternalReferences extends Serializable {
    */
   public parseCitationsFromAliases(
     aliases: string[],
-    restApiConnector: RestApiConnectorService,
+    restApiConnector: RestApiConnectorService
   ): Observable<CitationParseResult> {
     // Parse citations from the alias descriptions stored in external references
     const api_calls = [];
@@ -266,7 +279,10 @@ export class ExternalReferences extends Serializable {
       if (this._externalReferences.get(alias)) {
         result.usedCitations.add(alias);
         api_calls.push(
-          this.parseCitations(this._externalReferences.get(alias).description, restApiConnector),
+          this.parseCitations(
+            this._externalReferences.get(alias).description,
+            restApiConnector
+          )
         );
       }
     }
@@ -274,14 +290,14 @@ export class ExternalReferences extends Serializable {
     else
       return forkJoin(api_calls).pipe(
         // get citation errors for each alias
-        map((api_results) => {
+        map(api_results => {
           const citation_results = api_results as any;
           for (const citation_result of citation_results) {
             //merge into master list
             result.merge(citation_result);
           }
           return result; //return master list
-        }),
+        })
       );
   }
 
@@ -293,28 +309,30 @@ export class ExternalReferences extends Serializable {
    */
   public parseCitationsFromRelatedAssets(
     relatedAssets: RelatedAsset[],
-    restApiConnector: RestApiConnectorService,
+    restApiConnector: RestApiConnectorService
   ): Observable<CitationParseResult> {
     // Parse citations from the related asset descriptions
     const api_calls = [];
     const result = new CitationParseResult();
     for (const relatedAsset of relatedAssets) {
       if ('description' in relatedAsset && relatedAsset.description) {
-        api_calls.push(this.parseCitations(relatedAsset.description, restApiConnector));
+        api_calls.push(
+          this.parseCitations(relatedAsset.description, restApiConnector)
+        );
       }
     }
     if (api_calls.length == 0) return of(result);
     else
       return forkJoin(api_calls).pipe(
         // get citation errors
-        map((api_results) => {
+        map(api_results => {
           const citation_results = api_results as any;
           for (const citation_result of citation_results) {
             // merge into master list
             result.merge(citation_result);
           }
           return result; // return master list
-        }),
+        })
       );
   }
 
@@ -390,7 +408,7 @@ export class ExternalReferences extends Serializable {
         raw,
         '(',
         typeof raw,
-        ')',
+        ')'
       );
   }
 
@@ -406,7 +424,10 @@ export class ExternalReferences extends Serializable {
     const temp_externalReferences = new Map<string, ExternalReference>();
     for (const usedSourceName of usedSourceNames) {
       if (this._externalReferences.get(usedSourceName))
-        temp_externalReferences.set(usedSourceName, this._externalReferences.get(usedSourceName));
+        temp_externalReferences.set(
+          usedSourceName,
+          this._externalReferences.get(usedSourceName)
+        );
     }
 
     const pre_delete_keys = Array.from(this._externalReferences.keys());
@@ -415,7 +436,7 @@ export class ExternalReferences extends Serializable {
     const post_delete_keys = Array.from(this._externalReferences.keys());
     logger.log(
       'removed unused references',
-      pre_delete_keys.filter((x) => !post_delete_keys.includes(x)),
+      pre_delete_keys.filter(x => !post_delete_keys.includes(x))
     );
     // Sort references by description and update index map
     this.sortReferences();
@@ -428,22 +449,30 @@ export class ExternalReferences extends Serializable {
    */
   public validate(
     restAPIService: RestApiConnectorService,
-    options: { fields: string[]; object: StixObject },
+    options: { fields: string[]; object: StixObject }
   ): Observable<ValidationData> {
     const result = new ValidationData();
     const parse_apis = [];
     for (const field of options.fields) {
       if (!Object.keys(options.object)) continue; //object does not implement the field
       if (field == 'aliases')
-        parse_apis.push(this.parseCitationsFromAliases(options.object[field], restAPIService));
+        parse_apis.push(
+          this.parseCitationsFromAliases(options.object[field], restAPIService)
+        );
       else if (field == 'relatedAssets')
         parse_apis.push(
-          this.parseCitationsFromRelatedAssets(options.object[field], restAPIService),
+          this.parseCitationsFromRelatedAssets(
+            options.object[field],
+            restAPIService
+          )
         );
-      else parse_apis.push(this.parseCitations(options.object[field], restAPIService));
+      else
+        parse_apis.push(
+          this.parseCitations(options.object[field], restAPIService)
+        );
     }
     return forkJoin(parse_apis).pipe(
-      map((api_results) => {
+      map(api_results => {
         const parse_results = api_results as CitationParseResult[];
         const citationResult = new CitationParseResult();
         for (const parse_result of parse_results) {
@@ -485,7 +514,7 @@ export class ExternalReferences extends Serializable {
           });
         //return the result
         return result;
-      }),
+      })
     );
   }
 }
@@ -515,9 +544,12 @@ export class CitationParseResult {
     missingCitations?: Set<string>;
     brokenCitations: Set<string>;
   }) {
-    if (initData && initData.usedCitations) this.usedCitations = initData.usedCitations;
-    if (initData && initData.missingCitations) this.missingCitations = initData.missingCitations;
-    if (initData && initData.brokenCitations) this.brokenCitations = initData.brokenCitations;
+    if (initData && initData.usedCitations)
+      this.usedCitations = initData.usedCitations;
+    if (initData && initData.missingCitations)
+      this.missingCitations = initData.missingCitations;
+    if (initData && initData.brokenCitations)
+      this.brokenCitations = initData.brokenCitations;
   }
 
   /**
@@ -525,8 +557,17 @@ export class CitationParseResult {
    * @param {CitationParseResult} that results from other object
    */
   public merge(that: CitationParseResult) {
-    this.usedCitations = new Set([...this.usedCitations, ...that.usedCitations]);
-    this.missingCitations = new Set([...this.missingCitations, ...that.missingCitations]);
-    this.brokenCitations = new Set([...this.brokenCitations, ...that.brokenCitations]);
+    this.usedCitations = new Set([
+      ...this.usedCitations,
+      ...that.usedCitations,
+    ]);
+    this.missingCitations = new Set([
+      ...this.missingCitations,
+      ...that.missingCitations,
+    ]);
+    this.brokenCitations = new Set([
+      ...this.brokenCitations,
+      ...that.brokenCitations,
+    ]);
   }
 }

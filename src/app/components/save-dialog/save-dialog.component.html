@@ -5,8 +5,7 @@
       <div *ngIf="validation; else validating">
         <app-validation-results
           [validation]="validation"
-          [patchId]="config.patchId"
-        ></app-validation-results>
+          [patchId]="config.patchId"></app-validation-results>
       </div>
       <ng-template #validating>
         <app-loading-overlay></app-loading-overlay>
@@ -26,20 +25,21 @@
         <button
           mat-list-item
           [disabled]="config.versionAlreadyIncremented || !saveEnabled"
-          (click)="saveNextMajorVersion()"
-        >
+          (click)="saveNextMajorVersion()">
           <div class="save-list-item">save new major version</div>
           <div>{{ currentVersion }} &#8594; {{ nextMajorVersion }}</div>
         </button>
         <button
           mat-list-item
           [disabled]="config.versionAlreadyIncremented || !saveEnabled"
-          (click)="saveNextMinorVersion()"
-        >
+          (click)="saveNextMinorVersion()">
           <div class="save-list-item">save new minor version</div>
           <div>{{ currentVersion }} &#8594; {{ nextMinorVersion }}</div>
         </button>
-        <button mat-list-item [disabled]="!saveEnabled" (click)="saveCurrentVersion()">
+        <button
+          mat-list-item
+          [disabled]="!saveEnabled"
+          (click)="saveCurrentVersion()">
           <div class="save-list-item">save current version</div>
           <div>{{ currentVersion }} &#8594; {{ currentVersion }}</div>
         </button>
@@ -60,27 +60,40 @@
       <mat-list>
         <mat-list-item>
           <mat-icon matListIcon class="text-success">check</mat-icon>
-          <p matLine class="text-success">No objects in the knowledge base link to this object.</p>
+          <p matLine class="text-success">
+            No objects in the knowledge base link to this object.
+          </p>
         </mat-list-item>
       </mat-list>
     </ng-container>
     <ng-template #linkPatches>
       <p>
-        The following objects include a link to the edited object and will be updated automatically.
+        The following objects include a link to the edited object and will be
+        updated automatically.
       </p>
       <ng-container>
         <h3>Objects</h3>
         <app-stix-list
-          [config]="{ stixObjects: patch_objects, clickBehavior: 'none' }"
-        ></app-stix-list>
+          [config]="{
+            stixObjects: patch_objects,
+            clickBehavior: 'none',
+          }"></app-stix-list>
       </ng-container>
     </ng-template>
     <div class="buttons">
       <button mat-button matDialogClose>cancel</button>
-      <button mat-stroked-button *ngIf="patch_objects.length > 0" (click)="patch()">
+      <button
+        mat-stroked-button
+        *ngIf="patch_objects.length > 0"
+        (click)="patch()">
         apply patches and save
       </button>
-      <button mat-stroked-button *ngIf="patch_objects.length == 0" (click)="save()">save</button>
+      <button
+        mat-stroked-button
+        *ngIf="patch_objects.length == 0"
+        (click)="save()">
+        save
+      </button>
     </div>
   </div>
   <div *ngIf="stage == 3" class="stage patching">

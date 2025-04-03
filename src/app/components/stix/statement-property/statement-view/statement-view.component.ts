@@ -10,7 +10,9 @@ export class StatementViewComponent {
   @Input() public config: StatementPropertyConfig;
 
   public get object() {
-    return Array.isArray(this.config.object) ? this.config.object[0] : this.config.object;
+    return Array.isArray(this.config.object)
+      ? this.config.object[0]
+      : this.config.object;
   }
 
   // return false if object has a statements
@@ -29,7 +31,8 @@ export class StatementViewComponent {
     const objectStatements = [];
     if (this.object['object_marking_refs']) {
       for (const stixId of this.object['object_marking_refs']) {
-        if (this.statementsMap[stixId]) objectStatements.push(this.statementsMap[stixId]);
+        if (this.statementsMap[stixId])
+          objectStatements.push(this.statementsMap[stixId]);
       }
     }
     return objectStatements;

@@ -32,7 +32,7 @@ export class AuthenticationService extends ApiConnector {
     private http: HttpClient,
     snackbar: MatSnackBar,
     private restAPIConnector: RestApiConnectorService,
-    private configService: AppConfigService,
+    private configService: AppConfigService
   ) {
     super(snackbar);
   }
@@ -77,7 +77,7 @@ export class AuthenticationService extends ApiConnector {
   public login(): Observable<UserAccount> {
     return this.getAuthType().pipe(
       // retrieve authentication configuration
-      concatMap((authnType) => {
+      concatMap(authnType => {
         let url = `${this.apiUrl}/authn/${authnType}/login`;
         if (authnType == 'oidc') {
           // oidc login
@@ -85,26 +85,26 @@ export class AuthenticationService extends ApiConnector {
           // redirect to OIDC Identity Provider
           window.location.href = url;
           return this.getSession().pipe(
-            map((res) => {
+            map(res => {
               this.success();
               return res;
-            }),
+            })
           );
         }
         // anonymous login
         return this.http.get(url, { responseType: 'text' }).pipe(
-          concatMap((success) => {
+          concatMap(success => {
             return this.getSession().pipe(
-              map((res) => {
+              map(res => {
                 this.success();
                 return res;
-              }),
+              })
             );
-          }),
+          })
         );
       }),
       catchError(this.handleError_raise<UserAccount>()),
-      share(),
+      share()
     );
   }
 
@@ -120,17 +120,17 @@ export class AuthenticationService extends ApiConnector {
    */
   public logout(): Observable<any> {
     return this.getAuthType().pipe(
-      concatMap((authnType) => {
+      concatMap(authnType => {
         const url = `${this.apiUrl}/authn/${authnType}/logout`;
         return this.http.get(url, { responseType: 'text' }).pipe(
-          map((res) => {
+          map(res => {
             this.currentUser = undefined;
             return res;
-          }),
+          })
         );
       }),
       catchError(this.handleError_raise()),
-      share(),
+      share()
     );
   }
 
@@ -141,7 +141,7 @@ export class AuthenticationService extends ApiConnector {
   public register() {
     return this.getAuthType().pipe(
       // retrieve authentication configuration
-      concatMap((authnType) => {
+      concatMap(authnType => {
         if (authnType == 'oidc') {
           let url = `${this.apiUrl}/authn/${authnType}/login`;
           // oidc login
@@ -152,31 +152,33 @@ export class AuthenticationService extends ApiConnector {
         return [].map(() => ({ next: () => true }));
       }),
       catchError(this.handleError_raise<UserAccount>()),
-      share(),
+      share()
     );
   }
 
   public handleRegisterRedirect(): Observable<any> {
     return this.getAuthType().pipe(
       // retrieve authentication configuration
-      concatMap((authnType) => {
+      concatMap(authnType => {
         if (authnType == 'oidc') {
           return this.http
-            .post(`${this.apiUrl}/user-accounts/register`, { responseType: 'text' })
+            .post(`${this.apiUrl}/user-accounts/register`, {
+              responseType: 'text',
+            })
             .pipe(
               concatMap(() => {
                 return this.getSession().pipe(
-                  map((res) => {
+                  map(res => {
                     return res;
-                  }),
+                  })
                 );
-              }),
+              })
             );
         }
         return [].map(() => ({ next: () => true }));
       }),
       catchError(this.handleError_raise<UserAccount>()),
-      share(),
+      share()
     );
   }
 
@@ -189,19 +191,19 @@ export class AuthenticationService extends ApiConnector {
     const url = `${this.apiUrl}/session`;
     // retrieve user session object
     return this.http.get<any>(url).pipe(
-      concatMap((session) => {
+      concatMap(session => {
         // retrieve user account from session
         return this.restAPIConnector.getUserAccount(session.userAccountId).pipe(
-          map((res) => {
+          map(res => {
             this.currentUser = new UserAccount(res);
             return res;
-          }),
+          })
         );
       }),
-      catchError((err) => {
+      catchError(err => {
         return of(null);
       }), // return a default value so that the app can continue
-      share(),
+      share()
     );
   }
 
@@ -212,16 +214,16 @@ export class AuthenticationService extends ApiConnector {
   public getAuthType(): Observable<string> {
     const url = `${this.apiUrl}/config/authn`;
     return this.http.get<any>(url).pipe(
-      map((results) => {
+      map(results => {
         if (results.mechanisms) {
-          const authnMechanism = results.mechanisms.find((m) => m.authnType);
+          const authnMechanism = results.mechanisms.find(m => m.authnType);
           if (authnMechanism?.authnType) {
             return authnMechanism.authnType;
           }
         } else throw new Error('invalid authentication mechanism'); // this should never happen
       }),
       catchError(this.handleError_raise()),
-      share(),
+      share()
     );
   }
 }

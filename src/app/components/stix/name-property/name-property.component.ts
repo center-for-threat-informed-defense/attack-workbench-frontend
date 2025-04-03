@@ -42,7 +42,9 @@ export class NamePropertyComponent implements OnInit {
   constructor(private restAPIService: RestApiConnectorService) {}
 
   ngOnInit(): void {
-    const object = Array.isArray(this.config.object) ? this.config.object[0] : this.config.object;
+    const object = Array.isArray(this.config.object)
+      ? this.config.object[0]
+      : this.config.object;
     if (this.config.mode !== 'diff' && object.revoked) {
       // retrieve revoking object
       const data$ = this.restAPIService.getRelatedTo({
@@ -50,7 +52,7 @@ export class NamePropertyComponent implements OnInit {
         relationshipType: 'revoked-by',
       });
       const relSubscription = data$.subscribe({
-        next: (data) => {
+        next: data => {
           const relationship = data.data[0] as Relationship;
           this.currentTargetObj = relationship.target_object as Technique;
           this.loaded = true;

@@ -7,13 +7,15 @@
   cdkDrag
   #popoverTrigger2="mtxPopoverTrigger"
   [mtxPopoverTriggerFor]="popover"
-  mtxPopoverTriggerOn="click"
->
+  mtxPopoverTriggerOn="click">
   <mat-icon aria-label="settings">settings</mat-icon>
 </button>
 
 <mtx-popover #popover="mtxPopover" [position]="['below', 'before']">
-  <div style="max-width: 14em" class="workflow-status" *ngIf="loaded; else loading">
+  <div
+    style="max-width: 14em"
+    class="workflow-status"
+    *ngIf="loaded; else loading">
     <mat-form-field class="workflow-status" appearance="outline">
       <mat-label>Workflow Status</mat-label>
       <mat-select [formControl]="statusControl">

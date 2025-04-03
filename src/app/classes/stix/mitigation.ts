@@ -40,7 +40,10 @@ export class Mitigation extends StixObject {
     rep.stix.x_mitre_domains = this.domains;
 
     // domain specific fields
-    if (this.domains.includes('ics-attack') && this.securityControls.length > 0) {
+    if (
+      this.domains.includes('ics-attack') &&
+      this.securityControls.length > 0
+    ) {
       rep.stix.labels = this.securityControls;
     }
 
@@ -64,12 +67,13 @@ export class Mitigation extends StixObject {
             sdo.name,
             '(',
             typeof sdo.name,
-            ')',
+            ')'
           );
       } else this.name = '';
 
       if ('x_mitre_domains' in sdo) {
-        if (this.isStringArray(sdo.x_mitre_domains)) this.domains = sdo.x_mitre_domains;
+        if (this.isStringArray(sdo.x_mitre_domains))
+          this.domains = sdo.x_mitre_domains;
         else logger.error('TypeError: domains field is not a string array.');
       } else this.domains = [];
 
@@ -85,7 +89,9 @@ export class Mitigation extends StixObject {
    * @param {RestApiConnectorService} restAPIService: the REST API connector through which asynchronous validation can be completed
    * @returns {Observable<ValidationData>} the validation warnings and errors once validation is complete.
    */
-  public validate(restAPIService: RestApiConnectorService): Observable<ValidationData> {
+  public validate(
+    restAPIService: RestApiConnectorService
+  ): Observable<ValidationData> {
     return this.base_validate(restAPIService);
   }
 
@@ -97,7 +103,7 @@ export class Mitigation extends StixObject {
   public save(restAPIService: RestApiConnectorService): Observable<Mitigation> {
     const postObservable = restAPIService.postMitigation(this);
     const subscription = postObservable.subscribe({
-      next: (result) => {
+      next: result => {
         this.deserialize(result.serialize());
       },
       complete: () => {
@@ -126,10 +132,12 @@ export class Mitigation extends StixObject {
    * @param restAPIService [RestApiConnectorService] the service to perform the PUT through
    * @returns {Observable} of the put
    */
-  public update(restAPIService: RestApiConnectorService): Observable<Mitigation> {
+  public update(
+    restAPIService: RestApiConnectorService
+  ): Observable<Mitigation> {
     const putObservable = restAPIService.putMitigation(this);
     const subscription = putObservable.subscribe({
-      next: (result) => {
+      next: result => {
         this.deserialize(result.serialize());
       },
       complete: () => {

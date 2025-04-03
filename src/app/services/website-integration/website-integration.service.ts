@@ -38,7 +38,7 @@ export class WebsiteIntegrationService {
 
   constructor(
     private editorService: EditorService,
-    private restAPIService: RestApiConnectorService,
+    private restAPIService: RestApiConnectorService
   ) {
     // intentionally left blank
   }
@@ -50,8 +50,16 @@ export class WebsiteIntegrationService {
    */
   public checkExternalUrlValidity(stixIdToCheck) {
     // if the integration is disabled, if the stixId passed in is not truthy, or if the stixId is 'new' we can auto-return false
-    if (this.websiteIntegrationEnabled == false || !stixIdToCheck || stixIdToCheck == 'new') {
-      this.currentWebIntegrationStatus = { url: null, valid: false, stixId: stixIdToCheck };
+    if (
+      this.websiteIntegrationEnabled == false ||
+      !stixIdToCheck ||
+      stixIdToCheck == 'new'
+    ) {
+      this.currentWebIntegrationStatus = {
+        url: null,
+        valid: false,
+        stixId: stixIdToCheck,
+      };
       return false;
     }
     // if the stixId matches the currently held stixId, no need to do the HTTP reqs
@@ -59,7 +67,11 @@ export class WebsiteIntegrationService {
       return this.currentWebIntegrationStatus.valid;
     }
     // set the stixId to the passed in stixId
-    this.currentWebIntegrationStatus = { url: null, valid: false, stixId: stixIdToCheck };
+    this.currentWebIntegrationStatus = {
+      url: null,
+      valid: false,
+      stixId: stixIdToCheck,
+    };
     // retrieve object based on type
     let data$: any;
     if (this.editorService.type == 'software')
@@ -85,7 +97,7 @@ export class WebsiteIntegrationService {
     }
     // fetch the object from the REST API based on stixId
     const objSubscription = data$.subscribe({
-      next: (data) => {
+      next: data => {
         // if data is not there, we can return false immediately
         if (data.length !== 1) {
           return false;
@@ -116,14 +128,14 @@ export class WebsiteIntegrationService {
 
         // with no-cors we will get no data but we can validate that the URL is valid
         fetch(url, { mode: 'no-cors' }).then(
-          (response) => {
+          response => {
             this.currentWebIntegrationStatus.valid = true;
             return this.currentWebIntegrationStatus.valid;
           },
-          (error) => {
+          error => {
             this.currentWebIntegrationStatus.valid = false;
             return this.currentWebIntegrationStatus.valid;
-          },
+          }
         );
       },
       complete: () => {

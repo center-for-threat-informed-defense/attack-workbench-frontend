@@ -5,20 +5,17 @@
       *ngIf="detailTable.length"
       mat-table
       [dataSource]="detailTable"
-      class="subtype-table"
-    >
+      class="subtype-table">
       <ng-container
         [matColumnDef]="column.label ? column.label : column.name"
-        *ngFor="let column of subtypeFields"
-      >
+        *ngFor="let column of subtypeFields">
         <th mat-header-cell *matHeaderCellDef>
           {{ (column.label ? column.label : column.name) | titlecase }}
         </th>
         <td mat-cell *matCellDef="let element">
           <app-property-diff
             [before]="fieldToString(element.before, column.name)"
-            [after]="fieldToString(element.after, column.name)"
-          >
+            [after]="fieldToString(element.after, column.name)">
           </app-property-diff>
         </td>
       </ng-container>

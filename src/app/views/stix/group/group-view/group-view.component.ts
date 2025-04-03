@@ -24,7 +24,7 @@ export class GroupViewComponent extends StixViewPage implements OnInit {
 
   constructor(
     authenticationService: AuthenticationService,
-    private restApiConnector: RestApiConnectorService,
+    private restApiConnector: RestApiConnectorService
   ) {
     super(authenticationService);
   }

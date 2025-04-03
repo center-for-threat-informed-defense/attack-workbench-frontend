@@ -21,8 +21,7 @@
         field: 'created',
         humanize: true,
         tooltip: true,
-      }"
-    ></app-timestamp-view>
+      }"></app-timestamp-view>
   </div>
   <div class="row">
     <div class="col">
@@ -34,8 +33,7 @@
           object: user,
           field: 'displayName',
           label: 'display name',
-        }"
-      ></app-string-property>
+        }"></app-string-property>
     </div>
     <div class="col">
       <!-- username -->
@@ -45,8 +43,7 @@
           mode: 'view',
           object: user,
           field: 'username',
-        }"
-      ></app-string-property>
+        }"></app-string-property>
     </div>
     <div class="col">
       <!-- email -->
@@ -56,8 +53,7 @@
           mode: 'view',
           object: user,
           field: 'email',
-        }"
-      ></app-string-property>
+        }"></app-string-property>
     </div>
   </div>
   <!-- teams -->
@@ -79,7 +75,9 @@
     </div>
     <div class="row">
       <div class="col">
-        <app-recent-activity [identities]="[user.id]" [showIdentity]="false"></app-recent-activity>
+        <app-recent-activity
+          [identities]="[user.id]"
+          [showIdentity]="false"></app-recent-activity>
       </div>
     </div>
   </ng-container>

@@ -57,7 +57,7 @@ export class DescriptiveViewComponent implements OnInit {
   private replaceCitationHTML(
     displayStr: string,
     sourceName: string,
-    completeReference: string,
+    completeReference: string
   ): string {
     const referencesField = this.config.object[this.config.referencesField];
     const reference = referencesField.getReference(sourceName);
@@ -90,11 +90,13 @@ export class DescriptiveViewComponent implements OnInit {
     const cleanReferenceNames = [];
     if (referenceNames) {
       for (let i = 0; i < referenceNames.length; i++) {
-        cleanReferenceNames[i] = referenceNames[i].split('(Citation: ')[1].slice(0, -1);
+        cleanReferenceNames[i] = referenceNames[i]
+          .split('(Citation: ')[1]
+          .slice(0, -1);
         displayStr = this.replaceCitationHTML(
           displayStr,
           cleanReferenceNames[i],
-          referenceNames[i],
+          referenceNames[i]
         );
       }
     }
@@ -108,7 +110,7 @@ export class DescriptiveViewComponent implements OnInit {
   private getLinkedIds(displayStr: string): string[] {
     const matches = displayStr.match(this.reLinkById);
     if (!matches) return []; // no LinkByIds found
-    return matches.map((link) => link.split('(LinkById: ')[1].slice(0, -1));
+    return matches.map(link => link.split('(LinkById: ')[1].slice(0, -1));
   }
 
   /**
@@ -117,13 +119,18 @@ export class DescriptiveViewComponent implements OnInit {
    */
   private loadLinkedObjects(ids: string[]): Observable<any> {
     return this.restApiConnector
-      .getAllObjects({ attackIDs: ids, revoked: true, deprecated: true, deserialize: true })
+      .getAllObjects({
+        attackIDs: ids,
+        revoked: true,
+        deprecated: true,
+        deserialize: true,
+      })
       .pipe(
         map((results: any) => {
           const data = results.data as StixObject[];
           // store retrieved objects in dictionary for quick lookup
           if (data?.length > 0) {
-            data.forEach((obj) => {
+            data.forEach(obj => {
               // objects must be validated in cases where more than one object is
               // returned by the given ATT&CK ID, this occurs due to older versions
               // of ATT&CK in which techniques shared their IDs with mitigations
@@ -131,7 +138,7 @@ export class DescriptiveViewComponent implements OnInit {
             });
           }
           return results;
-        }),
+        })
       );
   }
 
@@ -187,12 +194,12 @@ export class DescriptiveViewComponent implements OnInit {
     }
 
     const loaded = function (ids: string[], lookup: {}) {
-      return ids.every((id) => Object.keys(lookup).includes(id));
+      return ids.every(id => Object.keys(lookup).includes(id));
     };
 
     // Check for LinkById tags
     let linkedIDs = this.getLinkedIds(this.preview);
-    linkedIDs = linkedIDs.filter((id) => id != '');
+    linkedIDs = linkedIDs.filter(id => id != '');
     if (!linkedIDs) {
       this.loading = false;
       return;
@@ -204,7 +211,9 @@ export class DescriptiveViewComponent implements OnInit {
         this.preview = this.replaceLinkByIds(this.preview, linkedIDs);
         this.loading = false;
       } else {
-        const missing = linkedIDs.filter((id) => Object.keys(this.objectLookup).indexOf(id) < 0);
+        const missing = linkedIDs.filter(
+          id => Object.keys(this.objectLookup).indexOf(id) < 0
+        );
         this.sub = this.loadLinkedObjects(missing).subscribe({
           next: (results: any) => {
             this.preview = this.replaceLinkByIds(this.preview, linkedIDs);

@@ -77,8 +77,10 @@ export class CollectionDiffCategories<T> {
    */
   public remove_objects(objects: T[], change_type: string) {
     const sdos = objects as unknown as StixObject[];
-    const objects_ids = new Set(sdos.map((x) => x.stixID));
-    this[change_type] = this[change_type].filter((x) => !objects_ids.has(x.stixID));
+    const objects_ids = new Set(sdos.map(x => x.stixID));
+    this[change_type] = this[change_type].filter(
+      x => !objects_ids.has(x.stixID)
+    );
   }
 
   /**
@@ -91,7 +93,7 @@ export class CollectionDiffCategories<T> {
    */
   public has_object(object: T, change_type: string) {
     const sdo = object as unknown as StixObject;
-    return this[change_type].some((x) => x.stixID == sdo.stixID);
+    return this[change_type].some(x => x.stixID == sdo.stixID);
   }
 
   /**
@@ -157,7 +159,7 @@ export class VersionReference {
           sdo.object_ref,
           '(',
           typeof sdo.object_ref,
-          ')',
+          ')'
         );
     } else this.object_ref = '';
 
@@ -170,7 +172,7 @@ export class VersionReference {
           sdo.object_modified,
           '(',
           typeof sdo.object_modified,
-          ')',
+          ')'
         );
     } else this.object_modified = new Date();
   }
@@ -229,7 +231,7 @@ export class Collection extends StixObject {
     const rep = super.base_serialize();
 
     rep.stix.name = this.name.trim();
-    rep.stix.x_mitre_contents = this.contents.map((vr) => vr.serialize());
+    rep.stix.x_mitre_contents = this.contents.map(vr => vr.serialize());
     // add release marking
     if (!rep.workspace.hasOwnProperty('workflow') || !rep.workspace.workflow) {
       rep.workspace.workflow = {};
@@ -237,7 +239,8 @@ export class Collection extends StixObject {
     rep.workspace.workflow.release = this.release;
     // add import/categories
     if (this.imported) rep.workspace.imported = this.imported.toString();
-    if (this.import_categories) rep.workspace.import_categories = this.import_categories;
+    if (this.import_categories)
+      rep.workspace.import_categories = this.import_categories;
 
     return rep;
   }
@@ -259,20 +262,22 @@ export class Collection extends StixObject {
             sdo.name,
             '(',
             typeof sdo.name,
-            ')',
+            ')'
           );
       } else this.name = '';
 
       if ('x_mitre_contents' in sdo) {
         if (typeof sdo.x_mitre_contents === 'object')
-          this.contents = sdo.x_mitre_contents.map((vr) => new VersionReference(vr));
+          this.contents = sdo.x_mitre_contents.map(
+            vr => new VersionReference(vr)
+          );
         else
           logger.error(
             'TypeError: x_mitre_contents field is not an object:',
             sdo.x_mitre_contents,
             '(',
             typeof sdo.x_mitre_contents,
-            ')',
+            ')'
           );
       }
     } else logger.error("ObjectError: 'stix' field does not exist in object");
@@ -281,26 +286,28 @@ export class Collection extends StixObject {
       const sdo = raw.workspace;
 
       if ('imported' in sdo) {
-        if (typeof sdo.imported === 'string') this.imported = new Date(sdo.imported);
+        if (typeof sdo.imported === 'string')
+          this.imported = new Date(sdo.imported);
         else
           logger.error(
             'TypeError: imported field is not a string:',
             sdo.imported,
             '(',
             typeof sdo.imported,
-            ')',
+            ')'
           );
       }
 
       if ('workflow' in sdo && 'release' in sdo.workflow) {
-        if (typeof sdo.workflow.release === 'boolean') this.release = sdo.workflow.release;
+        if (typeof sdo.workflow.release === 'boolean')
+          this.release = sdo.workflow.release;
         else
           logger.error(
             'TypeError: release field is not a boolean:',
             sdo.workflow.release,
             '(',
             typeof sdo.workflow.release,
-            ')',
+            ')'
           );
       }
 
@@ -313,7 +320,7 @@ export class Collection extends StixObject {
             sdo.import_categories,
             '(',
             typeof sdo.import_categories,
-            ')',
+            ')'
           );
       }
     }
@@ -397,10 +404,10 @@ export class Collection extends StixObject {
     };
     // build helper lookups to reduce complexity from n^2 to n.
     const thisStixLookup = new Map<string, StixObject>(
-      this.stix_contents.map((sdo) => [sdo.stixID, sdo]),
+      this.stix_contents.map(sdo => [sdo.stixID, sdo])
     );
     const thatStixLookup = new Map<string, StixObject>(
-      that.stix_contents.map((sdo) => [sdo.stixID, sdo]),
+      that.stix_contents.map(sdo => [sdo.stixID, sdo])
     );
 
     for (const thisVr of this.contents) {
@@ -410,7 +417,9 @@ export class Collection extends StixObject {
         continue;
       }
       const attackType = thisAttackObject.attackType.replace(/-/g, '_');
-      if (that.contents.find((thatVr) => thisVr.object_ref == thatVr.object_ref)) {
+      if (
+        that.contents.find(thatVr => thisVr.object_ref == thatVr.object_ref)
+      ) {
         // object exists in other collection
         const thatAttackObject = thatStixLookup.get(thisVr.object_ref);
         if (!thatAttackObject) {
@@ -421,7 +430,8 @@ export class Collection extends StixObject {
         if (
           thatAttackObject.modified &&
           thisAttackObject.modified &&
-          thatAttackObject.modified.toISOString() == thisAttackObject.modified.toISOString()
+          thatAttackObject.modified.toISOString() ==
+            thisAttackObject.modified.toISOString()
         ) {
           // not a change
           results[attackType].duplicates.push(thisAttackObject);
@@ -431,10 +441,15 @@ export class Collection extends StixObject {
           if (thisAttackObject.revoked && !thatAttackObject.revoked) {
             // was revoked in the new and note in old
             results[attackType].revocations.push(thisAttackObject);
-          } else if (thisAttackObject.deprecated && !thatAttackObject.deprecated) {
+          } else if (
+            thisAttackObject.deprecated &&
+            !thatAttackObject.deprecated
+          ) {
             // was deprecated in new and not in old
             results[attackType].deprecations.push(thisAttackObject);
-          } else if (thisAttackObject.version.compareTo(thatAttackObject.version) != 0) {
+          } else if (
+            thisAttackObject.version.compareTo(thatAttackObject.version) != 0
+          ) {
             // version number incremented/decremented
             results[attackType].changes.push(thisAttackObject);
           } else {
@@ -455,7 +470,9 @@ export class Collection extends StixObject {
    * @param {RestApiConnectorService} restAPIService: the REST API connector through which asynchronous validation can be completed
    * @returns {Observable<ValidationData>} the validation warnings and errors once validation is complete.
    */
-  public validate(restAPIService: RestApiConnectorService): Observable<ValidationData> {
+  public validate(
+    restAPIService: RestApiConnectorService
+  ): Observable<ValidationData> {
     return this.base_validate(restAPIService);
   }
 
@@ -467,7 +484,7 @@ export class Collection extends StixObject {
   public save(restAPIService: RestApiConnectorService): Observable<Collection> {
     const postObservable = restAPIService.postCollection(this);
     const subscription = postObservable.subscribe({
-      next: (result) => {
+      next: result => {
         this.deserialize(result.serialize());
       },
       complete: () => {

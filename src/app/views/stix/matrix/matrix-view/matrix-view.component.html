@@ -5,13 +5,11 @@
         [config]="{
           mode: config.mode,
           object: config.object,
-        }"
-      ></app-name-property>
+        }"></app-name-property>
       <app-subheading
         [config]="config"
         (onOpenHistory)="openHistory()"
-        (onOpenNotes)="openNotes()"
-      ></app-subheading>
+        (onOpenNotes)="openNotes()"></app-subheading>
     </div>
   </div>
   <div class="row">
@@ -22,8 +20,7 @@
         [config]="{
           mode: config.mode,
           object: config.object,
-        }"
-      ></app-attackid-property>
+        }"></app-attackid-property>
     </div>
     <div class="col">
       <!-- VERSION NUMBER -->
@@ -32,8 +29,7 @@
         [config]="{
           mode: config.mode,
           object: config.object,
-        }"
-      ></app-version-property>
+        }"></app-version-property>
     </div>
   </div>
   <div class="row">
@@ -48,8 +44,7 @@
           firstParagraphOnly: false,
           referencesField: 'external_references',
           label: 'Description',
-        }"
-      ></app-descriptive-property>
+        }"></app-descriptive-property>
     </div>
   </div>
   <!-- TACTICS -->
@@ -71,8 +66,7 @@
         clickBehavior: 'link',
         type: 'tactic',
         label: 'tactics',
-      }"
-    ></app-ordered-list-property>
+      }"></app-ordered-list-property>
   </div>
   <ng-template #tacticsLoading>
     <div class="row labelled-box spacing-16 grow-to-row">
@@ -101,26 +95,29 @@
             <mat-option value="flat">Flat</mat-option>
           </mat-select>
         </mat-form-field>
-        <button mat-stroked-button (click)="toggleAllSubtechniquesVisible(true)">
+        <button
+          mat-stroked-button
+          (click)="toggleAllSubtechniquesVisible(true)">
           Show all sub-techniques
         </button>
-        <button mat-stroked-button (click)="toggleAllSubtechniquesVisible(false)">
+        <button
+          mat-stroked-button
+          (click)="toggleAllSubtechniquesVisible(false)">
           Hide all sub-technique
         </button>
       </div>
       <app-matrix-side
         *ngIf="view === 'side'"
         [matrix]="matrix"
-        [tactics]="matrix_tactics"
-      ></app-matrix-side>
+        [tactics]="matrix_tactics"></app-matrix-side>
       <app-matrix-flat
         *ngIf="view === 'flat'"
         [matrix]="matrix"
-        [tactics]="matrix_tactics"
-      ></app-matrix-flat>
+        [tactics]="matrix_tactics"></app-matrix-flat>
     </ng-container>
     <ng-template #nothingHere>
-      <app-empty-list-marker (onCheckAgain)="loadMatrix()"></app-empty-list-marker>
+      <app-empty-list-marker
+        (onCheckAgain)="loadMatrix()"></app-empty-list-marker>
     </ng-template>
   </ng-container>
   <ng-template #loadingDisplay>
@@ -131,9 +128,9 @@
 <!-- EXTERNAL REFERENCES -->
 <div
   *ngIf="
-    matrix.external_references.list().length > 0 || previous?.external_references.list().length > 0
-  "
->
+    matrix.external_references.list().length > 0 ||
+    previous?.external_references.list().length > 0
+  ">
   <div class="row">
     <div class="col">
       <h2 class="section-header">References</h2>
@@ -146,8 +143,7 @@
           mode: config.mode,
           object: config.object,
           referencesField: 'external_references',
-        }"
-      ></app-external-references-property>
+        }"></app-external-references-property>
     </div>
   </div>
 </div>

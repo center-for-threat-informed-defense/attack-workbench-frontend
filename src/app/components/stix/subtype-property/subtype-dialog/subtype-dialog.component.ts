@@ -23,15 +23,17 @@ export class SubtypeDialogComponent implements OnInit, OnDestroy {
   private saveSubscription: Subscription = new Subscription();
 
   public get isValid(): boolean {
-    const required = this.config.subtypeFields.filter((field) => field.required);
-    return required.every((field) => field.name in this.data && this.data[field.name].length);
+    const required = this.config.subtypeFields.filter(field => field.required);
+    return required.every(
+      field => field.name in this.data && this.data[field.name].length
+    );
   }
 
   constructor(
     public dialogRef: MatDialogRef<SubtypeDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public config: SubtypeDialogConfig,
     public restApiService: RestApiConnectorService,
-    public editorService: EditorService,
+    public editorService: EditorService
   ) {
     this.isNew = config.index == undefined;
     if (!this.isNew) this.data = config.object[config.field][config.index];
@@ -40,43 +42,47 @@ export class SubtypeDialogComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     // retrieve 'select' fields
     const selections = this.config.subtypeFields
-      .filter((field) => field.editType == 'select')
-      .map((field) => field.name);
+      .filter(field => field.editType == 'select')
+      .map(field => field.name);
     if (!selections.length) return;
 
     // create a form control for each 'select' field
-    selections.forEach((fieldName) => {
+    selections.forEach(fieldName => {
       if (!this.data[fieldName]) this.data[fieldName] = [];
       this.selectControls[fieldName] = new FormControl(this.data[fieldName]);
     });
 
     // load allowed values for 'select' fields
-    this.allowedValuesSub = this.restApiService.getAllAllowedValues().subscribe({
-      next: (data) => {
-        const allAllowedValues = data.find(
-          (obj) => obj.objectType == this.config.object.attackType,
-        );
-        selections.forEach((field) => {
-          const values = new Set<string>();
-          const property = allAllowedValues.properties.find((p) => p.propertyName == field);
-          if ('domains' in this.config.object) {
-            const obj = this.config.object as any;
-            property.domains.forEach((domain) => {
-              if (obj.domains.includes(domain.domainName)) {
+    this.allowedValuesSub = this.restApiService
+      .getAllAllowedValues()
+      .subscribe({
+        next: data => {
+          const allAllowedValues = data.find(
+            obj => obj.objectType == this.config.object.attackType
+          );
+          selections.forEach(field => {
+            const values = new Set<string>();
+            const property = allAllowedValues.properties.find(
+              p => p.propertyName == field
+            );
+            if ('domains' in this.config.object) {
+              const obj = this.config.object as any;
+              property.domains.forEach(domain => {
+                if (obj.domains.includes(domain.domainName)) {
+                  domain.allowedValues.forEach(values.add, values);
+                }
+              });
+            } else {
+              // domains not specified on object
+              property.domains.forEach(domain => {
                 domain.allowedValues.forEach(values.add, values);
-              }
-            });
-          } else {
-            // domains not specified on object
-            property.domains.forEach((domain) => {
-              domain.allowedValues.forEach(values.add, values);
-            });
-          }
-          this.allowedValues[field] = Array.from(values);
-        });
-        this.dataLoaded = true;
-      },
-    });
+              });
+            }
+            this.allowedValues[field] = Array.from(values);
+          });
+          this.dataLoaded = true;
+        },
+      });
   }
 
   ngOnDestroy(): void {
@@ -98,7 +104,7 @@ export class SubtypeDialogComponent implements OnInit, OnDestroy {
     this.saveSubscription = this.config.object['external_references']
       .parseObjectCitations(this.config.object, this.restApiService)
       .subscribe({
-        next: (result) => {
+        next: result => {
           this.editorService.onReloadReferences.emit();
         },
       });

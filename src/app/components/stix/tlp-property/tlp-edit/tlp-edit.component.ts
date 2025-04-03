@@ -73,7 +73,7 @@ export class TlpEditComponent implements OnInit {
     });
 
     const subscription = prompt.afterClosed().subscribe({
-      next: (result) => {
+      next: result => {
         if (result && this.select.selected) {
           let tlp_selection = this.select.selected;
           // Check if there are two selections, ignore previous selection
@@ -83,7 +83,8 @@ export class TlpEditComponent implements OnInit {
 
           // first add marking definition statements if they exist
           if (this.objStatementsSTIXids) {
-            this.config.object['object_marking_refs'] = this.objStatementsSTIXids;
+            this.config.object['object_marking_refs'] =
+              this.objStatementsSTIXids;
           } else this.config.object['object_marking_refs'] = [];
           this.config.object['object_marking_refs'].push(tlp_selection[0]); // add tlp selection
         }

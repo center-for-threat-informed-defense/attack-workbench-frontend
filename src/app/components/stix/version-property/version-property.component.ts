@@ -9,7 +9,9 @@ export class VersionPropertyComponent {
   @Input() public config: VersionPropertyConfig;
 
   public get object(): StixObject {
-    return Array.isArray(this.config.object) ? this.config.object[1] : this.config.object;
+    return Array.isArray(this.config.object)
+      ? this.config.object[1]
+      : this.config.object;
   }
 }
 

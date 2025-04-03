@@ -30,7 +30,7 @@ export class CreateNewDialogComponent {
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public matDialogConfig: any,
-    public dialogRef: MatDialogRef<CreateNewDialogComponent>,
+    public dialogRef: MatDialogRef<CreateNewDialogComponent>
   ) {
     this.config = this.matDialogConfig.config;
     this.objectType = this.config.objectName;

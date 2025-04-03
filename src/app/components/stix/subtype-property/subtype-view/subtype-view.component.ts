@@ -17,7 +17,7 @@ export class SubtypeViewComponent implements OnInit {
     return this.config.subtypeFields;
   }
   public get fieldLabels(): string[] {
-    return this.config.subtypeFields.map((f) => (f.label ? f.label : f.name));
+    return this.config.subtypeFields.map(f => (f.label ? f.label : f.name));
   }
 
   public get valueCopy() {
@@ -42,9 +42,12 @@ export class SubtypeViewComponent implements OnInit {
    * @param sourceName source name of the reference
    */
   private referenceToHTML(sourceName: string): string {
-    const reference = this.config.object[this.config.referencesField].getReference(sourceName);
+    const reference =
+      this.config.object[this.config.referencesField].getReference(sourceName);
     const referenceNumber =
-      this.config.object[this.config.referencesField].getIndexOfReference(sourceName);
+      this.config.object[this.config.referencesField].getIndexOfReference(
+        sourceName
+      );
 
     if (reference && referenceNumber) {
       if (reference.url) {
@@ -64,7 +67,9 @@ export class SubtypeViewComponent implements OnInit {
   // Build table of values including any inline citations
   public buildTable(): void {
     // get subtype field that supports references
-    const referenceField = this.config.subtypeFields.find((f) => f.supportsReferences);
+    const referenceField = this.config.subtypeFields.find(
+      f => f.supportsReferences
+    );
     if (!referenceField || !this.config.referencesField) return;
     for (const row of this.detailTable) {
       if (referenceField.name in row) {
@@ -74,7 +79,10 @@ export class SubtypeViewComponent implements OnInit {
           for (const reference of references) {
             const sourceName = reference.split('(Citation: ')[1].slice(0, -1);
             const referenceHTML = this.referenceToHTML(sourceName);
-            row[referenceField.name] = row[referenceField.name].replace(reference, referenceHTML);
+            row[referenceField.name] = row[referenceField.name].replace(
+              reference,
+              referenceHTML
+            );
           }
         }
       }

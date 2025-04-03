@@ -36,8 +36,8 @@ export class Group extends StixObject {
       rep.stix.modified = keepModified;
     }
     rep.stix.name = this.name.trim();
-    rep.stix.aliases = this.aliases.map((x) => x.trim());
-    rep.stix.x_mitre_contributors = this.contributors.map((x) => x.trim());
+    rep.stix.aliases = this.aliases.map(x => x.trim());
+    rep.stix.x_mitre_contributors = this.contributors.map(x => x.trim());
 
     return rep;
   }
@@ -59,7 +59,7 @@ export class Group extends StixObject {
             sdo.name,
             '(',
             typeof sdo.name,
-            ')',
+            ')'
           );
       } else this.name = '';
 
@@ -71,7 +71,7 @@ export class Group extends StixObject {
             sdo.aliases,
             '(',
             typeof sdo.aliases,
-            ')',
+            ')'
           );
       } else this.aliases = [];
 
@@ -84,7 +84,7 @@ export class Group extends StixObject {
             sdo.x_mitre_contributors,
             '(',
             typeof sdo.x_mitre_contributors,
-            ')',
+            ')'
           );
       } else this.contributors = [];
     }
@@ -95,7 +95,9 @@ export class Group extends StixObject {
    * @param {RestApiConnectorService} restAPIService: the REST API connector through which asynchronous validation can be completed
    * @returns {Observable<ValidationData>} the validation warnings and errors once validation is complete.
    */
-  public validate(restAPIService: RestApiConnectorService): Observable<ValidationData> {
+  public validate(
+    restAPIService: RestApiConnectorService
+  ): Observable<ValidationData> {
     return this.base_validate(restAPIService);
   }
 
@@ -109,7 +111,7 @@ export class Group extends StixObject {
     this.aliases[0] = this.name;
     const postObservable = restAPIService.postGroup(this);
     const subscription = postObservable.subscribe({
-      next: (result) => {
+      next: result => {
         this.deserialize(result.serialize());
       },
       complete: () => {
@@ -141,7 +143,7 @@ export class Group extends StixObject {
   public update(restAPIService: RestApiConnectorService): Observable<Group> {
     const putObservable = restAPIService.putGroup(this);
     const subscription = putObservable.subscribe({
-      next: (result) => {
+      next: result => {
         this.deserialize(result.serialize());
       },
       complete: () => {

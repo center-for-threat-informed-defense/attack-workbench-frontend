@@ -9,7 +9,9 @@ export class BooleanPropertyComponent {
   @Input() public config: BooleanPropertyConfig;
 
   public get object() {
-    return Array.isArray(this.config.object) ? this.config.object[0] : this.config.object;
+    return Array.isArray(this.config.object)
+      ? this.config.object[0]
+      : this.config.object;
   }
   public get current(): string {
     return this.object?.[this.config.field] || false;

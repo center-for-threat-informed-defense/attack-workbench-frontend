@@ -277,8 +277,12 @@ $tooltip-color: color-alternate(dark, 4);
     .mat-mdc-form-field {
       display: flex;
     }
-    .mdc-text-field--outlined:not(.mdc-text-field--disabled):not(.mdc-text-field--invalid),
-    .mdc-text-field--outlined:not(.mdc-text-field--disabled):not(.mdc-text-field--invalid):hover {
+    .mdc-text-field--outlined:not(.mdc-text-field--disabled):not(
+        .mdc-text-field--invalid
+      ),
+    .mdc-text-field--outlined:not(.mdc-text-field--disabled):not(
+        .mdc-text-field--invalid
+      ):hover {
       .mdc-notched-outline__leading,
       .mdc-notched-outline__notch,
       .mdc-notched-outline__trailing {
@@ -376,7 +380,8 @@ button.mat-mdc-outlined-button:disabled {
   background-color: transparent !important;
 }
 
-.mdc-text-field--filled:not(.mdc-text-field--disabled) .mdc-line-ripple::before {
+.mdc-text-field--filled:not(.mdc-text-field--disabled)
+  .mdc-line-ripple::before {
   .light & {
     border-bottom-color: border-color(light) !important;
   }

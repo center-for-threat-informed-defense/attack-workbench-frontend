@@ -23,9 +23,9 @@ export class LandingPageComponent implements OnInit, OnDestroy {
     private restApiConnector: RestApiConnectorService,
     private authenticationService: AuthenticationService,
     private dialog: MatDialog,
-    private router: Router,
+    private router: Router
   ) {
-    this.routes = stixRoutes.filter((route) => !route.data.more);
+    this.routes = stixRoutes.filter(route => !route.data.more);
   }
 
   public get isAdmin(): boolean {
@@ -38,7 +38,7 @@ export class LandingPageComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.loginSubscription = this.authenticationService.onLogin.subscribe({
       // called on initial user login
-      next: (event) => {
+      next: event => {
         this.getPendingUsers();
         this.openOrgIdentityDialog();
       },
@@ -54,7 +54,7 @@ export class LandingPageComponent implements OnInit, OnDestroy {
       const userSubscription = this.restApiConnector
         .getAllUserAccounts({ status: ['pending'] })
         .subscribe({
-          next: (results) => {
+          next: results => {
             const users = results as any;
             if (users && users.length) this.pendingUsers = users.length;
           },
@@ -66,31 +66,37 @@ export class LandingPageComponent implements OnInit, OnDestroy {
   // bug the admin about editing their organization identity
   private openOrgIdentityDialog(): void {
     if (this.authenticationService.isAuthorized([Role.ADMIN])) {
-      const subscription = this.restApiConnector.getOrganizationIdentity().subscribe({
-        next: (identity) => {
-          if (identity && identity.name == 'Placeholder Organization Identity') {
-            const prompt = this.dialog.open(ConfirmationDialogComponent, {
-              maxWidth: '35em',
-              data: {
-                message:
-                  '### Your organization identity has not yet been set.\n\nYour organization identity is used for attribution of edits you make to objects in the knowledge base and is attached to published collections. Currently, a placeholder is being used.\n\nUpdate your organization identity now?',
-                yes_suffix: 'edit my identity now',
-                no_suffix: 'edit my identity later',
-              },
-              autoFocus: false, // prevents auto focus on buttons
-            });
-            const prompt_subscription = prompt.afterClosed().subscribe({
-              next: (prompt_result) => {
-                if (prompt_result) this.router.navigate(['/admin/org-settings']);
-              },
-              complete: () => {
-                prompt_subscription.unsubscribe();
-              },
-            });
-          }
-        },
-        complete: () => subscription.unsubscribe(),
-      });
+      const subscription = this.restApiConnector
+        .getOrganizationIdentity()
+        .subscribe({
+          next: identity => {
+            if (
+              identity &&
+              identity.name == 'Placeholder Organization Identity'
+            ) {
+              const prompt = this.dialog.open(ConfirmationDialogComponent, {
+                maxWidth: '35em',
+                data: {
+                  message:
+                    '### Your organization identity has not yet been set.\n\nYour organization identity is used for attribution of edits you make to objects in the knowledge base and is attached to published collections. Currently, a placeholder is being used.\n\nUpdate your organization identity now?',
+                  yes_suffix: 'edit my identity now',
+                  no_suffix: 'edit my identity later',
+                },
+                autoFocus: false, // prevents auto focus on buttons
+              });
+              const prompt_subscription = prompt.afterClosed().subscribe({
+                next: prompt_result => {
+                  if (prompt_result)
+                    this.router.navigate(['/admin/org-settings']);
+                },
+                complete: () => {
+                  prompt_subscription.unsubscribe();
+                },
+              });
+            }
+          },
+          complete: () => subscription.unsubscribe(),
+        });
     }
   }
 

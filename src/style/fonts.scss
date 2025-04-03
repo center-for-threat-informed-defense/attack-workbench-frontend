@@ -14,14 +14,16 @@ $poppins-weights: (
   @font-face {
     //normal style for weight
     font-family: 'Poppins';
-    src: url('/assets/fonts/Poppins/Poppins-#{$weightName}.ttf') format('truetype');
+    src: url('/assets/fonts/Poppins/Poppins-#{$weightName}.ttf')
+      format('truetype');
     font-weight: $weight;
     font-style: normal;
   }
   @font-face {
     //italic style for weight
     font-family: 'Poppins';
-    src: url('/assets/fonts/Poppins/Poppins-#{$weightName}Italic.ttf') format('truetype');
+    src: url('/assets/fonts/Poppins/Poppins-#{$weightName}Italic.ttf')
+      format('truetype');
     font-weight: $weight;
     font-style: italic;
   }
@@ -40,14 +42,16 @@ $roboto-weights: (
   @font-face {
     //normal style for weight
     font-family: 'Roboto';
-    src: url('/assets/fonts/Roboto/Roboto-#{$weightName}.ttf') format('truetype');
+    src: url('/assets/fonts/Roboto/Roboto-#{$weightName}.ttf')
+      format('truetype');
     font-weight: $weight;
     font-style: normal;
   }
   @font-face {
     //italic style for weight
     font-family: 'Roboto';
-    src: url('/assets/fonts/Roboto/Roboto-#{$weightName}Italic.ttf') format('truetype');
+    src: url('/assets/fonts/Roboto/Roboto-#{$weightName}Italic.ttf')
+      format('truetype');
     font-weight: $weight;
     font-style: italic;
   }
@@ -63,7 +67,8 @@ $roboto-condensed-weights: (
   @font-face {
     //normal style for weight
     font-family: 'Roboto Condensed';
-    src: url('/assets/fonts/Roboto_Condensed/RobotoCondensed-#{$weightName}.ttf') format('truetype');
+    src: url('/assets/fonts/Roboto_Condensed/RobotoCondensed-#{$weightName}.ttf')
+      format('truetype');
     font-weight: $weight;
     font-style: normal;
   }

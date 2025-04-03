@@ -14,7 +14,9 @@ export class CitationViewComponent implements OnInit {
   public display: string;
 
   public get object() {
-    return Array.isArray(this.config.object) ? this.config.object[0] : this.config.object;
+    return Array.isArray(this.config.object)
+      ? this.config.object[0]
+      : this.config.object;
   }
 
   private readonly reReference = /\(Citation: (.*?)\)/gmu;
@@ -41,7 +43,8 @@ export class CitationViewComponent implements OnInit {
     }
 
     // parse references and replace from references field
-    if (this.config.referencesField) this.display = this.parseReferences(this.display);
+    if (this.config.referencesField)
+      this.display = this.parseReferences(this.display);
     // remove references if not defined
     else this.display = this.display.replace(this.reReference, '');
 
@@ -57,7 +60,11 @@ export class CitationViewComponent implements OnInit {
     if (references) {
       for (let i = 0; i < references.length; i++) {
         sourceNames[i] = references[i].split('(Citation: ')[1].slice(0, -1);
-        displayStr = this.citationToHTML(displayStr, sourceNames[i], references[i]);
+        displayStr = this.citationToHTML(
+          displayStr,
+          sourceNames[i],
+          references[i]
+        );
       }
     }
     return displayStr;
@@ -68,8 +75,13 @@ export class CitationViewComponent implements OnInit {
    * @param {string} sourceName source name of the reference
    * @param {string} citation complete citation string, e.g. (Citation: sourceName)
    */
-  private citationToHTML(displayStr: string, sourceName: string, citation: string): string {
-    const externalReferences: ExternalReferences = this.object[this.config.referencesField];
+  private citationToHTML(
+    displayStr: string,
+    sourceName: string,
+    citation: string
+  ): string {
+    const externalReferences: ExternalReferences =
+      this.object[this.config.referencesField];
     const reference = externalReferences.getReference(sourceName);
     const referenceNum = externalReferences.getIndexOfReference(sourceName);
     if (reference && referenceNum) {

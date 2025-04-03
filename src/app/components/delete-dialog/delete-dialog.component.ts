@@ -22,7 +22,7 @@ export class DeleteDialogComponent {
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public config: any,
-    public dialogRef: MatDialogRef<DeleteDialogComponent>,
+    public dialogRef: MatDialogRef<DeleteDialogComponent>
   ) {}
 
   public confirm() {

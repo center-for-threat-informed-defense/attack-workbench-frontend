@@ -1,4 +1,10 @@
-import { Component, EventEmitter, Input, Output, ViewEncapsulation } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  Output,
+  ViewEncapsulation,
+} from '@angular/core';
 import { SidebarService } from 'src/app/services/sidebar/sidebar.service';
 import { StixViewConfig } from 'src/app/views/stix/stix-view-page';
 import { EditorService } from 'src/app/services/editor/editor.service';
@@ -15,14 +21,19 @@ export class SubheadingComponent {
   @Output() public onOpenNotes = new EventEmitter();
 
   public get object() {
-    return Array.isArray(this.config.object) ? this.config.object[0] : this.config.object;
+    return Array.isArray(this.config.object)
+      ? this.config.object[0]
+      : this.config.object;
   }
   public get editing(): boolean {
     return this.editorService.editing;
   }
 
   public openHistory() {
-    if (this.config.sidebarControl == 'service' || !this.config.hasOwnProperty('sidebarControl')) {
+    if (
+      this.config.sidebarControl == 'service' ||
+      !this.config.hasOwnProperty('sidebarControl')
+    ) {
       this.sidebarService.opened = true;
       this.sidebarService.currentTab = 'history';
     } else if (this.config.sidebarControl == 'events') {
@@ -30,7 +41,10 @@ export class SubheadingComponent {
     }
   }
   public openNotes() {
-    if (this.config.sidebarControl == 'service' || !this.config.hasOwnProperty('sidebarControl')) {
+    if (
+      this.config.sidebarControl == 'service' ||
+      !this.config.hasOwnProperty('sidebarControl')
+    ) {
       this.sidebarService.opened = true;
       this.sidebarService.currentTab = 'notes';
     } else if (this.config.sidebarControl == 'events') {
@@ -40,7 +54,7 @@ export class SubheadingComponent {
 
   constructor(
     private sidebarService: SidebarService,
-    private editorService: EditorService,
+    private editorService: EditorService
   ) {
     // intentionally left blank
   }

@@ -1,5 +1,9 @@
 import { Component, Inject, OnInit, ViewEncapsulation } from '@angular/core';
-import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import {
+  MatDialog,
+  MatDialogRef,
+  MAT_DIALOG_DATA,
+} from '@angular/material/dialog';
 import { forkJoin, Observable, of } from 'rxjs';
 import { filter, map, switchMap } from 'rxjs/operators';
 import { ValidationData } from 'src/app/classes/serializable';
@@ -25,7 +29,10 @@ import { DeleteDialogComponent } from 'src/app/components/delete-dialog/delete-d
 import { AuthenticationService } from 'src/app/services/connectors/authentication/authentication.service';
 import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/rest-api-connector.service';
 import { EditorService } from 'src/app/services/editor/editor.service';
-import { SidebarService, tabOption } from 'src/app/services/sidebar/sidebar.service';
+import {
+  SidebarService,
+  tabOption,
+} from 'src/app/services/sidebar/sidebar.service';
 import { StixViewConfig } from '../stix-view-page';
 
 // transform AttackType to the relevant class
@@ -61,9 +68,13 @@ export class StixDialogComponent implements OnInit {
     public restApiService: RestApiConnectorService,
     public editorService: EditorService,
     private authenticationService: AuthenticationService,
-    private dialog: MatDialog,
+    private dialog: MatDialog
   ) {
-    if (this._config.mode && this._config.mode == 'edit' && this.authenticationService.canEdit())
+    if (
+      this._config.mode &&
+      this._config.mode == 'edit' &&
+      this.authenticationService.canEdit()
+    )
       this.startEditing();
   }
 
@@ -71,7 +82,10 @@ export class StixDialogComponent implements OnInit {
     return this.authenticationService.canDelete();
   }
   public get canDeprecate(): boolean {
-    return this.stixType == 'relationship' || this.stixType == 'x-mitre-data-component';
+    return (
+      this.stixType == 'relationship' ||
+      this.stixType == 'x-mitre-data-component'
+    );
   }
   public get showRelationships() {
     if (this._config.mode == 'diff') return false;
@@ -80,7 +94,10 @@ export class StixDialogComponent implements OnInit {
   }
 
   public get config(): StixViewConfig {
-    const mode = this.editing && this.authenticationService.canEdit() ? 'edit' : this._config.mode;
+    const mode =
+      this.editing && this.authenticationService.canEdit()
+        ? 'edit'
+        : this._config.mode;
     return {
       mode: mode,
       object: this._config.object,
@@ -89,7 +106,8 @@ export class StixDialogComponent implements OnInit {
       showRelationships: this.showRelationships,
       editable: this._config.editable && this.authenticationService.canEdit(),
       is_new: this._config.is_new ? true : false,
-      sidebarControl: this._config.sidebarControl == 'disable' ? 'disable' : 'events',
+      sidebarControl:
+        this._config.sidebarControl == 'disable' ? 'disable' : 'events',
       dialog: this.dialogRef, // relevant when adding a new relationship inside of an existing dialog
     };
   }
@@ -134,9 +152,11 @@ export class StixDialogComponent implements OnInit {
     this.sidebarOpened = false;
     this.validation = null; // reset prior validation if it has been loaded
     this.validating = true;
-    const object = Array.isArray(this.config.object) ? this.config.object[0] : this.config.object;
+    const object = Array.isArray(this.config.object)
+      ? this.config.object[0]
+      : this.config.object;
     const subscription = object.validate(this.restApiService).subscribe({
-      next: (result) => {
+      next: result => {
         this.validation = result;
       },
       complete: () => {
@@ -149,9 +169,11 @@ export class StixDialogComponent implements OnInit {
   }
 
   public save() {
-    const object = Array.isArray(this.config.object) ? this.config.object[0] : this.config.object;
+    const object = Array.isArray(this.config.object)
+      ? this.config.object[0]
+      : this.config.object;
     const subscription = object.save(this.restApiService).subscribe({
-      next: (result) => {
+      next: result => {
         this.editorService.onEditingStopped.emit();
         this._config.is_new = false;
         if (object.attackType == 'relationship')
@@ -183,12 +205,14 @@ export class StixDialogComponent implements OnInit {
    * Determine whether or not this object can be deleted
    */
   public getDeletable(): Observable<boolean> {
-    const object = Array.isArray(this.config.object) ? this.config.object[0] : this.config.object;
+    const object = Array.isArray(this.config.object)
+      ? this.config.object[0]
+      : this.config.object;
     if (this.stixType == 'relationship') {
       // 'subtechnique_of' relationships cannot be deleted
       return of(
         this.stixType == 'relationship' &&
-          (object as Relationship).relationship_type != 'subtechnique_of',
+          (object as Relationship).relationship_type != 'subtechnique_of'
       );
     }
     if (this.stixType == 'x-mitre-data-component') {
@@ -196,9 +220,9 @@ export class StixDialogComponent implements OnInit {
       return this.restApiService
         .getRelatedTo({ sourceOrTargetRef: (object as DataComponent).stixID })
         .pipe(
-          map((relationships) => {
+          map(relationships => {
             return relationships.data.length == 0;
-          }),
+          })
         );
     }
     return of(false);
@@ -209,7 +233,9 @@ export class StixDialogComponent implements OnInit {
    */
   public delete(): void {
     const object = (
-      Array.isArray(this.config.object) ? this.config.object[0] : this.config.object
+      Array.isArray(this.config.object)
+        ? this.config.object[0]
+        : this.config.object
     ) as Relationship;
 
     // open confirmation dialog
@@ -219,7 +245,7 @@ export class StixDialogComponent implements OnInit {
       autoFocus: false, // disables auto focus on the dialog form field
     });
     const subscription = prompt.afterClosed().subscribe({
-      next: (confirm) => {
+      next: confirm => {
         if (confirm) {
           // delete the object
           object.delete(this.restApiService);
@@ -260,15 +286,23 @@ export class StixDialogComponent implements OnInit {
     const saves = [];
     if (this.versions.source.minor || this.versions.source.major) {
       // handle source object version update
-      const source_obj = this.getObject(object.source_object.stix.type, object.source_object);
-      if (this.versions.source.minor) source_obj.version = source_obj.version.nextMinorVersion();
+      const source_obj = this.getObject(
+        object.source_object.stix.type,
+        object.source_object
+      );
+      if (this.versions.source.minor)
+        source_obj.version = source_obj.version.nextMinorVersion();
       else source_obj.version = source_obj.version.nextMajorVersion();
       saves.push(source_obj.save(this.restApiService));
     }
     if (this.versions.target.minor || this.versions.target.major) {
       // handle target object version update
-      const target_obj = this.getObject(object.target_object.stix.type, object.target_object);
-      if (this.versions.target.minor) target_obj.version = target_obj.version.nextMinorVersion();
+      const target_obj = this.getObject(
+        object.target_object.stix.type,
+        object.target_object
+      );
+      if (this.versions.target.minor)
+        target_obj.version = target_obj.version.nextMinorVersion();
       else target_obj.version = target_obj.version.nextMajorVersion();
       saves.push(target_obj.save(this.restApiService));
     }
@@ -293,7 +327,9 @@ export class StixDialogComponent implements OnInit {
 
   public loading = false;
   public deprecateChanged() {
-    const object = Array.isArray(this.config.object) ? this.config.object[0] : this.config.object;
+    const object = Array.isArray(this.config.object)
+      ? this.config.object[0]
+      : this.config.object;
 
     if (!object.deprecated && this.stixType == 'x-mitre-data-component') {
       // inform users of relationship changes
@@ -309,17 +345,17 @@ export class StixDialogComponent implements OnInit {
       const confirmationSub = confirmationPrompt
         .afterClosed()
         .pipe(
-          filter((result) => result), // user continued
-          switchMap((_) => {
+          filter(result => result), // user continued
+          switchMap(_ => {
             this.loading = true;
             return this.restApiService.getRelatedTo({
               sourceRef: object.stixID,
               includeDeprecated: false,
             });
-          }),
+          })
         )
         .subscribe({
-          next: (result) => {
+          next: result => {
             const saves = [];
             const relationships = result?.data as Relationship[];
 
@@ -385,7 +421,7 @@ export class StixDialogComponent implements OnInit {
   }
 
   public reload() {
-    this.getDeletable().subscribe((res) => (this.deletable = res));
+    this.getDeletable().subscribe(res => (this.deletable = res));
   }
 
   ngOnInit(): void {

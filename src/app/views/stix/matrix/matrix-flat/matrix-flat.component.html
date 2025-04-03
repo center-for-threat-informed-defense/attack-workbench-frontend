@@ -6,13 +6,18 @@
     <thead>
       <tr class="tactic">
         <th *ngFor="let tactic of tactics">
-          <app-tactic-cell [tactic]="tactic" [showID]="showID"></app-tactic-cell>
+          <app-tactic-cell
+            [tactic]="tactic"
+            [showID]="showID"></app-tactic-cell>
         </th>
       </tr>
     </thead>
     <tbody>
       <tr>
-        <td *ngFor="let tactic of tactics" class="tactic" style="vertical-align: top">
+        <td
+          *ngFor="let tactic of tactics"
+          class="tactic"
+          style="vertical-align: top">
           <table class="techniques-table">
             <ng-container *ngFor="let technique of tactic.technique_objects">
               <tr *ngIf="!technique.subTechniques.length">
@@ -26,8 +31,7 @@
                       <app-technique-cell
                         [technique]="technique"
                         [tactic]="tactic"
-                        [showID]="showID"
-                      ></app-technique-cell>
+                        [showID]="showID"></app-technique-cell>
                     </td>
                   </tr>
                 </table>
@@ -42,35 +46,32 @@
                     <td
                       class="sidebar technique"
                       (click)="onToggleSubtechniquesVisible(technique, tactic)"
-                      style="vertical-align: middle"
-                    >
+                      style="vertical-align: middle">
                       <div class="handle">=</div>
                     </td>
                     <td class="technique">
                       <app-technique-cell
                         [technique]="technique"
                         [tactic]="tactic"
-                        [showID]="showID"
-                      ></app-technique-cell>
+                        [showID]="showID"></app-technique-cell>
                     </td>
                   </tr>
                   <tr
                     class="subtechniques-row subtechniques-container"
-                    [class.hidden]="!technique.show_subtechniques"
-                  >
+                    [class.hidden]="!technique.show_subtechniques">
                     <td class="angle-top">
-                      <svg width="12px" height="12px"><path d="M0 0H12V12Z" /></svg>
+                      <svg width="12px" height="12px">
+                        <path d="M0 0H12V12Z" />
+                      </svg>
                     </td>
                     <td class="subtechniques">
                       <div
                         *ngFor="let subtechnique of technique.subTechniques"
-                        class="subtechnique"
-                      >
+                        class="subtechnique">
                         <app-technique-cell
                           [technique]="subtechnique"
                           [tactic]="tactic"
-                          [showID]="showID"
-                        ></app-technique-cell>
+                          [showID]="showID"></app-technique-cell>
                       </div>
                     </td>
                   </tr>

@@ -9,9 +9,10 @@
   matBadgeOverlap="true"
   matBadgeSize="small"
   [matBadgeHidden]="showChangeIndicator"
-  class="statement-diff hide-badge-text"
->
-  <app-property-diff [before]="getLabel(previous)" [after]="getLabel(current)"></app-property-diff>
+  class="statement-diff hide-badge-text">
+  <app-property-diff
+    [before]="getLabel(previous)"
+    [after]="getLabel(current)"></app-property-diff>
 </button>
 <mtx-popover
   #popover="mtxPopover"
@@ -20,8 +21,7 @@
   leaveDelay="25"
   [position]="['below', 'center']"
   [closeOnPanelClick]="true"
-  [closeOnBackdropClick]="true"
->
+  [closeOnBackdropClick]="true">
   <div style="max-width: 30em">
     <div class="labelled-box suffixed">
       <div class="content">
@@ -29,8 +29,7 @@
           <li *ngFor="let statementDiff of statementDiffList">
             <app-property-diff
               [before]="getDefinition(statementDiff.before)"
-              [after]="getDefinition(statementDiff.after)"
-            ></app-property-diff>
+              [after]="getDefinition(statementDiff.after)"></app-property-diff>
           </li>
         </ul>
       </div>

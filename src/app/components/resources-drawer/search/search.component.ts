@@ -11,7 +11,12 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { Observable, Subscription, fromEvent } from 'rxjs';
-import { debounceTime, distinctUntilChanged, filter, tap } from 'rxjs/operators';
+import {
+  debounceTime,
+  distinctUntilChanged,
+  filter,
+  tap,
+} from 'rxjs/operators';
 import { StixObject } from 'src/app/classes/stix';
 import {
   Paginated,
@@ -40,19 +45,22 @@ export class SearchComponent implements AfterViewInit, OnDestroy {
     public editorService: EditorService,
     private router: Router,
     private dialog: MatDialog,
-    public snackbar: MatSnackBar,
+    public snackbar: MatSnackBar
   ) {
     // intentionally left blank
   }
 
   ngAfterViewInit(): void {
-    const searchSubscription = fromEvent(this.input.nativeElement, 'keyup').pipe(
+    const searchSubscription = fromEvent(
+      this.input.nativeElement,
+      'keyup'
+    ).pipe(
       filter(Boolean),
       debounceTime(250),
       distinctUntilChanged(),
-      tap((_) => {
+      tap(_ => {
         this.getResults();
-      }),
+      })
     );
     searchSubscription.subscribe();
   }
@@ -78,7 +86,9 @@ export class SearchComponent implements AfterViewInit, OnDestroy {
     if (this.editorService.editing) {
       this.stopEditingAndNavigate(obj);
     } else {
-      this.router.navigate([`/${obj.attackType}/${obj.stixID}`], { queryParams: {} });
+      this.router.navigate([`/${obj.attackType}/${obj.stixID}`], {
+        queryParams: {},
+      });
     }
   }
 
@@ -97,10 +107,12 @@ export class SearchComponent implements AfterViewInit, OnDestroy {
     });
 
     const subscription = prompt.afterClosed().subscribe({
-      next: (result) => {
+      next: result => {
         if (result) {
           this.editorService.onEditingStopped.emit();
-          this.router.navigate([`/${obj.attackType}/${obj.stixID}`], { queryParams: {} });
+          this.router.navigate([`/${obj.attackType}/${obj.stixID}`], {
+            queryParams: {},
+          });
         } // otherwise do nothing
       },
       complete: () => {
@@ -113,7 +125,9 @@ export class SearchComponent implements AfterViewInit, OnDestroy {
    * Show the snackbar copy confirmation message
    */
   public showSnackbar(): void {
-    this.snackbar.open(`LinkById copied to clipboard`, null, { duration: 1000 });
+    this.snackbar.open(`LinkById copied to clipboard`, null, {
+      duration: 1000,
+    });
   }
 
   /**
@@ -133,7 +147,7 @@ export class SearchComponent implements AfterViewInit, OnDestroy {
     };
     this.searchResults$ = this.restApiService.getAllObjects(options);
     const subscription = this.searchResults$.subscribe({
-      next: (data) => {
+      next: data => {
         this.resultCount = data.pagination.total;
       },
       complete: () => {

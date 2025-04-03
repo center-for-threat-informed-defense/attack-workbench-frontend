@@ -20,7 +20,7 @@ export class ContributorsPageComponent implements OnInit, OnDestroy {
 
   constructor(
     private restApiConnector: RestApiConnectorService,
-    public dialog: MatDialog,
+    public dialog: MatDialog
   ) {}
 
   ngOnInit(): void {
@@ -40,11 +40,11 @@ export class ContributorsPageComponent implements OnInit, OnDestroy {
     const subscription = this.restApiConnector
       .getAllObjects({ revoked: true, deprecated: true, deserialize: true })
       .subscribe({
-        next: (results) => {
+        next: results => {
           const contributors = new Set<string>();
-          results.data.forEach((obj) => {
+          results.data.forEach(obj => {
             if (obj.contributors?.length) {
-              obj.contributors.forEach((contributor) => {
+              obj.contributors.forEach(contributor => {
                 contributors.add(contributor);
                 if (this.contributorMap.has(contributor)) {
                   this.contributorMap.get(contributor).push(obj);
@@ -109,22 +109,24 @@ export class ContributorsPageComponent implements OnInit, OnDestroy {
       autoFocus: false, // prevents auto focus on buttons
     });
     // subscribe to contributor changes
-    this.dialogSaveSubscription = prompt.componentInstance.onSave.subscribe((newContributor) => {
-      const contributions = this.contributorMap.get(contributor);
-      if (this.contributorMap.has(newContributor)) {
-        this.contributorMap.get(newContributor).push(...contributions);
-      } else {
-        this.contributorMap.set(newContributor, contributions);
+    this.dialogSaveSubscription = prompt.componentInstance.onSave.subscribe(
+      newContributor => {
+        const contributions = this.contributorMap.get(contributor);
+        if (this.contributorMap.has(newContributor)) {
+          this.contributorMap.get(newContributor).push(...contributions);
+        } else {
+          this.contributorMap.set(newContributor, contributions);
+        }
+        // update dialog data
+        prompt.componentInstance.config = {
+          contributor: newContributor,
+          objects: this.contributorMap.get(newContributor),
+        };
       }
-      // update dialog data
-      prompt.componentInstance.config = {
-        contributor: newContributor,
-        objects: this.contributorMap.get(newContributor),
-      };
-    });
+    );
     // re-fetch values if an edit occurs
     const subscription = prompt.afterClosed().subscribe({
-      next: (_result) => {
+      next: _result => {
         if (prompt.componentInstance.dirty) {
           this.load();
         }

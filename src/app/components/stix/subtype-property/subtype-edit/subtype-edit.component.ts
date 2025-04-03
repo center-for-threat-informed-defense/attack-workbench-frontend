@@ -16,8 +16,8 @@ export class SubtypeEditComponent {
    * Get list of key values from subtype list
    */
   public get keyValues(): any[] {
-    const key = this.config.subtypeFields.find((subtype) => subtype.key).name;
-    return this.config.object[this.config.field].map((value) => value[key]);
+    const key = this.config.subtypeFields.find(subtype => subtype.key).name;
+    return this.config.object[this.config.field].map(value => value[key]);
   }
 
   constructor(public dialog: MatDialog) {

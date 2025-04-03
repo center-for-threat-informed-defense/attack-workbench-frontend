@@ -20,7 +20,9 @@ export class StatementPropertyComponent implements OnInit {
   private tlpMap = {};
 
   public get object() {
-    return Array.isArray(this.config.object) ? this.config.object[0] : this.config.object;
+    return Array.isArray(this.config.object)
+      ? this.config.object[0]
+      : this.config.object;
   }
 
   // Retrieves tlp marking definition of current Object
@@ -44,16 +46,18 @@ export class StatementPropertyComponent implements OnInit {
     };
     this.data$ = this.restAPIConnectorService.getAllMarkingDefinitions(options);
     const subscription = this.data$.subscribe({
-      next: (objects) => {
+      next: objects => {
         if (objects) {
           if ('data' in objects) {
             for (const index in objects.data) {
               // Populate statements map with marking definitions statements
               if (objects.data[index]['definition_type'] == 'statement') {
-                this.statementsMap[objects.data[index]['stixID']] = objects.data[index];
+                this.statementsMap[objects.data[index]['stixID']] =
+                  objects.data[index];
               }
               if (objects.data[index]['definition_type'] == 'tlp') {
-                this.tlpMap[objects.data[index]['stixID']] = objects.data[index];
+                this.tlpMap[objects.data[index]['stixID']] =
+                  objects.data[index];
               }
             }
           }

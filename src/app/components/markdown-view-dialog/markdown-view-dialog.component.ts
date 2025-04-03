@@ -9,7 +9,7 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 export class MarkdownViewDialogComponent implements OnInit {
   constructor(
     public dialogRef: MatDialogRef<MarkdownViewDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) public config: MarkownViewDialogConfig,
+    @Inject(MAT_DIALOG_DATA) public config: MarkownViewDialogConfig
   ) {}
 
   ngOnInit(): void {

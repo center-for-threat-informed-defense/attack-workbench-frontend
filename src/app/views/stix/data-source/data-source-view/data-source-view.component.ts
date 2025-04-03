@@ -30,51 +30,57 @@ export class DataSourceViewComponent extends StixViewPage implements OnInit {
   constructor(
     public dialog: MatDialog,
     private restApiService: RestApiConnectorService,
-    authenticationService: AuthenticationService,
+    authenticationService: AuthenticationService
   ) {
     super(authenticationService);
   }
 
   ngOnInit(): void {
     if (this.dataSource.firstInitialized) {
-      this.dataSource.initializeWithDefaultMarkingDefinitions(this.restApiService);
+      this.dataSource.initializeWithDefaultMarkingDefinitions(
+        this.restApiService
+      );
     }
     this.loadData();
   }
 
   public getDataComponents() {
-    return this.restApiService.getAllDataComponents({ includeDeprecated: true }).pipe(
-      // get related data components
-      map((results) => {
-        const allComponents = results.data as DataComponent[];
-        const components = allComponents.filter((c) => c.dataSourceRef == this.dataSource.stixID);
-        this.dataComponents = components;
-        return components;
-      }),
-      // get techniques detected by data components
-      concatMap((components) => {
-        const apiCalls = [];
-        components.forEach((c) =>
-          apiCalls.push(
-            this.restApiService.getRelatedTo({
-              sourceRef: c.stixID,
-              relationshipType: 'detects',
-              targetType: 'technique',
-              includeDeprecated: true,
-            }),
-          ),
-        );
-        if (apiCalls.length) return forkJoin(apiCalls);
-        else return of([]);
-      }),
-      // map pagination data to relationship list
-      map((results: any) => {
-        const relationshipData = results.map((r) => r.data);
-        const relationships = [];
-        relationshipData.forEach((data) => relationships.push(...data));
-        this.techniquesDetected = relationships;
-      }),
-    );
+    return this.restApiService
+      .getAllDataComponents({ includeDeprecated: true })
+      .pipe(
+        // get related data components
+        map(results => {
+          const allComponents = results.data as DataComponent[];
+          const components = allComponents.filter(
+            c => c.dataSourceRef == this.dataSource.stixID
+          );
+          this.dataComponents = components;
+          return components;
+        }),
+        // get techniques detected by data components
+        concatMap(components => {
+          const apiCalls = [];
+          components.forEach(c =>
+            apiCalls.push(
+              this.restApiService.getRelatedTo({
+                sourceRef: c.stixID,
+                relationshipType: 'detects',
+                targetType: 'technique',
+                includeDeprecated: true,
+              })
+            )
+          );
+          if (apiCalls.length) return forkJoin(apiCalls);
+          else return of([]);
+        }),
+        // map pagination data to relationship list
+        map((results: any) => {
+          const relationshipData = results.map(r => r.data);
+          const relationships = [];
+          relationshipData.forEach(data => relationships.push(...data));
+          this.techniquesDetected = relationships;
+        })
+      );
   }
 
   public loadData() {
@@ -103,7 +109,7 @@ export class DataSourceViewComponent extends StixViewPage implements OnInit {
       autoFocus: false,
     });
     const subscription = prompt.afterClosed().subscribe({
-      next: (result) => {
+      next: result => {
         if (result) {
           // re-fetch values since an edit occurred
           this.loadData();

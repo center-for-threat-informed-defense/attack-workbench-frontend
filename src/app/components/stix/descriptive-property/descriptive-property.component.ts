@@ -1,6 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { StixObject } from 'src/app/classes/stix/stix-object';
-import { ExternalReferences } from 'src/app/classes/external-references';
 
 @Component({
   selector: 'app-descriptive-property',

@@ -1,4 +1,10 @@
-import { Component, Input, ViewEncapsulation, ViewChild, OnDestroy } from '@angular/core';
+import {
+  Component,
+  Input,
+  ViewEncapsulation,
+  ViewChild,
+  OnDestroy,
+} from '@angular/core';
 import { DescriptivePropertyConfig } from '../descriptive-property.component';
 import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/rest-api-connector.service';
 import { DescriptiveViewComponent } from '../descriptive-view/descriptive-view.component';
@@ -23,7 +29,7 @@ export class DescriptiveEditComponent implements OnDestroy {
 
   constructor(
     public restApiConnector: RestApiConnectorService,
-    public editorService: EditorService,
+    public editorService: EditorService
   ) {}
 
   ngOnDestroy(): void {
@@ -49,7 +55,7 @@ export class DescriptiveEditComponent implements OnDestroy {
     this.sub = this.config.object[this.config.referencesField]
       .parseObjectCitations(this.config.object, this.restApiConnector)
       .subscribe({
-        next: (result) => {
+        next: result => {
           this.parsingCitations = false;
           this.editorService.onReloadReferences.emit();
         },

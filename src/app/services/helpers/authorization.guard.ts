@@ -1,5 +1,9 @@
 import { Injectable } from '@angular/core';
-import { ActivatedRouteSnapshot, RouterStateSnapshot, Router } from '@angular/router';
+import {
+  ActivatedRouteSnapshot,
+  RouterStateSnapshot,
+  Router,
+} from '@angular/router';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { AuthenticationService } from '../connectors/authentication/authentication.service';
@@ -10,23 +14,26 @@ import { AuthenticationService } from '../connectors/authentication/authenticati
 export class AuthorizationGuard {
   constructor(
     private router: Router,
-    private authenticationService: AuthenticationService,
+    private authenticationService: AuthenticationService
   ) {}
 
   // determine if user has permissions to activate the requested route
   public canActivate(
     route: ActivatedRouteSnapshot,
-    state: RouterStateSnapshot,
+    state: RouterStateSnapshot
   ): Observable<boolean> {
     return this.authenticationService.getSession().pipe(
-      map((_) => {
+      map(_ => {
         // check if user is logged in
         if (!this.authenticationService.isLoggedIn) {
           this.router.navigate(['']);
           return false;
         }
         // check if route is restricted by role
-        if (route.data.roles && !this.authenticationService.isAuthorized(route.data.roles)) {
+        if (
+          route.data.roles &&
+          !this.authenticationService.isAuthorized(route.data.roles)
+        ) {
           this.router.navigate(['']);
           return false;
         }
@@ -41,14 +48,14 @@ export class AuthorizationGuard {
         }
         // user is authorized
         return true;
-      }),
+      })
     );
   }
 
   // determine if user has permissions to activate the requested child route
   public canActivateChild(
     childRoute: ActivatedRouteSnapshot,
-    state: RouterStateSnapshot,
+    state: RouterStateSnapshot
   ): Observable<boolean> {
     return this.canActivate(childRoute, state);
   }

@@ -5,7 +5,6 @@ import {
   Output,
   EventEmitter,
   Input,
-  ViewChild,
 } from '@angular/core';
 import { Router } from '@angular/router';
 import { ValidationData } from 'src/app/classes/serializable';
@@ -41,7 +40,9 @@ export class ToolbarComponent implements OnInit {
     return this.editorService.hasRelationships;
   }
   public get deletable(): boolean {
-    return this.editorService.deletable && this.authenticationService.canDelete();
+    return (
+      this.editorService.deletable && this.authenticationService.canDelete()
+    );
   }
   public get isAnImportedCollection(): boolean {
     return this.editorService.isAnImportedCollection;
@@ -59,7 +60,7 @@ export class ToolbarComponent implements OnInit {
     private editorService: EditorService,
     private authenticationService: AuthenticationService,
     public websiteIntegrationService: WebsiteIntegrationService,
-    private router: Router,
+    private router: Router
   ) {}
 
   ngOnInit() {
@@ -104,6 +105,8 @@ export class ToolbarComponent implements OnInit {
   }
 
   public createCollectionFromGroup() {
-    this.router.navigateByUrl(`/collection/new?editing=true&groupId=${this.editorService.stixId}`);
+    this.router.navigateByUrl(
+      `/collection/new?editing=true&groupId=${this.editorService.stixId}`
+    );
   }
 }

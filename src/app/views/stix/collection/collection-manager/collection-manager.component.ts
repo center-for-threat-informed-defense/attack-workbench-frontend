@@ -22,17 +22,19 @@ export class CollectionManagerComponent implements OnInit {
 
   constructor(
     private restAPIConnector: RestApiConnectorService,
-    private authenticationService: AuthenticationService,
+    private authenticationService: AuthenticationService
   ) {}
 
   ngOnInit(): void {
-    const subscription = this.restAPIConnector.getAllCollections({ versions: 'all' }).subscribe({
-      next: (result) => {
-        this.collections = result.data as Collection[];
-      },
-      complete: () => {
-        subscription.unsubscribe();
-      },
-    });
+    const subscription = this.restAPIConnector
+      .getAllCollections({ versions: 'all' })
+      .subscribe({
+        next: result => {
+          this.collections = result.data as Collection[];
+        },
+        complete: () => {
+          subscription.unsubscribe();
+        },
+      });
   }
 }

@@ -43,32 +43,37 @@ export class EditorService {
     private sidebarService: SidebarService,
     private authenticationService: AuthenticationService,
     private restAPIConnectorService: RestApiConnectorService,
-    private dialog: MatDialog,
+    private dialog: MatDialog
   ) {
-    this.router.events.subscribe((event) => {
+    this.router.events.subscribe(event => {
       if (event instanceof NavigationEnd) {
         this.isAnImportedCollection = false;
         const editable = this.getEditableFromRoute(
           this.router.routerState,
-          this.router.routerState.root,
+          this.router.routerState.root
         );
         const attackType = this.route.root.firstChild.snapshot.data.breadcrumb;
         this.editable =
           editable.length > 0 &&
-          editable.every((x) => x) &&
+          editable.every(x => x) &&
           this.authenticationService.canEdit(attackType);
         this.hasWorkflow = attackType !== 'home';
-        if (!(this.editable && this.hasWorkflow)) this.sidebarService.currentTab = 'search';
+        if (!(this.editable && this.hasWorkflow))
+          this.sidebarService.currentTab = 'search';
         this.sidebarService.setEnabled(
           'history',
-          this.editable && this.hasWorkflow && !this.router.url.includes('/new'),
+          this.editable && this.hasWorkflow && !this.router.url.includes('/new')
         );
-        this.sidebarService.setEnabled('notes', this.editable && this.hasWorkflow);
+        this.sidebarService.setEnabled(
+          'notes',
+          this.editable && this.hasWorkflow
+        );
         this.isGroup = false;
         if (this.editable) {
           this.sidebarService.currentTab = 'references';
           // if we have a group type and it is NOT new we can create a collection from all of the objects in the group
-          this.isGroup = this.type === 'group' && !this.router.url.includes('/new');
+          this.isGroup =
+            this.type === 'group' && !this.router.url.includes('/new');
           if (!this.hasWorkflow) {
             this.hasRelationships = false;
             if (this.type.includes('profile')) this.deletable = false;
@@ -82,19 +87,22 @@ export class EditorService {
           } else {
             this.deletable = true;
             // determine if this object has existing relationships
-            this.getRelationships().subscribe((rels) => (this.hasRelationships = rels > 0));
+            this.getRelationships().subscribe(
+              rels => (this.hasRelationships = rels > 0)
+            );
           }
         }
         if (!this.editable) this.sidebarService.currentTab = 'search';
       }
     });
-    this.route.queryParams.subscribe((params) => {
+    this.route.queryParams.subscribe(params => {
       this.editing = params['editing'] && this.authenticationService.canEdit();
     });
   }
 
   public startEditing() {
-    if (this.editable) this.router.navigate([], { queryParams: { editing: true } });
+    if (this.editable)
+      this.router.navigate([], { queryParams: { editing: true } });
   }
 
   public stopEditing() {
@@ -107,9 +115,10 @@ export class EditorService {
     });
 
     const subscription = prompt.afterClosed().subscribe({
-      next: (result) => {
+      next: result => {
         if (result) {
-          if (!this.router.url.includes('/new')) this.router.navigate([], { queryParams: {} });
+          if (!this.router.url.includes('/new'))
+            this.router.navigate([], { queryParams: {} });
           else this.router.navigate(['..'], { queryParams: {} });
           this.onEditingStopped.emit();
         }
@@ -140,21 +149,27 @@ export class EditorService {
     if (this.type == 'data-source') {
       return this.restAPIConnectorService
         .getDataSource(this.stixId, null, 'latest', false, false, true)
-        .pipe(map((dataSource) => dataSource[0] && dataSource[0].data_components.length));
+        .pipe(
+          map(
+            dataSource => dataSource[0] && dataSource[0].data_components.length
+          )
+        );
     } else {
-      return this.restAPIConnectorService.getRelatedTo({ sourceOrTargetRef: this.stixId }).pipe(
-        map((relationships) => {
-          return relationships.data.filter((r: Relationship) => {
-            // filter out subtechnique-of relationships, IFF this is the source object (sub-technique)
-            // note: the subtechnique-of relationship is automatically deleted with the sub-technique object
-            return !(
-              r.relationship_type == 'subtechnique-of' &&
-              r.source_object &&
-              r.source_object['stix']['id'] == this.stixId
-            );
-          }).length;
-        }),
-      );
+      return this.restAPIConnectorService
+        .getRelatedTo({ sourceOrTargetRef: this.stixId })
+        .pipe(
+          map(relationships => {
+            return relationships.data.filter((r: Relationship) => {
+              // filter out subtechnique-of relationships, IFF this is the source object (sub-technique)
+              // note: the subtechnique-of relationship is automatically deleted with the sub-technique object
+              return !(
+                r.relationship_type == 'subtechnique-of' &&
+                r.source_object &&
+                r.source_object['stix']['id'] == this.stixId
+              );
+            }).length;
+          })
+        );
     }
   }
 }

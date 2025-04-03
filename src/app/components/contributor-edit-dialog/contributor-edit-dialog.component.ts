@@ -1,4 +1,11 @@
-import { Component, EventEmitter, Inject, OnInit, Output, ViewEncapsulation } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Inject,
+  OnInit,
+  Output,
+  ViewEncapsulation,
+} from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { forkJoin } from 'rxjs';
 import { StixObject } from 'src/app/classes/stix';
@@ -26,7 +33,8 @@ export class ContributorEditDialogComponent implements OnInit {
   }
   public get isValid(): boolean {
     return (
-      this.contributor?.trim().length > 0 && this.contributor.trim() !== this.config.contributor
+      this.contributor?.trim().length > 0 &&
+      this.contributor.trim() !== this.config.contributor
     );
   }
 
@@ -34,7 +42,7 @@ export class ContributorEditDialogComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) public config: ContributorEditConfig,
     public dialogRef: MatDialogRef<ContributorEditDialogComponent>,
     private authenticationService: AuthenticationService,
-    private restApiConnector: RestApiConnectorService,
+    private restApiConnector: RestApiConnectorService
   ) {}
 
   ngOnInit(): void {

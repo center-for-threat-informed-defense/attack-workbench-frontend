@@ -20,7 +20,8 @@ const isAbsolute = new RegExp('(?:^[a-z][a-z0-9+.-]*:|\/\/)', 'i');
 })
 export class HelpPageComponent implements OnInit, OnDestroy {
   private listenObj: any;
-  @ViewChild('markdownElement', { static: false }) private markdownElement: MarkdownComponent;
+  @ViewChild('markdownElement', { static: false })
+  private markdownElement: MarkdownComponent;
   public headingAnchors: MarkdownHeadingAnchor[] = [];
 
   constructor(
@@ -28,7 +29,7 @@ export class HelpPageComponent implements OnInit, OnDestroy {
     private router: Router,
     private renderer: Renderer2,
     public route: ActivatedRoute,
-    private viewportScroller: ViewportScroller,
+    private viewportScroller: ViewportScroller
   ) {}
 
   ngOnInit() {
@@ -44,12 +45,27 @@ export class HelpPageComponent implements OnInit, OnDestroy {
           anchor: escapedText,
           label: text.replace('&amp;', '&').replace('&#39;', "'"),
         });
-      return '<h' + level + ' class="' + escapedText + '">' + text + '</h' + level + '>';
+      return (
+        '<h' +
+        level +
+        ' class="' +
+        escapedText +
+        '">' +
+        text +
+        '</h' +
+        level +
+        '>'
+      );
     };
 
     // remove .md from the end of the link if it's an absolute link to this project
-    this.markdownService.renderer.link = (href: string, title: string, text: string) => {
-      if (href.startsWith('/') && href.endsWith('.md')) href = href.split('.md')[0];
+    this.markdownService.renderer.link = (
+      href: string,
+      title: string,
+      text: string
+    ) => {
+      if (href.startsWith('/') && href.endsWith('.md'))
+        href = href.split('.md')[0];
       return `<a href="${href}">${text}</a>`;
     };
   }
@@ -69,7 +85,7 @@ export class HelpPageComponent implements OnInit, OnDestroy {
               this.router.navigate([linkURL]);
             }
           }
-        },
+        }
       );
     }
   }
@@ -82,7 +98,12 @@ export class HelpPageComponent implements OnInit, OnDestroy {
 
   public scrollTo(anchor) {
     const element = document.querySelector('.' + anchor);
-    if (element) element.scrollIntoView({ behavior: 'smooth', block: 'start', inline: 'nearest' });
+    if (element)
+      element.scrollIntoView({
+        behavior: 'smooth',
+        block: 'start',
+        inline: 'nearest',
+      });
   }
 }
 

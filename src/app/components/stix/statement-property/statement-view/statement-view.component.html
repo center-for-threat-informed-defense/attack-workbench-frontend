@@ -3,10 +3,11 @@
   #popoverTrigger2="mtxPopoverTrigger"
   [mtxPopoverTriggerFor]="popover"
   [mtxPopoverTriggerOn]="popoverTrigger"
-  [disabled]="popoverDisabled"
->
+  [disabled]="popoverDisabled">
   <div *ngIf="objStatements.length == 1">1 statement</div>
-  <div *ngIf="objStatements.length != 1">{{ objStatements.length }} statements</div>
+  <div *ngIf="objStatements.length != 1">
+    {{ objStatements.length }} statements
+  </div>
 </button>
 <mtx-popover
   #popover="mtxPopover"
@@ -14,13 +15,14 @@
   leaveDelay="25"
   [position]="['below', 'center']"
   [closeOnPanelClick]="true"
-  [closeOnBackdropClick]="true"
->
+  [closeOnBackdropClick]="true">
   <div style="max-width: 30em">
     <div class="labelled-box suffixed">
       <div class="content">
         <ul>
-          <li *ngFor="let objStatement of objStatements">{{ objStatement.definition_string }}</li>
+          <li *ngFor="let objStatement of objStatements">
+            {{ objStatement.definition_string }}
+          </li>
         </ul>
       </div>
       <span class="labelled-box-label">Statements</span>

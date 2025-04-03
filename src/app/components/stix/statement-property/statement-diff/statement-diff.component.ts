@@ -15,14 +15,16 @@ export class StatementDiffComponent implements OnInit {
   public showChangeIndicator = false;
 
   public get current() {
-    const statements: any[] = this.config.object[0]?.['object_marking_refs'] || [];
+    const statements: any[] =
+      this.config.object[0]?.['object_marking_refs'] || [];
     // ignore tlp markings
-    return statements.filter((id) => this.statementsMap[id]);
+    return statements.filter(id => this.statementsMap[id]);
   }
   public get previous() {
-    const statements: any[] = this.config.object[1]?.['object_marking_refs'] || [];
+    const statements: any[] =
+      this.config.object[1]?.['object_marking_refs'] || [];
     // ignore tlp markings
-    return statements.filter((id) => this.statementsMap[id]);
+    return statements.filter(id => this.statementsMap[id]);
   }
 
   // return false if object has a statements
@@ -56,7 +58,7 @@ export class StatementDiffComponent implements OnInit {
     const merged = new Map();
 
     // add before state to map
-    this.previous.forEach((stixId) => {
+    this.previous.forEach(stixId => {
       merged.set(stixId, {
         before: this.statementsMap[stixId] || null,
         after: null,
@@ -65,7 +67,8 @@ export class StatementDiffComponent implements OnInit {
 
     // add after state to map
     for (const stixId of this.current) {
-      if (merged.has(stixId)) merged.get(stixId).after = this.statementsMap[stixId] || null;
+      if (merged.has(stixId))
+        merged.get(stixId).after = this.statementsMap[stixId] || null;
       else
         merged.set(stixId, {
           before: null,

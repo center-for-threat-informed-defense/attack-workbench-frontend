@@ -6,11 +6,16 @@
  * @param  {string} value          value to set under key
  * @param  {number} expirationDays when cookie expires in days
  */
-const setCookie = function (key: string, value: string, expirationDays: number) {
+const setCookie = function (
+  key: string,
+  value: string,
+  expirationDays: number
+) {
   const d = new Date();
   d.setTime(d.getTime() + expirationDays * 24 * 60 * 60 * 1000);
   const expires = 'expires=' + d.toUTCString();
-  document.cookie = key + '=' + value + ';' + expires + ';path=/;SameSite=Strict';
+  document.cookie =
+    key + '=' + value + ';' + expires + ';path=/;SameSite=Strict';
 };
 
 /**
@@ -47,7 +52,8 @@ const hasCookie = function (key: string): boolean {
  * @param {string} key to delete
  */
 const deleteCookie = function (key: string) {
-  document.cookie = key + '=; expires=Thu, 01 Jan 1970 00:00:01 GMT;path=/;SameSite=Strict';
+  document.cookie =
+    key + '=; expires=Thu, 01 Jan 1970 00:00:01 GMT;path=/;SameSite=Strict';
 };
 
 export { setCookie, getCookie, hasCookie, deleteCookie };

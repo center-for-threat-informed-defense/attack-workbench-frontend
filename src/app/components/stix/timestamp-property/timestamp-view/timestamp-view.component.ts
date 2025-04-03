@@ -23,19 +23,23 @@ export class TimestampViewComponent implements OnInit {
 
   ngOnInit(): void {
     if (this.config.showDisplayName) {
-      const object = Array.isArray(this.config.object) ? this.config.object[0] : this.config.object;
+      const object = Array.isArray(this.config.object)
+        ? this.config.object[0]
+        : this.config.object;
       const createdByAccountId = object.workflow.created_by_user_account;
       if (!createdByAccountId) {
         // createdByAccountId does not exist
         return;
       }
-      this.userSubscription$ = this.restAPIConnector.getUserAccount(createdByAccountId).subscribe({
-        next: (response) => {
-          const user = new UserAccount(response);
-          this.displayName = user.displayName;
-        },
-        complete: () => this.userSubscription$.unsubscribe(),
-      });
+      this.userSubscription$ = this.restAPIConnector
+        .getUserAccount(createdByAccountId)
+        .subscribe({
+          next: response => {
+            const user = new UserAccount(response);
+            this.displayName = user.displayName;
+          },
+          complete: () => this.userSubscription$.unsubscribe(),
+        });
     }
   }
 
@@ -44,7 +48,8 @@ export class TimestampViewComponent implements OnInit {
    */
   public get humanized(): string {
     if (this._humanized) return this._humanized;
-    else if (!this.config.object.hasOwnProperty(this.config.field)) this._humanized = '';
+    else if (!this.config.object.hasOwnProperty(this.config.field))
+      this._humanized = '';
     else {
       const now = moment();
       const then = moment(this.config.object[this.config.field]);
@@ -65,6 +70,8 @@ export class TimestampViewComponent implements OnInit {
    */
   public get timestamp(): string {
     if (!this.config.object.hasOwnProperty(this.config.field)) return '';
-    return moment(this.config.object[this.config.field]).format('D MMMM YYYY, h:mm A');
+    return moment(this.config.object[this.config.field]).format(
+      'D MMMM YYYY, h:mm A'
+    );
   }
 }

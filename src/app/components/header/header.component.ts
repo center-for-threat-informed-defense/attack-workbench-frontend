@@ -50,20 +50,22 @@ export class HeaderComponent implements AfterViewInit {
 
   constructor(
     private route: ActivatedRoute,
-    private authenticationService: AuthenticationService,
+    private authenticationService: AuthenticationService
   ) {
     this.allRoutes = stixRoutes;
-    this.filteredRoutes = stixRoutes.filter((x) => x.data.more != true);
-    this.moreRoutes = stixRoutes.filter((x) => x.data.more == true);
+    this.filteredRoutes = stixRoutes.filter(x => x.data.more != true);
+    this.moreRoutes = stixRoutes.filter(x => x.data.more == true);
 
-    this.authnTypeSubscription = this.authenticationService.getAuthType().subscribe({
-      next: (v) => {
-        this.authnType = v;
-      },
-      complete: () => {
-        this.authnTypeSubscription.unsubscribe();
-      },
-    });
+    this.authnTypeSubscription = this.authenticationService
+      .getAuthType()
+      .subscribe({
+        next: v => {
+          this.authnType = v;
+        },
+        complete: () => {
+          this.authnTypeSubscription.unsubscribe();
+        },
+      });
   }
 
   ngAfterViewInit() {
@@ -76,7 +78,8 @@ export class HeaderComponent implements AfterViewInit {
   public onResize(event?: any) {
     //if the element overflows, show hamburger instead
     this.showHamburger =
-      this.linkMenu.nativeElement.offsetWidth < this.linkMenu.nativeElement.scrollWidth;
+      this.linkMenu.nativeElement.offsetWidth <
+      this.linkMenu.nativeElement.scrollWidth;
   }
 
   public login(): void {

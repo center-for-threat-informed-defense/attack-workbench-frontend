@@ -1,5 +1,8 @@
 import { Component } from '@angular/core';
-import { Breadcrumb, BreadcrumbService } from 'src/app/services/helpers/breadcrumb.service';
+import {
+  Breadcrumb,
+  BreadcrumbService,
+} from 'src/app/services/helpers/breadcrumb.service';
 
 @Component({
   selector: 'app-breadcrumb',

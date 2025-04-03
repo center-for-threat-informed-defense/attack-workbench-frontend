@@ -18,7 +18,7 @@ export class AddRelationshipButtonComponent implements OnInit {
   public loading = false; // is the component currently loading/creating the relationship?
   constructor(
     public restApiService: RestApiConnectorService,
-    public dialog: MatDialog,
+    public dialog: MatDialog
   ) {}
 
   ngOnInit(): void {
@@ -32,13 +32,25 @@ export class AddRelationshipButtonComponent implements OnInit {
     const targetType = this.config.targetType ? this.config.targetType : null;
     let initializer = null;
     if (this.config.source_object)
-      initializer = relationship.set_source_object(this.config.source_object, this.restApiService);
+      initializer = relationship.set_source_object(
+        this.config.source_object,
+        this.restApiService
+      );
     else if (this.config.source_ref)
-      initializer = relationship.set_source_ref(this.config.source_ref, this.restApiService);
+      initializer = relationship.set_source_ref(
+        this.config.source_ref,
+        this.restApiService
+      );
     else if (this.config.target_object)
-      initializer = relationship.set_target_object(this.config.target_object, this.restApiService);
+      initializer = relationship.set_target_object(
+        this.config.target_object,
+        this.restApiService
+      );
     else if (this.config.target_ref)
-      initializer = relationship.set_target_ref(this.config.target_ref, this.restApiService);
+      initializer = relationship.set_target_ref(
+        this.config.target_ref,
+        this.restApiService
+      );
     else initializer = EMPTY;
     this.loading = true;
     var zip_subscription = initializer.subscribe({
@@ -59,7 +71,8 @@ export class AddRelationshipButtonComponent implements OnInit {
         // a new dialog from opening over the current dialog.
         if (this.config.dialog && this.config.dialog.componentInstance) {
           this.config.dialog.componentInstance._config = config;
-          this.config.dialog.componentInstance.prevObject = this.config.source_object
+          this.config.dialog.componentInstance.prevObject = this.config
+            .source_object
             ? this.config.source_object
             : this.config.target_object;
           this.config.dialog.componentInstance.startEditing();
@@ -73,7 +86,7 @@ export class AddRelationshipButtonComponent implements OnInit {
           autoFocus: false, // prevents auto focus on toolbar buttons
         });
         const subscription = prompt.afterClosed().subscribe({
-          next: (result) => {
+          next: result => {
             if (prompt.componentInstance.dirty) this.created.emit();
           }, //re-fetch values since an edit occurred
           complete: () => {

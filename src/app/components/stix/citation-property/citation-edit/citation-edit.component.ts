@@ -16,12 +16,14 @@ export class CitationEditComponent implements OnDestroy {
   private sub: Subscription = new Subscription(); // prevent async issues
 
   public get object() {
-    return Array.isArray(this.config.object) ? this.config.object[0] : this.config.object;
+    return Array.isArray(this.config.object)
+      ? this.config.object[0]
+      : this.config.object;
   }
 
   constructor(
     public restApiService: RestApiConnectorService,
-    public editorService: EditorService,
+    public editorService: EditorService
   ) {
     // intentionally left blank
   }
@@ -34,9 +36,12 @@ export class CitationEditComponent implements OnDestroy {
    * On input blur, parse citations into the external references field
    */
   public parseCitations(): void {
-    const externalReferences: ExternalReferences = this.object[this.config.referencesField];
-    this.sub = externalReferences.parseObjectCitations(this.object, this.restApiService).subscribe({
-      complete: () => this.editorService.onReloadReferences.emit(),
-    });
+    const externalReferences: ExternalReferences =
+      this.object[this.config.referencesField];
+    this.sub = externalReferences
+      .parseObjectCitations(this.object, this.restApiService)
+      .subscribe({
+        complete: () => this.editorService.onReloadReferences.emit(),
+      });
   }
 }

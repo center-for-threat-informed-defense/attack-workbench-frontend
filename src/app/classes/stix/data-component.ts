@@ -70,18 +70,25 @@ export class DataComponent extends StixObject {
     if ('name' in sdo) {
       if (typeof sdo.name === 'string') this.name = sdo.name;
       else
-        logger.error('TypeError: name field is not a string:', sdo.name, '(', typeof sdo.name, ')');
+        logger.error(
+          'TypeError: name field is not a string:',
+          sdo.name,
+          '(',
+          typeof sdo.name,
+          ')'
+        );
     } else this.name = '';
 
     if ('description' in sdo) {
-      if (typeof sdo.description === 'string') this.description = sdo.description;
+      if (typeof sdo.description === 'string')
+        this.description = sdo.description;
       else
         logger.error(
           'TypeError: description field is not a string:',
           sdo.description,
           '(',
           typeof sdo.description,
-          ')',
+          ')'
         );
     } else this.description = '';
 
@@ -94,12 +101,13 @@ export class DataComponent extends StixObject {
           sdo.x_mitre_data_source_ref,
           '(',
           typeof sdo.x_mitre_data_source_ref,
-          ')',
+          ')'
         );
     } else this.dataSourceRef = '';
 
     if ('x_mitre_domains' in sdo) {
-      if (this.isStringArray(sdo.x_mitre_domains)) this.domains = sdo.x_mitre_domains;
+      if (this.isStringArray(sdo.x_mitre_domains))
+        this.domains = sdo.x_mitre_domains;
       else logger.error('TypeError: domains field is not a string array.');
     } else this.domains = [];
   }
@@ -109,7 +117,9 @@ export class DataComponent extends StixObject {
    * @param {RestApiConnectorService} restAPIService: the REST API connector through which asynchronous validation can be completed
    * @returns {Observable<ValidationData>} the validation warnings and errors once validation is complete.
    */
-  public validate(restAPIService: RestApiConnectorService): Observable<ValidationData> {
+  public validate(
+    restAPIService: RestApiConnectorService
+  ): Observable<ValidationData> {
     return this.base_validate(restAPIService);
   }
 
@@ -118,10 +128,12 @@ export class DataComponent extends StixObject {
    * @param restAPIService [RestApiConnectorService] the service to perform the POST/PUT through
    * @returns {Observable} of the post
    */
-  public save(restAPIService: RestApiConnectorService): Observable<DataComponent> {
+  public save(
+    restAPIService: RestApiConnectorService
+  ): Observable<DataComponent> {
     const postObservable = restAPIService.postDataComponent(this);
     const subscription = postObservable.subscribe({
-      next: (result) => {
+      next: result => {
         this.deserialize(result.serialize());
       },
       complete: () => {
@@ -150,10 +162,12 @@ export class DataComponent extends StixObject {
    * @param restAPIService [RestApiConnectorService] the service to perform the PUT through
    * @returns {Observable} of the put
    */
-  public update(restAPIService: RestApiConnectorService): Observable<DataComponent> {
+  public update(
+    restAPIService: RestApiConnectorService
+  ): Observable<DataComponent> {
     const putObservable = restAPIService.putDataComponent(this);
     const subscription = putObservable.subscribe({
-      next: (result) => {
+      next: result => {
         this.deserialize(result.serialize());
       },
       complete: () => {

@@ -8,21 +8,20 @@
         cdkDrag
         #popoverTrigger2="mtxPopoverTrigger"
         [mtxPopoverTriggerFor]="popover"
-        mtxPopoverTriggerOn="hover"
-      >
+        mtxPopoverTriggerOn="hover">
         help_outline
       </mat-icon>
       <mtx-popover
         #popover="mtxPopover"
         [position]="['below', 'center']"
         enterDelay="25"
-        leaveDelay="25"
-      >
+        leaveDelay="25">
         <div style="max-width: 26em">
           <span class="help-content"
-            >Individuals or organizations that have contributed information regarding the existence
-            of a technique, details on how to detect and/or mitigate use of a technique, or threat
-            intelligence on adversary use.</span
+            >Individuals or organizations that have contributed information
+            regarding the existence of a technique, details on how to detect
+            and/or mitigate use of a technique, or threat intelligence on
+            adversary use.</span
           >
         </div>
       </mtx-popover>
@@ -31,14 +30,17 @@
   <div
     *ngIf="!loading; else loadingTemplate"
     class="row"
-    [ngClass]="{ 'no-results': !contributors.length }"
-  >
+    [ngClass]="{ 'no-results': !contributors.length }">
     <ng-container *ngIf="contributors.length > 0; else nothingHere">
       <div *ngFor="let column of columns" class="col">
         <ul>
           <li *ngFor="let contributor of column">
-            <a class="link" (click)="openDialog(contributor)">{{ contributor }}</a>
-            <sup class="text-deemphasis">({{ getNumContributions(contributor) }})</sup>
+            <a class="link" (click)="openDialog(contributor)">{{
+              contributor
+            }}</a>
+            <sup class="text-deemphasis"
+              >({{ getNumContributions(contributor) }})</sup
+            >
           </li>
         </ul>
       </div>
@@ -49,8 +51,7 @@
 <ng-template #nothingHere>
   <app-empty-list-marker
     [message]="'No contributors found'"
-    (onCheckAgain)="load()"
-  ></app-empty-list-marker>
+    (onCheckAgain)="load()"></app-empty-list-marker>
 </ng-template>
 
 <ng-template #loadingTemplate>

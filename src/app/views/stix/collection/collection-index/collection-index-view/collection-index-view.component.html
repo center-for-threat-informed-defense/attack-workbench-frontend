@@ -12,8 +12,7 @@
           humanize: true,
           object: config.index.collection_index,
           field: 'created',
-        }"
-      ></app-timestamp-property>
+        }"></app-timestamp-property>
     </div>
     <div class="col">
       <app-timestamp-property
@@ -22,8 +21,7 @@
           humanize: true,
           object: config.index.collection_index,
           field: 'modified',
-        }"
-      ></app-timestamp-property>
+        }"></app-timestamp-property>
     </div>
   </div>
   <div class="row">
@@ -35,8 +33,7 @@
           field: 'description',
           firstParagraphOnly: false,
           label: 'description',
-        }"
-      ></app-descriptive-property>
+        }"></app-descriptive-property>
     </div>
   </div>
   <div class="row">
@@ -48,23 +45,24 @@
     <div class="col">
       <mat-accordion>
         <mat-expansion-panel
-          *ngFor="let collectionRef of config.index.collection_index.collections"
-          class="mat-elevation-z0"
-        >
+          *ngFor="
+            let collectionRef of config.index.collection_index.collections
+          "
+          class="mat-elevation-z0">
           <mat-expansion-panel-header>
             <mat-panel-title>
               <strong>{{ collectionRef.name }}</strong>
             </mat-panel-title>
             <mat-panel-description>
-              {{ collectionRef.versions.length }} versions, last updated&nbsp;<app-timestamp-view
+              {{ collectionRef.versions.length }} versions, last
+              updated&nbsp;<app-timestamp-view
                 *ngIf="collectionRef.versions.length > 0"
                 [config]="{
                   mode: 'view',
                   humanize: true,
                   object: collectionRef,
                   field: 'lastModified',
-                }"
-              ></app-timestamp-view>
+                }"></app-timestamp-view>
             </mat-panel-description>
           </mat-expansion-panel-header>
           <div class="collection-section description">
@@ -75,8 +73,7 @@
               <div
                 class="row subscription-action clickable"
                 *ngIf="collectionRef.subscribed && showActions && isAdmin"
-                (click)="unsubscribe(collectionRef)"
-              >
+                (click)="unsubscribe(collectionRef)">
                 <div class="col narrow">
                   <mat-icon aria-label="subscribed" class="text-success"
                     >check_circle_outline</mat-icon
@@ -87,8 +84,7 @@
               <div
                 class="row subscription-action clickable"
                 *ngIf="!collectionRef.subscribed && showActions && isAdmin"
-                (click)="subscribe(collectionRef)"
-              >
+                (click)="subscribe(collectionRef)">
                 <div class="col narrow">
                   <mat-icon aria-label="subscribe">sync</mat-icon>
                 </div>
@@ -99,12 +95,16 @@
                   class="col narrow"
                   [ngClass]="{ clickable: isAdmin }"
                   *ngIf="showActions"
-                  (click)="isAdmin && onVersionClick(version, collectionRef)"
-                >
-                  <mat-icon *ngIf="versionDownloaded(version, collectionRef)" class="text-success"
+                  (click)="isAdmin && onVersionClick(version, collectionRef)">
+                  <mat-icon
+                    *ngIf="versionDownloaded(version, collectionRef)"
+                    class="text-success"
                     >done</mat-icon
                   >
-                  <mat-icon *ngIf="!versionDownloaded(version, collectionRef) && isAdmin"
+                  <mat-icon
+                    *ngIf="
+                      !versionDownloaded(version, collectionRef) && isAdmin
+                    "
                     >get_app</mat-icon
                   >
                 </div>
@@ -119,16 +119,14 @@
                         humanize: true,
                         object: version,
                         field: 'modified',
-                      }"
-                    ></app-timestamp-view>
+                      }"></app-timestamp-view>
                   </div>
                 </div>
                 <div
                   matTooltip="view release notes"
                   class="col narrow clickable"
                   *ngIf="showActions && version.release_notes"
-                  (click)="showReleaseNotes(version, collectionRef)"
-                >
+                  (click)="showReleaseNotes(version, collectionRef)">
                   <mat-icon>description</mat-icon>
                 </div>
               </div>

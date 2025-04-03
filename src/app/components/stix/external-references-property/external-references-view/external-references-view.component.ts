@@ -1,6 +1,15 @@
-import { Component, OnInit, Input, ViewEncapsulation, OnDestroy } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  Input,
+  ViewEncapsulation,
+  OnDestroy,
+} from '@angular/core';
 import { Subscription } from 'rxjs';
-import { ExternalReference, ExternalReferences } from 'src/app/classes/external-references';
+import {
+  ExternalReference,
+  ExternalReferences,
+} from 'src/app/classes/external-references';
 import { EditorService } from 'src/app/services/editor/editor.service';
 import { ExternalReferencesPropertyConfig } from '../external-references-property.component';
 
@@ -17,20 +26,25 @@ export class ExternalReferencesViewComponent implements OnInit, OnDestroy {
   public referenceList: [number, ExternalReference, string][] = [];
 
   public get object() {
-    return Array.isArray(this.config.object) ? this.config.object[0] : this.config.object;
+    return Array.isArray(this.config.object)
+      ? this.config.object[0]
+      : this.config.object;
   }
 
   constructor(private editorService: EditorService) {
-    this.onEditStopSubscription = this.editorService.onEditingStopped.subscribe({
-      next: () => {
-        this.loadReferences();
-      }, // reload references when done editing
-    });
-    this.onReloadReferencesSub = this.editorService.onReloadReferences.subscribe({
-      next: () => {
-        this.loadReferences();
-      }, // reload references on text preview
-    });
+    this.onEditStopSubscription = this.editorService.onEditingStopped.subscribe(
+      {
+        next: () => {
+          this.loadReferences();
+        }, // reload references when done editing
+      }
+    );
+    this.onReloadReferencesSub =
+      this.editorService.onReloadReferences.subscribe({
+        next: () => {
+          this.loadReferences();
+        }, // reload references on text preview
+      });
   }
 
   ngOnInit(): void {
@@ -43,7 +57,8 @@ export class ExternalReferencesViewComponent implements OnInit, OnDestroy {
   }
 
   public loadReferences(): void {
-    const objReferences: ExternalReferences = this.object[this.config.referencesField];
+    const objReferences: ExternalReferences =
+      this.object[this.config.referencesField];
     this.referenceList = objReferences.list();
   }
 }

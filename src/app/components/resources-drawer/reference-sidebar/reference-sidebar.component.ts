@@ -11,7 +11,12 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { fromEvent, Observable } from 'rxjs';
-import { debounceTime, distinctUntilChanged, filter, tap } from 'rxjs/operators';
+import {
+  debounceTime,
+  distinctUntilChanged,
+  filter,
+  tap,
+} from 'rxjs/operators';
 import { ExternalReference } from 'src/app/classes/external-references';
 import { AuthenticationService } from 'src/app/services/connectors/authentication/authentication.service';
 import {
@@ -47,7 +52,7 @@ export class ReferenceSidebarComponent implements OnInit, AfterViewInit {
     private restApiConnector: RestApiConnectorService,
     public snackbar: MatSnackBar,
     public dialog: MatDialog,
-    private authenticationService: AuthenticationService,
+    private authenticationService: AuthenticationService
   ) {}
 
   public newReference() {
@@ -76,9 +81,13 @@ export class ReferenceSidebarComponent implements OnInit, AfterViewInit {
   public applyControls(search?: string) {
     const limit = this.paginator ? this.paginator.pageSize : 10;
     const offset = this.paginator ? this.paginator.pageIndex * limit : 0;
-    this.references$ = this.restApiConnector.getAllReferences(limit, offset, search);
+    this.references$ = this.restApiConnector.getAllReferences(
+      limit,
+      offset,
+      search
+    );
     const subscription = this.references$.subscribe({
-      next: (data) => {
+      next: data => {
         this.totalObjectCount = data.pagination.total;
       },
       complete: () => {
@@ -98,12 +107,12 @@ export class ReferenceSidebarComponent implements OnInit, AfterViewInit {
         filter(Boolean),
         debounceTime(250),
         distinctUntilChanged(),
-        tap((_) => {
+        tap(_ => {
           if (this.paginator) this.paginator.pageIndex = 0;
           const el = _ as any;
           const query = el.target.value ? el.target.value : null;
           this.applyControls(query);
-        }),
+        })
       )
       .subscribe();
   }

@@ -16,7 +16,7 @@ export class OrgSettingsPageComponent implements OnInit {
   public idRegex = `^([A-Za-z])*$`;
   public rangeRegex = `^([0-9]){1,4}$`;
 
-  public isNOU = (x) => x === undefined || x === null; // isNullOrUndefined
+  public isNOU = x => x === undefined || x === null; // isNullOrUndefined
 
   public get isNamespaceInvalid(): boolean {
     const regid = new RegExp(this.idRegex);
@@ -32,43 +32,46 @@ export class OrgSettingsPageComponent implements OnInit {
 
   ngOnInit(): void {
     const idSub = this.restAPIConnector.getOrganizationIdentity().subscribe({
-      next: (identity) => (this.organizationIdentity = identity),
+      next: identity => (this.organizationIdentity = identity),
       complete: () => idSub.unsubscribe(),
     });
 
-    const namespaceSub = this.restAPIConnector.getOrganizationNamespace().subscribe({
-      next: (namespaceSettings) => {
-        this.organizationNamespace = {
-          ...namespaceSettings,
-          range_start: namespaceSettings.range_start
-            ? namespaceSettings.range_start.toString().padStart(4, '0')
-            : undefined,
-        };
-      },
-      complete: () => namespaceSub.unsubscribe(),
-    });
+    const namespaceSub = this.restAPIConnector
+      .getOrganizationNamespace()
+      .subscribe({
+        next: namespaceSettings => {
+          this.organizationNamespace = {
+            ...namespaceSettings,
+            range_start: namespaceSettings.range_start
+              ? namespaceSettings.range_start.toString().padStart(4, '0')
+              : undefined,
+          };
+        },
+        complete: () => namespaceSub.unsubscribe(),
+      });
   }
 
   onBlur(): void {
     if (!this.isNOU(this.organizationNamespace.range_start)) {
-      this.organizationNamespace.range_start = this.organizationNamespace.range_start
-        .toString()
-        .padStart(4, '0');
+      this.organizationNamespace.range_start =
+        this.organizationNamespace.range_start.toString().padStart(4, '0');
     }
   }
 
   saveIdentity(): void {
-    const subscription = this.restAPIConnector.postIdentity(this.organizationIdentity).subscribe({
-      next: (identity) => (this.organizationIdentity = identity),
-      complete: () => subscription.unsubscribe(),
-    });
+    const subscription = this.restAPIConnector
+      .postIdentity(this.organizationIdentity)
+      .subscribe({
+        next: identity => (this.organizationIdentity = identity),
+        complete: () => subscription.unsubscribe(),
+      });
   }
 
   saveNamespace(): void {
     const subscription = this.restAPIConnector
       .setOrganizationNamespace(this.organizationNamespace)
       .subscribe({
-        next: (namespace) => (this.organizationNamespace = namespace),
+        next: namespace => (this.organizationNamespace = namespace),
         complete: () => subscription.unsubscribe(),
       });
   }

@@ -17,7 +17,9 @@ export abstract class StixViewPage {
     return this.authenticationService.canEdit();
   }
   public get configCurrentObject(): StixObject {
-    return Array.isArray(this.config.object) ? this.config.object[0] : this.config.object;
+    return Array.isArray(this.config.object)
+      ? this.config.object[0]
+      : this.config.object;
   }
   public get configPreviousObject(): StixObject | null {
     return this.config.mode == 'diff' ? this.config.object[1] || null : null;

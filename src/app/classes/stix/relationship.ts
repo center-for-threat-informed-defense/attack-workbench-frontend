@@ -76,7 +76,8 @@ export class Relationship extends StixObject {
     if (this.relationship_type == 'uses') {
       if (
         this.target_object &&
-        (this.target_object.stix.type == 'malware' || this.target_object.stix.type == 'tool')
+        (this.target_object.stix.type == 'malware' ||
+          this.target_object.stix.type == 'tool')
       )
         return ['group', 'campaign'];
       else return ['software', 'group', 'campaign'];
@@ -96,7 +97,8 @@ export class Relationship extends StixObject {
     if (this.relationship_type == 'uses') {
       if (
         this.source_object &&
-        (this.source_object.stix.type == 'malware' || this.source_object.stix.type == 'tool')
+        (this.source_object.stix.type == 'malware' ||
+          this.source_object.stix.type == 'tool')
       )
         return ['technique'];
       else return ['software', 'technique'];
@@ -126,36 +128,41 @@ export class Relationship extends StixObject {
    */
   public set_source_ref(
     new_source_ref: string,
-    restAPIService: RestApiConnectorService,
+    restAPIService: RestApiConnectorService
   ): Observable<Relationship> {
     this.source_ref = new_source_ref;
     this.updating_refs = true;
     return restAPIService.getAllObjects().pipe(
-      map((results) => {
+      map(results => {
         const x = results as any;
         const serialized = this.serialize();
-        serialized.source_object = x.find((result) => result.stix.id == new_source_ref);
+        serialized.source_object = x.find(
+          result => result.stix.id == new_source_ref
+        );
         this.deserialize(serialized);
         return this;
       }),
-      switchMap((relationship) => {
+      switchMap(relationship => {
         if (
           relationship.source_object.stix.x_mitre_is_subtechnique ||
           relationship.source_object.stix.type == 'x-mitre-data-component'
         ) {
-          return this.get_parent_object(relationship.source_object, restAPIService).pipe(
-            map((res) => {
+          return this.get_parent_object(
+            relationship.source_object,
+            restAPIService
+          ).pipe(
+            map(res => {
               this.source_parent = res;
               this.updating_refs = false;
               return this;
-            }),
+            })
           );
         } else {
           this.source_parent = undefined; // source object has no parent
           this.updating_refs = false;
           return of(this);
         }
-      }),
+      })
     );
   }
 
@@ -167,14 +174,16 @@ export class Relationship extends StixObject {
    */
   public set_source_object(
     new_source_object: StixObject,
-    restAPIService: RestApiConnectorService,
+    restAPIService: RestApiConnectorService
   ): Observable<Relationship> {
     this.updating_refs = true;
     this.source_ref = new_source_object.stixID;
     const serialized = this.serialize();
     const modified = new_source_object.modified;
     serialized.source_object = new_source_object.serialize();
-    serialized.source_object['stix'].modified = modified ? modified.toISOString() : undefined; // fix modified date overwrite by serialization
+    serialized.source_object['stix'].modified = modified
+      ? modified.toISOString()
+      : undefined; // fix modified date overwrite by serialization
     this.deserialize(serialized);
 
     if (
@@ -182,11 +191,11 @@ export class Relationship extends StixObject {
       this.source_object.stix.type == 'x-mitre-data-component'
     ) {
       return this.get_parent_object(this.source_object, restAPIService).pipe(
-        map((result) => {
+        map(result => {
           this.source_parent = result;
           this.updating_refs = false;
           return this;
-        }),
+        })
       );
     } else this.source_parent = undefined; // source object has no parent
 
@@ -202,36 +211,41 @@ export class Relationship extends StixObject {
    */
   public set_target_ref(
     new_target_ref: string,
-    restAPIService: RestApiConnectorService,
+    restAPIService: RestApiConnectorService
   ): Observable<Relationship> {
     this.target_ref = new_target_ref;
     this.updating_refs = true;
     return restAPIService.getAllObjects().pipe(
-      map((results) => {
+      map(results => {
         const x = results as any;
         const serialized = this.serialize();
-        serialized.target_object = x.find((result) => result.stix.id == new_target_ref);
+        serialized.target_object = x.find(
+          result => result.stix.id == new_target_ref
+        );
         this.deserialize(serialized);
         return this;
       }),
-      switchMap((relationship) => {
+      switchMap(relationship => {
         if (
           relationship.target_object.stix.x_mitre_is_subtechnique ||
           relationship.target_object.stix.type == 'x-mitre-data-component'
         ) {
-          return this.get_parent_object(relationship.target_object, restAPIService).pipe(
-            map((res) => {
+          return this.get_parent_object(
+            relationship.target_object,
+            restAPIService
+          ).pipe(
+            map(res => {
               this.target_parent = res;
               this.updating_refs = false;
               return this;
-            }),
+            })
           );
         } else {
           this.target_parent = undefined; // target object has no parent
           this.updating_refs = false;
           return of(this);
         }
-      }),
+      })
     );
   }
 
@@ -243,14 +257,16 @@ export class Relationship extends StixObject {
    */
   public set_target_object(
     new_target_object: StixObject,
-    restAPIService: RestApiConnectorService,
+    restAPIService: RestApiConnectorService
   ): Observable<Relationship> {
     this.updating_refs = true;
     this.target_ref = new_target_object.stixID;
     const serialized = this.serialize();
     const modified = new_target_object.modified;
     serialized.target_object = new_target_object.serialize();
-    serialized.target_object['stix'].modified = modified ? modified.toISOString() : undefined; // fix modified date overwrite by serialization
+    serialized.target_object['stix'].modified = modified
+      ? modified.toISOString()
+      : undefined; // fix modified date overwrite by serialization
     this.deserialize(serialized);
 
     if (
@@ -258,11 +274,11 @@ export class Relationship extends StixObject {
       this.target_object.stix.type == 'x-mitre-data-component'
     ) {
       return this.get_parent_object(this.target_object, restAPIService).pipe(
-        map((result) => {
+        map(result => {
           this.target_parent = result;
           this.updating_refs = false;
           return this;
-        }),
+        })
       );
     } else this.target_parent = undefined; // target object has no parent
 
@@ -280,29 +296,34 @@ export class Relationship extends StixObject {
    */
   public get_parent_object(
     object: any,
-    restAPIService: RestApiConnectorService,
+    restAPIService: RestApiConnectorService
   ): Observable<StixObject> {
     if (object.stix.x_mitre_is_subtechnique) {
       // sub-technique
       return restAPIService
-        .getRelatedTo({ sourceRef: object.stix.id, relationshipType: 'subtechnique-of' })
+        .getRelatedTo({
+          sourceRef: object.stix.id,
+          relationshipType: 'subtechnique-of',
+        })
         .pipe(
           // fetch parent from REST API
-          map((relationship) => {
+          map(relationship => {
             if (!relationship || relationship.data.length == 0) return null; // no parent technique found
             const p = relationship.data[0] as Relationship;
             return p.target_object;
-          }),
+          })
         );
     } else {
       // data component
-      return restAPIService.getDataSource(object.stix.x_mitre_data_source_ref).pipe(
-        // fetch data source from REST API
-        map((data_sources) => {
-          if (!data_sources || data_sources.length == 0) return null; // no data source found
-          return data_sources[0].serialize();
-        }),
-      );
+      return restAPIService
+        .getDataSource(object.stix.x_mitre_data_source_ref)
+        .pipe(
+          // fetch data source from REST API
+          map(data_sources => {
+            if (!data_sources || data_sources.length == 0) return null; // no data source found
+            return data_sources[0].serialize();
+          })
+        );
     }
   }
 
@@ -311,14 +332,16 @@ export class Relationship extends StixObject {
    * @param {RestApiConnectorService} restAPIService the REST API connector through which the parent can be fetched
    * @returns {Observable<Relationship>} of this object after the source parent has been updated
    */
-  public update_source_parent(restAPIService: RestApiConnectorService): Observable<Relationship> {
+  public update_source_parent(
+    restAPIService: RestApiConnectorService
+  ): Observable<Relationship> {
     this.updating_refs = true;
     return this.get_parent_object(this.source_object, restAPIService).pipe(
-      map((result) => {
+      map(result => {
         this.source_parent = result;
         this.updating_refs = false;
         return this;
-      }),
+      })
     );
   }
 
@@ -327,14 +350,16 @@ export class Relationship extends StixObject {
    * @param {RestApiConnectorService} restAPIService the REST API connector through which the parent can be fetched
    * @returns {Observable<Relationship>} of this object after the target parent has been updated
    */
-  public update_target_parent(restAPIService: RestApiConnectorService): Observable<Relationship> {
+  public update_target_parent(
+    restAPIService: RestApiConnectorService
+  ): Observable<Relationship> {
     this.updating_refs = true;
     return this.get_parent_object(this.target_object, restAPIService).pipe(
-      map((result) => {
+      map(result => {
         this.target_parent = result;
         this.updating_refs = false;
         return this;
-      }),
+      })
     );
   }
 
@@ -364,25 +389,27 @@ export class Relationship extends StixObject {
   public deserialize(raw: any) {
     const sdoStix = raw.stix;
     if ('source_ref' in sdoStix) {
-      if (typeof sdoStix.source_ref === 'string') this.source_ref = sdoStix.source_ref;
+      if (typeof sdoStix.source_ref === 'string')
+        this.source_ref = sdoStix.source_ref;
       else
         logger.error(
           'TypeError: source_ref field is not a string:',
           sdoStix.source_ref,
           '(',
           typeof sdoStix.source_ref,
-          ')',
+          ')'
         );
     }
     if ('target_ref' in sdoStix) {
-      if (typeof sdoStix.target_ref === 'string') this.target_ref = sdoStix.target_ref;
+      if (typeof sdoStix.target_ref === 'string')
+        this.target_ref = sdoStix.target_ref;
       else
         logger.error(
           'TypeError: target_ref field is not a string:',
           sdoStix.target_ref,
           '(',
           typeof sdoStix.target_ref,
-          ')',
+          ')'
         );
     }
     if ('relationship_type' in sdoStix) {
@@ -394,7 +421,7 @@ export class Relationship extends StixObject {
           sdoStix.relationship_type,
           '(',
           typeof sdoStix.relationship_type,
-          ')',
+          ')'
         );
     }
     if ('source_object' in raw) {
@@ -414,7 +441,7 @@ export class Relationship extends StixObject {
               src_sdo.external_references[0].external_id,
               '(',
               typeof src_sdo.external_references[0].external_id,
-              ')',
+              ')'
             );
         }
         // else logger.warn("ObjectWarning: cannot find attackID for source object");
@@ -437,7 +464,7 @@ export class Relationship extends StixObject {
               tgt_sdo.external_references[0].external_id,
               '(',
               typeof tgt_sdo.external_references[0].external_id,
-              ')',
+              ')'
             );
         }
         // else logger.warn("ObjectWarning: cannot find attackID for target object");
@@ -450,9 +477,11 @@ export class Relationship extends StixObject {
    * @param {RestApiConnectorService} restAPIService: the REST API connector through which asynchronous validation can be completed
    * @returns {Observable<ValidationData>} the validation warnings and errors once validation is complete.
    */
-  public validate(restAPIService: RestApiConnectorService): Observable<ValidationData> {
+  public validate(
+    restAPIService: RestApiConnectorService
+  ): Observable<ValidationData> {
     return this.base_validate(restAPIService).pipe(
-      map((result) => {
+      map(result => {
         // presence of source-ref
         if (!this.source_ref) {
           result.errors.push({
@@ -482,9 +511,15 @@ export class Relationship extends StixObject {
           });
         }
         // is this a valid sub-technique-of relationship?
-        if (this.source_ref && this.target_ref && this.relationship_type == 'subtechnique-of') {
+        if (
+          this.source_ref &&
+          this.target_ref &&
+          this.relationship_type == 'subtechnique-of'
+        ) {
           if (
-            !this.source_object.stix.hasOwnProperty('x_mitre_is_subtechnique') ||
+            !this.source_object.stix.hasOwnProperty(
+              'x_mitre_is_subtechnique'
+            ) ||
             !this.source_object.stix.x_mitre_is_subtechnique
           ) {
             result.errors.push({
@@ -505,15 +540,18 @@ export class Relationship extends StixObject {
         return result;
       }),
       //check for parallel relationships
-      switchMap((result) => {
+      switchMap(result => {
         // find all objects connected to the source or target ref
         return restAPIService
-          .getRelatedTo({ sourceRef: this.source_ref, targetRef: this.target_ref })
+          .getRelatedTo({
+            sourceRef: this.source_ref,
+            targetRef: this.target_ref,
+          })
           .pipe(
-            map((objects) => {
+            map(objects => {
               const relationships = objects.data as Relationship[];
               if (
-                relationships.find((relationship) => {
+                relationships.find(relationship => {
                   //parallel relationship
                   return (
                     relationship.stixID != this.stixID &&
@@ -525,7 +563,8 @@ export class Relationship extends StixObject {
                 result.errors.push({
                   field: 'source_ref',
                   result: 'error',
-                  message: 'a relationship already exists between these objects',
+                  message:
+                    'a relationship already exists between these objects',
                 });
               } else {
                 result.successes.push({
@@ -535,16 +574,19 @@ export class Relationship extends StixObject {
                 });
               }
               return result;
-            }),
+            })
           );
       }),
-      switchMap((result) => {
+      switchMap(result => {
         // check for existing sub-technique-of for targeted technique
         if (this.relationship_type == 'subtechnique-of') {
           return restAPIService
-            .getRelatedTo({ sourceRef: this.source_ref, relationshipType: 'subtechnique-of' })
+            .getRelatedTo({
+              sourceRef: this.source_ref,
+              relationshipType: 'subtechnique-of',
+            })
             .pipe(
-              map((objects) => {
+              map(objects => {
                 if (objects.data.length > 0) {
                   //already has a parent
                   result.errors.push({
@@ -554,12 +596,12 @@ export class Relationship extends StixObject {
                   });
                 }
                 return result;
-              }),
+              })
             );
         } else {
           return of(result);
         }
-      }),
+      })
     );
   }
 
@@ -568,7 +610,9 @@ export class Relationship extends StixObject {
    * @param restAPIService [RestApiConnectorService] the service to perform the POST/PUT through
    * @returns {Observable} of the post
    */
-  public save(restAPIService: RestApiConnectorService): Observable<Relationship> {
+  public save(
+    restAPIService: RestApiConnectorService
+  ): Observable<Relationship> {
     if (!this.workflow) {
       // Initialize the workflow object if it doesn't exist
       this.workflow = { state: '' };
@@ -576,11 +620,17 @@ export class Relationship extends StixObject {
     this.workflow.state = 'work-in-progress';
     const postObservable = restAPIService.postRelationship(this);
     const subscription = postObservable.subscribe({
-      next: (result) => {
+      next: result => {
         this.deserialize(result.serialize());
-        const source_object = this.getObject(this.source_object.stix.type, this.source_object);
+        const source_object = this.getObject(
+          this.source_object.stix.type,
+          this.source_object
+        );
         this.updateSourceTargetObject(restAPIService, source_object);
-        const target_object = this.getObject(this.target_object.stix.type, this.target_object);
+        const target_object = this.getObject(
+          this.target_object.stix.type,
+          this.target_object
+        );
         this.updateSourceTargetObject(restAPIService, target_object);
       },
       complete: () => {
@@ -609,10 +659,12 @@ export class Relationship extends StixObject {
    * @param restAPIService [RestApiConnectorService] the service to perform the PUT through
    * @returns {Observable} of the put
    */
-  public update(restAPIService: RestApiConnectorService): Observable<Relationship> {
+  public update(
+    restAPIService: RestApiConnectorService
+  ): Observable<Relationship> {
     const putObservable = restAPIService.putRelationship(this);
     const subscription = putObservable.subscribe({
-      next: (result) => {
+      next: result => {
         this.deserialize(result.serialize());
       },
       complete: () => {
@@ -627,7 +679,10 @@ export class Relationship extends StixObject {
    * @param restAPIService the rest api service
    * @param object the relationship source object
    */
-  public updateSourceTargetObject(restAPIService: RestApiConnectorService, object: StixObject) {
+  public updateSourceTargetObject(
+    restAPIService: RestApiConnectorService,
+    object: StixObject
+  ) {
     // Check if the workflow object exists
     if (!object.workflow) {
       // Initialize the workflow object if it doesn't exist
@@ -635,11 +690,11 @@ export class Relationship extends StixObject {
     }
     object.workflow.state = 'work-in-progress';
     object.update(restAPIService).subscribe({
-      next: (response) => {
+      next: response => {
         console.log('Object updated successfully:', response);
         window.location.reload();
       },
-      error: (error) => {
+      error: error => {
         console.error('Error updating object:', error);
       },
       complete: () => {

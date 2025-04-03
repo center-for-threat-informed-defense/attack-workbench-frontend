@@ -21,7 +21,7 @@ export class SubtypeDiffComponent implements OnInit {
     return this.config.subtypeFields;
   }
   public get fieldLabels(): string[] {
-    return this.config.subtypeFields.map((f) => (f.label ? f.label : f.name));
+    return this.config.subtypeFields.map(f => (f.label ? f.label : f.name));
   }
 
   ngOnInit(): void {
@@ -32,7 +32,9 @@ export class SubtypeDiffComponent implements OnInit {
     const merged = new Map();
 
     // add before state to map
-    this.previous.forEach((item) => merged.set(item.name, { before: item, after: null }));
+    this.previous.forEach(item =>
+      merged.set(item.name, { before: item, after: null })
+    );
 
     // add after state to map
     for (const item of this.current) {

@@ -6,13 +6,16 @@
       [matTooltip]="tab.name"
       mat-icon-button
       class="control"
-      [disabled]="!sidebarService.tabEnabled(tab.name)"
-    >
+      [disabled]="!sidebarService.tabEnabled(tab.name)">
       <mat-icon [attr.aria-label]="tab.name">{{ tab.icon }}</mat-icon>
     </button>
     <ng-container *ngIf="showCloseButton">
       <div class="spacer"></div>
-      <button matTooltip="close sidebar" mat-icon-button class="control" (click)="close()">
+      <button
+        matTooltip="close sidebar"
+        mat-icon-button
+        class="control"
+        (click)="close()">
         <mat-icon aria-label="close">close</mat-icon>
       </button>
     </ng-container>
@@ -22,14 +25,20 @@
       {{ currentTab }}
     </h1>
     <app-history-timeline
-      *ngIf="currentTab === 'history' && sidebarService.tabEnabled('history')"
-    ></app-history-timeline>
+      *ngIf="
+        currentTab === 'history' && sidebarService.tabEnabled('history')
+      "></app-history-timeline>
     <app-reference-sidebar
-      *ngIf="currentTab === 'references' && sidebarService.tabEnabled('references')"
-    ></app-reference-sidebar>
+      *ngIf="
+        currentTab === 'references' && sidebarService.tabEnabled('references')
+      "></app-reference-sidebar>
     <app-notes-editor
-      *ngIf="currentTab === 'notes' && sidebarService.tabEnabled('notes')"
-    ></app-notes-editor>
-    <app-search *ngIf="currentTab === 'search' && sidebarService.tabEnabled('search')"></app-search>
+      *ngIf="
+        currentTab === 'notes' && sidebarService.tabEnabled('notes')
+      "></app-notes-editor>
+    <app-search
+      *ngIf="
+        currentTab === 'search' && sidebarService.tabEnabled('search')
+      "></app-search>
   </div>
 </div>

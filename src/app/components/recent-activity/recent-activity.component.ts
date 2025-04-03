@@ -55,7 +55,7 @@ export class RecentActivityComponent implements OnInit {
     private restAPIService: RestApiConnectorService,
     private dialog: MatDialog,
     private router: Router,
-    private sidebarService: SidebarService,
+    private sidebarService: SidebarService
   ) {
     // intentionally left blank
   }
@@ -69,7 +69,7 @@ export class RecentActivityComponent implements OnInit {
     if (this.identities.length) {
       this.loading = true;
       const subscription = this.getUserActivity().subscribe({
-        next: (results) => {
+        next: results => {
           this.parseActivity(results as StixObject[]);
           this.loading = false;
         },
@@ -88,10 +88,10 @@ export class RecentActivityComponent implements OnInit {
     return this.restAPIService
       .getRecentActivity(1000, null, true, true, true, this.identities)
       .pipe(
-        map((results) => {
+        map(results => {
           if (results?.data) return results.data as StixObject[];
           else return results;
-        }),
+        })
       );
   }
 
@@ -108,9 +108,11 @@ export class RecentActivityComponent implements OnInit {
   private parseActivity(activity: StixObject[]): void {
     // build recent activity events
     for (const stixObject of activity) {
-      const createEvent = stixObject.created.getTime() == stixObject.modified.getTime();
+      const createEvent =
+        stixObject.created.getTime() == stixObject.modified.getTime();
       const releaseEvent =
-        stixObject.attackType == 'collection' && (stixObject as Collection).release;
+        stixObject.attackType == 'collection' &&
+        (stixObject as Collection).release;
 
       let objectName, eventIcon;
       if (createEvent) {
@@ -140,18 +142,24 @@ export class RecentActivityComponent implements OnInit {
     }
 
     // ensure that the stix objects are sorted in ascending order of date
-    this.allRecentActivity.sort((a, b) => (b.sdo.modified as any) - (a.sdo.modified as any));
+    this.allRecentActivity.sort(
+      (a, b) => (b.sdo.modified as any) - (a.sdo.modified as any)
+    );
     this.recentActivity = this.allRecentActivity.slice(0, 5);
   }
 
   /** show more activity */
   public showMore(): void {
-    this.recentActivity = this.allRecentActivity.slice(0, this.recentActivity.length + 5);
+    this.recentActivity = this.allRecentActivity.slice(
+      0,
+      this.recentActivity.length + 5
+    );
   }
 
   /** show less activity */
   public showLess(): void {
-    const end = this.recentActivity.length - 5 < 5 ? 5 : this.recentActivity.length - 5;
+    const end =
+      this.recentActivity.length - 5 < 5 ? 5 : this.recentActivity.length - 5;
     this.recentActivity = this.allRecentActivity.slice(0, end);
   }
 
@@ -173,15 +181,17 @@ export class RecentActivityComponent implements OnInit {
     let url = `/${type}/${stixID}`;
     if (type == 'collection') {
       // collection URLs must include their modified date
-      const collectionSub = this.restAPIService.getCollection(stixID).subscribe({
-        next: (result) => {
-          url = `${url}/modified/${result[0].modified.toISOString()}`;
-          this.router.navigateByUrl(url);
-        },
-        complete: () => {
-          collectionSub.unsubscribe();
-        },
-      });
+      const collectionSub = this.restAPIService
+        .getCollection(stixID)
+        .subscribe({
+          next: result => {
+            url = `${url}/modified/${result[0].modified.toISOString()}`;
+            this.router.navigateByUrl(url);
+          },
+          complete: () => {
+            collectionSub.unsubscribe();
+          },
+        });
     } else {
       this.router.navigateByUrl(url);
     }
