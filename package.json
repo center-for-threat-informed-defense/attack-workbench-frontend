@@ -73,7 +73,7 @@
     "karma-coverage-istanbul-reporter": "~3.0.2",
     "karma-jasmine": "^5.1.0",
     "karma-jasmine-html-reporter": "^2.1.0",
-    "semantic-release": "^22.0.12",
+    "semantic-release": "^24.2.3",
     "ts-node": "^10.9.1",
     "tslint": "~6.1.0",
     "typescript": "^5.4.5"
