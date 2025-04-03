@@ -1,27 +1,28 @@
-FROM node:18 AS build
+FROM node:18-alpine AS build
 
-# Create app directory
-WORKDIR /usr/src/app
+WORKDIR /workspace
 
-# Install app dependencies
-# A wildcard is used to ensure both package.json AND package-lock.json are copied
-# where available (npm@5+)
-COPY ./app/package*.json ./
+# Copy everything
+COPY . .
 
+# Install dependencies
 RUN npm install
-# If you are building your code for production
-# RUN npm ci --only=production
 
-# Copy the app source
-COPY ./app .
-
-# Copy the docs--angular looks for them in a sibling directory
-COPY ./docs ../docs
-
-# Build the bundle
+# Build the application
 RUN npm run build-prod
 
-FROM nginx
+# Second stage: production environment
+FROM nginx:alpine
+
+# Define build arguments
+ARG VERSION=dev
+ARG BUILDTIME=unknown
+ARG REVISION=unknown
+
+# Set version as environment variable for runtime access
+ENV APP_VERSION=$VERSION \
+    GIT_COMMIT=$REVISION \
+    BUILD_DATE=$BUILDTIME
 
 # Set Docker labels
 LABEL org.opencontainers.image.title="ATT&CK Workbench Frontend Service" \
@@ -37,8 +38,11 @@ LABEL org.opencontainers.image.title="ATT&CK Workbench Frontend Service" \
 # Remove the default nginx website
 RUN rm -rf /usr/share/nginx/html/*
 
-# Note: The nginx config file must be included as a volume at /etc/nginx/nginx.conf
+# Copy the application bundles - explicitly specifying the full path
+COPY --from=build /workspace/dist /usr/share/nginx/html
 
-# Copy the application bundles
-COPY --from=build  /usr/src/app/dist/app /usr/share/nginx/html
+# Expose port 80
+EXPOSE 80 443
 
+# Command to run NGINX in foreground
+CMD ["nginx", "-g", "daemon off;"]
