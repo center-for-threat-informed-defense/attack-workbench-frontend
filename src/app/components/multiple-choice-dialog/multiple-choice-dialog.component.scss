@@ -1,0 +1,31 @@
+@import '../../../style/globals';
+.multiple-choice-dialog {
+  h1 {
+    margin-bottom: 0px;
+    font-size: 28px;
+  }
+  .choice {
+    cursor: pointer;
+    .light & {
+      color: on-color(light);
+    }
+    .dark & {
+      color: on-color(dark);
+    }
+  }
+  .choice:hover h3 {
+    color: color(primary);
+  }
+  .choice h3 {
+    @extend .subheading;
+    font-weight: 700 !important;
+  }
+  .choice + .choice {
+    .dark & {
+      border-top: 1px solid border-color(dark);
+    }
+    .light & {
+      border-top: 1px solid border-color(light);
+    }
+  }
+}

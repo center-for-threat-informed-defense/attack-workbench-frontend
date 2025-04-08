@@ -1,0 +1,144 @@
+<div class="collection-index-view grid spacing-16">
+  <div class="row" *ngIf="config.show_title">
+    <div class="col center">
+      <h1>{{ config.index.collection_index.name }}</h1>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col">
+      <app-timestamp-property
+        [config]="{
+          mode: 'view',
+          humanize: true,
+          object: config.index.collection_index,
+          field: 'created',
+        }"></app-timestamp-property>
+    </div>
+    <div class="col">
+      <app-timestamp-property
+        [config]="{
+          mode: 'view',
+          humanize: true,
+          object: config.index.collection_index,
+          field: 'modified',
+        }"></app-timestamp-property>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col">
+      <app-descriptive-property
+        [config]="{
+          mode: 'view',
+          object: config.index.collection_index,
+          field: 'description',
+          firstParagraphOnly: false,
+          label: 'description',
+        }"></app-descriptive-property>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col">
+      <h2 class="section-header">collections</h2>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col">
+      <mat-accordion>
+        <mat-expansion-panel
+          *ngFor="
+            let collectionRef of config.index.collection_index.collections
+          "
+          class="mat-elevation-z0">
+          <mat-expansion-panel-header>
+            <mat-panel-title>
+              <strong>{{ collectionRef.name }}</strong>
+            </mat-panel-title>
+            <mat-panel-description>
+              {{ collectionRef.versions.length }} versions, last
+              updated&nbsp;<app-timestamp-view
+                *ngIf="collectionRef.versions.length > 0"
+                [config]="{
+                  mode: 'view',
+                  humanize: true,
+                  object: collectionRef,
+                  field: 'lastModified',
+                }"></app-timestamp-view>
+            </mat-panel-description>
+          </mat-expansion-panel-header>
+          <div class="collection-section description">
+            {{ collectionRef.description }}
+          </div>
+          <div class="collection-section versions">
+            <div class="grid version-list">
+              <div
+                class="row subscription-action clickable"
+                *ngIf="collectionRef.subscribed && showActions && isAdmin"
+                (click)="unsubscribe(collectionRef)">
+                <div class="col narrow">
+                  <mat-icon aria-label="subscribed" class="text-success"
+                    >check_circle_outline</mat-icon
+                  >
+                </div>
+                <div class="col">subscribed</div>
+              </div>
+              <div
+                class="row subscription-action clickable"
+                *ngIf="!collectionRef.subscribed && showActions && isAdmin"
+                (click)="subscribe(collectionRef)">
+                <div class="col narrow">
+                  <mat-icon aria-label="subscribe">sync</mat-icon>
+                </div>
+                <div class="col">subscribe</div>
+              </div>
+              <div class="row" *ngFor="let version of collectionRef.versions">
+                <div
+                  class="col narrow"
+                  [ngClass]="{ clickable: isAdmin }"
+                  *ngIf="showActions"
+                  (click)="isAdmin && onVersionClick(version, collectionRef)">
+                  <mat-icon
+                    *ngIf="versionDownloaded(version, collectionRef)"
+                    class="text-success"
+                    >done</mat-icon
+                  >
+                  <mat-icon
+                    *ngIf="
+                      !versionDownloaded(version, collectionRef) && isAdmin
+                    "
+                    >get_app</mat-icon
+                  >
+                </div>
+                <div class="col">
+                  <div>
+                    <strong>v{{ version.version }}</strong>
+                  </div>
+                  <div>
+                    released&nbsp;<app-timestamp-view
+                      [config]="{
+                        mode: 'view',
+                        humanize: true,
+                        object: version,
+                        field: 'modified',
+                      }"></app-timestamp-view>
+                  </div>
+                </div>
+                <div
+                  matTooltip="view release notes"
+                  class="col narrow clickable"
+                  *ngIf="showActions && version.release_notes"
+                  (click)="showReleaseNotes(version, collectionRef)">
+                  <mat-icon>description</mat-icon>
+                </div>
+              </div>
+            </div>
+          </div>
+        </mat-expansion-panel>
+      </mat-accordion>
+    </div>
+  </div>
+  <div class="row" *ngIf="showActions && isAdmin">
+    <div class="col center remove-actions">
+      <button mat-button (click)="removeIndex()">remove index</button>
+    </div>
+  </div>
+</div>

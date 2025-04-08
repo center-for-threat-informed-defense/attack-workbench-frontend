@@ -1,0 +1,30 @@
+.import-workflow {
+  width: 50em;
+  max-width: 100%;
+  margin: 0 auto;
+  // mat-toolbar { @extend %toolbar; }
+  mat-form-field.fullwidth {
+    width: 100%;
+    .mat-mdc-form-field-subscript-wrapper {
+      display: none;
+    }
+  }
+  .mat-vertical-stepper-header {
+    pointer-events: none;
+    .mat-step-label {
+      @extend .heading;
+      font-size: 16px;
+    }
+  }
+  .center {
+    text-align: center;
+  }
+  .action-bar {
+    &:not(.no-margin) {
+      margin-top: 24px;
+    }
+    button + button {
+      margin-left: 10px;
+    }
+  }
+}

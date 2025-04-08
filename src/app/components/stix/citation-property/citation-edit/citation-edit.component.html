@@ -1,0 +1,10 @@
+<div class="citation-edit grow-to-row">
+  <mat-form-field appearance="outline">
+    <input
+      matInput
+      [(ngModel)]="config.object[config.field]"
+      (blur)="parseCitations()"
+      [required]="config.required" />
+    <mat-label>{{ config.label }}</mat-label>
+  </mat-form-field>
+</div>

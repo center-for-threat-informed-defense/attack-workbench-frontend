@@ -1,0 +1,19 @@
+@import '../../../../../../style/globals';
+.collection-index-import {
+  .import-options {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    .spacer {
+      @extend .text-label;
+      @extend .text-deemphasis;
+      padding-bottom: 1.34375em;
+      margin: 0 10px;
+      flex-shrink: 1;
+    }
+    .mat-mdc-form-field {
+      flex-grow: 1;
+    }
+  }
+}
