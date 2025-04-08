@@ -39,7 +39,7 @@ LABEL org.opencontainers.image.title="ATT&CK Workbench Frontend Service" \
 RUN rm -rf /usr/share/nginx/html/*
 
 # Copy the application bundles - explicitly specifying the full path
-COPY --from=build /workspace/dist /usr/share/nginx/html
+COPY --from=build /workspace/dist/app /usr/share/nginx/html
 
 # Expose port 80
 EXPOSE 80 443
