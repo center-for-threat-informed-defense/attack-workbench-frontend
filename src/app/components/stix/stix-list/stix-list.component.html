@@ -1,0 +1,414 @@
+<div class="stix-list">
+  <div class="table-container">
+    <!-- -------- -->
+    <!-- CONTROLS -->
+    <!-- -------- -->
+    <div
+      class="controls"
+      [ngStyle]="{ visibility: showControls ? 'visible' : 'hidden' }">
+      <div
+        class="input-group"
+        [class.bordered]="config.type && config.type === 'relationship'"
+        [ngStyle]="{ height: showControls ? 'inherit' : '0px' }">
+        <!-- show search/filter options for non-relationship objects -->
+        <ng-container *ngIf="!(config.type && config.type === 'relationship')">
+          <mat-form-field class="search" appearance="fill">
+            <mat-label>search</mat-label>
+            <input matInput #search [(ngModel)]="searchQuery" />
+          </mat-form-field>
+
+          <!-- don't show options for collections or if loading data not from REST API -->
+          <mat-form-field appearance="fill" *ngIf="config.showFilters">
+            <mat-label>options</mat-label>
+            <mat-select
+              multiple
+              panelWidth=""
+              [(ngModel)]="filter"
+              (selectionChange)="applyControls()">
+              <mat-optgroup
+                class="user-filter"
+                *ngIf="config.showUserSearch"
+                label="users">
+                <div
+                  class="clickable"
+                  (click)="openUserSelectModal()"
+                  (keydown)="openUserSelectModal()">
+                  <mat-option class="no-checkbox" disabled>
+                    <div class="user-search">
+                      <div>{{ userSearchString }}</div>
+                      <mat-icon
+                        aria-hidden="false"
+                        aria-label="select-users"
+                        matTooltip="Select users"
+                        class="align-right"
+                        >open_in_new</mat-icon
+                      >
+                    </div>
+                  </mat-option>
+                </div>
+              </mat-optgroup>
+              <mat-optgroup
+                *ngFor="let group of filterOptions"
+                [label]="group.name"
+                [disabled]="group.disabled">
+                <mat-option
+                  *ngFor="let filter of group.values"
+                  [value]="filter.value"
+                  [disabled]="filter.disabled">
+                  {{ filter.label }}
+                </mat-option>
+              </mat-optgroup>
+            </mat-select>
+          </mat-form-field>
+        </ng-container>
+        <!-- show deprecated filter -->
+        <ng-container
+          *ngIf="
+            (config.type && config.type === 'relationship') ||
+            config.showDeprecatedFilter
+          ">
+          <mat-checkbox
+            color="primary"
+            class="align-center"
+            [class.bordered]="!(config.type && config.type === 'relationship')"
+            (change)="showDeprecated($event)"
+            >show deprecated</mat-checkbox
+          >
+        </ng-container>
+      </div>
+    </div>
+
+    <!-- ----- -->
+    <!-- TABLE -->
+    <!-- ----- -->
+    <div
+      class="scroll-container"
+      *ngIf="data$ | async as data; else loading"
+      @fadeIn>
+      <table
+        mat-table
+        multiTemplateDataRows
+        *ngIf="data.data.length > 0; else noObjects"
+        [dataSource]="data.data">
+        <caption hidden aria-hidden="false" aria-label="object table">
+          Object List
+        </caption>
+
+        <!-- column definitions -->
+        <ng-container
+          matColumnDef="{{ column }}"
+          *ngFor="let column of tableColumns"
+          [sticky]="tableColumns_settings.get(column)['sticky']">
+          <th mat-header-cell *matHeaderCellDef class="nowrap">
+            {{ tableColumns_settings.get(column)['label'] }}
+          </th>
+          <td
+            mat-cell
+            *matCellDef="let element"
+            [ngClass]="tableColumns_settings.get(column)['classes']"
+            (click)="rowClick(element)"
+            [class.clickable]="
+              !config.clickBehavior || config.clickBehavior !== 'none'
+            ">
+            <app-version-view
+              *ngIf="tableColumns_settings.get(column)['display'] === 'version'"
+              [config]="{ object: element, field: column }"></app-version-view>
+            <div
+              *ngIf="
+                tableColumns_settings.get(column)['display'] === 'timestamp'
+              ">
+              <app-identity-property
+                [config]="{
+                  object: element,
+                  field: column + '_by',
+                  timeField: column,
+                }"></app-identity-property>
+            </div>
+            <div
+              class="width-limited-sm"
+              *ngIf="tableColumns_settings.get(column)['display'] === 'list'">
+              <app-list-view
+                [config]="{
+                  object: element,
+                  field: column,
+                  mode: 'view',
+                  wrap: false,
+                }"></app-list-view>
+            </div>
+            <div
+              *ngIf="
+                tableColumns_settings.get(column)['display'] === 'descriptive'
+              ">
+              <app-descriptive-view
+                [config]="{
+                  object: element,
+                  mode: 'view',
+                  field: column,
+                  firstParagraphOnly: true,
+                }"></app-descriptive-view>
+            </div>
+            <div
+              *ngIf="tableColumns_settings.get(column)['display'] === 'icon'">
+              <app-icon-view
+                [config]="{ object: element, field: column }"></app-icon-view>
+            </div>
+            <div
+              *ngIf="tableColumns_settings.get(column)['display'] === 'plain'">
+              {{ element[column] }}
+            </div>
+          </td>
+        </ng-container>
+
+        <!-- select column -->
+        <ng-container matColumnDef="select">
+          <th mat-header-cell *matHeaderCellDef [ngClass]="config.select">
+            <!-- nothing in header -->
+          </th>
+          <td mat-cell *matCellDef="let element" [ngClass]="config.select">
+            <mat-checkbox
+              *ngIf="config.select && config.select === 'many'"
+              color="primary"
+              (click)="onSelect.emit(element); $event.stopPropagation()"
+              (change)="$event ? selection.toggle(element.stixID) : null"
+              [checked]="selection.isSelected(element.stixID)">
+            </mat-checkbox>
+            <mat-radio-button
+              *ngIf="config.select && config.select === 'one'"
+              color="primary"
+              (click)="onSelect.emit(element); $event.stopPropagation()"
+              (change)="$event ? selection.toggle(element.stixID) : null"
+              [checked]="selection.isSelected(element.stixID)">
+            </mat-radio-button>
+          </td>
+        </ng-container>
+
+        <!-- row action: before -->
+        <ng-container matColumnDef="start-action" sticky>
+          <th mat-header-cell *matHeaderCellDef></th>
+          <!--nothing in header-->
+          <td
+            mat-cell
+            *matCellDef="let element"
+            class="icon-cell"
+            [matTooltip]="config.rowAction.tooltip"
+            (click)="onRowAction.emit(element)">
+            <mat-icon [aria-label]="config.rowAction.tooltip">{{
+              config.rowAction.icon
+            }}</mat-icon>
+          </td>
+        </ng-container>
+        <!-- row action: after -->
+        <ng-container matColumnDef="end-action" stickyEnd>
+          <th mat-header-cell *matHeaderCellDef></th>
+          <!--nothing in header-->
+          <td
+            mat-cell
+            *matCellDef="let element"
+            class="icon-cell"
+            [matTooltip]="config.rowAction.tooltip"
+            (click)="onRowAction.emit(element)">
+            <mat-icon [aria-label]="config.rowAction.tooltip">{{
+              config.rowAction.icon
+            }}</mat-icon>
+          </td>
+        </ng-container>
+
+        <!-- open new dialog icon column (for relationships) -->
+        <ng-container matColumnDef="open-dialog" stickyEnd>
+          <th mat-header-cell *matHeaderCellDef></th>
+          <!-- nothing in header -->
+          <td mat-cell *matCellDef="let element" class="icon-cell">
+            <mat-icon
+              aria-hidden="false"
+              aria-label="open-dialog"
+              matTooltip="View object in dialog box"
+              >open_in_new</mat-icon
+            >
+          </td>
+        </ng-container>
+
+        <!-- open link icon column (for notes/objects) -->
+        <ng-container matColumnDef="open-link" stickyEnd>
+          <th mat-header-cell *matHeaderCellDef></th>
+          <!-- nothing in header -->
+          <td mat-cell *matCellDef="let element" class="icon-cell">
+            <mat-icon
+              aria-hidden="false"
+              aria-label="open-link"
+              matTooltip="View object page"
+              >open_in_browser</mat-icon
+            >
+          </td>
+        </ng-container>
+
+        <!-- expanded content formatting -->
+        <ng-container matColumnDef="expandedDetail">
+          <td
+            mat-cell
+            *matCellDef="let element"
+            [attr.colspan]="tableColumns_controls.length">
+            <div
+              class="element-detail"
+              @detailExpand
+              *ngIf="expandedElement === element">
+              <div class="element-description columns">
+                <div
+                  class="column controls"
+                  [ngClass]="
+                    !config.type.includes('collection-')
+                      ? 'is-narrow'
+                      : 'collection-table'
+                  "
+                  *ngIf="config.showLinks">
+                  <span *ngIf="!config.type.includes('collection-')">
+                    <div
+                      *ngFor="
+                        let route of getAccessibleRoutes(
+                          element.attackType,
+                          element.routes
+                        )
+                      ">
+                      <button
+                        class="detail-button"
+                        mat-button
+                        (click)="
+                          routeTo(
+                            '/' +
+                              [
+                                element.attackType,
+                                element.stixID,
+                                route.route,
+                              ].join('/'),
+                            route.query
+                          )
+                        ">
+                        {{ route.label }}
+                      </button>
+                    </div>
+                  </span>
+                  <span *ngIf="config.type.includes('collection-')">
+                    <mat-table
+                      mat-table
+                      multiTemplateDataRows
+                      [dataSource]="config.collectionMap.get(element.stixID)">
+                      <ng-container matColumnDef="action">
+                        <mat-header-cell *matHeaderCellDef></mat-header-cell>
+                        <mat-cell *matCellDef="let collection">
+                          <div
+                            *ngFor="
+                              let route of getAccessibleRoutes(
+                                collection.attackType,
+                                collection.routes
+                              )
+                            ">
+                            <button
+                              class="detail-button"
+                              mat-button
+                              (click)="
+                                routeTo(
+                                  '/' +
+                                    [
+                                      collection.attackType,
+                                      collection.stixID,
+                                      route.route,
+                                    ].join('/'),
+                                  route.query
+                                )
+                              ">
+                              {{ route.label }}
+                            </button>
+                          </div>
+                        </mat-cell>
+                      </ng-container>
+
+                      <ng-container matColumnDef="version">
+                        <mat-header-cell *matHeaderCellDef
+                          >Version</mat-header-cell
+                        >
+                        <mat-cell *matCellDef="let collection">{{
+                          collection.version
+                        }}</mat-cell>
+                      </ng-container>
+
+                      <ng-container matColumnDef="released">
+                        <mat-header-cell *matHeaderCellDef
+                          >Released</mat-header-cell
+                        >
+                        <mat-cell *matCellDef="let collection">{{
+                          collection.release
+                        }}</mat-cell>
+                      </ng-container>
+
+                      <ng-container matColumnDef="description">
+                        <mat-header-cell *matHeaderCellDef
+                          >Description</mat-header-cell
+                        >
+                        <mat-cell
+                          *matCellDef="let collection; let i = dataIndex">
+                          <span *ngIf="i == 0">{{
+                            collection.description
+                          }}</span>
+                        </mat-cell>
+                      </ng-container>
+
+                      <mat-header-row
+                        *matHeaderRowDef="
+                          collectionColumnsToDisplay;
+                          sticky: true
+                        "></mat-header-row>
+                      <mat-row
+                        *matRowDef="
+                          let row;
+                          columns: collectionColumnsToDisplay
+                        "></mat-row>
+                    </mat-table>
+                  </span>
+                </div>
+                <div
+                  class="column description"
+                  *ngIf="!config.type.includes('collection-')">
+                  <div *ngFor="let property of tableDetail">
+                    <app-descriptive-view
+                      [config]="{
+                        object: element,
+                        mode: 'view',
+                        field: property.field,
+                        firstParagraphOnly: true,
+                      }"></app-descriptive-view>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </td>
+        </ng-container>
+
+        <!-- row definitions -->
+        <tr mat-header-row *matHeaderRowDef="tableColumns_controls"></tr>
+        <tr
+          mat-row
+          *matRowDef="let element; columns: tableColumns_controls"
+          class="element-row"
+          [class.expanded]="expandedElement === element"></tr>
+        <tr
+          mat-row
+          *matRowDef="let row; columns: ['expandedDetail']"
+          class="detail-row"></tr>
+      </table>
+      <ng-template #noObjects>
+        <app-empty-list-marker
+          (onCheckAgain)="applyControls()"></app-empty-list-marker>
+      </ng-template>
+    </div>
+    <ng-template #loading>
+      <app-loading-overlay *ngIf="!data"></app-loading-overlay>
+    </ng-template>
+    <!-- ---------- -->
+    <!-- PAGINATION -->
+    <!-- ---------- -->
+    <mat-paginator
+      [pageSizeOptions]="[5, 10, 25, 100]"
+      pageSize="10"
+      (page)="applyControls()"
+      [length]="totalObjectCount"></mat-paginator>
+  </div>
+</div>

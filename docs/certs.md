@@ -9,7 +9,7 @@ Depending on deployment environments, the ATT&CK Workbench application may need 
 /attack-workbench-frontend/certs
 ```
 
-2. Edit the `attack-workbench-frontend/docker-compose.certs.yml` file to specify the certificate filename.
+2. Edit the `attack-workbench-frontend/docker/compose/compose.certs.yml` file to specify the certificate filename.
 
 - Edit/complete the directory path of the certificates file under the `volumes:` section.
 - Edit/complete the file path of the certificates file under the `environments:` section.
@@ -43,8 +43,8 @@ services:
       - NODE_EXTRA_CA_CERTS=./certs/${CERTS_FILENAME}    # << EDIT "${CERTS_FILENAME}"
 ```
 
-3. Then, upon startup of ATT&CK Workbench, use the following docker-compose command to include the additional `docker-compose.certs.yml` file.
+1. Then, upon startup of ATT&CK Workbench, use the following docker-compose command to include the additional `compose.certs.yml` file.
 
 ```
-docker-compose -f docker-compose.yml -f docker-compose.certs.yml up
+docker compose -f compose.yml -f compose.certs.yml up
 ```

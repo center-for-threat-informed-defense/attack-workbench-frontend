@@ -1,6 +1,0 @@
-<div class="tlp-property">
-    <div *ngIf="(data$ | async)" class="content">
-        <app-tlp-view *ngIf="config.mode == 'view'" [tlp]="tlp"></app-tlp-view>
-        <app-tlp-edit *ngIf="config.mode == 'edit'" [config]="config" [objStatementsSTIXids]="objStatementsSTIXids" [tlpMarkingDefinitionsMap]="tlpMarkingDefinitionsMap" [tlp]="tlp"></app-tlp-edit>
-    </div>
-</div>

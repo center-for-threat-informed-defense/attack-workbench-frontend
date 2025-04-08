@@ -1,0 +1,11 @@
+@import '../../../style/globals';
+
+.contributors-page {
+  width: 68em !important;
+  .link {
+    cursor: pointer;
+  }
+  .no-results {
+    justify-content: center;
+  }
+}

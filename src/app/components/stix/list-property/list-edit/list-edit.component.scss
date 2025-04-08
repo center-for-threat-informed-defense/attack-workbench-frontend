@@ -1,0 +1,50 @@
+@import '../../../../../style/globals';
+
+.list-edit {
+  input,
+  mat-chip {
+    font-size: 14px;
+  }
+  .loading-label {
+    position: absolute;
+    right: 0;
+  }
+  .mat-mdc-form-field {
+    width: 100%;
+    .mat-mdc-form-field-subscript-wrapper {
+      display: none;
+    }
+    .mat-mdc-text-field-wrapper {
+      flex: 1 0;
+    }
+    .loading {
+      display: flex;
+      align-items: center;
+    }
+
+    .loading > span {
+      flex: 1;
+    }
+  }
+  input {
+    font-size: 14px;
+  }
+
+  // stix list object selection dialog
+  .icon {
+    float: right;
+    &.disabled {
+      .dark & {
+        color: on-color-deemphasis(light) !important;
+      }
+      .light & {
+        color: on-color-deemphasis(dark) !important;
+      }
+    }
+  }
+  .stix-select {
+    &:not(.disabled) {
+      cursor: pointer;
+    }
+  }
+}

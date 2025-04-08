@@ -53,26 +53,25 @@ The ATT&CK Workbench application is made up of several repositories. For the ful
 The manual install instructions in each repository describe how each component to be deployed to a separate machine or with customized settings. 
 
 ### Installing using Docker
-Please refer to our [Docker install instructions](docs/docker-compose.md) for information on installing and deploying the the full application using Docker. The docker setup is the easiest way to deploy the application.
+Please refer to our [Docker install instructions](docs/docker-compose.md) for information on installing and deploying the full application using Docker. The docker setup is the easiest way to deploy the application.
 
 ### Manual Installation
 
 #### Requirements
 
-- [Node.js](https://nodejs.org/) version `18.20.2` or greater
+- [Node.js](https://nodejs.org/) version `22.x`
 
 #### Installing dependencies
 This step is necessary for cases where the app is deployed locally through `ng serve` or `ng build`. It can be skipped for installs using docker (above).
 
-1. Navigate to `app`
-2. Run `npm install` to install required packages
+1. Run `npm install` to install required packages
 
 #### Serve on local machine
-1. Run `ng serve` within the `app` directory
+1. Run `ng serve`
 2. Navigate to `localhost:4200` in your browser
 
 #### Compile for use elsewhere
-1. Run `ng build` within the `app` directory
+1. Run `ng build`
 2. Copy files from the `app/dist` directory
 
 If you're building the app for production, use `ng build --prod` which will use the production environment instead of the development environment. See [modifying the environment](#modifying-the-environment) for more information.
@@ -93,6 +92,10 @@ To allow for additional customization, the ATT&CK Workbench enables users to set
 #### PKI Certificates
 
 For additional troubleshooting and installation of security certificates for use by ATT&CK Workbench, pleaser refer to [PKI Certificates instructions](docs/certs.md).
+
+### Developer Setup
+
+Please refer to our [local development instructions](docs/local-dev.md) for information on installing and running the application for local development and testing. 
 
 ## Related Work
 
@@ -120,7 +123,7 @@ https://github.com/mitre-attack/attack-navigator/
 
 ## Notice 
 
-Copyright 2020-2024 MITRE Engenuity. Approved for public release. Document number CT0020 and public release case number 22-3206.
+Copyright 2020-2025 MITRE Engenuity. Approved for public release. Document number CT0020 and public release case number 22-3206.
 
 Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at 
 

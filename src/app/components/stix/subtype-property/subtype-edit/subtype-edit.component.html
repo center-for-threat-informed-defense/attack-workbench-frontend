@@ -1,0 +1,23 @@
+<div class="subtype-edit labelled-box">
+  <div class="content">
+    <mat-chip-listbox>
+      <mat-chip
+        *ngFor="let value of keyValues; let i = index"
+        [removable]="true"
+        (removed)="removeValue(i)"
+        (click)="editValue(i)">
+        {{ value }} <mat-icon matChipRemove>cancel</mat-icon>
+      </mat-chip>
+      <button
+        class="small-icon-button"
+        mat-icon-button
+        aria-label="add value"
+        matTooltip="Add {{ config.tooltip }}"
+        matTooltipPosition="right"
+        (click)="editValue()">
+        <mat-icon>add</mat-icon>
+      </button>
+    </mat-chip-listbox>
+  </div>
+  <span class="labelled-box-label">{{ config.label }}</span>
+</div>

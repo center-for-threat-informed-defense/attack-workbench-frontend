@@ -1,0 +1,31 @@
+<div
+  class="external-references-view"
+  *ngIf="referenceList.length > 0; else loading">
+  <div class="row">
+    <div class="col">
+      <ol [class.twocol]="referenceList.length > 1">
+        <li
+          *ngFor="let reference of referenceList"
+          value="{{ reference[0] }}"
+          [ngClass]="{ 'external-link': reference[1].url }">
+          <span>
+            <a
+              *ngIf="reference[1].url && reference[1].description"
+              class="external-link"
+              rel="nofollow noopener"
+              [href]="reference[1].url"
+              target="_blank">
+              {{ reference[1].description }}
+            </a>
+            <div *ngIf="!reference[1].url && reference[1].description">
+              {{ reference[1].description }}
+            </div>
+          </span>
+        </li>
+      </ol>
+    </div>
+  </div>
+</div>
+<ng-template #loading>
+  <app-loading-overlay></app-loading-overlay>
+</ng-template>

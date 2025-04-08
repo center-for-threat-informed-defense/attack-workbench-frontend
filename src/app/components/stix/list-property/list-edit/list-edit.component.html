@@ -1,0 +1,109 @@
+<div class="list-edit grow-to-row">
+  <!-- edit type: 'any' -->
+  <mat-form-field
+    *ngIf="!config.editType || config.editType === 'any'"
+    class="grow-to-row"
+    appearance="outline">
+    <mat-label>{{ config.label ? config.label : config.field }}</mat-label>
+    <mat-chip-grid
+      #anyChipList
+      [required]="config.required ? config.required : false"
+      [formControl]="inputControl">
+      <mat-chip-row
+        *ngFor="let value of values"
+        [removable]="true"
+        (removed)="remove(value)">
+        {{ value }} <mat-icon matChipRemove>cancel</mat-icon>
+      </mat-chip-row>
+      <input
+        matInput
+        placeholder="new {{ config.label ? config.label : config.field }}..."
+        [formControl]="inputControl"
+        [matChipInputFor]="anyChipList"
+        [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+        [matChipInputAddOnBlur]="true"
+        (matChipInputTokenEnd)="add($event)" />
+    </mat-chip-grid>
+  </mat-form-field>
+  <!-- edit type: 'select' -->
+  <mat-form-field
+    *ngIf="config.editType === 'select'"
+    class="grow-to-row"
+    appearance="outline"
+    [matTooltip]="
+      selectControl.disabled && !config.disabled
+        ? 'a valid domain must be selected'
+        : null
+    ">
+    <mat-label *ngIf="!dataLoaded" class="loading">
+      <span>Loading {{ config.label ? config.label : config.field }}...</span>
+      <mat-spinner class="spinner" diameter="20"></mat-spinner>
+    </mat-label>
+    <mat-label *ngIf="dataLoaded">{{
+      config.label ? config.label : config.field
+    }}</mat-label>
+    <mat-select
+      [formControl]="selectControl"
+      multiple
+      [required]="config.required ? config.required : false">
+      <mat-select-trigger>
+        <mat-chip-listbox
+          [required]="config.required ? config.required : false">
+          <mat-chip
+            *ngFor="let value of selectControl.value"
+            [removable]="true"
+            (removed)="removeSelection(value)">
+            {{ value }}
+            <mat-icon *ngIf="!config.disabled" matChipRemove>cancel</mat-icon>
+          </mat-chip>
+        </mat-chip-listbox>
+      </mat-select-trigger>
+      <mat-option
+        *ngFor="let item of getAllowedValues()"
+        (onSelectionChange)="change($event)"
+        [value]="item"
+        >{{ item }}</mat-option
+      >
+    </mat-select>
+  </mat-form-field>
+  <!-- edit type: 'stixList' -->
+  <div
+    *ngIf="config.editType === 'stixList'"
+    class="labelled-box grow-to-row editing stix-select"
+    [class.disabled]="config.disabled || !dataLoaded"
+    (click)="openStixList()"
+    (keydown)="openStixList()"
+    [matTooltip]="
+      config.disabled
+        ? config.object.is_subtechnique
+          ? 'sub-technique tactics are automatically synced with its parent tactics'
+          : 'a valid domain must be selected first'
+        : null
+    ">
+    <div class="content">
+      <mat-chip-listbox
+        #stixChipList
+        [required]="config.required ? config.required : false"
+        [disabled]="!dataLoaded || config.disabled"
+        (blur)="onBlur()">
+        <mat-chip *ngFor="let value of selectedValues()" [removable]="false">{{
+          value
+        }}</mat-chip>
+      </mat-chip-listbox>
+      <span
+        matIconSuffix
+        *ngIf="!dataLoaded && config.field === 'parentTechnique'"
+        class="loading-label">
+        <mat-spinner class="spinner" diameter="20"></mat-spinner>
+      </span>
+      <span matIconSuffix *ngIf="dataLoaded && !config.disabled">
+        <mat-icon aria-hidden="false" aria-label="open" class="icon"
+          >open_in_new</mat-icon
+        >
+      </span>
+    </div>
+    <span class="labelled-box-label">{{
+      config.label ? config.label : config.field
+    }}</span>
+  </div>
+</div>

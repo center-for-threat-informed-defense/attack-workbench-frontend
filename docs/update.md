@@ -30,7 +30,7 @@ This will install an `alpine` image and mount the volumes to a temporary contain
 
 ```sh
 cd attack-workbench-frontend
-docker-compose down
+docker compose down
 ```
 
 ### 4. Remove Collection Manager repository
@@ -75,14 +75,14 @@ Rebuild the ATT&CK Workbench with updated Frontend and REST API components.
 
 ```sh
 cd attack-workbench-frontend
-docker-compose up --build
+docker compose up --build
 ```
 
 Alternatively, if using custom SSL certs
 
 ```sh
 cd attack-workbench-frontend
-docker-compose -f docker-compose.yml -f docker-compose.certs.yml up --build
+docker compose -f compose.yml -f compose.certs.yml up --build
 ```
 
 The persistent database is now in use.

@@ -1,0 +1,40 @@
+<div class="collection-index-list">
+  <div *ngIf="collectionIndexes$ | async as result; else loading">
+    <mat-accordion *ngIf="result.length > 0">
+      <mat-expansion-panel
+        *ngFor="let index of result"
+        class="mat-elevation-z0">
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            <strong>{{ index.collection_index.name }}</strong>
+          </mat-panel-title>
+          <mat-panel-description>
+            {{ index.collection_index.collections.length }} collections, last
+            updated&nbsp;<app-timestamp-view
+              [config]="{
+                mode: 'view',
+                humanize: true,
+                object: index.collection_index,
+                field: 'modified',
+              }"></app-timestamp-view>
+          </mat-panel-description>
+        </mat-expansion-panel-header>
+
+        <app-collection-index-view
+          [config]="{
+            index: index,
+            subscribed_collections: subscribed_collections,
+          }"
+          (onCollectionsModified)="
+            refreshIndexes()
+          "></app-collection-index-view>
+      </mat-expansion-panel>
+    </mat-accordion>
+    <app-empty-list-marker
+      *ngIf="result.length == 0"
+      (onCheckAgain)="refreshIndexes()"></app-empty-list-marker>
+  </div>
+  <ng-template #loading>
+    <app-loading-overlay></app-loading-overlay>
+  </ng-template>
+</div>
