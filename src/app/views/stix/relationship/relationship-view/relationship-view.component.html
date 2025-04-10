@@ -11,7 +11,7 @@
         <h1 *ngIf="config.mode !== 'diff'">
           <span
             *ngIf="
-              relationship.source_object.stix.id === currentPageStixID ||
+              relationship.source_object?.stix?.id === currentPageStixID ||
                 editing;
               else showSourceLink
             "
@@ -27,7 +27,7 @@
           >
           <span
             *ngIf="
-              relationship.target_object.stix.id === currentPageStixID ||
+              relationship.target_object?.stix?.id === currentPageStixID ||
                 editing;
               else showTargetLink
             "
