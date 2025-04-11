@@ -27,7 +27,7 @@
             "assets": [
               {
                 "glob": "**/*",
-                "input": "../docs",
+                "input": "docs",
                 "output": "/assets/docs"
               },
               "src/favicon.ico",
