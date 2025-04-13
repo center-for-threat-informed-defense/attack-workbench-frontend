@@ -22,8 +22,8 @@ import { environment } from '../environments/environment';
 import { AuthorizationGuard } from './services/helpers/authorization.guard';
 import { Role } from './classes/authn/role';
 
-const viewRoles = [Role.VISITOR, Role.EDITOR, Role.ADMIN];
-const editRoles = [Role.EDITOR, Role.ADMIN];
+const viewRoles = [Role.VISITOR, Role.EDITOR, Role.TEAM_LEAD, Role.ADMIN];
+const editRoles = [Role.EDITOR, Role.TEAM_LEAD, Role.ADMIN];
 const attackTypeToPlural = {
   technique: 'techniques',
   tactic: 'tactics',
