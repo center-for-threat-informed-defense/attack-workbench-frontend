@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { EditorService } from '../editor/editor.service';
 import { RestApiConnectorService } from '../connectors/rest-api/rest-api-connector.service';
 import { environment } from 'src/environments/environment';
+import { AttackTypeToRoute } from 'src/app/utils/type-mappings';
 @Injectable({
   providedIn: 'root',
 })
@@ -15,19 +16,6 @@ export class WebsiteIntegrationService {
   public get websiteIntegrationEnabled(): boolean {
     return environment.integrations.attack_website.enabled;
   }
-
-  // route mapping based on type
-  public typeToRouteMap = {
-    'software': 'software',
-    'matrix': 'matrices',
-    'group': 'groups',
-    'mitigation': 'mitigations',
-    'tactic': 'tactics',
-    'campaign': 'campaigns',
-    'technique': 'techniques',
-    'data-source': 'datasources',
-    'asset': 'assets',
-  };
 
   // tracks the current URL, stixID, and validity of the URL
   public currentWebIntegrationStatus: ExternalWebIntegrationStatus = {
@@ -73,7 +61,7 @@ export class WebsiteIntegrationService {
       stixId: stixIdToCheck,
     };
     // retrieve object based on type
-    let data$: any;
+    let data$;
     if (this.editorService.type == 'software')
       data$ = this.restAPIService.getSoftware(stixIdToCheck);
     else if (this.editorService.type == 'group')
@@ -103,36 +91,35 @@ export class WebsiteIntegrationService {
           return false;
         }
         // grab attackObject and the attackID for the external lookup
-        const attackObject = data[0];
-        const attackID = attackObject.attackID.split('.');
+        const attackID = data[0].attackID;
         let additionalPath = '';
         // matrix type is special
         if (this.editorService.type == 'matrix') {
           if (attackID == 'enterprise-attack') {
-            additionalPath = '/enterprise/';
+            additionalPath = 'enterprise/';
           } else if (attackID == 'mobile-attack') {
-            additionalPath = '/mobile/';
+            additionalPath = 'mobile/';
           } else if (attackID == 'ics-attack') {
-            additionalPath = '/ics/';
+            additionalPath = 'ics/';
           } else {
             return false;
           }
         } else {
           // for sub-objects we need to split based on the '.' delimiter in the url
-          for (let i = 0; i < attackID.length; i++) {
-            additionalPath = additionalPath.concat('/', attackID[i]);
-          }
+          additionalPath += attackID.replace(/\./g, '/');
         }
-        const url = `${this.websiteIntegrationUrl}/${this.typeToRouteMap[this.editorService.type]}${additionalPath}`;
+        const url = `${this.websiteIntegrationUrl}/${AttackTypeToRoute[this.editorService.type]}/${additionalPath}`;
         this.currentWebIntegrationStatus.url = url;
 
         // with no-cors we will get no data but we can validate that the URL is valid
         fetch(url, { mode: 'no-cors' }).then(
           response => {
+            console.debug('URL validated:', response);
             this.currentWebIntegrationStatus.valid = true;
             return this.currentWebIntegrationStatus.valid;
           },
           error => {
+            console.debug('Invalid URL:', error);
             this.currentWebIntegrationStatus.valid = false;
             return this.currentWebIntegrationStatus.valid;
           }

@@ -15,7 +15,7 @@ export type workflowStates =
   | 'awaiting-review'
   | 'reviewed'
   | '';
-const stixTypeToAttackType = {
+const StixTypeToAttackType = {
   'x-mitre-collection': 'collection',
   'attack-pattern': 'technique',
   'malware': 'software',
@@ -32,7 +32,6 @@ const stixTypeToAttackType = {
   'x-mitre-asset': 'asset',
   'note': 'note',
 };
-export { stixTypeToAttackType };
 
 export abstract class StixObject extends Serializable {
   public stixID: string; // STIX ID
@@ -124,7 +123,7 @@ export abstract class StixObject extends Serializable {
       this.description = '';
       this.firstInitialized = true;
     }
-    this.attackType = stixTypeToAttackType[this.type];
+    this.attackType = StixTypeToAttackType[this.type];
   }
 
   /**

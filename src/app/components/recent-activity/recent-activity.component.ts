@@ -8,6 +8,7 @@ import { Relationship } from 'src/app/classes/stix/relationship';
 import { StixObject } from 'src/app/classes/stix/stix-object';
 import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/rest-api-connector.service';
 import { SidebarService } from 'src/app/services/sidebar/sidebar.service';
+import { StixTypeToAttackType } from 'src/app/utils/type-mappings';
 import { StixDialogComponent } from 'src/app/views/stix/stix-dialog/stix-dialog.component';
 
 interface ActivityEvent {
@@ -32,24 +33,6 @@ export class RecentActivityComponent implements OnInit {
   public recentActivity: ActivityEvent[] = [];
   public loading = false;
   public hoveredEvent: ActivityEvent = null;
-  // Type map for redirections
-  private typeMap = {
-    'attack-pattern': 'technique',
-    'x-mitre-tactic': 'tactic',
-    'intrusion-set': 'group',
-    'campaign': 'campaign',
-    'malware': 'software',
-    'tool': 'software',
-    'course-of-action': 'mitigation',
-    'x-mitre-matrix': 'matrix',
-    'x-mitre-collection': 'collection',
-    'relationship': 'relationship',
-    'note': 'note',
-    'identity': 'identity',
-    'marking-definition': 'marking-definition',
-    'x-mitre-data-source': 'data-source',
-    'x-mitre-data-component': 'data-component',
-  };
 
   constructor(
     private restAPIService: RestApiConnectorService,
@@ -169,7 +152,7 @@ export class RecentActivityComponent implements OnInit {
       this.sidebarService.opened = true;
       this.sidebarService.currentTab = 'notes';
       const objectRef = (event.sdo as Note).object_refs[0];
-      const type = this.typeMap[objectRef.split('--')[0]];
+      const type = StixTypeToAttackType[objectRef.split('--')[0]];
       this.navigateTo(objectRef, type);
     } else {
       this.navigateTo(event.sdo.stixID, event.sdo.attackType);

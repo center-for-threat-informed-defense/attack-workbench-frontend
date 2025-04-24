@@ -36,6 +36,7 @@ import { MatSelect } from '@angular/material/select';
 import { AddDialogComponent } from '../../add-dialog/add-dialog.component';
 import { Collection } from 'src/app/classes/stix/collection';
 import { logger } from 'src/app/utils/logger';
+import { StixTypeToAttackType } from 'src/app/utils/type-mappings';
 
 @Component({
   selector: 'app-stix-list',
@@ -109,26 +110,6 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
 
   // Selection stuff
   public selection: SelectionModel<string>;
-
-  // Type map for redirections
-  private typeMap = {
-    'attack-pattern': 'technique',
-    'x-mitre-tactic': 'tactic',
-    'intrusion-set': 'group',
-    'campaign': 'campaign',
-    'malware': 'software',
-    'tool': 'software',
-    'course-of-action': 'mitigation',
-    'x-mitre-matrix': 'matrix',
-    'x-mitre-collection': 'collection',
-    'relationship': 'relationship',
-    'note': 'note',
-    'identity': 'identity',
-    'marking-definition': 'marking-definition',
-    'x-mitre-data-source': 'data-source',
-    'x-mitre-data-component': 'data-component',
-    'x-mitre-asset': 'asset',
-  };
 
   // all possible each type of filter/groupBy
   private platformSubscription: Subscription;
@@ -707,7 +688,7 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
     ) {
       const source_ref = element['source_ref'];
       // Get type to navigate from source_ref
-      const type = this.typeMap[source_ref.split('--')[0]];
+      const type = StixTypeToAttackType[source_ref.split('--')[0]];
 
       this.router.navigateByUrl('/' + type + '/' + source_ref);
     } else if (
@@ -716,7 +697,7 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
     ) {
       const target_ref = element['target_ref'];
       // Get type to navigate from target_ref
-      const type = this.typeMap[target_ref.split('--')[0]];
+      const type = StixTypeToAttackType[target_ref.split('--')[0]];
       this.router.navigateByUrl('/' + type + '/' + target_ref);
     } else if (
       this.config.clickBehavior &&
@@ -725,7 +706,7 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
       // technically a note can be linked to many objects, we will select the first object
       const object_ref = element['object_refs'][0];
       // Get type to navigate from target_ref
-      const type = this.typeMap[object_ref.split('--')[0]];
+      const type = StixTypeToAttackType[object_ref.split('--')[0]];
 
       this.sidebarService.opened = true;
       this.sidebarService.currentTab = 'notes';

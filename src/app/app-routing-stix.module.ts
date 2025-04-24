@@ -21,20 +21,11 @@ import { NgModule } from '@angular/core';
 import { environment } from '../environments/environment';
 import { AuthorizationGuard } from './services/helpers/authorization.guard';
 import { Role } from './classes/authn/role';
+import { AttackTypeToRoute } from './utils/type-mappings';
 
 const viewRoles = [Role.VISITOR, Role.EDITOR, Role.ADMIN];
 const editRoles = [Role.EDITOR, Role.ADMIN];
-const attackTypeToPlural = {
-  technique: 'techniques',
-  tactic: 'tactics',
-  group: 'groups',
-  campaign: 'campaigns',
-  software: 'software',
-  mitigation: 'mitigations',
-  matrix: 'matrices',
-  'data-source': 'data-sources',
-  asset: 'assets',
-};
+
 const stixRouteData = [
   {
     attackType: 'matrix',
@@ -89,14 +80,14 @@ stixRouteData.forEach(stixRoute => {
     path: stixRoute.attackType,
     canActivateChild: [AuthorizationGuard],
     data: {
-      breadcrumb: attackTypeToPlural[stixRoute.attackType].replace(/-/g, ' '),
+      breadcrumb: AttackTypeToRoute[stixRoute.attackType].replace(/-/g, ' '),
     },
     children: [
       {
         path: '',
         data: {
           breadcrumb: 'list',
-          title: attackTypeToPlural[stixRoute.attackType].replace(/-/g, ' '),
+          title: AttackTypeToRoute[stixRoute.attackType].replace(/-/g, ' '),
           roles: viewRoles,
         },
         component: stixRoute.component,

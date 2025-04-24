@@ -52,7 +52,7 @@ export class Relationship extends StixObject {
   private getObject(type: string, raw: any) {
     // transform AttackType to the relevant class
     // note: cannot use type-mappings.ts due to circular dependency
-    const stixTypeToClass = {
+    const StixTypeToClass = {
       'attack-pattern': Technique,
       'x-mitre-tactic': Tactic,
       'campaign': Campaign,
@@ -66,7 +66,7 @@ export class Relationship extends StixObject {
       'x-mitre-asset': Asset,
     };
     if (type == 'malware' || type == 'tool') return new Software(type, raw);
-    return new stixTypeToClass[type](raw);
+    return new StixTypeToClass[type](raw);
   }
   /**
    * The valid source types according to relationship_type
