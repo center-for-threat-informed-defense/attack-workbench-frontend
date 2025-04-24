@@ -18,19 +18,19 @@ export type workflowStates =
 const stixTypeToAttackType = {
   'x-mitre-collection': 'collection',
   'attack-pattern': 'technique',
-  malware: 'software',
-  tool: 'software',
+  'malware': 'software',
+  'tool': 'software',
   'intrusion-set': 'group',
-  campaign: 'campaign',
+  'campaign': 'campaign',
   'course-of-action': 'mitigation',
   'x-mitre-matrix': 'matrix',
   'x-mitre-tactic': 'tactic',
-  relationship: 'relationship',
+  'relationship': 'relationship',
   'marking-definition': 'marking-definition',
   'x-mitre-data-source': 'data-source',
   'x-mitre-data-component': 'data-component',
   'x-mitre-asset': 'asset',
-  note: 'note',
+  'note': 'note',
 };
 export { stixTypeToAttackType };
 
@@ -57,18 +57,18 @@ export abstract class StixObject extends Serializable {
   };
 
   private typeUrlMap = {
-    technique: 'techniques',
-    software: 'software',
-    group: 'groups',
-    campaign: 'campaigns',
-    mitigation: 'mitigations',
-    matrix: 'matrices',
-    tactic: 'tactics',
-    note: 'notes',
+    'technique': 'techniques',
+    'software': 'software',
+    'group': 'groups',
+    'campaign': 'campaigns',
+    'mitigation': 'mitigations',
+    'matrix': 'matrices',
+    'tactic': 'tactics',
+    'note': 'notes',
     'marking-definition': 'marking-definitions',
     'data-source': 'datasources',
     'data-component': 'datacomponents',
-    asset: 'assets',
+    'asset': 'assets',
   };
 
   private defaultMarkingDefinitionsLoaded = false; // avoid overloading of default marking definitions

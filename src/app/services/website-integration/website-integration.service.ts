@@ -18,15 +18,15 @@ export class WebsiteIntegrationService {
 
   // route mapping based on type
   public typeToRouteMap = {
-    software: 'software',
-    matrix: 'matrices',
-    group: 'groups',
-    mitigation: 'mitigations',
-    tactic: 'tactics',
-    campaign: 'campaigns',
-    technique: 'techniques',
+    'software': 'software',
+    'matrix': 'matrices',
+    'group': 'groups',
+    'mitigation': 'mitigations',
+    'tactic': 'tactics',
+    'campaign': 'campaigns',
+    'technique': 'techniques',
     'data-source': 'datasources',
-    asset: 'assets',
+    'asset': 'assets',
   };
 
   // tracks the current URL, stixID, and validity of the URL
