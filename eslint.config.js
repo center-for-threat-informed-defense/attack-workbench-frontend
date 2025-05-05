@@ -33,6 +33,13 @@ module.exports = tseslint.config(
           argsIgnorePattern: '^_',
         },
       ],
+      'quote-props': ['error', 'consistent'],
+      'prettier/prettier': [
+        'error',
+        {
+          quoteProps: 'consistent'
+        }
+      ]
     },
   },
   {

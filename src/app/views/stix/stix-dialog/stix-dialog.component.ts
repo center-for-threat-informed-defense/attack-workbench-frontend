@@ -8,22 +8,11 @@ import { forkJoin, Observable, of } from 'rxjs';
 import { filter, map, switchMap } from 'rxjs/operators';
 import { ValidationData } from 'src/app/classes/serializable';
 import {
-  Asset,
-  Campaign,
   DataComponent,
-  DataSource,
-  Group,
-  Identity,
-  MarkingDefinition,
-  Matrix,
-  Mitigation,
   Relationship,
   Software,
   StixObject,
-  Tactic,
-  Technique,
 } from 'src/app/classes/stix';
-import { Collection } from 'src/app/classes/stix/collection';
 import { ConfirmationDialogComponent } from 'src/app/components/confirmation-dialog/confirmation-dialog.component';
 import { DeleteDialogComponent } from 'src/app/components/delete-dialog/delete-dialog.component';
 import { AuthenticationService } from 'src/app/services/connectors/authentication/authentication.service';
@@ -34,25 +23,7 @@ import {
   tabOption,
 } from 'src/app/services/sidebar/sidebar.service';
 import { StixViewConfig } from '../stix-view-page';
-
-// transform AttackType to the relevant class
-const stixTypeToClass = {
-  'attack-pattern': Technique,
-  'x-mitre-tactic': Tactic,
-  campaign: Campaign,
-  'intrusion-set': Group,
-  tool: Software,
-  malware: Software,
-  'course-of-action': Mitigation,
-  'x-mitre-matrix': Matrix,
-  'x-mitre-collection': Collection,
-  relationship: Relationship,
-  identity: Identity,
-  'marking-definition': MarkingDefinition,
-  'x-mitre-data-source': DataSource,
-  'x-mitre-data-component': DataComponent,
-  'x-mitre-asset': Asset,
-};
+import { StixTypeToClass } from 'src/app/utils/class-mappings';
 
 @Component({
   selector: 'app-stix-dialog',
@@ -322,7 +293,7 @@ export class StixDialogComponent implements OnInit {
    */
   private getObject(type: string, raw: any) {
     if (type == 'malware' || type == 'tool') return new Software(type, raw);
-    return new stixTypeToClass[type](raw);
+    return new StixTypeToClass[type](raw);
   }
 
   public loading = false;

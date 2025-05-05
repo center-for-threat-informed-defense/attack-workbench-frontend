@@ -9,6 +9,7 @@ import { EditorService } from 'src/app/services/editor/editor.service';
 import { AddDialogComponent } from '../add-dialog/add-dialog.component';
 import { ConfirmationDialogComponent } from '../confirmation-dialog/confirmation-dialog.component';
 import { forkJoin } from 'rxjs';
+import { WorkflowStates } from 'src/app/utils/types';
 
 @Component({
   selector: 'app-object-status',
@@ -19,12 +20,7 @@ export class ObjectStatusComponent implements OnInit {
   public loaded = false;
   public statusControl: FormControl<string>;
   public select: SelectionModel<string>;
-  public workflows: string[] = [
-    'none',
-    'work-in-progress',
-    'awaiting-review',
-    'reviewed',
-  ];
+  public workflows = Object.entries(WorkflowStates);
   public objects: StixObject[];
   public object: StixObject;
   public relationships = [];
@@ -48,7 +44,7 @@ export class ObjectStatusComponent implements OnInit {
   }
 
   public loadData() {
-    let data$: any;
+    let data$;
     const options = {
       includeRevoked: true,
       includeDeprecated: true,
@@ -148,10 +144,6 @@ export class ObjectStatusComponent implements OnInit {
       else this.object.workflow = { state: event.source.value };
       this.save();
     }
-  }
-
-  public getLabel(status: string): string {
-    return status.replace(/-/g, ' ');
   }
 
   /**

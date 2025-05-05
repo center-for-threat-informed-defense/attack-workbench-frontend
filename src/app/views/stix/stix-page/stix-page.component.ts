@@ -10,20 +10,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router, NavigationEnd } from '@angular/router';
 
 import { Observable, forkJoin } from 'rxjs';
-import {
-  Asset,
-  Campaign,
-  DataSource,
-  Group,
-  MarkingDefinition,
-  Matrix,
-  Mitigation,
-  Note,
-  Software,
-  StixObject,
-  Tactic,
-  Technique,
-} from 'src/app/classes/stix';
+import { Note, Software, StixObject } from 'src/app/classes/stix';
 import { concatMap } from 'rxjs/operators';
 import { Collection } from 'src/app/classes/stix/collection';
 import { VersionNumber } from 'src/app/classes/version-number';
@@ -37,6 +24,7 @@ import { CollectionViewComponent } from '../collection/collection-view/collectio
 import { MarkingDefinitionViewComponent } from '../marking-definition/marking-definition-view/marking-definition-view.component';
 import { StixViewConfig } from '../stix-view-page';
 import { BreadcrumbService } from 'src/app/services/helpers/breadcrumb.service';
+import { AttackTypeToClass } from 'src/app/utils/class-mappings';
 
 @Component({
   selector: 'app-stix-page',
@@ -343,33 +331,7 @@ export class StixPageComponent implements OnInit, OnDestroy {
     } else {
       // create a new object to edit
       this.objects = [];
-      const attackTypeToClass = function (objectType: string) {
-        switch (objectType) {
-          case 'matrix':
-            return new Matrix();
-          case 'technique':
-            return new Technique();
-          case 'tactic':
-            return new Tactic();
-          case 'mitigation':
-            return new Mitigation();
-          case 'campaign':
-            return new Campaign();
-          case 'group':
-            return new Group();
-          case 'collection':
-            return new Collection();
-          case 'data-source':
-            return new DataSource();
-          case 'asset':
-            return new Asset();
-          case 'marking-definition':
-            return new MarkingDefinition();
-          default:
-            return null;
-        }
-      };
-      this.objects.push(attackTypeToClass(this.objectType));
+      this.objects.push(new AttackTypeToClass[this.objectType]());
       this.initialVersion = new VersionNumber(
         this.objects[0].version.toString()
       );
