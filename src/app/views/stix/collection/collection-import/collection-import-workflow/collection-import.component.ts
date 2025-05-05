@@ -105,10 +105,10 @@ export class CollectionImportComponent implements OnInit {
 
   private typeUrlMap = {
     'attack-pattern': 'techniques',
-    malware: 'software',
-    tool: 'software',
+    'malware': 'software',
+    'tool': 'software',
     'intrusion-set': 'groups',
-    campaign: 'campaigns',
+    'campaign': 'campaigns',
     'course-of-action': 'mitigations',
     'x-mitre-tactic': 'tactics',
     'x-mitre-data-source': 'datasources',

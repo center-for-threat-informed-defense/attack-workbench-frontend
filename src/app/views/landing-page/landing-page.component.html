@@ -42,7 +42,10 @@
       <div class="explore-links grow-to-row">
         <div
           class="explore-link grow-to-row"
-          [ngClass]="{ 'button-slide-left': isLoggedIn, disabled: !isLoggedIn }"
+          [ngClass]="{
+            'button-slide-left': isLoggedIn,
+            'disabled': !isLoggedIn,
+          }"
           *ngFor="let stixRoute of routes"
           [routerLink]="'/' + stixRoute.path">
           <span class="text-label">{{ stixRoute.data.breadcrumb }}</span>
