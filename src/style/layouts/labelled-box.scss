@@ -55,6 +55,14 @@
           }
         }
       }
+      &.no-label {
+        .dark & {
+          border-top-color: white;
+        }
+        .light & {
+          border-top-color: black;
+        }
+      }
     }
   }
   > .content {
