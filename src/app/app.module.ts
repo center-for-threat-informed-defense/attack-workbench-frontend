@@ -8,8 +8,9 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppRoutingStixModule } from './app-routing-stix.module';
 import {
   HttpClient,
-  HttpClientModule,
   HTTP_INTERCEPTORS,
+  provideHttpClient,
+  withInterceptorsFromDi,
 } from '@angular/common/http';
 import { AuthInterceptor } from './services/helpers/auth.interceptor';
 import { DragDropModule } from '@angular/cdk/drag-drop';
@@ -241,7 +242,6 @@ export function initConfig(appConfigService: AppConfigService) {
 @NgModule({
   declarations: [
     AppComponent,
-
     HeaderComponent,
     FooterComponent,
     LoadingOverlayComponent,
@@ -262,9 +262,7 @@ export function initConfig(appConfigService: AppConfigService) {
     ValidationResultsComponent,
     AddRelationshipButtonComponent,
     CollectionUpdateDialogComponent,
-
     StixListComponent,
-
     DescriptivePropertyComponent,
     DescriptiveViewComponent,
     DescriptiveEditComponent,
@@ -295,7 +293,6 @@ export function initConfig(appConfigService: AppConfigService) {
     NamePropertyComponent,
     DatepickerPropertyComponent,
     IconViewComponent,
-
     LandingPageComponent,
     HelpPageComponent,
     AdminPageComponent,
@@ -304,10 +301,8 @@ export function initConfig(appConfigService: AppConfigService) {
     DefaultMarkingDefinitionsComponent,
     ProfilePageComponent,
     ReferenceManagerComponent,
-
     StixDialogComponent,
     StixPageComponent,
-
     CollectionListComponent,
     CollectionViewComponent,
     CollectionManagerComponent,
@@ -317,28 +312,21 @@ export function initConfig(appConfigService: AppConfigService) {
     CollectionImportComponent,
     CollectionImportReviewComponent,
     CollectionImportErrorComponent,
-
     RelationshipViewComponent,
-
     GroupListComponent,
     GroupViewComponent,
-
     MatrixListComponent,
     MatrixViewComponent,
     MatrixSideComponent,
     MatrixFlatComponent,
     TacticCellComponent,
     TechniqueCellComponent,
-
     MitigationListComponent,
     MitigationViewComponent,
-
     SoftwareListComponent,
     SoftwareViewComponent,
-
     TacticListComponent,
     TacticViewComponent,
-
     TechniqueListComponent,
     TechniqueViewComponent,
     AliasPropertyComponent,
@@ -349,7 +337,6 @@ export function initConfig(appConfigService: AppConfigService) {
     OrderedListPropertyComponent,
     OrderedListViewComponent,
     OrderedListEditComponent,
-
     NotesEditorComponent,
     ObjectStatusComponent,
     RecentActivityComponent,
@@ -390,6 +377,37 @@ export function initConfig(appConfigService: AppConfigService) {
     TlpDiffComponent,
     VersionPopoverComponent,
   ],
+  exports: [
+    MatToolbarModule,
+    MatButtonModule,
+    MatSidenavModule,
+    MatIconModule,
+    MatTableModule,
+    MatSortModule,
+    MatPaginatorModule,
+    MatTabsModule,
+    MatTooltipModule,
+    MatButtonToggleModule,
+    MatCardModule,
+    MatDividerModule,
+    MatStepperModule,
+    MatFormFieldModule,
+    FormsModule,
+    ReactiveFormsModule,
+    MatInputModule,
+    MatSelectModule,
+    MatExpansionModule,
+    MatCheckboxModule,
+    MatRadioModule,
+    MatProgressSpinnerModule,
+    MatMenuModule,
+    MatDialogModule,
+    MatSnackBarModule,
+    DragDropModule,
+    ClipboardModule,
+    OverlayModule,
+  ],
+  bootstrap: [AppComponent],
   imports: [
     MaterialFileInputModule,
     MarkdownModule.forRoot({
@@ -402,15 +420,10 @@ export function initConfig(appConfigService: AppConfigService) {
     MtxPopoverModule,
     NgxJdenticonModule,
     AutosizeModule,
-
     BrowserModule,
-
     AppRoutingModule,
     AppRoutingStixModule,
-    HttpClientModule,
-
     BrowserAnimationsModule,
-
     MatToolbarModule,
     MatButtonModule,
     MatSidenavModule,
@@ -441,37 +454,6 @@ export function initConfig(appConfigService: AppConfigService) {
     MatDatepickerModule,
     MatNativeDateModule,
     MatBadgeModule,
-
-    DragDropModule,
-    ClipboardModule,
-    OverlayModule,
-  ],
-  exports: [
-    MatToolbarModule,
-    MatButtonModule,
-    MatSidenavModule,
-    MatIconModule,
-    MatTableModule,
-    MatSortModule,
-    MatPaginatorModule,
-    MatTabsModule,
-    MatTooltipModule,
-    MatButtonToggleModule,
-    MatCardModule,
-    MatDividerModule,
-    MatStepperModule,
-    MatFormFieldModule,
-    FormsModule,
-    ReactiveFormsModule,
-    MatInputModule,
-    MatSelectModule,
-    MatExpansionModule,
-    MatCheckboxModule,
-    MatRadioModule,
-    MatProgressSpinnerModule,
-    MatMenuModule,
-    MatDialogModule,
-    MatSnackBarModule,
     DragDropModule,
     ClipboardModule,
     OverlayModule,
@@ -503,7 +485,7 @@ export function initConfig(appConfigService: AppConfigService) {
       useClass: AuthInterceptor,
       multi: true,
     },
+    provideHttpClient(withInterceptorsFromDi()),
   ],
-  bootstrap: [AppComponent],
 })
 export class AppModule {}

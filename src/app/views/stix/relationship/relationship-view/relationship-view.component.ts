@@ -14,7 +14,7 @@ import { StixViewPage } from '../../stix-view-page';
 import { VersionNumber } from 'src/app/classes/version-number';
 import { EditorService } from 'src/app/services/editor/editor.service';
 import { forkJoin } from 'rxjs';
-import * as moment from 'moment';
+import moment from 'moment';
 import { DataComponent } from 'src/app/classes/stix';
 import { StixTypeToAttackType } from 'src/app/utils/type-mappings';
 

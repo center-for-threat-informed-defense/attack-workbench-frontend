@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { CollectionIndex } from 'src/app/classes/collection-index';
-import * as moment from 'moment';
+import moment from 'moment';
 import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/rest-api-connector.service';
 import { Observable } from 'rxjs';
 
