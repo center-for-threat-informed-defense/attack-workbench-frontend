@@ -13,13 +13,25 @@
             <mat-icon matSuffix>cloud_download</mat-icon>
           </mat-form-field>
           <div class="spacer">or</div>
-          <div class="custom-file-input labelled-box" tabindex="0" (keydown.enter)="fileInput.click()" (click)="fileInput.click()">
+          <div
+            class="custom-file-input labelled-box"
+            tabindex="0"
+            (keydown.enter)="fileInput.click()"
+            (click)="fileInput.click()">
             <div class="content no-label icon-suffix">
-              <input #fileInput type="file" [disabled]="url.length > 0" (change)="getCollectionFromFile($event)" accept=".json,.csv,.xlsx" hidden>
+              <input
+                #fileInput
+                type="file"
+                [disabled]="url.length > 0"
+                (change)="getCollectionFromFile($event)"
+                accept=".json,.csv,.xlsx"
+                hidden />
               <span class="placeholder-text">upload a file</span>
               <mat-icon>attach_file</mat-icon>
             </div>
-            <small class="hint-text">supported formats: .json, .csv, .xlsx</small>
+            <small class="hint-text"
+              >supported formats: .json, .csv, .xlsx</small
+            >
           </div>
         </div>
         <div class="action-bar">
