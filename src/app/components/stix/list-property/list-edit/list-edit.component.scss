@@ -1,4 +1,5 @@
-@import '../../../../../style/globals';
+@use '../../../../../style/globals';
+@use '../../../../../style/colors';
 
 .list-edit {
   input,
@@ -35,10 +36,10 @@
     float: right;
     &.disabled {
       .dark & {
-        color: on-color-deemphasis(light) !important;
+        color: colors.on-color-deemphasis(light) !important;
       }
       .light & {
-        color: on-color-deemphasis(dark) !important;
+        color: colors.on-color-deemphasis(dark) !important;
       }
     }
   }

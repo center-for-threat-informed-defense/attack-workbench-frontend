@@ -1,4 +1,5 @@
-@import '../../../../style/globals';
+@use '../../../../style/globals';
+@use '../../../../style/colors';
 
 .ordered-list-property {
   .list {
@@ -12,10 +13,10 @@
     border-radius: 4px;
     overflow: hidden;
     .light & {
-      border-color: border-color(light);
+      border-color: colors.border-color(light);
     }
     .dark & {
-      border-color: border-color(dark);
+      border-color: colors.border-color(dark);
     }
   }
 
@@ -24,10 +25,10 @@
     border-bottom: solid 1px;
     color: inherit;
     .light & {
-      border-color: border-color(light);
+      border-color: colors.border-color(light);
     }
     .dark & {
-      border-color: border-color(dark);
+      border-color: colors.border-color(dark);
     }
     display: flex;
     flex-direction: row;

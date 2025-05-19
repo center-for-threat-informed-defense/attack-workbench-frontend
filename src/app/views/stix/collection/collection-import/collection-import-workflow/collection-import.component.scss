@@ -1,4 +1,7 @@
-@import '../../../../../../style/globals';
+@use '../../../../../../style/globals';
+@use '../../../../../../style/colors';
+@use '../../../../../../style/layouts/expansion-panel';
+
 .collection-import {
   .mat-vertical-content {
     padding-top: 6px;
@@ -7,13 +10,13 @@
     margin-top: 0;
   }
   .warn {
-    color: color(warn);
+    color: colors.color(warn);
   }
   .error {
-    color: color(error);
+    color: colors.color(error);
   }
   .mat-expansion-panel {
-    @include expansion-panel(True);
+    @include expansion-panel.expansion-panel(True);
   }
   .import-options {
     display: flex;

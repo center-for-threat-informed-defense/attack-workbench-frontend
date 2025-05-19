@@ -1,4 +1,5 @@
-@import '../../../../../style/globals';
+@use '../../../../../style/globals';
+@use '../../../../../style/colors';
 
 .alias-view {
   @extend .labelled-box;
@@ -42,11 +43,11 @@
     box-sizing: border-box;
     border: solid 1px;
     .dark & {
-      border-color: border-color(dark);
+      border-color: colors.border-color(dark);
       border-top-color: transparent;
     }
     .light & {
-      border-color: border-color(light);
+      border-color: colors.border-color(light);
       border-top-color: transparent;
     }
     border-radius: 0px 0px 4px 4px;

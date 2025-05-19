@@ -1,4 +1,4 @@
-@import '../../../style/colors.scss';
+@use '../../../style/colors.scss';
 .delete-dialog {
   margin: 0 24px;
   .confirm-form {
@@ -12,7 +12,7 @@
       margin-left: 10px;
     }
     .warn {
-      color: color(error);
+      color: colors.color(error);
     }
   }
 }

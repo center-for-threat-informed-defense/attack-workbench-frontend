@@ -1,4 +1,5 @@
-@import '../../../../../style/globals';
+@use '../../../../../style/globals';
+@use '../../../../../style/colors';
 
 .external-references-view {
   span {
@@ -6,8 +7,8 @@
       border-bottom: none;
       transition: none;
       &:hover {
-        color: color(link);
-        border-bottom: 2px solid color(link);
+        color: colors.color(link);
+        border-bottom: 2px solid colors.color(link);
       }
     }
   }
@@ -30,6 +31,6 @@
   }
 
   li.external-link::marker {
-    color: color(link);
+    color: colors.color(link);
   }
 }

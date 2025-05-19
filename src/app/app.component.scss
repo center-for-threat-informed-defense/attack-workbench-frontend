@@ -1,4 +1,4 @@
-@import '../style/colors.scss';
+@use '../style/colors.scss';
 .app-root {
   height: 100%;
   display: flex;
@@ -40,10 +40,10 @@
     padding: 6px 0 6px 12px;
   }
   .banner.warning {
-    background-color: color(warn);
+    background-color: colors.color(warn);
   }
   .banner.success {
-    background-color: color(success);
+    background-color: colors.color(success);
   }
 }
 
@@ -53,9 +53,9 @@
 
 .main-body {
   .light & {
-    background-color: color(light);
+    background-color: colors.color(light);
   }
   .dark & {
-    background-color: color(dark);
+    background-color: colors.color(dark);
   }
 }
