@@ -50,7 +50,6 @@
     "marked": "^12.0.2",
     "moment": "^2.29.4",
     "ngx-autosize": "^2.0.4",
-    "ngx-custom-material-file-input": "^4.0.0",
     "ngx-jdenticon": "^2.0.0",
     "ngx-logger": "^5.0.12",
     "ngx-markdown": "^17.2.1",

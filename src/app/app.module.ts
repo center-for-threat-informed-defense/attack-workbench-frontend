@@ -52,7 +52,6 @@ import { MatNativeDateModule } from '@angular/material/core';
 import { MatBadgeModule } from '@angular/material/badge';
 
 // other library imports
-import { MaterialFileInputModule } from 'ngx-custom-material-file-input';
 import { MarkdownModule } from 'ngx-markdown';
 import { MtxPopoverModule } from '@ng-matero/extensions/popover';
 import { NgxJdenticonModule, JDENTICON_CONFIG } from 'ngx-jdenticon';
@@ -409,7 +408,6 @@ export function initConfig(appConfigService: AppConfigService) {
   ],
   bootstrap: [AppComponent],
   imports: [
-    MaterialFileInputModule,
     MarkdownModule.forRoot({
       loader: HttpClient,
     }),
