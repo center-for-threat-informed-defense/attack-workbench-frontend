@@ -11,6 +11,7 @@ import { EditorService } from 'src/app/services/editor/editor.service';
   selector: 'app-subtype-dialog',
   templateUrl: './subtype-dialog.component.html',
   styleUrls: ['./subtype-dialog.component.scss'],
+  standalone: false,
 })
 export class SubtypeDialogComponent implements OnInit, OnDestroy {
   public isNew = false;

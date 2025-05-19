@@ -42,6 +42,7 @@ import _ from 'lodash';
   templateUrl: './collection-import.component.html',
   styleUrls: ['./collection-import.component.scss'],
   encapsulation: ViewEncapsulation.None,
+  standalone: false,
 })
 export class CollectionImportComponent implements OnInit {
   @ViewChild(MatStepper) public stepper: MatStepper;

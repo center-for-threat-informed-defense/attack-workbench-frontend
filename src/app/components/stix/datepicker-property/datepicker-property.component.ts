@@ -45,6 +45,7 @@ export const DATE_FORMATS = {
       useValue: DATE_FORMATS,
     },
   ],
+  standalone: false,
 })
 export class DatepickerPropertyComponent {
   @Input() public config: DatepickerPropertyConfig;

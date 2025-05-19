@@ -8,6 +8,7 @@ import { SubtypeDialogComponent } from '../subtype-dialog/subtype-dialog.compone
   templateUrl: './subtype-edit.component.html',
   styleUrls: ['./subtype-edit.component.scss'],
   encapsulation: ViewEncapsulation.None,
+  standalone: false,
 })
 export class SubtypeEditComponent {
   @Input() public config: SubtypePropertyConfig;

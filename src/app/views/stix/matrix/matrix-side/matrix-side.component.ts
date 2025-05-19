@@ -6,6 +6,7 @@ import { Technique } from 'src/app/classes/stix/technique';
   selector: 'app-matrix-side',
   templateUrl: './matrix-side.component.html',
   styleUrls: ['./matrix-side.component.scss'],
+  standalone: false,
 })
 export class MatrixSideComponent {
   @Input() public tactics: Tactic[];

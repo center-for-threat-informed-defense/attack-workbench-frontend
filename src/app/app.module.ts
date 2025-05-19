@@ -3,7 +3,7 @@ import { LoggerModule } from 'ngx-logger';
 
 // angular imports
 import { BrowserModule } from '@angular/platform-browser';
-import { APP_INITIALIZER, NgModule } from '@angular/core';
+import { NgModule, inject, provideAppInitializer } from '@angular/core';
 import { AppRoutingModule } from './app-routing.module';
 import { AppRoutingStixModule } from './app-routing-stix.module';
 import {
@@ -458,12 +458,10 @@ export function initConfig(appConfigService: AppConfigService) {
   ],
   providers: [
     AppConfigService,
-    {
-      provide: APP_INITIALIZER,
-      useFactory: initConfig,
-      deps: [AppConfigService],
-      multi: true,
-    },
+    provideAppInitializer(() => {
+      const initializerFn = initConfig(inject(AppConfigService));
+      return initializerFn();
+    }),
     {
       provide: JDENTICON_CONFIG,
       useValue: {

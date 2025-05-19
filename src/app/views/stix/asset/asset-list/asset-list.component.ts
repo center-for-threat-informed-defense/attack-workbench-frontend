@@ -5,6 +5,7 @@ import { AuthenticationService } from 'src/app/services/connectors/authenticatio
   selector: 'app-asset-list',
   templateUrl: './asset-list.component.html',
   styleUrls: ['./asset-list.component.scss'],
+  standalone: false,
 })
 export class AssetListComponent {
   public get canEdit(): boolean {

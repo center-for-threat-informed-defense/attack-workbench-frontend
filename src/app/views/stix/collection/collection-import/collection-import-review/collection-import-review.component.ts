@@ -26,6 +26,7 @@ import { AuthenticationService } from 'src/app/services/connectors/authenticatio
   templateUrl: './collection-import-review.component.html',
   styleUrls: ['./collection-import-review.component.scss'],
   encapsulation: ViewEncapsulation.None,
+  standalone: false,
 })
 export class CollectionImportReviewComponent
   extends StixViewPage

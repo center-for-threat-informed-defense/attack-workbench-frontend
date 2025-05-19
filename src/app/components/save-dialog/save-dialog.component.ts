@@ -12,6 +12,7 @@ import { WorkflowState, WorkflowStates } from 'src/app/utils/types';
   templateUrl: './save-dialog.component.html',
   styleUrls: ['./save-dialog.component.scss'],
   encapsulation: ViewEncapsulation.None,
+  standalone: false,
 })
 export class SaveDialogComponent implements OnInit {
   public stage = 0;

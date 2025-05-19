@@ -23,6 +23,7 @@ import { StixTypeToAttackType } from 'src/app/utils/type-mappings';
   templateUrl: './relationship-view.component.html',
   styleUrls: ['./relationship-view.component.scss'],
   encapsulation: ViewEncapsulation.None,
+  standalone: false,
 })
 export class RelationshipViewComponent extends StixViewPage implements OnInit {
   @Output() public onVersionChange = new EventEmitter();

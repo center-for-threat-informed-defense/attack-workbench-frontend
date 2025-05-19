@@ -30,6 +30,7 @@ import { AttackTypeToClass } from 'src/app/utils/class-mappings';
   selector: 'app-stix-page',
   templateUrl: './stix-page.component.html',
   styleUrls: ['./stix-page.component.scss'],
+  standalone: false,
 })
 export class StixPageComponent implements OnInit, OnDestroy {
   public objects: StixObject[];

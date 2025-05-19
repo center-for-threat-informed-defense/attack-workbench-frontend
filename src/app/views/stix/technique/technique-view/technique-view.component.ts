@@ -17,6 +17,7 @@ import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/re
   templateUrl: './technique-view.component.html',
   styleUrls: ['./technique-view.component.scss'],
   encapsulation: ViewEncapsulation.None,
+  standalone: false,
 })
 export class TechniqueViewComponent
   extends StixViewPage

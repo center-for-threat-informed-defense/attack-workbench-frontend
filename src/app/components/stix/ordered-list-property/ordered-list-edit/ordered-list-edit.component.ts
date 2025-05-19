@@ -11,6 +11,7 @@ import { logger } from '../../../../utils/logger';
   selector: 'app-ordered-list-edit',
   templateUrl: './ordered-list-edit.component.html',
   styleUrls: ['./ordered-list-edit.component.scss'],
+  standalone: false,
 })
 export class OrderedListEditComponent implements OnInit {
   @Input() public config: OrderedListPropertyConfig;

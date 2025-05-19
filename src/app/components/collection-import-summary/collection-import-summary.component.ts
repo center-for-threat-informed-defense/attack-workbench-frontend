@@ -20,6 +20,7 @@ import { CollectionDiffCategories } from 'src/app/classes/stix/collection';
   templateUrl: './collection-import-summary.component.html',
   styleUrls: ['./collection-import-summary.component.scss'],
   encapsulation: ViewEncapsulation.None,
+  standalone: false,
 })
 export class CollectionImportSummaryComponent implements OnInit {
   @Input() config: CollectionImportSummaryConfig;

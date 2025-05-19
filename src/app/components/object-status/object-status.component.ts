@@ -15,6 +15,7 @@ import { WorkflowStates } from 'src/app/utils/types';
   selector: 'app-object-status',
   templateUrl: './object-status.component.html',
   encapsulation: ViewEncapsulation.None,
+  standalone: false,
 })
 export class ObjectStatusComponent implements OnInit {
   public loaded = false;

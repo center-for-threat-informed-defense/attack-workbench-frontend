@@ -9,6 +9,7 @@ import { UserAccount } from 'src/app/classes/authn/user-account';
   selector: 'app-timestamp-view',
   templateUrl: './timestamp-view.component.html',
   styleUrls: ['./timestamp-view.component.scss'],
+  standalone: false,
 })
 export class TimestampViewComponent implements OnInit {
   @Input() public config: TimestampPropertyConfig;

@@ -9,6 +9,7 @@ import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/re
   templateUrl: './name-property.component.html',
   styleUrls: ['./name-property.component.scss'],
   encapsulation: ViewEncapsulation.None,
+  standalone: false,
 })
 export class NamePropertyComponent implements OnInit {
   @Input() public config: NamePropertyConfig;

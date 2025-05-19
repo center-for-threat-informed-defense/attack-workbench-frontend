@@ -4,6 +4,7 @@ import { VersionPropertyConfig } from '../version-property.component';
 @Component({
   selector: 'app-version-diff',
   templateUrl: './version-diff.component.html',
+  standalone: false,
 })
 export class VersionDiffComponent {
   @Input() public config: VersionPropertyConfig;

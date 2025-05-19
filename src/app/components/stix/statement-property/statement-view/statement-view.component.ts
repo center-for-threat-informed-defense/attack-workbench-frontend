@@ -4,6 +4,7 @@ import { StatementPropertyConfig } from '../statement-property.component';
 @Component({
   selector: 'app-statement-view',
   templateUrl: './statement-view.component.html',
+  standalone: false,
 })
 export class StatementViewComponent {
   @Input() public statementsMap: any;

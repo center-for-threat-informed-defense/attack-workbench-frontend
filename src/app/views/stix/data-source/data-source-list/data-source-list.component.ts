@@ -4,6 +4,7 @@ import { AuthenticationService } from 'src/app/services/connectors/authenticatio
 @Component({
   selector: 'app-data-source-list',
   templateUrl: './data-source-list.component.html',
+  standalone: false,
 })
 export class DataSourceListComponent {
   public get canEdit(): boolean {

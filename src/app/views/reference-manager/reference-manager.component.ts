@@ -32,6 +32,7 @@ import {
   templateUrl: './reference-manager.component.html',
   styleUrls: ['./reference-manager.component.scss'],
   encapsulation: ViewEncapsulation.None,
+  standalone: false,
 })
 export class ReferenceManagerComponent
   implements OnInit, AfterViewInit, OnDestroy

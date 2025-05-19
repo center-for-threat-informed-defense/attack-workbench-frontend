@@ -6,6 +6,7 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
   templateUrl: './delete-dialog.component.html',
   styleUrls: ['./delete-dialog.component.scss'],
   encapsulation: ViewEncapsulation.None,
+  standalone: false,
 })
 export class DeleteDialogComponent {
   private deleteConfirmation = 'DELETE';

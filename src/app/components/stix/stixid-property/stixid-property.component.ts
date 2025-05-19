@@ -6,6 +6,7 @@ import { StixObject } from 'src/app/classes/stix/stix-object';
   selector: 'app-stixid-property',
   templateUrl: './stixid-property.component.html',
   styleUrls: ['./stixid-property.component.scss'],
+  standalone: false,
 })
 export class StixIDPropertyComponent {
   @Input() public config: StixIDPropertyConfig;

@@ -53,6 +53,7 @@ type changeCategory =
   templateUrl: './collection-view.component.html',
   styleUrls: ['./collection-view.component.scss'],
   encapsulation: ViewEncapsulation.None,
+  standalone: false,
 })
 export class CollectionViewComponent extends StixViewPage implements OnInit {
   public get collection(): Collection {

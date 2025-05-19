@@ -17,6 +17,7 @@ import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/re
   templateUrl: './contributor-edit-dialog.component.html',
   styleUrls: ['./contributor-edit-dialog.component.scss'],
   encapsulation: ViewEncapsulation.None,
+  standalone: false,
 })
 export class ContributorEditDialogComponent implements OnInit {
   @Output() public onSave = new EventEmitter();

@@ -17,6 +17,7 @@ const isAbsolute = new RegExp('(?:^[a-z][a-z0-9+.-]*:|\/\/)', 'i');
   templateUrl: './help-page.component.html',
   styleUrls: ['./help-page.component.scss'],
   encapsulation: ViewEncapsulation.None,
+  standalone: false,
 })
 export class HelpPageComponent implements OnInit, OnDestroy {
   private listenObj: any;

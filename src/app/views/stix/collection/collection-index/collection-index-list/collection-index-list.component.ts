@@ -9,6 +9,7 @@ import { Observable } from 'rxjs';
   templateUrl: './collection-index-list.component.html',
   styleUrls: ['./collection-index-list.component.scss'],
   encapsulation: ViewEncapsulation.None,
+  standalone: false,
 })
 export class CollectionIndexListComponent implements OnInit {
   constructor(private restAPIConnector: RestApiConnectorService) {}

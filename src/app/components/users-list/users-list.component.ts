@@ -25,6 +25,7 @@ import { SelectionModel } from '@angular/cdk/collections';
   templateUrl: './users-list.component.html',
   styleUrls: ['./users-list.component.scss'],
   encapsulation: ViewEncapsulation.None,
+  standalone: false,
 })
 export class UsersListComponent implements OnInit {
   @Input() config: UsersListConfig;

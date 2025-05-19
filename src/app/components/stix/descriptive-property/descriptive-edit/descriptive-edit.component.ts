@@ -16,6 +16,7 @@ import { EditorService } from 'src/app/services/editor/editor.service';
   templateUrl: './descriptive-edit.component.html',
   styleUrls: ['./descriptive-edit.component.scss'],
   encapsulation: ViewEncapsulation.None,
+  standalone: false,
 })
 export class DescriptiveEditComponent implements OnDestroy {
   @Input() public config: DescriptivePropertyConfig;

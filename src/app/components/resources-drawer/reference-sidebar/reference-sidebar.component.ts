@@ -30,6 +30,7 @@ import { ReferenceEditDialogComponent } from 'src/app/components/reference-edit-
   templateUrl: './reference-sidebar.component.html',
   styleUrls: ['./reference-sidebar.component.scss'],
   encapsulation: ViewEncapsulation.None,
+  standalone: false,
 })
 export class ReferenceSidebarComponent implements OnInit, AfterViewInit {
   public newRef: ExternalReference = {

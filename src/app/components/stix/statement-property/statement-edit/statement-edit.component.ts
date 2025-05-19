@@ -10,6 +10,7 @@ import { StatementPropertyConfig } from '../statement-property.component';
   templateUrl: './statement-edit.component.html',
   styleUrls: ['./statement-edit.component.scss'],
   encapsulation: ViewEncapsulation.None,
+  standalone: false,
 })
 export class StatementEditComponent {
   @Input() public statementsMap: any;

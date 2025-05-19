@@ -5,6 +5,7 @@ import { AuthenticationService } from 'src/app/services/connectors/authenticatio
   selector: 'app-mitigation-list',
   templateUrl: './mitigation-list.component.html',
   styleUrls: ['./mitigation-list.component.scss'],
+  standalone: false,
 })
 export class MitigationListComponent implements OnInit {
   public get canEdit(): boolean {

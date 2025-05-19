@@ -32,6 +32,7 @@ interface HistoryEvent {
   templateUrl: './history-timeline.component.html',
   styleUrls: ['./history-timeline.component.scss'],
   encapsulation: ViewEncapsulation.None,
+  standalone: false,
 })
 export class HistoryTimelineComponent implements OnInit, OnDestroy {
   public historyEvents: HistoryEvent[];

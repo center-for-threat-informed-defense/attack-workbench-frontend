@@ -25,6 +25,7 @@ interface ActivityEvent {
   templateUrl: './recent-activity.component.html',
   styleUrls: ['./recent-activity.component.scss'],
   encapsulation: ViewEncapsulation.None,
+  standalone: false,
 })
 export class RecentActivityComponent implements OnInit {
   @Input() public identities: string[]; // list of user IDs

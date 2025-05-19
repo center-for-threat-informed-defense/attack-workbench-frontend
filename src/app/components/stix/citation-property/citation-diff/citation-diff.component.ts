@@ -4,6 +4,7 @@ import { CitationPropertyConfig } from '../citation-property.component';
 @Component({
   selector: 'app-citation-diff',
   templateUrl: './citation-diff.component.html',
+  standalone: false,
 })
 export class CitationDiffComponent {
   @Input() public config: CitationPropertyConfig;
