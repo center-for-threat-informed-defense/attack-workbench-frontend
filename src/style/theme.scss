@@ -14,14 +14,14 @@
 }
 
 //custom color theme
-$light-theme: mat.define-light-theme(
+$light-theme: mat.m2-define-light-theme(
   (
     color: (
-      primary: mat.define-palette(to-material-map(primary), 50, 100, 200),
-      accent: mat.define-palette(to-material-map(secondary), 50, 100, 200),
-      foreground: mat.define-palette(to-material-map(dark), 50, 100, 200),
-      background: mat.define-palette(to-material-map(light), 50, 100, 200),
-      warn: mat.define-palette(to-material-map(warn)),
+      primary: mat.m2-define-palette(to-material-map(primary), 50, 100, 200),
+      accent: mat.m2-define-palette(to-material-map(secondary), 50, 100, 200),
+      foreground: mat.m2-define-palette(to-material-map(dark), 50, 100, 200),
+      background: mat.m2-define-palette(to-material-map(light), 50, 100, 200),
+      warn: mat.m2-define-palette(to-material-map(warn)),
     ),
     // only include 'typography' and 'density' in default theme
     typography: $custom-typography,
@@ -29,14 +29,14 @@ $light-theme: mat.define-light-theme(
   )
 );
 
-$dark-theme: mat.define-dark-theme(
+$dark-theme: mat.m2-define-dark-theme(
   (
     color: (
-      primary: mat.define-palette(to-material-map(primary), 50, 100, 200),
-      accent: mat.define-palette(to-material-map(secondary), 50, 100, 200),
-      foreground: mat.define-palette(to-material-map(light), 50, 100, 200),
-      background: mat.define-palette(to-material-map(dark), 50, 100, 200),
-      warn: mat.define-palette(to-material-map(warn)),
+      primary: mat.m2-define-palette(to-material-map(primary), 50, 100, 200),
+      accent: mat.m2-define-palette(to-material-map(secondary), 50, 100, 200),
+      foreground: mat.m2-define-palette(to-material-map(light), 50, 100, 200),
+      background: mat.m2-define-palette(to-material-map(dark), 50, 100, 200),
+      warn: mat.m2-define-palette(to-material-map(warn)),
     ),
   )
 );
