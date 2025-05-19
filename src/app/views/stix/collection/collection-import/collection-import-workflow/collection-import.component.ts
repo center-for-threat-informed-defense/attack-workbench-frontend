@@ -1,11 +1,16 @@
 import { SelectionModel } from '@angular/cdk/collections';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  OnInit,
+  ViewChild,
+  ViewEncapsulation,
+} from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatStepper } from '@angular/material/stepper';
 import { ActivatedRoute } from '@angular/router';
-import { FileInputComponent } from 'ngx-custom-material-file-input';
 import {
   Asset,
   Campaign,
@@ -40,7 +45,7 @@ import _ from 'lodash';
 })
 export class CollectionImportComponent implements OnInit {
   @ViewChild(MatStepper) public stepper: MatStepper;
-  @ViewChild(FileInputComponent) public fileInput: FileInputComponent;
+  @ViewChild('fileInput') public fileInput!: ElementRef<HTMLInputElement>;
 
   public url = '';
   public loadingStep1 = false;
