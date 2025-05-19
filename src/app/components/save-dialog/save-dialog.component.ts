@@ -2,9 +2,10 @@ import { Component, Inject, OnInit, ViewEncapsulation } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { forkJoin } from 'rxjs';
 import { ValidationData } from 'src/app/classes/serializable';
-import { StixObject, workflowStates } from 'src/app/classes/stix/stix-object';
+import { StixObject } from 'src/app/classes/stix/stix-object';
 import { VersionNumber } from 'src/app/classes/version-number';
 import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/rest-api-connector.service';
+import { WorkflowState, WorkflowStates } from 'src/app/utils/types';
 
 @Component({
   selector: 'app-save-dialog',
@@ -19,12 +20,8 @@ export class SaveDialogComponent implements OnInit {
   public nextMinorVersion: string;
   public patch_objects = [];
   public validation: ValidationData = null;
-  public newState: workflowStates = 'work-in-progress';
-  public workflows: string[] = [
-    'work-in-progress',
-    'awaiting-review',
-    'reviewed',
-  ];
+  public newState: WorkflowState = 'work-in-progress';
+  public workflows = Object.entries(WorkflowStates);
 
   public get saveEnabled() {
     return this.validation && this.validation.errors.length == 0;
@@ -98,14 +95,14 @@ export class SaveDialogComponent implements OnInit {
       });
   }
 
-  private patchObject(obj: any): void {
+  private patchObject(obj): void {
     // replace LinkById references with the new ATT&CK ID
     const regex = new RegExp(`\\(LinkById: (${this.config.patchId})\\)`, 'gmu');
     obj.description = obj.description.replace(
       regex,
       `(LinkById: ${this.config.object.attackID})`
     );
-    if (obj.hasOwnProperty('detection') && obj.detection) {
+    if ('detection' in obj && obj.detection) {
       obj.detection = obj.detection.replace(
         regex,
         `(LinkById: ${this.config.object.attackID})`
@@ -179,15 +176,11 @@ export class SaveDialogComponent implements OnInit {
       return;
     }
     const sub = this.saveObject().subscribe({
-      next: v => {
+      next: () => {
         this.dialogRef.close(true);
       },
       complete: () => sub.unsubscribe(),
     });
-  }
-
-  public getLabel(status: string): string {
-    return status.replace(/-/g, ' ');
   }
 }
 

@@ -1,18 +1,21 @@
-FROM node:22-alpine AS build
+FROM --platform=${BUILDPLATFORM} node:22-alpine AS build
 
 WORKDIR /workspace
 
 # Copy everything
 COPY . .
 
+ARG TARGETOS
+ARG TARGETARCH
+
 # Install dependencies
-RUN npm install
+RUN npm install --cpu ${TARGETARCH} --os ${TARGETOS}
 
 # Build the application
-RUN npm run build-prod
+RUN npm run build-prod --cpu ${TARGETARCH} --os ${TARGETOS}
 
 # Second stage: production environment
-FROM nginx:alpine
+FROM nginx:stable-alpine-slim
 
 # Define build arguments
 ARG VERSION=dev
@@ -39,7 +42,7 @@ LABEL org.opencontainers.image.title="ATT&CK Workbench Frontend Service" \
 RUN rm -rf /usr/share/nginx/html/*
 
 # Copy the application bundles - explicitly specifying the full path
-COPY --from=build /workspace/dist /usr/share/nginx/html
+COPY --from=build /workspace/dist/app /usr/share/nginx/html
 
 # Expose port 80
 EXPOSE 80 443
