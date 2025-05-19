@@ -5,6 +5,7 @@ import { AuthenticationService } from 'src/app/services/connectors/authenticatio
   selector: 'app-software-list',
   templateUrl: './software-list.component.html',
   styleUrls: ['./software-list.component.scss'],
+  standalone: false,
 })
 export class SoftwareListComponent implements OnInit {
   public get canEdit(): boolean {

@@ -6,6 +6,7 @@ import { SubtypePropertyConfig } from '../subtype-property.component';
   templateUrl: './subtype-view.component.html',
   styleUrls: ['./subtype-view.component.scss'],
   encapsulation: ViewEncapsulation.None,
+  standalone: false,
 })
 export class SubtypeViewComponent implements OnInit {
   @Input() public config: SubtypePropertyConfig;

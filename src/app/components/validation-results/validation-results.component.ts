@@ -6,6 +6,7 @@ import { ValidationData } from 'src/app/classes/serializable';
   templateUrl: './validation-results.component.html',
   styleUrls: ['./validation-results.component.scss'],
   encapsulation: ViewEncapsulation.None,
+  standalone: false,
 })
 export class ValidationResultsComponent implements OnInit {
   @Input() validation: ValidationData;

@@ -30,6 +30,7 @@ import { ConfirmationDialogComponent } from '../../confirmation-dialog/confirmat
   templateUrl: './search.component.html',
   styleUrls: ['./search.component.scss'],
   encapsulation: ViewEncapsulation.None,
+  standalone: false,
 })
 export class SearchComponent implements AfterViewInit, OnDestroy {
   @ViewChild('search') input: ElementRef;

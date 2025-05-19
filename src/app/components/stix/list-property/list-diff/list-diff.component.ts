@@ -4,6 +4,7 @@ import { ListPropertyConfig } from '../list-property.component';
 @Component({
   selector: 'app-list-diff',
   templateUrl: './list-diff.component.html',
+  standalone: false,
 })
 export class ListDiffComponent {
   @Input() public config: ListPropertyConfig;

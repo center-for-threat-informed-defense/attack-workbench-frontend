@@ -4,7 +4,10 @@ import { StixObject } from 'src/app/classes/stix/stix-object';
 import { AuthenticationService } from 'src/app/services/connectors/authentication/authentication.service';
 import { StixDialogComponent } from './stix-dialog/stix-dialog.component';
 
-@Component({ template: '' })
+@Component({
+  template: '',
+  standalone: false,
+})
 export abstract class StixViewPage {
   constructor(private authenticationService: AuthenticationService) {}
 

@@ -21,6 +21,7 @@ import { animate, style, transition, trigger } from '@angular/animations';
       ]),
     ]),
   ],
+  standalone: false,
 })
 export class AliasDiffComponent implements OnInit {
   @Input() public config: AliasPropertyConfig;

@@ -4,6 +4,7 @@ import { OrderedListPropertyConfig } from '../ordered-list-property.component';
 @Component({
   selector: 'app-ordered-list-diff',
   templateUrl: './ordered-list-diff.component.html',
+  standalone: false,
 })
 export class OrderedListDiffComponent {
   @Input() public config: OrderedListPropertyConfig;

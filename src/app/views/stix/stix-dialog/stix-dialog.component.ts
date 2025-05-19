@@ -30,6 +30,7 @@ import { StixTypeToClass } from 'src/app/utils/class-mappings';
   templateUrl: './stix-dialog.component.html',
   styleUrls: ['./stix-dialog.component.scss'],
   encapsulation: ViewEncapsulation.None,
+  standalone: false,
 })
 export class StixDialogComponent implements OnInit {
   constructor(

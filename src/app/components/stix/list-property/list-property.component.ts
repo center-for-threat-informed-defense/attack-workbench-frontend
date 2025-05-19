@@ -5,6 +5,7 @@ import { StixObject } from 'src/app/classes/stix/stix-object';
   selector: 'app-list-property',
   templateUrl: './list-property.component.html',
   styleUrls: ['./list-property.component.scss'],
+  standalone: false,
 })
 export class ListPropertyComponent {
   @Input() public config: ListPropertyConfig;

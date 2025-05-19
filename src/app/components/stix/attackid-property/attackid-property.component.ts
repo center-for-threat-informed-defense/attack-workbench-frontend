@@ -6,6 +6,7 @@ import { StixObject } from 'src/app/classes/stix/stix-object';
   selector: 'app-attackid-property',
   templateUrl: './attackid-property.component.html',
   styleUrls: ['./attackid-property.component.scss'],
+  standalone: false,
 })
 export class AttackIDPropertyComponent {
   @Input() public config: AttackIDPropertyConfig;

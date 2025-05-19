@@ -5,6 +5,7 @@ import { AuthenticationService } from 'src/app/services/connectors/authenticatio
   selector: 'app-matrix-list',
   templateUrl: './matrix-list.component.html',
   styleUrls: ['./matrix-list.component.scss'],
+  standalone: false,
 })
 export class MatrixListComponent implements OnInit {
   public get canEdit(): boolean {

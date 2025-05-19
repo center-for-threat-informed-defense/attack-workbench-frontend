@@ -5,6 +5,7 @@ import { AttackIDPropertyConfig } from '../attackid-property.component';
   selector: 'app-attackid-view',
   templateUrl: './attackid-view.component.html',
   styleUrls: ['./attackid-view.component.scss'],
+  standalone: false,
 })
 export class AttackIDViewComponent implements OnInit {
   @Input() public config: AttackIDPropertyConfig;

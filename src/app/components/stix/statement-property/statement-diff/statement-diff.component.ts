@@ -6,6 +6,7 @@ import { MarkingDefinition } from 'src/app/classes/stix';
   selector: 'app-statement-diff',
   templateUrl: './statement-diff.component.html',
   styleUrl: './statement-diff.component.scss',
+  standalone: false,
 })
 export class StatementDiffComponent implements OnInit {
   @Input() public statementsMap: any;

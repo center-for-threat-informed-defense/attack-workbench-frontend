@@ -8,6 +8,7 @@ import { StixViewPage } from '../../stix-view-page';
 @Component({
   selector: 'app-data-component-view',
   templateUrl: './data-component-view.component.html',
+  standalone: false,
 })
 export class DataComponentViewComponent extends StixViewPage implements OnInit {
   @Output() onClickRelationship = new EventEmitter();

@@ -5,6 +5,7 @@ import { StixObject } from 'src/app/classes/stix/stix-object';
   selector: 'app-alias-property',
   templateUrl: './alias-property.component.html',
   styleUrls: ['./alias-property.component.scss'],
+  standalone: false,
 })
 export class AliasPropertyComponent implements OnInit {
   @Input() public config: AliasPropertyConfig;

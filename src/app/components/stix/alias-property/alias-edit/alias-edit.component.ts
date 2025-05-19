@@ -9,6 +9,7 @@ import { AliasEditDialogComponent } from './alias-edit-dialog/alias-edit-dialog.
   templateUrl: './alias-edit.component.html',
   styleUrls: ['./alias-edit.component.scss'],
   encapsulation: ViewEncapsulation.None,
+  standalone: false,
 })
 export class AliasEditComponent implements OnInit {
   @Input() public config: AliasPropertyConfig;

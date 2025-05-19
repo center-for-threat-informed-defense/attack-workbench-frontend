@@ -4,6 +4,7 @@ import { StixObject } from 'src/app/classes/stix';
 @Component({
   selector: 'app-boolean-property',
   templateUrl: './boolean-property.component.html',
+  standalone: false,
 })
 export class BooleanPropertyComponent {
   @Input() public config: BooleanPropertyConfig;

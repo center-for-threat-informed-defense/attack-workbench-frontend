@@ -11,6 +11,7 @@ import { UserAccount } from 'src/app/classes/authn/user-account';
   templateUrl: './identity-property.component.html',
   styleUrls: ['./identity-property.component.scss'],
   encapsulation: ViewEncapsulation.None,
+  standalone: false,
 })
 export class IdentityPropertyComponent implements OnInit {
   @Input() public config: IdentityPropertyConfig;

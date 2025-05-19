@@ -66,6 +66,7 @@ import { StixTypeToAttackType } from 'src/app/utils/type-mappings';
       ]),
     ]),
   ],
+  standalone: false,
 })
 export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
   @Input() public config: StixListConfig = {};
