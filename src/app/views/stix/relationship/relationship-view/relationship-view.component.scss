@@ -1,7 +1,9 @@
-@import '../../../../../style/globals';
+@use '../../../../../style/globals';
+@use '../../../../../style/layouts/expansion-panel';
+
 .relationship-view {
   .mat-expansion-panel {
-    @include expansion-panel(true);
+    @include expansion-panel.expansion-panel(true);
   }
   .type_select {
     width: 100%;

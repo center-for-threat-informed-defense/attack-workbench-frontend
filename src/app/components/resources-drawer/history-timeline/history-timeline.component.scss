@@ -1,4 +1,6 @@
-@import '../../../../style/globals';
+@use '../../../../style/globals';
+@use '../../../../style/colors';
+
 .history-timeline {
   h3 {
     margin: 0;
@@ -10,10 +12,10 @@
     padding: 0;
     border-radius: 4px;
     .dark & {
-      border: 1px solid border-color(dark);
+      border: 1px solid colors.border-color(dark);
     }
     .light & {
-      border: 1px solid border-color(light);
+      border: 1px solid colors.border-color(light);
     }
   }
   .history-event {
@@ -38,29 +40,29 @@
     }
     &:hover {
       .dark & {
-        background: color-alternate(dark);
+        background: colors.color-alternate(dark);
       }
       .light & {
-        background: color-alternate(light);
+        background: colors.color-alternate(light);
       }
     }
     .dark & {
-      border-bottom: 1px solid border-color(dark);
+      border-bottom: 1px solid colors.border-color(dark);
     }
     .light & {
-      border-bottom: 1px solid border-color(light);
+      border-bottom: 1px solid colors.border-color(light);
     }
     &:last-of-type {
       border-bottom: none;
     }
     &.object {
-      border-left: 4px solid color(primary);
+      border-left: 4px solid colors.color(primary);
     }
     &.relationship {
-      border-left: 4px solid color(secondary);
+      border-left: 4px solid colors.color(secondary);
     }
     &.collection {
-      border-left: 4px solid color-alternate(dark, 10);
+      border-left: 4px solid colors.color-alternate(dark, 10);
     }
     .event-identity {
       padding-left: 16px;
@@ -71,10 +73,10 @@
     .mdc-checkbox
     .mdc-checkbox__native-control:enabled:checked
     ~ .mdc-checkbox__background {
-    background-color: color-alternate(dark, 10);
-    border-color: color-alternate(dark, 10);
+    background-color: colors.color-alternate(dark, 10);
+    border-color: colors.color-alternate(dark, 10);
   }
   .mdc-checkbox .mdc-checkbox__checkmark {
-    color: color(light) !important;
+    color: colors.color(light) !important;
   }
 }

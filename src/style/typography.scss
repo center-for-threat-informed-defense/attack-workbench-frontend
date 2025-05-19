@@ -1,6 +1,6 @@
 @use '@angular/material' as mat;
-@import 'colors';
-@import 'fonts';
+@use 'colors';
+@use 'fonts';
 
 .superheading {
   //super big display text
@@ -46,7 +46,7 @@
   font-family: Poppins, Arial, sans-serif;
   font-weight: 700;
   text-transform: uppercase;
-  color: color(error);
+  color: colors.color(error);
 }
 .hint-text {
   font-family: Roboto;
@@ -138,20 +138,20 @@ $custom-typography: mat.m2-define-typography-config(
     color: inherit;
     text-decoration: none;
     transition: all 0.2s ease;
-    border-bottom: 2px solid color(balanced-blue);
+    border-bottom: 2px solid colors.color(balanced-blue);
     &:hover {
-      color: color(balanced-blue);
+      color: colors.color(balanced-blue);
     }
   }
 
   a.external-link {
     border-bottom: none;
-    color: color(link);
+    color: colors.color(link);
     transition: none;
     text-decoration: none;
     &:hover {
-      border-bottom: 2px solid color(link);
-      color: color(balanced-blue);
+      border-bottom: 2px solid colors.color(link);
+      color: colors.color(balanced-blue);
     }
   }
 

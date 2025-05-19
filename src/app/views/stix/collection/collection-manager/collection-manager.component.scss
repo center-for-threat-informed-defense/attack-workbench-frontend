@@ -1,4 +1,5 @@
-@import '../../../../../style/globals';
+@use '../../../../../style/globals';
+@use '../../../../../style/colors';
 
 .collection-manager {
   h1 {
@@ -10,10 +11,10 @@
   margin: 0 auto;
   .mat-mdc-tab-header {
     .dark & {
-      border-bottom: 1px solid border-color(dark);
+      border-bottom: 1px solid colors.border-color(dark);
     }
     .light & {
-      border-bottom: 1px solid border-color(light);
+      border-bottom: 1px solid colors.border-color(light);
     }
     .mdc-tab__text-label {
       @extend .text-label;

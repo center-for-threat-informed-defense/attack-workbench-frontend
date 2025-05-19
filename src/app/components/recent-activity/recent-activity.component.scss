@@ -1,4 +1,6 @@
-@import '../../../style/globals';
+@use '../../../style/globals';
+@use '../../../style/colors';
+
 .recent-activity {
   h3 {
     margin: 0;
@@ -21,17 +23,17 @@
   .activity-event {
     &:hover {
       .dark & {
-        background: color-alternate(dark);
+        background: colors.color-alternate(dark);
       }
       .light & {
-        background: color-alternate(light);
+        background: colors.color-alternate(light);
       }
     }
     .dark & {
-      border: 1px solid border-color(dark);
+      border: 1px solid colors.border-color(dark);
     }
     .light & {
-      border: 1px solid border-color(light);
+      border: 1px solid colors.border-color(light);
     }
     &:not(:first-of-type) {
       border-top-width: 0px;
@@ -45,13 +47,13 @@
       border-bottom-right-radius: 4px;
     }
     &.object {
-      border-left: 4px solid color(primary);
+      border-left: 4px solid colors.color(primary);
     }
     &.relationship {
-      border-left: 4px solid color(secondary);
+      border-left: 4px solid colors.color(secondary);
     }
     &.note {
-      border-left: 4px solid color(engenuity-dark-gray);
+      border-left: 4px solid colors.color(engenuity-dark-gray);
     }
     .event-timestamp {
       padding-left: 16px;

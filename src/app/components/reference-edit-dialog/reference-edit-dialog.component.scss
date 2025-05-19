@@ -1,4 +1,5 @@
-@import '../../../style/globals.scss';
+@use '../../../style/globals.scss';
+@use '../../../style/colors';
 
 .reference-dialog {
   mat-toolbar {
@@ -57,10 +58,10 @@
         margin-bottom: 24px;
         padding-left: 16px;
         .dark & {
-          border-left: 1px solid border-color(dark);
+          border-left: 1px solid colors.border-color(dark);
         }
         .light & {
-          border-left: 1px solid border-color(light);
+          border-left: 1px solid colors.border-color(light);
         }
       }
     }
