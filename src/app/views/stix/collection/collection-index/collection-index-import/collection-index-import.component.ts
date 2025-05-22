@@ -10,6 +10,7 @@ import { logger } from '../../../../../utils/logger';
   templateUrl: './collection-index-import.component.html',
   styleUrls: ['./collection-index-import.component.scss'],
   encapsulation: ViewEncapsulation.None,
+  standalone: false,
 })
 export class CollectionIndexImportComponent implements OnInit {
   @ViewChild(MatStepper) public stepper: MatStepper;

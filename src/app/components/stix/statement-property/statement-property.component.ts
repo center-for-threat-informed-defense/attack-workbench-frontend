@@ -11,6 +11,7 @@ import { Observable } from 'rxjs';
   templateUrl: './statement-property.component.html',
   styleUrls: ['./statement-property.component.scss'],
   encapsulation: ViewEncapsulation.None,
+  standalone: false,
 })
 export class StatementPropertyComponent implements OnInit {
   @Input() public config: StatementPropertyConfig;

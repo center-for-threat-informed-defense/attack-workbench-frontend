@@ -4,6 +4,7 @@ import { DescriptivePropertyConfig } from '../descriptive-property.component';
 @Component({
   selector: 'app-descriptive-diff',
   templateUrl: './descriptive-diff.component.html',
+  standalone: false,
 })
 export class DescriptiveDiffComponent {
   @Input() public config: DescriptivePropertyConfig;

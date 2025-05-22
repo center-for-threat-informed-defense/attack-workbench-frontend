@@ -8,6 +8,7 @@ import {
   OnDestroy,
 } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { Parser } from 'marked';
 import { MarkdownComponent, MarkdownService } from 'ngx-markdown';
 
 const isAbsolute = new RegExp('(?:^[a-z][a-z0-9+.-]*:|\/\/)', 'i');
@@ -17,6 +18,7 @@ const isAbsolute = new RegExp('(?:^[a-z][a-z0-9+.-]*:|\/\/)', 'i');
   templateUrl: './help-page.component.html',
   styleUrls: ['./help-page.component.scss'],
   encapsulation: ViewEncapsulation.None,
+  standalone: false,
 })
 export class HelpPageComponent implements OnInit, OnDestroy {
   private listenObj: any;
@@ -35,35 +37,22 @@ export class HelpPageComponent implements OnInit, OnDestroy {
   ngOnInit() {
     // extend default markdown renderer with additional bells and whistles
     // add anchor link to headers rendered HTML
-    const self = this;
-    const counters = [];
-    this.markdownService.renderer.heading = (text: string, level: number) => {
+    // const self = this;
+    this.markdownService.renderer.heading = ({ tokens, depth }) => {
+      const text = Parser.parseInline(tokens);
       const escapedText = '_' + text.toLowerCase().replace(/[^\w]+/g, '-');
-      if (level != 1)
-        self.headingAnchors.push({
-          level: level,
+      if (depth != 1)
+        this.headingAnchors.push({
+          level: depth,
           anchor: escapedText,
           label: text.replace('&amp;', '&').replace('&#39;', "'"),
         });
-      return (
-        '<h' +
-        level +
-        ' class="' +
-        escapedText +
-        '">' +
-        text +
-        '</h' +
-        level +
-        '>'
-      );
+      return `<h${depth} class="${escapedText}">${text}</h${depth}>`;
     };
 
     // remove .md from the end of the link if it's an absolute link to this project
-    this.markdownService.renderer.link = (
-      href: string,
-      title: string,
-      text: string
-    ) => {
+    this.markdownService.renderer.link = ({ href, tokens }) => {
+      const text = Parser.parseInline(tokens);
       if (href.startsWith('/') && href.endsWith('.md'))
         href = href.split('.md')[0];
       return `<a href="${href}">${text}</a>`;

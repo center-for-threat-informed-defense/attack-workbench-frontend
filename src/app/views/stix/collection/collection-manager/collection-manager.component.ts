@@ -10,6 +10,7 @@ import { CollectionIndexListComponent } from '../collection-index/collection-ind
   templateUrl: './collection-manager.component.html',
   styleUrls: ['./collection-manager.component.scss'],
   encapsulation: ViewEncapsulation.None,
+  standalone: false,
 })
 export class CollectionManagerComponent implements OnInit {
   @ViewChild(CollectionIndexListComponent)

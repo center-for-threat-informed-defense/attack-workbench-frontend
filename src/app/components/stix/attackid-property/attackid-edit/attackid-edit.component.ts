@@ -8,6 +8,7 @@ import { StixObject } from '../../../../classes/stix/stix-object';
   templateUrl: './attackid-edit.component.html',
   styleUrls: ['./attackid-edit.component.scss'],
   encapsulation: ViewEncapsulation.None,
+  standalone: false,
 })
 export class AttackIDEditComponent implements OnInit {
   @Input() public config: AttackIDPropertyConfig;

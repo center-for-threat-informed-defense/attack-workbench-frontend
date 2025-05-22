@@ -5,6 +5,7 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
   selector: 'app-markdown-view-dialog',
   templateUrl: './markdown-view-dialog.component.html',
   styleUrls: ['./markdown-view-dialog.component.scss'],
+  standalone: false,
 })
 export class MarkdownViewDialogComponent implements OnInit {
   constructor(

@@ -5,6 +5,7 @@ import { StixObject } from 'src/app/classes/stix/stix-object';
   selector: 'app-descriptive-property',
   templateUrl: './descriptive-property.component.html',
   styleUrls: ['./descriptive-property.component.scss'],
+  standalone: false,
 })
 export class DescriptivePropertyComponent implements OnInit {
   @Input() public config: DescriptivePropertyConfig;

@@ -6,6 +6,7 @@ import { StixObject } from 'src/app/classes/stix/stix-object';
   selector: 'app-alias-edit-dialog',
   templateUrl: './alias-edit-dialog.component.html',
   styleUrls: ['./alias-edit-dialog.component.scss'],
+  standalone: false,
 })
 export class AliasEditDialogComponent implements OnInit {
   public is_new = false;

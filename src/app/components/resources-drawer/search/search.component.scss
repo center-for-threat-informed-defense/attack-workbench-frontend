@@ -1,15 +1,16 @@
-@import '../../../../style/globals';
+@use '../../../../style/globals';
+@use '../../../../style/colors';
 
 .search-drawer {
   padding: 16px 0;
   .search-container {
     border-radius: 4px;
     .dark & {
-      border: 1px solid border-color(dark);
+      border: 1px solid colors.border-color(dark);
       border-bottom: none !important;
     }
     .light & {
-      border: 1px solid border-color(light);
+      border: 1px solid colors.border-color(light);
       border-bottom: none !important;
     }
 
@@ -26,10 +27,10 @@
       }
       .mat-mdc-floating-label {
         .light & {
-          color: on-color-deemphasis(light);
+          color: colors.on-color-deemphasis(light);
         }
         .dark & {
-          color: on-color-deemphasis(dark);
+          color: colors.on-color-deemphasis(dark);
         }
       }
     }
@@ -37,25 +38,25 @@
     .search-results {
       .empty-list {
         .dark & {
-          border-bottom: 1px solid border-color(dark);
+          border-bottom: 1px solid colors.border-color(dark);
         }
         .light & {
-          border-bottom: 1px solid border-color(light);
+          border-bottom: 1px solid colors.border-color(light);
         }
       }
       .results-list {
         .dark & {
-          border-bottom: 1px solid border-color(dark);
+          border-bottom: 1px solid colors.border-color(dark);
         }
         .light & {
-          border-bottom: 1px solid border-color(light);
+          border-bottom: 1px solid colors.border-color(light);
         }
         .result {
           .dark & {
-            border-top: 1px solid border-color(dark);
+            border-top: 1px solid colors.border-color(dark);
           }
           .light & {
-            border-top: 1px solid border-color(light);
+            border-top: 1px solid colors.border-color(light);
           }
         }
         .description {
@@ -89,15 +90,15 @@
       cursor: pointer;
       &:hover {
         .dark & {
-          background: color-alternate(dark);
+          background: colors.color-alternate(dark);
         }
         .light & {
-          background: color-alternate(light);
+          background: colors.color-alternate(light);
         }
       }
     }
   }
   .warning {
-    color: color(error);
+    color: colors.color(error);
   }
 }

@@ -6,6 +6,7 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
   templateUrl: './create-new-dialog.component.html',
   styleUrls: ['./create-new-dialog.component.scss'],
   encapsulation: ViewEncapsulation.None,
+  standalone: false,
 })
 export class CreateNewDialogComponent {
   private config: CreateNewDialogConfig;

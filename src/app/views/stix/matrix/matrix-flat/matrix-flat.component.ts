@@ -6,6 +6,7 @@ import { Technique } from 'src/app/classes/stix/technique';
   selector: 'app-matrix-flat',
   templateUrl: './matrix-flat.component.html',
   styleUrls: ['./matrix-flat.component.scss'],
+  standalone: false,
 })
 export class MatrixFlatComponent {
   @Input() public tactics: Tactic[];

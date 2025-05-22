@@ -23,6 +23,7 @@ module.exports = tseslint.config(
     processor: angular.processInlineTemplates,
     rules: {
       'no-unused-vars': 'off',
+      '@angular-eslint/prefer-standalone': 'off',
       'unused-imports/no-unused-imports': 'error',
       'unused-imports/no-unused-vars': [
         'warn',
@@ -32,6 +33,13 @@ module.exports = tseslint.config(
           args: 'after-used',
           argsIgnorePattern: '^_',
         },
+      ],
+      'quote-props': ['error', 'consistent'],
+      'prettier/prettier': [
+        'error',
+        {
+          quoteProps: 'consistent'
+        }
       ],
     },
   },

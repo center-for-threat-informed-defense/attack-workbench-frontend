@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { TimestampPropertyConfig } from '../timestamp-property.component';
-import * as moment from 'moment';
+import moment from 'moment';
 import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/rest-api-connector.service';
 import { Subscription } from 'rxjs';
 import { UserAccount } from 'src/app/classes/authn/user-account';
@@ -9,6 +9,7 @@ import { UserAccount } from 'src/app/classes/authn/user-account';
   selector: 'app-timestamp-view',
   templateUrl: './timestamp-view.component.html',
   styleUrls: ['./timestamp-view.component.scss'],
+  standalone: false,
 })
 export class TimestampViewComponent implements OnInit {
   @Input() public config: TimestampPropertyConfig;

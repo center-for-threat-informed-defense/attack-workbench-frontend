@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { CollectionIndex } from 'src/app/classes/collection-index';
-import * as moment from 'moment';
+import moment from 'moment';
 import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/rest-api-connector.service';
 import { Observable } from 'rxjs';
 
@@ -9,6 +9,7 @@ import { Observable } from 'rxjs';
   templateUrl: './collection-index-list.component.html',
   styleUrls: ['./collection-index-list.component.scss'],
   encapsulation: ViewEncapsulation.None,
+  standalone: false,
 })
 export class CollectionIndexListComponent implements OnInit {
   constructor(private restAPIConnector: RestApiConnectorService) {}

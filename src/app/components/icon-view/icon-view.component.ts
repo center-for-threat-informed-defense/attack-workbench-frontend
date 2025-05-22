@@ -5,6 +5,7 @@ import { StixObject } from 'src/app/classes/stix/stix-object';
   selector: 'app-icon-view',
   templateUrl: './icon-view.component.html',
   styleUrls: ['./icon-view.component.scss'],
+  standalone: false,
 })
 export class IconViewComponent implements OnInit {
   @Input() public config: IconViewConfig;

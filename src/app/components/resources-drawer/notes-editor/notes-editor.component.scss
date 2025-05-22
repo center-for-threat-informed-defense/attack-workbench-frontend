@@ -1,4 +1,5 @@
-@import '../../../../style/globals';
+@use '../../../../style/globals';
+@use '../../../../style/colors';
 
 .notes-editor {
   .notes-toolbar {
@@ -8,12 +9,12 @@
       @extend %toolbar;
       border-radius: 4px;
       .light & {
-        background: color(primary);
-        color: on-color(primary);
+        background: colors.color(primary);
+        color: colors.on-color(primary);
       }
       .dark & {
-        background: color(primary);
-        color: on-color(primary);
+        background: colors.color(primary);
+        color: colors.on-color(primary);
       }
     }
 
@@ -43,12 +44,12 @@
         padding-left: 0 !important;
       }
       .mat-mdc-input-element {
-        color: color(light) !important;
+        color: colors.color(light) !important;
       }
       .mdc-text-field--filled:not(.mdc-text-field--disabled) {
         .mdc-line-ripple::before,
         .mdc-line-ripple::after {
-          border-bottom-color: color(light);
+          border-bottom-color: colors.color(light);
         }
       }
       .mat-mdc-form-field-infix {
@@ -78,20 +79,20 @@
     // replace dark theme box-shadow with a border
     .dark & {
       &.edit-outline {
-        border-color: border-color(primary);
+        border-color: colors.border-color(primary);
       }
       box-shadow: none;
       border: solid 1px;
-      border-color: border-color(dark);
+      border-color: colors.border-color(dark);
     }
 
     .light & {
       // update box shadow to primary color
       &.edit-outline {
         box-shadow:
-          0px 2px 1px -1px color(primary),
-          0px 1px 1px 0px color(primary),
-          0px 1px 3px 0px color(primary);
+          0px 2px 1px -1px colors.color(primary),
+          0px 1px 1px 0px colors.color(primary),
+          0px 1px 3px 0px colors.color(primary);
       }
     }
 

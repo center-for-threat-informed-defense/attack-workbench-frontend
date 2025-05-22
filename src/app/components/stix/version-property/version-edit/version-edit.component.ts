@@ -6,6 +6,7 @@ import { VersionPropertyConfig } from '../version-property.component';
   templateUrl: './version-edit.component.html',
   styleUrls: ['./version-edit.component.scss'],
   encapsulation: ViewEncapsulation.None,
+  standalone: false,
 })
 export class VersionEditComponent implements OnInit {
   @Input() public config: VersionPropertyConfig;

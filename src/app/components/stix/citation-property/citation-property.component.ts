@@ -5,6 +5,7 @@ import { StixObject } from 'src/app/classes/stix/stix-object';
   selector: 'app-citation-property',
   templateUrl: './citation-property.component.html',
   styleUrls: ['./citation-property.component.scss'],
+  standalone: false,
 })
 export class CitationPropertyComponent {
   @Input() public config: CitationPropertyConfig;

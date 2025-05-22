@@ -6,6 +6,7 @@ import { ExternalReference } from '@angular/compiler';
   selector: 'app-external-references-diff',
   templateUrl: './external-references-diff.component.html',
   styleUrl: './external-references-diff.component.scss',
+  standalone: false,
 })
 export class ExternalReferencesDiffComponent implements OnInit {
   @Input() public config: ExternalReferencesPropertyConfig;

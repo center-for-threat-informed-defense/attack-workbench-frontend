@@ -17,101 +17,35 @@ import {
 } from 'rxjs/operators';
 import { CollectionIndex } from 'src/app/classes/collection-index';
 import { ExternalReference } from 'src/app/classes/external-references';
-import { Collection } from 'src/app/classes/stix/collection';
-import { Group } from 'src/app/classes/stix/group';
-import { Identity } from 'src/app/classes/stix/identity';
-import { MarkingDefinition } from 'src/app/classes/stix/marking-definition';
-import { Matrix } from 'src/app/classes/stix/matrix';
-import { Mitigation } from 'src/app/classes/stix/mitigation';
-import { Note } from 'src/app/classes/stix/note';
-import { Relationship } from 'src/app/classes/stix/relationship';
-import { Software } from 'src/app/classes/stix/software';
-import { StixObject } from 'src/app/classes/stix/stix-object';
-import { Tactic } from 'src/app/classes/stix/tactic';
-import { Technique } from 'src/app/classes/stix/technique';
 import { environment } from '../../../../environments/environment';
 import { ApiConnector } from '../api-connector';
 import { logger } from '../../../utils/logger';
-import { DataSource } from 'src/app/classes/stix/data-source';
-import { DataComponent } from 'src/app/classes/stix/data-component';
 import { UserAccount } from 'src/app/classes/authn/user-account';
-import { Campaign } from 'src/app/classes/stix/campaign';
 import { Team } from 'src/app/classes/authn/team';
-import { Asset } from 'src/app/classes/stix/asset';
-
-//attack types
-type AttackType =
-  | 'asset'
-  | 'campaign'
-  | 'collection'
-  | 'group'
-  | 'matrix'
-  | 'mitigation'
-  | 'software'
-  | 'tactic'
-  | 'technique'
-  | 'relationship'
-  | 'note'
-  | 'identity'
-  | 'marking-definition'
-  | 'data-source'
-  | 'data-component';
-// pluralize AttackType
-const attackTypeToPlural = {
-  technique: 'techniques',
-  tactic: 'tactics',
-  group: 'groups',
-  campaign: 'campaigns',
-  asset: 'assets',
-  software: 'software',
-  mitigation: 'mitigations',
-  matrix: 'matrices',
-  collection: 'collections',
-  relationship: 'relationships',
-  note: 'notes',
-  identity: 'identities',
-  'marking-definition': 'marking-definitions',
-  'data-source': 'data-sources',
-  'data-component': 'data-components',
-};
-// transform AttackType to the relevant class
-const attackTypeToClass = {
-  technique: Technique,
-  tactic: Tactic,
-  group: Group,
-  campaign: Campaign,
-  asset: Asset,
-  software: Software,
-  mitigation: Mitigation,
-  matrix: Matrix,
-  collection: Collection,
-  relationship: Relationship,
-  note: Note,
-  identity: Identity,
-  'marking-definition': MarkingDefinition,
-  'data-source': DataSource,
-  'data-component': DataComponent,
-};
-
-// transform AttackType to the relevant class
-const stixTypeToClass = {
-  'attack-pattern': Technique,
-  'x-mitre-tactic': Tactic,
-  'intrusion-set': Group,
-  campaign: Campaign,
-  'x-mitre-asset': Asset,
-  tool: Software,
-  malware: Software,
-  'course-of-action': Mitigation,
-  'x-mitre-matrix': Matrix,
-  'x-mitre-collection': Collection,
-  relationship: Relationship,
-  identity: Identity,
-  'marking-definition': MarkingDefinition,
-  'x-mitre-data-source': DataSource,
-  'x-mitre-data-component': DataComponent,
-  note: Note,
-};
+import {
+  StixObject,
+  Software,
+  Technique,
+  Tactic,
+  Group,
+  Campaign,
+  Asset,
+  Mitigation,
+  DataSource,
+  DataComponent,
+  Matrix,
+  Note,
+  Identity,
+  Relationship,
+  MarkingDefinition,
+} from 'src/app/classes/stix';
+import { Collection } from 'src/app/classes/stix/collection';
+import {
+  AttackTypeToClass,
+  StixTypeToClass,
+} from 'src/app/utils/class-mappings';
+import { AttackTypeToPlural } from 'src/app/utils/type-mappings';
+import { AttackType } from 'src/app/utils/types';
 
 export interface Paginated<T> {
   data: T[];
@@ -179,8 +113,8 @@ export class RestApiConnectorService extends ApiConnector {
    * @returns getter function
    */
   private getStixObjectsFactory<T extends StixObject>(attackType: AttackType) {
-    const attackClass = attackTypeToClass[attackType];
-    const plural = attackTypeToPlural[attackType];
+    const attackClass = AttackTypeToClass[attackType];
+    const plural = AttackTypeToPlural[attackType];
     return function <P extends T>(options?: {
       limit?: number;
       offset?: number;
@@ -578,7 +512,7 @@ export class RestApiConnectorService extends ApiConnector {
               .map(y => {
                 if (y.stix.type == 'malware' || y.stix.type == 'tool')
                   return new Software(y.stix.type, y);
-                else return new stixTypeToClass[y.stix.type](y);
+                else return new StixTypeToClass[y.stix.type](y);
               });
             response.data = data;
             return response;
@@ -597,7 +531,7 @@ export class RestApiConnectorService extends ApiConnector {
                 .map(y => {
                   if (y.stix.type == 'malware' || y.stix.type == 'tool')
                     return new Software(y.stix.type, y);
-                  else return new stixTypeToClass[y.stix.type](y);
+                  else return new StixTypeToClass[y.stix.type](y);
                 }),
             };
           }
@@ -657,7 +591,7 @@ export class RestApiConnectorService extends ApiConnector {
               .map(y => {
                 if (y.stix.type == 'malware' || y.stix.type == 'tool')
                   return new Software(y.stix.type, y);
-                else return new stixTypeToClass[y.stix.type](y);
+                else return new StixTypeToClass[y.stix.type](y);
               });
             response.data = data;
             return response;
@@ -676,7 +610,7 @@ export class RestApiConnectorService extends ApiConnector {
                 .map(y => {
                   if (y.stix.type == 'malware' || y.stix.type == 'tool')
                     return new Software(y.stix.type, y);
-                  else return new stixTypeToClass[y.stix.type](y);
+                  else return new StixTypeToClass[y.stix.type](y);
                 }),
             };
           }
@@ -693,8 +627,8 @@ export class RestApiConnectorService extends ApiConnector {
    * @returns getter function
    */
   private getStixObjectFactory<T extends StixObject>(attackType: AttackType) {
-    const attackClass = attackTypeToClass[attackType];
-    const plural = attackTypeToPlural[attackType];
+    const attackClass = AttackTypeToClass[attackType];
+    const plural = AttackTypeToPlural[attackType];
     return function <P extends T>(
       id: string,
       modified?: Date | string,
@@ -961,8 +895,8 @@ export class RestApiConnectorService extends ApiConnector {
    * @returns creator (POST) function
    */
   private postStixObjectFactory<T extends StixObject>(attackType: AttackType) {
-    const attackClass = attackTypeToClass[attackType];
-    const plural = attackTypeToPlural[attackType];
+    const attackClass = AttackTypeToClass[attackType];
+    const plural = AttackTypeToPlural[attackType];
     return function <P extends T>(object: P): Observable<P> {
       const url = `${this.apiUrl}/${plural}`;
       return this.http
@@ -1109,8 +1043,8 @@ export class RestApiConnectorService extends ApiConnector {
    * @returns put function
    */
   private putStixObjectFactory<T extends StixObject>(attackType: AttackType) {
-    const attackClass = attackTypeToClass[attackType];
-    const plural = attackTypeToPlural[attackType];
+    const attackClass = AttackTypeToClass[attackType];
+    const plural = AttackTypeToPlural[attackType];
     return function <P extends T>(object: T, modified?: Date): Observable<P> {
       if (!modified) modified = object.modified; //infer modified from STIX object modified date
       const url = `${this.apiUrl}/${plural}/${object.stixID}/modified/${modified.toISOString()}`;
@@ -1248,7 +1182,7 @@ export class RestApiConnectorService extends ApiConnector {
   }
 
   private deleteStixObjectFactory(attackType: AttackType) {
-    const plural = attackTypeToPlural[attackType];
+    const plural = AttackTypeToPlural[attackType];
     return function (id: string): Observable<{}> {
       const url = `${this.apiUrl}/${plural}/${id}`;
       return this.http.delete(url).pipe(

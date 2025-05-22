@@ -11,7 +11,7 @@ import {
   MAT_DATE_LOCALE,
 } from '@angular/material/core';
 import { Moment } from 'moment';
-import * as moment from 'moment';
+import moment from 'moment';
 
 // Date formatting from Angular documentation: emulating a year and month picker
 // https://v10.material.angular.io/components/datepicker/overview
@@ -45,6 +45,7 @@ export const DATE_FORMATS = {
       useValue: DATE_FORMATS,
     },
   ],
+  standalone: false,
 })
 export class DatepickerPropertyComponent {
   @Input() public config: DatepickerPropertyConfig;

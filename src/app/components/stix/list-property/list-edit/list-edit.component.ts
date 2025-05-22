@@ -28,6 +28,7 @@ import { Technique } from 'src/app/classes/stix/technique';
   templateUrl: './list-edit.component.html',
   styleUrls: ['./list-edit.component.scss'],
   encapsulation: ViewEncapsulation.None,
+  standalone: false,
 })
 export class ListEditComponent implements OnInit, AfterContentChecked {
   @Input() public config: ListPropertyConfig;

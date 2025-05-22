@@ -11,6 +11,7 @@ import { Observable } from 'rxjs';
   templateUrl: './tlp-property.component.html',
   styleUrls: ['./tlp-property.component.scss'],
   encapsulation: ViewEncapsulation.None,
+  standalone: false,
 })
 export class TlpPropertyComponent implements OnInit {
   @Input() public config: TlpPropertyConfig;

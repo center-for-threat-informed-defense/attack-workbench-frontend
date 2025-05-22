@@ -1,12 +1,15 @@
-@import '../../../style/globals';
+@use '../../../style/globals';
+@use '../../../style/colors';
+@use '../../../style/typography';
+
 .empty-list-marker {
   // width: 100%;
   @extend .text-label;
   .dark & {
-    color: on-color-deemphasis(dark);
+    color: colors.on-color-deemphasis(dark);
   }
   .light & {
-    color: on-color-deemphasis(light);
+    color: colors.on-color-deemphasis(light);
   }
   text-align: center;
   padding: 50px;
