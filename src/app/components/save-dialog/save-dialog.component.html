@@ -1,5 +1,5 @@
 <div class="save-dialog grid spacing-20">
-  <div *ngIf="stage == 0" class="row">
+  <div *ngIf="stage === 0" class="row">
     <div class="column validation">
       <h3>Validation</h3>
       <div *ngIf="validation; else validating">
@@ -16,10 +16,11 @@
         <mat-form-field class="workflow-status" appearance="outline">
           <mat-label>mark as...</mat-label>
           <mat-select [(ngModel)]="newState" [disabled]="!saveEnabled">
-            <mat-option></mat-option>
-            <mat-option *ngFor="let status of workflows" [value]="status">{{
-              getLabel(status)
-            }}</mat-option>
+            <mat-option
+              *ngFor="let workflow of workflows"
+              [value]="workflow[0]"
+              >{{ workflow[1] }}</mat-option
+            >
           </mat-select>
         </mat-form-field>
         <button
@@ -50,13 +51,13 @@
       </mat-action-list>
     </div>
   </div>
-  <div *ngIf="stage == 1" class="stage parsing">
+  <div *ngIf="stage === 1" class="stage parsing">
     <h1>Determining required knowledge base patches...</h1>
     <app-loading-overlay></app-loading-overlay>
   </div>
-  <div *ngIf="stage == 2" class="stage reviewing">
+  <div *ngIf="stage === 2" class="stage reviewing">
     <h1>Required Patches</h1>
-    <ng-container *ngIf="patch_objects.length == 0; else linkPatches">
+    <ng-container *ngIf="patch_objects.length === 0; else linkPatches">
       <mat-list>
         <mat-list-item>
           <mat-icon matListIcon class="text-success">check</mat-icon>
@@ -90,13 +91,13 @@
       </button>
       <button
         mat-stroked-button
-        *ngIf="patch_objects.length == 0"
+        *ngIf="patch_objects.length === 0"
         (click)="save()">
         save
       </button>
     </div>
   </div>
-  <div *ngIf="stage == 3" class="stage patching">
+  <div *ngIf="stage === 3" class="stage patching">
     <h1>Patching links...</h1>
     <app-loading-overlay></app-loading-overlay>
   </div>

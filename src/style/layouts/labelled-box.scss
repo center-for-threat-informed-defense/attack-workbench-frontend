@@ -1,3 +1,6 @@
+@use '../colors';
+@use '../typography';
+
 // adapted from https://codepen.io/finnhvman/pen/xyOORQ
 
 .labelled-box {
@@ -6,11 +9,11 @@
   flex-direction: column;
   &.editing.disabled {
     .dark & {
-      border-color: on-color-deemphasis(light) !important;
+      border-color: colors.on-color-deemphasis(light) !important;
       border-top-color: transparent;
     }
     .light & {
-      border-color: on-color-deemphasis(dark) !important;
+      border-color: colors.on-color-deemphasis(dark) !important;
       border-top-color: transparent;
     }
   }
@@ -55,6 +58,14 @@
           }
         }
       }
+      &.no-label {
+        .dark & {
+          border-top-color: white;
+        }
+        .light & {
+          border-top-color: black;
+        }
+      }
     }
   }
   > .content {
@@ -66,11 +77,11 @@
     margin: 0;
     border: solid 1px;
     .dark & {
-      border-color: border-color(dark);
+      border-color: colors.border-color(dark);
       border-top-color: transparent;
     }
     .light & {
-      border-color: border-color(light);
+      border-color: colors.border-color(light);
       border-top-color: transparent;
     }
     border-radius: 4px;
@@ -79,10 +90,10 @@
     font-size: 16px;
     &.no-label {
       .light & {
-        border-top-color: border-color(light);
+        border-top-color: colors.border-color(light);
       }
       .dark & {
-        border-top-color: border-color(dark);
+        border-top-color: colors.border-color(dark);
       }
     }
     &.no-padding {
@@ -96,12 +107,12 @@
       left: 0;
       display: flex;
       .dark & {
-        border-color: border-color(dark);
-        color: on-color-deemphasis(dark);
+        border-color: colors.border-color(dark);
+        color: colors.on-color-deemphasis(dark);
       }
       .light & {
-        border-color: border-color(light);
-        color: on-color-deemphasis(light);
+        border-color: colors.border-color(light);
+        color: colors.on-color-deemphasis(light);
       }
       width: 100%;
       max-height: 100%;
@@ -115,10 +126,10 @@
         margin-top: 6px;
         border-top: solid 1px;
         .dark & {
-          border-top-color: border-color(dark);
+          border-top-color: colors.border-color(dark);
         }
         .light & {
-          border-top-color: border-color(light);
+          border-top-color: colors.border-color(light);
         }
         min-width: 10px;
         height: 8px;
@@ -141,10 +152,10 @@
       // left border
       border-left: 1px solid;
       .dark & {
-        border-color: border-color(dark);
+        border-color: colors.border-color(dark);
       }
       .light & {
-        border-color: border-color(light);
+        border-color: colors.border-color(light);
       }
       // override parent padding with own padding
       margin: -16px -12px -16px 12px; // left margin should exist

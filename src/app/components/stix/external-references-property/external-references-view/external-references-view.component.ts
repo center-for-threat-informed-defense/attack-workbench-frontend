@@ -18,6 +18,7 @@ import { ExternalReferencesPropertyConfig } from '../external-references-propert
   templateUrl: './external-references-view.component.html',
   styleUrls: ['./external-references-view.component.scss'],
   encapsulation: ViewEncapsulation.None,
+  standalone: false,
 })
 export class ExternalReferencesViewComponent implements OnInit, OnDestroy {
   @Input() public config: ExternalReferencesPropertyConfig;

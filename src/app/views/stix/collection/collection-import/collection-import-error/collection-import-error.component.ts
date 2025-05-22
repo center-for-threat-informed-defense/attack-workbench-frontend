@@ -11,6 +11,7 @@ import {
   templateUrl: './collection-import-error.component.html',
   styleUrls: ['./collection-import-error.component.scss'],
   encapsulation: ViewEncapsulation.None,
+  standalone: false,
 })
 export class CollectionImportErrorComponent {
   @Input() error: any;

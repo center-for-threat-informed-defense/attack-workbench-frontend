@@ -1,4 +1,7 @@
-@import '../../../../../../style/globals';
+@use '../../../../../../style/globals';
+@use '../../../../../../style/colors';
+@use '../../../../../../style/layouts/expansion-panel';
+
 .collection-import {
   .mat-vertical-content {
     padding-top: 6px;
@@ -7,13 +10,13 @@
     margin-top: 0;
   }
   .warn {
-    color: color(warn);
+    color: colors.color(warn);
   }
   .error {
-    color: color(error);
+    color: colors.color(error);
   }
   .mat-expansion-panel {
-    @include expansion-panel(True);
+    @include expansion-panel.expansion-panel(True);
   }
   .import-options {
     display: flex;
@@ -23,7 +26,7 @@
     .spacer {
       @extend .text-label;
       @extend .text-deemphasis;
-      padding-bottom: 1.34375em;
+      padding-bottom: 16px;
       margin: 0 10px;
       flex-shrink: 1;
     }
@@ -35,5 +38,35 @@
     overflow-x: scroll;
     overflow-y: auto;
     max-height: 30em;
+  }
+  .custom-file-input {
+    .content.icon-suffix {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      cursor: pointer;
+    }
+    .content {
+      border-width: 1px !important;
+      .light & {
+        border-color: rgba(0, 0, 0, 0.38) !important;
+      }
+      .dark & {
+        border-color: rgba(255, 255, 255, 0.38) !important;
+      }
+      &:hover {
+        .light & {
+          border-color: rgba(0, 0, 0, 0.87) !important;
+        }
+        .dark & {
+          border-color: rgba(255, 255, 255, 0.87) !important;
+        }
+      }
+    }
+  }
+  .url-input,
+  .custom-file-input {
+    flex: 1;
+    min-width: 0;
   }
 }

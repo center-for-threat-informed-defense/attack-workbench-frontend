@@ -41,6 +41,7 @@ export class CustomErrorStateMatcher implements ErrorStateMatcher {
   templateUrl: './reference-edit-dialog.component.html',
   styleUrls: ['./reference-edit-dialog.component.scss'],
   encapsulation: ViewEncapsulation.None,
+  standalone: false,
 })
 export class ReferenceEditDialogComponent implements OnInit, OnDestroy {
   public reference: ExternalReference;

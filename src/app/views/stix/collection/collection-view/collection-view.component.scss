@@ -1,4 +1,7 @@
-@import '../../../../../style/globals';
+@use '../../../../../style/globals';
+@use '../../../../../style/colors';
+@use '../../../../../style/layouts/expansion-panel';
+
 .collection-view {
   .row.width-limited {
     max-width: 45em;
@@ -25,20 +28,20 @@
     margin-left: 24px !important;
     padding-left: 24px;
     .dark & {
-      border-left: 1px solid border-color(dark);
+      border-left: 1px solid colors.border-color(dark);
     }
     .light & {
-      border-left: 1px solid border-color(light);
+      border-left: 1px solid colors.border-color(light);
     }
   }
   .mat-expansion-panel {
-    @include expansion-panel(true);
+    @include expansion-panel.expansion-panel(true);
     .mat-expansion-panel-header-title {
       text-transform: capitalize;
     }
 
     &.warn:not(.disabled) .mat-expansion-panel-header-title {
-      color: color(warn);
+      color: colors.color(warn);
     }
   }
   .changes .col {
@@ -78,17 +81,17 @@
       cursor: pointer;
       &:hover {
         .dark & {
-          background: color-alternate(dark);
+          background: colors.color-alternate(dark);
         }
         .light & {
-          background: color-alternate(light);
+          background: colors.color-alternate(light);
         }
       }
     }
     .copy-url {
       cursor: pointer;
       &:hover {
-        color: color(link);
+        color: colors.color(link);
       }
     }
     .url {

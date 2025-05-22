@@ -1,13 +1,16 @@
-@import '../../../style/globals';
+@use '../../../style/globals';
+@use '../../../style/colors';
+@use '../../../style/layouts/expansion-panel';
+
 .collection-import-summary {
   .mat-expansion-panel {
-    @include expansion-panel(true);
+    @include expansion-panel.expansion-panel(true);
     .mat-expansion-panel-header-title {
       text-transform: capitalize;
     }
 
     &.warn:not(.disabled) .mat-expansion-panel-header-title {
-      color: color(warn);
+      color: colors.color(warn);
     }
   }
   p:first-child {

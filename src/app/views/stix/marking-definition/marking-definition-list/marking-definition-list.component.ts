@@ -5,6 +5,7 @@ import { AuthenticationService } from 'src/app/services/connectors/authenticatio
 @Component({
   selector: 'app-marking-definition-list',
   templateUrl: './marking-definition-list.component.html',
+  standalone: false,
 })
 export class MarkingDefinitionListComponent implements OnInit {
   public get isAdmin(): boolean {

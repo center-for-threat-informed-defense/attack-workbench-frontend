@@ -5,6 +5,7 @@ import { StixObject } from 'src/app/classes/stix/stix-object';
   selector: 'app-version-popover',
   templateUrl: './version-popover.component.html',
   styleUrls: ['./version-popover.component.scss'],
+  standalone: false,
 })
 export class VersionPopoverComponent implements OnInit {
   @Input() public config: VersionPopoverConfig;

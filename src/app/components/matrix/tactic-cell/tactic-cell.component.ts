@@ -5,6 +5,7 @@ import { Tactic } from 'src/app/classes/stix/tactic';
   selector: 'app-tactic-cell',
   templateUrl: './tactic-cell.component.html',
   styleUrls: ['./tactic-cell.component.scss'],
+  standalone: false,
 })
 export class TacticCellComponent implements OnInit {
   @Input() tactic: Tactic;

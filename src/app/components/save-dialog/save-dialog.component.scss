@@ -1,4 +1,6 @@
-@import '../../../style/globals';
+@use '../../../style/globals';
+@use '../../../style/colors';
+
 .save-dialog {
   padding: 24px;
   .version-buttons {
@@ -15,23 +17,23 @@
     }
     .mat-mdc-list-item:hover:not(.mdc-list-item--disabled) {
       .save-list-item {
-        color: color(primary);
+        color: colors.color(primary);
       }
     }
     .mat-mdc-list-item + .mat-mdc-list-item {
       .dark & {
-        border-top: 1px solid border-color(dark);
+        border-top: 1px solid colors.border-color(dark);
       }
       .light & {
-        border-top: 1px solid border-color(light);
+        border-top: 1px solid colors.border-color(light);
       }
     }
     .mat-mdc-list-item.mdc-list-item--disabled {
       .light & {
-        color: on-color-deemphasis(light);
+        color: colors.on-color-deemphasis(light);
       }
       .dark & {
-        color: on-color-deemphasis(dark);
+        color: colors.on-color-deemphasis(dark);
       }
     }
     .mat-mdc-form-field {
@@ -49,10 +51,10 @@
   .column + .column {
     padding-left: 16px;
     .dark & {
-      border-left: 1px solid border-color(dark);
+      border-left: 1px solid colors.border-color(dark);
     }
     .light & {
-      border-left: 1px solid border-color(light);
+      border-left: 1px solid colors.border-color(light);
     }
   }
   .buttons {

@@ -1,4 +1,5 @@
-@import '../../../../../style/globals';
+@use '../../../../../style/globals';
+@use '../../../../../style/colors';
 
 .subtype-view {
   @extend .labelled-box;
@@ -7,10 +8,10 @@
     width: 100%;
     padding: 8px;
     .light & {
-      background-color: color(light);
+      background-color: colors.color(light);
     }
     .dark & {
-      background-color: color(dark);
+      background-color: colors.color(dark);
     }
     tr.mat-mdc-header-row {
       height: 25px;
@@ -19,10 +20,10 @@
     .mat-mdc-header-cell {
       padding: 0 10px;
       .light & {
-        border-color: border-color(light);
+        border-color: colors.border-color(light);
       }
       .dark & {
-        border-color: border-color(dark);
+        border-color: colors.border-color(dark);
       }
     }
   }

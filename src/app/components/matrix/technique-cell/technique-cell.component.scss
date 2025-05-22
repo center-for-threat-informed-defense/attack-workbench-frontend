@@ -1,19 +1,19 @@
 @use 'sass:math' as math;
-@import '../../../../style/layouts/matrix.scss';
-@import '../../../../style/colors.scss';
+@use '../../../../style/layouts/matrix.scss';
+@use '../../../../style/colors.scss';
 
 .technique-cell {
   cursor: pointer;
   display: flex;
   align-items: center;
   position: relative;
-  font-size: $sizeunit - 1px;
-  line-height: $sizeunit;
-  min-width: $sizeunit;
-  min-height: $sizeunit;
+  font-size: matrix.$sizeunit - 1px;
+  line-height: matrix.$sizeunit;
+  min-width: matrix.$sizeunit;
+  min-height: matrix.$sizeunit;
   border-collapse: collapse;
   > div {
-    padding: math.div($sizeunit, 2) 3px;
+    padding: math.div(matrix.$sizeunit, 2) 3px;
     box-sizing: border-box;
     display: block;
     width: 100%;
@@ -29,8 +29,8 @@
     line-height: 18px;
   }
   :hover span {
-    color: color(balanced-blue);
-    border-bottom: 1px solid color(balanced-blue);
+    color: colors.color(balanced-blue);
+    border-bottom: 1px solid colors.color(balanced-blue);
     cursor: pointer;
   }
 }
@@ -47,7 +47,7 @@ sub {
 .technique-cell-tooltip {
   position: relative !important;
   font-size: small !important;
-  background-color: color-alternate(dark, 4) !important;
+  background-color: colors.color-alternate(dark, 4) !important;
   bottom: -0.5rem !important;
   overflow: initial !important;
   margin-bottom: 1rem !important;
@@ -58,7 +58,7 @@ sub {
     position: absolute !important;
     border-left: 0.5rem solid transparent !important;
     border-right: 0.5rem solid transparent !important;
-    border-bottom: 0.5rem solid color-alternate(dark, 4) !important;
+    border-bottom: 0.5rem solid colors.color-alternate(dark, 4) !important;
     bottom: -0.5rem !important;
     right: calc(50% - 0.5rem) !important;
     transform: rotate(180deg) !important;

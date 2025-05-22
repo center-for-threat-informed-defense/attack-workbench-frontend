@@ -1,4 +1,6 @@
-@import '../../../style/globals';
+@use '../../../style/globals';
+@use '../../../style/colors';
+
 .resources-drawer {
   display: flex;
   flex-direction: column;
@@ -6,10 +8,10 @@
   height: 100%;
   border-left: 1px solid;
   .dark & {
-    border-color: border-color(dark);
+    border-color: colors.border-color(dark);
   }
   .light & {
-    border-color: border-color(light);
+    border-color: colors.border-color(light);
   }
 
   .mat-toolbar {
@@ -17,10 +19,10 @@
   }
   .content {
     .light & {
-      background-color: color(light);
+      background-color: colors.color(light);
     }
     .dark & {
-      background-color: color(dark);
+      background-color: colors.color(dark);
     }
     flex-grow: 1;
     overflow: auto;

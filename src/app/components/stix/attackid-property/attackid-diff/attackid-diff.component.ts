@@ -4,6 +4,7 @@ import { AttackIDPropertyConfig } from '../attackid-property.component';
 @Component({
   selector: 'app-attackid-diff',
   templateUrl: './attackid-diff.component.html',
+  standalone: false,
 })
 export class AttackidDiffComponent {
   @Input() public config: AttackIDPropertyConfig;

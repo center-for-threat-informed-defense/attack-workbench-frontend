@@ -4,7 +4,7 @@
       <ng-template matStepLabel>specify collection</ng-template>
       <ng-container *ngIf="!loadingStep1; else loadingStep1_marker">
         <div class="import-options">
-          <mat-form-field #fileInput appearance="outline">
+          <mat-form-field class="url-input" appearance="outline">
             <mat-label>specify a URL</mat-label>
             <input
               matInput
@@ -13,15 +13,26 @@
             <mat-icon matSuffix>cloud_download</mat-icon>
           </mat-form-field>
           <div class="spacer">or</div>
-          <mat-form-field appearance="outline">
-            <mat-label>upload a file</mat-label>
-            <ngx-mat-file-input
-              [disabled]="url.length > 0"
-              accept=".json, .csv, .xlsx"
-              (change)="getCollectionFromFile($event)"></ngx-mat-file-input>
-            <mat-icon matSuffix>attach_file</mat-icon>
-            <mat-hint>supported formats: .json, .csv, .xlsx</mat-hint>
-          </mat-form-field>
+          <div
+            class="custom-file-input labelled-box"
+            tabindex="0"
+            (keydown.enter)="fileInput.click()"
+            (click)="fileInput.click()">
+            <div class="content no-label icon-suffix">
+              <input
+                #fileInput
+                type="file"
+                [disabled]="url.length > 0"
+                (change)="getCollectionFromFile($event)"
+                accept=".json,.csv,.xlsx"
+                hidden />
+              <span class="placeholder-text">upload a file</span>
+              <mat-icon>attach_file</mat-icon>
+            </div>
+            <small class="hint-text"
+              >supported formats: .json, .csv, .xlsx</small
+            >
+          </div>
         </div>
         <div class="action-bar">
           <button

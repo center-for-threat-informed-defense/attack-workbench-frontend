@@ -24,6 +24,7 @@ import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/re
   templateUrl: './collection-index-view.component.html',
   styleUrls: ['./collection-index-view.component.scss'],
   encapsulation: ViewEncapsulation.None,
+  standalone: false,
 })
 export class CollectionIndexViewComponent implements OnInit {
   @Input() config: CollectionIndexViewConfig;

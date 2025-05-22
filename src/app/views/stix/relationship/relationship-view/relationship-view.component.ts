@@ -7,24 +7,23 @@ import {
 } from '@angular/core';
 import { Router } from '@angular/router';
 import { Relationship } from 'src/app/classes/stix/relationship';
-import {
-  StixObject,
-  stixTypeToAttackType,
-} from 'src/app/classes/stix/stix-object';
+import { StixObject } from 'src/app/classes/stix/stix-object';
 import { AuthenticationService } from 'src/app/services/connectors/authentication/authentication.service';
 import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/rest-api-connector.service';
 import { StixViewPage } from '../../stix-view-page';
 import { VersionNumber } from 'src/app/classes/version-number';
 import { EditorService } from 'src/app/services/editor/editor.service';
 import { forkJoin } from 'rxjs';
-import * as moment from 'moment';
+import moment from 'moment';
 import { DataComponent } from 'src/app/classes/stix';
+import { StixTypeToAttackType } from 'src/app/utils/type-mappings';
 
 @Component({
   selector: 'app-relationship-view',
   templateUrl: './relationship-view.component.html',
   styleUrls: ['./relationship-view.component.scss'],
   encapsulation: ViewEncapsulation.None,
+  standalone: false,
 })
 export class RelationshipViewComponent extends StixViewPage implements OnInit {
   @Output() public onVersionChange = new EventEmitter();
@@ -77,7 +76,7 @@ export class RelationshipViewComponent extends StixViewPage implements OnInit {
     // initialize source types if there is a source object, or if there is only one possible value
     if (this.relationship.source_object)
       this.source_type =
-        stixTypeToAttackType[this.relationship.source_object.stix.type];
+        StixTypeToAttackType[this.relationship.source_object.stix.type];
     else if (this.config.sourceType) this.source_type = this.config.sourceType;
     else if (this.relationship.valid_source_types.length == 1)
       this.source_type = this.relationship.valid_source_types[0];
@@ -85,7 +84,7 @@ export class RelationshipViewComponent extends StixViewPage implements OnInit {
     // initialize target types if there is a target object, or if there is only one possible value
     if (this.relationship.target_object)
       this.target_type =
-        stixTypeToAttackType[this.relationship.target_object.stix.type];
+        StixTypeToAttackType[this.relationship.target_object.stix.type];
     else if (this.config.targetType) this.target_type = this.config.targetType;
     else if (this.relationship.valid_target_types.length == 1)
       this.target_type = this.relationship.valid_target_types[0];
@@ -239,13 +238,13 @@ export class RelationshipViewComponent extends StixViewPage implements OnInit {
     }
 
     let targetRoute: string;
-    if (stixTypeToAttackType[obj.stix.type] === 'data-component') {
+    if (StixTypeToAttackType[obj.stix.type] === 'data-component') {
       targetRoute = `/data-source/${obj.stix.x_mitre_data_source_ref}`;
       const dataComponent = new DataComponent(obj);
       dataComponent.deserialize(obj);
       this.changeDialogToDataComponent.emit(dataComponent);
     } else {
-      const formattedType = stixTypeToAttackType[obj.stix.type]
+      const formattedType = StixTypeToAttackType[obj.stix.type]
         .toLowerCase()
         .replace(/\s+/g, '-');
       targetRoute = `/${formattedType}/${obj.stix.id}`;

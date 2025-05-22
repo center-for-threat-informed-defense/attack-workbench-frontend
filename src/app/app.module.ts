@@ -3,13 +3,14 @@ import { LoggerModule } from 'ngx-logger';
 
 // angular imports
 import { BrowserModule } from '@angular/platform-browser';
-import { APP_INITIALIZER, NgModule } from '@angular/core';
+import { NgModule, inject, provideAppInitializer } from '@angular/core';
 import { AppRoutingModule } from './app-routing.module';
 import { AppRoutingStixModule } from './app-routing-stix.module';
 import {
   HttpClient,
-  HttpClientModule,
   HTTP_INTERCEPTORS,
+  provideHttpClient,
+  withInterceptorsFromDi,
 } from '@angular/common/http';
 import { AuthInterceptor } from './services/helpers/auth.interceptor';
 import { DragDropModule } from '@angular/cdk/drag-drop';
@@ -51,7 +52,6 @@ import { MatNativeDateModule } from '@angular/material/core';
 import { MatBadgeModule } from '@angular/material/badge';
 
 // other library imports
-import { MaterialFileInputModule } from 'ngx-custom-material-file-input';
 import { MarkdownModule } from 'ngx-markdown';
 import { MtxPopoverModule } from '@ng-matero/extensions/popover';
 import { NgxJdenticonModule, JDENTICON_CONFIG } from 'ngx-jdenticon';
@@ -241,7 +241,6 @@ export function initConfig(appConfigService: AppConfigService) {
 @NgModule({
   declarations: [
     AppComponent,
-
     HeaderComponent,
     FooterComponent,
     LoadingOverlayComponent,
@@ -262,9 +261,7 @@ export function initConfig(appConfigService: AppConfigService) {
     ValidationResultsComponent,
     AddRelationshipButtonComponent,
     CollectionUpdateDialogComponent,
-
     StixListComponent,
-
     DescriptivePropertyComponent,
     DescriptiveViewComponent,
     DescriptiveEditComponent,
@@ -295,7 +292,6 @@ export function initConfig(appConfigService: AppConfigService) {
     NamePropertyComponent,
     DatepickerPropertyComponent,
     IconViewComponent,
-
     LandingPageComponent,
     HelpPageComponent,
     AdminPageComponent,
@@ -304,10 +300,8 @@ export function initConfig(appConfigService: AppConfigService) {
     DefaultMarkingDefinitionsComponent,
     ProfilePageComponent,
     ReferenceManagerComponent,
-
     StixDialogComponent,
     StixPageComponent,
-
     CollectionListComponent,
     CollectionViewComponent,
     CollectionManagerComponent,
@@ -317,28 +311,21 @@ export function initConfig(appConfigService: AppConfigService) {
     CollectionImportComponent,
     CollectionImportReviewComponent,
     CollectionImportErrorComponent,
-
     RelationshipViewComponent,
-
     GroupListComponent,
     GroupViewComponent,
-
     MatrixListComponent,
     MatrixViewComponent,
     MatrixSideComponent,
     MatrixFlatComponent,
     TacticCellComponent,
     TechniqueCellComponent,
-
     MitigationListComponent,
     MitigationViewComponent,
-
     SoftwareListComponent,
     SoftwareViewComponent,
-
     TacticListComponent,
     TacticViewComponent,
-
     TechniqueListComponent,
     TechniqueViewComponent,
     AliasPropertyComponent,
@@ -349,7 +336,6 @@ export function initConfig(appConfigService: AppConfigService) {
     OrderedListPropertyComponent,
     OrderedListViewComponent,
     OrderedListEditComponent,
-
     NotesEditorComponent,
     ObjectStatusComponent,
     RecentActivityComponent,
@@ -390,62 +376,6 @@ export function initConfig(appConfigService: AppConfigService) {
     TlpDiffComponent,
     VersionPopoverComponent,
   ],
-  imports: [
-    MaterialFileInputModule,
-    MarkdownModule.forRoot({
-      loader: HttpClient,
-    }),
-    LoggerModule.forRoot({
-      level: environment.log_level,
-      disableConsoleLogging: false,
-    }),
-    MtxPopoverModule,
-    NgxJdenticonModule,
-    AutosizeModule,
-
-    BrowserModule,
-
-    AppRoutingModule,
-    AppRoutingStixModule,
-    HttpClientModule,
-
-    BrowserAnimationsModule,
-
-    MatToolbarModule,
-    MatButtonModule,
-    MatSidenavModule,
-    MatIconModule,
-    MatTableModule,
-    MatSortModule,
-    MatPaginatorModule,
-    MatTabsModule,
-    MatTooltipModule,
-    MatButtonToggleModule,
-    MatCardModule,
-    MatDividerModule,
-    MatStepperModule,
-    MatFormFieldModule,
-    MatListModule,
-    FormsModule,
-    ReactiveFormsModule,
-    MatInputModule,
-    MatSelectModule,
-    MatExpansionModule,
-    MatCheckboxModule,
-    MatRadioModule,
-    MatProgressSpinnerModule,
-    MatMenuModule,
-    MatDialogModule,
-    MatSnackBarModule,
-    MatChipsModule,
-    MatDatepickerModule,
-    MatNativeDateModule,
-    MatBadgeModule,
-
-    DragDropModule,
-    ClipboardModule,
-    OverlayModule,
-  ],
   exports: [
     MatToolbarModule,
     MatButtonModule,
@@ -476,14 +406,62 @@ export function initConfig(appConfigService: AppConfigService) {
     ClipboardModule,
     OverlayModule,
   ],
+  bootstrap: [AppComponent],
+  imports: [
+    MarkdownModule.forRoot({
+      loader: HttpClient,
+    }),
+    LoggerModule.forRoot({
+      level: environment.log_level,
+      disableConsoleLogging: false,
+    }),
+    MtxPopoverModule,
+    NgxJdenticonModule,
+    AutosizeModule,
+    BrowserModule,
+    AppRoutingModule,
+    AppRoutingStixModule,
+    BrowserAnimationsModule,
+    MatToolbarModule,
+    MatButtonModule,
+    MatSidenavModule,
+    MatIconModule,
+    MatTableModule,
+    MatSortModule,
+    MatPaginatorModule,
+    MatTabsModule,
+    MatTooltipModule,
+    MatButtonToggleModule,
+    MatCardModule,
+    MatDividerModule,
+    MatStepperModule,
+    MatFormFieldModule,
+    MatListModule,
+    FormsModule,
+    ReactiveFormsModule,
+    MatInputModule,
+    MatSelectModule,
+    MatExpansionModule,
+    MatCheckboxModule,
+    MatRadioModule,
+    MatProgressSpinnerModule,
+    MatMenuModule,
+    MatDialogModule,
+    MatSnackBarModule,
+    MatChipsModule,
+    MatDatepickerModule,
+    MatNativeDateModule,
+    MatBadgeModule,
+    DragDropModule,
+    ClipboardModule,
+    OverlayModule,
+  ],
   providers: [
     AppConfigService,
-    {
-      provide: APP_INITIALIZER,
-      useFactory: initConfig,
-      deps: [AppConfigService],
-      multi: true,
-    },
+    provideAppInitializer(() => {
+      const initializerFn = initConfig(inject(AppConfigService));
+      return initializerFn();
+    }),
     {
       provide: JDENTICON_CONFIG,
       useValue: {
@@ -503,7 +481,7 @@ export function initConfig(appConfigService: AppConfigService) {
       useClass: AuthInterceptor,
       multi: true,
     },
+    provideHttpClient(withInterceptorsFromDi()),
   ],
-  bootstrap: [AppComponent],
 })
 export class AppModule {}

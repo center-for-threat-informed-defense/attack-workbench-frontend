@@ -1,18 +1,20 @@
-@import '../../../style/globals';
+@use '../../../style/globals';
+@use '../../../style/colors';
+
 .header {
   .light & {
-    background: color(primary);
-    color: on-color(primary);
+    background: colors.color(primary);
+    color: colors.on-color(primary);
   }
   .dark & {
-    background: color(light);
+    background: colors.color(light);
   }
   .mat-mdc-button:disabled {
     .light & {
-      color: on-color-deemphasis(light);
+      color: colors.on-color-deemphasis(light);
     }
     .dark & {
-      color: on-color-deemphasis(dark);
+      color: colors.on-color-deemphasis(dark);
     }
   }
   .spacer {
@@ -24,11 +26,11 @@
       border-bottom-width: 0 !important;
       .dark &,
       .dark &:hover {
-        color: color(primary) !important;
+        color: colors.color(primary) !important;
       }
       .light &,
       .light &:hover {
-        color: color(light) !important;
+        color: colors.color(light) !important;
       }
     }
     .app-version {
@@ -39,10 +41,10 @@
   }
   button {
     .light & {
-      color: on-color(dark);
+      color: colors.on-color(dark);
     }
     .dark & {
-      color: on-color(light);
+      color: colors.on-color(light);
     }
     font-family: Roboto, Arial, sans-serif;
     font-weight: 500;
@@ -68,10 +70,10 @@
     scale: 0.85;
     vertical-align: middle;
     .dark & {
-      background: color-alternate(dark);
+      background: colors.color-alternate(dark);
     }
     .light & {
-      background: color(light);
+      background: colors.color(light);
     }
     svg {
       scale: 1.3;
