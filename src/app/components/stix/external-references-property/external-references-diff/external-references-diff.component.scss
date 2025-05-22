@@ -1,4 +1,5 @@
-@import '../../../../../style/globals';
+@use '../../../../../style/globals';
+@use '../../../../../style/colors';
 
 .external-references-diff {
   span a.external-link {
@@ -22,6 +23,6 @@
   }
 
   li.external-link::marker {
-    color: color(link);
+    color: colors.color(link);
   }
 }

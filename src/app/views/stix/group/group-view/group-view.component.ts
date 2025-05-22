@@ -9,6 +9,7 @@ import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/re
   selector: 'app-group-view',
   templateUrl: './group-view.component.html',
   styleUrls: ['./group-view.component.scss'],
+  standalone: false,
 })
 export class GroupViewComponent extends StixViewPage implements OnInit {
   @Output() public onReload = new EventEmitter();

@@ -26,6 +26,7 @@ import { ConfirmationDialogComponent } from '../../confirmation-dialog/confirmat
   templateUrl: './notes-editor.component.html',
   styleUrls: ['./notes-editor.component.scss'],
   encapsulation: ViewEncapsulation.None,
+  standalone: false,
 })
 export class NotesEditorComponent implements OnInit, AfterViewInit {
   @ViewChild('search') search: ElementRef;

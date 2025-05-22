@@ -10,6 +10,7 @@ import { DescriptivePropertyConfig } from '../descriptive-property.component';
   templateUrl: './descriptive-view.component.html',
   styleUrls: ['./descriptive-view.component.scss'],
   encapsulation: ViewEncapsulation.None,
+  standalone: false,
 })
 export class DescriptiveViewComponent implements OnInit {
   @Input() public config: DescriptivePropertyConfig;

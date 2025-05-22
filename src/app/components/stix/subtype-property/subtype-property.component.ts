@@ -4,6 +4,7 @@ import { StixObject } from 'src/app/classes/stix';
 @Component({
   selector: 'app-subtype-property',
   templateUrl: './subtype-property.component.html',
+  standalone: false,
 })
 export class SubtypePropertyComponent {
   @Input() public config: SubtypePropertyConfig;

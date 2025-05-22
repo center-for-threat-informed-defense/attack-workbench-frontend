@@ -1,4 +1,6 @@
-@import '../../../../../../style/globals';
+@use '../../../../../../style/globals';
+@use '../../../../../../style/layouts/expansion-panel';
+
 .collection-index-list {
   // .collection-index {
   //     .light & {
@@ -10,6 +12,6 @@
   //     }
   // }
   .mat-expansion-panel {
-    @include expansion-panel(true);
+    @include expansion-panel.expansion-panel(true);
   }
 }

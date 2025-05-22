@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { HttpClient } from '@angular/common/http';
 import { EventEmitter, Injectable } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -20,7 +22,12 @@ export class AuthenticationService extends ApiConnector {
   public get isLoggedIn(): boolean {
     return this.currentUser && this.currentUser.status == Status.ACTIVE;
   }
-  public activeRoles: Role[] = [Role.ADMIN, Role.EDITOR, Role.VISITOR];
+  public activeRoles: Role[] = [
+    Role.ADMIN,
+    Role.EDITOR,
+    Role.TEAM_LEAD,
+    Role.VISITOR,
+  ];
   public inactiveRoles: Role[] = [Role.NONE];
   private get apiUrl(): string {
     return environment.integrations.rest_api.url;
@@ -59,7 +66,7 @@ export class AuthenticationService extends ApiConnector {
       // restrict collection editing to admin only
       return this.isAuthorized([Role.ADMIN]);
     }
-    return this.isAuthorized([Role.EDITOR, Role.ADMIN]);
+    return this.isAuthorized([Role.EDITOR, Role.TEAM_LEAD, Role.ADMIN]);
   }
 
   /**
@@ -93,7 +100,7 @@ export class AuthenticationService extends ApiConnector {
         }
         // anonymous login
         return this.http.get(url, { responseType: 'text' }).pipe(
-          concatMap(success => {
+          concatMap(_success => {
             return this.getSession().pipe(
               map(res => {
                 this.success();
@@ -200,7 +207,7 @@ export class AuthenticationService extends ApiConnector {
           })
         );
       }),
-      catchError(err => {
+      catchError(_err => {
         return of(null);
       }), // return a default value so that the app can continue
       share()

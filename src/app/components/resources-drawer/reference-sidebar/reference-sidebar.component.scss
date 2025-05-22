@@ -1,4 +1,5 @@
-@import '../../../../style/globals';
+@use '../../../../style/globals';
+@use '../../../../style/colors';
 
 .reference-sidebar {
   .add-container {
@@ -9,10 +10,10 @@
   .references-container {
     border-radius: 4px;
     .dark & {
-      border: 1px solid border-color(dark);
+      border: 1px solid colors.border-color(dark);
     }
     .light & {
-      border: 1px solid border-color(light);
+      border: 1px solid colors.border-color(light);
     }
     .controls {
       .fullwidth {
@@ -27,10 +28,10 @@
       }
       .mat-mdc-floating-label {
         .light & {
-          color: on-color-deemphasis(light);
+          color: colors.on-color-deemphasis(light);
         }
         .dark & {
-          color: on-color-deemphasis(dark);
+          color: colors.on-color-deemphasis(dark);
         }
       }
     }
@@ -41,10 +42,10 @@
       .reference-list {
         .reference {
           .dark & {
-            border-bottom: 1px solid border-color(dark);
+            border-bottom: 1px solid colors.border-color(dark);
           }
           .light & {
-            border-bottom: 1px solid border-color(light);
+            border-bottom: 1px solid colors.border-color(light);
           }
         }
         .row {
@@ -63,10 +64,10 @@
           cursor: pointer;
           &:hover {
             .dark & {
-              background: color-alternate(dark);
+              background: colors.color-alternate(dark);
             }
             .light & {
-              background: color-alternate(light);
+              background: colors.color-alternate(light);
             }
           }
         }

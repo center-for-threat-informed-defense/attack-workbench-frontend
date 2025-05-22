@@ -1,4 +1,6 @@
-@import '../../../style/globals.scss';
+@use '../../../style/globals.scss';
+@use '../../../style/colors';
+
 .icon-view {
   display: inherit;
 }
@@ -6,11 +8,11 @@
   vertical-align: middle;
 }
 .warn {
-  color: color(warn);
+  color: colors.color(warn);
 }
 .error {
-  color: color(error);
+  color: colors.color(error);
 }
 .success {
-  color: color(success);
+  color: colors.color(success);
 }

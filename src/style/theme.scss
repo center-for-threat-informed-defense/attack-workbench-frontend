@@ -1,7 +1,8 @@
 @use '@angular/material' as mat;
-@import './colors.scss';
-@import './typography.scss';
-@include mat.core();
+@use 'colors.scss';
+@use 'typography.scss';
+@include mat.elevation-classes();
+@include mat.app-background();
 
 ::-webkit-scrollbar {
   width: 8px;
@@ -14,60 +15,101 @@
 }
 
 //custom color theme
-$light-theme: mat.define-light-theme(
+$light-theme: mat.m2-define-light-theme(
   (
     color: (
-      primary: mat.define-palette(to-material-map(primary), 50, 100, 200),
-      accent: mat.define-palette(to-material-map(secondary), 50, 100, 200),
-      foreground: mat.define-palette(to-material-map(dark), 50, 100, 200),
-      background: mat.define-palette(to-material-map(light), 50, 100, 200),
-      warn: mat.define-palette(to-material-map(warn)),
+      primary: mat.m2-define-palette(
+          colors.to-material-map(primary),
+          50,
+          100,
+          200
+        ),
+      accent: mat.m2-define-palette(
+          colors.to-material-map(secondary),
+          50,
+          100,
+          200
+        ),
+      foreground: mat.m2-define-palette(
+          colors.to-material-map(dark),
+          50,
+          100,
+          200
+        ),
+      background: mat.m2-define-palette(
+          colors.to-material-map(light),
+          50,
+          100,
+          200
+        ),
+      warn: mat.m2-define-palette(colors.to-material-map(warn)),
     ),
     // only include 'typography' and 'density' in default theme
-    typography: $custom-typography,
+    typography: typography.$custom-typography,
     density: 0,
   )
 );
 
-$dark-theme: mat.define-dark-theme(
+$dark-theme: mat.m2-define-dark-theme(
   (
     color: (
-      primary: mat.define-palette(to-material-map(primary), 50, 100, 200),
-      accent: mat.define-palette(to-material-map(secondary), 50, 100, 200),
-      foreground: mat.define-palette(to-material-map(light), 50, 100, 200),
-      background: mat.define-palette(to-material-map(dark), 50, 100, 200),
-      warn: mat.define-palette(to-material-map(warn)),
+      primary: mat.m2-define-palette(
+          colors.to-material-map(primary),
+          50,
+          100,
+          200
+        ),
+      accent: mat.m2-define-palette(
+          colors.to-material-map(secondary),
+          50,
+          100,
+          200
+        ),
+      foreground: mat.m2-define-palette(
+          colors.to-material-map(light),
+          50,
+          100,
+          200
+        ),
+      background: mat.m2-define-palette(
+          colors.to-material-map(dark),
+          50,
+          100,
+          200
+        ),
+      warn: mat.m2-define-palette(colors.to-material-map(warn)),
     ),
   )
 );
 
 // apply light theme by default
-@include mat.core-theme($light-theme);
+@include mat.elevation-classes();
+@include mat.app-background();
 @include mat.button-theme($light-theme);
 
 @include mat.all-component-themes($light-theme);
 .light {
-  background: color(light);
-  color: on-color(light);
+  background: colors.color(light);
+  color: colors.on-color(light);
+  scrollbar-color: rgba(colors.on-color(light), 0.15) transparent; //firefox scrollbar styles
   ::-webkit-scrollbar-thumb {
-    background: rgba(on-color(light), 0.15);
+    background: rgba(colors.on-color(light), 0.15);
     &:hover {
-      background: rgba(on-color(light), 0.25);
+      background: rgba(colors.on-color(light), 0.25);
     }
   }
-  scrollbar-color: rgba(on-color(light), 0.15) transparent; //firefox scrollbar styles
   hr {
     border: none;
-    border-bottom: 1px solid border-color(light);
+    border-bottom: 1px solid colors.border-color(light);
   }
   .matrix {
     tr.tactic {
-      border-color: on-color-deemphasis(light);
+      border-color: colors.on-color-deemphasis(light);
       color: white;
-      background-color: color(engenuity-purple);
+      background-color: colors.color(engenuity-purple);
     }
     .tactic td.technique {
-      border: 1px solid on-color-deemphasis(light);
+      border: 1px solid colors.on-color-deemphasis(light);
     }
     .supertechnique,
     .regularTechnique,
@@ -76,66 +118,65 @@ $dark-theme: mat.define-dark-theme(
       color: black;
     }
     .subtechnique {
-      border: 1px solid on-color-deemphasis(light);
+      border: 1px solid colors.on-color-deemphasis(light);
     }
     td.angle-top {
-      background-color: color(engenuity-gray);
+      background-color: colors.color(engenuity-gray);
     }
     .sidebar.expanded .angle svg {
-      fill: color(engenuity-gray);
+      fill: colors.color(engenuity-gray);
     }
   }
   .matrix-container {
-    border-color: on-color-deemphasis(light);
+    border-color: colors.on-color-deemphasis(light);
   }
 }
 .dark {
+  background: colors.color(dark);
+  color: colors.on-color(dark);
+  scrollbar-color: rgba(colors.on-color(dark), 0.15) transparent; //firefox scrollbar styles
   @include mat.all-component-colors($dark-theme);
-
-  background: color(dark);
-  color: on-color(dark);
   ::-webkit-scrollbar-thumb {
-    background: rgba(on-color(dark), 0.15);
+    background: rgba(colors.on-color(dark), 0.15);
     &:hover {
-      background: rgba(on-color(dark), 0.25);
+      background: rgba(colors.on-color(dark), 0.25);
     }
   }
-  scrollbar-color: rgba(on-color(dark), 0.15) transparent; //firefox scrollbar styles
   hr {
     border: none;
-    border-bottom: 1px solid border-color(dark);
+    border-bottom: 1px solid colors.border-color(dark);
   }
   .matrix {
     tr.tactic {
-      border-color: border-color(dark);
-      background-color: color(engenuity-gray);
-      color: color(engenuity-black);
+      border-color: colors.border-color(dark);
+      background-color: colors.color(engenuity-gray);
+      color: colors.color(engenuity-black);
     }
     .tactic td.technique {
-      border: 1px solid on-color-deemphasis(dark);
+      border: 1px solid colors.on-color-deemphasis(dark);
     }
     .supertechnique,
     .regularTechnique,
     .subtechniques {
-      background-color: color(engenuity-black);
+      background-color: colors.color(engenuity-black);
       color: white;
     }
     .subtechnique {
-      border: 1px solid on-color-deemphasis(dark);
+      border: 1px solid colors.on-color-deemphasis(dark);
     }
     td.angle-top {
-      background-color: color(engenuity-black);
+      background-color: colors.color(engenuity-black);
     }
     .sidebar.expanded .angle svg {
-      fill: color(engenuity-black);
+      fill: colors.color(engenuity-black);
     }
   }
   .matrix-container {
-    border-color: on-color-deemphasis(dark);
+    border-color: colors.on-color-deemphasis(dark);
   }
 }
 
-$tooltip-color: color-alternate(dark, 4);
+$tooltip-color: colors.color-alternate(dark, 4);
 //patch overlays for theme compatibility
 .cdk-overlay-container,
 .cdk-overlay-container {
@@ -146,69 +187,69 @@ $tooltip-color: color-alternate(dark, 4);
     background: $tooltip-color;
   }
   &.dark .mat-mdc-menu-panel {
-    background: color(dark);
-    color: on-color(dark);
+    background: colors.color(dark);
+    color: colors.on-color(dark);
     .mat-mdc-menu-item:hover {
-      background: color-alternate(dark);
+      background: colors.color-alternate(dark);
     }
     .mat-mdc-menu-item:disabled {
-      color: on-color-deemphasis(dark);
+      color: colors.on-color-deemphasis(dark);
     }
   }
   &.light .mat-mdc-menu-panel {
-    background: color(light);
-    color: on-color(light);
+    background: colors.color(light);
+    color: colors.on-color(light);
     .mat-mdc-menu-item:hover {
-      background: color-alternate(light);
+      background: colors.color-alternate(light);
     }
     .mat-mdc-menu-item:disabled {
-      color: on-color-deemphasis(light);
+      color: colors.on-color-deemphasis(light);
     }
   }
   &.dark .mat-mdc-dialog-surface {
-    background: color(dark);
-    color: on-color(dark);
+    background: colors.color(dark);
+    color: colors.on-color(dark);
   }
   &.light .mat-mdc-dialog-surface {
-    background: color(light);
-    color: on-color(light);
+    background: colors.color(light);
+    color: colors.on-color(light);
   }
 
   &.light .mat-mdc-snack-bar-container {
-    background: color(light);
-    color: on-color(light);
+    background: colors.color(light);
+    color: colors.on-color(light);
   }
   &.dark .mat-mdc-snack-bar-container {
-    background: color(dark);
-    color: on-color(dark);
+    background: colors.color(dark);
+    color: colors.on-color(dark);
   }
   .mat-mdc-snack-bar-container.success {
-    background: color(success);
-    color: on-color(success);
+    background: colors.color(success);
+    color: colors.on-color(success);
     button {
-      color: on-color(success);
+      color: colors.on-color(success);
     }
   }
   .mat-mdc-snack-bar-container.warn {
-    background: color(warn);
-    color: on-color(warn);
+    background: colors.color(warn);
+    color: colors.on-color(warn);
     button {
-      color: on-color(warn);
+      color: colors.on-color(warn);
     }
   }
 
   &.light .mat-mdc-select-panel .mat-mdc-option.mat-active {
-    background: color-alternate(light, 2.5);
+    background: colors.color-alternate(light, 2.5);
   }
   &.dark .mat-mdc-select-panel .mat-mdc-option.mat-active {
-    background: color-alternate(dark, 2.5);
+    background: colors.color-alternate(dark, 2.5);
   }
 
   &.light .mat-datepicker-popup {
-    background: color-alternate(light);
+    background: colors.color-alternate(light);
   }
   &.dark .mat-datepicker-popup {
-    background: color-alternate(dark);
+    background: colors.color-alternate(dark);
   }
 }
 
@@ -224,7 +265,7 @@ $tooltip-color: color-alternate(dark, 4);
 .mtx-popover-content {
   border-radius: 4px !important;
   padding: 1.5em;
-  color: color(light);
+  color: colors.color(light);
   background-color: $tooltip-color !important;
 
   .c-align-popover {
@@ -247,28 +288,28 @@ $tooltip-color: color-alternate(dark, 4);
 
   // override child labelled-box borders for visibility
   .labelled-box .content {
+    border-top-color: transparent !important;
     ul {
       margin: 0.5em 0 !important;
     }
     &,
     & + .labelled-box-label,
     .suffix {
-      border-right-color: on-color-deemphasis(dark) !important;
-      border-left-color: on-color-deemphasis(dark) !important;
-      border-bottom-color: on-color-deemphasis(dark) !important;
+      border-right-color: colors.on-color-deemphasis(dark) !important;
+      border-left-color: colors.on-color-deemphasis(dark) !important;
+      border-bottom-color: colors.on-color-deemphasis(dark) !important;
     }
     & + .labelled-box-label::before,
     & + .labelled-box-label::after {
-      border-top-color: on-color-deemphasis(dark) !important;
+      border-top-color: colors.on-color-deemphasis(dark) !important;
     }
-    border-top-color: transparent !important;
   }
 
   // override mat-chip styles
   .mat-mdc-chip.mat-mdc-standard-chip {
-    background: color-alternate(dark) !important;
+    background: colors.color-alternate(dark) !important;
     .v-align {
-      color: on-color(dark) !important;
+      color: colors.on-color(dark) !important;
     }
   }
 
@@ -286,10 +327,10 @@ $tooltip-color: color-alternate(dark, 4);
       .mdc-notched-outline__leading,
       .mdc-notched-outline__notch,
       .mdc-notched-outline__trailing {
-        border-color: color(light);
+        border-color: colors.color(light);
       }
       .mat-mdc-floating-label {
-        color: color(light);
+        color: colors.color(light);
       }
     }
     .mdc-text-field--outlined:hover {
@@ -304,35 +345,35 @@ $tooltip-color: color-alternate(dark, 4);
     }
     .mat-mdc-select,
     .mat-mdc-select-arrow {
-      color: color(light);
+      color: colors.color(light);
     }
     .status-options {
       .mat-mdc-checkbox:not(.mat-mdc-checkbox-checked) {
         &:not(.disabled) {
           .mdc-checkbox__background {
-            border-color: color(light) !important;
+            border-color: colors.color(light) !important;
           }
         }
         &.disabled {
           .mdc-checkbox__background {
-            border-color: on-color-deemphasis(light) !important;
+            border-color: colors.on-color-deemphasis(light) !important;
           }
         }
       }
       .mat-mdc-checkbox {
         &:not(.disabled) {
           .mdc-label {
-            color: color(light);
+            color: colors.color(light);
           }
         }
         &.disabled {
           .mdc-label {
-            color: on-color-deemphasis(light) !important;
+            color: colors.on-color-deemphasis(light) !important;
           }
         }
       }
       .mat-mdc-checkbox.mat-mdc-checkbox-checked .mdc-checkbox__checkmark {
-        color: color(light);
+        color: colors.color(light);
       }
       .mat-mdc-checkbox + .mat-mdc-checkbox {
         padding-left: 10px !important;
@@ -347,12 +388,12 @@ button.mat-mdc-outlined-button:disabled {
 
 .mat-mdc-select-panel {
   .light & {
-    color: on-color(light);
-    background: color(light);
+    color: colors.on-color(light);
+    background: colors.color(light);
   }
   .dark & {
     color: on-color-alternate(dark);
-    background: color-alternate(dark);
+    background: colors.color-alternate(dark);
   }
 }
 
@@ -361,18 +402,18 @@ button.mat-mdc-outlined-button:disabled {
 .mat-expansion-panel,
 .mat-stepper-vertical {
   .light & {
-    background-color: color(light) !important;
+    background-color: colors.color(light) !important;
   }
   .dark & {
-    background-color: color(dark) !important;
+    background-color: colors.color(dark) !important;
   }
 }
 .mat-step-icon:not(.mat-step-icon-selected) {
   .light & {
-    background-color: border-color(light);
+    background-color: colors.border-color(light);
   }
   .dark & {
-    background-color: border-color(dark);
+    background-color: colors.border-color(dark);
   }
 }
 // remove form field focus overlay
@@ -383,38 +424,38 @@ button.mat-mdc-outlined-button:disabled {
 .mdc-text-field--filled:not(.mdc-text-field--disabled)
   .mdc-line-ripple::before {
   .light & {
-    border-bottom-color: border-color(light) !important;
+    border-bottom-color: colors.border-color(light) !important;
   }
   .dark & {
-    border-bottom-color: border-color(dark) !important;
+    border-bottom-color: colors.border-color(dark) !important;
   }
 }
 
 .mat-mdc-card .mat-mdc-card-header {
   .light & {
-    background: color-alternate(light);
+    background: colors.color-alternate(light);
   }
   .dark & {
-    background: color-alternate(dark);
+    background: colors.color-alternate(dark);
   }
 }
 
 .mat-mdc-chip.mat-mdc-standard-chip {
   height: auto !important;
   .light & {
-    background: color-alternate(light);
+    background: colors.color-alternate(light);
   }
   .dark & {
-    background: color-alternate(dark);
+    background: colors.color-alternate(dark);
   }
 }
 
 .mat-step-icon:not(.mat-step-icon-selected):not(.mat-step-icon-state-edit) {
   .dark & {
-    color: on-color(dark);
+    color: colors.on-color(dark);
   }
   .light & {
-    color: on-color(light);
+    color: colors.on-color(light);
   }
 }
 html,

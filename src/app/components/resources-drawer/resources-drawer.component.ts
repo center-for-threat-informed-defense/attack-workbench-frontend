@@ -13,6 +13,7 @@ import { SidebarService } from 'src/app/services/sidebar/sidebar.service';
   templateUrl: './resources-drawer.component.html',
   styleUrls: ['./resources-drawer.component.scss'],
   encapsulation: ViewEncapsulation.None,
+  standalone: false,
 })
 export class ResourcesDrawerComponent {
   @Output() onClose = new EventEmitter();

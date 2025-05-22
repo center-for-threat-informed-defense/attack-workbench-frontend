@@ -18,6 +18,7 @@ import { WebsiteIntegrationService } from 'src/app/services/website-integration/
   templateUrl: './toolbar.component.html',
   styleUrls: ['./toolbar.component.scss'],
   encapsulation: ViewEncapsulation.None,
+  standalone: false,
 })
 export class ToolbarComponent implements OnInit {
   @Input() public canScroll: boolean;

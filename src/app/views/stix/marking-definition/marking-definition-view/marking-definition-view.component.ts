@@ -13,6 +13,7 @@ import { AuthenticationService } from 'src/app/services/connectors/authenticatio
   templateUrl: './marking-definition-view.component.html',
   styleUrls: ['./marking-definition-view.component.scss'],
   encapsulation: ViewEncapsulation.None,
+  standalone: false,
 })
 export class MarkingDefinitionViewComponent extends StixViewPage {
   public get markingDefinition(): MarkingDefinition {

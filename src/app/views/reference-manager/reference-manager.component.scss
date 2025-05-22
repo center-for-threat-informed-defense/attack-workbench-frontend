@@ -1,14 +1,15 @@
-@import '../../../style/globals';
+@use '../../../style/globals';
+@use '../../../style/colors';
 
 .reference-manager {
   max-width: 60em;
   margin: 0 auto;
   border-radius: 4px;
   .dark & {
-    border: 1px solid border-color(dark);
+    border: 1px solid colors.border-color(dark);
   }
   .light & {
-    border: 1px solid border-color(light);
+    border: 1px solid colors.border-color(light);
   }
 
   .search {
@@ -21,10 +22,10 @@
     }
     .mat-mdc-floating-label {
       .light & {
-        color: on-color-deemphasis(light);
+        color: colors.on-color-deemphasis(light);
       }
       .dark & {
-        color: on-color-deemphasis(dark);
+        color: colors.on-color-deemphasis(dark);
       }
     }
   }
@@ -39,20 +40,20 @@
       flex: 1 0 auto;
       width: 100%;
       .dark & {
-        border-bottom: 1px solid border-color(dark);
+        border-bottom: 1px solid colors.border-color(dark);
       }
       .light & {
-        border-bottom: 1px solid border-color(light);
+        border-bottom: 1px solid colors.border-color(light);
       }
       th,
       td {
         .light & {
-          background: color(light);
-          border-color: border-color(light);
+          background: colors.color(light);
+          border-color: colors.border-color(light);
         }
         .dark & {
-          background: color(dark);
-          border-color: border-color(dark);
+          background: colors.color(dark);
+          border-color: colors.border-color(dark);
         }
       }
       th {
@@ -63,10 +64,10 @@
       tr:hover {
         cursor: pointer;
         .light & td {
-          background: color-alternate(light);
+          background: colors.color-alternate(light);
         }
         .dark & td {
-          background: color-alternate(dark);
+          background: colors.color-alternate(dark);
         }
       }
 
@@ -84,10 +85,10 @@
         cursor: pointer;
         &:hover {
           .light & {
-            background: color-alternate(light);
+            background: colors.color-alternate(light);
           }
           .dark & {
-            background: color-alternate(dark);
+            background: colors.color-alternate(dark);
           }
         }
       }

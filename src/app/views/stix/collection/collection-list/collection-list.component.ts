@@ -6,6 +6,7 @@ import { Collection } from 'src/app/classes/stix/collection';
   templateUrl: './collection-list.component.html',
   styleUrls: ['./collection-list.component.scss'],
   encapsulation: ViewEncapsulation.None,
+  standalone: false,
 })
 export class CollectionListComponent implements OnInit {
   @Input() config: CollectionListConfig;

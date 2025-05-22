@@ -1,4 +1,5 @@
-@import '../../../../../style/globals';
+@use '../../../../../style/globals';
+@use '../../../../../style/colors';
 
 .teams-list-page {
   .teams-page-header {
@@ -16,11 +17,11 @@
     }
 
     .light & {
-      border-color: border-color(light);
+      border-color: colors.border-color(light);
     }
 
     .dark & {
-      border-color: border-color(dark);
+      border-color: colors.border-color(dark);
     }
     .mat-mdc-form-field-subscript-wrapper {
       display: none; // remove bottom padding used for hint
@@ -28,10 +29,10 @@
   }
   .mat-mdc-floating-label {
     .light & {
-      color: on-color-deemphasis(light);
+      color: colors.on-color-deemphasis(light);
     }
     .dark & {
-      color: on-color-deemphasis(dark);
+      color: colors.on-color-deemphasis(dark);
     }
   }
 
@@ -49,11 +50,11 @@
     border-radius: 4px;
 
     .dark & {
-      border: 1px solid border-color(dark);
+      border: 1px solid colors.border-color(dark);
     }
 
     .light & {
-      border: 1px solid border-color(light);
+      border: 1px solid colors.border-color(light);
     }
 
     .scroll-container {
@@ -63,10 +64,10 @@
       display: flex;
       flex-direction: column;
       .dark & {
-        border-bottom: 1px solid border-color(dark);
+        border-bottom: 1px solid colors.border-color(dark);
       }
       .light & {
-        border-bottom: 1px solid border-color(light);
+        border-bottom: 1px solid colors.border-color(light);
       }
 
       table {
@@ -80,13 +81,13 @@
         th,
         td {
           .light & {
-            background: color(light);
-            border-color: border-color(light);
+            background: colors.color(light);
+            border-color: colors.border-color(light);
           }
 
           .dark & {
-            background: color(dark);
-            border-color: border-color(dark);
+            background: colors.color(dark);
+            border-color: colors.border-color(dark);
           }
         }
 
@@ -100,11 +101,11 @@
 
         tr.element-row:not(.expanded):hover {
           .light & td {
-            background: color-alternate(light);
+            background: colors.color-alternate(light);
           }
 
           .dark & td {
-            background: color-alternate(dark);
+            background: colors.color-alternate(dark);
           }
         }
 
@@ -127,27 +128,27 @@
           cursor: pointer;
 
           .dark & {
-            background: color(dark);
+            background: colors.color(dark);
           }
 
           .light & {
-            background: color(light);
+            background: colors.color(light);
           }
 
           &:hover {
-            background: color(primary) !important;
-            color: on-color(primary);
+            background: colors.color(primary) !important;
+            color: colors.on-color(primary);
           }
         }
 
         .mat-column-start-action {
           &.mat-mdc-cell {
             .light & {
-              outline: 1px solid border-color(light);
+              outline: 1px solid colors.border-color(light);
             }
 
             .dark & {
-              outline: 1px solid border-color(dark);
+              outline: 1px solid colors.border-color(dark);
             }
           }
 
@@ -158,11 +159,11 @@
         .mat-column-end-action {
           &.mat-mdc-cell {
             .light & {
-              outline: 1px solid border-color(light);
+              outline: 1px solid colors.border-color(light);
             }
 
             .dark & {
-              outline: 1px solid border-color(dark);
+              outline: 1px solid colors.border-color(dark);
             }
           }
 

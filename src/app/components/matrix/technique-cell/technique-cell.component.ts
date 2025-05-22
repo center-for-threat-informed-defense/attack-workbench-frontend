@@ -6,6 +6,7 @@ import { Technique } from 'src/app/classes/stix/technique';
   templateUrl: './technique-cell.component.html',
   styleUrls: ['./technique-cell.component.scss'],
   encapsulation: ViewEncapsulation.None,
+  standalone: false,
 })
 export class TechniqueCellComponent implements OnInit {
   @Input() technique: Technique;

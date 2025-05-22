@@ -5,6 +5,7 @@ import { TlpPropertyConfig } from '../tlp-property.component';
   selector: 'app-tlp-diff',
   templateUrl: './tlp-diff.component.html',
   styleUrl: './tlp-diff.component.scss',
+  standalone: false,
 })
 export class TlpDiffComponent {
   @Input() public config: TlpPropertyConfig;

@@ -10,6 +10,7 @@ import { TlpPropertyConfig } from '../tlp-property.component';
   templateUrl: './tlp-edit.component.html',
   styleUrls: ['./tlp-edit.component.scss'],
   encapsulation: ViewEncapsulation.None,
+  standalone: false,
 })
 export class TlpEditComponent implements OnInit {
   @Input() public tlpMarkingDefinitionsMap: any;

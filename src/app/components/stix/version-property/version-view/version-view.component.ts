@@ -5,6 +5,7 @@ import { VersionPropertyConfig } from '../version-property.component';
   selector: 'app-version-view',
   templateUrl: './version-view.component.html',
   styleUrls: ['./version-view.component.scss'],
+  standalone: false,
 })
 export class VersionViewComponent implements OnInit {
   @Input() public config: VersionPropertyConfig;

@@ -1,10 +1,10 @@
-@import '../../../../../../style/colors';
+@use '../../../../../../style/colors';
 
 .collection-import-error {
   .warn {
-    color: color(warn);
+    color: colors.color(warn);
   }
   .error {
-    color: color(error);
+    color: colors.color(error);
   }
 }

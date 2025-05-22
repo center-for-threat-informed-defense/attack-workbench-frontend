@@ -6,6 +6,7 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
   templateUrl: './multiple-choice-dialog.component.html',
   styleUrls: ['./multiple-choice-dialog.component.scss'],
   encapsulation: ViewEncapsulation.None,
+  standalone: false,
 })
 export class MultipleChoiceDialogComponent implements OnInit {
   constructor(

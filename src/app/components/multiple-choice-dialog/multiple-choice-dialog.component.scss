@@ -1,4 +1,6 @@
-@import '../../../style/globals';
+@use '../../../style/globals';
+@use '../../../style/colors';
+
 .multiple-choice-dialog {
   h1 {
     margin-bottom: 0px;
@@ -7,14 +9,14 @@
   .choice {
     cursor: pointer;
     .light & {
-      color: on-color(light);
+      color: colors.on-color(light);
     }
     .dark & {
-      color: on-color(dark);
+      color: colors.on-color(dark);
     }
   }
   .choice:hover h3 {
-    color: color(primary);
+    color: colors.color(primary);
   }
   .choice h3 {
     @extend .subheading;
@@ -22,10 +24,10 @@
   }
   .choice + .choice {
     .dark & {
-      border-top: 1px solid border-color(dark);
+      border-top: 1px solid colors.border-color(dark);
     }
     .light & {
-      border-top: 1px solid border-color(light);
+      border-top: 1px solid colors.border-color(light);
     }
   }
 }

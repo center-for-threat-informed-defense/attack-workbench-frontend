@@ -12,6 +12,7 @@ import { forkJoin, Observable, of, Subscription } from 'rxjs';
   selector: 'app-matrix-view',
   templateUrl: './matrix-view.component.html',
   styleUrls: ['./matrix-view.component.scss'],
+  standalone: false,
 })
 export class MatrixViewComponent
   extends StixViewPage

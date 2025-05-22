@@ -1,4 +1,7 @@
-@import '../../../style/globals';
+@use '../../../style/globals';
+@use '../../../style/colors';
+@use '../../../style/layouts/button-slide-left';
+
 .landing-page {
   max-width: 50em;
   margin: 0 auto;
@@ -15,10 +18,10 @@
 
   .explore-label {
     .dark & {
-      border-bottom: 1px solid border-color(dark);
+      border-bottom: 1px solid colors.border-color(dark);
     }
     .light & {
-      border-bottom: 1px solid border-color(light);
+      border-bottom: 1px solid colors.border-color(light);
     }
   }
 
@@ -36,26 +39,26 @@
   }
 
   .explore-link {
-    @include button-slide-left(primary);
     justify-content: center;
+    @include button-slide-left.button-slide-left(primary);
   }
   .explore-links .disabled {
     cursor: not-allowed;
   }
   .col.border-left {
     .dark & {
-      border-left: 1px solid border-color(dark);
+      border-left: 1px solid colors.border-color(dark);
     }
     .light & {
-      border-left: 1px solid border-color(light);
+      border-left: 1px solid colors.border-color(light);
     }
   }
 
   .admin-link {
     margin-top: 40px;
     .mat-badge-content.mat-badge-active {
-      color: on-color(pending);
-      background-color: color(pending);
+      color: colors.on-color(pending);
+      background-color: colors.color(pending);
     }
   }
 }

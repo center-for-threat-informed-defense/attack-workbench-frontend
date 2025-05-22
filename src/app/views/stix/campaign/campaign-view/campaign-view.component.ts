@@ -8,6 +8,7 @@ import { StixViewPage } from '../../stix-view-page';
   selector: 'app-campaign-view',
   templateUrl: './campaign-view.component.html',
   styleUrls: ['./campaign-view.component.scss'],
+  standalone: false,
 })
 export class CampaignViewComponent extends StixViewPage implements OnInit {
   @Output() public onReload = new EventEmitter();

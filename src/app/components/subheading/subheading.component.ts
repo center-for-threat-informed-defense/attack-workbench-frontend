@@ -14,6 +14,7 @@ import { EditorService } from 'src/app/services/editor/editor.service';
   templateUrl: './subheading.component.html',
   styleUrls: ['./subheading.component.scss'],
   encapsulation: ViewEncapsulation.None,
+  standalone: false,
 })
 export class SubheadingComponent {
   @Input() public config: StixViewConfig;

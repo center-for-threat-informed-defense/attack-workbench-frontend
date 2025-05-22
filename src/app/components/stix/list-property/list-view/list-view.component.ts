@@ -6,6 +6,7 @@ import { ListPropertyConfig } from '../list-property.component';
   templateUrl: './list-view.component.html',
   styleUrls: ['./list-view.component.scss'],
   encapsulation: ViewEncapsulation.None,
+  standalone: false,
 })
 export class ListViewComponent {
   @Input() public config: ListPropertyConfig;

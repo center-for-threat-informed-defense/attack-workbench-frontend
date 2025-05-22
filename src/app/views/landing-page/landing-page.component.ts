@@ -13,6 +13,7 @@ import { stixRoutes } from '../../app-routing-stix.module';
   templateUrl: './landing-page.component.html',
   styleUrls: ['./landing-page.component.scss'],
   encapsulation: ViewEncapsulation.None,
+  standalone: false,
 })
 export class LandingPageComponent implements OnInit, OnDestroy {
   private loginSubscription: Subscription;

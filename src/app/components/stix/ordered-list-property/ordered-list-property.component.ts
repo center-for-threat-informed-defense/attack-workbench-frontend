@@ -6,6 +6,7 @@ import { StixObject } from 'src/app/classes/stix/stix-object';
   templateUrl: './ordered-list-property.component.html',
   styleUrls: ['./ordered-list-property.component.scss'],
   encapsulation: ViewEncapsulation.None,
+  standalone: false,
 })
 export class OrderedListPropertyComponent {
   @Input() public config: OrderedListPropertyConfig;

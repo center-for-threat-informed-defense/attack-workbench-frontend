@@ -1,5 +1,8 @@
-@import '../../../style/globals';
+@use '../../../style/globals';
+@use '../../../style/colors';
+
 .help-page {
+  max-width: 100%;
   &,
   .grid,
   .grid .row {
@@ -17,9 +20,6 @@
     margin: 0 auto;
     width: 36em;
   }
-  max-width: 100%;
-  // margin: 0 auto;
-  // padding: 0 20%;
   table {
     @extend .app-table;
     width: 100%;
@@ -28,14 +28,13 @@
   .col.toc {
     padding: 0px 21px;
     .dark & {
-      border: 1px solid border-color(dark);
-      background: color-alternate(dark);
+      border: 1px solid colors.border-color(dark);
+      background: colors.color-alternate(dark);
     }
     .light & {
-      border: 1px solid border-color(light);
-      background: color-alternate(light);
+      border: 1px solid colors.border-color(light);
+      background: colors.color-alternate(light);
     }
-    // position: sticky;
   }
   .table-of-contents {
     list-style: none;
@@ -47,7 +46,7 @@
         cursor: pointer;
         border-bottom-color: transparent;
         &:hover {
-          border-bottom-color: color(link);
+          border-bottom-color: colors.color(link);
         }
       }
       &.level-2 {

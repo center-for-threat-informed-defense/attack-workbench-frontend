@@ -5,6 +5,7 @@ import { StixObject } from 'src/app/classes/stix/stix-object';
   selector: 'app-timestamp-property',
   templateUrl: './timestamp-property.component.html',
   styleUrls: ['./timestamp-property.component.scss'],
+  standalone: false,
 })
 export class TimestampPropertyComponent implements OnInit {
   @Input() public config: TimestampPropertyConfig;
