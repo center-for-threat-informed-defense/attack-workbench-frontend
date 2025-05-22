@@ -1,16 +1,18 @@
+@use '../colors';
+
 @mixin expansion-panel($bordered) {
   .dark &.mat-expanded {
-    border: 1px solid border-color(dark);
+    border: 1px solid colors.border-color(dark);
   }
   .light &.mat-expanded {
-    border: 1px solid border-color(light);
+    border: 1px solid colors.border-color(light);
   }
   @if ($bordered) {
     .dark & {
-      border: 1px solid border-color(dark);
+      border: 1px solid colors.border-color(dark);
     }
     .light & {
-      border: 1px solid border-color(light);
+      border: 1px solid colors.border-color(light);
     }
   }
   &:not(:first-of-type):not(.mat-expanded) {
@@ -31,10 +33,10 @@
     .mat-expansion-panel-header,
     .mat-expansion-header-title {
       .dark & {
-        color: on-color-deemphasis(dark);
+        color: colors.on-color-deemphasis(dark);
       }
       .light & {
-        color: on-color-deemphasis(light);
+        color: colors.on-color-deemphasis(light);
       }
     }
   }

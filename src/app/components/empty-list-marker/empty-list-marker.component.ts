@@ -12,6 +12,7 @@ import {
   templateUrl: './empty-list-marker.component.html',
   styleUrls: ['./empty-list-marker.component.scss'],
   encapsulation: ViewEncapsulation.None,
+  standalone: false,
 })
 export class EmptyListMarkerComponent implements OnInit {
   @Input() public message = 'Nothing here';

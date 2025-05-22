@@ -6,6 +6,7 @@ import { OrderedListPropertyConfig } from '../ordered-list-property.component';
   templateUrl: './ordered-list-view.component.html',
   styleUrls: ['./ordered-list-view.component.scss'],
   encapsulation: ViewEncapsulation.None,
+  standalone: false,
 })
 export class OrderedListViewComponent {
   @Input() public config: OrderedListPropertyConfig;

@@ -5,6 +5,7 @@ import { AuthenticationService } from 'src/app/services/connectors/authenticatio
   selector: 'app-tactic-list',
   templateUrl: './tactic-list.component.html',
   styleUrls: ['./tactic-list.component.scss'],
+  standalone: false,
 })
 export class TacticListComponent implements OnInit {
   public get canEdit(): boolean {

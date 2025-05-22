@@ -9,6 +9,7 @@ import { StixObject } from 'src/app/classes/stix/stix-object';
   selector: 'app-tactic-view',
   templateUrl: './tactic-view.component.html',
   styleUrls: ['./tactic-view.component.scss'],
+  standalone: false,
 })
 export class TacticViewComponent extends StixViewPage implements OnInit {
   public loading = false;

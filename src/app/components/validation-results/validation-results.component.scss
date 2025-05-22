@@ -1,27 +1,29 @@
-@import '../../../style/globals';
+@use '../../../style/globals';
+@use '../../../style/colors';
+
 .mat-mdc-list.validation-results {
   .validation-item.success {
     .mat-mdc-list-item-icon,
     .mat-mdc-list-item-line {
-      color: color(success);
+      color: colors.color(success);
     }
   }
   .validation-item.warning {
     .mat-mdc-list-item-icon,
     .mat-mdc-list-item-line {
-      color: color(warn);
+      color: colors.color(warn);
     }
   }
   .validation-item.error {
     .mat-mdc-list-item-icon,
     .mat-mdc-list-item-line {
-      color: color(error);
+      color: colors.color(error);
     }
   }
   .validation-item.info {
     .mat-mdc-list-item-icon,
     .mat-mdc-list-item-line {
-      color: color(info);
+      color: colors.color(info);
     }
   }
   .validation-item .mat-mdc-list-item-line {

@@ -5,6 +5,7 @@ import { Component, OnInit, ViewEncapsulation } from '@angular/core';
   templateUrl: './user-accounts-page.component.html',
   styleUrls: ['./user-accounts-page.component.scss'],
   encapsulation: ViewEncapsulation.None,
+  standalone: false,
 })
 export class UserAccountsPageComponent implements OnInit {
   constructor() {

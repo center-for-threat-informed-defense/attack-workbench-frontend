@@ -14,6 +14,7 @@ import { DeleteDialogComponent } from 'src/app/components/delete-dialog/delete-d
   selector: 'app-teams-view-page',
   templateUrl: './teams-view-page.component.html',
   styleUrls: ['./teams-view-page.component.scss'],
+  standalone: false,
 })
 export class TeamsViewPageComponent implements OnInit, OnDestroy {
   public editing: boolean;

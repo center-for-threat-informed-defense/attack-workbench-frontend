@@ -10,6 +10,7 @@ import { ExternalReferences } from 'src/app/classes/external-references';
   templateUrl: './citation-edit.component.html',
   styleUrls: ['./citation-edit.component.scss'],
   encapsulation: ViewEncapsulation.None,
+  standalone: false,
 })
 export class CitationEditComponent implements OnDestroy {
   @Input() public config: CitationPropertyConfig;

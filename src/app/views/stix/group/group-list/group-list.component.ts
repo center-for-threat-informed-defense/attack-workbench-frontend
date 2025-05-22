@@ -5,6 +5,7 @@ import { AuthenticationService } from 'src/app/services/connectors/authenticatio
   selector: 'app-group-list',
   templateUrl: './group-list.component.html',
   styleUrls: ['./group-list.component.scss'],
+  standalone: false,
 })
 export class GroupListComponent implements OnInit {
   public get canEdit(): boolean {

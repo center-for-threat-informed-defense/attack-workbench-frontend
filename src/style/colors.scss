@@ -1,3 +1,6 @@
+@use 'sass:color';
+@use 'sass:map';
+@use 'sass:string';
 /**
  * Colors used across the website.
  * For each color-pair:
@@ -104,7 +107,7 @@ $colors: (
 
 // accessor helper for $colors. Gets the color of the named pair
 @function color($name) {
-  @return map-get(map-get($colors, $name), 'color');
+  @return map.get(map.get($colors, $name), 'color');
 }
 
 // given a color name, get an alternate version of the color, for patterning
@@ -112,28 +115,32 @@ $colors: (
 // if the base color is light, the alternate will be slightly darker.
 // contrast, an optional argument, multiplies to create a more distint or similar color. >1 is more distant, <1 is more similar.
 @function color-alternate($name, $contrast: 1) {
-  @return mix(invert(color($name)), color($name), $weight: $contrast * 5%);
+  @return color.mix(
+    color.invert(color($name)),
+    color($name),
+    $weight: $contrast * 5%
+  );
 }
 
 // accessor helper for $colors. Gets the on-color of the named pair
 @function on-color($name) {
-  @return map-get(map-get($colors, $name), 'on-color');
+  @return map.get(map.get($colors, $name), 'on-color');
 }
 
 // given a color-name, get an emphasized version of the on-color.
 // The emphasized on-color is less like the background color.
 @function on-color-emphasis($name) {
-  @return mix(invert(color($name)), on-color($name));
+  @return color.mix(color.invert(color($name)), on-color($name));
 }
 // given a color-name, get an deemphasized version of the on-color.
 // The deemphasized on-color is more like the background color.
 @function on-color-deemphasis($name) {
-  @return mix(color($name), on-color($name), 60%);
+  @return color.mix(color($name), on-color($name), 60%);
 }
 
 // given a color name, compute a border color for the color
 @function border-color($name) {
-  @return mix(color($name), on-color($name), 80%);
+  @return color.mix(color($name), on-color($name), 80%);
   // @return rgba(invert(color($name)), 0.125);
 }
 
@@ -141,8 +148,8 @@ $colors: (
 // replaces # with %23 in hex colors
 // see https://codepen.io/gunnarbittersmann/pen/BoovjR for explanation of why we have to escape # for the background image
 @function escape-color($color) {
-  $hex: ie-hex-str($color);
-  @return '%23' + str-slice($string: #{$hex}, $start-at: 4); //skip #AA in #AARRGGBB
+  $hex: color.ie-hex-str($color);
+  @return '%23' + string.slice($string: #{$hex}, $start-at: 4); //skip #AA in #AARRGGBB
 }
 
 // convert the color to a material-supporting color map

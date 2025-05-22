@@ -18,10 +18,10 @@ The ATT&CK Workbench does not collect or share information with MITRE or any thi
 
 For more information about the ATT&CK Workbench, please see the [docs](/docs/README.md) folder. The contents of the docs folder is also available in the in-app help page.
 - [usage](/docs/usage.md): documentation about how to use the ATT&CK Workbench application and its full capabilities.
-- [changelog](/docs/changelog.md): records of updates to this application.
 - [collections](/docs/collections.md): documentation about the collection and collection index data type.
 - [integrations](/docs/integrations.md): instructions for integrating other tools with the ATT&CK Workbench.
 - [contributing](/docs/contributing.md): information about how to contribute to this project.
+- [changelog-archive](/docs/changelog-archive.md): records of updates to this application prior to v3.1.0.
 
 ## Collections and Collection Indexes
 

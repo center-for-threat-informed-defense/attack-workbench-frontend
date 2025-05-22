@@ -5,6 +5,7 @@ import { StixObject } from 'src/app/classes/stix/stix-object';
   selector: 'app-external-references-property',
   templateUrl: './external-references-property.component.html',
   styleUrls: ['./external-references-property.component.scss'],
+  standalone: false,
 })
 export class ExternalReferencesPropertyComponent {
   @Input() public config: ExternalReferencesPropertyConfig;

@@ -1,3 +1,5 @@
+@use 'colors';
+
 .form-row {
   display: flex;
   flex-direction: row;
@@ -73,10 +75,10 @@
     .mdc-notched-outline__leading,
     .mdc-notched-outline__notch,
     .mdc-notched-outline__trailing {
-      border-color: color(primary);
+      border-color: colors.color(primary);
     }
     .mat-mdc-floating-label {
-      color: color(primary);
+      color: colors.color(primary);
     }
   }
 
@@ -86,18 +88,18 @@
     .mdc-notched-outline__notch,
     .mdc-notched-outline__trailing {
       .light & {
-        border-color: on-color-deemphasis(dark);
+        border-color: colors.on-color-deemphasis(dark);
       }
       .dark & {
-        border-color: on-color-deemphasis(light);
+        border-color: colors.on-color-deemphasis(light);
       }
     }
     .mat-mdc-floating-label {
       .light & {
-        color: on-color-deemphasis(dark);
+        color: colors.on-color-deemphasis(dark);
       }
       .dark & {
-        color: on-color-deemphasis(light);
+        color: colors.on-color-deemphasis(light);
       }
     }
   }
@@ -124,21 +126,21 @@
 }
 
 .mat-mdc-form-field-error {
-  color: color(error) !important;
+  color: colors.color(error) !important;
 }
 .mat-mdc-form-field {
   &.mat-form-field-invalid,
   &.ng-invalid {
-    color: color(error);
+    color: colors.color(error);
     .mat-mdc-floating-label,
     .mat-input-element,
     .mat-form-field-outline,
     .mat-form-field-outline-thick,
     .mat-form-field-required-marker {
-      color: color(error) !important;
+      color: colors.color(error) !important;
     }
   }
   &.mat-warn .mat-mdc-input-element {
-    color: color(error) !important;
+    color: colors.color(error) !important;
   }
 }

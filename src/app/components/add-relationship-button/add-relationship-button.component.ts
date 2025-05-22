@@ -11,6 +11,7 @@ import { StixViewConfig } from 'src/app/views/stix/stix-view-page';
   selector: 'app-add-relationship-button',
   templateUrl: './add-relationship-button.component.html',
   styleUrls: ['./add-relationship-button.component.scss'],
+  standalone: false,
 })
 export class AddRelationshipButtonComponent implements OnInit {
   @Input() config: AddRelationshipButtonConfig;

@@ -5,6 +5,7 @@ import { DiffMatchPatch } from 'diff-match-patch-ts';
 @Component({
   selector: 'app-property-diff',
   templateUrl: './property-diff.component.html',
+  standalone: false,
 })
 export class PropertyDiffComponent implements OnInit {
   @Input() public before: string;

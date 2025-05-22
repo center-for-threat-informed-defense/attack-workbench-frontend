@@ -11,6 +11,7 @@ import { EditorService } from 'src/app/services/editor/editor.service';
   templateUrl: './profile-page.component.html',
   styleUrls: ['./profile-page.component.scss'],
   encapsulation: ViewEncapsulation.None,
+  standalone: false,
 })
 export class ProfilePageComponent implements OnInit, OnDestroy {
   private saveSubscription: Subscription;

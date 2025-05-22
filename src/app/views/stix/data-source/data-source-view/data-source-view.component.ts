@@ -14,6 +14,7 @@ import { Relationship } from 'src/app/classes/stix';
   selector: 'app-data-source-view',
   templateUrl: './data-source-view.component.html',
   styleUrls: ['./data-source-view.component.scss'],
+  standalone: false,
 })
 export class DataSourceViewComponent extends StixViewPage implements OnInit {
   public get dataSource(): DataSource {

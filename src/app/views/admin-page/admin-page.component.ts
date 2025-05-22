@@ -6,6 +6,7 @@ import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/re
   templateUrl: './admin-page.component.html',
   styleUrls: ['./admin-page.component.scss'],
   encapsulation: ViewEncapsulation.None,
+  standalone: false,
 })
 export class AdminPageComponent implements OnInit {
   public pendingUsers;

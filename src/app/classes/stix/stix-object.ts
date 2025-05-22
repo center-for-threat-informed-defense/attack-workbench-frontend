@@ -15,24 +15,23 @@ export type workflowStates =
   | 'awaiting-review'
   | 'reviewed'
   | '';
-const stixTypeToAttackType = {
+const StixTypeToAttackType = {
   'x-mitre-collection': 'collection',
   'attack-pattern': 'technique',
-  malware: 'software',
-  tool: 'software',
+  'malware': 'software',
+  'tool': 'software',
   'intrusion-set': 'group',
-  campaign: 'campaign',
+  'campaign': 'campaign',
   'course-of-action': 'mitigation',
   'x-mitre-matrix': 'matrix',
   'x-mitre-tactic': 'tactic',
-  relationship: 'relationship',
+  'relationship': 'relationship',
   'marking-definition': 'marking-definition',
   'x-mitre-data-source': 'data-source',
   'x-mitre-data-component': 'data-component',
   'x-mitre-asset': 'asset',
-  note: 'note',
+  'note': 'note',
 };
-export { stixTypeToAttackType };
 
 export abstract class StixObject extends Serializable {
   public stixID: string; // STIX ID
@@ -57,18 +56,18 @@ export abstract class StixObject extends Serializable {
   };
 
   private typeUrlMap = {
-    technique: 'techniques',
-    software: 'software',
-    group: 'groups',
-    campaign: 'campaigns',
-    mitigation: 'mitigations',
-    matrix: 'matrices',
-    tactic: 'tactics',
-    note: 'notes',
+    'technique': 'techniques',
+    'software': 'software',
+    'group': 'groups',
+    'campaign': 'campaigns',
+    'mitigation': 'mitigations',
+    'matrix': 'matrices',
+    'tactic': 'tactics',
+    'note': 'notes',
     'marking-definition': 'marking-definitions',
     'data-source': 'datasources',
     'data-component': 'datacomponents',
-    asset: 'assets',
+    'asset': 'assets',
   };
 
   private defaultMarkingDefinitionsLoaded = false; // avoid overloading of default marking definitions
@@ -124,7 +123,7 @@ export abstract class StixObject extends Serializable {
       this.description = '';
       this.firstInitialized = true;
     }
-    this.attackType = stixTypeToAttackType[this.type];
+    this.attackType = StixTypeToAttackType[this.type];
   }
 
   /**

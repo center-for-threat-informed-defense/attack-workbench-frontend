@@ -8,6 +8,7 @@ import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/re
   selector: 'app-software-view',
   templateUrl: './software-view.component.html',
   styleUrls: ['./software-view.component.scss'],
+  standalone: false,
 })
 export class SoftwareViewComponent extends StixViewPage implements OnInit {
   @Output() public onReload = new EventEmitter();

@@ -7,6 +7,7 @@ import { ExternalReferences } from 'src/app/classes/external-references';
   templateUrl: './citation-view.component.html',
   styleUrls: ['./citation-view.component.scss'],
   encapsulation: ViewEncapsulation.None,
+  standalone: false,
 })
 export class CitationViewComponent implements OnInit {
   @Input() public config: CitationPropertyConfig;

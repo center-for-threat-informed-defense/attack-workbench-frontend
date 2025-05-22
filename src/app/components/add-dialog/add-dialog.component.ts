@@ -8,6 +8,7 @@ import { SelectionModel } from '@angular/cdk/collections';
   templateUrl: './add-dialog.component.html',
   styleUrls: ['./add-dialog.component.scss'],
   encapsulation: ViewEncapsulation.None,
+  standalone: false,
 })
 export class AddDialogComponent implements OnInit {
   constructor(

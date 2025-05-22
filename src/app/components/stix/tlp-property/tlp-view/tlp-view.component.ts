@@ -4,6 +4,7 @@ import { Component, Input, OnInit, ViewEncapsulation } from '@angular/core';
   selector: 'app-tlp-view',
   templateUrl: './tlp-view.component.html',
   encapsulation: ViewEncapsulation.None,
+  standalone: false,
 })
 export class TlpViewComponent implements OnInit {
   @Input() public tlp: string;

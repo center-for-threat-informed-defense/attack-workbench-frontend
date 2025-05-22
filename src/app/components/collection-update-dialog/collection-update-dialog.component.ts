@@ -11,6 +11,7 @@ import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/re
   templateUrl: './collection-update-dialog.component.html',
   styleUrls: ['./collection-update-dialog.component.scss'],
   encapsulation: ViewEncapsulation.None,
+  standalone: false,
 })
 export class CollectionUpdateDialogComponent implements OnInit {
   public stage = 0;

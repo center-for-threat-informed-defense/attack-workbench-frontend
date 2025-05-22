@@ -9,6 +9,7 @@ import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/re
   selector: 'app-contributors-page',
   templateUrl: './contributors-page.component.html',
   styleUrls: ['./contributors-page.component.scss'],
+  standalone: false,
 })
 export class ContributorsPageComponent implements OnInit, OnDestroy {
   private contributors: string[] = [];

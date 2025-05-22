@@ -1,4 +1,6 @@
-@import '../../../../style/globals';
+@use '../../../../style/globals';
+@use '../../../../style/colors';
+
 .stix-list {
   .controls {
     .input-group {
@@ -12,10 +14,10 @@
       }
       .mat-mdc-floating-label {
         .light & {
-          color: on-color-deemphasis(light);
+          color: colors.on-color-deemphasis(light);
         }
         .dark & {
-          color: on-color-deemphasis(dark);
+          color: colors.on-color-deemphasis(dark);
         }
       }
       .mat-mdc-checkbox {
@@ -25,10 +27,10 @@
     .bordered {
       border-bottom: 1px solid;
       .light & {
-        border-color: border-color(light);
+        border-color: colors.border-color(light);
       }
       .dark & {
-        border-color: border-color(dark);
+        border-color: colors.border-color(dark);
       }
     }
 
@@ -50,10 +52,10 @@
     margin: 0 auto;
     border-radius: 4px;
     .dark & {
-      border: 1px solid border-color(dark);
+      border: 1px solid colors.border-color(dark);
     }
     .light & {
-      border: 1px solid border-color(light);
+      border: 1px solid colors.border-color(light);
     }
     .scroll-container {
       width: 100%;
@@ -62,10 +64,10 @@
       display: flex;
       flex-direction: column;
       .dark & {
-        border-bottom: 1px solid border-color(dark);
+        border-bottom: 1px solid colors.border-color(dark);
       }
       .light & {
-        border-bottom: 1px solid border-color(light);
+        border-bottom: 1px solid colors.border-color(light);
       }
       table {
         flex: 1 0 auto;
@@ -78,12 +80,12 @@
         th,
         td {
           .light & {
-            background: color(light);
-            border-color: border-color(light);
+            background: colors.color(light);
+            border-color: colors.border-color(light);
           }
           .dark & {
-            background: color(dark);
-            border-color: border-color(dark);
+            background: colors.color(dark);
+            border-color: colors.border-color(dark);
           }
         }
         th {
@@ -119,10 +121,10 @@
 
         tr.element-row:not(.expanded):hover {
           .light & td {
-            background: color-alternate(light);
+            background: colors.color-alternate(light);
           }
           .dark & td {
-            background: color-alternate(dark);
+            background: colors.color-alternate(dark);
           }
         }
 
@@ -143,24 +145,24 @@
         .mat-cell.mat-column-start-action {
           cursor: pointer;
           .dark & {
-            background: color(dark);
+            background: colors.color(dark);
           }
           .light & {
-            background: color(light);
+            background: colors.color(light);
           }
           &:hover {
-            background: color(primary) !important;
-            color: on-color(primary);
+            background: colors.color(primary) !important;
+            color: colors.on-color(primary);
           }
         }
 
         .mat-column-start-action {
           &.mat-mdc-cell {
             .light & {
-              outline: 1px solid border-color(light);
+              outline: 1px solid colors.border-color(light);
             }
             .dark & {
-              outline: 1px solid border-color(dark);
+              outline: 1px solid colors.border-color(dark);
             }
           }
           padding-left: 12px;
@@ -169,10 +171,10 @@
         .mat-column-end-action {
           &.mat-mdc-cell {
             .light & {
-              outline: 1px solid border-color(light);
+              outline: 1px solid colors.border-color(light);
             }
             .dark & {
-              outline: 1px solid border-color(dark);
+              outline: 1px solid colors.border-color(dark);
             }
           }
           padding-right: 12px;
@@ -210,12 +212,12 @@
                       border-bottom-width: 1px;
                       border-style: solid;
                       .light & {
-                        background-color: color(light);
-                        border-color: border-color(light);
+                        background-color: colors.color(light);
+                        border-color: colors.border-color(light);
                       }
                       .dark & {
-                        background-color: color(light);
-                        border-color: border-color(dark);
+                        background-color: colors.color(light);
+                        border-color: colors.border-color(dark);
                       }
                     }
                     .mat-mdc-header-row {
@@ -224,10 +226,10 @@
                     .mat-mdc-header-cell {
                       border-bottom: none;
                       .light & {
-                        background-color: color(light);
+                        background-color: colors.color(light);
                       }
                       .dark & {
-                        background-color: color(dark);
+                        background-color: colors.color(dark);
                       }
                     }
                     .mat-column-action {
@@ -247,10 +249,10 @@
                 }
                 & + .column {
                   .light & {
-                    border-color: border-color(light);
+                    border-color: colors.border-color(light);
                   }
                   .dark & {
-                    border-color: border-color(dark);
+                    border-color: colors.border-color(dark);
                   }
                   border-left: 1px solid;
                   padding-left: 16px;
@@ -268,10 +270,10 @@
                 width: 100%;
                 &:hover {
                   .light & {
-                    background: color-alternate(light);
+                    background: colors.color-alternate(light);
                   }
                   .dark & {
-                    background: rgba(border-color(dark), 0.25);
+                    background: rgba(colors.border-color(dark), 0.25);
                   }
                 }
               }

@@ -13,6 +13,7 @@ import { Observable } from 'rxjs';
   selector: 'app-default-marking-definitions',
   templateUrl: './default-marking-definitions.component.html',
   styleUrls: ['./default-marking-definitions.component.scss'],
+  standalone: false,
 })
 export class DefaultMarkingDefinitionsComponent implements OnInit {
   public select: SelectionModel<string>;

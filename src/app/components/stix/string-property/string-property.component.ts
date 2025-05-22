@@ -6,6 +6,7 @@ import { StixObject } from 'src/app/classes/stix/stix-object';
   templateUrl: './string-property.component.html',
   styleUrls: ['./string-property.component.scss'],
   encapsulation: ViewEncapsulation.None,
+  standalone: false,
 })
 export class StringPropertyComponent {
   @Input() public config: StringPropertyConfig;

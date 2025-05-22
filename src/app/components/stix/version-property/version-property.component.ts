@@ -4,6 +4,7 @@ import { StixObject } from 'src/app/classes/stix/stix-object';
 @Component({
   selector: 'app-version-property',
   templateUrl: './version-property.component.html',
+  standalone: false,
 })
 export class VersionPropertyComponent {
   @Input() public config: VersionPropertyConfig;

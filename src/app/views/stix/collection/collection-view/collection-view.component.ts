@@ -53,6 +53,7 @@ type changeCategory =
   templateUrl: './collection-view.component.html',
   styleUrls: ['./collection-view.component.scss'],
   encapsulation: ViewEncapsulation.None,
+  standalone: false,
 })
 export class CollectionViewComponent extends StixViewPage implements OnInit {
   public get collection(): Collection {
@@ -73,29 +74,29 @@ export class CollectionViewComponent extends StixViewPage implements OnInit {
 
   // type map for the _t
   private typeMap = {
-    Technique: 'technique',
-    Tactic: 'tactic',
-    Campaign: 'campaign',
-    Software: 'software',
+    'Technique': 'technique',
+    'Tactic': 'tactic',
+    'Campaign': 'campaign',
+    'Software': 'software',
     'Course-of-Action': 'mitigation',
-    MatrixModel: 'matrix',
+    'MatrixModel': 'matrix',
     'Intrusion-Set': 'group',
     'Data-Source': 'data_source',
     'Data-Component': 'data_component',
-    Asset: 'asset',
+    'Asset': 'asset',
   };
 
   // pluralize attackType for text display
   public plural = {
-    technique: 'techniques',
-    tactic: 'tactics',
-    group: 'groups',
-    software: 'software',
-    mitigation: 'mitigations',
-    matrix: 'matrices',
+    'technique': 'techniques',
+    'tactic': 'tactics',
+    'group': 'groups',
+    'software': 'software',
+    'mitigation': 'mitigations',
+    'matrix': 'matrices',
     'data-source': 'data sources',
     'data-component': 'data components',
-    asset: 'assets',
+    'asset': 'assets',
   };
 
   public get collectionDownloadURL() {

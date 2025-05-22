@@ -8,6 +8,7 @@ import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/re
   selector: 'app-mitigation-view',
   templateUrl: './mitigation-view.component.html',
   styleUrls: ['./mitigation-view.component.scss'],
+  standalone: false,
 })
 export class MitigationViewComponent extends StixViewPage implements OnInit {
   @Output() public onReload = new EventEmitter();

@@ -9,6 +9,7 @@ import {
   selector: 'app-org-settings-page',
   templateUrl: './org-settings-page.component.html',
   styleUrls: ['./org-settings-page.component.scss'],
+  standalone: false,
 })
 export class OrgSettingsPageComponent implements OnInit {
   public organizationIdentity: Identity;

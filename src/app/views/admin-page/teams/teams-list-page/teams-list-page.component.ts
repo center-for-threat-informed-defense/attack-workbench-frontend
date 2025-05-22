@@ -14,6 +14,7 @@ import { Router } from '@angular/router';
   templateUrl: './teams-list-page.component.html',
   styleUrls: ['./teams-list-page.component.scss'],
   encapsulation: ViewEncapsulation.None,
+  standalone: false,
 })
 export class TeamsListPageComponent implements OnInit {
   @ViewChild(MatPaginator) paginator: MatPaginator;

@@ -4,6 +4,7 @@ import { SubtypePropertyConfig } from '../subtype-property.component';
 @Component({
   selector: 'app-subtype-diff',
   templateUrl: './subtype-diff.component.html',
+  standalone: false,
 })
 export class SubtypeDiffComponent implements OnInit {
   @Input() public config: SubtypePropertyConfig;

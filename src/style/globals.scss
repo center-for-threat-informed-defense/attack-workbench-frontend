@@ -1,7 +1,7 @@
-@import 'colors.scss';
-@import 'layout.scss';
-@import 'typography.scss';
-@import 'forms.scss';
+@use 'colors.scss';
+@use 'layout.scss';
+@use 'typography.scss';
+@use 'forms.scss';
 
 button.control {
   min-width: 24px;
@@ -22,10 +22,10 @@ button.control {
 
 .mat-pseudo-checkbox.mat-mdc-option-pseudo-checkbox.mat-pseudo-checkbox-full.ng-star-inserted.mat-pseudo-checkbox-checked {
   .light & {
-    color: color(light) !important;
+    color: colors.color(light) !important;
   }
   .dark & {
-    color: color(light) !important;
+    color: colors.color(light) !important;
   }
 }
 .mat-mdc-select-panel .no-checkbox .mat-pseudo-checkbox {
@@ -35,10 +35,10 @@ button.control {
   .mdc-checkbox__native-control[disabled]:checked
   ~ .mdc-checkbox__background {
   .light & {
-    background-color: on-color-deemphasis(light);
+    background-color: colors.on-color-deemphasis(light);
   }
   .dark & {
-    background-color: on-color-deemphasis(dark);
+    background-color: colors.on-color-deemphasis(dark);
   }
 }
 

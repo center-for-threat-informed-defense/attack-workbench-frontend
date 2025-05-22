@@ -1,3 +1,6 @@
+@use '../colors';
+@use '../typography';
+
 .section-header {
   margin: 20px 0;
   display: flex;
@@ -9,10 +12,10 @@
     content: '';
     border-bottom: 1px solid;
     .dark & {
-      border-color: border-color(dark);
+      border-color: colors.border-color(dark);
     }
     .light & {
-      border-color: border-color(light);
+      border-color: colors.border-color(light);
     }
   }
   &:before {
@@ -39,10 +42,10 @@
       transition: ease border-color 0.2s;
       &:hover {
         .dark & {
-          border-color: on-color-deemphasis(dark);
+          border-color: colors.on-color-deemphasis(dark);
         }
         .light & {
-          border-color: on-color-deemphasis(light);
+          border-color: colors.on-color-deemphasis(light);
         }
       }
     }
@@ -55,10 +58,10 @@
       border-radius: 10px;
       border-style: solid;
       .dark & {
-        border-color: border-color(dark);
+        border-color: colors.border-color(dark);
       }
       .light & {
-        border-color: border-color(light);
+        border-color: colors.border-color(light);
       }
     }
   }
