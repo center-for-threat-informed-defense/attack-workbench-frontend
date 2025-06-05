@@ -16,10 +16,12 @@
 
   <!-- Stix Object Routes -->
   <div
+    *ngIf="filteredRoutes.length > 0"
     class="links"
     #linkMenu
     [ngClass]="{ 'pad-right': isLoggedIn }"
     [ngStyle]="{ visibility: showHamburger ? 'hidden' : 'visible' }">
+    <!-- non-grouped routes -->
     <button
       mat-button
       *ngFor="let stixRoute of filteredRoutes"
@@ -28,19 +30,28 @@
       {{ stixRoute.data.breadcrumb }}
     </button>
 
-    <button mat-button [matMenuTriggerFor]="more" aria-label="more">
-      More
-    </button>
-    <mat-menu #more="matMenu" backdropClass="override-light">
+    <!-- drop downs for grouped routes -->
+    <ng-container *ngFor="let section of groupedRoutes | keyvalue">
       <button
-        mat-menu-item
-        *ngFor="let stixRoute of moreRoutes"
-        [disabled]="!isLoggedIn"
-        [routerLink]="stixRoute.path">
-        {{ stixRoute.data.breadcrumb }}
+        mat-button
+        [matMenuTriggerFor]="menu"
+        (click)="setSectionDropdown(section)">
+        {{ section.key }}
       </button>
-      <button mat-menu-item routerLink="/docs">documentation</button>
-    </mat-menu>
+      <!-- dynamic dropdown menus -->
+      <mat-menu #menu="matMenu" backdropClass="override-light">
+        <button
+          mat-menu-item
+          *ngFor="let stixRoute of currentDropdown?.value"
+          [disabled]="!isLoggedIn"
+          [routerLink]="stixRoute.path">
+          {{ stixRoute.data.breadcrumb }}
+        </button>
+        <button *ngIf="section.key === 'more'" mat-menu-item routerLink="/docs">
+          documentation
+        </button>
+      </mat-menu>
+    </ng-container>
   </div>
 
   <!-- Hamburger Dropdown Menus -->

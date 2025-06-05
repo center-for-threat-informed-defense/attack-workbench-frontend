@@ -15,6 +15,9 @@ import { AssetListComponent } from './views/stix/asset/asset-list/asset-list.com
 import { NotesPageComponent } from './views/notes-page/notes-page.component';
 import { StixPageComponent } from './views/stix/stix-page/stix-page.component';
 import { ContributorsPageComponent } from './views/contributors-page/contributors-page.component';
+import { DetectionStrategyListComponent } from './views/stix/detection-strategy/detection-strategy-list/detection-strategy-list.component';
+import { LogSourceListComponent } from './views/stix/log-source/log-source-list/log-source-list.component';
+import { AnalyticListComponent } from './views/stix/analytic/analytic-list/analytic-list.component';
 
 import { RouterModule, Routes } from '@angular/router';
 import { NgModule } from '@angular/core';
@@ -46,31 +49,55 @@ const stixRouteData = [
     attackType: 'data-source',
     editable: true,
     component: DataSourceListComponent,
+    headerSection: 'defenses',
   },
   {
     attackType: 'mitigation',
     editable: true,
     component: MitigationListComponent,
+    headerSection: 'defenses',
   },
   {
     attackType: 'group',
     editable: true,
     component: GroupListComponent,
+    headerSection: 'cti',
   },
   {
     attackType: 'software',
     editable: true,
     component: SoftwareListComponent,
+    headerSection: 'cti',
   },
   {
     attackType: 'campaign',
     editable: true,
     component: CampaignListComponent,
+    headerSection: 'cti',
   },
   {
     attackType: 'asset',
     editable: true,
     component: AssetListComponent,
+    headerSection: 'defenses',
+  },
+  {
+    attackType: 'detection-strategy',
+    editable: true,
+    component: DetectionStrategyListComponent,
+    headerSection: 'defenses',
+  },
+  {
+    attackType: 'log-source',
+    editable: true,
+    component: LogSourceListComponent,
+    headerSection: 'defenses',
+  },
+  {
+    attackType: 'analytic',
+    editable: true,
+    component: AnalyticListComponent,
+    headerSection: 'defenses',
   },
 ];
 
@@ -81,6 +108,7 @@ stixRouteData.forEach(stixRoute => {
     canActivateChild: [AuthorizationGuard],
     data: {
       breadcrumb: AttackTypeToRoute[stixRoute.attackType].replace(/-/g, ' '),
+      headerSection: stixRoute.headerSection || undefined,
     },
     children: [
       {
@@ -139,7 +167,7 @@ stixRoutes.push({
   canActivateChild: [AuthorizationGuard],
   data: {
     breadcrumb: 'marking definitions',
-    more: true,
+    headerSection: 'more',
   },
   children: [
     {
@@ -196,7 +224,7 @@ if (environment.integrations.collection_manager.enabled) {
     canActivateChild: [AuthorizationGuard],
     data: {
       breadcrumb: 'collections',
-      more: true,
+      headerSection: 'more',
     },
     children: [
       {
@@ -293,7 +321,7 @@ stixRoutes.push(
     canActivateChild: [AuthorizationGuard],
     data: {
       breadcrumb: 'reference manager',
-      more: true,
+      headerSection: 'more',
     },
     children: [
       {
@@ -313,7 +341,7 @@ stixRoutes.push(
     canActivateChild: [AuthorizationGuard],
     data: {
       breadcrumb: 'contributors',
-      more: true,
+      headerSection: 'more',
     },
     children: [
       {
@@ -332,7 +360,7 @@ stixRoutes.push(
     canActivateChild: [AuthorizationGuard],
     data: {
       breadcrumb: 'notes',
-      more: true,
+      headerSection: 'more',
     },
     children: [
       {
