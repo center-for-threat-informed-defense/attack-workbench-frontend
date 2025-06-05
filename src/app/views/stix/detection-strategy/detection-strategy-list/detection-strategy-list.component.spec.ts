@@ -8,9 +8,8 @@ describe('DetectionStrategyListComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [DetectionStrategyListComponent]
-    })
-    .compileComponents();
+      declarations: [DetectionStrategyListComponent],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(DetectionStrategyListComponent);
     component = fixture.componentInstance;

@@ -4,8 +4,6 @@ import { Component } from '@angular/core';
   selector: 'app-analytic-list',
   standalone: false,
   templateUrl: './analytic-list.component.html',
-  styleUrl: './analytic-list.component.scss'
+  styleUrl: './analytic-list.component.scss',
 })
-export class AnalyticListComponent {
-
-}
+export class AnalyticListComponent {}

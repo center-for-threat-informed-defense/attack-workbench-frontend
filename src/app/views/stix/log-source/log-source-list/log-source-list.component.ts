@@ -4,8 +4,6 @@ import { Component } from '@angular/core';
   selector: 'app-log-source-list',
   standalone: false,
   templateUrl: './log-source-list.component.html',
-  styleUrl: './log-source-list.component.scss'
+  styleUrl: './log-source-list.component.scss',
 })
-export class LogSourceListComponent {
-
-}
+export class LogSourceListComponent {}
