@@ -7,7 +7,7 @@
  * circular dependency issues.
  */
 
-import { AttackType } from './types';
+import { AttackType, StixType } from './types';
 
 /**
  * Map ATT&CK types to their plural forms
@@ -29,6 +29,9 @@ export const AttackTypeToPlural: Record<AttackType, string> = {
   'marking-definition': 'marking-definitions',
   'data-source': 'data-sources',
   'data-component': 'data-components',
+  'detection-strategy': 'detection-strategies',
+  'analytic': 'analytics',
+  'log-source': 'log-sources',
 };
 
 /**
@@ -41,7 +44,7 @@ export const AttackTypeToRoute: Record<AttackType, string> = AttackTypeToPlural;
  * Map STIX types to their corresponding ATT&CK types
  * @type { Record<StixType, AttackType> }
  */
-export const StixTypeToAttackType = {
+export const StixTypeToAttackType: Record<StixType, AttackType> = {
   'x-mitre-collection': 'collection',
   'attack-pattern': 'technique',
   'malware': 'software',
@@ -58,4 +61,7 @@ export const StixTypeToAttackType = {
   'x-mitre-asset': 'asset',
   'note': 'note',
   'identity': 'identity',
+  'x-mitre-detection-strategy': 'detection-strategy',
+  'x-mitre-analytic': 'analytic',
+  'x-mitre-log-source': 'log-source',
 };

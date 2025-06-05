@@ -233,6 +233,12 @@ import { ExternalReferencesDiffComponent } from './components/stix/external-refe
 import { BooleanPropertyComponent } from './components/stix/boolean-property/boolean-property.component';
 import { StatementDiffComponent } from './components/stix/statement-property/statement-diff/statement-diff.component';
 import { TlpDiffComponent } from './components/stix/tlp-property/tlp-diff/tlp-diff.component';
+import { DetectionStrategyListComponent } from './views/stix/detection-strategy/detection-strategy-list/detection-strategy-list.component';
+import { DetectionStrategyViewComponent } from './views/stix/detection-strategy/detection-strategy-view/detection-strategy-view.component';
+import { LogSourceListComponent } from './views/stix/log-source/log-source-list/log-source-list.component';
+import { LogSourceViewComponent } from './views/stix/log-source/log-source-view/log-source-view.component';
+import { AnalyticListComponent } from './views/stix/analytic/analytic-list/analytic-list.component';
+import { AnalyticViewComponent } from './views/stix/analytic/analytic-view/analytic-view.component';
 
 export function initConfig(appConfigService: AppConfigService) {
   return () => appConfigService.loadAppConfig();
@@ -375,6 +381,12 @@ export function initConfig(appConfigService: AppConfigService) {
     StatementDiffComponent,
     TlpDiffComponent,
     VersionPopoverComponent,
+    DetectionStrategyListComponent,
+    DetectionStrategyViewComponent,
+    LogSourceListComponent,
+    LogSourceViewComponent,
+    AnalyticListComponent,
+    AnalyticViewComponent,
   ],
   exports: [
     MatToolbarModule,
