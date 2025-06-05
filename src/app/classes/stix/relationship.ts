@@ -15,6 +15,8 @@ import {
   Software,
   Tactic,
   Technique,
+  DetectionStrategy,
+  LogSource,
 } from 'src/app/classes/stix';
 
 export class Relationship extends StixObject {
@@ -64,6 +66,8 @@ export class Relationship extends StixObject {
       'x-mitre-data-source': DataSource,
       'x-mitre-data-component': DataComponent,
       'x-mitre-asset': Asset,
+      'x-mitre-detection-strategy': DetectionStrategy,
+      'x-mitre-log-source': LogSource,
     };
     if (type == 'malware' || type == 'tool') return new Software(type, raw);
     return new StixTypeToClass[type](raw);
@@ -84,9 +88,10 @@ export class Relationship extends StixObject {
     }
     if (this.relationship_type == 'mitigates') return ['mitigation'];
     if (this.relationship_type == 'subtechnique-of') return ['technique'];
-    if (this.relationship_type == 'detects') return ['data-component'];
+    if (this.relationship_type == 'detects') return ['detection-strategy'];
     if (this.relationship_type == 'attributed-to') return ['campaign'];
     if (this.relationship_type == 'targets') return ['technique'];
+    if (this.relationship_type == 'found-in') return ['data-component'];
     else return null;
   }
   /**
@@ -108,6 +113,7 @@ export class Relationship extends StixObject {
     if (this.relationship_type == 'detects') return ['technique'];
     if (this.relationship_type == 'attributed-to') return ['group'];
     if (this.relationship_type == 'targets') return ['asset'];
+    if (this.relationship_type == 'found-in') return ['log-source'];
     else return null;
   }
 
@@ -644,7 +650,7 @@ export class Relationship extends StixObject {
    * Delete this STIX object from the database.
    * @param restAPIService [RestApiConnectorService] the service to perform the DELETE through
    */
-  public delete(restAPIService: RestApiConnectorService): Observable<{}> {
+  public delete(restAPIService: RestApiConnectorService): Observable<object> {
     const deleteObservable = restAPIService.deleteRelationship(this.stixID);
     const subscription = deleteObservable.subscribe({
       complete: () => {
