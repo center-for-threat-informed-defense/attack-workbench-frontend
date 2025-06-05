@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import {
   HttpClient,
   HttpHeaders,
@@ -38,6 +39,9 @@ import {
   Identity,
   Relationship,
   MarkingDefinition,
+  DetectionStrategy,
+  LogSource,
+  Analytic,
 } from 'src/app/classes/stix';
 import { Collection } from 'src/app/classes/stix/collection';
 import {
@@ -353,6 +357,48 @@ export class RestApiConnectorService extends ApiConnector {
     return this.getStixObjectsFactory<DataComponent>('data-component');
   }
   /**
+   * Get all detection strategies
+   * @param {number} [limit] the number of detection strategies to retrieve
+   * @param {number} [offset] the number of detection strategies to skip
+   * @param {string} [state] if specified, only get objects with this state
+   * @param {string} [lastUpdatedBy] if specified, only get objects which were last updated by these users
+   * @param {boolean} [revoked] if true, get revoked objects
+   * @param {boolean} [deprecated] if true, get deprecated objects
+   * @param {string[]} [excludeIDs] if specified, excludes these STIX IDs from the result
+   * @returns {Observable<DetectionStrategy[]>} observable of retrieved objects
+   */
+  public get getAllDetectionStrategies() {
+    return this.getStixObjectsFactory<DetectionStrategy>('detection-strategy');
+  }
+  /**
+   * Get all analytics
+   * @param {number} [limit] the number of analytics to retrieve
+   * @param {number} [offset] the number of analytics to skip
+   * @param {string} [state] if specified, only get objects with this state
+   * @param {string} [lastUpdatedBy] if specified, only get objects which were last updated by these users
+   * @param {boolean} [revoked] if true, get revoked objects
+   * @param {boolean} [deprecated] if true, get deprecated objects
+   * @param {string[]} [excludeIDs] if specified, excludes these STIX IDs from the result
+   * @returns {Observable<Analytic[]>} observable of retrieved objects
+   */
+  public get getAllAnalytics() {
+    return this.getStixObjectsFactory<Analytic>('analytic');
+  }
+  /**
+   * Get all log sources
+   * @param {number} [limit] the number of log sources to retrieve
+   * @param {number} [offset] the number of log sources to skip
+   * @param {string} [state] if specified, only get objects with this state
+   * @param {string} [lastUpdatedBy] if specified, only get objects which were last updated by these users
+   * @param {boolean} [revoked] if true, get revoked objects
+   * @param {boolean} [deprecated] if true, get deprecated objects
+   * @param {string[]} [excludeIDs] if specified, excludes these STIX IDs from the result
+   * @returns {Observable<LogSource[]>} observable of retrieved objects
+   */
+  public get getAllLogSources() {
+    return this.getStixObjectsFactory<LogSource>('log-source');
+  }
+  /**
    * Get all matrices
    * @param {number} [limit] the number of matrices to retrieve
    * @param {number} [offset] the number of matrices to skip
@@ -394,7 +440,7 @@ export class RestApiConnectorService extends ApiConnector {
    * @returns {Observable<MarkingDefinition[]>} observable of retrieved objects
    */
   public get getAllMarkingDefinitions() {
-    return this.getStixObjectsFactory<Collection>('marking-definition');
+    return this.getStixObjectsFactory<MarkingDefinition>('marking-definition');
   }
   /**
    * Get all notes
@@ -840,6 +886,36 @@ export class RestApiConnectorService extends ApiConnector {
     return this.getStixObjectFactory<DataComponent>('data-component');
   }
   /**
+   * Get a single detection strategy by STIX ID
+   * @param {string} id the object STIX ID
+   * @param {Date} [modified] if specified, get the version modified at the given date
+   * @param {versions} [string] default "latest", if "all" returns all versions of the object instead of just the latest version.
+   * @returns {Observable<DetectionStrategy>} the object with the given ID and modified date
+   */
+  public get getDetectionStrategy() {
+    return this.getStixObjectFactory<DetectionStrategy>('detection-strategy');
+  }
+  /**
+   * Get a single analytic by STIX ID
+   * @param {string} id the object STIX ID
+   * @param {Date} [modified] if specified, get the version modified at the given date
+   * @param {versions} [string] default "latest", if "all" returns all versions of the object instead of just the latest version.
+   * @returns {Observable<Analytic>} the object with the given ID and modified date
+   */
+  public get getAnalytic() {
+    return this.getStixObjectFactory<Analytic>('analytic');
+  }
+  /**
+   * Get a single log source by STIX ID
+   * @param {string} id the object STIX ID
+   * @param {Date} [modified] if specified, get the version modified at the given date
+   * @param {versions} [string] default "latest", if "all" returns all versions of the object instead of just the latest version.
+   * @returns {Observable<LogSource>} the object with the given ID and modified date
+   */
+  public get getLogSource() {
+    return this.getStixObjectFactory<LogSource>('log-source');
+  }
+  /**
    * Get a single matrix by STIX ID
    * @param {string} id the object STIX ID
    * @param {Date} [modified] if specified, get the version modified at the given date
@@ -986,6 +1062,30 @@ export class RestApiConnectorService extends ApiConnector {
    */
   public get postDataComponent() {
     return this.postStixObjectFactory<DataComponent>('data-component');
+  }
+  /**
+   * POST (create) a new detection strategy
+   * @param {DetectionStrategy} object the object to create
+   * @returns {Observable<DetectionStrategy>} the created object
+   */
+  public get postDetectionStrategy() {
+    return this.postStixObjectFactory<DetectionStrategy>('detection-strategy');
+  }
+  /**
+   * POST (create) a new analytic
+   * @param {Analytic} object the object to create
+   * @returns {Observable<Analytic>} the created object
+   */
+  public get postAnalytic() {
+    return this.postStixObjectFactory<Analytic>('analytic');
+  }
+  /**
+   * POST (create) a new log source
+   * @param {LogSource} object the object to create
+   * @returns {Observable<LogSource>} the created object
+   */
+  public get postLogSource() {
+    return this.postStixObjectFactory<LogSource>('log-source');
   }
   /**
    * POST (create) a new matrix
@@ -1145,6 +1245,33 @@ export class RestApiConnectorService extends ApiConnector {
     return this.putStixObjectFactory<DataComponent>('data-component');
   }
   /**
+   * PUT (update) a detection strategy
+   * @param {DetectionStrategy} object the object to update
+   * @param {Date} [modified] optional, the modified date to overwrite. If omitted, uses the modified field of the object
+   * @returns {Observable<DetectionStrategy>} the updated object
+   */
+  public get putDetectionStrategy() {
+    return this.putStixObjectFactory<DetectionStrategy>('detection-strategy');
+  }
+  /**
+   * PUT (update) an analytic
+   * @param {Analytic} object the object to update
+   * @param {Date} [modified] optional, the modified date to overwrite. If omitted, uses the modified field of the object
+   * @returns {Observable<Analytic>} the updated object
+   */
+  public get putAnalytic() {
+    return this.putStixObjectFactory<Analytic>('analytic');
+  }
+  /**
+   * PUT (update) a log source
+   * @param {LogSource} object the object to update
+   * @param {Date} [modified] optional, the modified date to overwrite. If omitted, uses the modified field of the object
+   * @returns {Observable<LogSource>} the updated object
+   */
+  public get putLogSource() {
+    return this.putStixObjectFactory<LogSource>('log-source');
+  }
+  /**
    * PUT (update) a matrix
    * @param {Matrix} object the object to update
    * @param {Date} [modified] optional, the modified date to overwrite. If omitted, uses the modified field of the object
@@ -1264,6 +1391,30 @@ export class RestApiConnectorService extends ApiConnector {
    */
   public get deleteDataComponent() {
     return this.deleteStixObjectFactory('data-component');
+  }
+  /**
+   * DELETE a detection strategy
+   * @param {string} id the STIX ID of the object to delete
+   * @returns {Observable<{}>} observable of the response body
+   */
+  public get deleteDetectionStrategy() {
+    return this.deleteStixObjectFactory('detection-strategy');
+  }
+  /**
+   * DELETE an analytic
+   * @param {string} id the STIX ID of the object to delete
+   * @returns {Observable<{}>} observable of the response body
+   */
+  public get deleteAnalytic() {
+    return this.deleteStixObjectFactory('analytic');
+  }
+  /**
+   * DELETE a log source
+   * @param {string} id the STIX ID of the object to delete
+   * @returns {Observable<{}>} observable of the response body
+   */
+  public get deleteLogSource() {
+    return this.deleteStixObjectFactory('log-source');
   }
   /**
    * DELETE a matrix
