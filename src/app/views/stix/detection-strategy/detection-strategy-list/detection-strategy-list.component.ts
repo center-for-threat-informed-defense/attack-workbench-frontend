@@ -4,8 +4,6 @@ import { Component } from '@angular/core';
   selector: 'app-detection-strategy-list',
   standalone: false,
   templateUrl: './detection-strategy-list.component.html',
-  styleUrl: './detection-strategy-list.component.scss'
+  styleUrl: './detection-strategy-list.component.scss',
 })
-export class DetectionStrategyListComponent {
-
-}
+export class DetectionStrategyListComponent {}

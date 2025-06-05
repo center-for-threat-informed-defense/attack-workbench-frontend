@@ -4,8 +4,6 @@ import { Component } from '@angular/core';
   selector: 'app-analytic-view',
   standalone: false,
   templateUrl: './analytic-view.component.html',
-  styleUrl: './analytic-view.component.scss'
+  styleUrl: './analytic-view.component.scss',
 })
-export class AnalyticViewComponent {
-
-}
+export class AnalyticViewComponent {}

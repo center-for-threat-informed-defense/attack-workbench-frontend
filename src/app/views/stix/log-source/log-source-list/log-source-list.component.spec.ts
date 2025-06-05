@@ -8,9 +8,8 @@ describe('LogSourceListComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [LogSourceListComponent]
-    })
-    .compileComponents();
+      declarations: [LogSourceListComponent],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(LogSourceListComponent);
     component = fixture.componentInstance;
