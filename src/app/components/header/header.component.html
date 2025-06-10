@@ -35,6 +35,7 @@
       <button
         mat-button
         [matMenuTriggerFor]="menu"
+        [disabled]="!isLoggedIn"
         (click)="setSectionDropdown(section)">
         {{ section.key }}
       </button>
