@@ -14,7 +14,11 @@
             "prerelease": true
         },
         {
-            "name": "project-orion",
+            "name": "detections",
+            "prerelease": true
+        },
+        {
+            "name": "adm",
             "prerelease": true
         }
     ],
