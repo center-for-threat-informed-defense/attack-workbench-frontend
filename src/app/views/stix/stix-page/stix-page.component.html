@@ -1,6 +1,6 @@
 <div class="stix-page-wrapper">
   <div *ngIf="objects; else loading">
-    <div class="nothing-here" *ngIf="objects.length == 0; else showObject">
+    <div class="nothing-here" *ngIf="objects.length === 0; else showObject">
       <h1 class="text-deemphasis">
         <span class="shrug">¯\_(ツ)_/¯</span> Nothing here
       </h1>
