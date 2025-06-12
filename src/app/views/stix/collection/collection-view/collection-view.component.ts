@@ -40,13 +40,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { CollectionUpdateDialogComponent } from 'src/app/components/collection-update-dialog/collection-update-dialog.component';
 import { AddDialogComponent } from 'src/app/components/add-dialog/add-dialog.component';
 import { SelectionModel } from '@angular/cdk/collections';
-
-type changeCategory =
-  | 'additions'
-  | 'changes'
-  | 'minor_changes'
-  | 'revocations'
-  | 'deprecations';
+import { ChangelogCategory } from 'src/app/utils/types';
 
 @Component({
   selector: 'app-collection-view',
@@ -520,7 +514,7 @@ export class CollectionViewComponent extends StixViewPage implements OnInit {
   public moveChanges(
     objects: StixObject[],
     attackType: string,
-    category: changeCategory,
+    category: ChangelogCategory,
     direction: 'stage' | 'unstage'
   ): void {
     // Addition: stage
