@@ -3,13 +3,14 @@
     <div class="grid spacing-16" *ngIf="!loading; else loadingDisplay">
       <div class="row width-limited">
         <div class="col">
-          <!-- things to add to the collection -->
+          <!-- NAME -->
           <app-name-property
             class="grow-to-row c-align"
             [config]="{
               mode: config.mode,
               object: config.object,
             }"></app-name-property>
+          <!-- SUBHEADING -->
           <app-subheading
             *ngIf="!editing"
             [config]="config"
@@ -68,17 +69,17 @@
             <div class="content collection-data">
               <!-- collection data -->
               <div class="url">
-                <code
-                  class="copy-url"
+                <a
                   [cdkCopyToClipboard]="collectionDownloadURL"
-                  (click)="
-                    snackbar.open('copied to clipboard', null, {
+                  class="copy-url"
+                  title="click to copy URL"
+                  (cdkCopyToClipboardCopied)="
+                    snackbar.open('copied download URL to clipboard', null, {
                       duration: 1000,
                     })
-                  "
-                  matTooltip="click to copy URL">
+                  ">
                   {{ collectionDownloadURL }}
-                </code>
+                </a>
                 <!-- include notes? -->
                 <div class="notes">
                   <mat-checkbox color="primary" [(ngModel)]="includeNotes"
@@ -87,9 +88,12 @@
                 </div>
               </div>
               <!-- download collection -->
-              <div class="suffix download" (click)="downloadCollectionBundle()">
+              <button
+                mat-button
+                class="suffix download"
+                (click)="downloadCollectionBundle()">
                 <mat-icon aria-label="download">download</mat-icon>
-              </div>
+              </button>
             </div>
             <span class="labelled-box-label">Collection Data</span>
           </div>
@@ -136,22 +140,7 @@
           <mat-accordion>
             <mat-expansion-panel
               class="mat-elevation-z0"
-              *ngFor="
-                let attackType of [
-                  'matrix',
-                  'tactic',
-                  'technique',
-                  'mitigation',
-                  'campaign',
-                  'group',
-                  'software',
-                  'data_source',
-                  'data_component',
-                  'asset',
-                ]
-              "
-              [expanded]="panel == attackType"
-              (click)="panel = attackType">
+              *ngFor="let attackType of collection.expansionPanels">
               <!-- header -->
               <mat-expansion-panel-header>
                 <mat-panel-title>
@@ -172,13 +161,13 @@
                     [disabled]="autoAddDisabled(attackType)"
                     matTooltipPosition="above"
                     matTooltip="automatically find and add {{
-                      plural[attackType]
+                      plural(attackType)
                     }} related to {{
                       relevantObjects(attackType)
                     }} in this collection">
                     <mat-icon>playlist_add</mat-icon>
                     <span class="text-label"
-                      >apply {{ plural[attackType] }} to collection</span
+                      >apply {{ plural(attackType) }} to collection</span
                     >
                   </button>
                 </div>
@@ -244,8 +233,8 @@
                               mat-icon-button
                               matTooltip="stage all additions"
                               [disabled]="
-                                potentialChanges[attackType].additions.length ==
-                                0
+                                potentialChanges[attackType].additions
+                                  .length === 0
                               "
                               (click)="
                                 moveChanges(
@@ -264,7 +253,7 @@
                               matTooltip="unstage all additions"
                               [disabled]="
                                 collectionChanges[attackType].additions
-                                  .length == 0
+                                  .length === 0
                               "
                               (click)="
                                 moveChanges(
@@ -377,7 +366,8 @@
                               mat-icon-button
                               matTooltip="stage all changes"
                               [disabled]="
-                                potentialChanges[attackType].changes.length == 0
+                                potentialChanges[attackType].changes.length ===
+                                0
                               "
                               (click)="
                                 moveChanges(
@@ -395,7 +385,7 @@
                               mat-icon-button
                               matTooltip="unstage all changes"
                               [disabled]="
-                                collectionChanges[attackType].changes.length ==
+                                collectionChanges[attackType].changes.length ===
                                 0
                               "
                               (click)="
@@ -510,7 +500,7 @@
                               matTooltip="stage all minor changes"
                               [disabled]="
                                 potentialChanges[attackType].minor_changes
-                                  .length == 0
+                                  .length === 0
                               "
                               (click)="
                                 moveChanges(
@@ -529,7 +519,7 @@
                               matTooltip="unstage all minor changes"
                               [disabled]="
                                 collectionChanges[attackType].minor_changes
-                                  .length == 0
+                                  .length === 0
                               "
                               (click)="
                                 moveChanges(
@@ -643,7 +633,7 @@
                               matTooltip="stage all revocations"
                               [disabled]="
                                 potentialChanges[attackType].revocations
-                                  .length == 0
+                                  .length === 0
                               "
                               (click)="
                                 moveChanges(
@@ -662,7 +652,7 @@
                               matTooltip="unstage all revocations"
                               [disabled]="
                                 collectionChanges[attackType].revocations
-                                  .length == 0
+                                  .length === 0
                               "
                               (click)="
                                 moveChanges(
@@ -776,7 +766,7 @@
                               matTooltip="stage all deprecations"
                               [disabled]="
                                 potentialChanges[attackType].deprecations
-                                  .length == 0
+                                  .length === 0
                               "
                               (click)="
                                 moveChanges(
@@ -795,7 +785,7 @@
                               matTooltip="unstage all deprecations"
                               [disabled]="
                                 collectionChanges[attackType].deprecations
-                                  .length == 0
+                                  .length === 0
                               "
                               (click)="
                                 moveChanges(
@@ -869,10 +859,7 @@
               </ng-template>
             </mat-expansion-panel>
             <!-- relationships -->
-            <mat-expansion-panel
-              class="mat-elevation-z0"
-              [expanded]="panel === 'relationships'"
-              (click)="panel = 'relationships'">
+            <mat-expansion-panel class="mat-elevation-z0">
               <mat-expansion-panel-header>
                 <mat-panel-title>
                   <h3>Relationship</h3>
@@ -924,10 +911,7 @@
               </ng-template>
             </mat-expansion-panel>
             <!-- marking definitions -->
-            <mat-expansion-panel
-              class="mat-elevation-z0"
-              [expanded]="panel === 'marking_defs'"
-              (click)="panel = 'marking_defs'">
+            <mat-expansion-panel class="mat-elevation-z0">
               <mat-expansion-panel-header>
                 <mat-panel-title>
                   <h3>Marking Definition</h3>
