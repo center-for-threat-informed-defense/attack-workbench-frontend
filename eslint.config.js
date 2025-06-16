@@ -23,6 +23,7 @@ module.exports = tseslint.config(
     processor: angular.processInlineTemplates,
     rules: {
       'no-unused-vars': 'off',
+      '@typescript-eslint/no-explicit-any': 'off',
       '@angular-eslint/prefer-standalone': 'off',
       'unused-imports/no-unused-imports': 'error',
       'unused-imports/no-unused-vars': [
