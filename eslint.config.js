@@ -25,6 +25,7 @@ module.exports = tseslint.config(
       'no-unused-vars': 'off',
       '@typescript-eslint/no-explicit-any': 'off',
       '@angular-eslint/prefer-standalone': 'off',
+      '@angular-eslint/no-output-on-prefix': 'off',
       'unused-imports/no-unused-imports': 'error',
       'unused-imports/no-unused-vars': [
         'warn',
