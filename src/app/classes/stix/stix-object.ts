@@ -9,7 +9,12 @@ import {
 import { forkJoin, Observable, of } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
 import { logger } from '../../utils/logger';
-import { nameSchema, xMitreFirstSeenCitationSchema, stixTimestampSchema, xMitreLastSeenCitationSchema } from '@mitre-attack/attack-data-model';
+import {
+  nameSchema,
+  xMitreFirstSeenCitationSchema,
+  stixTimestampSchema,
+  xMitreLastSeenCitationSchema,
+} from '@mitre-attack/attack-data-model';
 
 export type workflowStates =
   | 'work-in-progress'
@@ -475,8 +480,8 @@ export abstract class StixObject extends Serializable {
             // check name
             if (this.hasOwnProperty('name')) {
               const nameValidationResult = nameSchema.safeParse(this['name']);
-              if(!nameValidationResult.success){
-                if(nameValidationResult.error.errors[0].code == 'too_small'){
+              if (!nameValidationResult.success) {
+                if (nameValidationResult.error.errors[0].code == 'too_small') {
                   result.errors.push({
                     result: 'error',
                     field: 'name',
@@ -491,7 +496,7 @@ export abstract class StixObject extends Serializable {
               //     field: 'name',
               //     message: 'object has no name',
               //   });
-              // } 
+              // }
               else if (
                 objects.data.some(
                   x =>
@@ -562,13 +567,11 @@ export abstract class StixObject extends Serializable {
                   field: 'first_seen',
                   message: 'object does not have a first seen date',
                 });
-              }
-              else if (
-                this.hasOwnProperty('first_seen')
-              ) {
+              } else if (this.hasOwnProperty('first_seen')) {
                 const firstSeenISO = this['first_seen'].toISOString();
-                const firstSeenValidationResult = stixTimestampSchema.safeParse(firstSeenISO);
-                if(!firstSeenValidationResult.success){
+                const firstSeenValidationResult =
+                  stixTimestampSchema.safeParse(firstSeenISO);
+                if (!firstSeenValidationResult.success) {
                   result.errors.push({
                     result: 'error',
                     field: 'name',
@@ -586,16 +589,17 @@ export abstract class StixObject extends Serializable {
                   message:
                     'object is missing a citation for the first seen date',
                 });
-              }
-              else if (
-                this.hasOwnProperty('first_seen_citation')
-              ) {
-                const firstSeenCitationValidationResult = xMitreFirstSeenCitationSchema.safeParse(this['first_seen_citation']);
-                if(!firstSeenCitationValidationResult.success){
+              } else if (this.hasOwnProperty('first_seen_citation')) {
+                const firstSeenCitationValidationResult =
+                  xMitreFirstSeenCitationSchema.safeParse(
+                    this['first_seen_citation']
+                  );
+                if (!firstSeenCitationValidationResult.success) {
                   result.errors.push({
                     result: 'error',
                     field: 'name',
-                    message: firstSeenCitationValidationResult.error.errors[0].message,
+                    message:
+                      firstSeenCitationValidationResult.error.errors[0].message,
                   });
                 }
               }
@@ -608,13 +612,11 @@ export abstract class StixObject extends Serializable {
                   field: 'last_seen',
                   message: 'object does not have a last seen date',
                 });
-              }
-              else if (
-                this.hasOwnProperty('last_seen')
-              ) {
+              } else if (this.hasOwnProperty('last_seen')) {
                 const lastSeenISO = this['last_seen'].toISOString();
-                const lastSeenValidationResult = stixTimestampSchema.safeParse(lastSeenISO);
-                if(!lastSeenValidationResult.success){
+                const lastSeenValidationResult =
+                  stixTimestampSchema.safeParse(lastSeenISO);
+                if (!lastSeenValidationResult.success) {
                   result.errors.push({
                     result: 'error',
                     field: 'name',
@@ -632,16 +634,17 @@ export abstract class StixObject extends Serializable {
                   message:
                     'object is missing a citation for the last seen date',
                 });
-              }
-              else if (
-                this.hasOwnProperty('last_seen_citation')
-              ) {
-                const lastSeenCitationValidationResult = xMitreLastSeenCitationSchema.safeParse(this['first_seen_citation']);
-                if(!lastSeenCitationValidationResult.success){
+              } else if (this.hasOwnProperty('last_seen_citation')) {
+                const lastSeenCitationValidationResult =
+                  xMitreLastSeenCitationSchema.safeParse(
+                    this['first_seen_citation']
+                  );
+                if (!lastSeenCitationValidationResult.success) {
                   result.errors.push({
                     result: 'error',
                     field: 'name',
-                    message: lastSeenCitationValidationResult.error.errors[0].message,
+                    message:
+                      lastSeenCitationValidationResult.error.errors[0].message,
                   });
                 }
               }
