@@ -56,16 +56,14 @@
       <!-- display import review if collection was imported -->
       <app-collection-import-review
         *ngIf="
-          objectType === 'collection' &&
-          objects[0].hasOwnProperty('imported')
+          objectType === 'collection' && objects[0].hasOwnProperty('imported')
         "
         [config]="buildConfig()"></app-collection-import-review>
       <!-- otherwise show view/edit interface -->
       <app-collection-view
         #collectionViewRef
         *ngIf="
-          objectType === 'collection' &&
-          !objects[0].hasOwnProperty('imported')
+          objectType === 'collection' && !objects[0].hasOwnProperty('imported')
         "
         [config]="buildConfig()"></app-collection-view>
     </ng-template>
