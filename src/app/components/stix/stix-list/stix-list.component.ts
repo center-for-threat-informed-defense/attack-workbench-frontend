@@ -37,6 +37,7 @@ import { AddDialogComponent } from '../../add-dialog/add-dialog.component';
 import { Collection } from 'src/app/classes/stix/collection';
 import { logger } from 'src/app/utils/logger';
 import { StixTypeToAttackType } from 'src/app/utils/type-mappings';
+import { AttackType } from 'src/app/utils/types';
 
 @Component({
   selector: 'app-stix-list',
@@ -269,6 +270,7 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
             'description',
           ];
           break;
+        case 'detection-strategy':
         case 'mitigation':
         case 'tactic':
           this.addColumn('', 'workflow', 'icon');
@@ -296,6 +298,19 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
             },
           ];
           break;
+        case 'analytic':
+          this.addColumn('', 'workflow', 'icon');
+          this.addColumn('', 'state', 'icon');
+          this.addColumn('ID', 'attackID', 'plain', false);
+          this.addVersionsAndDatesColumns();
+          this.tableDetail = [
+            {
+              field: 'description',
+              display: 'descriptive',
+            },
+          ];
+          break;
+        case 'log-source':
         case 'campaign':
           this.addColumn('', 'workflow', 'icon');
           this.addColumn('', 'state', 'icon');
@@ -1034,6 +1049,13 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
           offset: offset,
           includeDeprecated: deprecated,
         });
+      else if (this.config.type == 'log-source')
+        this.data$ = this.restAPIConnectorService.getAllLogSources(options);
+      else if (this.config.type == 'detection-strategy')
+        this.data$ =
+          this.restAPIConnectorService.getAllDetectionStrategies(options);
+      else if (this.config.type == 'analytic')
+        this.data$ = this.restAPIConnectorService.getAllAnalytics(options);
       else if (this.config.type == 'data-source')
         this.data$ = this.restAPIConnectorService.getAllDataSources(options);
       else if (this.config.type == 'data-component')
@@ -1050,7 +1072,7 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
           this.totalObjectCount = data.pagination.total;
         },
         complete: () => {
-          subscription.unsubscribe();
+          if (subscription) subscription.unsubscribe();
         },
       });
     }
@@ -1156,22 +1178,6 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 }
 
-//allowed types for StixListConfig
-type type_attacktype =
-  | 'collection'
-  | 'campaign'
-  | 'group'
-  | 'matrix'
-  | 'mitigation'
-  | 'software'
-  | 'tactic'
-  | 'technique'
-  | 'relationship'
-  | 'data-source'
-  | 'data-component'
-  | 'asset'
-  | 'marking-definition'
-  | 'note';
 type selection_types = 'one' | 'many' | 'disabled';
 type filter_types = 'state' | 'workflow_status';
 export interface StixListConfig {
@@ -1182,13 +1188,13 @@ export interface StixListConfig {
   sourceRef?: string;
   targetRef?: string;
   /** ATT&CK Types force the list to show relationships only with those types, use with type == 'relationship' */
-  sourceType?: type_attacktype;
-  targetType?: type_attacktype;
+  sourceType?: AttackType;
+  targetType?: AttackType;
   /** relationship type to get, use with type=='relationship' */
   relationshipType?: string;
 
   /** force the list to show only this type */
-  type?: type_attacktype | 'collection-created' | 'collection-imported';
+  type?: AttackType | 'collection-created' | 'collection-imported';
   /** force the list to show only objects matching this query */
   query?: any;
 
