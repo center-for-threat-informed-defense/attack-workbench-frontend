@@ -110,91 +110,87 @@ export class RestApiConnectorService extends ApiConnector {
   //  |___/ |_| |___/_/\_\    /_/ \_\_| |___|___/
   //
 
-  private detection =
-    {
-      id: 'x-mitre-detection-strategy--2330e230-337c-4f4b-a95e-127bde55f776',
-      type: 'x-mitre-detection-strategy',
-      spec_version: '2.1',
-      created: '2025-05-20T00:00:00.000Z',
-      modified: '2025-05-20T00:00:00.000Z',
-      name: 'Detection Strategy 1',
-      x_mitre_version: '1.0',
-      x_mitre_contributors: [],
-      x_mitre_domains: ['enterprise-attack'],
-      x_mitre_analytics: [
-        'x-mitre-analytic--f78db141-6154-43b0-8e39-6be5b5eda624',
-      ],
-      external_references: [
-        {
-          source_name: 'mitre-attack',
-          external_id: 'DET0001',
-          url: 'https://attack.mitre.org/detection-strategies/DET0001'
-        }
-      ]
-    };
-  private analytic =
-    {
-      id: 'x-mitre-analytic--f78db141-6154-43b0-8e39-6be5b5eda624',
-      type: 'x-mitre-analytic',
-      spec_version: '2.1',
-      created: '2025-05-20T00:00:00.000Z',
-      modified: '2025-05-20T00:00:00.000Z',
-      x_mitre_version: '1.0',
-      x_mitre_platform: 'MacOS',
-      x_mitre_detects:
-        'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec sodales nunc at tortor maximus ultrices. Ut egestas eget enim eget.',
-      x_mitre_log_sources: [
-        {
-          ref: 'x-mitre-log-source--2330e230-337c-4f4b-a95e-127bde55f776',
-          keys: ['permutation:1', 'permutation:2'],
-        },
-      ],
-      x_mitre_mutable_elements: [
-        {
-          field: 'Mutable Element 1',
-          description:
-            'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
-        },
-        {
-          field: 'Mutable Element 2',
-          description: 'Donec sodales nunc at tortor maximus ultrices.',
-        },
-      ],
-      external_references: [
-        {
-          source_name: 'mitre-attack',
-          external_id: 'AN0001',
-          url: 'https://attack.mitre.org/analytics/AN0001'
-        }
-      ]
-    };
-  private logSource =
-    {
-      id: 'x-mitre-log-source--2330e230-337c-4f4b-a95e-127bde55f776',
-      type: 'x-mitre-log-source',
-      spec_version: '2.1',
-      created: '2025-05-20T00:00:00.000Z',
-      modified: '2025-05-20T00:00:00.000Z',
-      name: 'Log Source 1',
-      x_mitre_version: '1.0',
-      x_mitre_log_source_permutations: [
-        {
-          name: 'permutation:1',
-          channel: 'subsystem=com.apple.accessibility',
-        },
-        {
-          name: 'permutation:2',
-          channel: 'process',
-        },
-      ],
-      external_references: [
-        {
-          source_name: 'mitre-attack',
-          external_id: 'LS0001',
-          url: 'https://attack.mitre.org/log-sources/LS0001'
-        }
-      ]
-    };
+  private detection = {
+    id: 'x-mitre-detection-strategy--2330e230-337c-4f4b-a95e-127bde55f776',
+    type: 'x-mitre-detection-strategy',
+    spec_version: '2.1',
+    created: '2025-05-20T00:00:00.000Z',
+    modified: '2025-05-20T00:00:00.000Z',
+    name: 'Detection Strategy 1',
+    x_mitre_version: '1.0',
+    x_mitre_contributors: [],
+    x_mitre_domains: ['enterprise-attack'],
+    x_mitre_analytics: [
+      'x-mitre-analytic--f78db141-6154-43b0-8e39-6be5b5eda624',
+    ],
+    external_references: [
+      {
+        source_name: 'mitre-attack',
+        external_id: 'DET0001',
+        url: 'https://attack.mitre.org/detection-strategies/DET0001',
+      },
+    ],
+  };
+  private analytic = {
+    id: 'x-mitre-analytic--f78db141-6154-43b0-8e39-6be5b5eda624',
+    type: 'x-mitre-analytic',
+    spec_version: '2.1',
+    created: '2025-05-20T00:00:00.000Z',
+    modified: '2025-05-20T00:00:00.000Z',
+    x_mitre_version: '1.0',
+    x_mitre_platform: 'MacOS',
+    x_mitre_detects:
+      'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec sodales nunc at tortor maximus ultrices. Ut egestas eget enim eget.',
+    x_mitre_log_sources: [
+      {
+        ref: 'x-mitre-log-source--2330e230-337c-4f4b-a95e-127bde55f776',
+        keys: ['permutation:1', 'permutation:2'],
+      },
+    ],
+    x_mitre_mutable_elements: [
+      {
+        field: 'Mutable Element 1',
+        description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
+      },
+      {
+        field: 'Mutable Element 2',
+        description: 'Donec sodales nunc at tortor maximus ultrices.',
+      },
+    ],
+    external_references: [
+      {
+        source_name: 'mitre-attack',
+        external_id: 'AN0001',
+        url: 'https://attack.mitre.org/analytics/AN0001',
+      },
+    ],
+  };
+  private logSource = {
+    id: 'x-mitre-log-source--2330e230-337c-4f4b-a95e-127bde55f776',
+    type: 'x-mitre-log-source',
+    spec_version: '2.1',
+    created: '2025-05-20T00:00:00.000Z',
+    modified: '2025-05-20T00:00:00.000Z',
+    name: 'Log Source 1',
+    x_mitre_version: '1.0',
+    x_mitre_log_source_permutations: [
+      {
+        name: 'permutation:1',
+        channel: 'subsystem=com.apple.accessibility',
+      },
+      {
+        name: 'permutation:2',
+        channel: 'process',
+      },
+    ],
+    external_references: [
+      {
+        source_name: 'mitre-attack',
+        external_id: 'LS0001',
+        url: 'https://attack.mitre.org/log-sources/LS0001',
+      },
+    ],
+  };
 
   /**
    * Factory to create a new STIX get-all function
@@ -219,18 +215,19 @@ export class RestApiConnectorService extends ApiConnector {
       lastUpdatedBy?: string[];
     }): Observable<Paginated<StixObject>> {
       const pagination = {
-            total: 1,
-            limit: -1,
-            offset: -1,
+        total: 1,
+        limit: -1,
+        offset: -1,
       };
       if (attackType === 'log-source') {
         return of({
           pagination: pagination,
           data: [
             new LogSource({
-              stix: this.logSource, workspace: {},
-            })
-          ]
+              stix: this.logSource,
+              workspace: {},
+            }),
+          ],
         });
       }
       if (attackType === 'detection-strategy') {
@@ -238,9 +235,10 @@ export class RestApiConnectorService extends ApiConnector {
           pagination: pagination,
           data: [
             new DetectionStrategy({
-              stix: this.detection, workspace: {},
-            })
-          ]
+              stix: this.detection,
+              workspace: {},
+            }),
+          ],
         });
       }
       if (attackType === 'analytic') {
@@ -248,9 +246,10 @@ export class RestApiConnectorService extends ApiConnector {
           pagination: pagination,
           data: [
             new Analytic({
-              stix: this.analytic, workspace: {},
-            })
-          ]
+              stix: this.analytic,
+              workspace: {},
+            }),
+          ],
         });
       }
 
@@ -805,29 +804,31 @@ export class RestApiConnectorService extends ApiConnector {
       retrieveContents?: boolean,
       retrieveDataComponents?: boolean
     ): Observable<P[]> {
-
       if (attackType === 'log-source') {
         const obj$: unknown = of([
-            new LogSource({
-              stix: this.logSource, workspace: {},
-            })
-          ])
+          new LogSource({
+            stix: this.logSource,
+            workspace: {},
+          }),
+        ]);
         return obj$ as Observable<P[]>;
       }
       if (attackType === 'detection-strategy') {
         const obj$: unknown = of([
-            new DetectionStrategy({
-              stix: this.detection, workspace: {},
-            })
-          ])
+          new DetectionStrategy({
+            stix: this.detection,
+            workspace: {},
+          }),
+        ]);
         return obj$ as Observable<P[]>;
       }
       if (attackType === 'analytic') {
         const obj$: unknown = of([
-            new Analytic({
-              stix: this.analytic, workspace: {},
-            })
-          ])
+          new Analytic({
+            stix: this.analytic,
+            workspace: {},
+          }),
+        ]);
         return obj$ as Observable<P[]>;
       }
 
