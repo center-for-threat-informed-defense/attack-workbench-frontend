@@ -204,13 +204,13 @@ export class StixPageComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.loadObjects();
     this.saveSubscription = this.editorService.onSave.subscribe({
-      next: _event => this.save(),
+      next: () => this.save(),
     });
     this.deleteSubscription = this.editorService.onDelete.subscribe({
-      next: _event => this.delete(),
+      next: () => this.delete(),
     });
     this.reloadSubscription = this.editorService.onReload.subscribe({
-      next: _event => {
+      next: () => {
         this.objects = undefined;
         this.loadObjects();
       },
@@ -272,6 +272,12 @@ export class StixPageComponent implements OnInit, OnDestroy {
         );
       else if (this.objectType == 'data-component')
         objects$ = this.restApiService.getDataComponent(objectStixID);
+      else if (this.objectType == 'log-source')
+        objects$ = this.restApiService.getLogSource(objectStixID);
+      else if (this.objectType == 'detection-strategy')
+        objects$ = this.restApiService.getDetectionStrategy(objectStixID);
+      else if (this.objectType == 'analytic')
+        objects$ = this.restApiService.getAnalytic(objectStixID);
       else if (this.objectType == 'asset')
         objects$ = this.restApiService.getAsset(objectStixID);
       else if (this.objectType == 'marking-definition')
@@ -293,7 +299,7 @@ export class StixPageComponent implements OnInit, OnDestroy {
             : null;
         },
         complete: () => {
-          subscription.unsubscribe();
+          if (subscription) subscription.unsubscribe();
         },
       });
     } else if (this.objectType == 'software') {

@@ -9,29 +9,16 @@ import {
 import { forkJoin, Observable, of } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
 import { logger } from '../../utils/logger';
+import {
+  AttackTypeToRoute,
+  StixTypeToAttackType,
+} from 'src/app/utils/type-mappings';
 
 export type workflowStates =
   | 'work-in-progress'
   | 'awaiting-review'
   | 'reviewed'
   | '';
-const StixTypeToAttackType = {
-  'x-mitre-collection': 'collection',
-  'attack-pattern': 'technique',
-  'malware': 'software',
-  'tool': 'software',
-  'intrusion-set': 'group',
-  'campaign': 'campaign',
-  'course-of-action': 'mitigation',
-  'x-mitre-matrix': 'matrix',
-  'x-mitre-tactic': 'tactic',
-  'relationship': 'relationship',
-  'marking-definition': 'marking-definition',
-  'x-mitre-data-source': 'data-source',
-  'x-mitre-data-component': 'data-component',
-  'x-mitre-asset': 'asset',
-  'note': 'note',
-};
 
 export abstract class StixObject extends Serializable {
   public stixID: string; // STIX ID
@@ -53,21 +40,6 @@ export abstract class StixObject extends Serializable {
   protected abstract get attackIDValidator(): {
     regex: string; // regex to validate the ID
     format: string; // format to display to user
-  };
-
-  private typeUrlMap = {
-    'technique': 'techniques',
-    'software': 'software',
-    'group': 'groups',
-    'campaign': 'campaigns',
-    'mitigation': 'mitigations',
-    'matrix': 'matrices',
-    'tactic': 'tactics',
-    'note': 'notes',
-    'marking-definition': 'marking-definitions',
-    'data-source': 'datasources',
-    'data-component': 'datacomponents',
-    'asset': 'assets',
   };
 
   private defaultMarkingDefinitionsLoaded = false; // avoid overloading of default marking definitions
@@ -135,11 +107,11 @@ export abstract class StixObject extends Serializable {
     const serialized_external_references = this.external_references.serialize();
 
     // Add attackID for
-    if (this.attackID && this.typeUrlMap[this.attackType]) {
+    if (this.attackID && AttackTypeToRoute[this.attackType]) {
       const new_ext_ref = {
         source_name: 'mitre-attack',
         external_id: this.attackID,
-        url: `https://attack.mitre.org/${this.typeUrlMap[this.attackType]}/${this.attackID.replace(/\./g, '/')}`,
+        url: `https://attack.mitre.org/${AttackTypeToRoute[this.attackType]}/${this.attackID.replace(/\./g, '/')}`,
       };
       serialized_external_references.unshift(new_ext_ref);
     }

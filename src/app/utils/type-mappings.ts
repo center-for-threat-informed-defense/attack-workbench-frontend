@@ -4,7 +4,7 @@
  *
  * Note: this file should not include mappings or references to class constructors.
  * Class constructor mappings should be defined in 'class-mappings.ts' to prevent
- * circular dependency issues.
+ * circular dependency issues with the `StixObject` class.
  */
 
 import { AttackType, StixType } from './types';
