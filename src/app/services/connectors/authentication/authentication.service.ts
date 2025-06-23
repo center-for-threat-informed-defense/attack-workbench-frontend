@@ -62,8 +62,12 @@ export class AuthenticationService extends ApiConnector {
    * @returns true, if the user can edit the object, false otherwise
    */
   public canEdit(attackType?: string): boolean {
-    if (attackType && attackType.includes('collection')) {
-      // restrict collection editing to admin only
+    if (
+      attackType &&
+      (attackType.includes('collection') ||
+        attackType.includes('marking-definition'))
+    ) {
+      // restrict collection & marking definition editing to admin only
       return this.isAuthorized([Role.ADMIN]);
     }
     return this.isAuthorized([Role.EDITOR, Role.TEAM_LEAD, Role.ADMIN]);

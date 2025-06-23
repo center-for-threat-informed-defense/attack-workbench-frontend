@@ -1,17 +1,7 @@
 import { CollectionManagerComponent } from './views/stix/collection/collection-manager/collection-manager.component';
 import { CollectionImportComponent } from './views/stix/collection/collection-import/collection-import-workflow/collection-import.component';
 import { CollectionIndexImportComponent } from './views/stix/collection/collection-index/collection-index-import/collection-index-import.component';
-import { GroupListComponent } from './views/stix/group/group-list/group-list.component';
-import { MatrixListComponent } from './views/stix/matrix/matrix-list/matrix-list.component';
-import { MitigationListComponent } from './views/stix/mitigation/mitigation-list/mitigation-list.component';
-import { SoftwareListComponent } from './views/stix/software/software-list/software-list.component';
-import { TacticListComponent } from './views/stix/tactic/tactic-list/tactic-list.component';
-import { TechniqueListComponent } from './views/stix/technique/technique-list/technique-list.component';
-import { MarkingDefinitionListComponent } from './views/stix/marking-definition/marking-definition-list/marking-definition-list.component';
-import { DataSourceListComponent } from './views/stix/data-source/data-source-list/data-source-list.component';
 import { ReferenceManagerComponent } from './views/reference-manager/reference-manager.component';
-import { CampaignListComponent } from './views/stix/campaign/campaign-list/campaign-list.component';
-import { AssetListComponent } from './views/stix/asset/asset-list/asset-list.component';
 import { NotesPageComponent } from './views/notes-page/notes-page.component';
 import { StixPageComponent } from './views/stix/stix-page/stix-page.component';
 import { ContributorsPageComponent } from './views/contributors-page/contributors-page.component';
@@ -22,6 +12,7 @@ import { environment } from '../environments/environment';
 import { AuthorizationGuard } from './services/helpers/authorization.guard';
 import { Role } from './classes/authn/role';
 import { AttackTypeToRoute } from './utils/type-mappings';
+import { StixListPageComponent } from './views/stix/stix-list-page/stix-list-page.component';
 
 const viewRoles = [Role.VISITOR, Role.EDITOR, Role.TEAM_LEAD, Role.ADMIN];
 const editRoles = [Role.EDITOR, Role.TEAM_LEAD, Role.ADMIN];
@@ -30,47 +21,38 @@ const stixRouteData = [
   {
     attackType: 'matrix',
     editable: true,
-    component: MatrixListComponent,
   },
   {
     attackType: 'tactic',
     editable: true,
-    component: TacticListComponent,
   },
   {
     attackType: 'technique',
     editable: true,
-    component: TechniqueListComponent,
   },
   {
     attackType: 'data-source',
     editable: true,
-    component: DataSourceListComponent,
   },
   {
     attackType: 'mitigation',
     editable: true,
-    component: MitigationListComponent,
   },
   {
     attackType: 'group',
     editable: true,
-    component: GroupListComponent,
   },
   {
     attackType: 'software',
     editable: true,
-    component: SoftwareListComponent,
   },
   {
     attackType: 'campaign',
     editable: true,
-    component: CampaignListComponent,
   },
   {
     attackType: 'asset',
     editable: true,
-    component: AssetListComponent,
   },
 ];
 
@@ -90,7 +72,7 @@ stixRouteData.forEach(stixRoute => {
           title: AttackTypeToRoute[stixRoute.attackType].replace(/-/g, ' '),
           roles: viewRoles,
         },
-        component: stixRoute.component,
+        component: StixListPageComponent,
       },
       {
         path: ':id',
@@ -149,7 +131,7 @@ stixRoutes.push({
         title: 'marking definitions',
         roles: viewRoles,
       },
-      component: MarkingDefinitionListComponent,
+      component: StixListPageComponent,
     },
     {
       path: ':id',
