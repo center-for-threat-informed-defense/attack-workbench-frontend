@@ -177,44 +177,23 @@ import { CollectionImportComponent } from './views/stix/collection/collection-im
 import { CollectionImportReviewComponent } from './views/stix/collection/collection-import/collection-import-review/collection-import-review.component';
 import { CollectionImportErrorComponent } from './views/stix/collection/collection-import/collection-import-error/collection-import-error.component';
 
-import { GroupViewComponent } from './views/stix/group/group-view/group-view.component';
-import { GroupListComponent } from './views/stix/group/group-list/group-list.component';
-
+import { GroupViewComponent } from './views/stix/group-view/group-view.component';
 import { MatrixViewComponent } from './views/stix/matrix/matrix-view/matrix-view.component';
-import { MatrixListComponent } from './views/stix/matrix/matrix-list/matrix-list.component';
-
-import { MitigationListComponent } from './views/stix/mitigation/mitigation-list/mitigation-list.component';
-import { MitigationViewComponent } from './views/stix/mitigation/mitigation-view/mitigation-view.component';
-
-import { SoftwareViewComponent } from './views/stix/software/software-view/software-view.component';
-import { SoftwareListComponent } from './views/stix/software/software-list/software-list.component';
-
-import { TacticViewComponent } from './views/stix/tactic/tactic-view/tactic-view.component';
-import { TacticListComponent } from './views/stix/tactic/tactic-list/tactic-list.component';
-
-import { TechniqueViewComponent } from './views/stix/technique/technique-view/technique-view.component';
-import { TechniqueListComponent } from './views/stix/technique/technique-list/technique-list.component';
-
-import { RelationshipViewComponent } from './views/stix/relationship/relationship-view/relationship-view.component';
-
-import { DataSourceViewComponent } from './views/stix/data-source/data-source-view/data-source-view.component';
-import { DataSourceListComponent } from './views/stix/data-source/data-source-list/data-source-list.component';
-import { DataComponentViewComponent } from './views/stix/data-component/data-component-view/data-component-view.component';
-
-import { MarkingDefinitionViewComponent } from './views/stix/marking-definition/marking-definition-view/marking-definition-view.component';
-import { MarkingDefinitionListComponent } from './views/stix/marking-definition/marking-definition-list/marking-definition-list.component';
-
-import { CampaignViewComponent } from './views/stix/campaign/campaign-view/campaign-view.component';
-import { CampaignListComponent } from './views/stix/campaign/campaign-list/campaign-list.component';
-
+import { MitigationViewComponent } from './views/stix/mitigation-view/mitigation-view.component';
+import { SoftwareViewComponent } from './views/stix/software-view/software-view.component';
+import { TacticViewComponent } from './views/stix/tactic-view/tactic-view.component';
+import { TechniqueViewComponent } from './views/stix/technique-view/technique-view.component';
+import { RelationshipViewComponent } from './views/stix/relationship-view/relationship-view.component';
+import { DataSourceViewComponent } from './views/stix/data-source-view/data-source-view.component';
+import { DataComponentViewComponent } from './views/stix/data-component-view/data-component-view.component';
+import { MarkingDefinitionViewComponent } from './views/stix/marking-definition-view/marking-definition-view.component';
+import { CampaignViewComponent } from './views/stix/campaign-view/campaign-view.component';
 import { NotesPageComponent } from './views/notes-page/notes-page.component';
 import { MatrixSideComponent } from './views/stix/matrix/matrix-side/matrix-side.component';
 import { TacticCellComponent } from './components/matrix/tactic-cell/tactic-cell.component';
 import { TechniqueCellComponent } from './components/matrix/technique-cell/technique-cell.component';
 import { MatrixFlatComponent } from './views/stix/matrix/matrix-flat/matrix-flat.component';
-
-import { AssetListComponent } from './views/stix/asset/asset-list/asset-list.component';
-import { AssetViewComponent } from './views/stix/asset/asset-view/asset-view.component';
+import { AssetViewComponent } from './views/stix/asset-view/asset-view.component';
 
 import { TeamsListPageComponent } from './views/admin-page/teams/teams-list-page/teams-list-page.component';
 import { TeamsViewPageComponent } from './views/admin-page/teams/teams-view-page/teams-view-page.component';
@@ -233,6 +212,7 @@ import { ExternalReferencesDiffComponent } from './components/stix/external-refe
 import { BooleanPropertyComponent } from './components/stix/boolean-property/boolean-property.component';
 import { StatementDiffComponent } from './components/stix/statement-property/statement-diff/statement-diff.component';
 import { TlpDiffComponent } from './components/stix/tlp-property/tlp-diff/tlp-diff.component';
+import { StixListPageComponent } from './views/stix/stix-list-page/stix-list-page.component';
 
 export function initConfig(appConfigService: AppConfigService) {
   return () => appConfigService.loadAppConfig();
@@ -312,21 +292,15 @@ export function initConfig(appConfigService: AppConfigService) {
     CollectionImportReviewComponent,
     CollectionImportErrorComponent,
     RelationshipViewComponent,
-    GroupListComponent,
     GroupViewComponent,
-    MatrixListComponent,
     MatrixViewComponent,
     MatrixSideComponent,
     MatrixFlatComponent,
     TacticCellComponent,
     TechniqueCellComponent,
-    MitigationListComponent,
     MitigationViewComponent,
-    SoftwareListComponent,
     SoftwareViewComponent,
-    TacticListComponent,
     TacticViewComponent,
-    TechniqueListComponent,
     TechniqueViewComponent,
     AliasPropertyComponent,
     AliasViewComponent,
@@ -341,12 +315,9 @@ export function initConfig(appConfigService: AppConfigService) {
     RecentActivityComponent,
     IdentityPropertyComponent,
     DataSourceViewComponent,
-    DataSourceListComponent,
     DataComponentViewComponent,
     MarkingDefinitionViewComponent,
-    MarkingDefinitionListComponent,
     CampaignViewComponent,
-    CampaignListComponent,
     CitationPropertyComponent,
     CitationViewComponent,
     CitationEditComponent,
@@ -355,7 +326,6 @@ export function initConfig(appConfigService: AppConfigService) {
     TeamsViewPageComponent,
     CreateNewDialogComponent,
     UsersListComponent,
-    AssetListComponent,
     AssetViewComponent,
     SubtypePropertyComponent,
     SubtypeViewComponent,
@@ -375,6 +345,7 @@ export function initConfig(appConfigService: AppConfigService) {
     StatementDiffComponent,
     TlpDiffComponent,
     VersionPopoverComponent,
+    StixListPageComponent,
   ],
   exports: [
     MatToolbarModule,
