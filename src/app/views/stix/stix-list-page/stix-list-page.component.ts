@@ -8,7 +8,6 @@ import { AttackType } from 'src/app/utils/types';
   selector: 'app-stix-list-page',
   standalone: false,
   templateUrl: './stix-list-page.component.html',
-  styleUrl: './stix-list-page.component.scss',
 })
 export class StixListPageComponent implements OnInit {
   public attackType: AttackType;

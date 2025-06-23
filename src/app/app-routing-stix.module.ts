@@ -33,32 +33,26 @@ const stixRouteData = [
   {
     attackType: 'data-source',
     editable: true,
-    headerSection: 'defenses',
   },
   {
     attackType: 'mitigation',
     editable: true,
-    headerSection: 'defenses',
   },
   {
     attackType: 'group',
     editable: true,
-    headerSection: 'cti',
   },
   {
     attackType: 'software',
     editable: true,
-    headerSection: 'cti',
   },
   {
     attackType: 'campaign',
     editable: true,
-    headerSection: 'cti',
   },
   {
     attackType: 'asset',
     editable: true,
-    headerSection: 'defenses',
   },
 ];
 
