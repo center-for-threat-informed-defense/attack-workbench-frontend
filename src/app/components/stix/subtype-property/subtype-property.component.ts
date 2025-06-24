@@ -26,7 +26,7 @@ export interface SubtypePropertyConfig {
     name: string;
     type: 'string' | 'select';
     required?: boolean; // default false
-    label?: string;
+    label?: string; // default name
     supportsReferences?: boolean; // whether this field supports references, default false
     key?: boolean /** The key field, must have at least one */;
   }[];
