@@ -21,7 +21,7 @@ import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/re
 import { EditorService } from 'src/app/services/editor/editor.service';
 import { TitleService } from 'src/app/services/title/title.service';
 import { CollectionViewComponent } from '../collection/collection-view/collection-view.component';
-import { MarkingDefinitionViewComponent } from '../marking-definition/marking-definition-view/marking-definition-view.component';
+import { MarkingDefinitionViewComponent } from '../marking-definition-view/marking-definition-view.component';
 import { StixViewConfig } from '../stix-view-page';
 import { BreadcrumbService } from 'src/app/services/helpers/breadcrumb.service';
 import { AttackTypeToClass } from 'src/app/utils/class-mappings';
