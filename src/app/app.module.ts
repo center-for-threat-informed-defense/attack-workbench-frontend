@@ -165,7 +165,7 @@ import { ReferenceManagerComponent } from './views/reference-manager/reference-m
 import { StixDialogComponent } from './views/stix/stix-dialog/stix-dialog.component';
 import { StixPageComponent } from './views/stix/stix-page/stix-page.component';
 
-import { CollectionManagerComponent } from './views/stix/collection/collection-manager/collection-manager.component';
+import { CollectionManagerComponent } from './views/collection-manager/collection-manager.component';
 
 import { CollectionIndexListComponent } from './views/stix/collection/collection-index/collection-index-list/collection-index-list.component';
 import { CollectionIndexViewComponent } from './views/stix/collection/collection-index/collection-index-view/collection-index-view.component';
