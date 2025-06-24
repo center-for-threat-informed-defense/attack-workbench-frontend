@@ -78,17 +78,17 @@
 
   .content.collection-data {
     .download {
-      cursor: pointer;
-      &:hover {
-        .dark & {
-          background: colors.color-alternate(dark);
-        }
-        .light & {
-          background: colors.color-alternate(light);
-        }
+      height: auto;
+      border-radius: 0px;
+      min-width: unset;
+      .mat-icon {
+        margin: 0px;
       }
     }
     .copy-url {
+      font-family: monospace;
+      font-size: 14px;
+      border-bottom: none !important;
       cursor: pointer;
       &:hover {
         color: colors.color(link);
@@ -98,7 +98,10 @@
       display: block;
     }
     .notes {
-      margin-top: 12px;
+      margin-top: 8px;
+      label.mdc-label {
+        padding: 0px !important;
+      }
     }
   }
   .mdc-label {

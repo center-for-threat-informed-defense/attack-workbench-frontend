@@ -40,13 +40,8 @@ import { MatDialog } from '@angular/material/dialog';
 import { CollectionUpdateDialogComponent } from 'src/app/components/collection-update-dialog/collection-update-dialog.component';
 import { AddDialogComponent } from 'src/app/components/add-dialog/add-dialog.component';
 import { SelectionModel } from '@angular/cdk/collections';
-
-type changeCategory =
-  | 'additions'
-  | 'changes'
-  | 'minor_changes'
-  | 'revocations'
-  | 'deprecations';
+import { ChangelogCategory } from 'src/app/utils/types';
+import { AttackTypeToPlural } from 'src/app/utils/type-mappings';
 
 @Component({
   selector: 'app-collection-view',
@@ -56,21 +51,21 @@ type changeCategory =
   standalone: false,
 })
 export class CollectionViewComponent extends StixViewPage implements OnInit {
-  public get collection(): Collection {
-    return this.configCurrentObject as Collection;
-  }
+  @ViewChildren(StixListComponent) stixLists: QueryList<StixListComponent>;
+
   public previousRelease: Collection;
   public attackObjects: any[]; //all objects in the knowledge base, unserialized
   public knowledgeBaseCollection: Collection;
   public editingReloadToggle = true;
   public release = false;
   public includeNotes = false;
-
-  @ViewChildren(StixListComponent) stixLists: QueryList<StixListComponent>;
-
   public loading: string = null; // loading message if loading
   public validating = false;
   public validationData: ValidationData = null;
+
+  public get collection(): Collection {
+    return this.configCurrentObject as Collection;
+  }
 
   // type map for the _t
   private typeMap = {
@@ -84,19 +79,6 @@ export class CollectionViewComponent extends StixViewPage implements OnInit {
     'Data-Source': 'data_source',
     'Data-Component': 'data_component',
     'Asset': 'asset',
-  };
-
-  // pluralize attackType for text display
-  public plural = {
-    'technique': 'techniques',
-    'tactic': 'tactics',
-    'group': 'groups',
-    'software': 'software',
-    'mitigation': 'mitigations',
-    'matrix': 'matrices',
-    'data-source': 'data sources',
-    'data-component': 'data components',
-    'asset': 'assets',
   };
 
   public get collectionDownloadURL() {
@@ -223,9 +205,8 @@ export class CollectionViewComponent extends StixViewPage implements OnInit {
                 const newObject = collectionStixIDToObject.get(
                   oldObject.stixID
                 );
-                const objectName = newObject.hasOwnProperty('name')
-                  ? newObject['name']
-                  : newObject.stixID;
+                const objectName =
+                  'name' in newObject ? newObject['name'] : newObject.stixID;
                 if (newObject.version.compareTo(oldObject.version) < 0) {
                   results.warnings.push({
                     result: 'warning',
@@ -254,12 +235,8 @@ export class CollectionViewComponent extends StixViewPage implements OnInit {
           const missingATTACKIDs = [];
           for (const object of collectionStixIDToObject.values()) {
             // grab name of objects that do not have ATT&CK IDs
-            if (
-              object.hasOwnProperty('supportsAttackID') &&
-              object.supportsAttackID &&
-              object.hasOwnProperty('attackID')
-            ) {
-              if (object.attackID == '' && object.hasOwnProperty('name')) {
+            if (object.supportsAttackID && 'attackID' in object) {
+              if (object.attackID === '' && 'name' in object) {
                 missingATTACKIDs.push(object['name']);
               }
             }
@@ -520,7 +497,7 @@ export class CollectionViewComponent extends StixViewPage implements OnInit {
   public moveChanges(
     objects: StixObject[],
     attackType: string,
-    category: changeCategory,
+    category: ChangelogCategory,
     direction: 'stage' | 'unstage'
   ): void {
     // Addition: stage
@@ -713,10 +690,6 @@ export class CollectionViewComponent extends StixViewPage implements OnInit {
     });
   }
 
-  public format(attackType: string): string {
-    return attackType.replace(/_/g, ' ');
-  }
-
   /**
    * Determine if the auto add objects button is disabled
    * for a given attack type
@@ -770,7 +743,7 @@ export class CollectionViewComponent extends StixViewPage implements OnInit {
 
   ngOnInit() {
     //set up subscription to route query params to reinitialize stix lists
-    this.route.queryParams.subscribe(params => {
+    this.route.queryParams.subscribe(() => {
       //reinitialize stix lists in case editing has changed and they have different configs now
       this.editingReloadToggle = false;
       setTimeout(() => (this.editingReloadToggle = true));
@@ -829,7 +802,7 @@ export class CollectionViewComponent extends StixViewPage implements OnInit {
     // fetch previous collection and objects in knowledge base
     const subscription = forkJoin(apis)
       .pipe(
-        tap(_ => {
+        tap(() => {
           this.loading = 'Preparing change lists';
         }),
         delay(1) // allow render cycle to display loading text
@@ -839,10 +812,7 @@ export class CollectionViewComponent extends StixViewPage implements OnInit {
           const anyResult = result as any;
           this.attackObjects = result['attackObjects'];
           //make sure "previous" release wasn't this release
-          if (
-            anyResult.hasOwnProperty('previousRelease') &&
-            anyResult['previousRelease']
-          ) {
+          if ('previousRelease' in anyResult && anyResult['previousRelease']) {
             this.previousRelease = result['previousRelease'];
             this.collectionChanges = this.collection.compareTo(
               this.previousRelease
@@ -857,9 +827,7 @@ export class CollectionViewComponent extends StixViewPage implements OnInit {
           this.knowledgeBaseCollection = new Collection({
             stix: {
               x_mitre_contents: this.attackObjects
-                .filter(
-                  x => x.stix.hasOwnProperty('modified') && x.stix.modified
-                )
+                .filter(x => 'modified' in x.stix && x.stix.modified)
                 .map(x => {
                   return {
                     object_ref: x.stix.id,
@@ -928,6 +896,14 @@ export class CollectionViewComponent extends StixViewPage implements OnInit {
         subscription.unsubscribe(); //prevent memory leaks
       },
     });
+  }
+
+  public format(attackType: string): string {
+    return attackType.replace(/-/g, ' ');
+  }
+
+  public plural(attackType: string) {
+    return this.format(AttackTypeToPlural[attackType]);
   }
 
   /**
