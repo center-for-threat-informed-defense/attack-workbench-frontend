@@ -791,29 +791,36 @@ export abstract class StixObject extends Serializable {
     });
   }
 
-  public getNamespaceID(restAPIConnector, orgNamespace): Observable<any> {
+  public getNamespaceID(
+    apiService: RestApiConnectorService,
+    orgNamespace: { prefix: string; range_start: string }
+  ): Observable<any> {
     let prefix = ''; // i.e. 'TA', if StixObject type is tactic
     let count = '' as any; // i.e. 1234
     this.attackID = '(generating ID)';
 
     let accessor: Observable<Paginated<StixObject>>;
-    if (this.attackType == 'group') accessor = restAPIConnector.getAllGroups();
+    if (this.attackType == 'group') accessor = apiService.getAllGroups();
     else if (this.attackType == 'campaign')
-      accessor = restAPIConnector.getAllCampaigns();
+      accessor = apiService.getAllCampaigns();
     else if (this.attackType == 'mitigation')
-      accessor = restAPIConnector.getAllMitigations();
+      accessor = apiService.getAllMitigations();
     else if (this.attackType == 'software')
-      accessor = restAPIConnector.getAllSoftware();
-    else if (this.attackType == 'tactic')
-      accessor = restAPIConnector.getAllTactics();
+      accessor = apiService.getAllSoftware();
+    else if (this.attackType == 'tactic') accessor = apiService.getAllTactics();
     else if (this.attackType == 'technique')
-      accessor = restAPIConnector.getAllTechniques();
+      accessor = apiService.getAllTechniques();
     else if (this.attackType == 'data-source')
-      accessor = restAPIConnector.getAllDataSources();
-    else if (this.attackType == 'asset')
-      accessor = restAPIConnector.getAllAssets();
+      accessor = apiService.getAllDataSources();
+    else if (this.attackType == 'asset') accessor = apiService.getAllAssets();
     else if (this.attackType == 'matrix')
-      accessor = restAPIConnector.getAllMatrices();
+      accessor = apiService.getAllMatrices();
+    else if (this.attackType == 'detection-strategy')
+      accessor = apiService.getAllDetectionStrategies();
+    else if (this.attackType == 'log-source')
+      accessor = apiService.getAllLogSources();
+    else if (this.attackType == 'analytic')
+      accessor = apiService.getAllAnalytics();
     else accessor = null;
 
     // Find all other objects that have this prefix and range, and set ID to the most recent & unique ID available
@@ -841,7 +848,7 @@ export abstract class StixObject extends Serializable {
               if (found && found.length > 0) {
                 familyPrefix += found[0];
                 count = 1;
-                return restAPIConnector
+                return apiService
                   .getTechnique(
                     this['parentTechnique'].stixID,
                     null,
