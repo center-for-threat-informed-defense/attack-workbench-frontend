@@ -1,1 +1,99 @@
-<p>log-source-view works!</p>
+<div class="log-source-view view-page grid spacing-16">
+  <div class="row">
+    <div class="col">
+      <!-- NAME -->
+      <app-name-property
+        [config]="{
+          mode: config.mode,
+          object: config.object,
+        }"></app-name-property>
+      <app-subheading
+        [config]="config"
+        (onOpenHistory)="openHistory()"
+        (onOpenNotes)="openNotes()"></app-subheading>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col">
+      <!-- ATT&CK ID -->
+      <app-attackid-property
+        class="grow-to-row"
+        [config]="{
+          mode: config.mode,
+          object: config.object,
+        }"></app-attackid-property>
+    </div>
+    <div class="col">
+      <!-- VERSION NUMBER -->
+      <app-version-property
+        class="grow-to-row"
+        [config]="{
+          mode: config.mode,
+          object: config.object,
+        }"></app-version-property>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col">
+      <!-- PERMUTATIONS -->
+      <app-subtype-property
+        class="grow-to-row"
+        [config]="{
+          mode: config.mode,
+          object: config.object,
+          field: 'permutations',
+          label: 'permutations',
+          subtypeFields: [
+            {
+              name: 'name',
+              required: true,
+              key: true,
+              editType: 'string',
+            },
+            {
+              name: 'channel',
+              required: true,
+              editType: 'string',
+            },
+          ],
+          tooltip: 'a permutation',
+        }"></app-subtype-property>
+    </div>
+  </div>
+  <!-- RELATIONSHIPS - NOTE: these are only shown in 'view' mode -->
+  @if (
+    (config.showRelationships || !config.hasOwnProperty('showRelationships')) &&
+    !editing
+  ) {
+    <!-- DATA COMPONENTS -->
+    <div class="row">
+      <div class="col">
+        <h2 class="section-header">Data Components</h2>
+      </div>
+    </div>
+    <div class="row" *ngIf="canEdit">
+      <div class="col">
+        <app-add-relationship-button
+          (created)="foundInList.applyControls(); reload.emit()"
+          [config]="{
+            label: 'add a data component',
+            relationship_type: 'found-in',
+            target_object: logSource,
+          }"></app-add-relationship-button>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col">
+        <app-stix-list
+          #foundInList
+          [config]="{
+            type: 'relationship',
+            targetRef: logSource.stixID,
+            relationshipType: 'found-in',
+            clickBehavior: 'dialog',
+            allowEdits: true,
+          }"></app-stix-list>
+      </div>
+    </div>
+  }
+</div>
