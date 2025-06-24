@@ -22,6 +22,7 @@ import { StixObject } from 'src/app/classes/stix/stix-object';
 import { AddDialogComponent } from 'src/app/components/add-dialog/add-dialog.component';
 import { Subscription } from 'rxjs';
 import { Technique } from 'src/app/classes/stix/technique';
+import { Analytic } from 'src/app/classes/stix';
 
 @Component({
   selector: 'app-list-edit',
@@ -152,6 +153,21 @@ export class ListEditComponent implements OnInit, AfterContentChecked {
             subscription.unsubscribe();
           },
         });
+    } else if (this.config.field == 'analytics') {
+      this.type = 'analytic';
+      const subscription = this.restAPIConnectorService
+        .getAllAnalytics()
+        .subscribe({
+          next: analytics => {
+            this.allObjects = analytics.data;
+            const selectedAnalyticIDs = this.config.object[this.config.field];
+            this.select = new SelectionModel<string>(true, selectedAnalyticIDs);
+            this.dataLoaded = true;
+          },
+          complete: () => {
+            subscription.unsubscribe();
+          },
+        });
     } else if (this.config.field == 'parentTechnique') {
       this.type = 'technique';
       const subscription = this.restAPIConnectorService
@@ -254,6 +270,15 @@ export class ListEditComponent implements OnInit, AfterContentChecked {
         object.domains.forEach(domain => this.domainState.push(domain));
         selectedTactics.forEach(tactic => this.tacticState.push(tactic));
       }
+    }
+    if (this.config.field == 'analytics') {
+      // convert analytic STIX ID to ATT&CK ID
+      return this.select.selected.map(
+        analyticId =>
+          this.allObjects.find(a => {
+            return a.stixID === analyticId;
+          }).attackID
+      );
     }
     if (
       this.config.field == 'parentTechnique' &&
@@ -367,6 +392,7 @@ export class ListEditComponent implements OnInit, AfterContentChecked {
     if (this.config.disabled) return; // cannot open stix list if field is disabled
     if (this.config.field == 'parentTechnique') this.openParentTechniqueList();
     if (this.config.field == 'tactics') this.openTacticList();
+    if (this.config.field == 'analytics') this.openAnalyticList();
   }
 
   /** Open tactic list */
@@ -445,6 +471,32 @@ export class ListEditComponent implements OnInit, AfterContentChecked {
           }
         } else {
           // user cancelled
+          this.select = selectCopy; // reset selection
+        }
+      },
+      complete: () => {
+        subscription.unsubscribe();
+      },
+    });
+  }
+
+  /** Open analytic list */
+  public openAnalyticList(): void {
+    // get list of analytics in current domain
+    const analytics = this.allObjects as Analytic[];
+
+    // open dialog window for user selection
+    const dialogRef = this.openDialogComponent(analytics);
+
+    // copy user selection
+    const selectCopy = new SelectionModel(true, this.select.selected);
+    const subscription = dialogRef.afterClosed().subscribe({
+      next: result => {
+        if (result) {
+          // update object list
+          this.config.object[this.config.field] = this.select.selected;
+        } else {
+          // user cancel
           this.select = selectCopy; // reset selection
         }
       },
