@@ -92,19 +92,6 @@
       }
     </div>
   </div>
-  <div class="row">
-    <div class="col">
-      <app-descriptive-property
-        [config]="{
-          mode: config.mode,
-          object: config.object,
-          field: 'description',
-          firstParagraphOnly: false,
-          referencesField: 'external_references',
-          label: 'Description',
-        }"></app-descriptive-property>
-    </div>
-  </div>
   <!-- RELATIONSHIPS - NOTE: these are only shown in 'view' mode -->
   @if (
     (config.showRelationships || !config.hasOwnProperty('showRelationships')) &&
@@ -138,6 +125,27 @@
             clickBehavior: 'dialog',
             allowEdits: true,
           }"></app-stix-list>
+      </div>
+    </div>
+  }
+  <!-- EXTERNAL REFERENCES -->
+  @if (
+    detectionStrategy.external_references.list().length > 0 ||
+    previous?.external_references.list().length > 0
+  ) {
+    <div class="row">
+      <div class="col">
+        <h2 class="section-header">References</h2>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col">
+        <app-external-references-property
+          [config]="{
+            mode: config.mode,
+            object: config.object,
+            referencesField: 'external_references',
+          }"></app-external-references-property>
       </div>
     </div>
   }
