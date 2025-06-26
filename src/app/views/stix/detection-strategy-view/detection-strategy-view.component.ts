@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { StixViewPage } from '../stix-view-page';
 import { DetectionStrategy, StixObject } from 'src/app/classes/stix';
 import { AuthenticationService } from 'src/app/services/connectors/authentication/authentication.service';
@@ -14,6 +14,8 @@ export class DetectionStrategyViewComponent
   extends StixViewPage
   implements OnInit
 {
+  @Output() public reload = new EventEmitter();
+
   public analytics: StixObject[] = [];
   public loading = false;
 
