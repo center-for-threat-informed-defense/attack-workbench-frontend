@@ -15,6 +15,10 @@ import {
   stixTimestampSchema,
   xMitreLastSeenCitationSchema,
 } from '@mitre-attack/attack-data-model';
+import {
+  attackIdPatterns,
+  stixTypeToAttackIdMapping,
+} from '@mitre-attack/attack-data-model/dist/schemas/common/attack-id';
 
 export type workflowStates =
   | 'work-in-progress'
@@ -410,10 +414,8 @@ export abstract class StixObject extends Serializable {
    * @returns true if the ATT&CK ID is valid, false otherwise
    */
   public isValidAttackId(): boolean {
-    const idRegex = new RegExp(
-      '^([A-Z]+-)?' + this.attackIDValidator.regex + '$'
-    );
-    const attackIDValid = idRegex.test(this.attackID);
+    const format = stixTypeToAttackIdMapping[this.type];
+    const attackIDValid = attackIdPatterns[format].test(this.attackID);
     return attackIDValid;
   }
 
@@ -488,16 +490,7 @@ export abstract class StixObject extends Serializable {
                     message: 'object has no name',
                   });
                 }
-              }
-              // if (this['name'] == '') {
-
-              //   result.errors.push({
-              //     result: 'error',
-              //     field: 'name',
-              //     message: 'object has no name',
-              //   });
-              // }
-              else if (
+              } else if (
                 objects.data.some(
                   x =>
                     x['name'].toLowerCase() == this['name'].toLowerCase() &&
