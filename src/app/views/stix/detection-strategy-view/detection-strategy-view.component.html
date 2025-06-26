@@ -69,7 +69,7 @@
             field: 'analytics',
             editType: 'stixList',
           }"></app-list-property>
-      } @else if ((!config.mode || config.mode === 'view') && !loading) {
+      } @else if (!loading) {
         <app-ordered-list-property
           class="grow-to-row"
           [config]="{
