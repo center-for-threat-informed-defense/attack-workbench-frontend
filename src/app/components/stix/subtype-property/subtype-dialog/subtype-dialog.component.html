@@ -4,7 +4,7 @@
   <ng-container *ngFor="let field of config.subtypeFields">
     <!-- edit type: 'string' -->
     <mat-form-field *ngIf="field.editType === 'string'" appearance="outline">
-      <mat-label>{{ field.name }}</mat-label>
+      <mat-label>{{ field.label ? field.label : field.name }}</mat-label>
       <input
         matInput
         [required]="field.required ? field.required : false"
