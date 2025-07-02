@@ -16,6 +16,10 @@ import {
   xMitreLastSeenCitationSchema,
 } from '@mitre-attack/attack-data-model';
 import {
+  createAttackIdSchema,
+} from '@mitre-attack/attack-data-model/dist/schemas/common/attack-id';
+
+import {
   attackIdPatterns,
   stixTypeToAttackIdMapping,
 } from '@mitre-attack/attack-data-model/dist/schemas/common/attack-id';
@@ -415,8 +419,9 @@ export abstract class StixObject extends Serializable {
    */
   public isValidAttackId(): boolean {
     const format = stixTypeToAttackIdMapping[this.type];
-    const attackIDValid = attackIdPatterns[format].test(this.attackID);
-    return attackIDValid;
+    const attackIDSchema = createAttackIdSchema(format);
+    const attackIDValid = attackIDSchema.safeParse(this.attackID);
+    return attackIDValid.success;
   }
 
   /**

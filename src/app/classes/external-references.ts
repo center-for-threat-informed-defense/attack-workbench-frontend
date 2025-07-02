@@ -5,6 +5,9 @@ import { Serializable, ValidationData } from './serializable';
 import { StixObject } from './stix/stix-object';
 import { logger } from '../utils/logger';
 import { RelatedAsset } from './stix/asset';
+import {
+  xMitreFirstSeenCitationSchema,
+} from '@mitre-attack/attack-data-model';
 
 export class ExternalReferences extends Serializable {
   private _externalReferences = new Map<string, ExternalReference>();
@@ -207,39 +210,47 @@ export class ExternalReferences extends Serializable {
     value: string,
     restApiConnector: RestApiConnectorService
   ): Observable<CitationParseResult> {
+    const brokenCitations = new Set<string>();
     const reReference = /\(Citation: (.*?)\)/gmu;
-    const citations = value.match(reReference);
-    const result = new CitationParseResult({
-      brokenCitations: this.validateBrokenCitations(value, [
-        /\(Citation:([^ ].*?)\)/gmu,
-        /\(citation:(.*?)\)/gmu,
-      ]),
-    });
-
+    const result = new CitationParseResult({brokenCitations})
+    const citations = value.match(reReference); // Extract citations using regex
+    const apiMap: { [key: string]: Observable<any> } = {}; // Initialize API map
+  
+    // Process citations
     if (citations) {
-      // build lookup api map
-      const api_map = {};
       for (const citation of citations) {
-        // Split to get source name from citation
-        const sourceName = citation.split('(Citation: ')[1].slice(0, -1);
-        api_map[sourceName] = this.checkAndAddReference(
-          sourceName,
-          restApiConnector
-        );
+        // Validate citation using schema
+        const validateCitation = xMitreFirstSeenCitationSchema.safeParse(citation);
+        if (validateCitation.success) {
+          // Extract source name from citation
+          const sourceName = citation.split('(Citation: ')[1].slice(0, -1);
+          // Add API call to the map
+          apiMap[sourceName] = this.checkAndAddReference(sourceName, restApiConnector);
+        } else {
+          // Add invalid citation to brokenCitations
+          brokenCitations.add(citation);
+        }
       }
-      // check/add each citation
-      return forkJoin(api_map).pipe(
-        map(api_results => {
-          const citation_results = api_results as any;
-          for (const key of Object.keys(citation_results)) {
-            // was the result able to be found/added?
-            if (citation_results[key]) result.usedCitations.add(key);
-            else result.missingCitations.add(key);
+    }
+  
+    // If there are valid citations to process, use forkJoin
+    if (Object.keys(apiMap).length > 0) {
+      return forkJoin(apiMap).pipe(
+        map(apiResults => {
+          const citationResults = apiResults as any;
+          for (const key of Object.keys(citationResults)) {
+            // Check if the citation was successfully processed
+            if (citationResults[key]) {
+              result.usedCitations.add(key);
+            } else {
+              result.missingCitations.add(key);
+            }
           }
           return result;
         })
       );
     } else {
+      // If no valid citations, return the result immediately
       return of(result);
     }
   }
@@ -250,6 +261,7 @@ export class ExternalReferences extends Serializable {
    * @param {regex[]} regExes regular expression
    */
   private validateBrokenCitations(field, regExes): Set<string> {
+
     const result = new Set<string>();
     for (const regex of regExes) {
       const brokenReferences = field.match(regex);
