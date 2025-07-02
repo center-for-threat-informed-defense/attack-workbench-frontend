@@ -5,9 +5,7 @@ import { Serializable, ValidationData } from './serializable';
 import { StixObject } from './stix/stix-object';
 import { logger } from '../utils/logger';
 import { RelatedAsset } from './stix/asset';
-import {
-  xMitreFirstSeenCitationSchema,
-} from '@mitre-attack/attack-data-model';
+import { xMitreFirstSeenCitationSchema } from '@mitre-attack/attack-data-model';
 
 export class ExternalReferences extends Serializable {
   private _externalReferences = new Map<string, ExternalReference>();
@@ -212,27 +210,31 @@ export class ExternalReferences extends Serializable {
   ): Observable<CitationParseResult> {
     const brokenCitations = new Set<string>();
     const reReference = /\(Citation: (.*?)\)/gmu;
-    const result = new CitationParseResult({brokenCitations})
+    const result = new CitationParseResult({ brokenCitations });
     const citations = value.match(reReference); // Extract citations using regex
     const apiMap: { [key: string]: Observable<any> } = {}; // Initialize API map
-  
+
     // Process citations
     if (citations) {
       for (const citation of citations) {
         // Validate citation using schema
-        const validateCitation = xMitreFirstSeenCitationSchema.safeParse(citation);
+        const validateCitation =
+          xMitreFirstSeenCitationSchema.safeParse(citation);
         if (validateCitation.success) {
           // Extract source name from citation
           const sourceName = citation.split('(Citation: ')[1].slice(0, -1);
           // Add API call to the map
-          apiMap[sourceName] = this.checkAndAddReference(sourceName, restApiConnector);
+          apiMap[sourceName] = this.checkAndAddReference(
+            sourceName,
+            restApiConnector
+          );
         } else {
           // Add invalid citation to brokenCitations
           brokenCitations.add(citation);
         }
       }
     }
-  
+
     // If there are valid citations to process, use forkJoin
     if (Object.keys(apiMap).length > 0) {
       return forkJoin(apiMap).pipe(
@@ -261,7 +263,6 @@ export class ExternalReferences extends Serializable {
    * @param {regex[]} regExes regular expression
    */
   private validateBrokenCitations(field, regExes): Set<string> {
-
     const result = new Set<string>();
     for (const regex of regExes) {
       const brokenReferences = field.match(regex);
