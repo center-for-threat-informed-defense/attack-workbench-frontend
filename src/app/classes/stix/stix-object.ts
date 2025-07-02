@@ -15,9 +15,7 @@ import {
   stixTimestampSchema,
   xMitreLastSeenCitationSchema,
 } from '@mitre-attack/attack-data-model';
-import {
-  createAttackIdSchema,
-} from '@mitre-attack/attack-data-model/dist/schemas/common/attack-id';
+import { createAttackIdSchema } from '@mitre-attack/attack-data-model/dist/schemas/common/attack-id';
 
 import {
   attackIdPatterns,
