@@ -34,6 +34,19 @@
     </div>
   </div>
   <div class="row">
+    <!-- DOMAINS -->
+    <div class="col">
+      <app-list-property
+        class="grow-to-row"
+        [config]="{
+          mode: config.mode,
+          object: config.object,
+          field: 'domains',
+          editType: 'select',
+        }"></app-list-property>
+    </div>
+  </div>
+  <div class="row">
     <div class="col">
       <!-- PERMUTATIONS -->
       <app-subtype-property
