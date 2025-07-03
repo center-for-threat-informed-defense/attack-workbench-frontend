@@ -7,6 +7,7 @@ import { ValidationData } from '../serializable';
 export class Analytic extends StixObject {
   public platform: string;
   public detects: string;
+  public domains: string[] = [];
   public logSources: LogSourceReference[] = [];
   public mutableElements: MutableElement[] = [];
 
@@ -36,6 +37,7 @@ export class Analytic extends StixObject {
     if (keepModified) rep.stix.modified = keepModified;
 
     if (this.platform) rep.stix.x_mitre_platform = this.platform;
+    if (this.domains) rep.stix.x_mitre_domains = this.domains;
     if (this.detects) rep.stix.x_mitre_detects = this.detects;
     if (this.logSources?.length)
       rep.stix.x_mitre_log_sources = this.logSources.map(({ ref, keys }) => ({
@@ -69,6 +71,12 @@ export class Analytic extends StixObject {
             `TypeError: platform field is not a string: ${sdo.platform} (${typeof sdo.platform})`
           );
       } else this.platform = '';
+
+      if ('x_mitre_domains' in sdo) {
+        if (this.isStringArray(sdo.x_mitre_domains))
+          this.domains = sdo.x_mitre_domains;
+        else logger.error('TypeError: domains field is not a string array.');
+      } else this.domains = [];
 
       if ('x_mitre_log_sources' in sdo) {
         if (this.isLogSourcesArray(sdo.x_mitre_log_sources))
