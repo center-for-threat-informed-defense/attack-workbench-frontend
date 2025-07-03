@@ -1,5 +1,8 @@
-import { Component, Input, ViewEncapsulation } from '@angular/core';
+import { Component, Input, OnInit, ViewEncapsulation } from '@angular/core';
+import { FormControl } from '@angular/forms';
+import { Subscription } from 'rxjs';
 import { StixObject } from 'src/app/classes/stix/stix-object';
+import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/rest-api-connector.service';
 
 @Component({
   selector: 'app-string-property',
@@ -8,8 +11,15 @@ import { StixObject } from 'src/app/classes/stix/stix-object';
   encapsulation: ViewEncapsulation.None,
   standalone: false,
 })
-export class StringPropertyComponent {
+export class StringPropertyComponent implements OnInit {
   @Input() public config: StringPropertyConfig;
+
+  public selectControl: FormControl;
+  public loading = false;
+  public options: Set<string>;
+
+  // prevent async issues
+  private subscription: Subscription = new Subscription();
 
   public get current() {
     return this.config.object[0]?.[this.config.field] || '';
@@ -18,8 +28,30 @@ export class StringPropertyComponent {
     return this.config.object[1]?.[this.config.field] || '';
   }
 
-  constructor() {
-    // intentionally left blank
+  constructor(private apiService: RestApiConnectorService) {}
+
+  ngOnInit(): void {
+    if (this.config.editType === 'select') {
+      this.selectControl = new FormControl({
+        value: this.config.object[this.config.field],
+      });
+
+      if (this.config.field == 'platform') {
+        this.loading = true;
+        const data$ = this.apiService.getAllAllowedValues();
+        this.subscription = data$.subscribe({
+          next: data => {
+            const stixObject = this.config.object as StixObject;
+            this.options =
+              data.find(obj => {
+                return obj.objectType == stixObject.attackType;
+              }) ?? [];
+            this.loading = false;
+          },
+          complete: () => this.subscription.unsubscribe(),
+        });
+      }
+    }
   }
 }
 
@@ -40,4 +72,6 @@ export interface StringPropertyConfig {
   label?: string;
   /* If true, the field will be required. Default false if omitted. */
   required?: boolean;
+  /* Edit type. Default: 'any' */
+  editType?: 'select' | 'any';
 }
