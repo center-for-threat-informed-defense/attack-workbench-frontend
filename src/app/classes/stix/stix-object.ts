@@ -585,20 +585,21 @@ export abstract class StixObject extends Serializable {
                   message:
                     'object is missing a citation for the first seen date',
                 });
-              } else if (this.hasOwnProperty('first_seen_citation')) {
-                const firstSeenCitationValidationResult =
-                  xMitreFirstSeenCitationSchema.safeParse(
-                    this['first_seen_citation']
-                  );
-                if (!firstSeenCitationValidationResult.success) {
-                  result.errors.push({
-                    result: 'error',
-                    field: 'name',
-                    message:
-                      firstSeenCitationValidationResult.error.errors[0].message,
-                  });
-                }
               }
+              // } else if (this.hasOwnProperty('first_seen_citation')) {
+              //   const firstSeenCitationValidationResult =
+              //     xMitreFirstSeenCitationSchema.safeParse(
+              //       this['first_seen_citation']
+              //     );
+              //   if (!firstSeenCitationValidationResult.success) {
+              //     result.errors.push({
+              //       result: 'error',
+              //       field: 'name',
+              //       message:
+              //         firstSeenCitationValidationResult.error.errors[0].message,
+              //     });
+              //   }
+              // }
               if (
                 !this.hasOwnProperty('last_seen') ||
                 this['last_seen'] == null
@@ -630,20 +631,21 @@ export abstract class StixObject extends Serializable {
                   message:
                     'object is missing a citation for the last seen date',
                 });
-              } else if (this.hasOwnProperty('last_seen_citation')) {
-                const lastSeenCitationValidationResult =
-                  xMitreLastSeenCitationSchema.safeParse(
-                    this['first_seen_citation']
-                  );
-                if (!lastSeenCitationValidationResult.success) {
-                  result.errors.push({
-                    result: 'error',
-                    field: 'name',
-                    message:
-                      lastSeenCitationValidationResult.error.errors[0].message,
-                  });
-                }
               }
+              // } else if (this.hasOwnProperty('last_seen_citation')) {
+              //   const lastSeenCitationValidationResult =
+              //     xMitreLastSeenCitationSchema.safeParse(
+              //       this['first_seen_citation']
+              //     );
+              //   if (!lastSeenCitationValidationResult.success) {
+              //     result.errors.push({
+              //       result: 'error',
+              //       field: 'name',
+              //       message:
+              //         lastSeenCitationValidationResult.error.errors[0].message,
+              //     });
+              //   }
+              // }
             }
             return result;
           })

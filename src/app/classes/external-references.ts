@@ -13,6 +13,7 @@ export class ExternalReferences extends Serializable {
   private usedReferences: string[] = []; // array to store used references
   private missingReferences: string[] = []; // array to store missing references
   private brokenCitations: string[] = []; // array to store broken citations
+  private invalidCitations: string[] = []; // array to store invalid citations
 
   /**
    * return external references list
@@ -208,30 +209,37 @@ export class ExternalReferences extends Serializable {
     value: string,
     restApiConnector: RestApiConnectorService
   ): Observable<CitationParseResult> {
-    const brokenCitations = new Set<string>();
     const reReference = /\(Citation: (.*?)\)/gmu;
-    const result = new CitationParseResult({ brokenCitations });
-    const citations = value.match(reReference); // Extract citations using regex
+    const result = new CitationParseResult({
+      brokenCitations: this.validateBrokenCitations(value, [
+        /\(Citation:([^ ].*?)\)/gmu,
+        /\(citation:(.*?)\)/gmu,
+      ]),
+    })
+
     const apiMap: { [key: string]: Observable<any> } = {}; // Initialize API map
 
-    // Process citations
-    if (citations) {
-      for (const citation of citations) {
-        // Validate citation using schema
-        const validateCitation =
-          xMitreFirstSeenCitationSchema.safeParse(citation);
-        if (validateCitation.success) {
-          // Extract source name from citation
+    const validateValue = xMitreFirstSeenCitationSchema.safeParse(value);
+    if (validateValue.success) {
+      // Extract citations even if the value doesn't pass validation
+      const citations = value.match(reReference); // Extract citations using regex
+
+      // Process citations
+      if (citations) {
+        for (const citation of citations) {
+            // Extract source name from citation
           const sourceName = citation.split('(Citation: ')[1].slice(0, -1);
           // Add API call to the map
           apiMap[sourceName] = this.checkAndAddReference(
             sourceName,
             restApiConnector
           );
-        } else {
-          // Add invalid citation to brokenCitations
-          brokenCitations.add(citation);
         }
+      }
+    }
+    else{
+      if (value != ""){
+        result.invalidCitations.add(value);
       }
     }
 
@@ -510,6 +518,21 @@ export class ExternalReferences extends Serializable {
             field: 'external_references', //TODO set this to the actual field to improve warnings
             message: `Citations ${brokenCitations.join(', ')} do not match format (Citation: source name)`,
           });
+        
+        // invalid citations
+        const invalidCitations = Array.from(citationResult.invalidCitations);
+        if (invalidCitations.length == 1)
+          result.errors.push({
+            result: 'error',
+            field: 'external_references', //TODO set this to the actual field to improve warnings
+            message: `Citation does not match format (Citation: source name) or (Citation: source name)(Citation: source name)`,
+          });
+        else if (invalidCitations.length > 1)
+          result.errors.push({
+            result: 'error',
+            field: 'external_references', //TODO set this to the actual field to improve warnings
+            message: `Citations ${invalidCitations.join(', ')} do not match format (Citation: source name) or (Citation: source name)(Citation: source name)`,
+          });
 
         //missing citations
         const missingCitations = Array.from(citationResult.missingCitations);
@@ -551,11 +574,14 @@ export class CitationParseResult {
   public missingCitations = new Set<string>();
   // list of broken references detected in the field
   public brokenCitations = new Set<string>();
+  // list of invalid references detected in the field
+  public invalidCitations = new Set<string>();
 
   constructor(initData?: {
     usedCitations?: Set<string>;
     missingCitations?: Set<string>;
     brokenCitations: Set<string>;
+    invalidCitations?: Set<string>;
   }) {
     if (initData && initData.usedCitations)
       this.usedCitations = initData.usedCitations;
@@ -563,6 +589,8 @@ export class CitationParseResult {
       this.missingCitations = initData.missingCitations;
     if (initData && initData.brokenCitations)
       this.brokenCitations = initData.brokenCitations;
+    if (initData && initData.invalidCitations)
+      this.invalidCitations = initData.invalidCitations;
   }
 
   /**
@@ -581,6 +609,10 @@ export class CitationParseResult {
     this.brokenCitations = new Set([
       ...this.brokenCitations,
       ...that.brokenCitations,
+    ]);
+    this.invalidCitations = new Set([
+      ...this.invalidCitations,
+      ...that.invalidCitations,
     ]);
   }
 }
