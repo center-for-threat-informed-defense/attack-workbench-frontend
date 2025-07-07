@@ -215,7 +215,7 @@ export class ExternalReferences extends Serializable {
         /\(Citation:([^ ].*?)\)/gmu,
         /\(citation:(.*?)\)/gmu,
       ]),
-    })
+    });
 
     const apiMap: { [key: string]: Observable<any> } = {}; // Initialize API map
 
@@ -227,7 +227,7 @@ export class ExternalReferences extends Serializable {
       // Process citations
       if (citations) {
         for (const citation of citations) {
-            // Extract source name from citation
+          // Extract source name from citation
           const sourceName = citation.split('(Citation: ')[1].slice(0, -1);
           // Add API call to the map
           apiMap[sourceName] = this.checkAndAddReference(
@@ -236,9 +236,8 @@ export class ExternalReferences extends Serializable {
           );
         }
       }
-    }
-    else{
-      if (value != ""){
+    } else {
+      if (value != '') {
         result.invalidCitations.add(value);
       }
     }
@@ -518,7 +517,7 @@ export class ExternalReferences extends Serializable {
             field: 'external_references', //TODO set this to the actual field to improve warnings
             message: `Citations ${brokenCitations.join(', ')} do not match format (Citation: source name)`,
           });
-        
+
         // invalid citations
         const invalidCitations = Array.from(citationResult.invalidCitations);
         if (invalidCitations.length == 1)
