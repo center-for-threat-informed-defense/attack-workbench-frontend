@@ -64,11 +64,12 @@ export class Analytic extends StixObject {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const sdo = raw.stix as any;
 
-      if ('platform' in sdo) {
-        if (typeof sdo.platform === 'string') this.platform = sdo.platform;
+      if ('x_mitre_platform' in sdo) {
+        if (typeof sdo.x_mitre_platform === 'string')
+          this.platform = sdo.x_mitre_platform;
         else
           logger.error(
-            `TypeError: platform field is not a string: ${sdo.platform} (${typeof sdo.platform})`
+            `TypeError: x_mitre_platform field is not a string: ${sdo.x_mitre_platform} (${typeof sdo.x_mitre_platform})`
           );
       } else this.platform = '';
 
