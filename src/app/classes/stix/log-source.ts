@@ -6,7 +6,6 @@ import { ValidationData } from '../serializable';
 
 export class LogSource extends StixObject {
   public name = '';
-  public domains: string[] = [];
   public permutations: LogSourcePermutation[] = [];
 
   public readonly supportsAttackID = true;
@@ -35,7 +34,6 @@ export class LogSource extends StixObject {
     if (keepModified) rep.stix.modified = keepModified;
 
     rep.stix.name = this.name.trim();
-    if (this.domains) rep.stix.x_mitre_domains = this.domains;
     if (this.permutations?.length)
       rep.stix.x_mitre_log_source_permutations = this.permutations.map(
         ({ name, channel }) => ({
@@ -63,12 +61,6 @@ export class LogSource extends StixObject {
             `TypeError: name field is not a string: ${sdo.name} (${typeof sdo.name})`
           );
       } else this.name = '';
-
-      if ('x_mitre_domains' in sdo) {
-        if (this.isStringArray(sdo.x_mitre_domains))
-          this.domains = sdo.x_mitre_domains;
-        else logger.error('TypeError: domains field is not a string array.');
-      } else this.domains = [];
 
       if ('x_mitre_log_source_permutations' in sdo) {
         if (this.isPermutationsArray(sdo.x_mitre_log_source_permutations))
