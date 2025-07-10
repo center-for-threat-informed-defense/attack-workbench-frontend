@@ -36,7 +36,10 @@ export class Analytic extends StixObject {
     const rep = super.base_serialize();
     if (keepModified) rep.stix.modified = keepModified;
 
-    if (this.platform) rep.stix.x_mitre_platform = this.platform;
+    if (this.platform) {
+      // convert to array to match spec
+      rep.stix.x_mitre_platforms = [this.platform];
+    }
     if (this.domains) rep.stix.x_mitre_domains = this.domains;
     if (this.detects) rep.stix.x_mitre_detects = this.detects;
     if (this.logSources?.length)
@@ -64,13 +67,17 @@ export class Analytic extends StixObject {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const sdo = raw.stix as any;
 
-      if ('x_mitre_platform' in sdo) {
-        if (typeof sdo.x_mitre_platform === 'string')
-          this.platform = sdo.x_mitre_platform;
-        else
-          logger.error(
-            `TypeError: x_mitre_platform field is not a string: ${sdo.x_mitre_platform} (${typeof sdo.x_mitre_platform})`
-          );
+      if ('x_mitre_platforms' in sdo) {
+        if (this.isStringArray(sdo.x_mitre_platforms)) {
+          if (sdo.x_mitre_platforms.length <= 1) {
+            this.platform =
+              sdo.x_mitre_platforms.length === 1 ? sdo.x_mitre_platform[0] : '';
+          } else
+            logger.error(
+              'ValidationError: platforms field contains more than one entry.'
+            );
+        } else
+          logger.error(`TypeError: platforms field is not a string array.`);
       } else this.platform = '';
 
       if ('x_mitre_domains' in sdo) {
