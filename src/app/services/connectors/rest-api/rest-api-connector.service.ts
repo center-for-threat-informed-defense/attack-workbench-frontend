@@ -1865,6 +1865,19 @@ export class RestApiConnectorService extends ApiConnector {
     );
   }
 
+  /**
+   * Get the list of channels on a Log Source by its STIX ID
+   * @param stixId the STIX ID of the log source object
+   */
+  public getLogSourceChannels(stixId: string): Observable<string[]> {
+    // TODO:
+    // const url = `${this.apiUrl}/log-sources/${stixId}/channels`;
+    // return this.http.get<string[]>(url).pipe(
+    //   tap(results => logger.log('retrieved log source channels', results)),
+    // );
+    return of(['EventCode=10', 'ptrace']);
+  }
+
   //   ___ ___ ___ ___ ___ ___ _  _  ___ ___ ___
   //  | _ \ __| __| __| _ \ __| \| |/ __| __/ __|
   //  |   / _|| _|| _||   / _|| .` | (__| _|\__ \

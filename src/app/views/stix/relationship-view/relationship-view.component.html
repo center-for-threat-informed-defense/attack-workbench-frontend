@@ -327,6 +327,10 @@
               field: 'logSourceChannel',
               label: 'log source channel',
               editType: 'select',
+              disabled: !relationship.target_ref,
+              relatedStixId: relationship.target_ref
+                ? relationship.target_ref
+                : '',
             }"></app-string-property>
         </div>
       </div>

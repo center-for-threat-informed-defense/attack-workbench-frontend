@@ -1,4 +1,11 @@
-import { Component, Input, OnInit, ViewEncapsulation } from '@angular/core';
+import {
+  Component,
+  Input,
+  OnChanges,
+  OnInit,
+  SimpleChanges,
+  ViewEncapsulation,
+} from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { StixObject } from 'src/app/classes/stix/stix-object';
@@ -11,7 +18,7 @@ import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/re
   encapsulation: ViewEncapsulation.None,
   standalone: false,
 })
-export class StringPropertyComponent implements OnInit {
+export class StringPropertyComponent implements OnInit, OnChanges {
   @Input() public config: StringPropertyConfig;
 
   public selectControl: FormControl;
@@ -34,9 +41,10 @@ export class StringPropertyComponent implements OnInit {
     if (this.config.editType === 'select') {
       this.selectControl = new FormControl({
         value: this.config.object[this.config.field],
+        disabled: this.config.disabled ?? false,
       });
 
-      if (this.config.field == 'platform') {
+      if (this.config.field === 'platform') {
         this.loading = true;
         const data$ = this.apiService.getAllAllowedValues();
         this.subscription = data$.subscribe({
@@ -50,8 +58,44 @@ export class StringPropertyComponent implements OnInit {
           },
           complete: () => this.subscription.unsubscribe(),
         });
+      } else if (
+        this.config.field === 'logSourceChannel' &&
+        this.config.relatedStixId
+      ) {
+        this.loadLogSourceChannels(this.config.relatedStixId);
       }
     }
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes.config) {
+      // react to changes in 'disabled' property
+      if (this.selectControl) {
+        const isDisabled = this.config.disabled ?? false;
+        if (isDisabled) this.selectControl.disable();
+        else this.selectControl.enable();
+      }
+
+      // react to changes in 'relatedStixId' property for logSourceChannel field
+      if (
+        this.config.field === 'logSourceChannel' &&
+        this.config.relatedStixId
+      ) {
+        this.loadLogSourceChannels(this.config.relatedStixId);
+      }
+    }
+  }
+
+  private loadLogSourceChannels(relatedStixId: string): void {
+    this.loading = true;
+    const data$ = this.apiService.getLogSourceChannels(relatedStixId);
+    this.subscription = data$.subscribe({
+      next: data => {
+        this.options = new Set(data);
+        this.loading = false;
+      },
+      complete: () => this.subscription.unsubscribe(),
+    });
   }
 }
 
@@ -72,6 +116,11 @@ export interface StringPropertyConfig {
   label?: string;
   /* If true, the field will be required. Default false if omitted. */
   required?: boolean;
+  /* If true, the field will be disabled. Default false if omitted. */
+  disabled?: boolean;
   /* Edit type. Default: 'any' */
   editType?: 'select' | 'any';
+  /* The stixId of an object related to the string selection; used to load
+  the list of selection options. */
+  relatedStixId?: string;
 }
