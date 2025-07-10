@@ -126,10 +126,10 @@ export abstract class StixObject extends Serializable {
       external_references: serialized_external_references,
       x_mitre_deprecated: this.deprecated,
       revoked: this.revoked,
-      description: this.description,
       object_marking_refs: this.object_marking_refs,
       spec_version: '2.1',
     };
+    if (this.description) stix.description = this.description;
     // Add modified date if type is not marking-definition
     if (this.type != 'marking-definition')
       stix['modified'] = new Date().toISOString();
