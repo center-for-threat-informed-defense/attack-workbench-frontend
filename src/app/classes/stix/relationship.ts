@@ -40,6 +40,9 @@ export class Relationship extends StixObject {
 
   public relationship_type = '';
 
+  // x_mitre_log_source_channel is only present in 'found-in' relationships
+  public logSourceChannel: string;
+
   public readonly supportsAttackID = false; // relationships do not have ATT&CK IDs
   public readonly supportsNamespace = false; // relationships do not support namespacing
   protected get attackIDValidator() {
@@ -381,6 +384,8 @@ export class Relationship extends StixObject {
     }
 
     rep.stix.relationship_type = this.relationship_type;
+    if (this.relationship_type === 'found-in' && this.logSourceChannel)
+      rep.stix.x_mitre_log_source_channel = this.logSourceChannel;
     rep.stix.source_ref = this.source_ref;
     rep.stix.target_ref = this.target_ref;
 
@@ -393,43 +398,54 @@ export class Relationship extends StixObject {
    * @param {*} raw the raw object to parse
    */
   public deserialize(raw: any) {
-    const sdoStix = raw.stix;
-    if ('source_ref' in sdoStix) {
-      if (typeof sdoStix.source_ref === 'string')
-        this.source_ref = sdoStix.source_ref;
+    const sdo = raw.stix;
+    if ('source_ref' in sdo) {
+      if (typeof sdo.source_ref === 'string') this.source_ref = sdo.source_ref;
       else
         logger.error(
           'TypeError: source_ref field is not a string:',
-          sdoStix.source_ref,
+          sdo.source_ref,
           '(',
-          typeof sdoStix.source_ref,
+          typeof sdo.source_ref,
           ')'
         );
     }
-    if ('target_ref' in sdoStix) {
-      if (typeof sdoStix.target_ref === 'string')
-        this.target_ref = sdoStix.target_ref;
+    if ('target_ref' in sdo) {
+      if (typeof sdo.target_ref === 'string') this.target_ref = sdo.target_ref;
       else
         logger.error(
           'TypeError: target_ref field is not a string:',
-          sdoStix.target_ref,
+          sdo.target_ref,
           '(',
-          typeof sdoStix.target_ref,
+          typeof sdo.target_ref,
           ')'
         );
     }
-    if ('relationship_type' in sdoStix) {
-      if (typeof sdoStix.relationship_type === 'string')
-        this.relationship_type = sdoStix.relationship_type;
+    if ('relationship_type' in sdo) {
+      if (typeof sdo.relationship_type === 'string')
+        this.relationship_type = sdo.relationship_type;
       else
         logger.error(
           'TypeError: relationship_type field is not a string:',
-          sdoStix.relationship_type,
+          sdo.relationship_type,
           '(',
-          typeof sdoStix.relationship_type,
+          typeof sdo.relationship_type,
           ')'
         );
     }
+    if ('x_mitre_log_source_channel' in sdo) {
+      if (typeof sdo.x_mitre_log_source_channel === 'string')
+        this.logSourceChannel = sdo.x_mitre_log_source_channel;
+      else
+        logger.error(
+          'TypeError: x_mitre_log_source_channel field is not a string:',
+          sdo.x_mitre_log_source_channel,
+          '(',
+          typeof sdo.x_mitre_log_source_channel,
+          ')'
+        );
+    }
+    // check for api attached source object
     if ('source_object' in raw) {
       this.source_object = raw.source_object;
 
@@ -450,9 +466,9 @@ export class Relationship extends StixObject {
               ')'
             );
         }
-        // else logger.warn("ObjectWarning: cannot find attackID for source object");
       } else this.source_ID = '';
     }
+    // check for api attached target object
     if ('target_object' in raw) {
       this.target_object = raw.target_object;
 

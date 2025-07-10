@@ -316,6 +316,21 @@
 
   <!-- subtechnique relationships do not support descriptions -->
   <ng-container *ngIf="relationship.relationship_type !== 'subtechnique-of'">
+    @if (relationship.relationship_type === 'found-in') {
+      <div class="row">
+        <div class="col">
+          <app-string-property
+            class="grow-to-row"
+            [config]="{
+              mode: config.mode,
+              object: config.object,
+              field: 'logSourceChannel',
+              label: 'log source channel',
+              editType: 'select',
+            }"></app-string-property>
+        </div>
+      </div>
+    }
     <div class="row">
       <div class="col">
         <!-- DESCRIPTION -->
