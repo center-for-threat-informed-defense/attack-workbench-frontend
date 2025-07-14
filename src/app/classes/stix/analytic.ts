@@ -5,10 +5,11 @@ import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/re
 import { ValidationData } from '../serializable';
 
 export class Analytic extends StixObject {
+  public name = '';
   public platform: string;
   public detects: string;
   public domains: string[] = [];
-  public logSources: LogSourceReference[] = [];
+  public logSourceRefs: LogSourceReference[] = [];
   public mutableElements: MutableElement[] = [];
 
   public readonly supportsAttackID = true;
@@ -36,17 +37,20 @@ export class Analytic extends StixObject {
     const rep = super.base_serialize();
     if (keepModified) rep.stix.modified = keepModified;
 
+    if (this.name) rep.stix.name = this.name.trim();
     if (this.platform) {
       // convert to array to match spec
       rep.stix.x_mitre_platforms = [this.platform];
     }
     if (this.domains) rep.stix.x_mitre_domains = this.domains;
     if (this.detects) rep.stix.x_mitre_detects = this.detects;
-    if (this.logSources?.length)
-      rep.stix.x_mitre_log_sources = this.logSources.map(({ ref, keys }) => ({
-        ref,
-        keys,
-      }));
+    if (this.logSourceRefs?.length)
+      rep.stix.x_mitre_log_sources = this.logSourceRefs.map(
+        ({ ref, keys }) => ({
+          ref,
+          keys,
+        })
+      );
     if (this.mutableElements?.length)
       rep.stix.x_mitre_mutable_elements = this.mutableElements.map(
         ({ field, description }) => ({
@@ -67,6 +71,12 @@ export class Analytic extends StixObject {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const sdo = raw.stix as any;
 
+      if (!('name' in sdo)) this.name = '';
+      else if (typeof sdo.name === 'string') this.name = sdo.name;
+      else
+        logger.error(
+          `TypeError: name field is not a string: ${sdo.name} (${typeof sdo.name})`
+        );
       if ('x_mitre_platforms' in sdo) {
         if (this.isStringArray(sdo.x_mitre_platforms)) {
           if (sdo.x_mitre_platforms.length <= 1) {
@@ -88,12 +98,12 @@ export class Analytic extends StixObject {
 
       if ('x_mitre_log_sources' in sdo) {
         if (this.isLogSourcesArray(sdo.x_mitre_log_sources))
-          this.logSources = sdo.x_mitre_log_sources;
+          this.logSourceRefs = sdo.x_mitre_log_sources;
         else
           logger.error(
             `TypeError: x_mitre_log_sources field is not an array of log source references: ${sdo.x_mitre_log_sources} (${typeof sdo.x_mitre_log_sources})`
           );
-      } else this.logSources = [];
+      } else this.logSourceRefs = [];
 
       if ('x_mitre_mutable_elements' in sdo) {
         if (this.isMutableElementsArray(sdo.x_mitre_mutable_elements))

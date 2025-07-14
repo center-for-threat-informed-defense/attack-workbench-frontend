@@ -135,6 +135,7 @@ export class RestApiConnectorService extends ApiConnector {
     id: 'x-mitre-analytic--f78db141-6154-43b0-8e39-6be5b5eda624',
     type: 'x-mitre-analytic',
     spec_version: '2.1',
+    name: 'Analytic 1',
     created: '2025-05-20T00:00:00.000Z',
     modified: '2025-05-20T00:00:00.000Z',
     x_mitre_version: '1.0',
