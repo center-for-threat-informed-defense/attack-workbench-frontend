@@ -15,8 +15,9 @@ export class ObjectRefEditComponent {
   @Input() public attackObjects: StixObject[];
 
   public get objectRefs(): StixObject[] {
+    if (!this.attackObjects) return [];
     const refIds = this.config.object[this.config.field].map(f => f.ref);
-    return this.attackObjects.filter(o => refIds.includes(o.stixID));
+    return refIds.map(id => this.attackObjects.find(o => o.stixID === id));
   }
 
   constructor(public dialog: MatDialog) {}
