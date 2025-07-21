@@ -54,6 +54,7 @@
           object: config.object,
           field: 'platform',
           editType: 'select',
+          disabled: !analytic.domains.length,
         }"></app-string-property>
     </div>
   </div>
@@ -103,7 +104,7 @@
             {
               name: 'description',
               required: true,
-              editType: 'string',
+              editType: 'description',
             },
           ],
           tooltip: 'a mutable element',
