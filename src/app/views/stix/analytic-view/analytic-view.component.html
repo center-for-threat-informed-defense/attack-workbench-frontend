@@ -59,20 +59,28 @@
   </div>
   <div class="row">
     <div class="col">
-      <!-- DETECTION -->
-      <app-descriptive-property
+      <!-- LOG SOURCE REFS -->
+      <app-object-ref-property
+        class="grow-to-row"
         [config]="{
           mode: config.mode,
           object: config.object,
-          field: 'detects',
-          firstParagraphOnly: false,
-          referencesField: 'external_references',
-          label: 'Detection',
-        }"></app-descriptive-property>
+          field: 'logSourceRefs',
+          label: 'log source references',
+          attackType: 'log-source',
+          objectRefField: {
+            field: 'ref',
+            label: 'log source',
+          },
+          relatedFields: [
+            {
+              field: 'keys',
+              refField: 'permutations',
+              key: 'name',
+            },
+          ],
+        }"></app-object-ref-property>
     </div>
-  </div>
-  <div class="row">
-    <div class="col">TODO: log source refs</div>
   </div>
   <div class="row">
     <div class="col">
@@ -100,6 +108,20 @@
           ],
           tooltip: 'a mutable element',
         }"></app-subtype-property>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col">
+      <!-- DETECTION -->
+      <app-descriptive-property
+        [config]="{
+          mode: config.mode,
+          object: config.object,
+          field: 'detects',
+          firstParagraphOnly: false,
+          referencesField: 'external_references',
+          label: 'Detection',
+        }"></app-descriptive-property>
     </div>
   </div>
 </div>

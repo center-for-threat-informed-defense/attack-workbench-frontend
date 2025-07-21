@@ -1,0 +1,26 @@
+<div class="object-ref-edit labelled-box">
+  <div class="content">
+    <mat-chip-listbox>
+      @for (objectRef of objectRefs; track objectRef.stixID; let i = $index) {
+        <mat-chip
+          [removable]="true"
+          (removed)="removeRef(i)"
+          (click)="editObjectRef(i)">
+          {{ objectRef.attackID }} <mat-icon matChipRemove>cancel</mat-icon>
+        </mat-chip>
+      }
+      <button
+        class="small-icon-button"
+        mat-icon-button
+        aria-label="add object reference"
+        matTooltip="Add object reference"
+        matTooltipPosition="right"
+        (click)="editObjectRef()">
+        <mat-icon>add</mat-icon>
+      </button>
+    </mat-chip-listbox>
+  </div>
+  <span class="labelled-box-label">{{
+    config.label ? config.label : config.field
+  }}</span>
+</div>
