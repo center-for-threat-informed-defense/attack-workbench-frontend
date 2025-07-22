@@ -22,8 +22,10 @@ export class StringPropertyComponent implements OnInit, OnChanges {
   @Input() public config: StringPropertyConfig;
 
   public selectControl: FormControl;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  public allowedValues: any;
+  public channels: Set<string>;
   public loading = false;
-  public options: Set<string>;
 
   // prevent async issues
   private subscription: Subscription = new Subscription();
@@ -49,10 +51,11 @@ export class StringPropertyComponent implements OnInit, OnChanges {
         const data$ = this.apiService.getAllAllowedValues();
         this.subscription = data$.subscribe({
           next: data => {
-            const stixObject = this.config.object as StixObject;
-            this.options =
-              data.find(obj => {
-                return obj.objectType == stixObject.attackType;
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            const obj = this.config.object as any;
+            this.allowedValues =
+              data.find(v => {
+                return v.objectType == obj.attackType;
               }) ?? [];
             this.loading = false;
           },
@@ -86,12 +89,32 @@ export class StringPropertyComponent implements OnInit, OnChanges {
     }
   }
 
+  public getOptions(): Set<string> {
+    let options = new Set<string>();
+    if (this.loading) return options;
+    if (this.config.field === 'platform') {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const obj = this.config.object as any;
+      const properties = this.allowedValues.properties.find(p => {
+        return p.propertyName == 'x_mitre_platforms';
+      });
+      properties?.domains?.forEach(d => {
+        if (obj?.domains?.includes(d.domainName)) {
+          d.allowedValues.forEach(options.add, options);
+        }
+      });
+    } else if (this.config.field === 'logSourceChannel') {
+      options = this.channels;
+    }
+    return options;
+  }
+
   private loadLogSourceChannels(relatedStixId: string): void {
     this.loading = true;
     const data$ = this.apiService.getLogSourceChannels(relatedStixId);
     this.subscription = data$.subscribe({
       next: data => {
-        this.options = new Set(data);
+        this.channels = new Set(data);
         this.loading = false;
       },
       complete: () => this.subscription.unsubscribe(),

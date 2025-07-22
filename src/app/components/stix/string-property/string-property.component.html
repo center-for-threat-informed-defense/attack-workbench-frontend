@@ -15,7 +15,7 @@
     <div class="string-property-edit grow-to-row">
       <!-- editType: 'select' -->
       @if (config.editType === 'select') {
-        <mat-form-field appearance="outline">
+        <mat-form-field class="grow-to-row" appearance="outline">
           @if (loading) {
             <mat-label class="loading">
               <span
@@ -32,7 +32,7 @@
           <mat-select
             [formControl]="selectControl"
             [required]="config.required ? config.required : false">
-            @for (item of options; track item) {
+            @for (item of getOptions(); track item) {
               <mat-option [value]="item">{{ item }}</mat-option>
             }
           </mat-select>
