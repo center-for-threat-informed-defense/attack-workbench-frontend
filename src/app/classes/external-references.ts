@@ -176,14 +176,14 @@ export class ExternalReferences extends Serializable {
     for (const field of refs_fields) {
       if (field == 'aliases')
         parse_apis.push(
-          this.parseCitationsFromAliases(object[field], restAPIConnector)
+          this.parseCitationsFromAliases(object[field], restAPIConnector, field)
         );
       else if (field == 'relatedAssets')
         parse_apis.push(
-          this.parseCitationsFromRelatedAssets(object[field], restAPIConnector)
+          this.parseCitationsFromRelatedAssets(object[field], restAPIConnector, field)
         );
       else
-        parse_apis.push(this.parseCitations(object[field], restAPIConnector));
+        parse_apis.push(this.parseCitations(object[field], restAPIConnector, field));
     }
 
     return forkJoin(parse_apis).pipe(
@@ -207,7 +207,8 @@ export class ExternalReferences extends Serializable {
    */
   public parseCitations(
     value: string,
-    restApiConnector: RestApiConnectorService
+    restApiConnector: RestApiConnectorService,
+    field?: string
   ): Observable<CitationParseResult> {
     const reReference = /\(Citation: (.*?)\)/gmu;
     const result = new CitationParseResult({
@@ -219,29 +220,54 @@ export class ExternalReferences extends Serializable {
 
     const apiMap: { [key: string]: Observable<any> } = {}; // Initialize API map
 
-    const validateValue = xMitreFirstSeenCitationSchema.safeParse(value);
-    if (validateValue.success) {
+    if(field != 'description' && field != 'detection'){
+      const validateValue = xMitreFirstSeenCitationSchema.safeParse(value);
+      if (validateValue.success) {
+        // Extract citations even if the value doesn't pass validation
+        const citations = value.match(reReference); // Extract citations using regex
+
+        // Process citations
+        if (citations) {
+          for (const citation of citations) {
+            // Extract source name from citation
+            const sourceName = citation.split('(Citation: ')[1].slice(0, -1);
+            // Add API call to the map
+            apiMap[sourceName] = this.checkAndAddReference(
+              sourceName,
+              restApiConnector
+            );
+          }
+        }
+      } else {
+        if (value != '') {
+          result.invalidCitations.add(value);
+        }
+      }
+    }
+    else{
       // Extract citations even if the value doesn't pass validation
       const citations = value.match(reReference); // Extract citations using regex
-
       // Process citations
       if (citations) {
         for (const citation of citations) {
-          // Extract source name from citation
-          const sourceName = citation.split('(Citation: ')[1].slice(0, -1);
-          // Add API call to the map
-          apiMap[sourceName] = this.checkAndAddReference(
-            sourceName,
-            restApiConnector
-          );
+          const validateValue = xMitreFirstSeenCitationSchema.safeParse(citation);
+          if(validateValue.success){
+            // Extract source name from citation
+            const sourceName = citation.split('(Citation: ')[1].slice(0, -1);
+            // Add API call to the map
+            apiMap[sourceName] = this.checkAndAddReference(
+              sourceName,
+              restApiConnector
+            );
+          }
+          else{
+            if (citation != '') {
+              result.invalidCitations.add(citation);
+            }
+          }
         }
       }
-    } else {
-      if (value != '') {
-        result.invalidCitations.add(value);
-      }
     }
-
     // If there are valid citations to process, use forkJoin
     if (Object.keys(apiMap).length > 0) {
       return forkJoin(apiMap).pipe(
@@ -290,7 +316,8 @@ export class ExternalReferences extends Serializable {
    */
   public parseCitationsFromAliases(
     aliases: string[],
-    restApiConnector: RestApiConnectorService
+    restApiConnector: RestApiConnectorService,
+    field?: string
   ): Observable<CitationParseResult> {
     // Parse citations from the alias descriptions stored in external references
     const api_calls = [];
@@ -301,7 +328,7 @@ export class ExternalReferences extends Serializable {
         api_calls.push(
           this.parseCitations(
             this._externalReferences.get(alias).description,
-            restApiConnector
+            restApiConnector, field
           )
         );
       }
@@ -329,7 +356,8 @@ export class ExternalReferences extends Serializable {
    */
   public parseCitationsFromRelatedAssets(
     relatedAssets: RelatedAsset[],
-    restApiConnector: RestApiConnectorService
+    restApiConnector: RestApiConnectorService,
+    field?: string
   ): Observable<CitationParseResult> {
     // Parse citations from the related asset descriptions
     const api_calls = [];
@@ -337,7 +365,7 @@ export class ExternalReferences extends Serializable {
     for (const relatedAsset of relatedAssets) {
       if ('description' in relatedAsset && relatedAsset.description) {
         api_calls.push(
-          this.parseCitations(relatedAsset.description, restApiConnector)
+          this.parseCitations(relatedAsset.description, restApiConnector, field)
         );
       }
     }
@@ -477,18 +505,19 @@ export class ExternalReferences extends Serializable {
       if (!Object.keys(options.object)) continue; //object does not implement the field
       if (field == 'aliases')
         parse_apis.push(
-          this.parseCitationsFromAliases(options.object[field], restAPIService)
+          this.parseCitationsFromAliases(options.object[field], restAPIService, field)
         );
       else if (field == 'relatedAssets')
         parse_apis.push(
           this.parseCitationsFromRelatedAssets(
             options.object[field],
-            restAPIService
+            restAPIService,
+            field
           )
         );
       else
         parse_apis.push(
-          this.parseCitations(options.object[field], restAPIService)
+          this.parseCitations(options.object[field], restAPIService, field)
         );
     }
     return forkJoin(parse_apis).pipe(
