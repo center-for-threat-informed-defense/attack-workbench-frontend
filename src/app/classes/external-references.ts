@@ -180,10 +180,16 @@ export class ExternalReferences extends Serializable {
         );
       else if (field == 'relatedAssets')
         parse_apis.push(
-          this.parseCitationsFromRelatedAssets(object[field], restAPIConnector, field)
+          this.parseCitationsFromRelatedAssets(
+            object[field],
+            restAPIConnector,
+            field
+          )
         );
       else
-        parse_apis.push(this.parseCitations(object[field], restAPIConnector, field));
+        parse_apis.push(
+          this.parseCitations(object[field], restAPIConnector, field)
+        );
     }
 
     return forkJoin(parse_apis).pipe(
@@ -220,7 +226,7 @@ export class ExternalReferences extends Serializable {
 
     const apiMap: { [key: string]: Observable<any> } = {}; // Initialize API map
 
-    if(field != 'description' && field != 'detection'){
+    if (field != 'description' && field != 'detection') {
       const validateValue = xMitreFirstSeenCitationSchema.safeParse(value);
       if (validateValue.success) {
         // Extract citations even if the value doesn't pass validation
@@ -243,15 +249,15 @@ export class ExternalReferences extends Serializable {
           result.invalidCitations.add(value);
         }
       }
-    }
-    else{
+    } else {
       // Extract citations even if the value doesn't pass validation
       const citations = value.match(reReference); // Extract citations using regex
       // Process citations
       if (citations) {
         for (const citation of citations) {
-          const validateValue = xMitreFirstSeenCitationSchema.safeParse(citation);
-          if(validateValue.success){
+          const validateValue =
+            xMitreFirstSeenCitationSchema.safeParse(citation);
+          if (validateValue.success) {
             // Extract source name from citation
             const sourceName = citation.split('(Citation: ')[1].slice(0, -1);
             // Add API call to the map
@@ -259,8 +265,7 @@ export class ExternalReferences extends Serializable {
               sourceName,
               restApiConnector
             );
-          }
-          else{
+          } else {
             if (citation != '') {
               result.invalidCitations.add(citation);
             }
@@ -328,7 +333,8 @@ export class ExternalReferences extends Serializable {
         api_calls.push(
           this.parseCitations(
             this._externalReferences.get(alias).description,
-            restApiConnector, field
+            restApiConnector,
+            field
           )
         );
       }
@@ -505,7 +511,11 @@ export class ExternalReferences extends Serializable {
       if (!Object.keys(options.object)) continue; //object does not implement the field
       if (field == 'aliases')
         parse_apis.push(
-          this.parseCitationsFromAliases(options.object[field], restAPIService, field)
+          this.parseCitationsFromAliases(
+            options.object[field],
+            restAPIService,
+            field
+          )
         );
       else if (field == 'relatedAssets')
         parse_apis.push(

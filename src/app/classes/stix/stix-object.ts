@@ -13,7 +13,10 @@ import {
   nameSchema,
   stixTimestampSchema,
 } from '@mitre-attack/attack-data-model';
-import { StixTypesWithAttackIds, createAttackIdSchema } from '@mitre-attack/attack-data-model/dist/schemas/common/attack-id';
+import {
+  StixTypesWithAttackIds,
+  createAttackIdSchema,
+} from '@mitre-attack/attack-data-model/dist/schemas/common/attack-id';
 
 export type workflowStates =
   | 'work-in-progress'
@@ -409,8 +412,10 @@ export abstract class StixObject extends Serializable {
    * @returns true if the ATT&CK ID is valid, false otherwise
    */
   public isValidAttackId(): boolean {
-    if(this.type in StixTypeToAttackType){
-      const attackIDSchema = createAttackIdSchema(this.type as StixTypesWithAttackIds);
+    if (this.type in StixTypeToAttackType) {
+      const attackIDSchema = createAttackIdSchema(
+        this.type as StixTypesWithAttackIds
+      );
       const attackIDValid = attackIDSchema.safeParse(this.attackID);
       return attackIDValid.success;
     }
