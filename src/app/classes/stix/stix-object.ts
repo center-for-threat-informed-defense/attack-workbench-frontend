@@ -11,16 +11,9 @@ import { map, switchMap } from 'rxjs/operators';
 import { logger } from '../../utils/logger';
 import {
   nameSchema,
-  xMitreFirstSeenCitationSchema,
   stixTimestampSchema,
-  xMitreLastSeenCitationSchema,
 } from '@mitre-attack/attack-data-model';
-import { createAttackIdSchema } from '@mitre-attack/attack-data-model/dist/schemas/common/attack-id';
-
-import {
-  attackIdPatterns,
-  stixTypeToAttackIdMapping,
-} from '@mitre-attack/attack-data-model/dist/schemas/common/attack-id';
+import { StixTypesWithAttackIds, createAttackIdSchema } from '@mitre-attack/attack-data-model/dist/schemas/common/attack-id';
 
 export type workflowStates =
   | 'work-in-progress'
@@ -416,10 +409,12 @@ export abstract class StixObject extends Serializable {
    * @returns true if the ATT&CK ID is valid, false otherwise
    */
   public isValidAttackId(): boolean {
-    const format = stixTypeToAttackIdMapping[this.type];
-    const attackIDSchema = createAttackIdSchema(format);
-    const attackIDValid = attackIDSchema.safeParse(this.attackID);
-    return attackIDValid.success;
+    if(this.type in StixTypeToAttackType){
+      const attackIDSchema = createAttackIdSchema(this.type as StixTypesWithAttackIds);
+      const attackIDValid = attackIDSchema.safeParse(this.attackID);
+      return attackIDValid.success;
+    }
+    return false;
   }
 
   /**
