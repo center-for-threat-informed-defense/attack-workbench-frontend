@@ -222,6 +222,7 @@ import { ObjectRefViewComponent } from './components/stix/object-ref-property/ob
 import { ObjectRefEditComponent } from './components/stix/object-ref-property/object-ref-edit/object-ref-edit.component';
 import { ObjectRefDialogComponent } from './components/stix/object-ref-property/object-ref-dialog/object-ref-dialog.component';
 import { ObjectRefDiffComponent } from './components/stix/object-ref-property/object-ref-diff/object-ref-diff.component';
+import { StixJsonDialogComponent } from './components/stix-json-dialog/stix-json-dialog.component';
 
 export function initConfig(appConfigService: AppConfigService) {
   return () => appConfigService.loadAppConfig();
@@ -363,6 +364,7 @@ export function initConfig(appConfigService: AppConfigService) {
     ObjectRefEditComponent,
     ObjectRefDialogComponent,
     ObjectRefDiffComponent,
+    StixJsonDialogComponent,
   ],
   exports: [
     MatToolbarModule,
