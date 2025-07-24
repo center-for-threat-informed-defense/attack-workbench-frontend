@@ -1,8 +1,16 @@
-import { Component, Input, ViewEncapsulation } from '@angular/core';
+import {
+  Component,
+  Input,
+  OnDestroy,
+  OnInit,
+  ViewEncapsulation,
+} from '@angular/core';
 import { ObjectRefPropertyConfig } from '../object-ref-property.component';
 import { MatDialog } from '@angular/material/dialog';
 import { ObjectRefDialogComponent } from '../object-ref-dialog/object-ref-dialog.component';
 import { StixObject } from 'src/app/classes/stix';
+import { Subscription } from 'rxjs';
+import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/rest-api-connector.service';
 
 @Component({
   selector: 'app-object-ref-edit',
@@ -10,17 +18,43 @@ import { StixObject } from 'src/app/classes/stix';
   encapsulation: ViewEncapsulation.None,
   standalone: false,
 })
-export class ObjectRefEditComponent {
+export class ObjectRefEditComponent implements OnInit, OnDestroy {
   @Input() public config: ObjectRefPropertyConfig;
-  @Input() public attackObjects: StixObject[];
+
+  public attackObjects: StixObject[];
+  private subscription: Subscription;
+  public loading = false;
 
   public get objectRefs(): StixObject[] {
-    if (!this.attackObjects) return [];
+    if (!this.attackObjects || this.loading) return [];
     const refIds = this.config.object[this.config.field].map(f => f.ref);
     return refIds.map(id => this.attackObjects.find(o => o.stixID === id));
   }
 
-  constructor(public dialog: MatDialog) {}
+  constructor(
+    public dialog: MatDialog,
+    private apiService: RestApiConnectorService
+  ) {}
+
+  ngOnInit(): void {
+    this.loadAttackObjects();
+  }
+
+  ngOnDestroy(): void {
+    if (this.subscription) this.subscription.unsubscribe();
+  }
+
+  public loadAttackObjects() {
+    if (this.config.attackType == 'log-source') {
+      this.loading = true;
+      this.subscription = this.apiService.getAllLogSources().subscribe({
+        next: results => {
+          this.attackObjects = results.data;
+        },
+        complete: () => (this.loading = false),
+      });
+    }
+  }
 
   public removeRef(i: number): void {
     // remove object reference from field
@@ -41,6 +75,7 @@ export class ObjectRefEditComponent {
       autoFocus: false, // prevents auto focus on form fields
     });
     const subscription = dialogRef.afterClosed().subscribe({
+      next: () => this.loadAttackObjects(),
       complete: () => subscription.unsubscribe(),
     });
   }
