@@ -246,6 +246,15 @@ export class UsersListComponent implements OnInit {
     this.restAPIConnector.putTeam(this.team);
     this.applyControls();
   }
+
+  /**
+   * Formats role string by replacing underscores with spaces
+   * @param role The raw role string value (e.g., "team_lead")
+   * @returns A display-friendly version of the role
+   */
+  public formatRole(role: string): string {
+    return role.replace(/_/g, ' ');
+  }
 }
 
 export interface UsersListConfig {
