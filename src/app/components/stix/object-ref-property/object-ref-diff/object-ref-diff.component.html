@@ -1,6 +1,6 @@
 <div class="object-ref-view labelled-box grow-to-row">
   <div class="content">
-    @if (refTable.length) {
+    @if (!loading && refTable.length) {
       <table
         aria-describedby="object reference table"
         mat-table
@@ -29,6 +29,9 @@
         <tr mat-header-row *matHeaderRowDef="fieldDefs"></tr>
         <tr mat-row *matRowDef="let row; columns: fieldDefs"></tr>
       </table>
+    } @else if (loading) {
+      <span class="text-deemphasis">Loading...</span>
+      <mat-spinner diameter="20"></mat-spinner>
     }
   </div>
   <span class="labelled-box-label">{{

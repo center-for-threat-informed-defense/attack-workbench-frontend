@@ -9,10 +9,6 @@ import { StixObject } from 'src/app/classes/stix/stix-object';
 })
 export class ListPropertyComponent {
   @Input() public config: ListPropertyConfig;
-
-  constructor() {
-    // intentionally left blank
-  }
 }
 
 export interface ListPropertyConfig {

@@ -1,20 +1,24 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { ObjectRefPropertyConfig } from '../object-ref-property.component';
 import { StixObject } from 'src/app/classes/stix';
+import { Subscription } from 'rxjs';
+import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/rest-api-connector.service';
 
 @Component({
   selector: 'app-object-ref-diff',
   templateUrl: './object-ref-diff.component.html',
   standalone: false,
 })
-export class ObjectRefDiffComponent implements OnInit {
+export class ObjectRefDiffComponent implements OnInit, OnDestroy {
   @Input() public config: ObjectRefPropertyConfig;
-  @Input() public attackObjects: StixObject[];
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   public refTable: any[] = [];
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   public fields: any[];
+  public attackObjects: StixObject[];
+  private subscription: Subscription;
+  public loading = false;
 
   public get fieldDefs(): string[] {
     return this.fields.map(f => f.field);
@@ -26,13 +30,32 @@ export class ObjectRefDiffComponent implements OnInit {
     return this.config.object[1]?.[this.config.field] || [];
   }
 
+  constructor(private apiService: RestApiConnectorService) {}
+
   ngOnInit(): void {
+    this.loadAttackObjects();
     this.refTable = this.mergeTable();
     const refField = {
       ...this.config.objectRefField,
       isRefField: true,
     };
     this.fields = [refField, ...this.config.relatedFields];
+  }
+
+  ngOnDestroy(): void {
+    if (this.subscription) this.subscription.unsubscribe();
+  }
+
+  public loadAttackObjects() {
+    if (this.config.attackType == 'log-source') {
+      this.loading = true;
+      this.subscription = this.apiService.getAllLogSources().subscribe({
+        next: results => {
+          this.attackObjects = results.data;
+        },
+        complete: () => (this.loading = false),
+      });
+    }
   }
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any

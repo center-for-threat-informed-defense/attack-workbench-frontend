@@ -1,7 +1,5 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { Subscription } from 'rxjs';
+import { Component, Input } from '@angular/core';
 import { StixObject } from 'src/app/classes/stix';
-import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/rest-api-connector.service';
 import { AttackType } from 'src/app/utils/types';
 
 @Component({
@@ -9,30 +7,8 @@ import { AttackType } from 'src/app/utils/types';
   templateUrl: './object-ref-property.component.html',
   standalone: false,
 })
-export class ObjectRefPropertyComponent implements OnInit, OnDestroy {
+export class ObjectRefPropertyComponent {
   @Input() public config: ObjectRefPropertyConfig;
-  public attackObjects: StixObject[];
-  private subscription: Subscription;
-
-  constructor(private apiService: RestApiConnectorService) {}
-
-  ngOnInit(): void {
-    this.loadAttackObjects();
-  }
-
-  ngOnDestroy(): void {
-    if (this.subscription) this.subscription.unsubscribe();
-  }
-
-  public loadAttackObjects() {
-    if (this.config.attackType == 'log-source') {
-      this.subscription = this.apiService.getAllLogSources().subscribe({
-        next: results => {
-          this.attackObjects = results.data;
-        },
-      });
-    }
-  }
 }
 
 export interface ObjectRefPropertyConfig {
