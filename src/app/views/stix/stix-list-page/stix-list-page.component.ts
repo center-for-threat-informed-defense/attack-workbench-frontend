@@ -71,6 +71,9 @@ export class StixListPageComponent implements OnInit {
             and identify the specific properties of a data source that are \
             relevant to detecting an ATT&CK technique or sub-technique.',
     'data-component': undefined,
+    'detection-strategy': undefined,
+    'analytic': undefined,
+    'log-source': undefined,
   };
 
   public get canEdit(): boolean {

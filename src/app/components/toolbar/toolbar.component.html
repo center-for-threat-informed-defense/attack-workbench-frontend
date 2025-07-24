@@ -19,6 +19,14 @@
       <button
         mat-icon-button
         class="control"
+        matTooltip="view raw stix json"
+        [disabled]="editing"
+        (click)="viewStix()">
+        <mat-icon aria-label="stix">data_object</mat-icon>
+      </button>
+      <button
+        mat-icon-button
+        class="control"
         matTooltip="validate & save"
         [disabled]="!editing"
         (click)="saveEdits()">

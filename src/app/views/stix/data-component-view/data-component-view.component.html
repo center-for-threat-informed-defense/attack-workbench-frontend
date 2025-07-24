@@ -99,6 +99,37 @@
         </app-stix-list>
       </div>
     </div>
+
+    <!-- LOG SOURCES -->
+    <div class="row">
+      <div class="col">
+        <h2 class="section-header">Log Sources</h2>
+      </div>
+    </div>
+    <div class="row" *ngIf="canEdit">
+      <div class="col">
+        <app-add-relationship-button
+          (created)="foundInList.applyControls()"
+          [config]="{
+            label: 'add a log source',
+            relationship_type: 'found-in',
+            source_object: dataComponent,
+          }"></app-add-relationship-button>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col">
+        <app-stix-list
+          #foundInList
+          [config]="{
+            type: 'relationship',
+            sourceRef: dataComponent.stixID,
+            relationshipType: 'found-in',
+            clickBehavior: 'dialog',
+            allowEdits: true,
+          }"></app-stix-list>
+      </div>
+    </div>
   </div>
   <!-- EXTERNAL REFERENCES -->
   <div

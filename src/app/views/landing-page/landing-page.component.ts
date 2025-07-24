@@ -26,7 +26,9 @@ export class LandingPageComponent implements OnInit, OnDestroy {
     private dialog: MatDialog,
     private router: Router
   ) {
-    this.routes = stixRoutes.filter(route => !route.data.more);
+    this.routes = stixRoutes.filter(
+      route => route.data.headerSection !== 'more'
+    );
   }
 
   public get isAdmin(): boolean {
