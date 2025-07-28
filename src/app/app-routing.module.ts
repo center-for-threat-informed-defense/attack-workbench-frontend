@@ -36,7 +36,7 @@ const routes: Routes = [
         component: LandingPageComponent,
       },
       {
-        path: 'admin',
+        path: 'dashboard',
         canActivate: [AuthorizationGuard],
         canActivateChild: [AuthorizationGuard],
         data: {
