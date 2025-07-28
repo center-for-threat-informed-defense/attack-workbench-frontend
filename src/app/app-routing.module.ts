@@ -2,15 +2,15 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { LandingPageComponent } from './views/landing-page/landing-page.component';
 import { HelpPageComponent } from './views/help-page/help-page.component';
-import { AdminPageComponent } from './views/admin-page/admin-page.component';
-import { OrgSettingsPageComponent } from './views/admin-page/org-settings-page/org-settings-page.component';
-import { UserAccountsPageComponent } from './views/admin-page/user-accounts-page/user-accounts-page.component';
-import { DefaultMarkingDefinitionsComponent } from './views/admin-page/default-marking-definitions/default-marking-definitions.component';
+import { DashboardPageComponent } from './views/dashboard-page/dashboard-page.component';
+import { OrgSettingsPageComponent } from './views/dashboard-page/org-settings-page/org-settings-page.component';
+import { UserAccountsPageComponent } from './views/dashboard-page/user-accounts-page/user-accounts-page.component';
+import { DefaultMarkingDefinitionsComponent } from './views/dashboard-page/default-marking-definitions/default-marking-definitions.component';
 import { ProfilePageComponent } from './views/profile-page/profile-page.component';
 import { AuthorizationGuard } from './services/helpers/authorization.guard';
 import { Role } from './classes/authn/role';
-import { TeamsListPageComponent } from './views/admin-page/teams/teams-list-page/teams-list-page.component';
-import { TeamsViewPageComponent } from './views/admin-page/teams/teams-view-page/teams-view-page.component';
+import { TeamsListPageComponent } from './views/dashboard-page/teams/teams-list-page/teams-list-page.component';
+import { TeamsViewPageComponent } from './views/dashboard-page/teams/teams-view-page/teams-view-page.component';
 
 const editRoles = [Role.EDITOR, Role.TEAM_LEAD, Role.ADMIN];
 
@@ -51,7 +51,7 @@ const routes: Routes = [
               breadcrumb: 'admin settings',
               title: 'Admin Settings',
             },
-            component: AdminPageComponent,
+            component: DashboardPageComponent,
           },
           {
             path: 'org-settings',
