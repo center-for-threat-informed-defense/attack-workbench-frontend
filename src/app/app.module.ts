@@ -155,10 +155,10 @@ import { CitationEditComponent } from './components/stix/citation-property/citat
 // views
 import { HelpPageComponent } from './views/help-page/help-page.component';
 import { LandingPageComponent } from './views/landing-page/landing-page.component';
-import { AdminPageComponent } from './views/admin-page/admin-page.component';
-import { OrgSettingsPageComponent } from './views/admin-page/org-settings-page/org-settings-page.component';
-import { UserAccountsPageComponent } from './views/admin-page/user-accounts-page/user-accounts-page.component';
-import { DefaultMarkingDefinitionsComponent } from './views/admin-page/default-marking-definitions/default-marking-definitions.component';
+import { DashboardPageComponent } from './views/dashboard-page/dashboard-page.component';
+import { OrgSettingsPageComponent } from './views/dashboard-page/org-settings-page/org-settings-page.component';
+import { UserAccountsPageComponent } from './views/dashboard-page/user-accounts-page/user-accounts-page.component';
+import { DefaultMarkingDefinitionsComponent } from './views/dashboard-page/default-marking-definitions/default-marking-definitions.component';
 import { ProfilePageComponent } from './views/profile-page/profile-page.component';
 import { ReferenceManagerComponent } from './views/reference-manager/reference-manager.component';
 
@@ -195,8 +195,8 @@ import { TechniqueCellComponent } from './components/matrix/technique-cell/techn
 import { MatrixFlatComponent } from './views/stix/matrix/matrix-flat/matrix-flat.component';
 import { AssetViewComponent } from './views/stix/asset-view/asset-view.component';
 
-import { TeamsListPageComponent } from './views/admin-page/teams/teams-list-page/teams-list-page.component';
-import { TeamsViewPageComponent } from './views/admin-page/teams/teams-view-page/teams-view-page.component';
+import { TeamsListPageComponent } from './views/dashboard-page/teams/teams-list-page/teams-list-page.component';
+import { TeamsViewPageComponent } from './views/dashboard-page/teams/teams-view-page/teams-view-page.component';
 import { CreateNewDialogComponent } from './components/create-new-dialog/create-new-dialog.component';
 
 import { ContributorsPageComponent } from './views/contributors-page/contributors-page.component';
@@ -274,7 +274,7 @@ export function initConfig(appConfigService: AppConfigService) {
     IconViewComponent,
     LandingPageComponent,
     HelpPageComponent,
-    AdminPageComponent,
+    DashboardPageComponent,
     OrgSettingsPageComponent,
     UserAccountsPageComponent,
     DefaultMarkingDefinitionsComponent,
