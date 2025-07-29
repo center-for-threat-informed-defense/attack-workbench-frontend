@@ -60,6 +60,20 @@
   </div>
   <div class="row">
     <div class="col">
+      <!-- DETECTION -->
+      <app-descriptive-property
+        [config]="{
+          mode: config.mode,
+          object: config.object,
+          field: 'detects',
+          firstParagraphOnly: false,
+          referencesField: 'external_references',
+          label: 'Detection',
+        }"></app-descriptive-property>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col">
       <!-- LOG SOURCE REFS -->
       <app-object-ref-property
         class="grow-to-row"
@@ -109,20 +123,6 @@
           ],
           tooltip: 'a mutable element',
         }"></app-subtype-property>
-    </div>
-  </div>
-  <div class="row">
-    <div class="col">
-      <!-- DETECTION -->
-      <app-descriptive-property
-        [config]="{
-          mode: config.mode,
-          object: config.object,
-          field: 'detects',
-          firstParagraphOnly: false,
-          referencesField: 'external_references',
-          label: 'Detection',
-        }"></app-descriptive-property>
     </div>
   </div>
 </div>
