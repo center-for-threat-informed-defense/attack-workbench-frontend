@@ -298,7 +298,6 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
           ];
           break;
         case 'detection-strategy':
-        case 'analytic':
         case 'log-source':
         case 'campaign':
           this.addColumn('', 'workflow', 'icon');
@@ -309,6 +308,20 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
           this.tableDetail = [
             {
               field: 'description',
+              display: 'descriptive',
+            },
+          ];
+          break;
+        case 'analytic':
+          this.addColumn('', 'workflow', 'icon');
+          this.addColumn('', 'state', 'icon');
+          this.addColumn('ID', 'attackID', 'plain', false);
+          this.addColumn('name', 'name', 'plain', sticky_allowed, ['name']);
+          this.addColumn('platform', 'platform', 'plain');
+          this.addVersionsAndDatesColumns();
+          this.tableDetail = [
+            {
+              field: 'detects',
               display: 'descriptive',
             },
           ];

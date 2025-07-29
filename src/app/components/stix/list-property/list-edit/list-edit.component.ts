@@ -510,6 +510,7 @@ export class ListEditComponent implements OnInit, AfterContentChecked {
   public openDialogComponent(selectableObjects) {
     return this.dialog.open(AddDialogComponent, {
       maxWidth: '70em',
+      minWidth: '70em',
       maxHeight: '70em',
       data: {
         selectableObjects: selectableObjects,
