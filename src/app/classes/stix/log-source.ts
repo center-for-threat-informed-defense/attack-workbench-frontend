@@ -1,6 +1,6 @@
 import { StixObject } from './stix-object';
 import { logger } from '../../utils/logger';
-import { Observable } from 'rxjs';
+import { map, Observable } from 'rxjs';
 import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/rest-api-connector.service';
 import { ValidationData } from '../serializable';
 
@@ -87,7 +87,27 @@ export class LogSource extends StixObject {
   public validate(
     restAPIService: RestApiConnectorService
   ): Observable<ValidationData> {
-    return this.base_validate(restAPIService);
+    return this.base_validate(restAPIService).pipe(
+      map(result => {
+        // validate unique permutations
+        if (this.permutations.length) {
+          const seen = new Set<string>();
+          for (const { name, channel } of this.permutations) {
+            const key = `${name}::${channel}`;
+            if (seen.has(key)) {
+              result.errors.push({
+                field: 'permutations',
+                result: 'error',
+                message: `Duplicate permutation pair found: name="${name}", channel="${channel}"`,
+              });
+            }
+            seen.add(key);
+          }
+        }
+
+        return result;
+      })
+    );
   }
 
   /**
