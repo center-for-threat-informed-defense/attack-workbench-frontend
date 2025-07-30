@@ -1,6 +1,6 @@
 import { StixObject } from './stix-object';
 import { logger } from '../../utils/logger';
-import { Observable } from 'rxjs';
+import { map, Observable } from 'rxjs';
 import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/rest-api-connector.service';
 import { ValidationData } from '../serializable';
 
@@ -147,7 +147,40 @@ export class Analytic extends StixObject {
   public validate(
     restAPIService: RestApiConnectorService
   ): Observable<ValidationData> {
-    return this.base_validate(restAPIService);
+    return this.base_validate(restAPIService).pipe(
+      map(result => {
+        // validate unique log source refs
+        if (this.logSourceRefs.length) {
+          const seen = new Set<string>();
+          for (const { ref } of this.logSourceRefs) {
+            if (seen.has(ref)) {
+              result.errors.push({
+                field: 'logSourceRefs',
+                result: 'error',
+                message: 'Duplicate log source reference found',
+              });
+            }
+            seen.add(ref);
+          }
+        }
+        // validate unique mutable fields
+        if (this.mutableElements.length) {
+          const seen = new Set<string>();
+          for (const { field } of this.mutableElements) {
+            if (seen.has(field)) {
+              result.errors.push({
+                field: 'mutableElements',
+                result: 'error',
+                message: `Duplicate mutable element field found: ${field}`,
+              });
+            }
+            seen.add(field);
+          }
+        }
+
+        return result;
+      })
+    );
   }
 
   /**
