@@ -81,7 +81,9 @@ export class Analytic extends StixObject {
         if (this.isStringArray(sdo.x_mitre_platforms)) {
           if (sdo.x_mitre_platforms.length <= 1) {
             this.platform =
-              sdo.x_mitre_platforms.length === 1 ? sdo.x_mitre_platform[0] : '';
+              sdo.x_mitre_platforms.length === 1
+                ? sdo.x_mitre_platforms[0]
+                : '';
           } else
             logger.error(
               'ValidationError: platforms field contains more than one entry.'

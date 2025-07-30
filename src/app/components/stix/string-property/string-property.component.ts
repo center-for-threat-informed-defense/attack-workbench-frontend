@@ -7,6 +7,7 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 import { FormControl } from '@angular/forms';
+import { MatOptionSelectionChange } from '@angular/material/core';
 import { Subscription } from 'rxjs';
 import { StixObject } from 'src/app/classes/stix/stix-object';
 import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/rest-api-connector.service';
@@ -107,6 +108,12 @@ export class StringPropertyComponent implements OnInit, OnChanges {
       options = this.channels;
     }
     return options;
+  }
+
+  public change(event: MatOptionSelectionChange): void {
+    if (event.isUserInput && event.source.selected) {
+      this.config.object[this.config.field] = event.source.value;
+    }
   }
 
   private loadLogSourceChannels(relatedStixId: string): void {
