@@ -61,15 +61,15 @@
           else updatingRefs
         ">
         <span *ngIf="config.mode !== 'diff'">
-          <span class="warning-text" *ngIf="config.object['deprecated']"
+          <span class="error-text" *ngIf="config.object['deprecated']"
             >deprecated</span
           >
-          <span class="warning-text" *ngIf="config.object['revoked'] && loaded"
+          <span class="error-text" *ngIf="config.object['revoked'] && loaded"
             >revoked by: {{ target_obj.stix.name }}</span
           >
         </span>
 
-        <span *ngIf="config.mode === 'diff'" class="warning-text">
+        <span *ngIf="config.mode === 'diff'" class="error-text">
           <app-property-diff
             [before]="getStatus(previous)"
             [after]="getStatus(relationship)"></app-property-diff>

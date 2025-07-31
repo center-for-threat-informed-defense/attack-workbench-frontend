@@ -76,6 +76,8 @@ export class StixListPageComponent implements OnInit {
     'log-source': undefined,
   };
 
+  public outdatedContentTypes: AttackType[] = ['data-source', 'data-component'];
+
   public get canEdit(): boolean {
     return this.authenticationService.canEdit(this.attackType);
   }
