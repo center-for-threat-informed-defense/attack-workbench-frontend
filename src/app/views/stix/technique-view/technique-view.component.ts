@@ -24,6 +24,10 @@ export class TechniqueViewComponent
   implements OnInit, AfterContentChecked
 {
   @Output() public onReload = new EventEmitter();
+
+  // used to conditionally hide data component relationships with techniques
+  public detectsHasData = false;
+
   public get technique(): Technique {
     return this.configCurrentObject as Technique;
   }

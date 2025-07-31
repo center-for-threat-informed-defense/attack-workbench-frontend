@@ -270,7 +270,7 @@
               editType: 'select',
             }"></app-list-property>
         </div>
-        <!-- DEFENSEs BYPASSED -->
+        <!-- DEFENSES BYPASSED -->
         <div
           *ngIf="
             technique.supportsDefensesBypassed ||
@@ -475,35 +475,40 @@
       </div>
     </div>
     <!-- data sources (source/component object representation) -->
-    <div class="row">
-      <div class="col">
-        <h2 class="section-header">Data Sources</h2>
+    @if (detectsHasData) {
+      <div class="row">
+        <div class="col">
+          <h2 class="section-header">Data Sources</h2>
+        </div>
       </div>
-    </div>
-    <div class="row" *ngIf="canEdit">
-      <div class="col">
-        <app-add-relationship-button
-          (created)="detectsList.applyControls(); onReload.emit()"
-          [config]="{
-            label: 'add a data source',
-            relationship_type: 'detects',
-            target_object: technique,
-          }"></app-add-relationship-button>
+      <div class="row" *ngIf="canEdit">
+        <div class="col">
+          <!-- todo: replace with warning statement -->
+          <app-add-relationship-button
+            (created)="dataComponentsList.applyControls(); onReload.emit()"
+            [config]="{
+              label: 'add a data source',
+              relationship_type: 'detects',
+              target_object: technique,
+            }"></app-add-relationship-button>
+        </div>
       </div>
-    </div>
-    <div class="row">
-      <div class="col">
-        <app-stix-list
-          #detectsList
-          [config]="{
-            type: 'relationship',
-            targetRef: technique.stixID,
-            relationshipType: 'detects',
-            clickBehavior: 'dialog',
-            allowEdits: true,
-          }"></app-stix-list>
+      <div class="row">
+        <div class="col">
+          <app-stix-list
+            #dataComponentsList
+            (detectsHasData)="detectsHasData = $event"
+            [config]="{
+              type: 'relationship',
+              targetRef: technique.stixID,
+              relationshipType: 'detects',
+              sourceType: 'data-component',
+              clickBehavior: 'dialog',
+              allowEdits: true,
+            }"></app-stix-list>
+        </div>
       </div>
-    </div>
+    }
     <!-- assets -->
     <div class="row">
       <div class="col">
