@@ -76,6 +76,9 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
   @Output() public onSelect = new EventEmitter<StixObject>();
   @Output() public refresh = new EventEmitter();
 
+  // used to conditionally hide data component relationships with techniques
+  @Output() public detectsHasData = new EventEmitter<boolean>();
+
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild('search') search: ElementRef;
   @ViewChild(MatSelect) matSelect: MatSelect;
@@ -1001,6 +1004,13 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
             limit: this.paginator ? this.paginator.pageSize : 0,
           },
         });
+        // used to conditionally hide data component relationships with techniques
+        if (
+          this.config.type === 'relationship' &&
+          this.config.relationshipType === 'detects'
+        ) {
+          this.detectsHasData.emit(filtered.length > 0);
+        }
       }
     } else {
       // fetch objects from backend
@@ -1072,6 +1082,13 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
       const subscription = this.data$.subscribe({
         next: data => {
           this.totalObjectCount = data.pagination.total;
+          // used to conditionally hide data component relationships with techniques
+          if (
+            this.config.type === 'relationship' &&
+            this.config.relationshipType === 'detects'
+          ) {
+            this.detectsHasData.emit(data.data.length > 0);
+          }
         },
         complete: () => {
           if (subscription) subscription.unsubscribe();
