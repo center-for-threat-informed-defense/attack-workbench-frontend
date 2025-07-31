@@ -40,8 +40,16 @@
         <button
           mat-menu-item
           *ngFor="let stixRoute of currentDropdown?.value"
+          [ngClass]="{ 'text-deemphasis': stixRoute.data.deprecated }"
           [disabled]="!isLoggedIn"
           [routerLink]="stixRoute.path">
+          @if (stixRoute.data.deprecated) {
+            <mat-icon
+              style="margin-right: 6px"
+              [ngClass]="{ 'text-deemphasis': stixRoute.data.deprecated }"
+              >warning</mat-icon
+            >
+          }
           {{ stixRoute.data.breadcrumb }}
         </button>
         <button *ngIf="section.key === 'more'" mat-menu-item routerLink="/docs">

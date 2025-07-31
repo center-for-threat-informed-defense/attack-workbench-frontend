@@ -30,16 +30,7 @@ const stixRouteData = [
     attackType: 'technique',
     editable: true,
   },
-  {
-    attackType: 'data-source',
-    editable: true,
-    headerSection: 'defenses',
-  },
-  {
-    attackType: 'mitigation',
-    editable: true,
-    headerSection: 'defenses',
-  },
+  // cti
   {
     attackType: 'group',
     editable: true,
@@ -54,6 +45,12 @@ const stixRouteData = [
     attackType: 'campaign',
     editable: true,
     headerSection: 'cti',
+  },
+  // defenses
+  {
+    attackType: 'mitigation',
+    editable: true,
+    headerSection: 'defenses',
   },
   {
     attackType: 'asset',
@@ -75,6 +72,12 @@ const stixRouteData = [
     editable: true,
     headerSection: 'defenses',
   },
+  {
+    attackType: 'data-source',
+    editable: true,
+    headerSection: 'defenses',
+    deprecated: true,
+  },
 ];
 
 const stixRoutes: Routes = [];
@@ -85,6 +88,7 @@ stixRouteData.forEach(stixRoute => {
     data: {
       breadcrumb: AttackTypeToRoute[stixRoute.attackType].replace(/-/g, ' '),
       headerSection: stixRoute.headerSection || undefined,
+      deprecated: stixRoute.deprecated ?? false,
     },
     children: [
       {
