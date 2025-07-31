@@ -61,15 +61,15 @@
           else updatingRefs
         ">
         <span *ngIf="config.mode !== 'diff'">
-          <span class="warning-text" *ngIf="config.object['deprecated']"
+          <span class="error-text" *ngIf="config.object['deprecated']"
             >deprecated</span
           >
-          <span class="warning-text" *ngIf="config.object['revoked'] && loaded"
+          <span class="error-text" *ngIf="config.object['revoked'] && loaded"
             >revoked by: {{ target_obj.stix.name }}</span
           >
         </span>
 
-        <span *ngIf="config.mode === 'diff'" class="warning-text">
+        <span *ngIf="config.mode === 'diff'" class="error-text">
           <app-property-diff
             [before]="getStatus(previous)"
             [after]="getStatus(relationship)"></app-property-diff>
@@ -316,6 +316,25 @@
 
   <!-- subtechnique relationships do not support descriptions -->
   <ng-container *ngIf="relationship.relationship_type !== 'subtechnique-of'">
+    @if (relationship.relationship_type === 'found-in') {
+      <div class="row">
+        <div class="col">
+          <app-string-property
+            class="grow-to-row"
+            [config]="{
+              mode: config.mode,
+              object: config.object,
+              field: 'logSourceChannel',
+              label: 'log source channel',
+              editType: 'select',
+              disabled: !relationship.target_ref,
+              relatedStixId: relationship.target_ref
+                ? relationship.target_ref
+                : '',
+            }"></app-string-property>
+        </div>
+      </div>
+    }
     <div class="row">
       <div class="col">
         <!-- DESCRIPTION -->

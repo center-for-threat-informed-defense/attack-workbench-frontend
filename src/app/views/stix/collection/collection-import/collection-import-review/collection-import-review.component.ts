@@ -5,11 +5,14 @@ import {
   CollectionDiffCategories,
 } from 'src/app/classes/stix/collection';
 import {
+  Analytic,
   Asset,
   Campaign,
   DataComponent,
   DataSource,
+  DetectionStrategy,
   Group,
+  LogSource,
   Matrix,
   Mitigation,
   Relationship,
@@ -51,6 +54,9 @@ export class CollectionImportReviewComponent
     data_source: new CollectionDiffCategories<DataSource>(),
     data_component: new CollectionDiffCategories<DataComponent>(),
     asset: new CollectionDiffCategories<Asset>(),
+    log_source: new CollectionDiffCategories<LogSource>(),
+    analytic: new CollectionDiffCategories<Analytic>(),
+    detection_strategy: new CollectionDiffCategories<DetectionStrategy>(),
   };
 
   constructor(
@@ -145,6 +151,17 @@ export class CollectionImportReviewComponent
           break;
         case 'x-mitre-asset': // asset
           this.collection_import_categories.asset[category].push(object);
+          break;
+        case 'x-mitre-analytic': // analytic
+          this.collection_import_categories.analytic[category].push(object);
+          break;
+        case 'x-mitre-detection-strategy': // detection strategy
+          this.collection_import_categories.detection_strategy[category].push(
+            object
+          );
+          break;
+        case 'x-mitre-log-source': // log source
+          this.collection_import_categories.log_source[category].push(object);
           break;
       }
     }

@@ -25,6 +25,7 @@ export class EditorService {
   public onEditingStopped = new EventEmitter();
   public onReload = new EventEmitter();
   public onReloadReferences = new EventEmitter();
+  public viewStix = new EventEmitter();
   public isGroup = false;
 
   public get stixId(): string {

@@ -45,7 +45,7 @@ export class HistoryTimelineComponent implements OnInit, OnDestroy {
 
   constructor(
     private router: Router,
-    private restAPIConnectorService: RestApiConnectorService,
+    private apiService: RestApiConnectorService,
     private dialog: MatDialog,
     private editorService: EditorService
   ) {
@@ -313,78 +313,44 @@ export class HistoryTimelineComponent implements OnInit, OnDestroy {
     // set up subscribers to get object versions
     let objects$;
     if (objectType == 'software')
-      objects$ = this.restAPIConnectorService.getSoftware(
-        objectStixID,
-        null,
-        'all'
-      );
+      objects$ = this.apiService.getSoftware(objectStixID, null, 'all');
     else if (objectType == 'group')
-      objects$ = this.restAPIConnectorService.getGroup(
-        objectStixID,
-        null,
-        'all'
-      );
+      objects$ = this.apiService.getGroup(objectStixID, null, 'all');
     else if (objectType == 'matrix')
-      objects$ = this.restAPIConnectorService.getMatrix(
-        objectStixID,
-        null,
-        'all'
-      );
+      objects$ = this.apiService.getMatrix(objectStixID, null, 'all');
     else if (objectType == 'mitigation')
-      objects$ = this.restAPIConnectorService.getMitigation(
-        objectStixID,
-        null,
-        'all'
-      );
+      objects$ = this.apiService.getMitigation(objectStixID, null, 'all');
     else if (objectType == 'tactic')
-      objects$ = this.restAPIConnectorService.getTactic(
-        objectStixID,
-        null,
-        'all'
-      );
+      objects$ = this.apiService.getTactic(objectStixID, null, 'all');
     else if (objectType == 'campaign')
-      objects$ = this.restAPIConnectorService.getCampaign(
-        objectStixID,
-        null,
-        'all'
-      );
+      objects$ = this.apiService.getCampaign(objectStixID, null, 'all');
     else if (objectType == 'technique')
-      objects$ = this.restAPIConnectorService.getTechnique(
-        objectStixID,
-        null,
-        'all'
-      );
+      objects$ = this.apiService.getTechnique(objectStixID, null, 'all');
     else if (objectType == 'collection')
-      objects$ = this.restAPIConnectorService.getCollection(
-        objectStixID,
-        null,
-        'all'
-      );
+      objects$ = this.apiService.getCollection(objectStixID, null, 'all');
     else if (objectType == 'data-source')
-      objects$ = this.restAPIConnectorService.getDataSource(
-        objectStixID,
-        null,
-        'all'
-      );
+      objects$ = this.apiService.getDataSource(objectStixID, null, 'all');
     else if (objectType == 'data-component')
-      objects$ = this.restAPIConnectorService.getDataComponent(
-        objectStixID,
-        null,
-        'all'
-      );
+      objects$ = this.apiService.getDataComponent(objectStixID, null, 'all');
     else if (objectType == 'asset')
-      objects$ = this.restAPIConnectorService.getAsset(
+      objects$ = this.apiService.getAsset(objectStixID, null, 'all');
+    else if (objectType == 'analytic')
+      objects$ = this.apiService.getAnalytic(objectStixID, null, 'all');
+    else if (objectType == 'detection-strategy')
+      objects$ = this.apiService.getDetectionStrategy(
         objectStixID,
         null,
         'all'
       );
+    else if (objectType == 'log-source')
+      objects$ = this.apiService.getLogSource(objectStixID, null, 'all');
     // set up subscribers to get relationships and collections
-    const relationships$ = this.restAPIConnectorService.getRelatedTo({
+    const relationships$ = this.apiService.getRelatedTo({
       sourceOrTargetRef: objectStixID,
       versions: 'all',
       includeDeprecated: true,
     });
-    const collections$ = this.restAPIConnectorService.getAllCollections({
+    const collections$ = this.apiService.getAllCollections({
       versions: 'all',
     });
     // join subscribers

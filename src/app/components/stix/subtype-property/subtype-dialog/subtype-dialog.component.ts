@@ -67,6 +67,7 @@ export class SubtypeDialogComponent implements OnInit, OnDestroy {
               p => p.propertyName == field
             );
             if ('domains' in this.config.object) {
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
               const obj = this.config.object as any;
               property.domains.forEach(domain => {
                 if (obj.domains.includes(domain.domainName)) {
