@@ -26,7 +26,7 @@ export class TechniqueViewComponent
   @Output() public onReload = new EventEmitter();
 
   // used to conditionally hide data component relationships with techniques
-  public detectsHasData = false;
+  public showDetects = true;
 
   public get technique(): Technique {
     return this.configCurrentObject as Technique;

@@ -475,29 +475,22 @@
       </div>
     </div>
     <!-- data sources (source/component object representation) -->
-    @if (detectsHasData) {
+    @if (showDetects) {
       <div class="row">
         <div class="col">
           <h2 class="section-header">Data Sources</h2>
         </div>
       </div>
-      <div class="row" *ngIf="canEdit">
+      <div class="row">
         <div class="col">
-          <!-- todo: replace with warning statement -->
-          <app-add-relationship-button
-            (created)="dataComponentsList.applyControls(); onReload.emit()"
-            [config]="{
-              label: 'add a data source',
-              relationship_type: 'detects',
-              target_object: technique,
-            }"></app-add-relationship-button>
+          <app-outdated-content-warning></app-outdated-content-warning>
         </div>
       </div>
       <div class="row">
         <div class="col">
           <app-stix-list
             #dataComponentsList
-            (detectsHasData)="detectsHasData = $event"
+            (detectsHasData)="showDetects = $event"
             [config]="{
               type: 'relationship',
               targetRef: technique.stixID,
