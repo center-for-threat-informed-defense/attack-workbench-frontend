@@ -8,6 +8,8 @@ import {
 import { ActivatedRoute, Router } from '@angular/router';
 import { forkJoin, of } from 'rxjs';
 import { delay, map, switchMap, tap } from 'rxjs/operators';
+import { Observable } from 'rxjs';
+import { StreamProgress } from 'src/app/services/connectors/collection-stream.service';
 import { ValidationData } from 'src/app/classes/serializable';
 import {
   Collection,
@@ -138,6 +140,8 @@ export class CollectionViewComponent extends StixViewPage implements OnInit {
   };
 
   public collection_import_categories = [];
+
+  public streamProgress$: Observable<StreamProgress>;
 
   constructor(
     private route: ActivatedRoute,
@@ -789,6 +793,61 @@ export class CollectionViewComponent extends StixViewPage implements OnInit {
     // fetch previous version if this was not a new collection
     const objectStixID = this.route.snapshot.params['id'];
     if (objectStixID && objectStixID != 'new') {
+      // Check if collection was loaded without contents (common for list views)
+      if (
+        (!this.collection.stix_contents ||
+          this.collection.stix_contents.length === 0) &&
+        this.collection.contents &&
+        this.collection.contents.length > 0
+      ) {
+        // Collection has content references but not the actual objects
+        // This means we need to load the full collection with contents
+
+        this.loading = 'Loading collection contents...';
+
+        // Set up streaming progress observable
+        this.streamProgress$ =
+          this.restApiConnector.getCollectionStreamProgress();
+
+        // Stream the collection contents
+        const streamSub = this.restApiConnector
+          .getCollectionStream(
+            this.collection.stixID,
+            this.collection.modified,
+            true // retrieveContents
+          )
+          .subscribe({
+            next: streamedCollection => {
+              // Update the existing collection object with streamed data
+              this.collection.stix_contents = streamedCollection.stix_contents;
+              this.collection.streaming = streamedCollection.streaming;
+              this.collection.streamProgress =
+                streamedCollection.streamProgress;
+
+              // Update loading message
+              if (this.collection.streaming) {
+                this.loading = `Loading collection contents: ${this.collection.streamProgress.loaded}/${this.collection.streamProgress.total}`;
+              }
+            },
+            error: err => {
+              logger.error('Failed to stream collection contents:', err);
+              this.loading = null;
+              this.snackbar.open('Error loading collection contents', null, {
+                duration: 5000,
+                panelClass: 'error',
+              });
+            },
+            complete: () => {
+              this.loading = 'Preparing change lists';
+              streamSub.unsubscribe();
+              // Continue with the rest of initialization
+              this.continueInitialization(apis);
+            },
+          });
+
+        return; // Exit early, will continue in the subscription
+      }
+
       apis['previousRelease'] = this.restApiConnector
         .getCollection(this.collection.stixID, null, 'all', false)
         .pipe(
@@ -825,7 +884,9 @@ export class CollectionViewComponent extends StixViewPage implements OnInit {
           })
         );
     }
+  }
 
+  private continueInitialization(apis: any) {
     // fetch previous collection and objects in knowledge base
     const subscription = forkJoin(apis)
       .pipe(

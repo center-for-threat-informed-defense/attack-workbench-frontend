@@ -195,6 +195,11 @@ export class Collection extends StixObject {
     return null;
   } //collections do not have ATT&CK IDs
 
+  // Streaming support
+  public streaming = false;
+  public streamProgress = { total: 0, loaded: 0 };
+  private contentBuffer: (StixObject | undefined)[] = [];
+
   constructor(sdo?: any) {
     super(sdo, 'x-mitre-collection');
     if (sdo) {
@@ -502,5 +507,78 @@ export class Collection extends StixObject {
   public update(_restAPIService: RestApiConnectorService): Observable<{}> {
     // update is not supported on Collections
     return of({});
+  }
+
+  /**
+   * Progressively hydrate content as it arrives from the stream
+   */
+  public hydrateContent(obj: any, position: number): void {
+    // Ensure buffer is large enough
+    while (this.contentBuffer.length <= position) {
+      this.contentBuffer.push(undefined);
+    }
+
+    // Deserialize and store the object
+    const stixObject = this.deserializeStixObject(obj);
+    if (stixObject) {
+      this.contentBuffer[position] = stixObject;
+      this.streamProgress.loaded = this.contentBuffer.filter(Boolean).length;
+
+      // Update stix_contents with non-null objects in order
+      this.stix_contents = this.contentBuffer.filter(Boolean) as StixObject[];
+    }
+  }
+
+  /**
+   * Deserialize a single STIX object based on its type
+   */
+  private deserializeStixObject(obj: any): StixObject | null {
+    if (!obj?.stix?.type) return null;
+
+    try {
+      switch (obj.stix.type) {
+        case 'attack-pattern':
+          return new Technique(obj);
+        case 'x-mitre-tactic':
+          return new Tactic(obj);
+        case 'campaign':
+          return new Campaign(obj);
+        case 'malware':
+        case 'tool':
+          return new Software(obj.stix.type, obj);
+        case 'relationship':
+          return new Relationship(obj);
+        case 'course-of-action':
+          return new Mitigation(obj);
+        case 'x-mitre-matrix':
+          return new Matrix(obj);
+        case 'intrusion-set':
+          return new Group(obj);
+        case 'x-mitre-data-source':
+          return new DataSource(obj);
+        case 'x-mitre-data-component':
+          return new DataComponent(obj);
+        case 'marking-definition':
+          return new MarkingDefinition(obj);
+        case 'x-mitre-asset':
+          return new Asset(obj);
+        default:
+          logger.warn('Unknown STIX type:', obj.stix.type);
+          return null;
+      }
+    } catch (err) {
+      logger.error('Error deserializing content:', err, obj);
+      return null;
+    }
+  }
+
+  /**
+   * Check if the collection is ready for use
+   */
+  public get isReady(): boolean {
+    return (
+      !this.streaming ||
+      this.streamProgress.loaded === this.streamProgress.total
+    );
   }
 }
