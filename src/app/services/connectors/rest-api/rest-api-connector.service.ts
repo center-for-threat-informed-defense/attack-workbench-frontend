@@ -6,7 +6,7 @@ import {
 } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { forkJoin, Observable, of } from 'rxjs';
+import { forkJoin, Observable, of, Subject, throwError } from 'rxjs';
 import {
   tap,
   catchError,
@@ -14,6 +14,13 @@ import {
   share,
   switchMap,
   mergeMap,
+  finalize,
+  filter,
+  take,
+  shareReplay,
+  takeWhile,
+  defaultIfEmpty,
+  takeLast,
 } from 'rxjs/operators';
 import { CollectionIndex } from 'src/app/classes/collection-index';
 import { ExternalReference } from 'src/app/classes/external-references';
@@ -46,6 +53,10 @@ import {
 } from 'src/app/utils/class-mappings';
 import { AttackTypeToPlural } from 'src/app/utils/type-mappings';
 import { AttackType } from 'src/app/utils/types';
+import {
+  CollectionStreamService,
+  StreamProgress,
+} from '../collection-stream.service';
 
 export interface Paginated<T> {
   data: T[];
@@ -71,7 +82,8 @@ export class RestApiConnectorService extends ApiConnector {
 
   constructor(
     private http: HttpClient,
-    private snackbar: MatSnackBar
+    private snackbar: MatSnackBar,
+    private collectionStreamService: CollectionStreamService
   ) {
     super(snackbar);
   }
@@ -620,6 +632,90 @@ export class RestApiConnectorService extends ApiConnector {
       );
   }
 
+  private collectionStreamProgress$ = new Subject<StreamProgress>();
+
+  public getCollectionStream(
+    id: string,
+    modified?: Date | string,
+    retrieveContents = true
+  ): Observable<Collection> {
+    const modifiedString = typeof modified === 'string'
+      ? modified
+      : modified?.toISOString();
+
+    let url = `${this.apiUrl}/collections/${id}`;
+    if (modifiedString) {
+      url += `/modified/${modifiedString}`;
+    }
+    url += `?retrieveContents=${retrieveContents}&stream=true`;
+
+    logger.log('Streaming collection from:', url);
+
+    const collection = new Collection();
+    collection.streaming = true;
+    collection.stix_contents = [];
+    let expectedCount = 0;
+
+    return this.collectionStreamService.streamCollection(url).pipe(
+      tap(data => {
+        switch (data.type) {
+          case 'collection':
+            // Update collection metadata
+            collection.deserialize(data.data);
+            logger.log('Received collection metadata');
+            break;
+
+          case 'contentCount':
+            expectedCount = data.count || 0;
+            collection.streamProgress.total = expectedCount;
+            logger.log(`Expecting ${expectedCount} content objects`);
+            this.collectionStreamProgress$.next({
+              total: expectedCount,
+              loaded: 0,
+              percentage: 0
+            });
+            break;
+
+          case 'content':
+            if (data.position !== undefined && data.object) {
+              collection.hydrateContent(data.object, data.position);
+              const loaded = collection.stix_contents.length;
+              const percentage = expectedCount > 0
+                ? Math.round((loaded / expectedCount) * 100)
+                : 0;
+              this.collectionStreamProgress$.next({
+                total: expectedCount,
+                loaded,
+                percentage
+              });
+            }
+            break;
+        }
+      }),
+      // Only emit when we have the collection metadata
+      filter(data => data.type === 'collection' || data.type === 'content'),
+      map(() => collection),
+      finalize(() => {
+        collection.streaming = false;
+        logger.log('Stream complete, total objects:', collection.stix_contents.length);
+        this.collectionStreamProgress$.complete();
+      }),
+      catchError(err => {
+        logger.error('Stream error:', err);
+        collection.streaming = false;
+        this.collectionStreamProgress$.error(err);
+        return throwError(() => err);
+      }),
+      // Return a single collection at the end
+      takeLast(1)
+    );
+  }
+
+  // Add method to get progress updates
+  public getCollectionStreamProgress(): Observable<StreamProgress> {
+    return this.collectionStreamProgress$.asObservable();
+  }
+
   /**
    * Factory to create a new STIX get by ID function
    * @template T the type to get
@@ -635,8 +731,26 @@ export class RestApiConnectorService extends ApiConnector {
       versions = 'latest',
       includeSubs?: boolean,
       retrieveContents?: boolean,
-      retrieveDataComponents?: boolean
+      retrieveDataComponents?: boolean,
+      options?: { preferStream?: boolean }
     ): Observable<P[]> {
+      // For streaming collections, delegate to a separate method
+      if (attackType === 'collection' &&
+        options?.preferStream &&
+        retrieveContents &&
+        versions === 'latest') {
+        return this.getCollectionStream(id, modified, true).pipe(
+          map(collection => [collection]),
+          catchError(err => {
+            logger.warn('Streaming failed, falling back to traditional load:', err);
+            // Call the original implementation as fallback
+            return this.getCollectionTraditional(id, modified, versions,
+              includeSubs, retrieveContents, retrieveDataComponents);
+          })
+        );
+      }
+
+      // Continue with existing non-streaming implementation
       let url = `${this.apiUrl}/${plural}/${id}`;
       if (modified) {
         const modifiedString =
@@ -645,8 +759,8 @@ export class RestApiConnectorService extends ApiConnector {
       }
       let query = new HttpParams();
       if (versions != 'latest') query = query.set('versions', versions);
-      if (attackType == 'collection' && retrieveContents)
-        query = query.set('retrieveContents', 'true');
+
+      query = query.set('stream', 'true');
       if (attackType == 'data-source' && retrieveDataComponents)
         query = query.set('retrieveDataComponents', 'true');
       return this.http.get(url, { headers: this.headers, params: query }).pipe(
@@ -851,9 +965,14 @@ export class RestApiConnectorService extends ApiConnector {
   }
   /**
    * Get a single collection by STIX ID
+   * This is the existing getter that uses the factory
    * @param {string} id the object STIX ID
    * @param {Date} [modified] if specified, get the version modified at the given date
    * @param {versions} [string] default "latest", if "all" returns all versions of the object instead of just the latest version.
+   * @param {includeSubs} [boolean] not used for collections
+   * @param {retrieveContents} [boolean] if true, retrieve the collection with its contents
+   * @param {retrieveDataComponents} [boolean] not used for collections
+   * @param {options} [object] additional options, including preferStream for streaming support
    * @returns {Observable<Collection>} the object with the given ID and modified date
    */
   public get getCollection() {
