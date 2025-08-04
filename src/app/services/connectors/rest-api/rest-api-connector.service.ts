@@ -16,10 +16,6 @@ import {
   mergeMap,
   finalize,
   filter,
-  take,
-  shareReplay,
-  takeWhile,
-  defaultIfEmpty,
   takeLast,
 } from 'rxjs/operators';
 import { CollectionIndex } from 'src/app/classes/collection-index';
@@ -639,9 +635,8 @@ export class RestApiConnectorService extends ApiConnector {
     modified?: Date | string,
     retrieveContents = true
   ): Observable<Collection> {
-    const modifiedString = typeof modified === 'string'
-      ? modified
-      : modified?.toISOString();
+    const modifiedString =
+      typeof modified === 'string' ? modified : modified?.toISOString();
 
     let url = `${this.apiUrl}/collections/${id}`;
     if (modifiedString) {
@@ -672,7 +667,7 @@ export class RestApiConnectorService extends ApiConnector {
             this.collectionStreamProgress$.next({
               total: expectedCount,
               loaded: 0,
-              percentage: 0
+              percentage: 0,
             });
             break;
 
@@ -680,13 +675,14 @@ export class RestApiConnectorService extends ApiConnector {
             if (data.position !== undefined && data.object) {
               collection.hydrateContent(data.object, data.position);
               const loaded = collection.stix_contents.length;
-              const percentage = expectedCount > 0
-                ? Math.round((loaded / expectedCount) * 100)
-                : 0;
+              const percentage =
+                expectedCount > 0
+                  ? Math.round((loaded / expectedCount) * 100)
+                  : 0;
               this.collectionStreamProgress$.next({
                 total: expectedCount,
                 loaded,
-                percentage
+                percentage,
               });
             }
             break;
@@ -697,7 +693,10 @@ export class RestApiConnectorService extends ApiConnector {
       map(() => collection),
       finalize(() => {
         collection.streaming = false;
-        logger.log('Stream complete, total objects:', collection.stix_contents.length);
+        logger.log(
+          'Stream complete, total objects:',
+          collection.stix_contents.length
+        );
         this.collectionStreamProgress$.complete();
       }),
       catchError(err => {
@@ -735,17 +734,28 @@ export class RestApiConnectorService extends ApiConnector {
       options?: { preferStream?: boolean }
     ): Observable<P[]> {
       // For streaming collections, delegate to a separate method
-      if (attackType === 'collection' &&
+      if (
+        attackType === 'collection' &&
         options?.preferStream &&
         retrieveContents &&
-        versions === 'latest') {
+        versions === 'latest'
+      ) {
         return this.getCollectionStream(id, modified, true).pipe(
           map(collection => [collection]),
           catchError(err => {
-            logger.warn('Streaming failed, falling back to traditional load:', err);
+            logger.warn(
+              'Streaming failed, falling back to traditional load:',
+              err
+            );
             // Call the original implementation as fallback
-            return this.getCollectionTraditional(id, modified, versions,
-              includeSubs, retrieveContents, retrieveDataComponents);
+            return this.getCollectionTraditional(
+              id,
+              modified,
+              versions,
+              includeSubs,
+              retrieveContents,
+              retrieveDataComponents
+            );
           })
         );
       }
