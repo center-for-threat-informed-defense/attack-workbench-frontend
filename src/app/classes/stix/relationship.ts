@@ -40,9 +40,6 @@ export class Relationship extends StixObject {
 
   public relationship_type = '';
 
-  // x_mitre_log_source_channel is only present in 'found-in' relationships
-  public logSourceChannel: string;
-
   public readonly supportsAttackID = false; // relationships do not have ATT&CK IDs
   public readonly supportsNamespace = false; // relationships do not support namespacing
   protected get attackIDValidator() {
@@ -94,7 +91,6 @@ export class Relationship extends StixObject {
     if (this.relationship_type == 'detects') return ['detection-strategy'];
     if (this.relationship_type == 'attributed-to') return ['campaign'];
     if (this.relationship_type == 'targets') return ['technique'];
-    if (this.relationship_type == 'found-in') return ['data-component'];
     else return null;
   }
   /**
@@ -116,7 +112,6 @@ export class Relationship extends StixObject {
     if (this.relationship_type == 'detects') return ['technique'];
     if (this.relationship_type == 'attributed-to') return ['group'];
     if (this.relationship_type == 'targets') return ['asset'];
-    if (this.relationship_type == 'found-in') return ['log-source'];
     else return null;
   }
 
@@ -384,8 +379,6 @@ export class Relationship extends StixObject {
     }
 
     rep.stix.relationship_type = this.relationship_type;
-    if (this.relationship_type === 'found-in' && this.logSourceChannel)
-      rep.stix.x_mitre_log_source_channel = this.logSourceChannel;
     rep.stix.source_ref = this.source_ref;
     rep.stix.target_ref = this.target_ref;
 
@@ -430,18 +423,6 @@ export class Relationship extends StixObject {
           sdo.relationship_type,
           '(',
           typeof sdo.relationship_type,
-          ')'
-        );
-    }
-    if ('x_mitre_log_source_channel' in sdo) {
-      if (typeof sdo.x_mitre_log_source_channel === 'string')
-        this.logSourceChannel = sdo.x_mitre_log_source_channel;
-      else
-        logger.error(
-          'TypeError: x_mitre_log_source_channel field is not a string:',
-          sdo.x_mitre_log_source_channel,
-          '(',
-          typeof sdo.x_mitre_log_source_channel,
           ')'
         );
     }

@@ -62,11 +62,6 @@ export class StringPropertyComponent implements OnInit, OnChanges {
           },
           complete: () => this.subscription.unsubscribe(),
         });
-      } else if (
-        this.config.field === 'logSourceChannel' &&
-        this.config.relatedStixId
-      ) {
-        this.loadLogSourceChannels(this.config.relatedStixId);
       }
     }
   }
@@ -79,19 +74,11 @@ export class StringPropertyComponent implements OnInit, OnChanges {
         if (isDisabled) this.selectControl.disable();
         else this.selectControl.enable();
       }
-
-      // react to changes in 'relatedStixId' property for logSourceChannel field
-      if (
-        this.config.field === 'logSourceChannel' &&
-        this.config.relatedStixId
-      ) {
-        this.loadLogSourceChannels(this.config.relatedStixId);
-      }
     }
   }
 
   public getOptions(): Set<string> {
-    let options = new Set<string>();
+    const options = new Set<string>();
     if (this.loading) return options;
     if (this.config.field === 'platform') {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -104,8 +91,6 @@ export class StringPropertyComponent implements OnInit, OnChanges {
           d.allowedValues.forEach(options.add, options);
         }
       });
-    } else if (this.config.field === 'logSourceChannel') {
-      options = this.channels;
     }
     return options;
   }
@@ -114,18 +99,6 @@ export class StringPropertyComponent implements OnInit, OnChanges {
     if (event.isUserInput && event.source.selected) {
       this.config.object[this.config.field] = event.source.value;
     }
-  }
-
-  private loadLogSourceChannels(relatedStixId: string): void {
-    this.loading = true;
-    const data$ = this.apiService.getLogSourceChannels(relatedStixId);
-    this.subscription = data$.subscribe({
-      next: data => {
-        this.channels = new Set(data);
-        this.loading = false;
-      },
-      complete: () => this.subscription.unsubscribe(),
-    });
   }
 }
 
@@ -150,7 +123,4 @@ export interface StringPropertyConfig {
   disabled?: boolean;
   /* Edit type. Default: 'any' */
   editType?: 'select' | 'any';
-  /* The stixId of an object related to the string selection; used to load
-  the list of selection options. */
-  relatedStixId?: string;
 }

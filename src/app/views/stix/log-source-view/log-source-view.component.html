@@ -60,40 +60,4 @@
         }"></app-subtype-property>
     </div>
   </div>
-  <!-- RELATIONSHIPS - NOTE: these are only shown in 'view' mode -->
-  @if (
-    (config.showRelationships || !config.hasOwnProperty('showRelationships')) &&
-    !editing
-  ) {
-    <!-- DATA COMPONENTS -->
-    <div class="row">
-      <div class="col">
-        <h2 class="section-header">Data Components</h2>
-      </div>
-    </div>
-    <div class="row" *ngIf="canEdit">
-      <div class="col">
-        <app-add-relationship-button
-          (created)="foundInList.applyControls(); reload.emit()"
-          [config]="{
-            label: 'add a data component',
-            relationship_type: 'found-in',
-            target_object: logSource,
-          }"></app-add-relationship-button>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col">
-        <app-stix-list
-          #foundInList
-          [config]="{
-            type: 'relationship',
-            targetRef: logSource.stixID,
-            relationshipType: 'found-in',
-            clickBehavior: 'dialog',
-            allowEdits: true,
-          }"></app-stix-list>
-      </div>
-    </div>
-  }
 </div>
