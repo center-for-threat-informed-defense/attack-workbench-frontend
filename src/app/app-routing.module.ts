@@ -40,16 +40,16 @@ const routes: Routes = [
         canActivate: [AuthorizationGuard],
         canActivateChild: [AuthorizationGuard],
         data: {
-          breadcrumb: 'admin settings',
-          title: 'Admin Settings',
-          roles: [Role.ADMIN],
+          breadcrumb: 'dashboard',
+          title: 'Dashboard',
+          roles: [Role.TEAM_LEAD, Role.ADMIN],
         },
         children: [
           {
             path: '',
             data: {
-              breadcrumb: 'admin settings',
-              title: 'Admin Settings',
+              breadcrumb: 'dashboard',
+              title: 'Dashboard',
             },
             component: DashboardPageComponent,
           },
