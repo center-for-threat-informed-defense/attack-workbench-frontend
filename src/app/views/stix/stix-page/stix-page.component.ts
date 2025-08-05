@@ -259,7 +259,9 @@ export class StixPageComponent implements OnInit, OnDestroy {
           objectModified,
           'latest',
           false,
-          true
+          true,
+          false,
+          { preferStream: true }
         );
       else if (this.objectType == 'data-source')
         objects$ = this.restApiService.getDataSource(

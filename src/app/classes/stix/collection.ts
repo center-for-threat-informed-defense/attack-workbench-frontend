@@ -287,6 +287,9 @@ export class Collection extends StixObject {
       }
     } else logger.error("ObjectError: 'stix' field does not exist in object");
 
+    // Call base deserialize for other fields
+    super.base_deserialize(raw);
+
     if ('workspace' in raw) {
       const sdo = raw.workspace;
 

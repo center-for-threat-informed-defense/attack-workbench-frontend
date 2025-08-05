@@ -646,7 +646,13 @@ export class RestApiConnectorService extends ApiConnector {
 
     logger.log('Streaming collection from:', url);
 
-    const collection = new Collection();
+    // Create collection with the correct stixID to prevent UUID generation
+    const collection = new Collection({
+      stix: {
+        id: id,
+        type: 'x-mitre-collection',
+      },
+    });
     collection.streaming = true;
     collection.stix_contents = [];
     let expectedCount = 0;
@@ -747,8 +753,8 @@ export class RestApiConnectorService extends ApiConnector {
               'Streaming failed, falling back to traditional load:',
               err
             );
-            // Call the original implementation as fallback
-            return this.getCollectionTraditional(
+            // Call the original implementation as fallback (without preferStream)
+            return this.getCollection(
               id,
               modified,
               versions,
@@ -769,8 +775,8 @@ export class RestApiConnectorService extends ApiConnector {
       }
       let query = new HttpParams();
       if (versions != 'latest') query = query.set('versions', versions);
-
-      query = query.set('stream', 'true');
+      if (attackType == 'collection' && retrieveContents)
+        query = query.set('retrieveContents', 'true');
       if (attackType == 'data-source' && retrieveDataComponents)
         query = query.set('retrieveDataComponents', 'true');
       return this.http.get(url, { headers: this.headers, params: query }).pipe(

@@ -884,6 +884,9 @@ export class CollectionViewComponent extends StixViewPage implements OnInit {
           })
         );
     }
+
+    // For new collections or collections that don't need streaming, continue with normal initialization
+    this.continueInitialization(apis);
   }
 
   private continueInitialization(apis: any) {
