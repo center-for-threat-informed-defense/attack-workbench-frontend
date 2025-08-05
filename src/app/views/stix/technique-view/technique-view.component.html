@@ -475,7 +475,7 @@
       </div>
     </div>
     <!-- data sources (source/component object representation) -->
-    @if (showDetects) {
+    @if (showDataSources) {
       <div class="row">
         <div class="col">
           <h2 class="section-header">Data Sources</h2>
@@ -490,7 +490,7 @@
         <div class="col">
           <app-stix-list
             #dataComponentsList
-            (detectsHasData)="showDetects = $event"
+            (detectsHasData)="showDataSources = $event"
             [config]="{
               type: 'relationship',
               targetRef: technique.stixID,
@@ -502,6 +502,38 @@
         </div>
       </div>
     }
+    <!-- detection strategies -->
+    <div class="row">
+      <div class="col">
+        <h2 class="section-header">Detection Strategies</h2>
+      </div>
+    </div>
+    <div class="row" *ngIf="canEdit">
+      <div class="col">
+        <app-add-relationship-button
+          (created)="detectsList.applyControls(); onReload.emit()"
+          [config]="{
+            label: 'add a detection strategy',
+            relationship_type: 'detects',
+            sourceType: 'detection-strategy',
+            target_object: technique,
+          }"></app-add-relationship-button>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col">
+        <app-stix-list
+          #detectsList
+          [config]="{
+            type: 'relationship',
+            targetRef: technique.stixID,
+            relationshipType: 'detects',
+            sourceType: 'detection-strategy',
+            clickBehavior: 'dialog',
+            allowEdits: true,
+          }"></app-stix-list>
+      </div>
+    </div>
     <!-- assets -->
     <div class="row">
       <div class="col">
