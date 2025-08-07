@@ -13,3 +13,6 @@ export { Software } from './software';
 export { StixObject } from './stix-object';
 export { Tactic } from './tactic';
 export { Technique } from './technique';
+export { DetectionStrategy } from './detection-strategy';
+export { Analytic } from './analytic';
+export { LogSource } from './log-source';

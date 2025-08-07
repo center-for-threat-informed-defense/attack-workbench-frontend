@@ -15,6 +15,8 @@ import {
   Software,
   Tactic,
   Technique,
+  DetectionStrategy,
+  LogSource,
 } from 'src/app/classes/stix';
 
 export class Relationship extends StixObject {
@@ -64,6 +66,8 @@ export class Relationship extends StixObject {
       'x-mitre-data-source': DataSource,
       'x-mitre-data-component': DataComponent,
       'x-mitre-asset': Asset,
+      'x-mitre-detection-strategy': DetectionStrategy,
+      'x-mitre-log-source': LogSource,
     };
     if (type == 'malware' || type == 'tool') return new Software(type, raw);
     return new StixTypeToClass[type](raw);
@@ -84,7 +88,7 @@ export class Relationship extends StixObject {
     }
     if (this.relationship_type == 'mitigates') return ['mitigation'];
     if (this.relationship_type == 'subtechnique-of') return ['technique'];
-    if (this.relationship_type == 'detects') return ['data-component'];
+    if (this.relationship_type == 'detects') return ['detection-strategy'];
     if (this.relationship_type == 'attributed-to') return ['campaign'];
     if (this.relationship_type == 'targets') return ['technique'];
     else return null;
@@ -387,43 +391,42 @@ export class Relationship extends StixObject {
    * @param {*} raw the raw object to parse
    */
   public deserialize(raw: any) {
-    const sdoStix = raw.stix;
-    if ('source_ref' in sdoStix) {
-      if (typeof sdoStix.source_ref === 'string')
-        this.source_ref = sdoStix.source_ref;
+    const sdo = raw.stix;
+    if ('source_ref' in sdo) {
+      if (typeof sdo.source_ref === 'string') this.source_ref = sdo.source_ref;
       else
         logger.error(
           'TypeError: source_ref field is not a string:',
-          sdoStix.source_ref,
+          sdo.source_ref,
           '(',
-          typeof sdoStix.source_ref,
+          typeof sdo.source_ref,
           ')'
         );
     }
-    if ('target_ref' in sdoStix) {
-      if (typeof sdoStix.target_ref === 'string')
-        this.target_ref = sdoStix.target_ref;
+    if ('target_ref' in sdo) {
+      if (typeof sdo.target_ref === 'string') this.target_ref = sdo.target_ref;
       else
         logger.error(
           'TypeError: target_ref field is not a string:',
-          sdoStix.target_ref,
+          sdo.target_ref,
           '(',
-          typeof sdoStix.target_ref,
+          typeof sdo.target_ref,
           ')'
         );
     }
-    if ('relationship_type' in sdoStix) {
-      if (typeof sdoStix.relationship_type === 'string')
-        this.relationship_type = sdoStix.relationship_type;
+    if ('relationship_type' in sdo) {
+      if (typeof sdo.relationship_type === 'string')
+        this.relationship_type = sdo.relationship_type;
       else
         logger.error(
           'TypeError: relationship_type field is not a string:',
-          sdoStix.relationship_type,
+          sdo.relationship_type,
           '(',
-          typeof sdoStix.relationship_type,
+          typeof sdo.relationship_type,
           ')'
         );
     }
+    // check for api attached source object
     if ('source_object' in raw) {
       this.source_object = raw.source_object;
 
@@ -444,9 +447,9 @@ export class Relationship extends StixObject {
               ')'
             );
         }
-        // else logger.warn("ObjectWarning: cannot find attackID for source object");
       } else this.source_ID = '';
     }
+    // check for api attached target object
     if ('target_object' in raw) {
       this.target_object = raw.target_object;
 
@@ -644,7 +647,7 @@ export class Relationship extends StixObject {
    * Delete this STIX object from the database.
    * @param restAPIService [RestApiConnectorService] the service to perform the DELETE through
    */
-  public delete(restAPIService: RestApiConnectorService): Observable<{}> {
+  public delete(restAPIService: RestApiConnectorService): Observable<object> {
     const deleteObservable = restAPIService.deleteRelationship(this.stixID);
     const subscription = deleteObservable.subscribe({
       complete: () => {
