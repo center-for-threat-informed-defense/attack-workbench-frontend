@@ -29,7 +29,7 @@ export interface SubtypePropertyConfig {
 
 interface SubtypeField {
   name: string;
-  editType: 'string' | 'description' | 'select';
+  editType: 'string' | 'description' | 'select' | 'autocomplete';
   required?: boolean; // default false
   label?: string; // default name
   supportsReferences?: boolean; // whether this field supports references, default false

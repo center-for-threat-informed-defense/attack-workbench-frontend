@@ -2,10 +2,11 @@ import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { MatOptionSelectionChange } from '@angular/material/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { Subscription } from 'rxjs';
+import { map, Observable, startWith, Subscription } from 'rxjs';
 import { StixObject } from 'src/app/classes/stix';
 import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/rest-api-connector.service';
 import { EditorService } from 'src/app/services/editor/editor.service';
+import { dataComponentNames } from 'src/app/utils/data-component-names';
 
 @Component({
   selector: 'app-subtype-dialog',
@@ -22,6 +23,10 @@ export class SubtypeDialogComponent implements OnInit, OnDestroy {
   public dataLoaded = false;
   private allowedValuesSub: Subscription = new Subscription();
   private saveSubscription: Subscription = new Subscription();
+
+  public dataComponentNames = dataComponentNames;
+  public filteredDataComponentNames: Observable<string[]>;
+  public dataComponentNameControl = new FormControl('');
 
   public get isValid(): boolean {
     const required = this.config.subtypeFields.filter(field => field.required);
@@ -41,6 +46,23 @@ export class SubtypeDialogComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    const autocompletes = this.config.subtypeFields
+      .filter(field => field.editType === 'autocomplete')
+      .map(field => field.name);
+    if (autocompletes.includes('data_component_name')) {
+      const fieldName = 'data_component_name';
+      this.dataComponentNameControl.setValue(this.data[fieldName] || '');
+      this.filteredDataComponentNames =
+        this.dataComponentNameControl.valueChanges.pipe(
+          startWith(this.data[fieldName] || ''),
+          map(value => this.filterDataComponentNames(value || ''))
+        );
+      // keep in sync
+      this.dataComponentNameControl.valueChanges.subscribe(v => {
+        this.data[fieldName] = v;
+      });
+    }
+
     // retrieve 'select' fields
     const selections = this.config.subtypeFields
       .filter(field => field.editType == 'select')
@@ -128,6 +150,13 @@ export class SubtypeDialogComponent implements OnInit, OnDestroy {
     if (i >= 0) values.splice(i, 1);
     this.selectControls[fieldName].setValue(values);
     this.data[fieldName] = this.selectControls[fieldName].value;
+  }
+
+  private filterDataComponentNames(value: string): string[] {
+    const search = value.toLowerCase();
+    return this.dataComponentNames.filter(o =>
+      o.toLowerCase().includes(search)
+    );
   }
 }
 
