@@ -23,6 +23,26 @@
         [(ngModel)]="data[field.name]"></textarea>
     </mat-form-field>
 
+    <!-- edit type: 'autocomplete' -->
+    <mat-form-field
+      *ngIf="field.editType === 'autocomplete'"
+      appearance="outline">
+      <mat-label>{{ field.label ? field.label : field.name }}</mat-label>
+      <input
+        type="text"
+        matInput
+        [formControl]="dataComponentNameControl"
+        [required]="field.required ? field.required : false"
+        [matAutocomplete]="auto" />
+      <mat-autocomplete #auto="matAutocomplete">
+        <mat-option
+          *ngFor="let option of filteredDataComponentNames | async"
+          [value]="option">
+          {{ option }}
+        </mat-option>
+      </mat-autocomplete>
+    </mat-form-field>
+
     <!-- edit type: 'select' -->
     <mat-form-field
       *ngIf="field.editType === 'select'"

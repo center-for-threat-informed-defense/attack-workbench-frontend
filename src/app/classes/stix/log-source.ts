@@ -36,9 +36,10 @@ export class LogSource extends StixObject {
     rep.stix.name = this.name.trim();
     if (this.permutations?.length)
       rep.stix.x_mitre_log_source_permutations = this.permutations.map(
-        ({ name, channel }) => ({
+        ({ name, channel, data_component_name }) => ({
           name,
           channel,
+          data_component_name,
         })
       );
     return rep;
@@ -75,7 +76,7 @@ export class LogSource extends StixObject {
 
   public isPermutationsArray(arr): boolean {
     return arr.every(a => {
-      return 'name' in a && 'channel' in a;
+      return 'name' in a && 'channel' in a && 'data_component_name' in a;
     });
   }
 
@@ -166,4 +167,5 @@ export class LogSource extends StixObject {
 export interface LogSourcePermutation {
   name: string;
   channel: string;
+  data_component_name: string;
 }
