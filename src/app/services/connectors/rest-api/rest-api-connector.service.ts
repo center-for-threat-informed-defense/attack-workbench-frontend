@@ -927,10 +927,12 @@ export class RestApiConnectorService extends ApiConnector {
       const url = `${this.apiUrl}/validate`;
       const payload = {
         type: object.type,
-        stix: object.serialize()
+        stix: object.serialize(),
       };
       return this.http
-        .post(url, payload, { headers: new HttpHeaders({ 'Content-Type': 'application/json' }) })
+        .post(url, payload, {
+          headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
+        })
         .pipe(
           tap(this.handleSuccess(`${this.getObjectName(object)} validated`)),
           map(result => result),

@@ -186,7 +186,6 @@ export abstract class StixObject extends Serializable {
    * @param {*} raw the raw object to parse
    */
   public base_deserialize(raw: any) {
-
     if ('stix' in raw) {
       const sdo = raw.stix;
 
@@ -437,13 +436,17 @@ export abstract class StixObject extends Serializable {
 
     return validator(this).pipe(
       switchMap(validatorResult => {
-        const validatorErrors = validatorResult.errors.map(err => `${err.path.join('.')}: ${err.message}`);
+        const validatorErrors = validatorResult.errors.map(
+          err => `${err.path.join('.')}: ${err.message}`
+        );
 
-        validatorErrors.forEach(e => result.errors.push({
+        validatorErrors.forEach(e =>
+          result.errors.push({
             result: 'error',
             field: 'temp',
             message: e,
-        }));
+          })
+        );
         // test version number format
         if (!this.version.valid()) {
           result.errors.push({
@@ -458,7 +461,7 @@ export abstract class StixObject extends Serializable {
         ) {
           return of(result);
         }
-  
+
         // check if name & ATT&CK ID is unique, record result in validation, and return validation
         const options = {
           // validate against revoked & deprecated objects
