@@ -186,6 +186,7 @@ export abstract class StixObject extends Serializable {
    * @param {*} raw the raw object to parse
    */
   public base_deserialize(raw: any) {
+
     if ('stix' in raw) {
       const sdo = raw.stix;
 
@@ -431,26 +432,33 @@ export abstract class StixObject extends Serializable {
   public base_validate(
     restAPIService: RestApiConnectorService
   ): Observable<ValidationData> {
-    const validation = new ValidationData();
+    const result = new ValidationData();
+    const validator = restAPIService.validateStixObject();
 
-    // test version number format
-    if (!this.version.valid()) {
-      validation.errors.push({
-        result: 'error',
-        field: 'version',
-        message: 'version number is not formatted properly',
-      });
-    }
-    // check any asynchronous validators
-    return of(validation).pipe(
-      // check if the name is unique if it has a name
-      switchMap(result => {
-        //do not check name or attackID for relationships or marking definitions
+    return validator(this).pipe(
+      switchMap(validatorResult => {
+        const validatorErrors = validatorResult.errors.map(err => `${err.path.join('.')}: ${err.message}`);
+
+        validatorErrors.forEach(e => result.errors.push({
+            result: 'error',
+            field: 'temp',
+            message: e,
+        }));
+        // test version number format
+        if (!this.version.valid()) {
+          result.errors.push({
+            result: 'error',
+            field: 'version',
+            message: 'version number is not formatted properly',
+          });
+        }
         if (
           this.attackType == 'relationship' ||
           this.attackType == 'marking-definition'
-        )
+        ) {
           return of(result);
+        }
+  
         // check if name & ATT&CK ID is unique, record result in validation, and return validation
         const options = {
           // validate against revoked & deprecated objects
@@ -458,6 +466,13 @@ export abstract class StixObject extends Serializable {
           includeDeprecated: true,
         };
         let accessor: Observable<Paginated<StixObject>>;
+        if (!this.version.valid()) {
+          result.errors.push({
+            result: 'error',
+            field: 'version',
+            message: 'version number is not formatted properly',
+          });
+        }
         if (this.attackType == 'collection')
           accessor = restAPIService.getAllCollections(options);
         else if (this.attackType == 'group')
@@ -514,139 +529,111 @@ export abstract class StixObject extends Serializable {
               }
             }
             // check ATT&CK ID, ignoring collections and matrices
-            if (
-              this.attackType !== 'matrix' &&
-              this.hasOwnProperty('supportsAttackID') &&
-              this.supportsAttackID
-            ) {
-              if (this.attackID == '') {
-                result.warnings.push({
-                  result: 'warning',
-                  field: 'attackID',
-                  message: 'object does not have ATT&CK ID',
-                });
-              } else {
-                if (
-                  objects.data.some(
-                    x => x.attackID == this.attackID && x.stixID != this.stixID
-                  )
-                ) {
-                  result.errors.push({
-                    result: 'error',
-                    field: 'attackID',
-                    message: 'ATT&CK ID is not unique',
-                  });
-                } else {
-                  result.successes.push({
-                    result: 'success',
-                    field: 'attackID',
-                    message: 'ATT&CK ID is unique',
-                  });
-                }
-                if (!this.isValidAttackId()) {
-                  result.errors.push({
-                    result: 'error',
-                    field: 'attackID',
-                    message: `ATT&CK ID does not match the format ${this.attackIDValidator.format}`,
-                  });
-                }
-              }
-            }
+            // if (
+            //   this.attackType !== 'matrix' &&
+            //   this.hasOwnProperty('supportsAttackID') &&
+            //   this.supportsAttackID
+            // ) {
+            //   if (this.attackID == '') {
+            //     result.warnings.push({
+            //       result: 'warning',
+            //       field: 'attackID',
+            //       message: 'object does not have ATT&CK ID',
+            //     });
+            //   } else {
+            //     if (
+            //       objects.data.some(
+            //         x => x.attackID == this.attackID && x.stixID != this.stixID
+            //       )
+            //     ) {
+            //       result.errors.push({
+            //         result: 'error',
+            //         field: 'attackID',
+            //         message: 'ATT&CK ID is not unique',
+            //       });
+            //     } else {
+            //       result.successes.push({
+            //         result: 'success',
+            //         field: 'attackID',
+            //         message: 'ATT&CK ID is unique',
+            //       });
+            //     }
+            //     if (!this.isValidAttackId()) {
+            //       result.errors.push({
+            //         result: 'error',
+            //         field: 'attackID',
+            //         message: `ATT&CK ID does not match the format ${this.attackIDValidator.format}`,
+            //       });
+            //     }
+            //   }
+            // }
             // check required first/last seen fields for campaigns
-            if (this.attackType == 'campaign') {
-              if (
-                !this.hasOwnProperty('first_seen') ||
-                this['first_seen'] == null
-              ) {
-                result.errors.push({
-                  result: 'error',
-                  field: 'first_seen',
-                  message: 'object does not have a first seen date',
-                });
-              } else if (this.hasOwnProperty('first_seen')) {
-                const firstSeenISO = this['first_seen'].toISOString();
-                const firstSeenValidationResult =
-                  stixTimestampSchema.safeParse(firstSeenISO);
-                if (!firstSeenValidationResult.success) {
-                  result.errors.push({
-                    result: 'error',
-                    field: 'name',
-                    message: firstSeenValidationResult.error.errors[0].message,
-                  });
-                }
-              }
-              if (
-                !this.hasOwnProperty('first_seen_citation') ||
-                this['first_seen_citation'] == ''
-              ) {
-                result.errors.push({
-                  result: 'error',
-                  field: 'first_seen_citation',
-                  message:
-                    'object is missing a citation for the first seen date',
-                });
-              }
-              // } else if (this.hasOwnProperty('first_seen_citation')) {
-              //   const firstSeenCitationValidationResult =
-              //     xMitreFirstSeenCitationSchema.safeParse(
-              //       this['first_seen_citation']
-              //     );
-              //   if (!firstSeenCitationValidationResult.success) {
-              //     result.errors.push({
-              //       result: 'error',
-              //       field: 'name',
-              //       message:
-              //         firstSeenCitationValidationResult.error.errors[0].message,
-              //     });
-              //   }
-              // }
-              if (
-                !this.hasOwnProperty('last_seen') ||
-                this['last_seen'] == null
-              ) {
-                result.errors.push({
-                  result: 'error',
-                  field: 'last_seen',
-                  message: 'object does not have a last seen date',
-                });
-              } else if (this.hasOwnProperty('last_seen')) {
-                const lastSeenISO = this['last_seen'].toISOString();
-                const lastSeenValidationResult =
-                  stixTimestampSchema.safeParse(lastSeenISO);
-                if (!lastSeenValidationResult.success) {
-                  result.errors.push({
-                    result: 'error',
-                    field: 'name',
-                    message: lastSeenValidationResult.error.errors[0].message,
-                  });
-                }
-              }
-              if (
-                !this.hasOwnProperty('last_seen_citation') ||
-                this['last_seen_citation'] == ''
-              ) {
-                result.errors.push({
-                  result: 'error',
-                  field: 'last_seen_citation',
-                  message:
-                    'object is missing a citation for the last seen date',
-                });
-              }
-              // } else if (this.hasOwnProperty('last_seen_citation')) {
-              //   const lastSeenCitationValidationResult =
-              //     xMitreLastSeenCitationSchema.safeParse(
-              //       this['first_seen_citation']
-              //     );
-              //   if (!lastSeenCitationValidationResult.success) {
-              //     result.errors.push({
-              //       result: 'error',
-              //       field: 'name',
-              //       message:
-              //         lastSeenCitationValidationResult.error.errors[0].message,
-              //     });
-              //   }
-              // }
-            }
+            // if (this.attackType == 'campaign') {
+            //   if (
+            //     !this.hasOwnProperty('first_seen') ||
+            //     this['first_seen'] == null
+            //   ) {
+            //     result.errors.push({
+            //       result: 'error',
+            //       field: 'first_seen',
+            //       message: 'object does not have a first seen date',
+            //     });
+            //   } else if (this.hasOwnProperty('first_seen')) {
+            //     const firstSeenISO = this['first_seen'].toISOString();
+            //     const firstSeenValidationResult =
+            //       stixTimestampSchema.safeParse(firstSeenISO);
+            //     if (!firstSeenValidationResult.success) {
+            //       result.errors.push({
+            //         result: 'error',
+            //         field: 'first_seen',
+            //         message: firstSeenValidationResult.error.errors[0].message,
+            //       });
+            //     }
+            //   }
+            //   if (
+            //     !this.hasOwnProperty('first_seen_citation') ||
+            //     this['first_seen_citation'] == ''
+            //   ) {
+            //     result.errors.push({
+            //       result: 'error',
+            //       field: 'first_seen_citation',
+            //       message:
+            //         'object is missing a citation for the first seen date',
+            //     });
+            //   }
+            //   if (
+            //     !this.hasOwnProperty('last_seen') ||
+            //     this['last_seen'] == null
+            //   ) {
+            //     result.errors.push({
+            //       result: 'error',
+            //       field: 'last_seen',
+            //       message: 'object does not have a last seen date',
+            //     });
+            //   } else if (this.hasOwnProperty('last_seen')) {
+            //     const lastSeenISO = this['last_seen'].toISOString();
+            //     const lastSeenValidationResult =
+            //       stixTimestampSchema.safeParse(lastSeenISO);
+            //     if (!lastSeenValidationResult.success) {
+            //       result.errors.push({
+            //         result: 'error',
+            //         field: 'lastSeen',
+            //         message: lastSeenValidationResult.error.errors[0].message,
+            //       });
+            //     }
+            //   }
+            //   if (
+            //     !this.hasOwnProperty('last_seen_citation') ||
+            //     this['last_seen_citation'] == ''
+            //   ) {
+            //     result.errors.push({
+            //       result: 'error',
+            //       field: 'last_seen_citation',
+            //       message:
+            //         'object is missing a citation for the last seen date',
+            //     });
+            //   }
+            // }
             return result;
           })
         );
