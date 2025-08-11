@@ -10,7 +10,7 @@
     }}</mat-label>
     <input matInput [matAutocomplete]="auto" [formControl]="refCtrl" required />
     <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayWith">
-      @for (obj of filteredObjects$ | async; track obj) {
+      @for (obj of filteredObjects$ | async; track $index) {
         <mat-option [value]="obj">
           <span>{{ obj.name }}</span> | <small>{{ obj.attackID }}</small>
         </mat-option>
