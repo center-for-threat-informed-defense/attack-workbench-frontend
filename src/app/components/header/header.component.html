@@ -57,7 +57,12 @@
     <!-- Account Options Menu -->
     <mat-menu #accountOptions="matMenu" backdropClass="override-light">
       <button mat-menu-item routerLink="/profile">profile</button>
-      <button *ngIf="isAdmin" mat-menu-item routerLink="/admin">admin</button>
+      <button
+        *ngIf="isAdmin || isTeamLead"
+        mat-menu-item
+        routerLink="/dashboard">
+        dashboard
+      </button>
       <button mat-menu-item (click)="logout()">logout</button>
     </mat-menu>
 
