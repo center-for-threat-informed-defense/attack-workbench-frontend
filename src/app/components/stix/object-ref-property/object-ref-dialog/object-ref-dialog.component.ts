@@ -140,7 +140,7 @@ export class ObjectRefDialogComponent implements OnInit {
       search: query,
     };
     if (this.config.attackType === 'log-source') {
-      this.filteredObjects$ = this.apiService
+      return this.apiService
         .getAllLogSources(options)
         .pipe(map(results => results.data));
     }
