@@ -30,29 +30,53 @@ const stixRouteData = [
     attackType: 'technique',
     editable: true,
   },
-  {
-    attackType: 'data-source',
-    editable: true,
-  },
-  {
-    attackType: 'mitigation',
-    editable: true,
-  },
+  // cti
   {
     attackType: 'group',
     editable: true,
+    headerSection: 'cti',
   },
   {
     attackType: 'software',
     editable: true,
+    headerSection: 'cti',
   },
   {
     attackType: 'campaign',
     editable: true,
+    headerSection: 'cti',
+  },
+  // defenses
+  {
+    attackType: 'mitigation',
+    editable: true,
+    headerSection: 'defenses',
   },
   {
     attackType: 'asset',
     editable: true,
+    headerSection: 'defenses',
+  },
+  {
+    attackType: 'detection-strategy',
+    editable: true,
+    headerSection: 'defenses',
+  },
+  {
+    attackType: 'log-source',
+    editable: true,
+    headerSection: 'defenses',
+  },
+  {
+    attackType: 'analytic',
+    editable: true,
+    headerSection: 'defenses',
+  },
+  {
+    attackType: 'data-source',
+    editable: true,
+    headerSection: 'defenses',
+    deprecated: true,
   },
 ];
 
@@ -63,6 +87,8 @@ stixRouteData.forEach(stixRoute => {
     canActivateChild: [AuthorizationGuard],
     data: {
       breadcrumb: AttackTypeToRoute[stixRoute.attackType].replace(/-/g, ' '),
+      headerSection: stixRoute.headerSection || undefined,
+      deprecated: stixRoute.deprecated ?? false,
     },
     children: [
       {
@@ -121,7 +147,7 @@ stixRoutes.push({
   canActivateChild: [AuthorizationGuard],
   data: {
     breadcrumb: 'marking definitions',
-    more: true,
+    headerSection: 'more',
   },
   children: [
     {
@@ -178,7 +204,7 @@ if (environment.integrations.collection_manager.enabled) {
     canActivateChild: [AuthorizationGuard],
     data: {
       breadcrumb: 'collections',
-      more: true,
+      headerSection: 'more',
     },
     children: [
       {
@@ -275,7 +301,7 @@ stixRoutes.push(
     canActivateChild: [AuthorizationGuard],
     data: {
       breadcrumb: 'reference manager',
-      more: true,
+      headerSection: 'more',
     },
     children: [
       {
@@ -295,7 +321,7 @@ stixRoutes.push(
     canActivateChild: [AuthorizationGuard],
     data: {
       breadcrumb: 'contributors',
-      more: true,
+      headerSection: 'more',
     },
     children: [
       {
@@ -314,7 +340,7 @@ stixRoutes.push(
     canActivateChild: [AuthorizationGuard],
     data: {
       breadcrumb: 'notes',
-      more: true,
+      headerSection: 'more',
     },
     children: [
       {

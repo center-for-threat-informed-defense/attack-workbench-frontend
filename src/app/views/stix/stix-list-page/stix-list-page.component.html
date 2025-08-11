@@ -1,7 +1,9 @@
 <div class="list-page">
   <div class="list-page-header">
+    <!-- page title -->
     <h1 class="with-help-icon">
       {{ title }}
+      <!-- help description -->
       @if (help[attackType]) {
         <mat-icon
           class="help-icon"
@@ -25,6 +27,11 @@
         </mtx-popover>
       }
     </h1>
+    <!-- outdated content warning -->
+    @if (outdatedContentTypes.includes(attackType)) {
+      <app-outdated-content-warning></app-outdated-content-warning>
+    }
+    <!-- add new object button -->
     @if (canEdit) {
       <div class="button-group">
         <button
@@ -39,6 +46,7 @@
       </div>
     }
   </div>
+  <!-- stix object table -->
   <app-stix-list
     [config]="{
       type: attackType,

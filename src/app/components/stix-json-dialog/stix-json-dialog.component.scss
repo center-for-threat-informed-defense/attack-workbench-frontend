@@ -1,0 +1,25 @@
+@use '../../../style/colors';
+@use '../../../style/globals';
+
+.stix-json-dialog {
+  padding: 24px;
+  h2 {
+    margin-top: 0;
+  }
+  .wrapper {
+    overflow-y: scroll;
+    max-height: 60vh;
+    border-radius: 4px;
+    .dark & {
+      border: 1px solid colors.border-color(dark);
+    }
+    .light & {
+      border: 1px solid colors.border-color(light);
+    }
+  }
+  pre {
+    margin-top: 0;
+    font-size: 14px;
+    padding: 16px;
+  }
+}
