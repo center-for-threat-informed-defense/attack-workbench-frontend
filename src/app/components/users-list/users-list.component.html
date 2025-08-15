@@ -19,7 +19,7 @@
             *ngFor="let group of filterOptions"
             [label]="group.name">
             <mat-option *ngFor="let filter of group.values" [value]="filter">{{
-              filter
+              formatRole(filter)
             }}</mat-option>
           </mat-optgroup>
         </mat-select>

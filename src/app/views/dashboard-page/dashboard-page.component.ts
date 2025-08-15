@@ -2,13 +2,13 @@ import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/rest-api-connector.service';
 
 @Component({
-  selector: 'app-admin-page',
-  templateUrl: './admin-page.component.html',
-  styleUrls: ['./admin-page.component.scss'],
+  selector: 'app-dashboard-page',
+  templateUrl: './dashboard-page.component.html',
+  styleUrls: ['./dashboard-page.component.scss'],
   encapsulation: ViewEncapsulation.None,
   standalone: false,
 })
-export class AdminPageComponent implements OnInit {
+export class DashboardPageComponent implements OnInit {
   public pendingUsers;
 
   constructor(private restApiConnector: RestApiConnectorService) {}
