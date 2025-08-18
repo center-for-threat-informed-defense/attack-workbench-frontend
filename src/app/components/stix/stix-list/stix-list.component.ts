@@ -690,8 +690,7 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
       const source_ref = element['source_ref'];
       // Get type to navigate from source_ref
       const type = StixTypeToAttackType[source_ref.split('--')[0]];
-
-      this.router.navigateByUrl('/' + type + '/' + source_ref);
+      this.router.navigateByUrl(`/${type}/${source_ref}`);
     } else if (
       this.config.clickBehavior &&
       this.config.clickBehavior == 'linkToTargetRef'
@@ -699,7 +698,7 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
       const target_ref = element['target_ref'];
       // Get type to navigate from target_ref
       const type = StixTypeToAttackType[target_ref.split('--')[0]];
-      this.router.navigateByUrl('/' + type + '/' + target_ref);
+      this.router.navigateByUrl(`/${type}/${target_ref}`);
     } else if (
       this.config.clickBehavior &&
       this.config.clickBehavior == 'linkToObjectRef'
