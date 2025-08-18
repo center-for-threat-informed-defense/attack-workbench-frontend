@@ -22,14 +22,16 @@ export interface SubtypePropertyConfig {
   /* The object's references field. References will be removed if not included */
   referencesField?: string;
   /* The fields & types of the subtype property */
-  subtypeFields: {
-    name: string;
-    type: 'string' | 'select';
-    required?: boolean; // default false
-    label?: string;
-    supportsReferences?: boolean; // whether this field supports references, default false
-    key?: boolean /** The key field, must have at least one */;
-  }[];
+  subtypeFields: SubtypeField[];
   /* The tooltip for the add button/edit dialog */
   tooltip: string;
+}
+
+interface SubtypeField {
+  name: string;
+  editType: 'string' | 'description' | 'select' | 'autocomplete';
+  required?: boolean; // default false
+  label?: string; // default name
+  supportsReferences?: boolean; // whether this field supports references, default false
+  key?: boolean; // the key field, must have at least one
 }

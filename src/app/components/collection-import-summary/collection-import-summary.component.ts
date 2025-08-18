@@ -1,11 +1,14 @@
 import { SelectionModel } from '@angular/cdk/collections';
 import { Component, Input, OnInit, ViewEncapsulation } from '@angular/core';
 import {
+  Analytic,
   Asset,
   Campaign,
   DataComponent,
   DataSource,
+  DetectionStrategy,
   Group,
+  LogSource,
   Matrix,
   Mitigation,
   Relationship,
@@ -51,6 +54,9 @@ export interface CollectionImportSummaryConfig {
     data_source: CollectionDiffCategories<DataSource>;
     data_component: CollectionDiffCategories<DataComponent>;
     asset: CollectionDiffCategories<Asset>;
+    log_source: CollectionDiffCategories<LogSource>;
+    analytic: CollectionDiffCategories<Analytic>;
+    detection_strategy: CollectionDiffCategories<DetectionStrategy>;
   };
   select?: SelectionModel<string>;
 }
