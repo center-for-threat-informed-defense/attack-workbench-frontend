@@ -132,7 +132,7 @@ export class StixPageComponent implements OnInit, OnDestroy {
         if (confirm) {
           const deleteSubscription = this.deleteObjects().subscribe({
             complete: () => {
-              this.router.navigate([this.route.parent.url]);
+              this.router.navigate(['..'], { relativeTo: this.route });
               deleteSubscription.unsubscribe();
             },
           });
