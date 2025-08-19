@@ -11,8 +11,13 @@
     <input matInput [matAutocomplete]="auto" [formControl]="refCtrl" required />
     <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayWith">
       @for (obj of filteredObjects$ | async; track $index) {
-        <mat-option [value]="obj">
+        <mat-option [value]="obj" [disabled]="isAlreadyReferenced(obj)">
           <span>{{ obj.name }}</span> | <small>{{ obj.attackID }}</small>
+          <span
+            *ngIf="isAlreadyReferenced(obj)"
+            style="font-size: 0.9em; margin-left: 8px">
+            (Already referenced)
+          </span>
         </mat-option>
       }
     </mat-autocomplete>
