@@ -57,7 +57,7 @@ export class AttackIDEditComponent implements OnInit {
     }
   }
 
-  handleGenerateClick(): void {
+  public handleGenerateClick(): void {
     if ((this.config.object as StixObject).supportsNamespace) {
       const sub = (this.config.object as StixObject)
         .getNamespaceID(this.restApiConnector, {
@@ -70,14 +70,18 @@ export class AttackIDEditComponent implements OnInit {
           },
           complete: () => {
             this.prependPrefix();
-            this.attackIdGenerated.emit();
+            this.attackIdChanged();
             sub.unsubscribe();
           },
         });
     }
   }
 
-  prependPrefix(): void {
+  public attackIdChanged(): void {
+    this.attackIdGenerated.emit();
+  }
+
+  public prependPrefix(): void {
     if ((this.config.object as StixObject).attackID.startsWith(this.prefix))
       return; // If prefix is already present, exit
     const ID =
