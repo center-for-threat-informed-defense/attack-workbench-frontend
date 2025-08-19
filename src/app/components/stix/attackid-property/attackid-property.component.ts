@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { StixObject } from 'src/app/classes/stix/stix-object';
 
@@ -10,12 +10,18 @@ import { StixObject } from 'src/app/classes/stix/stix-object';
 })
 export class AttackIDPropertyComponent {
   @Input() public config: AttackIDPropertyConfig;
+  @Output() public attackIdGenerated = new EventEmitter();
+
   public get linkById(): string {
     return `(LinkById: ${this.config.object['attackID']})`;
   }
 
   constructor(public snackbar: MatSnackBar) {
     // intentionally left blank
+  }
+
+  public onAttackIdGenerated(): void {
+    this.attackIdGenerated.emit();
   }
 }
 export interface AttackIDPropertyConfig {

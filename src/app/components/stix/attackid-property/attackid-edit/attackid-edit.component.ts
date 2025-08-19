@@ -1,4 +1,11 @@
-import { Component, Input, OnInit, ViewEncapsulation } from '@angular/core';
+import {
+  Component,
+  Input,
+  OnInit,
+  Output,
+  ViewEncapsulation,
+  EventEmitter,
+} from '@angular/core';
 import { AttackIDPropertyConfig } from '../attackid-property.component';
 import { RestApiConnectorService } from '../../../../services/connectors/rest-api/rest-api-connector.service';
 import { StixObject } from '../../../../classes/stix/stix-object';
@@ -12,6 +19,7 @@ import { StixObject } from '../../../../classes/stix/stix-object';
 })
 export class AttackIDEditComponent implements OnInit {
   @Input() public config: AttackIDPropertyConfig;
+  @Output() public attackIdGenerated = new EventEmitter();
   public showHint = false;
   public prefix = '';
   public namespaceRange = '';
@@ -61,8 +69,9 @@ export class AttackIDEditComponent implements OnInit {
             (this.config.object as StixObject).attackID = val;
           },
           complete: () => {
-            sub.unsubscribe();
             this.prependPrefix();
+            this.attackIdGenerated.emit();
+            sub.unsubscribe();
           },
         });
     }
