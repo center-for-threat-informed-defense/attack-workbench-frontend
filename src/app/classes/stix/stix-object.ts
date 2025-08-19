@@ -478,11 +478,19 @@ export abstract class StixObject extends Serializable {
               this.supportsAttackID
             ) {
               if (this.attackID == '') {
-                result.warnings.push({
-                  result: 'warning',
-                  field: 'attackID',
-                  message: 'object does not have ATT&CK ID',
-                });
+                if (this.attackType === 'analytic') {
+                  result.errors.push({
+                    result: 'error',
+                    field: 'attackID',
+                    message: 'object does not have ATT&CK ID',
+                  });
+                } else {
+                  result.warnings.push({
+                    result: 'warning',
+                    field: 'attackID',
+                    message: 'object does not have ATT&CK ID',
+                  });
+                }
               } else {
                 if (
                   objects.data.some(
