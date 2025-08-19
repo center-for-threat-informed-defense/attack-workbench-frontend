@@ -42,7 +42,6 @@ export class ObjectRefDialogComponent implements OnInit {
     this.isNew = this.config.index === undefined;
     // set up form controls for each related field
     this.config.relatedFields.forEach(relatedField => {
-      // const initValue = this.isNew ? [] : this.config.object[this.config.field]
       this.selectControls[relatedField.field] = new FormControl({
         value: [],
         disabled: true,
@@ -133,6 +132,12 @@ export class ObjectRefDialogComponent implements OnInit {
     }
 
     this.dialogRef.close();
+  }
+
+  public isAlreadyReferenced(obj: StixObject) {
+    const existingRefs = this.config.object[this.config.field] || [];
+    const refIds = existingRefs.map(item => item.ref);
+    return refIds.includes(obj.stixID);
   }
 
   private filterObjects(query?: string): Observable<StixObject[]> {
