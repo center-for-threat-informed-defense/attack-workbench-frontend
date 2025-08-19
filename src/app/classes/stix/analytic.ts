@@ -167,14 +167,15 @@ export class Analytic extends StixObject {
         if (this.mutableElements.length) {
           const seen = new Set<string>();
           for (const { field } of this.mutableElements) {
-            if (seen.has(field)) {
+            const normalizedField = field.toLowerCase(); // ignore case
+            if (seen.has(normalizedField)) {
               result.errors.push({
                 field: 'mutableElements',
                 result: 'error',
                 message: `Duplicate mutable element field found: ${field}`,
               });
             }
-            seen.add(field);
+            seen.add(normalizedField);
           }
         }
 
