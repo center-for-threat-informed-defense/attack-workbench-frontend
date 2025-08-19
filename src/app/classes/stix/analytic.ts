@@ -1,6 +1,6 @@
 import { StixObject } from './stix-object';
 import { logger } from '../../utils/logger';
-import { map, Observable } from 'rxjs';
+import { catchError, forkJoin, map, Observable, of, switchMap } from 'rxjs';
 import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/rest-api-connector.service';
 import { ValidationData } from '../serializable';
 
@@ -148,21 +148,7 @@ export class Analytic extends StixObject {
     restAPIService: RestApiConnectorService
   ): Observable<ValidationData> {
     return this.base_validate(restAPIService).pipe(
-      map(result => {
-        // validate unique log source refs
-        if (this.logSourceRefs.length) {
-          const seen = new Set<string>();
-          for (const { ref } of this.logSourceRefs) {
-            if (seen.has(ref)) {
-              result.errors.push({
-                field: 'logSourceRefs',
-                result: 'error',
-                message: 'Duplicate log source reference found',
-              });
-            }
-            seen.add(ref);
-          }
-        }
+      switchMap(result => {
         // validate unique mutable fields
         if (this.mutableElements.length) {
           const seen = new Set<string>();
@@ -179,7 +165,36 @@ export class Analytic extends StixObject {
           }
         }
 
-        return result;
+        // validate unique log source refs
+        if (this.logSourceRefs.length) {
+          const refs = this.logSourceRefs.map(({ ref }) => ref);
+
+          return forkJoin(
+            refs.map(ref =>
+              restAPIService.getLogSource(ref).pipe(
+                catchError(() => of(null)) // fallback if API fails
+              )
+            )
+          ).pipe(
+            map(logSources => {
+              const seen = new Set<string>();
+              this.logSourceRefs.forEach(({ ref }, index) => {
+                if (seen.has(ref)) {
+                  const logSource = logSources[index];
+                  result.errors.push({
+                    field: 'logSourceRefs',
+                    result: 'error',
+                    message: `Duplicate log source reference found: ${logSource?.[0].attackID || 'unknown'}`,
+                  });
+                }
+                seen.add(ref);
+              });
+              return result;
+            })
+          );
+        }
+
+        return of(result);
       })
     );
   }
