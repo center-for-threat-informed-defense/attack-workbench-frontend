@@ -29,4 +29,5 @@ export interface AttackIDPropertyConfig {
    * Note: if mode is diff, pass an array of two objects to diff
    */
   object: StixObject | [StixObject, StixObject];
+  required?: boolean; // default false
 }

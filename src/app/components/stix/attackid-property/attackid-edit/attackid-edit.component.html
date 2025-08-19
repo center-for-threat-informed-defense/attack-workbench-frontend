@@ -9,6 +9,7 @@
     <mat-label>ID</mat-label>
     <input
       matInput
+      [required]="config.required ? config.required : false"
       [(ngModel)]="config.object['attackID']"
       (blur)="prependPrefix()" />
     <button
