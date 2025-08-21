@@ -254,12 +254,19 @@ export class StixPageComponent implements OnInit, OnDestroy {
           true
         );
       else if (this.objectType == 'collection')
+        /**
+         * Note: This only loads the collection object without
+         * retrieving the full set of contained STIX objects.
+         * The contents are streamed and managed separately
+         * by the CollectionView child component, which handles
+         * progress updates and additional processing.
+         */
         objects$ = this.restApiService.getCollection(
           objectStixID,
           objectModified,
           'latest',
           false,
-          true,
+          false, // retrieveContents <- do not load contents
           false,
           { preferStream: true }
         );
