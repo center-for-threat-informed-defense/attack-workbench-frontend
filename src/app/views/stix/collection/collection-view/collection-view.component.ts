@@ -791,7 +791,7 @@ export class CollectionViewComponent extends StixViewPage implements OnInit {
     };
 
     // fetch previous version if this was not a new collection
-    const objectStixID = this.route.snapshot.params['id'];
+    const objectStixID = this.editor.stixId;
     if (objectStixID && objectStixID != 'new') {
       // Check if collection was loaded without contents (common for list views)
       if (
