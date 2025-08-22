@@ -1,6 +1,6 @@
 // components/stream-progress/stream-progress.component.ts
-import { Component, Input, OnInit } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Observable, Subscription } from 'rxjs';
 import { StreamProgress } from 'src/app/services/connectors/collection-stream.service';
 
 @Component({
@@ -31,20 +31,25 @@ import { StreamProgress } from 'src/app/services/connectors/collection-stream.se
   ],
   standalone: false,
 })
-export class StreamProgressComponent implements OnInit {
+export class StreamProgressComponent implements OnInit, OnDestroy {
   @Input() progress$: Observable<StreamProgress>;
+  private sub: Subscription;
 
   public loaded: number;
   public total: number;
   public percentage: number;
 
   ngOnInit(): void {
-    this.progress$.subscribe({
+    this.sub = this.progress$.subscribe({
       next: result => {
         this.loaded = result.loaded ?? 0;
         this.total = result.total ?? 0;
         this.percentage = result.percentage ?? 0;
       },
     });
+  }
+
+  ngOnDestroy(): void {
+    this.sub?.unsubscribe();
   }
 }

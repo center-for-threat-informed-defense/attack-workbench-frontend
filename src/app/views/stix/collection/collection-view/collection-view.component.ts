@@ -817,39 +817,36 @@ export class CollectionViewComponent extends StixViewPage implements OnInit {
         // Collection has content references but not the actual objects
         // This means we need to load the full collection with contents
 
-        // Set up streaming progress observable
-        this.streamProgress$ =
-          this.restApiConnector.getCollectionStreamProgress();
-
         // Stream the collection contents
-        const streamSub = this.restApiConnector
-          .getCollectionStream(
+        const { collection$, streamProgress$ } =
+          this.restApiConnector.getCollectionStream(
             this.collection.stixID,
             this.collection.modified,
             true // retrieveContents
-          )
-          .subscribe({
-            next: streamedCollection => {
-              // Update the existing collection object with streamed data
-              this.collection.stix_contents = streamedCollection.stix_contents;
-              this.collection.streaming = streamedCollection.streaming;
-              this.collection.streamProgress =
-                streamedCollection.streamProgress;
-            },
-            error: err => {
-              logger.error('Failed to stream collection contents:', err);
-              this.loading = false;
-              this.snackbar.open('Error loading collection contents', null, {
-                duration: 5000,
-                panelClass: 'error',
-              });
-            },
-            complete: () => {
-              streamSub.unsubscribe();
-              // Continue with the rest of initialization
-              this.continueInitialization(apis);
-            },
-          });
+          );
+
+        this.streamProgress$ = streamProgress$;
+        const streamSub = collection$.subscribe({
+          next: streamedCollection => {
+            // Update the existing collection object with streamed data
+            this.collection.stix_contents = streamedCollection.stix_contents;
+            this.collection.streaming = streamedCollection.streaming;
+            this.collection.streamProgress = streamedCollection.streamProgress;
+          },
+          error: err => {
+            logger.error('Failed to stream collection contents:', err);
+            this.loading = false;
+            this.snackbar.open('Error loading collection contents', null, {
+              duration: 5000,
+              panelClass: 'error',
+            });
+          },
+          complete: () => {
+            if (streamSub) streamSub.unsubscribe();
+            // Continue with the rest of initialization
+            this.continueInitialization(apis);
+          },
+        });
 
         return; // Exit early, will continue in the subscription
       }
