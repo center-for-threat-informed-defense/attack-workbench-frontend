@@ -6,7 +6,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { AuthenticationService } from '../connectors/authentication/authentication.service';
 import { RestApiConnectorService } from '../connectors/rest-api/rest-api-connector.service';
 import { map } from 'rxjs/operators';
-import { Observable } from 'rxjs';
+import { forkJoin, Observable } from 'rxjs';
 import { Relationship } from 'src/app/classes/stix/relationship';
 
 @Injectable({
@@ -19,13 +19,17 @@ export class EditorService {
   public hasWorkflow = true;
   public hasRelationships = true;
   public isAnImportedCollection = false;
+  public hasConvertedCollection = false;
+  public isGroup = false;
+
   public onSave = new EventEmitter();
   public onDelete = new EventEmitter();
   public onDeleteImportedCollection = new EventEmitter();
   public onEditingStopped = new EventEmitter();
   public onReload = new EventEmitter();
   public onReloadReferences = new EventEmitter();
-  public isGroup = false;
+  public onConvertImportedCollection = new EventEmitter();
+  public viewStix = new EventEmitter();
 
   public get stixId(): string {
     return this.router.url.split('/')[2].split('?')[0];
@@ -42,12 +46,13 @@ export class EditorService {
     private route: ActivatedRoute,
     private sidebarService: SidebarService,
     private authenticationService: AuthenticationService,
-    private restAPIConnectorService: RestApiConnectorService,
+    private apiService: RestApiConnectorService,
     private dialog: MatDialog
   ) {
     this.router.events.subscribe(event => {
       if (event instanceof NavigationEnd) {
         this.isAnImportedCollection = false;
+        this.hasConvertedCollection = false;
         const editable = this.getEditableFromRoute(
           this.router.routerState,
           this.router.routerState.root
@@ -90,6 +95,9 @@ export class EditorService {
             this.getRelationships().subscribe(
               rels => (this.hasRelationships = rels > 0)
             );
+          }
+          if (this.type === 'collection' && !this.editing) {
+            this.checkIfCollectionIsImported();
           }
         }
         if (!this.editable) this.sidebarService.currentTab = 'search';
@@ -147,7 +155,7 @@ export class EditorService {
    */
   public getRelationships(): Observable<number> {
     if (this.type == 'data-source') {
-      return this.restAPIConnectorService
+      return this.apiService
         .getDataSource(this.stixId, null, 'latest', false, false, true)
         .pipe(
           map(
@@ -155,7 +163,7 @@ export class EditorService {
           )
         );
     } else {
-      return this.restAPIConnectorService
+      return this.apiService
         .getRelatedTo({ sourceOrTargetRef: this.stixId })
         .pipe(
           map(relationships => {
@@ -171,5 +179,34 @@ export class EditorService {
           })
         );
     }
+  }
+
+  public checkIfCollectionIsImported(): void {
+    const modified = this.router.url.split('/')[4];
+    const $collections = forkJoin({
+      latest: this.apiService.getCollection(this.stixId, null, 'latest'),
+      current: this.apiService.getCollection(this.stixId, modified),
+    });
+    const subscription = $collections.subscribe({
+      next: ({ latest, current }) => {
+        const latestCollection = latest[0];
+        const currentCollection = current[0];
+        if (
+          !latestCollection.imported &&
+          latestCollection.modified > currentCollection.modified
+        ) {
+          // latest collection with the given stixId is
+          // not imported and has a different modified date
+          this.hasConvertedCollection = true;
+        }
+        if (currentCollection.imported) {
+          this.editable = false;
+          this.isAnImportedCollection = true;
+        }
+      },
+      complete: () => {
+        if (subscription) subscription.unsubscribe();
+      },
+    });
   }
 }

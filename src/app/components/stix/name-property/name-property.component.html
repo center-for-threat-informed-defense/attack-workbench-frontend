@@ -12,10 +12,10 @@
         [config]="{ object: config.object, field: 'workflow' }"></app-icon-view>
     </h1>
     <h3 class="status">
-      <span class="warning-text" *ngIf="config.object['deprecated']"
+      <span class="error-text" *ngIf="config.object['deprecated']"
         >deprecated</span
       >
-      <span class="warning-text" *ngIf="config.object['revoked'] && loaded"
+      <span class="error-text" *ngIf="config.object['revoked'] && loaded"
         >revoked by: {{ currentTargetObj.stix.name }}</span
       >
     </h3>
@@ -38,10 +38,10 @@
       </h1>
     </mat-form-field>
     <h3 class="status">
-      <span class="warning-text" *ngIf="config.object['deprecated']"
+      <span class="error-text" *ngIf="config.object['deprecated']"
         >deprecated</span
       >
-      <span class="warning-text" *ngIf="config.object['revoked'] && loaded"
+      <span class="error-text" *ngIf="config.object['revoked'] && loaded"
         >revoked by: {{ currentTargetObj.stix.name }}</span
       >
     </h3>
@@ -53,7 +53,7 @@
         [after]="currentName"></app-property-diff>
     </h1>
     <h3 class="status">
-      <span class="warning-text">
+      <span class="error-text">
         <app-property-diff
           [before]="getStatus(previous)"
           [after]="getStatus(current)"></app-property-diff>

@@ -1,3 +1,5 @@
+/* eslint-disable @angular-eslint/no-output-on-prefix */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import {
   AfterViewInit,
   Component,
@@ -24,8 +26,9 @@ import * as globals from '../../utils/globals';
 })
 export class HeaderComponent implements AfterViewInit {
   public allRoutes: any[];
-  public filteredRoutes: any[];
-  public moreRoutes: any[];
+  public groupedRoutes: Record<string, any[]> = {};
+  public filteredRoutes: any[] = [];
+  public currentDropdown = null;
   public appVersion = globals.appVersion;
 
   @Output() public onLogin = new EventEmitter();
@@ -36,6 +39,9 @@ export class HeaderComponent implements AfterViewInit {
 
   public get isAdmin(): boolean {
     return this.authenticationService.isAuthorized([Role.ADMIN]);
+  }
+  public get isTeamLead(): boolean {
+    return this.authenticationService.isAuthorized([Role.TEAM_LEAD]);
   }
   public get isLoggedIn(): boolean {
     return this.authenticationService.isLoggedIn;
@@ -54,8 +60,9 @@ export class HeaderComponent implements AfterViewInit {
     private authenticationService: AuthenticationService
   ) {
     this.allRoutes = stixRoutes;
-    this.filteredRoutes = stixRoutes.filter(x => x.data.more != true);
-    this.moreRoutes = stixRoutes.filter(x => x.data.more == true);
+    this.groupedRoutes = this.groupRoutesBySection(stixRoutes);
+    this.filteredRoutes = this.groupedRoutes['none'] || [];
+    delete this.groupedRoutes['none'];
 
     this.authnTypeSubscription = this.authenticationService
       .getAuthType()
@@ -93,5 +100,19 @@ export class HeaderComponent implements AfterViewInit {
 
   public register(): void {
     this.onRegister.emit();
+  }
+
+  public groupRoutesBySection(routes: any[]): Record<string, any[]> {
+    const grouped = {};
+    routes.forEach(route => {
+      const section = route.data.headerSection || 'none';
+      if (!grouped[section]) grouped[section] = [];
+      grouped[section].push(route);
+    });
+    return grouped;
+  }
+
+  public setSectionDropdown(section) {
+    this.currentDropdown = section;
   }
 }

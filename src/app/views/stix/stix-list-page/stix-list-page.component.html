@@ -1,0 +1,58 @@
+<div class="list-page">
+  <div class="list-page-header">
+    <!-- page title -->
+    <h1 class="with-help-icon">
+      {{ title }}
+      <!-- help description -->
+      @if (help[attackType]) {
+        <mat-icon
+          class="help-icon"
+          aria-label="help"
+          cdkDrag
+          #popoverTrigger2="mtxPopoverTrigger"
+          [mtxPopoverTriggerFor]="popover"
+          mtxPopoverTriggerOn="hover">
+          help_outline
+        </mat-icon>
+        <mtx-popover
+          #popover="mtxPopover"
+          [position]="['below', 'center']"
+          enterDelay="25"
+          leaveDelay="25">
+          <div style="max-width: 26em">
+            <span class="help-content">
+              {{ help[attackType] }}
+            </span>
+          </div>
+        </mtx-popover>
+      }
+    </h1>
+    <!-- outdated content warning -->
+    @if (outdatedContentTypes.includes(attackType)) {
+      <app-outdated-content-warning></app-outdated-content-warning>
+    }
+    <!-- add new object button -->
+    @if (canEdit) {
+      <div class="button-group">
+        <button
+          mat-raised-button
+          class="extended-button"
+          color="primary"
+          [routerLink]="newObjectLink"
+          [queryParams]="{ editing: true }">
+          <mat-icon>create</mat-icon>
+          <span class="text-label">{{ createButtonLabel }}</span>
+        </button>
+      </div>
+    }
+  </div>
+  <!-- stix object table -->
+  <app-stix-list
+    [config]="{
+      type: attackType,
+      showLinks: true,
+      showUserSearch: !uneditable,
+      showFilters: !uneditable,
+      uneditableObject: uneditable,
+    }"></app-stix-list>
+</div>

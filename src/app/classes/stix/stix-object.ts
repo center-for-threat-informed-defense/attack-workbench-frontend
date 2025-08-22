@@ -9,29 +9,16 @@ import {
 import { forkJoin, Observable, of } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
 import { logger } from '../../utils/logger';
+import {
+  AttackTypeToRoute,
+  StixTypeToAttackType,
+} from 'src/app/utils/type-mappings';
 
 export type workflowStates =
   | 'work-in-progress'
   | 'awaiting-review'
   | 'reviewed'
   | '';
-const StixTypeToAttackType = {
-  'x-mitre-collection': 'collection',
-  'attack-pattern': 'technique',
-  'malware': 'software',
-  'tool': 'software',
-  'intrusion-set': 'group',
-  'campaign': 'campaign',
-  'course-of-action': 'mitigation',
-  'x-mitre-matrix': 'matrix',
-  'x-mitre-tactic': 'tactic',
-  'relationship': 'relationship',
-  'marking-definition': 'marking-definition',
-  'x-mitre-data-source': 'data-source',
-  'x-mitre-data-component': 'data-component',
-  'x-mitre-asset': 'asset',
-  'note': 'note',
-};
 
 export abstract class StixObject extends Serializable {
   public stixID: string; // STIX ID
@@ -53,21 +40,6 @@ export abstract class StixObject extends Serializable {
   protected abstract get attackIDValidator(): {
     regex: string; // regex to validate the ID
     format: string; // format to display to user
-  };
-
-  private typeUrlMap = {
-    'technique': 'techniques',
-    'software': 'software',
-    'group': 'groups',
-    'campaign': 'campaigns',
-    'mitigation': 'mitigations',
-    'matrix': 'matrices',
-    'tactic': 'tactics',
-    'note': 'notes',
-    'marking-definition': 'marking-definitions',
-    'data-source': 'datasources',
-    'data-component': 'datacomponents',
-    'asset': 'assets',
   };
 
   private defaultMarkingDefinitionsLoaded = false; // avoid overloading of default marking definitions
@@ -135,11 +107,11 @@ export abstract class StixObject extends Serializable {
     const serialized_external_references = this.external_references.serialize();
 
     // Add attackID for
-    if (this.attackID && this.typeUrlMap[this.attackType]) {
+    if (this.attackID && AttackTypeToRoute[this.attackType]) {
       const new_ext_ref = {
         source_name: 'mitre-attack',
         external_id: this.attackID,
-        url: `https://attack.mitre.org/${this.typeUrlMap[this.attackType]}/${this.attackID.replace(/\./g, '/')}`,
+        url: `https://attack.mitre.org/${AttackTypeToRoute[this.attackType]}/${this.attackID.replace(/\./g, '/')}`,
       };
       serialized_external_references.unshift(new_ext_ref);
     }
@@ -154,10 +126,10 @@ export abstract class StixObject extends Serializable {
       external_references: serialized_external_references,
       x_mitre_deprecated: this.deprecated,
       revoked: this.revoked,
-      description: this.description,
       object_marking_refs: this.object_marking_refs,
       spec_version: '2.1',
     };
+    if (this.description) stix.description = this.description;
     // Add modified date if type is not marking-definition
     if (this.type != 'marking-definition')
       stix['modified'] = new Date().toISOString();
@@ -506,11 +478,19 @@ export abstract class StixObject extends Serializable {
               this.supportsAttackID
             ) {
               if (this.attackID == '') {
-                result.warnings.push({
-                  result: 'warning',
-                  field: 'attackID',
-                  message: 'object does not have ATT&CK ID',
-                });
+                if (this.attackType === 'analytic') {
+                  result.errors.push({
+                    result: 'error',
+                    field: 'attackID',
+                    message: 'object does not have ATT&CK ID',
+                  });
+                } else {
+                  result.warnings.push({
+                    result: 'warning',
+                    field: 'attackID',
+                    message: 'object does not have ATT&CK ID',
+                  });
+                }
               } else {
                 if (
                   objects.data.some(
@@ -819,29 +799,36 @@ export abstract class StixObject extends Serializable {
     });
   }
 
-  public getNamespaceID(restAPIConnector, orgNamespace): Observable<any> {
+  public getNamespaceID(
+    apiService: RestApiConnectorService,
+    orgNamespace: { prefix: string; range_start: string }
+  ): Observable<any> {
     let prefix = ''; // i.e. 'TA', if StixObject type is tactic
     let count = '' as any; // i.e. 1234
     this.attackID = '(generating ID)';
 
     let accessor: Observable<Paginated<StixObject>>;
-    if (this.attackType == 'group') accessor = restAPIConnector.getAllGroups();
+    if (this.attackType == 'group') accessor = apiService.getAllGroups();
     else if (this.attackType == 'campaign')
-      accessor = restAPIConnector.getAllCampaigns();
+      accessor = apiService.getAllCampaigns();
     else if (this.attackType == 'mitigation')
-      accessor = restAPIConnector.getAllMitigations();
+      accessor = apiService.getAllMitigations();
     else if (this.attackType == 'software')
-      accessor = restAPIConnector.getAllSoftware();
-    else if (this.attackType == 'tactic')
-      accessor = restAPIConnector.getAllTactics();
+      accessor = apiService.getAllSoftware();
+    else if (this.attackType == 'tactic') accessor = apiService.getAllTactics();
     else if (this.attackType == 'technique')
-      accessor = restAPIConnector.getAllTechniques();
+      accessor = apiService.getAllTechniques();
     else if (this.attackType == 'data-source')
-      accessor = restAPIConnector.getAllDataSources();
-    else if (this.attackType == 'asset')
-      accessor = restAPIConnector.getAllAssets();
+      accessor = apiService.getAllDataSources();
+    else if (this.attackType == 'asset') accessor = apiService.getAllAssets();
     else if (this.attackType == 'matrix')
-      accessor = restAPIConnector.getAllMatrices();
+      accessor = apiService.getAllMatrices();
+    else if (this.attackType == 'detection-strategy')
+      accessor = apiService.getAllDetectionStrategies();
+    else if (this.attackType == 'log-source')
+      accessor = apiService.getAllLogSources();
+    else if (this.attackType == 'analytic')
+      accessor = apiService.getAllAnalytics();
     else accessor = null;
 
     // Find all other objects that have this prefix and range, and set ID to the most recent & unique ID available
@@ -869,7 +856,7 @@ export abstract class StixObject extends Serializable {
               if (found && found.length > 0) {
                 familyPrefix += found[0];
                 count = 1;
-                return restAPIConnector
+                return apiService
                   .getTechnique(
                     this['parentTechnique'].stixID,
                     null,
