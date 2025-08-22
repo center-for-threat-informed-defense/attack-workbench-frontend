@@ -1,0 +1,40 @@
+<div class="object-ref-view labelled-box grow-to-row">
+  <div class="content">
+    @if (!loading && refTable.length) {
+      <table
+        aria-describedby="object reference table"
+        mat-table
+        [dataSource]="refTable"
+        class="object-ref-table">
+        @for (column of fields; track column) {
+          <ng-container [matColumnDef]="column.field">
+            <th mat-header-cell *matHeaderCellDef>
+              {{ column.label || column.field | titlecase }}
+            </th>
+            <td mat-cell *matCellDef="let element">
+              @if (column.isRefField) {
+                <app-property-diff
+                  [before]="getAttackId(element.before, column.field)"
+                  [after]="getAttackId(element.after, column.field)">
+                </app-property-diff>
+              } @else {
+                <app-property-diff
+                  [before]="fieldToString(element.before, column.field)"
+                  [after]="fieldToString(element.after, column.field)">
+                </app-property-diff>
+              }
+            </td>
+          </ng-container>
+        }
+        <tr mat-header-row *matHeaderRowDef="fieldDefs"></tr>
+        <tr mat-row *matRowDef="let row; columns: fieldDefs"></tr>
+      </table>
+    } @else if (loading) {
+      <span class="text-deemphasis">Loading...</span>
+      <mat-spinner diameter="20"></mat-spinner>
+    }
+  </div>
+  <span class="labelled-box-label">{{
+    config.label ? config.label : config.field
+  }}</span>
+</div>

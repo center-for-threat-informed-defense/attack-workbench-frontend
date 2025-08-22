@@ -1,5 +1,16 @@
-import { Component, Input, ViewEncapsulation } from '@angular/core';
+import {
+  Component,
+  Input,
+  OnChanges,
+  OnInit,
+  SimpleChanges,
+  ViewEncapsulation,
+} from '@angular/core';
+import { FormControl } from '@angular/forms';
+import { MatOptionSelectionChange } from '@angular/material/core';
+import { Subscription } from 'rxjs';
 import { StixObject } from 'src/app/classes/stix/stix-object';
+import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/rest-api-connector.service';
 
 @Component({
   selector: 'app-string-property',
@@ -8,8 +19,17 @@ import { StixObject } from 'src/app/classes/stix/stix-object';
   encapsulation: ViewEncapsulation.None,
   standalone: false,
 })
-export class StringPropertyComponent {
+export class StringPropertyComponent implements OnInit, OnChanges {
   @Input() public config: StringPropertyConfig;
+
+  public selectControl: FormControl;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  public allowedValues: any;
+  public channels: Set<string>;
+  public loading = false;
+
+  // prevent async issues
+  private subscription: Subscription = new Subscription();
 
   public get current() {
     return this.config.object[0]?.[this.config.field] || '';
@@ -18,8 +38,67 @@ export class StringPropertyComponent {
     return this.config.object[1]?.[this.config.field] || '';
   }
 
-  constructor() {
-    // intentionally left blank
+  constructor(private apiService: RestApiConnectorService) {}
+
+  ngOnInit(): void {
+    if (this.config.editType === 'select') {
+      this.selectControl = new FormControl({
+        value: this.config.object[this.config.field],
+        disabled: this.config.disabled ?? false,
+      });
+
+      if (this.config.field === 'platform') {
+        this.loading = true;
+        const data$ = this.apiService.getAllAllowedValues();
+        this.subscription = data$.subscribe({
+          next: data => {
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            const obj = this.config.object as any;
+            this.allowedValues =
+              data.find(v => {
+                return v.objectType == obj.attackType;
+              }) ?? [];
+            this.loading = false;
+          },
+          complete: () => this.subscription.unsubscribe(),
+        });
+      }
+    }
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes.config) {
+      // react to changes in 'disabled' property
+      if (this.selectControl) {
+        const isDisabled = this.config.disabled ?? false;
+        if (isDisabled) this.selectControl.disable();
+        else this.selectControl.enable();
+      }
+    }
+  }
+
+  public getOptions(): Set<string> {
+    const options = new Set<string>();
+    if (this.loading) return options;
+    if (this.config.field === 'platform') {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const obj = this.config.object as any;
+      const properties = this.allowedValues.properties.find(p => {
+        return p.propertyName == 'x_mitre_platforms';
+      });
+      properties?.domains?.forEach(d => {
+        if (obj?.domains?.includes(d.domainName)) {
+          d.allowedValues.forEach(options.add, options);
+        }
+      });
+    }
+    return options;
+  }
+
+  public change(event: MatOptionSelectionChange): void {
+    if (event.isUserInput && event.source.selected) {
+      this.config.object[this.config.field] = event.source.value;
+    }
   }
 }
 
@@ -40,4 +119,8 @@ export interface StringPropertyConfig {
   label?: string;
   /* If true, the field will be required. Default false if omitted. */
   required?: boolean;
+  /* If true, the field will be disabled. Default false if omitted. */
+  disabled?: boolean;
+  /* Edit type. Default: 'any' */
+  editType?: 'select' | 'any';
 }

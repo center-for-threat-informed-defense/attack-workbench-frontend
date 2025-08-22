@@ -9,10 +9,6 @@ import { StixObject } from 'src/app/classes/stix/stix-object';
 })
 export class ListPropertyComponent {
   @Input() public config: ListPropertyConfig;
-
-  constructor() {
-    // intentionally left blank
-  }
 }
 
 export interface ListPropertyConfig {
@@ -26,7 +22,7 @@ export interface ListPropertyConfig {
    * Note: if mode is diff, pass an array of two objects to diff
    */
   object: StixObject | [StixObject, StixObject];
-  /* Edit mode. Default: 'any' */
+  /* List type. Default: 'any' */
   editType?: 'select' | 'stixList' | 'any';
   /* If true, the field will be disabled. Default false if omitted. */
   disabled?: boolean;

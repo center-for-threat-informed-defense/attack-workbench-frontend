@@ -4,7 +4,7 @@
   <ng-container *ngFor="let field of config.subtypeFields">
     <!-- edit type: 'string' -->
     <mat-form-field *ngIf="field.editType === 'string'" appearance="outline">
-      <mat-label>{{ field.name }}</mat-label>
+      <mat-label>{{ field.label ? field.label : field.name }}</mat-label>
       <input
         matInput
         [required]="field.required ? field.required : false"
@@ -21,6 +21,26 @@
         matInput
         [required]="field.required ? field.required : false"
         [(ngModel)]="data[field.name]"></textarea>
+    </mat-form-field>
+
+    <!-- edit type: 'autocomplete' -->
+    <mat-form-field
+      *ngIf="field.editType === 'autocomplete'"
+      appearance="outline">
+      <mat-label>{{ field.label ? field.label : field.name }}</mat-label>
+      <input
+        type="text"
+        matInput
+        [formControl]="dataComponentNameControl"
+        [required]="field.required ? field.required : false"
+        [matAutocomplete]="auto" />
+      <mat-autocomplete #auto="matAutocomplete">
+        <mat-option
+          *ngFor="let option of filteredDataComponentNames | async"
+          [value]="option">
+          {{ option }}
+        </mat-option>
+      </mat-autocomplete>
     </mat-form-field>
 
     <!-- edit type: 'select' -->

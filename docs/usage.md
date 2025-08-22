@@ -98,7 +98,7 @@ The history timeline browser allows users to see the revision history of an obje
 - Events within the timeline are color-coded by type:
     - Purple events correspond to object changes
     - Blue events correspond to relationship changes
-	- Black events correspond to collection events
+	- Gray events correspond to collection events
 - Events within the timeline are also differentiated by type, denoted by tooltip and icon:
     - A plus symbol denotes additions, such as the creation of the object itself or the addition of relationships with the object.
     - A pencil symbol denotes modifications. Modifications to the object that change the version number have additional markings.
@@ -191,7 +191,10 @@ ATT&CK IDs must follow a prescribed format:
 | Campaign         | `Cxxxx` |
 | Group            | `Gxxxx`  |
 | Software         | `Sxxxx` |
-| Data Source      | `DSxxxx` |
+| Data Source (deprecated)      | `DSxxxx` |
+| Detection Strategy | `DETxxxx` |
+| Log Source | `LSxxxx` |
+| Analytic | `ANxxxx` |
 
 _\* Domain identifiers for Matrices are described in the section for editing matrices._
 
@@ -280,13 +283,15 @@ The set of fields available to edit on a technique differs according to the doma
 | Campaigns                                  | Campaigns that use this technique |
 | Mitigations                                | Mitigations that apply to this technique |
 | Procedure Examples                         | Groups and software that use this technique |
-| Data Sources                               | Data components that detect this technique |
+| Data Sources (deprecated)                  | Data components that detect this technique |
+| Detection Strategies | Strategies that detect this technique |
 
 #### Editing Tactics
 
 Tactics represent the "why" of an ATT&CK technique or sub-technique. It is the adversary's tactical goal: the reason for performing an action. For example, an adversary may want to achieve credential access. 
 
 Tactics support the standard set of fields, including a description supporting citations, LinkByIds, and markdown formatting. Tactics must be assigned to a domain before techniques can be assigned to them. The assignment of techniques to tactics can only be done on the techniques page.
+
 ##### Tactic Relationships
 
 Tactics do not have any associated relationships.
@@ -351,7 +356,7 @@ The software type must be selected when creating it and due to limitations of th
 | Techniques Used      | Techniques used by the software |
 | Associated Groups    | Groups that use this software |
 
-#### Editing Data Sources
+#### Editing Data Sources (deprecated)
 
 Data sources represent relevant information that can be collected by sensors or logs to detect adversary behaviors. Data sources
 include data components to provide an additional layer of context and identify the specific properties of a data source
@@ -373,6 +378,32 @@ data component dialog window.
 |:-----|:----|
 | Techniques Detected      | Techniques detected by the data component |
 
+#### Editing Detection Strategies
+
+Detection strategies define high-level approaches for detecting specific adversary techniques. They serve as containers that organize multiple platform-specific analytics into cohesive detection methodologies.
+
+##### Detection Strategy Relationships
+
+| Relationship Section                    | Description |
+|:-----|:----|
+| Technqiues | Techniques detected by the detection strategy. |
+
+#### Editing Log Sources
+
+Log sources define immutable configurations for collecting security telemetry across different platforms and deployment scenarios.
+
+##### Log Source Relationships
+
+While Log Sources do not have direct relationships with other objects, they are linked to Analytics through the list of log source references on Analytics (specifically, the `x_mitre_log_sources` field).
+
+#### Editing Analytics
+
+Analytics contain platform-specific detection logic and represent the implementation details of a detection strategy.
+
+##### Analytic Relationships
+
+While Analytics do not have direct relationships with other objects, they are linked to Detection Strategies through the list of analytic references on Detection Strategies (specifically, the `x_mitre_analytics` field)
+
 #### Editing Relationships
 
 Relationships map objects to other objects. Relationships have types, sources, and targets. The source and targets define the objects connected by the relationship, and the type is a verb describing the nature of their relationship. 
@@ -383,7 +414,7 @@ Relationships map objects to other objects. Relationships have types, sources, a
 | uses              | Campaign, Group, Software*  | Software*, Technique |
 | mitigates         | Mitigation       | Technique |
 | subtechnique-of   | Technique        | Technique |
-| detects           | Data Component   | Technique |
+| detects           | Detection Strategy, Data Component (deprecated)   | Technique |
 | attributed-to     | Campaign         | Group     |
 
 _\* Relationships cannot be created between two software._

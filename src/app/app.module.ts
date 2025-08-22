@@ -50,6 +50,7 @@ import { MatChipsModule } from '@angular/material/chips';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatBadgeModule } from '@angular/material/badge';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
 
 // other library imports
 import { MarkdownModule } from 'ngx-markdown';
@@ -212,7 +213,17 @@ import { ExternalReferencesDiffComponent } from './components/stix/external-refe
 import { BooleanPropertyComponent } from './components/stix/boolean-property/boolean-property.component';
 import { StatementDiffComponent } from './components/stix/statement-property/statement-diff/statement-diff.component';
 import { TlpDiffComponent } from './components/stix/tlp-property/tlp-diff/tlp-diff.component';
+import { DetectionStrategyViewComponent } from './views/stix/detection-strategy-view/detection-strategy-view.component';
+import { LogSourceViewComponent } from './views/stix/log-source-view/log-source-view.component';
+import { AnalyticViewComponent } from './views/stix/analytic-view/analytic-view.component';
 import { StixListPageComponent } from './views/stix/stix-list-page/stix-list-page.component';
+import { ObjectRefPropertyComponent } from './components/stix/object-ref-property/object-ref-property.component';
+import { ObjectRefViewComponent } from './components/stix/object-ref-property/object-ref-view/object-ref-view.component';
+import { ObjectRefEditComponent } from './components/stix/object-ref-property/object-ref-edit/object-ref-edit.component';
+import { ObjectRefDialogComponent } from './components/stix/object-ref-property/object-ref-dialog/object-ref-dialog.component';
+import { ObjectRefDiffComponent } from './components/stix/object-ref-property/object-ref-diff/object-ref-diff.component';
+import { StixJsonDialogComponent } from './components/stix-json-dialog/stix-json-dialog.component';
+import { OutdatedContentWarningComponent } from './components/outdated-content-warning/outdated-content-warning.component';
 
 export function initConfig(appConfigService: AppConfigService) {
   return () => appConfigService.loadAppConfig();
@@ -345,7 +356,17 @@ export function initConfig(appConfigService: AppConfigService) {
     StatementDiffComponent,
     TlpDiffComponent,
     VersionPopoverComponent,
+    DetectionStrategyViewComponent,
+    LogSourceViewComponent,
+    AnalyticViewComponent,
     StixListPageComponent,
+    ObjectRefPropertyComponent,
+    ObjectRefViewComponent,
+    ObjectRefEditComponent,
+    ObjectRefDialogComponent,
+    ObjectRefDiffComponent,
+    StixJsonDialogComponent,
+    OutdatedContentWarningComponent,
   ],
   exports: [
     MatToolbarModule,
@@ -426,6 +447,7 @@ export function initConfig(appConfigService: AppConfigService) {
     DragDropModule,
     ClipboardModule,
     OverlayModule,
+    MatAutocompleteModule,
   ],
   providers: [
     AppConfigService,

@@ -15,11 +15,14 @@ import {
   VersionReference,
 } from 'src/app/classes/stix/collection';
 import {
+  Analytic,
   Asset,
   Campaign,
   DataComponent,
   DataSource,
+  DetectionStrategy,
   Group,
+  LogSource,
   Matrix,
   Mitigation,
   Relationship,
@@ -79,6 +82,9 @@ export class CollectionViewComponent extends StixViewPage implements OnInit {
     'Data-Source': 'data_source',
     'Data-Component': 'data_component',
     'Asset': 'asset',
+    'Log-Source': 'log_source',
+    'Analytic': 'analytic',
+    'Detection-Strategy': 'detection_strategy',
   };
 
   public get collectionDownloadURL() {
@@ -103,6 +109,9 @@ export class CollectionViewComponent extends StixViewPage implements OnInit {
     data_source: new CollectionDiffCategories<DataSource>(),
     data_component: new CollectionDiffCategories<DataComponent>(),
     asset: new CollectionDiffCategories<Asset>(),
+    log_source: new CollectionDiffCategories<LogSource>(),
+    analytic: new CollectionDiffCategories<Analytic>(),
+    detection_strategy: new CollectionDiffCategories<DetectionStrategy>(),
   };
 
   public collectionChanges = {
@@ -117,6 +126,9 @@ export class CollectionViewComponent extends StixViewPage implements OnInit {
     data_source: new CollectionDiffCategories<DataSource>(),
     data_component: new CollectionDiffCategories<DataComponent>(),
     asset: new CollectionDiffCategories<Asset>(),
+    log_source: new CollectionDiffCategories<LogSource>(),
+    analytic: new CollectionDiffCategories<Analytic>(),
+    detection_strategy: new CollectionDiffCategories<DetectionStrategy>(),
   };
 
   public collection_import_categories = [];

@@ -25,6 +25,7 @@ import { MarkingDefinitionViewComponent } from '../marking-definition-view/marki
 import { StixViewConfig } from '../stix-view-page';
 import { BreadcrumbService } from 'src/app/services/helpers/breadcrumb.service';
 import { AttackTypeToClass } from 'src/app/utils/class-mappings';
+import { StixJsonDialogComponent } from 'src/app/components/stix-json-dialog/stix-json-dialog.component';
 
 @Component({
   selector: 'app-stix-page',
@@ -41,6 +42,7 @@ export class StixPageComponent implements OnInit, OnDestroy {
   private saveSubscription;
   private deleteSubscription;
   private reloadSubscription;
+  private stixSubscription;
 
   @Output() created = new EventEmitter();
 
@@ -132,7 +134,7 @@ export class StixPageComponent implements OnInit, OnDestroy {
         if (confirm) {
           const deleteSubscription = this.deleteObjects().subscribe({
             complete: () => {
-              this.router.navigate([this.route.parent.url]);
+              this.router.navigate(['..'], { relativeTo: this.route });
               deleteSubscription.unsubscribe();
             },
           });
@@ -204,22 +206,38 @@ export class StixPageComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.loadObjects();
     this.saveSubscription = this.editorService.onSave.subscribe({
-      next: _event => this.save(),
+      next: () => this.save(),
     });
     this.deleteSubscription = this.editorService.onDelete.subscribe({
-      next: _event => this.delete(),
+      next: () => this.delete(),
     });
     this.reloadSubscription = this.editorService.onReload.subscribe({
-      next: _event => {
+      next: () => {
         this.objects = undefined;
         this.loadObjects();
       },
+    });
+    this.stixSubscription = this.editorService.viewStix.subscribe({
+      next: () => this.viewStix(),
     });
     this.routerEvents = this.router.events.subscribe(event => {
       if (event instanceof NavigationEnd) {
         // Load objects when navigation ends successfully
         this.loadObjects();
       }
+    });
+  }
+
+  private viewStix() {
+    const prompt = this.dialog.open(StixJsonDialogComponent, {
+      maxWidth: '45em',
+      autoFocus: false,
+      data: {
+        stixObject: this.objects[0],
+      },
+    });
+    const closeSubscription = prompt.afterClosed().subscribe({
+      complete: () => closeSubscription.unsubscribe(),
     });
   }
 
@@ -272,6 +290,12 @@ export class StixPageComponent implements OnInit, OnDestroy {
         );
       else if (this.objectType == 'data-component')
         objects$ = this.restApiService.getDataComponent(objectStixID);
+      else if (this.objectType == 'log-source')
+        objects$ = this.restApiService.getLogSource(objectStixID);
+      else if (this.objectType == 'detection-strategy')
+        objects$ = this.restApiService.getDetectionStrategy(objectStixID);
+      else if (this.objectType == 'analytic')
+        objects$ = this.restApiService.getAnalytic(objectStixID);
       else if (this.objectType == 'asset')
         objects$ = this.restApiService.getAsset(objectStixID);
       else if (this.objectType == 'marking-definition')
@@ -293,7 +317,7 @@ export class StixPageComponent implements OnInit, OnDestroy {
             : null;
         },
         complete: () => {
-          subscription.unsubscribe();
+          if (subscription) subscription.unsubscribe();
         },
       });
     } else if (this.objectType == 'software') {
@@ -344,6 +368,7 @@ export class StixPageComponent implements OnInit, OnDestroy {
     this.saveSubscription.unsubscribe();
     this.deleteSubscription.unsubscribe();
     this.reloadSubscription.unsubscribe();
+    this.stixSubscription.unsubscribe();
     this.routerEvents.unsubscribe();
   }
 
