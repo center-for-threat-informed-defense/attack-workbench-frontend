@@ -18,16 +18,14 @@ import { StreamProgress } from 'src/app/services/connectors/collection-stream.se
   styles: [
     `
       .stream-progress {
+        width: 60vw;
         padding: 16px;
-        background-color: #f5f5f5;
         border-radius: 4px;
-        margin-bottom: 16px;
-      }
-      .progress-text {
-        margin-top: 8px;
-        font-size: 14px;
-        color: rgba(0, 0, 0, 0.6);
-        text-align: center;
+        margin: auto;
+        .progress-text {
+          margin-top: 8px;
+          text-align: center;
+        }
       }
     `,
   ],
@@ -36,16 +34,16 @@ import { StreamProgress } from 'src/app/services/connectors/collection-stream.se
 export class StreamProgressComponent implements OnInit {
   @Input() progress$: Observable<StreamProgress>;
 
-  public loaded: number = 0;
-  public total: number = 0;
-  public percentage: number = 0;
+  public loaded: number;
+  public total: number;
+  public percentage: number;
 
   ngOnInit(): void {
     this.progress$.subscribe({
       next: result => {
-        this.loaded = result.loaded;
-        this.total = result.total;
-        this.percentage = this.loaded / this.total;
+        this.loaded = result.loaded ?? 0;
+        this.total = result.total ?? 0;
+        this.percentage = result.percentage ?? 0;
       },
     });
   }
