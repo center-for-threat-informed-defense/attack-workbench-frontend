@@ -678,13 +678,15 @@ export class RestApiConnectorService extends ApiConnector {
       );
   }
 
-  private collectionStreamProgress$ = new Subject<StreamProgress>();
-
   public getCollectionStream(
     id: string,
     modified?: Date | string,
     retrieveContents = true
-  ): Observable<Collection> {
+  ): {
+    collection$: Observable<Collection>;
+    streamProgress$: Observable<StreamProgress>;
+  } {
+    const collectionStreamProgress$ = new Subject<StreamProgress>();
     const modifiedString =
       typeof modified === 'string' ? modified : modified?.toISOString();
 
@@ -707,7 +709,7 @@ export class RestApiConnectorService extends ApiConnector {
     collection.stix_contents = [];
     let expectedCount = 0;
 
-    return this.collectionStreamService.streamCollection(url).pipe(
+    const collection$ = this.collectionStreamService.streamCollection(url).pipe(
       tap(data => {
         switch (data.type) {
           case 'collection':
@@ -720,7 +722,7 @@ export class RestApiConnectorService extends ApiConnector {
             expectedCount = data.count || 0;
             collection.streamProgress.total = expectedCount;
             logger.log(`Expecting ${expectedCount} content objects`);
-            this.collectionStreamProgress$.next({
+            collectionStreamProgress$.next({
               total: expectedCount,
               loaded: 0,
               percentage: 0,
@@ -735,7 +737,7 @@ export class RestApiConnectorService extends ApiConnector {
                 expectedCount > 0
                   ? Math.round((loaded / expectedCount) * 100)
                   : 0;
-              this.collectionStreamProgress$.next({
+              collectionStreamProgress$.next({
                 total: expectedCount,
                 loaded,
                 percentage,
@@ -753,20 +755,20 @@ export class RestApiConnectorService extends ApiConnector {
           'Stream complete, total objects:',
           collection.stix_contents.length
         );
-        this.collectionStreamProgress$.complete();
+        collectionStreamProgress$.complete();
       }),
       catchError(err => {
         logger.error('Stream error:', err);
         collection.streaming = false;
-        this.collectionStreamProgress$.error(err);
+        collectionStreamProgress$.error(err);
         return throwError(() => err);
       })
     );
-  }
 
-  // Add method to get progress updates
-  public getCollectionStreamProgress(): Observable<StreamProgress> {
-    return this.collectionStreamProgress$.asObservable();
+    return {
+      collection$,
+      streamProgress$: collectionStreamProgress$.asObservable(),
+    };
   }
 
   /**
