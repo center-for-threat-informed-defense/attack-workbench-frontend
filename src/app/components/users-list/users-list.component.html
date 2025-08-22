@@ -109,11 +109,11 @@
               class="no-checkbox"
               *ngFor="let role of filterOptions[1].values"
               [value]="role"
-              >{{ role }}</mat-option
+              >{{ formatRole(role) }}</mat-option
             >
           </mat-select>
           <span *ngIf="!(isAdmin && user.id !== currentUser.id)">
-            {{ user.role }}
+            {{ formatRole(user.role) }}
           </span>
         </td>
       </ng-container>

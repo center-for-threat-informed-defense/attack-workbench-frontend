@@ -12,11 +12,14 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatStepper } from '@angular/material/stepper';
 import { ActivatedRoute } from '@angular/router';
 import {
+  Analytic,
   Asset,
   Campaign,
   DataComponent,
   DataSource,
+  DetectionStrategy,
   Group,
+  LogSource,
   Matrix,
   Mitigation,
   Relationship,
@@ -79,6 +82,9 @@ export class CollectionImportComponent implements OnInit {
     data_source: new CollectionDiffCategories<DataSource>(),
     data_component: new CollectionDiffCategories<DataComponent>(),
     asset: new CollectionDiffCategories<Asset>(),
+    log_source: new CollectionDiffCategories<LogSource>(),
+    analytic: new CollectionDiffCategories<Analytic>(),
+    detection_strategy: new CollectionDiffCategories<DetectionStrategy>(),
   };
 
   // list of headers that comes from mitre-generated excel files and the mapping to support collection objects
@@ -121,6 +127,9 @@ export class CollectionImportComponent implements OnInit {
     'x-mitre-data-component': 'datacomponents',
     'x-mitre-asset': 'assets',
     'x-mitre-matrix': 'matrices',
+    'x-mitre-log-source': 'logsources',
+    'x-mitre-detection-strategy': 'detectionstrategies',
+    'x-mitre-analytic': 'analytics',
   };
 
   constructor(
@@ -680,6 +689,21 @@ export class CollectionImportComponent implements OnInit {
         case 'x-mitre-asset': // asset
           this.object_import_categories.asset[category].push(new Asset(raw));
           break;
+        case 'x-mitre-log-source': // log source
+          this.object_import_categories.log_source[category].push(
+            new LogSource(raw)
+          );
+          break;
+        case 'x-mitre-analytic': // analytic
+          this.object_import_categories.analytic[category].push(
+            new Analytic(raw)
+          );
+          break;
+        case 'x-mitre-detection-strategy': // detection strategy
+          this.object_import_categories.detection_strategy[category].push(
+            new DetectionStrategy(raw)
+          );
+          break;
       }
     }
     // set up selection
@@ -706,43 +730,36 @@ export class CollectionImportComponent implements OnInit {
         case 'tool':
           object.id = object.type + '--' + uuid();
           return;
+        case 'analytic':
+          object.id = 'x-mitre-analytic--' + uuid();
+          return;
+        case 'detectionstrategy':
+          object.id = 'x-mitre-detection-strategy--' + uuid();
+          return;
+        case 'logsource':
+          object.id = 'x-mitre-log-source--' + uuid();
+          return;
       }
     }
     if (object.attack_id) {
+      const regexMap = [
+        { regex: /^AN\d{4}$/, stix: 'x-mitre-analytic' },
+        { regex: /^A\d{4}$/, stix: 'x-mitre-asset' },
+        { regex: /^C\d{4}$/, stix: 'campaign' },
+        { regex: /^DS\d{4}$/, stix: 'x-mitre-data-source' },
+        { regex: /^DET\d{4}$/, stix: 'x-mitre-detection-strategy' },
+        { regex: /^G\d{4}$/, stix: 'intrusion-set' },
+        { regex: /^LS\d{4}$/, stix: 'x-mitre-log-source' },
+        { regex: /^M\d{4}$/, stix: 'course-of-action' },
+        { regex: /^TA\d{4}$/, stix: 'x-mitre-tactic' },
+        { regex: /^T\d{4}$/, stix: 'attack-pattern' }, // technique
+        { regex: /^T\d{4}.\d{3}$/, stix: 'attack-pattern' }, // sub-technique
+      ];
       // generate STIX ID from ATT&CK ID
-      switch (object.attack_id.charAt(0).toLowerCase()) {
-        case 't': //technique or tactic
-          const subtechniqueRegex = /T\d{4}.\d{3}/;
-          const techniqueRegex = /T\d{4}/;
-          const tacticRegex = /TA\d{4}/;
-
-          // check if tactic
-          if (tacticRegex.test(object.attack_id)) {
-            object.id = 'x-mitre-tactic--' + uuid();
-          }
-          //check if technique
-          else if (
-            techniqueRegex.test(object.attack_id) ||
-            subtechniqueRegex.test(object.attack_id)
-          ) {
-            object.id = 'attack-pattern--' + uuid();
-          }
-          return;
-        case 'g': //groups
-          object.id = 'intrusion-set--' + uuid();
-          return;
-        case 'm': //mitigations
-          object.id = 'course-of-action--' + uuid();
-          return;
-        case 'd': // data sources
-          object.id = 'x-mitre-data-source--' + uuid();
-          return;
-        case 'c': // campaign
-          object.id = 'campaign--' + uuid();
-          return;
-        case 'a': // asset
-          object.id = 'x-mitre-asset--' + uuid();
-          return;
+      for (const entry of regexMap) {
+        if (entry.regex.test(object.attack_id)) {
+          object.id = `${entry.stix}--${uuid()}`;
+        }
       }
     }
     // relationships don't have attack ids, so check for target and source fields here
