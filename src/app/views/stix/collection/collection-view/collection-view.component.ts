@@ -1,3 +1,4 @@
+import { SelectionModel } from '@angular/cdk/collections';
 import {
   Component,
   OnInit,
@@ -5,17 +6,12 @@ import {
   ViewChildren,
   ViewEncapsulation,
 } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
-import { forkJoin, of } from 'rxjs';
+import { forkJoin, Observable, of } from 'rxjs';
 import { delay, map, switchMap, tap } from 'rxjs/operators';
-import { Observable } from 'rxjs';
-import { StreamProgress } from 'src/app/services/connectors/collection-stream.service';
 import { ValidationData } from 'src/app/classes/serializable';
-import {
-  Collection,
-  CollectionDiffCategories,
-  VersionReference,
-} from 'src/app/classes/stix/collection';
 import {
   Analytic,
   Asset,
@@ -33,18 +29,21 @@ import {
   Tactic,
   Technique,
 } from 'src/app/classes/stix';
+import {
+  Collection,
+  CollectionDiffCategories,
+  VersionReference,
+} from 'src/app/classes/stix/collection';
+import { AddDialogComponent } from 'src/app/components/add-dialog/add-dialog.component';
+import { CollectionUpdateDialogComponent } from 'src/app/components/collection-update-dialog/collection-update-dialog.component';
 import { StixListComponent } from 'src/app/components/stix/stix-list/stix-list.component';
+import { AuthenticationService } from 'src/app/services/connectors/authentication/authentication.service';
+import { StreamProgress } from 'src/app/services/connectors/collection-stream.service';
 import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/rest-api-connector.service';
 import { EditorService } from 'src/app/services/editor/editor.service';
-import { StixViewPage } from '../../stix-view-page';
 import { environment } from '../../../../../environments/environment';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { logger } from '../../../../utils/logger';
-import { AuthenticationService } from 'src/app/services/connectors/authentication/authentication.service';
-import { MatDialog } from '@angular/material/dialog';
-import { CollectionUpdateDialogComponent } from 'src/app/components/collection-update-dialog/collection-update-dialog.component';
-import { AddDialogComponent } from 'src/app/components/add-dialog/add-dialog.component';
-import { SelectionModel } from '@angular/cdk/collections';
+import { StixViewPage } from '../../stix-view-page';
 
 type changeCategory =
   | 'additions'
@@ -73,7 +72,7 @@ export class CollectionViewComponent extends StixViewPage implements OnInit {
 
   @ViewChildren(StixListComponent) stixLists: QueryList<StixListComponent>;
 
-  public loading: string = null; // loading message if loading
+  public loading: boolean = false; // loading message if loading
   public validating = false;
   public validationData: ValidationData = null;
 
@@ -796,7 +795,7 @@ export class CollectionViewComponent extends StixViewPage implements OnInit {
     });
 
     // prepare additional data loading
-    this.loading = 'fetching additional data';
+    this.loading = true;
     const apis = {
       attackObjects: this.restApiConnector.getAllObjects({
         revoked: true,
@@ -818,8 +817,6 @@ export class CollectionViewComponent extends StixViewPage implements OnInit {
         // Collection has content references but not the actual objects
         // This means we need to load the full collection with contents
 
-        this.loading = 'Loading collection contents...';
-
         // Set up streaming progress observable
         this.streamProgress$ =
           this.restApiConnector.getCollectionStreamProgress();
@@ -838,22 +835,16 @@ export class CollectionViewComponent extends StixViewPage implements OnInit {
               this.collection.streaming = streamedCollection.streaming;
               this.collection.streamProgress =
                 streamedCollection.streamProgress;
-
-              // Update loading message
-              if (this.collection.streaming) {
-                this.loading = `Loading collection contents: ${this.collection.streamProgress.loaded}/${this.collection.streamProgress.total}`;
-              }
             },
             error: err => {
               logger.error('Failed to stream collection contents:', err);
-              this.loading = null;
+              this.loading = false;
               this.snackbar.open('Error loading collection contents', null, {
                 duration: 5000,
                 panelClass: 'error',
               });
             },
             complete: () => {
-              this.loading = 'Preparing change lists';
               streamSub.unsubscribe();
               // Continue with the rest of initialization
               this.continueInitialization(apis);
@@ -909,7 +900,7 @@ export class CollectionViewComponent extends StixViewPage implements OnInit {
     const subscription = forkJoin(apis)
       .pipe(
         tap(_ => {
-          this.loading = 'Preparing change lists';
+          this.loading = true;
         }),
         delay(1) // allow render cycle to display loading text
       )
@@ -951,7 +942,6 @@ export class CollectionViewComponent extends StixViewPage implements OnInit {
           this.potentialChanges = this.knowledgeBaseCollection.compareTo(
             this.collection
           );
-          this.loading = null;
           // for a new collection we not have to option to create it from a groupId
           // stixObjectID is not set to 'new' for some reason
           if (this.route.snapshot.data.breadcrumb == 'new collection') {
@@ -962,6 +952,7 @@ export class CollectionViewComponent extends StixViewPage implements OnInit {
           }
         },
         complete: () => {
+          this.loading = false;
           subscription.unsubscribe();
         },
       });
@@ -1017,7 +1008,7 @@ export class CollectionViewComponent extends StixViewPage implements OnInit {
    */
   private updateCollectionFromGroup(groupId, direction, fromPageLoad): void {
     if (fromPageLoad) {
-      this.loading = 'loading objects from group into collection';
+      this.loading = true;
     }
 
     const apiCalls = {
@@ -1079,7 +1070,7 @@ export class CollectionViewComponent extends StixViewPage implements OnInit {
         },
         complete: () => {
           subscription.unsubscribe();
-          this.loading = null;
+          this.loading = false;
         },
       });
   }

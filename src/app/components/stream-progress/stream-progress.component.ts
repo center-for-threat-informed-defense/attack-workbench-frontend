@@ -1,20 +1,17 @@
 // components/stream-progress/stream-progress.component.ts
-import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
 import { StreamProgress } from 'src/app/services/connectors/collection-stream.service';
 
 @Component({
   selector: 'app-stream-progress',
   template: `
-    <div class="stream-progress" *ngIf="progress$ | async as progress">
-      <mat-progress-bar
-        mode="determinate"
-        [value]="progress.percentage"
-        color="primary">
+    <div class="stream-progress">
+      <mat-progress-bar mode="determinate" [value]="percentage" color="primary">
       </mat-progress-bar>
       <div class="progress-text">
-        Loading collection contents: {{ progress.loaded | number }} /
-        {{ progress.total | number }} ({{ progress.percentage }}%)
+        Loading collection contents: {{ loaded | number }} /
+        {{ total | number }} ({{ percentage }}%)
       </div>
     </div>
   `,
@@ -34,9 +31,22 @@ import { StreamProgress } from 'src/app/services/connectors/collection-stream.se
       }
     `,
   ],
-  changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: false,
 })
-export class StreamProgressComponent {
+export class StreamProgressComponent implements OnInit {
   @Input() progress$: Observable<StreamProgress>;
+
+  public loaded: number = 0;
+  public total: number = 0;
+  public percentage: number = 0;
+
+  ngOnInit(): void {
+    this.progress$.subscribe({
+      next: result => {
+        this.loaded = result.loaded;
+        this.total = result.total;
+        this.percentage = this.loaded / this.total;
+      },
+    });
+  }
 }
