@@ -9,42 +9,38 @@ import { Injectable } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { forkJoin, Observable, of, Subject, throwError } from 'rxjs';
 import {
-  tap,
   catchError,
+  filter,
+  finalize,
   map,
+  mergeMap,
   share,
   switchMap,
-  mergeMap,
-  finalize,
-  filter,
-  takeLast,
+  tap,
 } from 'rxjs/operators';
+import { Team } from 'src/app/classes/authn/team';
+import { UserAccount } from 'src/app/classes/authn/user-account';
 import { CollectionIndex } from 'src/app/classes/collection-index';
 import { ExternalReference } from 'src/app/classes/external-references';
-import { environment } from '../../../../environments/environment';
-import { ApiConnector } from '../api-connector';
-import { logger } from '../../../utils/logger';
-import { UserAccount } from 'src/app/classes/authn/user-account';
-import { Team } from 'src/app/classes/authn/team';
 import {
-  StixObject,
-  Software,
-  Technique,
-  Tactic,
-  Group,
-  Campaign,
-  Asset,
-  Mitigation,
-  DataSource,
-  DataComponent,
-  Matrix,
-  Note,
-  Identity,
-  Relationship,
-  MarkingDefinition,
-  DetectionStrategy,
-  LogSource,
   Analytic,
+  Asset,
+  Campaign,
+  DataComponent,
+  DataSource,
+  DetectionStrategy,
+  Group,
+  Identity,
+  LogSource,
+  MarkingDefinition,
+  Matrix,
+  Mitigation,
+  Note,
+  Relationship,
+  Software,
+  StixObject,
+  Tactic,
+  Technique,
 } from 'src/app/classes/stix';
 import { Collection } from 'src/app/classes/stix/collection';
 import {
@@ -53,6 +49,9 @@ import {
 } from 'src/app/utils/class-mappings';
 import { AttackTypeToPlural } from 'src/app/utils/type-mappings';
 import { AttackType } from 'src/app/utils/types';
+import { environment } from '../../../../environments/environment';
+import { logger } from '../../../utils/logger';
+import { ApiConnector } from '../api-connector';
 import {
   CollectionStreamService,
   StreamProgress,
@@ -730,7 +729,7 @@ export class RestApiConnectorService extends ApiConnector {
 
           case 'content':
             if (data.position !== undefined && data.object) {
-              collection.hydrateContent(data.object, data.position);
+              collection.hydrateContent(data.object);
               const loaded = collection.stix_contents.length;
               const percentage =
                 expectedCount > 0
@@ -761,9 +760,7 @@ export class RestApiConnectorService extends ApiConnector {
         collection.streaming = false;
         this.collectionStreamProgress$.error(err);
         return throwError(() => err);
-      }),
-      // Return a single collection at the end
-      takeLast(1)
+      })
     );
   }
 

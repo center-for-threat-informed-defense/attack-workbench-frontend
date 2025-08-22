@@ -1,11 +1,6 @@
 <div class="collection-view">
   <div *ngIf="!validating">
     <div class="grid spacing-16" *ngIf="!loading; else loadingDisplay">
-      <app-stream-progress
-        *ngIf="collection?.streaming && streamProgress$"
-        [progress$]="streamProgress$"
-        class="row width-limited">
-      </app-stream-progress>
       <div class="row width-limited">
         <div class="col">
           <!-- things to add to the collection -->
@@ -950,7 +945,10 @@
       </div>
     </div>
     <ng-template #loadingDisplay>
-      <app-loading-overlay [message]="loading"></app-loading-overlay>
+      <app-stream-progress
+        [progress$]="streamProgress$"
+        class="row width-limited">
+      </app-stream-progress>
     </ng-template>
   </div>
   <div *ngIf="validating">

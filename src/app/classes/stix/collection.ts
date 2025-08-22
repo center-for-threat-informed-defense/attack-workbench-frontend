@@ -1,5 +1,6 @@
 import { Observable, of } from 'rxjs';
 import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/rest-api-connector.service';
+import { logger } from '../../utils/logger';
 import { ValidationData } from '../serializable';
 import {
   Analytic,
@@ -19,7 +20,6 @@ import {
   Tactic,
   Technique,
 } from '../stix';
-import { logger } from '../../utils/logger';
 
 /**
  * auto-generated changelog/report about an import
@@ -201,7 +201,6 @@ export class Collection extends StixObject {
   // Streaming support
   public streaming = false;
   public streamProgress = { total: 0, loaded: 0 };
-  private contentBuffer: (StixObject | undefined)[] = [];
 
   constructor(sdo?: any) {
     super(sdo, 'x-mitre-collection');
@@ -533,21 +532,13 @@ export class Collection extends StixObject {
   /**
    * Progressively hydrate content as it arrives from the stream
    */
-  public hydrateContent(obj: any, position: number): void {
-    // Ensure buffer is large enough
-    while (this.contentBuffer.length <= position) {
-      this.contentBuffer.push(undefined);
-    }
-
+  public hydrateContent(obj: any): void {
     // Deserialize and store the object
     const stixObject = this.deserializeStixObject(obj);
-    if (stixObject) {
-      this.contentBuffer[position] = stixObject;
-      this.streamProgress.loaded = this.contentBuffer.filter(Boolean).length;
+    this.stix_contents.push(stixObject);
 
-      // Update stix_contents with non-null objects in order
-      this.stix_contents = this.contentBuffer.filter(Boolean) as StixObject[];
-    }
+    // Update the progress
+    this.streamProgress.loaded = this.stix_contents.length;
   }
 
   /**
