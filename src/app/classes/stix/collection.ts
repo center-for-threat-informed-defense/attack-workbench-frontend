@@ -535,7 +535,9 @@ export class Collection extends StixObject {
   public hydrateContent(obj: any): void {
     // Deserialize and store the object
     const stixObject = this.deserializeStixObject(obj);
-    this.stix_contents.push(stixObject);
+    if (stixObject) {
+      this.stix_contents.push(stixObject);
+    }
 
     // Update the progress
     this.streamProgress.loaded = this.stix_contents.length;
@@ -574,6 +576,8 @@ export class Collection extends StixObject {
           return new MarkingDefinition(obj);
         case 'x-mitre-asset':
           return new Asset(obj);
+        case 'identity':
+          return null; // ignore identity object
         default:
           logger.warn('Unknown STIX type:', obj.stix.type);
           return null;
