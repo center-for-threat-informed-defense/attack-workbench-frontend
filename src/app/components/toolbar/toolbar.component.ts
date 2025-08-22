@@ -85,6 +85,10 @@ export class ToolbarComponent {
     this.editorService.onConvertImportedCollection.emit();
   }
 
+  public viewStix() {
+    this.editorService.viewStix.emit();
+  }
+
   // emit a toggle theme event
   public emitToggleTheme() {
     this.onToggleTheme.emit();

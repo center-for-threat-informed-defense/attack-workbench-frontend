@@ -29,6 +29,7 @@ export class EditorService {
   public onReload = new EventEmitter();
   public onReloadReferences = new EventEmitter();
   public onConvertImportedCollection = new EventEmitter();
+  public viewStix = new EventEmitter();
 
   public get stixId(): string {
     return this.router.url.split('/')[2].split('?')[0];

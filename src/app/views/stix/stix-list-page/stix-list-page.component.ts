@@ -71,7 +71,19 @@ export class StixListPageComponent implements OnInit {
             and identify the specific properties of a data source that are \
             relevant to detecting an ATT&CK technique or sub-technique.',
     'data-component': undefined,
+    'detection-strategy':
+      'Detection strategies define high-level approaches for detecting specific \
+      adversary techniques. They serve as containers that organize multiple \
+      platform-specific analytics into cohesive detection methodologies.',
+    'analytic':
+      'Analytics contain platform-specific detection logic and represent the \
+      implementation details of a detection strategy.',
+    'log-source':
+      'Log sources define immutable configurations for collecting security \
+      telemetry across different platforms and deployment scenarios.',
   };
+
+  public outdatedContentTypes: AttackType[] = ['data-source', 'data-component'];
 
   public get canEdit(): boolean {
     return this.authenticationService.canEdit(this.attackType);
