@@ -1,0 +1,14 @@
+.object-ref-edit-dialog {
+  margin: 0 50px;
+  min-width: 40vw;
+  text-align: center;
+  .mat-mdc-form-field {
+    width: 100%;
+  }
+  .buttons {
+    margin: 18px 0;
+    button + button {
+      margin-left: 10px;
+    }
+  }
+}

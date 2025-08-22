@@ -44,6 +44,10 @@
 }
 .warning-text {
   font-family: Poppins, Arial, sans-serif;
+  color: colors.color(warn);
+}
+.error-text {
+  font-family: Poppins, Arial, sans-serif;
   font-weight: 700;
   text-transform: uppercase;
   color: colors.color(error);

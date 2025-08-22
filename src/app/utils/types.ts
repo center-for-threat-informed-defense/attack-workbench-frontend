@@ -16,7 +16,10 @@ export type AttackType =
   | 'identity'
   | 'marking-definition'
   | 'data-source'
-  | 'data-component';
+  | 'data-component'
+  | 'detection-strategy'
+  | 'log-source'
+  | 'analytic';
 
 /**
  * STIX type definitions
@@ -37,7 +40,10 @@ export type StixType =
   | 'identity'
   | 'marking-definition'
   | 'x-mitre-data-source'
-  | 'x-mitre-data-component';
+  | 'x-mitre-data-component'
+  | 'x-mitre-detection-strategy'
+  | 'x-mitre-log-source'
+  | 'x-mitre-analytic';
 
 /**
  * Workflow state definitions
