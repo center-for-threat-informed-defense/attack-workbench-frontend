@@ -831,7 +831,6 @@ export class CollectionViewComponent extends StixViewPage implements OnInit {
             // Update the existing collection object with streamed data
             this.collection.stix_contents = streamedCollection.stix_contents;
             this.collection.streaming = streamedCollection.streaming;
-            this.collection.streamProgress = streamedCollection.streamProgress;
           },
           error: err => {
             logger.error('Failed to stream collection contents:', err);
