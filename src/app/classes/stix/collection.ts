@@ -188,6 +188,7 @@ export class Collection extends StixObject {
   public imported: Date; // null if it was not imported
   public release = false; // was this collection version release?
   public editable = true; //internal field; set to false to disallow editing of this collection
+  public streaming = false; // streaming support
   // auto-generated changelog/report about the import
   //  each sub-property is a list of STIX IDs corresponding to objects in the import
   public import_categories: CollectionDiffCategories<string>;
@@ -197,10 +198,6 @@ export class Collection extends StixObject {
   protected get attackIDValidator() {
     return null;
   } //collections do not have ATT&CK IDs
-
-  // Streaming support
-  public streaming = false;
-  public streamProgress = { total: 0, loaded: 0 };
 
   constructor(sdo?: any) {
     super(sdo, 'x-mitre-collection');
@@ -538,9 +535,6 @@ export class Collection extends StixObject {
     if (stixObject) {
       this.stix_contents.push(stixObject);
     }
-
-    // Update the progress
-    this.streamProgress.loaded = this.stix_contents.length;
   }
 
   /**
@@ -586,15 +580,5 @@ export class Collection extends StixObject {
       logger.error('Error deserializing content:', err, obj);
       return null;
     }
-  }
-
-  /**
-   * Check if the collection is ready for use
-   */
-  public get isReady(): boolean {
-    return (
-      !this.streaming ||
-      this.streamProgress.loaded === this.streamProgress.total
-    );
   }
 }

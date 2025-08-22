@@ -1,4 +1,3 @@
-/* eslint-disable prettier/prettier */
 import {
   HttpClient,
   HttpHeaders,
@@ -720,7 +719,6 @@ export class RestApiConnectorService extends ApiConnector {
 
           case 'contentCount':
             expectedCount = data.count || 0;
-            collection.streamProgress.total = expectedCount;
             logger.log(`Expecting ${expectedCount} content objects`);
             collectionStreamProgress$.next({
               total: expectedCount,
