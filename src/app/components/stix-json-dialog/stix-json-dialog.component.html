@@ -1,0 +1,23 @@
+<div class="stix-json-dialog">
+  <h2>
+    {{ title }}
+    @if (subtitle.length) {
+      <span class="text-deemphasis" style="font-size: 18px">
+        ({{ subtitle }})
+      </span>
+    }
+    <button
+      mat-icon-button
+      [cdkCopyToClipboard]="formattedJson"
+      (click)="
+        snackbar.open('STIX JSON copied to clipboard', null, { duration: 1000 })
+      "
+      style="float: right"
+      matTooltip="copy raw stix">
+      <mat-icon>content_copy</mat-icon>
+    </button>
+  </h2>
+  <div class="wrapper">
+    <pre>{{ formattedJson }}</pre>
+  </div>
+</div>

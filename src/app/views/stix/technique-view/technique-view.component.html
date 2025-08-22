@@ -270,7 +270,7 @@
               editType: 'select',
             }"></app-list-property>
         </div>
-        <!-- DEFENSEs BYPASSED -->
+        <!-- DEFENSES BYPASSED -->
         <div
           *ngIf="
             technique.supportsDefensesBypassed ||
@@ -475,9 +475,37 @@
       </div>
     </div>
     <!-- data sources (source/component object representation) -->
+    @if (showDataSources) {
+      <div class="row">
+        <div class="col">
+          <h2 class="section-header">Data Sources</h2>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col">
+          <app-outdated-content-warning></app-outdated-content-warning>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col">
+          <app-stix-list
+            #dataComponentsList
+            (detectsHasData)="showDataSources = $event"
+            [config]="{
+              type: 'relationship',
+              targetRef: technique.stixID,
+              relationshipType: 'detects',
+              sourceType: 'data-component',
+              clickBehavior: 'dialog',
+              allowEdits: true,
+            }"></app-stix-list>
+        </div>
+      </div>
+    }
+    <!-- detection strategies -->
     <div class="row">
       <div class="col">
-        <h2 class="section-header">Data Sources</h2>
+        <h2 class="section-header">Detection Strategies</h2>
       </div>
     </div>
     <div class="row" *ngIf="canEdit">
@@ -485,8 +513,9 @@
         <app-add-relationship-button
           (created)="detectsList.applyControls(); onReload.emit()"
           [config]="{
-            label: 'add a data source',
+            label: 'add a detection strategy',
             relationship_type: 'detects',
+            sourceType: 'detection-strategy',
             target_object: technique,
           }"></app-add-relationship-button>
       </div>
@@ -499,6 +528,7 @@
             type: 'relationship',
             targetRef: technique.stixID,
             relationshipType: 'detects',
+            sourceType: 'detection-strategy',
             clickBehavior: 'dialog',
             allowEdits: true,
           }"></app-stix-list>

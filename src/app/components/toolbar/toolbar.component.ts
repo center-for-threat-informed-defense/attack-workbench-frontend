@@ -1,6 +1,5 @@
 import {
   Component,
-  OnInit,
   ViewEncapsulation,
   Output,
   EventEmitter,
@@ -20,7 +19,7 @@ import { WebsiteIntegrationService } from 'src/app/services/website-integration/
   encapsulation: ViewEncapsulation.None,
   standalone: false,
 })
-export class ToolbarComponent implements OnInit {
+export class ToolbarComponent {
   @Input() public canScroll: boolean;
   @Output() public onToggleTheme = new EventEmitter();
   @Output() public onToggleSidebar = new EventEmitter();
@@ -64,10 +63,6 @@ export class ToolbarComponent implements OnInit {
     private router: Router
   ) {}
 
-  ngOnInit() {
-    // intentionally left blank
-  }
-
   public startEditing() {
     this.editorService.startEditing();
   }
@@ -82,6 +77,10 @@ export class ToolbarComponent implements OnInit {
 
   public delete() {
     this.editorService.onDelete.emit();
+  }
+
+  public viewStix() {
+    this.editorService.viewStix.emit();
   }
 
   // emit a toggle theme event
