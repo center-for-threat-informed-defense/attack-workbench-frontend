@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { Router } from '@angular/router';
 import {
   Collection,
   CollectionDiffCategories,
@@ -23,6 +23,8 @@ import {
 import { EditorService } from 'src/app/services/editor/editor.service';
 import { StixViewPage } from '../../../stix-view-page';
 import { AuthenticationService } from 'src/app/services/connectors/authentication/authentication.service';
+import { Subscription } from 'rxjs';
+import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/rest-api-connector.service';
 
 @Component({
   selector: 'app-collection-import-review',
@@ -35,7 +37,9 @@ export class CollectionImportReviewComponent
   extends StixViewPage
   implements OnInit, OnDestroy
 {
-  private deleteSubscription;
+  private convertSubscription: Subscription;
+  public converting = false;
+  private deleteSubscription: Subscription;
   public deleting = false;
 
   public get collection(): Collection {
@@ -60,29 +64,30 @@ export class CollectionImportReviewComponent
   };
 
   constructor(
-    private route: ActivatedRoute,
     public editor: EditorService,
+    public apiService: RestApiConnectorService,
+    private router: Router,
     authenticationService: AuthenticationService
   ) {
     super(authenticationService);
   }
 
   ngOnInit() {
-    /**
-     *  TODO: From Vince and Charissa
-     *  This is really wonky since the page load completes and then the editor service is changed, the user can click the edit button while all of the attack objects are loading
-     *  Need to find a way to figure out how to tell is a collection is imported earlier on in the chain/disable the toolbar while things are loading
-     **/
-
     // set up delete watcher
     this.deleting = false;
     this.deleteSubscription = this.editor.onDeleteImportedCollection.subscribe({
-      next: _event => (this.deleting = true),
+      next: () => (this.deleting = true),
     });
 
-    // disable editing
-    this.editor.editable = false;
-    this.editor.isAnImportedCollection = true;
+    // set up watcher for converting an imported collection to an editable collection
+    this.converting = false;
+    this.convertSubscription =
+      this.editor.onConvertImportedCollection.subscribe({
+        next: () => {
+          this.converting = true;
+          this.convertToEditableCollection();
+        },
+      });
 
     // parse collection into object_import_categories
     //build category lookup
@@ -117,8 +122,10 @@ export class CollectionImportReviewComponent
           this.collection_import_categories.software[category].push(object);
           break;
         case 'relationship': //relationship
+          // eslint-disable-next-line no-case-declarations
           const x = object as Relationship;
           // add source and target objects
+          // eslint-disable-next-line no-case-declarations
           const serialized = x.serialize();
           serialized.workspace.workflow = {};
           if (x.source_ref in idToSdo)
@@ -169,5 +176,27 @@ export class CollectionImportReviewComponent
 
   ngOnDestroy() {
     this.deleteSubscription.unsubscribe();
+    if (this.convertSubscription) this.convertSubscription.unsubscribe();
+  }
+
+  public convertToEditableCollection(): void {
+    // make a copy of the collection
+    const serialized = this.collection.serialize();
+    serialized.workspace = {}; // clear workspace/imported properties
+    const collectionCopy = new Collection(serialized);
+    // save new, editable collection
+    const saveSubscription = collectionCopy.save(this.apiService).subscribe({
+      next: (c: Collection) => {
+        // route to collection edit page
+        const url = `/${c.attackType}/${c.stixID}/modified/${c.modified.toISOString()}`;
+        this.router.navigate([url], { queryParams: { editing: true } });
+      },
+      error: error => {
+        console.log('Error converting to editable collection: ', error);
+      },
+      complete: () => {
+        if (saveSubscription) saveSubscription.unsubscribe();
+      },
+    });
   }
 }

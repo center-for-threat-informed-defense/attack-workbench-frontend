@@ -34,21 +34,26 @@ For example, the enterprise STIX bundle of a manual installation running locally
 
 ## ATT&CK Navigator Integration
 
-The [ATT&CK Navigator](https://github.com/mitre-attack/attack-navigator) can be configured to display the contents of your local knowledge base.
+The [ATT&CK Navigator](https://github.com/mitre-attack/attack-navigator) can be configured to display the contents of your local ATT&CK Workbench knowledge base.
 
-### 1. Install the Navigator
+### 1. Install ATT&CK Navigator
 
-Clone the [ATT&CK Navigator](https://github.com/mitre-attack/attack-navigator) repository: `git clone https://github.com/mitre-attack/attack-navigator.git`
+Clone the [ATT&CK Navigator](https://github.com/mitre-attack/attack-navigator) repository:
 
-### 2. Update the config
+```bash
+git clone https://github.com/mitre-attack/attack-navigator.git
+```
 
-Edit the config file `nav-app/src/assets/config.json` by enabling and adding an object to the versions array connecting to the ATT&CK Workbench REST API. Refer to [Workbench REST API URLs, above](#workbench-rest-api-urls), for the values for the enterprise, mobile and ICS URLs.
+### 2. Update Navigator Configuration
+
+Edit the configuration file at `nav-app/src/assets/config.json` to connect to your ATT&CK Workbench REST API. Enable the `versions` section and add an entry for your Workbench data. Replace the `(Enterprise URL)`, `(Mobile URL)`, and `(ICS URL)` with your actual REST API endpoints (see [Workbench REST API URLs](#workbench-rest-api-urls)).
+
 
 ```json
 {
     "versions": {
         "enabled": true,
-        "data": [
+        "entries": [
             {
                 "name": "ATT&CK Workbench Data",
                 "version": "14",
@@ -80,9 +85,44 @@ Edit the config file `nav-app/src/assets/config.json` by enabling and adding an 
 }
 ```
 
-### 3. Serve the application
+### 3. Configure ATT&CK Workbench REST API Authentication
 
-Follow the [install and run](https://github.com/mitre-attack/attack-navigator#install-and-run) instructions on the ATT&CK Navigator to deploy the application. The Navigator will update its data from the Workbench every time it loads, so there is no need to periodically rebuild the application to stay synchronized with Workbench data.
+To allow Navigator to access your Workbench data, you must enable basic API key authentication in your REST API configuration.
+
+1. Create or update your REST API configuration file. The REST API loads its configuration from the file specified by the `JSON_CONFIG_PATH` environment variable in your `.env` file. For example:
+
+    ```bash
+    JSON_CONFIG_PATH=/some/path/to/rest-api-service-config.json
+    ```
+
+    Make sure this path points to your actual configuration file. For more details on configuring the REST API, see the [Usage Documentation: Configuration](https://github.com/center-for-threat-informed-defense/attack-workbench-rest-api/blob/main/USAGE.md#configuration).
+
+2. In your REST API config file, add a `basicApikey` section to the `serviceAuthn` block, specifying a service account for Navigator. Example:
+
+    ```json
+    {
+    "serviceAuthn": {
+        "basicApikey": {
+        "enable": true,
+        "serviceAccounts": [
+            {
+            "name": "navigator",
+            "apikey": "sample-navigator-apikey",
+            "serviceRole": "read-only"
+            }
+        ]
+        }
+    }
+    }
+    ```
+
+    For more example configurations, see the [sample REST API configuration files](https://github.com/center-for-threat-informed-defense/attack-workbench-rest-api/tree/main/resources/sample-configurations). For more details on Service Authentication, see the [REST API Service Authentication documentation](https://github.com/center-for-threat-informed-defense/attack-workbench-rest-api/blob/main/docs/legacy/authentication.md#service-authentication).
+
+### 4. Serve the application
+
+Follow the [install and run](https://github.com/mitre-attack/attack-navigator#install-and-run) instructions in the ATT&CK Navigator repository to deploy the application.
+
+*Note: Navigator will fetch the latest data from your Workbench REST API each time it loads. You do not need to rebuild the application to stay synchronized with Workbench data.*
 
 ## ATT&CK Website Integration
 

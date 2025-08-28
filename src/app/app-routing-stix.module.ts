@@ -1,4 +1,4 @@
-import { CollectionManagerComponent } from './views/stix/collection/collection-manager/collection-manager.component';
+import { CollectionManagerComponent } from './views/collection-manager/collection-manager.component';
 import { CollectionImportComponent } from './views/stix/collection/collection-import/collection-import-workflow/collection-import.component';
 import { CollectionIndexImportComponent } from './views/stix/collection/collection-index/collection-index-import/collection-index-import.component';
 import { ReferenceManagerComponent } from './views/reference-manager/reference-manager.component';

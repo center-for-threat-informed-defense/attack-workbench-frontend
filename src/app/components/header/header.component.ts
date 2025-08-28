@@ -40,6 +40,9 @@ export class HeaderComponent implements AfterViewInit {
   public get isAdmin(): boolean {
     return this.authenticationService.isAuthorized([Role.ADMIN]);
   }
+  public get isTeamLead(): boolean {
+    return this.authenticationService.isAuthorized([Role.TEAM_LEAD]);
+  }
   public get isLoggedIn(): boolean {
     return this.authenticationService.isLoggedIn;
   }
