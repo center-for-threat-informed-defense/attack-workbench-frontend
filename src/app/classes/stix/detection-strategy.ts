@@ -36,7 +36,7 @@ export class DetectionStrategy extends StixObject {
 
     rep.stix.name = this.name.trim();
     rep.stix.x_mitre_contributors = this.contributors.map(x => x.trim());
-    if (this.analytics) rep.stix.x_mitre_analytics = this.analytics;
+    if (this.analytics) rep.stix.x_mitre_analytic_refs = this.analytics;
 
     return rep;
   }
@@ -68,12 +68,12 @@ export class DetectionStrategy extends StixObject {
           );
       } else this.contributors = [];
 
-      if ('x_mitre_analytics' in sdo) {
-        if (this.isStringArray(sdo.x_mitre_analytics))
-          this.analytics = sdo.x_mitre_analytics;
+      if ('x_mitre_analytic_refs' in sdo) {
+        if (this.isStringArray(sdo.x_mitre_analytic_refs))
+          this.analytics = sdo.x_mitre_analytic_refs;
         else
           logger.error(
-            `TypeError: x_mitre_analytics field is not a string array: ${sdo.x_mitre_analytics} (${typeof sdo.x_mitre_analytics})`
+            `TypeError: x_mitre_analytic_refs field is not a string array: ${sdo.x_mitre_analytic_refs} (${typeof sdo.x_mitre_analytic_refs})`
           );
       } else this.analytics = [];
     }

@@ -324,7 +324,7 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
           this.addVersionsAndDatesColumns();
           this.tableDetail = [
             {
-              field: 'detects',
+              field: 'description',
               display: 'descriptive',
             },
           ];
