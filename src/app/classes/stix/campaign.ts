@@ -41,13 +41,15 @@ export class Campaign extends StixObject {
     }
 
     rep.stix.name = this.name.trim();
-    rep.stix.first_seen = this.first_seen ? this.first_seen.toISOString() : null;
+    rep.stix.first_seen = this.first_seen
+      ? this.first_seen.toISOString()
+      : null;
     rep.stix.last_seen = this.last_seen ? this.last_seen.toISOString() : null;
     rep.stix.x_mitre_first_seen_citation = this.first_seen_citation.trim();
     rep.stix.x_mitre_last_seen_citation = this.last_seen_citation.trim();
     rep.stix.aliases = this.aliases.map(x => x.trim());
     rep.stix.x_mitre_contributors = this.contributors.map(x => x.trim());
-    rep.stix = this.filterObject(rep.stix)
+    rep.stix = this.filterObject(rep.stix);
     return rep;
   }
 
@@ -61,7 +63,9 @@ export class Campaign extends StixObject {
   }
 
   public filterObject(obj) {
-      return Object.fromEntries(Object.entries(obj).filter((entry) => this.hasValue(entry[1])));
+    return Object.fromEntries(
+      Object.entries(obj).filter(entry => this.hasValue(entry[1]))
+    );
   }
 
   /**
