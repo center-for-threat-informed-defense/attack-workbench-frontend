@@ -927,7 +927,7 @@ export class RestApiConnectorService extends ApiConnector {
       const url = `${this.apiUrl}/validate`;
       const payload = {
         type: object.type,
-        status: object.workflow? object.workflow.state : 'work-in-progress',
+        status: object.workflow ? object.workflow.state : 'work-in-progress',
         stix: object.serialize().stix,
       };
       return this.http
