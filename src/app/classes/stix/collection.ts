@@ -192,12 +192,22 @@ export class Collection extends StixObject {
   // auto-generated changelog/report about the import
   //  each sub-property is a list of STIX IDs corresponding to objects in the import
   public import_categories: CollectionDiffCategories<string>;
+  public expansionPanels: string[] = [
+    'asset',
+    'campaign',
+    'group',
+    'matrix',
+    'mitigation',
+    'software',
+    'tactic',
+    'technique',
+    'data-source',
+    'data-component',
+  ];
 
   public readonly supportsAttackID = false; // collections do not support ATT&CK IDs
   public readonly supportsNamespace = false;
-  protected get attackIDValidator() {
-    return null;
-  } //collections do not have ATT&CK IDs
+  protected readonly attackIDValidator = null; //collections do not have ATT&CK IDs
 
   constructor(sdo?: any) {
     super(sdo, 'x-mitre-collection');
@@ -237,7 +247,7 @@ export class Collection extends StixObject {
     rep.stix.name = this.name.trim();
     rep.stix.x_mitre_contents = this.contents.map(vr => vr.serialize());
     // add release marking
-    if (!rep.workspace.hasOwnProperty('workflow') || !rep.workspace.workflow) {
+    if (!('workflow' in rep.workspace) || !rep.workspace.workflow) {
       rep.workspace.workflow = {};
     }
     rep.workspace.workflow.release = this.release;
@@ -516,12 +526,14 @@ export class Collection extends StixObject {
     return postObservable;
   }
 
-  public delete(_restAPIService: RestApiConnectorService): Observable<{}> {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  public delete(_restAPIService: RestApiConnectorService): Observable<object> {
     // deletion is not supported on Collections
     return of({});
   }
 
-  public update(_restAPIService: RestApiConnectorService): Observable<{}> {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  public update(_restAPIService: RestApiConnectorService): Observable<object> {
     // update is not supported on Collections
     return of({});
   }

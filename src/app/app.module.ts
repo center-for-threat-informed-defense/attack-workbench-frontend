@@ -155,19 +155,19 @@ import { CitationPropertyComponent } from './components/stix/citation-property/c
 import { CitationViewComponent } from './components/stix/citation-property/citation-view/citation-view.component';
 
 // views
-import { AdminPageComponent } from './views/admin-page/admin-page.component';
-import { DefaultMarkingDefinitionsComponent } from './views/admin-page/default-marking-definitions/default-marking-definitions.component';
-import { OrgSettingsPageComponent } from './views/admin-page/org-settings-page/org-settings-page.component';
-import { UserAccountsPageComponent } from './views/admin-page/user-accounts-page/user-accounts-page.component';
 import { HelpPageComponent } from './views/help-page/help-page.component';
 import { LandingPageComponent } from './views/landing-page/landing-page.component';
+import { DashboardPageComponent } from './views/dashboard-page/dashboard-page.component';
+import { OrgSettingsPageComponent } from './views/dashboard-page/org-settings-page/org-settings-page.component';
+import { UserAccountsPageComponent } from './views/dashboard-page/user-accounts-page/user-accounts-page.component';
+import { DefaultMarkingDefinitionsComponent } from './views/dashboard-page/default-marking-definitions/default-marking-definitions.component';
 import { ProfilePageComponent } from './views/profile-page/profile-page.component';
 import { ReferenceManagerComponent } from './views/reference-manager/reference-manager.component';
 
 import { StixDialogComponent } from './views/stix/stix-dialog/stix-dialog.component';
 import { StixPageComponent } from './views/stix/stix-page/stix-page.component';
 
-import { CollectionManagerComponent } from './views/stix/collection/collection-manager/collection-manager.component';
+import { CollectionManagerComponent } from './views/collection-manager/collection-manager.component';
 
 import { CollectionIndexImportComponent } from './views/stix/collection/collection-index/collection-index-import/collection-index-import.component';
 import { CollectionIndexListComponent } from './views/stix/collection/collection-index/collection-index-list/collection-index-list.component';
@@ -197,9 +197,9 @@ import { SoftwareViewComponent } from './views/stix/software-view/software-view.
 import { TacticViewComponent } from './views/stix/tactic-view/tactic-view.component';
 import { TechniqueViewComponent } from './views/stix/technique-view/technique-view.component';
 
+import { TeamsListPageComponent } from './views/dashboard-page/teams/teams-list-page/teams-list-page.component';
+import { TeamsViewPageComponent } from './views/dashboard-page/teams/teams-view-page/teams-view-page.component';
 import { CreateNewDialogComponent } from './components/create-new-dialog/create-new-dialog.component';
-import { TeamsListPageComponent } from './views/admin-page/teams/teams-list-page/teams-list-page.component';
-import { TeamsViewPageComponent } from './views/admin-page/teams/teams-view-page/teams-view-page.component';
 
 import { ContributorEditDialogComponent } from './components/contributor-edit-dialog/contributor-edit-dialog.component';
 import { ContributorsPageComponent } from './views/contributors-page/contributors-page.component';
@@ -287,7 +287,7 @@ export function initConfig(appConfigService: AppConfigService) {
     IconViewComponent,
     LandingPageComponent,
     HelpPageComponent,
-    AdminPageComponent,
+    DashboardPageComponent,
     OrgSettingsPageComponent,
     UserAccountsPageComponent,
     DefaultMarkingDefinitionsComponent,
