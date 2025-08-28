@@ -1,5 +1,6 @@
 import { Observable, of } from 'rxjs';
 import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/rest-api-connector.service';
+import { logger } from '../../utils/logger';
 import { ValidationData } from '../serializable';
 import {
   Analytic,
@@ -19,7 +20,6 @@ import {
   Tactic,
   Technique,
 } from '../stix';
-import { logger } from '../../utils/logger';
 
 /**
  * auto-generated changelog/report about an import
@@ -188,15 +188,26 @@ export class Collection extends StixObject {
   public imported: Date; // null if it was not imported
   public release = false; // was this collection version release?
   public editable = true; //internal field; set to false to disallow editing of this collection
+  public streaming = false; // streaming support
   // auto-generated changelog/report about the import
   //  each sub-property is a list of STIX IDs corresponding to objects in the import
   public import_categories: CollectionDiffCategories<string>;
+  public expansionPanels: string[] = [
+    'asset',
+    'campaign',
+    'group',
+    'matrix',
+    'mitigation',
+    'software',
+    'tactic',
+    'technique',
+    'data-source',
+    'data-component',
+  ];
 
   public readonly supportsAttackID = false; // collections do not support ATT&CK IDs
   public readonly supportsNamespace = false;
-  protected get attackIDValidator() {
-    return null;
-  } //collections do not have ATT&CK IDs
+  protected readonly attackIDValidator = null; //collections do not have ATT&CK IDs
 
   constructor(sdo?: any) {
     super(sdo, 'x-mitre-collection');
@@ -236,7 +247,7 @@ export class Collection extends StixObject {
     rep.stix.name = this.name.trim();
     rep.stix.x_mitre_contents = this.contents.map(vr => vr.serialize());
     // add release marking
-    if (!rep.workspace.hasOwnProperty('workflow') || !rep.workspace.workflow) {
+    if (!('workflow' in rep.workspace) || !rep.workspace.workflow) {
       rep.workspace.workflow = {};
     }
     rep.workspace.workflow.release = this.release;
@@ -284,6 +295,9 @@ export class Collection extends StixObject {
           );
       }
     } else logger.error("ObjectError: 'stix' field does not exist in object");
+
+    // Call base deserialize for other fields
+    super.base_deserialize(raw);
 
     if ('workspace' in raw) {
       const sdo = raw.workspace;
@@ -512,13 +526,71 @@ export class Collection extends StixObject {
     return postObservable;
   }
 
-  public delete(_restAPIService: RestApiConnectorService): Observable<{}> {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  public delete(_restAPIService: RestApiConnectorService): Observable<object> {
     // deletion is not supported on Collections
     return of({});
   }
 
-  public update(_restAPIService: RestApiConnectorService): Observable<{}> {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  public update(_restAPIService: RestApiConnectorService): Observable<object> {
     // update is not supported on Collections
     return of({});
+  }
+
+  /**
+   * Progressively hydrate content as it arrives from the stream
+   */
+  public hydrateContent(obj: any): void {
+    // Deserialize and store the object
+    const stixObject = this.deserializeStixObject(obj);
+    if (stixObject) {
+      this.stix_contents.push(stixObject);
+    }
+  }
+
+  /**
+   * Deserialize a single STIX object based on its type
+   */
+  private deserializeStixObject(obj: any): StixObject | null {
+    if (!obj?.stix?.type) return null;
+
+    try {
+      switch (obj.stix.type) {
+        case 'attack-pattern':
+          return new Technique(obj);
+        case 'x-mitre-tactic':
+          return new Tactic(obj);
+        case 'campaign':
+          return new Campaign(obj);
+        case 'malware':
+        case 'tool':
+          return new Software(obj.stix.type, obj);
+        case 'relationship':
+          return new Relationship(obj);
+        case 'course-of-action':
+          return new Mitigation(obj);
+        case 'x-mitre-matrix':
+          return new Matrix(obj);
+        case 'intrusion-set':
+          return new Group(obj);
+        case 'x-mitre-data-source':
+          return new DataSource(obj);
+        case 'x-mitre-data-component':
+          return new DataComponent(obj);
+        case 'marking-definition':
+          return new MarkingDefinition(obj);
+        case 'x-mitre-asset':
+          return new Asset(obj);
+        case 'identity':
+          return null; // ignore identity object
+        default:
+          logger.warn('Unknown STIX type:', obj.stix.type);
+          return null;
+      }
+    } catch (err) {
+      logger.error('Error deserializing content:', err, obj);
+      return null;
+    }
   }
 }

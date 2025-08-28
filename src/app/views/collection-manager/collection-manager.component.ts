@@ -3,7 +3,7 @@ import { Role } from 'src/app/classes/authn/role';
 import { Collection } from 'src/app/classes/stix/collection';
 import { AuthenticationService } from 'src/app/services/connectors/authentication/authentication.service';
 import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/rest-api-connector.service';
-import { CollectionIndexListComponent } from '../collection-index/collection-index-list/collection-index-list.component';
+import { CollectionIndexListComponent } from '../stix/collection/collection-index/collection-index-list/collection-index-list.component';
 
 @Component({
   selector: 'app-collection-manager',
