@@ -50,9 +50,11 @@ export class ToolbarComponent {
   public get isGroup(): boolean {
     return this.editorService.isGroup;
   }
-
   public get isLoggedIn(): boolean {
     return this.authenticationService.isLoggedIn;
+  }
+  public get hasConvertedCollection(): boolean {
+    return this.editorService.hasConvertedCollection;
   }
 
   constructor(
@@ -77,6 +79,10 @@ export class ToolbarComponent {
 
   public delete() {
     this.editorService.onDelete.emit();
+  }
+
+  public convert() {
+    this.editorService.onConvertImportedCollection.emit();
   }
 
   public viewStix() {

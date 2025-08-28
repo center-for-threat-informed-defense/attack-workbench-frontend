@@ -63,3 +63,13 @@ export const WorkflowStates: Record<WorkflowState, string> = {
   'awaiting-review': 'awaiting review',
   'reviewed': 'reviewed',
 };
+
+/**
+ * Collection/release changelog categories
+ */
+export type ChangelogCategory =
+  | 'additions'
+  | 'changes'
+  | 'minor_changes'
+  | 'revocations'
+  | 'deprecations';

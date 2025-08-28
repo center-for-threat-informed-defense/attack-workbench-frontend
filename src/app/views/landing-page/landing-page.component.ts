@@ -34,6 +34,9 @@ export class LandingPageComponent implements OnInit, OnDestroy {
   public get isAdmin(): boolean {
     return this.authenticationService.isAuthorized([Role.ADMIN]);
   }
+  public get isTeamLead(): boolean {
+    return this.authenticationService.isAuthorized([Role.TEAM_LEAD]);
+  }
   public get isLoggedIn(): boolean {
     return this.authenticationService.isLoggedIn;
   }
@@ -90,7 +93,7 @@ export class LandingPageComponent implements OnInit, OnDestroy {
               const prompt_subscription = prompt.afterClosed().subscribe({
                 next: prompt_result => {
                   if (prompt_result)
-                    this.router.navigate(['/admin/org-settings']);
+                    this.router.navigate(['/dashboard/org-settings']);
                 },
                 complete: () => {
                   prompt_subscription.unsubscribe();

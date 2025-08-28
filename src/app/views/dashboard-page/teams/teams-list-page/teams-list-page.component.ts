@@ -134,7 +134,7 @@ export class TeamsListPageComponent implements OnInit {
               next: response => {
                 if (response) {
                   this.applyControls();
-                  this.router.navigateByUrl('/admin/teams/' + response.id);
+                  this.router.navigateByUrl('/dashboard/teams/' + response.id);
                 }
               },
               complete: () => createTeamSub.unsubscribe(),
