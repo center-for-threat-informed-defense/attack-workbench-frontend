@@ -448,13 +448,13 @@ export abstract class StixObject extends Serializable {
           })
         );
         // test version number format
-        if (!this.version.valid()) {
-          result.errors.push({
-            result: 'error',
-            field: 'version',
-            message: 'version number is not formatted properly',
-          });
-        }
+        // if (!this.version.valid()) {
+        //   result.errors.push({
+        //     result: 'error',
+        //     field: 'version',
+        //     message: 'version number is not formatted properly',
+        //   });
+        // }
         if (
           this.attackType == 'relationship' ||
           this.attackType == 'marking-definition'
@@ -469,13 +469,13 @@ export abstract class StixObject extends Serializable {
           includeDeprecated: true,
         };
         let accessor: Observable<Paginated<StixObject>>;
-        if (!this.version.valid()) {
-          result.errors.push({
-            result: 'error',
-            field: 'version',
-            message: 'version number is not formatted properly',
-          });
-        }
+        // if (!this.version.valid()) {
+        //   result.errors.push({
+        //     result: 'error',
+        //     field: 'version',
+        //     message: 'version number is not formatted properly',
+        //   });
+        // }
         if (this.attackType == 'collection')
           accessor = restAPIService.getAllCollections(options);
         else if (this.attackType == 'group')
@@ -501,36 +501,36 @@ export abstract class StixObject extends Serializable {
         return accessor.pipe(
           map(objects => {
             // check name
-            if (this.hasOwnProperty('name')) {
-              const nameValidationResult = nameSchema.safeParse(this['name']);
-              if (!nameValidationResult.success) {
-                if (nameValidationResult.error.errors[0].code == 'too_small') {
-                  result.errors.push({
-                    result: 'error',
-                    field: 'name',
-                    message: 'object has no name',
-                  });
-                }
-              } else if (
-                objects.data.some(
-                  x =>
-                    x['name'].toLowerCase() == this['name'].toLowerCase() &&
-                    x.stixID != this.stixID
-                )
-              ) {
-                result.warnings.push({
-                  result: 'warning',
-                  field: 'name',
-                  message: 'name is not unique',
-                });
-              } else {
-                result.successes.push({
-                  result: 'success',
-                  field: 'name',
-                  message: 'name is unique',
-                });
-              }
-            }
+            // if (this.hasOwnProperty('name')) {
+            //   const nameValidationResult = nameSchema.safeParse(this['name']);
+            //   if (!nameValidationResult.success) {
+            //     if (nameValidationResult.error.errors[0].code == 'too_small') {
+            //       result.errors.push({
+            //         result: 'error',
+            //         field: 'name',
+            //         message: 'object has no name',
+            //       });
+            //     }
+            //   } else if (
+            //     objects.data.some(
+            //       x =>
+            //         x['name'].toLowerCase() == this['name'].toLowerCase() &&
+            //         x.stixID != this.stixID
+            //     )
+            //   ) {
+            //     result.warnings.push({
+            //       result: 'warning',
+            //       field: 'name',
+            //       message: 'name is not unique',
+            //     });
+            //   } else {
+            //     result.successes.push({
+            //       result: 'success',
+            //       field: 'name',
+            //       message: 'name is unique',
+            //     });
+            //   }
+            // }
             // check ATT&CK ID, ignoring collections and matrices
             // if (
             //   this.attackType !== 'matrix' &&
