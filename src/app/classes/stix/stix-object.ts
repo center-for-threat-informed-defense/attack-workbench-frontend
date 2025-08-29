@@ -409,7 +409,7 @@ export abstract class StixObject extends Serializable {
             message: e,
           })
         );
-      // check if the name is unique if it has a name
+        // check if the name is unique if it has a name
         //do not check name or attackID for relationships or marking definitions
         if (
           this.attackType == 'relationship' ||
@@ -476,22 +476,22 @@ export abstract class StixObject extends Serializable {
               this.supportsAttackID
             ) {
               if (
-                  objects.data.some(
-                    x => x.attackID == this.attackID && x.stixID != this.stixID
-                  )
-                ) {
-                  result.errors.push({
-                    result: 'error',
-                    field: 'attackID',
-                    message: 'ATT&CK ID is not unique',
-                  });
-                } else {
-                  result.successes.push({
-                    result: 'success',
-                    field: 'attackID',
-                    message: 'ATT&CK ID is unique',
-                  });
-                }
+                objects.data.some(
+                  x => x.attackID == this.attackID && x.stixID != this.stixID
+                )
+              ) {
+                result.errors.push({
+                  result: 'error',
+                  field: 'attackID',
+                  message: 'ATT&CK ID is not unique',
+                });
+              } else {
+                result.successes.push({
+                  result: 'success',
+                  field: 'attackID',
+                  message: 'ATT&CK ID is unique',
+                });
+              }
             }
             // check required first/last seen fields for campaigns
             return result;
