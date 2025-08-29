@@ -1,6 +1,6 @@
 # Local Development Documentation
 
-This document outlines how to set up ATT&CK Workbench for local development. For information on installing and deploying the full application using Docker, please refer to the [docker install instructions](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/blob/master/docs/docker-compose.md).
+This document outlines how to set up ATT&CK Workbench for local development. For information on installing and deploying the full application using Docker, please refer to the [Workbench Deployment Guide](https://github.com/mitre-attack/attack-workbench-deployment).
 
 ## Prerequisites
 

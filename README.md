@@ -39,42 +39,65 @@ Importing and exporting data from the ATT&CK Workbench is facilitated through th
 
 More information about collections and collection indexes can be found in the [collections document](docs/collections.md).
 
+## Install and Run
 
-## Install and run
+The ATT\&CK Workbench application is composed of several interconnected services. **For the full application to function properly, the frontend, REST API, and database must all be running and able to communicate with one another.** The [Docker installation guide](https://github.com/mitre-attack/attack-workbench-deployment) provides instructions to install all components and is the **recommended approach** for most deployments.
 
-The ATT&CK Workbench application is made up of several repositories. For the full application to operate each needs to be running at the same time. The [docker install instructions](docs/docker-compose.md) will install all components and is recommended for most deployments.
-- [ATT&CK Workbench Frontend](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend) (this repository)
-  
-  The front-end user interface for the ATT&CK Workbench tool, and the primary interface through which the knowledge base is accessed.
-- [ATT&CK Workbench REST API](https://github.com/center-for-threat-informed-defense/attack-workbench-rest-api)
+### Core Components
 
-  REST API service for storing, querying and editing ATT&CK objects, as well as  for managing collections, collection indexes, and collection subscriptions.
+* **[ATT\&CK Workbench Frontend](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend)**
+  The web-based user interface for ATT\&CK Workbench, and the primary way users interact with the knowledge base.
 
-The manual install instructions in each repository describe how each component to be deployed to a separate machine or with customized settings. 
+* **[ATT\&CK Workbench REST API](https://github.com/center-for-threat-informed-defense/attack-workbench-rest-api)**
+  Provides a CRUD interface for storing, querying, and editing ATT\&CK objects, as well as managing collections, collection indexes, and subscriptions.
 
-### Installing using Docker
-Please refer to our [Docker install instructions](docs/docker-compose.md) for information on installing and deploying the full application using Docker. The docker setup is the easiest way to deploy the application.
+* **[ATT\&CK Workbench Database](https://hub.docker.com/_/mongo)**
+  A MongoDB instance for persisting Workbench entities.
+
+* **[ATT\&CK Workbench TAXII 2.1 Server](https://github.com/mitre-attack/attack-workbench-taxii-server)** *(optional)*
+  A sidecar service that exposes the Workbench’s STIX objects through a TAXII 2.1-compliant interface.
+
+Each component can also be manually installed using the instructions in its respective repository. This is useful if you wish to deploy components on separate machines or with custom configurations.
+
+### Installing with Docker
+
+Refer to the official [Deployment Guide](https://github.com/mitre-attack/attack-workbench-deployment) for templates and step-by-step instructions on installing and running Workbench using Docker Compose.
+
+> **Note:** Docker Compose is the **recommended** and **only officially supported** method for deploying Workbench.
 
 ### Manual Installation
+
+Developers who prefer to run the Workbench frontend locally (outside of Docker) can follow the steps below.
 
 #### Requirements
 
 - [Node.js](https://nodejs.org/) version `22.x`
 
-#### Installing dependencies
-This step is necessary for cases where the app is deployed locally through `ng serve` or `ng build`. It can be skipped for installs using docker (above).
+#### Installing Dependencies
 
-1. Run `npm install` to install required packages
+This step is only necessary if you're running the app locally using `ng serve` or `ng build`. It can be skipped if you're using the Docker setup described above.
 
-#### Serve on local machine
+1. Run `npm install` to install required packages.
+
+#### Running Locally
+
 1. Run `ng serve`
-2. Navigate to `localhost:4200` in your browser
+2. Open your browser and navigate to `http://localhost:4200`
 
-#### Compile for use elsewhere
+#### Building for Deployment
+
 1. Run `ng build`
-2. Copy files from the `app/dist` directory
+2. Copy the output from the `dist/` directory to your desired deployment location.
 
-If you're building the app for production, use `ng build --prod` which will use the production environment instead of the development environment. See [modifying the environment](#modifying-the-environment) for more information.
+To build the app for production, use:
+
+```bash
+ng build --prod
+````
+
+This will compile the application using the production environment configuration.
+See [Modifying the Environment](#modifying-the-environment) for more information.
+
 
 #### Modifying the environment
 The ATT&CK Workbench Frontend is configured to connect to the REST API running under its default configuration. If the applications is configured to run on a different port, or if the application is to be hosted for access on multiple machines, the environment must be edited to reflect the URLs and port.
@@ -88,10 +111,6 @@ To allow for additional customization, the ATT&CK Workbench enables users to set
 - Open up the config file, found at `src/assets/config.ts`.
 - Set the `defaultLandingPage` variable to the url path you want to set as the default landing page
   - You can set the default to a more general page, such as the tactic list view `"defaultLandingPage": "tactic"`, or to a specific page, such as a certain matrix `"defaultLandingPage": "matrix/x-mitre-matrix--eafc1b4c-5e56-4965-bd4e-66a6a89c88cc"`
-
-#### PKI Certificates
-
-For additional troubleshooting and installation of security certificates for use by ATT&CK Workbench, pleaser refer to [PKI Certificates instructions](docs/certs.md).
 
 ### Developer Setup
 

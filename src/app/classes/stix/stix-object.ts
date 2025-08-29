@@ -10,36 +10,15 @@ import { forkJoin, Observable, of } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
 import { logger } from '../../utils/logger';
 import {
-  nameSchema,
-  stixTimestampSchema,
-} from '@mitre-attack/attack-data-model';
-import {
-  StixTypesWithAttackIds,
-  createAttackIdSchema,
-} from '@mitre-attack/attack-data-model/dist/schemas/common/attack-id';
+  AttackTypeToRoute,
+  StixTypeToAttackType,
+} from 'src/app/utils/type-mappings';
 
 export type workflowStates =
   | 'work-in-progress'
   | 'awaiting-review'
   | 'reviewed'
   | '';
-const StixTypeToAttackType = {
-  'x-mitre-collection': 'collection',
-  'attack-pattern': 'technique',
-  'malware': 'software',
-  'tool': 'software',
-  'intrusion-set': 'group',
-  'campaign': 'campaign',
-  'course-of-action': 'mitigation',
-  'x-mitre-matrix': 'matrix',
-  'x-mitre-tactic': 'tactic',
-  'relationship': 'relationship',
-  'marking-definition': 'marking-definition',
-  'x-mitre-data-source': 'data-source',
-  'x-mitre-data-component': 'data-component',
-  'x-mitre-asset': 'asset',
-  'note': 'note',
-};
 
 export abstract class StixObject extends Serializable {
   public stixID: string; // STIX ID
@@ -61,21 +40,6 @@ export abstract class StixObject extends Serializable {
   protected abstract get attackIDValidator(): {
     regex: string; // regex to validate the ID
     format: string; // format to display to user
-  };
-
-  private typeUrlMap = {
-    'technique': 'techniques',
-    'software': 'software',
-    'group': 'groups',
-    'campaign': 'campaigns',
-    'mitigation': 'mitigations',
-    'matrix': 'matrices',
-    'tactic': 'tactics',
-    'note': 'notes',
-    'marking-definition': 'marking-definitions',
-    'data-source': 'datasources',
-    'data-component': 'datacomponents',
-    'asset': 'assets',
   };
 
   private defaultMarkingDefinitionsLoaded = false; // avoid overloading of default marking definitions
@@ -143,11 +107,11 @@ export abstract class StixObject extends Serializable {
     const serialized_external_references = this.external_references.serialize();
 
     // Add attackID for
-    if (this.attackID && this.typeUrlMap[this.attackType]) {
+    if (this.attackID && AttackTypeToRoute[this.attackType]) {
       const new_ext_ref = {
         source_name: 'mitre-attack',
         external_id: this.attackID,
-        url: `https://attack.mitre.org/${this.typeUrlMap[this.attackType]}/${this.attackID.replace(/\./g, '/')}`,
+        url: `https://attack.mitre.org/${AttackTypeToRoute[this.attackType]}/${this.attackID.replace(/\./g, '/')}`,
       };
       serialized_external_references.unshift(new_ext_ref);
     }
@@ -162,10 +126,10 @@ export abstract class StixObject extends Serializable {
       external_references: serialized_external_references,
       x_mitre_deprecated: this.deprecated,
       revoked: this.revoked,
-      description: this.description,
       object_marking_refs: this.object_marking_refs,
       spec_version: '2.1',
     };
+    if (this.description) stix.description = this.description;
     // Add modified date if type is not marking-definition
     if (this.type != 'marking-definition')
       stix['modified'] = new Date().toISOString();
@@ -412,14 +376,11 @@ export abstract class StixObject extends Serializable {
    * @returns true if the ATT&CK ID is valid, false otherwise
    */
   public isValidAttackId(): boolean {
-    if (this.type in StixTypeToAttackType) {
-      const attackIDSchema = createAttackIdSchema(
-        this.type as StixTypesWithAttackIds
-      );
-      const attackIDValid = attackIDSchema.safeParse(this.attackID);
-      return attackIDValid.success;
-    }
-    return false;
+    const idRegex = new RegExp(
+      '^([A-Z]+-)?' + this.attackIDValidator.regex + '$'
+    );
+    const attackIDValid = idRegex.test(this.attackID);
+    return attackIDValid;
   }
 
   /**
@@ -431,6 +392,7 @@ export abstract class StixObject extends Serializable {
   public base_validate(
     restAPIService: RestApiConnectorService
   ): Observable<ValidationData> {
+    // check any asynchronous validators
     const result = new ValidationData();
     const validator = restAPIService.validateStixObject();
 
@@ -447,21 +409,13 @@ export abstract class StixObject extends Serializable {
             message: e,
           })
         );
-        // test version number format
-        // if (!this.version.valid()) {
-        //   result.errors.push({
-        //     result: 'error',
-        //     field: 'version',
-        //     message: 'version number is not formatted properly',
-        //   });
-        // }
+      // check if the name is unique if it has a name
+        //do not check name or attackID for relationships or marking definitions
         if (
           this.attackType == 'relationship' ||
           this.attackType == 'marking-definition'
-        ) {
+        )
           return of(result);
-        }
-
         // check if name & ATT&CK ID is unique, record result in validation, and return validation
         const options = {
           // validate against revoked & deprecated objects
@@ -469,13 +423,6 @@ export abstract class StixObject extends Serializable {
           includeDeprecated: true,
         };
         let accessor: Observable<Paginated<StixObject>>;
-        // if (!this.version.valid()) {
-        //   result.errors.push({
-        //     result: 'error',
-        //     field: 'version',
-        //     message: 'version number is not formatted properly',
-        //   });
-        // }
         if (this.attackType == 'collection')
           accessor = restAPIService.getAllCollections(options);
         else if (this.attackType == 'group')
@@ -501,142 +448,52 @@ export abstract class StixObject extends Serializable {
         return accessor.pipe(
           map(objects => {
             // check name
-            // if (this.hasOwnProperty('name')) {
-            //   const nameValidationResult = nameSchema.safeParse(this['name']);
-            //   if (!nameValidationResult.success) {
-            //     if (nameValidationResult.error.errors[0].code == 'too_small') {
-            //       result.errors.push({
-            //         result: 'error',
-            //         field: 'name',
-            //         message: 'object has no name',
-            //       });
-            //     }
-            //   } else if (
-            //     objects.data.some(
-            //       x =>
-            //         x['name'].toLowerCase() == this['name'].toLowerCase() &&
-            //         x.stixID != this.stixID
-            //     )
-            //   ) {
-            //     result.warnings.push({
-            //       result: 'warning',
-            //       field: 'name',
-            //       message: 'name is not unique',
-            //     });
-            //   } else {
-            //     result.successes.push({
-            //       result: 'success',
-            //       field: 'name',
-            //       message: 'name is unique',
-            //     });
-            //   }
-            // }
+            if (this.hasOwnProperty('name')) {
+              if (
+                objects.data.some(
+                  x =>
+                    x['name'].toLowerCase() == this['name'].toLowerCase() &&
+                    x.stixID != this.stixID
+                )
+              ) {
+                result.warnings.push({
+                  result: 'warning',
+                  field: 'name',
+                  message: 'name is not unique',
+                });
+              } else {
+                result.successes.push({
+                  result: 'success',
+                  field: 'name',
+                  message: 'name is unique',
+                });
+              }
+            }
             // check ATT&CK ID, ignoring collections and matrices
-            // if (
-            //   this.attackType !== 'matrix' &&
-            //   this.hasOwnProperty('supportsAttackID') &&
-            //   this.supportsAttackID
-            // ) {
-            //   if (this.attackID == '') {
-            //     result.warnings.push({
-            //       result: 'warning',
-            //       field: 'attackID',
-            //       message: 'object does not have ATT&CK ID',
-            //     });
-            //   } else {
-            //     if (
-            //       objects.data.some(
-            //         x => x.attackID == this.attackID && x.stixID != this.stixID
-            //       )
-            //     ) {
-            //       result.errors.push({
-            //         result: 'error',
-            //         field: 'attackID',
-            //         message: 'ATT&CK ID is not unique',
-            //       });
-            //     } else {
-            //       result.successes.push({
-            //         result: 'success',
-            //         field: 'attackID',
-            //         message: 'ATT&CK ID is unique',
-            //       });
-            //     }
-            //     if (!this.isValidAttackId()) {
-            //       result.errors.push({
-            //         result: 'error',
-            //         field: 'attackID',
-            //         message: `ATT&CK ID does not match the format ${this.attackIDValidator.format}`,
-            //       });
-            //     }
-            //   }
-            // }
+            if (
+              this.attackType !== 'matrix' &&
+              this.hasOwnProperty('supportsAttackID') &&
+              this.supportsAttackID
+            ) {
+              if (
+                  objects.data.some(
+                    x => x.attackID == this.attackID && x.stixID != this.stixID
+                  )
+                ) {
+                  result.errors.push({
+                    result: 'error',
+                    field: 'attackID',
+                    message: 'ATT&CK ID is not unique',
+                  });
+                } else {
+                  result.successes.push({
+                    result: 'success',
+                    field: 'attackID',
+                    message: 'ATT&CK ID is unique',
+                  });
+                }
+            }
             // check required first/last seen fields for campaigns
-            // if (this.attackType == 'campaign') {
-            //   if (
-            //     !this.hasOwnProperty('first_seen') ||
-            //     this['first_seen'] == null
-            //   ) {
-            //     result.errors.push({
-            //       result: 'error',
-            //       field: 'first_seen',
-            //       message: 'object does not have a first seen date',
-            //     });
-            //   } else if (this.hasOwnProperty('first_seen')) {
-            //     const firstSeenISO = this['first_seen'].toISOString();
-            //     const firstSeenValidationResult =
-            //       stixTimestampSchema.safeParse(firstSeenISO);
-            //     if (!firstSeenValidationResult.success) {
-            //       result.errors.push({
-            //         result: 'error',
-            //         field: 'first_seen',
-            //         message: firstSeenValidationResult.error.errors[0].message,
-            //       });
-            //     }
-            //   }
-            //   if (
-            //     !this.hasOwnProperty('first_seen_citation') ||
-            //     this['first_seen_citation'] == ''
-            //   ) {
-            //     result.errors.push({
-            //       result: 'error',
-            //       field: 'first_seen_citation',
-            //       message:
-            //         'object is missing a citation for the first seen date',
-            //     });
-            //   }
-            //   if (
-            //     !this.hasOwnProperty('last_seen') ||
-            //     this['last_seen'] == null
-            //   ) {
-            //     result.errors.push({
-            //       result: 'error',
-            //       field: 'last_seen',
-            //       message: 'object does not have a last seen date',
-            //     });
-            //   } else if (this.hasOwnProperty('last_seen')) {
-            //     const lastSeenISO = this['last_seen'].toISOString();
-            //     const lastSeenValidationResult =
-            //       stixTimestampSchema.safeParse(lastSeenISO);
-            //     if (!lastSeenValidationResult.success) {
-            //       result.errors.push({
-            //         result: 'error',
-            //         field: 'lastSeen',
-            //         message: lastSeenValidationResult.error.errors[0].message,
-            //       });
-            //     }
-            //   }
-            //   if (
-            //     !this.hasOwnProperty('last_seen_citation') ||
-            //     this['last_seen_citation'] == ''
-            //   ) {
-            //     result.errors.push({
-            //       result: 'error',
-            //       field: 'last_seen_citation',
-            //       message:
-            //         'object is missing a citation for the last seen date',
-            //     });
-            //   }
-            // }
             return result;
           })
         );
@@ -873,29 +730,36 @@ export abstract class StixObject extends Serializable {
     });
   }
 
-  public getNamespaceID(restAPIConnector, orgNamespace): Observable<any> {
+  public getNamespaceID(
+    apiService: RestApiConnectorService,
+    orgNamespace: { prefix: string; range_start: string }
+  ): Observable<any> {
     let prefix = ''; // i.e. 'TA', if StixObject type is tactic
     let count = '' as any; // i.e. 1234
     this.attackID = '(generating ID)';
 
     let accessor: Observable<Paginated<StixObject>>;
-    if (this.attackType == 'group') accessor = restAPIConnector.getAllGroups();
+    if (this.attackType == 'group') accessor = apiService.getAllGroups();
     else if (this.attackType == 'campaign')
-      accessor = restAPIConnector.getAllCampaigns();
+      accessor = apiService.getAllCampaigns();
     else if (this.attackType == 'mitigation')
-      accessor = restAPIConnector.getAllMitigations();
+      accessor = apiService.getAllMitigations();
     else if (this.attackType == 'software')
-      accessor = restAPIConnector.getAllSoftware();
-    else if (this.attackType == 'tactic')
-      accessor = restAPIConnector.getAllTactics();
+      accessor = apiService.getAllSoftware();
+    else if (this.attackType == 'tactic') accessor = apiService.getAllTactics();
     else if (this.attackType == 'technique')
-      accessor = restAPIConnector.getAllTechniques();
+      accessor = apiService.getAllTechniques();
     else if (this.attackType == 'data-source')
-      accessor = restAPIConnector.getAllDataSources();
-    else if (this.attackType == 'asset')
-      accessor = restAPIConnector.getAllAssets();
+      accessor = apiService.getAllDataSources();
+    else if (this.attackType == 'asset') accessor = apiService.getAllAssets();
     else if (this.attackType == 'matrix')
-      accessor = restAPIConnector.getAllMatrices();
+      accessor = apiService.getAllMatrices();
+    else if (this.attackType == 'detection-strategy')
+      accessor = apiService.getAllDetectionStrategies();
+    else if (this.attackType == 'log-source')
+      accessor = apiService.getAllLogSources();
+    else if (this.attackType == 'analytic')
+      accessor = apiService.getAllAnalytics();
     else accessor = null;
 
     // Find all other objects that have this prefix and range, and set ID to the most recent & unique ID available
@@ -923,7 +787,7 @@ export abstract class StixObject extends Serializable {
               if (found && found.length > 0) {
                 familyPrefix += found[0];
                 count = 1;
-                return restAPIConnector
+                return apiService
                   .getTechnique(
                     this['parentTechnique'].stixID,
                     null,

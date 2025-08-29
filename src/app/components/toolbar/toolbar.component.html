@@ -8,6 +8,14 @@
       <button
         mat-icon-button
         class="control"
+        [disabled]="hasConvertedCollection"
+        (click)="convert()"
+        matTooltip="convert to editable collection">
+        <mat-icon aria-label="convert">queue</mat-icon>
+      </button>
+      <button
+        mat-icon-button
+        class="control"
         (click)="delete()"
         matTooltip="delete collection and all associated objects">
         <mat-icon aria-label="delete">delete</mat-icon>
@@ -16,6 +24,14 @@
     <div
       class="controls button-list section"
       *ngIf="(editable || editing) && !isAnImportedCollection">
+      <button
+        mat-icon-button
+        class="control"
+        matTooltip="view raw stix json"
+        [disabled]="editing"
+        (click)="viewStix()">
+        <mat-icon aria-label="stix">data_object</mat-icon>
+      </button>
       <button
         mat-icon-button
         class="control"
