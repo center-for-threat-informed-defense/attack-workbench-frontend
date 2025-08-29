@@ -94,82 +94,124 @@
           </div>
         </mat-toolbar>
         <div class="page-padding">
-          <app-relationship-view
-            *ngIf="stixType === 'relationship'"
-            [config]="config"
-            (onVersionChange)="versionChange($event)"
-            (onOpenHistory)="openHistory()"
-            (onOpenNotes)="openNotes()"
-            (changeDialogToDataComponent)="changeDialogObject($event)"
-            (closeDialogEvent)="close()">
-          </app-relationship-view>
-          <app-group-view
-            *ngIf="stixType === 'intrusion-set'"
-            [config]="config"
-            (onOpenHistory)="openHistory()"
-            (onOpenNotes)="openNotes()">
-          </app-group-view>
-          <app-campaign-view
-            *ngIf="stixType === 'campaign'"
-            [config]="config"
-            (onOpenHistory)="openHistory()"
-            (onOpenNotes)="openNotes()">
-          </app-campaign-view>
-          <app-software-view
-            *ngIf="stixType === 'malware' || stixType === 'tool'"
-            [config]="config"
-            (onOpenHistory)="openHistory()"
-            (onOpenNotes)="openNotes()">
-          </app-software-view>
-          <app-matrix-view
-            *ngIf="stixType === 'x-mitre-matrix'"
-            [config]="config"
-            (onOpenHistory)="openHistory()"
-            (onOpenNotes)="openNotes()">
-          </app-matrix-view>
-          <app-mitigation-view
-            *ngIf="stixType === 'course-of-action'"
-            [config]="config"
-            (onOpenHistory)="openHistory()"
-            (onOpenNotes)="openNotes()">
-          </app-mitigation-view>
-          <app-technique-view
-            *ngIf="stixType === 'attack-pattern'"
-            [config]="config"
-            (onOpenHistory)="openHistory()"
-            (onOpenNotes)="openNotes()">
-          </app-technique-view>
-          <app-data-source-view
-            *ngIf="stixType === 'x-mitre-data-source'"
-            [config]="config"
-            (onOpenHistory)="openHistory()"
-            (onOpenNotes)="openNotes()">
-          </app-data-source-view>
-          <app-data-component-view
-            *ngIf="stixType === 'x-mitre-data-component'"
-            [config]="config"
-            (onOpenHistory)="openHistory()"
-            (onOpenNotes)="openNotes()"
-            (onClickRelationship)="changeDialogObject($event)">
-          </app-data-component-view>
-          <app-asset-view
-            *ngIf="stixType === 'x-mitre-asset'"
-            [config]="config"
-            (onOpenHistory)="openHistory()"
-            (onOpenNotes)="openNotes()">
-          </app-asset-view>
-          <app-tactic-view
-            *ngIf="stixType === 'x-mitre-tactic'"
-            [config]="config"
-            (onOpenHistory)="openHistory()"
-            (onOpenNotes)="openNotes()">
-          </app-tactic-view>
-          <app-collection-view
-            *ngIf="stixType === 'x-mitre-collection'"
-            [config]="config"
-            (onOpenHistory)="openHistory()"
-            (onOpenNotes)="openNotes()">
-          </app-collection-view>
+          @switch (stixType) {
+            @case ('relationship') {
+              <app-relationship-view
+                [config]="config"
+                (onVersionChange)="versionChange($event)"
+                (onOpenHistory)="openHistory()"
+                (onOpenNotes)="openNotes()"
+                (changeDialogToDataComponent)="changeDialogObject($event)"
+                (closeDialogEvent)="close()">
+              </app-relationship-view>
+            }
+            @case ('intrusion-set') {
+              <app-group-view
+                [config]="config"
+                (onOpenHistory)="openHistory()"
+                (onOpenNotes)="openNotes()">
+              </app-group-view>
+            }
+            @case ('campaign') {
+              <app-campaign-view
+                [config]="config"
+                (onOpenHistory)="openHistory()"
+                (onOpenNotes)="openNotes()">
+              </app-campaign-view>
+            }
+            @case ('malware') {
+              <app-software-view
+                [config]="config"
+                (onOpenHistory)="openHistory()"
+                (onOpenNotes)="openNotes()">
+              </app-software-view>
+            }
+            @case ('tool') {
+              <app-software-view
+                [config]="config"
+                (onOpenHistory)="openHistory()"
+                (onOpenNotes)="openNotes()">
+              </app-software-view>
+            }
+            @case ('x-mitre-matrix') {
+              <app-matrix-view
+                [config]="config"
+                (onOpenHistory)="openHistory()"
+                (onOpenNotes)="openNotes()">
+              </app-matrix-view>
+            }
+            @case ('course-of-action') {
+              <app-mitigation-view
+                [config]="config"
+                (onOpenHistory)="openHistory()"
+                (onOpenNotes)="openNotes()">
+              </app-mitigation-view>
+            }
+            @case ('attack-pattern') {
+              <app-technique-view
+                [config]="config"
+                (onOpenHistory)="openHistory()"
+                (onOpenNotes)="openNotes()">
+              </app-technique-view>
+            }
+            @case ('x-mitre-data-source') {
+              <app-data-source-view
+                [config]="config"
+                (onOpenHistory)="openHistory()"
+                (onOpenNotes)="openNotes()">
+              </app-data-source-view>
+            }
+            @case ('x-mitre-data-component') {
+              <app-data-component-view
+                [config]="config"
+                (onOpenHistory)="openHistory()"
+                (onOpenNotes)="openNotes()"
+                (onClickRelationship)="changeDialogObject($event)">
+              </app-data-component-view>
+            }
+            @case ('x-mitre-asset') {
+              <app-asset-view
+                [config]="config"
+                (onOpenHistory)="openHistory()"
+                (onOpenNotes)="openNotes()">
+              </app-asset-view>
+            }
+            @case ('x-mitre-tactic') {
+              <app-tactic-view
+                [config]="config"
+                (onOpenHistory)="openHistory()"
+                (onOpenNotes)="openNotes()">
+              </app-tactic-view>
+            }
+            @case ('x-mitre-collection') {
+              <app-collection-view
+                [config]="config"
+                (onOpenHistory)="openHistory()"
+                (onOpenNotes)="openNotes()">
+              </app-collection-view>
+            }
+            @case ('x-mitre-detection-strategy') {
+              <app-detection-strategy-view
+                [config]="config"
+                (onOpenHistory)="openHistory()"
+                (onOpenNotes)="openNotes()">
+              </app-detection-strategy-view>
+            }
+            @case ('x-mitre-analytic') {
+              <app-analytic-view
+                [config]="config"
+                (onOpenHistory)="openHistory()"
+                (onOpenNotes)="openNotes()">
+              </app-analytic-view>
+            }
+            @case ('x-mitre-log-source') {
+              <app-log-source-view
+                [config]="config"
+                (onOpenHistory)="openHistory()"
+                (onOpenNotes)="openNotes()">
+              </app-log-source-view>
+            }
+          }
         </div>
       </div>
       <div class="validation page-padding grid spacing-20" *ngIf="validating">
