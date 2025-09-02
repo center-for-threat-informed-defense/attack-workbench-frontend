@@ -48,8 +48,23 @@ export class Tactic extends StixObject {
     rep.stix.x_mitre_domains = this.domains;
     rep.stix.x_mitre_shortname = this.shortname;
     rep.stix.x_mitre_contributors = this.contributors.map(x => x.trim());
-
+    rep.stix = this.filterObject(rep.stix);
     return rep;
+  }
+
+  public hasValue(field) {
+    return (
+      field !== undefined &&
+      field !== null &&
+      field !== '' &&
+      !(Array.isArray(field) && field.length === 0)
+    );
+  }
+
+  public filterObject(obj) {
+    return Object.fromEntries(
+      Object.entries(obj).filter(entry => this.hasValue(entry[1]))
+    );
   }
 
   /**

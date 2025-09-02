@@ -244,6 +244,7 @@ export class Technique extends StixObject {
         }
       }
     }
+    rep.stix = this.filterObject(rep.stix);
     return rep;
   }
 
@@ -440,6 +441,21 @@ export class Technique extends StixObject {
           );
       }
     }
+  }
+
+  public hasValue(field) {
+    return (
+      field !== undefined &&
+      field !== null &&
+      field !== '' &&
+      !(Array.isArray(field) && field.length === 0)
+    );
+  }
+
+  public filterObject(obj) {
+    return Object.fromEntries(
+      Object.entries(obj).filter(entry => this.hasValue(entry[1]))
+    );
   }
 
   /**
