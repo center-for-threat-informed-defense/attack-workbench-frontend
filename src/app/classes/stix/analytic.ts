@@ -7,9 +7,8 @@ import { ValidationData } from '../serializable';
 export class Analytic extends StixObject {
   public name = '';
   public platform: string;
-  public detects: string;
   public domains: string[] = [];
-  public logSourceRefs: LogSourceReference[] = [];
+  public logSourceReferences: LogSourceReference[] = [];
   public mutableElements: MutableElement[] = [];
 
   public readonly supportsAttackID = true;
@@ -43,12 +42,11 @@ export class Analytic extends StixObject {
       rep.stix.x_mitre_platforms = [this.platform];
     }
     if (this.domains) rep.stix.x_mitre_domains = this.domains;
-    if (this.detects) rep.stix.x_mitre_detects = this.detects;
-    if (this.logSourceRefs?.length)
-      rep.stix.x_mitre_log_sources = this.logSourceRefs.map(
-        ({ ref, keys }) => ({
-          ref,
-          keys,
+    if (this.logSourceReferences?.length)
+      rep.stix.x_mitre_log_source_references = this.logSourceReferences.map(
+        ({ x_mitre_log_source_ref, permutation_names }) => ({
+          x_mitre_log_source_ref,
+          permutation_names,
         })
       );
     if (this.mutableElements?.length)
@@ -98,14 +96,14 @@ export class Analytic extends StixObject {
         else logger.error('TypeError: domains field is not a string array.');
       } else this.domains = [];
 
-      if ('x_mitre_log_sources' in sdo) {
-        if (this.isLogSourcesArray(sdo.x_mitre_log_sources))
-          this.logSourceRefs = sdo.x_mitre_log_sources;
+      if ('x_mitre_log_source_references' in sdo) {
+        if (this.isLogSourcesArray(sdo.x_mitre_log_source_references))
+          this.logSourceReferences = sdo.x_mitre_log_source_references;
         else
           logger.error(
-            `TypeError: x_mitre_log_sources field is not an array of log source references: ${sdo.x_mitre_log_sources} (${typeof sdo.x_mitre_log_sources})`
+            `TypeError: x_mitre_log_source_references is not an array of log source references: ${sdo.x_mitre_log_source_references} (${typeof sdo.x_mitre_log_source_references})`
           );
-      } else this.logSourceRefs = [];
+      } else this.logSourceReferences = [];
 
       if ('x_mitre_mutable_elements' in sdo) {
         if (this.isMutableElementsArray(sdo.x_mitre_mutable_elements))
@@ -115,21 +113,12 @@ export class Analytic extends StixObject {
             `TypeError: x_mitre_mutable_elements field is not an array of log source references: ${sdo.x_mitre_mutable_elements} (${typeof sdo.x_mitre_mutable_elements})`
           );
       } else this.mutableElements = [];
-
-      if ('x_mitre_detects' in sdo) {
-        if (typeof sdo.x_mitre_detects === 'string')
-          this.detects = sdo.x_mitre_detects;
-        else
-          logger.error(
-            `TypeError: x_mitre_detects field is not a string: ${sdo.x_mitre_detects} (${typeof sdo.x_mitre_detects})`
-          );
-      }
     }
   }
 
   public isLogSourcesArray(arr): boolean {
     return arr.every(a => {
-      return 'ref' in a && 'keys' in a;
+      return 'x_mitre_log_source_ref' in a && 'permutation_names' in a;
     });
   }
 
@@ -166,8 +155,10 @@ export class Analytic extends StixObject {
         }
 
         // validate unique log source refs
-        if (this.logSourceRefs.length) {
-          const refs = this.logSourceRefs.map(({ ref }) => ref);
+        if (this.logSourceReferences.length) {
+          const refs = this.logSourceReferences.map(
+            ({ x_mitre_log_source_ref }) => x_mitre_log_source_ref
+          );
 
           return forkJoin(
             refs.map(ref =>
@@ -178,17 +169,19 @@ export class Analytic extends StixObject {
           ).pipe(
             map(logSources => {
               const seen = new Set<string>();
-              this.logSourceRefs.forEach(({ ref }, index) => {
-                if (seen.has(ref)) {
-                  const logSource = logSources[index];
-                  result.errors.push({
-                    field: 'logSourceRefs',
-                    result: 'error',
-                    message: `Duplicate log source reference found: ${logSource?.[0].attackID || 'unknown'}`,
-                  });
+              this.logSourceReferences.forEach(
+                ({ x_mitre_log_source_ref }, index) => {
+                  if (seen.has(x_mitre_log_source_ref)) {
+                    const logSource = logSources[index];
+                    result.errors.push({
+                      field: 'logSourceReferences',
+                      result: 'error',
+                      message: `Duplicate log source reference found: ${logSource?.[0].attackID || 'unknown'}`,
+                    });
+                  }
+                  seen.add(x_mitre_log_source_ref);
                 }
-                seen.add(ref);
-              });
+              );
               return result;
             })
           );
@@ -251,8 +244,8 @@ export class Analytic extends StixObject {
 }
 
 export interface LogSourceReference {
-  ref: string;
-  keys: string[];
+  x_mitre_log_source_ref: string;
+  permutation_names: string[];
 }
 
 export interface MutableElement {
