@@ -1,8 +1,9 @@
-import { StixObject } from './stix-object';
+import { RelatedRef, StixObject } from './stix-object';
 import { logger } from '../../utils/logger';
 import { catchError, forkJoin, map, Observable, of, switchMap } from 'rxjs';
 import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/rest-api-connector.service';
 import { ValidationData } from '../serializable';
+import { StixType } from 'src/app/utils/types';
 
 export class Analytic extends StixObject {
   public name = '';
@@ -10,6 +11,10 @@ export class Analytic extends StixObject {
   public domains: string[] = [];
   public logSourceReferences: LogSourceReference[] = [];
   public mutableElements: MutableElement[] = [];
+
+  // NOTE: the following two fields will only be populated when this object is fetched with the `includeRefs=true` param
+  public relatedDetections: RelatedRef[];
+  public relatedLogSources: RelatedRef[];
 
   public readonly supportsAttackID = true;
   public readonly supportsNamespace = true;
@@ -66,7 +71,6 @@ export class Analytic extends StixObject {
    */
   public deserialize(raw: object) {
     if ('stix' in raw) {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const sdo = raw.stix as any;
 
       if (!('name' in sdo)) this.name = '';
@@ -113,6 +117,27 @@ export class Analytic extends StixObject {
             `TypeError: x_mitre_mutable_elements field is not an array of log source references: ${sdo.x_mitre_mutable_elements} (${typeof sdo.x_mitre_mutable_elements})`
           );
       } else this.mutableElements = [];
+    }
+
+    this.deserializeRelatedRefs(raw);
+  }
+
+  public deserializeRelatedRefs(raw: any): void {
+    if ('related_to' in raw) {
+      const relatedTo = raw.related_to as any[];
+      const relatedRefs: RelatedRef[] = relatedTo.map(ref => ({
+        stixId: ref.id,
+        name: ref.name,
+        attackId: ref.attack_id,
+        type: ref.type as StixType,
+      }));
+
+      this.relatedDetections = relatedRefs.filter(
+        ref => ref.type === 'x-mitre-detection-strategy'
+      );
+      this.relatedLogSources = relatedRefs.filter(
+        ref => ref.type === 'x-mitre-log-source'
+      );
     }
   }
 
