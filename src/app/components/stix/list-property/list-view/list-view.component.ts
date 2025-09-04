@@ -50,7 +50,7 @@ export class ListViewComponent {
   }
 
   public internalLink(item: RelatedRef): string {
-    const attackType = StixTypeToAttackType[item.stixId];
+    const attackType = StixTypeToAttackType[item.type];
     return `/${attackType}/${item.stixId}`;
   }
 }
