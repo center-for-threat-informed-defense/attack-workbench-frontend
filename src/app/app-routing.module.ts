@@ -3,6 +3,7 @@ import { Routes, RouterModule } from '@angular/router';
 import { LandingPageComponent } from './views/landing-page/landing-page.component';
 import { HelpPageComponent } from './views/help-page/help-page.component';
 import { DashboardPageComponent } from './views/dashboard-page/dashboard-page.component';
+import { ObjectReviewPageComponent } from './views/dashboard-page/object-review-page/object-review-page.component';
 import { OrgSettingsPageComponent } from './views/dashboard-page/org-settings-page/org-settings-page.component';
 import { UserAccountsPageComponent } from './views/dashboard-page/user-accounts-page/user-accounts-page.component';
 import { DefaultMarkingDefinitionsComponent } from './views/dashboard-page/default-marking-definitions/default-marking-definitions.component';
@@ -52,6 +53,14 @@ const routes: Routes = [
               title: 'Dashboard',
             },
             component: DashboardPageComponent,
+          },
+          {
+            path: 'object-review',
+            data: {
+              breadcrumb: 'object review',
+              title: 'Object Review',
+            },
+            component: ObjectReviewPageComponent,
           },
           {
             path: 'org-settings',
