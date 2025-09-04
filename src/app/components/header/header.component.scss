@@ -40,15 +40,15 @@
     }
   }
   button {
+    font-family: Roboto, Arial, sans-serif;
+    font-weight: 500;
+    text-transform: uppercase;
     .light & {
       color: colors.on-color(dark);
     }
     .dark & {
       color: colors.on-color(light);
     }
-    font-family: Roboto, Arial, sans-serif;
-    font-weight: 500;
-    text-transform: uppercase;
   }
 
   .links {
