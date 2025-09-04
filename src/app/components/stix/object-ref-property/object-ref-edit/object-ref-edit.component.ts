@@ -27,7 +27,8 @@ export class ObjectRefEditComponent implements OnInit, OnDestroy {
 
   public get objectRefs(): StixObject[] {
     if (!this.attackObjects || this.loading) return [];
-    const refIds = this.config.object[this.config.field].map(f => f.ref);
+    const refField = this.config.objectRefField.field;
+    const refIds = this.config.object[this.config.field].map(f => f[refField]);
     return refIds.map(id => this.attackObjects.find(o => o.stixID === id));
   }
 
