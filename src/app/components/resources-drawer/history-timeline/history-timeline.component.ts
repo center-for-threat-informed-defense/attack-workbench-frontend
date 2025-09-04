@@ -335,15 +335,7 @@ export class HistoryTimelineComponent implements OnInit, OnDestroy {
     else if (objectType == 'asset')
       objects$ = this.apiService.getAsset(objectStixID, null, 'all');
     else if (objectType == 'analytic')
-      objects$ = this.apiService.getAnalytic(
-        objectStixID,
-        null,
-        'all',
-        null,
-        null,
-        null,
-        { includeRefs: true }
-      );
+      objects$ = this.apiService.getAnalytic(objectStixID, null, 'all');
     else if (objectType == 'detection-strategy')
       objects$ = this.apiService.getDetectionStrategy(
         objectStixID,
