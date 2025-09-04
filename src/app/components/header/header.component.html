@@ -89,7 +89,15 @@
         mat-menu-item
         *ngFor="let stixRoute of allRoutes"
         [disabled]="!isLoggedIn"
+        [ngClass]="{ 'text-deemphasis': stixRoute.data.deprecated }"
         [routerLink]="stixRoute.path">
+        @if (stixRoute.data.deprecated) {
+          <mat-icon
+            style="margin-right: 6px"
+            [ngClass]="{ 'text-deemphasis': stixRoute.data.deprecated }"
+            >warning</mat-icon
+          >
+        }
         {{ stixRoute.data.breadcrumb }}
       </button>
       <button mat-menu-item routerLink="/docs">documentation</button>
