@@ -2,7 +2,7 @@
   <!-- Title & Help -->
   <div class="app-title">
     <h1>
-      <a routerLink=""> ATT&CK Workbench </a>
+      <a routerLink="">ATT&CK Workbench</a>
     </h1>
   </div>
   <button mat-icon-button routerLink="/docs" matTooltip="help">
@@ -34,6 +34,7 @@
         [disabled]="!isLoggedIn"
         (click)="setSectionDropdown(section)">
         {{ section.key }}
+        <mat-icon>arrow_drop_down</mat-icon>
       </button>
       <!-- dynamic dropdown menus -->
       <mat-menu #menu="matMenu" backdropClass="override-light">
