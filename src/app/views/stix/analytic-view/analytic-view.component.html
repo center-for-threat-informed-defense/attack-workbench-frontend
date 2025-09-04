@@ -60,6 +60,24 @@
         }"></app-string-property>
     </div>
   </div>
+  @if (config.mode === 'view') {
+    <!-- DETECTION STRATEGY -->
+    <!-- cannot be edited/diffed from the analytic page -->
+    <div class="row">
+      <div class="col">
+        <app-list-property
+          class="grow-to-row"
+          [config]="{
+            mode: config.mode,
+            object: config.object,
+            field: 'relatedDetections',
+            label: 'related detection strategy',
+            objectProperty: 'name',
+            showLink: true,
+          }"></app-list-property>
+      </div>
+    </div>
+  }
   <div class="row">
     <div class="col">
       <!-- DESCRIPTION -->

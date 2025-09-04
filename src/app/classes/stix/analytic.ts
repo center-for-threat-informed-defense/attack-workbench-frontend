@@ -13,8 +13,8 @@ export class Analytic extends StixObject {
   public mutableElements: MutableElement[] = [];
 
   // NOTE: the following two fields will only be populated when this object is fetched with the `includeRefs=true` param
-  public relatedDetections: RelatedRef[];
-  public relatedLogSources: RelatedRef[];
+  public relatedDetections: RelatedRef[] = [];
+  public relatedLogSources: RelatedRef[] = [];
 
   public readonly supportsAttackID = true;
   public readonly supportsNamespace = true;
