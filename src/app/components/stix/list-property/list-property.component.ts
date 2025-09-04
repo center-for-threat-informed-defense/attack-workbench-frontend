@@ -32,6 +32,9 @@ export interface ListPropertyConfig {
   field: string;
   /* the field to map to, if field is a list of objects (e.g. object[field].objectProperty) - used in 'view' mode only */
   objectProperty?: string;
+  /* show a link to the object property (e.g. object[field].objectProperty) - 
+     used in 'view' mode only with objectProperty */
+  showLink?: boolean;
   /* if specified, label with this string instead of field */
   label?: string;
   /* Default true if omitted. For the view mode, if false,
