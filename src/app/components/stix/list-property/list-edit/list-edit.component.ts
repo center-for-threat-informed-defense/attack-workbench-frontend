@@ -156,7 +156,7 @@ export class ListEditComponent implements OnInit, AfterContentChecked {
     } else if (this.config.field == 'analytics') {
       this.type = 'analytic';
       const subscription = this.restAPIConnectorService
-        .getAllAnalytics()
+        .getAllAnalytics({ includeRefs: true })
         .subscribe({
           next: analytics => {
             this.allObjects = analytics.data;

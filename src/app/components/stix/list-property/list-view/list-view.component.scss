@@ -13,6 +13,7 @@ ul.list-view {
     &:not(:last-child):after {
       content: ';';
       margin-right: 3px;
+      margin-left: -3px;
     }
   }
 }

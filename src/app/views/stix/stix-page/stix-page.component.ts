@@ -304,7 +304,15 @@ export class StixPageComponent implements OnInit, OnDestroy {
       else if (this.objectType == 'detection-strategy')
         objects$ = this.restApiService.getDetectionStrategy(objectStixID);
       else if (this.objectType == 'analytic')
-        objects$ = this.restApiService.getAnalytic(objectStixID);
+        objects$ = this.restApiService.getAnalytic(
+          objectStixID,
+          null,
+          'latest',
+          null,
+          null,
+          null,
+          { includeRefs: true }
+        );
       else if (this.objectType == 'asset')
         objects$ = this.restApiService.getAsset(objectStixID);
       else if (this.objectType == 'marking-definition')

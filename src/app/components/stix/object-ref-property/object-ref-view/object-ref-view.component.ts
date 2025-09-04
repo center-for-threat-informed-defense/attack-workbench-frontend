@@ -20,9 +20,7 @@ import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/re
 export class ObjectRefViewComponent implements OnInit, OnDestroy {
   @Input() public config: ObjectRefPropertyConfig;
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   public refTable: any[] = [];
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   public fields: any[];
   public attackObjects: StixObject[];
   private subscription: Subscription;
