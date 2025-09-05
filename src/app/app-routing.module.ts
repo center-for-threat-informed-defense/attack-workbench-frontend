@@ -63,30 +63,6 @@ const routes: Routes = [
             component: ObjectReviewPageComponent,
           },
           {
-            path: 'org-settings',
-            data: {
-              breadcrumb: 'organization settings',
-              title: 'Organization Identity',
-            },
-            component: OrgSettingsPageComponent,
-          },
-          {
-            path: 'user-accounts',
-            data: {
-              breadcrumb: 'user accounts',
-              title: 'User Accounts',
-            },
-            component: UserAccountsPageComponent,
-          },
-          {
-            path: 'default-marking-definitions',
-            data: {
-              breadcrumb: 'default marking definitions',
-              title: 'Default Marking Definitions',
-            },
-            component: DefaultMarkingDefinitionsComponent,
-          },
-          {
             path: 'teams',
             data: {
               breadcrumb: 'teams',
@@ -112,6 +88,33 @@ const routes: Routes = [
                 component: TeamsViewPageComponent,
               },
             ],
+          },
+          {
+            path: 'org-settings',
+            data: {
+              breadcrumb: 'organization settings',
+              title: 'Organization Identity',
+              roles: [Role.ADMIN]
+            },
+            component: OrgSettingsPageComponent,
+          },
+          {
+            path: 'user-accounts',
+            data: {
+              breadcrumb: 'user accounts',
+              title: 'User Accounts',
+              roles: [Role.ADMIN]
+            },
+            component: UserAccountsPageComponent,
+          },
+          {
+            path: 'default-marking-definitions',
+            data: {
+              breadcrumb: 'default marking definitions',
+              title: 'Default Marking Definitions',
+              roles: [Role.ADMIN]
+            },
+            component: DefaultMarkingDefinitionsComponent,
           },
         ],
       },
