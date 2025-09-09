@@ -1,6 +1,6 @@
 @use '../../../../../style/globals';
 
-ul.list-view {
+ul.list-property-view.list-view {
   margin: 0;
   padding: 0;
   &:not(.wrap) {
@@ -13,7 +13,6 @@ ul.list-view {
     &:not(:last-child):after {
       content: ';';
       margin-right: 3px;
-      margin-left: -3px;
     }
   }
 }
