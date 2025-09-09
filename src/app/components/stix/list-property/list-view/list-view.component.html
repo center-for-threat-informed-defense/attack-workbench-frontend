@@ -1,19 +1,11 @@
 <ul
-  class="list-view"
+  class="list-property-view list-view"
   [class.wrap]="wrap"
   [matTooltip]="tooltip"
   [matTooltipDisabled]="wrap"
   matTooltipPosition="above">
-  <li class="list-item" *ngFor="let value of values">
-    @if (showLink && config.objectProperty) {
-      <a
-        class="external-link"
-        [href]="internalLink(value)"
-        rel="nofollow noopener">
-        {{ value[config.objectProperty] }}
-      </a>
-    } @else {
-      {{ config.objectProperty ? value[config.objectProperty] : value }}
-    }
-  </li>
+  <li
+    class="list-item"
+    *ngFor="let value of values"
+    [innerHTML]="getHTML(value)"></li>
 </ul>
