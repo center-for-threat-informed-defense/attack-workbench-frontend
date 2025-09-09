@@ -135,6 +135,17 @@ export class ObjectStatusComponent implements OnInit {
     });
   }
 
+  // private validate() {
+  //   const subscription = this.object
+  //     .validate(this.restAPIService)
+  //     .subscribe({
+  //       complete: () => {
+  //         this.editorService.onReload.emit();
+  //         subscription.unsubscribe()
+  //       },
+  //     });
+  // }
+
   /**
    * Handle workflow state change
    * @param event workflow state selection
@@ -144,6 +155,7 @@ export class ObjectStatusComponent implements OnInit {
       if (event.source.value == 'none') this.object.workflow = undefined;
       else this.object.workflow = { state: event.source.value };
       this.save();
+      //this.validate()
     }
   }
 

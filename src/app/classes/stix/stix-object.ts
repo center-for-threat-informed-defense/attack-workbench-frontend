@@ -13,6 +13,7 @@ import {
   AttackTypeToRoute,
   StixTypeToAttackType,
 } from 'src/app/utils/type-mappings';
+import { StixTypesWithAttackIds, createAttackIdSchema } from '@mitre-attack/attack-data-model/dist/schemas/common/attack-id';
 
 export type workflowStates =
   | 'work-in-progress'
@@ -376,11 +377,14 @@ export abstract class StixObject extends Serializable {
    * @returns true if the ATT&CK ID is valid, false otherwise
    */
   public isValidAttackId(): boolean {
-    const idRegex = new RegExp(
-      '^([A-Z]+-)?' + this.attackIDValidator.regex + '$'
-    );
-    const attackIDValid = idRegex.test(this.attackID);
-    return attackIDValid;
+    if (this.type in StixTypeToAttackType) {
+      const attackIDSchema = createAttackIdSchema(
+        this.type as StixTypesWithAttackIds
+      );
+      const attackIDValid = attackIDSchema.safeParse(this.attackID);
+      return attackIDValid.success;
+    }
+    return false;
   }
 
   /**
@@ -402,13 +406,13 @@ export abstract class StixObject extends Serializable {
           err => `${err.path.join('.')}: ${err.message}`
         );
 
-        validatorErrors.forEach(e =>
-          result.errors.push({
-            result: 'error',
-            field: 'temp',
-            message: e,
-          })
-        );
+  validatorErrors.forEach(e =>
+    result.errors.push({
+      result: 'error',
+      field: 'temp',
+      message: e,
+    })
+  );
         // check if the name is unique if it has a name
         //do not check name or attackID for relationships or marking definitions
         if (
@@ -506,8 +510,8 @@ export abstract class StixObject extends Serializable {
           refs_fields.push('aliases');
         if (this.attackType == 'asset') refs_fields.push('relatedAssets');
         if (this.attackType == 'technique') refs_fields.push('detection');
-        if (this.attackType == 'campaign')
-          refs_fields.push('first_seen_citation', 'last_seen_citation');
+        // if (this.attackType == 'campaign')
+        //   refs_fields.push('first_seen_citation', 'last_seen_citation');
 
         return this.external_references
           .validate(restAPIService, { object: this, fields: refs_fields })
