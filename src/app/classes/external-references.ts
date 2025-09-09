@@ -221,18 +221,17 @@ export class ExternalReferences extends Serializable {
       brokenCitations: this.validateBrokenCitations(value, [
         /\(Citation:([^ ].*?)\)/gmu,
         /\(citation:(.*?)\)/gmu,
-        /\(Citation [^)]+\)/gmu
+        /\(Citation [^)]+\)/gmu,
       ]),
     });
 
     const apiMap: { [key: string]: Observable<any> } = {}; // Initialize API map
-      // Extract citations even if the value doesn't pass validation
+    // Extract citations even if the value doesn't pass validation
     const citations = value.match(reReference); // Extract citations using regex
     // Process citations
     if (citations) {
       for (const citation of citations) {
-        const validateValue =
-          xMitreFirstSeenCitationSchema.safeParse(citation);
+        const validateValue = xMitreFirstSeenCitationSchema.safeParse(citation);
         if (validateValue.success) {
           // Extract source name from citation
           const sourceName = citation.split('(Citation: ')[1].slice(0, -1);
