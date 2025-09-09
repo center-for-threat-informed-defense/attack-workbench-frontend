@@ -13,7 +13,10 @@ import {
   AttackTypeToRoute,
   StixTypeToAttackType,
 } from 'src/app/utils/type-mappings';
-import { StixTypesWithAttackIds, createAttackIdSchema } from '@mitre-attack/attack-data-model/dist/schemas/common/attack-id';
+import {
+  StixTypesWithAttackIds,
+  createAttackIdSchema,
+} from '@mitre-attack/attack-data-model/dist/schemas/common/attack-id';
 
 export type workflowStates =
   | 'work-in-progress'
@@ -406,13 +409,13 @@ export abstract class StixObject extends Serializable {
           err => `${err.path.join('.')}: ${err.message}`
         );
 
-  validatorErrors.forEach(e =>
-    result.errors.push({
-      result: 'error',
-      field: 'temp',
-      message: e,
-    })
-  );
+        validatorErrors.forEach(e =>
+          result.errors.push({
+            result: 'error',
+            field: 'temp',
+            message: e,
+          })
+        );
         // check if the name is unique if it has a name
         //do not check name or attackID for relationships or marking definitions
         if (
