@@ -14,7 +14,7 @@ export class ListViewComponent {
   @Input() public config: ListPropertyConfig;
 
   public get wrap() {
-    return this.config.hasOwnProperty('wrap') ? this.config.wrap : true;
+    return this.config.wrap !== undefined ? !!this.config.wrap : true;
   }
 
   public get showLink() {
@@ -47,6 +47,16 @@ export class ListViewComponent {
       return String(aVal).localeCompare(String(bVal));
     });
     return arr;
+  }
+
+  public getHTML(val: string | RelatedRef) {
+    if (this.config.objectProperty && typeof val === 'object') {
+      if (this.showLink) {
+        return `<a class="external-link" href="${this.internalLink(val)}" rel="nofollow noopener">${val[this.config.objectProperty]}</a>`;
+      }
+      return val[this.config.objectProperty];
+    }
+    return val;
   }
 
   public internalLink(item: RelatedRef): string {
