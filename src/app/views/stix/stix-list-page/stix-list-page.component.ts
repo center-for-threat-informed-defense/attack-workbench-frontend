@@ -83,7 +83,7 @@ export class StixListPageComponent implements OnInit {
       telemetry across different platforms and deployment scenarios.',
   };
 
-  public outdatedContentTypes: AttackType[] = ['data-source', 'data-component'];
+  public outdatedContentTypes: AttackType[] = ['data-source'];
 
   public get canEdit(): boolean {
     return this.authenticationService.canEdit(this.attackType);
