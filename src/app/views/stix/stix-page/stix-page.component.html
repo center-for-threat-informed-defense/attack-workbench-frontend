@@ -35,6 +35,9 @@
       <app-tactic-view
         *ngIf="objectType === 'tactic'"
         [config]="buildConfig()"></app-tactic-view>
+      <app-data-component-view
+        *ngIf="objectType === 'data-component'"
+        [config]="buildConfig()"></app-data-component-view>
       <app-data-source-view
         *ngIf="objectType === 'data-source'"
         [config]="buildConfig()"></app-data-source-view>
