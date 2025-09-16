@@ -1,9 +1,43 @@
-<div>
-  <div class="view-page grid spacing-20">
-    <div class="row">
-      <div class="col">
-        <h1>Review</h1>
-      </div>
+<div class="view-page grid spacing-20">
+  <div class="row">
+    <div class="col"><h1>Review</h1></div>
+  </div>
+
+  <div class="row">
+    <div class="col">
+      <mat-chip-listbox aria-label="Workflow filters">
+        <mat-chip-option
+          [selected]="!selectedState"
+          (selectionChange)="onAllToggle($event)"
+          class="square-chip">
+          All
+        </mat-chip-option>
+
+        <mat-chip-option
+          *ngFor="let workflow of workflows"
+          [selected]="selectedState === workflow[0]"
+          (selectionChange)="onStateToggle($event, workflow[0])"
+          class="square-chip">
+          {{ workflow[1] }}
+        </mat-chip-option>
+      </mat-chip-listbox>
+    </div>
+  </div>
+
+  <div class="row" *ngFor="let sec of sections">
+    <div class="col">
+      <h2 class="section-header">{{ sec.label }}</h2>
+
+      <app-stix-list
+        [config]="{
+          type: sec.type,
+          showLinks: true,
+          showUserSearch: false,
+          showFilters: false,
+        }">
+      </app-stix-list>
+
+      <div class="section-divider"></div>
     </div>
   </div>
 </div>
