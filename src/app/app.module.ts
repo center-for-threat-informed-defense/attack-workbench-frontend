@@ -211,11 +211,11 @@ import { BooleanPropertyComponent } from './components/stix/boolean-property/boo
 import { CitationDiffComponent } from './components/stix/citation-property/citation-diff/citation-diff.component';
 import { DescriptiveDiffComponent } from './components/stix/descriptive-property/descriptive-diff/descriptive-diff.component';
 import { ExternalReferencesDiffComponent } from './components/stix/external-references-property/external-references-diff/external-references-diff.component';
-import { ObjectRefDialogComponent } from './components/stix/object-ref-property/object-ref-dialog/object-ref-dialog.component';
-import { ObjectRefDiffComponent } from './components/stix/object-ref-property/object-ref-diff/object-ref-diff.component';
-import { ObjectRefEditComponent } from './components/stix/object-ref-property/object-ref-edit/object-ref-edit.component';
-import { ObjectRefPropertyComponent } from './components/stix/object-ref-property/object-ref-property.component';
-import { ObjectRefViewComponent } from './components/stix/object-ref-property/object-ref-view/object-ref-view.component';
+import { LogSourceReferenceDialogComponent } from './components/stix/log-source-reference-property/log-source-reference-dialog/log-source-reference-dialog.component';
+import { LogSourceReferenceDiffComponent } from './components/stix/log-source-reference-property/log-source-reference-diff/log-source-reference-diff.component';
+import { LogSourceReferenceEditComponent } from './components/stix/log-source-reference-property/log-source-reference-edit/log-source-reference-edit.component';
+import { LogSourceReferencePropertyComponent } from './components/stix/log-source-reference-property/log-source-reference-property.component';
+import { LogSourceReferenceViewComponent } from './components/stix/log-source-reference-property/log-source-reference-view/log-source-reference-view.component';
 import { OrderedListDiffComponent } from './components/stix/ordered-list-property/ordered-list-diff/ordered-list-diff.component';
 import { StatementDiffComponent } from './components/stix/statement-property/statement-diff/statement-diff.component';
 import { SubtypeDiffComponent } from './components/stix/subtype-property/subtype-diff/subtype-diff.component';
@@ -362,11 +362,11 @@ export function initConfig(appConfigService: AppConfigService) {
     LogSourceViewComponent,
     AnalyticViewComponent,
     StixListPageComponent,
-    ObjectRefPropertyComponent,
-    ObjectRefViewComponent,
-    ObjectRefEditComponent,
-    ObjectRefDialogComponent,
-    ObjectRefDiffComponent,
+    LogSourceReferencePropertyComponent,
+    LogSourceReferenceViewComponent,
+    LogSourceReferenceEditComponent,
+    LogSourceReferenceDialogComponent,
+    LogSourceReferenceDiffComponent,
     StixJsonDialogComponent,
     OutdatedContentWarningComponent,
     StreamProgressComponent,
