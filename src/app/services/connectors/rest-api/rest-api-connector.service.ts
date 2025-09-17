@@ -1866,15 +1866,15 @@ export class RestApiConnectorService extends ApiConnector {
   }
 
   /**
-   * Get the list of channels on a Log Source by its STIX ID
-   * @param stixId the STIX ID of the log source object
+   * Get the list of channels on a Data Component by its STIX ID
+   * @param stixId the STIX ID of the data component object
    */
-  public getLogSourceChannels(stixId: string): Observable<string[]> {
-    const url = `${this.apiUrl}/log-sources/${stixId}/channels`;
+  public getDataComponentChannels(stixId: string): Observable<string[]> {
+    const url = `${this.apiUrl}/data-components/${stixId}/channels`;
     return this.http
       .get<string[]>(url)
       .pipe(
-        tap(results => logger.log('retrieved log source channels', results))
+        tap(results => logger.log('retrieved data component channels', results))
       );
   }
 

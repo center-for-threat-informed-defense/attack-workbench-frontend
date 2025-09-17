@@ -49,18 +49,14 @@ export class Analytic extends StixObject {
     if (this.domains) rep.stix.x_mitre_domains = this.domains;
     if (this.logSourceReferences?.length)
       rep.stix.x_mitre_log_source_references = this.logSourceReferences.map(
-        ({ x_mitre_log_source_ref, permutation_names }) => ({
-          x_mitre_log_source_ref,
-          permutation_names,
+        ({ name, channel, dataComponentRef }) => ({
+          name,
+          channel,
+          x_mitre_data_component_ref: dataComponentRef,
         })
       );
     if (this.mutableElements?.length)
-      rep.stix.x_mitre_mutable_elements = this.mutableElements.map(
-        ({ field, description }) => ({
-          field,
-          description,
-        })
-      );
+      rep.stix.x_mitre_mutable_elements = this.mutableElements;
     return rep;
   }
 
@@ -101,8 +97,14 @@ export class Analytic extends StixObject {
       } else this.domains = [];
 
       if ('x_mitre_log_source_references' in sdo) {
-        if (this.isLogSourcesArray(sdo.x_mitre_log_source_references))
-          this.logSourceReferences = sdo.x_mitre_log_source_references;
+        if (this.isLogSourceReferencesArray(sdo.x_mitre_log_source_references))
+          this.logSourceReferences = sdo.x_mitre_log_source_references.map(
+            ({ name, channel, x_mitre_data_component_ref }) => ({
+              name,
+              channel,
+              dataComponentRef: x_mitre_data_component_ref,
+            })
+          );
         else
           logger.error(
             `TypeError: x_mitre_log_source_references is not an array of log source references: ${sdo.x_mitre_log_source_references} (${typeof sdo.x_mitre_log_source_references})`
@@ -141,9 +143,9 @@ export class Analytic extends StixObject {
     }
   }
 
-  public isLogSourcesArray(arr): boolean {
+  public isLogSourceReferencesArray(arr): boolean {
     return arr.every(a => {
-      return 'x_mitre_log_source_ref' in a && 'permutation_names' in a;
+      return 'name' in a && 'channel' in a && 'x_mitre_data_component_ref' in a;
     });
   }
 
@@ -179,34 +181,29 @@ export class Analytic extends StixObject {
           }
         }
 
-        // validate unique log source refs
+        // validate unique log source references
         if (this.logSourceReferences.length) {
-          const refs = this.logSourceReferences.map(
-            ({ x_mitre_log_source_ref }) => x_mitre_log_source_ref
-          );
-
           return forkJoin(
-            refs.map(ref =>
-              restAPIService.getLogSource(ref).pipe(
+            this.logSourceReferences.map(ref =>
+              restAPIService.getDataComponent(ref.dataComponentRef).pipe(
                 catchError(() => of(null)) // fallback if API fails
               )
             )
           ).pipe(
-            map(logSources => {
+            map(dataComponents => {
               const seen = new Set<string>();
-              this.logSourceReferences.forEach(
-                ({ x_mitre_log_source_ref }, index) => {
-                  if (seen.has(x_mitre_log_source_ref)) {
-                    const logSource = logSources[index];
-                    result.errors.push({
-                      field: 'logSourceReferences',
-                      result: 'error',
-                      message: `Duplicate log source reference found: ${logSource?.[0].attackID || 'unknown'}`,
-                    });
-                  }
-                  seen.add(x_mitre_log_source_ref);
+              this.logSourceReferences.forEach((lsr, idx) => {
+                const key = `${lsr.dataComponentRef}::${lsr.name}::${lsr.channel}`;
+                if (seen.has(key)) {
+                  const dataComponent = dataComponents[idx];
+                  result.errors.push({
+                    field: 'logSourceReferences',
+                    result: 'error',
+                    message: `Duplicate log source reference found: ${dataComponent?.[0].attackID || 'unknown'}`,
+                  });
                 }
-              );
+                seen.add(key);
+              });
               return result;
             })
           );
@@ -269,8 +266,9 @@ export class Analytic extends StixObject {
 }
 
 export interface LogSourceReference {
-  x_mitre_log_source_ref: string;
-  permutation_names: string[];
+  name: string;
+  channel: string;
+  dataComponentRef: string;
 }
 
 export interface MutableElement {

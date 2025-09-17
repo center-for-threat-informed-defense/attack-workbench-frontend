@@ -1,0 +1,32 @@
+<div class="log-source-reference-edit labelled-box">
+  <div class="content">
+    @if (!loading) {
+      <mat-chip-listbox>
+        @for (dataComponent of dataComponents; track $index; let i = $index) {
+          <mat-chip
+            matTooltipPosition="above"
+            [matTooltip]="getTooltip(i)"
+            [removable]="true"
+            (removed)="removeRef(i)"
+            (click)="editRef(i)">
+            {{ dataComponent?.name }} ({{ dataComponent?.attackID }})
+            <mat-icon matChipRemove>cancel</mat-icon>
+          </mat-chip>
+        }
+        <button
+          class="small-icon-button"
+          mat-icon-button
+          aria-label="add log source reference"
+          matTooltip="Add log source reference"
+          matTooltipPosition="right"
+          (click)="editRef()">
+          <mat-icon>add</mat-icon>
+        </button>
+      </mat-chip-listbox>
+    } @else {
+      <span class="text-deemphasis">Loading...</span>
+      <mat-spinner diameter="20"></mat-spinner>
+    }
+  </div>
+  <span class="labelled-box-label"> log source references </span>
+</div>
