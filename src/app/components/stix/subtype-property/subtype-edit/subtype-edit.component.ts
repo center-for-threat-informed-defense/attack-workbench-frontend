@@ -31,7 +31,7 @@ export class SubtypeEditComponent {
     const fieldTooltips = nonKeyFields.map(
       field => `${field.label || field.name}: ${value[field.name]}`
     );
-    return fieldTooltips.join(', ');
+    return fieldTooltips.join('; ');
   }
 
   public removeValue(i: number): void {

@@ -82,6 +82,6 @@ export class LogSourceReferenceEditComponent implements OnInit, OnDestroy {
 
   public getTooltip(i: number): string {
     const lsr = this.logSourceReferences[i];
-    return `name: ${lsr.name}, channel: ${lsr.channel}`;
+    return `name: ${lsr.name}; channel: ${lsr.channel}`;
   }
 }
