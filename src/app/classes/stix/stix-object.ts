@@ -444,8 +444,6 @@ export abstract class StixObject extends Serializable {
           accessor = restAPIService.getAllAnalytics(options);
         else if (this.attackType == 'detection-strategy')
           accessor = restAPIService.getAllDetectionStrategies(options);
-        else if (this.attackType == 'log-source')
-          accessor = restAPIService.getAllLogSources(options);
         else accessor = restAPIService.getAllTactics(options);
 
         return accessor.pipe(
@@ -832,8 +830,6 @@ export abstract class StixObject extends Serializable {
       accessor = apiService.getAllMatrices();
     else if (this.attackType == 'detection-strategy')
       accessor = apiService.getAllDetectionStrategies();
-    else if (this.attackType == 'log-source')
-      accessor = apiService.getAllLogSources();
     else if (this.attackType == 'analytic')
       accessor = apiService.getAllAnalytics();
     else accessor = null;

@@ -31,7 +31,6 @@ export const AttackTypeToPlural: Record<AttackType, string> = {
   'data-component': 'data-components',
   'detection-strategy': 'detection-strategies',
   'analytic': 'analytics',
-  'log-source': 'log-sources',
 };
 
 /**
@@ -63,5 +62,4 @@ export const StixTypeToAttackType: Record<StixType, AttackType> = {
   'identity': 'identity',
   'x-mitre-detection-strategy': 'detection-strategy',
   'x-mitre-analytic': 'analytic',
-  'x-mitre-log-source': 'log-source',
 };

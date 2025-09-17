@@ -224,7 +224,6 @@ import { StreamProgressComponent } from './components/stream-progress/stream-pro
 import { AppConfigService } from './services/config/app-config.service';
 import { AnalyticViewComponent } from './views/stix/analytic-view/analytic-view.component';
 import { DetectionStrategyViewComponent } from './views/stix/detection-strategy-view/detection-strategy-view.component';
-import { LogSourceViewComponent } from './views/stix/log-source-view/log-source-view.component';
 import { StixListPageComponent } from './views/stix/stix-list-page/stix-list-page.component';
 
 export function initConfig(appConfigService: AppConfigService) {
@@ -359,7 +358,6 @@ export function initConfig(appConfigService: AppConfigService) {
     TlpDiffComponent,
     VersionPopoverComponent,
     DetectionStrategyViewComponent,
-    LogSourceViewComponent,
     AnalyticViewComponent,
     StixListPageComponent,
     LogSourceReferencePropertyComponent,

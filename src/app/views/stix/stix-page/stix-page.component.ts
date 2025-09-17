@@ -299,8 +299,6 @@ export class StixPageComponent implements OnInit, OnDestroy {
         );
       else if (this.objectType == 'data-component')
         objects$ = this.restApiService.getDataComponent(objectStixID);
-      else if (this.objectType == 'log-source')
-        objects$ = this.restApiService.getLogSource(objectStixID);
       else if (this.objectType == 'detection-strategy')
         objects$ = this.restApiService.getDetectionStrategy(objectStixID);
       else if (this.objectType == 'analytic')

@@ -73,11 +73,6 @@ const stixRouteData = [
     headerSection: 'defenses',
   },
   {
-    attackType: 'log-source',
-    editable: true,
-    headerSection: 'defenses',
-  },
-  {
     attackType: 'data-source',
     editable: true,
     headerSection: 'defenses',
