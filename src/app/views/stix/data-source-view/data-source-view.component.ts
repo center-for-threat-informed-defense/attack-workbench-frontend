@@ -38,9 +38,7 @@ export class DataSourceViewComponent extends StixViewPage implements OnInit {
 
   ngOnInit(): void {
     if (this.dataSource.firstInitialized) {
-      this.dataSource.initializeWithDefaultMarkingDefinitions(
-        this.restApiService
-      );
+      this.dataSource.setDefaultMarkingDefinitions(this.restApiService);
     }
     this.loadData();
   }

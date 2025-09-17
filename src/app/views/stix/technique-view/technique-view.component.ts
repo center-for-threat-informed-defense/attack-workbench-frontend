@@ -45,9 +45,7 @@ export class TechniqueViewComponent
 
   ngOnInit() {
     if (this.technique.firstInitialized) {
-      this.technique.initializeWithDefaultMarkingDefinitions(
-        this.restApiConnector
-      );
+      this.technique.setDefaultMarkingDefinitions(this.restApiConnector);
     }
   }
 
