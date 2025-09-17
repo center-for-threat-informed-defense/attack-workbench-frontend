@@ -44,15 +44,15 @@ export class LogSourceReferenceEditComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    this.loadDataComponents();
+    this.loadDataComponents(true);
   }
 
   ngOnDestroy(): void {
     if (this.subscription) this.subscription.unsubscribe();
   }
 
-  public loadDataComponents() {
-    this.loading = true;
+  public loadDataComponents(init: boolean) {
+    this.loading = init;
     this.subscription = this.apiService.getAllDataComponents().subscribe({
       next: results => {
         this.allDataComponents = results.data as DataComponent[];
@@ -75,7 +75,7 @@ export class LogSourceReferenceEditComponent implements OnInit, OnDestroy {
       autoFocus: false, // prevents auto focus on form fields
     });
     const subscription = dialogRef.afterClosed().subscribe({
-      next: () => this.loadDataComponents(),
+      next: () => this.loadDataComponents(false),
       complete: () => subscription.unsubscribe(),
     });
   }
