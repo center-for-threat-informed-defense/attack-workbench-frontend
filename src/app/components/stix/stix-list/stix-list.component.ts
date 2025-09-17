@@ -329,6 +329,7 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
             'name'
           );
           this.addColumn('platform', 'platform', 'plain');
+          this.addColumn('domain', 'domains', 'list');
           this.addVersionsAndDatesColumns();
           this.tableDetail = [
             {
@@ -558,6 +559,7 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
           'software',
           'tactic',
           'technique',
+          'analytic',
         ].includes(this.config.type)
       : false;
     const filterByPlatform: boolean = this.config.type
