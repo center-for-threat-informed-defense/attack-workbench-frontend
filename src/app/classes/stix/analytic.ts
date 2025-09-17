@@ -12,9 +12,8 @@ export class Analytic extends StixObject {
   public logSourceReferences: LogSourceReference[] = [];
   public mutableElements: MutableElement[] = [];
 
-  // NOTE: the following two fields will only be populated when this object is fetched with the `includeRefs=true` param
+  // NOTE: the following fields will only be populated when this object is fetched with the `includeRefs=true` param
   public relatedDetections: RelatedRef[] = [];
-  public relatedLogSources: RelatedRef[] = [];
 
   public readonly supportsAttackID = true;
   public readonly supportsNamespace = true;
@@ -136,9 +135,6 @@ export class Analytic extends StixObject {
 
       this.relatedDetections = relatedRefs.filter(
         ref => ref.type === 'x-mitre-detection-strategy'
-      );
-      this.relatedLogSources = relatedRefs.filter(
-        ref => ref.type === 'x-mitre-log-source'
       );
     }
   }

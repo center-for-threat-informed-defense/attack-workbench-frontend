@@ -78,9 +78,6 @@ export class StixListPageComponent implements OnInit {
     'analytic':
       'Analytics contain platform-specific detection logic and represent the \
       implementation details of a detection strategy.',
-    'log-source':
-      'Log sources define immutable configurations for collecting security \
-      telemetry across different platforms and deployment scenarios.',
   };
 
   public outdatedContentTypes: AttackType[] = ['data-source'];

@@ -302,7 +302,6 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
           ];
           break;
         case 'detection-strategy':
-        case 'log-source':
         case 'campaign':
           this.addColumn('', 'workflow', 'icon');
           this.addColumn('', 'state', 'icon');
@@ -1066,8 +1065,6 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
           offset: offset,
           includeDeprecated: deprecated,
         });
-      else if (this.config.type == 'log-source')
-        this.data$ = this.restAPIConnectorService.getAllLogSources(options);
       else if (this.config.type == 'detection-strategy')
         this.data$ =
           this.restAPIConnectorService.getAllDetectionStrategies(options);
