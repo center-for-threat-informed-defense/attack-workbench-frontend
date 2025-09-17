@@ -70,7 +70,8 @@ export class StixListPageComponent implements OnInit {
             include data components to provide an additional layer of context \
             and identify the specific properties of a data source that are \
             relevant to detecting an ATT&CK technique or sub-technique.',
-    'data-component': undefined,
+    'data-component':
+      'Data Components identify the specific properties/values relevant to detecting a given ATT&CK technique or sub-technique.',
     'detection-strategy':
       'Detection strategies define high-level approaches for detecting specific \
       adversary techniques. They serve as containers that organize multiple \
