@@ -35,9 +35,7 @@ export class DetectionStrategyViewComponent
 
   ngOnInit(): void {
     if (this.detectionStrategy.firstInitialized) {
-      this.detectionStrategy.initializeWithDefaultMarkingDefinitions(
-        this.apiService
-      );
+      this.detectionStrategy.setDefaultMarkingDefinitions(this.apiService);
     }
 
     this.loading = true;

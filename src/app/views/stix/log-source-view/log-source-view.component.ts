@@ -29,7 +29,7 @@ export class LogSourceViewComponent extends StixViewPage implements OnInit {
 
   ngOnInit(): void {
     if (this.logSource.firstInitialized) {
-      this.logSource.initializeWithDefaultMarkingDefinitions(this.apiService);
+      this.logSource.setDefaultMarkingDefinitions(this.apiService);
     }
   }
 }

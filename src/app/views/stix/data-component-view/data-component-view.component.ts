@@ -21,7 +21,7 @@ export class DataComponentViewComponent extends StixViewPage implements OnInit {
   }
 
   constructor(
-    private restAPIConnectorService: RestApiConnectorService,
+    private apiService: RestApiConnectorService,
     authenticationService: AuthenticationService
   ) {
     super(authenticationService);
@@ -29,9 +29,7 @@ export class DataComponentViewComponent extends StixViewPage implements OnInit {
 
   ngOnInit(): void {
     if (this.dataComponent.firstInitialized) {
-      this.dataComponent.initializeWithDefaultMarkingDefinitions(
-        this.restAPIConnectorService
-      );
+      this.dataComponent.setDefaultMarkingDefinitions(this.apiService);
     }
   }
 }

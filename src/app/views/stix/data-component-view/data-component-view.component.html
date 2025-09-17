@@ -15,15 +15,13 @@
   </div>
   <div class="row">
     <div class="col">
-      <!-- Domains -->
-      <app-list-property
+      <!-- ATT&CK ID -->
+      <app-attackid-property
         class="grow-to-row"
         [config]="{
           mode: config.mode,
           object: config.object,
-          field: 'domains',
-          editType: 'select',
-        }"></app-list-property>
+        }"></app-attackid-property>
     </div>
     <div class="col">
       <!-- VERSION NUMBER -->
@@ -33,6 +31,19 @@
           mode: config.mode,
           object: config.object,
         }"></app-version-property>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col">
+      <!-- Domains -->
+      <app-list-property
+        class="grow-to-row"
+        [config]="{
+          mode: config.mode,
+          object: config.object,
+          field: 'domains',
+          editType: 'select',
+        }"></app-list-property>
     </div>
   </div>
   <div class="row">
@@ -47,6 +58,33 @@
           referencesField: 'external_references',
           label: 'Description',
         }"></app-descriptive-property>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col">
+      <!-- LOG SOURCES -->
+      <app-subtype-property
+        class="grow-to-row"
+        [config]="{
+          mode: config.mode,
+          object: config.object,
+          field: 'logSources',
+          label: 'log sources',
+          subtypeFields: [
+            {
+              name: 'name',
+              required: true,
+              key: true,
+              editType: 'string',
+            },
+            {
+              name: 'channel',
+              required: true,
+              editType: 'string',
+            },
+          ],
+          tooltip: 'a log source',
+        }"></app-subtype-property>
     </div>
   </div>
   <!-- RELATIONSHIPS - NOTE: these are only shown in 'view' mode -->
