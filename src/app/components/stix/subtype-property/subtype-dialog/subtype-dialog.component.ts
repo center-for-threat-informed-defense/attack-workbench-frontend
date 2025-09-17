@@ -89,7 +89,6 @@ export class SubtypeDialogComponent implements OnInit, OnDestroy {
               p => p.propertyName == field
             );
             if ('domains' in this.config.object) {
-              // eslint-disable-next-line @typescript-eslint/no-explicit-any
               const obj = this.config.object as any;
               property.domains.forEach(domain => {
                 if (obj.domains.includes(domain.domainName)) {
@@ -128,7 +127,7 @@ export class SubtypeDialogComponent implements OnInit, OnDestroy {
     this.saveSubscription = this.config.object['external_references']
       .parseObjectCitations(this.config.object, this.restApiService)
       .subscribe({
-        next: result => {
+        next: () => {
           this.editorService.onReloadReferences.emit();
         },
       });
