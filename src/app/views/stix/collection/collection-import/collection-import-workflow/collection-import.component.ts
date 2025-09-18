@@ -19,7 +19,6 @@ import {
   DataSource,
   DetectionStrategy,
   Group,
-  LogSource,
   Matrix,
   Mitigation,
   Relationship,
@@ -82,7 +81,6 @@ export class CollectionImportComponent implements OnInit {
     data_source: new CollectionDiffCategories<DataSource>(),
     data_component: new CollectionDiffCategories<DataComponent>(),
     asset: new CollectionDiffCategories<Asset>(),
-    log_source: new CollectionDiffCategories<LogSource>(),
     analytic: new CollectionDiffCategories<Analytic>(),
     detection_strategy: new CollectionDiffCategories<DetectionStrategy>(),
   };
@@ -127,7 +125,6 @@ export class CollectionImportComponent implements OnInit {
     'x-mitre-data-component': 'datacomponents',
     'x-mitre-asset': 'assets',
     'x-mitre-matrix': 'matrices',
-    'x-mitre-log-source': 'logsources',
     'x-mitre-detection-strategy': 'detectionstrategies',
     'x-mitre-analytic': 'analytics',
   };
@@ -689,11 +686,6 @@ export class CollectionImportComponent implements OnInit {
         case 'x-mitre-asset': // asset
           this.object_import_categories.asset[category].push(new Asset(raw));
           break;
-        case 'x-mitre-log-source': // log source
-          this.object_import_categories.log_source[category].push(
-            new LogSource(raw)
-          );
-          break;
         case 'x-mitre-analytic': // analytic
           this.object_import_categories.analytic[category].push(
             new Analytic(raw)
@@ -736,9 +728,6 @@ export class CollectionImportComponent implements OnInit {
         case 'detectionstrategy':
           object.id = 'x-mitre-detection-strategy--' + uuid();
           return;
-        case 'logsource':
-          object.id = 'x-mitre-log-source--' + uuid();
-          return;
       }
     }
     if (object.attack_id) {
@@ -749,7 +738,6 @@ export class CollectionImportComponent implements OnInit {
         { regex: /^DS\d{4}$/, stix: 'x-mitre-data-source' },
         { regex: /^DET\d{4}$/, stix: 'x-mitre-detection-strategy' },
         { regex: /^G\d{4}$/, stix: 'intrusion-set' },
-        { regex: /^LS\d{4}$/, stix: 'x-mitre-log-source' },
         { regex: /^M\d{4}$/, stix: 'course-of-action' },
         { regex: /^TA\d{4}$/, stix: 'x-mitre-tactic' },
         { regex: /^T\d{4}$/, stix: 'attack-pattern' }, // technique

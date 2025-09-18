@@ -1,6 +1,9 @@
 <div
   class="grid spacing-16 view-page relationship-view"
   *ngIf="loaded; else loading">
+  @if (showOutdatedContentWarning) {
+    <app-outdated-content-warning></app-outdated-content-warning>
+  }
   <div class="row">
     <div class="col">
       <ng-container
