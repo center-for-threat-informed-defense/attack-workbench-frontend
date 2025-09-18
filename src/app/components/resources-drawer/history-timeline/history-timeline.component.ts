@@ -342,8 +342,7 @@ export class HistoryTimelineComponent implements OnInit, OnDestroy {
         null,
         'all'
       );
-    else if (objectType == 'log-source')
-      objects$ = this.apiService.getLogSource(objectStixID, null, 'all');
+
     // set up subscribers to get relationships and collections
     const relationships$ = this.apiService.getRelatedTo({
       sourceOrTargetRef: objectStixID,

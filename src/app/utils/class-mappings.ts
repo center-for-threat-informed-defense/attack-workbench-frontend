@@ -25,7 +25,6 @@ import {
   DataComponent,
   DetectionStrategy,
   Analytic,
-  LogSource,
 } from '../classes/stix';
 import { Collection } from '../classes/stix/collection';
 import { AttackType, StixType } from './types';
@@ -50,7 +49,6 @@ type AttackClass =
   | typeof DataSource
   | typeof DataComponent
   | typeof DetectionStrategy
-  | typeof LogSource
   | typeof Analytic;
 
 /**
@@ -74,7 +72,6 @@ export const AttackTypeToClass: Record<AttackType, AttackClass> = {
   'data-source': DataSource,
   'data-component': DataComponent,
   'detection-strategy': DetectionStrategy,
-  'log-source': LogSource,
   'analytic': Analytic,
 };
 
@@ -100,6 +97,5 @@ export const StixTypeToClass: Record<StixType, AttackClass> = {
   'x-mitre-data-component': DataComponent,
   'note': Note,
   'x-mitre-detection-strategy': DetectionStrategy,
-  'x-mitre-log-source': LogSource,
   'x-mitre-analytic': Analytic,
 };

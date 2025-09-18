@@ -28,9 +28,7 @@ export class CampaignViewComponent extends StixViewPage implements OnInit {
 
   ngOnInit(): void {
     if (this.campaign.firstInitialized) {
-      this.campaign.initializeWithDefaultMarkingDefinitions(
-        this.restApiConnector
-      );
+      this.campaign.setDefaultMarkingDefinitions(this.restApiConnector);
     }
   }
 }

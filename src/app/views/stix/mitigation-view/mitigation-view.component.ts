@@ -41,9 +41,7 @@ export class MitigationViewComponent extends StixViewPage implements OnInit {
 
   ngOnInit() {
     if (this.mitigation.firstInitialized) {
-      this.mitigation.initializeWithDefaultMarkingDefinitions(
-        this.restApiConnector
-      );
+      this.mitigation.setDefaultMarkingDefinitions(this.restApiConnector);
     }
   }
 }

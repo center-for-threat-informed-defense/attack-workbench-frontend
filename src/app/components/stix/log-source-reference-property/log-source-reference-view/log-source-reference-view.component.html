@@ -1,0 +1,42 @@
+<div class="log-source-reference-view labelled-box grow-to-row">
+  <div class="content">
+    @if (logSourceReferences.length) {
+      <table
+        aria-describedby="log source reference table"
+        mat-table
+        [dataSource]="logSourceReferences"
+        class="log-source-reference-table">
+        <!-- data component attack id column -->
+        <ng-container matColumnDef="dataComponentRef">
+          <th mat-header-cell *matHeaderCellDef>Data Component</th>
+          <td mat-cell *matCellDef="let element">
+            <a
+              class="external-link"
+              [href]="internalLink(element.dataComponentRef)"
+              rel="nofollow noopener">
+              {{ getName(element.dataComponentRef) }} ({{
+                getAttackId(element.dataComponentRef)
+              }})
+            </a>
+          </td>
+        </ng-container>
+
+        <!-- log source name column -->
+        <ng-container matColumnDef="name">
+          <th mat-header-cell *matHeaderCellDef>Log Source Name</th>
+          <td mat-cell *matCellDef="let element">{{ element.name }}</td>
+        </ng-container>
+
+        <!-- log source channel column -->
+        <ng-container matColumnDef="channel">
+          <th mat-header-cell *matHeaderCellDef>Log Source Channel</th>
+          <td mat-cell *matCellDef="let element">{{ element.channel }}</td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="fields"></tr>
+        <tr mat-row *matRowDef="let row; columns: fields"></tr>
+      </table>
+    }
+  </div>
+  <span class="labelled-box-label"> log source references </span>
+</div>

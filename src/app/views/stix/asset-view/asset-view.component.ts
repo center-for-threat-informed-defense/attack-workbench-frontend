@@ -27,7 +27,7 @@ export class AssetViewComponent extends StixViewPage implements OnInit {
 
   ngOnInit(): void {
     if (this.asset.firstInitialized) {
-      this.asset.initializeWithDefaultMarkingDefinitions(this.restApiConnector);
+      this.asset.setDefaultMarkingDefinitions(this.restApiConnector);
     }
   }
 }

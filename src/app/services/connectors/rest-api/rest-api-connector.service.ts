@@ -30,7 +30,6 @@ import {
   DetectionStrategy,
   Group,
   Identity,
-  LogSource,
   MarkingDefinition,
   Matrix,
   Mitigation,
@@ -401,20 +400,6 @@ export class RestApiConnectorService extends ApiConnector {
    */
   public get getAllAnalytics() {
     return this.getStixObjectsFactory<Analytic>('analytic');
-  }
-  /**
-   * Get all log sources
-   * @param {number} [limit] the number of log sources to retrieve
-   * @param {number} [offset] the number of log sources to skip
-   * @param {string} [state] if specified, only get objects with this state
-   * @param {string} [lastUpdatedBy] if specified, only get objects which were last updated by these users
-   * @param {boolean} [revoked] if true, get revoked objects
-   * @param {boolean} [deprecated] if true, get deprecated objects
-   * @param {string[]} [excludeIDs] if specified, excludes these STIX IDs from the result
-   * @returns {Observable<LogSource[]>} observable of retrieved objects
-   */
-  public get getAllLogSources() {
-    return this.getStixObjectsFactory<LogSource>('log-source');
   }
   /**
    * Get all matrices
@@ -1050,16 +1035,6 @@ export class RestApiConnectorService extends ApiConnector {
     return this.getStixObjectFactory<Analytic>('analytic');
   }
   /**
-   * Get a single log source by STIX ID
-   * @param {string} id the object STIX ID
-   * @param {Date} [modified] if specified, get the version modified at the given date
-   * @param {versions} [string] default "latest", if "all" returns all versions of the object instead of just the latest version.
-   * @returns {Observable<LogSource>} the object with the given ID and modified date
-   */
-  public get getLogSource() {
-    return this.getStixObjectFactory<LogSource>('log-source');
-  }
-  /**
    * Get a single matrix by STIX ID
    * @param {string} id the object STIX ID
    * @param {Date} [modified] if specified, get the version modified at the given date
@@ -1227,14 +1202,6 @@ export class RestApiConnectorService extends ApiConnector {
    */
   public get postAnalytic() {
     return this.postStixObjectFactory<Analytic>('analytic');
-  }
-  /**
-   * POST (create) a new log source
-   * @param {LogSource} object the object to create
-   * @returns {Observable<LogSource>} the created object
-   */
-  public get postLogSource() {
-    return this.postStixObjectFactory<LogSource>('log-source');
   }
   /**
    * POST (create) a new matrix
@@ -1412,15 +1379,6 @@ export class RestApiConnectorService extends ApiConnector {
     return this.putStixObjectFactory<Analytic>('analytic');
   }
   /**
-   * PUT (update) a log source
-   * @param {LogSource} object the object to update
-   * @param {Date} [modified] optional, the modified date to overwrite. If omitted, uses the modified field of the object
-   * @returns {Observable<LogSource>} the updated object
-   */
-  public get putLogSource() {
-    return this.putStixObjectFactory<LogSource>('log-source');
-  }
-  /**
    * PUT (update) a matrix
    * @param {Matrix} object the object to update
    * @param {Date} [modified] optional, the modified date to overwrite. If omitted, uses the modified field of the object
@@ -1556,14 +1514,6 @@ export class RestApiConnectorService extends ApiConnector {
    */
   public get deleteAnalytic() {
     return this.deleteStixObjectFactory('analytic');
-  }
-  /**
-   * DELETE a log source
-   * @param {string} id the STIX ID of the object to delete
-   * @returns {Observable<{}>} observable of the response body
-   */
-  public get deleteLogSource() {
-    return this.deleteStixObjectFactory('log-source');
   }
   /**
    * DELETE a matrix
@@ -1866,15 +1816,15 @@ export class RestApiConnectorService extends ApiConnector {
   }
 
   /**
-   * Get the list of channels on a Log Source by its STIX ID
-   * @param stixId the STIX ID of the log source object
+   * Get the list of channels on a Data Component by its STIX ID
+   * @param stixId the STIX ID of the data component object
    */
-  public getLogSourceChannels(stixId: string): Observable<string[]> {
-    const url = `${this.apiUrl}/log-sources/${stixId}/channels`;
+  public getDataComponentChannels(stixId: string): Observable<string[]> {
+    const url = `${this.apiUrl}/data-components/${stixId}/channels`;
     return this.http
       .get<string[]>(url)
       .pipe(
-        tap(results => logger.log('retrieved log source channels', results))
+        tap(results => logger.log('retrieved data component channels', results))
       );
   }
 

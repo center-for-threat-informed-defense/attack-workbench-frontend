@@ -12,7 +12,6 @@ import {
   DataSource,
   DetectionStrategy,
   Group,
-  LogSource,
   Matrix,
   Mitigation,
   Relationship,
@@ -58,7 +57,6 @@ export class CollectionImportReviewComponent
     data_source: new CollectionDiffCategories<DataSource>(),
     data_component: new CollectionDiffCategories<DataComponent>(),
     asset: new CollectionDiffCategories<Asset>(),
-    log_source: new CollectionDiffCategories<LogSource>(),
     analytic: new CollectionDiffCategories<Analytic>(),
     detection_strategy: new CollectionDiffCategories<DetectionStrategy>(),
   };
@@ -166,9 +164,6 @@ export class CollectionImportReviewComponent
           this.collection_import_categories.detection_strategy[category].push(
             object
           );
-          break;
-        case 'x-mitre-log-source': // log source
-          this.collection_import_categories.log_source[category].push(object);
           break;
       }
     }
