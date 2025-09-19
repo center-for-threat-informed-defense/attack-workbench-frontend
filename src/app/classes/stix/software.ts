@@ -49,6 +49,9 @@ export class Software extends StixObject {
     rep.stix.x_mitre_contributors = this.contributors.map(x => x.trim());
     if (this.type == 'malware') rep.stix.is_family = true; // add is_family to malware type SDOs
 
+    // Strip properties that are empty strs + lists
+    rep.stix = this.filterObject(rep.stix);
+    
     return rep;
   }
 

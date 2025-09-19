@@ -1,8 +1,8 @@
-import { StixObject } from './stix-object';
-import { logger } from '../../utils/logger';
 import { Observable } from 'rxjs';
 import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/rest-api-connector.service';
+import { logger } from '../../utils/logger';
 import { ValidationData } from '../serializable';
+import { StixObject } from './stix-object';
 
 export class Asset extends StixObject {
   public name = '';
@@ -57,6 +57,9 @@ export class Asset extends StixObject {
     rep.stix.x_mitre_platforms = this.platforms;
     rep.stix.x_mitre_contributors = this.contributors.map(x => x.trim());
 
+    // Strip properties that are empty strs + lists
+    rep.stix = this.filterObject(rep.stix);
+    
     return rep;
   }
 

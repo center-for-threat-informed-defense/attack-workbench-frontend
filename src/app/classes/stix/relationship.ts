@@ -382,6 +382,9 @@ export class Relationship extends StixObject {
     rep.stix.source_ref = this.source_ref;
     rep.stix.target_ref = this.target_ref;
 
+    // Strip properties that are empty strs + lists
+    rep.stix = this.filterObject(rep.stix);
+    
     return rep;
   }
 

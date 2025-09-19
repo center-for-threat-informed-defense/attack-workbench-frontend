@@ -47,6 +47,9 @@ export class Mitigation extends StixObject {
       rep.stix.labels = this.securityControls;
     }
 
+    // Strip properties that are empty strs + lists
+    rep.stix = this.filterObject(rep.stix);
+    
     return rep;
   }
 

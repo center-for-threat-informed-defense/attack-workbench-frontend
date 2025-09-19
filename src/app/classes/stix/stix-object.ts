@@ -677,6 +677,21 @@ export abstract class StixObject extends Serializable {
     return result;
   }
 
+  public hasValue(field) {
+    return (
+      field !== undefined &&
+      field !== null &&
+      field !== '' &&
+      !(Array.isArray(field) && field.length === 0)
+    );
+  }
+
+  public filterObject(obj) {
+    return Object.fromEntries(
+      Object.entries(obj).filter(entry => this.hasValue(entry[1]))
+    );
+  }
+
   /**
    * Check if the given array is a list of strings
    * @param arr the array to check
