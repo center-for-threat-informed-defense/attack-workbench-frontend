@@ -35,12 +35,12 @@
       <app-tactic-view
         *ngIf="objectType === 'tactic'"
         [config]="buildConfig()"></app-tactic-view>
+      <app-data-component-view
+        *ngIf="objectType === 'data-component'"
+        [config]="buildConfig()"></app-data-component-view>
       <app-data-source-view
         *ngIf="objectType === 'data-source'"
         [config]="buildConfig()"></app-data-source-view>
-      <app-log-source-view
-        *ngIf="objectType === 'log-source'"
-        [config]="buildConfig()"></app-log-source-view>
       <app-detection-strategy-view
         *ngIf="objectType === 'detection-strategy'"
         [config]="buildConfig()"></app-detection-strategy-view>

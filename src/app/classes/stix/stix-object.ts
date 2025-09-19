@@ -13,6 +13,7 @@ import {
   AttackTypeToRoute,
   StixTypeToAttackType,
 } from 'src/app/utils/type-mappings';
+import { StixType } from 'src/app/utils/types';
 
 export type workflowStates =
   | 'work-in-progress'
@@ -439,6 +440,10 @@ export abstract class StixObject extends Serializable {
           accessor = restAPIService.getAllDataComponents(options);
         else if (this.attackType == 'asset')
           accessor = restAPIService.getAllAssets();
+        else if (this.attackType == 'analytic')
+          accessor = restAPIService.getAllAnalytics(options);
+        else if (this.attackType == 'detection-strategy')
+          accessor = restAPIService.getAllDetectionStrategies(options);
         else accessor = restAPIService.getAllTactics(options);
 
         return accessor.pipe(
@@ -780,9 +785,7 @@ export abstract class StixObject extends Serializable {
    * Updates the object's marking definitions with the default the first time an object is created
    * @param restAPIService [RestApiConnectorService] the service to perform the POST/PUT through
    */
-  public initializeWithDefaultMarkingDefinitions(
-    restAPIService: RestApiConnectorService
-  ) {
+  public setDefaultMarkingDefinitions(restAPIService: RestApiConnectorService) {
     const data$ = restAPIService.getDefaultMarkingDefinitions();
     const sub = data$.subscribe({
       next: data => {
@@ -820,13 +823,13 @@ export abstract class StixObject extends Serializable {
       accessor = apiService.getAllTechniques();
     else if (this.attackType == 'data-source')
       accessor = apiService.getAllDataSources();
+    else if (this.attackType == 'data-component')
+      accessor = apiService.getAllDataComponents();
     else if (this.attackType == 'asset') accessor = apiService.getAllAssets();
     else if (this.attackType == 'matrix')
       accessor = apiService.getAllMatrices();
     else if (this.attackType == 'detection-strategy')
       accessor = apiService.getAllDetectionStrategies();
-    else if (this.attackType == 'log-source')
-      accessor = apiService.getAllLogSources();
     else if (this.attackType == 'analytic')
       accessor = apiService.getAllAnalytics();
     else accessor = null;
@@ -969,4 +972,11 @@ export class LinkByIdParseResult {
     this.missingLinks = new Set([...this.missingLinks, ...that.missingLinks]);
     this.brokenLinks = new Set([...this.brokenLinks, ...that.brokenLinks]);
   }
+}
+
+export interface RelatedRef {
+  stixId: string;
+  name: string;
+  attackId: string;
+  type: StixType;
 }

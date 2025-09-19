@@ -1,4 +1,4 @@
-import { Observable } from 'rxjs';
+import { map, Observable } from 'rxjs';
 import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/rest-api-connector.service';
 import { ValidationData } from '../serializable';
 import { StixObject } from './stix-object';
@@ -9,17 +9,21 @@ export class DataComponent extends StixObject {
   public name = '';
   public description = '';
   public domains: string[] = [];
-  public dataSourceRef: string; // stix ID of the data source
+  public logSources: LogSource[] = [];
 
   // NOTE: the following field will only be populated when this object
   // is fetched using RestApiConnectorServicegetDataComponent()
   public data_source: DataSource = null;
+  public dataSourceRef: string; // (deprecated) stix ID of the data source
 
   // data components do not support ATT&CK IDs
-  public readonly supportsAttackID = false;
-  public readonly supportsNamespace = false;
+  public readonly supportsAttackID = true;
+  public readonly supportsNamespace = true;
   protected get attackIDValidator() {
-    return null;
+    return {
+      regex: 'DC\\d{4}',
+      format: 'DC####',
+    };
   }
 
   constructor(sdo?: any) {
@@ -53,6 +57,9 @@ export class DataComponent extends StixObject {
     rep.stix.description = this.description;
     rep.stix.x_mitre_data_source_ref = this.dataSourceRef;
     rep.stix.x_mitre_domains = this.domains;
+    if (this.logSources.length) {
+      rep.stix.x_mitre_log_sources = this.logSources;
+    }
 
     return rep;
   }
@@ -110,6 +117,21 @@ export class DataComponent extends StixObject {
         this.domains = sdo.x_mitre_domains;
       else logger.error('TypeError: domains field is not a string array.');
     } else this.domains = [];
+
+    if ('x_mitre_log_sources' in sdo) {
+      if (this.isLogSourcesArray(sdo.x_mitre_log_sources))
+        this.logSources = sdo.x_mitre_log_sources;
+      else
+        logger.error(
+          `TypeError: x_mitre_log_sources field is not an array of log sources: ${sdo.x_mitre_log_sources} (${typeof sdo.x_mitre_log_sources})`
+        );
+    } else this.logSources = [];
+  }
+
+  private isLogSourcesArray(arr): boolean {
+    return arr.every(a => {
+      return 'name' in a && 'channel' in a;
+    });
   }
 
   /**
@@ -120,7 +142,26 @@ export class DataComponent extends StixObject {
   public validate(
     restAPIService: RestApiConnectorService
   ): Observable<ValidationData> {
-    return this.base_validate(restAPIService);
+    return this.base_validate(restAPIService).pipe(
+      map(result => {
+        if (!this.logSources.length) return result;
+
+        // validate log sources array
+        const seen = new Set<string>();
+        for (const { name, channel } of this.logSources) {
+          const key = `${name}::${channel}`;
+          if (seen.has(key)) {
+            result.errors.push({
+              field: 'permutations',
+              result: 'error',
+              message: `Duplicate log source found: name="${name}", channel="${channel}"`,
+            });
+          }
+          seen.add(key);
+        }
+        return result;
+      })
+    );
   }
 
   /**
@@ -147,7 +188,7 @@ export class DataComponent extends StixObject {
    * Delete this STIX object from the database.
    * @param restAPIService [RestApiConnectorService] the service to perform the DELETE through
    */
-  public delete(restAPIService: RestApiConnectorService): Observable<{}> {
+  public delete(restAPIService: RestApiConnectorService): Observable<object> {
     const deleteObservable = restAPIService.deleteDataComponent(this.stixID);
     const subscription = deleteObservable.subscribe({
       complete: () => {
@@ -176,4 +217,9 @@ export class DataComponent extends StixObject {
     });
     return putObservable;
   }
+}
+
+export interface LogSource {
+  name: string;
+  channel: string;
 }

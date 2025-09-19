@@ -1,0 +1,15 @@
+<div class="log-source-reference-property grow-to-row">
+  @if (!config.mode || config.mode === 'view') {
+    <app-log-source-reference-view
+      class="grow-to-row"
+      [config]="config"></app-log-source-reference-view>
+  } @else if (config.mode === 'edit') {
+    <app-log-source-reference-edit
+      class="grow-to-row"
+      [config]="config"></app-log-source-reference-edit>
+  } @else if (config.mode === 'diff') {
+    <app-log-source-reference-diff
+      class="grow-to-row"
+      [config]="config"></app-log-source-reference-diff>
+  }
+</div>
