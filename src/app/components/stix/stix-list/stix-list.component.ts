@@ -24,7 +24,7 @@ import {
   tap,
 } from 'rxjs/operators';
 
-import { StixObject } from 'src/app/classes/stix/stix-object';
+import { RelatedRef, StixObject } from 'src/app/classes/stix/stix-object';
 import { StixDialogComponent } from 'src/app/views/stix/stix-dialog/stix-dialog.component';
 import {
   Paginated,
@@ -275,6 +275,7 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
           break;
         case 'mitigation':
         case 'tactic':
+        case 'data-component':
           this.addColumn('', 'workflow', 'icon');
           this.addColumn('', 'state', 'icon');
           this.addColumn('ID', 'attackID', 'plain', false);
@@ -301,7 +302,6 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
           ];
           break;
         case 'detection-strategy':
-        case 'log-source':
         case 'campaign':
           this.addColumn('', 'workflow', 'icon');
           this.addColumn('', 'state', 'icon');
@@ -319,8 +319,16 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
           this.addColumn('', 'workflow', 'icon');
           this.addColumn('', 'state', 'icon');
           this.addColumn('ID', 'attackID', 'plain', false);
-          this.addColumn('name', 'name', 'plain', sticky_allowed, ['name']);
+          this.addColumn(
+            'related detection strategy',
+            'relatedDetections',
+            'related_ref_list',
+            false,
+            undefined,
+            'name'
+          );
           this.addColumn('platform', 'platform', 'plain');
+          this.addColumn('domain', 'domains', 'list');
           this.addVersionsAndDatesColumns();
           this.tableDetail = [
             {
@@ -365,18 +373,6 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
           this.addColumn('ID', 'attackID', 'plain', false);
           this.addColumn('name', 'name', 'plain', sticky_allowed, ['name']);
           this.addColumn('platforms', 'platforms', 'list');
-          this.addColumn('domain', 'domains', 'list');
-          this.addVersionsAndDatesColumns();
-          this.tableDetail = [
-            {
-              field: 'description',
-              display: 'descriptive',
-            },
-          ];
-          break;
-        case 'data-component':
-          this.addColumn('', 'state', 'icon');
-          this.addColumn('name', 'name', 'plain', sticky_allowed, ['name']);
           this.addColumn('domain', 'domains', 'list');
           this.addVersionsAndDatesColumns();
           this.tableDetail = [
@@ -562,6 +558,7 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
           'software',
           'tactic',
           'technique',
+          'analytic',
         ].includes(this.config.type)
       : false;
     const filterByPlatform: boolean = this.config.type
@@ -616,12 +613,20 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
       | 'timestamp'
       | 'descriptive'
       | 'relationship_name'
-      | 'icon',
+      | 'icon'
+      | 'related_ref_list',
     sticky?: boolean,
-    classes?: string[]
+    classes?: string[],
+    relatedRefProperty?: keyof RelatedRef
   ) {
     this.tableColumns.push(field);
-    this.tableColumns_settings.set(field, { label, display, sticky, classes });
+    this.tableColumns_settings.set(field, {
+      label,
+      display,
+      sticky,
+      classes,
+      relatedRefProperty,
+    });
   }
 
   /**
@@ -1060,13 +1065,14 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
           offset: offset,
           includeDeprecated: deprecated,
         });
-      else if (this.config.type == 'log-source')
-        this.data$ = this.restAPIConnectorService.getAllLogSources(options);
       else if (this.config.type == 'detection-strategy')
         this.data$ =
           this.restAPIConnectorService.getAllDetectionStrategies(options);
       else if (this.config.type == 'analytic')
-        this.data$ = this.restAPIConnectorService.getAllAnalytics(options);
+        this.data$ = this.restAPIConnectorService.getAllAnalytics({
+          ...options,
+          includeRefs: true,
+        });
       else if (this.config.type == 'data-source')
         this.data$ = this.restAPIConnectorService.getAllDataSources(options);
       else if (this.config.type == 'data-component')

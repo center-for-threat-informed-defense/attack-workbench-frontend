@@ -1,5 +1,5 @@
 import { SelectionModel } from '@angular/cdk/collections';
-import { Component, Input, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, Input, ViewEncapsulation } from '@angular/core';
 import {
   Analytic,
   Asset,
@@ -8,7 +8,6 @@ import {
   DataSource,
   DetectionStrategy,
   Group,
-  LogSource,
   Matrix,
   Mitigation,
   Relationship,
@@ -25,16 +24,8 @@ import { CollectionDiffCategories } from 'src/app/classes/stix/collection';
   encapsulation: ViewEncapsulation.None,
   standalone: false,
 })
-export class CollectionImportSummaryComponent implements OnInit {
+export class CollectionImportSummaryComponent {
   @Input() config: CollectionImportSummaryConfig;
-
-  constructor() {
-    // intentionally left blank
-  }
-
-  ngOnInit(): void {
-    // intentionally left blank
-  }
 
   public format(attackType: string): string {
     return attackType.replace(/_/g, ' ');
@@ -54,7 +45,6 @@ export interface CollectionImportSummaryConfig {
     data_source: CollectionDiffCategories<DataSource>;
     data_component: CollectionDiffCategories<DataComponent>;
     asset: CollectionDiffCategories<Asset>;
-    log_source: CollectionDiffCategories<LogSource>;
     analytic: CollectionDiffCategories<Analytic>;
     detection_strategy: CollectionDiffCategories<DetectionStrategy>;
   };
