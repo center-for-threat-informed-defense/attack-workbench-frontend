@@ -1,22 +1,22 @@
-import { VersionNumber } from '../version-number';
-import { ExternalReferences } from '../external-references';
-import { v4 as uuid } from 'uuid';
-import { Serializable, ValidationData } from '../serializable';
+import {
+  createAttackIdSchema,
+  StixTypesWithAttackIds,
+} from '@mitre-attack/attack-data-model/dist/schemas/common/attack-id';
+import { forkJoin, Observable, of } from 'rxjs';
+import { map, switchMap } from 'rxjs/operators';
 import {
   Paginated,
   RestApiConnectorService,
 } from 'src/app/services/connectors/rest-api/rest-api-connector.service';
-import { forkJoin, Observable, of } from 'rxjs';
-import { map, switchMap } from 'rxjs/operators';
-import { logger } from '../../utils/logger';
 import {
   AttackTypeToRoute,
   StixTypeToAttackType,
 } from 'src/app/utils/type-mappings';
-import {
-  StixTypesWithAttackIds,
-  createAttackIdSchema,
-} from '@mitre-attack/attack-data-model/dist/schemas/common/attack-id';
+import { v4 as uuid } from 'uuid';
+import { logger } from '../../utils/logger';
+import { ExternalReferences } from '../external-references';
+import { Serializable, ValidationData } from '../serializable';
+import { VersionNumber } from '../version-number';
 
 export type workflowStates =
   | 'work-in-progress'
@@ -405,17 +405,26 @@ export abstract class StixObject extends Serializable {
 
     return validator(this).pipe(
       switchMap(validatorResult => {
-        const validatorErrors = validatorResult.errors.map(
-          err => `${err.path.join('.')}: ${err.message}`
-        );
-
-        validatorErrors.forEach(e =>
+        // Process validation errors from API (backend now handles error-to-warning conversion)
+        (validatorResult.errors || []).forEach((err: any) => {
+          const errorMessage = `${err.path.join('.')}: ${err.message}`;
           result.errors.push({
             result: 'error',
             field: 'temp',
-            message: e,
-          })
-        );
+            message: errorMessage,
+          });
+        });
+
+        // Process validation warnings from API
+        (validatorResult.warnings || []).forEach((warning: any) => {
+          const warningMessage =
+            warning.message || `${warning.path.join('.')}: ${warning.message}`;
+          result.warnings.push({
+            result: 'warning',
+            field: warning.path[warning.path.length - 1] || 'temp',
+            message: warningMessage,
+          });
+        });
         // check if the name is unique if it has a name
         //do not check name or attackID for relationships or marking definitions
         if (
