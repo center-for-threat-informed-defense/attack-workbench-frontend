@@ -38,7 +38,10 @@ export class Group extends StixObject {
     rep.stix.name = this.name.trim();
     rep.stix.aliases = this.aliases.map(x => x.trim());
     rep.stix.x_mitre_contributors = this.contributors.map(x => x.trim());
-
+    
+    // Strip properties that are empty strs + lists
+    rep.stix = this.filterObject(rep.stix);
+    
     return rep;
   }
 

@@ -49,6 +49,10 @@ export class Tactic extends StixObject {
     rep.stix.x_mitre_shortname = this.shortname;
     rep.stix.x_mitre_contributors = this.contributors.map(x => x.trim());
     rep.stix = this.filterObject(rep.stix);
+
+    // Strip properties that are empty strs + lists
+    rep.stix = this.filterObject(rep.stix);
+    
     return rep;
   }
 

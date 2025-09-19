@@ -54,6 +54,9 @@ export class DataComponent extends StixObject {
     rep.stix.x_mitre_data_source_ref = this.dataSourceRef;
     rep.stix.x_mitre_domains = this.domains;
 
+    // Strip properties that are empty strs + lists
+    rep.stix = this.filterObject(rep.stix);
+
     return rep;
   }
 

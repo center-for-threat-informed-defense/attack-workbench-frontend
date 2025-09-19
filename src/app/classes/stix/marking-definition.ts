@@ -36,6 +36,9 @@ export class MarkingDefinition extends StixObject {
     rep.stix.definition = {};
     rep.stix.definition[this.definition_type] = this.definition_string;
 
+    // Strip properties that are empty strs + lists
+    rep.stix = this.filterObject(rep.stix);
+    
     return rep;
   }
 
