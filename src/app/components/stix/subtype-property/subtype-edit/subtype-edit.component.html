@@ -3,6 +3,8 @@
     <mat-chip-listbox>
       <mat-chip
         *ngFor="let value of keyValues; let i = index"
+        matTooltipPosition="above"
+        [matTooltip]="getTooltip(i)"
         [removable]="true"
         (removed)="removeValue(i)"
         (click)="editValue(i)">

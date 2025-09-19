@@ -16,7 +16,6 @@ import {
   Tactic,
   Technique,
   DetectionStrategy,
-  LogSource,
 } from 'src/app/classes/stix';
 
 export class Relationship extends StixObject {
@@ -67,7 +66,6 @@ export class Relationship extends StixObject {
       'x-mitre-data-component': DataComponent,
       'x-mitre-asset': Asset,
       'x-mitre-detection-strategy': DetectionStrategy,
-      'x-mitre-log-source': LogSource,
     };
     if (type == 'malware' || type == 'tool') return new Software(type, raw);
     return new StixTypeToClass[type](raw);

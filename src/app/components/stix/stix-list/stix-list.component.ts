@@ -275,6 +275,7 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
           break;
         case 'mitigation':
         case 'tactic':
+        case 'data-component':
           this.addColumn('', 'workflow', 'icon');
           this.addColumn('', 'state', 'icon');
           this.addColumn('ID', 'attackID', 'plain', false);
@@ -301,7 +302,6 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
           ];
           break;
         case 'detection-strategy':
-        case 'log-source':
         case 'campaign':
           this.addColumn('', 'workflow', 'icon');
           this.addColumn('', 'state', 'icon');
@@ -328,6 +328,7 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
             'name'
           );
           this.addColumn('platform', 'platform', 'plain');
+          this.addColumn('domain', 'domains', 'list');
           this.addVersionsAndDatesColumns();
           this.tableDetail = [
             {
@@ -372,18 +373,6 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
           this.addColumn('ID', 'attackID', 'plain', false);
           this.addColumn('name', 'name', 'plain', sticky_allowed, ['name']);
           this.addColumn('platforms', 'platforms', 'list');
-          this.addColumn('domain', 'domains', 'list');
-          this.addVersionsAndDatesColumns();
-          this.tableDetail = [
-            {
-              field: 'description',
-              display: 'descriptive',
-            },
-          ];
-          break;
-        case 'data-component':
-          this.addColumn('', 'state', 'icon');
-          this.addColumn('name', 'name', 'plain', sticky_allowed, ['name']);
           this.addColumn('domain', 'domains', 'list');
           this.addVersionsAndDatesColumns();
           this.tableDetail = [
@@ -569,6 +558,7 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
           'software',
           'tactic',
           'technique',
+          'analytic',
         ].includes(this.config.type)
       : false;
     const filterByPlatform: boolean = this.config.type
@@ -1075,8 +1065,6 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
           offset: offset,
           includeDeprecated: deprecated,
         });
-      else if (this.config.type == 'log-source')
-        this.data$ = this.restAPIConnectorService.getAllLogSources(options);
       else if (this.config.type == 'detection-strategy')
         this.data$ =
           this.restAPIConnectorService.getAllDetectionStrategies(options);
