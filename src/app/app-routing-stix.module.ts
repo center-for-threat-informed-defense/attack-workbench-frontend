@@ -68,7 +68,7 @@ const stixRouteData = [
     headerSection: 'defenses',
   },
   {
-    attackType: 'log-source',
+    attackType: 'data-component',
     editable: true,
     headerSection: 'defenses',
   },
