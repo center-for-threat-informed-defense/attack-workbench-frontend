@@ -38,7 +38,7 @@ export class MarkingDefinition extends StixObject {
 
     // Strip properties that are empty strs + lists
     rep.stix = this.filterObject(rep.stix);
-    
+
     return rep;
   }
 

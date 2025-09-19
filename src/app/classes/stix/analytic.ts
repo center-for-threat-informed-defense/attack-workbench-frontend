@@ -58,7 +58,7 @@ export class Analytic extends StixObject {
           description,
         })
       );
-    
+
     // Strip properties that are empty strs + lists
     rep.stix = this.filterObject(rep.stix);
 
