@@ -24,7 +24,7 @@ import {
   tap,
 } from 'rxjs/operators';
 
-import { StixObject } from 'src/app/classes/stix/stix-object';
+import { RelatedRef, StixObject } from 'src/app/classes/stix/stix-object';
 import { StixDialogComponent } from 'src/app/views/stix/stix-dialog/stix-dialog.component';
 import {
   Paginated,
@@ -319,12 +319,19 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
           this.addColumn('', 'workflow', 'icon');
           this.addColumn('', 'state', 'icon');
           this.addColumn('ID', 'attackID', 'plain', false);
-          this.addColumn('name', 'name', 'plain', sticky_allowed, ['name']);
+          this.addColumn(
+            'related detection strategy',
+            'relatedDetections',
+            'related_ref_list',
+            false,
+            undefined,
+            'name'
+          );
           this.addColumn('platform', 'platform', 'plain');
           this.addVersionsAndDatesColumns();
           this.tableDetail = [
             {
-              field: 'detects',
+              field: 'description',
               display: 'descriptive',
             },
           ];
@@ -616,12 +623,20 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
       | 'timestamp'
       | 'descriptive'
       | 'relationship_name'
-      | 'icon',
+      | 'icon'
+      | 'related_ref_list',
     sticky?: boolean,
-    classes?: string[]
+    classes?: string[],
+    relatedRefProperty?: keyof RelatedRef
   ) {
     this.tableColumns.push(field);
-    this.tableColumns_settings.set(field, { label, display, sticky, classes });
+    this.tableColumns_settings.set(field, {
+      label,
+      display,
+      sticky,
+      classes,
+      relatedRefProperty,
+    });
   }
 
   /**
@@ -1066,7 +1081,10 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
         this.data$ =
           this.restAPIConnectorService.getAllDetectionStrategies(options);
       else if (this.config.type == 'analytic')
-        this.data$ = this.restAPIConnectorService.getAllAnalytics(options);
+        this.data$ = this.restAPIConnectorService.getAllAnalytics({
+          ...options,
+          includeRefs: true,
+        });
       else if (this.config.type == 'data-source')
         this.data$ = this.restAPIConnectorService.getAllDataSources(options);
       else if (this.config.type == 'data-component')

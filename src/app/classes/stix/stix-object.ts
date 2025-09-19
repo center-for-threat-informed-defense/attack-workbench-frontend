@@ -12,6 +12,7 @@ import {
   AttackTypeToRoute,
   StixTypeToAttackType,
 } from 'src/app/utils/type-mappings';
+import { StixType } from 'src/app/utils/types';
 import { v4 as uuid } from 'uuid';
 import { logger } from '../../utils/logger';
 import { ExternalReferences } from '../external-references';
@@ -459,6 +460,12 @@ export abstract class StixObject extends Serializable {
           accessor = restAPIService.getAllDataComponents(options);
         else if (this.attackType == 'asset')
           accessor = restAPIService.getAllAssets();
+        else if (this.attackType == 'analytic')
+          accessor = restAPIService.getAllAnalytics(options);
+        else if (this.attackType == 'detection-strategy')
+          accessor = restAPIService.getAllDetectionStrategies(options);
+        else if (this.attackType == 'log-source')
+          accessor = restAPIService.getAllLogSources(options);
         else accessor = restAPIService.getAllTactics(options);
 
         return accessor.pipe(
@@ -931,4 +938,11 @@ export class LinkByIdParseResult {
     this.missingLinks = new Set([...this.missingLinks, ...that.missingLinks]);
     this.brokenLinks = new Set([...this.brokenLinks, ...that.brokenLinks]);
   }
+}
+
+export interface RelatedRef {
+  stixId: string;
+  name: string;
+  attackId: string;
+  type: StixType;
 }

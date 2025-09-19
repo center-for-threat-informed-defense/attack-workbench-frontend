@@ -137,6 +137,7 @@ export class RestApiConnectorService extends ApiConnector {
       platforms?: string[];
       domains?: string[];
       lastUpdatedBy?: string[];
+      includeRefs?: boolean;
     }): Observable<Paginated<StixObject>> {
       const pagination = {
         total: 1,
@@ -163,6 +164,12 @@ export class RestApiConnectorService extends ApiConnector {
           query = query.set(
             'includeDeprecated',
             options.includeDeprecated ? 'true' : 'false'
+          );
+        // include related objects in a `related_to` array
+        if (options.includeRefs)
+          query = query.set(
+            'includeRefs',
+            options.includeRefs ? 'true' : 'false'
           );
         // versions selector
         if (options.versions) query = query.set('versions', options.versions);
@@ -785,7 +792,10 @@ export class RestApiConnectorService extends ApiConnector {
       includeSubs?: boolean,
       retrieveContents?: boolean,
       retrieveDataComponents?: boolean,
-      options?: { preferStream?: boolean }
+      options?: {
+        preferStream?: boolean;
+        includeRefs?: boolean;
+      }
     ): Observable<P[]> {
       // For streaming collections, delegate to a separate method
       if (
@@ -827,6 +837,8 @@ export class RestApiConnectorService extends ApiConnector {
         query = query.set('retrieveContents', 'true');
       if (attackType == 'data-source' && retrieveDataComponents)
         query = query.set('retrieveDataComponents', 'true');
+      // include related objects in a `related_to` array
+      if (options?.includeRefs) query = query.set('includeRefs', 'true');
       return this.http.get(url, { headers: this.headers, params: query }).pipe(
         tap(result => logger.log(`retrieved ${attackType}`, result)), // on success, trigger the success notification
         map(result => {

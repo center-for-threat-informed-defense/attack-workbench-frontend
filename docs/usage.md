@@ -394,7 +394,7 @@ Log sources define immutable configurations for collecting security telemetry ac
 
 ##### Log Source Relationships
 
-While Log Sources do not have direct relationships with other objects, they are linked to Analytics through the list of log source references on Analytics (specifically, the `x_mitre_log_sources` field).
+While Log Sources do not have direct relationships with other objects, they are linked to Analytics through the list of log source references and permutation names on Analytics (specifically, the `x_mitre_log_source_references` field).
 
 #### Editing Analytics
 
@@ -402,7 +402,7 @@ Analytics contain platform-specific detection logic and represent the implementa
 
 ##### Analytic Relationships
 
-While Analytics do not have direct relationships with other objects, they are linked to Detection Strategies through the list of analytic references on Detection Strategies (specifically, the `x_mitre_analytics` field)
+While Analytics do not have direct relationships with other objects, they are linked to Detection Strategies through the list of analytic STIX ID references on Detection Strategies (specifically, the `x_mitre_analytic_refs` field)
 
 #### Editing Relationships
 
