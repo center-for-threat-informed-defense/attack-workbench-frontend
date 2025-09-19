@@ -10,7 +10,6 @@ import {
   DataSource,
   DetectionStrategy,
   Group,
-  LogSource,
   MarkingDefinition,
   Matrix,
   Mitigation,
@@ -382,9 +381,6 @@ export class Collection extends StixObject {
           case 'x-mitre-asset': // asset
             this.stix_contents.push(new Asset(obj));
             break;
-          case 'x-mitre-log-source': // log source
-            this.stix_contents.push(new LogSource(obj));
-            break;
           case 'x-mitre-detection-strategy': // detection strategy
             this.stix_contents.push(new DetectionStrategy(obj));
             break;
@@ -413,7 +409,6 @@ export class Collection extends StixObject {
     data_component: CollectionDiffCategories<DataComponent>;
     marking_definition: CollectionDiffCategories<MarkingDefinition>;
     asset: CollectionDiffCategories<Asset>;
-    log_source: CollectionDiffCategories<LogSource>;
     analytic: CollectionDiffCategories<Analytic>;
     detection_strategy: CollectionDiffCategories<DetectionStrategy>;
   } {
@@ -430,7 +425,6 @@ export class Collection extends StixObject {
       data_component: new CollectionDiffCategories<DataComponent>(),
       marking_definition: new CollectionDiffCategories<MarkingDefinition>(),
       asset: new CollectionDiffCategories<Asset>(),
-      log_source: new CollectionDiffCategories<LogSource>(),
       analytic: new CollectionDiffCategories<Analytic>(),
       detection_strategy: new CollectionDiffCategories<DetectionStrategy>(),
     };

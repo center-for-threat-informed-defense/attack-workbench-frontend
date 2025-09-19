@@ -4,6 +4,9 @@
 .subtype-view {
   @extend .labelled-box;
 
+  .content {
+    overflow-x: auto;
+  }
   .subtype-table {
     width: 100%;
     padding: 8px;

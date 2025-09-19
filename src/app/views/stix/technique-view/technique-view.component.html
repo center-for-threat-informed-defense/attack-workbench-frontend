@@ -474,8 +474,8 @@
           }"></app-stix-list>
       </div>
     </div>
-    <!-- data sources (source/component object representation) -->
-    @if (showDataSources) {
+    <!-- data sources (deprecated source/component object representation) -->
+    <div [ngStyle]="{ display: showDataSources ? 'inherit' : 'none' }">
       <div class="row">
         <div class="col">
           <h2 class="section-header">Data Sources</h2>
@@ -501,7 +501,7 @@
             }"></app-stix-list>
         </div>
       </div>
-    }
+    </div>
     <!-- detection strategies -->
     <div class="row">
       <div class="col">

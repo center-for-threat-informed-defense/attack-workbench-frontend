@@ -20,7 +20,6 @@ import {
   DataSource,
   DetectionStrategy,
   Group,
-  LogSource,
   Matrix,
   Mitigation,
   Relationship,
@@ -83,7 +82,6 @@ export class CollectionViewComponent extends StixViewPage implements OnInit {
     'Data-Source': 'data_source',
     'Data-Component': 'data_component',
     'Asset': 'asset',
-    'Log-Source': 'log_source',
     'Analytic': 'analytic',
     'Detection-Strategy': 'detection_strategy',
   };
@@ -110,7 +108,6 @@ export class CollectionViewComponent extends StixViewPage implements OnInit {
     data_source: new CollectionDiffCategories<DataSource>(),
     data_component: new CollectionDiffCategories<DataComponent>(),
     asset: new CollectionDiffCategories<Asset>(),
-    log_source: new CollectionDiffCategories<LogSource>(),
     analytic: new CollectionDiffCategories<Analytic>(),
     detection_strategy: new CollectionDiffCategories<DetectionStrategy>(),
   };
@@ -127,7 +124,6 @@ export class CollectionViewComponent extends StixViewPage implements OnInit {
     data_source: new CollectionDiffCategories<DataSource>(),
     data_component: new CollectionDiffCategories<DataComponent>(),
     asset: new CollectionDiffCategories<Asset>(),
-    log_source: new CollectionDiffCategories<LogSource>(),
     analytic: new CollectionDiffCategories<Analytic>(),
     detection_strategy: new CollectionDiffCategories<DetectionStrategy>(),
   };
