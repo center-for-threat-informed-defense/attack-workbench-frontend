@@ -56,6 +56,10 @@ export class Analytic extends StixObject {
       );
     if (this.mutableElements?.length)
       rep.stix.x_mitre_mutable_elements = this.mutableElements;
+
+    // Strip properties that are empty strs + lists
+    rep.stix = this.filterObject(rep.stix);
+
     return rep;
   }
 
