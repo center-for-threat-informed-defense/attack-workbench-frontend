@@ -38,7 +38,7 @@ export class Identity extends StixObject {
 
     // Strip properties that are empty strs + lists
     rep.stix = this.filterObject(rep.stix);
-    
+
     // Strip unsupported fields that are set by the superclass (StixObject)
     delete rep.stix.x_mitre_version;
 
