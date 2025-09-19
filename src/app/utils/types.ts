@@ -18,7 +18,6 @@ export type AttackType =
   | 'data-source'
   | 'data-component'
   | 'detection-strategy'
-  | 'log-source'
   | 'analytic';
 
 /**
@@ -42,7 +41,6 @@ export type StixType =
   | 'x-mitre-data-source'
   | 'x-mitre-data-component'
   | 'x-mitre-detection-strategy'
-  | 'x-mitre-log-source'
   | 'x-mitre-analytic';
 
 /**

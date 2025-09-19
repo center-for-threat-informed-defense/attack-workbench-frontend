@@ -51,9 +51,7 @@ export class MatrixViewComponent
   ngOnInit() {
     this.loadMatrix();
     if (this.matrix.firstInitialized) {
-      this.matrix.initializeWithDefaultMarkingDefinitions(
-        this.restAPIConnectorService
-      );
+      this.matrix.setDefaultMarkingDefinitions(this.restAPIConnectorService);
     }
   }
 

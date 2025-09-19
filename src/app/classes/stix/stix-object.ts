@@ -1,22 +1,23 @@
-import { VersionNumber } from '../version-number';
-import { ExternalReferences } from '../external-references';
-import { v4 as uuid } from 'uuid';
-import { Serializable, ValidationData } from '../serializable';
+import {
+  createAttackIdSchema,
+  StixTypesWithAttackIds,
+} from '@mitre-attack/attack-data-model/dist/schemas/common/attack-id';
+import { forkJoin, Observable, of } from 'rxjs';
+import { map, switchMap } from 'rxjs/operators';
 import {
   Paginated,
   RestApiConnectorService,
 } from 'src/app/services/connectors/rest-api/rest-api-connector.service';
-import { forkJoin, Observable, of } from 'rxjs';
-import { map, switchMap } from 'rxjs/operators';
-import { logger } from '../../utils/logger';
 import {
   AttackTypeToRoute,
   StixTypeToAttackType,
 } from 'src/app/utils/type-mappings';
-import {
-  StixTypesWithAttackIds,
-  createAttackIdSchema,
-} from '@mitre-attack/attack-data-model/dist/schemas/common/attack-id';
+import { StixType } from 'src/app/utils/types';
+import { v4 as uuid } from 'uuid';
+import { logger } from '../../utils/logger';
+import { ExternalReferences } from '../external-references';
+import { Serializable, ValidationData } from '../serializable';
+import { VersionNumber } from '../version-number';
 
 export type workflowStates =
   | 'work-in-progress'
@@ -405,17 +406,26 @@ export abstract class StixObject extends Serializable {
 
     return validator(this).pipe(
       switchMap(validatorResult => {
-        const validatorErrors = validatorResult.errors.map(
-          err => `${err.path.join('.')}: ${err.message}`
-        );
-
-        validatorErrors.forEach(e =>
+        // Process validation errors from API (backend now handles error-to-warning conversion)
+        (validatorResult.errors || []).forEach((err: any) => {
+          const errorMessage = `${err.path.join('.')}: ${err.message}`;
           result.errors.push({
             result: 'error',
             field: 'temp',
-            message: e,
-          })
-        );
+            message: errorMessage,
+          });
+        });
+
+        // Process validation warnings from API
+        (validatorResult.warnings || []).forEach((warning: any) => {
+          const warningMessage =
+            warning.message || `${warning.path.join('.')}: ${warning.message}`;
+          result.warnings.push({
+            result: 'warning',
+            field: warning.path[warning.path.length - 1] || 'temp',
+            message: warningMessage,
+          });
+        });
         // check if the name is unique if it has a name
         //do not check name or attackID for relationships or marking definitions
         if (
@@ -450,6 +460,10 @@ export abstract class StixObject extends Serializable {
           accessor = restAPIService.getAllDataComponents(options);
         else if (this.attackType == 'asset')
           accessor = restAPIService.getAllAssets();
+        else if (this.attackType == 'analytic')
+          accessor = restAPIService.getAllAnalytics(options);
+        else if (this.attackType == 'detection-strategy')
+          accessor = restAPIService.getAllDetectionStrategies(options);
         else accessor = restAPIService.getAllTactics(options);
 
         return accessor.pipe(
@@ -677,6 +691,21 @@ export abstract class StixObject extends Serializable {
     return result;
   }
 
+  public hasValue(field) {
+    return (
+      field !== undefined &&
+      field !== null &&
+      field !== '' &&
+      !(Array.isArray(field) && field.length === 0)
+    );
+  }
+
+  public filterObject(obj) {
+    return Object.fromEntries(
+      Object.entries(obj).filter(entry => this.hasValue(entry[1]))
+    );
+  }
+
   /**
    * Check if the given array is a list of strings
    * @param arr the array to check
@@ -718,9 +747,7 @@ export abstract class StixObject extends Serializable {
    * Updates the object's marking definitions with the default the first time an object is created
    * @param restAPIService [RestApiConnectorService] the service to perform the POST/PUT through
    */
-  public initializeWithDefaultMarkingDefinitions(
-    restAPIService: RestApiConnectorService
-  ) {
+  public setDefaultMarkingDefinitions(restAPIService: RestApiConnectorService) {
     const data$ = restAPIService.getDefaultMarkingDefinitions();
     const sub = data$.subscribe({
       next: data => {
@@ -758,13 +785,13 @@ export abstract class StixObject extends Serializable {
       accessor = apiService.getAllTechniques();
     else if (this.attackType == 'data-source')
       accessor = apiService.getAllDataSources();
+    else if (this.attackType == 'data-component')
+      accessor = apiService.getAllDataComponents();
     else if (this.attackType == 'asset') accessor = apiService.getAllAssets();
     else if (this.attackType == 'matrix')
       accessor = apiService.getAllMatrices();
     else if (this.attackType == 'detection-strategy')
       accessor = apiService.getAllDetectionStrategies();
-    else if (this.attackType == 'log-source')
-      accessor = apiService.getAllLogSources();
     else if (this.attackType == 'analytic')
       accessor = apiService.getAllAnalytics();
     else accessor = null;
@@ -907,4 +934,11 @@ export class LinkByIdParseResult {
     this.missingLinks = new Set([...this.missingLinks, ...that.missingLinks]);
     this.brokenLinks = new Set([...this.brokenLinks, ...that.brokenLinks]);
   }
+}
+
+export interface RelatedRef {
+  stixId: string;
+  name: string;
+  attackId: string;
+  type: StixType;
 }

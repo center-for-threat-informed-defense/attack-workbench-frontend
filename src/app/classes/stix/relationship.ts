@@ -1,23 +1,22 @@
 import { Observable, of } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
-import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/rest-api-connector.service';
-import { ValidationData } from '../serializable';
-import { StixObject } from './stix-object';
-import { logger } from '../../utils/logger';
 import {
   Asset,
   Campaign,
   DataComponent,
   DataSource,
+  DetectionStrategy,
   Group,
   Matrix,
   Mitigation,
   Software,
   Tactic,
   Technique,
-  DetectionStrategy,
-  LogSource,
 } from 'src/app/classes/stix';
+import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/rest-api-connector.service';
+import { logger } from '../../utils/logger';
+import { ValidationData } from '../serializable';
+import { StixObject } from './stix-object';
 
 export class Relationship extends StixObject {
   public source_ref = '';
@@ -67,7 +66,6 @@ export class Relationship extends StixObject {
       'x-mitre-data-component': DataComponent,
       'x-mitre-asset': Asset,
       'x-mitre-detection-strategy': DetectionStrategy,
-      'x-mitre-log-source': LogSource,
     };
     if (type == 'malware' || type == 'tool') return new Software(type, raw);
     return new StixTypeToClass[type](raw);
@@ -381,6 +379,12 @@ export class Relationship extends StixObject {
     rep.stix.relationship_type = this.relationship_type;
     rep.stix.source_ref = this.source_ref;
     rep.stix.target_ref = this.target_ref;
+
+    // Strip properties that are empty strs + lists
+    rep.stix = this.filterObject(rep.stix);
+
+    // TODO is there a better way to accomplish this?
+    delete rep.stix.x_mitre_version;
 
     return rep;
   }

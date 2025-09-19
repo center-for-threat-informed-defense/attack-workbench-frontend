@@ -42,6 +42,7 @@ export class RelationshipViewComponent extends StixViewPage implements OnInit {
   public refresh = true;
   public loaded = false;
   public currentPageStixID: string;
+  public showOutdatedContentWarning = false;
 
   /** refresh the list of source objects if the type changes
    *  This is bad code and should be done a better way.
@@ -88,6 +89,14 @@ export class RelationshipViewComponent extends StixViewPage implements OnInit {
     else if (this.config.targetType) this.target_type = this.config.targetType;
     else if (this.relationship.valid_target_types.length == 1)
       this.target_type = this.relationship.valid_target_types[0];
+
+    if (
+      this.source_type === 'data-component' &&
+      this.relationship.relationship_type === 'detects' &&
+      this.target_type === 'technique'
+    ) {
+      this.showOutdatedContentWarning = true;
+    }
 
     // fetch parent of source/target objects of current object (utilized for displaying the full name of subtechniques and data components)
     const parent_calls = [];

@@ -1,8 +1,8 @@
 import { Observable, of } from 'rxjs';
 import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/rest-api-connector.service';
+import { logger } from '../../utils/logger';
 import { ValidationData } from '../serializable';
 import { StixObject } from './stix-object';
-import { logger } from '../../utils/logger';
 
 export class Identity extends StixObject {
   public name: string; // identity name
@@ -35,6 +35,12 @@ export class Identity extends StixObject {
     rep.stix.identity_class = this.identity_class;
     if (this.roles) rep.stix.roles = this.roles;
     if (this.contact) rep.stix.contact_information = this.contact;
+
+    // Strip properties that are empty strs + lists
+    rep.stix = this.filterObject(rep.stix);
+
+    // Strip unsupported fields that are set by the superclass (StixObject)
+    delete rep.stix.x_mitre_version;
 
     return rep;
   }

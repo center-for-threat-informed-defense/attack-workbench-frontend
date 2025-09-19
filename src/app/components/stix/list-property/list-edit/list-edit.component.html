@@ -80,28 +80,37 @@
           : 'a valid domain must be selected first'
         : null
     ">
-    <div class="content">
-      <mat-chip-listbox
-        #stixChipList
-        [required]="config.required ? config.required : false"
-        [disabled]="!dataLoaded || config.disabled"
-        (blur)="onBlur()">
-        <mat-chip *ngFor="let value of selectedValues()" [removable]="false">{{
-          value
-        }}</mat-chip>
-      </mat-chip-listbox>
-      <span
-        matIconSuffix
-        *ngIf="!dataLoaded && config.field === 'parentTechnique'"
-        class="loading-label">
+    @if (dataLoaded) {
+      <div class="content">
+        <mat-chip-listbox
+          #stixChipList
+          [required]="config.required ? config.required : false"
+          [disabled]="!dataLoaded || config.disabled"
+          (blur)="onBlur()">
+          <mat-chip
+            *ngFor="let value of selectedValues()"
+            [removable]="false"
+            >{{ value }}</mat-chip
+          >
+        </mat-chip-listbox>
+        <span
+          matIconSuffix
+          *ngIf="!dataLoaded && config.field === 'parentTechnique'"
+          class="loading-label">
+          <mat-spinner class="spinner" diameter="20"></mat-spinner>
+        </span>
+        <span matIconSuffix *ngIf="dataLoaded && !config.disabled">
+          <mat-icon aria-hidden="false" aria-label="open" class="icon"
+            >open_in_new</mat-icon
+          >
+        </span>
+      </div>
+    } @else {
+      <div class="content">
+        <span>Loading {{ config.label ? config.label : config.field }}...</span>
         <mat-spinner class="spinner" diameter="20"></mat-spinner>
-      </span>
-      <span matIconSuffix *ngIf="dataLoaded && !config.disabled">
-        <mat-icon aria-hidden="false" aria-label="open" class="icon"
-          >open_in_new</mat-icon
-        >
-      </span>
-    </div>
+      </div>
+    }
     <span class="labelled-box-label">{{
       config.label ? config.label : config.field
     }}</span>

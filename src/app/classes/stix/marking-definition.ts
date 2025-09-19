@@ -36,6 +36,13 @@ export class MarkingDefinition extends StixObject {
     rep.stix.definition = {};
     rep.stix.definition[this.definition_type] = this.definition_string;
 
+    // Strip properties that are empty strs + lists
+    rep.stix = this.filterObject(rep.stix);
+
+    // TODO is there a better way to accomplish this?
+    delete rep.stix.x_mitre_version;
+    delete rep.stix.x_mitre_deprecated;
+
     return rep;
   }
 

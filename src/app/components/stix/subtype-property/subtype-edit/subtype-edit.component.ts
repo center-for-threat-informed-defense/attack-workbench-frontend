@@ -25,6 +25,15 @@ export class SubtypeEditComponent {
     // intentionally left blank
   }
 
+  public getTooltip(i: number): string {
+    const nonKeyFields = this.config.subtypeFields.filter(field => !field.key);
+    const value = this.config.object[this.config.field][i];
+    const fieldTooltips = nonKeyFields.map(
+      field => `${field.label || field.name}: ${value[field.name]}`
+    );
+    return fieldTooltips.join('; ');
+  }
+
   public removeValue(i: number): void {
     // remove subtype from field
     this.config.object[this.config.field].splice(i, 1);

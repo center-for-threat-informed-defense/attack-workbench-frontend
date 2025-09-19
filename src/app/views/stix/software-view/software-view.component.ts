@@ -28,9 +28,7 @@ export class SoftwareViewComponent extends StixViewPage implements OnInit {
 
   ngOnInit() {
     if (this.software.firstInitialized) {
-      this.software.initializeWithDefaultMarkingDefinitions(
-        this.restApiConnector
-      );
+      this.software.setDefaultMarkingDefinitions(this.restApiConnector);
     }
   }
 }

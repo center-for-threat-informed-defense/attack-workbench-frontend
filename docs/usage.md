@@ -372,11 +372,19 @@ data component dialog window.
 |:-----|:----|
 | Data Components      | Data components related to this data source |
 
-##### Data Component Relationships
+##### Data Component Relationships (deprecated)
 
 | Relationship Section                    | Description |
 |:-----|:----|
 | Techniques Detected      | Techniques detected by the data component |
+
+#### Editing Data Components
+
+Data Components identify the specific properties/values relevant to detecting a given ATT&CK technique or sub-technique.
+
+##### Data Component Relationships
+
+While Data Components do not have direct relationships with other objects, they are linked to Analytics through the list of log source references on Analytics (specifically, the `x_mitre_data_component_ref` property in each entry of the `x_mitre_log_source_references` array).
 
 #### Editing Detection Strategies
 
@@ -388,14 +396,6 @@ Detection strategies define high-level approaches for detecting specific adversa
 |:-----|:----|
 | Technqiues | Techniques detected by the detection strategy. |
 
-#### Editing Log Sources
-
-Log sources define immutable configurations for collecting security telemetry across different platforms and deployment scenarios.
-
-##### Log Source Relationships
-
-While Log Sources do not have direct relationships with other objects, they are linked to Analytics through the list of log source references and permutation names on Analytics (specifically, the `x_mitre_log_source_references` field).
-
 #### Editing Analytics
 
 Analytics contain platform-specific detection logic and represent the implementation details of a detection strategy.
@@ -406,7 +406,7 @@ While Analytics do not have direct relationships with other objects, they are li
 
 #### Editing Relationships
 
-Relationships map objects to other objects. Relationships have types, sources, and targets. The source and targets define the objects connected by the relationship, and the type is a verb describing the nature of their relationship. 
+Relationships map objects to other objects. Relationships have types, sources, and targets. The source and targets define the objects connected by the relationship, and the type is a verb describing the nature of their relationship.
 
 
 | Relationship Type | Valid Source Types | Valid Target Types |
