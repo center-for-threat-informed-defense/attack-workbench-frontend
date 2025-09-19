@@ -60,38 +60,56 @@
         }"></app-string-property>
     </div>
   </div>
+  @if (config.mode === 'view') {
+    <!-- DETECTION STRATEGY -->
+    <!-- cannot be edited/diffed from the analytic page -->
+    <div class="row">
+      <div class="col">
+        <app-list-property
+          class="grow-to-row"
+          [config]="{
+            mode: config.mode,
+            object: config.object,
+            field: 'relatedDetections',
+            label: 'related detection strategy',
+            objectProperty: 'name',
+            showLink: true,
+          }"></app-list-property>
+      </div>
+    </div>
+  }
   <div class="row">
     <div class="col">
-      <!-- DETECTION -->
+      <!-- DESCRIPTION -->
       <app-descriptive-property
         [config]="{
           mode: config.mode,
           object: config.object,
-          field: 'detects',
+          field: 'description',
           firstParagraphOnly: false,
           referencesField: 'external_references',
-          label: 'Detection',
+          label: 'Description',
         }"></app-descriptive-property>
     </div>
   </div>
   <div class="row">
     <div class="col">
-      <!-- LOG SOURCE REFS -->
+      <!-- LOG SOURCE REFERENCES -->
       <app-object-ref-property
         class="grow-to-row"
         [config]="{
           mode: config.mode,
           object: config.object,
-          field: 'logSourceRefs',
+          field: 'logSourceReferences',
           label: 'log source references',
           attackType: 'log-source',
           objectRefField: {
-            field: 'ref',
+            field: 'x_mitre_log_source_ref',
             label: 'log source',
           },
           relatedFields: [
             {
-              field: 'keys',
+              field: 'permutation_names',
               refField: 'permutations',
               key: 'name',
             },

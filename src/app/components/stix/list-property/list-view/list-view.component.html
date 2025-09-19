@@ -1,8 +1,11 @@
 <ul
-  class="list-view"
+  class="list-property-view list-view"
   [class.wrap]="wrap"
-  [matTooltip]="values.join('; ')"
+  [matTooltip]="tooltip"
   [matTooltipDisabled]="wrap"
   matTooltipPosition="above">
-  <li class="list-item" *ngFor="let value of values">{{ value }}</li>
+  <li
+    class="list-item"
+    *ngFor="let value of values"
+    [innerHTML]="getHTML(value)"></li>
 </ul>

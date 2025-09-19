@@ -1,6 +1,6 @@
 @use '../../../../../style/globals';
 
-ul.list-view {
+ul.list-property-view.list-view {
   margin: 0;
   padding: 0;
   &:not(.wrap) {

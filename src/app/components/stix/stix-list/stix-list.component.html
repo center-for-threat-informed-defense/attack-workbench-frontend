@@ -136,6 +136,22 @@
                 }"></app-list-view>
             </div>
             <div
+              class="width-limited-sm"
+              *ngIf="
+                tableColumns_settings.get(column)['display'] ===
+                'related_ref_list'
+              ">
+              <app-list-view
+                [config]="{
+                  object: element,
+                  field: column,
+                  mode: 'view',
+                  wrap: true,
+                  objectProperty:
+                    tableColumns_settings.get(column)['relatedRefProperty'],
+                }"></app-list-view>
+            </div>
+            <div
               *ngIf="
                 tableColumns_settings.get(column)['display'] === 'descriptive'
               ">
