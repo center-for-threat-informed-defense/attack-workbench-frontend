@@ -38,6 +38,9 @@ export class DetectionStrategy extends StixObject {
     rep.stix.x_mitre_contributors = this.contributors.map(x => x.trim());
     if (this.analytics) rep.stix.x_mitre_analytic_refs = this.analytics;
 
+    // Strip properties that are empty strs + lists
+    rep.stix = this.filterObject(rep.stix);
+
     return rep;
   }
 

@@ -15,12 +15,14 @@
       <mat-action-list>
         <mat-form-field class="workflow-status" appearance="outline">
           <mat-label>mark as...</mat-label>
-          <mat-select [(ngModel)]="newState" [disabled]="!saveEnabled">
+          <mat-select
+            [(ngModel)]="newState"
+            (selectionChange)="onStatusChanged($event)">
             <mat-option
               *ngFor="let workflow of workflows"
-              [value]="workflow[0]"
-              >{{ workflow[1] }}</mat-option
-            >
+              [value]="workflow[0]">
+              {{ workflow[1] }}
+            </mat-option>
           </mat-select>
         </mat-form-field>
         <button

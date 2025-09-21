@@ -48,6 +48,9 @@ export class DataSource extends StixObject {
     rep.stix.x_mitre_contributors = this.contributors.map(x => x.trim());
     rep.stix.x_mitre_domains = this.domains;
 
+    // Strip properties that are empty strs + lists
+    rep.stix = this.filterObject(rep.stix);
+
     return rep;
   }
 
