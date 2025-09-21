@@ -806,15 +806,12 @@ export abstract class StixObject extends Serializable {
     existingPrefix?: string
   ): Observable<any> {
     this.attackID = '(generating ID)';
-
     return apiService.getOrganizationNamespace().pipe(
       switchMap(namespace => {
-        // get API call for this attack type
         const accessor = this.getApiAccessor(apiService, this.attackType);
         if (!accessor) return of('(unsupported attack type)');
 
-        // build the base prefix (ex: "TA" for tactics)
-        const typePrefix = this.getAttackIdPrefix();
+        const typePrefix = this.getAttackIdPrefix(); // ex: "TA" for tactics
         // org prefix (ex: "ORG"), use existing prefix if defined
         const orgPrefix = existingPrefix
           ? existingPrefix
@@ -869,7 +866,6 @@ export abstract class StixObject extends Serializable {
   }
 
   private getAttackIdPrefix(): string {
-    // extract prefix from validator format
     return this.attackIDValidator.format.includes('#')
       ? this.attackIDValidator.format.split('#')[0]
       : '';
@@ -888,7 +884,6 @@ export abstract class StixObject extends Serializable {
     const parent = this['parentTechnique'] as StixObject;
     const found = parent.attackID.match(/[0-9]{4}/g);
     if (!found?.length) return of('(invalid parent id)');
-
     orgPrefix += found[0];
 
     return apiService.getTechnique(parent.stixID, null, 'latest', true).pipe(
@@ -897,22 +892,20 @@ export abstract class StixObject extends Serializable {
         let count = 1;
 
         if (children.length > 0) {
-          // collect numeric suffixes from child IDs
           const childIds = children
             .filter(obj => obj.attackID.startsWith(orgPrefix))
             .map(obj => obj.attackID.match(/[^.]([0-9]*)$/g)?.[0])
             .filter(Boolean)
             .map(Number);
 
-          // get next available number
+          // get next available subtechnique number
           if (childIds.length > 0) {
             count = Math.max(...childIds) + 1;
           }
         }
 
         // construct new id (e.g. T1234.001)
-        const subId = count.toString().padStart(3, '0');
-        return `${typePrefix}${found[0]}.${subId}`;
+        return `${typePrefix}${found[0]}.${count.toString().padStart(3, '0')}`;
       })
     );
   }
@@ -932,13 +925,12 @@ export abstract class StixObject extends Serializable {
       return ids;
     }, [] as string[]);
 
-    // get next available ID from existing related IDs
+    // get next available ID from existing IDs
     const next = currIds.length > 0 ? Number(currIds.sort().pop()) + 1 : 1;
 
     let newId = next;
     if (this.firstInitialized && rangeStart) {
-      // if creating a new object & range start is defined,
-      // use range start if larger than next available ID
+      // if creating new & range start is defined, use range start if larger than next available ID
       newId = +rangeStart > next ? +rangeStart : next;
     }
 
@@ -948,12 +940,9 @@ export abstract class StixObject extends Serializable {
 
   public formatWithPrefix(attackId: string, orgPrefix: string): string {
     const prefix = orgPrefix ? orgPrefix + '-' : '';
-
-    // add prefix if not already present
     const withPrefix = attackId.startsWith(prefix)
       ? attackId
       : prefix + attackId;
-
     // matrix IDs are case sensitive, all others uppercase
     return this.attackType === 'matrix' ? withPrefix : withPrefix.toUpperCase();
   }
