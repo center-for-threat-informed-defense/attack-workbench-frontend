@@ -691,6 +691,12 @@ export abstract class StixObject extends Serializable {
     return result;
   }
 
+  /**
+   * Checks if the provided field has a valid value.
+   * Returns false for undefined, null, empty string, or empty array.
+   * @param {*} field - The value to validate.
+   * @returns {boolean} - True if the field has a value, false otherwise.
+   */
   public hasValue(field) {
     return (
       field !== undefined &&
@@ -700,6 +706,12 @@ export abstract class StixObject extends Serializable {
     );
   }
 
+  /**
+   * Filters the properties of an object, returning a new object containing only
+   * those entries whose values pass the hasValue check.
+   * @param {Object} obj - The object to filter.
+   * @returns {Object} - A new object with only the valid entries.
+   */
   public filterObject(obj) {
     return Object.fromEntries(
       Object.entries(obj).filter(entry => this.hasValue(entry[1]))
