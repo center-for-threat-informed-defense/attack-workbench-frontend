@@ -11,7 +11,6 @@ export class MarkingDefinition extends StixObject {
   public definition_string = '';
 
   public readonly supportsAttackID = false; // marking-defs do not support ATT&CK IDs
-  public readonly supportsNamespace = false;
   protected get attackIDValidator() {
     return null;
   } //marking-defs do not have ATT&CK IDs
@@ -163,12 +162,12 @@ export class MarkingDefinition extends StixObject {
     return postObservable;
   }
 
-  public delete(_restAPIService: RestApiConnectorService): Observable<{}> {
+  public delete(_restAPIService: RestApiConnectorService): Observable<object> {
     // deletion is not supported on Marking Definitions
     return of({});
   }
 
-  public update(_restAPIService: RestApiConnectorService): Observable<{}> {
+  public update(_restAPIService: RestApiConnectorService): Observable<object> {
     // update is not supported on Marking Definitions
     return of({});
   }

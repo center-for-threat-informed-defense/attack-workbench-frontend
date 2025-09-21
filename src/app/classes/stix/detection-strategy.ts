@@ -10,7 +10,6 @@ export class DetectionStrategy extends StixObject {
   public analytics: string[] = []; // list of x-mitre-analytic uuids
 
   public readonly supportsAttackID = true;
-  public readonly supportsNamespace = true;
   protected get attackIDValidator() {
     return {
       regex: 'DET\\d{4}',
@@ -48,7 +47,6 @@ export class DetectionStrategy extends StixObject {
    */
   public deserialize(raw: object) {
     if ('stix' in raw) {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const sdo = raw.stix as any;
 
       if ('name' in sdo) {

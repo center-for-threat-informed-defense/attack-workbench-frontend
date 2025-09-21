@@ -1,18 +1,12 @@
 <div class="attackid-edit">
-  <mat-form-field
-    appearance="outline"
-    [matTooltip]="
-      showHint
-        ? 'ID prefix appended is based on your organization\'s namespace settings'
-        : null
-    ">
+  <mat-form-field appearance="outline">
     <mat-label>ID</mat-label>
     <input
       matInput
       [required]="config.required ? config.required : false"
       [(ngModel)]="config.object['attackID']"
       (ngModelChange)="attackIdChanged()"
-      (blur)="prependPrefix()" />
+      (blur)="formatAttackId()" />
     <button
       *ngIf="
         config.object['supportsAttackID'] &&

@@ -18,7 +18,6 @@ export class DataComponent extends StixObject {
 
   // data components do not support ATT&CK IDs
   public readonly supportsAttackID = true;
-  public readonly supportsNamespace = true;
   protected get attackIDValidator() {
     return {
       regex: 'DC\\d{4}',

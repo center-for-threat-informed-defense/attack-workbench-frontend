@@ -37,7 +37,6 @@ export abstract class StixObject extends Serializable {
   public object_marking_refs: string[] = []; //list of embedded relationships to marking_defs
 
   public abstract readonly supportsAttackID: boolean; // boolean to determine if object supports ATT&CK IDs
-  public abstract readonly supportsNamespace: boolean; // boolean to determine if object supports namespacing of ATT&CK ID
   protected abstract get attackIDValidator(): {
     regex: string; // regex to validate the ID
     format: string; // format to display to user
@@ -772,14 +771,14 @@ export abstract class StixObject extends Serializable {
    * Delete the STIX object from the database.
    * @param restAPIService [RestApiConnectorService] the service to perform the DELETE through
    */
-  abstract delete(restAPIService: RestApiConnectorService): Observable<{}>;
+  abstract delete(restAPIService: RestApiConnectorService): Observable<object>;
 
   /**
    * Update the state of the STIX object in the database. Update the current object from the response
    * @param restAPIService [RestApiConnectorService] the service to perform the PUT through
    * @returns {Observable} of the pout
    */
-  abstract update(restAPIService: RestApiConnectorService): Observable<{}>;
+  abstract update(restAPIService: RestApiConnectorService): Observable<object>;
 
   /**
    * Updates the object's marking definitions with the default the first time an object is created
@@ -802,148 +801,161 @@ export abstract class StixObject extends Serializable {
     });
   }
 
-  public getNamespaceID(
+  public generateAttackId(
     apiService: RestApiConnectorService,
-    orgNamespace: { prefix: string; range_start: string }
+    existingPrefix?: string
   ): Observable<any> {
-    let prefix = ''; // i.e. 'TA', if StixObject type is tactic
-    let count = '' as any; // i.e. 1234
     this.attackID = '(generating ID)';
 
-    let accessor: Observable<Paginated<StixObject>>;
-    if (this.attackType == 'group') accessor = apiService.getAllGroups();
-    else if (this.attackType == 'campaign')
-      accessor = apiService.getAllCampaigns();
-    else if (this.attackType == 'mitigation')
-      accessor = apiService.getAllMitigations();
-    else if (this.attackType == 'software')
-      accessor = apiService.getAllSoftware();
-    else if (this.attackType == 'tactic') accessor = apiService.getAllTactics();
-    else if (this.attackType == 'technique')
-      accessor = apiService.getAllTechniques();
-    else if (this.attackType == 'data-source')
-      accessor = apiService.getAllDataSources();
-    else if (this.attackType == 'data-component')
-      accessor = apiService.getAllDataComponents();
-    else if (this.attackType == 'asset') accessor = apiService.getAllAssets();
-    else if (this.attackType == 'matrix')
-      accessor = apiService.getAllMatrices();
-    else if (this.attackType == 'detection-strategy')
-      accessor = apiService.getAllDetectionStrategies();
-    else if (this.attackType == 'analytic')
-      accessor = apiService.getAllAnalytics();
-    else accessor = null;
+    return apiService.getOrganizationNamespace().pipe(
+      switchMap(namespace => {
+        // get API call for this attack type
+        const accessor = this.getApiAccessor(apiService, this.attackType);
+        if (!accessor) return of('(unsupported attack type)');
 
-    // Find all other objects that have this prefix and range, and set ID to the most recent & unique ID available
-    if (accessor) {
-      // Get object identifier, i.e. 'TA' for Tactic
-      prefix += this.attackIDValidator.format.includes('#')
-        ? this.attackIDValidator.format.split('#')[0]
-        : '';
-      let familyPrefix = orgNamespace.prefix
-        ? orgNamespace.prefix + prefix
-        : prefix;
+        // build the base prefix (ex: "TA" for tactics)
+        const typePrefix = this.getAttackIdPrefix();
+        // org prefix (ex: "ORG"), use existing prefix if defined
+        const orgPrefix = existingPrefix
+          ? existingPrefix
+          : (namespace.prefix ?? '');
+        // family prefix: orgPrefix + typePrefix (ex: "ORG-TA" for tactics)
+        const familyPrefix = orgPrefix
+          ? orgPrefix + '-' + typePrefix
+          : typePrefix;
 
-      return accessor.pipe(
-        map(stixObjects => stixObjects),
-        switchMap(objects => {
-          if (
-            this.hasOwnProperty('is_subtechnique') &&
-            this['is_subtechnique']
-          ) {
-            if (
-              this.hasOwnProperty('parentTechnique') &&
-              this['parentTechnique']
-            ) {
-              const found = this['parentTechnique'].attackID.match(/[0-9]{4}/g); // Get 4-digit ID of parent technique
-              if (found && found.length > 0) {
-                familyPrefix += found[0];
-                count = 1;
-                return apiService
-                  .getTechnique(
-                    this['parentTechnique'].stixID,
-                    null,
-                    'latest',
-                    true
-                  )
-                  .pipe(
-                    map(technique => {
-                      if (technique[0] && technique[0].subTechniques) {
-                        const children = technique[0].subTechniques;
-                        if (children.length > 0) {
-                          const childIds = children.reduce((ids, obj) => {
-                            if (obj.attackID.startsWith(familyPrefix)) {
-                              const match =
-                                obj.attackID.match(/[^.]([0-9]*)$/g);
-                              if (match && match.length > 0) {
-                                ids.push(match[0]);
-                              }
-                            }
-                            return ids;
-                          }, []);
-                          count =
-                            childIds?.length > 0
-                              ? Number(childIds.sort().pop()) + 1
-                              : 1;
-                        }
-                      }
-                      return (
-                        prefix +
-                        found[0] +
-                        '.' +
-                        count.toString().padStart(3, '0')
-                      );
-                    })
-                  );
-              }
+        return accessor.pipe(
+          switchMap(objects => {
+            if ('is_subtechnique' in this && this['is_subtechnique']) {
+              return this.getNextSubtechniqueAttackId(
+                apiService,
+                familyPrefix,
+                typePrefix
+              );
             } else {
-              return of('(parent technique missing)');
+              return this.getNextObjectAttackId(
+                objects,
+                familyPrefix,
+                typePrefix,
+                namespace.range_start
+              );
             }
-          } else return of(objects);
-        }),
-        switchMap(objects => {
-          if (
-            !this.hasOwnProperty('is_subtechnique') ||
-            !this['is_subtechnique']
-          ) {
-            // Get ids of existing objects that have the same prefix
-            const relatedIDs = objects['data'].reduce((ids, obj) => {
-              if (obj.attackID.startsWith(familyPrefix)) {
-                // Remove non-digits and decimals
-                ids.push(
-                  obj.attackID
-                    .replace(familyPrefix, '')
-                    .replace(/[.](\d{3})/, '')
-                );
-              }
-              return ids;
-            }, []);
-            if (this.firstInitialized) {
-              // If creating a new object
-              if (!orgNamespace.range_start) {
-                count =
-                  relatedIDs.length > 0
-                    ? Number(relatedIDs.sort().pop()) + 1
-                    : 1;
-              } else {
-                const range = Number(orgNamespace.range_start);
-                const latest =
-                  relatedIDs.length > 0
-                    ? Number(relatedIDs.sort().pop()) + 1
-                    : 1;
-                count = range > latest ? range : latest;
-              }
-            } else {
-              // If editing an existing object
-              count =
-                relatedIDs.length > 0 ? Number(relatedIDs.sort().pop()) + 1 : 1;
-            }
-            return of(prefix + count.toString().padStart(4, '0'));
-          }
-          return of(objects);
-        })
-      );
+          }),
+          map(generatedId => this.formatWithPrefix(generatedId, orgPrefix))
+        );
+      })
+    );
+  }
+
+  private getApiAccessor(
+    apiService: RestApiConnectorService,
+    attackType: string
+  ): Observable<Paginated<StixObject>> {
+    if (attackType == 'group') return apiService.getAllGroups();
+    else if (attackType == 'campaign') return apiService.getAllCampaigns();
+    else if (attackType == 'mitigation') return apiService.getAllMitigations();
+    else if (attackType == 'software') return apiService.getAllSoftware();
+    else if (attackType == 'tactic') return apiService.getAllTactics();
+    else if (attackType == 'technique') return apiService.getAllTechniques();
+    else if (attackType == 'data-source') return apiService.getAllDataSources();
+    else if (attackType == 'data-component')
+      return apiService.getAllDataComponents();
+    else if (attackType == 'asset') return apiService.getAllAssets();
+    else if (attackType == 'matrix') return apiService.getAllMatrices();
+    else if (attackType == 'detection-strategy')
+      return apiService.getAllDetectionStrategies();
+    else if (attackType == 'analytic') return apiService.getAllAnalytics();
+    else return null;
+  }
+
+  private getAttackIdPrefix(): string {
+    // extract prefix from validator format
+    return this.attackIDValidator.format.includes('#')
+      ? this.attackIDValidator.format.split('#')[0]
+      : '';
+  }
+
+  private getNextSubtechniqueAttackId(
+    apiService: RestApiConnectorService,
+    orgPrefix: string,
+    typePrefix: string
+  ): Observable<string> {
+    if (!('parentTechnique' in this && this['parentTechnique'])) {
+      return of('(parent technique missing)');
     }
+
+    // get 4-digit ID of parent technique
+    const parent = this['parentTechnique'] as StixObject;
+    const found = parent.attackID.match(/[0-9]{4}/g);
+    if (!found?.length) return of('(invalid parent id)');
+
+    orgPrefix += found[0];
+
+    return apiService.getTechnique(parent.stixID, null, 'latest', true).pipe(
+      map(technique => {
+        const children = technique[0]?.subTechniques ?? [];
+        let count = 1;
+
+        if (children.length > 0) {
+          // collect numeric suffixes from child IDs
+          const childIds = children
+            .filter(obj => obj.attackID.startsWith(orgPrefix))
+            .map(obj => obj.attackID.match(/[^.]([0-9]*)$/g)?.[0])
+            .filter(Boolean)
+            .map(Number);
+
+          // get next available number
+          if (childIds.length > 0) {
+            count = Math.max(...childIds) + 1;
+          }
+        }
+
+        // construct new id (e.g. T1234.001)
+        const subId = count.toString().padStart(3, '0');
+        return `${typePrefix}${found[0]}.${subId}`;
+      })
+    );
+  }
+
+  private getNextObjectAttackId(
+    objects: Paginated<StixObject>,
+    orgPrefix: string,
+    typePrefix: string,
+    rangeStart: string
+  ): Observable<string> {
+    // get ids of existing objects that have the same prefix
+    const currIds = objects.data.reduce((ids, obj) => {
+      if (obj.attackID.startsWith(orgPrefix)) {
+        // remove non-digits and decimals
+        ids.push(obj.attackID.replace(orgPrefix, '').replace(/[.](\d{3})/, ''));
+      }
+      return ids;
+    }, [] as string[]);
+
+    // get next available ID from existing related IDs
+    const next = currIds.length > 0 ? Number(currIds.sort().pop()) + 1 : 1;
+
+    let newId = next;
+    if (this.firstInitialized && rangeStart) {
+      // if creating a new object & range start is defined,
+      // use range start if larger than next available ID
+      newId = +rangeStart > next ? +rangeStart : next;
+    }
+
+    // construct new id (e.g. G0999)
+    return of(typePrefix + newId.toString().padStart(4, '0'));
+  }
+
+  public formatWithPrefix(attackId: string, orgPrefix: string): string {
+    const prefix = orgPrefix ? orgPrefix + '-' : '';
+
+    // add prefix if not already present
+    const withPrefix = attackId.startsWith(prefix)
+      ? attackId
+      : prefix + attackId;
+
+    // matrix IDs are case sensitive, all others uppercase
+    return this.attackType === 'matrix' ? withPrefix : withPrefix.toUpperCase();
   }
 }
 
