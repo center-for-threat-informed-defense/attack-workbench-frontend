@@ -1,6 +1,6 @@
-import { ValidatorFn, AbstractControl } from '@angular/forms';
-import { logger } from '../utils/logger';
+import { AbstractControl, ValidatorFn } from '@angular/forms';
 import { versionSchema } from '@mitre-attack/attack-data-model';
+import { logger } from '../utils/logger';
 
 export class VersionNumber {
   private _version = [];
@@ -127,7 +127,6 @@ export class VersionNumber {
       return false;
     }
     return true;
-    // return /^(\d+\.)*\d+$/.test(this.toString());
   }
 }
 
