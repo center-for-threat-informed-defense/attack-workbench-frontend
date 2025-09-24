@@ -94,7 +94,7 @@ const routes: Routes = [
             data: {
               breadcrumb: 'organization settings',
               title: 'Organization Identity',
-              roles: [Role.ADMIN]
+              roles: [Role.ADMIN],
             },
             component: OrgSettingsPageComponent,
           },
@@ -103,7 +103,7 @@ const routes: Routes = [
             data: {
               breadcrumb: 'user accounts',
               title: 'User Accounts',
-              roles: [Role.ADMIN]
+              roles: [Role.ADMIN],
             },
             component: UserAccountsPageComponent,
           },
@@ -112,7 +112,7 @@ const routes: Routes = [
             data: {
               breadcrumb: 'default marking definitions',
               title: 'Default Marking Definitions',
-              roles: [Role.ADMIN]
+              roles: [Role.ADMIN],
             },
             component: DefaultMarkingDefinitionsComponent,
           },
