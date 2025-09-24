@@ -1225,10 +1225,25 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
 
 type selection_types = 'one' | 'many' | 'disabled';
 type filter_types = 'state' | 'workflow_status';
-type DisplayType = 'version' | 'list' | 'plain' | 'timestamp' | 'descriptive' | 'relationship_name' | 'icon' | 'related_ref_list';
+type DisplayType =
+  | 'version'
+  | 'list'
+  | 'plain'
+  | 'timestamp'
+  | 'descriptive'
+  | 'relationship_name'
+  | 'icon'
+  | 'related_ref_list';
 export interface StixListConfig {
   /** optional custom column list for overriding default table columns */
-  columns?: [label: string, field: string, display: DisplayType, sticky?: boolean, classes?: string[], relatedRefProperty?: keyof RelatedRef][];
+  columns?: [
+    label: string,
+    field: string,
+    display: DisplayType,
+    sticky?: boolean,
+    classes?: string[],
+    relatedRefProperty?: keyof RelatedRef,
+  ][];
   /* if specified, shows the given STIX objects in the table instead of loading from the back-end based on other configurations. */
   stixObjects?: Observable<StixObject[]> | StixObject[];
 
