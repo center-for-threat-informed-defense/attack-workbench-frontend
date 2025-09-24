@@ -24,19 +24,9 @@
     </div>
   </div>
 
-  <div class="row" *ngFor="let sec of sections">
+  <div class="row">
     <div class="col">
-      <h2 class="section-header">{{ sec.label }}</h2>
-
-      <app-stix-list
-        [config]="{
-          type: sec.type,
-          showLinks: true,
-          showUserSearch: false,
-          showFilters: false,
-        }">
-      </app-stix-list>
-
+      <app-stix-list [config]="combinedConfig"></app-stix-list>
       <div class="section-divider"></div>
     </div>
   </div>
