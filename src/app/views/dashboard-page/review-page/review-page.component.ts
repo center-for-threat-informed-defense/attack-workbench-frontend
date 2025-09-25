@@ -22,8 +22,9 @@ export class ReviewPageComponent implements AfterViewInit {
   combinedConfig: StixListConfig = {
     stixObjects: [],
     showLinks: true,
-    showUserSearch: false,
-    showFilters: false,
+    select: 'many',
+    showFilters: true,
+    filterList: ['workflow_status'],
     columns: [
       ['', 'workflow', 'icon'],
       ['type', 'type', 'plain'],
@@ -78,7 +79,7 @@ export class ReviewPageComponent implements AfterViewInit {
 
   private loadCombinedData(): void {
     const sub = this.restAPIConnectorService
-      .getAllObjects({ limit: 1000, offset: 0, deserialize: true })
+      .getAllObjects({ deserialize: true })
       .subscribe({
         next: res => {
           const data = Array.isArray((res as any)?.data)
