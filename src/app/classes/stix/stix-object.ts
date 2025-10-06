@@ -43,6 +43,17 @@ export abstract class StixObject extends Serializable {
     format: string; // format to display to user
   };
 
+  protected buildAttackExternalReference(): object | null {
+    if (this.attackID && AttackTypeToRoute[this.attackType]) {
+      return {
+        source_name: 'mitre-attack',
+        external_id: this.attackID,
+        url: `https://attack.mitre.org/${AttackTypeToRoute[this.attackType]}/${this.attackID.replace(/\./g, '/')}`,
+      };
+    }
+    return null;
+  }
+
   private defaultMarkingDefinitionsLoaded = false; // avoid overloading of default marking definitions
 
   public get routes(): any[] {
@@ -107,14 +118,10 @@ export abstract class StixObject extends Serializable {
   public base_serialize(): any {
     const serialized_external_references = this.external_references.serialize();
 
-    // Add attackID for
-    if (this.attackID && AttackTypeToRoute[this.attackType]) {
-      const new_ext_ref = {
-        source_name: 'mitre-attack',
-        external_id: this.attackID,
-        url: `https://attack.mitre.org/${AttackTypeToRoute[this.attackType]}/${this.attackID.replace(/\./g, '/')}`,
-      };
-      serialized_external_references.unshift(new_ext_ref);
+    // Add attackID entry
+    const attackExtRef = this.buildAttackExternalReference();
+    if (attackExtRef) {
+      serialized_external_references.unshift(attackExtRef);
     }
 
     const stix: any = {
