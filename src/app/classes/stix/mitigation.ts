@@ -10,7 +10,6 @@ export class Mitigation extends StixObject {
   public securityControls: string[] = [];
 
   public readonly supportsAttackID = true;
-  public readonly supportsNamespace = true;
   protected get attackIDValidator() {
     return {
       regex: 'M\\d{4}',

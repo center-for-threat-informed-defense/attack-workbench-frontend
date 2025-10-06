@@ -25,7 +25,6 @@ export class Technique extends StixObject {
   public show_subtechniques = false; // used by matrix view to handle displaying subtechniques
 
   public readonly supportsAttackID = true;
-  public readonly supportsNamespace = true;
   protected get attackIDValidator() {
     return {
       regex: this.is_subtechnique ? 'T\\d{4}\\.\\d{3}' : 'T\\d{4}',
@@ -746,7 +745,7 @@ export class Technique extends StixObject {
    * Delete this STIX object from the database.
    * @param restAPIService [RestApiConnectorService] the service to perform the DELETE through
    */
-  public delete(restAPIService: RestApiConnectorService): Observable<{}> {
+  public delete(restAPIService: RestApiConnectorService): Observable<object> {
     const deleteObservable = restAPIService.deleteTechnique(this.stixID);
     const subscription = deleteObservable.subscribe({
       complete: () => {

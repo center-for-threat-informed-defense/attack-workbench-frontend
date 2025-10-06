@@ -11,7 +11,6 @@ export class Identity extends StixObject {
   public contact?: string; // contact information for this identity
 
   public readonly supportsAttackID = false; // Identity does not support ATT&CK IDs
-  public readonly supportsNamespace = false;
   protected get attackIDValidator() {
     return null;
   } // identities do not have an ATT&CK ID
@@ -123,7 +122,7 @@ export class Identity extends StixObject {
     return postObservable;
   }
 
-  public delete(_restAPIService: RestApiConnectorService): Observable<{}> {
+  public delete(_restAPIService: RestApiConnectorService): Observable<object> {
     // deletion is not supported on Identity objects
     return of({});
   }

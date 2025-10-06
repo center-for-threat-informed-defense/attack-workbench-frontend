@@ -40,7 +40,6 @@ export class Relationship extends StixObject {
   public relationship_type = '';
 
   public readonly supportsAttackID = false; // relationships do not have ATT&CK IDs
-  public readonly supportsNamespace = false; // relationships do not support namespacing
   protected get attackIDValidator() {
     return null;
   } // relationships have no ATT&CK ID

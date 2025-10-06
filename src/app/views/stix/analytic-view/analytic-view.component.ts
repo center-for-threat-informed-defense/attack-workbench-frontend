@@ -33,27 +33,12 @@ export class AnalyticViewComponent extends StixViewPage implements OnInit {
   }
 
   private generateAttackId(): void {
-    this.apiService.getOrganizationNamespace().subscribe({
-      next: namespaceSettings => {
-        const prefix = namespaceSettings.prefix
-          ? namespaceSettings.prefix + '-'
-          : '';
-        const range_start = namespaceSettings.range_start;
-
-        // generate the ATT&CK ID
-        const sub = this.analytic
-          .getNamespaceID(this.apiService, {
-            prefix,
-            range_start,
-          })
-          .subscribe({
-            next: val => {
-              this.analytic.attackID = val;
-              this.setNameFromAttackId();
-            },
-            complete: () => sub.unsubscribe(),
-          });
+    const sub = this.analytic.generateAttackId(this.apiService).subscribe({
+      next: val => {
+        this.analytic.attackID = val;
+        this.setNameFromAttackId();
       },
+      complete: () => sub.unsubscribe(),
     });
   }
 

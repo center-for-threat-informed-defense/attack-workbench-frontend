@@ -16,7 +16,6 @@ export class Analytic extends StixObject {
   public relatedDetections: RelatedRef[] = [];
 
   public readonly supportsAttackID = true;
-  public readonly supportsNamespace = true;
   protected get attackIDValidator() {
     return {
       regex: 'AN\\d{4}',
