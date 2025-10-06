@@ -205,7 +205,6 @@ export class Collection extends StixObject {
   ];
 
   public readonly supportsAttackID = false; // collections do not support ATT&CK IDs
-  public readonly supportsNamespace = false;
   protected readonly attackIDValidator = null; //collections do not have ATT&CK IDs
 
   constructor(sdo?: any) {
