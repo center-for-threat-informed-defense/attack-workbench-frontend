@@ -225,16 +225,7 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
   /**
    * Build the stix list table to display
    */
-  private buildTable(): void {
-    if (this.config.columns && this.config.columns.length) {
-      this.tableColumns = [];
-      this.tableColumns_settings.clear();
-
-      this.config.columns.forEach(col => {
-        this.addColumn(...col);
-      });
-      return;
-    }
+  protected buildTable(): void {
     // filter options
     this.filterOptions = [];
     if (!('showFilters' in this.config)) this.config.showFilters = true;
@@ -622,7 +613,7 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
    * @param {boolean} [sticky] is the column sticky? If true, the column will be static in the X scrolling of the view
    * @param {string[]} [classes] list of css classes to apply to the cell
    */
-  private addColumn(
+  protected addColumn(
     label: string,
     field: string,
     display:
@@ -651,7 +642,7 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
   /**
    * Add version, modified, and created columns to the table
    */
-  private addVersionsAndDatesColumns() {
+  protected addVersionsAndDatesColumns() {
     this.addColumn('version', 'version', 'version');
     this.addColumn('modified', 'modified', 'timestamp');
     this.addColumn('created', 'created', 'timestamp');
@@ -1225,25 +1216,7 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
 
 type selection_types = 'one' | 'many' | 'disabled';
 type filter_types = 'state' | 'workflow_status';
-type DisplayType =
-  | 'version'
-  | 'list'
-  | 'plain'
-  | 'timestamp'
-  | 'descriptive'
-  | 'relationship_name'
-  | 'icon'
-  | 'related_ref_list';
 export interface StixListConfig {
-  /** optional custom column list for overriding default table columns */
-  columns?: [
-    label: string,
-    field: string,
-    display: DisplayType,
-    sticky?: boolean,
-    classes?: string[],
-    relatedRefProperty?: keyof RelatedRef,
-  ][];
   /* if specified, shows the given STIX objects in the table instead of loading from the back-end based on other configurations. */
   stixObjects?: Observable<StixObject[]> | StixObject[];
 
