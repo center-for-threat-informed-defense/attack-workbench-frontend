@@ -12,9 +12,7 @@ import { animate, style, transition, trigger } from '@angular/animations';
 import { forkJoin } from 'rxjs';
 import { MatSort } from '@angular/material/sort';
 import { MatPaginator } from '@angular/material/paginator';
-import {
-  map,
-} from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 import { StixObject } from 'src/app/classes/stix/stix-object';
 import { MatSelect } from '@angular/material/select';
 import { StixListComponent } from 'src/app/components/stix/stix-list/stix-list.component';
@@ -92,8 +90,16 @@ export class ReviewListComponent extends StixListComponent implements OnInit {
       name: 'workflow status',
       disabled: false,
       values: [
-        { value: 'status.work-in-progress', label: 'work in progress', disabled: false },
-        { value: 'status.awaiting-review', label: 'awaiting review', disabled: false },
+        {
+          value: 'status.work-in-progress',
+          label: 'work in progress',
+          disabled: false,
+        },
+        {
+          value: 'status.awaiting-review',
+          label: 'awaiting review',
+          disabled: false,
+        },
         { value: 'status.reviewed', label: 'reviewed', disabled: false },
       ],
     });
@@ -150,7 +156,9 @@ export class ReviewListComponent extends StixListComponent implements OnInit {
         dataSources: (this as any).restAPIConnectorService.getAllDataSources({
           search: this.searchQuery,
         }),
-        dataComponents: (this as any).restAPIConnectorService.getAllDataComponents({
+        dataComponents: (
+          this as any
+        ).restAPIConnectorService.getAllDataComponents({
           search: this.searchQuery,
         }),
         groups: (this as any).restAPIConnectorService.getAllGroups({
@@ -165,9 +173,11 @@ export class ReviewListComponent extends StixListComponent implements OnInit {
         notes: (this as any).restAPIConnectorService.getAllNotes({
           search: this.searchQuery,
         }),
-        markingDefinitions: (this as any).restAPIConnectorService.getAllMarkingDefinitions({
+        markingDefinitions: (
+          this as any
+        ).restAPIConnectorService.getAllMarkingDefinitions({
           search: this.searchQuery,
-        })
+        }),
       });
 
       this.data$ = allRequests.pipe(
@@ -189,14 +199,18 @@ export class ReviewListComponent extends StixListComponent implements OnInit {
           // Update total object count for paginator
 
           // Apply client‑side filtering (search, workflow status, etc.)
-          let filtered = (this as any).filterObjects(this.searchQuery, combined);
+          let filtered = (this as any).filterObjects(
+            this.searchQuery,
+            combined
+          );
           // Apply workflow status filters (multi‑select)
           const statusFilters = this.filter
             .filter((x: string) => x.startsWith('status.'))
             .map(f => f.split('status.')[1]);
           if (statusFilters.length) {
-            filtered = filtered.filter((obj: any) =>
-              obj.workflow && statusFilters.includes(obj.workflow.state)
+            filtered = filtered.filter(
+              (obj: any) =>
+                obj.workflow && statusFilters.includes(obj.workflow.state)
             );
           }
           const sorted = filtered.sort((a: any, b: any) => {
@@ -247,7 +261,9 @@ export class ReviewListComponent extends StixListComponent implements OnInit {
     // ID column
     this.addColumn('ID', 'attackID', 'plain', false);
     // Name column (sticky if selection enabled)
-    const stickyAllowed = !(this.config.select && this.config.select === 'disabled');
+    const stickyAllowed = !(
+      this.config.select && this.config.select === 'disabled'
+    );
     this.addColumn('Name', 'name', 'plain', stickyAllowed, ['name']);
     // Modified and Created timestamps
     this.addVersionsAndDatesColumns(); // adds version, modified, created

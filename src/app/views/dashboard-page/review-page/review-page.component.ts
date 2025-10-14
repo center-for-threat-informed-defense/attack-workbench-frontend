@@ -1,8 +1,4 @@
-import {
-  Component,
-  ViewEncapsulation,
-  AfterViewInit,
-} from '@angular/core';
+import { Component, ViewEncapsulation, AfterViewInit } from '@angular/core';
 import { StixListConfig } from 'src/app/components/stix/stix-list/stix-list.component';
 
 @Component({
@@ -19,7 +15,5 @@ export class ReviewPageComponent implements AfterViewInit {
     showControls: true,
   };
 
-  ngAfterViewInit(): void {
-  }
-
+  ngAfterViewInit(): void {}
 }
