@@ -14,7 +14,6 @@ export class Tactic extends StixObject {
   public technique_objects: Technique[] = [];
 
   public readonly supportsAttackID = true;
-  public readonly supportsNamespace = true;
   protected get attackIDValidator() {
     return {
       regex: 'TA\\d{4}',
@@ -142,7 +141,7 @@ export class Tactic extends StixObject {
     return postObservable;
   }
 
-  public delete(_restAPIService: RestApiConnectorService): Observable<{}> {
+  public delete(_restAPIService: RestApiConnectorService): Observable<object> {
     // deletion is not supported on Tactic objects
     return of({});
   }

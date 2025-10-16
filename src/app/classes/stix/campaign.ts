@@ -14,7 +14,6 @@ export class Campaign extends StixObject {
   public contributors: string[] = [];
 
   public readonly supportsAttackID = true;
-  public readonly supportsNamespace = true;
   protected get attackIDValidator() {
     return {
       regex: 'C\\d{4}',
@@ -204,7 +203,7 @@ export class Campaign extends StixObject {
    * Delete this STIX object from the database.
    * @param restAPIService [RestApiConnectorService] the service to perform the DELETE through
    */
-  public delete(restAPIService: RestApiConnectorService): Observable<{}> {
+  public delete(restAPIService: RestApiConnectorService): Observable<object> {
     const deleteObservable = restAPIService.deleteCampaign(this.stixID);
     const subscription = deleteObservable.subscribe({
       complete: () => {

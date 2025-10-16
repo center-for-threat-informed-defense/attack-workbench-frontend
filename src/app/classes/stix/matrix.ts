@@ -12,7 +12,6 @@ export class Matrix extends StixObject {
   public tactic_objects: Tactic[] = [];
 
   public readonly supportsAttackID = true;
-  public readonly supportsNamespace = true;
   protected get attackIDValidator() {
     return {
       regex: '.*',
@@ -113,7 +112,7 @@ export class Matrix extends StixObject {
     return postObservable;
   }
 
-  public delete(_restAPIService: RestApiConnectorService): Observable<{}> {
+  public delete(_restAPIService: RestApiConnectorService): Observable<object> {
     // deletion is not supported on Matrix objects
     return of({});
   }

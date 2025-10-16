@@ -16,7 +16,6 @@ export class Analytic extends StixObject {
   public relatedDetections: RelatedRef[] = [];
 
   public readonly supportsAttackID = true;
-  public readonly supportsNamespace = true;
   protected get attackIDValidator() {
     return {
       regex: 'AN\\d{4}',
@@ -29,6 +28,23 @@ export class Analytic extends StixObject {
     if (sdo) {
       this.deserialize(sdo);
     }
+  }
+
+  protected buildAttackExternalReference(): object | null {
+    if (this.attackID && this.relatedDetections?.[0]?.attackId) {
+      const detAttackId = this.relatedDetections[0].attackId;
+      return {
+        source_name: 'mitre-attack',
+        external_id: this.attackID,
+        url: `https://attack.mitre.org/detectionstrategies/${detAttackId}#${this.attackID}`,
+      };
+    } else if (this.attackID) {
+      return {
+        source_name: 'mitre-attack',
+        external_id: this.attackID,
+      };
+    }
+    return null;
   }
 
   /**
