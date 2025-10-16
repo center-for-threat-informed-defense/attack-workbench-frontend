@@ -5,6 +5,7 @@ import { Serializable, ValidationData } from './serializable';
 import { StixObject } from './stix/stix-object';
 import { logger } from '../utils/logger';
 import { RelatedAsset } from './stix/asset';
+import { xMitreFirstSeenCitationSchema } from '@mitre-attack/attack-data-model';
 
 export class ExternalReferences extends Serializable {
   private _externalReferences = new Map<string, ExternalReference>();
@@ -12,6 +13,7 @@ export class ExternalReferences extends Serializable {
   private usedReferences: string[] = []; // array to store used references
   private missingReferences: string[] = []; // array to store missing references
   private brokenCitations: string[] = []; // array to store broken citations
+  private invalidCitations: string[] = []; // array to store invalid citations
 
   /**
    * return external references list
@@ -174,14 +176,20 @@ export class ExternalReferences extends Serializable {
     for (const field of refs_fields) {
       if (field == 'aliases')
         parse_apis.push(
-          this.parseCitationsFromAliases(object[field], restAPIConnector)
+          this.parseCitationsFromAliases(object[field], restAPIConnector, field)
         );
       else if (field == 'relatedAssets')
         parse_apis.push(
-          this.parseCitationsFromRelatedAssets(object[field], restAPIConnector)
+          this.parseCitationsFromRelatedAssets(
+            object[field],
+            restAPIConnector,
+            field
+          )
         );
       else
-        parse_apis.push(this.parseCitations(object[field], restAPIConnector));
+        parse_apis.push(
+          this.parseCitations(object[field], restAPIConnector, field)
+        );
     }
 
     return forkJoin(parse_apis).pipe(
@@ -205,41 +213,58 @@ export class ExternalReferences extends Serializable {
    */
   public parseCitations(
     value: string,
-    restApiConnector: RestApiConnectorService
+    restApiConnector: RestApiConnectorService,
+    field?: string
   ): Observable<CitationParseResult> {
     const reReference = /\(Citation: (.*?)\)/gmu;
-    const citations = value.match(reReference);
     const result = new CitationParseResult({
       brokenCitations: this.validateBrokenCitations(value, [
         /\(Citation:([^ ].*?)\)/gmu,
         /\(citation:(.*?)\)/gmu,
+        /\(Citation [^)]+\)/gmu,
       ]),
     });
 
+    const apiMap: { [key: string]: Observable<any> } = {}; // Initialize API map
+    // Extract citations even if the value doesn't pass validation
+    const citations = value.match(reReference); // Extract citations using regex
+    // Process citations
     if (citations) {
-      // build lookup api map
-      const api_map = {};
       for (const citation of citations) {
-        // Split to get source name from citation
-        const sourceName = citation.split('(Citation: ')[1].slice(0, -1);
-        api_map[sourceName] = this.checkAndAddReference(
-          sourceName,
-          restApiConnector
-        );
+        const validateValue = xMitreFirstSeenCitationSchema.safeParse(citation);
+        if (validateValue.success) {
+          // Extract source name from citation
+          const sourceName = citation.split('(Citation: ')[1].slice(0, -1);
+          // Add API call to the map
+          apiMap[sourceName] = this.checkAndAddReference(
+            sourceName,
+            restApiConnector
+          );
+        } else {
+          if (citation != '') {
+            result.invalidCitations.add(citation);
+          }
+        }
       }
-      // check/add each citation
-      return forkJoin(api_map).pipe(
-        map(api_results => {
-          const citation_results = api_results as any;
-          for (const key of Object.keys(citation_results)) {
-            // was the result able to be found/added?
-            if (citation_results[key]) result.usedCitations.add(key);
-            else result.missingCitations.add(key);
+    }
+    // If there are valid citations to process, use forkJoin
+    if (Object.keys(apiMap).length > 0) {
+      return forkJoin(apiMap).pipe(
+        map(apiResults => {
+          const citationResults = apiResults as any;
+          for (const key of Object.keys(citationResults)) {
+            // Check if the citation was successfully processed
+            if (citationResults[key]) {
+              result.usedCitations.add(key);
+            } else {
+              result.missingCitations.add(key);
+            }
           }
           return result;
         })
       );
     } else {
+      // If no valid citations, return the result immediately
       return of(result);
     }
   }
@@ -270,7 +295,8 @@ export class ExternalReferences extends Serializable {
    */
   public parseCitationsFromAliases(
     aliases: string[],
-    restApiConnector: RestApiConnectorService
+    restApiConnector: RestApiConnectorService,
+    field?: string
   ): Observable<CitationParseResult> {
     // Parse citations from the alias descriptions stored in external references
     const api_calls = [];
@@ -281,7 +307,8 @@ export class ExternalReferences extends Serializable {
         api_calls.push(
           this.parseCitations(
             this._externalReferences.get(alias).description,
-            restApiConnector
+            restApiConnector,
+            field
           )
         );
       }
@@ -309,7 +336,8 @@ export class ExternalReferences extends Serializable {
    */
   public parseCitationsFromRelatedAssets(
     relatedAssets: RelatedAsset[],
-    restApiConnector: RestApiConnectorService
+    restApiConnector: RestApiConnectorService,
+    field?: string
   ): Observable<CitationParseResult> {
     // Parse citations from the related asset descriptions
     const api_calls = [];
@@ -317,7 +345,7 @@ export class ExternalReferences extends Serializable {
     for (const relatedAsset of relatedAssets) {
       if ('description' in relatedAsset && relatedAsset.description) {
         api_calls.push(
-          this.parseCitations(relatedAsset.description, restApiConnector)
+          this.parseCitations(relatedAsset.description, restApiConnector, field)
         );
       }
     }
@@ -457,18 +485,23 @@ export class ExternalReferences extends Serializable {
       if (!Object.keys(options.object)) continue; //object does not implement the field
       if (field == 'aliases')
         parse_apis.push(
-          this.parseCitationsFromAliases(options.object[field], restAPIService)
+          this.parseCitationsFromAliases(
+            options.object[field],
+            restAPIService,
+            field
+          )
         );
       else if (field == 'relatedAssets')
         parse_apis.push(
           this.parseCitationsFromRelatedAssets(
             options.object[field],
-            restAPIService
+            restAPIService,
+            field
           )
         );
       else
         parse_apis.push(
-          this.parseCitations(options.object[field], restAPIService)
+          this.parseCitations(options.object[field], restAPIService, field)
         );
     }
     return forkJoin(parse_apis).pipe(
@@ -496,6 +529,21 @@ export class ExternalReferences extends Serializable {
             result: 'error',
             field: 'external_references', //TODO set this to the actual field to improve warnings
             message: `Citations ${brokenCitations.join(', ')} do not match format (Citation: source name)`,
+          });
+
+        // invalid citations
+        const invalidCitations = Array.from(citationResult.invalidCitations);
+        if (invalidCitations.length == 1)
+          result.errors.push({
+            result: 'error',
+            field: 'external_references', //TODO set this to the actual field to improve warnings
+            message: `Citation does not match format (Citation: source name) or (Citation: source name)(Citation: source name)`,
+          });
+        else if (invalidCitations.length > 1)
+          result.errors.push({
+            result: 'error',
+            field: 'external_references', //TODO set this to the actual field to improve warnings
+            message: `Citations ${invalidCitations.join(', ')} do not match format (Citation: source name) or (Citation: source name)(Citation: source name)`,
           });
 
         //missing citations
@@ -538,11 +586,14 @@ export class CitationParseResult {
   public missingCitations = new Set<string>();
   // list of broken references detected in the field
   public brokenCitations = new Set<string>();
+  // list of invalid references detected in the field
+  public invalidCitations = new Set<string>();
 
   constructor(initData?: {
     usedCitations?: Set<string>;
     missingCitations?: Set<string>;
     brokenCitations: Set<string>;
+    invalidCitations?: Set<string>;
   }) {
     if (initData && initData.usedCitations)
       this.usedCitations = initData.usedCitations;
@@ -550,6 +601,8 @@ export class CitationParseResult {
       this.missingCitations = initData.missingCitations;
     if (initData && initData.brokenCitations)
       this.brokenCitations = initData.brokenCitations;
+    if (initData && initData.invalidCitations)
+      this.invalidCitations = initData.invalidCitations;
   }
 
   /**
@@ -568,6 +621,10 @@ export class CitationParseResult {
     this.brokenCitations = new Set([
       ...this.brokenCitations,
       ...that.brokenCitations,
+    ]);
+    this.invalidCitations = new Set([
+      ...this.invalidCitations,
+      ...that.invalidCitations,
     ]);
   }
 }
