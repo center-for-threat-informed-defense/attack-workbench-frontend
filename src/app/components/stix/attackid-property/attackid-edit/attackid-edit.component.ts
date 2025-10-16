@@ -20,29 +20,18 @@ import { StixObject } from '../../../../classes/stix/stix-object';
 export class AttackIDEditComponent implements OnInit {
   @Input() public config: AttackIDPropertyConfig;
   @Output() public attackIdGenerated = new EventEmitter();
-  public showHint = false;
   public prefix = '';
-  public namespaceRange = '';
-  public regMatch = /[A-Z]*[0-9]+[.0-9]*/g;
 
   constructor(public restApiConnector: RestApiConnectorService) {}
 
   ngOnInit(): void {
-    if ((this.config.object as StixObject).attackType === 'matrix') {
-      this.regMatch = /^(.*?)*$/g;
-    }
     // Get namespace settings and prepend, if creating a new object
     if ((this.config.object as StixObject).firstInitialized) {
-      let organizationNamespace = {};
       const namespaceSub = this.restApiConnector
         .getOrganizationNamespace()
         .subscribe({
           next: namespaceSettings => {
-            organizationNamespace = namespaceSettings;
-            this.prefix = namespaceSettings.prefix
-              ? namespaceSettings.prefix + '-'
-              : '';
-            this.namespaceRange = namespaceSettings.range_start;
+            this.prefix = namespaceSettings.prefix ?? '';
           },
           complete: () => namespaceSub.unsubscribe(),
         });
@@ -52,24 +41,20 @@ export class AttackIDEditComponent implements OnInit {
         /[A-Z]+-/g
       );
       if (found) {
-        this.prefix = found[0];
+        this.prefix = found[0].replace(/-$/, '');
       }
     }
   }
 
   public handleGenerateClick(): void {
-    if ((this.config.object as StixObject).supportsNamespace) {
+    if ((this.config.object as StixObject).supportsAttackID) {
       const sub = (this.config.object as StixObject)
-        .getNamespaceID(this.restApiConnector, {
-          prefix: this.prefix,
-          range_start: this.namespaceRange,
-        })
+        .generateAttackId(this.restApiConnector, this.prefix)
         .subscribe({
           next: val => {
             (this.config.object as StixObject).attackID = val;
           },
           complete: () => {
-            this.prependPrefix();
             this.attackIdChanged();
             sub.unsubscribe();
           },
@@ -81,19 +66,10 @@ export class AttackIDEditComponent implements OnInit {
     this.attackIdGenerated.emit();
   }
 
-  public prependPrefix(): void {
-    if ((this.config.object as StixObject).attackID.startsWith(this.prefix))
-      return; // If prefix is already present, exit
-    const ID =
-      (this.config.object as StixObject).attackType === 'matrix'
-        ? (this.config.object as StixObject).attackID
-        : (this.config.object as StixObject).attackID.toUpperCase();
-    const found = ID.match(this.regMatch);
-    if (found) {
-      (this.config.object as StixObject).attackID = this.prefix + found[0];
-      this.showHint = true;
-    } else {
-      this.showHint = false;
-    }
+  public formatAttackId(): void {
+    // handle user set attack id
+    const object = this.config.object as StixObject;
+    const withPrefix = object.formatWithPrefix(object.attackID, this.prefix);
+    (this.config.object as StixObject).attackID = withPrefix;
   }
 }

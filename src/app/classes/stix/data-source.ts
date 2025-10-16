@@ -15,7 +15,6 @@ export class DataSource extends StixObject {
   public data_components: DataComponent[] = [];
 
   public readonly supportsAttackID = true;
-  public readonly supportsNamespace = true;
   protected get attackIDValidator() {
     return {
       regex: 'DS\\d{4}',
@@ -162,7 +161,7 @@ export class DataSource extends StixObject {
    * Delete this STIX object from the database.
    * @param restAPIService [RestApiConnectorService] the service to perform the DELETE through
    */
-  public delete(restAPIService: RestApiConnectorService): Observable<{}> {
+  public delete(restAPIService: RestApiConnectorService): Observable<object> {
     const deleteObservable = restAPIService.deleteDataSource(this.stixID);
     const subscription = deleteObservable.subscribe({
       complete: () => {
