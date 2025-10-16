@@ -15,7 +15,6 @@ export class Asset extends StixObject {
   public domains: string[] = ['ics-attack'];
 
   public readonly supportsAttackID = true;
-  public readonly supportsNamespace = true;
   protected get attackIDValidator() {
     return {
       regex: 'A\\d{4}',
@@ -148,7 +147,7 @@ export class Asset extends StixObject {
    * Delete this STIX object from the database.
    * @param restAPIService [RestApiConnectorService] the service to perform the DELETE through
    */
-  public delete(restAPIService: RestApiConnectorService): Observable<{}> {
+  public delete(restAPIService: RestApiConnectorService): Observable<object> {
     const deleteObservable = restAPIService.deleteAsset(this.stixID);
     const subscription = deleteObservable.subscribe({
       complete: () => {
