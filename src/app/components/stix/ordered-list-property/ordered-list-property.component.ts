@@ -40,6 +40,9 @@ export interface OrderedListPropertyConfig {
   /* type of object to display stix lists
    */
   type?: string;
+  /** tooltip field and label to display */
+  tooltipField?: string;
+  tooltipLabel?: string;
   /**
    * How should the table act when the row is clicked? default "none"
    *     "link": clicking redirects to the object

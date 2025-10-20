@@ -1,5 +1,6 @@
-import { Component, Input, ViewEncapsulation } from '@angular/core';
+import { Component, Input, OnInit, ViewEncapsulation } from '@angular/core';
 import { OrderedListPropertyConfig } from '../ordered-list-property.component';
+import { StixObject } from 'src/app/classes/stix';
 
 @Component({
   selector: 'app-ordered-list-view',
@@ -8,12 +9,17 @@ import { OrderedListPropertyConfig } from '../ordered-list-property.component';
   encapsulation: ViewEncapsulation.None,
   standalone: false,
 })
-export class OrderedListViewComponent {
+export class OrderedListViewComponent implements OnInit {
   @Input() public config: OrderedListPropertyConfig;
-  private _idToLabel: Map<string, string>;
+  private _idToObject: Map<string, StixObject>;
 
-  constructor() {
-    // intentionally left blank
+  ngOnInit(): void {
+    if (!this._idToObject) {
+      this._idToObject = new Map();
+      for (const object of this.config.globalObjects) {
+        this._idToObject.set(object.stixID, object);
+      }
+    }
   }
 
   /**
@@ -22,13 +28,15 @@ export class OrderedListViewComponent {
    * @param {string} stixID the stix ID to get
    */
   public getLabel(stixID: string): string {
-    if (!this._idToLabel) {
-      this._idToLabel = new Map();
-      for (const object of this.config.globalObjects) {
-        this._idToLabel.set(object.stixID, object[this.config.field]);
-      }
-    }
-    return this._idToLabel.get(stixID);
+    return this._idToObject.get(stixID)[this.config.field];
+  }
+
+  public getTooltip(stixID: string): string {
+    if (!this.config.tooltipField) return '';
+    const tooltip =
+      this._idToObject.get(stixID)?.[this.config.tooltipField] ?? '';
+    if (!tooltip) return '';
+    return `${this.config.tooltipLabel ? this.config.tooltipLabel + ': ' : ''}${tooltip}`;
   }
 
   /**
