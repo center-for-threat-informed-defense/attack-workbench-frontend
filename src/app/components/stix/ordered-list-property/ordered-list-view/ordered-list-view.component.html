@@ -3,6 +3,8 @@
     <ul class="list-view">
       <li class="list-item" *ngFor="let stixID of list">
         <a
+          [matTooltip]="getTooltip(stixID)"
+          matTooltipPosition="above"
           class="external-link"
           [href]="internalLink(stixID)"
           rel="nofollow noopener"
