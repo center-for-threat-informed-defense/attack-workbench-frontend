@@ -44,22 +44,32 @@ export class Asset extends StixObject {
     // Conditionally serialize array fields - only include if non-empty
     this.serializeArrayField(rep.stix, 'x_mitre_domains', this.domains);
     this.serializeArrayField(rep.stix, 'x_mitre_sectors', this.sectors);
-    this.serializeArrayField(rep.stix, 'x_mitre_related_assets', this.relatedAssets,
-      (assets) => assets.map((asset: RelatedAsset) => {
-        const relatedAsset: any = {
-          name: asset.name.trim(),
-          description: asset.description || '',
-        };
-        // Only include related_asset_sectors if it's a non-empty array
-        if (Array.isArray(asset.related_asset_sectors) && asset.related_asset_sectors.length > 0) {
-          relatedAsset.related_asset_sectors = asset.related_asset_sectors;
-        }
-        return relatedAsset;
-      })
+    this.serializeArrayField(
+      rep.stix,
+      'x_mitre_related_assets',
+      this.relatedAssets,
+      assets =>
+        assets.map((asset: RelatedAsset) => {
+          const relatedAsset: any = {
+            name: asset.name.trim(),
+            description: asset.description || '',
+          };
+          // Only include related_asset_sectors if it's a non-empty array
+          if (
+            Array.isArray(asset.related_asset_sectors) &&
+            asset.related_asset_sectors.length > 0
+          ) {
+            relatedAsset.related_asset_sectors = asset.related_asset_sectors;
+          }
+          return relatedAsset;
+        })
     );
     this.serializeArrayField(rep.stix, 'x_mitre_platforms', this.platforms);
-    this.serializeArrayField(rep.stix, 'x_mitre_contributors', this.contributors,
-      (contributors) => contributors.map(x => x.trim())
+    this.serializeArrayField(
+      rep.stix,
+      'x_mitre_contributors',
+      this.contributors,
+      contributors => contributors.map(x => x.trim())
     );
 
     return rep;
