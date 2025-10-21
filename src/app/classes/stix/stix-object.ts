@@ -790,11 +790,11 @@ export abstract class StixObject extends Serializable {
    *   (contributors) => contributors.map(x => x.trim())
    * );
    */
-  protected serializeArrayField(
+  protected serializeArrayField<T, R = T>(
     target: any,
     key: string,
-    value: any[],
-    transform?: (val: any[]) => any
+    value: T[],
+    transform?: (val: T[]) => R[]
   ): void {
     if (Array.isArray(value) && value.length > 0) {
       target[key] = transform ? transform(value) : value;
