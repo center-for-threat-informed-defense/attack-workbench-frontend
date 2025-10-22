@@ -903,8 +903,12 @@ export class RestApiConnectorService extends ApiConnector {
         switchMap(result => {
           // fetch parent data source of data component
           const x = result as any[];
-          if (x[0].attackType != 'data-component') return of(result);
+          if (!x[0] || x[0].attackType != 'data-component') return of(result);
+
           const d = x[0] as DataComponent;
+          // if no data source ref, just return the data component
+          if (!d.dataSourceRef) return of([d]);
+          // otherwise, fetch the parent data source
           return this.getDataSource(d.dataSourceRef).pipe(
             // fetch data source from REST API
             map(data_source => {
