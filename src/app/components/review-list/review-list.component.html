@@ -140,7 +140,16 @@
 
             <div
               *ngIf="tableColumns_settings.get(column)['display'] === 'plain'">
-              {{ element[column] }}
+              <ng-container *ngIf="column === 'attackID'; else plainCell">
+                <a
+                  [routerLink]="['/', element.attackType, element.stixID]"
+                  (click)="$event.stopPropagation()">
+                  {{ element[column] }}
+                </a>
+              </ng-container>
+              <ng-template #plainCell>{{ element[column] }}</ng-template>
+              <ng-template #plainCell>{{ element[column] }}</ng-template>
+              <ng-template #plainCell>{{ element[column] }}</ng-template>
             </div>
           </td>
         </ng-container>
