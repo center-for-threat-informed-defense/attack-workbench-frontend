@@ -50,9 +50,9 @@ import { StixListConfig } from 'src/app/components/stix/stix-list/stix-list.comp
 })
 export class ReviewListComponent extends StixListComponent implements OnInit {
   /**
-   * Review list with a custom dropdown (same look) that exposes only two
-   * workflow filters and enforces radio-like behavior. It never shows
-   * objects outside ['work-in-progress','awaiting-review'].
+   * Review list with a custom dropdown that exposes only two workflow filters,
+   * enforces radio-like behavior, and never shows objects outside
+   * ['work-in-progress','awaiting-review'].
    */
   @Input() public config: StixListConfig = {};
 
@@ -68,21 +68,22 @@ export class ReviewListComponent extends StixListComponent implements OnInit {
     'awaiting-review',
   ] as const;
 
+  // saving-state tracker for the checkbox
+  private updating = new Set<string>();
+  public isUpdating = (id: string) => this.updating.has(id);
+
   ngOnInit(): void {
+    // base config
     this.config.select = 'many';
     this.config.showControls = true;
 
+    // hide base filters to avoid conflicts; we render our own dropdown
     this.config.filterList = [];
 
     super.ngOnInit();
   }
 
-  /**
-   * Force single-select behavior inside a multi-select MatSelect:
-   * - Selecting one status removes any other selected status.
-   * - Deselecting clears status (default shows BOTH allowed states).
-   * Also forcibly deselect the other option in the UI.
-   */
+  /** single-select behavior inside the MatSelect (only one status.* at a time) */
   public onStatusOptionChange(
     evt: MatOptionSelectionChange,
     value: 'status.work-in-progress' | 'status.awaiting-review'
@@ -90,12 +91,13 @@ export class ReviewListComponent extends StixListComponent implements OnInit {
     if (!evt.isUserInput) return;
 
     const current = Array.isArray(this.filter) ? [...this.filter] : [];
-    const nonStatus = current.filter(v => !v.startsWith('status.'));
+    const nonStatus = current.filter(
+      v => typeof v === 'string' && !v.startsWith('status.')
+    );
     const isSelecting = evt.source.selected;
 
     if (isSelecting) {
       this.filter = [...nonStatus, value];
-
       if (this.matSelect) {
         this.matSelect.options.forEach((opt: MatOption) => {
           const isStatus =
@@ -110,6 +112,7 @@ export class ReviewListComponent extends StixListComponent implements OnInit {
     this.applyControls();
   }
 
+  /** Keep only allowed workflow states; optionally narrowed by the selected status.* */
   private filterToAllowedStates(objs: any[]): any[] {
     const onlyAllowed = objs.filter(
       (o: any) => o?.workflow && this.ALLOWED_STATES.includes(o.workflow.state)
@@ -132,9 +135,35 @@ export class ReviewListComponent extends StixListComponent implements OnInit {
     });
   }
 
-  /**
-   * Apply all controls and fetch objects.
-   */
+  /** Checkbox handler: set workflow.state='reviewed', save, then refresh */
+  public markReviewed(element: StixObject): void {
+    if (!element) return;
+    if (element?.workflow?.state === 'reviewed') return;
+
+    const stixId = (element as any).stixID;
+    this.updating.add(stixId);
+
+    // set state & save
+    element.workflow = { state: 'reviewed' } as any;
+    const save$ = element.save((this as any).restAPIConnectorService);
+
+    const sub = save$.subscribe({
+      next: () => {
+        // After marking reviewed, it should drop from this list
+        this.applyControls();
+      },
+      error: () => {
+        // best-effort rollback to a visible state
+        element.workflow = { state: 'awaiting-review' } as any;
+      },
+      complete: () => {
+        this.updating.delete(stixId);
+        sub.unsubscribe();
+      },
+    });
+  }
+
+  /** Apply all controls and fetch objects. */
   public applyControls(): void {
     if (this.paginator && this.previousPageSize !== this.paginator.pageSize) {
       this.paginator.pageIndex = 0;
@@ -163,9 +192,7 @@ export class ReviewListComponent extends StixListComponent implements OnInit {
       }
 
       filtered = (this as any).filterObjects(this.searchQuery, filtered);
-
       filtered = this.filterToAllowedStates(filtered);
-
       filtered = this.sortByModifiedDesc(filtered);
 
       this.totalObjectCount = filtered.length;
@@ -370,5 +397,7 @@ export class ReviewListComponent extends StixListComponent implements OnInit {
       this.tableColumns.splice(versionIdx, 1);
       this.tableColumns_settings.delete('version');
     }
+
+    this.addColumn('Mark as reviewed', 'markReviewed', 'plain', false);
   }
 }
