@@ -140,21 +140,34 @@
 
             <div
               *ngIf="tableColumns_settings.get(column)['display'] === 'plain'">
-              <ng-container *ngIf="column === 'attackID'; else plainCell">
+              <ng-container *ngIf="column === 'attackID'; else nonIdPlain">
                 <a
                   [routerLink]="['/', element.attackType, element.stixID]"
                   (click)="$event.stopPropagation()">
                   {{ element[column] }}
                 </a>
               </ng-container>
-              <ng-template #plainCell>{{ element[column] }}</ng-template>
-              <ng-template #plainCell>{{ element[column] }}</ng-template>
-              <ng-template #plainCell>{{ element[column] }}</ng-template>
+
+              <ng-template #nonIdPlain>
+                <ng-container
+                  *ngIf="column === 'markReviewed'; else plainCellText">
+                  <mat-checkbox
+                    [checked]="element?.workflow?.state === 'reviewed'"
+                    [disabled]="
+                      element?.workflow?.state === 'reviewed' ||
+                      isUpdating(element.stixID)
+                    "
+                    (click)="$event.stopPropagation()"
+                    (change)="markReviewed(element)">
+                  </mat-checkbox>
+                </ng-container>
+              </ng-template>
+
+              <ng-template #plainCellText>{{ element[column] }}</ng-template>
             </div>
           </td>
         </ng-container>
 
-        <!-- select column (keep if you use selection) -->
         <ng-container matColumnDef="select">
           <th mat-header-cell *matHeaderCellDef [ngClass]="config.select"></th>
           <td mat-cell *matCellDef="let element" [ngClass]="config.select">
@@ -175,7 +188,6 @@
           </td>
         </ng-container>
 
-        <!-- expanded content formatting -->
         <ng-container matColumnDef="expandedDetail">
           <td
             mat-cell
@@ -202,7 +214,6 @@
           </td>
         </ng-container>
 
-        <!-- row definitions -->
         <tr mat-header-row *matHeaderRowDef="tableColumns_controls"></tr>
         <tr
           mat-row
