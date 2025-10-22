@@ -9,12 +9,12 @@ import {
   EventEmitter,
 } from '@angular/core';
 import { animate, style, transition, trigger } from '@angular/animations';
-import { forkJoin } from 'rxjs';
-import { MatSort } from '@angular/material/sort';
+import { forkJoin, Observable, of } from 'rxjs';
 import { MatPaginator } from '@angular/material/paginator';
 import { map } from 'rxjs/operators';
 import { StixObject } from 'src/app/classes/stix/stix-object';
 import { MatSelect } from '@angular/material/select';
+import { MatOption, MatOptionSelectionChange } from '@angular/material/core';
 import { StixListComponent } from 'src/app/components/stix/stix-list/stix-list.component';
 import { StixListConfig } from 'src/app/components/stix/stix-list/stix-list.component';
 
@@ -50,139 +50,268 @@ import { StixListConfig } from 'src/app/components/stix/stix-list/stix-list.comp
 })
 export class ReviewListComponent extends StixListComponent implements OnInit {
   /**
-   * ReviewListComponent is a specialized list used on the Dashboard Review page.
-   * It inherits all functionality from StixListComponent but overrides:
-   *  - ngOnInit: removes any forced object type so that all STIX types are fetched.
-   *  - applyControls: when no type is set, it performs parallel REST calls for every
-   *    supported STIX object type via forkJoin, merges the results, and applies the
-   *    standard search, filter, and pagination logic.
-   *  - buildTable: defines a minimal column set (workflow status, type, ID, name,
-   *    modified, created) suitable for review purposes.
-   *
-   * The component respects the `filterList` configuration, which is set to only
-   * include the workflow‑status dropdown, removing domain and platform filters.
+   * Review list with a custom dropdown (same look) that exposes only two
+   * workflow filters and enforces radio-like behavior. It never shows
+   * objects outside ['work-in-progress','awaiting-review'].
    */
   @Input() public config: StixListConfig = {};
 
-  @Output() public onRowAction = new EventEmitter<string>();
   @Output() public onSelect = new EventEmitter<StixObject>();
-  @Output() public refresh = new EventEmitter();
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
-  @ViewChild(MatSort) sort: MatSort;
   @ViewChild('search') search: ElementRef;
   @ViewChild(MatSelect) matSelect: MatSelect;
-  private previousPageSize: number = 0;
+
+  private previousPageSize = 0;
+  private readonly ALLOWED_STATES = [
+    'work-in-progress',
+    'awaiting-review',
+  ] as const;
 
   ngOnInit(): void {
     this.config.select = 'many';
-    this.config.showFilters = true;
     this.config.showControls = true;
+
     this.config.filterList = [];
+
     super.ngOnInit();
-    // Set default sort to modified descending
-    if (this.sort) {
-      this.sort.sort({ id: 'modified', start: 'desc', disableClear: true });
+  }
+
+  /**
+   * Force single-select behavior inside a multi-select MatSelect:
+   * - Selecting one status removes any other selected status.
+   * - Deselecting clears status (default shows BOTH allowed states).
+   * Also forcibly deselect the other option in the UI.
+   */
+  public onStatusOptionChange(
+    evt: MatOptionSelectionChange,
+    value: 'status.work-in-progress' | 'status.awaiting-review'
+  ): void {
+    if (!evt.isUserInput) return;
+
+    const current = Array.isArray(this.filter) ? [...this.filter] : [];
+    const nonStatus = current.filter(v => !v.startsWith('status.'));
+    const isSelecting = evt.source.selected;
+
+    if (isSelecting) {
+      this.filter = [...nonStatus, value];
+
+      if (this.matSelect) {
+        this.matSelect.options.forEach((opt: MatOption) => {
+          const isStatus =
+            typeof opt.value === 'string' && opt.value.startsWith('status.');
+          if (isStatus && opt.value !== value && opt.selected) opt.deselect();
+        });
+      }
+    } else {
+      this.filter = nonStatus;
     }
-    // Define concise workflow status filter options
-    this.filterOptions = [];
-    this.filterOptions.push({
-      name: 'workflow status',
-      disabled: false,
-      values: [
-        {
-          value: 'status.work-in-progress',
-          label: 'work in progress',
-          disabled: false,
-        },
-        {
-          value: 'status.awaiting-review',
-          label: 'awaiting review',
-          disabled: false,
-        },
-        { value: 'status.reviewed', label: 'reviewed', disabled: false },
-      ],
+
+    this.applyControls();
+  }
+
+  private filterToAllowedStates(objs: any[]): any[] {
+    const onlyAllowed = objs.filter(
+      (o: any) => o?.workflow && this.ALLOWED_STATES.includes(o.workflow.state)
+    );
+
+    const selectedStatus = (this.filter || []).find(
+      (x: string) => typeof x === 'string' && x.startsWith('status.')
+    );
+    if (!selectedStatus) return onlyAllowed;
+
+    const state = selectedStatus.split('status.')[1];
+    return onlyAllowed.filter(o => o.workflow.state === state);
+  }
+
+  private sortByModifiedDesc<T extends { modified?: string }>(arr: T[]) {
+    return arr.sort((a, b) => {
+      const am = a.modified ? new Date(a.modified).getTime() : 0;
+      const bm = b.modified ? new Date(b.modified).getTime() : 0;
+      return bm - am;
     });
   }
 
   /**
-   * Override applyControls to sort by Modified date descending.
-   */
-  /**
-   * Override applyControls to fetch all STIX object types when no specific type is set.
-   * If a type is defined, fall back to the base implementation.
+   * Apply all controls and fetch objects.
    */
   public applyControls(): void {
-    if (this.config.type) {
-      // Use default behavior for a specific type
-      super.applyControls();
-      // Ensure sorting by modified descending
-      if (this.data$) {
-        this.data$ = this.data$.pipe(
-          map(paginated => {
-            const sorted = (paginated as any).data.sort((a: any, b: any) => {
-              const aMod = a.modified ? new Date(a.modified).getTime() : 0;
-              const bMod = b.modified ? new Date(b.modified).getTime() : 0;
-              return bMod - aMod;
-            });
-            return { ...(paginated as any), data: sorted };
-          })
+    if (this.paginator && this.previousPageSize !== this.paginator.pageSize) {
+      this.paginator.pageIndex = 0;
+      this.previousPageSize = this.paginator.pageSize;
+    }
+    const limit = this.paginator ? this.paginator.pageSize : 10;
+    const offset = this.paginator ? this.paginator.pageIndex * limit : 0;
+
+    if (
+      'stixObjects' in this.config &&
+      !(this.config.stixObjects instanceof Observable)
+    ) {
+      let filtered = this.config.stixObjects as any[];
+
+      if (
+        Array.isArray(this.userIdsUsedInSearch) &&
+        this.userIdsUsedInSearch.length > 0
+      ) {
+        filtered = filtered.filter(
+          (obj: any) =>
+            obj.workflow &&
+            this.userIdsUsedInSearch.includes(
+              obj.workflow.created_by_user_account
+            )
         );
       }
-    } else {
-      // No specific type – fetch **all** supported STIX objects in parallel
-      // Reset to first page when page size changes to keep pagination correct
-      if (this.paginator && this.previousPageSize !== this.paginator.pageSize) {
-        this.paginator.pageIndex = 0;
-        this.previousPageSize = this.paginator.pageSize;
-      }
-      const limit = this.paginator ? this.paginator.pageSize : 10;
-      const offset = this.paginator ? this.paginator.pageIndex * limit : 0;
 
-      // Parallel requests for each object type
+      filtered = (this as any).filterObjects(this.searchQuery, filtered);
+
+      filtered = this.filterToAllowedStates(filtered);
+
+      filtered = this.sortByModifiedDesc(filtered);
+
+      this.totalObjectCount = filtered.length;
+      let start = offset;
+      if (this.paginator && start >= filtered.length) {
+        this.paginator.pageIndex = 0;
+        start = 0;
+      }
+      const pageData = filtered.slice(start, start + limit);
+
+      this.data$ = of({
+        data: pageData,
+        pagination: { total: filtered.length, offset: start, limit },
+      });
+      return;
+    }
+
+    const optionsCommon = {
+      limit,
+      offset,
+      excludeIDs: this.config.excludeIDs,
+      search: this.searchQuery,
+      includeRevoked: false,
+      includeDeprecated: false,
+      platforms: undefined,
+      domains: undefined,
+      lastUpdatedBy: this.userIdsUsedInSearch,
+    };
+
+    if (this.config.type) {
+      const type = this.config.type;
+      let obs: Observable<any>;
+      const svc = (this as any).restAPIConnectorService;
+
+      switch (type) {
+        case 'software':
+          obs = svc.getAllSoftware(optionsCommon);
+          break;
+        case 'campaign':
+          obs = svc.getAllCampaigns(optionsCommon);
+          break;
+        case 'group':
+          obs = svc.getAllGroups(optionsCommon);
+          break;
+        case 'matrix':
+          obs = svc.getAllMatrices(optionsCommon);
+          break;
+        case 'mitigation':
+          obs = svc.getAllMitigations(optionsCommon);
+          break;
+        case 'tactic':
+          obs = svc.getAllTactics(optionsCommon);
+          break;
+        case 'technique':
+          obs = svc.getAllTechniques(optionsCommon);
+          break;
+        case 'log-source':
+          obs = svc.getAllLogSources(optionsCommon);
+          break;
+        case 'detection-strategy':
+          obs = svc.getAllDetectionStrategies(optionsCommon);
+          break;
+        case 'analytic':
+          obs = svc.getAllAnalytics({ ...optionsCommon, includeRefs: true });
+          break;
+        case 'data-source':
+          obs = svc.getAllDataSources(optionsCommon);
+          break;
+        case 'data-component':
+          obs = svc.getAllDataComponents(optionsCommon);
+          break;
+        case 'asset':
+          obs = svc.getAllAssets(optionsCommon);
+          break;
+        case 'marking-definition':
+          obs = svc.getAllMarkingDefinitions(optionsCommon);
+          break;
+        case 'note':
+          obs = svc.getAllNotes(optionsCommon);
+          break;
+        default:
+          if (type.includes('collection')) {
+            obs = svc.getAllCollections({
+              search: this.searchQuery,
+              versions: 'all',
+            });
+          } else if (type === 'relationship') {
+            obs = svc.getRelatedTo({
+              sourceRef: this.config.sourceRef,
+              targetRef: this.config.targetRef,
+              sourceType: this.config.sourceType,
+              targetType: this.config.targetType,
+              relationshipType: this.config.relationshipType,
+              excludeSourceRefs: this.config.excludeSourceRefs,
+              excludeTargetRefs: this.config.excludeTargetRefs,
+              limit,
+              offset,
+              includeDeprecated: false,
+            });
+          } else {
+            obs = of({ data: [], pagination: { total: 0, offset, limit } });
+          }
+      }
+
+      this.data$ = obs.pipe(
+        map((paginated: any) => {
+          const data = Array.isArray(paginated?.data) ? paginated.data : [];
+          const searched = (this as any).filterObjects(this.searchQuery, data);
+          const filtered = this.filterToAllowedStates(searched);
+          const sorted = this.sortByModifiedDesc(filtered);
+
+          this.totalObjectCount = sorted.length;
+
+          let start = offset;
+          if (this.paginator && start >= sorted.length) {
+            this.paginator.pageIndex = 0;
+            start = 0;
+          }
+          const end = start + limit;
+
+          return {
+            data: sorted.slice(start, end),
+            pagination: { total: sorted.length, offset: start, limit },
+          };
+        })
+      );
+    } else {
+      const svc = (this as any).restAPIConnectorService;
       const allRequests = forkJoin({
-        techniques: (this as any).restAPIConnectorService.getAllTechniques({
-          search: this.searchQuery,
-        }),
-        tactics: (this as any).restAPIConnectorService.getAllTactics({
-          search: this.searchQuery,
-        }),
-        software: (this as any).restAPIConnectorService.getAllSoftware({
-          search: this.searchQuery,
-        }),
-        mitigations: (this as any).restAPIConnectorService.getAllMitigations({
-          search: this.searchQuery,
-        }),
-        dataSources: (this as any).restAPIConnectorService.getAllDataSources({
-          search: this.searchQuery,
-        }),
-        dataComponents: (
-          this as any
-        ).restAPIConnectorService.getAllDataComponents({
-          search: this.searchQuery,
-        }),
-        groups: (this as any).restAPIConnectorService.getAllGroups({
-          search: this.searchQuery,
-        }),
-        matrices: (this as any).restAPIConnectorService.getAllMatrices({
-          search: this.searchQuery,
-        }),
-        assets: (this as any).restAPIConnectorService.getAllAssets({
-          search: this.searchQuery,
-        }),
-        notes: (this as any).restAPIConnectorService.getAllNotes({
-          search: this.searchQuery,
-        }),
-        markingDefinitions: (
-          this as any
-        ).restAPIConnectorService.getAllMarkingDefinitions({
+        techniques: svc.getAllTechniques({ search: this.searchQuery }),
+        tactics: svc.getAllTactics({ search: this.searchQuery }),
+        software: svc.getAllSoftware({ search: this.searchQuery }),
+        mitigations: svc.getAllMitigations({ search: this.searchQuery }),
+        dataSources: svc.getAllDataSources({ search: this.searchQuery }),
+        dataComponents: svc.getAllDataComponents({ search: this.searchQuery }),
+        groups: svc.getAllGroups({ search: this.searchQuery }),
+        matrices: svc.getAllMatrices({ search: this.searchQuery }),
+        assets: svc.getAllAssets({ search: this.searchQuery }),
+        notes: svc.getAllNotes({ search: this.searchQuery }),
+        markingDefinitions: svc.getAllMarkingDefinitions({
           search: this.searchQuery,
         }),
       });
 
       this.data$ = allRequests.pipe(
         map((results: any) => {
-          // Concatenate all arrays into a single list
           const combined: any[] = ([] as any[]).concat(
             results.techniques.data,
             results.tactics.data,
@@ -196,78 +325,46 @@ export class ReviewListComponent extends StixListComponent implements OnInit {
             results.notes.data,
             results.markingDefinitions.data
           );
-          // Update total object count for paginator
 
-          // Apply client‑side filtering (search, workflow status, etc.)
-          let filtered = (this as any).filterObjects(
+          const searched = (this as any).filterObjects(
             this.searchQuery,
             combined
           );
-          // Apply workflow status filters (multi‑select)
-          const statusFilters = this.filter
-            .filter((x: string) => x.startsWith('status.'))
-            .map(f => f.split('status.')[1]);
-          if (statusFilters.length) {
-            filtered = filtered.filter(
-              (obj: any) =>
-                obj.workflow && statusFilters.includes(obj.workflow.state)
-            );
-          }
-          const sorted = filtered.sort((a: any, b: any) => {
-            const aMod = a.modified ? new Date(a.modified).getTime() : 0;
-            const bMod = b.modified ? new Date(b.modified).getTime() : 0;
-            return bMod - aMod;
-          });
-          // Update total object count for paginator based on filtered results
-          this.totalObjectCount = filtered.length;
+          const filtered = this.filterToAllowedStates(searched);
+          const sorted = this.sortByModifiedDesc(filtered);
 
-          // Pagination slice with bounds check
+          this.totalObjectCount = sorted.length;
+
           let start = offset;
-          // If start exceeds filtered results, reset to first page
-          if (this.paginator && start >= filtered.length) {
+          if (this.paginator && start >= sorted.length) {
             this.paginator.pageIndex = 0;
             start = 0;
           }
           const end = start + limit;
-          const pageData = sorted.slice(start, end);
 
           return {
-            data: pageData,
-            pagination: {
-              total: filtered.length,
-              offset: start,
-              limit: limit,
-            },
+            data: sorted.slice(start, end),
+            pagination: { total: sorted.length, offset: start, limit },
           };
         })
       );
     }
   }
 
-  /**
-   * Build a simplified table for review purposes.
-   * Columns: Type, ID, Name, Modified, Created.
-   */
   protected buildTable(): void {
-    // Reset any previous columns
     this.tableColumns = [];
     this.tableColumns_settings.clear();
 
-    // Workflow status icon column (appears after select)
     this.addColumn('', 'workflow', 'icon');
-
-    // Type column
     this.addColumn('Type', 'attackType', 'plain', false);
-    // ID column
     this.addColumn('ID', 'attackID', 'plain', false);
-    // Name column (sticky if selection enabled)
+
     const stickyAllowed = !(
       this.config.select && this.config.select === 'disabled'
     );
     this.addColumn('Name', 'name', 'plain', stickyAllowed, ['name']);
-    // Modified and Created timestamps
-    this.addVersionsAndDatesColumns(); // adds version, modified, created
-    // Remove version column (not needed for review)
+
+    this.addVersionsAndDatesColumns();
     const versionIdx = this.tableColumns.indexOf('version');
     if (versionIdx !== -1) {
       this.tableColumns.splice(versionIdx, 1);
