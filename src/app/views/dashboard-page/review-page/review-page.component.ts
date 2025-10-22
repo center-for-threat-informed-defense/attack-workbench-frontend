@@ -13,6 +13,7 @@ export class ReviewPageComponent implements AfterViewInit {
     filterList: ['workflow_status'],
     showFilters: true,
     showControls: true,
+    clickBehavior: 'none',
   };
 
   ngAfterViewInit(): void {}
