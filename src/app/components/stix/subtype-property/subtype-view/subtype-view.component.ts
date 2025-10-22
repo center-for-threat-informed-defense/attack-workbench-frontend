@@ -20,13 +20,18 @@ export class SubtypeViewComponent implements OnInit {
   public get fieldLabels(): string[] {
     return this.config.subtypeFields.map(f => (f.label ? f.label : f.name));
   }
-
   public get valueCopy() {
     return JSON.parse(JSON.stringify(this.config.object[this.config.field])); //deep copy
+  }
+  public get keyField(): string {
+    return this.config.subtypeFields.find(subtype => subtype.key)?.name;
   }
 
   ngOnInit(): void {
     this.detailTable = this.valueCopy;
+    if (this.keyField) {
+      this.sortTableByKey();
+    }
     this.buildTable();
   }
 
@@ -63,6 +68,17 @@ export class SubtypeViewComponent implements OnInit {
       return '<span><sup>[' + referenceNumber + ']</sup></span>';
     }
     return '';
+  }
+
+  private sortTableByKey(): void {
+    const key = this.keyField;
+    this.detailTable.sort((a, b) => {
+      const aValue = a[key] ?? '';
+      const bValue = b[key] ?? '';
+      return String(aValue).localeCompare(String(bValue), undefined, {
+        sensitivity: 'base',
+      });
+    });
   }
 
   // Build table of values including any inline citations
