@@ -1,19 +1,19 @@
-import { VersionNumber } from '../version-number';
-import { ExternalReferences } from '../external-references';
-import { v4 as uuid } from 'uuid';
-import { Serializable, ValidationData } from '../serializable';
+import { forkJoin, Observable, of } from 'rxjs';
+import { map, switchMap } from 'rxjs/operators';
 import {
   Paginated,
   RestApiConnectorService,
 } from 'src/app/services/connectors/rest-api/rest-api-connector.service';
-import { forkJoin, Observable, of } from 'rxjs';
-import { map, switchMap } from 'rxjs/operators';
-import { logger } from '../../utils/logger';
 import {
   AttackTypeToRoute,
   StixTypeToAttackType,
 } from 'src/app/utils/type-mappings';
 import { StixType } from 'src/app/utils/types';
+import { v4 as uuid } from 'uuid';
+import { logger } from '../../utils/logger';
+import { ExternalReferences } from '../external-references';
+import { Serializable, ValidationData } from '../serializable';
+import { VersionNumber } from '../version-number';
 
 export type workflowStates =
   | 'work-in-progress'
@@ -764,6 +764,42 @@ export abstract class StixObject extends Serializable {
     }
     return true;
   };
+
+  /**
+   * Conditionally serializes an array field to the target object only if it contains at least one element.
+   * This ensures that empty arrays are never included in the serialized STIX object sent to the backend,
+   * which is critical because the REST API does not accept empty arrays in POST/PUT requests.
+   *
+   * Use this method in serialize() implementations to prevent empty array fields from being set.
+   *
+   * @param target - The target object (typically rep.stix) to set the field on
+   * @param key - The field name in the STIX object (e.g., 'x_mitre_platforms')
+   * @param value - The array value to conditionally serialize
+   * @param transform - Optional transformation function to apply to the array before setting (e.g., mapping, trimming)
+   *
+   * @example
+   * // Simple usage - only set if array is non-empty
+   * this.serializeArrayField(rep.stix, 'x_mitre_platforms', this.platforms);
+   *
+   * @example
+   * // With transformation - trim strings before serializing
+   * this.serializeArrayField(
+   *   rep.stix,
+   *   'x_mitre_contributors',
+   *   this.contributors,
+   *   (contributors) => contributors.map(x => x.trim())
+   * );
+   */
+  protected serializeArrayField<T, R = T>(
+    target: any,
+    key: string,
+    value: T[],
+    transform?: (val: T[]) => R[]
+  ): void {
+    if (Array.isArray(value) && value.length > 0) {
+      target[key] = transform ? transform(value) : value;
+    }
+  }
 
   /**
    * Save the current state of the STIX object in the database. Update the current object from the response
