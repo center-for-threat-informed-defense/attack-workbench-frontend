@@ -22,7 +22,6 @@ import { StixObject } from 'src/app/classes/stix/stix-object';
 import { AddDialogComponent } from 'src/app/components/add-dialog/add-dialog.component';
 import { Subscription } from 'rxjs';
 import { Technique } from 'src/app/classes/stix/technique';
-import { Analytic } from 'src/app/classes/stix';
 
 @Component({
   selector: 'app-list-edit',
@@ -156,7 +155,7 @@ export class ListEditComponent implements OnInit, AfterContentChecked {
     } else if (this.config.field == 'analytics') {
       this.type = 'analytic';
       const subscription = this.restAPIConnectorService
-        .getAllAnalytics({ includeRefs: true })
+        .getAllAnalytics()
         .subscribe({
           next: analytics => {
             this.allObjects = analytics.data;
@@ -404,7 +403,7 @@ export class ListEditComponent implements OnInit, AfterContentChecked {
     );
 
     // open dialog window for user selection
-    const dialogRef = this.openDialogComponent(selectableObjects);
+    const dialogRef = this.openDialogWithSelectableObjects(selectableObjects);
 
     // copy user selection
     const selectCopy = new SelectionModel(true, this.select.selected);
@@ -444,7 +443,7 @@ export class ListEditComponent implements OnInit, AfterContentChecked {
     // check if parent techniques have been loaded, if not, do nothing
     if (this.config.label === 'parent technique' && !this.dataLoaded) return;
     // otherwise, open the dialog window for user selection
-    const dialogRef = this.openDialogComponent(this.allObjects);
+    const dialogRef = this.openDialogWithSelectableObjects(this.allObjects);
 
     // copy the user selection
     const selectCopy = new SelectionModel(false, this.select.selected);
@@ -482,11 +481,8 @@ export class ListEditComponent implements OnInit, AfterContentChecked {
 
   /** Open analytic list */
   public openAnalyticList(): void {
-    // get list of analytics in current domain
-    const analytics = this.allObjects as Analytic[];
-
     // open dialog window for user selection
-    const dialogRef = this.openDialogComponent(analytics);
+    const dialogRef = this.openDialogWithoutSelectableObjects();
 
     // copy user selection
     const selectCopy = new SelectionModel(true, this.select.selected);
@@ -507,13 +503,31 @@ export class ListEditComponent implements OnInit, AfterContentChecked {
   }
 
   /** Open the AddDialogComponent with the given list of selectable objects */
-  public openDialogComponent(selectableObjects) {
+  public openDialogWithSelectableObjects(selectableObjects) {
     return this.dialog.open(AddDialogComponent, {
       maxWidth: '70em',
       minWidth: '70em',
       maxHeight: '70em',
       data: {
         selectableObjects: selectableObjects,
+        select: this.select,
+        type: this.type,
+        buttonLabel: 'OK',
+      },
+    });
+  }
+
+  /** Open the AddDialogComponent without selectable objects, instead
+   * using StixObjectList to grab the selectable objects
+   * Note: depending on the object type, this will allow for faster
+   * rendering and prevent a gateway timeout (analytics)
+   */
+  public openDialogWithoutSelectableObjects() {
+    return this.dialog.open(AddDialogComponent, {
+      maxWidth: '70em',
+      minWidth: '70em',
+      maxHeight: '70em',
+      data: {
         select: this.select,
         type: this.type,
         buttonLabel: 'OK',
