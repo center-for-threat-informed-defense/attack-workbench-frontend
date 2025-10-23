@@ -326,3 +326,15 @@
     width: 100%;
   }
 }
+.selection-bar {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+}
+
+.selection-bar .spacer {
+  flex: 1 1 auto;
+}
+.selection-count {
+  font-size: 16px;
+}
