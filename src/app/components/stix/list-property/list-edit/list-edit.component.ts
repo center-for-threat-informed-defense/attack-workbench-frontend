@@ -155,7 +155,7 @@ export class ListEditComponent implements OnInit, AfterContentChecked {
     } else if (this.config.field == 'analytics') {
       this.type = 'analytic';
       const subscription = this.restAPIConnectorService
-        .getAllAnalytics()
+        .getAllAnalytics() // NOTE: do not include refs, pulls refs in StixList component instead
         .subscribe({
           next: analytics => {
             this.allObjects = analytics.data;
