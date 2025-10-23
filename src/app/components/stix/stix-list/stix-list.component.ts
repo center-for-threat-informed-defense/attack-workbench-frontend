@@ -588,6 +588,7 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
     // get data from config (if we are not connecting to back-end)
     if (
       'stixObjects' in this.config &&
+      this.config.stixObjects !== undefined &&
       !(this.config.stixObjects instanceof Observable)
     ) {
       this.totalObjectCount = this.config.stixObjects.length;
@@ -920,7 +921,7 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
       exclusiveDeprecated,
       exclusiveRevoked,
     } = this.getFilterObjectStates();
-    if ('stixObjects' in this.config) {
+    if ('stixObjects' in this.config && this.config.stixObjects !== undefined) {
       if (this.config.stixObjects instanceof Observable) {
         // pull objects out of observable
       } else {
