@@ -49,6 +49,19 @@
       class="scroll-container"
       *ngIf="data$ | async as data; else loading"
       @fadeIn>
+      <mat-toolbar
+        *ngIf="selection.hasValue()"
+        color="primary"
+        class="selection-bar">
+        <span class="selection-count"
+          >{{ selection.selected.length }} selected</span
+        >
+        <span class="spacer"></span>
+        <button mat-button (click)="approveSelected($event)">
+          <mat-icon>check</mat-icon>Mark as Reviewed
+        </button>
+      </mat-toolbar>
+
       <table
         mat-table
         multiTemplateDataRows
@@ -169,7 +182,16 @@
         </ng-container>
 
         <ng-container matColumnDef="select">
-          <th mat-header-cell *matHeaderCellDef [ngClass]="config.select"></th>
+          <th mat-header-cell *matHeaderCellDef [ngClass]="config.select">
+            <div *ngIf="config.select === 'many'">
+              <mat-checkbox
+                (click)="$event.stopPropagation()"
+                (change)="toggleAllRows()"
+                [checked]="isAllSelected()"
+                [indeterminate]="selection.hasValue() && !isAllSelected()">
+              </mat-checkbox>
+            </div>
+          </th>
           <td mat-cell *matCellDef="let element" [ngClass]="config.select">
             <mat-checkbox
               *ngIf="config.select && config.select === 'many'"

@@ -17,6 +17,7 @@ import { MatSelect } from '@angular/material/select';
 import { MatOption, MatOptionSelectionChange } from '@angular/material/core';
 import { StixListComponent } from 'src/app/components/stix/stix-list/stix-list.component';
 import { StixListConfig } from 'src/app/components/stix/stix-list/stix-list.component';
+import { SelectionModel } from '@angular/cdk/collections';
 
 @Component({
   selector: 'app-review-list',
@@ -49,13 +50,7 @@ import { StixListConfig } from 'src/app/components/stix/stix-list/stix-list.comp
   ],
 })
 export class ReviewListComponent extends StixListComponent implements OnInit {
-  /**
-   * Review list with a custom dropdown that exposes only two workflow filters,
-   * enforces radio-like behavior, and never shows objects outside
-   * ['work-in-progress','awaiting-review'].
-   */
   @Input() public config: StixListConfig = {};
-
   @Output() public onSelect = new EventEmitter<StixObject>();
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
@@ -68,35 +63,29 @@ export class ReviewListComponent extends StixListComponent implements OnInit {
     'awaiting-review',
   ] as const;
 
-  // saving-state tracker for the checkbox
   private updating = new Set<string>();
   public isUpdating = (id: string) => this.updating.has(id);
 
+  public selection = new SelectionModel<string>(true, []);
+  private pageMap = new Map<string, StixObject>();
+
   ngOnInit(): void {
-    // base config
     this.config.select = 'many';
     this.config.showControls = true;
-
-    // hide base filters to avoid conflicts; we render our own dropdown
     this.config.filterList = [];
-
     super.ngOnInit();
   }
 
-  /** single-select behavior inside the MatSelect (only one status.* at a time) */
   public onStatusOptionChange(
     evt: MatOptionSelectionChange,
     value: 'status.work-in-progress' | 'status.awaiting-review'
   ): void {
     if (!evt.isUserInput) return;
-
     const current = Array.isArray(this.filter) ? [...this.filter] : [];
     const nonStatus = current.filter(
       v => typeof v === 'string' && !v.startsWith('status.')
     );
-    const isSelecting = evt.source.selected;
-
-    if (isSelecting) {
+    if (evt.source.selected) {
       this.filter = [...nonStatus, value];
       if (this.matSelect) {
         this.matSelect.options.forEach((opt: MatOption) => {
@@ -108,21 +97,17 @@ export class ReviewListComponent extends StixListComponent implements OnInit {
     } else {
       this.filter = nonStatus;
     }
-
     this.applyControls();
   }
 
-  /** Keep only allowed workflow states; optionally narrowed by the selected status.* */
   private filterToAllowedStates(objs: any[]): any[] {
     const onlyAllowed = objs.filter(
       (o: any) => o?.workflow && this.ALLOWED_STATES.includes(o.workflow.state)
     );
-
     const selectedStatus = (this.filter || []).find(
       (x: string) => typeof x === 'string' && x.startsWith('status.')
     );
     if (!selectedStatus) return onlyAllowed;
-
     const state = selectedStatus.split('status.')[1];
     return onlyAllowed.filter(o => o.workflow.state === state);
   }
@@ -135,27 +120,15 @@ export class ReviewListComponent extends StixListComponent implements OnInit {
     });
   }
 
-  /** Checkbox handler: set workflow.state='reviewed', save, then refresh */
   public markReviewed(element: StixObject): void {
-    if (!element) return;
-    if (element?.workflow?.state === 'reviewed') return;
-
+    if (!element || element?.workflow?.state === 'reviewed') return;
     const stixId = (element as any).stixID;
     this.updating.add(stixId);
-
-    // set state & save
     element.workflow = { state: 'reviewed' } as any;
     const save$ = element.save((this as any).restAPIConnectorService);
-
     const sub = save$.subscribe({
-      next: () => {
-        // After marking reviewed, it should drop from this list
-        this.applyControls();
-      },
-      error: () => {
-        // best-effort rollback to a visible state
-        element.workflow = { state: 'awaiting-review' } as any;
-      },
+      next: () => this.applyControls(),
+      error: () => (element.workflow = { state: 'awaiting-review' } as any),
       complete: () => {
         this.updating.delete(stixId);
         sub.unsubscribe();
@@ -163,8 +136,35 @@ export class ReviewListComponent extends StixListComponent implements OnInit {
     });
   }
 
-  /** Apply all controls and fetch objects. */
+  // selection header helpers
+  public isAllSelected(): boolean {
+    const pageIds = Array.from(this.pageMap.keys());
+    return (
+      pageIds.length > 0 && pageIds.every(id => this.selection.isSelected(id))
+    );
+  }
+
+  public toggleAllRows(): void {
+    const pageIds = Array.from(this.pageMap.keys());
+    if (this.isAllSelected())
+      pageIds.forEach(id => this.selection.deselect(id));
+    else pageIds.forEach(id => this.selection.select(id));
+  }
+
+  public approveSelected(evt?: Event): void {
+    if (evt) evt.stopPropagation();
+    const ids = this.selection.selected;
+    if (!ids.length) return;
+    ids.forEach(id => {
+      const obj = this.pageMap.get(id);
+      if (obj) this.markReviewed(obj);
+    });
+    this.selection.clear();
+  }
+
   public applyControls(): void {
+    this.selection.clear();
+
     if (this.paginator && this.previousPageSize !== this.paginator.pageSize) {
       this.paginator.pageIndex = 0;
       this.previousPageSize = this.paginator.pageSize;
@@ -202,6 +202,7 @@ export class ReviewListComponent extends StixListComponent implements OnInit {
         start = 0;
       }
       const pageData = filtered.slice(start, start + limit);
+      this.pageMap = new Map(pageData.map((o: any) => [o.stixID, o]));
 
       this.data$ = of({
         data: pageData,
@@ -312,9 +313,11 @@ export class ReviewListComponent extends StixListComponent implements OnInit {
             start = 0;
           }
           const end = start + limit;
+          const slice = sorted.slice(start, end);
+          this.pageMap = new Map(slice.map((o: any) => [o.stixID, o]));
 
           return {
-            data: sorted.slice(start, end),
+            data: slice,
             pagination: { total: sorted.length, offset: start, limit },
           };
         })
@@ -368,9 +371,11 @@ export class ReviewListComponent extends StixListComponent implements OnInit {
             start = 0;
           }
           const end = start + limit;
+          const slice = sorted.slice(start, end);
+          this.pageMap = new Map(slice.map((o: any) => [o.stixID, o]));
 
           return {
-            data: sorted.slice(start, end),
+            data: slice,
             pagination: { total: sorted.length, offset: start, limit },
           };
         })
