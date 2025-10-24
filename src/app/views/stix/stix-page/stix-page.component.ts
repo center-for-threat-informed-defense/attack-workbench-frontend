@@ -95,6 +95,9 @@ export class StixPageComponent implements OnInit, OnDestroy {
             this.objectID != this.objects[0].attackID
               ? this.objectID
               : undefined,
+          patchAnalytics:
+            this.objectType === 'detection-strategy' &&
+            (this.objects[0] as any)?.analytics?.length,
           versionAlreadyIncremented: versionChanged,
         },
         autoFocus: false, // prevent auto focus on form field

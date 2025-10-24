@@ -2,6 +2,7 @@ import { Component, Inject, OnInit, ViewEncapsulation } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { forkJoin } from 'rxjs';
 import { ValidationData } from 'src/app/classes/serializable';
+import { DetectionStrategy } from 'src/app/classes/stix';
 import { StixObject } from 'src/app/classes/stix/stix-object';
 import { VersionNumber } from 'src/app/classes/version-number';
 import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/rest-api-connector.service';
@@ -74,10 +75,24 @@ export class SaveDialogComponent implements OnInit {
           const objLink = `(LinkById: ${this.config.patchId})`;
           results.data.forEach(x => {
             if (
-              x.description?.indexOf(objLink) !== -1 ||
-              ('detection' in x && x.detection?.indexOf(objLink) !== -1)
+              this.config.patchId &&
+              (x.description?.indexOf(objLink) !== -1 ||
+                ('detection' in x && x.detection?.indexOf(objLink) !== -1))
             ) {
               this.patch_objects.push(x);
+              return; // already added as a patch object, continue
+            }
+
+            // update analytics referencing the old detection strategy url
+            if (this.config.patchAnalytics) {
+              const det = this.config.object as DetectionStrategy;
+              if (
+                x.type === 'x-mitre-analytic' &&
+                det.analytics?.includes(x.stixID)
+              ) {
+                this.patch_objects.push(x);
+                return; // already added as a patch object, continue
+              }
             }
           });
 
@@ -97,17 +112,35 @@ export class SaveDialogComponent implements OnInit {
   }
 
   private patchObject(obj): void {
-    // replace LinkById references with the new ATT&CK ID
-    const regex = new RegExp(`\\(LinkById: (${this.config.patchId})\\)`, 'gmu');
-    obj.description = obj.description.replace(
-      regex,
-      `(LinkById: ${this.config.object.attackID})`
-    );
-    if ('detection' in obj && obj.detection) {
-      obj.detection = obj.detection.replace(
+    if (this.config.patchId) {
+      // replace LinkById references with the new ATT&CK ID
+      const regex = new RegExp(
+        `\\(LinkById: (${this.config.patchId})\\)`,
+        'gmu'
+      );
+      obj.description = obj.description.replace(
         regex,
         `(LinkById: ${this.config.object.attackID})`
       );
+      if ('detection' in obj && obj.detection) {
+        obj.detection = obj.detection.replace(
+          regex,
+          `(LinkById: ${this.config.object.attackID})`
+        );
+      }
+    }
+
+    if (this.config.patchAnalytics && obj.type === 'x-mitre-analytic') {
+      // update the related detection so the analytic url is serialized correctly
+      const det = this.config.object as DetectionStrategy;
+      obj.relatedDetections = [
+        {
+          stixId: det.stixID,
+          name: det.name,
+          attackId: det.attackID,
+          type: det.type,
+        },
+      ];
     }
   }
 
@@ -137,7 +170,7 @@ export class SaveDialogComponent implements OnInit {
     this.config.object.workflow = this.newState
       ? { state: this.newState }
       : undefined;
-    if (this.config.patchId) this.parse_patches();
+    if (this.config.patchId || this.config.patchAnalytics) this.parse_patches();
     else this.save();
   }
 
@@ -149,7 +182,7 @@ export class SaveDialogComponent implements OnInit {
     this.config.object.workflow = this.newState
       ? { state: this.newState }
       : undefined;
-    if (this.config.patchId) this.parse_patches();
+    if (this.config.patchId || this.config.patchAnalytics) this.parse_patches();
     else this.save();
   }
 
@@ -161,7 +194,7 @@ export class SaveDialogComponent implements OnInit {
     this.config.object.workflow = this.newState
       ? { state: this.newState }
       : undefined;
-    if (this.config.patchId) this.parse_patches();
+    if (this.config.patchId || this.config.patchAnalytics) this.parse_patches();
     else this.save();
   }
 
@@ -188,5 +221,6 @@ export class SaveDialogComponent implements OnInit {
 export interface SaveDialogConfig {
   object: StixObject;
   patchId?: string; // previous object ID to patch in LinkByID tags
+  patchAnalytics?: boolean; // whether to patch analytics related to a detection strategy
   versionAlreadyIncremented: boolean;
 }
