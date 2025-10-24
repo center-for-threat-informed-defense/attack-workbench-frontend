@@ -912,7 +912,8 @@ export abstract class StixObject extends Serializable {
     else if (attackType == 'tactic') return apiService.getAllTactics(options);
     else if (attackType == 'technique')
       return apiService.getAllTechniques(options);
-    else if (attackType == 'data-source') return apiService.getAllDataSources();
+    else if (attackType == 'data-source')
+      return apiService.getAllDataSources(options);
     else if (attackType == 'data-component')
       return apiService.getAllDataComponents(options);
     else if (attackType == 'asset') return apiService.getAllAssets(options);
