@@ -1981,6 +1981,104 @@ export class RestApiConnectorService extends ApiConnector {
   }
 
   /**
+   * Stream collection bundle import with progress updates using Server-Sent Events
+   * @param collectionBundle the STIX bundle to import
+   * @param force whether to force import despite warnings
+   * @returns Observable that emits progress events and final collection
+   */
+  public streamCollectionBundleImport(
+    collectionBundle: any,
+    force = false
+  ): Observable<{ type: string; data: any }> {
+    return new Observable(observer => {
+      let query = new HttpParams();
+      query = query.set('stream', 'true');
+      if (force) query = query.set('forceImport', 'all');
+
+      const url = `${this.apiUrl}/collection-bundles?${query.toString()}`;
+      const eventSource = new EventSource(url, {
+        withCredentials: true,
+      });
+
+      // Note: EventSource doesn't support POST with body, so we need to use fetch
+      // with SSE streaming instead
+      fetch(url, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'text/event-stream',
+        },
+        credentials: 'include',
+        body: JSON.stringify(collectionBundle),
+      })
+        .then(async response => {
+          if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+          }
+
+          const reader = response.body?.getReader();
+          const decoder = new TextDecoder();
+
+          if (!reader) {
+            throw new Error('No response body');
+          }
+
+          let buffer = '';
+
+          while (true) {
+            const { done, value } = await reader.read();
+
+            if (done) {
+              observer.complete();
+              break;
+            }
+
+            buffer += decoder.decode(value, { stream: true });
+            const lines = buffer.split('\n\n');
+            buffer = lines.pop() || '';
+
+            for (const line of lines) {
+              if (line.trim() === '' || line.startsWith(':')) continue;
+
+              const eventMatch = line.match(/^event: (\w+)\n/);
+              const dataMatch = line.match(/data: (.+)$/m);
+
+              if (dataMatch) {
+                try {
+                  const data = JSON.parse(dataMatch[1]);
+                  const eventType = eventMatch ? eventMatch[1] : 'message';
+
+                  if (eventType === 'error') {
+                    observer.error(data);
+                    return;
+                  }
+
+                  observer.next({ type: eventType, data });
+
+                  if (eventType === 'complete') {
+                    observer.complete();
+                    return;
+                  }
+                } catch (e) {
+                  logger.error('Error parsing SSE data:', e);
+                }
+              }
+            }
+          }
+        })
+        .catch(err => {
+          logger.error('Stream error:', err);
+          observer.error(err);
+        });
+
+      // Cleanup
+      return () => {
+        // EventSource cleanup if needed
+      };
+    });
+  }
+
+  /**
    * Preview a collection bundle.
    * POST the collection bundle to the back end to retrieve a preview of the import results. A second POST
    * call will occur (with ?forceImport='all') if the first POST call results in an overridable import error.

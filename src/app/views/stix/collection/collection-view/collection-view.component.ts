@@ -62,7 +62,7 @@ export class CollectionViewComponent extends StixViewPage implements OnInit {
   public editingReloadToggle = true;
   public release = false;
   public includeNotes = false;
-  public loading: boolean = false;
+  public loading = false;
   public validating = false;
   public validationData: ValidationData = null;
 
