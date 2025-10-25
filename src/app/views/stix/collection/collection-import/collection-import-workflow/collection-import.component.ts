@@ -811,9 +811,24 @@ export class CollectionImportComponent implements OnInit {
             this.importProgress = 0;
             // Initialize multi-phase progress tracking
             this.phaseProgress = [
-              { phase: 'processing', label: 'Processing Objects', progress: 0, active: false },
-              { phase: 'references', label: 'Importing References', progress: 0, active: false },
-              { phase: 'saving', label: 'Saving Collection', progress: 0, active: false },
+              {
+                phase: 'processing',
+                label: 'Processing Objects',
+                progress: 0,
+                active: false,
+              },
+              {
+                phase: 'references',
+                label: 'Importing References',
+                progress: 0,
+                active: false,
+              },
+              {
+                phase: 'saving',
+                label: 'Saving Collection',
+                progress: 0,
+                active: false,
+              },
             ];
             logger.log('Starting streaming import...');
             const subscription = this.restAPIConnectorService
@@ -827,7 +842,9 @@ export class CollectionImportComponent implements OnInit {
                     const phasePercentage = event.data.phasePercentage || 0;
 
                     // Find and update the appropriate phase
-                    const phaseIndex = this.phaseProgress.findIndex(p => p.phase === phase);
+                    const phaseIndex = this.phaseProgress.findIndex(
+                      p => p.phase === phase
+                    );
                     if (phaseIndex !== -1) {
                       // Mark all previous phases as complete
                       for (let i = 0; i < phaseIndex; i++) {
@@ -838,20 +855,30 @@ export class CollectionImportComponent implements OnInit {
                       this.phaseProgress[phaseIndex].progress = phasePercentage;
                       this.phaseProgress[phaseIndex].active = true;
                       // Keep future phases at 0
-                      for (let i = phaseIndex + 1; i < this.phaseProgress.length; i++) {
+                      for (
+                        let i = phaseIndex + 1;
+                        i < this.phaseProgress.length;
+                        i++
+                      ) {
                         this.phaseProgress[i].progress = 0;
                         this.phaseProgress[i].active = false;
                       }
                     }
 
-                    logger.log('Phase progress updated:', phase, phasePercentage);
+                    logger.log(
+                      'Phase progress updated:',
+                      phase,
+                      phasePercentage
+                    );
                   } else if (event.type === 'complete') {
                     // Import complete - mark all phases as 100%
                     this.phaseProgress.forEach(p => {
                       p.progress = 100;
                       p.active = false;
                     });
-                    logger.log('Import complete, waiting 1 second before transitioning to done');
+                    logger.log(
+                      'Import complete, waiting 1 second before transitioning to done'
+                    );
                     // Wait 1 second to show all progress bars at 100% before transitioning
                     setTimeout(() => {
                       this.handleImportSuccess(new Collection(event.data));
