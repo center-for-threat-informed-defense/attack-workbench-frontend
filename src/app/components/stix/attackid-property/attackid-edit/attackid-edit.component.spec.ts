@@ -1,19 +1,19 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { AttackidEditComponent } from './attackid-edit.component';
+import { AttackIDEditComponent } from './attackid-edit.component';
 
-describe('AttackidEditComponent', () => {
-  let component: AttackidEditComponent;
-  let fixture: ComponentFixture<AttackidEditComponent>;
+describe('AttackIDEditComponent', () => {
+  let component: AttackIDEditComponent;
+  let fixture: ComponentFixture<AttackIDEditComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [AttackidEditComponent],
+      declarations: [AttackIDEditComponent],
     }).compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(AttackidEditComponent);
+    fixture = TestBed.createComponent(AttackIDEditComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
