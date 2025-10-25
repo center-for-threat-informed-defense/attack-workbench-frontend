@@ -2,8 +2,8 @@ import { TestBed } from '@angular/core/testing';
 
 import { SidebarService } from './sidebar.service';
 
-describe('SidebarManagerService', () => {
-  let service: SidebarManagerService;
+describe('SidebarService', () => {
+  let service: SidebarService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({});
