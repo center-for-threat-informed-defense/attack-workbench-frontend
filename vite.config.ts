@@ -1,19 +1,29 @@
 /// <reference types="vitest" />
-import { defineConfig } from 'vite';
 import angular from '@analogjs/vite-plugin-angular';
+import { defineConfig } from 'vite';
+import path from 'path';
 
-// https://vitejs.dev/config/
+// https://vite.dev/config/
 export default defineConfig(({ mode }) => ({
   plugins: [angular()],
   test: {
     globals: true,
+    dir: 'src',
     setupFiles: ['src/test-setup.ts'],
     environment: 'jsdom',
-    include: ['src/**/*.{test,spec}.{js,mjs,cjs,ts,mts,cts,jsx,tsx}'],
-    reporters: ['default'],
+    maxConcurrency: 1,
+    bail: 10, // Stop after 10 test failures
     coverage: {
       provider: 'v8',
-      reporter: ['text', 'html', 'lcov'],
+      enabled: false,
+      reporter: ['text', 'text-summary', 'html', 'clover', 'json'],
+    },
+  },
+  resolve: {
+    conditions: ['default', 'node'],
+    alias: {
+      src: path.resolve(__dirname, './src'),
+      'package.json': path.resolve(__dirname, './package.json'),
     },
   },
   define: {
