@@ -1,4 +1,6 @@
+import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { provideHttpClient } from '@angular/common/http';
 
 import { StixListComponent } from './stix-list.component';
 
@@ -9,6 +11,8 @@ describe('StixListComponent', () => {
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [StixListComponent],
+      providers: [provideHttpClient()],
+      schemas: [NO_ERRORS_SCHEMA],
     }).compileComponents();
   }));
 
