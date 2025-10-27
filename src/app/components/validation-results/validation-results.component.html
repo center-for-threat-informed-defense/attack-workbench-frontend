@@ -24,6 +24,13 @@
       knowledge base patches will be determined in next step
     </div>
   </mat-list-item>
+  <mat-list-item class="validation-item warning" *ngIf="patchAnalytics">
+    <mat-icon matListItemIcon>warning</mat-icon>
+    <div matListItemLine>analytics changed</div>
+    <div matListItemLine>
+      knowledge base patches will be determined in next step
+    </div>
+  </mat-list-item>
   <mat-list-item
     class="validation-item info"
     *ngFor="let info of validation.info">

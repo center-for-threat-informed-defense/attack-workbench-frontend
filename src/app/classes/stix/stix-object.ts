@@ -851,7 +851,12 @@ export abstract class StixObject extends Serializable {
     this.attackID = '(generating ID)';
     return apiService.getOrganizationNamespace().pipe(
       switchMap(namespace => {
-        const accessor = this.getApiAccessor(apiService, this.attackType);
+        const accessor = this.getApiAccessor(
+          apiService,
+          this.attackType,
+          true,
+          true
+        );
         if (!accessor) return of('(unsupported attack type)');
 
         const typePrefix = this.getAttackIdPrefix(); // ex: "TA" for tactics
@@ -889,22 +894,34 @@ export abstract class StixObject extends Serializable {
 
   private getApiAccessor(
     apiService: RestApiConnectorService,
-    attackType: string
+    attackType: string,
+    includeDeprecated?: boolean,
+    includeRevoked?: boolean
   ): Observable<Paginated<StixObject>> {
-    if (attackType == 'group') return apiService.getAllGroups();
-    else if (attackType == 'campaign') return apiService.getAllCampaigns();
-    else if (attackType == 'mitigation') return apiService.getAllMitigations();
-    else if (attackType == 'software') return apiService.getAllSoftware();
-    else if (attackType == 'tactic') return apiService.getAllTactics();
-    else if (attackType == 'technique') return apiService.getAllTechniques();
-    else if (attackType == 'data-source') return apiService.getAllDataSources();
+    const options = {
+      includeDeprecated: includeDeprecated ?? false,
+      includeRevoked: includeRevoked ?? false,
+    };
+    if (attackType == 'group') return apiService.getAllGroups(options);
+    else if (attackType == 'campaign')
+      return apiService.getAllCampaigns(options);
+    else if (attackType == 'mitigation')
+      return apiService.getAllMitigations(options);
+    else if (attackType == 'software')
+      return apiService.getAllSoftware(options);
+    else if (attackType == 'tactic') return apiService.getAllTactics(options);
+    else if (attackType == 'technique')
+      return apiService.getAllTechniques(options);
+    else if (attackType == 'data-source')
+      return apiService.getAllDataSources(options);
     else if (attackType == 'data-component')
-      return apiService.getAllDataComponents();
-    else if (attackType == 'asset') return apiService.getAllAssets();
-    else if (attackType == 'matrix') return apiService.getAllMatrices();
+      return apiService.getAllDataComponents(options);
+    else if (attackType == 'asset') return apiService.getAllAssets(options);
+    else if (attackType == 'matrix') return apiService.getAllMatrices(options);
     else if (attackType == 'detection-strategy')
-      return apiService.getAllDetectionStrategies();
-    else if (attackType == 'analytic') return apiService.getAllAnalytics();
+      return apiService.getAllDetectionStrategies(options);
+    else if (attackType == 'analytic')
+      return apiService.getAllAnalytics(options);
     else return null;
   }
 

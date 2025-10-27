@@ -5,7 +5,9 @@
       <div *ngIf="validation; else validating">
         <app-validation-results
           [validation]="validation"
-          [patchId]="config.patchId"></app-validation-results>
+          [patchId]="config.patchId"
+          [patchAnalytics]="config.patchAnalytics">
+        </app-validation-results>
       </div>
       <ng-template #validating>
         <app-loading-overlay></app-loading-overlay>
