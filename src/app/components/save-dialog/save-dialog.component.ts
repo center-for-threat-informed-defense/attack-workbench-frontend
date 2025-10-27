@@ -24,6 +24,7 @@ export class SaveDialogComponent implements OnInit {
   public validation: ValidationData = null;
   public newState: WorkflowState = 'work-in-progress';
   public workflows = Object.entries(WorkflowStates);
+  public analyticsToPatch = new Set<string>(); // list of stix ids of analytics that need patching
 
   public get saveEnabled() {
     return this.validation && this.validation.errors.length == 0;
@@ -60,6 +61,27 @@ export class SaveDialogComponent implements OnInit {
 
   ngOnInit(): void {
     this.newState = 'work-in-progress';
+    if (this.config.object.attackType === 'detection-strategy') {
+      const det = this.config.object as DetectionStrategy;
+      const newAnalytics = new Set<string>(det.analytics);
+      if (this.config.patchAnalytics) {
+        // get set symmetric diff of analytics that need patching
+        // analytics that were removed or added to the DET need to
+        // be updated
+        for (const a of this.config.patchAnalytics) {
+          // check for analytics removed
+          if (!newAnalytics.has(a)) this.analyticsToPatch.add(a);
+        }
+        for (const a of newAnalytics) {
+          // check for analytics added
+          if (!this.config.patchAnalytics.has(a)) this.analyticsToPatch.add(a);
+        }
+      }
+      if (this.config.patchId) {
+        // patching DET ID -> need to patch all current analytics
+        for (const a of newAnalytics) this.analyticsToPatch.add(a);
+      }
+    }
   }
 
   /**
@@ -84,15 +106,12 @@ export class SaveDialogComponent implements OnInit {
             }
 
             // update analytics referencing the old detection strategy url
-            if (this.config.patchAnalytics) {
-              const det = this.config.object as DetectionStrategy;
-              if (
-                x.type === 'x-mitre-analytic' &&
-                det.analytics?.includes(x.stixID)
-              ) {
-                this.patch_objects.push(x);
-                return; // already added as a patch object, continue
-              }
+            if (
+              this.analyticsToPatch.size &&
+              this.analyticsToPatch.has(x.stixID)
+            ) {
+              this.patch_objects.push(x);
+              return; // already added as a patch object, continue
             }
           });
 
@@ -130,17 +149,23 @@ export class SaveDialogComponent implements OnInit {
       }
     }
 
-    if (this.config.patchAnalytics && obj.type === 'x-mitre-analytic') {
+    if (this.analyticsToPatch.has(obj.stixID)) {
       // update the related detection so the analytic url is serialized correctly
       const det = this.config.object as DetectionStrategy;
-      obj.relatedDetections = [
-        {
-          stixId: det.stixID,
-          name: det.name,
-          attackId: det.attackID,
-          type: det.type,
-        },
-      ];
+      if (det?.analytics.includes(obj.stixID)) {
+        // set related detection to this DET
+        obj.relatedDetections = [
+          {
+            stixId: det.stixID,
+            name: det.name,
+            attackId: det.attackID,
+            type: det.type,
+          },
+        ];
+      } else {
+        // analytic was removed, remove related DET
+        obj.relatedDetections = undefined;
+      }
     }
   }
 
@@ -221,6 +246,6 @@ export class SaveDialogComponent implements OnInit {
 export interface SaveDialogConfig {
   object: StixObject;
   patchId?: string; // previous object ID to patch in LinkByID tags
-  patchAnalytics?: boolean; // whether to patch analytics related to a detection strategy
+  patchAnalytics?: Set<string>; // previous list of analytics related to a detection strategy
   versionAlreadyIncremented: boolean;
 }

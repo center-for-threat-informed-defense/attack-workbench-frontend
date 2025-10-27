@@ -10,7 +10,12 @@ import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router, NavigationEnd } from '@angular/router';
 
 import { Observable, forkJoin } from 'rxjs';
-import { Note, Software, StixObject } from 'src/app/classes/stix';
+import {
+  DetectionStrategy,
+  Note,
+  Software,
+  StixObject,
+} from 'src/app/classes/stix';
 import { concatMap } from 'rxjs/operators';
 import { Collection } from 'src/app/classes/stix/collection';
 import { VersionNumber } from 'src/app/classes/version-number';
@@ -38,6 +43,7 @@ export class StixPageComponent implements OnInit, OnDestroy {
   public initialVersion: VersionNumber;
   public objectType: string;
   private objectID: string;
+  private oldAnalytics = new Set<string>();
   private routerEvents;
   private saveSubscription;
   private deleteSubscription;
@@ -97,7 +103,14 @@ export class StixPageComponent implements OnInit, OnDestroy {
               : undefined,
           patchAnalytics:
             this.objectType === 'detection-strategy' &&
-            (this.objects[0] as any)?.analytics?.length,
+            this.analyticsChanged(
+              this.oldAnalytics,
+              new Set<string>(
+                (this.objects[0] as DetectionStrategy)?.analytics ?? []
+              )
+            )
+              ? this.oldAnalytics
+              : undefined,
           versionAlreadyIncremented: versionChanged,
         },
         autoFocus: false, // prevent auto focus on form field
@@ -231,6 +244,16 @@ export class StixPageComponent implements OnInit, OnDestroy {
     });
   }
 
+  private analyticsChanged(
+    oldAnalytics: Set<string>,
+    newAnalytics: Set<string>
+  ) {
+    return (
+      oldAnalytics?.size !== newAnalytics?.size ||
+      ![...newAnalytics].every(a => oldAnalytics.has(a))
+    );
+  }
+
   private viewStix() {
     const prompt = this.dialog.open(StixJsonDialogComponent, {
       maxWidth: '45em',
@@ -333,6 +356,11 @@ export class StixPageComponent implements OnInit, OnDestroy {
           this.objectID = this.objects[0].supportsAttackID
             ? this.objects[0].attackID
             : null;
+          if (this.objectType == 'detection-strategy') {
+            // set up changes to analytic list for analytic URL patching
+            const det = this.objects[0] as DetectionStrategy;
+            this.oldAnalytics = new Set<string>(det?.analytics ?? []);
+          }
         },
         complete: () => {
           if (subscription) subscription.unsubscribe();
