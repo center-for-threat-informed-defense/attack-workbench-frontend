@@ -1708,7 +1708,7 @@ export class RestApiConnectorService extends ApiConnector {
       map(result => {
         // get related data component objects
         const dataComponents = result.data as DataComponent[];
-        return dataComponents.filter(d => d.dataSourceRef == id);
+        return dataComponents.filter(d => d?.dataSourceRef == id);
       }),
       mergeMap(dataComponents => {
         // get relationships for each data component
