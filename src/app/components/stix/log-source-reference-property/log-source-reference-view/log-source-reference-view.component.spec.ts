@@ -1,4 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { provideHttpClient } from '@angular/common/http';
+import { NO_ERRORS_SCHEMA } from '@angular/core';
 
 import { LogSourceReferenceViewComponent } from './log-source-reference-view.component';
 
@@ -9,11 +11,19 @@ describe('LogSourceReferenceViewComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [LogSourceReferenceViewComponent],
+      schemas: [NO_ERRORS_SCHEMA],
+      providers: [provideHttpClient()],
     }).compileComponents();
+  });
 
+  beforeEach(() => {
     fixture = TestBed.createComponent(LogSourceReferenceViewComponent);
     component = fixture.componentInstance;
-    fixture.detectChanges();
+    component.config = {
+      mode: 'view',
+      object: {} as any,
+      field: 'logSourceReferences',
+    } as any;
   });
 
   it('should create', () => {
