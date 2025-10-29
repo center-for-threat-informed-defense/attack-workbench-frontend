@@ -1996,9 +1996,6 @@ export class RestApiConnectorService extends ApiConnector {
       if (force) query = query.set('forceImport', 'all');
 
       const url = `${this.apiUrl}/collection-bundles?${query.toString()}`;
-      const eventSource = new EventSource(url, {
-        withCredentials: true,
-      });
 
       // Note: EventSource doesn't support POST with body, so we need to use fetch
       // with SSE streaming instead
