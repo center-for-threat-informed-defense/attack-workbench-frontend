@@ -14,6 +14,9 @@
 #   - version: Semantic version (e.g. 1.2.3 or 1.2.3-alpha.1)
 #   - release_type: Type of release (e.g. "major", "minor", "patch", "prerelease")
 #   - git_sha: Git commit SHA of the build
+#   - release_channel (optional): Distribution channel from semantic-release
+#       Examples: "main", "master", "next", "next-major", "alpha", "beta", etc.
+#       If omitted or "undefined", defaults to "main".
 #
 # Behavior:
 #   - For non-prerelease builds (release_type != "prerelease"),
@@ -30,6 +33,15 @@ set -e
 VERSION=$1
 RELEASE_TYPE=$2
 REVISION=$3
+CHANNEL_RAW=$4
+
+# Default channel handling (semantic-release uses undefined for default channel)
+if [[ -z "$CHANNEL_RAW" || "$CHANNEL_RAW" == "undefined" ]]; then
+  CHANNEL="main"
+else
+  CHANNEL="$CHANNEL_RAW"
+fi
+
 BUILDTIME=$(date -u +'%Y-%m-%dT%H:%M:%SZ')
 IMAGE_NAME="ghcr.io/center-for-threat-informed-defense/attack-workbench-frontend"
 
@@ -43,13 +55,17 @@ BUILD_CMD+=" --build-arg BUILDTIME=$BUILDTIME"
 BUILD_CMD+=" --build-arg REVISION=$REVISION"
 BUILD_CMD+=" -t $IMAGE_NAME:$VERSION"
 
-# Add the 'latest' tag only for non-prerelease versions (main/master branches)
-if [[ "$RELEASE_TYPE" != "prerelease" ]]; then
-    echo "Adding latest tag (non-prerelease build)"
+# Determine whether to apply 'latest' based on channel
+channel_lc="${CHANNEL,,}"
+case "$channel_lc" in
+  master|main|next|next-major)
+    echo "Channel '$CHANNEL' is a release channel; adding 'latest' tag"
     BUILD_CMD+=" -t $IMAGE_NAME:latest"
-else
-    echo "Skipping latest tag (prerelease build)"
-fi
+    ;;
+  *)
+    echo "Channel '$CHANNEL' is a pre-release channel; skipping 'latest' tag"
+    ;;
+esac
 
 # Add 'alpha'/'beta' tags based on VERSION (case-insensitive)
 v_lower="${VERSION,,}"
