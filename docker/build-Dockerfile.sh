@@ -51,6 +51,18 @@ else
     echo "Skipping latest tag (prerelease build)"
 fi
 
+# Add 'alpha'/'beta' tags based on VERSION (case-insensitive)
+v_lower="${VERSION,,}"
+
+if [[ $v_lower == *alpha* ]]; then
+    echo "Adding alpha tag (version contains 'alpha')"
+    BUILD_CMD+=" -t $IMAGE_NAME:alpha"
+elif [[ $v_lower == *beta* ]]; then
+    echo "Adding beta tag (version contains 'beta')"
+    BUILD_CMD+=" -t $IMAGE_NAME:beta"
+fi
+
+
 # Execute the final constructed Docker build command
 $BUILD_CMD .
 
