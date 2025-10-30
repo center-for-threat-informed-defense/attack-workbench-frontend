@@ -852,9 +852,10 @@ export abstract class StixObject extends Serializable {
 
     // Determine if this is a subtechnique
     const isSubtechnique = 'is_subtechnique' in this && this['is_subtechnique'];
-    const parentRef = isSubtechnique && 'parentTechnique' in this
-      ? (this['parentTechnique'] as StixObject)?.stixID
-      : undefined;
+    const parentRef =
+      isSubtechnique && 'parentTechnique' in this
+        ? (this['parentTechnique'] as StixObject)?.stixID
+        : undefined;
 
     // Use the new REST endpoint to generate the ID
     return apiService.getNextAttackId(this.type, parentRef).pipe(
