@@ -2330,6 +2330,26 @@ export class RestApiConnectorService extends ApiConnector {
       );
   }
 
+  /**
+   * Get the next available ATT&CK ID for a given STIX type
+   * @param {string} stixType the STIX type (e.g., 'attack-pattern', 'x-mitre-tactic')
+   * @param {string} [parentRef] optional parent technique STIX ID for subtechniques
+   * @returns {Observable<string>} the next available ATT&CK ID
+   */
+  public getNextAttackId(stixType: string, parentRef?: string): Observable<string> {
+    let params = new HttpParams().set('type', stixType);
+    if (parentRef) {
+      params = params.set('parentRef', parentRef);
+    }
+
+    return this.http.get<{ attack_id: string }>(`${this.apiUrl}/attack-objects/attack-id/next`, { params }).pipe(
+      tap(_ => logger.log(`retrieved next ATT&CK ID for ${stixType}`)),
+      map(result => result.attack_id),
+      catchError(this.handleError_continue<string>()),
+      share()
+    );
+  }
+
   //   _   _ ___ ___ ___     _   ___ ___ ___  _   _ _  _ _____     _   ___ ___ ___
   //  | | | / __| __| _ \   /_\ / __/ __/ _ \| | | | \| |_   _|   /_\ | _ \_ _/ __|
   //  | |_| \__ \ _||   /  / _ \ (_| (_| (_) | |_| | .` | | |    / _ \|  _/| |\__ \

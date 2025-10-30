@@ -849,44 +849,22 @@ export abstract class StixObject extends Serializable {
     existingPrefix?: string
   ): Observable<any> {
     this.attackID = '(generating ID)';
-    return apiService.getOrganizationNamespace().pipe(
-      switchMap(namespace => {
-        const accessor = this.getApiAccessor(
-          apiService,
-          this.attackType,
-          true,
-          true
-        );
-        if (!accessor) return of('(unsupported attack type)');
 
-        const typePrefix = this.getAttackIdPrefix(); // ex: "TA" for tactics
-        // org prefix (ex: "ORG"), use existing prefix if defined
-        const orgPrefix = existingPrefix
-          ? existingPrefix
-          : (namespace.prefix ?? '');
-        // family prefix: orgPrefix + typePrefix (ex: "ORG-TA" for tactics)
-        const familyPrefix = orgPrefix
-          ? orgPrefix + '-' + typePrefix
-          : typePrefix;
+    // Determine if this is a subtechnique
+    const isSubtechnique = 'is_subtechnique' in this && this['is_subtechnique'];
+    const parentRef = isSubtechnique && 'parentTechnique' in this
+      ? (this['parentTechnique'] as StixObject)?.stixID
+      : undefined;
 
-        return accessor.pipe(
-          switchMap(objects => {
-            if ('is_subtechnique' in this && this['is_subtechnique']) {
-              return this.getNextSubtechniqueAttackId(
-                apiService,
-                familyPrefix,
-                typePrefix
-              );
-            } else {
-              return this.getNextObjectAttackId(
-                objects,
-                familyPrefix,
-                typePrefix,
-                namespace.range_start
-              );
-            }
-          }),
-          map(generatedId => this.formatWithPrefix(generatedId, orgPrefix))
+    // Use the new REST endpoint to generate the ID
+    return apiService.getNextAttackId(this.type, parentRef).pipe(
+      switchMap(generatedId => {
+        // Apply organization prefix if needed
+        return apiService.getOrganizationNamespace().pipe(
+          map(namespace => {
+            const orgPrefix = existingPrefix || namespace.prefix || '';
+            return this.formatWithPrefix(generatedId, orgPrefix);
+          })
         );
       })
     );
