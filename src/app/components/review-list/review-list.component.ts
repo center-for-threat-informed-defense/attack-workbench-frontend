@@ -250,9 +250,6 @@ export class ReviewListComponent extends StixListComponent implements OnInit {
         case 'technique':
           obs = svc.getAllTechniques(optionsCommon);
           break;
-        case 'log-source':
-          obs = svc.getAllLogSources(optionsCommon);
-          break;
         case 'detection-strategy':
           obs = svc.getAllDetectionStrategies(optionsCommon);
           break;
