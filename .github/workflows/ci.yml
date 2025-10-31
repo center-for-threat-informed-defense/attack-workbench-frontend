@@ -78,7 +78,7 @@ jobs:
 
       - name: Install dependencies
         run: npm ci
-        
+
       # Install semantic-release plugins
       - name: Install semantic-release plugins
         run: npm install -D @semantic-release/exec
@@ -88,7 +88,8 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          DOCKER_USERNAME: ${{ github.repository_owner }}
-          DOCKER_PASSWORD: ${{ secrets.GITHUB_TOKEN }}
+          # needed to authenticate with @codedependant/semantic-release-docker
+          DOCKER_REGISTRY_USER: ${{ github.repository_owner }}
+          DOCKER_REGISTRY_PASSWORD: ${{ secrets.GITHUB_TOKEN }}
           HUSKY: 0  # Temporarily disables all Git hooks
         run: npx semantic-release
