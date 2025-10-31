@@ -16,7 +16,6 @@ export class SubtypeDiffComponent implements OnInit {
     return this.config.object[1]?.[this.config.field] || [];
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   public detailTable: any[] = [];
 
   public get subtypeFields() {
@@ -30,7 +29,6 @@ export class SubtypeDiffComponent implements OnInit {
     this.detailTable = this.mergeTable();
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   private mergeTable(): any[] {
     const merged = new Map();
 
