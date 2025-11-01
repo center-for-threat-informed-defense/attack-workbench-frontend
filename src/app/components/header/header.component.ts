@@ -1,5 +1,3 @@
-/* eslint-disable @angular-eslint/no-output-on-prefix */
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import {
   AfterViewInit,
   Component,
