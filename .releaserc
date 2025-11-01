@@ -22,9 +22,26 @@
         "@semantic-release/commit-analyzer",
         "@semantic-release/release-notes-generator",
         [
-            "@semantic-release/exec",
+            "@codedependant/semantic-release-docker",
             {
-                "prepareCmd": "./docker/build-Dockerfile.sh ${nextRelease.version} ${nextRelease.type} ${process.env.GITHUB_SHA}"
+              "dockerRegistry": "ghcr.io",
+              "dockerProject": "center-for-threat-informed-defense",
+              "dockerImage": "attack-workbench-frontend",
+              "dockerFile": "Dockerfile",
+              "dockerContext": ".",
+              "dockerPlatform": ["linux/amd64", "linux/arm64"],
+              "dockerPublish": true,
+              "dockerArgs": {
+                  "VERSION": "{{next.version}}",
+                  "BUILDTIME": "{{now}}",
+                  "REVISION": "{{git_sha}}"
+              },
+              "dockerTags": [
+                  "{{version}}",
+                  "{{#if prerelease.[0]}}{{prerelease.[0]}}{{else}}latest{{/if}}",
+                  "{{major}}-{{#if prerelease.[0]}}{{prerelease.[0]}}{{else}}latest{{/if}}",
+                  "{{major}}.{{minor}}-{{#if prerelease.[0]}}{{prerelease.[0]}}{{else}}latest{{/if}}"
+              ]
             }
         ],
         "@semantic-release/github"
