@@ -1,5 +1,6 @@
 {
   "branches": [
+    "+([0-9]).x",
     "main",
     "next",
     "next-major",
