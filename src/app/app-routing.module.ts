@@ -3,6 +3,7 @@ import { Routes, RouterModule } from '@angular/router';
 import { LandingPageComponent } from './views/landing-page/landing-page.component';
 import { HelpPageComponent } from './views/help-page/help-page.component';
 import { DashboardPageComponent } from './views/dashboard-page/dashboard-page.component';
+import { ReviewPageComponent } from './views/dashboard-page/review-page/review-page.component';
 import { OrgSettingsPageComponent } from './views/dashboard-page/org-settings-page/org-settings-page.component';
 import { UserAccountsPageComponent } from './views/dashboard-page/user-accounts-page/user-accounts-page.component';
 import { DefaultMarkingDefinitionsComponent } from './views/dashboard-page/default-marking-definitions/default-marking-definitions.component';
@@ -54,28 +55,12 @@ const routes: Routes = [
             component: DashboardPageComponent,
           },
           {
-            path: 'org-settings',
+            path: 'review',
             data: {
-              breadcrumb: 'organization settings',
-              title: 'Organization Identity',
+              breadcrumb: 'review',
+              title: 'Review',
             },
-            component: OrgSettingsPageComponent,
-          },
-          {
-            path: 'user-accounts',
-            data: {
-              breadcrumb: 'user accounts',
-              title: 'User Accounts',
-            },
-            component: UserAccountsPageComponent,
-          },
-          {
-            path: 'default-marking-definitions',
-            data: {
-              breadcrumb: 'default marking definitions',
-              title: 'Default Marking Definitions',
-            },
-            component: DefaultMarkingDefinitionsComponent,
+            component: ReviewPageComponent,
           },
           {
             path: 'teams',
@@ -103,6 +88,33 @@ const routes: Routes = [
                 component: TeamsViewPageComponent,
               },
             ],
+          },
+          {
+            path: 'org-settings',
+            data: {
+              breadcrumb: 'organization settings',
+              title: 'Organization Identity',
+              roles: [Role.ADMIN],
+            },
+            component: OrgSettingsPageComponent,
+          },
+          {
+            path: 'user-accounts',
+            data: {
+              breadcrumb: 'user accounts',
+              title: 'User Accounts',
+              roles: [Role.ADMIN],
+            },
+            component: UserAccountsPageComponent,
+          },
+          {
+            path: 'default-marking-definitions',
+            data: {
+              breadcrumb: 'default marking definitions',
+              title: 'Default Marking Definitions',
+              roles: [Role.ADMIN],
+            },
+            component: DefaultMarkingDefinitionsComponent,
           },
         ],
       },
