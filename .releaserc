@@ -38,9 +38,9 @@
               },
               "dockerTags": [
                   "{{version}}",
-                  "{{#if prerelease.[0]}}{{prerelease.[0]}}{{else}}latest{{/if}}",
-                  "{{major}}-{{#if prerelease.[0]}}{{prerelease.[0]}}{{else}}latest{{/if}}",
-                  "{{major}}.{{minor}}-{{#if prerelease.[0]}}{{prerelease.[0]}}{{else}}latest{{/if}}"
+                  "{{#if prerelease.[0]}}{{prerelease.[0]}}{{else}}{{#if (eq env.GITHUB_REF_NAME 'main')}}latest{{else}}{{env.GITHUB_REF_NAME}}{{/if}}{{/if}}",
+                  "{{#unless prerelease.[0]}}{{major}}.{{minor}}{{/unless}}",
+                  "{{#unless prerelease.[0]}}{{major}}{{/unless}}"
               ]
             }
         ],
