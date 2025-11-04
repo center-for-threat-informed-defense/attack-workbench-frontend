@@ -87,6 +87,34 @@
         }"></app-subtype-property>
     </div>
   </div>
+  <div class="row">
+    <div class="col">
+      <app-dictionary-property
+        class="grow-to-row"
+        [config]="{
+          mode: config.mode,
+          objectList: config.object['logSources'],
+          columns: [
+            {
+              name: 'name',
+              label: 'Name',
+              editType: 'string',
+              required: true,
+              sort: true,
+            },
+            {
+              name: 'channel',
+              label: 'Channel',
+              editType: 'string',
+              required: true
+            }
+          ],
+          label: 'log sources',
+          tooltip: 'log sources'
+        }">
+      </app-dictionary-property>
+    </div>
+  </div>
   <!-- RELATIONSHIPS - NOTE: these are only shown in 'view' mode -->
   @if (
     (config.showRelationships || !config.hasOwnProperty('showRelationships')) &&
