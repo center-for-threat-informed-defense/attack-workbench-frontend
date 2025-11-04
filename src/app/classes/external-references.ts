@@ -180,15 +180,10 @@ export class ExternalReferences extends Serializable {
         );
       else if (field == 'relatedAssets')
         parse_apis.push(
-          this.parseCitationsFromRelatedAssets(
-            object[field],
-            restAPIConnector
-          )
+          this.parseCitationsFromRelatedAssets(object[field], restAPIConnector)
         );
       else
-        parse_apis.push(
-          this.parseCitations(object[field], restAPIConnector)
-        );
+        parse_apis.push(this.parseCitations(object[field], restAPIConnector));
     }
 
     return forkJoin(parse_apis).pipe(
@@ -212,7 +207,7 @@ export class ExternalReferences extends Serializable {
    */
   public parseCitations(
     value: string,
-    restApiConnector: RestApiConnectorService,
+    restApiConnector: RestApiConnectorService
   ): Observable<CitationParseResult> {
     const reReference = /\(Citation: (.*?)\)/gmu;
     const result = new CitationParseResult({
@@ -293,7 +288,7 @@ export class ExternalReferences extends Serializable {
    */
   public parseCitationsFromAliases(
     aliases: string[],
-    restApiConnector: RestApiConnectorService,
+    restApiConnector: RestApiConnectorService
   ): Observable<CitationParseResult> {
     // Parse citations from the alias descriptions stored in external references
     const api_calls = [];
@@ -304,7 +299,7 @@ export class ExternalReferences extends Serializable {
         api_calls.push(
           this.parseCitations(
             this._externalReferences.get(alias).description,
-            restApiConnector,
+            restApiConnector
           )
         );
       }
@@ -332,7 +327,7 @@ export class ExternalReferences extends Serializable {
    */
   public parseCitationsFromRelatedAssets(
     relatedAssets: RelatedAsset[],
-    restApiConnector: RestApiConnectorService,
+    restApiConnector: RestApiConnectorService
   ): Observable<CitationParseResult> {
     // Parse citations from the related asset descriptions
     const api_calls = [];
@@ -480,10 +475,7 @@ export class ExternalReferences extends Serializable {
       if (!Object.keys(options.object)) continue; //object does not implement the field
       if (field == 'aliases')
         parse_apis.push(
-          this.parseCitationsFromAliases(
-            options.object[field],
-            restAPIService,
-          )
+          this.parseCitationsFromAliases(options.object[field], restAPIService)
         );
       else if (field == 'relatedAssets')
         parse_apis.push(
