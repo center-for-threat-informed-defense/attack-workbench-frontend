@@ -1130,14 +1130,12 @@ export class RestApiConnectorService extends ApiConnector {
         status: object.workflow ? object.workflow.state : 'work-in-progress',
         stix: object.serialize().stix,
       };
-      return this.http
-        .post(url, payload)
-        .pipe(
-          tap(this.handleSuccess(`${this.getObjectName(object)} validated`)),
-          map(result => result),
-          catchError(this.handleError_raise()),
-          share() // multicast so that multiple subscribers don't trigger the call twice. THIS MUST BE THE LAST LINE OF THE PIPE
-        );
+      return this.http.post(url, payload).pipe(
+        tap(this.handleSuccess(`${this.getObjectName(object)} validated`)),
+        map(result => result),
+        catchError(this.handleError_raise()),
+        share() // multicast so that multiple subscribers don't trigger the call twice. THIS MUST BE THE LAST LINE OF THE PIPE
+      );
     };
   }
   /**
