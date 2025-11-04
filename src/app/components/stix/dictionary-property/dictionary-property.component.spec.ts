@@ -8,9 +8,8 @@ describe('DictionaryPropertyComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [DictionaryPropertyComponent]
-    })
-    .compileComponents();
+      declarations: [DictionaryPropertyComponent],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(DictionaryPropertyComponent);
     component = fixture.componentInstance;

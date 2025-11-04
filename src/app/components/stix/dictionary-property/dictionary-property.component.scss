@@ -3,7 +3,8 @@ table {
   border-collapse: collapse;
 }
 
-th, td {
+th,
+td {
   border: 1px solid #ddd;
   padding: 8px;
   text-align: left;
@@ -18,7 +19,7 @@ button {
   padding: 4px 8px;
   border: none;
   border-radius: 4px;
-  background-color: #4CAF50;
+  background-color: #4caf50;
   color: white;
   cursor: pointer;
 }

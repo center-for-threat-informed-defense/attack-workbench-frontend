@@ -4,8 +4,6 @@ import { Component } from '@angular/core';
   selector: 'app-dictionary-diff',
   standalone: false,
   templateUrl: './dictionary-diff.component.html',
-  styleUrl: './dictionary-diff.component.scss'
+  styleUrl: './dictionary-diff.component.scss',
 })
-export class DictionaryDiffComponent {
-
-}
+export class DictionaryDiffComponent {}

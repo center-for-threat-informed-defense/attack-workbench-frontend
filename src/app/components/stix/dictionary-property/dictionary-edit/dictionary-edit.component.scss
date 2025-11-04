@@ -2,33 +2,34 @@
 @use '../../../../../style/colors';
 
 .dictionary-edit {
-    @extend .labelled-box;
-    .mat-divider {
-        margin: 16px 8px;
-    }
-    .mat-mdc-form-field-subscript-wrapper {
-        display: none; // remove bottom padding used for hint
-    }
-    .mat-mdc-form-field-infix {
-        padding-bottom: 8px !important;
-        padding-top: 8px !important;
-        min-height: unset;
-    }
-    .mat-mdc-text-field-wrapper {
-        height: unset !important;
-        padding: 0 6px !important;
-    }
-    .action-cell {
-      display: flex;
-      height: inherit;
-      align-items: center;
-      justify-content: end;
-    }
-    .table-value, .add-row-button {
-        padding: 0 6px;
-    }
-    .content {
-        overflow-x: auto;
-        display: block !important;
-    }
+  @extend .labelled-box;
+  .mat-divider {
+    margin: 16px 8px;
+  }
+  .mat-mdc-form-field-subscript-wrapper {
+    display: none; // remove bottom padding used for hint
+  }
+  .mat-mdc-form-field-infix {
+    padding-bottom: 8px !important;
+    padding-top: 8px !important;
+    min-height: unset;
+  }
+  .mat-mdc-text-field-wrapper {
+    height: unset !important;
+    padding: 0 6px !important;
+  }
+  .action-cell {
+    display: flex;
+    height: inherit;
+    align-items: center;
+    justify-content: end;
+  }
+  .table-value,
+  .add-row-button {
+    padding: 0 6px;
+  }
+  .content {
+    overflow-x: auto;
+    display: block !important;
+  }
 }
