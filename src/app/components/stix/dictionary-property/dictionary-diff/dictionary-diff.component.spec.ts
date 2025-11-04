@@ -8,9 +8,8 @@ describe('DictionaryDiffComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [DictionaryDiffComponent]
-    })
-    .compileComponents();
+      declarations: [DictionaryDiffComponent],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(DictionaryDiffComponent);
     component = fixture.componentInstance;
