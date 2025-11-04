@@ -144,26 +144,7 @@ export class DataComponent extends StixObject {
   public validate(
     restAPIService: RestApiConnectorService
   ): Observable<ValidationData> {
-    return this.base_validate(restAPIService).pipe(
-      map(result => {
-        if (!this.logSources.length) return result;
-
-        // validate log sources array
-        const seen = new Set<string>();
-        for (const { name, channel } of this.logSources) {
-          const key = `${name}::${channel}`;
-          if (seen.has(key)) {
-            result.errors.push({
-              field: 'permutations',
-              result: 'error',
-              message: `Duplicate log source found: name="${name}", channel="${channel}"`,
-            });
-          }
-          seen.add(key);
-        }
-        return result;
-      })
-    );
+    return this.base_validate(restAPIService);
   }
 
   /**

@@ -53,21 +53,6 @@ export class Campaign extends StixObject {
     return rep;
   }
 
-  public hasValue(field) {
-    return (
-      field !== undefined &&
-      field !== null &&
-      field !== '' &&
-      !(Array.isArray(field) && field.length === 0)
-    );
-  }
-
-  public filterObject(obj) {
-    return Object.fromEntries(
-      Object.entries(obj).filter(entry => this.hasValue(entry[1]))
-    );
-  }
-
   /**
    * Parse the object from the record returned from the back-end
    * @abstract
