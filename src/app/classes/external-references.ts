@@ -176,19 +176,18 @@ export class ExternalReferences extends Serializable {
     for (const field of refs_fields) {
       if (field == 'aliases')
         parse_apis.push(
-          this.parseCitationsFromAliases(object[field], restAPIConnector, field)
+          this.parseCitationsFromAliases(object[field], restAPIConnector)
         );
       else if (field == 'relatedAssets')
         parse_apis.push(
           this.parseCitationsFromRelatedAssets(
             object[field],
-            restAPIConnector,
-            field
+            restAPIConnector
           )
         );
       else
         parse_apis.push(
-          this.parseCitations(object[field], restAPIConnector, field)
+          this.parseCitations(object[field], restAPIConnector)
         );
     }
 
@@ -214,7 +213,6 @@ export class ExternalReferences extends Serializable {
   public parseCitations(
     value: string,
     restApiConnector: RestApiConnectorService,
-    field?: string
   ): Observable<CitationParseResult> {
     const reReference = /\(Citation: (.*?)\)/gmu;
     const result = new CitationParseResult({
@@ -296,7 +294,6 @@ export class ExternalReferences extends Serializable {
   public parseCitationsFromAliases(
     aliases: string[],
     restApiConnector: RestApiConnectorService,
-    field?: string
   ): Observable<CitationParseResult> {
     // Parse citations from the alias descriptions stored in external references
     const api_calls = [];
@@ -308,7 +305,6 @@ export class ExternalReferences extends Serializable {
           this.parseCitations(
             this._externalReferences.get(alias).description,
             restApiConnector,
-            field
           )
         );
       }
@@ -337,7 +333,6 @@ export class ExternalReferences extends Serializable {
   public parseCitationsFromRelatedAssets(
     relatedAssets: RelatedAsset[],
     restApiConnector: RestApiConnectorService,
-    field?: string
   ): Observable<CitationParseResult> {
     // Parse citations from the related asset descriptions
     const api_calls = [];
@@ -345,7 +340,7 @@ export class ExternalReferences extends Serializable {
     for (const relatedAsset of relatedAssets) {
       if ('description' in relatedAsset && relatedAsset.description) {
         api_calls.push(
-          this.parseCitations(relatedAsset.description, restApiConnector, field)
+          this.parseCitations(relatedAsset.description, restApiConnector)
         );
       }
     }
@@ -488,20 +483,18 @@ export class ExternalReferences extends Serializable {
           this.parseCitationsFromAliases(
             options.object[field],
             restAPIService,
-            field
           )
         );
       else if (field == 'relatedAssets')
         parse_apis.push(
           this.parseCitationsFromRelatedAssets(
             options.object[field],
-            restAPIService,
-            field
+            restAPIService
           )
         );
       else
         parse_apis.push(
-          this.parseCitations(options.object[field], restAPIService, field)
+          this.parseCitations(options.object[field], restAPIService)
         );
     }
     return forkJoin(parse_apis).pipe(
