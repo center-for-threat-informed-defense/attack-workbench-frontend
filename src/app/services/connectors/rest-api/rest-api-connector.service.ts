@@ -1131,9 +1131,7 @@ export class RestApiConnectorService extends ApiConnector {
         stix: object.serialize().stix,
       };
       return this.http
-        .post(url, payload, {
-          headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
-        })
+        .post(url, payload)
         .pipe(
           tap(this.handleSuccess(`${this.getObjectName(object)} validated`)),
           map(result => result),
