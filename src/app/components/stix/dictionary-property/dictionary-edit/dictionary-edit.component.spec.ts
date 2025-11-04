@@ -8,9 +8,8 @@ describe('DictionaryEditComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [DictionaryEditComponent]
-    })
-    .compileComponents();
+      declarations: [DictionaryEditComponent],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(DictionaryEditComponent);
     component = fixture.componentInstance;

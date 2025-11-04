@@ -1,9 +1,9 @@
 @use '../../../../../style/globals';
 
 .dictionary-view {
-    @extend .labelled-box;
+  @extend .labelled-box;
 
-    .content {
-        overflow-x: auto;
-    }
+  .content {
+    overflow-x: auto;
+  }
 }

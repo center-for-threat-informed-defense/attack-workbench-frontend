@@ -8,9 +8,8 @@ describe('DictionaryViewComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [DictionaryViewComponent]
-    })
-    .compileComponents();
+      declarations: [DictionaryViewComponent],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(DictionaryViewComponent);
     component = fixture.componentInstance;
