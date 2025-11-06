@@ -61,6 +61,18 @@ export class SaveDialogComponent implements OnInit {
     this.newState = 'work-in-progress';
   }
 
+  onStatusChanged(event) {
+    this.config.object.workflow = { state: event.value };
+    const subscription = this.config.object
+      .validate(this.restApiService)
+      .subscribe({
+        next: result => {
+          this.validation = result;
+        },
+        complete: () => subscription.unsubscribe(),
+      });
+  }
+
   /**
    * Find objects with links to the previous object ATT&CK ID
    */

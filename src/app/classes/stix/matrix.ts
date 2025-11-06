@@ -40,6 +40,9 @@ export class Matrix extends StixObject {
     rep.stix.name = this.name.trim();
     rep.stix.tactic_refs = this.tactic_refs;
 
+    // Strip properties that are empty strs + lists
+    rep.stix = this.filterObject(rep.stix);
+
     return rep;
   }
 

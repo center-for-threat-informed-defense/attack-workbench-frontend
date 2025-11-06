@@ -72,6 +72,10 @@ export class Analytic extends StixObject {
       );
     if (this.mutableElements?.length)
       rep.stix.x_mitre_mutable_elements = this.mutableElements;
+
+    // Strip properties that are empty strs + lists
+    rep.stix = this.filterObject(rep.stix);
+
     return rep;
   }
 
@@ -192,35 +196,6 @@ export class Analytic extends StixObject {
             seen.add(normalizedField);
           }
         }
-
-        // validate unique log source references
-        if (this.logSourceReferences.length) {
-          return forkJoin(
-            this.logSourceReferences.map(ref =>
-              restAPIService.getDataComponent(ref.dataComponentRef).pipe(
-                catchError(() => of(null)) // fallback if API fails
-              )
-            )
-          ).pipe(
-            map(dataComponents => {
-              const seen = new Set<string>();
-              this.logSourceReferences.forEach((lsr, idx) => {
-                const key = `${lsr.dataComponentRef}::${lsr.name}::${lsr.channel}`;
-                if (seen.has(key)) {
-                  const dataComponent = dataComponents[idx];
-                  result.errors.push({
-                    field: 'logSourceReferences',
-                    result: 'error',
-                    message: `Duplicate log source reference found: ${dataComponent?.[0].attackID || 'unknown'}`,
-                  });
-                }
-                seen.add(key);
-              });
-              return result;
-            })
-          );
-        }
-
         return of(result);
       })
     );
