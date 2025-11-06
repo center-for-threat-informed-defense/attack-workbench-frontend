@@ -717,9 +717,13 @@ export abstract class StixObject extends Serializable {
    * @returns {Object} - A new object with only the valid entries.
    */
   public filterObject(obj) {
-    return Object.fromEntries(
-      Object.entries(obj).filter(entry => this.hasValue(entry[1]))
-    );
+    const out = {};
+    for (const [key, value] of Object.entries(obj)) {
+      if (this.hasValue(value)) {
+        out[key] = value;
+      }
+    }
+    return out;
   }
 
   /**
