@@ -1,10 +1,10 @@
 import { forkJoin, Observable, of } from 'rxjs';
 import { concatMap, map, shareReplay, switchMap } from 'rxjs/operators';
 import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/rest-api-connector.service';
-import { ValidationData } from '../serializable';
-import { StixObject } from './stix-object';
 import { logger } from '../../utils/logger';
+import { ValidationData } from '../serializable';
 import { Relationship } from './relationship';
+import { StixObject } from './stix-object';
 
 export class Technique extends StixObject {
   public name = '';
@@ -243,6 +243,10 @@ export class Technique extends StixObject {
         }
       }
     }
+
+    // Strip properties that are empty strs + lists
+    rep.stix = this.filterObject(rep.stix);
+
     return rep;
   }
 
