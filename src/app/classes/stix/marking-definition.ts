@@ -16,7 +16,7 @@ export class MarkingDefinition extends StixObject {
   } //marking-defs do not have ATT&CK IDs
 
   // override StixObject excludedFields
-  protected excludedFields = ["x_mitre_version", "x_mitre_deprecated"];
+  protected excludedFields = ['x_mitre_version', 'x_mitre_deprecated'];
 
   constructor(sdo?: any) {
     super(sdo, 'marking-definition');
