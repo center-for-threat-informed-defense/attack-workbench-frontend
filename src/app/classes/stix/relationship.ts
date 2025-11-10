@@ -45,7 +45,7 @@ export class Relationship extends StixObject {
   } // relationships have no ATT&CK ID
 
   // override StixObject excludedFields
-  protected excludedFields = ["x_mitre_version"];
+  protected excludedFields = ['x_mitre_version'];
 
   /**
    * Creates and returns the deserialized object

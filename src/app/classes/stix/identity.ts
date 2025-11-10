@@ -16,7 +16,7 @@ export class Identity extends StixObject {
   } // identities do not have an ATT&CK ID
 
   // override StixObject excludedFields
-  protected excludedFields = ["x_mitre_version"];
+  protected excludedFields = ['x_mitre_version'];
 
   constructor(sdo?: any) {
     super(sdo, 'identity');

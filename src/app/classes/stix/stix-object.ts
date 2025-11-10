@@ -47,7 +47,7 @@ export abstract class StixObject extends Serializable {
   };
 
   // fields to omit. By default, do not omit any fields
-  protected excludedFields: string [] = [];
+  protected excludedFields: string[] = [];
 
   protected buildAttackExternalReference(): object | null {
     if (this.attackID && AttackTypeToRoute[this.attackType]) {
@@ -133,8 +133,13 @@ export abstract class StixObject extends Serializable {
     const stix = this.filterObject({
       type: this.type,
       id: this.stixID,
-      created: this.created ? this.created.toISOString() : new Date().toISOString(),
-      modified: this.type !== 'marking-definition' ? new Date().toISOString() : undefined,
+      created: this.created
+        ? this.created.toISOString()
+        : new Date().toISOString(),
+      modified:
+        this.type !== 'marking-definition'
+          ? new Date().toISOString()
+          : undefined,
       x_mitre_version: this.version?.toString(),
       x_mitre_deprecated: this.deprecated,
       revoked: this.revoked,
@@ -518,8 +523,7 @@ export abstract class StixObject extends Serializable {
                     message: 'object does not have ATT&CK ID',
                   });
                 }
-              }
-              else{
+              } else {
                 if (
                   objects.data.some(
                     x => x.attackID == this.attackID && x.stixID != this.stixID
@@ -727,10 +731,9 @@ export abstract class StixObject extends Serializable {
     if (Array.isArray(value)) {
       if (value.length === 0) {
         return undefined;
-      }
-      else {
+      } else {
         const arr = value.map(v => this.clean(v)).filter(v => v !== undefined);
-      return arr.length ? arr : undefined;
+        return arr.length ? arr : undefined;
       }
     }
 
