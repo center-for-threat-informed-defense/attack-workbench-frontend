@@ -15,6 +15,9 @@ export class Identity extends StixObject {
     return null;
   } // identities do not have an ATT&CK ID
 
+  // override StixObject excludedFields
+  protected excludedFields = ["x_mitre_version"];
+
   constructor(sdo?: any) {
     super(sdo, 'identity');
     if (sdo) {
@@ -37,9 +40,6 @@ export class Identity extends StixObject {
 
     // Strip properties that are empty strs + lists
     rep.stix = this.filterObject(rep.stix);
-
-    // Strip unsupported fields that are set by the superclass (StixObject)
-    delete rep.stix.x_mitre_version;
 
     return rep;
   }

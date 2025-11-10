@@ -46,6 +46,9 @@ export abstract class StixObject extends Serializable {
     format: string; // format to display to user
   };
 
+  // fields to omit. By default, do not omit any fields
+  protected excludedFields: string [] = [];
+
   protected buildAttackExternalReference(): object | null {
     if (this.attackID && AttackTypeToRoute[this.attackType]) {
       return {
@@ -127,25 +130,24 @@ export abstract class StixObject extends Serializable {
       serialized_external_references.unshift(attackExtRef);
     }
 
-    const stix: any = {
+    const stix = this.filterObject({
       type: this.type,
       id: this.stixID,
-      created: this.created
-        ? this.created.toISOString()
-        : new Date().toISOString(),
-      x_mitre_version: this.version.toString(),
-      external_references: serialized_external_references,
+      created: this.created ? this.created.toISOString() : new Date().toISOString(),
+      modified: this.type !== 'marking-definition' ? new Date().toISOString() : undefined,
+      x_mitre_version: this.version?.toString(),
       x_mitre_deprecated: this.deprecated,
       revoked: this.revoked,
-      object_marking_refs: this.object_marking_refs,
       spec_version: '2.1',
-    };
-    if (this.description) stix.description = this.description;
-    // Add modified date if type is not marking-definition
-    if (this.type != 'marking-definition')
-      stix['modified'] = new Date().toISOString();
-    if (this.created_by_ref) stix.created_by_ref = this.created_by_ref;
-    // do not set modified by ref since we don't know who we are, but the REST API knows
+      description: this.description,
+      created_by_ref: this.created_by_ref,
+      object_marking_refs: this.object_marking_refs,
+      external_references: serialized_external_references,
+    });
+
+    for (const field of this.excludedFields) {
+      delete stix[field];
+    }
 
     return {
       workspace: {
@@ -502,22 +504,39 @@ export abstract class StixObject extends Serializable {
               this.hasOwnProperty('supportsAttackID') &&
               this.supportsAttackID
             ) {
-              if (
-                objects.data.some(
-                  x => x.attackID == this.attackID && x.stixID != this.stixID
-                )
-              ) {
-                result.errors.push({
-                  result: 'error',
-                  field: 'attackID',
-                  message: 'ATT&CK ID is not unique',
-                });
-              } else {
-                result.successes.push({
-                  result: 'success',
-                  field: 'attackID',
-                  message: 'ATT&CK ID is unique',
-                });
+              if (this.attackID == '') {
+                if (this.attackType === 'analytic') {
+                  result.errors.push({
+                    result: 'error',
+                    field: 'attackID',
+                    message: 'object does not have ATT&CK ID',
+                  });
+                } else {
+                  result.warnings.push({
+                    result: 'warning',
+                    field: 'attackID',
+                    message: 'object does not have ATT&CK ID',
+                  });
+                }
+              }
+              else{
+                if (
+                  objects.data.some(
+                    x => x.attackID == this.attackID && x.stixID != this.stixID
+                  )
+                ) {
+                  result.errors.push({
+                    result: 'error',
+                    field: 'attackID',
+                    message: 'ATT&CK ID is not unique',
+                  });
+                } else {
+                  result.successes.push({
+                    result: 'success',
+                    field: 'attackID',
+                    message: 'ATT&CK ID is unique',
+                  });
+                }
               }
             }
             // check required first/last seen fields for campaigns
@@ -697,31 +716,43 @@ export abstract class StixObject extends Serializable {
 
   /**
    * Checks if the provided field has a valid value.
-   * Returns false for undefined, null, empty string, or empty array.
+   * Returns undefined or the value of the field if it is valid
    * @param {*} field - The value to validate.
-   * @returns {boolean} - True if the field has a value, false otherwise.
+   * @returns {value} - Value if the field has a valid value, undefined otherwise.
    */
-  public hasValue(field) {
-    return (
-      field !== undefined &&
-      field !== null &&
-      field !== '' &&
-      !(Array.isArray(field) && field.length === 0)
-    );
+  public clean(value) {
+    if (value == null) return undefined; // null or undefined
+    if (typeof value === 'string' && value.trim() === '') return undefined;
+    if (typeof value === 'number' && Number.isNaN(value)) return undefined;
+    if (Array.isArray(value)) {
+      if (value.length === 0) {
+        return undefined;
+      }
+      else {
+        const arr = value.map(v => this.clean(v)).filter(v => v !== undefined);
+      return arr.length ? arr : undefined;
+      }
+    }
+
+    if (typeof value === 'object') {
+      const obj = this.filterObject(value);
+      return Object.keys(obj).length ? obj : undefined;
+    }
+
+    return value;
   }
 
   /**
    * Filters the properties of an object, returning a new object containing only
-   * those entries whose values pass the hasValue check.
+   * those entries whose values pass the validity check.
    * @param {Object} obj - The object to filter.
    * @returns {Object} - A new object with only the valid entries.
    */
   public filterObject(obj) {
     const out = {};
     for (const [key, value] of Object.entries(obj)) {
-      if (this.hasValue(value)) {
-        out[key] = value;
-      }
+      const cleaned = this.clean(value);
+      if (cleaned !== undefined) out[key] = cleaned;
     }
     return out;
   }

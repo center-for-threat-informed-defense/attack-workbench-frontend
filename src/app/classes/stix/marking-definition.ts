@@ -15,6 +15,9 @@ export class MarkingDefinition extends StixObject {
     return null;
   } //marking-defs do not have ATT&CK IDs
 
+  // override StixObject excludedFields
+  protected excludedFields = ["x_mitre_version", "x_mitre_deprecated"];
+
   constructor(sdo?: any) {
     super(sdo, 'marking-definition');
     if (sdo) {
@@ -37,10 +40,6 @@ export class MarkingDefinition extends StixObject {
 
     // Strip properties that are empty strs + lists
     rep.stix = this.filterObject(rep.stix);
-
-    // TODO is there a better way to accomplish this?
-    delete rep.stix.x_mitre_version;
-    delete rep.stix.x_mitre_deprecated;
 
     return rep;
   }
