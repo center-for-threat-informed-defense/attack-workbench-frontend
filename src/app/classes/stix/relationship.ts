@@ -44,6 +44,9 @@ export class Relationship extends StixObject {
     return null;
   } // relationships have no ATT&CK ID
 
+  // override StixObject excludedFields
+  protected excludedFields = ["x_mitre_version"];
+
   /**
    * Creates and returns the deserialized object
    * @param type the stix type of the object
@@ -381,9 +384,6 @@ export class Relationship extends StixObject {
 
     // Strip properties that are empty strs + lists
     rep.stix = this.filterObject(rep.stix);
-
-    // TODO is there a better way to accomplish this?
-    delete rep.stix.x_mitre_version;
 
     return rep;
   }
