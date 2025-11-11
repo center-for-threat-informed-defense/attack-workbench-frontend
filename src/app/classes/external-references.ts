@@ -223,7 +223,7 @@ export class ExternalReferences extends Serializable {
     if (citations) {
       for (const citation of citations) {
         const sourceName = citation.split('(Citation: ')[1].slice(0, -1);
-          // Add API call to the map
+        // Add API call to the map
         apiMap[sourceName] = this.checkAndAddReference(
           sourceName,
           restApiConnector
