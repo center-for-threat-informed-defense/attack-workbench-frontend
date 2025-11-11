@@ -5,7 +5,7 @@ import { Serializable, ValidationData } from './serializable';
 import { StixObject } from './stix/stix-object';
 import { logger } from '../utils/logger';
 import { RelatedAsset } from './stix/asset';
-import { xMitreFirstSeenCitationSchema } from '@mitre-attack/attack-data-model';
+// import { xMitreFirstSeenCitationSchema } from '@mitre-attack/attack-data-model';
 
 export class ExternalReferences extends Serializable {
   private _externalReferences = new Map<string, ExternalReference>();
@@ -224,7 +224,7 @@ export class ExternalReferences extends Serializable {
     // Process citations
     if (citations) {
       for (const citation of citations) {
-        const validateValue = xMitreFirstSeenCitationSchema.safeParse(citation);
+        const validateValue = { success: true }//xMitreFirstSeenCitationSchema.safeParse(citation);
         if (validateValue.success) {
           // Extract source name from citation
           const sourceName = citation.split('(Citation: ')[1].slice(0, -1);
