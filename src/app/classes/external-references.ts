@@ -224,7 +224,7 @@ export class ExternalReferences extends Serializable {
     // Process citations
     if (citations) {
       for (const citation of citations) {
-        const validateValue = { success: true }//xMitreFirstSeenCitationSchema.safeParse(citation);
+        const validateValue = { success: true }; //xMitreFirstSeenCitationSchema.safeParse(citation);
         if (validateValue.success) {
           // Extract source name from citation
           const sourceName = citation.split('(Citation: ')[1].slice(0, -1);
