@@ -1,7 +1,3 @@
-// import {
-//   createAttackIdSchema,
-//   StixTypesWithAttackIds,
-// } from '@mitre-attack/attack-data-model/dist/schemas/common/attack-id';
 import { forkJoin, Observable, of } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
 import {
@@ -393,22 +389,15 @@ export abstract class StixObject extends Serializable {
    * This function handles cases in which the object has an organization prefix
    * @returns true if the ATT&CK ID is valid, false otherwise
    */
-  // public isValidAttackId(): boolean {
-  //   if (this.type in StixTypeToAttackType) {
-  //     const attackIDSchema = createAttackIdSchema(
-  //       this.type as StixTypesWithAttackIds
-  //     );
-  //     const attackIDValid = attackIDSchema.safeParse(this.attackID);
-  //     return attackIDValid.success;
-  //   }
-  //   return false;
-  // }
   public isValidAttackId(): boolean {
-    const idRegex = new RegExp(
-      '^([A-Z]+-)?' + this.attackIDValidator.regex + '$'
-    );
-    const attackIDValid = idRegex.test(this.attackID);
-    return attackIDValid;
+    if (this.type in StixTypeToAttackType) {
+      const idRegex = new RegExp(
+        '^([A-Z]+-)?' + this.attackIDValidator.regex + '$'
+      );
+      const attackIDValid = idRegex.test(this.attackID);
+      return attackIDValid;
+    }
+    return false;
   }
 
   /**

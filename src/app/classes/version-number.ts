@@ -1,5 +1,4 @@
 import { AbstractControl, ValidatorFn } from '@angular/forms';
-// import { versionSchema } from '@mitre-attack/attack-data-model';
 import { logger } from '../utils/logger';
 
 export class VersionNumber {
@@ -116,18 +115,6 @@ export class VersionNumber {
     }
     return timesIncremented > 1;
   }
-
-  // /**
-  //  * Is this version number formatted correctly?
-  //  * @returns {boolean} true if valid
-  //  */
-  // public valid(): boolean {
-  //   const validationResult = versionSchema.safeParse(this.toString());
-  //   if (!validationResult.success) {
-  //     return false;
-  //   }
-  //   return true;
-  // }
 }
 
 /**
