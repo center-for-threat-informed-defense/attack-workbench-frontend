@@ -3,7 +3,9 @@
   <mat-dialog-content>
     <div
       *ngIf="
-        config.type === 'user' || config.selectableObjects.length > 0;
+        config.type === 'user' ||
+          config.type === 'analytic' ||
+          config.selectableObjects?.length > 0;
         else nothing
       ">
       <app-stix-list
@@ -17,7 +19,9 @@
           selectionModel: config.select,
           type: config.type,
           clickBehavior: 'expand',
-          stixObjects: config.selectableObjects,
+          stixObjects: config.selectableObjects
+            ? config.selectableObjects
+            : undefined,
           showFilters: false,
         }"></app-stix-list>
       <app-users-list
@@ -37,7 +41,9 @@
   <mat-dialog-actions align="center">
     <ng-container
       *ngIf="
-        config.type === 'user' || config.selectableObjects.length > 0;
+        config.type === 'user' ||
+          config.type === 'analytic' ||
+          config.selectableObjects?.length > 0;
         else closeDialog
       ">
       <button

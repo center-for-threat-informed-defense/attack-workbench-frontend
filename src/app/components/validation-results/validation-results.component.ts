@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, Input, ViewEncapsulation } from '@angular/core';
 import { ValidationData } from 'src/app/classes/serializable';
 
 @Component({
@@ -8,15 +8,8 @@ import { ValidationData } from 'src/app/classes/serializable';
   encapsulation: ViewEncapsulation.None,
   standalone: false,
 })
-export class ValidationResultsComponent implements OnInit {
+export class ValidationResultsComponent {
   @Input() validation: ValidationData;
   @Input() patchId: boolean;
-
-  constructor() {
-    // intentionally left blank
-  }
-
-  ngOnInit(): void {
-    // intentionally left blank
-  }
+  @Input() patchAnalytics: boolean;
 }
