@@ -58,13 +58,21 @@ export class SaveDialogComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.newState = 'work-in-progress';
+    this.newState = this.config.initialWorkflowState || 'work-in-progress';  
+    // Run validation for the initial state
+    const subscription = this.config.object
+      .validate(this.restApiService, this.newState)
+      .subscribe({
+        next: result => {
+          this.validation = result;
+        },
+        complete: () => subscription.unsubscribe(),
+      });
   }
 
   onStatusChanged(event) {
-    this.config.object.workflow = { state: event.value };
     const subscription = this.config.object
-      .validate(this.restApiService)
+      .validate(this.restApiService, event.value)
       .subscribe({
         next: result => {
           this.validation = result;
@@ -188,6 +196,7 @@ export class SaveDialogComponent implements OnInit {
     if (!this.saveEnabled) {
       return;
     }
+    this.config.object.workflow = { state: this.newState };
     const sub = this.saveObject().subscribe({
       next: () => {
         this.dialogRef.close(true);
@@ -201,4 +210,5 @@ export interface SaveDialogConfig {
   object: StixObject;
   patchId?: string; // previous object ID to patch in LinkByID tags
   versionAlreadyIncremented: boolean;
+  initialWorkflowState?: WorkflowState;
 }

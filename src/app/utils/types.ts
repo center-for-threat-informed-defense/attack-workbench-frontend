@@ -47,7 +47,6 @@ export type StixType =
  * Workflow state definitions
  */
 export type WorkflowState =
-  | ''
   | 'work-in-progress'
   | 'awaiting-review'
   | 'reviewed';
@@ -56,7 +55,6 @@ export type WorkflowState =
  * List of all workflow states
  */
 export const WorkflowStates: Record<WorkflowState, string> = {
-  '': 'none',
   'work-in-progress': 'work in progress',
   'awaiting-review': 'awaiting review',
   'reviewed': 'reviewed',

@@ -17,6 +17,7 @@ import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/re
 import { logger } from '../../utils/logger';
 import { ValidationData } from '../serializable';
 import { StixObject } from './stix-object';
+import { WorkflowState } from 'src/app/utils/types';
 
 export class Relationship extends StixObject {
   public source_ref = '';
@@ -484,9 +485,10 @@ export class Relationship extends StixObject {
    * @returns {Observable<ValidationData>} the validation warnings and errors once validation is complete.
    */
   public validate(
-    restAPIService: RestApiConnectorService
+    restAPIService: RestApiConnectorService,
+    tempWorkflowState?: WorkflowState
   ): Observable<ValidationData> {
-    return this.base_validate(restAPIService).pipe(
+    return this.base_validate(restAPIService, tempWorkflowState).pipe(
       map(result => {
         // presence of source-ref
         if (!this.source_ref) {
@@ -621,7 +623,7 @@ export class Relationship extends StixObject {
   ): Observable<Relationship> {
     if (!this.workflow) {
       // Initialize the workflow object if it doesn't exist
-      this.workflow = { state: '' };
+      this.workflow = { state: 'work-in-progress' };
     }
     this.workflow.state = 'work-in-progress';
     const postObservable = restAPIService.postRelationship(this);
@@ -692,7 +694,7 @@ export class Relationship extends StixObject {
     // Check if the workflow object exists
     if (!object.workflow) {
       // Initialize the workflow object if it doesn't exist
-      object.workflow = { state: '' };
+      object.workflow = { state: 'work-in-progress' };
     }
     object.workflow.state = 'work-in-progress';
     object.update(restAPIService).subscribe({
