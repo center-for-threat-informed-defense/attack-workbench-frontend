@@ -4,6 +4,7 @@ import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/re
 import { Observable, of } from 'rxjs';
 import { ValidationData } from '../serializable';
 import { logger } from '../../utils/logger';
+import { WorkflowState } from 'src/app/utils/types';
 
 export class MarkingDefinition extends StixObject {
   public name = '';
@@ -102,9 +103,10 @@ export class MarkingDefinition extends StixObject {
    * @returns {Observable<ValidationData>} the validation warnings and errors once validation is complete.
    */
   public validate(
-    restAPIService: RestApiConnectorService
+    restAPIService: RestApiConnectorService,
+    tempWorkflowState?: WorkflowState
   ): Observable<ValidationData> {
-    return this.base_validate(restAPIService).pipe(
+    return this.base_validate(restAPIService, tempWorkflowState).pipe(
       map(result => {
         // presence of statement
         if (!this.definition_string) {

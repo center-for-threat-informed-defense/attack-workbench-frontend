@@ -5,6 +5,7 @@ import { logger } from '../../utils/logger';
 import { ValidationData } from '../serializable';
 import { Relationship } from './relationship';
 import { StixObject } from './stix-object';
+import { WorkflowState } from 'src/app/utils/types';
 
 export class Technique extends StixObject {
   public name = '';
@@ -451,9 +452,10 @@ export class Technique extends StixObject {
    * @returns {Observable<ValidationData>} the validation warnings and errors once validation is complete.
    */
   public validate(
-    restAPIService: RestApiConnectorService
+    restAPIService: RestApiConnectorService,
+    tempWorkflowState?: WorkflowState
   ): Observable<ValidationData> {
-    return this.base_validate(restAPIService).pipe(
+    return this.base_validate(restAPIService, tempWorkflowState).pipe(
       map(result => {
         // validate technique has at least one tactic
         if (this.attackID && this.tactics.length == 0) {

@@ -8,7 +8,7 @@ import {
   AttackTypeToRoute,
   StixTypeToAttackType,
 } from 'src/app/utils/type-mappings';
-import { StixType } from 'src/app/utils/types';
+import { StixType, WorkflowState } from 'src/app/utils/types';
 import { v4 as uuid } from 'uuid';
 import { logger } from '../../utils/logger';
 import { ExternalReferences } from '../external-references';
@@ -18,8 +18,7 @@ import { VersionNumber } from '../version-number';
 export type workflowStates =
   | 'work-in-progress'
   | 'awaiting-review'
-  | 'reviewed'
-  | '';
+  | 'reviewed';
 
 export abstract class StixObject extends Serializable {
   public stixID: string; // STIX ID
@@ -37,6 +36,7 @@ export abstract class StixObject extends Serializable {
   public object_marking_refs: string[] = []; //list of embedded relationships to marking_defs
 
   public abstract readonly supportsAttackID: boolean; // boolean to determine if object supports ATT&CK IDs
+  public tempWorkflowState: WorkflowState;
   protected abstract get attackIDValidator(): {
     regex: string; // regex to validate the ID
     format: string; // format to display to user
@@ -407,8 +407,12 @@ export abstract class StixObject extends Serializable {
    * @returns {Observable<ValidationData>} the validation warnings and errors once validation is complete.
    */
   public base_validate(
-    restAPIService: RestApiConnectorService
+    restAPIService: RestApiConnectorService,
+    tempWorkflowState?
   ): Observable<ValidationData> {
+    if(tempWorkflowState){
+      this.workflow = { state: tempWorkflowState }
+    }
     // check any asynchronous validators
     const result = new ValidationData();
     const validator = restAPIService.validateStixObject();

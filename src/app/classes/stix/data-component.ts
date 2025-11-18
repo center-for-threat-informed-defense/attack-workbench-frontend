@@ -4,6 +4,7 @@ import { ValidationData } from '../serializable';
 import { StixObject } from './stix-object';
 import { logger } from '../../utils/logger';
 import { DataSource } from './data-source';
+import { WorkflowState } from 'src/app/utils/types';
 
 export class DataComponent extends StixObject {
   public name = '';
@@ -142,9 +143,10 @@ export class DataComponent extends StixObject {
    * @returns {Observable<ValidationData>} the validation warnings and errors once validation is complete.
    */
   public validate(
-    restAPIService: RestApiConnectorService
+    restAPIService: RestApiConnectorService,
+    tempWorkflowState?: WorkflowState
   ): Observable<ValidationData> {
-    return this.base_validate(restAPIService);
+    return this.base_validate(restAPIService, tempWorkflowState);
   }
 
   /**

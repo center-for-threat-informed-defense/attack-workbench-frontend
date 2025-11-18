@@ -3,7 +3,7 @@ import { logger } from '../../utils/logger';
 import { catchError, forkJoin, map, Observable, of, switchMap } from 'rxjs';
 import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/rest-api-connector.service';
 import { ValidationData } from '../serializable';
-import { StixType } from 'src/app/utils/types';
+import { StixType, WorkflowState } from 'src/app/utils/types';
 
 export class Analytic extends StixObject {
   public name = '';
@@ -177,9 +177,10 @@ export class Analytic extends StixObject {
    * @returns {Observable<ValidationData>} the validation warnings and errors once validation is complete.
    */
   public validate(
-    restAPIService: RestApiConnectorService
+    restAPIService: RestApiConnectorService,
+    tempWorkflowState?: WorkflowState
   ): Observable<ValidationData> {
-    return this.base_validate(restAPIService).pipe(
+    return this.base_validate(restAPIService, tempWorkflowState).pipe(
       switchMap(result => {
         // validate unique mutable fields
         if (this.mutableElements.length) {
