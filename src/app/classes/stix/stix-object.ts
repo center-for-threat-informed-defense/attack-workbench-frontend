@@ -410,8 +410,8 @@ export abstract class StixObject extends Serializable {
     restAPIService: RestApiConnectorService,
     tempWorkflowState?
   ): Observable<ValidationData> {
-    if(tempWorkflowState){
-      this.workflow = { state: tempWorkflowState }
+    if (tempWorkflowState) {
+      this.workflow = { state: tempWorkflowState };
     }
     // check any asynchronous validators
     const result = new ValidationData();

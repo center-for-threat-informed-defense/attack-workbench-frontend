@@ -141,7 +141,8 @@ export class ObjectStatusComponent implements OnInit {
    * @param event workflow state selection
    */
   public workflowChange(event) {
-    const previousWorkflowState = this.object.workflow?.state || 'work-in-progress'
+    const previousWorkflowState =
+      this.object.workflow?.state || 'work-in-progress';
     if (event.isUserInput) {
       // Open save-dialog instead of saving directly
       const dialogRef = this.dialog.open(SaveDialogComponent, {
@@ -155,7 +156,7 @@ export class ObjectStatusComponent implements OnInit {
         },
         autoFocus: false,
       });
-  
+
       dialogRef.afterClosed().subscribe(result => {
         if (result) {
           this.editorService.onReload.emit();

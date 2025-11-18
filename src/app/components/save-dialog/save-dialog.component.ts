@@ -58,7 +58,7 @@ export class SaveDialogComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.newState = this.config.initialWorkflowState || 'work-in-progress';  
+    this.newState = this.config.initialWorkflowState || 'work-in-progress';
     // Run validation for the initial state
     const subscription = this.config.object
       .validate(this.restApiService, this.newState)
