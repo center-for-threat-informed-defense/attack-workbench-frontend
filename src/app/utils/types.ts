@@ -46,10 +46,7 @@ export type StixType =
 /**
  * Workflow state definitions
  */
-export type WorkflowState =
-  | 'work-in-progress'
-  | 'awaiting-review'
-  | 'reviewed';
+export type WorkflowState = 'work-in-progress' | 'awaiting-review' | 'reviewed';
 
 /**
  * List of all workflow states
