@@ -1,3 +1,7 @@
+import {
+  createAttackIdSchema,
+  StixTypesWithAttackIds,
+} from '@mitre-attack/attack-data-model';
 import { forkJoin, Observable, of } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
 import {
@@ -391,11 +395,11 @@ export abstract class StixObject extends Serializable {
    */
   public isValidAttackId(): boolean {
     if (this.type in StixTypeToAttackType) {
-      const idRegex = new RegExp(
-        '^([A-Z]+-)?' + this.attackIDValidator.regex + '$'
+      const attackIDSchema = createAttackIdSchema(
+        this.type as StixTypesWithAttackIds
       );
-      const attackIDValid = idRegex.test(this.attackID);
-      return attackIDValid;
+      const attackIDValid = attackIDSchema.safeParse(this.attackID);
+      return attackIDValid.success;
     }
     return false;
   }
