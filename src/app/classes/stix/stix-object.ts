@@ -780,6 +780,42 @@ export abstract class StixObject extends Serializable {
   };
 
   /**
+   * Conditionally serializes an array field to the target object only if it contains at least one element.
+   * This ensures that empty arrays are never included in the serialized STIX object sent to the backend,
+   * which is critical because the REST API does not accept empty arrays in POST/PUT requests.
+   *
+   * Use this method in serialize() implementations to prevent empty array fields from being set.
+   *
+   * @param target - The target object (typically rep.stix) to set the field on
+   * @param key - The field name in the STIX object (e.g., 'x_mitre_platforms')
+   * @param value - The array value to conditionally serialize
+   * @param transform - Optional transformation function to apply to the array before setting (e.g., mapping, trimming)
+   *
+   * @example
+   * // Simple usage - only set if array is non-empty
+   * this.serializeArrayField(rep.stix, 'x_mitre_platforms', this.platforms);
+   *
+   * @example
+   * // With transformation - trim strings before serializing
+   * this.serializeArrayField(
+   *   rep.stix,
+   *   'x_mitre_contributors',
+   *   this.contributors,
+   *   (contributors) => contributors.map(x => x.trim())
+   * );
+   */
+  protected serializeArrayField<T, R = T>(
+    target: any,
+    key: string,
+    value: T[],
+    transform?: (val: T[]) => R[]
+  ): void {
+    if (Array.isArray(value) && value.length > 0) {
+      target[key] = transform ? transform(value) : value;
+    }
+  }
+
+  /**
    * Save the current state of the STIX object in the database. Update the current object from the response
    * @param restAPIService [RestApiConnectorService] the service to perform the POST/PUT through
    * @returns {Observable} of the post
@@ -829,7 +865,12 @@ export abstract class StixObject extends Serializable {
     this.attackID = '(generating ID)';
     return apiService.getOrganizationNamespace().pipe(
       switchMap(namespace => {
-        const accessor = this.getApiAccessor(apiService, this.attackType);
+        const accessor = this.getApiAccessor(
+          apiService,
+          this.attackType,
+          true,
+          true
+        );
         if (!accessor) return of('(unsupported attack type)');
 
         const typePrefix = this.getAttackIdPrefix(); // ex: "TA" for tactics
@@ -867,22 +908,34 @@ export abstract class StixObject extends Serializable {
 
   private getApiAccessor(
     apiService: RestApiConnectorService,
-    attackType: string
+    attackType: string,
+    includeDeprecated?: boolean,
+    includeRevoked?: boolean
   ): Observable<Paginated<StixObject>> {
-    if (attackType == 'group') return apiService.getAllGroups();
-    else if (attackType == 'campaign') return apiService.getAllCampaigns();
-    else if (attackType == 'mitigation') return apiService.getAllMitigations();
-    else if (attackType == 'software') return apiService.getAllSoftware();
-    else if (attackType == 'tactic') return apiService.getAllTactics();
-    else if (attackType == 'technique') return apiService.getAllTechniques();
-    else if (attackType == 'data-source') return apiService.getAllDataSources();
+    const options = {
+      includeDeprecated: includeDeprecated ?? false,
+      includeRevoked: includeRevoked ?? false,
+    };
+    if (attackType == 'group') return apiService.getAllGroups(options);
+    else if (attackType == 'campaign')
+      return apiService.getAllCampaigns(options);
+    else if (attackType == 'mitigation')
+      return apiService.getAllMitigations(options);
+    else if (attackType == 'software')
+      return apiService.getAllSoftware(options);
+    else if (attackType == 'tactic') return apiService.getAllTactics(options);
+    else if (attackType == 'technique')
+      return apiService.getAllTechniques(options);
+    else if (attackType == 'data-source')
+      return apiService.getAllDataSources(options);
     else if (attackType == 'data-component')
-      return apiService.getAllDataComponents();
-    else if (attackType == 'asset') return apiService.getAllAssets();
-    else if (attackType == 'matrix') return apiService.getAllMatrices();
+      return apiService.getAllDataComponents(options);
+    else if (attackType == 'asset') return apiService.getAllAssets(options);
+    else if (attackType == 'matrix') return apiService.getAllMatrices(options);
     else if (attackType == 'detection-strategy')
-      return apiService.getAllDetectionStrategies();
-    else if (attackType == 'analytic') return apiService.getAllAnalytics();
+      return apiService.getAllDetectionStrategies(options);
+    else if (attackType == 'analytic')
+      return apiService.getAllAnalytics(options);
     else return null;
   }
 

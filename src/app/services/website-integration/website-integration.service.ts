@@ -80,6 +80,10 @@ export class WebsiteIntegrationService {
       data$ = this.restAPIService.getDataSource(stixIdToCheck);
     else if (this.editorService.type == 'asset')
       data$ = this.restAPIService.getAsset(stixIdToCheck);
+    else if (this.editorService.type == 'analytic')
+      data$ = this.restAPIService.getAnalytic(stixIdToCheck);
+    else if (this.editorService.type == 'detection-strategy')
+      data$ = this.restAPIService.getDetectionStrategy(stixIdToCheck);
     else {
       return false;
     }
