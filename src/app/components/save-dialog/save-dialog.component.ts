@@ -84,13 +84,13 @@ export class SaveDialogComponent implements OnInit {
     }
     // Run validation for the initial state
     const subscription = this.config.object
-    .validate(this.restApiService, this.newState)
-    .subscribe({
-      next: result => {
-        this.validation = result;
-      },
-      complete: () => subscription.unsubscribe(),
-    });
+      .validate(this.restApiService, this.newState)
+      .subscribe({
+        next: result => {
+          this.validation = result;
+        },
+        complete: () => subscription.unsubscribe(),
+      });
   }
 
   onStatusChanged(event) {
