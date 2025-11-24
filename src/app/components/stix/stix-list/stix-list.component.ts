@@ -225,7 +225,7 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
   /**
    * Build the stix list table to display
    */
-  private buildTable(): void {
+  protected buildTable(): void {
     // filter options
     this.filterOptions = [];
     if (!('showFilters' in this.config)) this.config.showFilters = true;
@@ -604,7 +604,7 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
    * @param {boolean} [sticky] is the column sticky? If true, the column will be static in the X scrolling of the view
    * @param {string[]} [classes] list of css classes to apply to the cell
    */
-  private addColumn(
+  protected addColumn(
     label: string,
     field: string,
     display:
@@ -633,7 +633,7 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
   /**
    * Add version, modified, and created columns to the table
    */
-  private addVersionsAndDatesColumns() {
+  protected addVersionsAndDatesColumns() {
     this.addColumn('version', 'version', 'version');
     this.addColumn('modified', 'modified', 'timestamp');
     this.addColumn('created', 'created', 'timestamp');
