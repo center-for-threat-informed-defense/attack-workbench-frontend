@@ -15,7 +15,6 @@ import { VersionNumber } from 'src/app/classes/version-number';
 import { EditorService } from 'src/app/services/editor/editor.service';
 import { forkJoin } from 'rxjs';
 import moment from 'moment';
-import { DataComponent } from 'src/app/classes/stix';
 import { StixTypeToAttackType } from 'src/app/utils/type-mappings';
 
 @Component({
@@ -28,7 +27,7 @@ import { StixTypeToAttackType } from 'src/app/utils/type-mappings';
 export class RelationshipViewComponent extends StixViewPage implements OnInit {
   @Output() public onVersionChange = new EventEmitter();
   @Output() closeDialogEvent = new EventEmitter<void>();
-  @Output() changeDialogToDataComponent = new EventEmitter<any>();
+  @Output() changeDialogToObject = new EventEmitter<any>();
 
   public get relationship() {
     return this.configCurrentObject as Relationship;
@@ -241,24 +240,18 @@ export class RelationshipViewComponent extends StixViewPage implements OnInit {
    * @param {any} obj the raw STIX object
    */
   public navigateTo(obj: any): void {
-    if (!(obj?.stix?.type && obj?.stix?.id)) {
+    if (
+      !(obj?.stix?.type && obj?.stix?.id && StixTypeToAttackType[obj.stix.type])
+    ) {
       console.warn('Invalid object passed to navigateTo:', obj);
       return;
     }
 
-    let targetRoute: string;
-    if (StixTypeToAttackType[obj.stix.type] === 'data-component') {
-      targetRoute = `/data-source/${obj.stix.x_mitre_data_source_ref}`;
-      const dataComponent = new DataComponent(obj);
-      dataComponent.deserialize(obj);
-      this.changeDialogToDataComponent.emit(dataComponent);
-    } else {
-      const formattedType = StixTypeToAttackType[obj.stix.type]
-        .toLowerCase()
-        .replace(/\s+/g, '-');
-      targetRoute = `/${formattedType}/${obj.stix.id}`;
-      this.closeDialogEvent.emit();
-    }
+    const formattedType = StixTypeToAttackType[obj.stix.type]
+      .toLowerCase()
+      .replace(/\s+/g, '-');
+    const targetRoute = `/${formattedType}/${obj.stix.id}`;
+    this.closeDialogEvent.emit();
     this.router.navigate([targetRoute]);
   }
 }
