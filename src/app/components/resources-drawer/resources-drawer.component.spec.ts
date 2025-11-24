@@ -1,4 +1,6 @@
+import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { provideHttpClient } from '@angular/common/http';
 
 import { ResourcesDrawerComponent } from './resources-drawer.component';
 
@@ -9,6 +11,8 @@ describe('ResourcesDrawerComponent', () => {
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ResourcesDrawerComponent],
+      providers: [provideHttpClient()],
+      schemas: [NO_ERRORS_SCHEMA],
     }).compileComponents();
   }));
 
