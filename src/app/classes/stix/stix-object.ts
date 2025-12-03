@@ -482,53 +482,6 @@ export abstract class StixObject extends Serializable {
                 });
               }
             }
-            // check ATT&CK ID, ignoring collections and matrices
-            if (
-              this.attackType !== 'matrix' &&
-              this.hasOwnProperty('supportsAttackID') &&
-              this.supportsAttackID
-            ) {
-              if (this.attackID == '') {
-                if (this.attackType === 'analytic') {
-                  result.errors.push({
-                    result: 'error',
-                    field: 'attackID',
-                    message: 'object does not have ATT&CK ID',
-                  });
-                } else {
-                  result.warnings.push({
-                    result: 'warning',
-                    field: 'attackID',
-                    message: 'object does not have ATT&CK ID',
-                  });
-                }
-              } else {
-                if (
-                  objects.data.some(
-                    x => x.attackID == this.attackID && x.stixID != this.stixID
-                  )
-                ) {
-                  result.errors.push({
-                    result: 'error',
-                    field: 'attackID',
-                    message: 'ATT&CK ID is not unique',
-                  });
-                } else {
-                  result.successes.push({
-                    result: 'success',
-                    field: 'attackID',
-                    message: 'ATT&CK ID is unique',
-                  });
-                }
-                if (!this.isValidAttackId()) {
-                  result.errors.push({
-                    result: 'error',
-                    field: 'attackID',
-                    message: `ATT&CK ID does not match the format ${this.attackIDValidator.format}`,
-                  });
-                }
-              }
-            }
             // check required first/last seen fields for campaigns
             if (this.attackType == 'campaign') {
               if (
@@ -842,42 +795,6 @@ export abstract class StixObject extends Serializable {
         sub.unsubscribe();
       },
     });
-  }
-
-  public generateAttackId(
-    apiService: RestApiConnectorService,
-    existingPrefix?: string
-  ): Observable<any> {
-    this.attackID = '(generating ID)';
-
-    // Determine if this is a subtechnique
-    const isSubtechnique = 'is_subtechnique' in this && this['is_subtechnique'];
-    const parentRef =
-      isSubtechnique && 'parentTechnique' in this
-        ? (this['parentTechnique'] as StixObject)?.stixID
-        : undefined;
-
-    // Use the new REST endpoint to generate the ID
-    return apiService.getNextAttackId(this.type, parentRef).pipe(
-      switchMap(generatedId => {
-        // Apply organization prefix if needed
-        return apiService.getOrganizationNamespace().pipe(
-          map(namespace => {
-            const orgPrefix = existingPrefix || namespace.prefix || '';
-            return this.formatWithPrefix(generatedId, orgPrefix);
-          })
-        );
-      })
-    );
-  }
-
-  public formatWithPrefix(attackId: string, orgPrefix: string): string {
-    const prefix = orgPrefix ? orgPrefix + '-' : '';
-    const withPrefix = attackId.startsWith(prefix)
-      ? attackId
-      : prefix + attackId;
-    // matrix IDs are case sensitive, all others uppercase
-    return this.attackType === 'matrix' ? withPrefix : withPrefix.toUpperCase();
   }
 }
 
