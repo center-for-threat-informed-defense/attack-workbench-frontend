@@ -24,7 +24,10 @@ import {
   tap,
 } from 'rxjs/operators';
 
-import { RelatedRef, StixObject } from 'src/app/classes/stix/stix-object';
+import {
+  EmbeddedRelationship,
+  StixObject,
+} from 'src/app/classes/stix/stix-object';
 import { StixDialogComponent } from 'src/app/views/stix/stix-dialog/stix-dialog.component';
 import {
   Paginated,
@@ -618,7 +621,7 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
       | 'related_ref_list',
     sticky?: boolean,
     classes?: string[],
-    relatedRefProperty?: keyof RelatedRef
+    relatedRefProperty?: keyof EmbeddedRelationship
   ) {
     this.tableColumns.push(field);
     this.tableColumns_settings.set(field, {

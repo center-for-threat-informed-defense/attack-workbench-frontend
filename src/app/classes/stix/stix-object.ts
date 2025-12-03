@@ -825,9 +825,8 @@ export class LinkByIdParseResult {
   }
 }
 
-export interface RelatedRef {
+export interface EmbeddedRelationship {
   stixId: string;
   name: string;
   attackId: string;
-  type: StixType;
 }
