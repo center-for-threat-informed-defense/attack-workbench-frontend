@@ -5,7 +5,7 @@
     <div
       class="content"
       [ngClass]="{ 'icon-button': config.object['attackID'] }">
-      <app-attackid-view [config]="config"></app-attackid-view>
+      {{ config.object['attackID'] }}
       <button
         mat-icon-button
         *ngIf="config.object['attackID']"

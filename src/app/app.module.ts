@@ -109,7 +109,6 @@ import { TlpViewComponent } from './components/stix/tlp-property/tlp-view/tlp-vi
 import { AttackidDiffComponent } from './components/stix/attackid-property/attackid-diff/attackid-diff.component';
 import { AttackIDEditComponent } from './components/stix/attackid-property/attackid-edit/attackid-edit.component';
 import { AttackIDPropertyComponent } from './components/stix/attackid-property/attackid-property.component';
-import { AttackIDViewComponent } from './components/stix/attackid-property/attackid-view/attackid-view.component';
 
 import { StixIDPropertyComponent } from './components/stix/stixid-property/stixid-property.component';
 
@@ -270,7 +269,6 @@ export function initConfig(appConfigService: AppConfigService) {
     TlpEditComponent,
     AttackIDPropertyComponent,
     AttackIDEditComponent,
-    AttackIDViewComponent,
     AttackidDiffComponent,
     StixIDPropertyComponent,
     ListPropertyComponent,
