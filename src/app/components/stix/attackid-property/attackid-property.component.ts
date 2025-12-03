@@ -12,6 +12,13 @@ export class AttackIDPropertyComponent {
   @Input() public config: AttackIDPropertyConfig;
   @Output() public attackIdGenerated = new EventEmitter();
 
+  public get currentId(): string {
+    return this.config.object[0]?.['attackID'] || '';
+  }
+  public get previousId(): string {
+    return this.config.object[1]?.['attackID'] || '';
+  }
+
   public get linkById(): string {
     return `(LinkById: ${this.config.object['attackID']})`;
   }
