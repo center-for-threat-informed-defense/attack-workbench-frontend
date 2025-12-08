@@ -1,4 +1,4 @@
-import { RelatedRef, StixObject } from './stix-object';
+import { EmbeddedRelationship, StixObject } from './stix-object';
 import { logger } from '../../utils/logger';
 import { catchError, forkJoin, map, Observable, of, switchMap } from 'rxjs';
 import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/rest-api-connector.service';
@@ -13,7 +13,7 @@ export class Analytic extends StixObject {
   public mutableElements: MutableElement[] = [];
 
   // NOTE: the following fields will only be populated when this object is fetched with the `includeRefs=true` param
-  public relatedDetections: RelatedRef[] = [];
+  public relatedDetections: EmbeddedRelationship[] = [];
 
   public readonly supportsAttackID = true;
   protected get attackIDValidator() {
@@ -140,22 +140,23 @@ export class Analytic extends StixObject {
       } else this.mutableElements = [];
     }
 
-    this.deserializeRelatedRefs(raw);
+    this.deserializeEmbeddedRelationships(raw);
   }
 
-  public deserializeRelatedRefs(raw: any): void {
-    if ('related_to' in raw) {
-      const relatedTo = raw.related_to as any[];
-      const relatedRefs: RelatedRef[] = relatedTo.map(ref => ({
-        stixId: ref.id,
+  public deserializeEmbeddedRelationships(raw: any): void {
+    if (raw.workspace?.embedded_relationships) {
+      const relatedTo = raw.workspace.embedded_relationships as any[];
+      const relatedRefs: EmbeddedRelationship[] = relatedTo.map(ref => ({
+        stixId: ref.stix_id,
         name: ref.name,
         attackId: ref.attack_id,
-        type: ref.type as StixType,
       }));
 
-      this.relatedDetections = relatedRefs.filter(
-        ref => ref.type === 'x-mitre-detection-strategy'
-      );
+      function isDetectionStrategy(o: EmbeddedRelationship) {
+        return o.stixId.includes('x-mitre-detection-strategy');
+      }
+
+      this.relatedDetections = relatedRefs.filter(isDetectionStrategy);
     }
   }
 
