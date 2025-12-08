@@ -18,11 +18,9 @@
       <!-- ATT&CK ID -->
       <app-attackid-property
         class="grow-to-row"
-        (attackIdGenerated)="setNameFromAttackId()"
         [config]="{
           mode: config.mode,
           object: config.object,
-          required: true,
         }">
       </app-attackid-property>
     </div>
