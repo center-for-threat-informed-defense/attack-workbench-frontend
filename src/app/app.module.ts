@@ -86,7 +86,6 @@ import { VersionPopoverComponent } from './components/version-popover/version-po
 
 // STIX components
 import { StixListComponent } from './components/stix/stix-list/stix-list.component';
-import { ReviewListComponent } from './components/review-list/review-list.component';
 import { UsersListComponent } from './components/users-list/users-list.component';
 
 import { ExternalReferencesPropertyComponent } from './components/stix/external-references-property/external-references-property.component';
@@ -255,8 +254,6 @@ export function initConfig(appConfigService: AppConfigService) {
     AddRelationshipButtonComponent,
     CollectionUpdateDialogComponent,
     StixListComponent,
-    ReviewListComponent,
-    ReviewListComponent,
     DescriptivePropertyComponent,
     DescriptiveViewComponent,
     DescriptiveEditComponent,
