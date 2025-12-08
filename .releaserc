@@ -1,32 +1,47 @@
 {
-    "branches": [
-        "+([0-9])?(.{+([0-9]),x}).x",
-        "master",
-        "main",
-        "next",
-        "next-major",
-        {
-            "name": "beta",
-            "prerelease": true
+  "branches": [
+    "main",
+    "next",
+    "next-major",
+    {
+      "name": "beta",
+      "prerelease": true
+    },
+    {
+      "name": "alpha",
+      "prerelease": true
+    },
+    {
+      "name": "adm",
+      "prerelease": true
+    }
+  ],
+  "plugins": [
+    "@semantic-release/commit-analyzer",
+    "@semantic-release/release-notes-generator",
+    [
+      "@codedependant/semantic-release-docker",
+      {
+        "dockerRegistry": "ghcr.io",
+        "dockerProject": "center-for-threat-informed-defense",
+        "dockerImage": "attack-workbench-frontend",
+        "dockerFile": "Dockerfile",
+        "dockerContext": ".",
+        "dockerPlatform": ["linux/amd64", "linux/arm64"],
+        "dockerPublish": true,
+        "dockerArgs": {
+          "VERSION": "{{next.version}}",
+          "BUILDTIME": "{{now}}",
+          "REVISION": "{{git_sha}}"
         },
-        {
-            "name": "alpha",
-            "prerelease": true
-        },
-        {
-            "name": "adm",
-            "prerelease": true
-        }
+        "dockerTags": [
+          "{{version}}",
+          "{{#if prerelease.[0]}}{{prerelease.[0]}}{{else}}{{#if (eq env.GITHUB_REF_NAME 'main')}}latest{{else}}{{env.GITHUB_REF_NAME}}{{/if}}{{/if}}",
+          "{{#unless prerelease.[0]}}{{major}}.{{minor}}{{/unless}}",
+          "{{#unless prerelease.[0]}}{{major}}{{/unless}}"
+        ]
+      }
     ],
-    "plugins": [
-        "@semantic-release/commit-analyzer",
-        "@semantic-release/release-notes-generator",
-        [
-            "@semantic-release/exec",
-            {
-                "prepareCmd": "./docker/build-Dockerfile.sh ${nextRelease.version} ${nextRelease.type} ${process.env.GITHUB_SHA}"
-            }
-        ],
-        "@semantic-release/github"
-    ]
+    "@semantic-release/github"
+  ]
 }
