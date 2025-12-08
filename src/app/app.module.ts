@@ -258,7 +258,6 @@ export function initConfig(appConfigService: AppConfigService) {
     CollectionUpdateDialogComponent,
     StixListComponent,
     ReviewListComponent,
-    ReviewListComponent,
     DescriptivePropertyComponent,
     DescriptiveViewComponent,
     DescriptiveEditComponent,
