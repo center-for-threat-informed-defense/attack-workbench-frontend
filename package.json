@@ -30,6 +30,7 @@
     "prepare": "husky || true",
     "lint": "npx eslint src",
     "lint:fix": "npm run lint -- --fix",
+    "lint:warnonly": "npm run lint || true",
     "prettier": "npx prettier src --check",
     "prettier:fix": "npm run prettier -- --write",
     "format": "npm run prettier:fix && npm run lint:fix"
