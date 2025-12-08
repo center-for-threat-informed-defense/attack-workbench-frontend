@@ -1,1 +1,2 @@
+npm run check:lockfile
 npm run prettier:fix
