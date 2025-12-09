@@ -1,23 +1,27 @@
 #!/usr/bin/env bash
 
-# This script checks package-lock.json for references to internal Artifactory.
-# Developers using ~/.npmrc with artifacts.mitre.org will have their package-lock.json
-# updated with internal registry URLs, which cannot be committed to the public repo.
+# This script checks package-lock.json for references to private npm registries.
+# Developers using ~/.npmrc with a private Artifactory registry will have their
+# package-lock.json updated with internal registry URLs in the "resolved" fields,
+# which cannot be committed to the public repo.
 
 LOCKFILE="package-lock.json"
-FORBIDDEN_PATTERN="artifacts.mitre.org"
+
+# Check for any mitre.org subdomain in resolved URLs (e.g., private Artifactory)
+FORBIDDEN_PATTERN='[a-zA-Z0-9.-]*\.mitre\.org'
 
 if [ ! -f "$LOCKFILE" ]; then
     echo "✓ No package-lock.json found, skipping check."
     exit 0
 fi
 
-if grep -q "$FORBIDDEN_PATTERN" "$LOCKFILE"; then
-    echo "✗ ERROR: package-lock.json contains references to '$FORBIDDEN_PATTERN'"
+# Look specifically for "resolved" fields pointing to mitre.org subdomains
+if grep -E '"resolved":\s*"https?://'"$FORBIDDEN_PATTERN" "$LOCKFILE" > /dev/null; then
+    echo "✗ ERROR: package-lock.json contains 'resolved' URLs pointing to a private registry"
     echo ""
-    echo "  This happens when your ~/.npmrc is configured to use the internal"
+    echo "  This happens when your ~/.npmrc is configured to use an internal"
     echo "  Artifactory registry. Committing this file would break CI pipelines"
-    echo "  that run on public GitHub runners without access to Artifactory."
+    echo "  that run on public GitHub runners without access to the private registry."
     echo ""
     echo "  To fix this:"
     echo "    1. Temporarily rename or remove your ~/.npmrc"
@@ -28,5 +32,5 @@ if grep -q "$FORBIDDEN_PATTERN" "$LOCKFILE"; then
     exit 1
 fi
 
-echo "✓ package-lock.json is clean (no internal registry references found)."
+echo "✓ package-lock.json is clean (no private registry references found)."
 exit 0
