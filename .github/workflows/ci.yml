@@ -55,8 +55,8 @@ jobs:
       - name: Run linting
         run: npm run lint:warnonly
 
-  # Job 2b: Regression Tests
-  regression-tests:
+  # Job 2b: Tests
+  run-tests:
     runs-on: ubuntu-latest
     needs: [commitlint]
     steps:
@@ -80,7 +80,7 @@ jobs:
 
   # Job 3: Semantic Release and Docker Build
   release:
-    needs: [static-checks, regression-tests]
+    needs: [static-checks, run-tests]
     # Only run on pushes (not PRs) - semantic-release will determine whether to release
     if: github.event_name == 'push'
     runs-on: ubuntu-latest
