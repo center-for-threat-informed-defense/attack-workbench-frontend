@@ -4,9 +4,7 @@ import { NO_ERRORS_SCHEMA } from '@angular/core';
 
 import { ListEditComponent } from './list-edit.component';
 import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/rest-api-connector.service';
-import {
-  createMockRestApiConnector,
-} from 'src/app/testing/mocks/rest-api-connector.mock';
+import { createMockRestApiConnector } from 'src/app/testing/mocks/rest-api-connector.mock';
 
 describe('ListEditComponent', () => {
   let component: ListEditComponent;

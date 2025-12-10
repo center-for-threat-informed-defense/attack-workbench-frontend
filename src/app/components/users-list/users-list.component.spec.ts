@@ -18,7 +18,8 @@ describe('UsersListComponent', () => {
 
   beforeEach(async () => {
     const mockRestApiConnector = createMockRestApiConnector({
-      getAllUserAccounts: () => createAsyncObservable(createPaginatedResponse()),
+      getAllUserAccounts: () =>
+        createAsyncObservable(createPaginatedResponse()),
       getTeamsByUserId: () => createAsyncObservable([]),
     });
     const mockAuthService = createMockAuthenticationService({});

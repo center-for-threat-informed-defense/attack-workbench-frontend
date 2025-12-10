@@ -19,7 +19,8 @@ describe('CollectionIndexImportComponent', () => {
 
   beforeEach(async () => {
     const mockRestApiConnector = createMockRestApiConnector({
-      getAllCollectionIndexes: () => createAsyncObservable(createPaginatedResponse()),
+      getAllCollectionIndexes: () =>
+        createAsyncObservable(createPaginatedResponse()),
       getAllCollections: () => createAsyncObservable(createPaginatedResponse()),
     });
 

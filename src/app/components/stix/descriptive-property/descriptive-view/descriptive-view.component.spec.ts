@@ -14,7 +14,9 @@ describe('DescriptiveViewComponent', () => {
 
     await TestBed.configureTestingModule({
       declarations: [DescriptiveViewComponent],
-      providers: [{ provide: RestApiConnectorService, useValue: mockRestApiConnector }],
+      providers: [
+        { provide: RestApiConnectorService, useValue: mockRestApiConnector },
+      ],
       schemas: [NO_ERRORS_SCHEMA],
     }).compileComponents();
   });

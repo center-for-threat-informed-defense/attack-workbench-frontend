@@ -14,7 +14,9 @@ import { createAsyncObservable } from './rest-api-connector.mock';
  * @example
  * const user = createMockUserAccount({ role: Role.ADMIN });
  */
-export function createMockUserAccount(overrides?: Partial<UserAccount>): UserAccount {
+export function createMockUserAccount(
+  overrides?: Partial<UserAccount>
+): UserAccount {
   const mockUser = new UserAccount({
     id: 'mock-user-id',
     username: 'testuser',
@@ -93,7 +95,11 @@ export function createMockAuthenticationService(config?: any): any {
       const mock = config?.currentUser || defaultUser;
       if (!mock || mock.status !== Status.ACTIVE) return false;
 
-      if (attackType && (attackType.includes('collection') || attackType.includes('marking-definition'))) {
+      if (
+        attackType &&
+        (attackType.includes('collection') ||
+          attackType.includes('marking-definition'))
+      ) {
         return mock.role === Role.ADMIN;
       }
       return [Role.EDITOR, Role.TEAM_LEAD, Role.ADMIN].indexOf(mock.role) > -1;

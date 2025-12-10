@@ -19,8 +19,10 @@ describe('TeamsViewPageComponent', () => {
 
   beforeEach(async () => {
     const mockRestApiConnector = createMockRestApiConnector({
-      getTeamById: () => createAsyncObservable({ id: 'test', name: 'Test Team' }),
-      getAllUserAccounts: () => createAsyncObservable(createPaginatedResponse()),
+      getTeamById: () =>
+        createAsyncObservable({ id: 'test', name: 'Test Team' }),
+      getAllUserAccounts: () =>
+        createAsyncObservable(createPaginatedResponse()),
     });
 
     await TestBed.configureTestingModule({

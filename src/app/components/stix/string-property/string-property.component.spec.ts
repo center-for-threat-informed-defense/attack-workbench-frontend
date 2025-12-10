@@ -15,7 +15,9 @@ describe('StringPropertyComponent', () => {
 
     await TestBed.configureTestingModule({
       declarations: [StringPropertyComponent],
-      providers: [{ provide: RestApiConnectorService, useValue: mockRestApiConnector }],
+      providers: [
+        { provide: RestApiConnectorService, useValue: mockRestApiConnector },
+      ],
       schemas: [NO_ERRORS_SCHEMA],
     }).compileComponents();
   });

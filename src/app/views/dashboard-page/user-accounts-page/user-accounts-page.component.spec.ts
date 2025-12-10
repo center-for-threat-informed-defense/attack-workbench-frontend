@@ -16,7 +16,8 @@ describe('UserAccountsPageComponent', () => {
 
   beforeEach(async () => {
     const mockRestApiConnector = createMockRestApiConnector({
-      getAllUserAccounts: () => createAsyncObservable(createPaginatedResponse()),
+      getAllUserAccounts: () =>
+        createAsyncObservable(createPaginatedResponse()),
       getAllTeams: () => createAsyncObservable(createPaginatedResponse()),
     });
 
