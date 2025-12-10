@@ -4,7 +4,10 @@ import { ActivatedRoute } from '@angular/router';
 import { of } from 'rxjs';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { AuthenticationService } from 'src/app/services/connectors/authentication/authentication.service';
-import { createMockAuthenticationService, createMockUserAccount } from 'src/app/testing/mocks/authentication-service.mock';
+import {
+  createMockAuthenticationService,
+  createMockUserAccount,
+} from 'src/app/testing/mocks/authentication-service.mock';
 
 import { ProfilePageComponent } from './profile-page.component';
 

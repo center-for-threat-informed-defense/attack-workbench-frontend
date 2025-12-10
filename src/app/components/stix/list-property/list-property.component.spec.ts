@@ -4,9 +4,7 @@ import { provideHttpClient } from '@angular/common/http';
 
 import { ListPropertyComponent } from './list-property.component';
 import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/rest-api-connector.service';
-import {
-  createMockRestApiConnector,
-} from 'src/app/testing/mocks/rest-api-connector.mock';
+import { createMockRestApiConnector } from 'src/app/testing/mocks/rest-api-connector.mock';
 
 describe('ListPropertyComponent', () => {
   let component: ListPropertyComponent;

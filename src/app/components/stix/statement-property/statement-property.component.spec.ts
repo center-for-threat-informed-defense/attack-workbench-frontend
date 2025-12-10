@@ -15,12 +15,15 @@ describe('StatementPropertyComponent', () => {
 
   beforeEach(async () => {
     const mockRestApiConnector = createMockRestApiConnector({
-      getAllMarkingDefinitions: () => createAsyncObservable(createPaginatedResponse([])),
+      getAllMarkingDefinitions: () =>
+        createAsyncObservable(createPaginatedResponse([])),
     });
 
     await TestBed.configureTestingModule({
       declarations: [StatementPropertyComponent],
-      providers: [{ provide: RestApiConnectorService, useValue: mockRestApiConnector }],
+      providers: [
+        { provide: RestApiConnectorService, useValue: mockRestApiConnector },
+      ],
       schemas: [NO_ERRORS_SCHEMA],
     }).compileComponents();
   });

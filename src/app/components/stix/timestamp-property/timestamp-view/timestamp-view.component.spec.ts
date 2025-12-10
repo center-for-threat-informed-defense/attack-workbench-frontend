@@ -15,7 +15,9 @@ describe('TimestampViewComponent', () => {
     await TestBed.configureTestingModule({
       declarations: [TimestampViewComponent],
       schemas: [NO_ERRORS_SCHEMA],
-      providers: [{ provide: RestApiConnectorService, useValue: mockRestApiConnector }],
+      providers: [
+        { provide: RestApiConnectorService, useValue: mockRestApiConnector },
+      ],
     }).compileComponents();
   });
 

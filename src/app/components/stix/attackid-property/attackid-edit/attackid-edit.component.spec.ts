@@ -15,7 +15,9 @@ describe('AttackIDEditComponent', () => {
 
     await TestBed.configureTestingModule({
       declarations: [AttackIDEditComponent],
-      providers: [{ provide: RestApiConnectorService, useValue: mockRestApiConnector }],
+      providers: [
+        { provide: RestApiConnectorService, useValue: mockRestApiConnector },
+      ],
       schemas: [NO_ERRORS_SCHEMA],
     }).compileComponents();
   });

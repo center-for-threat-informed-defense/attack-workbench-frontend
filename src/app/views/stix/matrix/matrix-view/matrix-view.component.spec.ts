@@ -20,7 +20,8 @@ describe('MatrixViewComponent', () => {
   beforeEach(waitForAsync(() => {
     const mockRestApiConnector = createMockRestApiConnector({
       getDefaultMarkingDefinitions: () => createAsyncObservable([]),
-      getTechniquesInMatrix: () => createAsyncObservable({ tactic_objects: [] }),
+      getTechniquesInMatrix: () =>
+        createAsyncObservable({ tactic_objects: [] }),
       getAllTactics: () => createAsyncObservable(createPaginatedResponse()),
     });
 

@@ -20,7 +20,8 @@ describe('CollectionImportReviewComponent', () => {
   beforeEach(async () => {
     const mockRestApiConnector = createMockRestApiConnector({
       getAllCollections: () => createAsyncObservable(createPaginatedResponse()),
-      getAllMarkingDefinitions: () => createAsyncObservable(createPaginatedResponse()),
+      getAllMarkingDefinitions: () =>
+        createAsyncObservable(createPaginatedResponse()),
     });
 
     await TestBed.configureTestingModule({
