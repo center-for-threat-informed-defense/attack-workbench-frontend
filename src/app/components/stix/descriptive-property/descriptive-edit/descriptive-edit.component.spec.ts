@@ -6,16 +6,21 @@ import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { of } from 'rxjs';
 
 import { DescriptiveEditComponent } from './descriptive-edit.component';
+import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/rest-api-connector.service';
+import { createMockRestApiConnector } from 'src/app/testing/mocks/rest-api-connector.mock';
 
 describe('DescriptiveEditComponent', () => {
   let component: DescriptiveEditComponent;
   let fixture: ComponentFixture<DescriptiveEditComponent>;
 
   beforeEach(async () => {
+    const mockRestApiConnector = createMockRestApiConnector({});
+
     await TestBed.configureTestingModule({
       declarations: [DescriptiveEditComponent],
       schemas: [NO_ERRORS_SCHEMA],
       providers: [
+        { provide: RestApiConnectorService, useValue: mockRestApiConnector },
         provideHttpClient(),
         provideRouter([]),
         {

@@ -2,12 +2,11 @@ import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { provideHttpClient } from '@angular/common/http';
-import { of } from 'rxjs';
-import { delay } from 'rxjs/operators';
 import { vi } from 'vitest';
 
 import { SaveDialogComponent } from './save-dialog.component';
 import { VersionNumber } from 'src/app/classes/version-number';
+import { createAsyncObservable } from 'src/app/testing/mocks/rest-api-connector.mock';
 
 describe('SaveDialogComponent', () => {
   let component: SaveDialogComponent;
@@ -17,10 +16,10 @@ describe('SaveDialogComponent', () => {
     const mockObject = {
       version: new VersionNumber('1.0'),
       validate: vi.fn().mockReturnValue(
-        of({
+        createAsyncObservable({
           errors: [],
           info: [],
-        }).pipe(delay(0))
+        })
       ),
     };
 

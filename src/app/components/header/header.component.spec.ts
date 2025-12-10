@@ -12,12 +12,19 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { of } from 'rxjs';
 
 import { HeaderComponent } from './header.component';
+import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/rest-api-connector.service';
+import { AuthenticationService } from 'src/app/services/connectors/authentication/authentication.service';
+import { createMockRestApiConnector } from 'src/app/testing/mocks/rest-api-connector.mock';
+import { createMockAuthenticationService } from 'src/app/testing/mocks/authentication-service.mock';
 
 describe('HeaderComponent', () => {
   let component: HeaderComponent;
   let fixture: ComponentFixture<HeaderComponent>;
 
   beforeEach(waitForAsync(() => {
+    const mockRestApiConnector = createMockRestApiConnector({});
+    const mockAuthService = createMockAuthenticationService({});
+
     TestBed.configureTestingModule({
       declarations: [HeaderComponent],
       imports: [
@@ -29,6 +36,8 @@ describe('HeaderComponent', () => {
         NoopAnimationsModule,
       ],
       providers: [
+        { provide: RestApiConnectorService, useValue: mockRestApiConnector },
+        { provide: AuthenticationService, useValue: mockAuthService },
         provideRouter([]),
         {
           provide: ActivatedRoute,

@@ -7,16 +7,26 @@ import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { of } from 'rxjs';
 
 import { SubtypeDialogComponent } from './subtype-dialog.component';
+import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/rest-api-connector.service';
+import {
+  createAsyncObservable,
+  createMockRestApiConnector,
+} from 'src/app/testing/mocks/rest-api-connector.mock';
 
 describe('SubtypeDialogComponent', () => {
   let component: SubtypeDialogComponent;
   let fixture: ComponentFixture<SubtypeDialogComponent>;
 
   beforeEach(async () => {
+    const mockRestApiConnector = createMockRestApiConnector({
+      getAllAllowedValues: () => createAsyncObservable([]),
+    });
+
     await TestBed.configureTestingModule({
       declarations: [SubtypeDialogComponent],
       schemas: [NO_ERRORS_SCHEMA],
       providers: [
+        { provide: RestApiConnectorService, useValue: mockRestApiConnector },
         provideHttpClient(),
         provideRouter([]),
         {
@@ -29,7 +39,11 @@ describe('SubtypeDialogComponent', () => {
         { provide: MatDialogRef, useValue: {} },
         {
           provide: MAT_DIALOG_DATA,
-          useValue: { subtypeFields: [], object: {} },
+          useValue: {
+            subtypeFields: [],
+            object: { attackType: 'test-type' },
+            field: 'testField',
+          },
         },
       ],
     }).compileComponents();

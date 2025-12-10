@@ -1,17 +1,20 @@
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { provideHttpClient } from '@angular/common/http';
 
 import { NamePropertyComponent } from './name-property.component';
+import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/rest-api-connector.service';
+import { createMockRestApiConnector } from 'src/app/testing/mocks/rest-api-connector.mock';
 
 describe('NamePropertyComponent', () => {
   let component: NamePropertyComponent;
   let fixture: ComponentFixture<NamePropertyComponent>;
 
   beforeEach(async () => {
+    const mockRestApiConnector = createMockRestApiConnector({});
+
     await TestBed.configureTestingModule({
       declarations: [NamePropertyComponent],
-      providers: [provideHttpClient()],
+      providers: [{ provide: RestApiConnectorService, useValue: mockRestApiConnector }],
       schemas: [NO_ERRORS_SCHEMA],
     }).compileComponents();
   });
