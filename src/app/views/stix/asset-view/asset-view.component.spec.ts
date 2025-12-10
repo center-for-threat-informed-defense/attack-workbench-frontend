@@ -3,16 +3,28 @@ import { provideHttpClient } from '@angular/common/http';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 
 import { AssetViewComponent } from './asset-view.component';
+import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/rest-api-connector.service';
+import {
+  createMockRestApiConnector,
+  createAsyncObservable,
+} from 'src/app/testing/mocks/rest-api-connector.mock';
 
 describe('AssetViewComponent', () => {
   let component: AssetViewComponent;
   let fixture: ComponentFixture<AssetViewComponent>;
 
   beforeEach(async () => {
+    const mockRestApiConnector = createMockRestApiConnector({
+      getDefaultMarkingDefinitions: () => createAsyncObservable([]),
+    });
+
     await TestBed.configureTestingModule({
       declarations: [AssetViewComponent],
       schemas: [NO_ERRORS_SCHEMA],
-      providers: [provideHttpClient()],
+      providers: [
+        provideHttpClient(),
+        { provide: RestApiConnectorService, useValue: mockRestApiConnector },
+      ],
     }).compileComponents();
   });
 

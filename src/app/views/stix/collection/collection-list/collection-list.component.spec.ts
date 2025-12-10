@@ -22,7 +22,6 @@ describe('CollectionListComponent', () => {
       mode: 'created',
       collections: [],
     };
-    fixture.detectChanges();
   });
 
   it('should create', () => {

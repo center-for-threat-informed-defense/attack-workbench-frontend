@@ -7,16 +7,27 @@ import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { of } from 'rxjs';
 
 import { StixDialogComponent } from './stix-dialog.component';
+import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/rest-api-connector.service';
+import {
+  createAsyncObservable,
+  createMockRestApiConnector,
+  createPaginatedResponse,
+} from 'src/app/testing/mocks/rest-api-connector.mock';
 
 describe('StixDialogComponent', () => {
   let component: StixDialogComponent;
   let fixture: ComponentFixture<StixDialogComponent>;
 
   beforeEach(async () => {
+    const mockRestApiConnector = createMockRestApiConnector({
+      getRelatedTo: () => createAsyncObservable(createPaginatedResponse([])),
+    });
+
     await TestBed.configureTestingModule({
       declarations: [StixDialogComponent],
       schemas: [NO_ERRORS_SCHEMA],
       providers: [
+        { provide: RestApiConnectorService, useValue: mockRestApiConnector },
         provideHttpClient(),
         provideRouter([]),
         {

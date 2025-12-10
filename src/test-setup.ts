@@ -17,7 +17,7 @@ initLogger({
   error: console.error,
 } as any);
 
-// First, initialize the Angular testing environment.
+// Initialize the Angular testing environment.
 getTestBed().initTestEnvironment(
   BrowserDynamicTestingModule,
   platformBrowserDynamicTesting(),

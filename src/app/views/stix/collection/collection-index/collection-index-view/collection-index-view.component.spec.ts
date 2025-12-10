@@ -6,18 +6,23 @@ import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { of } from 'rxjs';
 
 import { CollectionIndexViewComponent } from './collection-index-view.component';
+import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/rest-api-connector.service';
+import { createMockRestApiConnector } from 'src/app/testing/mocks/rest-api-connector.mock';
 
 describe('CollectionIndexViewComponent', () => {
   let component: CollectionIndexViewComponent;
   let fixture: ComponentFixture<CollectionIndexViewComponent>;
 
   beforeEach(async () => {
+    const mockRestApiConnector = createMockRestApiConnector({});
+
     await TestBed.configureTestingModule({
       declarations: [CollectionIndexViewComponent],
       schemas: [NO_ERRORS_SCHEMA],
       providers: [
         provideHttpClient(),
         provideRouter([]),
+        { provide: RestApiConnectorService, useValue: mockRestApiConnector },
         {
           provide: ActivatedRoute,
           useValue: {

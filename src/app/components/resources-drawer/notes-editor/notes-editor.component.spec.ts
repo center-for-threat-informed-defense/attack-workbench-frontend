@@ -4,12 +4,22 @@ import { provideHttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 
 import { NotesEditorComponent } from './notes-editor.component';
+import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/rest-api-connector.service';
+import {
+  createMockRestApiConnector,
+  createAsyncObservable,
+  createPaginatedResponse,
+} from 'src/app/testing/mocks/rest-api-connector.mock';
 
 describe('NotesEditorComponent', () => {
   let component: NotesEditorComponent;
   let fixture: ComponentFixture<NotesEditorComponent>;
 
   beforeEach(async () => {
+    const mockRestApiConnector = createMockRestApiConnector({
+      getAllNotes: () => createAsyncObservable(createPaginatedResponse()),
+    });
+
     await TestBed.configureTestingModule({
       declarations: [NotesEditorComponent],
       providers: [
@@ -20,6 +30,7 @@ describe('NotesEditorComponent', () => {
             url: '/test/mock-id?param=value',
           },
         },
+        { provide: RestApiConnectorService, useValue: mockRestApiConnector },
       ],
       schemas: [NO_ERRORS_SCHEMA],
     }).compileComponents();

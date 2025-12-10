@@ -4,15 +4,20 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { provideHttpClient } from '@angular/common/http';
 
 import { ContributorEditDialogComponent } from './contributor-edit-dialog.component';
+import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/rest-api-connector.service';
+import { createMockRestApiConnector } from 'src/app/testing/mocks/rest-api-connector.mock';
 
 describe('ContributorEditDialogComponent', () => {
   let component: ContributorEditDialogComponent;
   let fixture: ComponentFixture<ContributorEditDialogComponent>;
 
   beforeEach(async () => {
+    const mockRestApiConnector = createMockRestApiConnector({});
+
     await TestBed.configureTestingModule({
       declarations: [ContributorEditDialogComponent],
       providers: [
+        { provide: RestApiConnectorService, useValue: mockRestApiConnector },
         { provide: MatDialogRef, useValue: {} },
         { provide: MAT_DIALOG_DATA, useValue: {} },
         provideHttpClient(),
