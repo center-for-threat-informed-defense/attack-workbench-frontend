@@ -1,7 +1,7 @@
 import { Component, Input, ViewEncapsulation } from '@angular/core';
 import { ListPropertyConfig } from '../list-property.component';
 import { StixTypeToAttackType } from 'src/app/utils/type-mappings';
-import { RelatedRef } from 'src/app/classes/stix/stix-object';
+import { EmbeddedRelationship } from 'src/app/classes/stix/stix-object';
 
 @Component({
   selector: 'app-list-view',
@@ -49,7 +49,7 @@ export class ListViewComponent {
     return arr;
   }
 
-  public getHTML(val: string | RelatedRef) {
+  public getHTML(val: string | EmbeddedRelationship) {
     if (this.config.objectProperty && typeof val === 'object') {
       if (this.showLink) {
         return `<a class="external-link" href="${this.internalLink(val)}" rel="nofollow noopener">${val[this.config.objectProperty]}</a>`;
@@ -59,8 +59,9 @@ export class ListViewComponent {
     return val;
   }
 
-  public internalLink(item: RelatedRef): string {
-    const attackType = StixTypeToAttackType[item.type];
+  public internalLink(item: EmbeddedRelationship): string {
+    const stixType = item.stixId.split('--')?.[0];
+    const attackType = StixTypeToAttackType[stixType];
     return `/${attackType}/${item.stixId}`;
   }
 }
