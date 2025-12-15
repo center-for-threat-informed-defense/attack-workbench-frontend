@@ -6,6 +6,9 @@ import path from 'path';
 // https://vite.dev/config/
 export default defineConfig(({ mode }) => ({
   plugins: [angular()],
+  build: {
+    sourcemap: true,
+  },
   test: {
     globals: true,
     dir: 'src',
@@ -15,8 +18,18 @@ export default defineConfig(({ mode }) => ({
     bail: 10, // Stop after 10 test failures
     coverage: {
       provider: 'v8',
-      enabled: false,
-      reporter: ['text', 'text-summary', 'html', 'clover', 'json'],
+      reporter: ['text', 'text-summary', 'html', 'lcov'],
+      reportsDirectory: 'coverage',
+      exclude: [
+        '**/*.config.*',
+        'node_modules/',
+        '.nuxt/',
+        'dist/',
+        'src/environments/',
+        'src/app/testing/mocks/',
+      ],
+      all: false,
+      clean: true,
     },
   },
   resolve: {

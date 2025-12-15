@@ -75,6 +75,20 @@ jobs:
       - name: Run regression tests with code coverage
         run: npm run test:coverage
 
+      - name: Upload coverage artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ui-coverage
+          path: coverage
+          retention-days: 7
+
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v4
+        with:
+          files: coverage/lcov.info
+          flags: workbench-frontend
+          verbose: true
+
       - name: Verify integrity of dependencies
         run: npm audit signatures
 
