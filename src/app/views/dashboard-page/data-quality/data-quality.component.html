@@ -2,4 +2,13 @@
   <div class="list-page-header">
     <h1>Data Quality</h1>
   </div>
+  <div class="data-quality-subheader">
+    This report was generated on
+    <app-timestamp-view
+      [config]="{
+        field: 'created_at',
+        object: { created_at: '2025-01-01T12:34:56Z' },
+        showDisplayName: false,
+      }"></app-timestamp-view>
+  </div>
 </div>
