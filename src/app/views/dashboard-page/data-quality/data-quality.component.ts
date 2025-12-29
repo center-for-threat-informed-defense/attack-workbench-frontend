@@ -8,8 +8,7 @@ import { Component, OnInit, ViewEncapsulation } from '@angular/core';
   standalone: false,
 })
 export class DataQualityComponent implements OnInit {
-  constructor() {
-  }
+  constructor() {}
 
   ngOnInit(): void {}
 }
