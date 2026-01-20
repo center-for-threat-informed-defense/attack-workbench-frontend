@@ -1,0 +1,40 @@
+version: 2
+updates:
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "monthly"
+    target-branch: "main"
+
+    groups:
+      angular-ecosystem:
+        patterns:
+          - "@angular*"
+          - "rxjs"
+          - "typescript"
+          - "ngx-markdown"
+          - "marked" # peer of ngx-markdown, must update together
+          - "@ng-matero/extensions" # extended Angular component lib
+          - "angular-eslint"
+        update-types:
+          - "minor"
+          - "patch"
+
+    ignore:
+      - dependency-name: "@angular*"
+        update-types: ["version-update:semver-major"]
+      # libraries constrained by angular version
+      - dependency-name: "rxjs"
+        update-types: ["version-update:semver-major", "version-update:semver-minor"]
+      - dependency-name: "typescript"
+        update-types: ["version-update:semver-major", "version-update:semver-minor"]
+      - dependency-name: "@types/node"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "ngx-markdown"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "marked"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "@ng-matero/extensions"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "angular-eslint"
+        update-types: ["version-update:semver-major"]
