@@ -60,7 +60,7 @@ export class SaveDialogComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.newState = 'work-in-progress';
+    this.newState = this.config.initialWorkflowState || 'work-in-progress';
     if (this.config.object.attackType === 'detection-strategy') {
       const det = this.config.object as DetectionStrategy;
       const newAnalytics = new Set<string>(det.analytics);
@@ -82,6 +82,26 @@ export class SaveDialogComponent implements OnInit {
         for (const a of newAnalytics) this.analyticsToPatch.add(a);
       }
     }
+    // Run validation for the initial state
+    const subscription = this.config.object
+      .validate(this.restApiService, this.newState)
+      .subscribe({
+        next: result => {
+          this.validation = result;
+        },
+        complete: () => subscription.unsubscribe(),
+      });
+  }
+
+  onStatusChanged(event) {
+    const subscription = this.config.object
+      .validate(this.restApiService, event.value)
+      .subscribe({
+        next: result => {
+          this.validation = result;
+        },
+        complete: () => subscription.unsubscribe(),
+      });
   }
 
   /**
@@ -234,6 +254,7 @@ export class SaveDialogComponent implements OnInit {
     if (!this.saveEnabled) {
       return;
     }
+    this.config.object.workflow = { state: this.newState };
     const sub = this.saveObject().subscribe({
       next: () => {
         this.dialogRef.close(true);
@@ -248,4 +269,5 @@ export interface SaveDialogConfig {
   patchId?: string; // previous object ID to patch in LinkByID tags
   patchAnalytics?: Set<string>; // previous list of analytics related to a detection strategy
   versionAlreadyIncremented: boolean;
+  initialWorkflowState?: WorkflowState;
 }

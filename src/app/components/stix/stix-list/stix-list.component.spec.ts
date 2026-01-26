@@ -2,11 +2,15 @@ import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { provideHttpClient } from '@angular/common/http';
 
-import { StixListComponent } from './stix-list.component';
+import { StixListComponent, StixListConfig } from './stix-list.component';
 
 describe('StixListComponent', () => {
   let component: StixListComponent;
   let fixture: ComponentFixture<StixListComponent>;
+
+  const defaultConfig: StixListConfig = {
+    type: 'technique',
+  };
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
@@ -19,6 +23,7 @@ describe('StixListComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(StixListComponent);
     component = fixture.componentInstance;
+    component.config = { ...defaultConfig };
     fixture.detectChanges();
   });
 

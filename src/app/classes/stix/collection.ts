@@ -19,6 +19,7 @@ import {
   Tactic,
   Technique,
 } from '../stix';
+import { WorkflowState } from 'src/app/utils/types';
 
 /**
  * auto-generated changelog/report about an import
@@ -496,9 +497,10 @@ export class Collection extends StixObject {
    * @returns {Observable<ValidationData>} the validation warnings and errors once validation is complete.
    */
   public validate(
-    restAPIService: RestApiConnectorService
+    restAPIService: RestApiConnectorService,
+    tempWorkflowState?: WorkflowState
   ): Observable<ValidationData> {
-    return this.base_validate(restAPIService);
+    return this.base_validate(restAPIService, tempWorkflowState);
   }
 
   /**
