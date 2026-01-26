@@ -8,7 +8,6 @@ on:
       - next-major
       - beta
       - alpha
-      - adm
       - '*.x'     # Matches branches like '1.x', '2.x'
   pull_request: # Run on all PRs regardless of target branch
   workflow_dispatch:
@@ -74,6 +73,21 @@ jobs:
 
       - name: Run regression tests with code coverage
         run: npm run test:coverage
+
+      - name: Upload coverage artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: workbench-frontend-coverage
+          path: coverage
+          retention-days: 7
+
+      - name: Upload coverage reports to Codecov
+        uses: codecov/codecov-action@v4
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          slug: center-for-threat-informed-defense/attack-workbench-frontend
+          files: coverage/lcov.info
+          verbose: true
 
       - name: Verify integrity of dependencies
         run: npm audit signatures
