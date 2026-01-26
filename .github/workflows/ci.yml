@@ -8,7 +8,6 @@ on:
       - next-major
       - beta
       - alpha
-      - adm
       - '*.x'     # Matches branches like '1.x', '2.x'
   pull_request: # Run on all PRs regardless of target branch
   workflow_dispatch:
