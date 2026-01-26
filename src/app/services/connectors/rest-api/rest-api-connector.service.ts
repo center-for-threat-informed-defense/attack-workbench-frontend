@@ -1120,6 +1120,29 @@ export class RestApiConnectorService extends ApiConnector {
   }
 
   /**
+   * Factory to create a STIX object validator (POST) function
+   * @template T the type to validate
+   * @param {AttackType} attackType the type to validate
+   * @returns validator (POST) function
+   */
+  public validateStixObject<T extends StixObject>() {
+    // Return a function that takes an object and returns an Observable
+    return <P extends T>(object: P): Observable<any> => {
+      const url = `${this.apiUrl}/validate`;
+      const payload = {
+        type: object.type,
+        status: object.workflow ? object.workflow.state : 'work-in-progress',
+        stix: object.serialize().stix,
+      };
+      return this.http.post(url, payload).pipe(
+        tap(this.handleSuccess(`${this.getObjectName(object)} validated`)),
+        map(result => result),
+        catchError(this.handleError_raise()),
+        share() // multicast so that multiple subscribers don't trigger the call twice. THIS MUST BE THE LAST LINE OF THE PIPE
+      );
+    };
+  }
+  /**
    * POST (create) a new technique
    * @param {Technique} object the object to create
    * @returns {Observable<Technique>} the created object

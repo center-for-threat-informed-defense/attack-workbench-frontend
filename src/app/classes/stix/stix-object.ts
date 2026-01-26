@@ -1,3 +1,7 @@
+import {
+  createAttackIdSchema,
+  StixTypesWithAttackIds,
+} from '@mitre-attack/attack-data-model';
 import { forkJoin, Observable, of } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
 import {
@@ -8,7 +12,7 @@ import {
   AttackTypeToRoute,
   StixTypeToAttackType,
 } from 'src/app/utils/type-mappings';
-import { StixType } from 'src/app/utils/types';
+import { StixType, WorkflowState } from 'src/app/utils/types';
 import { v4 as uuid } from 'uuid';
 import { logger } from '../../utils/logger';
 import { ExternalReferences } from '../external-references';
@@ -18,8 +22,7 @@ import { VersionNumber } from '../version-number';
 export type workflowStates =
   | 'work-in-progress'
   | 'awaiting-review'
-  | 'reviewed'
-  | '';
+  | 'reviewed';
 
 export abstract class StixObject extends Serializable {
   public stixID: string; // STIX ID
@@ -37,10 +40,14 @@ export abstract class StixObject extends Serializable {
   public object_marking_refs: string[] = []; //list of embedded relationships to marking_defs
 
   public abstract readonly supportsAttackID: boolean; // boolean to determine if object supports ATT&CK IDs
+  public tempWorkflowState: WorkflowState;
   protected abstract get attackIDValidator(): {
     regex: string; // regex to validate the ID
     format: string; // format to display to user
   };
+
+  // fields to omit. By default, do not omit any fields
+  protected excludedFields: string[] = [];
 
   protected buildAttackExternalReference(): object | null {
     if (this.attackID && AttackTypeToRoute[this.attackType]) {
@@ -123,25 +130,29 @@ export abstract class StixObject extends Serializable {
       serialized_external_references.unshift(attackExtRef);
     }
 
-    const stix: any = {
+    const stix = this.filterObject({
       type: this.type,
       id: this.stixID,
       created: this.created
         ? this.created.toISOString()
         : new Date().toISOString(),
-      x_mitre_version: this.version.toString(),
-      external_references: serialized_external_references,
+      modified:
+        this.type !== 'marking-definition'
+          ? new Date().toISOString()
+          : undefined,
+      x_mitre_version: this.version?.toString(),
       x_mitre_deprecated: this.deprecated,
       revoked: this.revoked,
-      object_marking_refs: this.object_marking_refs,
       spec_version: '2.1',
-    };
-    if (this.description) stix.description = this.description;
-    // Add modified date if type is not marking-definition
-    if (this.type != 'marking-definition')
-      stix['modified'] = new Date().toISOString();
-    if (this.created_by_ref) stix.created_by_ref = this.created_by_ref;
-    // do not set modified by ref since we don't know who we are, but the REST API knows
+      description: this.description,
+      created_by_ref: this.created_by_ref,
+      object_marking_refs: this.object_marking_refs,
+      external_references: serialized_external_references,
+    });
+
+    for (const field of this.excludedFields) {
+      delete stix[field];
+    }
 
     return {
       workspace: {
@@ -383,11 +394,14 @@ export abstract class StixObject extends Serializable {
    * @returns true if the ATT&CK ID is valid, false otherwise
    */
   public isValidAttackId(): boolean {
-    const idRegex = new RegExp(
-      '^([A-Z]+-)?' + this.attackIDValidator.regex + '$'
-    );
-    const attackIDValid = idRegex.test(this.attackID);
-    return attackIDValid;
+    if (this.type in StixTypeToAttackType) {
+      const attackIDSchema = createAttackIdSchema(
+        this.type as StixTypesWithAttackIds
+      );
+      const attackIDValid = attackIDSchema.safeParse(this.attackID);
+      return attackIDValid.success;
+    }
+    return false;
   }
 
   /**
@@ -397,22 +411,39 @@ export abstract class StixObject extends Serializable {
    * @returns {Observable<ValidationData>} the validation warnings and errors once validation is complete.
    */
   public base_validate(
-    restAPIService: RestApiConnectorService
+    restAPIService: RestApiConnectorService,
+    tempWorkflowState?
   ): Observable<ValidationData> {
-    const validation = new ValidationData();
-
-    // test version number format
-    if (!this.version.valid()) {
-      validation.errors.push({
-        result: 'error',
-        field: 'version',
-        message: 'version number is not formatted properly',
-      });
+    if (tempWorkflowState) {
+      this.workflow = { state: tempWorkflowState };
     }
     // check any asynchronous validators
-    return of(validation).pipe(
-      // check if the name is unique if it has a name
-      switchMap(result => {
+    const result = new ValidationData();
+    const validator = restAPIService.validateStixObject();
+
+    return validator(this).pipe(
+      switchMap(validatorResult => {
+        // Process validation errors from API (backend now handles error-to-warning conversion)
+        (validatorResult.errors || []).forEach((err: any) => {
+          const errorMessage = `${err.path.join('.')}: ${err.message}`;
+          result.errors.push({
+            result: 'error',
+            field: 'temp',
+            message: errorMessage,
+          });
+        });
+
+        // Process validation warnings from API
+        (validatorResult.warnings || []).forEach((warning: any) => {
+          const warningMessage =
+            warning.message || `${warning.path.join('.')}: ${warning.message}`;
+          result.warnings.push({
+            result: 'warning',
+            field: warning.path[warning.path.length - 1] || 'temp',
+            message: warningMessage,
+          });
+        });
+        // check if the name is unique if it has a name
         //do not check name or attackID for relationships or marking definitions
         if (
           this.attackType == 'relationship' ||
@@ -456,13 +487,7 @@ export abstract class StixObject extends Serializable {
           map(objects => {
             // check name
             if (this.hasOwnProperty('name')) {
-              if (this['name'] == '') {
-                result.errors.push({
-                  result: 'error',
-                  field: 'name',
-                  message: 'object has no name',
-                });
-              } else if (
+              if (
                 objects.data.some(
                   x =>
                     x['name'].toLowerCase() == this['name'].toLowerCase() &&
@@ -482,51 +507,6 @@ export abstract class StixObject extends Serializable {
                 });
               }
             }
-            // check required first/last seen fields for campaigns
-            if (this.attackType == 'campaign') {
-              if (
-                !this.hasOwnProperty('first_seen') ||
-                this['first_seen'] == null
-              ) {
-                result.errors.push({
-                  result: 'error',
-                  field: 'first_seen',
-                  message: 'object does not have a first seen date',
-                });
-              }
-              if (
-                !this.hasOwnProperty('first_seen_citation') ||
-                this['first_seen_citation'] == ''
-              ) {
-                result.errors.push({
-                  result: 'error',
-                  field: 'first_seen_citation',
-                  message:
-                    'object is missing a citation for the first seen date',
-                });
-              }
-              if (
-                !this.hasOwnProperty('last_seen') ||
-                this['last_seen'] == null
-              ) {
-                result.errors.push({
-                  result: 'error',
-                  field: 'last_seen',
-                  message: 'object does not have a last seen date',
-                });
-              }
-              if (
-                !this.hasOwnProperty('last_seen_citation') ||
-                this['last_seen_citation'] == ''
-              ) {
-                result.errors.push({
-                  result: 'error',
-                  field: 'last_seen_citation',
-                  message:
-                    'object is missing a citation for the last seen date',
-                });
-              }
-            }
             return result;
           })
         );
@@ -539,8 +519,6 @@ export abstract class StixObject extends Serializable {
           refs_fields.push('aliases');
         if (this.attackType == 'asset') refs_fields.push('relatedAssets');
         if (this.attackType == 'technique') refs_fields.push('detection');
-        if (this.attackType == 'campaign')
-          refs_fields.push('first_seen_citation', 'last_seen_citation');
 
         return this.external_references
           .validate(restAPIService, { object: this, fields: refs_fields })
@@ -701,6 +679,48 @@ export abstract class StixObject extends Serializable {
       }
     }
     return result;
+  }
+
+  /**
+   * Checks if the provided field has a valid value.
+   * Returns undefined or the value of the field if it is valid
+   * @param {*} field - The value to validate.
+   * @returns {value} - Value if the field has a valid value, undefined otherwise.
+   */
+  public clean(value) {
+    if (value == null) return undefined; // null or undefined
+    if (typeof value === 'string' && value.trim() === '') return undefined;
+    if (typeof value === 'number' && Number.isNaN(value)) return undefined;
+    if (Array.isArray(value)) {
+      if (value.length === 0) {
+        return undefined;
+      } else {
+        const arr = value.map(v => this.clean(v)).filter(v => v !== undefined);
+        return arr.length ? arr : undefined;
+      }
+    }
+
+    if (typeof value === 'object') {
+      const obj = this.filterObject(value);
+      return Object.keys(obj).length ? obj : undefined;
+    }
+
+    return value;
+  }
+
+  /**
+   * Filters the properties of an object, returning a new object containing only
+   * those entries whose values pass the validity check.
+   * @param {Object} obj - The object to filter.
+   * @returns {Object} - A new object with only the valid entries.
+   */
+  public filterObject(obj) {
+    const out = {};
+    for (const [key, value] of Object.entries(obj)) {
+      const cleaned = this.clean(value);
+      if (cleaned !== undefined) out[key] = cleaned;
+    }
+    return out;
   }
 
   /**
