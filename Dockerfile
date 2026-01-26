@@ -36,6 +36,9 @@ LABEL org.opencontainers.image.title="ATT&CK Workbench Frontend Service" \
     org.opencontainers.image.vendor="The MITRE Corporation" \
     org.opencontainers.image.licenses="Apache-2.0" \
     org.opencontainers.image.authors="MITRE ATT&CK<attack@mitre.org>" \
+    org.opencontainers.image.version="${VERSION}" \
+    org.opencontainers.image.created="${BUILDTIME}" \
+    org.opencontainers.image.revision="${REVISION}" \
     maintainer="MITRE ATT&CK<attack@mitre.org>"
 
 # Remove the default nginx website
