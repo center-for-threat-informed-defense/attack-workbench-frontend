@@ -155,6 +155,7 @@ import { CitationViewComponent } from './components/stix/citation-property/citat
 import { HelpPageComponent } from './views/help-page/help-page.component';
 import { LandingPageComponent } from './views/landing-page/landing-page.component';
 import { DashboardPageComponent } from './views/dashboard-page/dashboard-page.component';
+import { DataQualityComponent } from './views/dashboard-page/data-quality/data-quality.component';
 import { OrgSettingsPageComponent } from './views/dashboard-page/org-settings-page/org-settings-page.component';
 import { UserAccountsPageComponent } from './views/dashboard-page/user-accounts-page/user-accounts-page.component';
 import { DefaultMarkingDefinitionsComponent } from './views/dashboard-page/default-marking-definitions/default-marking-definitions.component';
@@ -281,6 +282,7 @@ export function initConfig(appConfigService: AppConfigService) {
     LandingPageComponent,
     HelpPageComponent,
     DashboardPageComponent,
+    DataQualityComponent,
     OrgSettingsPageComponent,
     UserAccountsPageComponent,
     DefaultMarkingDefinitionsComponent,
