@@ -84,7 +84,7 @@
     "karma-coverage-istanbul-reporter": "~3.0.2",
     "karma-jasmine": "^5.1.0",
     "karma-jasmine-html-reporter": "^2.1.0",
-    "prettier": "^3.8.0",
+    "prettier": "^3.8.1",
     "prettier-eslint": "^16.3.0",
     "semantic-release": "^25.0.2",
     "ts-node": "^10.9.1",
