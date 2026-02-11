@@ -7,24 +7,17 @@ import { environment } from '../../../environments/environment';
   providedIn: 'root',
 })
 export class ReportService {
-
-  constructor(
-    private http: HttpClient,
-  ) {}
+  constructor(private http: HttpClient) {}
 
   get apiUrl(): string {
     return environment.integrations.rest_api.url;
   }
 
   getMissingLinkById(): Observable<any> {
-    return this.http.get(
-      `${this.apiUrl}/reports/link-by-id/missing`
-    );
+    return this.http.get(`${this.apiUrl}/reports/link-by-id/missing`);
   }
 
   getParallelRelationships(): Observable<any> {
-    return this.http.get(
-      `${this.apiUrl}/reports/parallel-relationships`
-    );
+    return this.http.get(`${this.apiUrl}/reports/parallel-relationships`);
   }
 }
