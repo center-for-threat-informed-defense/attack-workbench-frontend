@@ -1256,6 +1256,8 @@ export interface StixListConfig {
   showFilters?: boolean;
   /** default true, if false hides all search/filter/control options */
   showControls?: boolean;
+  /** if true, show created/modified timestamp columns for relationship tables */
+  showCreatedModified?: boolean;
   /** display the 'show deprecated' filter, default false
    *  this may be relevant when displaying a list of embedded relationships, where
    *  the list of STIX objects is provided in the 'stixObjects' configuration
