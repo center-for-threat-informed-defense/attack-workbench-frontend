@@ -447,8 +447,13 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
                 this.config.relationshipType == 'subtechnique-of'
               )
             )
-            this.addColumn('description', 'description', 'descriptive', false);
-              }
+              this.addColumn(
+                'description',
+                'description',
+                'descriptive',
+                false
+              );
+          }
           break;
         case 'marking-definition':
           this.addColumn('definition type', 'definition_type', 'plain');
