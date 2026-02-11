@@ -1,37 +1,17 @@
-<div class="list-page grid spacing-20">
-  <div class="list-page-header">
-    <h1 class="with-help-icon">
-      data quality
-      <mat-icon
-        class="help-icon"
-        aria-label="help"
-        cdkDrag
-        #popoverTrigger2="mtxPopoverTrigger"
-        [mtxPopoverTriggerFor]="popover"
-        mtxPopoverTriggerOn="hover">
-        help_outline
-      </mat-icon>
-      <mtx-popover
-        #popover="mtxPopover"
-        [position]="['below', 'center']"
-        enterDelay="25"
-        leaveDelay="25">
-        <div style="max-width: 26em">
-          <span class="help-content"
-            >This page lists the results of the tests run on the ATT&CK STIX
-            data and on the HTML of the built site.</span
-          >
-        </div>
-      </mtx-popover>
-    </h1>
-  </div>
-  <div class="data-quality-subheader">
-    This report was generated on
-    <app-timestamp-view
-      [config]="{
-        field: 'created_at',
-        object: { created_at: '2025-01-01T12:34:56Z' },
-        showDisplayName: false,
-      }"></app-timestamp-view>
+<div class="data-quality-container">
+  <app-loading-overlay *ngIf="loadingParallel"></app-loading-overlay>
+  <div *ngIf="parallelError" class="error">{{ parallelError }}</div>
+
+  <app-stix-list
+    #relationshipList
+    [config]="stixRelationshipConfig">
+  </app-stix-list>
+
+  <!-- Fallback if empty 
+  <div *ngIf="!loadingParallel && isRelationshipListEmpty">
+    No parallel relationships found.
+  </div> -->
+  <div *ngIf="!loadingParallel && isRelationshipListEmpty">
+    No parallel relationships found.
   </div>
 </div>
