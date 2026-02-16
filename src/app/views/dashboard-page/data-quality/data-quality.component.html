@@ -1,17 +1,80 @@
 <div class="data-quality-container">
+  <h1>Parallel Relationships</h1>
   <app-loading-overlay *ngIf="loadingParallel"></app-loading-overlay>
   <div *ngIf="parallelError" class="error">{{ parallelError }}</div>
 
-  <app-stix-list
-    #relationshipList
-    [config]="stixRelationshipConfig">
-  </app-stix-list>
+  <!-- Accordion view for parallel relationships -->
+  <mat-accordion
+    class="dq-accordion"
+    *ngIf="!loadingParallel && parallelRelationships?.length > 0">
+    <mat-expansion-panel *ngFor="let group of parallelRelationships">
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          <ng-container *ngIf="group.relationships[0] as first">
+            <a [routerLink]="objectLink(first.source_object)">
+              {{ first.source_object.stix.external_references[0].external_id }}
+            </a>
+            <mat-icon aria-hidden="false" aria-label="to"
+              >arrow_forward</mat-icon
+            >
+            {{ group.relationshipType }}
+            <mat-icon aria-hidden="false" aria-label="to"
+              >arrow_forward</mat-icon
+            >
+            <a [routerLink]="objectLink(first.target_object)">
+              {{ first.target_object.stix.external_references[0].external_id }}
+            </a>
+          </ng-container>
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+
+      <app-stix-list [config]="stixConfigForGroup(group)"></app-stix-list>
+    </mat-expansion-panel>
+  </mat-accordion>
+
+  <h1>Missing LinkByIds Status</h1>
+  <!-- Missing Links Section -->
+  <app-loading-overlay *ngIf="loading"></app-loading-overlay>
+  <div *ngIf="error" class="error">{{ error }}</div>
+  <mat-accordion
+    class="dq-accordion"
+    *ngIf="
+      !loading &&
+      nonRelationshipMissingLinks &&
+      nonRelationshipMissingLinks.length > 0
+    ">
+    <mat-expansion-panel>
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          Missing Links by ID ({{ nonRelationshipMissingLinks.length }})
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+      <div class="missing-list">
+        <div
+          class="missing-item"
+          *ngFor="let item of nonRelationshipMissingLinks">
+          <div class="missing-id">
+            <a [routerLink]="objectLink(item)">
+              {{ item.stix.external_references[0].external_id }}
+            </a>
+          </div>
+          <div class="missing-description">
+            {{ item.stix.description }}
+          </div>
+        </div>
+      </div>
+    </mat-expansion-panel>
+  </mat-accordion>
 
   <!-- Fallback if empty 
   <div *ngIf="!loadingParallel && isRelationshipListEmpty">
     No parallel relationships found.
   </div> -->
-  <div *ngIf="!loadingParallel && isRelationshipListEmpty">
+  <div
+    *ngIf="
+      !loadingParallel &&
+      (!parallelRelationships || parallelRelationships.length === 0)
+    ">
     No parallel relationships found.
   </div>
 </div>
