@@ -3,6 +3,7 @@ import { Routes, RouterModule } from '@angular/router';
 import { LandingPageComponent } from './views/landing-page/landing-page.component';
 import { HelpPageComponent } from './views/help-page/help-page.component';
 import { DashboardPageComponent } from './views/dashboard-page/dashboard-page.component';
+import { DataQualityComponent } from './views/dashboard-page/data-quality/data-quality.component';
 import { OrgSettingsPageComponent } from './views/dashboard-page/org-settings-page/org-settings-page.component';
 import { UserAccountsPageComponent } from './views/dashboard-page/user-accounts-page/user-accounts-page.component';
 import { DefaultMarkingDefinitionsComponent } from './views/dashboard-page/default-marking-definitions/default-marking-definitions.component';
@@ -79,6 +80,15 @@ const routes: Routes = [
                 component: TeamsViewPageComponent,
               },
             ],
+          },
+          {
+            path: 'data-quality',
+            data: {
+              breadcrumb: 'data quality',
+              title: 'Data Quality',
+              roles: [Role.ADMIN, Role.TEAM_LEAD],
+            },
+            component: DataQualityComponent,
           },
           {
             path: 'org-settings',
