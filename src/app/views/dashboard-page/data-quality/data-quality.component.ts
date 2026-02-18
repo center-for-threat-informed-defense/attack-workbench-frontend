@@ -20,14 +20,14 @@ interface ParallelRelationshipGroup {
   templateUrl: './data-quality.component.html',
   styleUrls: ['./data-quality.component.scss'],
   encapsulation: ViewEncapsulation.None,
-  standalone: false, // ✅ non-standalone
+  standalone: false,
 })
 export class DataQualityComponent implements OnInit {
   constructor(private reportService: ReportService) {}
 
   missingLinks: any[] = [];
-  nonRelationshipMissingLinks: any[] = [];
-  loading = false;
+  missingLinkRows: { id: string; name: string }[] = [];
+  loadingMissingLinks = false;
   error?: string;
 
   parallelRelationships: ParallelRelationshipGroup[] = [];
@@ -38,8 +38,6 @@ export class DataQualityComponent implements OnInit {
     type: 'relationship',
     stixObjects: [],
     clickBehavior: 'none',
-    allowEdits: false,
-    showControls: true,
     showFilters: false,
     showDeprecatedFilter: true,
     compactRelationshipColumns: true,
@@ -49,8 +47,8 @@ export class DataQualityComponent implements OnInit {
   @ViewChild('relationshipList') relationshipList: StixListComponent;
 
   ngOnInit(): void {
-    this.loadMissingLinks();
     this.loadParallelRelationships();
+    this.loadMissingLinks();
   }
 
   private transformParallelRelationships(
@@ -78,28 +76,23 @@ export class DataQualityComponent implements OnInit {
     return ['/', attackType, id];
   }
 
-  // Helper for template: safely check if stixObjects is a non-empty array
-  public get isRelationshipListEmpty(): boolean {
-    const objs = this.stixRelationshipConfig?.stixObjects as unknown;
-    return !(Array.isArray(objs) && objs.length > 0);
-  }
-
   loadMissingLinks(): void {
-    this.loading = true;
+    this.loadingMissingLinks = true;
     this.reportService.getMissingLinkById().subscribe({
       next: data => {
-        this.missingLinks = data;
-        this.nonRelationshipMissingLinks = Array.isArray(data)
+        // update later to also display relationship missing link by ids
+        this.missingLinks = Array.isArray(data)
           ? data.filter(item => {
               const type = item.stix.type;
               return type !== 'relationship';
             })
           : [];
-        this.loading = false;
+        this.missingLinkRows = this.buildMissingLinkRows();
+        this.loadingMissingLinks = false;
       },
       error: err => {
         this.error = 'Failed to load report';
-        this.loading = false;
+        this.loadingMissingLinks = false;
         console.error(err);
       },
     });
@@ -113,13 +106,12 @@ export class DataQualityComponent implements OnInit {
         this.parallelRelationships =
           this.transformParallelRelationships(rawData);
 
-        // Build per-group stixObjects once and cache on the group
         this.parallelRelationships.forEach(group => {
           group.stixObjects = this.buildStixObjectsForGroup(group);
         });
         this.loadingParallel = false;
         this.parallelError = undefined;
-        setTimeout(() => this.relationshipList?.applyControls(), 0);
+        this.relationshipList.applyControls();
       },
       error: err => {
         this.parallelError = 'Failed to load parallel relationships report';
@@ -132,12 +124,10 @@ export class DataQualityComponent implements OnInit {
   // Build a StixList-compatible array for a given group
   buildStixObjectsForGroup(group: ParallelRelationshipGroup): StixObject[] {
     if (!group || !Array.isArray(group.relationships)) return [] as any;
-    return group.relationships.map(r =>
-      this.mapRelationshipToRow(r)
-    ) as any;
+    return group.relationships.map(r => this.mapRelationshipToRow(r)) as any;
   }
 
-  // Use existing config and override only the stixObjects (and hide controls in panels)
+  // Use existing config and override only the stixObjects and hide controls in panels
   stixConfigForGroup(group: ParallelRelationshipGroup): StixListConfig {
     return {
       ...this.stixRelationshipConfig,
@@ -146,10 +136,34 @@ export class DataQualityComponent implements OnInit {
     };
   }
 
-  // Centralized row mapping used by builders
-  private mapRelationshipToRow(
-    r: any,
-  ): StixObject {
+  // Build stix objects for missing links
+  buildMissingLinkObjects(): StixObject[] {
+    return (this.missingLinks || []).map(item => {
+      const s = item?.stix || item;
+      return {
+        stixID: s.id,
+        attackType: StixTypeToAttackType[s.type],
+        type: s.type,
+        attackID: s.external_references?.[0]?.external_id || '',
+        name: s.name || s.external_references?.[0]?.external_id || s.id,
+      } as any;
+    });
+  }
+
+  // Use stix-list for missing links with a 2 columns - id and name
+  stixConfigForMissingLinks(): StixListConfig {
+    return {
+      type: 'relationship', // use relationship so stix-list table styling matches
+      stixObjects: this.buildMissingLinkObjects(),
+      columnsPreset: 'id-name',
+      showControls: false,
+      showFilters: false,
+      showDeprecatedFilter: false,
+      clickBehavior: 'linkToObjectPage',
+    };
+  }
+
+  private mapRelationshipToRow(r: any): StixObject {
     const stix = r.stix;
     return {
       stixID: stix.id,
@@ -167,5 +181,13 @@ export class DataQualityComponent implements OnInit {
       revoked: r?.revoked,
       deprecated: r?.x_mitre_deprecated,
     } as any;
+  }
+  // Build rows for missing links table and display id and name
+  buildMissingLinkRows(): { id: string; name: string }[] {
+    return (this.missingLinks || []).map(item => {
+      const id = item?.stix.external_references?.[0]?.external_id || item?.stix.id || '';
+      const name = item?.stix.name || '';
+      return { id, name };
+    });
   }
 }
