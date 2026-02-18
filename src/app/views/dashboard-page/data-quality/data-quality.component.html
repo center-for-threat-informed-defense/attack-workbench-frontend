@@ -27,7 +27,7 @@
           </ng-container>
         </mat-panel-title>
       </mat-expansion-panel-header>
-    <!-- Table for parallel relationships -->
+      <!-- Table for parallel relationships -->
       <app-stix-list [config]="stixConfigForGroup(group)"></app-stix-list>
     </mat-expansion-panel>
   </mat-accordion>
@@ -45,11 +45,7 @@
   <div *ngIf="error" class="error">{{ error }}</div>
   <mat-accordion
     class="dq-accordion"
-    *ngIf="
-      !loadingMissingLinks &&
-      missingLinks &&
-      missingLinks.length > 0
-    ">
+    *ngIf="!loadingMissingLinks && missingLinks && missingLinks.length > 0">
     <mat-expansion-panel>
       <mat-expansion-panel-header>
         <mat-panel-title>

@@ -185,7 +185,8 @@ export class DataQualityComponent implements OnInit {
   // Build rows for missing links table and display id and name
   buildMissingLinkRows(): { id: string; name: string }[] {
     return (this.missingLinks || []).map(item => {
-      const id = item?.stix.external_references?.[0]?.external_id || item?.stix.id || '';
+      const id =
+        item?.stix.external_references?.[0]?.external_id || item?.stix.id || '';
       const name = item?.stix.name || '';
       return { id, name };
     });
