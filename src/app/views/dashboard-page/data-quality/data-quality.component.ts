@@ -111,7 +111,6 @@ export class DataQualityComponent implements OnInit {
         });
         this.loadingParallel = false;
         this.parallelError = undefined;
-        this.relationshipList.applyControls();
       },
       error: err => {
         this.parallelError = 'Failed to load parallel relationships report';
