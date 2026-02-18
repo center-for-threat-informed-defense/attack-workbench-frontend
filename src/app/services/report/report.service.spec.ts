@@ -7,10 +7,7 @@ describe('ReportService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [
-        provideHttpClient(),
-        ReportService
-      ]
+      providers: [provideHttpClient(), ReportService],
     });
 
     service = TestBed.inject(ReportService);
