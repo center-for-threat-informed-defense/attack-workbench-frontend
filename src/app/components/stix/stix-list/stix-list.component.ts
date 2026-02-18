@@ -234,6 +234,13 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
     const sticky_allowed = !(
       this.config.rowAction && this.config.rowAction.position == 'start'
     );
+    // Column presets take precedence
+    if (this.config.columnsPreset === 'id-name') {
+      this.addColumn('ID', 'attackID', 'plain', false);
+      this.addColumn('name', 'name', 'plain', sticky_allowed, ['name']);
+      this.tableDetail = [];
+      return;
+    }
     if ('type' in this.config) {
       // set columns according to type
       switch (this.config.type.replace(/_/g, '-')) {
@@ -1258,6 +1265,8 @@ export interface StixListConfig {
   showControls?: boolean;
   /** if true, show created/modified timestamp columns for relationship tables */
   showCreatedModified?: boolean;
+  /** Optional preset to override default columns */
+  columnsPreset?: 'id-name';
   /** display the 'show deprecated' filter, default false
    *  this may be relevant when displaying a list of embedded relationships, where
    *  the list of STIX objects is provided in the 'stixObjects' configuration

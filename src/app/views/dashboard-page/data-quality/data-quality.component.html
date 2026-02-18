@@ -1,5 +1,5 @@
 <div class="data-quality-container">
-  <h1>Parallel Relationships</h1>
+  <h1>Duplicate Relationships</h1>
   <app-loading-overlay *ngIf="loadingParallel"></app-loading-overlay>
   <div *ngIf="parallelError" class="error">{{ parallelError }}</div>
 
@@ -27,49 +27,10 @@
           </ng-container>
         </mat-panel-title>
       </mat-expansion-panel-header>
-
+    <!-- Table for parallel relationships -->
       <app-stix-list [config]="stixConfigForGroup(group)"></app-stix-list>
     </mat-expansion-panel>
   </mat-accordion>
-
-  <h1>Missing LinkByIds Status</h1>
-  <!-- Missing Links Section -->
-  <app-loading-overlay *ngIf="loading"></app-loading-overlay>
-  <div *ngIf="error" class="error">{{ error }}</div>
-  <mat-accordion
-    class="dq-accordion"
-    *ngIf="
-      !loading &&
-      nonRelationshipMissingLinks &&
-      nonRelationshipMissingLinks.length > 0
-    ">
-    <mat-expansion-panel>
-      <mat-expansion-panel-header>
-        <mat-panel-title>
-          Missing Links by ID ({{ nonRelationshipMissingLinks.length }})
-        </mat-panel-title>
-      </mat-expansion-panel-header>
-      <div class="missing-list">
-        <div
-          class="missing-item"
-          *ngFor="let item of nonRelationshipMissingLinks">
-          <div class="missing-id">
-            <a [routerLink]="objectLink(item)">
-              {{ item.stix.external_references[0].external_id }}
-            </a>
-          </div>
-          <div class="missing-description">
-            {{ item.stix.description }}
-          </div>
-        </div>
-      </div>
-    </mat-expansion-panel>
-  </mat-accordion>
-
-  <!-- Fallback if empty 
-  <div *ngIf="!loadingParallel && isRelationshipListEmpty">
-    No parallel relationships found.
-  </div> -->
   <div
     *ngIf="
       !loadingParallel &&
@@ -77,4 +38,25 @@
     ">
     No parallel relationships found.
   </div>
+
+  <!-- Missing Links Section -->
+  <h1>Missing LinkByIds Status</h1>
+  <app-loading-overlay *ngIf="loadingMissingLinks"></app-loading-overlay>
+  <div *ngIf="error" class="error">{{ error }}</div>
+  <mat-accordion
+    class="dq-accordion"
+    *ngIf="
+      !loadingMissingLinks &&
+      missingLinks &&
+      missingLinks.length > 0
+    ">
+    <mat-expansion-panel>
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          Missing Links by ID ({{ missingLinks.length }})
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+      <app-stix-list [config]="stixConfigForMissingLinks()"></app-stix-list>
+    </mat-expansion-panel>
+  </mat-accordion>
 </div>
