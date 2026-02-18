@@ -4,6 +4,7 @@ import { ValidationData } from '../serializable';
 import { StixObject } from './stix-object';
 import { logger } from '../../utils/logger';
 import { Technique } from './technique';
+import { WorkflowState } from 'src/app/utils/types';
 
 export class Tactic extends StixObject {
   public name = '';
@@ -47,6 +48,10 @@ export class Tactic extends StixObject {
     rep.stix.x_mitre_domains = this.domains;
     rep.stix.x_mitre_shortname = this.shortname;
     rep.stix.x_mitre_contributors = this.contributors.map(x => x.trim());
+    rep.stix = this.filterObject(rep.stix);
+
+    // Strip properties that are empty strs + lists
+    rep.stix = this.filterObject(rep.stix);
 
     return rep;
   }
@@ -99,9 +104,10 @@ export class Tactic extends StixObject {
    * @returns {Observable<ValidationData>} the validation warnings and errors once validation is complete.
    */
   public validate(
-    restAPIService: RestApiConnectorService
+    restAPIService: RestApiConnectorService,
+    tempWorkflowState?: WorkflowState
   ): Observable<ValidationData> {
-    return this.base_validate(restAPIService);
+    return this.base_validate(restAPIService, tempWorkflowState);
   }
 
   /**
