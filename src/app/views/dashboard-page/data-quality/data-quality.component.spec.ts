@@ -15,9 +15,7 @@ describe('DataQualityComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [DataQualityComponent],
-      providers: [
-        { provide: ReportService, useValue: mockReportService }
-      ],
+      providers: [{ provide: ReportService, useValue: mockReportService }],
     }).compileComponents();
 
     fixture = TestBed.createComponent(DataQualityComponent);
