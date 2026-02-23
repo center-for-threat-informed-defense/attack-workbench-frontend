@@ -62,7 +62,7 @@
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "^19.2.15",
-    "@angular/cli": "^19.2.12",
+    "@angular/cli": "^21.1.5",
     "@angular/compiler-cli": "^19.2.18",
     "@codedependant/semantic-release-docker": "^5.1.1",
     "@commitlint/config-conventional": "^19.8.0",
