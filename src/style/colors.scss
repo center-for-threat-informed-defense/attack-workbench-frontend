@@ -23,9 +23,9 @@ $mitre-dark-gray: #7e8284;
 
 $colors: (
   primary: (
-      color: $mitre-navy,
-      on-color: $mitre-silver,
-    ),
+    color: $mitre-navy,
+    on-color: $mitre-silver,
+  ),
   secondary: (
     color: $mitre-blue,
     on-color: $mitre-black,
@@ -96,7 +96,7 @@ $colors: (
   alert: (
       color: #ff9f32,
       on-color: black,
-    )
+    ),
 );
 
 // accessor helper for $colors. Gets the color of the named pair
