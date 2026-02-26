@@ -2808,11 +2808,11 @@ export class RestApiConnectorService extends ApiConnector {
     return getter;
   }
 
-  //   ___                      _       
-  //  | _ \___ _ __  ___ _ _ __| |_ ___ 
-  //  |   / -_) '_ \/ _ \ '_/ _|  _(_-< 
-  //  |_|_\___| .__/\___/_| \__|\__/__/ 
-  //          |_|                       
+  //   ___                      _
+  //  | _ \___ _ __  ___ _ _ __| |_ ___
+  //  |   / -_) '_ \/ _ \ '_/ _|  _(_-<
+  //  |_|_\___| .__/\___/_| \__|\__/__/
+  //          |_|
 
   /**
    * Retrieve objects which have unresolved link-by-id references
