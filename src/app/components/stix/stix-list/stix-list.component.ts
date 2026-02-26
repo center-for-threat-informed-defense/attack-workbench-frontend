@@ -237,6 +237,13 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
     const sticky_allowed = !(
       this.config.rowAction && this.config.rowAction.position == 'start'
     );
+    // Column presets take precedence
+    if (this.config.columnsPreset === 'id-name') {
+      this.addColumn('ID', 'attackID', 'plain', false);
+      this.addColumn('name', 'name', 'plain', sticky_allowed, ['name']);
+      this.tableDetail = [];
+      return;
+    }
     if ('type' in this.config) {
       // set columns according to type
       switch (this.config.type.replace(/_/g, '-')) {
@@ -401,46 +408,62 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
           ];
           break;
         case 'relationship':
-          this.addColumn('', 'state', 'icon');
-          if (
-            this.config.relationshipType &&
-            this.config.relationshipType !== 'detects'
-          ) {
+          if (this.config.compactRelationshipColumns) {
+            // Only show source ID, type, target ID, and description
             this.addColumn('source', 'source_ID', 'plain');
+            this.addColumn('type', 'relationship_type', 'plain', false, [
+              'text-deemphasis',
+              'relationship-joiner',
+            ]);
+            this.addColumn('target', 'target_ID', 'plain');
+            this.addColumn('description', 'description', 'descriptive', false);
+          } else {
+            this.addColumn('', 'state', 'icon');
+            if (
+              this.config.relationshipType &&
+              this.config.relationshipType !== 'detects'
+            ) {
+              this.addColumn('source', 'source_ID', 'plain');
+              this.addColumn(
+                '',
+                'source_name',
+                'plain',
+                this.config.targetRef ? sticky_allowed : false,
+                ['relationship-name']
+              );
+            } else
+              this.addColumn(
+                'source',
+                'source_name',
+                'plain',
+                this.config.targetRef ? sticky_allowed : false,
+                ['relationship-name']
+              );
+            this.addColumn('type', 'relationship_type', 'plain', false, [
+              'text-deemphasis',
+              'relationship-joiner',
+            ]);
+            this.addColumn('target', 'target_ID', 'plain');
             this.addColumn(
               '',
-              'source_name',
+              'target_name',
               'plain',
-              this.config.targetRef ? sticky_allowed : false,
+              this.config.sourceRef ? sticky_allowed : false,
               ['relationship-name']
             );
-          } else
-            this.addColumn(
-              'source',
-              'source_name',
-              'plain',
-              this.config.targetRef ? sticky_allowed : false,
-              ['relationship-name']
-            );
-          this.addColumn('type', 'relationship_type', 'plain', false, [
-            'text-deemphasis',
-            'relationship-joiner',
-          ]);
-          this.addColumn('target', 'target_ID', 'plain');
-          this.addColumn(
-            '',
-            'target_name',
-            'plain',
-            this.config.sourceRef ? sticky_allowed : false,
-            ['relationship-name']
-          );
-          if (
-            !(
-              this.config.relationshipType &&
-              this.config.relationshipType == 'subtechnique-of'
+            if (
+              !(
+                this.config.relationshipType &&
+                this.config.relationshipType == 'subtechnique-of'
+              )
             )
-          )
-            this.addColumn('description', 'description', 'descriptive', false);
+              this.addColumn(
+                'description',
+                'description',
+                'descriptive',
+                false
+              );
+          }
           break;
         case 'marking-definition':
           this.addColumn('definition type', 'definition_type', 'plain');
@@ -1243,6 +1266,10 @@ export interface StixListConfig {
   showFilters?: boolean;
   /** default true, if false hides all search/filter/control options */
   showControls?: boolean;
+  /** if true, show created/modified timestamp columns for relationship tables */
+  showCreatedModified?: boolean;
+  /** Optional preset to override default columns */
+  columnsPreset?: 'id-name';
   /** display the 'show deprecated' filter, default false
    *  this may be relevant when displaying a list of embedded relationships, where
    *  the list of STIX objects is provided in the 'stixObjects' configuration
@@ -1298,6 +1325,11 @@ export interface StixListConfig {
    * Map of collections by stixID
    */
   collectionMap?: Map<string, Collection[]>;
+
+  /**
+   * If true, collapse relationship columns to source, type, target, description only
+   */
+  compactRelationshipColumns?: boolean;
 }
 
 export interface FilterValue {

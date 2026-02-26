@@ -2807,6 +2807,39 @@ export class RestApiConnectorService extends ApiConnector {
     });
     return getter;
   }
+
+  //   ___                      _
+  //  | _ \___ _ __  ___ _ _ __| |_ ___
+  //  |   / -_) '_ \/ _ \ '_/ _|  _(_-<
+  //  |_|_\___| .__/\___/_| \__|\__/__/
+  //          |_|
+
+  /**
+   * Retrieve objects which have unresolved link-by-id references
+   */
+  public getMissingLinkById(): Observable<any> {
+    const url = `${this.apiUrl}/reports/link-by-id/missing`;
+    return this.http.get(url).pipe(
+      tap(results =>
+        logger.log('retrieved missing link-by-id report', results)
+      ),
+      catchError(this.handleError_continue([])), // on error, trigger the error notification and continue operation without crashing (returns empty item)
+      share() // multicast so that multiple subscribers don't trigger the call twice. THIS MUST BE THE LAST LINE OF THE PIPE
+    );
+  }
+  /**
+   * Retrieve groups of parallel relationships between the same source/target/type
+   */
+  public getParallelRelationships(): Observable<any> {
+    const url = `${this.apiUrl}/reports/parallel-relationships`;
+    return this.http.get(url).pipe(
+      tap(results =>
+        logger.log('retrieved parallel relationships report', results)
+      ),
+      catchError(this.handleError_continue([])), // on error, trigger the error notification and continue operation without crashing (returns empty item)
+      share() // multicast so that multiple subscribers don't trigger the call twice. THIS MUST BE THE LAST LINE OF THE PIPE
+    );
+  }
 }
 
 class CustomEncoder implements HttpParameterCodec {
