@@ -40,8 +40,7 @@ export class DataQualityComponent implements OnInit {
     clickBehavior: 'none',
     showFilters: false,
     showDeprecatedFilter: true,
-    compactRelationshipColumns: true,
-    showCreatedModified: true,
+    compactRelationshipColumns: true
   };
 
   @ViewChild('relationshipList') relationshipList: StixListComponent;
