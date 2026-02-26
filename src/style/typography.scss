@@ -142,9 +142,9 @@ $custom-typography: mat.m2-define-typography-config(
     color: inherit;
     text-decoration: none;
     transition: all 0.2s ease;
-    border-bottom: 2px solid colors.color(balanced-blue);
+    border-bottom: 2px solid colors.color(mitre-blue);
     &:hover {
-      color: colors.color(balanced-blue);
+      color: colors.color(mitre-blue);
     }
   }
 
@@ -155,7 +155,7 @@ $custom-typography: mat.m2-define-typography-config(
     text-decoration: none;
     &:hover {
       border-bottom: 2px solid colors.color(link);
-      color: colors.color(balanced-blue);
+      color: colors.color(mitre-blue);
     }
   }
 
