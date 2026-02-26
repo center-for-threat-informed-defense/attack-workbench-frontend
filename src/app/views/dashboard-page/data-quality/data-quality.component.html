@@ -56,10 +56,9 @@
     </mat-expansion-panel>
   </mat-accordion>
   <div
-  *ngIf="
-    !loadingMissingLinks &&
-    (!missingLinks || missingLinks.length === 0)
-  ">
-  No missing link by ids found.
+    *ngIf="
+      !loadingMissingLinks && (!missingLinks || missingLinks.length === 0)
+    ">
+    No missing link by ids found.
   </div>
 </div>
