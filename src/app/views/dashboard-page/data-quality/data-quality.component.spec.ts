@@ -1,7 +1,7 @@
 import { TestBed, ComponentFixture } from '@angular/core/testing';
 import { of } from 'rxjs';
 import { DataQualityComponent } from './data-quality.component';
-import { ReportService } from 'src/app/services/report/report.service';
+import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/rest-api-connector.service';
 
 describe('DataQualityComponent', () => {
   let component: DataQualityComponent;
@@ -15,7 +15,9 @@ describe('DataQualityComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [DataQualityComponent],
-      providers: [{ provide: ReportService, useValue: mockReportService }],
+      providers: [
+        { provide: RestApiConnectorService, useValue: mockReportService },
+      ],
     }).compileComponents();
 
     fixture = TestBed.createComponent(DataQualityComponent);

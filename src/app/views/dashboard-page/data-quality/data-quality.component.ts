@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewEncapsulation, ViewChild } from '@angular/core';
-import { ReportService } from 'src/app/services/report/report.service';
+import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/rest-api-connector.service';
 import { StixObject } from 'src/app/classes/stix/stix-object';
 import { StixListConfig } from 'src/app/components/stix/stix-list/stix-list.component';
 import { StixTypeToAttackType } from 'src/app/utils/type-mappings';
@@ -23,7 +23,7 @@ interface ParallelRelationshipGroup {
   standalone: false,
 })
 export class DataQualityComponent implements OnInit {
-  constructor(private reportService: ReportService) {}
+  constructor(private reportService: RestApiConnectorService) {}
 
   missingLinks: any[] = [];
   missingLinkRows: { id: string; name: string }[] = [];
