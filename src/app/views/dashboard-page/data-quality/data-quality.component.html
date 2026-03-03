@@ -27,8 +27,23 @@
           </ng-container>
         </mat-panel-title>
       </mat-expansion-panel-header>
-      <!-- Table for parallel relationships -->
-      <app-stix-list [config]="stixConfigForGroup(group)"></app-stix-list>
+      <!-- Table for parallel relationships with single-select radios -->
+      <app-stix-list
+        [config]="stixConfigForGroup(group)"
+        (onSelect)="onGroupSelect($event, group)"></app-stix-list>
+      <div class="dq-actions">
+        <button
+          mat-raised-button
+          color="primary"
+          (click)="deprecateOthers(group)"
+          [disabled]="!group.toDeprecate?.length">
+          Deprecate Others ({{ group.toDeprecate.length }})
+        </button>
+        <span class="dq-note" *ngIf="group.toDeprecate?.length">
+          Selecting one relationship will mark the remaining
+          {{ group.toDeprecate.length }} for deprecation
+        </span>
+      </div>
     </mat-expansion-panel>
   </mat-accordion>
   <div

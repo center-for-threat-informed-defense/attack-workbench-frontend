@@ -1,9 +1,14 @@
 import { Component, OnInit, ViewEncapsulation, ViewChild } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/rest-api-connector.service';
 import { StixObject } from 'src/app/classes/stix/stix-object';
 import { StixListConfig } from 'src/app/components/stix/stix-list/stix-list.component';
 import { StixTypeToAttackType } from 'src/app/utils/type-mappings';
 import { StixListComponent } from 'src/app/components/stix/stix-list/stix-list.component';
+import { SelectionModel } from '@angular/cdk/collections';
+import { forkJoin } from 'rxjs';
+import { Relationship } from 'src/app/classes/stix/relationship';
+import { ConfirmationDialogComponent } from 'src/app/components/confirmation-dialog/confirmation-dialog.component';
 
 interface ParallelRelationshipGroup {
   key: string;
@@ -13,6 +18,9 @@ interface ParallelRelationshipGroup {
   count: number;
   relationships: any[];
   stixObjects?: StixObject[];
+  selectedRelationship: string;
+  toDeprecate: string[];
+  selection?: SelectionModel<string>;
 }
 
 @Component({
@@ -23,7 +31,10 @@ interface ParallelRelationshipGroup {
   standalone: false,
 })
 export class DataQualityComponent implements OnInit {
-  constructor(private reportService: RestApiConnectorService) {}
+  constructor(
+    private reportService: RestApiConnectorService,
+    private dialog: MatDialog
+  ) {}
 
   missingLinks: any[] = [];
   missingLinkRows: { id: string; name: string }[] = [];
@@ -54,8 +65,20 @@ export class DataQualityComponent implements OnInit {
     raw: Record<string, any[]>
   ): ParallelRelationshipGroup[] {
     return Object.entries(raw).map(([key, relationships]) => {
-      const first = relationships[0]?.stix;
+      const byNewest = [...relationships].sort((a, b) => {
+        const ac = a.stix?.created;
+        const bc = b.stix?.created;
+        return bc - ac;
+      });
+      const selectedRelationship =
+        byNewest[0].stix.id ?? relationships[0].stix.id;
+      const toDeprecate = relationships
+        .map(r => r.stix.id)
+        .filter(id => id !== selectedRelationship);
+      const selection = new SelectionModel<string>(false);
+      if (selectedRelationship) selection.toggle(selectedRelationship);
 
+      const first = relationships[0].stix;
       return {
         key,
         sourceRef: first?.source_ref,
@@ -63,6 +86,9 @@ export class DataQualityComponent implements OnInit {
         relationshipType: first?.relationship_type,
         count: relationships.length,
         relationships,
+        selectedRelationship,
+        toDeprecate,
+        selection,
       };
     });
   }
@@ -131,6 +157,8 @@ export class DataQualityComponent implements OnInit {
       ...this.stixRelationshipConfig,
       stixObjects: group.stixObjects || this.buildStixObjectsForGroup(group),
       showControls: false,
+      select: 'one',
+      selectionModel: group.selection,
     };
   }
 
@@ -187,6 +215,71 @@ export class DataQualityComponent implements OnInit {
         item?.stix.external_references?.[0]?.external_id || item?.stix.id || '';
       const name = item?.stix.name || '';
       return { id, name };
+    });
+  }
+
+  // Handle selection change from stix-list radios
+  onGroupSelect(element: StixObject, group: ParallelRelationshipGroup): void {
+    if (!group || !group.selection) return;
+    const stixId = element.stixID;
+    if (!stixId) return;
+    group.selection.clear();
+    group.selection.select(stixId);
+    group.selectedRelationship = stixId;
+    group.toDeprecate = group.relationships
+      .map(r => r.stix.id)
+      .filter(id => id && id !== group.selectedRelationship);
+    group.stixObjects = this.buildStixObjectsForGroup(group);
+  }
+
+  // Deprecate non-selected relationships for a group
+  deprecateOthers(group: ParallelRelationshipGroup): void {
+    if (!group || !group.toDeprecate?.length) return;
+
+    const confirmationPrompt = this.dialog.open(ConfirmationDialogComponent, {
+      maxWidth: '35em',
+      data: {
+        message:
+          'All selected relationships in this group will be deprecated. Do you want to continue?',
+      },
+      autoFocus: false, // prevents auto focus on toolbar buttons
+    });
+
+    const confirmationSub = confirmationPrompt.afterClosed().subscribe({
+      next: result => {
+        if (!result) return; // user cancelled
+
+        const tasks = group.relationships
+          .filter(
+            r =>
+              r.stix.id !== group.selectedRelationship &&
+              !r?.x_mitre_deprecated &&
+              !['subtechnique-of', 'revoked-by'].includes(
+                r.stix?.relationship_type
+              )
+          )
+          .map(r => {
+            const rel = new Relationship(r);
+            rel.deprecated = true;
+            return this.reportService.putRelationship(rel);
+          });
+
+        const sub = forkJoin(tasks).subscribe({
+          next: () => {
+            group.relationships = group.relationships.filter(
+              r => r.stix?.id === group.selectedRelationship
+            );
+            group.toDeprecate = [];
+            group.stixObjects = this.buildStixObjectsForGroup(group);
+            window.location.reload();
+          },
+          error: err => {
+            console.error(err);
+          },
+          complete: () => sub.unsubscribe(),
+        });
+      },
+      complete: () => confirmationSub.unsubscribe(),
     });
   }
 }
