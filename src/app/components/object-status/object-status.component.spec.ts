@@ -1,4 +1,18 @@
+import { DragDropModule } from '@angular/cdk/drag-drop';
+import { provideHttpClient } from '@angular/common/http';
+import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MatButtonModule } from '@angular/material/button';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
+import { MatSelectModule } from '@angular/material/select';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { ActivatedRoute } from '@angular/router';
+import { MtxPopoverModule } from '@ng-matero/extensions/popover';
+import { of } from 'rxjs';
 
 import { ObjectStatusComponent } from './object-status.component';
 
@@ -9,6 +23,30 @@ describe('ObjectStatusComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [ObjectStatusComponent],
+      imports: [
+        MtxPopoverModule,
+        ReactiveFormsModule,
+        FormsModule,
+        MatFormFieldModule,
+        MatSelectModule,
+        MatCheckboxModule,
+        MatIconModule,
+        MatButtonModule,
+        MatTooltipModule,
+        DragDropModule,
+        BrowserAnimationsModule,
+      ],
+      providers: [
+        {
+          provide: ActivatedRoute,
+          useValue: {
+            params: of({}),
+            queryParams: of({}),
+          },
+        },
+        provideHttpClient(),
+      ],
+      schemas: [NO_ERRORS_SCHEMA],
     }).compileComponents();
   });
 
