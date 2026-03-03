@@ -54,7 +54,7 @@ $dark-theme: mat.m2-define-dark-theme(
   (
     color: (
       primary: mat.m2-define-palette(
-          colors.to-material-map(primary),
+          colors.to-material-map(primary-dark),
           50,
           100,
           200
