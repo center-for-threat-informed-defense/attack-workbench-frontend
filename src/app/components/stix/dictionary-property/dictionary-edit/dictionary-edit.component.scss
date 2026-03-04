@@ -1,5 +1,4 @@
 @use '../../../../../style/globals';
-@use '../../../../../style/colors';
 
 .dictionary-edit {
   @extend .labelled-box;
@@ -18,15 +17,66 @@
     height: unset !important;
     padding: 0 6px !important;
   }
+  table.property-table {
+    width: 100%;
+    table-layout: fixed;
+  }
+  td.mat-mdc-cell,
+  td.mat-cell,
+  .cell {
+    position: relative;
+    overflow: visible;
+  }
+  .cell {
+    cursor: text;
+    padding: 6px;
+  }
+  th.mat-column-actions,
+  td.mat-column-actions {
+    width: 44px;
+    min-width: 44px;
+    max-width: 44px;
+    text-align: center;
+  }
   .action-cell {
     display: flex;
-    height: inherit;
     align-items: center;
-    justify-content: end;
+    justify-content: center;
+    height: 100%;
   }
-  .table-value,
-  .add-row-button {
-    padding: 0 6px;
+  th.mat-column-name,
+  td.mat-column-name {
+    width: 30%;
+    max-width: 30%;
+  }
+  th.mat-mdc-header-cell,
+  td.mat-mdc-cell {
+    white-space: normal;
+    overflow-wrap: anywhere;
+    word-break: break-word;
+  }
+  .cell-inner {
+    position: relative;
+  }
+  .table-value.hidden {
+    visibility: hidden;
+  }
+  .editor {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: stretch;
+  }
+  .editor-field {
+    width: 100%;
+    height: 100%;
+  }
+  .editor-field .mat-mdc-form-field-subscript-wrapper {
+    display: none;
+  }
+  .table-value {
+    white-space: normal;
+    overflow-wrap: anywhere;
   }
   .content {
     overflow-x: auto;
