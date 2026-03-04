@@ -8,6 +8,7 @@ import {
 } from '@angular/core';
 import { DictionaryPropertyConfig } from '../dictionary-property.component';
 import { MatTable } from '@angular/material/table';
+import { EditorService } from 'src/app/services/editor/editor.service';
 
 @Component({
   selector: 'app-dictionary-edit',
@@ -26,8 +27,15 @@ export class DictionaryEditComponent implements OnInit {
   public editingCol: string | undefined;
 
   private originalCellValue: any;
+  private originalTableValue: any;
+
+  constructor(private editorService: EditorService) {}
 
   ngOnInit() {
+    this.originalTableValue = JSON.parse(
+      JSON.stringify(this.config.object[this.config.field])
+    );
+
     this.displayedColumns = [
       ...this.config.columns.map(c => c.name),
       'actions',
@@ -35,7 +43,7 @@ export class DictionaryEditComponent implements OnInit {
 
     const sortColumn = this.config.columns.find(c => c.sort)?.name;
     if (sortColumn) {
-      this.config.objectList.sort((a, b) => {
+      this.config.object[this.config.field].sort((a, b) => {
         const aValue = a[sortColumn] ?? '';
         const bValue = b[sortColumn] ?? '';
         return String(aValue).localeCompare(String(bValue), undefined, {
@@ -43,6 +51,12 @@ export class DictionaryEditComponent implements OnInit {
         });
       });
     }
+
+    this.editorService.onEditingStopped.subscribe(discard => {
+      if (discard) {
+        this.config.object[this.config.field] = this.originalTableValue;
+      }
+    });
   }
 
   public isEditing(index: number, column: string): boolean {
@@ -57,7 +71,7 @@ export class DictionaryEditComponent implements OnInit {
 
   public cancelEditing(): void {
     if (this.editingIdx === undefined || !this.editingCol) return;
-    const row = this.config.objectList?.[this.editingIdx];
+    const row = this.config.object[this.config.field]?.[this.editingIdx];
     if (row) row[this.editingCol] = this.originalCellValue;
     this.stopEditing();
   }
@@ -65,7 +79,7 @@ export class DictionaryEditComponent implements OnInit {
   public addRow(): void {
     const newRow: any = {};
     this.config.columns.forEach(c => (newRow[c.name] = ''));
-    this.config.objectList.unshift(newRow);
+    this.config.object[this.config.field].unshift(newRow);
     this.table?.renderRows();
     this.editCell(0, this.config.columns[0]?.name);
   }
@@ -76,14 +90,14 @@ export class DictionaryEditComponent implements OnInit {
     this.editingIdx = index;
     this.editingCol = column;
 
-    const row = this.config.objectList?.[index];
+    const row = this.config.object[this.config.field]?.[index];
     this.originalCellValue = row ? row[column] : undefined;
 
     setTimeout(() => this.editInput?.nativeElement?.focus());
   }
 
   public deleteRow(index: number): void {
-    this.config.objectList.splice(index, 1);
+    this.config.object[this.config.field]?.splice(index, 1);
     this.table?.renderRows();
     this.stopEditing();
   }

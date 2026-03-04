@@ -14,14 +14,17 @@ export class DictionaryPropertyComponent {
 export interface DictionaryPropertyConfig {
   /* What is the current mode? Default: 'view' */
   mode?: 'view' | 'edit' | 'diff';
-  /* The object list to display in the table */
-  objectList: object[];
   /* The fields to display as columns in the table */
   columns: DictionaryColumn[];
   /* The label for the table */
   label: string;
+  /* Label for the add button */
+  buttonLabel?: string;
   /* The tooltip for the add button/edit dialog */
-  tooltip: string;
+  tooltip?: string;
+  /** The object to show the field of */
+  object: StixObject | [StixObject, StixObject];
+  field: string;
 }
 
 interface DictionaryColumn {
