@@ -21,11 +21,17 @@
           class="cell"
           tabindex="0"
           (click)="editCell(rowIndex, column.name)"
-          (keydown.enter)="isEditing(rowIndex, column.name) ? editCell(rowIndex, column.name) : stopEditing()"
+          (keydown.enter)="
+            isEditing(rowIndex, column.name)
+              ? editCell(rowIndex, column.name)
+              : stopEditing()
+          "
           (keydown.escape)="cancelEditing()">
           <div class="cell-inner">
-            <div class="table-value" [class.hidden]="isEditing(rowIndex, column.name)">
-              {{row[column.name]}}
+            <div
+              class="table-value"
+              [class.hidden]="isEditing(rowIndex, column.name)">
+              {{ row[column.name] }}
             </div>
             @if (isEditing(rowIndex, column.name)) {
               <div class="editor">
