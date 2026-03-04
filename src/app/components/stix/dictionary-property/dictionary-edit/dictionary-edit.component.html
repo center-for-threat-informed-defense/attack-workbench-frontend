@@ -6,10 +6,12 @@
       </button>
     </div>
 
-    
     @if (config.object[config.field].length > 0) {
       <mat-divider></mat-divider>
-      <table mat-table [dataSource]="config.object[config.field]" class="property-table">
+      <table
+        mat-table
+        [dataSource]="config.object[config.field]"
+        class="property-table">
         <ng-container
           *ngFor="let column of config.columns"
           [matColumnDef]="column.name">
@@ -23,8 +25,8 @@
             tabindex="0"
             (click)="editCell(rowIndex, column.name)"
             (keydown.enter)="
-              isEditing(rowIndex, column.name)
-                && editCell(rowIndex, column.name)
+              isEditing(rowIndex, column.name) &&
+                editCell(rowIndex, column.name)
             "
             (keydown.escape)="cancelEditing()">
             <div class="cell-inner">
