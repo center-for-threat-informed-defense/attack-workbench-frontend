@@ -5,13 +5,12 @@
         *ngFor="let column of columns; let i = index"
         [matColumnDef]="column.name">
         <th mat-header-cell *matHeaderCellDef>
-          {{ (column.label || column.name) | titlecase }}
+          {{ column.label || column.name | titlecase }}
         </th>
         <td mat-cell *matCellDef="let row">
           <app-property-diff
             [before]="valueToString(row.before, column.name)"
-            [after]="valueToString(row.after, column.name)"
-          >
+            [after]="valueToString(row.after, column.name)">
           </app-property-diff>
         </td>
       </ng-container>
