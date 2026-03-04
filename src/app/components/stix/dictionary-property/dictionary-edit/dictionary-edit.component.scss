@@ -1,4 +1,5 @@
 @use '../../../../../style/globals';
+@use '../../../../../style/colors.scss';
 
 .dictionary-edit {
   @extend .labelled-box;
@@ -33,6 +34,14 @@
   .cell {
     cursor: text;
     padding: 6px;
+    &:hover {
+      .light & {
+        background: colors.color-alternate(light);
+      }
+      .dark & {
+        background: colors.color-alternate(dark);
+      }
+    }
   }
   th.mat-column-actions,
   td.mat-column-actions {
