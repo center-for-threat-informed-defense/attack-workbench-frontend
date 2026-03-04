@@ -17,12 +17,15 @@ import { DictionaryPropertyConfig } from '../dictionary-property.component';
 })
 export class DictionaryViewComponent implements OnInit {
   @Input() public config: DictionaryPropertyConfig;
-  public dataSource: any[] = [];
-
   @ViewChild(MatSort) sort: MatSort;
 
+  public dataSource: any[] = [];
+  public displayedColumns: string[] = [];
+
   ngOnInit() {
-    this.dataSource = this.config.objectList;
+    this.dataSource = this.config.object[this.config.field];
+    this.displayedColumns = this.config.columns.map(c => c.name);
+
     const sortColumn = this.config.columns.find(c => c.sort).name;
     if (sortColumn) {
       this.dataSource.sort((a, b) => {
@@ -33,9 +36,5 @@ export class DictionaryViewComponent implements OnInit {
         });
       });
     }
-  }
-
-  getDisplayedColumns(): string[] {
-    return [...this.config.columns.map(c => c.name)];
   }
 }
