@@ -1120,25 +1120,38 @@ export class RestApiConnectorService extends ApiConnector {
   }
 
   /**
-   * Factory to create a STIX object validator (POST) function
+   * Factory to create a STIX object validator via dryRun POST.
+   *
+   * Posts the serialized object to its type-specific endpoint with ?dryRun=true,
+   * which runs the full create pipeline (compose, validate) without persisting.
+   * Normalizes the response into { errors, warnings } for the caller.
+   *
    * @template T the type to validate
-   * @param {AttackType} attackType the type to validate
-   * @returns validator (POST) function
+   * @returns validator function
    */
   public validateStixObject<T extends StixObject>() {
-    // Return a function that takes an object and returns an Observable
     return <P extends T>(object: P): Observable<any> => {
-      const url = `${this.apiUrl}/validate`;
-      const payload = {
-        type: object.type,
-        status: object.workflow ? object.workflow.state : 'work-in-progress',
-        stix: object.serialize().stix,
-      };
-      return this.http.post(url, payload).pipe(
-        tap(this.handleSuccess(`${this.getObjectName(object)} validated`)),
-        map(result => result),
-        catchError(this.handleError_raise()),
-        share() // multicast so that multiple subscribers don't trigger the call twice. THIS MUST BE THE LAST LINE OF THE PIPE
+      const plural = AttackTypeToPlural[object.attackType];
+      const url = `${this.apiUrl}/${plural}`;
+      const params = new HttpParams().set('dryRun', 'true');
+      return this.http.post(url, object.serialize(), { params }).pipe(
+        // Success (200): validation passed, extract warnings only
+        map(result => ({
+          errors: [],
+          warnings: (result as any).warnings || [],
+        })),
+        catchError((error: any) => {
+          // Validation failure (400): normalize errors and warnings into expected shape
+          if (error.status === 400 && error.error?.details) {
+            return of({
+              errors: error.error.details,
+              warnings: error.error.warnings || [],
+            });
+          }
+          // Non-validation errors: re-raise
+          return throwError(error);
+        }),
+        share(),
       );
     };
   }
