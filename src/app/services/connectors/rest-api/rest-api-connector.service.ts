@@ -1151,7 +1151,7 @@ export class RestApiConnectorService extends ApiConnector {
           // Non-validation errors: re-raise
           return throwError(error);
         }),
-        share(),
+        share()
       );
     };
   }
