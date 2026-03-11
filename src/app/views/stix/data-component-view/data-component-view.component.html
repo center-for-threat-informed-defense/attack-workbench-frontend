@@ -62,29 +62,31 @@
   </div>
   <div class="row">
     <div class="col">
-      <!-- LOG SOURCES -->
-      <app-subtype-property
+      <app-dictionary-property
         class="grow-to-row"
         [config]="{
           mode: config.mode,
           object: config.object,
           field: 'logSources',
+          buttonLabel: 'log source',
           label: 'log sources',
-          subtypeFields: [
+          columns: [
             {
               name: 'name',
-              required: true,
-              key: true,
+              label: 'Name',
               editType: 'string',
+              required: true,
+              sort: true,
             },
             {
               name: 'channel',
-              required: true,
+              label: 'Channel',
               editType: 'string',
+              required: true,
             },
           ],
-          tooltip: 'a log source',
-        }"></app-subtype-property>
+        }">
+      </app-dictionary-property>
     </div>
   </div>
   <!-- RELATIONSHIPS - NOTE: these are only shown in 'view' mode -->

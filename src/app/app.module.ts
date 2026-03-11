@@ -223,6 +223,10 @@ import { AppConfigService } from './services/config/app-config.service';
 import { AnalyticViewComponent } from './views/stix/analytic-view/analytic-view.component';
 import { DetectionStrategyViewComponent } from './views/stix/detection-strategy-view/detection-strategy-view.component';
 import { StixListPageComponent } from './views/stix/stix-list-page/stix-list-page.component';
+import { DictionaryPropertyComponent } from './components/stix/dictionary-property/dictionary-property.component';
+import { DictionaryEditComponent } from './components/stix/dictionary-property/dictionary-edit/dictionary-edit.component';
+import { DictionaryViewComponent } from './components/stix/dictionary-property/dictionary-view/dictionary-view.component';
+import { DictionaryDiffComponent } from './components/stix/dictionary-property/dictionary-diff/dictionary-diff.component';
 
 export function initConfig(appConfigService: AppConfigService) {
   return () => appConfigService.loadAppConfig();
@@ -364,6 +368,10 @@ export function initConfig(appConfigService: AppConfigService) {
     StixJsonDialogComponent,
     OutdatedContentWarningComponent,
     StreamProgressComponent,
+    DictionaryPropertyComponent,
+    DictionaryEditComponent,
+    DictionaryViewComponent,
+    DictionaryDiffComponent,
   ],
   exports: [
     MatToolbarModule,
