@@ -5,6 +5,8 @@ import {
   ViewEncapsulation,
   ViewChild,
   ElementRef,
+  OnChanges,
+  SimpleChanges,
 } from '@angular/core';
 import { DictionaryPropertyConfig } from '../dictionary-property.component';
 import { MatTable } from '@angular/material/table';
@@ -17,7 +19,7 @@ import { EditorService } from 'src/app/services/editor/editor.service';
   styleUrls: ['./dictionary-edit.component.scss'],
   encapsulation: ViewEncapsulation.None,
 })
-export class DictionaryEditComponent implements OnInit {
+export class DictionaryEditComponent implements OnInit, OnChanges {
   @Input() public config: DictionaryPropertyConfig;
   @ViewChild('editInput', { static: false }) editInput: ElementRef;
   @ViewChild(MatTable) table!: MatTable<any>;
@@ -41,21 +43,29 @@ export class DictionaryEditComponent implements OnInit {
       'actions',
     ];
 
-    const sortColumn = this.config.columns.find(c => c.sort)?.name;
-    if (sortColumn) {
-      this.config.object[this.config.field].sort((a, b) => {
-        const aValue = a[sortColumn] ?? '';
-        const bValue = b[sortColumn] ?? '';
-        return String(aValue).localeCompare(String(bValue), undefined, {
-          sensitivity: 'base',
-        });
-      });
-    }
+    this.sortRows();
 
     this.editorService.onEditingStopped.subscribe(discard => {
       if (discard) {
         this.config.object[this.config.field] = this.originalTableValue;
       }
+    });
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['config']) this.sortRows();
+  }
+
+  public sortRows(): void {
+    const sortColumn = this.config.columns.find(c => c.sort)?.name;
+    if (!sortColumn) return;
+
+    this.config.object[this.config.field].sort((a, b) => {
+      const aValue = a[sortColumn] ?? '';
+      const bValue = b[sortColumn] ?? '';
+      return String(aValue).localeCompare(String(bValue), undefined, {
+        sensitivity: 'base',
+      });
     });
   }
 
