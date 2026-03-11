@@ -9,7 +9,8 @@ updates:
     groups:
       angular-ecosystem:
         patterns:
-          - "@angular*"
+          - "@angular/*"
+          - "@angular-devkit/*"
           - "rxjs"
           - "typescript"
           - "ngx-markdown"
@@ -21,7 +22,9 @@ updates:
           - "patch"
 
     ignore:
-      - dependency-name: "@angular*"
+      - dependency-name: "@angular/*"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "@angular-devkit/*"
         update-types: ["version-update:semver-major"]
       # libraries constrained by angular version
       - dependency-name: "rxjs"

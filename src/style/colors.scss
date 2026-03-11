@@ -1,6 +1,7 @@
 @use 'sass:color';
 @use 'sass:map';
 @use 'sass:string';
+
 /**
  * Colors used across the website.
  * For each color-pair:
@@ -11,66 +12,63 @@
  * cannot have inner text.
  */
 
-$engenuity-purple: #6241c5;
-$engenuity-black: #1d252c;
+$mitre-navy: #0d2f4f;
 $mitre-blue: #005b94;
+$mitre-black: #111921;
 $spark-yellow: #fff601;
-$balanced-blue: #0096d1;
-$engenuity-gray: #f0f1f2;
-$engenuity-dark-gray: #b2b2b2;
+$mitre-light-blue: #87deff;
+$mitre-silver: #f1f3f4;
+$mitre-gray: #d4d4d3;
+$mitre-dark-gray: #7e8284;
 
 $colors: (
-  // angular palette colors
   primary: (
-      color: $engenuity-purple,
-      on-color: #f0f1f2,
-    ),
+    color: $mitre-navy,
+    on-color: $mitre-silver,
+  ),
+  primary-dark: (
+    color: $mitre-blue,
+    on-color: $mitre-silver,
+  ),
   secondary: (
-    color: $balanced-blue,
-    on-color: black,
+    color: $mitre-blue,
+    on-color: $mitre-black,
   ),
   light: (
-    color: $engenuity-gray,
-    on-color: #050505,
+    color: $mitre-silver,
+    on-color: $mitre-black,
   ),
   dark: (
-    color: $engenuity-black,
-    on-color: #f0f1f2,
+    color: $mitre-black,
+    on-color: $mitre-silver,
   ),
   link: (
-    color: $balanced-blue,
-    on-color: black,
+    color: $mitre-blue,
+    on-color: $mitre-black,
   ),
-  //engenuity brand colors -- named helpers
-  engenuity-purple: (
-      color: $engenuity-purple,
-      on-color: #f0f1f2,
-    ),
-  engenuity-black: (
-    color: $engenuity-black,
-    on-color: #f0f1f2,
+  mitre-navy: (
+    color: $mitre-navy,
+    on-color: $mitre-silver,
   ),
   mitre-blue: (
     color: $mitre-blue,
     on-color: black,
   ),
+  mitre-black: (
+    color: $mitre-black,
+    on-color: $mitre-silver,
+  ),
   spark-yellow: (
     color: $spark-yellow,
     on-color: black,
   ),
-  balanced-blue: (
-    color: $balanced-blue,
-    on-color: black,
+  mitre-silver: (
+    color: $mitre-silver,
+    on-color: $mitre-black,
   ),
-  engenuity-gray: (
-    color: $engenuity-gray,
-    on-color: #050505,
-  ),
-  engenuity-dark-gray: (
-    (
-      color: $engenuity-dark-gray,
-      on-color: #050505,
-    )
+  mitre-dark-gray: (
+    color: $mitre-dark-gray,
+    on-color: $mitre-black,
   ),
   // snackbar colors
   success: (
@@ -86,7 +84,7 @@ $colors: (
     on-color: black,
   ),
   info: (
-    color: $balanced-blue,
+    color: $mitre-blue,
     on-color: black,
   ),
   // role colors
@@ -102,7 +100,7 @@ $colors: (
   alert: (
       color: #ff9f32,
       on-color: black,
-    )
+    ),
 );
 
 // accessor helper for $colors. Gets the color of the named pair
