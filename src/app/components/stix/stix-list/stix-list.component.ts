@@ -417,6 +417,8 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
             ]);
             this.addColumn('target', 'target_ID', 'plain');
             this.addColumn('description', 'description', 'descriptive', false);
+            this.addColumn('created', 'created', 'timestamp', false);
+            this.addColumn('modified', 'modified', 'timestamp', false);
           } else {
             this.addColumn('', 'state', 'icon');
             if (
@@ -1266,8 +1268,6 @@ export interface StixListConfig {
   showFilters?: boolean;
   /** default true, if false hides all search/filter/control options */
   showControls?: boolean;
-  /** if true, show created/modified timestamp columns for relationship tables */
-  showCreatedModified?: boolean;
   /** Optional preset to override default columns */
   columnsPreset?: 'id-name';
   /** display the 'show deprecated' filter, default false

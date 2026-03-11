@@ -18,6 +18,16 @@
   .dq-rel-table {
     width: 100%;
   }
+  .dq-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 8px 0 16px;
+  }
+  .dq-note {
+    font-size: 0.9rem;
+    opacity: 0.8;
+  }
 }
 
 .missing-list {
