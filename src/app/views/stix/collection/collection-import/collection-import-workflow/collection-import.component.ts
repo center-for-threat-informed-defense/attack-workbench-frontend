@@ -36,9 +36,8 @@ import { AuthenticationService } from 'src/app/services/connectors/authenticatio
 import { UserAccount } from 'src/app/classes/authn/user-account';
 import { logger } from '../../../../../utils/logger';
 import { v4 as uuid } from 'uuid';
-import * as XLSX from 'xlsx';
-import _ from 'lodash';
 import { PhaseProgress } from 'src/app/components/loading-overlay/loading-overlay.component';
+import type * as XLSXNS from 'xlsx';
 
 @Component({
   selector: 'app-collection-import',
@@ -178,7 +177,7 @@ export class CollectionImportComponent implements OnInit {
     this.errorObjects = [];
     const reader = new FileReader();
 
-    reader.onload = (e: any) => {
+    reader.onload = async (e: any) => {
       const str = String(e.target.result);
       try {
         const result = e.target.result;
@@ -188,8 +187,15 @@ export class CollectionImportComponent implements OnInit {
           this.previewCollection(collectionBundle);
         } else {
           // parse .csv or .xlsx
-          const workbook: XLSX.WorkBook = XLSX.read(result, { type: 'binary' });
-          const collectionBundle = this.buildXlsxRequest(workbook, filename);
+          const XLSX: typeof XLSXNS = await import('xlsx');
+          const workbook: XLSXNS.WorkBook = XLSX.read(result, {
+            type: 'binary',
+          });
+          const collectionBundle = this.buildXlsxRequest(
+            XLSX,
+            workbook,
+            filename
+          );
           this.csvWarning = true;
           this.previewCollection(collectionBundle);
         }
@@ -221,7 +227,11 @@ export class CollectionImportComponent implements OnInit {
    * @param filename input file name
    * @returns a collection to be uploaded to workbench
    */
-  public buildXlsxRequest(wb: XLSX.WorkBook, filename: string): any {
+  public buildXlsxRequest(
+    XLSX: typeof XLSXNS,
+    wb: XLSXNS.WorkBook,
+    filename: string
+  ): any {
     const timestamp = new Date().toISOString();
     const collection = [
       {
@@ -255,6 +265,14 @@ export class CollectionImportComponent implements OnInit {
     const components = [];
     const sourceLookup = new Map<string, string>(); // data source name => stixId
 
+    function zipObject(keys: string[], values: any[]) {
+      const out: Record<string, any> = {};
+      for (let i = 0; i < keys.length; i++) {
+        out[keys[i]] = values[i];
+      }
+      return out;
+    }
+
     for (const sheetname of wb.SheetNames) {
       const data: string[][] = XLSX.utils.sheet_to_json(wb.Sheets[sheetname], {
         header: 1,
@@ -263,13 +281,13 @@ export class CollectionImportComponent implements OnInit {
 
       data.forEach(row => {
         // create an object for the row
-        const i = _.zipObject(headerRow, row);
+        const rowData = zipObject(headerRow, row);
 
-        if (i.reference && i.citation && 'url' in i) {
+        if (rowData.reference && rowData.citation && 'url' in rowData) {
           return; // citation detected, skip
         }
 
-        const sdo = this.parseObject(i, timestamp);
+        const sdo = this.parseObject(rowData, timestamp);
         if (sdo.x_mitre_domains?.length) {
           sdo.x_mitre_domains.forEach((d: string) => domains.add(d));
         }
@@ -548,7 +566,7 @@ export class CollectionImportComponent implements OnInit {
             this.parsePreview(collectionBundle, preview_results.preview);
           }
         },
-        error: err => {
+        error: () => {
           this.loadingStep1 = false;
         },
         complete: () => {
@@ -657,6 +675,7 @@ export class CollectionImportComponent implements OnInit {
               },
             };
           }
+          // eslint-disable-next-line no-case-declarations
           const rel = new Relationship(raw);
           this.object_import_categories.relationship[category].push(rel);
           break;
