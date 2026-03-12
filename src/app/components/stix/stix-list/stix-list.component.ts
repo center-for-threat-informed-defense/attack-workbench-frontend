@@ -35,7 +35,6 @@ import {
 } from 'src/app/services/connectors/rest-api/rest-api-connector.service';
 import { AuthenticationService } from 'src/app/services/connectors/authentication/authentication.service';
 import { SidebarService } from 'src/app/services/sidebar/sidebar.service';
-import { MatSelect } from '@angular/material/select';
 import { AddDialogComponent } from '../../add-dialog/add-dialog.component';
 import { Collection } from 'src/app/classes/stix/collection';
 import { logger } from 'src/app/utils/logger';
@@ -84,19 +83,14 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild('search') search: ElementRef;
-  @ViewChild(MatSelect) matSelect: MatSelect;
 
   // search query
   public searchQuery = '';
   private searchSubscription: Subscription;
 
   // objects to render
-  public objects$: Observable<StixObject[]>;
   public data$: Observable<Paginated<StixObject>>;
   public totalObjectCount = 0;
-
-  // view mode
-  public mode = 'cards';
 
   // options provided to the user for grouping and filtering
   public filterOptions: FilterGroup[] = [];
@@ -104,7 +98,6 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
 
   // current grouping and filtering selections
   public filter: string[] = [];
-  public groupBy: string[] = [];
   public userIdsUsedInSearch = [];
 
   // TABLE STUFF
@@ -119,7 +112,7 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
   // Selection stuff
   public selection: SelectionModel<string>;
 
-  // all possible each type of filter/groupBy
+  // all possible each type of filter
   private platformSubscription: Subscription;
   private platformMap = new Map<string, Map<string, string[]>>();
   private domains: FilterValue[] = [
@@ -465,7 +458,6 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
           this.addColumn('created', 'created', 'timestamp');
       }
     } else {
-      this.groupBy = ['type'];
       this.addColumn('', 'state', 'icon');
       this.addColumn('type', 'attackType', 'plain');
       this.addColumn('ID', 'attackID', 'plain', false);
@@ -527,7 +519,6 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
     if (filterList.includes('workflow_status')) {
       this.filterOptions.push({
         name: 'workflow status',
-        disabled: 'status' in this.config,
         values: this.statuses,
       });
     }
@@ -543,14 +534,12 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
     if (filterList.includes('state')) {
       this.filterOptions.push({
         name: 'state',
-        disabled: 'status' in this.config,
         values: this.states,
       });
     }
     if (filterList.includes('state_exclusive')) {
       this.filterOptions.push({
         name: 'state (exclusive)',
-        disabled: 'status' in this.config,
         values: this.statesExclusive,
       });
     }
@@ -570,7 +559,6 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
     if (filterByDomain) {
       this.filterOptions.push({
         name: 'domain',
-        disabled: 'status' in this.config,
         values: this.domains,
       });
     }
@@ -582,7 +570,6 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
       if (platforms.length) {
         this.filterOptions.push({
           name: 'platform',
-          disabled: 'status' in this.config,
           values: platforms,
         });
       }
@@ -1207,7 +1194,7 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
 }
 
 type selection_types = 'one' | 'many' | 'disabled';
-type filter_types = 'state' | 'workflow_status';
+type filter_types = 'state' | 'workflow_status' | 'state_exclusive';
 export interface StixListConfig {
   /* if specified, shows the given STIX objects in the table instead of loading from the back-end based on other configurations. */
   stixObjects?: Observable<StixObject[]> | StixObject[];
@@ -1223,8 +1210,6 @@ export interface StixListConfig {
 
   /** force the list to show only this type */
   type?: AttackType | 'collection-created' | 'collection-imported';
-  /** force the list to show only objects matching this query */
-  query?: any;
 
   /** can the user select in this list? allowed options:
    *     "one": user can select a single element at a time
