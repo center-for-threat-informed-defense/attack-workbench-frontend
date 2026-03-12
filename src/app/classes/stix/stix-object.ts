@@ -55,21 +55,6 @@ export abstract class StixObject extends Serializable {
 
   private defaultMarkingDefinitionsLoaded = false; // avoid overloading of default marking definitions
 
-  public get routes(): any[] {
-    // route to view the object
-    return [
-      {
-        label: 'view',
-        route: '',
-      },
-      {
-        label: 'edit',
-        route: '',
-        query: { editing: true },
-      },
-    ];
-  }
-
   public created: Date; // object created date
   public modified: Date; // object modified date
   public version: VersionNumber; // version number of the object

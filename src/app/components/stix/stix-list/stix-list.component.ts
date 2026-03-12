@@ -275,35 +275,17 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
           this.addIdAndNameColumns(sticky_allowed);
           this.addDomainColumn();
           this.addVersionsAndDatesColumns();
-          this.tableDetail = [
-            {
-              field: 'description',
-              display: 'descriptive',
-            },
-          ];
           break;
         case 'matrix':
           this.addWorkflowAndStateColumns();
           this.addNameColumn(sticky_allowed);
           this.addVersionsAndDatesColumns();
-          this.tableDetail = [
-            {
-              field: 'description',
-              display: 'descriptive',
-            },
-          ];
           break;
         case 'detection-strategy':
         case 'campaign':
           this.addWorkflowAndStateColumns();
           this.addIdAndNameColumns(sticky_allowed);
           this.addVersionsAndDatesColumns();
-          this.tableDetail = [
-            {
-              field: 'description',
-              display: 'descriptive',
-            },
-          ];
           break;
         case 'analytic':
           this.addWorkflowAndStateColumns();
@@ -319,24 +301,12 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
           this.addPlatformsColumn('plain');
           this.addDomainColumn();
           this.addVersionsAndDatesColumns();
-          this.tableDetail = [
-            {
-              field: 'description',
-              display: 'descriptive',
-            },
-          ];
           break;
         case 'group':
           this.addWorkflowAndStateColumns();
           this.addIdAndNameColumns(sticky_allowed);
           this.addColumn('associated groups', 'aliases', 'list');
           this.addVersionsAndDatesColumns();
-          this.tableDetail = [
-            {
-              field: 'description',
-              display: 'descriptive',
-            },
-          ];
           break;
         case 'software':
           this.addWorkflowAndStateColumns();
@@ -344,12 +314,6 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
           this.addColumn('type', 'type', 'plain');
           this.addDomainColumn();
           this.addVersionsAndDatesColumns();
-          this.tableDetail = [
-            {
-              field: 'description',
-              display: 'descriptive',
-            },
-          ];
           break;
         case 'data-source':
         case 'technique':
@@ -358,12 +322,6 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
           this.addPlatformsColumn();
           this.addDomainColumn();
           this.addVersionsAndDatesColumns();
-          this.tableDetail = [
-            {
-              field: 'description',
-              display: 'descriptive',
-            },
-          ];
           break;
         case 'asset':
           this.addWorkflowAndStateColumns();
@@ -371,12 +329,6 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
           this.addPlatformsColumn();
           this.addColumn('sectors', 'sectors', 'list');
           this.addVersionsAndDatesColumns();
-          this.tableDetail = [
-            {
-              field: 'description',
-              display: 'descriptive',
-            },
-          ];
           break;
         case 'relationship':
           this.addStateColumnOnly();
@@ -424,12 +376,6 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
           this.addColumn('definition type', 'definition_type', 'plain');
           this.addColumn('created', 'created', 'timestamp');
           this.addColumn('definition', 'definition_string', 'descriptive');
-          this.tableDetail = [
-            {
-              field: 'definition_string',
-              display: 'descriptive',
-            },
-          ];
           break;
         case 'note':
           this.addColumn('title', 'title', 'plain');
@@ -484,7 +430,6 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
     this.addColumn('modified', 'modified', 'timestamp');
     this.addColumn('created', 'created', 'timestamp');
   }
-
 
   /**
    * Set up controls, including control columns and filters
@@ -668,10 +613,9 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
    * @param {StixObject} object of the row that was clicked
    */
   public rowClick(element: StixObject) {
-    if (this.config.clickBehavior && this.config.clickBehavior == 'none')
-      return;
-    if (this.config.clickBehavior && this.config.clickBehavior == 'dialog') {
-      //open modal
+    if (this.config.clickBehavior == 'none') return;
+
+    if (this.config.clickBehavior == 'dialog') {
       const prompt = this.dialog.open(StixDialogComponent, {
         data: {
           object: element,
@@ -681,10 +625,11 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
         maxHeight: '75vh',
         autoFocus: false, // prevents auto focus on toolbar buttons
       });
+
       const subscription = prompt.afterClosed().subscribe({
-        next: result => {
+        next: () => {
           if (prompt.componentInstance.dirty) {
-            //re-fetch values since an edit occurred
+            // re-fetch values since an edit occurred
             this.applyControls();
             this.refresh.emit();
           }
@@ -693,34 +638,26 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
           subscription.unsubscribe();
         },
       });
-    } else if (
-      this.config.clickBehavior &&
-      this.config.clickBehavior == 'linkToObjectPage'
-    ) {
-      this.onRowAction.emit(); // close any open dialogs
-      this.router.navigateByUrl(
-        '/' + element.attackType + '/' + element.stixID
-      );
-    } else if (
-      this.config.clickBehavior &&
-      this.config.clickBehavior == 'linkToSourceRef'
-    ) {
+      return;
+    }
+
+    if (this.config.clickBehavior == 'linkToSourceRef') {
       const source_ref = element['source_ref'];
       // Get type to navigate from source_ref
       const type = StixTypeToAttackType[source_ref.split('--')[0]];
       this.router.navigateByUrl(`/${type}/${source_ref}`);
-    } else if (
-      this.config.clickBehavior &&
-      this.config.clickBehavior == 'linkToTargetRef'
-    ) {
+      return;
+    }
+
+    if (this.config.clickBehavior == 'linkToTargetRef') {
       const target_ref = element['target_ref'];
       // Get type to navigate from target_ref
       const type = StixTypeToAttackType[target_ref.split('--')[0]];
       this.router.navigateByUrl(`/${type}/${target_ref}`);
-    } else if (
-      this.config.clickBehavior &&
-      this.config.clickBehavior == 'linkToObjectRef'
-    ) {
+      return;
+    }
+
+    if (this.config.clickBehavior == 'linkToObjectRef') {
       // technically a note can be linked to many objects, we will select the first object
       const object_ref = element['object_refs'][0];
       // Get type to navigate from target_ref
@@ -746,42 +683,53 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
       } else {
         this.router.navigateByUrl(url);
       }
-    } else {
-      //expand
-      this.expandedElement = this.expandedElement === element ? null : element;
+      return;
     }
+
+    if (this.isCollectionType()) {
+      this.expandedElement = this.expandedElement === element ? null : element;
+      return;
+    }
+
+    // by default, link to the object page
+    if (
+      this.config.clickBehavior == 'linkToObjectPage' ||
+      !this.config.clickBehavior
+    ) {
+      this.onRowAction.emit(); // close any open dialogs
+      this.router.navigateByUrl(
+        '/' + element.attackType + '/' + element.stixID
+      );
+      return;
+    }
+  }
+
+  public isCollectionType(): boolean {
+    return ['collection', 'collection-created', 'collection-imported'].includes(
+      this.config.type
+    );
   }
 
   // AUTHENTICATION FUNCTIONS
 
-  public getAccessibleRoutes(attackType: string, routes: any[]) {
-    return routes.filter(
-      route => this.canAccess(attackType, route) && this.canEdit(route)
+  public getAccessibleCollectionRoutes(collection) {
+    return collection.routes.filter(route =>
+      this.canShowCollectionRoute(collection.attackType, route)
     );
+  }
+
+  private canShowCollectionRoute(attackType: string, route): boolean {
+    if (route.label == 'edit') {
+      return (
+        this.authenticationService.canEdit(attackType) &&
+        !this.config.uneditableObject
+      );
+    }
+    return true;
   }
 
   public routeTo(url, queryParams): void {
     this.router.navigate([url], { queryParams: queryParams });
-  }
-
-  private canAccess(attackType: string, route: any) {
-    if (
-      route.label &&
-      route.label == 'edit' &&
-      !this.authenticationService.canEdit(attackType)
-    ) {
-      // user not authorized
-      return false;
-    }
-    // user authorized
-    return true;
-  }
-
-  private canEdit(route: any) {
-    if (route.label && route.label == 'edit' && this.config.uneditableObject) {
-      return false;
-    }
-    return true;
   }
 
   /**
