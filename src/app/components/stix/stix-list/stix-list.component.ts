@@ -898,11 +898,135 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
     }
   }
 
+  private hasLocalStixObjects(): boolean {
+    return (
+      'stixObjects' in this.config && this.config.stixObjects !== undefined
+    );
+  }
+
   /**
    * Apply all controls and fetch objects from the back-end if configured
    */
-  public applyControls() {
-    const {
+  public applyControls(): void {
+    const filterStates = this.getFilterObjectStates();
+
+    if (this.hasLocalStixObjects()) {
+      this.applyControlsToLocalData(filterStates);
+    } else {
+      this.applyControlsToBackendData(filterStates);
+    }
+  }
+
+  private applyControlsToLocalData(filterStates): void {
+    if (this.config.stixObjects instanceof Observable) {
+      // pull objects out of observable
+      return;
+    }
+    // filter on STIX objects specified in the config
+    let filtered = this.config.stixObjects;
+    filtered = this.filterLocalObjects(filtered, filterStates);
+    filtered = this.sortObjects(filtered);
+
+    if (this.paginator) this.totalObjectCount = filtered.length;
+
+    // filter to only ones within the correct index range
+    const { startIndex, endIndex } = this.getPaginationRange();
+    const paged = filtered.slice(startIndex, endIndex);
+
+    this.data$ = of({
+      data: paged,
+      pagination: {
+        total: this.config.stixObjects.length,
+        offset: startIndex,
+        limit: this.paginator ? this.paginator.pageSize : 0,
+      },
+    });
+
+    this.emitDetectsHasData(paged.length > 0);
+  }
+
+  private applyControlsToBackendData(filterStates): void {
+    // fetch objects from backend
+    const limit = this.paginator ? this.paginator.pageSize : 10;
+    const offset = this.paginator ? this.paginator.pageIndex * limit : 0;
+
+    const options = {
+      limit: limit,
+      offset: offset,
+      excludeIDs: this.config.excludeIDs,
+      search: this.searchQuery,
+      state: filterStates.state,
+      includeRevoked: filterStates.revoked,
+      includeDeprecated: filterStates.deprecated,
+      platforms: filterStates.platforms,
+      domains: filterStates.domains,
+      lastUpdatedBy: this.userIdsUsedInSearch,
+    };
+    if (this.config.type == 'software')
+      this.data$ = this.restAPIConnectorService.getAllSoftware(options);
+    else if (this.config.type == 'campaign')
+      this.data$ = this.restAPIConnectorService.getAllCampaigns(options);
+    else if (this.config.type == 'group')
+      this.data$ = this.restAPIConnectorService.getAllGroups(options);
+    else if (this.config.type == 'matrix')
+      this.data$ = this.restAPIConnectorService.getAllMatrices(options);
+    else if (this.config.type == 'mitigation')
+      this.data$ = this.restAPIConnectorService.getAllMitigations(options);
+    else if (this.config.type == 'tactic')
+      this.data$ = this.restAPIConnectorService.getAllTactics(options);
+    else if (this.config.type == 'technique')
+      this.data$ = this.restAPIConnectorService.getAllTechniques(options);
+    else if (this.config.type.includes('collection'))
+      this.data$ = this.restAPIConnectorService.getAllCollections({
+        search: this.searchQuery,
+        versions: 'all',
+      });
+    else if (this.config.type == 'relationship')
+      this.data$ = this.restAPIConnectorService.getRelatedTo({
+        sourceRef: this.config.sourceRef,
+        targetRef: this.config.targetRef,
+        sourceType: this.config.sourceType,
+        targetType: this.config.targetType,
+        relationshipType: this.config.relationshipType,
+        excludeSourceRefs: this.config.excludeSourceRefs,
+        excludeTargetRefs: this.config.excludeTargetRefs,
+        limit: limit,
+        offset: offset,
+        includeDeprecated: filterStates.deprecated,
+      });
+    else if (this.config.type == 'detection-strategy')
+      this.data$ =
+        this.restAPIConnectorService.getAllDetectionStrategies(options);
+    else if (this.config.type == 'analytic')
+      this.data$ = this.restAPIConnectorService.getAllAnalytics({
+        ...options,
+        includeRefs: true,
+      });
+    else if (this.config.type == 'data-source')
+      this.data$ = this.restAPIConnectorService.getAllDataSources(options);
+    else if (this.config.type == 'data-component')
+      this.data$ = this.restAPIConnectorService.getAllDataComponents(options);
+    else if (this.config.type == 'asset')
+      this.data$ = this.restAPIConnectorService.getAllAssets(options);
+    else if (this.config.type == 'marking-definition')
+      this.data$ =
+        this.restAPIConnectorService.getAllMarkingDefinitions(options);
+    else if (this.config.type == 'note')
+      this.data$ = this.restAPIConnectorService.getAllNotes(options);
+    const subscription = this.data$.subscribe({
+      next: data => {
+        this.totalObjectCount = data.pagination.total;
+        this.emitDetectsHasData(data.data.length > 0);
+      },
+      complete: () => {
+        if (subscription) subscription.unsubscribe();
+      },
+    });
+  }
+
+  private filterLocalObjects(
+    objects: StixObject[],
+    {
       deprecated,
       revoked,
       state,
@@ -910,186 +1034,96 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
       domains,
       exclusiveDeprecated,
       exclusiveRevoked,
-    } = this.getFilterObjectStates();
-    if ('stixObjects' in this.config && this.config.stixObjects !== undefined) {
-      if (this.config.stixObjects instanceof Observable) {
-        // pull objects out of observable
-      } else {
-        // filter on STIX objects specified in the config
-        let filtered = this.config.stixObjects;
+    }: ReturnType<typeof this.getFilterObjectStates>
+  ): StixObject[] {
+    let filtered = objects;
+    //filter by domains
+    if (Array.isArray(domains) && domains.length > 0) {
+      filtered = filtered.filter((obj: any) =>
+        obj.domains.some((object_domain: any) =>
+          domains.includes(object_domain)
+        )
+      );
+    }
 
-        //filter by domains
-        if (Array.isArray(domains) && domains.length > 0) {
-          filtered = filtered.filter((obj: any) =>
-            obj.domains.some((object_domain: any) =>
-              domains.includes(object_domain)
-            )
-          );
-        }
+    //filter by platforms
+    if (Array.isArray(platforms) && platforms.length > 0) {
+      filtered = filtered.filter((obj: any) =>
+        obj.platforms.some((object_platform: any) =>
+          platforms.includes(object_platform)
+        )
+      );
+    }
 
-        //filter by platforms
-        if (Array.isArray(platforms) && platforms.length > 0) {
-          filtered = filtered.filter((obj: any) =>
-            obj.platforms.some((object_platform: any) =>
-              platforms.includes(object_platform)
-            )
-          );
-        }
+    // filter by workflow status
+    if (state) {
+      filtered = filtered.filter(
+        (obj: any) => obj.workflow && obj.workflow.state == state
+      );
+    }
 
-        // filter by workflow status
-        if (state) {
-          filtered = filtered.filter(
-            (obj: any) => obj.workflow && obj.workflow.state == state
-          );
-        }
-
-        // filter by deprecation status
-        if (exclusiveDeprecated) {
-          filtered = filtered.filter((obj: any) => obj.deprecated);
-        } else if (deprecated || this.config.includeDeprecatedObjects) {
-          filtered = filtered.filter((obj: any) => obj || obj.deprecated);
-        } else {
-          filtered = filtered.filter((obj: any) => !obj.deprecated);
-        }
-
-        // filter by revocation status
-        if (exclusiveRevoked) {
-          filtered = filtered.filter((obj: any) => obj.revoked);
-        }
-
-        // filter by users
-        if (
-          Array.isArray(this.userIdsUsedInSearch) &&
-          this.userIdsUsedInSearch.length > 0
-        ) {
-          filtered = filtered.filter(
-            (obj: any) =>
-              obj.workflow &&
-              this.userIdsUsedInSearch.includes(
-                obj.workflow.created_by_user_account
-              )
-          );
-        }
-
-        // filter to objects matching searchString
-        filtered = this.filterObjects(this.searchQuery, filtered);
-        // sort
-        filtered = filtered.sort((a, b) => {
-          const x = a as any;
-          const y = b as any;
-          return x.hasOwnProperty('name') && y.hasOwnProperty('name')
-            ? x.name.localeCompare(y.name)
-            : x.stixID.localeCompare(y.stixID);
-        });
-        if (this.paginator) this.totalObjectCount = filtered.length;
-
-        // filter to only ones within the correct index range
-        const startIndex = this.paginator
-          ? this.paginator.pageIndex * this.paginator.pageSize
-          : 0;
-        const endIndex = this.paginator
-          ? startIndex + this.paginator.pageSize
-          : 10;
-        filtered = filtered.slice(startIndex, endIndex);
-        this.data$ = of({
-          data: filtered,
-          pagination: {
-            total: this.config.stixObjects.length,
-            offset: startIndex,
-            limit: this.paginator ? this.paginator.pageSize : 0,
-          },
-        });
-        // used to conditionally hide data component relationships with techniques
-        if (
-          this.config.type === 'relationship' &&
-          this.config.relationshipType === 'detects'
-        ) {
-          this.detectsHasData.emit(filtered.length > 0);
-        }
-      }
+    // filter by deprecation status
+    if (exclusiveDeprecated) {
+      filtered = filtered.filter((obj: any) => obj.deprecated);
+    } else if (deprecated || this.config.includeDeprecatedObjects) {
+      filtered = filtered.filter((obj: any) => obj || obj.deprecated);
     } else {
-      // fetch objects from backend
-      const limit = this.paginator ? this.paginator.pageSize : 10;
-      const offset = this.paginator ? this.paginator.pageIndex * limit : 0;
+      filtered = filtered.filter((obj: any) => !obj.deprecated);
+    }
 
-      const options = {
-        limit: limit,
-        offset: offset,
-        excludeIDs: this.config.excludeIDs,
-        search: this.searchQuery,
-        state: state,
-        includeRevoked: revoked,
-        includeDeprecated: deprecated,
-        platforms: platforms,
-        domains: domains,
-        lastUpdatedBy: this.userIdsUsedInSearch,
-      };
-      if (this.config.type == 'software')
-        this.data$ = this.restAPIConnectorService.getAllSoftware(options);
-      else if (this.config.type == 'campaign')
-        this.data$ = this.restAPIConnectorService.getAllCampaigns(options);
-      else if (this.config.type == 'group')
-        this.data$ = this.restAPIConnectorService.getAllGroups(options);
-      else if (this.config.type == 'matrix')
-        this.data$ = this.restAPIConnectorService.getAllMatrices(options);
-      else if (this.config.type == 'mitigation')
-        this.data$ = this.restAPIConnectorService.getAllMitigations(options);
-      else if (this.config.type == 'tactic')
-        this.data$ = this.restAPIConnectorService.getAllTactics(options);
-      else if (this.config.type == 'technique')
-        this.data$ = this.restAPIConnectorService.getAllTechniques(options);
-      else if (this.config.type.includes('collection'))
-        this.data$ = this.restAPIConnectorService.getAllCollections({
-          search: this.searchQuery,
-          versions: 'all',
-        });
-      else if (this.config.type == 'relationship')
-        this.data$ = this.restAPIConnectorService.getRelatedTo({
-          sourceRef: this.config.sourceRef,
-          targetRef: this.config.targetRef,
-          sourceType: this.config.sourceType,
-          targetType: this.config.targetType,
-          relationshipType: this.config.relationshipType,
-          excludeSourceRefs: this.config.excludeSourceRefs,
-          excludeTargetRefs: this.config.excludeTargetRefs,
-          limit: limit,
-          offset: offset,
-          includeDeprecated: deprecated,
-        });
-      else if (this.config.type == 'detection-strategy')
-        this.data$ =
-          this.restAPIConnectorService.getAllDetectionStrategies(options);
-      else if (this.config.type == 'analytic')
-        this.data$ = this.restAPIConnectorService.getAllAnalytics({
-          ...options,
-          includeRefs: true,
-        });
-      else if (this.config.type == 'data-source')
-        this.data$ = this.restAPIConnectorService.getAllDataSources(options);
-      else if (this.config.type == 'data-component')
-        this.data$ = this.restAPIConnectorService.getAllDataComponents(options);
-      else if (this.config.type == 'asset')
-        this.data$ = this.restAPIConnectorService.getAllAssets(options);
-      else if (this.config.type == 'marking-definition')
-        this.data$ =
-          this.restAPIConnectorService.getAllMarkingDefinitions(options);
-      else if (this.config.type == 'note')
-        this.data$ = this.restAPIConnectorService.getAllNotes(options);
-      const subscription = this.data$.subscribe({
-        next: data => {
-          this.totalObjectCount = data.pagination.total;
-          // used to conditionally hide data component relationships with techniques
-          if (
-            this.config.type === 'relationship' &&
-            this.config.relationshipType === 'detects'
-          ) {
-            this.detectsHasData.emit(data.data.length > 0);
-          }
-        },
-        complete: () => {
-          if (subscription) subscription.unsubscribe();
-        },
-      });
+    // filter by revocation status
+    if (exclusiveRevoked) {
+      filtered = filtered.filter((obj: any) => obj.revoked);
+    }
+
+    // filter by users
+    if (
+      Array.isArray(this.userIdsUsedInSearch) &&
+      this.userIdsUsedInSearch.length > 0
+    ) {
+      filtered = filtered.filter(
+        (obj: any) =>
+          obj.workflow &&
+          this.userIdsUsedInSearch.includes(
+            obj.workflow.created_by_user_account
+          )
+      );
+    }
+
+    // filter to objects matching searchString
+    filtered = this.filterObjects(this.searchQuery, filtered);
+    return filtered;
+  }
+
+  private sortObjects(objects: StixObject[]): StixObject[] {
+    return [...objects].sort((a, b) => {
+      const x = a as any;
+      const y = b as any;
+      return x.hasOwnProperty('name') && y.hasOwnProperty('name')
+        ? x.name.localeCompare(y.name)
+        : x.stixID.localeCompare(y.stixID);
+    });
+  }
+
+  private getPaginationRange(): {
+    startIndex: number;
+    endIndex: number;
+  } {
+    const startIndex = this.paginator
+      ? this.paginator.pageIndex * this.paginator.pageSize
+      : 0;
+    const endIndex = this.paginator ? startIndex + this.paginator.pageSize : 10;
+
+    return { startIndex, endIndex };
+  }
+
+  private emitDetectsHasData(hasData: boolean) {
+    // used to conditionally hide data component relationships with techniques
+    if (
+      this.config.type === 'relationship' &&
+      this.config.relationshipType === 'detects'
+    ) {
+      this.detectsHasData.emit(hasData);
     }
   }
 
