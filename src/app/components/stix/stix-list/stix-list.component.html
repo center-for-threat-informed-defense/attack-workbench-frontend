@@ -271,7 +271,6 @@
                 <div
                   class="column controls collection-table"
                   *ngIf="config.showLinks">
-
                   <mat-table
                     mat-table
                     multiTemplateDataRows
@@ -281,7 +280,9 @@
                       <mat-cell *matCellDef="let collection">
                         <div
                           *ngFor="
-                            let route of getAccessibleCollectionRoutes(collection)
+                            let route of getAccessibleCollectionRoutes(
+                              collection
+                            )
                           ">
                           <button
                             class="detail-button"
@@ -325,8 +326,7 @@
                       <mat-header-cell *matHeaderCellDef
                         >Description</mat-header-cell
                       >
-                      <mat-cell
-                        *matCellDef="let collection; let i = dataIndex">
+                      <mat-cell *matCellDef="let collection; let i = dataIndex">
                         <span *ngIf="i === 0">{{
                           collection.description
                         }}</span>
@@ -369,7 +369,9 @@
           mat-row
           *matRowDef="let element; columns: tableColumns_controls"
           class="element-row"
-          [class.expanded]="isCollectionType() && expandedElement === element"></tr>
+          [class.expanded]="
+            isCollectionType() && expandedElement === element
+          "></tr>
         <tr
           mat-row
           *matRowDef="let row; columns: ['expandedDetail']"
