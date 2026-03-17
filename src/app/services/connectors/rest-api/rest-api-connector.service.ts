@@ -1120,6 +1120,42 @@ export class RestApiConnectorService extends ApiConnector {
   }
 
   /**
+   * Factory to create a STIX object validator via dryRun POST.
+   *
+   * Posts the serialized object to its type-specific endpoint with ?dryRun=true,
+   * which runs the full create pipeline (compose, validate) without persisting.
+   * Normalizes the response into { errors, warnings } for the caller.
+   *
+   * @template T the type to validate
+   * @returns validator function
+   */
+  public validateStixObject<T extends StixObject>() {
+    return <P extends T>(object: P): Observable<any> => {
+      const plural = AttackTypeToPlural[object.attackType];
+      const url = `${this.apiUrl}/${plural}`;
+      const params = new HttpParams().set('dryRun', 'true');
+      return this.http.post(url, object.serialize(), { params }).pipe(
+        // Success (200): validation passed, extract warnings only
+        map(result => ({
+          errors: [],
+          warnings: (result as any).warnings || [],
+        })),
+        catchError((error: any) => {
+          // Validation failure (400): normalize errors and warnings into expected shape
+          if (error.status === 400 && error.error?.details) {
+            return of({
+              errors: error.error.details,
+              warnings: error.error.warnings || [],
+            });
+          }
+          // Non-validation errors: re-raise
+          return throwError(error);
+        }),
+        share()
+      );
+    };
+  }
+  /**
    * POST (create) a new technique
    * @param {Technique} object the object to create
    * @returns {Observable<Technique>} the created object
@@ -2783,6 +2819,39 @@ export class RestApiConnectorService extends ApiConnector {
       },
     });
     return getter;
+  }
+
+  //   ___                      _
+  //  | _ \___ _ __  ___ _ _ __| |_ ___
+  //  |   / -_) '_ \/ _ \ '_/ _|  _(_-<
+  //  |_|_\___| .__/\___/_| \__|\__/__/
+  //          |_|
+
+  /**
+   * Retrieve objects which have unresolved link-by-id references
+   */
+  public getMissingLinkById(): Observable<any> {
+    const url = `${this.apiUrl}/reports/link-by-id/missing`;
+    return this.http.get(url).pipe(
+      tap(results =>
+        logger.log('retrieved missing link-by-id report', results)
+      ),
+      catchError(this.handleError_continue([])), // on error, trigger the error notification and continue operation without crashing (returns empty item)
+      share() // multicast so that multiple subscribers don't trigger the call twice. THIS MUST BE THE LAST LINE OF THE PIPE
+    );
+  }
+  /**
+   * Retrieve groups of parallel relationships between the same source/target/type
+   */
+  public getParallelRelationships(): Observable<any> {
+    const url = `${this.apiUrl}/reports/parallel-relationships`;
+    return this.http.get(url).pipe(
+      tap(results =>
+        logger.log('retrieved parallel relationships report', results)
+      ),
+      catchError(this.handleError_continue([])), // on error, trigger the error notification and continue operation without crashing (returns empty item)
+      share() // multicast so that multiple subscribers don't trigger the call twice. THIS MUST BE THE LAST LINE OF THE PIPE
+    );
   }
 }
 

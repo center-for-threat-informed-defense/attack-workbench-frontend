@@ -1,5 +1,6 @@
 import { Observable } from 'rxjs';
 import { RestApiConnectorService } from '../services/connectors/rest-api/rest-api-connector.service';
+import { WorkflowState } from '../utils/types';
 
 /**
  * Objects which are serializable to the REST API implement this class
@@ -27,7 +28,8 @@ export abstract class Serializable {
    */
   public abstract validate(
     restAPIService: RestApiConnectorService,
-    options?: any
+    options?: any,
+    tempWorkflowState?: WorkflowState
   ): Observable<ValidationData>;
 }
 

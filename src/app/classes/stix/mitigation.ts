@@ -3,6 +3,7 @@ import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/re
 import { ValidationData } from '../serializable';
 import { StixObject } from './stix-object';
 import { logger } from '../../utils/logger';
+import { WorkflowState } from 'src/app/utils/types';
 
 export class Mitigation extends StixObject {
   public name = '';
@@ -45,6 +46,9 @@ export class Mitigation extends StixObject {
     ) {
       rep.stix.labels = this.securityControls;
     }
+
+    // Strip properties that are empty strs + lists
+    rep.stix = this.filterObject(rep.stix);
 
     return rep;
   }
@@ -89,9 +93,10 @@ export class Mitigation extends StixObject {
    * @returns {Observable<ValidationData>} the validation warnings and errors once validation is complete.
    */
   public validate(
-    restAPIService: RestApiConnectorService
+    restAPIService: RestApiConnectorService,
+    tempWorkflowState?: WorkflowState
   ): Observable<ValidationData> {
-    return this.base_validate(restAPIService);
+    return this.base_validate(restAPIService, tempWorkflowState);
   }
 
   /**
