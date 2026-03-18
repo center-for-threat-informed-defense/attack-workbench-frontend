@@ -1,25 +1,29 @@
-import { Observable } from 'rxjs';
+import { map, Observable } from 'rxjs';
 import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/rest-api-connector.service';
 import { ValidationData } from '../serializable';
 import { StixObject } from './stix-object';
 import { logger } from '../../utils/logger';
 import { DataSource } from './data-source';
+import { WorkflowState } from 'src/app/utils/types';
 
 export class DataComponent extends StixObject {
   public name = '';
   public description = '';
   public domains: string[] = [];
-  public dataSourceRef: string; // stix ID of the data source
+  public logSources: LogSource[] = [];
 
   // NOTE: the following field will only be populated when this object
   // is fetched using RestApiConnectorServicegetDataComponent()
   public data_source: DataSource = null;
+  public dataSourceRef: string; // (deprecated) stix ID of the data source
 
   // data components do not support ATT&CK IDs
-  public readonly supportsAttackID = false;
-  public readonly supportsNamespace = false;
+  public readonly supportsAttackID = true;
   protected get attackIDValidator() {
-    return null;
+    return {
+      regex: 'DC\\d{4}',
+      format: 'DC####',
+    };
   }
 
   constructor(sdo?: any) {
@@ -27,16 +31,6 @@ export class DataComponent extends StixObject {
     if (sdo) {
       this.deserialize(sdo);
     }
-  }
-
-  /**
-   * Set the data source ref for this data component
-   * @param data_source the data source this component is a part of
-   */
-  public set_data_source_ref(data_source: DataSource): void {
-    this.dataSourceRef = data_source.stixID;
-    this.data_source = data_source;
-    this.workflow = undefined;
   }
 
   /**
@@ -51,8 +45,13 @@ export class DataComponent extends StixObject {
     }
     rep.stix.name = this.name.trim();
     rep.stix.description = this.description;
-    rep.stix.x_mitre_data_source_ref = this.dataSourceRef;
     rep.stix.x_mitre_domains = this.domains;
+    if (this.logSources.length) {
+      rep.stix.x_mitre_log_sources = this.logSources;
+    }
+
+    // Strip properties that are empty strs + lists
+    rep.stix = this.filterObject(rep.stix);
 
     return rep;
   }
@@ -110,6 +109,21 @@ export class DataComponent extends StixObject {
         this.domains = sdo.x_mitre_domains;
       else logger.error('TypeError: domains field is not a string array.');
     } else this.domains = [];
+
+    if ('x_mitre_log_sources' in sdo) {
+      if (this.isLogSourcesArray(sdo.x_mitre_log_sources))
+        this.logSources = sdo.x_mitre_log_sources;
+      else
+        logger.error(
+          `TypeError: x_mitre_log_sources field is not an array of log sources: ${sdo.x_mitre_log_sources} (${typeof sdo.x_mitre_log_sources})`
+        );
+    } else this.logSources = [];
+  }
+
+  private isLogSourcesArray(arr): boolean {
+    return arr.every(a => {
+      return 'name' in a && 'channel' in a;
+    });
   }
 
   /**
@@ -118,9 +132,10 @@ export class DataComponent extends StixObject {
    * @returns {Observable<ValidationData>} the validation warnings and errors once validation is complete.
    */
   public validate(
-    restAPIService: RestApiConnectorService
+    restAPIService: RestApiConnectorService,
+    tempWorkflowState?: WorkflowState
   ): Observable<ValidationData> {
-    return this.base_validate(restAPIService);
+    return this.base_validate(restAPIService, tempWorkflowState);
   }
 
   /**
@@ -147,7 +162,7 @@ export class DataComponent extends StixObject {
    * Delete this STIX object from the database.
    * @param restAPIService [RestApiConnectorService] the service to perform the DELETE through
    */
-  public delete(restAPIService: RestApiConnectorService): Observable<{}> {
+  public delete(restAPIService: RestApiConnectorService): Observable<object> {
     const deleteObservable = restAPIService.deleteDataComponent(this.stixID);
     const subscription = deleteObservable.subscribe({
       complete: () => {
@@ -176,4 +191,9 @@ export class DataComponent extends StixObject {
     });
     return putObservable;
   }
+}
+
+export interface LogSource {
+  name: string;
+  channel: string;
 }

@@ -4,6 +4,7 @@ import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/re
 import { Observable } from 'rxjs';
 import { ValidationData } from '../serializable';
 import { DataComponent } from './data-component';
+import { WorkflowState } from 'src/app/utils/types';
 
 export class DataSource extends StixObject {
   public name = '';
@@ -15,7 +16,6 @@ export class DataSource extends StixObject {
   public data_components: DataComponent[] = [];
 
   public readonly supportsAttackID = true;
-  public readonly supportsNamespace = true;
   protected get attackIDValidator() {
     return {
       regex: 'DS\\d{4}',
@@ -47,6 +47,9 @@ export class DataSource extends StixObject {
     rep.stix.x_mitre_collection_layers = this.collection_layers;
     rep.stix.x_mitre_contributors = this.contributors.map(x => x.trim());
     rep.stix.x_mitre_domains = this.domains;
+
+    // Strip properties that are empty strs + lists
+    rep.stix = this.filterObject(rep.stix);
 
     return rep;
   }
@@ -132,9 +135,10 @@ export class DataSource extends StixObject {
    * @returns {Observable<ValidationData>} the validation warnings and errors once validation is complete.
    */
   public validate(
-    restAPIService: RestApiConnectorService
+    restAPIService: RestApiConnectorService,
+    tempWorkflowState?: WorkflowState
   ): Observable<ValidationData> {
-    return this.base_validate(restAPIService);
+    return this.base_validate(restAPIService, tempWorkflowState);
   }
 
   /**
@@ -159,7 +163,7 @@ export class DataSource extends StixObject {
    * Delete this STIX object from the database.
    * @param restAPIService [RestApiConnectorService] the service to perform the DELETE through
    */
-  public delete(restAPIService: RestApiConnectorService): Observable<{}> {
+  public delete(restAPIService: RestApiConnectorService): Observable<object> {
     const deleteObservable = restAPIService.deleteDataSource(this.stixID);
     const subscription = deleteObservable.subscribe({
       complete: () => {

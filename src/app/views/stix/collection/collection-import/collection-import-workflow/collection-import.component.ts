@@ -19,7 +19,6 @@ import {
   DataSource,
   DetectionStrategy,
   Group,
-  LogSource,
   Matrix,
   Mitigation,
   Relationship,
@@ -37,8 +36,8 @@ import { AuthenticationService } from 'src/app/services/connectors/authenticatio
 import { UserAccount } from 'src/app/classes/authn/user-account';
 import { logger } from '../../../../../utils/logger';
 import { v4 as uuid } from 'uuid';
-import * as XLSX from 'xlsx';
-import _ from 'lodash';
+import { PhaseProgress } from 'src/app/components/loading-overlay/loading-overlay.component';
+import type * as XLSXNS from 'xlsx';
 
 @Component({
   selector: 'app-collection-import',
@@ -54,6 +53,8 @@ export class CollectionImportComponent implements OnInit {
   public url = '';
   public loadingStep1 = false;
   public loadingStep2 = false;
+  public importProgress = 0; // 0-100 (legacy)
+  public phaseProgress: PhaseProgress[] = []; // Multi-phase progress
   public select: SelectionModel<string>;
   // ids of objects which have changed (object-version not already in knowledge base)
   public changed_ids: string[] = [];
@@ -82,7 +83,6 @@ export class CollectionImportComponent implements OnInit {
     data_source: new CollectionDiffCategories<DataSource>(),
     data_component: new CollectionDiffCategories<DataComponent>(),
     asset: new CollectionDiffCategories<Asset>(),
-    log_source: new CollectionDiffCategories<LogSource>(),
     analytic: new CollectionDiffCategories<Analytic>(),
     detection_strategy: new CollectionDiffCategories<DetectionStrategy>(),
   };
@@ -127,7 +127,6 @@ export class CollectionImportComponent implements OnInit {
     'x-mitre-data-component': 'datacomponents',
     'x-mitre-asset': 'assets',
     'x-mitre-matrix': 'matrices',
-    'x-mitre-log-source': 'logsources',
     'x-mitre-detection-strategy': 'detectionstrategies',
     'x-mitre-analytic': 'analytics',
   };
@@ -178,7 +177,7 @@ export class CollectionImportComponent implements OnInit {
     this.errorObjects = [];
     const reader = new FileReader();
 
-    reader.onload = (e: any) => {
+    reader.onload = async (e: any) => {
       const str = String(e.target.result);
       try {
         const result = e.target.result;
@@ -188,8 +187,15 @@ export class CollectionImportComponent implements OnInit {
           this.previewCollection(collectionBundle);
         } else {
           // parse .csv or .xlsx
-          const workbook: XLSX.WorkBook = XLSX.read(result, { type: 'binary' });
-          const collectionBundle = this.buildXlsxRequest(workbook, filename);
+          const XLSX: typeof XLSXNS = await import('xlsx');
+          const workbook: XLSXNS.WorkBook = XLSX.read(result, {
+            type: 'binary',
+          });
+          const collectionBundle = this.buildXlsxRequest(
+            XLSX,
+            workbook,
+            filename
+          );
           this.csvWarning = true;
           this.previewCollection(collectionBundle);
         }
@@ -221,7 +227,11 @@ export class CollectionImportComponent implements OnInit {
    * @param filename input file name
    * @returns a collection to be uploaded to workbench
    */
-  public buildXlsxRequest(wb: XLSX.WorkBook, filename: string): any {
+  public buildXlsxRequest(
+    XLSX: typeof XLSXNS,
+    wb: XLSXNS.WorkBook,
+    filename: string
+  ): any {
     const timestamp = new Date().toISOString();
     const collection = [
       {
@@ -255,6 +265,14 @@ export class CollectionImportComponent implements OnInit {
     const components = [];
     const sourceLookup = new Map<string, string>(); // data source name => stixId
 
+    function zipObject(keys: string[], values: any[]) {
+      const out: Record<string, any> = {};
+      for (let i = 0; i < keys.length; i++) {
+        out[keys[i]] = values[i];
+      }
+      return out;
+    }
+
     for (const sheetname of wb.SheetNames) {
       const data: string[][] = XLSX.utils.sheet_to_json(wb.Sheets[sheetname], {
         header: 1,
@@ -263,13 +281,13 @@ export class CollectionImportComponent implements OnInit {
 
       data.forEach(row => {
         // create an object for the row
-        const i = _.zipObject(headerRow, row);
+        const rowData = zipObject(headerRow, row);
 
-        if (i.reference && i.citation && 'url' in i) {
+        if (rowData.reference && rowData.citation && 'url' in rowData) {
           return; // citation detected, skip
         }
 
-        const sdo = this.parseObject(i, timestamp);
+        const sdo = this.parseObject(rowData, timestamp);
         if (sdo.x_mitre_domains?.length) {
           sdo.x_mitre_domains.forEach((d: string) => domains.add(d));
         }
@@ -548,7 +566,7 @@ export class CollectionImportComponent implements OnInit {
             this.parsePreview(collectionBundle, preview_results.preview);
           }
         },
-        error: err => {
+        error: () => {
           this.loadingStep1 = false;
         },
         complete: () => {
@@ -657,6 +675,7 @@ export class CollectionImportComponent implements OnInit {
               },
             };
           }
+          // eslint-disable-next-line no-case-declarations
           const rel = new Relationship(raw);
           this.object_import_categories.relationship[category].push(rel);
           break;
@@ -688,11 +707,6 @@ export class CollectionImportComponent implements OnInit {
           break;
         case 'x-mitre-asset': // asset
           this.object_import_categories.asset[category].push(new Asset(raw));
-          break;
-        case 'x-mitre-log-source': // log source
-          this.object_import_categories.log_source[category].push(
-            new LogSource(raw)
-          );
           break;
         case 'x-mitre-analytic': // analytic
           this.object_import_categories.analytic[category].push(
@@ -736,9 +750,6 @@ export class CollectionImportComponent implements OnInit {
         case 'detectionstrategy':
           object.id = 'x-mitre-detection-strategy--' + uuid();
           return;
-        case 'logsource':
-          object.id = 'x-mitre-log-source--' + uuid();
-          return;
       }
     }
     if (object.attack_id) {
@@ -749,7 +760,6 @@ export class CollectionImportComponent implements OnInit {
         { regex: /^DS\d{4}$/, stix: 'x-mitre-data-source' },
         { regex: /^DET\d{4}$/, stix: 'x-mitre-detection-strategy' },
         { regex: /^G\d{4}$/, stix: 'intrusion-set' },
-        { regex: /^LS\d{4}$/, stix: 'x-mitre-log-source' },
         { regex: /^M\d{4}$/, stix: 'course-of-action' },
         { regex: /^TA\d{4}$/, stix: 'x-mitre-tactic' },
         { regex: /^T\d{4}$/, stix: 'attack-pattern' }, // technique
@@ -815,27 +825,106 @@ export class CollectionImportComponent implements OnInit {
             }
             newBundle.objects = objects;
             const force = this.import_errors ? true : false; // force import if the collection bundle has errors
+
+            // Use streaming import for progress updates
+            this.importProgress = 0;
+            // Initialize multi-phase progress tracking
+            this.phaseProgress = [
+              {
+                phase: 'processing',
+                label: 'Processing Objects',
+                progress: 0,
+                active: false,
+              },
+              {
+                phase: 'references',
+                label: 'Importing References',
+                progress: 0,
+                active: false,
+              },
+              {
+                phase: 'saving',
+                label: 'Saving Collection',
+                progress: 0,
+                active: false,
+              },
+            ];
+            logger.log('Starting streaming import...');
             const subscription = this.restAPIConnectorService
-              .postCollectionBundle(newBundle, false, force)
+              .streamCollectionBundleImport(newBundle, force)
               .subscribe({
-                next: results => {
-                  if (results.import_categories.errors.length > 0) {
+                next: event => {
+                  logger.log('SSE Event received:', event.type, event.data);
+                  if (event.type === 'progress') {
+                    // Update phase progress
+                    const phase = event.data.phase;
+                    const phasePercentage = event.data.phasePercentage || 0;
+
+                    // Find and update the appropriate phase
+                    const phaseIndex = this.phaseProgress.findIndex(
+                      p => p.phase === phase
+                    );
+                    if (phaseIndex !== -1) {
+                      // Mark all previous phases as complete
+                      for (let i = 0; i < phaseIndex; i++) {
+                        this.phaseProgress[i].progress = 100;
+                        this.phaseProgress[i].active = false;
+                      }
+                      // Update current phase
+                      this.phaseProgress[phaseIndex].progress = phasePercentage;
+                      this.phaseProgress[phaseIndex].active = true;
+                      // Keep future phases at 0
+                      for (
+                        let i = phaseIndex + 1;
+                        i < this.phaseProgress.length;
+                        i++
+                      ) {
+                        this.phaseProgress[i].progress = 0;
+                        this.phaseProgress[i].active = false;
+                      }
+                    }
+
+                    logger.log(
+                      'Phase progress updated:',
+                      phase,
+                      phasePercentage
+                    );
+                  } else if (event.type === 'complete') {
+                    // Import complete - mark all phases as 100%
+                    this.phaseProgress.forEach(p => {
+                      p.progress = 100;
+                      p.active = false;
+                    });
+                    logger.log(
+                      'Import complete, waiting 1 second before transitioning to done'
+                    );
+                    // Wait 1 second to show all progress bars at 100% before transitioning
+                    setTimeout(() => {
+                      this.handleImportSuccess(new Collection(event.data));
+                    }, 1000);
+                  }
+                },
+                error: error => {
+                  // Check if it's a timeout error (504 Gateway Timeout or network timeout)
+                  if (error.status === 504 || error.status === 0) {
                     logger.warn(
-                      'Collection import completed with errors:',
-                      results.import_categories.errors
+                      'Import request timed out, but import may still be processing. Starting polling...'
+                    );
+                    // Import is likely still running - poll for completion
+                    this.pollForImportCompletion(
+                      newBundle.objects[0]?.id || newBundle.collection?.id
+                    );
+                  } else {
+                    // Real error - show it and stop loading
+                    this.loadingStep2 = false;
+                    this.importProgress = 0;
+                    logger.error('Import failed with error:', error);
+                    this.snackbar.open(
+                      `Import failed: ${error.error?.message || error.message || 'Unknown error'}`,
+                      'Dismiss',
+                      { duration: 10000 }
                     );
                   }
-                  this.save_errors = results.import_categories.errors;
-                  const save_error_ids = new Set(
-                    this.save_errors.map(err => err['object_ref'])
-                  );
-                  for (const category in results.import_categories) {
-                    if (category == 'errors') continue;
-                    for (const id of results.import_categories[category])
-                      if (!save_error_ids.has(id))
-                        this.successfully_saved.add(id);
-                  }
-                  this.stepper.next();
                 },
                 complete: () => {
                   subscription.unsubscribe();
@@ -848,6 +937,119 @@ export class CollectionImportComponent implements OnInit {
         promptSubscription.unsubscribe();
       }, //prevent memory leaks
     });
+  }
+
+  /**
+   * Handle successful import results
+   */
+  private handleImportSuccess(results: Collection): void {
+    if (results.import_categories.errors.length > 0) {
+      logger.warn(
+        'Collection import completed with errors:',
+        results.import_categories.errors
+      );
+    }
+    this.save_errors = results.import_categories.errors;
+    const save_error_ids = new Set(
+      this.save_errors.map(err => err['object_ref'])
+    );
+    for (const category in results.import_categories) {
+      if (category == 'errors') continue;
+      for (const id of results.import_categories[category])
+        if (!save_error_ids.has(id)) this.successfully_saved.add(id);
+    }
+    this.loadingStep2 = false;
+    this.stepper.next();
+  }
+
+  /**
+   * Poll for import completion when the initial request times out
+   */
+  private pollForImportCompletion(_expectedCollectionId: string): void {
+    // Show informative message to user
+    this.snackbar.open(
+      'Large import detected. Processing may take several minutes. Checking for completion...',
+      'Dismiss',
+      { duration: 8000 }
+    );
+
+    // Poll every 5 seconds for up to 15 minutes
+    const maxAttempts = 180; // 15 minutes (180 * 5 seconds)
+    let attempts = 0;
+
+    const pollInterval = setInterval(() => {
+      attempts++;
+
+      // Get all collections and find the one that was just imported
+      this.restAPIConnectorService.getAllCollections().subscribe({
+        next: result => {
+          // Look for a recently modified collection that matches our import
+          // Since we don't have the exact collection ID before import, we look for
+          // the most recently modified collection
+          if (result && result.data && result.data.length > 0) {
+            // Cast to Collection array since getAllCollections returns collections
+            const collections = result.data as Collection[];
+
+            // Sort by modified date descending
+            const sortedCollections = [...collections].sort(
+              (a: Collection, b: Collection) => {
+                const dateA = new Date(a.modified).getTime();
+                const dateB = new Date(b.modified).getTime();
+                return dateB - dateA;
+              }
+            );
+
+            // Check if the most recent collection was modified within the last few minutes
+            const mostRecent = sortedCollections[0];
+            const modifiedTime = new Date(mostRecent.modified).getTime();
+            const now = Date.now();
+            const timeDiff = now - modifiedTime;
+
+            // If modified within last 5 minutes, assume it's our import
+            if (timeDiff < 300000) {
+              // 5 minutes in milliseconds
+              clearInterval(pollInterval);
+              logger.log(
+                'Import detected as complete. Collection:',
+                mostRecent
+              );
+
+              // The collection from getAllCollections includes import_categories
+              // so we can use it directly
+              this.snackbar.open('Import completed successfully!', 'Dismiss', {
+                duration: 5000,
+              });
+              this.handleImportSuccess(mostRecent);
+            }
+          }
+
+          // Check if we've exceeded max attempts
+          if (attempts >= maxAttempts) {
+            clearInterval(pollInterval);
+            this.loadingStep2 = false;
+            this.snackbar.open(
+              'Import status check timed out after 15 minutes. The import may still be processing. Please check the collections page.',
+              'Dismiss',
+              { duration: 15000 }
+            );
+          }
+        },
+        error: () => {
+          // Only log errors, don't stop polling unless max attempts reached
+          logger.warn('Error polling for import completion');
+
+          if (attempts >= maxAttempts) {
+            clearInterval(pollInterval);
+            this.loadingStep2 = false;
+            this.snackbar.open(
+              'Unable to verify import completion. Please check the collections page.',
+              'Dismiss',
+              { duration: 10000 }
+            );
+          }
+        },
+      });
+    }, 5000); // Poll every 5 seconds
   }
 
   /**

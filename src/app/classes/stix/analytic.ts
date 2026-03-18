@@ -1,19 +1,21 @@
-import { StixObject } from './stix-object';
+import { EmbeddedRelationship, StixObject } from './stix-object';
 import { logger } from '../../utils/logger';
 import { catchError, forkJoin, map, Observable, of, switchMap } from 'rxjs';
 import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/rest-api-connector.service';
 import { ValidationData } from '../serializable';
+import { StixType, WorkflowState } from 'src/app/utils/types';
 
 export class Analytic extends StixObject {
   public name = '';
   public platform: string;
-  public detects: string;
   public domains: string[] = [];
-  public logSourceRefs: LogSourceReference[] = [];
+  public logSourceReferences: LogSourceReference[] = [];
   public mutableElements: MutableElement[] = [];
 
+  // NOTE: the following fields will only be populated when this object is fetched with the `includeRefs=true` param
+  public relatedDetections: EmbeddedRelationship[] = [];
+
   public readonly supportsAttackID = true;
-  public readonly supportsNamespace = true;
   protected get attackIDValidator() {
     return {
       regex: 'AN\\d{4}',
@@ -26,6 +28,23 @@ export class Analytic extends StixObject {
     if (sdo) {
       this.deserialize(sdo);
     }
+  }
+
+  protected buildAttackExternalReference(): object | null {
+    if (this.attackID && this.relatedDetections?.[0]?.attackId) {
+      const detAttackId = this.relatedDetections[0].attackId;
+      return {
+        source_name: 'mitre-attack',
+        external_id: this.attackID,
+        url: `https://attack.mitre.org/detectionstrategies/${detAttackId}#${this.attackID}`,
+      };
+    } else if (this.attackID) {
+      return {
+        source_name: 'mitre-attack',
+        external_id: this.attackID,
+      };
+    }
+    return null;
   }
 
   /**
@@ -43,21 +62,20 @@ export class Analytic extends StixObject {
       rep.stix.x_mitre_platforms = [this.platform];
     }
     if (this.domains) rep.stix.x_mitre_domains = this.domains;
-    if (this.detects) rep.stix.x_mitre_detects = this.detects;
-    if (this.logSourceRefs?.length)
-      rep.stix.x_mitre_log_sources = this.logSourceRefs.map(
-        ({ ref, keys }) => ({
-          ref,
-          keys,
+    if (this.logSourceReferences?.length)
+      rep.stix.x_mitre_log_source_references = this.logSourceReferences.map(
+        ({ name, channel, dataComponentRef }) => ({
+          name,
+          channel,
+          x_mitre_data_component_ref: dataComponentRef,
         })
       );
     if (this.mutableElements?.length)
-      rep.stix.x_mitre_mutable_elements = this.mutableElements.map(
-        ({ field, description }) => ({
-          field,
-          description,
-        })
-      );
+      rep.stix.x_mitre_mutable_elements = this.mutableElements;
+
+    // Strip properties that are empty strs + lists
+    rep.stix = this.filterObject(rep.stix);
+
     return rep;
   }
 
@@ -68,7 +86,6 @@ export class Analytic extends StixObject {
    */
   public deserialize(raw: object) {
     if ('stix' in raw) {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const sdo = raw.stix as any;
 
       if (!('name' in sdo)) this.name = '';
@@ -98,14 +115,20 @@ export class Analytic extends StixObject {
         else logger.error('TypeError: domains field is not a string array.');
       } else this.domains = [];
 
-      if ('x_mitre_log_sources' in sdo) {
-        if (this.isLogSourcesArray(sdo.x_mitre_log_sources))
-          this.logSourceRefs = sdo.x_mitre_log_sources;
+      if ('x_mitre_log_source_references' in sdo) {
+        if (this.isLogSourceReferencesArray(sdo.x_mitre_log_source_references))
+          this.logSourceReferences = sdo.x_mitre_log_source_references.map(
+            ({ name, channel, x_mitre_data_component_ref }) => ({
+              name,
+              channel,
+              dataComponentRef: x_mitre_data_component_ref,
+            })
+          );
         else
           logger.error(
-            `TypeError: x_mitre_log_sources field is not an array of log source references: ${sdo.x_mitre_log_sources} (${typeof sdo.x_mitre_log_sources})`
+            `TypeError: x_mitre_log_source_references is not an array of log source references: ${sdo.x_mitre_log_source_references} (${typeof sdo.x_mitre_log_source_references})`
           );
-      } else this.logSourceRefs = [];
+      } else this.logSourceReferences = [];
 
       if ('x_mitre_mutable_elements' in sdo) {
         if (this.isMutableElementsArray(sdo.x_mitre_mutable_elements))
@@ -115,21 +138,31 @@ export class Analytic extends StixObject {
             `TypeError: x_mitre_mutable_elements field is not an array of log source references: ${sdo.x_mitre_mutable_elements} (${typeof sdo.x_mitre_mutable_elements})`
           );
       } else this.mutableElements = [];
+    }
 
-      if ('x_mitre_detects' in sdo) {
-        if (typeof sdo.x_mitre_detects === 'string')
-          this.detects = sdo.x_mitre_detects;
-        else
-          logger.error(
-            `TypeError: x_mitre_detects field is not a string: ${sdo.x_mitre_detects} (${typeof sdo.x_mitre_detects})`
-          );
+    this.deserializeEmbeddedRelationships(raw);
+  }
+
+  public deserializeEmbeddedRelationships(raw: any): void {
+    if (raw.workspace?.embedded_relationships) {
+      const relatedTo = raw.workspace.embedded_relationships as any[];
+      const relatedRefs: EmbeddedRelationship[] = relatedTo.map(ref => ({
+        stixId: ref.stix_id,
+        name: ref.name,
+        attackId: ref.attack_id,
+      }));
+
+      function isDetectionStrategy(o: EmbeddedRelationship) {
+        return o.stixId.includes('x-mitre-detection-strategy');
       }
+
+      this.relatedDetections = relatedRefs.filter(isDetectionStrategy);
     }
   }
 
-  public isLogSourcesArray(arr): boolean {
+  public isLogSourceReferencesArray(arr): boolean {
     return arr.every(a => {
-      return 'ref' in a && 'keys' in a;
+      return 'name' in a && 'channel' in a && 'x_mitre_data_component_ref' in a;
     });
   }
 
@@ -145,9 +178,10 @@ export class Analytic extends StixObject {
    * @returns {Observable<ValidationData>} the validation warnings and errors once validation is complete.
    */
   public validate(
-    restAPIService: RestApiConnectorService
+    restAPIService: RestApiConnectorService,
+    tempWorkflowState?: WorkflowState
   ): Observable<ValidationData> {
-    return this.base_validate(restAPIService).pipe(
+    return this.base_validate(restAPIService, tempWorkflowState).pipe(
       switchMap(result => {
         // validate unique mutable fields
         if (this.mutableElements.length) {
@@ -164,36 +198,6 @@ export class Analytic extends StixObject {
             seen.add(normalizedField);
           }
         }
-
-        // validate unique log source refs
-        if (this.logSourceRefs.length) {
-          const refs = this.logSourceRefs.map(({ ref }) => ref);
-
-          return forkJoin(
-            refs.map(ref =>
-              restAPIService.getLogSource(ref).pipe(
-                catchError(() => of(null)) // fallback if API fails
-              )
-            )
-          ).pipe(
-            map(logSources => {
-              const seen = new Set<string>();
-              this.logSourceRefs.forEach(({ ref }, index) => {
-                if (seen.has(ref)) {
-                  const logSource = logSources[index];
-                  result.errors.push({
-                    field: 'logSourceRefs',
-                    result: 'error',
-                    message: `Duplicate log source reference found: ${logSource?.[0].attackID || 'unknown'}`,
-                  });
-                }
-                seen.add(ref);
-              });
-              return result;
-            })
-          );
-        }
-
         return of(result);
       })
     );
@@ -251,8 +255,9 @@ export class Analytic extends StixObject {
 }
 
 export interface LogSourceReference {
-  ref: string;
-  keys: string[];
+  name: string;
+  channel: string;
+  dataComponentRef: string;
 }
 
 export interface MutableElement {

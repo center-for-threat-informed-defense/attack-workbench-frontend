@@ -21,9 +21,8 @@
         [config]="{
           mode: config.mode,
           object: config.object,
-          required: true,
-        }"
-        (attackIdGenerated)="setNameFromAttackId()"></app-attackid-property>
+        }">
+      </app-attackid-property>
     </div>
     <div class="col">
       <!-- VERSION NUMBER -->
@@ -60,43 +59,47 @@
         }"></app-string-property>
     </div>
   </div>
+  @if (config.mode === 'view') {
+    <!-- DETECTION STRATEGY -->
+    <!-- cannot be edited/diffed from the analytic page -->
+    <div class="row">
+      <div class="col">
+        <app-list-property
+          class="grow-to-row"
+          [config]="{
+            mode: config.mode,
+            object: config.object,
+            field: 'relatedDetections',
+            label: 'related detection strategy',
+            objectProperty: 'name',
+            showLink: true,
+          }"></app-list-property>
+      </div>
+    </div>
+  }
   <div class="row">
     <div class="col">
-      <!-- DETECTION -->
+      <!-- DESCRIPTION -->
       <app-descriptive-property
         [config]="{
           mode: config.mode,
           object: config.object,
-          field: 'detects',
+          field: 'description',
           firstParagraphOnly: false,
           referencesField: 'external_references',
-          label: 'Detection',
+          label: 'Description',
         }"></app-descriptive-property>
     </div>
   </div>
   <div class="row">
     <div class="col">
-      <!-- LOG SOURCE REFS -->
-      <app-object-ref-property
+      <!-- LOG SOURCE REFERENCES -->
+      <app-log-source-reference-property
         class="grow-to-row"
         [config]="{
           mode: config.mode,
           object: config.object,
-          field: 'logSourceRefs',
-          label: 'log source references',
-          attackType: 'log-source',
-          objectRefField: {
-            field: 'ref',
-            label: 'log source',
-          },
-          relatedFields: [
-            {
-              field: 'keys',
-              refField: 'permutations',
-              key: 'name',
-            },
-          ],
-        }"></app-object-ref-property>
+        }"></app-log-source-reference-property>
     </div>
   </div>
   <div class="row">

@@ -3,9 +3,9 @@
     <ul class="list-view">
       <li class="list-item" *ngFor="let stixID of list">
         <a
-          class="external-link"
+          [matTooltip]="getTooltip(stixID)"
+          matTooltipPosition="above"
           [href]="internalLink(stixID)"
-          target="_blank"
           rel="nofollow noopener"
           >{{ getLabel(stixID) }}</a
         >

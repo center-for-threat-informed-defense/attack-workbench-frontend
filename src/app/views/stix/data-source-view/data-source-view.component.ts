@@ -4,7 +4,6 @@ import { DataComponent } from 'src/app/classes/stix/data-component';
 import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/rest-api-connector.service';
 import { StixViewPage } from '../stix-view-page';
 import { MatDialog } from '@angular/material/dialog';
-import { StixDialogComponent } from '../stix-dialog/stix-dialog.component';
 import { AuthenticationService } from 'src/app/services/connectors/authentication/authentication.service';
 import { forkJoin, of } from 'rxjs';
 import { concatMap, map } from 'rxjs/operators';
@@ -38,9 +37,7 @@ export class DataSourceViewComponent extends StixViewPage implements OnInit {
 
   ngOnInit(): void {
     if (this.dataSource.firstInitialized) {
-      this.dataSource.initializeWithDefaultMarkingDefinitions(
-        this.restApiService
-      );
+      this.dataSource.setDefaultMarkingDefinitions(this.restApiService);
     }
     this.loadData();
   }
@@ -53,7 +50,7 @@ export class DataSourceViewComponent extends StixViewPage implements OnInit {
         map(results => {
           const allComponents = results.data as DataComponent[];
           const components = allComponents.filter(
-            c => c.dataSourceRef == this.dataSource.stixID
+            c => c?.dataSourceRef == this.dataSource.stixID
           );
           this.dataComponents = components;
           return components;
@@ -90,34 +87,6 @@ export class DataSourceViewComponent extends StixViewPage implements OnInit {
       complete: () => {
         this.loading = false;
         if (subscription) subscription.unsubscribe();
-      },
-    });
-  }
-
-  public createDataComponent(): void {
-    const data_component = new DataComponent();
-    data_component.set_data_source_ref(this.dataSource);
-
-    const prompt = this.dialog.open(StixDialogComponent, {
-      data: {
-        object: data_component,
-        editable: true,
-        mode: 'edit',
-        is_new: true,
-        sidebarControl: 'events',
-      },
-      maxHeight: '75vh',
-      autoFocus: false,
-    });
-    const subscription = prompt.afterClosed().subscribe({
-      next: result => {
-        if (result) {
-          // re-fetch values since an edit occurred
-          this.loadData();
-        }
-      },
-      complete: () => {
-        subscription.unsubscribe();
       },
     });
   }

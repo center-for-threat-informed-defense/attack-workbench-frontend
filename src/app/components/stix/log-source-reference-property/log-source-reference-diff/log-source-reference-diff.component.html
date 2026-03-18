@@ -1,0 +1,51 @@
+<div class="log-source-reference-view labelled-box grow-to-row">
+  <div class="content">
+    @if (!loading && diffTable.length) {
+      <table
+        aria-describedby="log source reference diff table"
+        mat-table
+        [dataSource]="diffTable"
+        class="log-source-reference-table">
+        <!-- data component column (attack id diff) -->
+        <ng-container matColumnDef="dataComponentRef">
+          <th mat-header-cell *matHeaderCellDef>Data Component</th>
+          <td mat-cell *matCellDef="let element">
+            <app-property-diff
+              [before]="getAttackId(element.before?.dataComponentRef)"
+              [after]="getAttackId(element.after?.dataComponentRef)">
+            </app-property-diff>
+          </td>
+        </ng-container>
+
+        <!-- log source name column -->
+        <ng-container matColumnDef="name">
+          <th mat-header-cell *matHeaderCellDef>Log Source Name</th>
+          <td mat-cell *matCellDef="let element">
+            <app-property-diff
+              [before]="element.before?.name ?? ''"
+              [after]="element.after?.name ?? ''">
+            </app-property-diff>
+          </td>
+        </ng-container>
+
+        <!-- log source channel column -->
+        <ng-container matColumnDef="channel">
+          <th mat-header-cell *matHeaderCellDef>Log Source Channel</th>
+          <td mat-cell *matCellDef="let element">
+            <app-property-diff
+              [before]="element.before?.channel ?? ''"
+              [after]="element.after?.channel ?? ''">
+            </app-property-diff>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="fields"></tr>
+        <tr mat-row *matRowDef="let row; columns: fields"></tr>
+      </table>
+    } @else if (loading) {
+      <span class="text-deemphasis">Loading...</span>
+      <mat-spinner diameter="20"></mat-spinner>
+    }
+  </div>
+  <span class="labelled-box-label">log source references</span>
+</div>

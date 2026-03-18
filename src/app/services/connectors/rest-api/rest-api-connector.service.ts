@@ -1,4 +1,3 @@
-/* eslint-disable prettier/prettier */
 import {
   HttpClient,
   HttpHeaders,
@@ -7,41 +6,39 @@ import {
 } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { forkJoin, Observable, of } from 'rxjs';
+import { forkJoin, Observable, of, Subject, throwError } from 'rxjs';
 import {
-  tap,
   catchError,
+  filter,
+  finalize,
   map,
+  mergeMap,
   share,
   switchMap,
-  mergeMap,
+  tap,
 } from 'rxjs/operators';
+import { Team } from 'src/app/classes/authn/team';
+import { UserAccount } from 'src/app/classes/authn/user-account';
 import { CollectionIndex } from 'src/app/classes/collection-index';
 import { ExternalReference } from 'src/app/classes/external-references';
-import { environment } from '../../../../environments/environment';
-import { ApiConnector } from '../api-connector';
-import { logger } from '../../../utils/logger';
-import { UserAccount } from 'src/app/classes/authn/user-account';
-import { Team } from 'src/app/classes/authn/team';
 import {
-  StixObject,
-  Software,
-  Technique,
-  Tactic,
-  Group,
-  Campaign,
-  Asset,
-  Mitigation,
-  DataSource,
-  DataComponent,
-  Matrix,
-  Note,
-  Identity,
-  Relationship,
-  MarkingDefinition,
-  DetectionStrategy,
-  LogSource,
   Analytic,
+  Asset,
+  Campaign,
+  DataComponent,
+  DataSource,
+  DetectionStrategy,
+  Group,
+  Identity,
+  MarkingDefinition,
+  Matrix,
+  Mitigation,
+  Note,
+  Relationship,
+  Software,
+  StixObject,
+  Tactic,
+  Technique,
 } from 'src/app/classes/stix';
 import { Collection } from 'src/app/classes/stix/collection';
 import {
@@ -50,6 +47,13 @@ import {
 } from 'src/app/utils/class-mappings';
 import { AttackTypeToPlural } from 'src/app/utils/type-mappings';
 import { AttackType } from 'src/app/utils/types';
+import { environment } from '../../../../environments/environment';
+import { logger } from '../../../utils/logger';
+import { ApiConnector } from '../api-connector';
+import {
+  CollectionStreamService,
+  StreamProgress,
+} from '../collection-stream.service';
 
 export interface Paginated<T> {
   data: T[];
@@ -75,7 +79,8 @@ export class RestApiConnectorService extends ApiConnector {
 
   constructor(
     private http: HttpClient,
-    private snackbar: MatSnackBar
+    private snackbar: MatSnackBar,
+    private collectionStreamService: CollectionStreamService
   ) {
     super(snackbar);
   }
@@ -131,6 +136,7 @@ export class RestApiConnectorService extends ApiConnector {
       platforms?: string[];
       domains?: string[];
       lastUpdatedBy?: string[];
+      includeRefs?: boolean;
     }): Observable<Paginated<StixObject>> {
       const pagination = {
         total: 1,
@@ -157,6 +163,12 @@ export class RestApiConnectorService extends ApiConnector {
           query = query.set(
             'includeDeprecated',
             options.includeDeprecated ? 'true' : 'false'
+          );
+        // include related objects in a `related_to` array
+        if (options.includeRefs)
+          query = query.set(
+            'includeRefs',
+            options.includeRefs ? 'true' : 'false'
           );
         // versions selector
         if (options.versions) query = query.set('versions', options.versions);
@@ -388,20 +400,6 @@ export class RestApiConnectorService extends ApiConnector {
    */
   public get getAllAnalytics() {
     return this.getStixObjectsFactory<Analytic>('analytic');
-  }
-  /**
-   * Get all log sources
-   * @param {number} [limit] the number of log sources to retrieve
-   * @param {number} [offset] the number of log sources to skip
-   * @param {string} [state] if specified, only get objects with this state
-   * @param {string} [lastUpdatedBy] if specified, only get objects which were last updated by these users
-   * @param {boolean} [revoked] if true, get revoked objects
-   * @param {boolean} [deprecated] if true, get deprecated objects
-   * @param {string[]} [excludeIDs] if specified, excludes these STIX IDs from the result
-   * @returns {Observable<LogSource[]>} observable of retrieved objects
-   */
-  public get getAllLogSources() {
-    return this.getStixObjectsFactory<LogSource>('log-source');
   }
   /**
    * Get all matrices
@@ -671,6 +669,98 @@ export class RestApiConnectorService extends ApiConnector {
       );
   }
 
+  public getCollectionStream(
+    id: string,
+    modified?: Date | string,
+    retrieveContents = true
+  ): {
+    collection$: Observable<Collection>;
+    streamProgress$: Observable<StreamProgress>;
+  } {
+    const collectionStreamProgress$ = new Subject<StreamProgress>();
+    const modifiedString =
+      typeof modified === 'string' ? modified : modified?.toISOString();
+
+    let url = `${this.apiUrl}/collections/${id}`;
+    if (modifiedString) {
+      url += `/modified/${modifiedString}`;
+    }
+    url += `?retrieveContents=${retrieveContents}&stream=true`;
+
+    logger.log('Streaming collection from:', url);
+
+    // Create collection with the correct stixID to prevent UUID generation
+    const collection = new Collection({
+      stix: {
+        id: id,
+        type: 'x-mitre-collection',
+      },
+    });
+    collection.streaming = true;
+    collection.stix_contents = [];
+    let expectedCount = 0;
+
+    const collection$ = this.collectionStreamService.streamCollection(url).pipe(
+      tap(data => {
+        switch (data.type) {
+          case 'collection':
+            // Update collection metadata
+            collection.deserialize(data.data);
+            logger.log('Received collection metadata');
+            break;
+
+          case 'contentCount':
+            expectedCount = data.count || 0;
+            logger.log(`Expecting ${expectedCount} content objects`);
+            collectionStreamProgress$.next({
+              total: expectedCount,
+              loaded: 0,
+              percentage: 0,
+            });
+            break;
+
+          case 'content':
+            if (data.position !== undefined && data.object) {
+              collection.hydrateContent(data.object);
+              const loaded = collection.stix_contents.length;
+              const percentage =
+                expectedCount > 0
+                  ? Math.round((loaded / expectedCount) * 100)
+                  : 0;
+              collectionStreamProgress$.next({
+                total: expectedCount,
+                loaded,
+                percentage,
+              });
+            }
+            break;
+        }
+      }),
+      // Only emit when we have the collection metadata
+      filter(data => data.type === 'collection' || data.type === 'content'),
+      map(() => collection),
+      finalize(() => {
+        collection.streaming = false;
+        logger.log(
+          'Stream complete, total objects:',
+          collection.stix_contents.length
+        );
+        collectionStreamProgress$.complete();
+      }),
+      catchError(err => {
+        logger.error('Stream error:', err);
+        collection.streaming = false;
+        collectionStreamProgress$.error(err);
+        return throwError(() => err);
+      })
+    );
+
+    return {
+      collection$,
+      streamProgress$: collectionStreamProgress$.asObservable(),
+    };
+  }
+
   /**
    * Factory to create a new STIX get by ID function
    * @template T the type to get
@@ -686,8 +776,40 @@ export class RestApiConnectorService extends ApiConnector {
       versions = 'latest',
       includeSubs?: boolean,
       retrieveContents?: boolean,
-      retrieveDataComponents?: boolean
+      retrieveDataComponents?: boolean,
+      options?: {
+        preferStream?: boolean;
+        includeRefs?: boolean;
+      }
     ): Observable<P[]> {
+      // For streaming collections, delegate to a separate method
+      if (
+        attackType === 'collection' &&
+        options?.preferStream &&
+        retrieveContents &&
+        versions === 'latest'
+      ) {
+        return this.getCollectionStream(id, modified, true).pipe(
+          map(collection => [collection]),
+          catchError(err => {
+            logger.warn(
+              'Streaming failed, falling back to traditional load:',
+              err
+            );
+            // Call the original implementation as fallback (without preferStream)
+            return this.getCollection(
+              id,
+              modified,
+              versions,
+              includeSubs,
+              retrieveContents,
+              retrieveDataComponents
+            );
+          })
+        );
+      }
+
+      // Continue with existing non-streaming implementation
       let url = `${this.apiUrl}/${plural}/${id}`;
       if (modified) {
         const modifiedString =
@@ -700,6 +822,8 @@ export class RestApiConnectorService extends ApiConnector {
         query = query.set('retrieveContents', 'true');
       if (attackType == 'data-source' && retrieveDataComponents)
         query = query.set('retrieveDataComponents', 'true');
+      // include related objects in a `related_to` array
+      if (options?.includeRefs) query = query.set('includeRefs', 'true');
       return this.http.get(url, { headers: this.headers, params: query }).pipe(
         tap(result => logger.log(`retrieved ${attackType}`, result)), // on success, trigger the success notification
         map(result => {
@@ -779,8 +903,12 @@ export class RestApiConnectorService extends ApiConnector {
         switchMap(result => {
           // fetch parent data source of data component
           const x = result as any[];
-          if (x[0].attackType != 'data-component') return of(result);
+          if (!x[0] || x[0].attackType != 'data-component') return of(result);
+
           const d = x[0] as DataComponent;
+          // if no data source ref, just return the data component
+          if (!d.dataSourceRef) return of([d]);
+          // otherwise, fetch the parent data source
           return this.getDataSource(d.dataSourceRef).pipe(
             // fetch data source from REST API
             map(data_source => {
@@ -911,16 +1039,6 @@ export class RestApiConnectorService extends ApiConnector {
     return this.getStixObjectFactory<Analytic>('analytic');
   }
   /**
-   * Get a single log source by STIX ID
-   * @param {string} id the object STIX ID
-   * @param {Date} [modified] if specified, get the version modified at the given date
-   * @param {versions} [string] default "latest", if "all" returns all versions of the object instead of just the latest version.
-   * @returns {Observable<LogSource>} the object with the given ID and modified date
-   */
-  public get getLogSource() {
-    return this.getStixObjectFactory<LogSource>('log-source');
-  }
-  /**
    * Get a single matrix by STIX ID
    * @param {string} id the object STIX ID
    * @param {Date} [modified] if specified, get the version modified at the given date
@@ -932,9 +1050,14 @@ export class RestApiConnectorService extends ApiConnector {
   }
   /**
    * Get a single collection by STIX ID
+   * This is the existing getter that uses the factory
    * @param {string} id the object STIX ID
    * @param {Date} [modified] if specified, get the version modified at the given date
    * @param {versions} [string] default "latest", if "all" returns all versions of the object instead of just the latest version.
+   * @param {includeSubs} [boolean] not used for collections
+   * @param {retrieveContents} [boolean] if true, retrieve the collection with its contents
+   * @param {retrieveDataComponents} [boolean] not used for collections
+   * @param {options} [object] additional options, including preferStream for streaming support
    * @returns {Observable<Collection>} the object with the given ID and modified date
    */
   public get getCollection() {
@@ -996,6 +1119,42 @@ export class RestApiConnectorService extends ApiConnector {
     };
   }
 
+  /**
+   * Factory to create a STIX object validator via dryRun POST.
+   *
+   * Posts the serialized object to its type-specific endpoint with ?dryRun=true,
+   * which runs the full create pipeline (compose, validate) without persisting.
+   * Normalizes the response into { errors, warnings } for the caller.
+   *
+   * @template T the type to validate
+   * @returns validator function
+   */
+  public validateStixObject<T extends StixObject>() {
+    return <P extends T>(object: P): Observable<any> => {
+      const plural = AttackTypeToPlural[object.attackType];
+      const url = `${this.apiUrl}/${plural}`;
+      const params = new HttpParams().set('dryRun', 'true');
+      return this.http.post(url, object.serialize(), { params }).pipe(
+        // Success (200): validation passed, extract warnings only
+        map(result => ({
+          errors: [],
+          warnings: (result as any).warnings || [],
+        })),
+        catchError((error: any) => {
+          // Validation failure (400): normalize errors and warnings into expected shape
+          if (error.status === 400 && error.error?.details) {
+            return of({
+              errors: error.error.details,
+              warnings: error.error.warnings || [],
+            });
+          }
+          // Non-validation errors: re-raise
+          return throwError(error);
+        }),
+        share()
+      );
+    };
+  }
   /**
    * POST (create) a new technique
    * @param {Technique} object the object to create
@@ -1083,14 +1242,6 @@ export class RestApiConnectorService extends ApiConnector {
    */
   public get postAnalytic() {
     return this.postStixObjectFactory<Analytic>('analytic');
-  }
-  /**
-   * POST (create) a new log source
-   * @param {LogSource} object the object to create
-   * @returns {Observable<LogSource>} the created object
-   */
-  public get postLogSource() {
-    return this.postStixObjectFactory<LogSource>('log-source');
   }
   /**
    * POST (create) a new matrix
@@ -1268,15 +1419,6 @@ export class RestApiConnectorService extends ApiConnector {
     return this.putStixObjectFactory<Analytic>('analytic');
   }
   /**
-   * PUT (update) a log source
-   * @param {LogSource} object the object to update
-   * @param {Date} [modified] optional, the modified date to overwrite. If omitted, uses the modified field of the object
-   * @returns {Observable<LogSource>} the updated object
-   */
-  public get putLogSource() {
-    return this.putStixObjectFactory<LogSource>('log-source');
-  }
-  /**
    * PUT (update) a matrix
    * @param {Matrix} object the object to update
    * @param {Date} [modified] optional, the modified date to overwrite. If omitted, uses the modified field of the object
@@ -1412,14 +1554,6 @@ export class RestApiConnectorService extends ApiConnector {
    */
   public get deleteAnalytic() {
     return this.deleteStixObjectFactory('analytic');
-  }
-  /**
-   * DELETE a log source
-   * @param {string} id the STIX ID of the object to delete
-   * @returns {Observable<{}>} observable of the response body
-   */
-  public get deleteLogSource() {
-    return this.deleteStixObjectFactory('log-source');
   }
   /**
    * DELETE a matrix
@@ -1610,7 +1744,7 @@ export class RestApiConnectorService extends ApiConnector {
       map(result => {
         // get related data component objects
         const dataComponents = result.data as DataComponent[];
-        return dataComponents.filter(d => d.dataSourceRef == id);
+        return dataComponents.filter(d => d?.dataSourceRef == id);
       }),
       mergeMap(dataComponents => {
         // get relationships for each data component
@@ -1722,15 +1856,15 @@ export class RestApiConnectorService extends ApiConnector {
   }
 
   /**
-   * Get the list of channels on a Log Source by its STIX ID
-   * @param stixId the STIX ID of the log source object
+   * Get the list of channels on a Data Component by its STIX ID
+   * @param stixId the STIX ID of the data component object
    */
-  public getLogSourceChannels(stixId: string): Observable<string[]> {
-    const url = `${this.apiUrl}/log-sources/${stixId}/channels`;
+  public getDataComponentChannels(stixId: string): Observable<string[]> {
+    const url = `${this.apiUrl}/data-components/${stixId}/channels`;
     return this.http
       .get<string[]>(url)
       .pipe(
-        tap(results => logger.log('retrieved log source channels', results))
+        tap(results => logger.log('retrieved data component channels', results))
       );
   }
 
@@ -1880,6 +2014,101 @@ export class RestApiConnectorService extends ApiConnector {
         catchError(this.handleError_raise<Collection>(!suppressErrors)),
         share()
       );
+  }
+
+  /**
+   * Stream collection bundle import with progress updates using Server-Sent Events
+   * @param collectionBundle the STIX bundle to import
+   * @param force whether to force import despite warnings
+   * @returns Observable that emits progress events and final collection
+   */
+  public streamCollectionBundleImport(
+    collectionBundle: any,
+    force = false
+  ): Observable<{ type: string; data: any }> {
+    return new Observable(observer => {
+      let query = new HttpParams();
+      query = query.set('stream', 'true');
+      if (force) query = query.set('forceImport', 'all');
+
+      const url = `${this.apiUrl}/collection-bundles?${query.toString()}`;
+
+      // Note: EventSource doesn't support POST with body, so we need to use fetch
+      // with SSE streaming instead
+      fetch(url, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'text/event-stream',
+        },
+        credentials: 'include',
+        body: JSON.stringify(collectionBundle),
+      })
+        .then(async response => {
+          if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+          }
+
+          const reader = response.body?.getReader();
+          const decoder = new TextDecoder();
+
+          if (!reader) {
+            throw new Error('No response body');
+          }
+
+          let buffer = '';
+
+          while (true) {
+            const { done, value } = await reader.read();
+
+            if (done) {
+              observer.complete();
+              break;
+            }
+
+            buffer += decoder.decode(value, { stream: true });
+            const lines = buffer.split('\n\n');
+            buffer = lines.pop() || '';
+
+            for (const line of lines) {
+              if (line.trim() === '' || line.startsWith(':')) continue;
+
+              const eventMatch = line.match(/^event: (\w+)\n/);
+              const dataMatch = line.match(/data: (.+)$/m);
+
+              if (dataMatch) {
+                try {
+                  const data = JSON.parse(dataMatch[1]);
+                  const eventType = eventMatch ? eventMatch[1] : 'message';
+
+                  if (eventType === 'error') {
+                    observer.error(data);
+                    return;
+                  }
+
+                  observer.next({ type: eventType, data });
+
+                  if (eventType === 'complete') {
+                    observer.complete();
+                    return;
+                  }
+                } catch (e) {
+                  logger.error('Error parsing SSE data:', e);
+                }
+              }
+            }
+          }
+        })
+        .catch(err => {
+          logger.error('Stream error:', err);
+          observer.error(err);
+        });
+
+      // Cleanup
+      return () => {
+        // EventSource cleanup if needed
+      };
+    });
   }
 
   /**
@@ -2232,6 +2461,33 @@ export class RestApiConnectorService extends ApiConnector {
       );
   }
 
+  /**
+   * Get the next available ATT&CK ID for a given STIX type
+   * @param {string} stixType the STIX type (e.g., 'attack-pattern', 'x-mitre-tactic')
+   * @param {string} [parentRef] optional parent technique STIX ID for subtechniques
+   * @returns {Observable<string>} the next available ATT&CK ID
+   */
+  public getNextAttackId(
+    stixType: string,
+    parentRef?: string
+  ): Observable<string> {
+    let params = new HttpParams().set('type', stixType);
+    if (parentRef) {
+      params = params.set('parentRef', parentRef);
+    }
+
+    return this.http
+      .get<{
+        attack_id: string;
+      }>(`${this.apiUrl}/attack-objects/attack-id/next`, { params })
+      .pipe(
+        tap(_ => logger.log(`retrieved next ATT&CK ID for ${stixType}`)),
+        map(result => result.attack_id),
+        catchError(this.handleError_continue<string>()),
+        share()
+      );
+  }
+
   //   _   _ ___ ___ ___     _   ___ ___ ___  _   _ _  _ _____     _   ___ ___ ___
   //  | | | / __| __| _ \   /_\ / __/ __/ _ \| | | | \| |_   _|   /_\ | _ \_ _/ __|
   //  | |_| \__ \ _||   /  / _ \ (_| (_| (_) | |_| | .` | | |    / _ \|  _/| |\__ \
@@ -2563,6 +2819,39 @@ export class RestApiConnectorService extends ApiConnector {
       },
     });
     return getter;
+  }
+
+  //   ___                      _
+  //  | _ \___ _ __  ___ _ _ __| |_ ___
+  //  |   / -_) '_ \/ _ \ '_/ _|  _(_-<
+  //  |_|_\___| .__/\___/_| \__|\__/__/
+  //          |_|
+
+  /**
+   * Retrieve objects which have unresolved link-by-id references
+   */
+  public getMissingLinkById(): Observable<any> {
+    const url = `${this.apiUrl}/reports/link-by-id/missing`;
+    return this.http.get(url).pipe(
+      tap(results =>
+        logger.log('retrieved missing link-by-id report', results)
+      ),
+      catchError(this.handleError_continue([])), // on error, trigger the error notification and continue operation without crashing (returns empty item)
+      share() // multicast so that multiple subscribers don't trigger the call twice. THIS MUST BE THE LAST LINE OF THE PIPE
+    );
+  }
+  /**
+   * Retrieve groups of parallel relationships between the same source/target/type
+   */
+  public getParallelRelationships(): Observable<any> {
+    const url = `${this.apiUrl}/reports/parallel-relationships`;
+    return this.http.get(url).pipe(
+      tap(results =>
+        logger.log('retrieved parallel relationships report', results)
+      ),
+      catchError(this.handleError_continue([])), // on error, trigger the error notification and continue operation without crashing (returns empty item)
+      share() // multicast so that multiple subscribers don't trigger the call twice. THIS MUST BE THE LAST LINE OF THE PIPE
+    );
   }
 }
 

@@ -1,8 +1,9 @@
 import { Observable, of } from 'rxjs';
 import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/rest-api-connector.service';
+import { logger } from '../../utils/logger';
 import { ValidationData } from '../serializable';
 import { StixObject } from './stix-object';
-import { logger } from '../../utils/logger';
+import { WorkflowState } from 'src/app/utils/types';
 
 export class Identity extends StixObject {
   public name: string; // identity name
@@ -11,10 +12,12 @@ export class Identity extends StixObject {
   public contact?: string; // contact information for this identity
 
   public readonly supportsAttackID = false; // Identity does not support ATT&CK IDs
-  public readonly supportsNamespace = false;
   protected get attackIDValidator() {
     return null;
   } // identities do not have an ATT&CK ID
+
+  // override StixObject excludedFields
+  protected excludedFields = ['x_mitre_version'];
 
   constructor(sdo?: any) {
     super(sdo, 'identity');
@@ -35,6 +38,9 @@ export class Identity extends StixObject {
     rep.stix.identity_class = this.identity_class;
     if (this.roles) rep.stix.roles = this.roles;
     if (this.contact) rep.stix.contact_information = this.contact;
+
+    // Strip properties that are empty strs + lists
+    rep.stix = this.filterObject(rep.stix);
 
     return rep;
   }
@@ -99,9 +105,10 @@ export class Identity extends StixObject {
    * @returns {Observable<ValidationData>} the validation warnings and errors once validation is complete.
    */
   public validate(
-    restAPIService: RestApiConnectorService
+    restAPIService: RestApiConnectorService,
+    tempWorkflowState?: WorkflowState
   ): Observable<ValidationData> {
-    return this.base_validate(restAPIService);
+    return this.base_validate(restAPIService, tempWorkflowState);
   }
 
   /**
@@ -123,7 +130,7 @@ export class Identity extends StixObject {
     return postObservable;
   }
 
-  public delete(_restAPIService: RestApiConnectorService): Observable<{}> {
+  public delete(_restAPIService: RestApiConnectorService): Observable<object> {
     // deletion is not supported on Identity objects
     return of({});
   }

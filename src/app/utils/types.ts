@@ -18,7 +18,6 @@ export type AttackType =
   | 'data-source'
   | 'data-component'
   | 'detection-strategy'
-  | 'log-source'
   | 'analytic';
 
 /**
@@ -42,23 +41,17 @@ export type StixType =
   | 'x-mitre-data-source'
   | 'x-mitre-data-component'
   | 'x-mitre-detection-strategy'
-  | 'x-mitre-log-source'
   | 'x-mitre-analytic';
 
 /**
  * Workflow state definitions
  */
-export type WorkflowState =
-  | ''
-  | 'work-in-progress'
-  | 'awaiting-review'
-  | 'reviewed';
+export type WorkflowState = 'work-in-progress' | 'awaiting-review' | 'reviewed';
 
 /**
  * List of all workflow states
  */
 export const WorkflowStates: Record<WorkflowState, string> = {
-  '': 'none',
   'work-in-progress': 'work in progress',
   'awaiting-review': 'awaiting review',
   'reviewed': 'reviewed',

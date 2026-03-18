@@ -10,6 +10,7 @@ import { AddDialogComponent } from '../add-dialog/add-dialog.component';
 import { ConfirmationDialogComponent } from '../confirmation-dialog/confirmation-dialog.component';
 import { forkJoin } from 'rxjs';
 import { WorkflowStates } from 'src/app/utils/types';
+import { SaveDialogComponent } from '../save-dialog/save-dialog.component';
 
 @Component({
   selector: 'app-object-status',
@@ -75,6 +76,10 @@ export class ObjectStatusComponent implements OnInit {
         data$ = this.restAPIService.getAllDataComponents(options);
       else if (this.editorService.type == 'asset')
         data$ = this.restAPIService.getAllAssets(options);
+      else if (this.editorService.type == 'analytic')
+        data$ = this.restAPIService.getAllAnalytics(options);
+      else if (this.editorService.type == 'detection-strategy')
+        data$ = this.restAPIService.getAllDetectionStrategies(options);
       const objSubscription = data$.subscribe({
         next: data => {
           this.objects = data.data;
@@ -140,10 +145,29 @@ export class ObjectStatusComponent implements OnInit {
    * @param event workflow state selection
    */
   public workflowChange(event) {
+    const previousWorkflowState =
+      this.object.workflow?.state || 'work-in-progress';
     if (event.isUserInput) {
-      if (event.source.value == 'none') this.object.workflow = undefined;
-      else this.object.workflow = { state: event.source.value };
-      this.save();
+      // Open save-dialog instead of saving directly
+      const dialogRef = this.dialog.open(SaveDialogComponent, {
+        maxWidth: '70em',
+        maxHeight: '70em',
+        data: {
+          object: this.object,
+          versionAlreadyIncremented: false,
+          // Pass the selected workflow state
+          initialWorkflowState: event.source.value,
+        },
+        autoFocus: false,
+      });
+
+      dialogRef.afterClosed().subscribe(result => {
+        if (result) {
+          this.editorService.onReload.emit();
+        } else {
+          this.statusControl.setValue(previousWorkflowState);
+        }
+      });
     }
   }
 

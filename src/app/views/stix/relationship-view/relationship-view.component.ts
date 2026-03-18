@@ -15,7 +15,6 @@ import { VersionNumber } from 'src/app/classes/version-number';
 import { EditorService } from 'src/app/services/editor/editor.service';
 import { forkJoin } from 'rxjs';
 import moment from 'moment';
-import { DataComponent } from 'src/app/classes/stix';
 import { StixTypeToAttackType } from 'src/app/utils/type-mappings';
 
 @Component({
@@ -28,7 +27,7 @@ import { StixTypeToAttackType } from 'src/app/utils/type-mappings';
 export class RelationshipViewComponent extends StixViewPage implements OnInit {
   @Output() public onVersionChange = new EventEmitter();
   @Output() closeDialogEvent = new EventEmitter<void>();
-  @Output() changeDialogToDataComponent = new EventEmitter<any>();
+  @Output() changeDialogToObject = new EventEmitter<any>();
 
   public get relationship() {
     return this.configCurrentObject as Relationship;
@@ -42,6 +41,7 @@ export class RelationshipViewComponent extends StixViewPage implements OnInit {
   public refresh = true;
   public loaded = false;
   public currentPageStixID: string;
+  public showOutdatedContentWarning = false;
 
   /** refresh the list of source objects if the type changes
    *  This is bad code and should be done a better way.
@@ -88,6 +88,14 @@ export class RelationshipViewComponent extends StixViewPage implements OnInit {
     else if (this.config.targetType) this.target_type = this.config.targetType;
     else if (this.relationship.valid_target_types.length == 1)
       this.target_type = this.relationship.valid_target_types[0];
+
+    if (
+      this.source_type === 'data-component' &&
+      this.relationship.relationship_type === 'detects' &&
+      this.target_type === 'technique'
+    ) {
+      this.showOutdatedContentWarning = true;
+    }
 
     // fetch parent of source/target objects of current object (utilized for displaying the full name of subtechniques and data components)
     const parent_calls = [];
@@ -232,24 +240,18 @@ export class RelationshipViewComponent extends StixViewPage implements OnInit {
    * @param {any} obj the raw STIX object
    */
   public navigateTo(obj: any): void {
-    if (!(obj?.stix?.type && obj?.stix?.id)) {
+    if (
+      !(obj?.stix?.type && obj?.stix?.id && StixTypeToAttackType[obj.stix.type])
+    ) {
       console.warn('Invalid object passed to navigateTo:', obj);
       return;
     }
 
-    let targetRoute: string;
-    if (StixTypeToAttackType[obj.stix.type] === 'data-component') {
-      targetRoute = `/data-source/${obj.stix.x_mitre_data_source_ref}`;
-      const dataComponent = new DataComponent(obj);
-      dataComponent.deserialize(obj);
-      this.changeDialogToDataComponent.emit(dataComponent);
-    } else {
-      const formattedType = StixTypeToAttackType[obj.stix.type]
-        .toLowerCase()
-        .replace(/\s+/g, '-');
-      targetRoute = `/${formattedType}/${obj.stix.id}`;
-      this.closeDialogEvent.emit();
-    }
+    const formattedType = StixTypeToAttackType[obj.stix.type]
+      .toLowerCase()
+      .replace(/\s+/g, '-');
+    const targetRoute = `/${formattedType}/${obj.stix.id}`;
+    this.closeDialogEvent.emit();
     this.router.navigate([targetRoute]);
   }
 }

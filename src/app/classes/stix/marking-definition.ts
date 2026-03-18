@@ -4,6 +4,7 @@ import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/re
 import { Observable, of } from 'rxjs';
 import { ValidationData } from '../serializable';
 import { logger } from '../../utils/logger';
+import { WorkflowState } from 'src/app/utils/types';
 
 export class MarkingDefinition extends StixObject {
   public name = '';
@@ -11,10 +12,12 @@ export class MarkingDefinition extends StixObject {
   public definition_string = '';
 
   public readonly supportsAttackID = false; // marking-defs do not support ATT&CK IDs
-  public readonly supportsNamespace = false;
   protected get attackIDValidator() {
     return null;
   } //marking-defs do not have ATT&CK IDs
+
+  // override StixObject excludedFields
+  protected excludedFields = ['x_mitre_version', 'x_mitre_deprecated'];
 
   constructor(sdo?: any) {
     super(sdo, 'marking-definition');
@@ -35,6 +38,9 @@ export class MarkingDefinition extends StixObject {
     rep.stix.definition_type = this.definition_type;
     rep.stix.definition = {};
     rep.stix.definition[this.definition_type] = this.definition_string;
+
+    // Strip properties that are empty strs + lists
+    rep.stix = this.filterObject(rep.stix);
 
     return rep;
   }
@@ -97,9 +103,10 @@ export class MarkingDefinition extends StixObject {
    * @returns {Observable<ValidationData>} the validation warnings and errors once validation is complete.
    */
   public validate(
-    restAPIService: RestApiConnectorService
+    restAPIService: RestApiConnectorService,
+    tempWorkflowState?: WorkflowState
   ): Observable<ValidationData> {
-    return this.base_validate(restAPIService).pipe(
+    return this.base_validate(restAPIService, tempWorkflowState).pipe(
       map(result => {
         // presence of statement
         if (!this.definition_string) {
@@ -163,12 +170,12 @@ export class MarkingDefinition extends StixObject {
     return postObservable;
   }
 
-  public delete(_restAPIService: RestApiConnectorService): Observable<{}> {
+  public delete(_restAPIService: RestApiConnectorService): Observable<object> {
     // deletion is not supported on Marking Definitions
     return of({});
   }
 
-  public update(_restAPIService: RestApiConnectorService): Observable<{}> {
+  public update(_restAPIService: RestApiConnectorService): Observable<object> {
     // update is not supported on Marking Definitions
     return of({});
   }

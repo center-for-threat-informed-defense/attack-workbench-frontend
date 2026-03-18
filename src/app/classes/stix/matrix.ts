@@ -4,6 +4,7 @@ import { ValidationData } from '../serializable';
 import { StixObject } from './stix-object';
 import { logger } from '../../utils/logger';
 import { Tactic } from './tactic';
+import { WorkflowState } from 'src/app/utils/types';
 
 export class Matrix extends StixObject {
   public name = '';
@@ -12,7 +13,6 @@ export class Matrix extends StixObject {
   public tactic_objects: Tactic[] = [];
 
   public readonly supportsAttackID = true;
-  public readonly supportsNamespace = true;
   protected get attackIDValidator() {
     return {
       regex: '.*',
@@ -40,6 +40,9 @@ export class Matrix extends StixObject {
 
     rep.stix.name = this.name.trim();
     rep.stix.tactic_refs = this.tactic_refs;
+
+    // Strip properties that are empty strs + lists
+    rep.stix = this.filterObject(rep.stix);
 
     return rep;
   }
@@ -86,10 +89,11 @@ export class Matrix extends StixObject {
    * @returns {Observable<ValidationData>} the validation warnings and errors once validation is complete.
    */
   public validate(
-    restAPIService: RestApiConnectorService
+    restAPIService: RestApiConnectorService,
+    tempWorkflowState?: WorkflowState
   ): Observable<ValidationData> {
     // TODO verify all tactics exist
-    return this.base_validate(restAPIService);
+    return this.base_validate(restAPIService, tempWorkflowState);
   }
 
   /**
@@ -110,7 +114,7 @@ export class Matrix extends StixObject {
     return postObservable;
   }
 
-  public delete(_restAPIService: RestApiConnectorService): Observable<{}> {
+  public delete(_restAPIService: RestApiConnectorService): Observable<object> {
     // deletion is not supported on Matrix objects
     return of({});
   }

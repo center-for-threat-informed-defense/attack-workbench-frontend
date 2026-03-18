@@ -1,8 +1,9 @@
-import { StixObject } from './stix-object';
-import { logger } from '../../utils/logger';
 import { Observable } from 'rxjs';
 import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/rest-api-connector.service';
+import { logger } from '../../utils/logger';
 import { ValidationData } from '../serializable';
+import { StixObject } from './stix-object';
+import { WorkflowState } from 'src/app/utils/types';
 
 export class Asset extends StixObject {
   public name = '';
@@ -15,7 +16,6 @@ export class Asset extends StixObject {
   public domains: string[] = ['ics-attack'];
 
   public readonly supportsAttackID = true;
-  public readonly supportsNamespace = true;
   protected get attackIDValidator() {
     return {
       regex: 'A\\d{4}',
@@ -41,21 +41,40 @@ export class Asset extends StixObject {
       rep.stix.modified = keepModified;
     }
     rep.stix.name = this.name.trim();
-    rep.stix.x_mitre_domains = this.domains;
-    rep.stix.x_mitre_sectors = this.sectors;
-    rep.stix.x_mitre_related_assets = this.relatedAssets.map(
-      (asset: RelatedAsset) => {
-        return {
-          name: asset.name.trim(),
-          related_asset_sectors: asset.related_asset_sectors
-            ? asset.related_asset_sectors
-            : [],
-          description: asset.description ? asset.description : '',
-        };
-      }
+
+    // Conditionally serialize array fields - only include if non-empty
+    this.serializeArrayField(rep.stix, 'x_mitre_domains', this.domains);
+    this.serializeArrayField(rep.stix, 'x_mitre_sectors', this.sectors);
+    this.serializeArrayField(
+      rep.stix,
+      'x_mitre_related_assets',
+      this.relatedAssets,
+      assets =>
+        assets.map((asset: RelatedAsset) => {
+          const relatedAsset: any = {
+            name: asset.name.trim(),
+            description: asset.description || '',
+          };
+          // Only include related_asset_sectors if it's a non-empty array
+          if (
+            Array.isArray(asset.related_asset_sectors) &&
+            asset.related_asset_sectors.length > 0
+          ) {
+            relatedAsset.related_asset_sectors = asset.related_asset_sectors;
+          }
+          return relatedAsset;
+        })
     );
-    rep.stix.x_mitre_platforms = this.platforms;
-    rep.stix.x_mitre_contributors = this.contributors.map(x => x.trim());
+    this.serializeArrayField(rep.stix, 'x_mitre_platforms', this.platforms);
+    this.serializeArrayField(
+      rep.stix,
+      'x_mitre_contributors',
+      this.contributors,
+      contributors => contributors.map(x => x.trim())
+    );
+
+    // Strip properties that are empty strs + lists
+    rep.stix = this.filterObject(rep.stix);
 
     return rep;
   }
@@ -121,9 +140,10 @@ export class Asset extends StixObject {
    * @returns {Observable<ValidationData>} the validation warnings and errors once validation is complete.
    */
   public validate(
-    restAPIService: RestApiConnectorService
+    restAPIService: RestApiConnectorService,
+    tempWorkflowState?: WorkflowState
   ): Observable<ValidationData> {
-    return this.base_validate(restAPIService);
+    return this.base_validate(restAPIService, tempWorkflowState);
   }
 
   /**
@@ -148,7 +168,7 @@ export class Asset extends StixObject {
    * Delete this STIX object from the database.
    * @param restAPIService [RestApiConnectorService] the service to perform the DELETE through
    */
-  public delete(restAPIService: RestApiConnectorService): Observable<{}> {
+  public delete(restAPIService: RestApiConnectorService): Observable<object> {
     const deleteObservable = restAPIService.deleteAsset(this.stixID);
     const subscription = deleteObservable.subscribe({
       complete: () => {

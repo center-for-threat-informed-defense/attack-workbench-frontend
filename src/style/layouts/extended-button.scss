@@ -5,7 +5,7 @@
 }
 
 .mat-mdc-button {
-  padding: 0 12px;
+  padding: 0 12px !important;
 }
 
 .small-icon-button {
@@ -31,6 +31,31 @@
     width: 24px !important;
     height: 24px !important;
   }
+}
+
+.table-icon-button {
+  @extend .small-icon-button;
+  width: 20px !important;
+  height: 20px !important;
+
+  & > *[role='img'] {
+    width: 20px;
+    height: 20px;
+    font-size: 20px;
+
+    svg {
+      width: 20px;
+      height: 20px;
+    }
+  }
+
+  .mat-mdc-button-touch-target {
+    width: 20px !important;
+    height: 20px !important;
+  }
+}
+.table-icon-button + .table-icon-button {
+  margin-left: 8px;
 }
 
 .mini-icon-button {

@@ -3,6 +3,7 @@ import { logger } from '../../utils/logger';
 import { Observable } from 'rxjs';
 import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/rest-api-connector.service';
 import { ValidationData } from '../serializable';
+import { WorkflowState } from 'src/app/utils/types';
 
 export class DetectionStrategy extends StixObject {
   public name = '';
@@ -10,7 +11,6 @@ export class DetectionStrategy extends StixObject {
   public analytics: string[] = []; // list of x-mitre-analytic uuids
 
   public readonly supportsAttackID = true;
-  public readonly supportsNamespace = true;
   protected get attackIDValidator() {
     return {
       regex: 'DET\\d{4}',
@@ -36,7 +36,10 @@ export class DetectionStrategy extends StixObject {
 
     rep.stix.name = this.name.trim();
     rep.stix.x_mitre_contributors = this.contributors.map(x => x.trim());
-    if (this.analytics) rep.stix.x_mitre_analytics = this.analytics;
+    if (this.analytics) rep.stix.x_mitre_analytic_refs = this.analytics;
+
+    // Strip properties that are empty strs + lists
+    rep.stix = this.filterObject(rep.stix);
 
     return rep;
   }
@@ -48,7 +51,6 @@ export class DetectionStrategy extends StixObject {
    */
   public deserialize(raw: object) {
     if ('stix' in raw) {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const sdo = raw.stix as any;
 
       if ('name' in sdo) {
@@ -68,12 +70,12 @@ export class DetectionStrategy extends StixObject {
           );
       } else this.contributors = [];
 
-      if ('x_mitre_analytics' in sdo) {
-        if (this.isStringArray(sdo.x_mitre_analytics))
-          this.analytics = sdo.x_mitre_analytics;
+      if ('x_mitre_analytic_refs' in sdo) {
+        if (this.isStringArray(sdo.x_mitre_analytic_refs))
+          this.analytics = sdo.x_mitre_analytic_refs;
         else
           logger.error(
-            `TypeError: x_mitre_analytics field is not a string array: ${sdo.x_mitre_analytics} (${typeof sdo.x_mitre_analytics})`
+            `TypeError: x_mitre_analytic_refs field is not a string array: ${sdo.x_mitre_analytic_refs} (${typeof sdo.x_mitre_analytic_refs})`
           );
       } else this.analytics = [];
     }
@@ -85,9 +87,10 @@ export class DetectionStrategy extends StixObject {
    * @returns {Observable<ValidationData>} the validation warnings and errors once validation is complete.
    */
   public validate(
-    restAPIService: RestApiConnectorService
+    restAPIService: RestApiConnectorService,
+    tempWorkflowState?: WorkflowState
   ): Observable<ValidationData> {
-    return this.base_validate(restAPIService);
+    return this.base_validate(restAPIService, tempWorkflowState);
   }
 
   /**

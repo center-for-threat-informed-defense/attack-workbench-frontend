@@ -1,10 +1,11 @@
 import { forkJoin, Observable, of } from 'rxjs';
 import { concatMap, map, shareReplay, switchMap } from 'rxjs/operators';
 import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/rest-api-connector.service';
-import { ValidationData } from '../serializable';
-import { StixObject } from './stix-object';
 import { logger } from '../../utils/logger';
+import { ValidationData } from '../serializable';
 import { Relationship } from './relationship';
+import { StixObject } from './stix-object';
+import { WorkflowState } from 'src/app/utils/types';
 
 export class Technique extends StixObject {
   public name = '';
@@ -25,7 +26,6 @@ export class Technique extends StixObject {
   public show_subtechniques = false; // used by matrix view to handle displaying subtechniques
 
   public readonly supportsAttackID = true;
-  public readonly supportsNamespace = true;
   protected get attackIDValidator() {
     return {
       regex: this.is_subtechnique ? 'T\\d{4}\\.\\d{3}' : 'T\\d{4}',
@@ -244,6 +244,10 @@ export class Technique extends StixObject {
         }
       }
     }
+
+    // Strip properties that are empty strs + lists
+    rep.stix = this.filterObject(rep.stix);
+
     return rep;
   }
 
@@ -448,9 +452,10 @@ export class Technique extends StixObject {
    * @returns {Observable<ValidationData>} the validation warnings and errors once validation is complete.
    */
   public validate(
-    restAPIService: RestApiConnectorService
+    restAPIService: RestApiConnectorService,
+    tempWorkflowState?: WorkflowState
   ): Observable<ValidationData> {
-    return this.base_validate(restAPIService).pipe(
+    return this.base_validate(restAPIService, tempWorkflowState).pipe(
       map(result => {
         // validate technique has at least one tactic
         if (this.attackID && this.tactics.length == 0) {
@@ -746,7 +751,7 @@ export class Technique extends StixObject {
    * Delete this STIX object from the database.
    * @param restAPIService [RestApiConnectorService] the service to perform the DELETE through
    */
-  public delete(restAPIService: RestApiConnectorService): Observable<{}> {
+  public delete(restAPIService: RestApiConnectorService): Observable<object> {
     const deleteObservable = restAPIService.deleteTechnique(this.stixID);
     const subscription = deleteObservable.subscribe({
       complete: () => {

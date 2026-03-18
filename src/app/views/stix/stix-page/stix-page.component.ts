@@ -10,7 +10,12 @@ import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router, NavigationEnd } from '@angular/router';
 
 import { Observable, forkJoin } from 'rxjs';
-import { Note, Software, StixObject } from 'src/app/classes/stix';
+import {
+  DetectionStrategy,
+  Note,
+  Software,
+  StixObject,
+} from 'src/app/classes/stix';
 import { concatMap } from 'rxjs/operators';
 import { Collection } from 'src/app/classes/stix/collection';
 import { VersionNumber } from 'src/app/classes/version-number';
@@ -38,6 +43,7 @@ export class StixPageComponent implements OnInit, OnDestroy {
   public initialVersion: VersionNumber;
   public objectType: string;
   private objectID: string;
+  private oldAnalytics = new Set<string>();
   private routerEvents;
   private saveSubscription;
   private deleteSubscription;
@@ -94,6 +100,16 @@ export class StixPageComponent implements OnInit, OnDestroy {
             this.objectID &&
             this.objectID != this.objects[0].attackID
               ? this.objectID
+              : undefined,
+          patchAnalytics:
+            this.objectType === 'detection-strategy' &&
+            this.analyticsChanged(
+              this.oldAnalytics,
+              new Set<string>(
+                (this.objects[0] as DetectionStrategy)?.analytics ?? []
+              )
+            )
+              ? this.oldAnalytics
               : undefined,
           versionAlreadyIncremented: versionChanged,
         },
@@ -228,6 +244,16 @@ export class StixPageComponent implements OnInit, OnDestroy {
     });
   }
 
+  private analyticsChanged(
+    oldAnalytics: Set<string>,
+    newAnalytics: Set<string>
+  ) {
+    return (
+      oldAnalytics?.size !== newAnalytics?.size ||
+      ![...newAnalytics].every(a => oldAnalytics.has(a))
+    );
+  }
+
   private viewStix() {
     const prompt = this.dialog.open(StixJsonDialogComponent, {
       maxWidth: '45em',
@@ -272,12 +298,21 @@ export class StixPageComponent implements OnInit, OnDestroy {
           true
         );
       else if (this.objectType == 'collection')
+        /**
+         * Note: This only loads the collection object without
+         * retrieving the full set of contained STIX objects.
+         * The contents are streamed and managed separately
+         * by the CollectionView child component, which handles
+         * progress updates and additional processing.
+         */
         objects$ = this.restApiService.getCollection(
           objectStixID,
           objectModified,
           'latest',
           false,
-          true
+          false, // retrieveContents <- do not load contents
+          false,
+          { preferStream: true }
         );
       else if (this.objectType == 'data-source')
         objects$ = this.restApiService.getDataSource(
@@ -290,12 +325,18 @@ export class StixPageComponent implements OnInit, OnDestroy {
         );
       else if (this.objectType == 'data-component')
         objects$ = this.restApiService.getDataComponent(objectStixID);
-      else if (this.objectType == 'log-source')
-        objects$ = this.restApiService.getLogSource(objectStixID);
       else if (this.objectType == 'detection-strategy')
         objects$ = this.restApiService.getDetectionStrategy(objectStixID);
       else if (this.objectType == 'analytic')
-        objects$ = this.restApiService.getAnalytic(objectStixID);
+        objects$ = this.restApiService.getAnalytic(
+          objectStixID,
+          null,
+          'latest',
+          null,
+          null,
+          null,
+          { includeRefs: true }
+        );
       else if (this.objectType == 'asset')
         objects$ = this.restApiService.getAsset(objectStixID);
       else if (this.objectType == 'marking-definition')
@@ -315,6 +356,11 @@ export class StixPageComponent implements OnInit, OnDestroy {
           this.objectID = this.objects[0].supportsAttackID
             ? this.objects[0].attackID
             : null;
+          if (this.objectType == 'detection-strategy') {
+            // set up changes to analytic list for analytic URL patching
+            const det = this.objects[0] as DetectionStrategy;
+            this.oldAnalytics = new Set<string>(det?.analytics ?? []);
+          }
         },
         complete: () => {
           if (subscription) subscription.unsubscribe();

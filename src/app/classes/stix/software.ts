@@ -3,6 +3,7 @@ import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/re
 import { ValidationData } from '../serializable';
 import { StixObject } from './stix-object';
 import { logger } from '../../utils/logger';
+import { WorkflowState } from 'src/app/utils/types';
 
 type type_software = 'malware' | 'tool';
 export class Software extends StixObject {
@@ -15,7 +16,6 @@ export class Software extends StixObject {
   public domains: string[] = [];
 
   public readonly supportsAttackID = true;
-  public readonly supportsNamespace = true;
   protected get attackIDValidator() {
     return {
       regex: 'S\\d{4}',
@@ -48,6 +48,9 @@ export class Software extends StixObject {
     rep.stix.x_mitre_platforms = this.platforms;
     rep.stix.x_mitre_contributors = this.contributors.map(x => x.trim());
     if (this.type == 'malware') rep.stix.is_family = true; // add is_family to malware type SDOs
+
+    // Strip properties that are empty strs + lists
+    rep.stix = this.filterObject(rep.stix);
 
     return rep;
   }
@@ -138,9 +141,10 @@ export class Software extends StixObject {
    * @returns {Observable<ValidationData>} the validation warnings and errors once validation is complete.
    */
   public validate(
-    restAPIService: RestApiConnectorService
+    restAPIService: RestApiConnectorService,
+    tempWorkflowState?: WorkflowState
   ): Observable<ValidationData> {
-    return this.base_validate(restAPIService);
+    return this.base_validate(restAPIService, tempWorkflowState);
   }
 
   /**
