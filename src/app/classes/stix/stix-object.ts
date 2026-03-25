@@ -410,14 +410,14 @@ export abstract class StixObject extends Serializable {
     if (this.hasOwnProperty('name') && this.type != 'x-mitre-analytic') {
       if ('name' in this) {
         const name = this.name;
-      if (typeof name !== 'string' || name.trim() === '') {
-        result.errors.push({
-          result: 'error',
-          field: 'name',
-          message: 'name is required',
-        });
-        return of(result);
-      }
+        if (typeof name !== 'string' || name.trim() === '') {
+          result.errors.push({
+            result: 'error',
+            field: 'name',
+            message: 'name is required',
+          });
+          return of(result);
+        }
       }
     }
     const validator = restAPIService.validateStixObject();
