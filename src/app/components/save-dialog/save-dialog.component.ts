@@ -7,6 +7,7 @@ import { StixObject } from 'src/app/classes/stix/stix-object';
 import { VersionNumber } from 'src/app/classes/version-number';
 import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/rest-api-connector.service';
 import { WorkflowState, WorkflowStates } from 'src/app/utils/types';
+import { logger } from '../../utils/logger';
 
 @Component({
   selector: 'app-save-dialog',
@@ -53,6 +54,9 @@ export class SaveDialogComponent implements OnInit {
           });
         this.validation = result;
       },
+      error: err => {
+        logger.error(err);
+      },
       complete: () => {
         subscription.unsubscribe();
       },
@@ -89,6 +93,9 @@ export class SaveDialogComponent implements OnInit {
         next: result => {
           this.validation = result;
         },
+        error: err => {
+          logger.error(err);
+        },
         complete: () => subscription.unsubscribe(),
       });
   }
@@ -99,6 +106,9 @@ export class SaveDialogComponent implements OnInit {
       .subscribe({
         next: result => {
           this.validation = result;
+        },
+        error: err => {
+          logger.error(err);
         },
         complete: () => subscription.unsubscribe(),
       });

@@ -404,6 +404,22 @@ export abstract class StixObject extends Serializable {
     }
     // check any asynchronous validators
     const result = new ValidationData();
+    // Throws user friendly error when name is missing in the stix object
+    // Need to exclude analytics from this check because user cannot set names
+    // for analytics and those are automatically generated
+    if (this.hasOwnProperty('name') && this.type != 'x-mitre-analytic') {
+      if ('name' in this) {
+        const name = this.name;
+      if (typeof name !== 'string' || name.trim() === '') {
+        result.errors.push({
+          result: 'error',
+          field: 'name',
+          message: 'name is required',
+        });
+        return of(result);
+      }
+      }
+    }
     const validator = restAPIService.validateStixObject();
 
     return validator(this).pipe(
