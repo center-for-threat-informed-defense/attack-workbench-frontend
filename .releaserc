@@ -20,6 +20,7 @@
   "plugins": [
     "@semantic-release/commit-analyzer",
     "@semantic-release/release-notes-generator",
+    "@semantic-release/github",
     [
       "@codedependant/semantic-release-docker",
       {
@@ -42,7 +43,6 @@
           "{{#unless prerelease.[0]}}{{major}}{{/unless}}"
         ]
       }
-    ],
-    "@semantic-release/github"
+    ]
   ]
 }
