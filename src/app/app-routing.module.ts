@@ -3,6 +3,7 @@ import { Routes, RouterModule } from '@angular/router';
 import { LandingPageComponent } from './views/landing-page/landing-page.component';
 import { HelpPageComponent } from './views/help-page/help-page.component';
 import { DashboardPageComponent } from './views/dashboard-page/dashboard-page.component';
+import { DataQualityComponent } from './views/dashboard-page/data-quality/data-quality.component';
 import { OrgSettingsPageComponent } from './views/dashboard-page/org-settings-page/org-settings-page.component';
 import { UserAccountsPageComponent } from './views/dashboard-page/user-accounts-page/user-accounts-page.component';
 import { DefaultMarkingDefinitionsComponent } from './views/dashboard-page/default-marking-definitions/default-marking-definitions.component';
@@ -54,30 +55,6 @@ const routes: Routes = [
             component: DashboardPageComponent,
           },
           {
-            path: 'org-settings',
-            data: {
-              breadcrumb: 'organization settings',
-              title: 'Organization Identity',
-            },
-            component: OrgSettingsPageComponent,
-          },
-          {
-            path: 'user-accounts',
-            data: {
-              breadcrumb: 'user accounts',
-              title: 'User Accounts',
-            },
-            component: UserAccountsPageComponent,
-          },
-          {
-            path: 'default-marking-definitions',
-            data: {
-              breadcrumb: 'default marking definitions',
-              title: 'Default Marking Definitions',
-            },
-            component: DefaultMarkingDefinitionsComponent,
-          },
-          {
             path: 'teams',
             data: {
               breadcrumb: 'teams',
@@ -103,6 +80,42 @@ const routes: Routes = [
                 component: TeamsViewPageComponent,
               },
             ],
+          },
+          {
+            path: 'data-quality',
+            data: {
+              breadcrumb: 'data quality',
+              title: 'Data Quality',
+              roles: [Role.ADMIN, Role.TEAM_LEAD],
+            },
+            component: DataQualityComponent,
+          },
+          {
+            path: 'org-settings',
+            data: {
+              breadcrumb: 'organization settings',
+              title: 'Organization Identity',
+              roles: [Role.ADMIN],
+            },
+            component: OrgSettingsPageComponent,
+          },
+          {
+            path: 'user-accounts',
+            data: {
+              breadcrumb: 'user accounts',
+              title: 'User Accounts',
+              roles: [Role.ADMIN],
+            },
+            component: UserAccountsPageComponent,
+          },
+          {
+            path: 'default-marking-definitions',
+            data: {
+              breadcrumb: 'default marking definitions',
+              title: 'Default Marking Definitions',
+              roles: [Role.ADMIN],
+            },
+            component: DefaultMarkingDefinitionsComponent,
           },
         ],
       },

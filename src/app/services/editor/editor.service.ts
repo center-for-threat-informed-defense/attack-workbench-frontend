@@ -128,7 +128,7 @@ export class EditorService {
           if (!this.router.url.includes('/new'))
             this.router.navigate([], { queryParams: {} });
           else this.router.navigate(['..'], { queryParams: {} });
-          this.onEditingStopped.emit();
+          this.onEditingStopped.emit(true);
         }
       },
       complete: () => {

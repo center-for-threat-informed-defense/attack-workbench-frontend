@@ -106,10 +106,7 @@ import { TlpEditComponent } from './components/stix/tlp-property/tlp-edit/tlp-ed
 import { TlpPropertyComponent } from './components/stix/tlp-property/tlp-property.component';
 import { TlpViewComponent } from './components/stix/tlp-property/tlp-view/tlp-view.component';
 
-import { AttackidDiffComponent } from './components/stix/attackid-property/attackid-diff/attackid-diff.component';
-import { AttackIDEditComponent } from './components/stix/attackid-property/attackid-edit/attackid-edit.component';
 import { AttackIDPropertyComponent } from './components/stix/attackid-property/attackid-property.component';
-import { AttackIDViewComponent } from './components/stix/attackid-property/attackid-view/attackid-view.component';
 
 import { StixIDPropertyComponent } from './components/stix/stixid-property/stixid-property.component';
 
@@ -158,6 +155,7 @@ import { CitationViewComponent } from './components/stix/citation-property/citat
 import { HelpPageComponent } from './views/help-page/help-page.component';
 import { LandingPageComponent } from './views/landing-page/landing-page.component';
 import { DashboardPageComponent } from './views/dashboard-page/dashboard-page.component';
+import { DataQualityComponent } from './views/dashboard-page/data-quality/data-quality.component';
 import { OrgSettingsPageComponent } from './views/dashboard-page/org-settings-page/org-settings-page.component';
 import { UserAccountsPageComponent } from './views/dashboard-page/user-accounts-page/user-accounts-page.component';
 import { DefaultMarkingDefinitionsComponent } from './views/dashboard-page/default-marking-definitions/default-marking-definitions.component';
@@ -225,6 +223,10 @@ import { AppConfigService } from './services/config/app-config.service';
 import { AnalyticViewComponent } from './views/stix/analytic-view/analytic-view.component';
 import { DetectionStrategyViewComponent } from './views/stix/detection-strategy-view/detection-strategy-view.component';
 import { StixListPageComponent } from './views/stix/stix-list-page/stix-list-page.component';
+import { DictionaryPropertyComponent } from './components/stix/dictionary-property/dictionary-property.component';
+import { DictionaryEditComponent } from './components/stix/dictionary-property/dictionary-edit/dictionary-edit.component';
+import { DictionaryViewComponent } from './components/stix/dictionary-property/dictionary-view/dictionary-view.component';
+import { DictionaryDiffComponent } from './components/stix/dictionary-property/dictionary-diff/dictionary-diff.component';
 
 export function initConfig(appConfigService: AppConfigService) {
   return () => appConfigService.loadAppConfig();
@@ -269,9 +271,6 @@ export function initConfig(appConfigService: AppConfigService) {
     TlpViewComponent,
     TlpEditComponent,
     AttackIDPropertyComponent,
-    AttackIDEditComponent,
-    AttackIDViewComponent,
-    AttackidDiffComponent,
     StixIDPropertyComponent,
     ListPropertyComponent,
     ListEditComponent,
@@ -287,6 +286,7 @@ export function initConfig(appConfigService: AppConfigService) {
     LandingPageComponent,
     HelpPageComponent,
     DashboardPageComponent,
+    DataQualityComponent,
     OrgSettingsPageComponent,
     UserAccountsPageComponent,
     DefaultMarkingDefinitionsComponent,
@@ -368,6 +368,10 @@ export function initConfig(appConfigService: AppConfigService) {
     StixJsonDialogComponent,
     OutdatedContentWarningComponent,
     StreamProgressComponent,
+    DictionaryPropertyComponent,
+    DictionaryEditComponent,
+    DictionaryViewComponent,
+    DictionaryDiffComponent,
   ],
   exports: [
     MatToolbarModule,
