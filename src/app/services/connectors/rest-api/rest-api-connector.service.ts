@@ -1120,6 +1120,42 @@ export class RestApiConnectorService extends ApiConnector {
   }
 
   /**
+   * Factory to create a STIX object validator via dryRun POST.
+   *
+   * Posts the serialized object to its type-specific endpoint with ?dryRun=true,
+   * which runs the full create pipeline (compose, validate) without persisting.
+   * Normalizes the response into { errors, warnings } for the caller.
+   *
+   * @template T the type to validate
+   * @returns validator function
+   */
+  public validateStixObject<T extends StixObject>() {
+    return <P extends T>(object: P): Observable<any> => {
+      const plural = AttackTypeToPlural[object.attackType];
+      const url = `${this.apiUrl}/${plural}`;
+      const params = new HttpParams().set('dryRun', 'true');
+      return this.http.post(url, object.serialize(), { params }).pipe(
+        // Success (200): validation passed, extract warnings only
+        map(result => ({
+          errors: [],
+          warnings: (result as any).warnings || [],
+        })),
+        catchError((error: any) => {
+          // Validation failure (400): normalize errors and warnings into expected shape
+          if (error.status === 400 && error.error?.details) {
+            return of({
+              errors: error.error.details,
+              warnings: error.error.warnings || [],
+            });
+          }
+          // Non-validation errors: re-raise
+          return throwError(error);
+        }),
+        share()
+      );
+    };
+  }
+  /**
    * POST (create) a new technique
    * @param {Technique} object the object to create
    * @returns {Observable<Technique>} the created object
@@ -1981,6 +2017,101 @@ export class RestApiConnectorService extends ApiConnector {
   }
 
   /**
+   * Stream collection bundle import with progress updates using Server-Sent Events
+   * @param collectionBundle the STIX bundle to import
+   * @param force whether to force import despite warnings
+   * @returns Observable that emits progress events and final collection
+   */
+  public streamCollectionBundleImport(
+    collectionBundle: any,
+    force = false
+  ): Observable<{ type: string; data: any }> {
+    return new Observable(observer => {
+      let query = new HttpParams();
+      query = query.set('stream', 'true');
+      if (force) query = query.set('forceImport', 'all');
+
+      const url = `${this.apiUrl}/collection-bundles?${query.toString()}`;
+
+      // Note: EventSource doesn't support POST with body, so we need to use fetch
+      // with SSE streaming instead
+      fetch(url, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'text/event-stream',
+        },
+        credentials: 'include',
+        body: JSON.stringify(collectionBundle),
+      })
+        .then(async response => {
+          if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+          }
+
+          const reader = response.body?.getReader();
+          const decoder = new TextDecoder();
+
+          if (!reader) {
+            throw new Error('No response body');
+          }
+
+          let buffer = '';
+
+          while (true) {
+            const { done, value } = await reader.read();
+
+            if (done) {
+              observer.complete();
+              break;
+            }
+
+            buffer += decoder.decode(value, { stream: true });
+            const lines = buffer.split('\n\n');
+            buffer = lines.pop() || '';
+
+            for (const line of lines) {
+              if (line.trim() === '' || line.startsWith(':')) continue;
+
+              const eventMatch = line.match(/^event: (\w+)\n/);
+              const dataMatch = line.match(/data: (.+)$/m);
+
+              if (dataMatch) {
+                try {
+                  const data = JSON.parse(dataMatch[1]);
+                  const eventType = eventMatch ? eventMatch[1] : 'message';
+
+                  if (eventType === 'error') {
+                    observer.error(data);
+                    return;
+                  }
+
+                  observer.next({ type: eventType, data });
+
+                  if (eventType === 'complete') {
+                    observer.complete();
+                    return;
+                  }
+                } catch (e) {
+                  logger.error('Error parsing SSE data:', e);
+                }
+              }
+            }
+          }
+        })
+        .catch(err => {
+          logger.error('Stream error:', err);
+          observer.error(err);
+        });
+
+      // Cleanup
+      return () => {
+        // EventSource cleanup if needed
+      };
+    });
+  }
+
+  /**
    * Preview a collection bundle.
    * POST the collection bundle to the back end to retrieve a preview of the import results. A second POST
    * call will occur (with ?forceImport='all') if the first POST call results in an overridable import error.
@@ -2330,6 +2461,33 @@ export class RestApiConnectorService extends ApiConnector {
       );
   }
 
+  /**
+   * Get the next available ATT&CK ID for a given STIX type
+   * @param {string} stixType the STIX type (e.g., 'attack-pattern', 'x-mitre-tactic')
+   * @param {string} [parentRef] optional parent technique STIX ID for subtechniques
+   * @returns {Observable<string>} the next available ATT&CK ID
+   */
+  public getNextAttackId(
+    stixType: string,
+    parentRef?: string
+  ): Observable<string> {
+    let params = new HttpParams().set('type', stixType);
+    if (parentRef) {
+      params = params.set('parentRef', parentRef);
+    }
+
+    return this.http
+      .get<{
+        attack_id: string;
+      }>(`${this.apiUrl}/attack-objects/attack-id/next`, { params })
+      .pipe(
+        tap(_ => logger.log(`retrieved next ATT&CK ID for ${stixType}`)),
+        map(result => result.attack_id),
+        catchError(this.handleError_continue<string>()),
+        share()
+      );
+  }
+
   //   _   _ ___ ___ ___     _   ___ ___ ___  _   _ _  _ _____     _   ___ ___ ___
   //  | | | / __| __| _ \   /_\ / __/ __/ _ \| | | | \| |_   _|   /_\ | _ \_ _/ __|
   //  | |_| \__ \ _||   /  / _ \ (_| (_| (_) | |_| | .` | | |    / _ \|  _/| |\__ \
@@ -2661,6 +2819,39 @@ export class RestApiConnectorService extends ApiConnector {
       },
     });
     return getter;
+  }
+
+  //   ___                      _
+  //  | _ \___ _ __  ___ _ _ __| |_ ___
+  //  |   / -_) '_ \/ _ \ '_/ _|  _(_-<
+  //  |_|_\___| .__/\___/_| \__|\__/__/
+  //          |_|
+
+  /**
+   * Retrieve objects which have unresolved link-by-id references
+   */
+  public getMissingLinkById(): Observable<any> {
+    const url = `${this.apiUrl}/reports/link-by-id/missing`;
+    return this.http.get(url).pipe(
+      tap(results =>
+        logger.log('retrieved missing link-by-id report', results)
+      ),
+      catchError(this.handleError_continue([])), // on error, trigger the error notification and continue operation without crashing (returns empty item)
+      share() // multicast so that multiple subscribers don't trigger the call twice. THIS MUST BE THE LAST LINE OF THE PIPE
+    );
+  }
+  /**
+   * Retrieve groups of parallel relationships between the same source/target/type
+   */
+  public getParallelRelationships(): Observable<any> {
+    const url = `${this.apiUrl}/reports/parallel-relationships`;
+    return this.http.get(url).pipe(
+      tap(results =>
+        logger.log('retrieved parallel relationships report', results)
+      ),
+      catchError(this.handleError_continue([])), // on error, trigger the error notification and continue operation without crashing (returns empty item)
+      share() // multicast so that multiple subscribers don't trigger the call twice. THIS MUST BE THE LAST LINE OF THE PIPE
+    );
   }
 }
 
