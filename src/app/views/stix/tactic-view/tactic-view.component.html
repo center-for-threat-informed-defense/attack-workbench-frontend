@@ -6,17 +6,14 @@
           mode: config.mode,
           object: config.object,
         }"></app-name-property>
-      <app-subheading
-        [config]="config"></app-subheading>
+      <app-subheading [config]="config"></app-subheading>
     </div>
   </div>
 
   <app-stix-page-tabs
     [config]="config"
     [detailsTemplate]="detailsTpl"
-    [relationshipTabs]="[
-      { label: 'Techniques', template: techniquesTpl }
-    ]"
+    [relationshipTabs]="[{ label: 'Techniques', template: techniquesTpl }]"
     [showHistory]="true"
     [showNotes]="true">
   </app-stix-page-tabs>

@@ -6,8 +6,7 @@
           mode: config.mode,
           object: config.object,
         }"></app-name-property>
-      <app-subheading
-        [config]="{ mode: config.mode, object: config.object }">
+      <app-subheading [config]="{ mode: config.mode, object: config.object }">
       </app-subheading>
     </div>
   </div>
@@ -99,7 +98,8 @@
       </div>
       <!-- RELATIONSHIPS - NOTE: these are only shown in 'view' mode -->
       @if (
-        (config.showRelationships || !config.hasOwnProperty('showRelationships')) &&
+        (config.showRelationships ||
+          !config.hasOwnProperty('showRelationships')) &&
         !editing
       ) {
         <div [ngStyle]="{ display: showTechniques ? 'inherit' : 'none' }">

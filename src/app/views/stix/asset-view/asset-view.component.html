@@ -14,9 +14,7 @@
   <app-stix-page-tabs
     [config]="config"
     [detailsTemplate]="detailsTpl"
-    [relationshipTabs]="[
-      { label: 'Techniques', template: techniquesTpl }
-    ]"
+    [relationshipTabs]="[{ label: 'Techniques', template: techniquesTpl }]"
     [showHistory]="true"
     [showNotes]="true">
   </app-stix-page-tabs>
@@ -105,8 +103,16 @@
               label: 'related assets',
               subtypeFields: [
                 { name: 'name', editType: 'string', required: true, key: true },
-                { name: 'related_asset_sectors', label: 'sectors', editType: 'select' },
-                { name: 'description', supportsReferences: true, editType: 'description' }
+                {
+                  name: 'related_asset_sectors',
+                  label: 'sectors',
+                  editType: 'select',
+                },
+                {
+                  name: 'description',
+                  supportsReferences: true,
+                  editType: 'description',
+                },
               ],
               tooltip: 'a related asset',
             }"></app-subtype-property>
@@ -126,7 +132,7 @@
             }"></app-descriptive-property>
         </div>
       </div>
-  
+
       <!-- EXTERNAL REFERENCES -->
       <div
         *ngIf="
@@ -185,5 +191,4 @@
       </div>
     </div>
   </ng-template>
-
 </div>

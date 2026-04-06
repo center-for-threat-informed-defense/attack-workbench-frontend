@@ -7,8 +7,7 @@
           mode: config.mode,
           object: config.object,
         }"></app-name-property>
-      <app-subheading
-        [config]="config"></app-subheading>
+      <app-subheading [config]="config"></app-subheading>
     </div>
   </div>
 
@@ -17,7 +16,7 @@
     [detailsTemplate]="detailsTpl"
     [relationshipTabs]="[
       { label: 'Data Components', template: componentsTpl },
-      { label: 'Techniques', template: techniquesTpl }
+      { label: 'Techniques', template: techniquesTpl },
     ]"
     [showHistory]="true"
     [showNotes]="true">
