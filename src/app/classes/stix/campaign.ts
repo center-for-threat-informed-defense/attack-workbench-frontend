@@ -172,8 +172,6 @@ export class Campaign extends StixObject {
    * @returns {Observable} of the post
    */
   public save(restAPIService: RestApiConnectorService): Observable<Campaign> {
-    // update first index of aliases field to campaign name
-    this.aliases[0] = this.name;
     const postObservable = restAPIService.postCampaign(this);
     const subscription = postObservable.subscribe({
       next: result => {

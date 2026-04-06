@@ -111,8 +111,6 @@ export class Group extends StixObject {
    * @returns {Observable} of the post
    */
   public save(restAPIService: RestApiConnectorService): Observable<Group> {
-    // update first index of aliases field to group name
-    this.aliases[0] = this.name;
     const postObservable = restAPIService.postGroup(this);
     const subscription = postObservable.subscribe({
       next: result => {
