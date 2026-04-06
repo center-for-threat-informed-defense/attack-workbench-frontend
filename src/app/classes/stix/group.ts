@@ -7,7 +7,7 @@ import { WorkflowState } from 'src/app/utils/types';
 
 export class Group extends StixObject {
   public name = '';
-  public aliases: string[] = ['placeholder']; // initialize field with placeholder in first index for group name
+  public aliases: string[] = [];
   public contributors: string[] = [];
 
   public readonly supportsAttackID = true;

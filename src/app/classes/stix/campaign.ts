@@ -11,7 +11,7 @@ export class Campaign extends StixObject {
   public last_seen: Date;
   public first_seen_citation = '';
   public last_seen_citation = '';
-  public aliases: string[] = ['placeholder']; // initialize field with placeholder in first index for campaign name
+  public aliases: string[] = [];
   public contributors: string[] = [];
 
   public readonly supportsAttackID = true;
