@@ -1,0 +1,41 @@
+<mat-tab-group dynamicHeight mat-stretch-tabs>
+  <mat-tab>
+    <ng-template mat-tab-label>
+      <span class="nav-tab-label">DETAILS</span>
+    </ng-template>
+    <ng-template matTabContent>
+      <div class="details-tpl-wrapper">
+        <ng-container *ngTemplateOutlet="detailsTemplate"></ng-container>
+      </div>
+    </ng-template>
+  </mat-tab>
+
+  <ng-container *ngFor="let rel of relationshipTabs">
+    <mat-tab>
+      <ng-template mat-tab-label>
+        <span class="nav-tab-label">{{ rel.label | uppercase }}</span>
+      </ng-template>
+      <ng-template matTabContent>
+        <ng-container *ngTemplateOutlet="rel.template"></ng-container>
+      </ng-template>
+    </mat-tab>
+  </ng-container>
+
+  <mat-tab *ngIf="showHistory">
+    <ng-template mat-tab-label>
+      <span class="nav-tab-label">HISTORY</span>
+    </ng-template>
+    <ng-template matTabContent>
+      <app-history-timeline></app-history-timeline>
+    </ng-template>
+  </mat-tab>
+
+  <mat-tab *ngIf="showNotes">
+    <ng-template mat-tab-label>
+      <span class="nav-tab-label">NOTES</span>
+    </ng-template>
+    <ng-template matTabContent>
+      <app-notes-editor></app-notes-editor>
+    </ng-template>
+  </mat-tab>
+</mat-tab-group>

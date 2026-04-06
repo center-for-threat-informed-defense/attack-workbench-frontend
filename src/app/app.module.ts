@@ -227,6 +227,7 @@ import { DictionaryPropertyComponent } from './components/stix/dictionary-proper
 import { DictionaryEditComponent } from './components/stix/dictionary-property/dictionary-edit/dictionary-edit.component';
 import { DictionaryViewComponent } from './components/stix/dictionary-property/dictionary-view/dictionary-view.component';
 import { DictionaryDiffComponent } from './components/stix/dictionary-property/dictionary-diff/dictionary-diff.component';
+import { StixPageTabsComponent } from './components/stix/stix-page-tabs/stix-page-tabs.component';
 
 export function initConfig(appConfigService: AppConfigService) {
   return () => appConfigService.loadAppConfig();
@@ -284,6 +285,7 @@ export function initConfig(appConfigService: AppConfigService) {
     DatepickerPropertyComponent,
     IconViewComponent,
     LandingPageComponent,
+    StixPageTabsComponent,
     HelpPageComponent,
     DashboardPageComponent,
     DataQualityComponent,
