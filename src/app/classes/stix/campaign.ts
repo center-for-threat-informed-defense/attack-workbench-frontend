@@ -11,7 +11,7 @@ export class Campaign extends StixObject {
   public last_seen: Date;
   public first_seen_citation = '';
   public last_seen_citation = '';
-  public aliases: string[] = ['placeholder']; // initialize field with placeholder in first index for campaign name
+  public aliases: string[] = [];
   public contributors: string[] = [];
 
   public readonly supportsAttackID = true;
@@ -172,8 +172,6 @@ export class Campaign extends StixObject {
    * @returns {Observable} of the post
    */
   public save(restAPIService: RestApiConnectorService): Observable<Campaign> {
-    // update first index of aliases field to campaign name
-    this.aliases[0] = this.name;
     const postObservable = restAPIService.postCampaign(this);
     const subscription = postObservable.subscribe({
       next: result => {
