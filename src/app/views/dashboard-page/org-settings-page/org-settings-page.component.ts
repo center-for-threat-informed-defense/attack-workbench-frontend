@@ -61,7 +61,7 @@ export class OrgSettingsPageComponent implements OnInit {
 
   saveIdentity(): void {
     const subscription = this.restAPIConnector
-      .postIdentity(this.organizationIdentity)
+      .setOrganizationIdentity(this.organizationIdentity)
       .subscribe({
         next: identity => (this.organizationIdentity = identity),
         complete: () => subscription.unsubscribe(),
