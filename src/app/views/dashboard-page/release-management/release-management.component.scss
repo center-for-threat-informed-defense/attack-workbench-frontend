@@ -1,0 +1,140 @@
+@use '../../../../style/globals';
+@use '../../../../style/colors';
+
+.release-management {
+  .controls {
+    margin-bottom: 16px;
+  }
+
+  .sections-row {
+    /* Force the sections to stack vertically so Standard is always above Virtual */
+    display: block;
+    width: 100%;
+  }
+
+  .cards-container {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding: 10px;
+
+    .cards-grid {
+      /* responsive grid for cards inside each column */
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(18rem, 1fr));
+      gap: 24px;
+    }
+
+    /* lightweight wrapper for each card to ensure consistent surface styles
+       Added explicit fallback colors (do not rely solely on color() accessors)
+       to guard against build-time issues or runtime theming differences. */
+    .cards-grid > .list-card,
+    .cards-grid > div.list-card {
+      border-radius: 8px;
+      padding: 1.5rem;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      border: 1px solid rgba(0, 0, 0, 0.06);
+      min-height: 10rem;
+      box-sizing: border-box;
+      /* Fallback surface colors so cards render even without theme context */
+      background: #ffffff;
+      color: #111111;
+
+      /* Theme-aware overrides (preferred) */
+      .light & {
+        background: colors.color(light);
+        color: colors.on-color(light);
+      }
+      .dark & {
+        background: colors.color(dark);
+        color: colors.on-color(dark);
+      }
+    }
+
+    .card-standard,
+    .card-virtual {
+      /* card surface */
+      border-radius: 8px;
+      padding: 24px;
+      min-height: 12rem;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.35);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+
+      .light & {
+        background: colors.color(light);
+      }
+
+      .dark & {
+        background: colors.color(dark);
+      }
+
+      .card-top {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin: 8px 0;
+      }
+
+      .card-desc {
+        color: colors.on-color-deemphasis(dark);
+        margin: 6px 0;
+      }
+
+      .card-stats {
+        display: flex;
+        gap: 12px;
+        background: rgba(0, 0, 0, 0.06);
+        padding: 12px;
+        border-radius: 8px;
+        margin-top: 12px;
+      }
+
+      .stat {
+        flex: 1;
+        text-align: center;
+      }
+
+      .stat-label {
+        font-size: 11px;
+        color: colors.on-color-deemphasis(dark);
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        margin-bottom: 6px;
+      }
+
+      .stat-value {
+        font-weight: 700;
+        font-size: 1.25rem;
+      }
+
+      .card-sep {
+        margin: 12px 0;
+      }
+
+      .card-footer {
+        display: flex;
+        justify-content: space-between;
+        color: colors.on-color-deemphasis(dark);
+        font-size: 13px;
+      }
+    }
+
+    .tiny-icon {
+      font-size: 14px !important;
+      width: 14px !important;
+      height: 14px !important;
+      line-height: 14px !important;
+      margin-right: 6px;
+    }
+
+    .version {
+      display: flex;
+      align-items: center;
+    }
+  }
+}

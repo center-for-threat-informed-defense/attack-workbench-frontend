@@ -1,0 +1,165 @@
+<div class="release-management list-page grid spacing-20">
+  <div class="list-page-header">
+    <h1>Release Management</h1>
+    <div class="button-group">
+      <button
+        mat-raised-button
+        class="extended-button"
+        color="primary"
+        (click)="openNewTrackDialog()">
+        <mat-icon>create</mat-icon>
+        <span class="text-label">new track</span>
+      </button>
+    </div>
+  </div>
+
+  <div class="mt-8">
+    <div class="cards-container">
+      <!-- Standard tracks (full-width row) -->
+      <section class="tracks-section standard-section">
+        <h2 class="section-header">
+          Release Tracks ({{ standardTracks.length }})
+        </h2>
+        <div class="cards-grid">
+          <div
+            *ngFor="let track of standardTracks"
+            class="list-card card-standard"
+            role="button"
+            tabindex="0"
+            (click)="onViewTrack(track.id)"
+            (keydown.enter)="onViewTrack(track.id)"
+            (keydown.space)="onViewTrack(track.id)"
+            style="
+              display: flex;
+              flex-direction: column;
+              justify-content: space-between;
+              border-radius: 8px;
+              padding: 16px;
+              background: #ffffff;
+              color: #111111;
+              box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
+              border: 1px solid rgba(0, 0, 0, 0.06);
+              min-height: 10rem;
+            ">
+            <div class="card-top">
+              <span class="subheading">
+                {{ track.name }}
+              </span>
+              <mat-chip>Standard</mat-chip>
+            </div>
+
+            @if (track.description) {
+              <span class="description-text card-desc">
+                {{ track.description }}
+              </span>
+            }
+
+            <div class="card-stats">
+              <div class="stat">
+                <div class="stat-label">CANDIDATES</div>
+                <div class="stat-value">
+                  {{ track.stats?.candidates || track.snapshot_count || 0 }}
+                </div>
+              </div>
+              <div class="stat">
+                <div class="stat-label">STAGED</div>
+                <div class="stat-value">{{ track.stats?.staged || 0 }}</div>
+              </div>
+              <div class="stat">
+                <div class="stat-label">MEMBERS</div>
+                <div class="stat-value">
+                  {{ track.stats?.members || track.tagged_release_count || 0 }}
+                </div>
+              </div>
+            </div>
+
+            <mat-divider class="card-sep"></mat-divider>
+
+            <div class="card-footer">
+              <div class="version">
+                <mat-icon class="tiny-icon">sell</mat-icon>
+                {{ track.latestVersion }}
+              </div>
+              <div class="date">
+                {{ track.latestModified | date: 'shortDate' }}
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Virtual tracks (full-width row below) -->
+      <section class="tracks-section virtual-section">
+        <h2 class="section-header">
+          Virtual Tracks ({{ virtualTracks.length }})
+        </h2>
+        <div class="cards-grid">
+          <div
+            *ngFor="let track of virtualTracks"
+            class="list-card card-virtual"
+            role="button"
+            tabindex="0"
+            (click)="onViewTrack(track.id)"
+            (keydown.enter)="onViewTrack(track.id)"
+            (keydown.space)="onViewTrack(track.id)"
+            style="
+              display: flex;
+              flex-direction: column;
+              justify-content: space-between;
+              border-radius: 8px;
+              padding: 16px;
+              background: #ffffff;
+              color: #111111;
+              box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
+              border: 1px solid rgba(0, 0, 0, 0.06);
+              min-height: 10rem;
+            ">
+            <div class="card-top">
+              <span class="subheading">
+                {{ track.name }}
+              </span>
+              <mat-chip>Virtual</mat-chip>
+            </div>
+
+            @if (track.description) {
+              <span class="description-text card-desc">
+                {{ track.description }}
+              </span>
+            }
+
+            <div class="card-stats">
+              <div class="stat">
+                <div class="stat-label">COMPONENTS</div>
+                <div class="stat-value">
+                  {{ track.composition?.component_tracks?.length || 0 }}
+                </div>
+              </div>
+              <div class="stat">
+                <div class="stat-label">QUARANTINED</div>
+                <div class="stat-value">
+                  {{ track.stats?.quarantined || 0 }}
+                </div>
+              </div>
+              <div class="stat">
+                <div class="stat-label">MEMBERS</div>
+                <div class="stat-value">{{ track.stats?.members || 0 }}</div>
+              </div>
+            </div>
+
+            <mat-divider class="card-sep"></mat-divider>
+
+            <div class="card-footer">
+              <div class="version">
+                <mat-icon class="tiny-icon">sell</mat-icon>
+                {{ track.latestVersion }}
+              </div>
+              <div class="date">
+                {{ track.latestModified | date: 'shortDate' }}
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+</div>

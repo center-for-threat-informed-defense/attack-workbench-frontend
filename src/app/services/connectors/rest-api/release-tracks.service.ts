@@ -11,6 +11,7 @@ import {
   ReleaseTrackType,
   WorkflowStatusType,
 } from 'src/app/classes/release-tracks';
+import { Paginated } from './rest-api-connector.service';
 
 // -----------------------------------------------------------------------------
 // Request Payload Definitions for Release Tracks API Requests
@@ -130,7 +131,7 @@ export class ReleaseTracksConnectorService extends ApiConnector {
     limit?: number;
     offset?: number;
     search?: string;
-  }): Observable<any> {
+  }): Observable<Paginated<any>> {
     let params = new HttpParams();
     if (options?.type) params = params.set('type', options.type);
     if (options?.releases) params = params.set('releases', options.releases);

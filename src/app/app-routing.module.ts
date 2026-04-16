@@ -12,6 +12,7 @@ import { AuthorizationGuard } from './services/helpers/authorization.guard';
 import { Role } from './classes/authn/role';
 import { TeamsListPageComponent } from './views/dashboard-page/teams/teams-list-page/teams-list-page.component';
 import { TeamsViewPageComponent } from './views/dashboard-page/teams/teams-view-page/teams-view-page.component';
+import { ReleaseManagementComponent } from './views/dashboard-page/release-management/release-management.component';
 
 const editRoles = [Role.EDITOR, Role.TEAM_LEAD, Role.ADMIN];
 
@@ -53,6 +54,15 @@ const routes: Routes = [
               title: 'Dashboard',
             },
             component: DashboardPageComponent,
+          },
+          {
+            path: 'release-management',
+            data: {
+              breadcrumb: 'release management',
+              title: 'Release Management',
+              roles: [Role.ADMIN, Role.TEAM_LEAD],
+            },
+            component: ReleaseManagementComponent,
           },
           {
             path: 'teams',
