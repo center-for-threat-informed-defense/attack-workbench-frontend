@@ -195,6 +195,19 @@ export class Asset extends StixObject {
     });
     return putObservable;
   }
+
+  /**
+   * Revoke the STIX object in the database.
+   * @param restAPIService [RestApiConnectorService] the service to perform the revoke through
+   * @param revokingObject the revoking object payload
+   * @returns {Observable} of the revoke
+   */
+  public revoke(
+    restAPIService: RestApiConnectorService,
+    revokingObject: { revoking: { stixId: string; modified: string } }
+  ): Observable<object> {
+    return restAPIService.revokeAsset(this.stixID, revokingObject);
+  }
 }
 
 export interface RelatedAsset {
