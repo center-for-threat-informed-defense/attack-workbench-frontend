@@ -230,6 +230,7 @@ import { DictionaryViewComponent } from './components/stix/dictionary-property/d
 import { DictionaryDiffComponent } from './components/stix/dictionary-property/dictionary-diff/dictionary-diff.component';
 import { StixPageTabsComponent } from './components/stix/stix-page-tabs/stix-page-tabs.component';
 import { ReleaseManagementComponent } from './views/dashboard-page/release-management/release-management.component';
+import { ReleaseTrackCardComponent } from './components/release-track-card/release-track-card.component';
 import { NewTrackDialogComponent } from './components/new-track-dialog/new-track-dialog.component';
 
 export function initConfig(appConfigService: AppConfigService) {
@@ -463,6 +464,7 @@ export function initConfig(appConfigService: AppConfigService) {
     ClipboardModule,
     OverlayModule,
     MatAutocompleteModule,
+    ReleaseTrackCardComponent,
   ],
   providers: [
     AppConfigService,
