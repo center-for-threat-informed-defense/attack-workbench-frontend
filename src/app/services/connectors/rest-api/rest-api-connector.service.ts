@@ -1103,8 +1103,23 @@ export class RestApiConnectorService extends ApiConnector {
     const plural = AttackTypeToPlural[attackType];
     return function <P extends T>(object: P): Observable<P> {
       const url = `${this.apiUrl}/${plural}`;
+      let params = new HttpParams();
+
+      // add parentTechniqueId for sub-techniques
+      if (attackType == 'technique') {
+        const technique = object as StixObject as Technique;
+        if (technique.is_subtechnique && technique.parentTechnique) {
+          params = params.set(
+            'parentTechniqueId',
+            technique.parentTechnique.attackID
+          );
+        }
+      }
       return this.http
-        .post(url, object.serialize(), { headers: this.headers })
+        .post(url, object.serialize(), {
+          headers: this.headers,
+          params: params,
+        })
         .pipe(
           tap(this.handleSuccess(`${this.getObjectName(object)} saved`)),
           map(result => {
@@ -1133,7 +1148,19 @@ export class RestApiConnectorService extends ApiConnector {
     return <P extends T>(object: P): Observable<any> => {
       const plural = AttackTypeToPlural[object.attackType];
       const url = `${this.apiUrl}/${plural}`;
-      const params = new HttpParams().set('dryRun', 'true');
+      let params = new HttpParams().set('dryRun', 'true');
+
+      // add parentTechniqueId for sub-techniques
+      if (object.attackType == 'technique') {
+        const technique = object as StixObject as Technique;
+        if (technique.is_subtechnique && technique.parentTechnique) {
+          params = params.set(
+            'parentTechniqueId',
+            technique.parentTechnique.attackID
+          );
+        }
+      }
+
       return this.http.post(url, object.serialize(), { params }).pipe(
         // Success (200): validation passed, extract warnings only
         map(result => ({
