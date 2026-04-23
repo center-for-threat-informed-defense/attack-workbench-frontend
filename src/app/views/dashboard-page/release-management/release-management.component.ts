@@ -11,6 +11,7 @@ import { ReleaseTracksConnectorService } from 'src/app/services/connectors/rest-
 import { ReleaseTrackType } from 'src/app/classes/release-tracks';
 import { MatDialog } from '@angular/material/dialog';
 import { NewTrackDialogComponent } from 'src/app/components/new-track-dialog/new-track-dialog.component';
+import { MultipleChoiceDialogComponent } from 'src/app/components/multiple-choice-dialog/multiple-choice-dialog.component';
 
 @Component({
   selector: 'app-release-tracks-list',
@@ -150,18 +151,47 @@ export class ReleaseManagementComponent implements OnInit, OnDestroy {
   }
 
   public openNewTrackDialog(): void {
-    const dialogRef = this.dialog.open(NewTrackDialogComponent, {
-      width: '50em',
+    const choiceRef = this.dialog.open(MultipleChoiceDialogComponent, {
+      width: '30em',
       autoFocus: false,
+      data: {
+        title: 'Create a new track',
+        choices: [
+          {
+            label: 'Standard',
+            description:
+              'Recommended for most cases. Traditional release track that directly manages objects through the candidate, staged, and released workflow.',
+          },
+          {
+            label: 'Virtual',
+            description:
+              'Composite release track made up of standard tracks, used to build releases from multiple source tracks.',
+          },
+        ],
+      },
     });
 
-    dialogRef.afterClosed().subscribe(result => {
-      if (!result) return;
-      // attempt to extract an id from the result
-      const createdId = result?.id || result?.track_id || null;
-      if (createdId) this.viewTrack.emit(createdId);
-      // refresh list to include the newly-created track
-      this.loadTracks();
+    choiceRef.afterClosed().subscribe(choice => {
+      if (!choice) return;
+      const selectedType =
+        String(choice).toLowerCase() === 'virtual'
+          ? ReleaseTrackType.Virtual
+          : ReleaseTrackType.Standard;
+
+      const dialogRef = this.dialog.open(NewTrackDialogComponent, {
+        width: '50em',
+        autoFocus: false,
+        data: {
+          type: selectedType,
+        },
+      });
+
+      dialogRef.afterClosed().subscribe(result => {
+        if (!result) return;
+        const createdId = result?.id || result?.track_id || null;
+        if (createdId) this.viewTrack.emit(createdId);
+        this.loadTracks();
+      });
     });
   }
 }
