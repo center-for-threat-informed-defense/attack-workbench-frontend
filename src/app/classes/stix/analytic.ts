@@ -1,9 +1,9 @@
 import { EmbeddedRelationship, StixObject } from './stix-object';
 import { logger } from '../../utils/logger';
-import { catchError, forkJoin, map, Observable, of, switchMap } from 'rxjs';
+import { Observable, of, switchMap } from 'rxjs';
 import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/rest-api-connector.service';
 import { ValidationData } from '../serializable';
-import { StixType, WorkflowState } from 'src/app/utils/types';
+import { WorkflowState } from 'src/app/utils/types';
 
 export class Analytic extends StixObject {
   public name = '';
