@@ -2,15 +2,13 @@
 // Release Track Type
 // -----------------------------------------------------------------------------
 
-export enum ReleaseTrack {
+export enum ReleaseTrackType {
   Standard = 'standard',
   Virtual = 'virtual',
 }
 
-export type ReleaseTrackType = ReleaseTrack.Standard | ReleaseTrack.Virtual;
-
 export const RELEASE_TRACK_TYPE_OPTIONS: ReleaseTrackType[] = Object.values(
-  ReleaseTrack
+  ReleaseTrackType
 ) as ReleaseTrackType[];
 
 // -----------------------------------------------------------------------------

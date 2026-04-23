@@ -8,7 +8,7 @@ import {
 } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { ReleaseTracksConnectorService } from 'src/app/services/connectors/rest-api/release-tracks.service';
-import { ReleaseTrack } from 'src/app/classes/release-tracks';
+import { ReleaseTrackType } from 'src/app/classes/release-tracks';
 import { MatDialog } from '@angular/material/dialog';
 import { NewTrackDialogComponent } from 'src/app/components/new-track-dialog/new-track-dialog.component';
 
@@ -29,13 +29,13 @@ export class ReleaseManagementComponent implements OnInit, OnDestroy {
 
   public get standardTracks(): any[] {
     return this.allTracks.filter(
-      t => t.type === ReleaseTrack.Standard || t.type === 'standard'
+      t => t.type === ReleaseTrackType.Standard || t.type === 'standard'
     );
   }
 
   public get virtualTracks(): any[] {
     return this.allTracks.filter(
-      t => t.type === ReleaseTrack.Virtual || t.type === 'virtual'
+      t => t.type === ReleaseTrackType.Virtual || t.type === 'virtual'
     );
   }
 

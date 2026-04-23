@@ -1,6 +1,6 @@
 import { ReleaseTrackType, SnapshotScheduleModeType } from './enums';
 
-export interface ReleaseTrackRegistry {
+export interface ReleaseTrack {
   track_id: string;
   type: ReleaseTrackType;
   name: string;

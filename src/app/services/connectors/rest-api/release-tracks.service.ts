@@ -28,6 +28,17 @@ export interface CreateReleaseTrackPayload {
   snapshot_schedule?: any;
 }
 
+// Backwards-compatible payload shape for virtual track composition. The UI
+// sometimes submits a slightly different structure; keep the service tolerant.
+export interface VirtualCompositionPayload {
+  component_tracks?: any[];
+  deduplication?: {
+    strategy?: string;
+    tier_resolution?: string;
+    status_resolution?: string;
+  };
+}
+
 export interface StixBundlePayload {
   type: 'bundle';
   id?: string;
