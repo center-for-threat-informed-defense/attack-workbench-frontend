@@ -155,7 +155,8 @@ export class NewTrackDialogComponent implements OnInit {
         type: ReleaseTrackType.Standard,
       };
       if (payload.config.auto_promote) {
-        payload.config.candidacy_threshold = this.form.get('candidacyThreshold')?.value;
+        payload.config.candidacy_threshold =
+          this.form.get('candidacyThreshold')?.value;
       }
     }
 
