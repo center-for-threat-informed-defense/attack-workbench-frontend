@@ -63,7 +63,7 @@
     "zone.js": "~0.15.0"
   },
   "devDependencies": {
-    "@angular-devkit/build-angular": "^19.2.23",
+    "@angular-devkit/build-angular": "^21.2.8",
     "@angular/cli": "^19.2.23",
     "@angular/compiler-cli": "^19.2.20",
     "@codedependant/semantic-release-docker": "^5.1.1",
