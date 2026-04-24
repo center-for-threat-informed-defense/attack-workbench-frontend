@@ -7,7 +7,6 @@ import { Note } from 'src/app/classes/stix/note';
 import { Relationship } from 'src/app/classes/stix/relationship';
 import { StixObject } from 'src/app/classes/stix/stix-object';
 import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/rest-api-connector.service';
-import { SidebarService } from 'src/app/services/sidebar/sidebar.service';
 import { StixTypeToAttackType } from 'src/app/utils/type-mappings';
 import { StixDialogComponent } from 'src/app/views/stix/stix-dialog/stix-dialog.component';
 
@@ -39,7 +38,6 @@ export class RecentActivityComponent implements OnInit {
     private restAPIService: RestApiConnectorService,
     private dialog: MatDialog,
     private router: Router,
-    private sidebarService: SidebarService
   ) {
     // intentionally left blank
   }
@@ -150,8 +148,6 @@ export class RecentActivityComponent implements OnInit {
   /** open the event in a dialog or redirect to the object page */
   public open(event): void {
     if (event.sdo.attackType == 'note') {
-      this.sidebarService.opened = true;
-      this.sidebarService.currentTab = 'notes';
       const objectRef = (event.sdo as Note).object_refs[0];
       const type = StixTypeToAttackType[objectRef.split('--')[0]];
       this.navigateTo(objectRef, type);

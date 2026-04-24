@@ -34,7 +34,6 @@ import {
   RestApiConnectorService,
 } from 'src/app/services/connectors/rest-api/rest-api-connector.service';
 import { AuthenticationService } from 'src/app/services/connectors/authentication/authentication.service';
-import { SidebarService } from 'src/app/services/sidebar/sidebar.service';
 import { AddDialogComponent } from '../../add-dialog/add-dialog.component';
 import { Collection } from 'src/app/classes/stix/collection';
 import { logger } from 'src/app/utils/logger';
@@ -164,7 +163,6 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
     private restAPIConnectorService: RestApiConnectorService,
     private router: Router,
     private authenticationService: AuthenticationService,
-    private sidebarService: SidebarService
   ) {}
 
   ngOnInit(): void {
@@ -687,9 +685,6 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
       const object_ref = element['object_refs'][0];
       // Get type to navigate from target_ref
       const type = StixTypeToAttackType[object_ref.split('--')[0]];
-
-      this.sidebarService.opened = true;
-      this.sidebarService.currentTab = 'notes';
 
       // collection objs have a different URL structure
       let url = `/${type}/${object_ref}`;

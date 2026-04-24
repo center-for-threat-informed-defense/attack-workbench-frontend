@@ -16,7 +16,6 @@
         *ngIf="object.hasOwnProperty('modified')"
         style="border-radius: 16px"
         [disabled]="config.sidebarControl === 'disable'"
-        (click)="openHistory()"
         cdkDrag
         #popoverTrigger2="mtxPopoverTrigger"
         [mtxPopoverTriggerFor]="historyPopover"

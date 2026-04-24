@@ -27,16 +27,6 @@ export abstract class StixViewPage {
   public get configPreviousObject(): StixObject | null {
     return this.config.mode == 'diff' ? this.config.object[1] || null : null;
   }
-
-  //outputs to use if config.sidebarControl == "events"
-  @Output() public onOpenHistory = new EventEmitter();
-  public openHistory(): void {
-    this.onOpenHistory.emit();
-  }
-  @Output() public onOpenNotes = new EventEmitter();
-  public openNotes(): void {
-    this.onOpenNotes.emit();
-  }
 }
 
 export interface StixViewConfig {

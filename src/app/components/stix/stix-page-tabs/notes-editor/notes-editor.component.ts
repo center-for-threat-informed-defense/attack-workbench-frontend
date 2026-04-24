@@ -18,8 +18,8 @@ import {
   tap,
 } from 'rxjs/operators';
 import { Note } from 'src/app/classes/stix/note';
+import { ConfirmationDialogComponent } from 'src/app/components/confirmation-dialog/confirmation-dialog.component';
 import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/rest-api-connector.service';
-import { ConfirmationDialogComponent } from '../../confirmation-dialog/confirmation-dialog.component';
 
 @Component({
   selector: 'app-notes-editor',
