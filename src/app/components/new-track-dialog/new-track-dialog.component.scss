@@ -1,0 +1,69 @@
+@use '../../../style/globals';
+@use '../../../style/colors';
+
+.new-track-dialog {
+  margin: 0 24px;
+  height: 100%;
+  max-height: 80vh;
+  overflow: auto;
+  display: flex;
+  flex-direction: column;
+
+  .divider {
+    margin: 12px 0;
+  }
+
+  form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .section-block {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+
+    &.gap-12 {
+      gap: 12px;
+    }
+  }
+
+  .section-title {
+    font-weight: 600;
+    color: rgba(0, 0, 0, 0.85);
+  }
+  .section-sub {
+    font-size: 0.9em;
+    color: rgba(0, 0, 0, 0.6);
+  }
+
+  .mat-mdc-form-field {
+    width: 100%;
+  }
+
+  .no-hint .mat-mdc-form-field-subscript-wrapper {
+    display: none; // remove bottom padding used for hint
+  }
+
+  mat-hint {
+    color: rgba(0, 0, 0, 0.65);
+  }
+
+  // actions pinned to bottom of dialog
+  mat-dialog-actions {
+    display: flex;
+    justify-content: flex-end;
+    margin: 16px 0px;
+    padding: 0px;
+
+    button + button {
+      margin-left: 12px;
+    }
+
+    .success {
+      color: colors.color(success);
+    }
+  }
+}

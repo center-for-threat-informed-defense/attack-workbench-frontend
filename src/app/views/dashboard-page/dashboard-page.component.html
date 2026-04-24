@@ -7,6 +7,15 @@
   <div class="row" *ngIf="isTeamLead || isAdmin">
     <div class="col center">
       <div>
+        <button
+          mat-raised-button
+          color="primary"
+          routerLink="release-management">
+          <h2>Release Management</h2>
+          <h3 class="display-icon">
+            <mat-icon>published_with_changes</mat-icon>
+          </h3>
+        </button>
         <button mat-raised-button color="primary" routerLink="teams">
           <h2><br />Teams</h2>
           <h3 class="display-icon">

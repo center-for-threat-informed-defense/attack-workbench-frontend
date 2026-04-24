@@ -1,6 +1,6 @@
 import { Composition, CompositionResolution } from './composition';
 import { ReleaseTrackConfig } from './config';
-import { ReleaseTrack, ReleaseTrackType } from './enums';
+import { ReleaseTrackType } from './enums';
 import { VersionHistoryEntry } from './history';
 import {
   CandidateEntry,
@@ -11,7 +11,7 @@ import {
 
 export class ReleaseTrackSnapshot {
   public id = '';
-  public type: ReleaseTrackType;
+  public type: ReleaseTrackType = ReleaseTrackType.Standard;
   public modified: Date = new Date();
   public version?: string | null;
   public name = '';
@@ -40,11 +40,11 @@ export class ReleaseTrackSnapshot {
   }
 
   public get isVirtual(): boolean {
-    return this.type === ReleaseTrack.Virtual;
+    return this.type === ReleaseTrackType.Virtual;
   }
 
   public get isStandard(): boolean {
-    return this.type === ReleaseTrack.Standard;
+    return this.type === ReleaseTrackType.Standard;
   }
 
   public get memberCount(): number {

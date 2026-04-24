@@ -11,6 +11,7 @@ import {
   ReleaseTrackType,
   WorkflowStatusType,
 } from 'src/app/classes/release-tracks';
+import { Paginated } from './rest-api-connector.service';
 
 // -----------------------------------------------------------------------------
 // Request Payload Definitions for Release Tracks API Requests
@@ -25,6 +26,17 @@ export interface CreateReleaseTrackPayload {
   type?: ReleaseTrackType;
   composition?: any;
   snapshot_schedule?: any;
+}
+
+// Backwards-compatible payload shape for virtual track composition. The UI
+// sometimes submits a slightly different structure; keep the service tolerant.
+export interface VirtualCompositionPayload {
+  component_tracks?: any[];
+  deduplication?: {
+    strategy?: string;
+    tier_resolution?: string;
+    status_resolution?: string;
+  };
 }
 
 export interface StixBundlePayload {
@@ -130,7 +142,7 @@ export class ReleaseTracksConnectorService extends ApiConnector {
     limit?: number;
     offset?: number;
     search?: string;
-  }): Observable<any> {
+  }): Observable<Paginated<any>> {
     let params = new HttpParams();
     if (options?.type) params = params.set('type', options.type);
     if (options?.releases) params = params.set('releases', options.releases);

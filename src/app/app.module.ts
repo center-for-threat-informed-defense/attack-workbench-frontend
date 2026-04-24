@@ -45,6 +45,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatSelectModule } from '@angular/material/select';
 import { MatSidenavModule } from '@angular/material/sidenav';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatSortModule } from '@angular/material/sort';
 import { MatStepperModule } from '@angular/material/stepper';
@@ -228,6 +229,9 @@ import { DictionaryEditComponent } from './components/stix/dictionary-property/d
 import { DictionaryViewComponent } from './components/stix/dictionary-property/dictionary-view/dictionary-view.component';
 import { DictionaryDiffComponent } from './components/stix/dictionary-property/dictionary-diff/dictionary-diff.component';
 import { StixPageTabsComponent } from './components/stix/stix-page-tabs/stix-page-tabs.component';
+import { ReleaseManagementComponent } from './views/dashboard-page/release-management/release-management.component';
+import { ReleaseTrackCardComponent } from './components/release-track-card/release-track-card.component';
+import { NewTrackDialogComponent } from './components/new-track-dialog/new-track-dialog.component';
 
 export function initConfig(appConfigService: AppConfigService) {
   return () => appConfigService.loadAppConfig();
@@ -374,11 +378,14 @@ export function initConfig(appConfigService: AppConfigService) {
     DictionaryEditComponent,
     DictionaryViewComponent,
     DictionaryDiffComponent,
+    ReleaseManagementComponent,
+    NewTrackDialogComponent,
   ],
   exports: [
     MatToolbarModule,
     MatButtonModule,
     MatSidenavModule,
+    MatSlideToggleModule,
     MatIconModule,
     MatTableModule,
     MatSortModule,
@@ -424,6 +431,7 @@ export function initConfig(appConfigService: AppConfigService) {
     MatToolbarModule,
     MatButtonModule,
     MatSidenavModule,
+    MatSlideToggleModule,
     MatIconModule,
     MatTableModule,
     MatSortModule,
@@ -456,6 +464,7 @@ export function initConfig(appConfigService: AppConfigService) {
     ClipboardModule,
     OverlayModule,
     MatAutocompleteModule,
+    ReleaseTrackCardComponent,
   ],
   providers: [
     AppConfigService,

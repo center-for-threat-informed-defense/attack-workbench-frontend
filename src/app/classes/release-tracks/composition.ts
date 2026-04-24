@@ -5,13 +5,23 @@
 // aggregates content from component tracks
 // -----------------------------------------------------------------------------
 
-import { DeduplicationStrategyType } from './enums';
+import {
+  DeduplicationStrategyType,
+  SnapshotTierType,
+  WorkflowStatusType,
+} from './enums';
 import { ComponentTrack, ComponentSnapshotResolution } from './component-track';
 
 export interface Composition {
   component_tracks?: ComponentTrack[];
   deduplication?: {
     strategy?: DeduplicationStrategyType;
+    // When resolving conflicts between versions, which snapshot tier should be
+    // preferred (e.g., prefer from 'staged' over 'candidate' or vice-versa).
+    tier_resolution?: SnapshotTierType;
+    // When resolving conflicts, prefer the object with the highest workflow
+    // status (e.g., 'reviewed' over 'awaiting-review').
+    status_resolution?: WorkflowStatusType;
   };
 }
 
