@@ -6,7 +6,6 @@
           mode: config.mode,
           object: config.object,
         }"></app-name-property>
-      <!-- keep subheading but remove sidebar event handlers; history/notes now in tabs -->
       <app-subheading [config]="config"></app-subheading>
     </div>
   </div>
@@ -18,9 +17,7 @@
       { label: 'Techniques', template: techniqueTpl },
       { label: 'Campaigns', template: campaignTpl },
       { label: 'Software', template: softwareTpl },
-    ]"
-    [showHistory]="true"
-    [showNotes]="true">
+    ]">
   </app-stix-page-tabs>
 
   <ng-template #detailsTpl>

@@ -31,16 +31,6 @@ export class SidebarService {
       icon: 'superscript',
       enabled: true,
     },
-    {
-      name: 'history',
-      icon: 'history',
-      enabled: false,
-    },
-    {
-      name: 'notes',
-      icon: 'sticky_note_2_outlined',
-      enabled: true,
-    },
   ];
   //is the sidebar currently opened?
   private _opened = false;
@@ -61,7 +51,7 @@ export class SidebarService {
     // intentionally left blank
   }
 }
-export type tabOption = 'search' | 'references' | 'history' | 'notes';
+export type tabOption = 'search' | 'references';
 
 interface TabDefinition {
   name: tabOption; // the tab name

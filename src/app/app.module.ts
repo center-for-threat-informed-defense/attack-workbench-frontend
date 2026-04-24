@@ -74,7 +74,7 @@ import { LoadingOverlayComponent } from './components/loading-overlay/loading-ov
 import { MarkdownViewDialogComponent } from './components/markdown-view-dialog/markdown-view-dialog.component';
 import { MultipleChoiceDialogComponent } from './components/multiple-choice-dialog/multiple-choice-dialog.component';
 import { ReferenceEditDialogComponent } from './components/reference-edit-dialog/reference-edit-dialog.component';
-import { HistoryTimelineComponent } from './components/resources-drawer/history-timeline/history-timeline.component';
+import { HistoryTimelineComponent } from './components/stix/stix-page-tabs/history-timeline/history-timeline.component';
 import { ReferenceSidebarComponent } from './components/resources-drawer/reference-sidebar/reference-sidebar.component';
 import { ResourcesDrawerComponent } from './components/resources-drawer/resources-drawer.component';
 import { SearchComponent } from './components/resources-drawer/search/search.component';
@@ -144,7 +144,7 @@ import { OrderedListViewComponent } from './components/stix/ordered-list-propert
 import { IconViewComponent } from './components/icon-view/icon-view.component';
 import { ObjectStatusComponent } from './components/object-status/object-status.component';
 import { RecentActivityComponent } from './components/recent-activity/recent-activity.component';
-import { NotesEditorComponent } from './components/resources-drawer/notes-editor/notes-editor.component';
+import { NotesEditorComponent } from './components/stix/stix-page-tabs/notes-editor/notes-editor.component';
 import { IdentityPropertyComponent } from './components/stix/identity-property/identity-property.component';
 
 import { CitationEditComponent } from './components/stix/citation-property/citation-edit/citation-edit.component';

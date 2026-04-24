@@ -18,10 +18,6 @@ import { DeleteDialogComponent } from 'src/app/components/delete-dialog/delete-d
 import { AuthenticationService } from 'src/app/services/connectors/authentication/authentication.service';
 import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/rest-api-connector.service';
 import { EditorService } from 'src/app/services/editor/editor.service';
-import {
-  SidebarService,
-  tabOption,
-} from 'src/app/services/sidebar/sidebar.service';
 import { StixViewConfig } from '../stix-view-page';
 import { StixTypeToClass } from 'src/app/utils/class-mappings';
 
@@ -36,7 +32,6 @@ export class StixDialogComponent implements OnInit {
   constructor(
     public dialogRef: MatDialogRef<StixDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public _config: StixViewConfig,
-    public sidebarService: SidebarService,
     public restApiService: RestApiConnectorService,
     public editorService: EditorService,
     private authenticationService: AuthenticationService,
@@ -369,17 +364,8 @@ export class StixDialogComponent implements OnInit {
   }
 
   public sidebarOpened = false;
-  public currentTab: tabOption = 'history';
   public toggleSidebar() {
     this.sidebarOpened = !this.sidebarOpened;
-  }
-  public openHistory() {
-    this.sidebarOpened = true;
-    this.currentTab = 'history';
-  }
-  public openNotes() {
-    this.sidebarOpened = true;
-    this.currentTab = 'notes';
   }
   public get stixType(): string {
     return Array.isArray(this.config.object)
