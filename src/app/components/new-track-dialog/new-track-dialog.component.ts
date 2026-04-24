@@ -105,6 +105,13 @@ export class NewTrackDialogComponent implements OnInit {
     return this.form.valid && nameValid;
   }
 
+  public formatOption(opt: any): string {
+    if (opt === null || opt === undefined) return '';
+    // replace underscores and hyphens with spaces
+    const out = String(opt).replace(/[_-]+/g, ' ');
+    return out.toLowerCase();
+  }
+
   public handleCreate(): void {
     if (!this.isFormValid() || this.loading) return;
 

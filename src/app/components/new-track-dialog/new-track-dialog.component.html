@@ -48,7 +48,7 @@
           <mat-label>Candidacy Threshold</mat-label>
           <mat-select formControlName="candidacyThreshold">
             <mat-option *ngFor="let opt of candidacyOptions" [value]="opt">{{
-              opt
+              formatOption(opt)
             }}</mat-option>
           </mat-select>
         </mat-form-field>
@@ -60,7 +60,7 @@
         <mat-label>Member Sync Strategy</mat-label>
         <mat-select formControlName="memberSync">
           <mat-option *ngFor="let opt of memberSyncOptions" [value]="opt">{{
-            opt
+            formatOption(opt)
           }}</mat-option>
         </mat-select>
         <mat-hint>
@@ -73,7 +73,7 @@
         <mat-label>Supplant Behavior</mat-label>
         <mat-select formControlName="supplantBehavior">
           <mat-option *ngFor="let opt of supplantOptions" [value]="opt">{{
-            opt
+            formatOption(opt)
           }}</mat-option>
         </mat-select>
         <mat-hint>
@@ -98,8 +98,7 @@
             <mat-option
               *ngFor="let opt of deduplicationOptions"
               [value]="opt"
-              >{{ opt }}</mat-option
-            >
+              >{{ formatOption(opt) }}</mat-option>
           </mat-select>
           <mat-hint
             >How conflicting objects from component tracks are
@@ -114,8 +113,7 @@
               <mat-option
                 *ngFor="let opt of deduplicationTierOptions"
                 [value]="opt"
-                >{{ opt }}</mat-option
-              >
+                >{{ formatOption(opt) }}</mat-option>
             </mat-select>
             <mat-hint>
               Prefer objects from this tier when resolving conflicts
@@ -128,8 +126,7 @@
               <mat-option
                 *ngFor="let opt of deduplicationStatusOptions"
                 [value]="opt"
-                >{{ opt }}</mat-option
-              >
+                >{{ formatOption(opt) }}</mat-option>
             </mat-select>
             <mat-hint>
               Prefer objects with this status when resolving conflicts
@@ -152,7 +149,7 @@
           <mat-label>Mode</mat-label>
           <mat-select formControlName="mode">
             <mat-option *ngFor="let opt of snapshotModeOptions" [value]="opt">{{
-              opt
+              formatOption(opt)
             }}</mat-option>
           </mat-select>
           <mat-hint>Select mode for snapshot scheduling</mat-hint>
