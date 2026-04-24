@@ -9,7 +9,7 @@ type type_software = 'malware' | 'tool';
 export class Software extends StixObject {
   public name = '';
   public description: string;
-  public aliases: string[] = ['placeholder']; // initialize field with placeholder in first index for software name
+  public aliases: string[] = [];
   public platforms: string[] = [];
   public type: string;
   public contributors: string[] = [];
@@ -153,8 +153,6 @@ export class Software extends StixObject {
    * @returns {Observable} of the post
    */
   public save(restAPIService: RestApiConnectorService): Observable<Software> {
-    // update first index of aliases field to software name
-    this.aliases[0] = this.name;
     const postObservable = restAPIService.postSoftware(this);
     const subscription = postObservable.subscribe({
       next: result => {

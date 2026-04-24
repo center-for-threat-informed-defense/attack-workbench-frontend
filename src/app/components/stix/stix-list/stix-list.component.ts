@@ -303,7 +303,7 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
             undefined,
             'name'
           );
-          this.addPlatformsColumn('plain');
+          this.addColumn('platform', 'platform', 'plain');
           this.addDomainColumn();
           this.addVersionsAndDatesColumns();
           break;

@@ -7,7 +7,7 @@ import { WorkflowState } from 'src/app/utils/types';
 
 export class Group extends StixObject {
   public name = '';
-  public aliases: string[] = ['placeholder']; // initialize field with placeholder in first index for group name
+  public aliases: string[] = [];
   public contributors: string[] = [];
 
   public readonly supportsAttackID = true;
@@ -111,8 +111,6 @@ export class Group extends StixObject {
    * @returns {Observable} of the post
    */
   public save(restAPIService: RestApiConnectorService): Observable<Group> {
-    // update first index of aliases field to group name
-    this.aliases[0] = this.name;
     const postObservable = restAPIService.postGroup(this);
     const subscription = postObservable.subscribe({
       next: result => {
