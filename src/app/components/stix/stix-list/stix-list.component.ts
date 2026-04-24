@@ -162,7 +162,7 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
     public dialog: MatDialog,
     private restAPIConnectorService: RestApiConnectorService,
     private router: Router,
-    private authenticationService: AuthenticationService,
+    private authenticationService: AuthenticationService
   ) {}
 
   ngOnInit(): void {

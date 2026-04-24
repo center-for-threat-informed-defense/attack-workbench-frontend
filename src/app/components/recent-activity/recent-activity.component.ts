@@ -37,7 +37,7 @@ export class RecentActivityComponent implements OnInit {
   constructor(
     private restAPIService: RestApiConnectorService,
     private dialog: MatDialog,
-    private router: Router,
+    private router: Router
   ) {
     // intentionally left blank
   }
