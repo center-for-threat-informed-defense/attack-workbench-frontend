@@ -80,11 +80,9 @@ export class Asset extends StixObject {
   }
 
   public isRelatedAssetArray(arr: any[]): boolean {
-    return arr.every(a => this.instanceOfRelatedAsset(a));
-  }
-
-  public instanceOfRelatedAsset(object: any): boolean {
-    return 'name' in object && 'related_asset_sectors' in object;
+    return (
+      Array.isArray(arr) && arr.every(a => typeof a === 'object' && 'name' in a)
+    );
   }
 
   /**
