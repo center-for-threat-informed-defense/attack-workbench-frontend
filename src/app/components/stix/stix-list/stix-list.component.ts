@@ -534,6 +534,7 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
     }
     const filterByDomain: boolean = this.config.type
       ? [
+          'data-component',
           'data-source',
           'mitigation',
           'software',
