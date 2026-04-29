@@ -98,7 +98,8 @@
             <mat-option
               *ngFor="let opt of deduplicationOptions"
               [value]="opt"
-              >{{ formatOption(opt) }}</mat-option>
+              >{{ formatOption(opt) }}</mat-option
+            >
           </mat-select>
           <mat-hint
             >How conflicting objects from component tracks are
@@ -113,7 +114,8 @@
               <mat-option
                 *ngFor="let opt of deduplicationTierOptions"
                 [value]="opt"
-                >{{ formatOption(opt) }}</mat-option>
+                >{{ formatOption(opt) }}</mat-option
+              >
             </mat-select>
             <mat-hint>
               Prefer objects from this tier when resolving conflicts
@@ -126,7 +128,8 @@
               <mat-option
                 *ngFor="let opt of deduplicationStatusOptions"
                 [value]="opt"
-                >{{ formatOption(opt) }}</mat-option>
+                >{{ formatOption(opt) }}</mat-option
+              >
             </mat-select>
             <mat-hint>
               Prefer objects with this status when resolving conflicts
