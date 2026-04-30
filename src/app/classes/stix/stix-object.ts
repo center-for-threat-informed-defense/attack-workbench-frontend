@@ -798,6 +798,17 @@ export abstract class StixObject extends Serializable {
   abstract update(restAPIService: RestApiConnectorService): Observable<object>;
 
   /**
+   * Revoke the STIX object in the database.
+   * @param restAPIService [RestApiConnectorService] the service to perform the revoke through
+   * @param revokingObject the revoking object payload
+   * @returns {Observable} of the revoke
+   */
+  public revoke?(
+    restAPIService: RestApiConnectorService,
+    revokingObject: { revoking: { stixId: string; modified: string } }
+  ): Observable<object>;
+
+  /**
    * Updates the object's marking definitions with the default the first time an object is created
    * @param restAPIService [RestApiConnectorService] the service to perform the POST/PUT through
    */

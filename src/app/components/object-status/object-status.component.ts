@@ -198,9 +198,7 @@ export class ObjectStatusComponent implements OnInit {
       const revokedSubscription = revokedDialog.afterClosed().subscribe({
         next: result => {
           if (result && this.select.selected.length) {
-            // target object selected
-            const target_id = this.select.selected[0];
-            this.deprecateObjects(true, target_id);
+            this.revokeObject();
           } else {
             // user cancelled or no object selected
             this.revoked = false;
@@ -238,6 +236,41 @@ export class ObjectStatusComponent implements OnInit {
       this.object.deprecated = false;
       this.save();
     }
+  }
+
+  private revokeObject() {
+    const revokingObjectId = this.select.selected[0];
+    const revokingObject = this.objects.find(
+      object => object.stixID === revokingObjectId
+    );
+
+    if (!revokingObject?.modified) {
+      this.revoked = false;
+      return;
+    }
+
+    const revokePayload = {
+      revoking: {
+        stixId: revokingObject.stixID,
+        modified: revokingObject.modified.toISOString(),
+      },
+    };
+
+    const revoke = this.object.revoke?.(this.restAPIService, revokePayload);
+    if (!revoke) {
+      this.revoked = false;
+      return;
+    }
+
+    const revokeSubscription = revoke.subscribe({
+      complete: () => {
+        this.editorService.onReload.emit();
+        revokeSubscription.unsubscribe();
+      },
+      error: () => {
+        this.revoked = false;
+      },
+    });
   }
 
   /**
