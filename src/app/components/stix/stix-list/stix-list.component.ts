@@ -15,7 +15,6 @@ import { MatPaginator } from '@angular/material/paginator';
 import { SelectionModel } from '@angular/cdk/collections';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
-
 import { fromEvent, Observable, of, Subscription } from 'rxjs';
 import {
   debounceTime,
@@ -23,7 +22,6 @@ import {
   filter,
   tap,
 } from 'rxjs/operators';
-
 import {
   EmbeddedRelationship,
   StixObject,
@@ -244,7 +242,7 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
         case 'collection-created':
           this.addNameColumn(sticky_allowed);
           this.addColumn('latest version', 'version', 'version');
-          this.addModifiedAndCreatedColumns();
+          this.addColumn('modified', 'modified', 'timestamp');
           this.tableDetail = [
             {
               field: 'description',
@@ -281,18 +279,18 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
           this.addWorkflowAndStateColumns();
           this.addIdAndNameColumns(sticky_allowed);
           this.addDomainColumn();
-          this.addVersionsAndDatesColumns();
+          this.addColumn('modified', 'modified', 'timestamp');
           break;
         case 'matrix':
           this.addWorkflowAndStateColumns();
           this.addNameColumn(sticky_allowed);
-          this.addVersionsAndDatesColumns();
+          this.addColumn('modified', 'modified', 'timestamp');
           break;
         case 'detection-strategy':
         case 'campaign':
           this.addWorkflowAndStateColumns();
           this.addIdAndNameColumns(sticky_allowed);
-          this.addVersionsAndDatesColumns();
+          this.addColumn('modified', 'modified', 'timestamp');
           break;
         case 'analytic':
           this.addWorkflowAndStateColumns();
@@ -307,35 +305,35 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
           );
           this.addColumn('platform', 'platform', 'plain');
           this.addDomainColumn();
-          this.addVersionsAndDatesColumns();
+          this.addColumn('modified', 'modified', 'timestamp');
           break;
         case 'group':
           this.addWorkflowAndStateColumns();
           this.addIdAndNameColumns(sticky_allowed);
           this.addColumn('associated groups', 'aliases', 'list');
-          this.addVersionsAndDatesColumns();
+          this.addColumn('modified', 'modified', 'timestamp');
           break;
         case 'software':
           this.addWorkflowAndStateColumns();
           this.addIdAndNameColumns(sticky_allowed);
           this.addColumn('type', 'type', 'plain');
           this.addDomainColumn();
-          this.addVersionsAndDatesColumns();
+          this.addColumn('modified', 'modified', 'timestamp');
           break;
         case 'data-source':
         case 'technique':
           this.addWorkflowAndStateColumns();
           this.addIdAndNameColumns(sticky_allowed);
-          this.addPlatformsColumn();
           this.addDomainColumn();
-          this.addVersionsAndDatesColumns();
+          this.addPlatformsColumn();
+          this.addColumn('modified', 'modified', 'timestamp');
           break;
         case 'asset':
           this.addWorkflowAndStateColumns();
           this.addIdAndNameColumns(sticky_allowed);
           this.addPlatformsColumn();
           this.addColumn('sectors', 'sectors', 'list');
-          this.addVersionsAndDatesColumns();
+          this.addColumn('modified', 'modified', 'timestamp');
           break;
         case 'relationship':
           if (this.config.compactRelationshipColumns) {
@@ -405,17 +403,17 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
         case 'note':
           this.addColumn('title', 'title', 'plain');
           this.addColumn('content', 'content', 'plain');
-          this.addModifiedAndCreatedColumns();
+          this.addColumn('modified', 'modified', 'timestamp');
           break;
         default:
           this.addColumn('type', 'attackType', 'plain');
-          this.addModifiedAndCreatedColumns();
+          this.addColumn('modified', 'modified', 'timestamp');
       }
     } else {
       this.addStateColumnOnly();
       this.addColumn('type', 'attackType', 'plain');
       this.addIdAndNameColumns(true);
-      this.addModifiedAndCreatedColumns();
+      this.addColumn('modified', 'modified', 'timestamp');
     }
   }
 
@@ -443,17 +441,6 @@ export class StixListComponent implements OnInit, AfterViewInit, OnDestroy {
 
   private addPlatformsColumn(type: column_types = 'list'): void {
     this.addColumn('platforms', 'platforms', type);
-  }
-
-  private addModifiedAndCreatedColumns(): void {
-    this.addColumn('modified', 'modified', 'timestamp');
-    this.addColumn('created', 'created', 'timestamp');
-  }
-
-  private addVersionsAndDatesColumns() {
-    this.addColumn('version', 'version', 'version');
-    this.addColumn('modified', 'modified', 'timestamp');
-    this.addColumn('created', 'created', 'timestamp');
   }
 
   /**

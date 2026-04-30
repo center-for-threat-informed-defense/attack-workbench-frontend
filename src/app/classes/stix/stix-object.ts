@@ -90,7 +90,7 @@ export abstract class StixObject extends Serializable {
       this.version = new VersionNumber('0.1');
       this.attackID = '';
       this.external_references = new ExternalReferences();
-      if (this.type !== 'x-mitre-collection') {
+      if (this.type !== 'x-mitre-collection' && this.type !== 'relationship') {
         this.workflow = {
           state: 'work-in-progress',
         };
