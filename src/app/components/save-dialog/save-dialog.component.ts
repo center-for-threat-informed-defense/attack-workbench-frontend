@@ -65,6 +65,9 @@ export class SaveDialogComponent implements OnInit {
 
   ngOnInit(): void {
     this.newState = this.config.initialWorkflowState || 'work-in-progress';
+    if (this.config.object.attackType === 'relationship') {
+      this.newState = undefined;
+    }
     if (this.config.object.attackType === 'detection-strategy') {
       const det = this.config.object as DetectionStrategy;
       const newAnalytics = new Set<string>(det.analytics);

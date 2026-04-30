@@ -485,10 +485,9 @@ export class Relationship extends StixObject {
    * @returns {Observable<ValidationData>} the validation warnings and errors once validation is complete.
    */
   public validate(
-    restAPIService: RestApiConnectorService,
-    tempWorkflowState?: WorkflowState
+    restAPIService: RestApiConnectorService
   ): Observable<ValidationData> {
-    return this.base_validate(restAPIService, tempWorkflowState).pipe(
+    return this.base_validate(restAPIService).pipe(
       map(result => {
         // presence of source-ref
         if (!this.source_ref) {
@@ -621,11 +620,6 @@ export class Relationship extends StixObject {
   public save(
     restAPIService: RestApiConnectorService
   ): Observable<Relationship> {
-    if (!this.workflow) {
-      // Initialize the workflow object if it doesn't exist
-      this.workflow = { state: 'work-in-progress' };
-    }
-    this.workflow.state = 'work-in-progress';
     const postObservable = restAPIService.postRelationship(this);
     const subscription = postObservable.subscribe({
       next: result => {
