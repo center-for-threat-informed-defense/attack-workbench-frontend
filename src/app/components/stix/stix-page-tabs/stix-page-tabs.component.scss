@@ -1,16 +1,25 @@
-.nav-tab-label {
-  font-family: Roboto, Arial, sans-serif;
-  font-weight: 500;
-  text-transform: uppercase;
-  letter-spacing: 0.4px;
-  display: inline-block;
-  padding: 0 8px;
-}
+@use '../../../../style/colors.scss';
+@use '../../../../style/globals.scss';
 
-.mat-mdc-tab-header .mat-mdc-tab-label .nav-tab-label {
-  color: inherit;
-}
+.stix-page-tabs {
+  .mat-mdc-tab-header {
+    .dark & {
+      border-bottom: 1px solid colors.border-color(dark) !important;
+    }
+    .light & {
+      border-bottom: 1px solid colors.border-color(light) !important;
+    }
+  }
+  .nav-tab-label {
+    font-family: Roboto, Arial, sans-serif;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+    display: inline-block;
+    padding: 0 8px;
+  }
 
-.details-tpl-wrapper {
-  margin-top: 20px;
+  .details-tpl-wrapper {
+    margin-top: 20px;
+  }
 }

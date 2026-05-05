@@ -1,4 +1,4 @@
-<mat-tab-group dynamicHeight mat-stretch-tabs>
+<mat-tab-group dynamicHeight mat-stretch-tabs class="stix-page-tabs">
   <mat-tab>
     <ng-template mat-tab-label>
       <span class="nav-tab-label">DETAILS</span>
@@ -10,13 +10,13 @@
     </ng-template>
   </mat-tab>
 
-  <ng-container *ngFor="let rel of relationshipTabs">
+  <ng-container *ngFor="let tab of customTabs">
     <mat-tab>
       <ng-template mat-tab-label>
-        <span class="nav-tab-label">{{ rel.label | uppercase }}</span>
+        <span class="nav-tab-label">{{ tab.label | uppercase }}</span>
       </ng-template>
       <ng-template matTabContent>
-        <ng-container *ngTemplateOutlet="rel.template"></ng-container>
+        <ng-container *ngTemplateOutlet="tab.template"></ng-container>
       </ng-template>
     </mat-tab>
   </ng-container>
