@@ -1,0 +1,16 @@
+@use 'src/style/colors.scss' as colors;
+
+.status-chip {
+    .mat-mdc-chip.awaiting-review,
+    .awaiting-review {
+      background: colors.color('pending');
+      color: colors.on-color('pending');
+    }
+    
+    .mat-mdc-chip.reviewed,
+    .reviewed {
+      background: colors.color('active');
+      color: colors.on-color('active');
+    }
+}
+
