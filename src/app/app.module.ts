@@ -232,6 +232,7 @@ import { StixPageTabsComponent } from './components/stix/stix-page-tabs/stix-pag
 import { ReleaseManagementComponent } from './views/dashboard-page/release-management/release-management.component';
 import { ReleaseTrackCardComponent } from './components/release-track-card/release-track-card.component';
 import { NewTrackDialogComponent } from './components/new-track-dialog/new-track-dialog.component';
+import { StatusChipComponent } from './components/status-chip/status-chip.component';
 
 export function initConfig(appConfigService: AppConfigService) {
   return () => appConfigService.loadAppConfig();
@@ -380,6 +381,7 @@ export function initConfig(appConfigService: AppConfigService) {
     DictionaryDiffComponent,
     ReleaseManagementComponent,
     NewTrackDialogComponent,
+    StatusChipComponent,
   ],
   exports: [
     MatToolbarModule,
