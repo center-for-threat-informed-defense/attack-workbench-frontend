@@ -1,7 +1,8 @@
+import { ViewEncapsulation } from '@angular/core';
 import { Component, Input, TemplateRef } from '@angular/core';
 import { StixViewConfig } from 'src/app/views/stix/stix-view-page';
 
-interface RelationshipTab {
+interface CustomTab {
   label: string;
   template: TemplateRef<any>;
 }
@@ -11,11 +12,12 @@ interface RelationshipTab {
   templateUrl: './stix-page-tabs.component.html',
   styleUrls: ['./stix-page-tabs.component.scss'],
   standalone: false,
+  encapsulation: ViewEncapsulation.None,
 })
 export class StixPageTabsComponent {
   @Input() config!: StixViewConfig;
   @Input() detailsTemplate!: TemplateRef<any>;
-  @Input() relationshipTabs: RelationshipTab[] = [];
+  @Input() customTabs: CustomTab[] = [];
   @Input() showHistory = true;
   @Input() showNotes = true;
 }
