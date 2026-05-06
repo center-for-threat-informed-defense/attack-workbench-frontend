@@ -41,7 +41,7 @@
                 <span class="text-deemphasis"> &nbsp;(in this draft) </span>
               </div>
               <div class="card-body">
-                <h2 style="margin: 12px 0 0 0;" class="view-color">
+                <h2 style="margin: 12px 0 0 0" class="view-color">
                   {{ releaseTrack.candidates?.length || 0 }}
                 </h2>
               </div>
@@ -56,7 +56,7 @@
                 <span class="text-deemphasis"> &nbsp;(for next release) </span>
               </div>
               <div class="card-body">
-                <h2 style="margin: 12px 0 0 0;" class="promote-color">
+                <h2 style="margin: 12px 0 0 0" class="promote-color">
                   {{ releaseTrack.staged?.length || 0 }}
                 </h2>
               </div>
@@ -71,7 +71,7 @@
                 <span class="text-deemphasis"> &nbsp;(published) </span>
               </div>
               <div class="card-body">
-                <h2 style="margin: 12px 0 0 0;">
+                <h2 style="margin: 12px 0 0 0">
                   {{ releaseTrack.members?.length || 0 }}
                 </h2>
               </div>
@@ -88,18 +88,24 @@
               <div class="card-header member-list">
                 <h3 class="view-color">Candidates ({{ candidates.length }})</h3>
                 <div class="small-buttons">
-                  <button class="view-color" mat-stroked-button (click)="onAddCandidate()">
+                  <button
+                    class="view-color"
+                    mat-stroked-button
+                    (click)="onAddCandidate()">
                     <mat-icon>add</mat-icon>
                     Add
                   </button>
-                  <button class="promote-color" mat-stroked-button (click)="onPromoteAll()">
+                  <button
+                    class="promote-color"
+                    mat-stroked-button
+                    (click)="onPromoteAll()">
                     Promote All
                   </button>
                 </div>
               </div>
 
               <mat-divider></mat-divider>
-              
+
               <div class="card-body list">
                 <div *ngIf="!candidates.length">No candidates</div>
                 <div *ngFor="let item of candidates">
@@ -108,7 +114,7 @@
                       memberTpl;
                       context: {
                         $implicit: item,
-                        type: 'candidate'
+                        type: 'candidate',
                       }
                     "></ng-container>
                 </div>
@@ -124,14 +130,17 @@
               <div class="card-header member-list">
                 <h3 class="promote-color">Staged ({{ staged.length }})</h3>
                 <div class="small-buttons">
-                  <button class="demote-color" mat-stroked-button (click)="onDemoteAll()">
+                  <button
+                    class="demote-color"
+                    mat-stroked-button
+                    (click)="onDemoteAll()">
                     Demote All
                   </button>
                 </div>
               </div>
 
               <mat-divider></mat-divider>
-              
+
               <div class="card-body list">
                 <div *ngIf="!staged.length">No staged objects</div>
                 <div *ngFor="let item of staged">
@@ -140,7 +149,7 @@
                       memberTpl;
                       context: {
                         $implicit: item,
-                        type: 'staged'
+                        type: 'staged',
                       }
                     "></ng-container>
                 </div>
@@ -158,7 +167,7 @@
               </div>
 
               <mat-divider></mat-divider>
-              
+
               <div class="card-body list">
                 <div *ngIf="!members.length">No published objects</div>
                 <div *ngFor="let item of members">
@@ -167,7 +176,7 @@
                       memberTpl;
                       context: {
                         $implicit: item,
-                        type: 'member'
+                        type: 'member',
                       }
                     "></ng-container>
                 </div>
@@ -185,7 +194,9 @@
         <div class="space-between">
           <div class="card-title">
             <!-- TODO item name - awaiting API changes -->
-            {{ item.object_ref.split('-')[0] }}-{{ item.object_ref.split('-')[6] }}
+            {{ item.object_ref.split('-')[0] }}-{{
+              item.object_ref.split('-')[6]
+            }}
             <span class="card-subtitle">
               <!-- TODO item name - awaiting API changes -->
               &LessLess;ATT&CK ID&GreaterGreater;
@@ -203,7 +214,8 @@
             <mat-icon>open_in_browser</mat-icon>
             View
           </button>
-          <button *ngIf="type !== 'member'"
+          <button
+            *ngIf="type !== 'member'"
             mat-stroked-button
             (click)="onDiff(item.object_ref)">
             <mat-icon>difference</mat-icon>
@@ -211,14 +223,16 @@
           </button>
         </div>
         <div class="small-buttons">
-          <button *ngIf="type === 'candidate'"
+          <button
+            *ngIf="type === 'candidate'"
             class="promote-color"
             mat-stroked-button
             (click)="onPromote(item.object_ref)">
             <mat-icon>arrow_forward</mat-icon>
             Promote
           </button>
-          <button *ngIf="type === 'staged'"
+          <button
+            *ngIf="type === 'staged'"
             class="demote-color"
             mat-stroked-button
             (click)="onDemote(item.object_ref)">
@@ -231,20 +245,14 @@
   </ng-template>
 
   <ng-template #reviewTpl>
-    <div class="review-tpl">
-      TODO
-    </div>
+    <div class="review-tpl">TODO</div>
   </ng-template>
 
   <ng-template #historyTpl>
-    <div class="history-tpl">
-      TODO
-    </div>
+    <div class="history-tpl">TODO</div>
   </ng-template>
 
   <ng-template #configTpl>
-    <div class="config-tpl">
-      TODO
-    </div>
+    <div class="config-tpl">TODO</div>
   </ng-template>
 </div>

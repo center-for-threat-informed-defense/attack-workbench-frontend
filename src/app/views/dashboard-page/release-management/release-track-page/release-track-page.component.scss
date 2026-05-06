@@ -59,7 +59,9 @@
     }
   }
 
-  .candidate-card, .staged-card, .member-card {
+  .candidate-card,
+  .staged-card,
+  .member-card {
     margin: 12px 6px;
     .mat-mdc-card-header {
       padding: 12px 8px;
