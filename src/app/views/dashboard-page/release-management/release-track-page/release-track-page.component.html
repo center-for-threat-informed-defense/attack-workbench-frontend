@@ -1,0 +1,250 @@
+<div class="release-track-page">
+  <div class="release-track-header">
+    <h1 style="margin: 0">
+      {{ releaseTrack.name }}
+    </h1>
+    <div class="button-group">
+      <button mat-stroked-button>
+        Export Latest
+        <mat-icon>file_download</mat-icon>
+      </button>
+      <button mat-stroked-button>
+        Create Draft
+        <mat-icon>local_see</mat-icon>
+      </button>
+      <button mat-raised-button color="primary">
+        Preview & Release
+        <mat-icon>preview</mat-icon>
+      </button>
+    </div>
+  </div>
+
+  <app-stix-page-tabs
+    [detailsTemplate]="detailsTpl"
+    [showHistory]="false"
+    [showNotes]="false"
+    [customTabs]="[
+      { label: 'Review', template: reviewTpl },
+      { label: 'History', template: historyTpl },
+      { label: 'Config', template: configTpl },
+    ]"></app-stix-page-tabs>
+
+  <ng-template #detailsTpl>
+    <!-- stats summary -->
+    <div class="grid spacing-16">
+      <div class="row">
+        <div class="col">
+          <div class="labelled-box">
+            <div class="content no-label">
+              <div class="card-header">
+                <strong>Candidates</strong>
+                <span class="text-deemphasis"> &nbsp;(in this draft) </span>
+              </div>
+              <div class="card-body">
+                <h2 style="margin: 12px 0 0 0;" class="view-color">
+                  {{ releaseTrack.candidates?.length || 0 }}
+                </h2>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col">
+          <div class="labelled-box">
+            <div class="content no-label">
+              <div class="card-header">
+                <strong>Staged</strong>
+                <span class="text-deemphasis"> &nbsp;(for next release) </span>
+              </div>
+              <div class="card-body">
+                <h2 style="margin: 12px 0 0 0;" class="promote-color">
+                  {{ releaseTrack.staged?.length || 0 }}
+                </h2>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col">
+          <div class="labelled-box">
+            <div class="content no-label">
+              <div class="card-header">
+                <strong>Members</strong>
+                <span class="text-deemphasis"> &nbsp;(published) </span>
+              </div>
+              <div class="card-body">
+                <h2 style="margin: 12px 0 0 0;">
+                  {{ releaseTrack.members?.length || 0 }}
+                </h2>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col">
+          <!-- candidates list -->
+          <div class="labelled-box">
+            <div class="content no-label">
+              <div class="card-header member-list">
+                <h3 class="view-color">Candidates ({{ candidates.length }})</h3>
+                <div class="small-buttons">
+                  <button class="view-color" mat-stroked-button (click)="onAddCandidate()">
+                    <mat-icon>add</mat-icon>
+                    Add
+                  </button>
+                  <button class="promote-color" mat-stroked-button (click)="onPromoteAll()">
+                    Promote All
+                  </button>
+                </div>
+              </div>
+
+              <mat-divider></mat-divider>
+              
+              <div class="card-body list">
+                <div *ngIf="!candidates.length">No candidates</div>
+                <div *ngFor="let item of candidates">
+                  <ng-container
+                    *ngTemplateOutlet="
+                      memberTpl;
+                      context: {
+                        $implicit: item,
+                        type: 'candidate'
+                      }
+                    "></ng-container>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col">
+          <!-- staged -->
+          <div class="labelled-box">
+            <div class="content no-label">
+              <div class="card-header member-list">
+                <h3 class="promote-color">Staged ({{ staged.length }})</h3>
+                <div class="small-buttons">
+                  <button class="demote-color" mat-stroked-button (click)="onDemoteAll()">
+                    Demote All
+                  </button>
+                </div>
+              </div>
+
+              <mat-divider></mat-divider>
+              
+              <div class="card-body list">
+                <div *ngIf="!staged.length">No staged objects</div>
+                <div *ngFor="let item of staged">
+                  <ng-container
+                    *ngTemplateOutlet="
+                      memberTpl;
+                      context: {
+                        $implicit: item,
+                        type: 'staged'
+                      }
+                    "></ng-container>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col">
+          <!-- members -->
+          <div class="labelled-box">
+            <div class="content no-label">
+              <div class="card-header member-list">
+                <h3>Members ({{ members.length }})</h3>
+              </div>
+
+              <mat-divider></mat-divider>
+              
+              <div class="card-body list">
+                <div *ngIf="!members.length">No published objects</div>
+                <div *ngFor="let item of members">
+                  <ng-container
+                    *ngTemplateOutlet="
+                      memberTpl;
+                      context: {
+                        $implicit: item,
+                        type: 'member'
+                      }
+                    "></ng-container>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </ng-template>
+
+  <ng-template #memberTpl let-item let-type="type">
+    <mat-card class="candidate-card" appearance="outlined">
+      <mat-card-header>
+        <div class="space-between">
+          <div class="card-title">
+            <!-- TODO item name - awaiting API changes -->
+            {{ item.object_ref.split('-')[0] }}-{{ item.object_ref.split('-')[6] }}
+            <span class="card-subtitle">
+              <!-- TODO item name - awaiting API changes -->
+              &LessLess;ATT&CK ID&GreaterGreater;
+            </span>
+          </div>
+          <app-status-chip [status]="item.object_status"></app-status-chip>
+        </div>
+      </mat-card-header>
+      <mat-card-actions>
+        <div class="small-buttons">
+          <button
+            class="view-color"
+            mat-stroked-button
+            (click)="onView(item.object_ref)">
+            <mat-icon>open_in_browser</mat-icon>
+            View
+          </button>
+          <button *ngIf="type !== 'member'"
+            mat-stroked-button
+            (click)="onDiff(item.object_ref)">
+            <mat-icon>difference</mat-icon>
+            Diff
+          </button>
+        </div>
+        <div class="small-buttons">
+          <button *ngIf="type === 'candidate'"
+            class="promote-color"
+            mat-stroked-button
+            (click)="onPromote(item.object_ref)">
+            <mat-icon>arrow_forward</mat-icon>
+            Promote
+          </button>
+          <button *ngIf="type === 'staged'"
+            class="demote-color"
+            mat-stroked-button
+            (click)="onDemote(item.object_ref)">
+            <mat-icon>arrow_back</mat-icon>
+            Demote
+          </button>
+        </div>
+      </mat-card-actions>
+    </mat-card>
+  </ng-template>
+
+  <ng-template #reviewTpl>
+    <div class="review-tpl">
+      TODO
+    </div>
+  </ng-template>
+
+  <ng-template #historyTpl>
+    <div class="history-tpl">
+      TODO
+    </div>
+  </ng-template>
+
+  <ng-template #configTpl>
+    <div class="config-tpl">
+      TODO
+    </div>
+  </ng-template>
+</div>

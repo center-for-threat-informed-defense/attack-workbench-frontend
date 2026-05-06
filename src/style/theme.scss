@@ -430,12 +430,12 @@ button.mat-mdc-outlined-button:disabled {
   }
 }
 
-.mat-mdc-card .mat-mdc-card-header {
+.mat-mdc-card .mat-mdc-card-actions {
   .light & {
-    background: colors.color-alternate(light);
+    border-top: 1px solid colors.color-alternate(light);
   }
   .dark & {
-    background: colors.color-alternate(dark);
+    border-top: 1px solid colors.color-alternate(dark);
   }
 }
 

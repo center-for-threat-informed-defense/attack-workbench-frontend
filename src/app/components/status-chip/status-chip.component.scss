@@ -1,14 +1,16 @@
 @use 'src/style/colors.scss' as colors;
 
 .status-chip {
-  .mat-mdc-chip.awaiting-review,
-  .awaiting-review {
+  .mat-mdc-chip-action-label {
+    font-size: 12px !important;
+  }
+
+  .mat-mdc-chip.awaiting-review {
     background: colors.color('pending');
     color: colors.on-color('pending');
   }
 
-  .mat-mdc-chip.reviewed,
-  .reviewed {
+  .mat-mdc-chip.reviewed {
     background: colors.color('active');
     color: colors.on-color('active');
   }
