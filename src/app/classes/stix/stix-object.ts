@@ -12,17 +12,12 @@ import {
   AttackTypeToRoute,
   StixTypeToAttackType,
 } from 'src/app/utils/type-mappings';
-import { StixType, WorkflowState } from 'src/app/utils/types';
+import { WorkflowStatus, WorkflowStatusType } from 'src/app/utils/types';
 import { v4 as uuid } from 'uuid';
 import { logger } from '../../utils/logger';
 import { ExternalReferences } from '../external-references';
 import { Serializable, ValidationData } from '../serializable';
 import { VersionNumber } from '../version-number';
-
-export type workflowStates =
-  | 'work-in-progress'
-  | 'awaiting-review'
-  | 'reviewed';
 
 export abstract class StixObject extends Serializable {
   public stixID: string; // STIX ID
@@ -40,7 +35,7 @@ export abstract class StixObject extends Serializable {
   public object_marking_refs: string[] = []; //list of embedded relationships to marking_defs
 
   public abstract readonly supportsAttackID: boolean; // boolean to determine if object supports ATT&CK IDs
-  public tempWorkflowState: WorkflowState;
+  public tempWorkflowState: WorkflowStatusType;
   protected abstract get attackIDValidator(): {
     regex: string; // regex to validate the ID
     format: string; // format to display to user
@@ -67,7 +62,7 @@ export abstract class StixObject extends Serializable {
   public version: VersionNumber; // version number of the object
   public external_references: ExternalReferences;
   public workflow: {
-    state: workflowStates;
+    state: WorkflowStatusType;
     created_by_user_account?: string;
   };
 
@@ -92,7 +87,7 @@ export abstract class StixObject extends Serializable {
       this.external_references = new ExternalReferences();
       if (this.type !== 'x-mitre-collection') {
         this.workflow = {
-          state: 'work-in-progress',
+          state: WorkflowStatus.WorkInProgress,
         };
       }
       this.description = '';

@@ -1,16 +1,18 @@
 import { Component, Input } from '@angular/core';
-import { WorkflowState, WorkflowStates } from '../../utils/types';
+import { WorkflowStatus, WorkflowStatusMap } from '../../utils/types';
+import { ViewEncapsulation } from '@angular/core';
 
 @Component({
   selector: 'app-status-chip',
   standalone: false,
   templateUrl: './status-chip.component.html',
   styleUrls: ['./status-chip.component.scss'],
+  encapsulation: ViewEncapsulation.None,
 })
 export class StatusChipComponent {
-  @Input() status!: WorkflowState;
+  @Input() status!: WorkflowStatus;
 
   public get label(): string {
-    return WorkflowStates[this.status] ?? String(this.status);
+    return WorkflowStatusMap[this.status] ?? String(this.status);
   }
 }

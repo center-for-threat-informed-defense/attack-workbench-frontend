@@ -1,0 +1,85 @@
+@use '../../../../../style/colors' as colors;
+// @use '../../../../../style/typography' as typography;
+@use '../../../../../style/theme.scss';
+
+.release-track-page {
+  .promote-color {
+    color: colors.color(success);
+  }
+  .view-color {
+    color: colors.color(info);
+  }
+  .demote-color {
+    color: colors.color(warn);
+  }
+
+  .release-track-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 18px;
+  }
+  .space-between {
+    width: 100%;
+    display: flex !important;
+    justify-content: space-between;
+  }
+  .labelled-box .content {
+    display: block;
+    .card-header {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      &.member-list {
+        justify-content: space-between !important;
+        margin-bottom: 12px;
+      }
+      h3 {
+        margin: 0;
+      }
+    }
+    .card-body:not(.list) {
+      display: flex;
+      justify-content: center;
+    }
+  }
+
+  .small-buttons {
+    .mdc-button + .mdc-button {
+      margin-left: 6px;
+    }
+    .mdc-button {
+      height: 28px;
+      padding: 4px 8px;
+      .mat-mdc-outlined-button .mat-mdc-button-touch-target {
+        height: 32px !important;
+      }
+    }
+    .mat-icon {
+      margin-right: 4px;
+    }
+  }
+
+  .candidate-card,
+  .staged-card,
+  .member-card {
+    margin: 12px 6px;
+    .mat-mdc-card-header {
+      padding: 12px 8px;
+    }
+    .mat-mdc-card-actions {
+      justify-content: space-between;
+    }
+    .card-title {
+      @extend .text-label;
+      font-weight: bold;
+      letter-spacing: normal;
+    }
+    .card-subtitle {
+      @extend .text-label;
+      display: block;
+      font-size: 14px;
+      font-weight: 500;
+      color: colors.on-color-deemphasis(light) !important;
+    }
+  }
+}

@@ -13,6 +13,7 @@ import { Role } from './classes/authn/role';
 import { TeamsListPageComponent } from './views/dashboard-page/teams/teams-list-page/teams-list-page.component';
 import { TeamsViewPageComponent } from './views/dashboard-page/teams/teams-view-page/teams-view-page.component';
 import { ReleaseManagementComponent } from './views/dashboard-page/release-management/release-management.component';
+import { ReleaseTrackPageComponent } from './views/dashboard-page/release-management/release-track-page/release-track-page.component';
 
 const editRoles = [Role.EDITOR, Role.TEAM_LEAD, Role.ADMIN];
 
@@ -62,7 +63,25 @@ const routes: Routes = [
               title: 'Release Management',
               roles: [Role.ADMIN, Role.TEAM_LEAD],
             },
-            component: ReleaseManagementComponent,
+            children: [
+              {
+                path: '',
+                data: {
+                  breadcrumb: 'release management',
+                  title: 'Release Management',
+                },
+                component: ReleaseManagementComponent,
+              },
+              {
+                path: ':id',
+                data: {
+                  breadcrumb: 'view release track',
+                  editable: false,
+                  title: 'Release Track',
+                },
+                component: ReleaseTrackPageComponent,
+              },
+            ],
           },
           {
             path: 'teams',

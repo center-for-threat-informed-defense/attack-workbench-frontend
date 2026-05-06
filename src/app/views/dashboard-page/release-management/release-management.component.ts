@@ -12,6 +12,7 @@ import { ReleaseTrackType } from 'src/app/classes/release-tracks';
 import { MatDialog } from '@angular/material/dialog';
 import { NewTrackDialogComponent } from 'src/app/components/new-track-dialog/new-track-dialog.component';
 import { MultipleChoiceDialogComponent } from 'src/app/components/multiple-choice-dialog/multiple-choice-dialog.component';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-release-tracks-list',
@@ -42,6 +43,7 @@ export class ReleaseManagementComponent implements OnInit, OnDestroy {
 
   constructor(
     private connector: ReleaseTracksConnectorService,
+    private router: Router,
     private dialog: MatDialog
   ) {}
 
@@ -68,7 +70,7 @@ export class ReleaseManagementComponent implements OnInit, OnDestroy {
   }
 
   public onViewTrack(id: string): void {
-    this.viewTrack.emit(id);
+    this.router.navigate([`/dashboard/release-management/${id}`]);
   }
 
   private tracksWithComputedData(data: any[]): any[] {

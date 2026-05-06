@@ -1,4 +1,4 @@
-import { WorkflowStatusType } from './enums';
+import { WorkflowStatusType } from 'src/app/utils/types';
 
 export interface MemberEntry {
   object_ref: string;
