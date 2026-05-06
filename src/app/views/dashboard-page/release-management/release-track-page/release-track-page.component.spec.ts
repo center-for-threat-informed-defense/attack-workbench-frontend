@@ -9,6 +9,8 @@ import {
   createMockReleaseTrackApiConnector,
   createPaginatedResponse,
 } from 'src/app/testing/mocks/rest-api-connector.mock';
+import { ActivatedRoute } from '@angular/router';
+import { of } from 'rxjs';
 
 describe('ReleaseTrackPageComponent', () => {
   let component: ReleaseTrackPageComponent;
@@ -26,6 +28,13 @@ describe('ReleaseTrackPageComponent', () => {
         {
           provide: ReleaseTracksConnectorService,
           useValue: mockReleaseTrackApiConnector,
+        },
+        {
+          provide: ActivatedRoute,
+          useValue: {
+            params: of({}),
+            queryParams: of({}),
+          },
         },
         provideHttpClient(),
       ],
