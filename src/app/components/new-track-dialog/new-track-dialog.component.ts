@@ -2,7 +2,6 @@ import { Component, OnInit, ViewEncapsulation, Inject } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import {
-  WorkflowStatus,
   MemberSyncStrategy,
   MemberSyncBehavior,
   ReleaseTrackType,
@@ -11,6 +10,7 @@ import {
   SnapshotScheduleMode,
 } from 'src/app/classes/release-tracks/enums';
 import { ReleaseTracksConnectorService } from 'src/app/services/connectors/rest-api/release-tracks.service';
+import { WorkflowStatus } from 'src/app/utils/types';
 
 @Component({
   standalone: false,

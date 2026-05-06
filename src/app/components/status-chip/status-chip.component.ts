@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { WorkflowState, WorkflowStates } from '../../utils/types';
+import { WorkflowStatus, WorkflowStatusMap } from '../../utils/types';
 
 @Component({
   selector: 'app-status-chip',
@@ -8,9 +8,9 @@ import { WorkflowState, WorkflowStates } from '../../utils/types';
   styleUrls: ['./status-chip.component.scss'],
 })
 export class StatusChipComponent {
-  @Input() status!: WorkflowState;
+  @Input() status!: WorkflowStatus;
 
   public get label(): string {
-    return WorkflowStates[this.status] ?? String(this.status);
+    return WorkflowStatusMap[this.status] ?? String(this.status);
   }
 }

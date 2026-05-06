@@ -6,7 +6,11 @@ import { DetectionStrategy } from 'src/app/classes/stix';
 import { StixObject } from 'src/app/classes/stix/stix-object';
 import { VersionNumber } from 'src/app/classes/version-number';
 import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/rest-api-connector.service';
-import { WorkflowState, WorkflowStates } from 'src/app/utils/types';
+import {
+  WorkflowStatus,
+  WorkflowStatusMap,
+  WorkflowStatusType,
+} from 'src/app/utils/types';
 import { logger } from '../../utils/logger';
 
 @Component({
@@ -23,8 +27,8 @@ export class SaveDialogComponent implements OnInit {
   public nextMinorVersion: string;
   public patch_objects = [];
   public validation: ValidationData = null;
-  public newState: WorkflowState = 'work-in-progress';
-  public workflows = Object.entries(WorkflowStates);
+  public newState = WorkflowStatus.WorkInProgress;
+  public workflows = Object.entries(WorkflowStatusMap);
   public analyticsToPatch = new Set<string>(); // list of stix ids of analytics that need patching
 
   public get saveEnabled() {
@@ -64,7 +68,8 @@ export class SaveDialogComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.newState = this.config.initialWorkflowState || 'work-in-progress';
+    this.newState =
+      this.config.initialWorkflowState || WorkflowStatus.WorkInProgress;
     if (this.config.object.attackType === 'detection-strategy') {
       const det = this.config.object as DetectionStrategy;
       const newAnalytics = new Set<string>(det.analytics);
@@ -279,5 +284,5 @@ export interface SaveDialogConfig {
   patchId?: string; // previous object ID to patch in LinkByID tags
   patchAnalytics?: Set<string>; // previous list of analytics related to a detection strategy
   versionAlreadyIncremented: boolean;
-  initialWorkflowState?: WorkflowState;
+  initialWorkflowState?: WorkflowStatusType;
 }

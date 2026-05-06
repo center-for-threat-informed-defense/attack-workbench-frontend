@@ -17,7 +17,7 @@ import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/re
 import { logger } from '../../utils/logger';
 import { ValidationData } from '../serializable';
 import { StixObject } from './stix-object';
-import { WorkflowState } from 'src/app/utils/types';
+import { WorkflowStatus, WorkflowStatusType } from 'src/app/utils/types';
 
 export class Relationship extends StixObject {
   public source_ref = '';
@@ -486,7 +486,7 @@ export class Relationship extends StixObject {
    */
   public validate(
     restAPIService: RestApiConnectorService,
-    tempWorkflowState?: WorkflowState
+    tempWorkflowState?: WorkflowStatusType
   ): Observable<ValidationData> {
     return this.base_validate(restAPIService, tempWorkflowState).pipe(
       map(result => {
@@ -623,9 +623,9 @@ export class Relationship extends StixObject {
   ): Observable<Relationship> {
     if (!this.workflow) {
       // Initialize the workflow object if it doesn't exist
-      this.workflow = { state: 'work-in-progress' };
+      this.workflow = { state: WorkflowStatus.WorkInProgress };
     }
-    this.workflow.state = 'work-in-progress';
+    this.workflow.state = WorkflowStatus.WorkInProgress;
     const postObservable = restAPIService.postRelationship(this);
     const subscription = postObservable.subscribe({
       next: result => {
@@ -694,9 +694,9 @@ export class Relationship extends StixObject {
     // Check if the workflow object exists
     if (!object.workflow) {
       // Initialize the workflow object if it doesn't exist
-      object.workflow = { state: 'work-in-progress' };
+      object.workflow = { state: WorkflowStatus.WorkInProgress };
     }
-    object.workflow.state = 'work-in-progress';
+    object.workflow.state = WorkflowStatus.WorkInProgress;
     object.update(restAPIService).subscribe({
       next: response => {
         console.log('Object updated successfully:', response);

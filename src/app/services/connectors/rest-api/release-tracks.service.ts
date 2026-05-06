@@ -9,9 +9,9 @@ import { ApiConnector } from '../api-connector';
 import {
   ReleaseTrackSnapshot,
   ReleaseTrackType,
-  WorkflowStatusType,
 } from 'src/app/classes/release-tracks';
 import { Paginated } from './rest-api-connector.service';
+import { WorkflowStatusType } from 'src/app/utils/types';
 
 // -----------------------------------------------------------------------------
 // Request Payload Definitions for Release Tracks API Requests

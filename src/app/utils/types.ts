@@ -44,14 +44,20 @@ export type StixType =
   | 'x-mitre-analytic';
 
 /**
- * Workflow state definitions
+ * Workflow status definitions
  */
-export type WorkflowState = 'work-in-progress' | 'awaiting-review' | 'reviewed';
+export enum WorkflowStatus {
+  WorkInProgress = 'work-in-progress',
+  AwaitingReview = 'awaiting-review',
+  Reviewed = 'reviewed',
+}
 
-/**
- * List of all workflow states
- */
-export const WorkflowStates: Record<WorkflowState, string> = {
+export type WorkflowStatusType =
+  | WorkflowStatus.WorkInProgress
+  | WorkflowStatus.AwaitingReview
+  | WorkflowStatus.Reviewed;
+
+export const WorkflowStatusMap: Record<WorkflowStatus, string> = {
   'work-in-progress': 'work in progress',
   'awaiting-review': 'awaiting review',
   'reviewed': 'reviewed',

@@ -1,3 +1,5 @@
+import { WorkflowStatus, WorkflowStatusType } from 'src/app/utils/types';
+
 // -----------------------------------------------------------------------------
 // Release Track Type
 // -----------------------------------------------------------------------------
@@ -93,21 +95,6 @@ export type SnapshotTierType =
 export const SNAPSHOT_TIER_OPTIONS: SnapshotTierType[] = Object.values(
   SnapshotTier
 ) as SnapshotTierType[];
-
-// -----------------------------------------------------------------------------
-// Workflow Statuses
-// -----------------------------------------------------------------------------
-
-export enum WorkflowStatus {
-  WorkInProgress = 'work-in-progress',
-  AwaitingReview = 'awaiting-review',
-  Reviewed = 'reviewed',
-}
-
-export type WorkflowStatusType =
-  | WorkflowStatus.WorkInProgress
-  | WorkflowStatus.AwaitingReview
-  | WorkflowStatus.Reviewed;
 
 // -----------------------------------------------------------------------------
 // Candidacy Thresholds

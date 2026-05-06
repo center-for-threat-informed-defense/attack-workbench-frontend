@@ -9,7 +9,7 @@ import { EditorService } from 'src/app/services/editor/editor.service';
 import { AddDialogComponent } from '../add-dialog/add-dialog.component';
 import { ConfirmationDialogComponent } from '../confirmation-dialog/confirmation-dialog.component';
 import { forkJoin } from 'rxjs';
-import { WorkflowStates } from 'src/app/utils/types';
+import { WorkflowStatusMap } from 'src/app/utils/types';
 import { SaveDialogComponent } from '../save-dialog/save-dialog.component';
 
 @Component({
@@ -22,7 +22,7 @@ export class ObjectStatusComponent implements OnInit {
   public loaded = false;
   public statusControl: FormControl<string>;
   public select: SelectionModel<string>;
-  public workflows = Object.entries(WorkflowStates);
+  public workflows = Object.entries(WorkflowStatusMap);
   public objects: StixObject[];
   public object: StixObject;
   public relationships = [];

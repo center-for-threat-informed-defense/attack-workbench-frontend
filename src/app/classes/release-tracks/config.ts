@@ -2,9 +2,9 @@
 // Release Track Configuration
 // -----------------------------------------------------------------------------
 
+import { WorkflowStatusType } from 'src/app/utils/types';
 import {
   ConflictPolicyType,
-  WorkflowStatusType,
   MemberSyncBehaviorType,
   MemberSyncPolicyType,
   MemberSyncStrategyType,

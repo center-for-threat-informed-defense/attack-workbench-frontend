@@ -5,12 +5,9 @@
 // aggregates content from component tracks
 // -----------------------------------------------------------------------------
 
-import {
-  DeduplicationStrategyType,
-  SnapshotTierType,
-  WorkflowStatusType,
-} from './enums';
+import { DeduplicationStrategyType, SnapshotTierType } from './enums';
 import { ComponentTrack, ComponentSnapshotResolution } from './component-track';
+import { WorkflowStatusType } from 'src/app/utils/types';
 
 export interface Composition {
   component_tracks?: ComponentTrack[];
