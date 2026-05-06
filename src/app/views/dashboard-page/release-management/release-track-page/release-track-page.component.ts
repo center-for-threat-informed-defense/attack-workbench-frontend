@@ -1,7 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ReleaseTrackSnapshot } from 'src/app/classes/release-tracks';
-import { ReleaseTracksConnectorService } from 'src/app/services/connectors/rest-api/release-tracks.service';
+import {
+  ReleaseTracksConnectorService,
+  StixObjectRef,
+} from 'src/app/services/connectors/rest-api/release-tracks.service';
 import { BreadcrumbService } from 'src/app/services/helpers/breadcrumb.service';
 import { MatDialog } from '@angular/material/dialog';
 import { SelectionModel } from '@angular/cdk/collections';
@@ -159,24 +162,65 @@ export class ReleaseTrackPageComponent implements OnInit {
     return `/${StixTypeToAttackType[stixType]}/${stixId}`;
   }
 
-  public onPromoteAll(): void {
-    // TODO: implement batch promote logic
-    console.log('onPromoteAll clicked');
+  public promote(objectIds: string[]): void {
+    if (!objectIds.length) return;
+    const sub = this.connector.promoteCandidates(this.id, objectIds).subscribe({
+      next: () => {
+        this.getReleaseTrack();
+      },
+      error: err => {
+        console.error('Failed to promote candidates', err);
+      },
+      complete: () => sub.unsubscribe(),
+    });
   }
 
-  public onPromote(item: any): void {
-    // TODO: implement promote single item
-    console.log('onPromote', item);
+  public onPromoteAll(): void {
+    if (!this.id || !this.releaseTrack) return;
+    const candidateIds: string[] = this.candidates
+      .map(c => c.object_ref)
+      .filter((r: any) => !!r);
+    this.promote(candidateIds);
+  }
+
+  public onPromote(candidateId: string): void {
+    if (!this.id || !candidateId) return;
+    this.promote([candidateId]);
+  }
+
+  public demote(objectRefs: StixObjectRef[]): void {
+    if (!objectRefs.length) return;
+    const sub = this.connector.demoteStaged(this.id, objectRefs).subscribe({
+      next: () => {
+        this.getReleaseTrack();
+      },
+      error: err => {
+        console.error('Failed to demote staged objects', err);
+      },
+      complete: () => sub.unsubscribe(),
+    });
   }
 
   public onDemoteAll(): void {
-    // TODO: implement batch demote logic
-    console.log('onDemoteAll clicked');
+    if (!this.id || !this.releaseTrack) return;
+    const stagedRefs: StixObjectRef[] = this.staged
+      .map(s => {
+        return {
+          id: s.object_ref,
+          modified: s.object_modified,
+        };
+      })
+      .filter((s: any) => !!s);
+    this.demote(stagedRefs);
   }
 
-  public onDemote(item: any): void {
-    // TODO: implement demote single item
-    console.log('onDemote', item);
+  public onDemote(staged: any): void {
+    if (!this.id || !staged) return;
+    const stagedRef: StixObjectRef = {
+      id: staged.object_ref,
+      modified: staged.object_modified,
+    };
+    this.demote([stagedRef]);
   }
 
   public onView(id: string): void {
