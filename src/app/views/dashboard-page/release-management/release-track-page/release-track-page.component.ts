@@ -36,6 +36,10 @@ export class ReleaseTrackPageComponent implements OnInit {
     });
   }
 
+  public get releaseTrackName(): string {
+    return this.releaseTrack?.name ?? '';
+  }
+
   public get candidates(): any[] {
     return this.releaseTrack?.candidates ?? [];
   }

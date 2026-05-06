@@ -1,7 +1,7 @@
 <div class="release-track-page">
   <div class="release-track-header">
     <h1 style="margin: 0">
-      {{ releaseTrack.name }}
+      {{ releaseTrackName }}
     </h1>
     <div class="button-group">
       <button mat-stroked-button>
@@ -42,7 +42,7 @@
               </div>
               <div class="card-body">
                 <h2 style="margin: 12px 0 0 0" class="view-color">
-                  {{ releaseTrack.candidates?.length || 0 }}
+                  {{ candidates.length || 0 }}
                 </h2>
               </div>
             </div>
@@ -57,7 +57,7 @@
               </div>
               <div class="card-body">
                 <h2 style="margin: 12px 0 0 0" class="promote-color">
-                  {{ releaseTrack.staged?.length || 0 }}
+                  {{ staged.length || 0 }}
                 </h2>
               </div>
             </div>
@@ -72,7 +72,7 @@
               </div>
               <div class="card-body">
                 <h2 style="margin: 12px 0 0 0">
-                  {{ releaseTrack.members?.length || 0 }}
+                  {{ members.length || 0 }}
                 </h2>
               </div>
             </div>
