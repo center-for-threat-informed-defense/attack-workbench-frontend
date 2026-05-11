@@ -91,6 +91,14 @@
     font-size: 1.25rem;
   }
 
+  .candidates-stat-value {
+    color: colors.color(info);
+  }
+
+  .staged-stat-value {
+    color: colors.color(success);
+  }
+
   .card-sep {
     margin: 12px 0;
   }
