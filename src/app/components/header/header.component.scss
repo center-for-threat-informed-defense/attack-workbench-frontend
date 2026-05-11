@@ -67,16 +67,27 @@
     left: -40px;
   }
   .mat-mdc-icon-button.account {
+    --account-avatar-size: 48px;
+
+    align-items: center;
+    background: transparent;
+    display: inline-flex;
+    height: var(--account-avatar-size);
+    justify-content: center;
+    padding: 0;
     scale: 0.85;
     vertical-align: middle;
-    .dark & {
-      background: colors.color-alternate(dark);
+    width: var(--account-avatar-size);
+    app-user-avatar {
+      display: inline-flex;
+      flex: 0 0 auto;
+      height: var(--account-avatar-size);
+      vertical-align: middle;
+      width: var(--account-avatar-size);
     }
-    .light & {
-      background: colors.color(light);
-    }
-    svg {
-      scale: 1.3;
+    app-user-avatar .user-avatar {
+      height: 100%;
+      width: 100%;
     }
   }
 }

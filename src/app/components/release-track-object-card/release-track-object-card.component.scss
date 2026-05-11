@@ -156,26 +156,7 @@
 }
 
 .object-avatar {
-  display: inline-flex;
   flex: 0 0 auto;
-  align-items: center;
-  justify-content: center;
-  width: 20px;
-  height: 20px;
-  border-radius: 999px;
-  background: colors.color(error);
-  color: white;
-  font-size: 10px;
-  font-weight: 800;
-  line-height: 20px;
-}
-
-.status-awaiting-review .object-avatar {
-  background: #c84d84;
-}
-
-.status-reviewed .object-avatar {
-  background: colors.color(info);
 }
 
 .object-modified {

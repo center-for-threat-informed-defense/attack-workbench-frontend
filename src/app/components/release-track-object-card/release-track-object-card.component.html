@@ -5,12 +5,11 @@
   <mat-card-header>
     <div class="object-card-top">
       <div class="object-card-title-group">
-        <div class="object-card-title" [matTooltip]="title">
+        <div class="object-card-title">
           {{ title }}
         </div>
         <div
-          class="object-card-subtitle text-deemphasis"
-          [matTooltip]="subtitle">
+          class="object-card-subtitle text-deemphasis">
           {{ subtitle }}
         </div>
       </div>
@@ -49,9 +48,12 @@
       <ng-content select="[card-footer-action]"></ng-content>
 
       <div class="object-meta" *ngIf="showModifiedMeta">
-        <span class="object-avatar" aria-hidden="true">
-          {{ modifiedByInitials }}
-        </span>
+        <app-user-avatar
+          class="object-avatar"
+          [name]="modifiedByName"
+          [size]="20"
+          [matTooltip]="modifiedByName"
+          matTooltipPosition="below"></app-user-avatar>
         <span class="object-modified">
           Modified
           <strong *ngIf="modified; else unknownModified">

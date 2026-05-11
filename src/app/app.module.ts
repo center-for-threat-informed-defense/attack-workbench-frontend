@@ -82,6 +82,7 @@ import { SearchComponent } from './components/resources-drawer/search/search.com
 import { SaveDialogComponent } from './components/save-dialog/save-dialog.component';
 import { SubheadingComponent } from './components/subheading/subheading.component';
 import { ToolbarComponent } from './components/toolbar/toolbar.component';
+import { UserAvatarComponent } from './components/user-avatar/user-avatar.component';
 import { ValidationResultsComponent } from './components/validation-results/validation-results.component';
 import { VersionPopoverComponent } from './components/version-popover/version-popover.component';
 
@@ -470,6 +471,7 @@ export function initConfig(appConfigService: AppConfigService) {
     ClipboardModule,
     OverlayModule,
     MatAutocompleteModule,
+    UserAvatarComponent,
     ReleaseTrackCardComponent,
     ReleaseTrackObjectCardComponent,
     ReleaseTrackReviewBoardComponent,

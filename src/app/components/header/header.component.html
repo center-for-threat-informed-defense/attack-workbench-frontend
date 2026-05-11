@@ -127,10 +127,11 @@
       mat-icon-button
       [matMenuTriggerFor]="accountOptions"
       aria-label="account options">
-      <svg
-        [data-jdenticon-value]="username"
+      <app-user-avatar
+        [name]="username"
+        [size]="48"
         [matTooltip]="username"
-        matTooltipPosition="below"></svg>
+        matTooltipPosition="below"></app-user-avatar>
     </button>
   </ng-container>
 </mat-toolbar>

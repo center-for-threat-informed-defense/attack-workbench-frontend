@@ -6,6 +6,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { StixTypeToAttackType } from 'src/app/utils/type-mappings';
 import { StixType, WorkflowStatusType } from 'src/app/utils/types';
+import { UserAvatarComponent } from '../user-avatar/user-avatar.component';
 
 export interface ReleaseTrackObjectItem {
   object_ref: string;
@@ -27,6 +28,7 @@ export interface ReleaseTrackObjectItem {
     MatCardModule,
     MatIconModule,
     MatTooltipModule,
+    UserAvatarComponent,
   ],
   templateUrl: './release-track-object-card.component.html',
   styleUrls: ['./release-track-object-card.component.scss'],
@@ -59,15 +61,8 @@ export class ReleaseTrackObjectCardComponent {
     return this.item?.object_modified || null;
   }
 
-  public get modifiedByInitials(): string {
-    const value = this.item?.modified_by_user || '?';
-    const parts = value.split(/\s+/).filter(Boolean);
-
-    if (parts.length >= 2) {
-      return `${parts[0][0]}${parts[1][0]}`.toUpperCase();
-    }
-
-    return value.slice(0, 2).toUpperCase();
+  public get modifiedByName(): string {
+    return this.item?.modified_by_user || 'Unknown User';
   }
 
   public get cardClasses(): Record<string, boolean> {
