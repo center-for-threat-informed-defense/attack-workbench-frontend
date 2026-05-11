@@ -1,7 +1,7 @@
 @use 'src/style/colors.scss' as colors;
 
 .status-chip {
-  .mat-mdc-chip-action-label {
+  .mat-mdc-chip.mat-mdc-standard-chip .mat-mdc-chip-action-label {
     font-size: 12px !important;
   }
 

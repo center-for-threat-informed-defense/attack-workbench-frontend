@@ -1,6 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ReleaseTrackSnapshot } from 'src/app/classes/release-tracks';
+import {
+  ExportFormat,
+  ExportFormatType,
+  ReleaseTrackSnapshot,
+} from 'src/app/classes/release-tracks';
 import {
   ReleaseTracksConnectorService,
   StixObjectRef,
@@ -12,6 +16,8 @@ import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/re
 import { AddDialogComponent } from 'src/app/components/add-dialog/add-dialog.component';
 import { StixTypeToAttackType } from 'src/app/utils/type-mappings';
 import { StixType } from 'src/app/utils/types';
+import { MultipleChoiceDialogComponent } from 'src/app/components/multiple-choice-dialog/multiple-choice-dialog.component';
+import { take } from 'rxjs/operators';
 
 @Component({
   selector: 'app-release-track-page',
@@ -230,5 +236,89 @@ export class ReleaseTrackPageComponent implements OnInit {
   public onDiff(item: any): void {
     // TODO: open diff modal for item
     console.log('onDiff', item);
+  }
+
+  public onExport(): void {
+    if (!this.id) return;
+
+    const formatRef = this.dialog.open(MultipleChoiceDialogComponent, {
+      width: '30em',
+      autoFocus: false,
+      data: {
+        title: `Export latest release snapshot`,
+        choices: [
+          {
+            label: 'STIX Bundle',
+            value: 'bundle',
+            description:
+              'A standard STIX 2.1 JSON bundle containing all member objects of the release.',
+          },
+          {
+            label: 'Snapshot',
+            value: 'snapshot',
+            description:
+              'The raw release track snapshot, including tiers, version history, and configuration.',
+          },
+          {
+            label: 'File System Store',
+            value: 'filesystemstore',
+            description:
+              'A directory structure with individual STIX JSON files, suitable for Git releases.',
+          },
+          {
+            label: 'Workbench Format',
+            value: 'workbench',
+            description:
+              'A richer format including workflow statuses, metadata, and other Workbench-specific data.',
+          },
+        ],
+      },
+    });
+
+    formatRef
+      .afterClosed()
+      .pipe(take(1))
+      .subscribe(format => {
+        if (!format) return;
+        this.downloadLatestReleaseTrack(format as ExportFormat);
+      });
+  }
+
+  private downloadLatestReleaseTrack(format: ExportFormatType): void {
+    this.connector
+      .exportLatestSnapshot(this.id, format, { include: 'all' })
+      .pipe(take(1))
+      .subscribe({
+        next: result => {
+          this.restApiConnectorService.triggerBrowserDownload(
+            result,
+            this.getExportFilename(format)
+          );
+        },
+        error: err => {
+          console.error('Failed to export release track', err);
+        },
+      });
+  }
+
+  private getExportFilename(format: ExportFormatType): string {
+    const name = this.releaseTrackName || this.id || 'release-track';
+    const safeName =
+      name
+        .trim()
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, '-')
+        .replace(/^-+|-+$/g, '') || 'release-track';
+    return `${safeName}-latest-${format}.json`;
+  }
+
+  public onDraft(): void {
+    // TODO: create draft snapshot
+    console.log('onDraft');
+  }
+
+  public onPreviewRelease(): void {
+    // TODO: open preview & release modal
+    console.log('onPreviewRelease');
   }
 }
