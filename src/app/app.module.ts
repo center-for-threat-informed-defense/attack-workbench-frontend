@@ -57,7 +57,6 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 // other library imports
 import { MtxPopoverModule } from '@ng-matero/extensions/popover';
 import { AutosizeModule } from 'ngx-autosize';
-import { JDENTICON_CONFIG, NgxJdenticonModule } from 'ngx-jdenticon';
 import { MarkdownModule } from 'ngx-markdown';
 
 // custom components
@@ -82,6 +81,7 @@ import { SearchComponent } from './components/resources-drawer/search/search.com
 import { SaveDialogComponent } from './components/save-dialog/save-dialog.component';
 import { SubheadingComponent } from './components/subheading/subheading.component';
 import { ToolbarComponent } from './components/toolbar/toolbar.component';
+import { UserAvatarComponent } from './components/user-avatar/user-avatar.component';
 import { ValidationResultsComponent } from './components/validation-results/validation-results.component';
 import { VersionPopoverComponent } from './components/version-popover/version-popover.component';
 
@@ -231,6 +231,8 @@ import { DictionaryDiffComponent } from './components/stix/dictionary-property/d
 import { StixPageTabsComponent } from './components/stix/stix-page-tabs/stix-page-tabs.component';
 import { ReleaseManagementComponent } from './views/dashboard-page/release-management/release-management.component';
 import { ReleaseTrackCardComponent } from './components/release-track-card/release-track-card.component';
+import { ReleaseTrackObjectCardComponent } from './components/release-track-object-card/release-track-object-card.component';
+import { ReleaseTrackReviewBoardComponent } from './components/release-track-review-board/release-track-review-board.component';
 import { NewTrackDialogComponent } from './components/new-track-dialog/new-track-dialog.component';
 import { ReleaseTrackPageComponent } from './views/dashboard-page/release-management/release-track-page/release-track-page.component';
 import { StatusChipComponent } from './components/status-chip/status-chip.component';
@@ -426,7 +428,6 @@ export function initConfig(appConfigService: AppConfigService) {
       disableConsoleLogging: false,
     }),
     MtxPopoverModule,
-    NgxJdenticonModule,
     AutosizeModule,
     BrowserModule,
     AppRoutingModule,
@@ -468,7 +469,10 @@ export function initConfig(appConfigService: AppConfigService) {
     ClipboardModule,
     OverlayModule,
     MatAutocompleteModule,
+    UserAvatarComponent,
     ReleaseTrackCardComponent,
+    ReleaseTrackObjectCardComponent,
+    ReleaseTrackReviewBoardComponent,
   ],
   providers: [
     AppConfigService,
@@ -476,20 +480,6 @@ export function initConfig(appConfigService: AppConfigService) {
       const initializerFn = initConfig(inject(AppConfigService));
       return initializerFn();
     }),
-    {
-      provide: JDENTICON_CONFIG,
-      useValue: {
-        lightness: {
-          color: [0.35, 0.6],
-          grayscale: [0.35, 0.6],
-        },
-        saturation: {
-          color: 0.5,
-          grayscale: 0.5,
-        },
-        backColor: '#0000',
-      },
-    },
     {
       provide: HTTP_INTERCEPTORS,
       useClass: AuthInterceptor,

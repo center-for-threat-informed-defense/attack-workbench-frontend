@@ -26,6 +26,7 @@ describe('ReleaseTrackPageComponent', () => {
     mockReleaseTrackApiConnector = createMockReleaseTrackApiConnector({
       getLatestSnapshot: vi.fn(() => createAsyncObservable(null)),
       exportLatestSnapshot: vi.fn(() => createAsyncObservable({})),
+      reviewCandidates: vi.fn(() => createAsyncObservable({})),
     });
     mockDialog = {
       open: vi.fn(),
@@ -141,5 +142,133 @@ describe('ReleaseTrackPageComponent', () => {
     component.onExport();
 
     expect(mockDialog.open).not.toHaveBeenCalled();
+  });
+
+  it('should combine candidates and staged objects for review lanes', () => {
+    component.releaseTrack = {
+      candidates: [
+        {
+          object_ref: 'attack-pattern--candidate',
+          object_status: 'awaiting-review',
+        },
+      ],
+      staged: [
+        {
+          object_ref: 'attack-pattern--staged',
+          object_status: 'reviewed',
+        },
+      ],
+    } as any;
+
+    expect(component.reviewItems).toEqual([
+      expect.objectContaining({
+        object_ref: 'attack-pattern--candidate',
+        release_track_tier: 'candidate',
+      }),
+      expect.objectContaining({
+        object_ref: 'attack-pattern--staged',
+        release_track_tier: 'staged',
+      }),
+    ]);
+  });
+
+  it('should review and approve a single awaiting-review candidate', () => {
+    const refreshSpy = vi
+      .spyOn(component, 'getReleaseTrack')
+      .mockImplementation(() => undefined);
+    mockReleaseTrackApiConnector.reviewCandidates.mockReturnValue(of({}));
+    component.id = 'release-track--123';
+
+    component.onReviewAndApprove({
+      object_ref: 'attack-pattern--123',
+      object_modified: new Date('2024-04-20T00:00:00.000Z'),
+    });
+
+    expect(mockReleaseTrackApiConnector.reviewCandidates).toHaveBeenCalledWith(
+      'release-track--123',
+      {
+        from: 'awaiting-review',
+        to: 'reviewed',
+        object_refs: [
+          {
+            id: 'attack-pattern--123',
+            modified: '2024-04-20T00:00:00.000Z',
+          },
+        ],
+      }
+    );
+    expect(refreshSpy).toHaveBeenCalled();
+  });
+
+  it('should bulk review all awaiting-review candidates', () => {
+    mockReleaseTrackApiConnector.reviewCandidates.mockReturnValue(of({}));
+    component.id = 'release-track--123';
+
+    component.onBulkReviewAll([
+      {
+        object_ref: 'attack-pattern--123',
+        object_modified: '2024-04-20T00:00:00.000Z',
+      },
+      {
+        object_ref: 'x-mitre-tactic--456',
+      },
+    ]);
+
+    expect(mockReleaseTrackApiConnector.reviewCandidates).toHaveBeenCalledWith(
+      'release-track--123',
+      {
+        from: 'awaiting-review',
+        to: 'reviewed',
+        object_refs: [
+          {
+            id: 'attack-pattern--123',
+            modified: '2024-04-20T00:00:00.000Z',
+          },
+          'x-mitre-tactic--456',
+        ],
+      }
+    );
+  });
+
+  it('should not send staged objects to the candidate review endpoint', () => {
+    const consoleSpy = vi.spyOn(console, 'log').mockImplementation(() => null);
+    mockReleaseTrackApiConnector.reviewCandidates.mockReturnValue(of({}));
+    component.id = 'release-track--123';
+
+    component.onBulkReviewAll([
+      {
+        object_ref: 'attack-pattern--candidate',
+        object_modified: '2024-04-20T00:00:00.000Z',
+        release_track_tier: 'candidate',
+      },
+      {
+        object_ref: 'attack-pattern--staged',
+        object_modified: '2024-04-21T00:00:00.000Z',
+        release_track_tier: 'staged',
+      },
+    ]);
+
+    expect(mockReleaseTrackApiConnector.reviewCandidates).toHaveBeenCalledWith(
+      'release-track--123',
+      {
+        from: 'awaiting-review',
+        to: 'reviewed',
+        object_refs: [
+          {
+            id: 'attack-pattern--candidate',
+            modified: '2024-04-20T00:00:00.000Z',
+          },
+        ],
+      }
+    );
+    expect(consoleSpy).toHaveBeenCalledWith(
+      'onBulkReviewAll staged objects',
+      expect.arrayContaining([
+        expect.objectContaining({
+          object_ref: 'attack-pattern--staged',
+        }),
+      ])
+    );
+    consoleSpy.mockRestore();
   });
 });

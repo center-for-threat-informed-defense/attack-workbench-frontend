@@ -1,9 +1,9 @@
 <div class="release-track-page">
   <div class="release-track-header">
-    <h1 style="margin: 0">
+    <h1>
       {{ releaseTrackName }}
     </h1>
-    <div class="button-group">
+    <div class="button-group release-track-actions">
       <button mat-stroked-button (click)="onExport()">
         Export Latest
         <mat-icon>file_download</mat-icon>
@@ -31,59 +31,47 @@
 
   <ng-template #detailsTpl>
     <!-- stats summary -->
-    <div class="grid spacing-16">
-      <div class="row">
-        <div class="col">
-          <div class="labelled-box">
-            <div class="content no-label">
-              <div class="card-header">
-                <strong>Candidates</strong>
-                <span class="text-deemphasis"> &nbsp;(in this draft) </span>
-              </div>
-              <div class="card-body">
-                <h2 style="margin: 12px 0 0 0" class="view-color">
-                  {{ candidates.length || 0 }}
-                </h2>
-              </div>
+    <div class="release-track-board">
+      <div class="summary-grid">
+        <div class="labelled-box summary-card candidates-summary">
+          <div class="content no-label">
+            <p class="summary-label">
+              <strong>Candidates</strong>
+              <span class="text-deemphasis">(in this draft)</span>
+            </p>
+            <div class="summary-value view-color">
+              {{ candidates.length || 0 }}
             </div>
           </div>
         </div>
-        <div class="col">
-          <div class="labelled-box">
-            <div class="content no-label">
-              <div class="card-header">
-                <strong>Staged</strong>
-                <span class="text-deemphasis"> &nbsp;(for next release) </span>
-              </div>
-              <div class="card-body">
-                <h2 style="margin: 12px 0 0 0" class="promote-color">
-                  {{ staged.length || 0 }}
-                </h2>
-              </div>
+        <div class="labelled-box summary-card staged-summary">
+          <div class="content no-label">
+            <p class="summary-label">
+              <strong>Staged</strong>
+              <span class="text-deemphasis">(for next release)</span>
+            </p>
+            <div class="summary-value promote-color">
+              {{ staged.length || 0 }}
             </div>
           </div>
         </div>
-        <div class="col">
-          <div class="labelled-box">
-            <div class="content no-label">
-              <div class="card-header">
-                <strong>Members</strong>
-                <span class="text-deemphasis"> &nbsp;(published) </span>
-              </div>
-              <div class="card-body">
-                <h2 style="margin: 12px 0 0 0">
-                  {{ members.length || 0 }}
-                </h2>
-              </div>
+        <div class="labelled-box summary-card members-summary">
+          <div class="content no-label">
+            <p class="summary-label">
+              <strong>Members</strong>
+              <span class="text-deemphasis">(published)</span>
+            </p>
+            <div class="summary-value">
+              {{ members.length || 0 }}
             </div>
           </div>
         </div>
       </div>
 
-      <div class="row">
-        <div class="col">
+      <div class="release-columns">
+        <div class="release-column">
           <!-- candidates list -->
-          <div class="labelled-box">
+          <div class="labelled-box track-panel candidates-panel">
             <div class="content no-label">
               <div class="card-header member-list">
                 <h3 class="view-color">Candidates ({{ candidates.length }})</h3>
@@ -107,7 +95,9 @@
               <mat-divider></mat-divider>
 
               <div class="card-body list">
-                <div *ngIf="!candidates.length">No candidates</div>
+                <div class="empty-state" *ngIf="!candidates.length">
+                  No candidates
+                </div>
                 <div *ngFor="let item of candidates">
                   <ng-container
                     *ngTemplateOutlet="
@@ -123,9 +113,9 @@
           </div>
         </div>
 
-        <div class="col">
+        <div class="release-column">
           <!-- staged -->
-          <div class="labelled-box">
+          <div class="labelled-box track-panel staged-panel">
             <div class="content no-label">
               <div class="card-header member-list">
                 <h3 class="promote-color">Staged ({{ staged.length }})</h3>
@@ -142,7 +132,9 @@
               <mat-divider></mat-divider>
 
               <div class="card-body list">
-                <div *ngIf="!staged.length">No staged objects</div>
+                <div class="empty-state" *ngIf="!staged.length">
+                  No staged objects
+                </div>
                 <div *ngFor="let item of staged">
                   <ng-container
                     *ngTemplateOutlet="
@@ -158,9 +150,9 @@
           </div>
         </div>
 
-        <div class="col">
+        <div class="release-column">
           <!-- members -->
-          <div class="labelled-box">
+          <div class="labelled-box track-panel members-panel">
             <div class="content no-label">
               <div class="card-header member-list">
                 <h3>Members ({{ members.length }})</h3>
@@ -169,7 +161,9 @@
               <mat-divider></mat-divider>
 
               <div class="card-body list">
-                <div *ngIf="!members.length">No published objects</div>
+                <div class="empty-state" *ngIf="!members.length">
+                  No published objects
+                </div>
                 <div *ngFor="let item of members">
                   <ng-container
                     *ngTemplateOutlet="
@@ -189,63 +183,53 @@
   </ng-template>
 
   <ng-template #memberTpl let-item let-type="type">
-    <mat-card class="candidate-card" appearance="outlined">
-      <mat-card-header>
-        <div class="space-between">
-          <div class="card-title">
-            <!-- TODO item name - awaiting API changes -->
-            {{ item.object_ref.split('-')[0] }}-{{
-              item.object_ref.split('-')[6]
-            }}
-            <span class="card-subtitle">
-              <!-- TODO item name - awaiting API changes -->
-              &LessLess;ATT&CK ID&GreaterGreater;
-            </span>
-          </div>
-          <app-status-chip [status]="item.object_status"></app-status-chip>
-        </div>
-      </mat-card-header>
-      <mat-card-actions>
-        <div class="small-buttons">
-          <button
-            class="view-color"
-            mat-stroked-button
-            (click)="onView(item.object_ref)">
-            <mat-icon>open_in_browser</mat-icon>
-            View
-          </button>
-          <button
-            *ngIf="type !== 'member'"
-            mat-stroked-button
-            (click)="onDiff(item.object_ref)">
-            <mat-icon>difference</mat-icon>
-            Diff
-          </button>
-        </div>
-        <div class="small-buttons">
-          <button
-            *ngIf="type === 'candidate'"
-            class="promote-color"
-            mat-stroked-button
-            (click)="onPromote(item.object_ref)">
-            <mat-icon>arrow_forward</mat-icon>
-            Promote
-          </button>
-          <button
-            *ngIf="type === 'staged'"
-            class="demote-color"
-            mat-stroked-button
-            (click)="onDemote(item)">
-            <mat-icon>arrow_back</mat-icon>
-            Demote
-          </button>
-        </div>
-      </mat-card-actions>
-    </mat-card>
+    <app-release-track-object-card
+      [item]="item"
+      [cardType]="type"
+      [laneStatus]="item.object_status"
+      [showDescription]="false"
+      [showDiff]="type !== 'member'"
+      [showModifiedMeta]="false"
+      (viewObject)="onView($event.object_ref)"
+      (diffObject)="onDiff($event.object_ref)">
+      <app-status-chip
+        *ngIf="item.object_status"
+        card-header-action
+        [status]="item.object_status"></app-status-chip>
+
+      <div
+        *ngIf="type === 'candidate' || type === 'staged'"
+        card-footer-action
+        class="small-buttons">
+        <button
+          *ngIf="type === 'candidate'"
+          class="promote-color"
+          mat-stroked-button
+          (click)="onPromote(item.object_ref)">
+          <mat-icon>arrow_forward</mat-icon>
+          Promote
+        </button>
+        <button
+          *ngIf="type === 'staged'"
+          class="demote-color"
+          mat-stroked-button
+          (click)="onDemote(item)">
+          <mat-icon>arrow_back</mat-icon>
+          Demote
+        </button>
+      </div>
+    </app-release-track-object-card>
   </ng-template>
 
   <ng-template #reviewTpl>
-    <div class="review-tpl">TODO</div>
+    <div class="review-tpl-wrapper">
+      <app-release-track-review-board
+        [items]="reviewItems"
+        (viewObject)="onView($event.object_ref)"
+        (diffObject)="onDiff($event)"
+        (bulkReview)="onBulkReviewAll($event)">
+      </app-release-track-review-board>
+    </div>
   </ng-template>
 
   <ng-template #historyTpl>

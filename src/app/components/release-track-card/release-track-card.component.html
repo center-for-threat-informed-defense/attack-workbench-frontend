@@ -24,13 +24,15 @@
         <ng-container *ngIf="type === 'standard'">
           <div class="stat">
             <div class="stat-label">CANDIDATES</div>
-            <div class="stat-value">
+            <div class="stat-value candidates-stat-value">
               {{ track.candidates?.length || 'TODO' }}
             </div>
           </div>
           <div class="stat">
             <div class="stat-label">STAGED</div>
-            <div class="stat-value">{{ track.staged?.length || 'TODO' }}</div>
+            <div class="stat-value staged-stat-value">
+              {{ track.staged?.length || 'TODO' }}
+            </div>
           </div>
           <div class="stat">
             <div class="stat-label">MEMBERS</div>

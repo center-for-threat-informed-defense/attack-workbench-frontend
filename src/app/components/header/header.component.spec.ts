@@ -12,6 +12,7 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { of } from 'rxjs';
 
 import { HeaderComponent } from './header.component';
+import { UserAvatarComponent } from '../user-avatar/user-avatar.component';
 import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/rest-api-connector.service';
 import { AuthenticationService } from 'src/app/services/connectors/authentication/authentication.service';
 import { createMockRestApiConnector } from 'src/app/testing/mocks/rest-api-connector.mock';
@@ -28,6 +29,7 @@ describe('HeaderComponent', () => {
     TestBed.configureTestingModule({
       declarations: [HeaderComponent],
       imports: [
+        UserAvatarComponent,
         MatToolbarModule,
         MatMenuModule,
         MatButtonModule,

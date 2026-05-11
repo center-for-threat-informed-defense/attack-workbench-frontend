@@ -1,0 +1,68 @@
+<mat-card
+  class="release-track-object-card"
+  [ngClass]="cardClasses"
+  appearance="outlined">
+  <mat-card-header>
+    <div class="object-card-top">
+      <div class="object-card-title-group">
+        <div class="object-card-title">
+          {{ title }}
+        </div>
+        <div class="object-card-subtitle text-deemphasis">
+          {{ subtitle }}
+        </div>
+      </div>
+
+      <ng-content select="[card-header-action]"></ng-content>
+    </div>
+  </mat-card-header>
+
+  <mat-card-content *ngIf="showDescription">
+    <p class="object-description">
+      {{ description }}
+    </p>
+  </mat-card-content>
+
+  <mat-card-actions>
+    <div class="object-actions">
+      <button
+        class="view-button"
+        mat-stroked-button
+        type="button"
+        (click)="onView()">
+        <mat-icon>open_in_browser</mat-icon>
+        View
+      </button>
+      <button
+        *ngIf="showDiff"
+        mat-stroked-button
+        type="button"
+        (click)="onDiff()">
+        <mat-icon>difference</mat-icon>
+        Diff
+      </button>
+    </div>
+
+    <div class="object-footer-right">
+      <ng-content select="[card-footer-action]"></ng-content>
+
+      <div class="object-meta" *ngIf="showModifiedMeta">
+        <app-user-avatar
+          class="object-avatar"
+          [name]="modifiedByName"
+          [size]="20"
+          [matTooltip]="modifiedByName"
+          matTooltipPosition="below"></app-user-avatar>
+        <span class="object-modified">
+          Modified
+          <strong *ngIf="modified; else unknownModified">
+            {{ modified | date: 'M/d/yy' }}
+          </strong>
+          <ng-template #unknownModified>
+            <strong>Unknown</strong>
+          </ng-template>
+        </span>
+      </div>
+    </div>
+  </mat-card-actions>
+</mat-card>
