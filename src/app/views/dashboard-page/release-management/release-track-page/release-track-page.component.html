@@ -33,48 +33,36 @@
     <!-- stats summary -->
     <div class="release-track-board">
       <div class="summary-grid">
-        <div class="summary-item">
-          <div class="labelled-box summary-card candidates-summary">
-            <div class="content no-label">
-              <div class="card-header">
-                <strong>Candidates</strong>
-                <span class="text-deemphasis"> &nbsp;(in this draft) </span>
-              </div>
-              <div class="card-body">
-                <h2 class="view-color">
-                  {{ candidates.length || 0 }}
-                </h2>
-              </div>
+        <div class="labelled-box summary-card candidates-summary">
+          <div class="content no-label">
+            <p class="summary-label">
+              <strong>Candidates</strong>
+              <span class="text-deemphasis">(in this draft)</span>
+            </p>
+            <div class="summary-value view-color">
+              {{ candidates.length || 0 }}
             </div>
           </div>
         </div>
-        <div class="summary-item">
-          <div class="labelled-box summary-card staged-summary">
-            <div class="content no-label">
-              <div class="card-header">
-                <strong>Staged</strong>
-                <span class="text-deemphasis"> &nbsp;(for next release) </span>
-              </div>
-              <div class="card-body">
-                <h2 class="promote-color">
-                  {{ staged.length || 0 }}
-                </h2>
-              </div>
+        <div class="labelled-box summary-card staged-summary">
+          <div class="content no-label">
+            <p class="summary-label">
+              <strong>Staged</strong>
+              <span class="text-deemphasis">(for next release)</span>
+            </p>
+            <div class="summary-value promote-color">
+              {{ staged.length || 0 }}
             </div>
           </div>
         </div>
-        <div class="summary-item">
-          <div class="labelled-box summary-card members-summary">
-            <div class="content no-label">
-              <div class="card-header">
-                <strong>Members</strong>
-                <span class="text-deemphasis"> &nbsp;(published) </span>
-              </div>
-              <div class="card-body">
-                <h2>
-                  {{ members.length || 0 }}
-                </h2>
-              </div>
+        <div class="labelled-box summary-card members-summary">
+          <div class="content no-label">
+            <p class="summary-label">
+              <strong>Members</strong>
+              <span class="text-deemphasis">(published)</span>
+            </p>
+            <div class="summary-value">
+              {{ members.length || 0 }}
             </div>
           </div>
         </div>
