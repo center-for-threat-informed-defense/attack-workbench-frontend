@@ -4,15 +4,15 @@
       {{ releaseTrackName }}
     </h1>
     <div class="button-group">
-      <button mat-stroked-button>
+      <button mat-stroked-button (click)="onExport()">
         Export Latest
         <mat-icon>file_download</mat-icon>
       </button>
-      <button mat-stroked-button>
+      <button mat-stroked-button (click)="onDraft()">
         Create Draft
         <mat-icon>local_see</mat-icon>
       </button>
-      <button mat-raised-button color="primary">
+      <button mat-raised-button color="primary" (click)="onPreviewRelease()">
         Preview & Release
         <mat-icon>preview</mat-icon>
       </button>

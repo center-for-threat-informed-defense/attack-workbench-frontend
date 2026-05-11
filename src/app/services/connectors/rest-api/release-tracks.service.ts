@@ -7,6 +7,7 @@ import { environment } from '../../../../environments/environment';
 import { logger } from '../../../utils/logger';
 import { ApiConnector } from '../api-connector';
 import {
+  ExportFormatType,
   ReleaseTrackSnapshot,
   ReleaseTrackType,
 } from 'src/app/classes/release-tracks';
@@ -82,6 +83,12 @@ export interface ConfigPayload {
   auto_promote?: boolean;
 }
 
+export interface ReleaseTrackSnapshotOptions {
+  format?: ExportFormatType;
+  include?: string;
+  [key: string]: any;
+}
+
 // -----------------------------------------------------------------------------
 // Release Tracks API Connector Service
 // -----------------------------------------------------------------------------
@@ -99,6 +106,17 @@ export class ReleaseTracksConnectorService extends ApiConnector {
     snackbar: MatSnackBar
   ) {
     super(snackbar);
+  }
+
+  private buildHttpParams(options?: Record<string, any>): HttpParams {
+    let params = new HttpParams();
+    if (options) {
+      Object.keys(options).forEach(k => {
+        const v = options[k];
+        if (v !== undefined && v !== null) params = params.set(k, String(v));
+      });
+    }
+    return params;
   }
 
   // -----------------------------------------------------------------------------
@@ -214,15 +232,9 @@ export class ReleaseTracksConnectorService extends ApiConnector {
    */
   public getLatestSnapshot(
     id: string,
-    options?: { format?: string; [key: string]: any }
+    options?: ReleaseTrackSnapshotOptions
   ): Observable<ReleaseTrackSnapshot | null> {
-    let params = new HttpParams();
-    if (options) {
-      Object.keys(options).forEach(k => {
-        const v = (options as any)[k];
-        if (v !== undefined && v !== null) params = params.set(k, String(v));
-      });
-    }
+    const params = this.buildHttpParams(options);
     const url = `${this.apiUrl}/release-tracks/${id}`;
     return this.http.get(url, { params }).pipe(
       tap(result =>
@@ -230,6 +242,33 @@ export class ReleaseTracksConnectorService extends ApiConnector {
       ),
       map(result => (result ? new ReleaseTrackSnapshot(result) : null)),
       catchError(this.handleError_continue<ReleaseTrackSnapshot | null>(null)),
+      share()
+    );
+  }
+
+  /**
+   * GET /api/release-tracks/:id?format=:format
+   * Retrieve the latest snapshot in an export format without deserializing it.
+   * @param id Release track id
+   * @param format Export format
+   * @param options Additional query options
+   * @returns Observable<any> formatted export payload
+   */
+  public exportLatestSnapshot(
+    id: string,
+    format: ExportFormatType,
+    options?: Omit<ReleaseTrackSnapshotOptions, 'format'>
+  ): Observable<any> {
+    const params = this.buildHttpParams({ ...options, format });
+    const url = `${this.apiUrl}/release-tracks/${id}`;
+    return this.http.get(url, { params }).pipe(
+      tap(result =>
+        logger.log(
+          `retrieved latest snapshot export for track ${id} in ${format} format`,
+          result
+        )
+      ),
+      catchError(this.handleError_raise()),
       share()
     );
   }
