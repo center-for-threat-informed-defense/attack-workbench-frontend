@@ -15,7 +15,11 @@ import { SelectionModel } from '@angular/cdk/collections';
 import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/rest-api-connector.service';
 import { AddDialogComponent } from 'src/app/components/add-dialog/add-dialog.component';
 import { StixTypeToAttackType } from 'src/app/utils/type-mappings';
-import { StixType } from 'src/app/utils/types';
+import {
+  StixType,
+  WorkflowStatus,
+  WorkflowStatusType,
+} from 'src/app/utils/types';
 import { MultipleChoiceDialogComponent } from 'src/app/components/multiple-choice-dialog/multiple-choice-dialog.component';
 import { take } from 'rxjs/operators';
 
@@ -57,6 +61,19 @@ export class ReleaseTrackPageComponent implements OnInit {
     return this.releaseTrack?.staged ?? [];
   }
 
+  public get reviewItems(): any[] {
+    return [
+      ...this.candidates.map(item => ({
+        ...item,
+        release_track_tier: 'candidate',
+      })),
+      ...this.staged.map(item => ({
+        ...item,
+        release_track_tier: 'staged',
+      })),
+    ];
+  }
+
   public get members(): any[] {
     return this.releaseTrack?.members ?? [];
   }
@@ -65,9 +82,11 @@ export class ReleaseTrackPageComponent implements OnInit {
     const subscription = this.connector.getLatestSnapshot(this.id).subscribe({
       next: res => {
         this.releaseTrack = res;
+        if (!this.releaseTrack) return;
+
         this.breadcrumbService.changeBreadcrumb(
           this.route.snapshot,
-          this.releaseTrack!.name
+          this.releaseTrack.name
         );
 
         // this.loadCandidates();
@@ -238,6 +257,34 @@ export class ReleaseTrackPageComponent implements OnInit {
     console.log('onDiff', item);
   }
 
+  public onReviewAndApprove(item: any): void {
+    this.reviewCandidateStatus(
+      WorkflowStatus.AwaitingReview,
+      WorkflowStatus.Reviewed,
+      [item]
+    );
+  }
+
+  public onBulkReviewAll(items: any[]): void {
+    const candidateItems = items.filter(
+      item => this.getReleaseTrackTier(item) === 'candidate'
+    );
+    const stagedItems = items.filter(
+      item => this.getReleaseTrackTier(item) === 'staged'
+    );
+
+    if (stagedItems.length) {
+      // TODO: wire staged object review transition once the API is available.
+      console.log('onBulkReviewAll staged objects', stagedItems);
+    }
+
+    this.reviewCandidateStatus(
+      WorkflowStatus.AwaitingReview,
+      WorkflowStatus.Reviewed,
+      candidateItems
+    );
+  }
+
   public onExport(): void {
     if (!this.id) return;
 
@@ -320,5 +367,50 @@ export class ReleaseTrackPageComponent implements OnInit {
   public onPreviewRelease(): void {
     // TODO: open preview & release modal
     console.log('onPreviewRelease');
+  }
+
+  private reviewCandidateStatus(
+    from: WorkflowStatusType,
+    to: WorkflowStatusType,
+    items: any[]
+  ): void {
+    if (!this.id || !items.length) return;
+
+    const objectRefs = items
+      .map(item => this.getReviewObjectRef(item))
+      .filter((ref): ref is StixObjectRef => !!ref);
+
+    if (!objectRefs.length) return;
+
+    this.connector
+      .reviewCandidates(this.id, {
+        from,
+        to,
+        object_refs: objectRefs,
+      })
+      .pipe(take(1))
+      .subscribe({
+        next: () => this.getReleaseTrack(),
+        error: err => {
+          console.error('Failed to update candidate review status', err);
+        },
+      });
+  }
+
+  private getReviewObjectRef(item: any): StixObjectRef | null {
+    if (!item?.object_ref) return null;
+    const modified = this.toIsoString(item.object_modified);
+    return modified ? { id: item.object_ref, modified } : item.object_ref;
+  }
+
+  private getReleaseTrackTier(item: any): 'candidate' | 'staged' | null {
+    if (item?.release_track_tier) return item.release_track_tier;
+    if (item?.object_staged_at || item?.object_staged_by) return 'staged';
+    return item?.object_ref ? 'candidate' : null;
+  }
+
+  private toIsoString(value: Date | string | undefined): string | undefined {
+    if (!value) return undefined;
+    return value instanceof Date ? value.toISOString() : value;
   }
 }

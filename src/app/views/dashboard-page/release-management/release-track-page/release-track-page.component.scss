@@ -1,6 +1,4 @@
-@use 'sass:color';
 @use '../../../../../style/colors' as colors;
-@use '../../../../../style/globals';
 
 .release-track-page {
   .promote-color {
@@ -32,6 +30,10 @@
     flex-wrap: wrap;
     justify-content: flex-end;
     gap: 8px;
+  }
+
+  .review-tpl-wrapper {
+    margin-top: 20px;
   }
 
   .release-track-board {
@@ -78,15 +80,6 @@
   .track-panel {
     width: 100%;
     min-height: 0;
-  }
-
-  .space-between {
-    width: 100%;
-    display: flex !important;
-    justify-content: space-between;
-    align-items: flex-start;
-    gap: 12px;
-    min-width: 0;
   }
 
   .labelled-box > .content {
@@ -224,95 +217,6 @@
       color: colors.on-color-deemphasis(dark);
       border-color: colors.border-color(dark);
       background: rgba(colors.color(mitre-silver), 0.04);
-    }
-  }
-
-  .release-object-card {
-    margin: 0;
-    overflow: hidden;
-    border-radius: 4px;
-    box-shadow: none;
-    transition:
-      border-color 120ms ease,
-      box-shadow 120ms ease,
-      transform 120ms ease;
-
-    .light & {
-      background: color.mix(white, colors.color(light), 72%);
-      border-color: colors.border-color(light);
-    }
-
-    .dark & {
-      background: colors.color-alternate(dark);
-      border-color: colors.border-color(dark);
-    }
-
-    &:hover {
-      transform: translateY(-1px);
-
-      .light & {
-        box-shadow: 0 2px 8px rgba(colors.color(mitre-black), 0.1);
-      }
-
-      .dark & {
-        box-shadow: 0 2px 8px rgba(black, 0.28);
-      }
-    }
-
-    .mat-mdc-card-header {
-      padding: 14px 12px 12px;
-    }
-
-    .mat-mdc-card-actions {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      justify-content: space-between;
-      padding: 10px 8px !important;
-      min-height: 44px;
-
-      .small-buttons:last-child {
-        margin-left: auto;
-      }
-    }
-
-    .card-title {
-      @extend .text-label;
-      min-width: 0;
-      padding-left: 10px;
-      border-left: 3px solid colors.border-color(light);
-      font-weight: bold;
-      letter-spacing: normal;
-      line-height: 20px;
-      overflow-wrap: anywhere;
-    }
-
-    &.is-candidate .card-title {
-      border-left-color: colors.color(info);
-    }
-
-    &.is-staged .card-title {
-      border-left-color: colors.color(success);
-    }
-
-    &.is-member .card-title {
-      border-left-color: colors.border-color(light);
-    }
-
-    .card-subtitle {
-      @extend .text-label;
-      display: block;
-      font-size: 14px;
-      font-weight: 500;
-      line-height: 18px;
-
-      .light & {
-        color: colors.on-color-deemphasis(light) !important;
-      }
-
-      .dark & {
-        color: colors.on-color-deemphasis(dark) !important;
-      }
     }
   }
 

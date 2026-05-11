@@ -1,0 +1,65 @@
+<mat-card
+  class="review-object-card"
+  [ngClass]="cardClasses"
+  appearance="outlined">
+  <mat-card-header>
+    <div class="review-card-top">
+      <div class="review-card-title-group">
+        <div class="review-card-title" [matTooltip]="title">
+          {{ title }}
+        </div>
+        <div class="review-card-subtitle" [matTooltip]="subtitle">
+          {{ subtitle }}
+        </div>
+      </div>
+
+      <ng-content select="[card-header-action]"></ng-content>
+    </div>
+  </mat-card-header>
+
+  <mat-card-content *ngIf="showDescription">
+    <p class="review-description">
+      {{ description }}
+    </p>
+  </mat-card-content>
+
+  <mat-card-actions>
+    <div class="review-actions">
+      <button
+        class="view-button"
+        mat-stroked-button
+        type="button"
+        (click)="onView()">
+        <mat-icon>open_in_browser</mat-icon>
+        View
+      </button>
+      <button
+        *ngIf="showDiff"
+        mat-stroked-button
+        type="button"
+        (click)="onDiff()">
+        <mat-icon>difference</mat-icon>
+        Diff
+      </button>
+    </div>
+
+    <div class="review-footer-right">
+      <ng-content select="[card-footer-action]"></ng-content>
+
+      <div class="review-meta" *ngIf="showModifiedMeta">
+        <span class="review-avatar" aria-hidden="true">
+          {{ modifiedByInitials }}
+        </span>
+        <span class="review-modified">
+          Modified
+          <strong *ngIf="modified; else unknownModified">
+            {{ modified | date: 'M/d/yy' }}
+          </strong>
+          <ng-template #unknownModified>
+            <strong>Unknown</strong>
+          </ng-template>
+        </span>
+      </div>
+    </div>
+  </mat-card-actions>
+</mat-card>
