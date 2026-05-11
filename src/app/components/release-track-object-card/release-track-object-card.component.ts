@@ -7,7 +7,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { StixTypeToAttackType } from 'src/app/utils/type-mappings';
 import { StixType, WorkflowStatusType } from 'src/app/utils/types';
 
-export interface ReleaseTrackReviewItem {
+export interface ReleaseTrackObjectItem {
   object_ref: string;
   object_modified?: Date | string;
   object_status?: WorkflowStatusType;
@@ -19,7 +19,7 @@ export interface ReleaseTrackReviewItem {
 }
 
 @Component({
-  selector: 'app-release-track-review-card',
+  selector: 'app-release-track-object-card',
   standalone: true,
   imports: [
     CommonModule,
@@ -28,19 +28,19 @@ export interface ReleaseTrackReviewItem {
     MatIconModule,
     MatTooltipModule,
   ],
-  templateUrl: './release-track-review-card.component.html',
-  styleUrls: ['./release-track-review-card.component.scss'],
+  templateUrl: './release-track-object-card.component.html',
+  styleUrls: ['./release-track-object-card.component.scss'],
 })
-export class ReleaseTrackReviewCardComponent {
-  @Input({ required: true }) item!: ReleaseTrackReviewItem;
+export class ReleaseTrackObjectCardComponent {
+  @Input({ required: true }) item!: ReleaseTrackObjectItem;
   @Input() cardType: string | null = null;
   @Input() laneStatus: WorkflowStatusType | null = null;
   @Input() showDescription = true;
   @Input() showDiff = true;
   @Input() showModifiedMeta = true;
 
-  @Output() viewObject = new EventEmitter<ReleaseTrackReviewItem>();
-  @Output() diffObject = new EventEmitter<ReleaseTrackReviewItem>();
+  @Output() viewObject = new EventEmitter<ReleaseTrackObjectItem>();
+  @Output() diffObject = new EventEmitter<ReleaseTrackObjectItem>();
 
   public get title(): string {
     return this.item?.name || this.fallbackObjectLabel;

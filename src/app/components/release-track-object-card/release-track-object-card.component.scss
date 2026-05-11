@@ -1,7 +1,7 @@
 @use 'sass:color';
 @use '../../../style/colors' as colors;
 
-.review-object-card {
+.release-track-object-card {
   display: flex;
   flex-direction: column;
   gap: 0;
@@ -66,7 +66,7 @@
   }
 }
 
-.review-card-top {
+.object-card-top {
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
@@ -75,32 +75,14 @@
   margin-bottom: 12px;
 }
 
-.review-card-title-group {
-  min-width: 0;
-  padding-left: 10px;
-  border-left: 3px solid colors.border-color(light);
-}
-
-.status-work-in-progress .review-card-title-group {
-  border-left-color: colors.color(error);
-}
-
-.status-awaiting-review .review-card-title-group {
-  border-left-color: colors.color(pending);
-}
-
-.status-reviewed .review-card-title-group {
-  border-left-color: colors.color(success);
-}
-
-.review-card-title,
-.review-card-subtitle,
-.review-description {
+.object-card-title,
+.object-card-subtitle,
+.object-description {
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
-.review-card-title {
+.object-card-title {
   display: -webkit-box;
   font-size: 16px;
   font-weight: 800;
@@ -117,7 +99,7 @@
   }
 }
 
-.review-card-subtitle {
+.object-card-subtitle {
   margin-top: 2px;
   font-size: 13px;
   line-height: 17px;
@@ -132,26 +114,7 @@
   }
 }
 
-.review-version {
-  flex: 0 0 auto;
-  border: 1px solid colors.color(info);
-  border-radius: 999px;
-  padding: 1px 8px;
-  color: colors.color(info);
-  font-size: 12px;
-  font-weight: 700;
-  line-height: 17px;
-
-  .light & {
-    background: rgba(colors.color(info), 0.08);
-  }
-
-  .dark & {
-    background: rgba(colors.color(info), 0.16);
-  }
-}
-
-.review-description {
+.object-description {
   display: -webkit-box;
   min-height: 30px;
   margin: 0;
@@ -170,14 +133,15 @@
   }
 }
 
-.review-meta,
-.review-actions {
+.object-meta,
+.object-actions,
+.object-footer-right {
   display: flex;
   align-items: center;
   gap: 8px;
 }
 
-.review-meta {
+.object-meta {
   min-width: 0;
   font-size: 12px;
   line-height: 18px;
@@ -191,7 +155,7 @@
   }
 }
 
-.review-avatar {
+.object-avatar {
   display: inline-flex;
   flex: 0 0 auto;
   align-items: center;
@@ -206,20 +170,24 @@
   line-height: 20px;
 }
 
-.status-awaiting-review .review-avatar {
+.status-awaiting-review .object-avatar {
   background: #c84d84;
 }
 
-.status-reviewed .review-avatar {
+.status-reviewed .object-avatar {
   background: colors.color(info);
 }
 
-.review-modified {
+.object-modified {
   min-width: 0;
   white-space: nowrap;
 }
 
-.review-actions {
+.object-footer-right {
+  margin-left: auto;
+}
+
+.object-actions {
   .mdc-button {
     height: 28px;
     min-width: 0;
@@ -241,14 +209,4 @@
 
 .view-button {
   color: colors.color(info) !important;
-}
-
-.review-approve-button {
-  width: calc(100% - 16px);
-  height: 34px;
-  margin: 8px;
-  border-radius: 5px;
-  background: color.mix(colors.color(warn), #d47a00, 64%) !important;
-  color: white !important;
-  font-weight: 800;
 }

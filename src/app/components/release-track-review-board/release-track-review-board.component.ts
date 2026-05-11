@@ -4,9 +4,9 @@ import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import {
-  ReleaseTrackReviewCardComponent,
-  ReleaseTrackReviewItem,
-} from 'src/app/components/release-track-review-card/release-track-review-card.component';
+  ReleaseTrackObjectCardComponent,
+  ReleaseTrackObjectItem,
+} from 'src/app/components/release-track-object-card/release-track-object-card.component';
 import { WorkflowStatus, WorkflowStatusType } from 'src/app/utils/types';
 
 interface ReleaseTrackReviewLane {
@@ -25,17 +25,17 @@ interface ReleaseTrackReviewLane {
     FormsModule,
     MatButtonModule,
     MatIconModule,
-    ReleaseTrackReviewCardComponent,
+    ReleaseTrackObjectCardComponent,
   ],
   templateUrl: './release-track-review-board.component.html',
   styleUrls: ['./release-track-review-board.component.scss'],
 })
 export class ReleaseTrackReviewBoardComponent {
-  @Input() items: ReleaseTrackReviewItem[] = [];
+  @Input() items: ReleaseTrackObjectItem[] = [];
 
-  @Output() viewObject = new EventEmitter<ReleaseTrackReviewItem>();
-  @Output() diffObject = new EventEmitter<ReleaseTrackReviewItem>();
-  @Output() bulkReview = new EventEmitter<ReleaseTrackReviewItem[]>();
+  @Output() viewObject = new EventEmitter<ReleaseTrackObjectItem>();
+  @Output() diffObject = new EventEmitter<ReleaseTrackObjectItem>();
+  @Output() bulkReview = new EventEmitter<ReleaseTrackObjectItem[]>();
 
   public readonly WorkflowStatus = WorkflowStatus;
 
@@ -69,7 +69,7 @@ export class ReleaseTrackReviewBoardComponent {
     [WorkflowStatus.Reviewed]: '',
   };
 
-  public getLaneItems(lane: ReleaseTrackReviewLane): ReleaseTrackReviewItem[] {
+  public getLaneItems(lane: ReleaseTrackReviewLane): ReleaseTrackObjectItem[] {
     const query = this.searchTerms[lane.status].trim().toLowerCase();
     return this.items
       .filter(
@@ -83,18 +83,18 @@ export class ReleaseTrackReviewBoardComponent {
     return lane.status === WorkflowStatus.AwaitingReview;
   }
 
-  public onBulkReview(items: ReleaseTrackReviewItem[]): void {
+  public onBulkReview(items: ReleaseTrackObjectItem[]): void {
     this.bulkReview.emit(items);
   }
 
   public trackByObjectRef(
     _index: number,
-    item: ReleaseTrackReviewItem
+    item: ReleaseTrackObjectItem
   ): string {
     return `${item.object_ref}-${item.object_modified || ''}`;
   }
 
-  private searchText(item: ReleaseTrackReviewItem): string {
+  private searchText(item: ReleaseTrackObjectItem): string {
     try {
       return JSON.stringify(item).toLowerCase();
     } catch {

@@ -1,15 +1,15 @@
 <mat-card
-  class="review-object-card"
+  class="release-track-object-card"
   [ngClass]="cardClasses"
   appearance="outlined">
   <mat-card-header>
-    <div class="review-card-top">
-      <div class="review-card-title-group">
-        <div class="review-card-title" [matTooltip]="title">
+    <div class="object-card-top">
+      <div class="object-card-title-group">
+        <div class="object-card-title" [matTooltip]="title">
           {{ title }}
         </div>
         <div
-          class="review-card-subtitle text-deemphasis"
+          class="object-card-subtitle text-deemphasis"
           [matTooltip]="subtitle">
           {{ subtitle }}
         </div>
@@ -20,13 +20,13 @@
   </mat-card-header>
 
   <mat-card-content *ngIf="showDescription">
-    <p class="review-description">
+    <p class="object-description">
       {{ description }}
     </p>
   </mat-card-content>
 
   <mat-card-actions>
-    <div class="review-actions">
+    <div class="object-actions">
       <button
         class="view-button"
         mat-stroked-button
@@ -45,14 +45,14 @@
       </button>
     </div>
 
-    <div class="review-footer-right">
+    <div class="object-footer-right">
       <ng-content select="[card-footer-action]"></ng-content>
 
-      <div class="review-meta" *ngIf="showModifiedMeta">
-        <span class="review-avatar" aria-hidden="true">
+      <div class="object-meta" *ngIf="showModifiedMeta">
+        <span class="object-avatar" aria-hidden="true">
           {{ modifiedByInitials }}
         </span>
-        <span class="review-modified">
+        <span class="object-modified">
           Modified
           <strong *ngIf="modified; else unknownModified">
             {{ modified | date: 'M/d/yy' }}

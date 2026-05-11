@@ -231,7 +231,7 @@ import { DictionaryDiffComponent } from './components/stix/dictionary-property/d
 import { StixPageTabsComponent } from './components/stix/stix-page-tabs/stix-page-tabs.component';
 import { ReleaseManagementComponent } from './views/dashboard-page/release-management/release-management.component';
 import { ReleaseTrackCardComponent } from './components/release-track-card/release-track-card.component';
-import { ReleaseTrackReviewCardComponent } from './components/release-track-review-card/release-track-review-card.component';
+import { ReleaseTrackObjectCardComponent } from './components/release-track-object-card/release-track-object-card.component';
 import { ReleaseTrackReviewBoardComponent } from './components/release-track-review-board/release-track-review-board.component';
 import { NewTrackDialogComponent } from './components/new-track-dialog/new-track-dialog.component';
 import { ReleaseTrackPageComponent } from './views/dashboard-page/release-management/release-track-page/release-track-page.component';
@@ -471,7 +471,7 @@ export function initConfig(appConfigService: AppConfigService) {
     OverlayModule,
     MatAutocompleteModule,
     ReleaseTrackCardComponent,
-    ReleaseTrackReviewCardComponent,
+    ReleaseTrackObjectCardComponent,
     ReleaseTrackReviewBoardComponent,
   ],
   providers: [

@@ -195,7 +195,7 @@
   </ng-template>
 
   <ng-template #memberTpl let-item let-type="type">
-    <app-release-track-review-card
+    <app-release-track-object-card
       [item]="item"
       [cardType]="type"
       [laneStatus]="item.object_status"
@@ -230,7 +230,7 @@
           Demote
         </button>
       </div>
-    </app-release-track-review-card>
+    </app-release-track-object-card>
   </ng-template>
 
   <ng-template #reviewTpl>
