@@ -1,6 +1,6 @@
+@use 'sass:color';
 @use '../../../../../style/colors' as colors;
-// @use '../../../../../style/typography' as typography;
-@use '../../../../../style/theme.scss';
+@use '../../../../../style/globals';
 
 .release-track-page {
   .promote-color {
@@ -15,71 +15,330 @@
 
   .release-track-header {
     display: flex;
+    align-items: flex-start;
     justify-content: space-between;
+    gap: 16px;
     margin-bottom: 18px;
+
+    h1 {
+      margin: 0;
+      font-size: 28px;
+      line-height: 34px;
+    }
   }
+
+  .release-track-actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: 8px;
+  }
+
+  .release-track-board {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    height: calc(100dvh - 148px);
+    min-height: 0;
+  }
+
+  .summary-grid,
+  .release-columns {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 16px;
+  }
+
+  .summary-grid {
+    flex: 0 0 auto;
+  }
+
+  .release-columns {
+    flex: 1 1 auto;
+    align-items: stretch;
+    min-height: 0;
+  }
+
+  .summary-item,
+  .release-column {
+    min-width: 0;
+    min-height: 0;
+  }
+
+  .release-column {
+    display: flex;
+    align-self: stretch;
+  }
+
+  .summary-card,
+  .track-panel {
+    height: 100%;
+  }
+
+  .track-panel {
+    width: 100%;
+    min-height: 0;
+  }
+
   .space-between {
     width: 100%;
     display: flex !important;
     justify-content: space-between;
+    align-items: flex-start;
+    gap: 12px;
+    min-width: 0;
   }
-  .labelled-box .content {
+
+  .labelled-box > .content {
     display: block;
+
     .card-header {
       display: flex;
-      justify-content: center;
       align-items: center;
+      gap: 2px;
+      min-width: 0;
+
       &.member-list {
-        justify-content: space-between !important;
+        justify-content: space-between;
+        gap: 12px;
         margin-bottom: 12px;
+
+        h3 {
+          line-height: 32px;
+        }
       }
+
       h3 {
         margin: 0;
       }
     }
+
     .card-body:not(.list) {
       display: flex;
-      justify-content: center;
+      align-items: center;
+    }
+  }
+
+  .summary-card > .content {
+    position: relative;
+    overflow: hidden;
+    min-height: 104px;
+    padding: 18px 20px 16px;
+    box-shadow: inset 0 4px 0 colors.border-color(light);
+
+    .card-header {
+      justify-content: flex-start;
+      line-height: 20px;
+    }
+
+    h2 {
+      margin: 12px 0 0;
+      font-size: 30px;
+      font-weight: 800;
+      line-height: 36px;
+    }
+  }
+
+  .candidates-summary > .content,
+  .candidates-panel > .content {
+    box-shadow: inset 0 4px 0 colors.color(info);
+  }
+
+  .staged-summary > .content,
+  .staged-panel > .content {
+    box-shadow: inset 0 4px 0 colors.color(success);
+  }
+
+  .members-summary > .content,
+  .members-panel > .content {
+    box-shadow: inset 0 4px 0 colors.border-color(light);
+  }
+
+  .track-panel > .content {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    height: 100%;
+    min-height: 0;
+    padding: 14px 12px 16px;
+    overflow: hidden;
+
+    .card-body.list {
+      flex: 1 1 auto;
+      display: flex;
+      flex-direction: column;
+      align-items: stretch;
+      gap: 12px;
+      min-height: 0;
+      padding-top: 12px;
+      padding-right: 4px;
+      overflow-y: auto;
+      scrollbar-gutter: stable;
     }
   }
 
   .small-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 6px;
+
     .mdc-button + .mdc-button {
-      margin-left: 6px;
+      margin-left: 0;
     }
+
     .mdc-button {
       height: 28px;
-      padding: 4px 8px;
-      .mat-mdc-outlined-button .mat-mdc-button-touch-target {
+      min-width: 0;
+      padding: 0 8px;
+
+      .mat-mdc-button-touch-target {
         height: 32px !important;
       }
     }
+
     .mat-icon {
+      width: 18px;
+      height: 18px;
       margin-right: 4px;
+      font-size: 18px;
+      line-height: 18px;
     }
   }
 
-  .candidate-card,
-  .staged-card,
-  .member-card {
-    margin: 12px 6px;
+  .empty-state {
+    border: 1px dashed;
+    border-radius: 4px;
+    padding: 18px 12px;
+    font-size: 14px;
+    line-height: 20px;
+    text-align: center;
+
+    .light & {
+      color: colors.on-color-deemphasis(light);
+      border-color: colors.border-color(light);
+      background: rgba(colors.color(mitre-black), 0.02);
+    }
+
+    .dark & {
+      color: colors.on-color-deemphasis(dark);
+      border-color: colors.border-color(dark);
+      background: rgba(colors.color(mitre-silver), 0.04);
+    }
+  }
+
+  .release-object-card {
+    margin: 0;
+    overflow: hidden;
+    border-radius: 4px;
+    box-shadow: none;
+    transition:
+      border-color 120ms ease,
+      box-shadow 120ms ease,
+      transform 120ms ease;
+
+    .light & {
+      background: color.mix(white, colors.color(light), 72%);
+      border-color: colors.border-color(light);
+    }
+
+    .dark & {
+      background: colors.color-alternate(dark);
+      border-color: colors.border-color(dark);
+    }
+
+    &:hover {
+      transform: translateY(-1px);
+
+      .light & {
+        box-shadow: 0 2px 8px rgba(colors.color(mitre-black), 0.1);
+      }
+
+      .dark & {
+        box-shadow: 0 2px 8px rgba(black, 0.28);
+      }
+    }
+
     .mat-mdc-card-header {
-      padding: 12px 8px;
+      padding: 14px 12px 12px;
     }
+
     .mat-mdc-card-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
       justify-content: space-between;
+      padding: 10px 8px !important;
+      min-height: 44px;
+
+      .small-buttons:last-child {
+        margin-left: auto;
+      }
     }
+
     .card-title {
       @extend .text-label;
+      min-width: 0;
+      padding-left: 10px;
+      border-left: 3px solid colors.border-color(light);
       font-weight: bold;
       letter-spacing: normal;
+      line-height: 20px;
+      overflow-wrap: anywhere;
     }
+
+    &.is-candidate .card-title {
+      border-left-color: colors.color(info);
+    }
+
+    &.is-staged .card-title {
+      border-left-color: colors.color(success);
+    }
+
+    &.is-member .card-title {
+      border-left-color: colors.border-color(light);
+    }
+
     .card-subtitle {
       @extend .text-label;
       display: block;
       font-size: 14px;
       font-weight: 500;
-      color: colors.on-color-deemphasis(light) !important;
+      line-height: 18px;
+
+      .light & {
+        color: colors.on-color-deemphasis(light) !important;
+      }
+
+      .dark & {
+        color: colors.on-color-deemphasis(dark) !important;
+      }
+    }
+  }
+
+  @media (max-width: 960px) {
+    .release-track-board {
+      height: auto;
+    }
+
+    .summary-grid,
+    .release-columns {
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    }
+
+    .track-panel > .content {
+      height: clamp(360px, calc(100dvh - 360px), 720px);
+    }
+  }
+
+  @media (max-width: 720px) {
+    .release-track-header {
+      flex-direction: column;
+      align-items: stretch;
+    }
+
+    .release-track-actions {
+      justify-content: flex-start;
     }
   }
 }

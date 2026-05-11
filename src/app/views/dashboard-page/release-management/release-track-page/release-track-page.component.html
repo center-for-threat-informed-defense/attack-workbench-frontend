@@ -1,9 +1,9 @@
 <div class="release-track-page">
   <div class="release-track-header">
-    <h1 style="margin: 0">
+    <h1>
       {{ releaseTrackName }}
     </h1>
-    <div class="button-group">
+    <div class="button-group release-track-actions">
       <button mat-stroked-button (click)="onExport()">
         Export Latest
         <mat-icon>file_download</mat-icon>
@@ -31,47 +31,47 @@
 
   <ng-template #detailsTpl>
     <!-- stats summary -->
-    <div class="grid spacing-16">
-      <div class="row">
-        <div class="col">
-          <div class="labelled-box">
+    <div class="release-track-board">
+      <div class="summary-grid">
+        <div class="summary-item">
+          <div class="labelled-box summary-card candidates-summary">
             <div class="content no-label">
               <div class="card-header">
                 <strong>Candidates</strong>
                 <span class="text-deemphasis"> &nbsp;(in this draft) </span>
               </div>
               <div class="card-body">
-                <h2 style="margin: 12px 0 0 0" class="view-color">
+                <h2 class="view-color">
                   {{ candidates.length || 0 }}
                 </h2>
               </div>
             </div>
           </div>
         </div>
-        <div class="col">
-          <div class="labelled-box">
+        <div class="summary-item">
+          <div class="labelled-box summary-card staged-summary">
             <div class="content no-label">
               <div class="card-header">
                 <strong>Staged</strong>
                 <span class="text-deemphasis"> &nbsp;(for next release) </span>
               </div>
               <div class="card-body">
-                <h2 style="margin: 12px 0 0 0" class="promote-color">
+                <h2 class="promote-color">
                   {{ staged.length || 0 }}
                 </h2>
               </div>
             </div>
           </div>
         </div>
-        <div class="col">
-          <div class="labelled-box">
+        <div class="summary-item">
+          <div class="labelled-box summary-card members-summary">
             <div class="content no-label">
               <div class="card-header">
                 <strong>Members</strong>
                 <span class="text-deemphasis"> &nbsp;(published) </span>
               </div>
               <div class="card-body">
-                <h2 style="margin: 12px 0 0 0">
+                <h2>
                   {{ members.length || 0 }}
                 </h2>
               </div>
@@ -80,10 +80,10 @@
         </div>
       </div>
 
-      <div class="row">
-        <div class="col">
+      <div class="release-columns">
+        <div class="release-column">
           <!-- candidates list -->
-          <div class="labelled-box">
+          <div class="labelled-box track-panel candidates-panel">
             <div class="content no-label">
               <div class="card-header member-list">
                 <h3 class="view-color">Candidates ({{ candidates.length }})</h3>
@@ -107,7 +107,9 @@
               <mat-divider></mat-divider>
 
               <div class="card-body list">
-                <div *ngIf="!candidates.length">No candidates</div>
+                <div class="empty-state" *ngIf="!candidates.length">
+                  No candidates
+                </div>
                 <div *ngFor="let item of candidates">
                   <ng-container
                     *ngTemplateOutlet="
@@ -123,9 +125,9 @@
           </div>
         </div>
 
-        <div class="col">
+        <div class="release-column">
           <!-- staged -->
-          <div class="labelled-box">
+          <div class="labelled-box track-panel staged-panel">
             <div class="content no-label">
               <div class="card-header member-list">
                 <h3 class="promote-color">Staged ({{ staged.length }})</h3>
@@ -142,7 +144,9 @@
               <mat-divider></mat-divider>
 
               <div class="card-body list">
-                <div *ngIf="!staged.length">No staged objects</div>
+                <div class="empty-state" *ngIf="!staged.length">
+                  No staged objects
+                </div>
                 <div *ngFor="let item of staged">
                   <ng-container
                     *ngTemplateOutlet="
@@ -158,9 +162,9 @@
           </div>
         </div>
 
-        <div class="col">
+        <div class="release-column">
           <!-- members -->
-          <div class="labelled-box">
+          <div class="labelled-box track-panel members-panel">
             <div class="content no-label">
               <div class="card-header member-list">
                 <h3>Members ({{ members.length }})</h3>
@@ -169,7 +173,9 @@
               <mat-divider></mat-divider>
 
               <div class="card-body list">
-                <div *ngIf="!members.length">No published objects</div>
+                <div class="empty-state" *ngIf="!members.length">
+                  No published objects
+                </div>
                 <div *ngFor="let item of members">
                   <ng-container
                     *ngTemplateOutlet="
@@ -189,7 +195,10 @@
   </ng-template>
 
   <ng-template #memberTpl let-item let-type="type">
-    <mat-card class="candidate-card" appearance="outlined">
+    <mat-card
+      class="candidate-card release-object-card"
+      [ngClass]="'is-' + type"
+      appearance="outlined">
       <mat-card-header>
         <div class="space-between">
           <div class="card-title">
