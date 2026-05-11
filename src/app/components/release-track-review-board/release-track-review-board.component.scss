@@ -50,7 +50,7 @@
   border-color: color.mix(colors.color(warn), colors.color(spark-yellow), 70%);
 
   .review-lane-header h3 {
-    color: colors.color(pending);
+    color: color.mix(colors.color(warn), colors.color(spark-yellow), 70%);
   }
 }
 
@@ -89,7 +89,11 @@
     colors.color(spark-yellow),
     70%
   ) !important;
-  color: colors.color(pending) !important;
+  color: color.mix(
+    colors.color(warn),
+    colors.color(spark-yellow),
+    70%
+  ) !important;
   font-size: 12px;
   font-weight: 800;
 

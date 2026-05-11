@@ -1,3 +1,4 @@
+@use 'sass:color';
 @use '../../../../../style/colors' as colors;
 
 .release-track-page {
@@ -8,7 +9,7 @@
     color: colors.color(info);
   }
   .demote-color {
-    color: colors.color(warn);
+    color: color.mix(colors.color(warn), colors.color(spark-yellow), 70%);
   }
 
   .release-track-header {
