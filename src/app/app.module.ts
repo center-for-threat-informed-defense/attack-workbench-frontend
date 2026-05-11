@@ -57,7 +57,6 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 // other library imports
 import { MtxPopoverModule } from '@ng-matero/extensions/popover';
 import { AutosizeModule } from 'ngx-autosize';
-import { JDENTICON_CONFIG, NgxJdenticonModule } from 'ngx-jdenticon';
 import { MarkdownModule } from 'ngx-markdown';
 
 // custom components
@@ -429,7 +428,6 @@ export function initConfig(appConfigService: AppConfigService) {
       disableConsoleLogging: false,
     }),
     MtxPopoverModule,
-    NgxJdenticonModule,
     AutosizeModule,
     BrowserModule,
     AppRoutingModule,
@@ -482,20 +480,6 @@ export function initConfig(appConfigService: AppConfigService) {
       const initializerFn = initConfig(inject(AppConfigService));
       return initializerFn();
     }),
-    {
-      provide: JDENTICON_CONFIG,
-      useValue: {
-        lightness: {
-          color: [0.35, 0.6],
-          grayscale: [0.35, 0.6],
-        },
-        saturation: {
-          color: 0.5,
-          grayscale: 0.5,
-        },
-        backColor: '#0000',
-      },
-    },
     {
       provide: HTTP_INTERCEPTORS,
       useClass: AuthInterceptor,
