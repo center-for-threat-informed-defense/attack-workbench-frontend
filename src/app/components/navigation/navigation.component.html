@@ -1,0 +1,104 @@
+<nav class="app-navigation" aria-label="Primary navigation">
+  <div class="app-title">
+    <a routerLink="">ATT&CK Workbench</a>
+  </div>
+  <a
+    class="nav-area"
+    [routerLink]="isLoggedIn ? '/objects' : null"
+    [class.active]="isObjectLibraryActive"
+    [class.disabled]="!isLoggedIn"
+    [attr.aria-disabled]="!isLoggedIn"
+    [attr.tabindex]="isLoggedIn ? 0 : -1"
+    (click)="expandObjectLibrary()">
+    <mat-icon>dataset</mat-icon>
+    <span>Object Library</span>
+  </a>
+
+  <div class="nav-area-children" *ngIf="objectLibraryExpanded">
+    <a
+      class="nav-link"
+      [routerLink]="isLoggedIn ? '/objects' : null"
+      routerLinkActive="active"
+      [class.disabled]="!isLoggedIn"
+      [attr.aria-disabled]="!isLoggedIn"
+      [attr.tabindex]="isLoggedIn ? 0 : -1"
+      [routerLinkActiveOptions]="{ exact: true }">
+      All Objects
+    </a>
+
+    <section class="nav-section" *ngFor="let section of sections">
+      <button
+        class="nav-section-label"
+        type="button"
+        (click)="toggleSection(section.label)"
+        [attr.aria-controls]="sectionId(section.label)"
+        [attr.aria-expanded]="isSectionOpen(section.label)">
+        <span>{{ section.label }}</span>
+        <mat-icon>{{
+          isSectionOpen(section.label) ? 'expand_more' : 'chevron_right'
+        }}</mat-icon>
+      </button>
+
+      <div
+        class="nav-section-items"
+        *ngIf="isSectionOpen(section.label)"
+        [id]="sectionId(section.label)">
+        <a
+          class="nav-link"
+          *ngFor="let item of section.items"
+          [routerLink]="isLoggedIn ? item.path : null"
+          routerLinkActive="active"
+          [class.deprecated]="item.deprecated"
+          [class.disabled]="!isLoggedIn"
+          [attr.aria-disabled]="!isLoggedIn"
+          [attr.tabindex]="isLoggedIn ? 0 : -1">
+          <span>{{ item.label }}</span>
+          <mat-icon *ngIf="item.deprecated">warning</mat-icon>
+        </a>
+      </div>
+    </section>
+  </div>
+
+  <a
+    class="nav-area"
+    [routerLink]="isLoggedIn ? '/reference-manager' : null"
+    routerLinkActive="active"
+    [class.disabled]="!isLoggedIn"
+    [attr.aria-disabled]="!isLoggedIn"
+    [attr.tabindex]="isLoggedIn ? 0 : -1"
+    (click)="collapseObjectLibrary()">
+    <mat-icon>manage_search</mat-icon>
+    <span>Reference Manager</span>
+  </a>
+
+  <a
+    class="nav-area"
+    [routerLink]="isLoggedIn ? '/contributors' : null"
+    routerLinkActive="active"
+    [class.disabled]="!isLoggedIn"
+    [attr.aria-disabled]="!isLoggedIn"
+    [attr.tabindex]="isLoggedIn ? 0 : -1"
+    (click)="collapseObjectLibrary()">
+    <mat-icon>groups</mat-icon>
+    <span>Contributors</span>
+  </a>
+
+  <a
+    class="nav-area"
+    *ngIf="canAccessDashboard"
+    routerLink="/dashboard"
+    routerLinkActive="active"
+    (click)="collapseObjectLibrary()">
+    <mat-icon>dashboard</mat-icon>
+    <span>Dashboard</span>
+  </a>
+
+  <a
+    class="nav-area"
+    routerLink="/docs"
+    routerLinkActive="active"
+    (click)="collapseObjectLibrary()">
+    <mat-icon>menu_book</mat-icon>
+    <span>Documentation</span>
+  </a>
+</nav>

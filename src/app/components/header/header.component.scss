@@ -1,14 +1,18 @@
-@use '../../../style/globals';
 @use '../../../style/colors';
 
 .header {
+  height: 74px;
+  padding: 0 30px 0 32px;
+  border-bottom: 1px solid rgba(colors.color(mitre-silver), 0.1);
+
   .light & {
     background: colors.color(primary);
-    color: colors.on-color(primary);
   }
+
   .dark & {
-    background: colors.color(light);
+    background: colors.color(primary);
   }
+
   .mat-mdc-button:disabled {
     .light & {
       color: colors.on-color-deemphasis(light);
@@ -17,32 +21,16 @@
       color: colors.on-color-deemphasis(dark);
     }
   }
+
   .spacer {
     flex: 1 1 auto;
   }
-  .app-title {
-    a {
-      @extend .heading;
-      border-bottom-width: 0 !important;
-      .dark &,
-      .dark &:hover {
-        color: colors.color(primary-dark) !important;
-      }
-      .light &,
-      .light &:hover {
-        color: colors.color(light) !important;
-      }
-    }
-    .app-version {
-      text-transform: none;
-      @extend .text-label;
-      font-size: 10px;
-    }
-  }
+
   button {
     font-family: Roboto, Arial, sans-serif;
     font-weight: 500;
     text-transform: uppercase;
+
     .light & {
       color: colors.on-color(dark);
     }
@@ -51,21 +39,6 @@
     }
   }
 
-  .links {
-    overflow: hidden;
-    &.pad-right {
-      padding-right: 12px;
-    }
-  }
-  .account.pad-left {
-    margin-left: 12px;
-  }
-  .hamburger {
-    position: relative;
-    width: 0;
-    overflow-x: visible;
-    left: -40px;
-  }
   .mat-mdc-icon-button.account {
     --account-avatar-size: 48px;
 
@@ -78,6 +51,7 @@
     scale: 0.85;
     vertical-align: middle;
     width: var(--account-avatar-size);
+
     app-user-avatar {
       display: inline-flex;
       flex: 0 0 auto;
@@ -85,6 +59,7 @@
       vertical-align: middle;
       width: var(--account-avatar-size);
     }
+
     app-user-avatar .user-avatar {
       height: 100%;
       width: 100%;
