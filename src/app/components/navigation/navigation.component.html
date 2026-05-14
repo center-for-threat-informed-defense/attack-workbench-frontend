@@ -66,7 +66,7 @@
     [class.disabled]="!isLoggedIn"
     [attr.aria-disabled]="!isLoggedIn"
     [attr.tabindex]="isLoggedIn ? 0 : -1"
-    (click)="collapseObjectLibrary()">
+    (click)="collapseNavigationGroups()">
     <mat-icon>manage_search</mat-icon>
     <span>Reference Manager</span>
   </a>
@@ -78,7 +78,7 @@
     [class.disabled]="!isLoggedIn"
     [attr.aria-disabled]="!isLoggedIn"
     [attr.tabindex]="isLoggedIn ? 0 : -1"
-    (click)="collapseObjectLibrary()">
+    (click)="collapseNavigationGroups()">
     <mat-icon>groups</mat-icon>
     <span>Contributors</span>
   </a>
@@ -86,18 +86,70 @@
   <a
     class="nav-area"
     *ngIf="canAccessDashboard"
-    routerLink="/dashboard"
-    routerLinkActive="active"
-    (click)="collapseObjectLibrary()">
+    [routerLink]="isLoggedIn ? '/dashboard' : null"
+    [class.active]="isDashboardActive"
+    [class.disabled]="!isLoggedIn"
+    [attr.aria-disabled]="!isLoggedIn"
+    [attr.tabindex]="isLoggedIn ? 0 : -1"
+    (click)="expandDashboard()">
     <mat-icon>dashboard</mat-icon>
     <span>Dashboard</span>
   </a>
+
+  <div
+    class="nav-area-children"
+    *ngIf="canAccessDashboard && (dashboardExpanded || isDashboardActive)">
+    <a
+      class="nav-link"
+      *ngFor="let item of dashboardItems"
+      [routerLink]="isLoggedIn ? item.path : null"
+      routerLinkActive="active"
+      [routerLinkActiveOptions]="{ exact: item.exact }"
+      [class.disabled]="!isLoggedIn"
+      [attr.aria-disabled]="!isLoggedIn"
+      [attr.tabindex]="isLoggedIn ? 0 : -1">
+      <span>{{ item.label }}</span>
+    </a>
+
+    <section
+      class="nav-section"
+      *ngIf="canAccessAdminDashboard && dashboardAdminItems.length">
+      <button
+        class="nav-section-label"
+        type="button"
+        (click)="toggleSection('Admin')"
+        [attr.aria-controls]="sectionId('Admin')"
+        [attr.aria-expanded]="isSectionOpen('Admin')">
+        <span>Admin</span>
+        <mat-icon>{{
+          isSectionOpen('Admin') ? 'expand_more' : 'chevron_right'
+        }}</mat-icon>
+      </button>
+
+      <div
+        class="nav-section-items"
+        *ngIf="isSectionOpen('Admin')"
+        [id]="sectionId('Admin')">
+        <a
+          class="nav-link"
+          *ngFor="let item of dashboardAdminItems"
+          [routerLink]="isLoggedIn ? item.path : null"
+          routerLinkActive="active"
+          [routerLinkActiveOptions]="{ exact: item.exact }"
+          [class.disabled]="!isLoggedIn"
+          [attr.aria-disabled]="!isLoggedIn"
+          [attr.tabindex]="isLoggedIn ? 0 : -1">
+          <span>{{ item.label }}</span>
+        </a>
+      </div>
+    </section>
+  </div>
 
   <a
     class="nav-area"
     routerLink="/docs"
     routerLinkActive="active"
-    (click)="collapseObjectLibrary()">
+    (click)="collapseNavigationGroups()">
     <mat-icon>menu_book</mat-icon>
     <span>Documentation</span>
   </a>

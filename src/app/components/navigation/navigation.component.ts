@@ -1,5 +1,6 @@
 import { Component, ViewEncapsulation } from '@angular/core';
-import { Router } from '@angular/router';
+import { Route, Router } from '@angular/router';
+import { routes as appRoutes } from 'src/app/app-routing.module';
 import { stixRoutes } from 'src/app/app-routing-stix.module';
 import { Role } from 'src/app/classes/authn/role';
 import { AuthenticationService } from 'src/app/services/connectors/authentication/authentication.service';
@@ -8,6 +9,7 @@ interface NavigationItem {
   label: string;
   path: string;
   deprecated?: boolean;
+  exact?: boolean;
 }
 
 interface NavigationSection {
@@ -24,6 +26,7 @@ interface NavigationSection {
 })
 export class NavigationComponent {
   public objectLibraryExpanded = true;
+  public dashboardExpanded = false;
 
   private readonly groupOrder = ['core', 'cti', 'defenses', 'more'];
   private readonly objectLibraryExcludedPaths = new Set([
@@ -35,6 +38,10 @@ export class NavigationComponent {
   private readonly collapsedSections = new Set<string>();
 
   public readonly sections: NavigationSection[] = this.buildSections();
+  public readonly dashboardItems: NavigationItem[] =
+    this.buildDashboardItems(false);
+  public readonly dashboardAdminItems: NavigationItem[] =
+    this.buildDashboardItems(true);
 
   private readonly objectLibraryPaths = [
     '/objects',
@@ -55,8 +62,16 @@ export class NavigationComponent {
     ]);
   }
 
+  public get canAccessAdminDashboard(): boolean {
+    return this.authenticationService.isAuthorized([Role.ADMIN]);
+  }
+
   public get isObjectLibraryActive(): boolean {
     return this.isObjectLibraryRoute(this.router.url);
+  }
+
+  public get isDashboardActive(): boolean {
+    return this.isDashboardRoute(this.router.url);
   }
 
   constructor(
@@ -70,6 +85,21 @@ export class NavigationComponent {
 
   public expandObjectLibrary(): void {
     this.objectLibraryExpanded = true;
+    this.dashboardExpanded = false;
+  }
+
+  public collapseDashboard(): void {
+    this.dashboardExpanded = false;
+  }
+
+  public expandDashboard(): void {
+    this.objectLibraryExpanded = false;
+    this.dashboardExpanded = true;
+  }
+
+  public collapseNavigationGroups(): void {
+    this.objectLibraryExpanded = false;
+    this.dashboardExpanded = false;
   }
 
   public isSectionOpen(section: string): boolean {
@@ -93,6 +123,11 @@ export class NavigationComponent {
     return this.objectLibraryPaths.some(
       objectPath => path === objectPath || path.startsWith(`${objectPath}/`)
     );
+  }
+
+  public isDashboardRoute(url: string): boolean {
+    const path = url.split('?')[0].split('#')[0];
+    return path === '/dashboard' || path.startsWith('/dashboard/');
   }
 
   private buildSections(): NavigationSection[] {
@@ -133,6 +168,40 @@ export class NavigationComponent {
 
   private groupSortValue(order: number): number {
     return order === -1 ? Number.MAX_SAFE_INTEGER : order;
+  }
+
+  private buildDashboardItems(adminOnly: boolean): NavigationItem[] {
+    const dashboardRoute = this.dashboardRoute();
+    if (!dashboardRoute?.children) return [];
+
+    return dashboardRoute.children
+      .filter(route => this.isDashboardNavigationRoute(route))
+      .filter(route => this.isAdminDashboardRoute(route) === adminOnly)
+      .map(route => ({
+        label:
+          route.path === ''
+            ? 'Overview'
+            : this.titleCase(route.data?.breadcrumb || (route.path as string)),
+        path: this.dashboardPath(route),
+        exact: route.path === '',
+      }));
+  }
+
+  private dashboardRoute(): Route | undefined {
+    return appRoutes[0]?.children?.find(route => route.path === 'dashboard');
+  }
+
+  private dashboardPath(route: Route): string {
+    return route.path ? `/dashboard/${route.path}` : '/dashboard';
+  }
+
+  private isDashboardNavigationRoute(route: Route): boolean {
+    return route.path !== undefined && !!route.data?.breadcrumb;
+  }
+
+  private isAdminDashboardRoute(route: Route): boolean {
+    const roles = route.data?.roles as Role[] | undefined;
+    return roles?.length === 1 && roles.includes(Role.ADMIN);
   }
 
   private titleCase(value: string): string {

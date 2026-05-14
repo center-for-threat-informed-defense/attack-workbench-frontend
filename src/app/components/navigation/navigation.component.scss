@@ -105,11 +105,13 @@ $nav-active: rgba(colors.color(mitre-silver), 0.16);
 
   &.active {
     border-color: rgba($nav-parent-selected, 0.6) !important;
-    background: rgba($nav-parent-selected, 0.2);
-    color: colors.color(mitre-silver) !important;
+    background: rgba($nav-parent-selected, 0.12);
+    color: colors.color(mitre-light-blue) !important;
+    // color: colors.color(mitre-silver) !important;
 
     .mat-icon {
-      color: colors.color(mitre-silver);
+      // color: colors.color(mitre-silver);
+      color: colors.color(mitre-light-blue);
     }
   }
 
@@ -172,7 +174,7 @@ $nav-active: rgba(colors.color(mitre-silver), 0.16);
   text-transform: uppercase;
 
   span {
-    color: inherit;
+    color: colors.color(mitre-light-blue);
   }
 
   &:hover {

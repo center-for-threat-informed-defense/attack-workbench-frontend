@@ -17,7 +17,7 @@ import { ReleaseTrackPageComponent } from './views/dashboard-page/release-manage
 
 const editRoles = [Role.EDITOR, Role.TEAM_LEAD, Role.ADMIN];
 
-const routes: Routes = [
+export const routes: Routes = [
   {
     path: '',
     data: {

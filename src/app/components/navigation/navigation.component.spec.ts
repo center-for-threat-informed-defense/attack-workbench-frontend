@@ -52,6 +52,16 @@ describe('NavigationComponent', () => {
 
     component.expandObjectLibrary();
     expect(component.objectLibraryExpanded).toBe(true);
+    expect(component.dashboardExpanded).toBe(false);
+  });
+
+  it('should collapse and expand dashboard children', () => {
+    component.expandDashboard();
+    expect(component.dashboardExpanded).toBe(true);
+    expect(component.objectLibraryExpanded).toBe(false);
+
+    component.collapseDashboard();
+    expect(component.dashboardExpanded).toBe(false);
   });
 
   it('should mark object library routes as active', () => {
@@ -61,6 +71,17 @@ describe('NavigationComponent', () => {
       component.isObjectLibraryRoute('/technique/attack-pattern--123')
     ).toBe(true);
     expect(component.isObjectLibraryRoute('/reference-manager')).toBe(false);
+  });
+
+  it('should mark dashboard routes as active', () => {
+    expect(component.isDashboardRoute('/dashboard')).toBe(true);
+    expect(component.isDashboardRoute('/dashboard/release-management')).toBe(
+      true
+    );
+    expect(
+      component.isDashboardRoute('/dashboard/release-management/123')
+    ).toBe(true);
+    expect(component.isDashboardRoute('/objects')).toBe(false);
   });
 
   it('should use title-cased route breadcrumbs for object labels', () => {
@@ -83,6 +104,20 @@ describe('NavigationComponent', () => {
       'CTI',
       'Defenses',
       'More',
+    ]);
+  });
+
+  it('should build dashboard links with admin links grouped separately', () => {
+    expect(component.dashboardItems.map(item => item.label)).toEqual([
+      'Overview',
+      'Release Management',
+      'Teams',
+      'Data Quality',
+    ]);
+    expect(component.dashboardAdminItems.map(item => item.label)).toEqual([
+      'Organization Settings',
+      'User Accounts',
+      'Default Marking Definitions',
     ]);
   });
 });
