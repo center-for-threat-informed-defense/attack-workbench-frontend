@@ -35,6 +35,14 @@ export class ObjectStatusComponent implements OnInit {
     );
   }
 
+  public get revokeDisabled(): boolean {
+    return this.disabled || this.deprecated || !this.objects;
+  }
+
+  public get revokeTooltip(): string {
+    return this.object?.revoked || this.revoked ? 'un-revoke' : 'revoke';
+  }
+
   constructor(
     public editorService: EditorService,
     private restAPIService: RestApiConnectorService,
@@ -43,9 +51,14 @@ export class ObjectStatusComponent implements OnInit {
 
   ngOnInit(): void {
     this.statusControl = new FormControl();
+    this.loadData();
   }
 
   public loadData() {
+    if (!this.editorService.stixId || this.editorService.stixId == 'new')
+      return;
+    if (this.loaded && this.object && this.objects) return;
+
     let data$;
     const options = {
       includeRevoked: true,
@@ -171,12 +184,15 @@ export class ObjectStatusComponent implements OnInit {
     }
   }
 
-  /**
-   * Handle the selection for revoking or un-revoking an object
-   * @param event revoke selection
-   */
-  public revoke(event) {
-    if (event.checked) {
+  public revoke() {
+    if (!this.loaded || !this.object || !this.objects) return;
+    if (this.revokeDisabled) return;
+    this.setRevoke(!this.revoked);
+  }
+
+  private setRevoke(revoked: boolean) {
+    this.revoked = revoked;
+    if (revoked) {
       // revoke object
       // prompt for revoking object
       this.select = new SelectionModel<string>();
@@ -220,6 +236,7 @@ export class ObjectStatusComponent implements OnInit {
         revokedRelationship.deprecated = true;
         revokedRelationship.save(this.restAPIService);
       }
+      this.revoked = false;
       this.object.revoked = false;
       this.save();
     }

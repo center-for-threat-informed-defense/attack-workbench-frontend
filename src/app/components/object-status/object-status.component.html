@@ -30,13 +30,6 @@
 
     <div class="status-options">
       <mat-checkbox
-        [(ngModel)]="revoked"
-        (change)="revoke($event)"
-        [disabled]="deprecated || !objects"
-        [class.disabled]="deprecated || !objects"
-        >Revoke</mat-checkbox
-      >
-      <mat-checkbox
         [(ngModel)]="deprecated"
         (change)="deprecate($event)"
         [disabled]="revoked || !objects"

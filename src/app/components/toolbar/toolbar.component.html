@@ -74,7 +74,20 @@
           <mat-icon aria-label="delete">delete</mat-icon>
         </button>
       </div>
-      <app-object-status *ngIf="hasWorkflow"></app-object-status>
+      <button
+        *ngIf="hasWorkflow"
+        mat-icon-button
+        class="control"
+        [matTooltip]="objectStatus?.revokeTooltip || 'revoke'"
+        [disabled]="editing || !objectStatus?.loaded"
+        (click)="toggleRevoked()">
+        <mat-icon
+          aria-label="revoked-icon"
+          fontSet="material-symbols-outlined"
+          >{{ objectStatus?.revoked ? 'report_off' : 'report' }}</mat-icon
+        >
+      </button>
+      <app-object-status *ngIf="hasWorkflow" #objectStatus></app-object-status>
     </div>
     <div
       class="controls button-list section"
