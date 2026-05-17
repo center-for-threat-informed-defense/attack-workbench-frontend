@@ -805,7 +805,8 @@ export abstract class StixObject extends Serializable {
    */
   public revoke?(
     restAPIService: RestApiConnectorService,
-    revokingObject: { revoking: { stixId: string; modified: string } }
+    revokingObject: { revoking: { stixId: string; modified: string } },
+    preserveRelationships?: boolean
   ): Observable<object>;
 
   /**

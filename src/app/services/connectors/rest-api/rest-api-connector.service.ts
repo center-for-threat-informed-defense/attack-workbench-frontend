@@ -1471,10 +1471,12 @@ export class RestApiConnectorService extends ApiConnector {
     const plural = AttackTypeToPlural[attackType];
     return function (
       id: string,
-      revokingObject: { revoking: { stixId: string; modified: string } }
+      revokingObject: { revoking: { stixId: string; modified: string } },
+      preserveRelationships = false
     ): Observable<{}> {
       const url = `${this.apiUrl}/${plural}/${id}/revoke`;
-      return this.http.post(url, revokingObject).pipe(
+      const params = { preserveRelationships };
+      return this.http.post(url, revokingObject, { params }).pipe(
         tap(this.handleSuccess(`${attackType} revoked`)),
         catchError(this.handleError_raise()),
         share() // multicast so that multiple subscribers don't trigger the call twice. THIS MUST BE THE LAST LINE OF THE PIPE

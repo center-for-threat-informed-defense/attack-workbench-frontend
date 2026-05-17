@@ -156,25 +156,28 @@ export class ObjectStatusComponent implements OnInit {
       // revoke object
       // prompt for revoking object
       this.select = new SelectionModel<string>();
+      const revokeDialogData = {
+        selectableObjects: this.objects.filter(object => {
+          return object.stixID !== this.editorService.stixId;
+        }),
+        type: this.editorService.type,
+        select: this.select,
+        selectionType: 'one',
+        title: 'Select the revoking object',
+        buttonLabel: 'revoke',
+        showPreserveRelationshipsOption: true,
+        preserveRelationships: false,
+      };
       const revokedDialog = this.dialog.open(AddDialogComponent, {
         maxWidth: '70em',
         maxHeight: '70em',
-        data: {
-          selectableObjects: this.objects.filter(object => {
-            return object.stixID !== this.editorService.stixId;
-          }),
-          type: this.editorService.type,
-          select: this.select,
-          selectionType: 'one',
-          title: 'Select the revoking object',
-          buttonLabel: 'revoke',
-        },
+        data: revokeDialogData,
         autoFocus: false, // prevents auto focus on toolbar buttons
       });
       const revokedSubscription = revokedDialog.afterClosed().subscribe({
         next: result => {
           if (result && this.select.selected.length) {
-            this.revokeObject();
+            this.revokeObject(revokeDialogData.preserveRelationships);
           } else {
             // user cancelled or no object selected
             this.revoked = false;
@@ -215,7 +218,7 @@ export class ObjectStatusComponent implements OnInit {
     }
   }
 
-  private revokeObject() {
+  private revokeObject(preserveRelationships = false) {
     const revokingObjectId = this.select.selected[0];
     const revokingObject = this.objects.find(
       object => object.stixID === revokingObjectId
@@ -233,7 +236,11 @@ export class ObjectStatusComponent implements OnInit {
       },
     };
 
-    const revoke = this.object.revoke?.(this.restAPIService, revokePayload);
+    const revoke = this.object.revoke?.(
+      this.restAPIService,
+      revokePayload,
+      preserveRelationships
+    );
     if (!revoke) {
       this.revoked = false;
       return;

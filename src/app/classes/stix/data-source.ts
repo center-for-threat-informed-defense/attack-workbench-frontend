@@ -201,8 +201,13 @@ export class DataSource extends StixObject {
    */
   public revoke(
     restAPIService: RestApiConnectorService,
-    revokingObject: { revoking: { stixId: string; modified: string } }
+    revokingObject: { revoking: { stixId: string; modified: string } },
+    preserveRelationships = false
   ): Observable<object> {
-    return restAPIService.revokeDataSource(this.stixID, revokingObject);
+    return restAPIService.revokeDataSource(
+      this.stixID,
+      revokingObject,
+      preserveRelationships
+    );
   }
 }

@@ -30,4 +30,6 @@ export interface AddDialogConfig {
   buttonLabel?: string; // optional button label, default "add"
   title?: string; // dialog text
   clearSelection?: boolean; //boolean to add clear selection button
+  showPreserveRelationshipsOption?: boolean; // show checkbox for preserveRelationships revoke option
+  preserveRelationships?: boolean; // value passed back through the shared dialog config
 }

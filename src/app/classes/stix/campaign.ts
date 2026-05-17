@@ -224,8 +224,13 @@ export class Campaign extends StixObject {
    */
   public revoke(
     restAPIService: RestApiConnectorService,
-    revokingObject: { revoking: { stixId: string; modified: string } }
+    revokingObject: { revoking: { stixId: string; modified: string } },
+    preserveRelationships = false
   ): Observable<object> {
-    return restAPIService.revokeCampaign(this.stixID, revokingObject);
+    return restAPIService.revokeCampaign(
+      this.stixID,
+      revokingObject,
+      preserveRelationships
+    );
   }
 }

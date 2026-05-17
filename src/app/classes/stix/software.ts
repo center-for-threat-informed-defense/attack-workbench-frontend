@@ -205,8 +205,13 @@ export class Software extends StixObject {
    */
   public revoke(
     restAPIService: RestApiConnectorService,
-    revokingObject: { revoking: { stixId: string; modified: string } }
+    revokingObject: { revoking: { stixId: string; modified: string } },
+    preserveRelationships = false
   ): Observable<object> {
-    return restAPIService.revokeSoftware(this.stixID, revokingObject);
+    return restAPIService.revokeSoftware(
+      this.stixID,
+      revokingObject,
+      preserveRelationships
+    );
   }
 }
