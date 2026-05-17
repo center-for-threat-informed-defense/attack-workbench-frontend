@@ -1,6 +1,5 @@
 import { SelectionModel } from '@angular/cdk/collections';
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
-import { FormControl } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { Relationship } from 'src/app/classes/stix/relationship';
 import { StixObject } from 'src/app/classes/stix/stix-object';
@@ -9,8 +8,6 @@ import { EditorService } from 'src/app/services/editor/editor.service';
 import { AddDialogComponent } from '../add-dialog/add-dialog.component';
 import { ConfirmationDialogComponent } from '../confirmation-dialog/confirmation-dialog.component';
 import { forkJoin } from 'rxjs';
-import { WorkflowStates } from 'src/app/utils/types';
-import { SaveDialogComponent } from '../save-dialog/save-dialog.component';
 
 @Component({
   selector: 'app-object-status',
@@ -20,9 +17,7 @@ import { SaveDialogComponent } from '../save-dialog/save-dialog.component';
 })
 export class ObjectStatusComponent implements OnInit {
   public loaded = false;
-  public statusControl: FormControl<string>;
   public select: SelectionModel<string>;
-  public workflows = Object.entries(WorkflowStates);
   public objects: StixObject[];
   public object: StixObject;
   public relationships = [];
@@ -50,7 +45,6 @@ export class ObjectStatusComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.statusControl = new FormControl();
     this.loadData();
   }
 
@@ -100,9 +94,6 @@ export class ObjectStatusComponent implements OnInit {
             object => object.stixID === this.editorService.stixId
           );
           if (this.object) {
-            if (this.object.workflow?.state) {
-              this.statusControl.setValue(this.object.workflow.state);
-            }
             this.revoked = this.object.revoked;
             this.deprecated = this.object.deprecated;
           }
@@ -151,37 +142,6 @@ export class ObjectStatusComponent implements OnInit {
         saveSubscription.unsubscribe();
       },
     });
-  }
-
-  /**
-   * Handle workflow state change
-   * @param event workflow state selection
-   */
-  public workflowChange(event) {
-    const previousWorkflowState =
-      this.object.workflow?.state || 'work-in-progress';
-    if (event.isUserInput) {
-      // Open save-dialog instead of saving directly
-      const dialogRef = this.dialog.open(SaveDialogComponent, {
-        maxWidth: '70em',
-        maxHeight: '70em',
-        data: {
-          object: this.object,
-          versionAlreadyIncremented: false,
-          // Pass the selected workflow state
-          initialWorkflowState: event.source.value,
-        },
-        autoFocus: false,
-      });
-
-      dialogRef.afterClosed().subscribe(result => {
-        if (result) {
-          this.editorService.onReload.emit();
-        } else {
-          this.statusControl.setValue(previousWorkflowState);
-        }
-      });
-    }
   }
 
   public revoke() {
