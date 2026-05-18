@@ -78,8 +78,21 @@
         *ngIf="hasWorkflow"
         mat-icon-button
         class="control"
+        [matTooltip]="objectStatus?.deprecateTooltip || 'deprecate'"
+        [disabled]="editing || !objectStatus?.loaded || objectStatus?.deprecateDisabled"
+        (click)="toggleDeprecated()">
+        <mat-icon
+          aria-label="deprecated-icon"
+          fontSet="material-symbols-outlined"
+          >{{ objectStatus?.deprecated ? 'visibility_off' : 'visibility' }}</mat-icon
+        >
+      </button>
+      <button
+        *ngIf="hasWorkflow"
+        mat-icon-button
+        class="control"
         [matTooltip]="objectStatus?.revokeTooltip || 'revoke'"
-        [disabled]="editing || !objectStatus?.loaded"
+        [disabled]="editing || !objectStatus?.loaded || objectStatus?.revokeDisabled"
         (click)="toggleRevoked()">
         <mat-icon
           aria-label="revoked-icon"

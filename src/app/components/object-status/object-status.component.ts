@@ -38,6 +38,16 @@ export class ObjectStatusComponent implements OnInit {
     return this.object?.revoked || this.revoked ? 'un-revoke' : 'revoke';
   }
 
+  public get deprecateDisabled(): boolean {
+    return this.disabled || this.revoked || !this.objects;
+  }
+
+  public get deprecateTooltip(): string {
+    return this.object?.deprecated || this.deprecated
+      ? 'undeprecate'
+      : 'deprecate';
+  }
+
   constructor(
     public editorService: EditorService,
     private restAPIService: RestApiConnectorService,
@@ -150,6 +160,12 @@ export class ObjectStatusComponent implements OnInit {
     this.setRevoke(!this.revoked);
   }
 
+  public toggleDeprecated() {
+    if (!this.loaded || !this.object || !this.objects) return;
+    if (this.deprecateDisabled) return;
+    this.setDeprecated(!this.deprecated);
+  }
+
   private setRevoke(revoked: boolean) {
     this.revoked = revoked;
     if (revoked) {
@@ -205,12 +221,9 @@ export class ObjectStatusComponent implements OnInit {
     }
   }
 
-  /**
-   * Handle the selection for deprecating or un-deprecating an object
-   * @param event deprecate selection
-   */
-  public deprecate(event) {
-    if (event.checked) {
+  private setDeprecated(deprecated: boolean) {
+    this.deprecated = deprecated;
+    if (deprecated) {
       this.deprecateObjects(false);
     } else {
       this.object.deprecated = false;

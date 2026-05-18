@@ -122,4 +122,8 @@ export class ToolbarComponent {
   public toggleRevoked() {
     this.objectStatus?.revoke();
   }
+
+  public toggleDeprecated() {
+    this.objectStatus?.toggleDeprecated();
+  }
 }
