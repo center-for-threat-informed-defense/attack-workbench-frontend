@@ -157,12 +157,8 @@ export const routes: Routes = [
         children: [
           {
             path: '',
-            data: {
-              breadcrumb: 'documentation',
-              markdown: '/assets/docs/README.md',
-              title: 'Documentation',
-            },
-            component: HelpPageComponent,
+            pathMatch: 'full',
+            redirectTo: 'usage',
           },
           {
             path: 'usage',

@@ -1,5 +1,6 @@
-import { Component, ViewEncapsulation } from '@angular/core';
-import { Route, Router } from '@angular/router';
+import { Component, OnDestroy, ViewEncapsulation } from '@angular/core';
+import { NavigationEnd, Route, Router } from '@angular/router';
+import { Subscription } from 'rxjs';
 import { routes as appRoutes } from 'src/app/app-routing.module';
 import { stixRoutes } from 'src/app/app-routing-stix.module';
 import { Role } from 'src/app/classes/authn/role';
@@ -17,6 +18,8 @@ interface NavigationSection {
   items: NavigationItem[];
 }
 
+type NavigationArea = 'objectLibrary' | 'dashboard' | 'documentation';
+
 @Component({
   selector: 'app-navigation',
   templateUrl: './navigation.component.html',
@@ -24,11 +27,16 @@ interface NavigationSection {
   encapsulation: ViewEncapsulation.None,
   standalone: false,
 })
-export class NavigationComponent {
-  public objectLibraryExpanded = true;
-  public dashboardExpanded = false;
+export class NavigationComponent implements OnDestroy {
+  public expandedNavigationArea: NavigationArea | null = null;
 
   private readonly groupOrder = ['core', 'cti', 'defenses', 'more'];
+  private readonly documentationOrder = [
+    'usage',
+    'collections',
+    'integrations',
+    'contributing',
+  ];
   private readonly objectLibraryExcludedPaths = new Set([
     'objects',
     'reference-manager',
@@ -36,12 +44,15 @@ export class NavigationComponent {
   ]);
   private readonly uppercaseLabels = new Set(['cti']);
   private readonly collapsedSections = new Set<string>();
+  private readonly routerEventsSubscription: Subscription;
 
   public readonly sections: NavigationSection[] = this.buildSections();
   public readonly dashboardItems: NavigationItem[] =
     this.buildDashboardItems(false);
   public readonly dashboardAdminItems: NavigationItem[] =
     this.buildDashboardItems(true);
+  public readonly documentationItems: NavigationItem[] =
+    this.buildDocumentationItems();
 
   private readonly objectLibraryPaths = [
     '/objects',
@@ -74,32 +85,38 @@ export class NavigationComponent {
     return this.isDashboardRoute(this.router.url);
   }
 
+  public get isDocumentationActive(): boolean {
+    return this.isDocumentationRoute(this.router.url);
+  }
+
   constructor(
     private authenticationService: AuthenticationService,
     private router: Router
-  ) {}
-
-  public collapseObjectLibrary(): void {
-    this.objectLibraryExpanded = false;
+  ) {
+    this.expandedNavigationArea = this.navigationAreaForUrl(this.router.url);
+    this.routerEventsSubscription = this.router.events.subscribe(event => {
+      if (event instanceof NavigationEnd) {
+        this.expandedNavigationArea = this.navigationAreaForUrl(
+          event.urlAfterRedirects
+        );
+      }
+    });
   }
 
-  public expandObjectLibrary(): void {
-    this.objectLibraryExpanded = true;
-    this.dashboardExpanded = false;
+  public ngOnDestroy(): void {
+    this.routerEventsSubscription.unsubscribe();
   }
 
-  public collapseDashboard(): void {
-    this.dashboardExpanded = false;
-  }
-
-  public expandDashboard(): void {
-    this.objectLibraryExpanded = false;
-    this.dashboardExpanded = true;
+  public expandNavigationArea(area: NavigationArea): void {
+    this.expandedNavigationArea = area;
   }
 
   public collapseNavigationGroups(): void {
-    this.objectLibraryExpanded = false;
-    this.dashboardExpanded = false;
+    this.expandedNavigationArea = null;
+  }
+
+  public isNavigationAreaExpanded(area: NavigationArea): boolean {
+    return this.expandedNavigationArea === area;
   }
 
   public isSectionOpen(section: string): boolean {
@@ -119,15 +136,33 @@ export class NavigationComponent {
   }
 
   public isObjectLibraryRoute(url: string): boolean {
-    const path = url.split('?')[0].split('#')[0];
+    const path = this.routePath(url);
     return this.objectLibraryPaths.some(
       objectPath => path === objectPath || path.startsWith(`${objectPath}/`)
     );
   }
 
   public isDashboardRoute(url: string): boolean {
-    const path = url.split('?')[0].split('#')[0];
+    const path = this.routePath(url);
     return path === '/dashboard' || path.startsWith('/dashboard/');
+  }
+
+  public isDocumentationRoute(url: string): boolean {
+    const path = this.routePath(url);
+    return path === '/docs' || path.startsWith('/docs/');
+  }
+
+  private navigationAreaForUrl(url: string): NavigationArea | null {
+    const path = this.routePath(url);
+
+    if (path === '/' || this.isObjectLibraryRoute(path)) return 'objectLibrary';
+    if (this.isDashboardRoute(path)) return 'dashboard';
+    if (this.isDocumentationRoute(path)) return 'documentation';
+    return null;
+  }
+
+  private routePath(url: string): string {
+    return url.split('?')[0].split('#')[0];
   }
 
   private buildSections(): NavigationSection[] {
@@ -189,6 +224,26 @@ export class NavigationComponent {
 
   private dashboardRoute(): Route | undefined {
     return appRoutes[0]?.children?.find(route => route.path === 'dashboard');
+  }
+
+  private buildDocumentationItems(): NavigationItem[] {
+    const documentationRoute = this.documentationRoute();
+    if (!documentationRoute?.children) return [];
+
+    return this.documentationOrder
+      .map(path =>
+        documentationRoute.children?.find(route => route.path === path)
+      )
+      .filter((route): route is Route => !!route)
+      .map(route => ({
+        label: this.titleCase(route.data?.breadcrumb || (route.path as string)),
+        path: `/docs/${route.path}`,
+        exact: true,
+      }));
+  }
+
+  private documentationRoute(): Route | undefined {
+    return appRoutes[0]?.children?.find(route => route.path === 'docs');
   }
 
   private dashboardPath(route: Route): string {

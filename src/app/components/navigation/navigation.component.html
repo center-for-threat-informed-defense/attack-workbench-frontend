@@ -9,12 +9,14 @@
     [class.disabled]="!isLoggedIn"
     [attr.aria-disabled]="!isLoggedIn"
     [attr.tabindex]="isLoggedIn ? 0 : -1"
-    (click)="expandObjectLibrary()">
+    (click)="expandNavigationArea('objectLibrary')">
     <mat-icon>dataset</mat-icon>
     <span>Object Library</span>
   </a>
 
-  <div class="nav-area-children" *ngIf="objectLibraryExpanded">
+  <div
+    class="nav-area-children"
+    *ngIf="isNavigationAreaExpanded('objectLibrary')">
     <a
       class="nav-link"
       [routerLink]="isLoggedIn ? '/objects' : null"
@@ -91,14 +93,14 @@
     [class.disabled]="!isLoggedIn"
     [attr.aria-disabled]="!isLoggedIn"
     [attr.tabindex]="isLoggedIn ? 0 : -1"
-    (click)="expandDashboard()">
+    (click)="expandNavigationArea('dashboard')">
     <mat-icon>dashboard</mat-icon>
     <span>Dashboard</span>
   </a>
 
   <div
     class="nav-area-children"
-    *ngIf="canAccessDashboard && (dashboardExpanded || isDashboardActive)">
+    *ngIf="canAccessDashboard && isNavigationAreaExpanded('dashboard')">
     <a
       class="nav-link"
       *ngFor="let item of dashboardItems"
@@ -147,10 +149,23 @@
 
   <a
     class="nav-area"
-    routerLink="/docs"
-    routerLinkActive="active"
-    (click)="collapseNavigationGroups()">
+    routerLink="/docs/usage"
+    [class.active]="isDocumentationActive"
+    (click)="expandNavigationArea('documentation')">
     <mat-icon>menu_book</mat-icon>
     <span>Documentation</span>
   </a>
+
+  <div
+    class="nav-area-children"
+    *ngIf="isNavigationAreaExpanded('documentation')">
+    <a
+      class="nav-link"
+      *ngFor="let item of documentationItems"
+      [routerLink]="item.path"
+      routerLinkActive="active"
+      [routerLinkActiveOptions]="{ exact: item.exact }">
+      <span>{{ item.label }}</span>
+    </a>
+  </div>
 </nav>

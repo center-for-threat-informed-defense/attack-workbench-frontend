@@ -4,6 +4,7 @@ import { MatDividerModule } from '@angular/material/divider';
 import { MatIconModule } from '@angular/material/icon';
 
 import { NavigationComponent } from './navigation.component';
+import { routes } from 'src/app/app-routing.module';
 import { AuthenticationService } from 'src/app/services/connectors/authentication/authentication.service';
 import { createMockAuthenticationService } from 'src/app/testing/mocks/authentication-service.mock';
 
@@ -44,24 +45,23 @@ describe('NavigationComponent', () => {
     expect(component.isSectionOpen('Core')).toBe(true);
   });
 
-  it('should collapse and expand object library children', () => {
-    expect(component.objectLibraryExpanded).toBe(true);
+  it('should keep one parent navigation area expanded at a time', () => {
+    expect(component.isNavigationAreaExpanded('objectLibrary')).toBe(true);
 
-    component.collapseObjectLibrary();
-    expect(component.objectLibraryExpanded).toBe(false);
+    component.expandNavigationArea('dashboard');
+    expect(component.isNavigationAreaExpanded('objectLibrary')).toBe(false);
+    expect(component.isNavigationAreaExpanded('dashboard')).toBe(true);
+    expect(component.isNavigationAreaExpanded('documentation')).toBe(false);
 
-    component.expandObjectLibrary();
-    expect(component.objectLibraryExpanded).toBe(true);
-    expect(component.dashboardExpanded).toBe(false);
-  });
+    component.expandNavigationArea('documentation');
+    expect(component.isNavigationAreaExpanded('objectLibrary')).toBe(false);
+    expect(component.isNavigationAreaExpanded('dashboard')).toBe(false);
+    expect(component.isNavigationAreaExpanded('documentation')).toBe(true);
 
-  it('should collapse and expand dashboard children', () => {
-    component.expandDashboard();
-    expect(component.dashboardExpanded).toBe(true);
-    expect(component.objectLibraryExpanded).toBe(false);
-
-    component.collapseDashboard();
-    expect(component.dashboardExpanded).toBe(false);
+    component.collapseNavigationGroups();
+    expect(component.isNavigationAreaExpanded('objectLibrary')).toBe(false);
+    expect(component.isNavigationAreaExpanded('dashboard')).toBe(false);
+    expect(component.isNavigationAreaExpanded('documentation')).toBe(false);
   });
 
   it('should mark object library routes as active', () => {
@@ -82,6 +82,13 @@ describe('NavigationComponent', () => {
       component.isDashboardRoute('/dashboard/release-management/123')
     ).toBe(true);
     expect(component.isDashboardRoute('/objects')).toBe(false);
+  });
+
+  it('should mark documentation routes as active', () => {
+    expect(component.isDocumentationRoute('/docs')).toBe(true);
+    expect(component.isDocumentationRoute('/docs/usage')).toBe(true);
+    expect(component.isDocumentationRoute('/docs/collections')).toBe(true);
+    expect(component.isDocumentationRoute('/dashboard')).toBe(false);
   });
 
   it('should use title-cased route breadcrumbs for object labels', () => {
@@ -119,5 +126,32 @@ describe('NavigationComponent', () => {
       'User Accounts',
       'Default Marking Definitions',
     ]);
+  });
+
+  it('should build documentation links', () => {
+    expect(component.documentationItems.map(item => item.label)).toEqual([
+      'Usage',
+      'Collections',
+      'Integrations',
+      'Contributing',
+    ]);
+    expect(component.documentationItems.map(item => item.path)).toEqual([
+      '/docs/usage',
+      '/docs/collections',
+      '/docs/integrations',
+      '/docs/contributing',
+    ]);
+  });
+
+  it('should redirect the documentation index to usage', () => {
+    const documentationRoute = routes[0]?.children?.find(
+      route => route.path === 'docs'
+    );
+    const indexRoute = documentationRoute?.children?.find(
+      route => route.path === ''
+    );
+
+    expect(indexRoute?.redirectTo).toBe('usage');
+    expect(indexRoute?.pathMatch).toBe('full');
   });
 });
