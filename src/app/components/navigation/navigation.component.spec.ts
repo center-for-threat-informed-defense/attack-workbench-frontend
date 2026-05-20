@@ -11,6 +11,7 @@ import { createMockAuthenticationService } from 'src/app/testing/mocks/authentic
 describe('NavigationComponent', () => {
   let component: NavigationComponent;
   let fixture: ComponentFixture<NavigationComponent>;
+  let authenticationService: any;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -28,6 +29,7 @@ describe('NavigationComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(NavigationComponent);
     component = fixture.componentInstance;
+    authenticationService = TestBed.inject(AuthenticationService);
     fixture.detectChanges();
   });
 
@@ -46,6 +48,8 @@ describe('NavigationComponent', () => {
   });
 
   it('should keep one parent navigation area expanded at a time', () => {
+    authenticationService.isLoggedIn = true;
+
     expect(component.isNavigationAreaExpanded('objectLibrary')).toBe(true);
 
     component.expandNavigationArea('dashboard');
@@ -62,6 +66,22 @@ describe('NavigationComponent', () => {
     expect(component.isNavigationAreaExpanded('objectLibrary')).toBe(false);
     expect(component.isNavigationAreaExpanded('dashboard')).toBe(false);
     expect(component.isNavigationAreaExpanded('documentation')).toBe(false);
+  });
+
+  it('should collapse restricted parent navigation areas when logged out', () => {
+    expect(component.isNavigationAreaExpanded('objectLibrary')).toBe(false);
+
+    component.expandNavigationArea('objectLibrary');
+    expect(component.isNavigationAreaExpanded('objectLibrary')).toBe(false);
+
+    component.expandNavigationArea('dashboard');
+    expect(component.isNavigationAreaExpanded('dashboard')).toBe(false);
+  });
+
+  it('should allow documentation navigation to expand when logged out', () => {
+    component.expandNavigationArea('documentation');
+
+    expect(component.isNavigationAreaExpanded('documentation')).toBe(true);
   });
 
   it('should mark object library routes as active', () => {

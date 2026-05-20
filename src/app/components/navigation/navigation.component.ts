@@ -108,6 +108,11 @@ export class NavigationComponent implements OnDestroy {
   }
 
   public expandNavigationArea(area: NavigationArea): void {
+    if (!this.canDisplayNavigationArea(area)) {
+      this.expandedNavigationArea = null;
+      return;
+    }
+
     this.expandedNavigationArea = area;
   }
 
@@ -116,7 +121,10 @@ export class NavigationComponent implements OnDestroy {
   }
 
   public isNavigationAreaExpanded(area: NavigationArea): boolean {
-    return this.expandedNavigationArea === area;
+    return (
+      this.canDisplayNavigationArea(area) &&
+      this.expandedNavigationArea === area
+    );
   }
 
   public isSectionOpen(section: string): boolean {
@@ -159,6 +167,10 @@ export class NavigationComponent implements OnDestroy {
     if (this.isDashboardRoute(path)) return 'dashboard';
     if (this.isDocumentationRoute(path)) return 'documentation';
     return null;
+  }
+
+  private canDisplayNavigationArea(area: NavigationArea): boolean {
+    return this.isLoggedIn || area === 'documentation';
   }
 
   private routePath(url: string): string {
