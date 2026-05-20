@@ -73,6 +73,7 @@ import { HeaderComponent } from './components/header/header.component';
 import { LoadingOverlayComponent } from './components/loading-overlay/loading-overlay.component';
 import { MarkdownViewDialogComponent } from './components/markdown-view-dialog/markdown-view-dialog.component';
 import { MultipleChoiceDialogComponent } from './components/multiple-choice-dialog/multiple-choice-dialog.component';
+import { NavigationComponent } from './components/navigation/navigation.component';
 import { ReferenceEditDialogComponent } from './components/reference-edit-dialog/reference-edit-dialog.component';
 import { HistoryTimelineComponent } from './components/stix/stix-page-tabs/history-timeline/history-timeline.component';
 import { ReferenceSidebarComponent } from './components/resources-drawer/reference-sidebar/reference-sidebar.component';
@@ -163,6 +164,7 @@ import { DefaultMarkingDefinitionsComponent } from './views/dashboard-page/defau
 import { ProfilePageComponent } from './views/profile-page/profile-page.component';
 import { ReferenceManagerComponent } from './views/reference-manager/reference-manager.component';
 
+import { AllObjectsPageComponent } from './views/stix/all-objects-page/all-objects-page.component';
 import { StixDialogComponent } from './views/stix/stix-dialog/stix-dialog.component';
 import { StixPageComponent } from './views/stix/stix-page/stix-page.component';
 
@@ -245,6 +247,7 @@ export function initConfig(appConfigService: AppConfigService) {
   declarations: [
     AppComponent,
     HeaderComponent,
+    NavigationComponent,
     FooterComponent,
     LoadingOverlayComponent,
     ToolbarComponent,
@@ -293,6 +296,7 @@ export function initConfig(appConfigService: AppConfigService) {
     DatepickerPropertyComponent,
     IconViewComponent,
     LandingPageComponent,
+    AllObjectsPageComponent,
     StixPageTabsComponent,
     HelpPageComponent,
     DashboardPageComponent,

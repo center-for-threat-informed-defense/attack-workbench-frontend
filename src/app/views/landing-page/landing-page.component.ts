@@ -27,7 +27,7 @@ export class LandingPageComponent implements OnInit, OnDestroy {
     private router: Router
   ) {
     this.routes = stixRoutes.filter(
-      route => route.data.headerSection !== 'more' && !route.data.deprecated
+      route => route.data.group !== 'more' && !route.data.deprecated
     );
   }
 

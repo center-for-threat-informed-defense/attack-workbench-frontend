@@ -17,7 +17,7 @@ import { ReleaseTrackPageComponent } from './views/dashboard-page/release-manage
 
 const editRoles = [Role.EDITOR, Role.TEAM_LEAD, Role.ADMIN];
 
-const routes: Routes = [
+export const routes: Routes = [
   {
     path: '',
     data: {
@@ -157,12 +157,8 @@ const routes: Routes = [
         children: [
           {
             path: '',
-            data: {
-              breadcrumb: 'documentation',
-              markdown: '/assets/docs/README.md',
-              title: 'Documentation',
-            },
-            component: HelpPageComponent,
+            pathMatch: 'full',
+            redirectTo: 'usage',
           },
           {
             path: 'usage',
