@@ -11,19 +11,32 @@
   <ng-container *ngIf="isLoggedIn">
     <button
       class="account"
-      mat-icon-button
+      mat-button
       [matMenuTriggerFor]="accountOptions"
-      aria-label="account options">
+      [attr.aria-label]="'account options for ' + username">
       <app-user-avatar
         [name]="username"
-        [size]="48"
+        [size]="40"
         [matTooltip]="username"
         matTooltipPosition="below"></app-user-avatar>
+      <span class="account-name">{{ username }}</span>
     </button>
   </ng-container>
 
-  <mat-menu #accountOptions="matMenu" backdropClass="override-light">
-    <button mat-menu-item routerLink="/profile">view profile</button>
-    <button mat-menu-item (click)="logout()">logout</button>
+  <mat-menu
+    #accountOptions="matMenu"
+    backdropClass="override-light"
+    class="account-menu"
+    xPosition="before"
+    yPosition="below"
+    [overlapTrigger]="false">
+    <button mat-menu-item routerLink="/profile">
+      <mat-icon aria-hidden="true">person</mat-icon>
+      <span>view profile</span>
+    </button>
+    <button class="logout-menu-item" mat-menu-item (click)="logout()">
+      <mat-icon aria-hidden="true">logout</mat-icon>
+      <span>logout</span>
+    </button>
   </mat-menu>
 </mat-toolbar>

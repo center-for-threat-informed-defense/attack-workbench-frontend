@@ -50,9 +50,14 @@ export const routes: Routes = [
         children: [
           {
             path: '',
+            pathMatch: 'full',
+            redirectTo: 'overview',
+          },
+          {
+            path: 'overview',
             data: {
-              breadcrumb: 'dashboard',
-              title: 'Dashboard',
+              breadcrumb: 'overview',
+              title: 'Knowledge Base Overview',
             },
             component: DashboardPageComponent,
           },

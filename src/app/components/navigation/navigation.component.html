@@ -96,6 +96,11 @@
     (click)="expandNavigationArea('dashboard')">
     <mat-icon>dashboard</mat-icon>
     <span>Dashboard</span>
+    <span
+      *ngIf="hasPendingUserAccounts"
+      class="nav-attention-dot"
+      [attr.aria-label]="pendingUserAccountsMessage"
+      [attr.title]="pendingUserAccountsMessage"></span>
   </a>
 
   <div
@@ -142,6 +147,13 @@
           [attr.aria-disabled]="!isLoggedIn"
           [attr.tabindex]="isLoggedIn ? 0 : -1">
           <span>{{ item.label }}</span>
+          <span
+            *ngIf="isUserAccountsNavigationItem(item) && hasPendingUserAccounts"
+            class="nav-attention-count"
+            [attr.aria-label]="pendingUserAccountsMessage"
+            [attr.title]="pendingUserAccountsMessage">
+            {{ pendingUserAccountsDisplay }}
+          </span>
         </a>
       </div>
     </section>
