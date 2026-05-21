@@ -79,12 +79,18 @@
         mat-icon-button
         class="control"
         [matTooltip]="objectStatus?.deprecateTooltip || 'deprecate'"
-        [disabled]="editing || !objectStatus?.loaded || objectStatus?.deprecateDisabled"
+        [disabled]="
+          editing || !objectStatus?.loaded || objectStatus?.deprecateDisabled
+        "
         (click)="toggleDeprecated()">
         <mat-icon
           aria-label="deprecated-icon"
           fontSet="material-symbols-outlined"
-          >{{ objectStatus?.deprecated ? 'visibility_off' : 'visibility' }}</mat-icon
+          >{{
+            objectStatus?.deprecated
+              ? 'do_not_disturb_off'
+              : 'do_not_disturb_on'
+          }}</mat-icon
         >
       </button>
       <button
@@ -92,7 +98,9 @@
         mat-icon-button
         class="control"
         [matTooltip]="objectStatus?.revokeTooltip || 'revoke'"
-        [disabled]="editing || !objectStatus?.loaded || objectStatus?.revokeDisabled"
+        [disabled]="
+          editing || !objectStatus?.loaded || objectStatus?.revokeDisabled
+        "
         (click)="toggleRevoked()">
         <mat-icon
           aria-label="revoked-icon"
