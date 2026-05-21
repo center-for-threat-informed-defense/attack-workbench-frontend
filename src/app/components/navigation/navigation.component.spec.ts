@@ -141,11 +141,35 @@ describe('NavigationComponent', () => {
       'Teams',
       'Data Quality',
     ]);
+    expect(component.dashboardItems[0]).toEqual(
+      expect.objectContaining({
+        label: 'Overview',
+        path: '/dashboard/overview',
+        exact: true,
+      })
+    );
     expect(component.dashboardAdminItems.map(item => item.label)).toEqual([
       'Organization Settings',
       'User Accounts',
       'Default Marking Definitions',
     ]);
+  });
+
+  it('should redirect the dashboard index to overview', () => {
+    const dashboardRoute = routes[0]?.children?.find(
+      route => route.path === 'dashboard'
+    );
+    const indexRoute = dashboardRoute?.children?.find(
+      route => route.path === ''
+    );
+    const overviewRoute = dashboardRoute?.children?.find(
+      route => route.path === 'overview'
+    );
+
+    expect(indexRoute?.redirectTo).toBe('overview');
+    expect(indexRoute?.pathMatch).toBe('full');
+    expect(overviewRoute?.data?.breadcrumb).toBe('overview');
+    expect(overviewRoute?.data?.title).toBe('Knowledge Base Overview');
   });
 
   it('should build documentation links', () => {

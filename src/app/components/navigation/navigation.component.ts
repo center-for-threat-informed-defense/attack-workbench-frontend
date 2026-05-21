@@ -225,12 +225,9 @@ export class NavigationComponent implements OnDestroy {
       .filter(route => this.isDashboardNavigationRoute(route))
       .filter(route => this.isAdminDashboardRoute(route) === adminOnly)
       .map(route => ({
-        label:
-          route.path === ''
-            ? 'Overview'
-            : this.titleCase(route.data?.breadcrumb || (route.path as string)),
+        label: this.titleCase(route.data?.breadcrumb || (route.path as string)),
         path: this.dashboardPath(route),
-        exact: route.path === '',
+        exact: route.path === '' || route.path === 'overview',
       }));
   }
 
