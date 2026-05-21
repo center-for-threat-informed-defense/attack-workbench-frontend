@@ -28,11 +28,10 @@ describe('ObjectStatusComponent', () => {
 
   beforeEach(async () => {
     const mockRestApiConnector = createMockRestApiConnector({
-  getAllTechniques: () =>
-    createAsyncObservable(createPaginatedResponse([])),
-  getRelatedTo: () =>
-    createAsyncObservable(createPaginatedResponse([])),
-});
+      getAllTechniques: () =>
+        createAsyncObservable(createPaginatedResponse([])),
+      getRelatedTo: () => createAsyncObservable(createPaginatedResponse([])),
+    });
     await TestBed.configureTestingModule({
       declarations: [ObjectStatusComponent],
       imports: [
@@ -64,7 +63,7 @@ describe('ObjectStatusComponent', () => {
             url: '/technique/mock-stix-id?param=value',
             events: of({}),
           },
-        }
+        },
       ],
       schemas: [NO_ERRORS_SCHEMA],
     }).compileComponents();
