@@ -11,7 +11,7 @@ import { forkJoin } from 'rxjs';
 
 @Component({
   selector: 'app-object-status',
-  templateUrl: './object-status.component.html',
+  template: '',
   encapsulation: ViewEncapsulation.None,
   standalone: false,
 })
