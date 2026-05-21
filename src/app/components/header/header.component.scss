@@ -3,22 +3,23 @@
 .header {
   height: 74px;
   padding: 0 30px 0 32px;
-  border-bottom: 1px solid rgba(colors.color(mitre-silver), 0.1);
+  border-bottom: 1px solid rgba(colors.on-color(primary), 0.1);
 
   .light & {
     background: colors.color(primary);
   }
 
   .dark & {
-    background: colors.color(primary);
+    background: colors.color(primary-dark);
+    border-bottom-color: rgba(colors.on-color(primary-dark), 0.16);
   }
 
   .mat-mdc-button:disabled {
     .light & {
-      color: colors.on-color-deemphasis(light);
+      color: colors.on-color-deemphasis(primary);
     }
     .dark & {
-      color: colors.on-color-deemphasis(dark);
+      color: colors.on-color-deemphasis(primary-dark);
     }
   }
 
@@ -32,25 +33,48 @@
     text-transform: uppercase;
 
     .light & {
-      color: colors.on-color(dark);
+      --mat-text-button-ripple-color: #{rgba(colors.on-color(primary), 0.16)};
+      --mat-text-button-state-layer-color: #{colors.on-color(primary)};
+      --mdc-text-button-label-text-color: #{colors.on-color(primary)};
+
+      color: colors.on-color(primary);
     }
+
     .dark & {
-      color: colors.on-color(light);
+      --mat-text-button-ripple-color: #{rgba(
+          colors.on-color(primary-dark),
+          0.18
+        )};
+      --mat-text-button-state-layer-color: #{colors.on-color(primary-dark)};
+      --mdc-text-button-label-text-color: #{colors.on-color(primary-dark)};
+
+      color: colors.on-color(primary-dark);
     }
   }
 
-  .mat-mdc-icon-button.account {
-    --account-avatar-size: 48px;
+  .mat-mdc-button.account {
+    --account-avatar-size: 40px;
 
     align-items: center;
     background: transparent;
+    border-radius: 999px;
     display: inline-flex;
+    gap: 8px;
     height: var(--account-avatar-size);
     justify-content: center;
-    padding: 0;
-    scale: 0.85;
+    line-height: var(--account-avatar-size);
+    min-width: 0;
+    padding: 0 8px 0 0;
+    text-transform: none;
     vertical-align: middle;
-    width: var(--account-avatar-size);
+
+    .mdc-button__label {
+      align-items: center;
+      display: inline-flex;
+      gap: 8px;
+      height: var(--account-avatar-size);
+      min-width: 0;
+    }
 
     app-user-avatar {
       display: inline-flex;
@@ -63,6 +87,18 @@
     app-user-avatar .user-avatar {
       height: 100%;
       width: 100%;
+    }
+
+    .account-name {
+      align-self: center;
+      display: inline-block;
+      font-size: 16px;
+      font-weight: 700;
+      line-height: 22px;
+      max-width: 220px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
     }
   }
 }
