@@ -121,6 +121,32 @@ $nav-active: rgba(colors.color(mitre-silver), 0.16);
   }
 }
 
+.nav-attention-dot,
+.nav-attention-count {
+  flex: 0 0 auto;
+  background: colors.color(pending);
+}
+
+.nav-attention-dot {
+  width: 9px;
+  height: 9px;
+  margin-left: auto;
+  border-radius: 50%;
+  box-shadow: 0 0 0 2px rgba(colors.color(pending), 0.18);
+}
+
+.nav-attention-count {
+  min-width: 18px;
+  height: 18px;
+  padding: 0 5px;
+  border-radius: 999px;
+  color: colors.color(mitre-black) !important;
+  font-size: 10px;
+  font-weight: 800;
+  line-height: 18px;
+  text-align: center;
+}
+
 .app-title + .nav-area {
   margin-top: 14px;
 }

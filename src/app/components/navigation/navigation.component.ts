@@ -1,10 +1,13 @@
-import { Component, OnDestroy, ViewEncapsulation } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
 import { NavigationEnd, Route, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { routes as appRoutes } from 'src/app/app-routing.module';
 import { stixRoutes } from 'src/app/app-routing-stix.module';
 import { Role } from 'src/app/classes/authn/role';
+import { Status } from 'src/app/classes/authn/status';
 import { AuthenticationService } from 'src/app/services/connectors/authentication/authentication.service';
+import { RestApiConnectorService } from 'src/app/services/connectors/rest-api/rest-api-connector.service';
+import { UserAccountEventsService } from 'src/app/services/user-account-events/user-account-events.service';
 
 interface NavigationItem {
   label: string;
@@ -27,8 +30,9 @@ type NavigationArea = 'objectLibrary' | 'dashboard' | 'documentation';
   encapsulation: ViewEncapsulation.None,
   standalone: false,
 })
-export class NavigationComponent implements OnDestroy {
+export class NavigationComponent implements OnInit, OnDestroy {
   public expandedNavigationArea: NavigationArea | null = null;
+  public pendingUserAccounts = 0;
 
   private readonly groupOrder = ['core', 'cti', 'defenses', 'more'];
   private readonly documentationOrder = [
@@ -45,6 +49,10 @@ export class NavigationComponent implements OnDestroy {
   private readonly uppercaseLabels = new Set(['cti']);
   private readonly collapsedSections = new Set<string>();
   private readonly routerEventsSubscription: Subscription;
+  private readonly loginSubscription: Subscription;
+  private readonly userAccountEventsSubscription: Subscription;
+  private pendingUserAccountsSubscription?: Subscription;
+  private pendingUserAccountsRefreshTimer?: ReturnType<typeof setTimeout>;
 
   public readonly sections: NavigationSection[] = this.buildSections();
   public readonly dashboardItems: NavigationItem[] =
@@ -77,6 +85,22 @@ export class NavigationComponent implements OnDestroy {
     return this.authenticationService.isAuthorized([Role.ADMIN]);
   }
 
+  public get hasPendingUserAccounts(): boolean {
+    return this.canAccessAdminDashboard && this.pendingUserAccounts > 0;
+  }
+
+  public get pendingUserAccountsDisplay(): string {
+    return this.pendingUserAccounts > 99
+      ? '99+'
+      : this.pendingUserAccounts.toString();
+  }
+
+  public get pendingUserAccountsMessage(): string {
+    const accountLabel =
+      this.pendingUserAccounts === 1 ? 'account' : 'accounts';
+    return `${this.pendingUserAccounts} pending user ${accountLabel}`;
+  }
+
   public get isObjectLibraryActive(): boolean {
     return this.isObjectLibraryRoute(this.router.url);
   }
@@ -91,6 +115,8 @@ export class NavigationComponent implements OnDestroy {
 
   constructor(
     private authenticationService: AuthenticationService,
+    private restApiConnector: RestApiConnectorService,
+    private userAccountEvents: UserAccountEventsService,
     private router: Router
   ) {
     this.expandedNavigationArea = this.navigationAreaForUrl(this.router.url);
@@ -99,12 +125,31 @@ export class NavigationComponent implements OnDestroy {
         this.expandedNavigationArea = this.navigationAreaForUrl(
           event.urlAfterRedirects
         );
+        this.schedulePendingUserAccountsRefresh();
       }
     });
+    this.loginSubscription = this.authenticationService.onLogin.subscribe(() =>
+      this.refreshPendingUserAccounts()
+    );
+    this.userAccountEventsSubscription =
+      this.userAccountEvents.userAccountsChanged$.subscribe(() =>
+        this.refreshPendingUserAccounts()
+      );
+  }
+
+  public ngOnInit(): void {
+    this.refreshPendingUserAccounts();
+    this.schedulePendingUserAccountsRefresh();
   }
 
   public ngOnDestroy(): void {
     this.routerEventsSubscription.unsubscribe();
+    this.loginSubscription.unsubscribe();
+    this.userAccountEventsSubscription.unsubscribe();
+    this.pendingUserAccountsSubscription?.unsubscribe();
+    if (this.pendingUserAccountsRefreshTimer) {
+      clearTimeout(this.pendingUserAccountsRefreshTimer);
+    }
   }
 
   public expandNavigationArea(area: NavigationArea): void {
@@ -158,6 +203,49 @@ export class NavigationComponent implements OnDestroy {
   public isDocumentationRoute(url: string): boolean {
     const path = this.routePath(url);
     return path === '/docs' || path.startsWith('/docs/');
+  }
+
+  public isUserAccountsNavigationItem(item: NavigationItem): boolean {
+    return item.path === '/dashboard/user-accounts';
+  }
+
+  private refreshPendingUserAccounts(): void {
+    this.pendingUserAccountsSubscription?.unsubscribe();
+
+    if (!this.canAccessAdminDashboard) {
+      this.pendingUserAccounts = 0;
+      return;
+    }
+
+    this.pendingUserAccountsSubscription = this.restApiConnector
+      .getAllUserAccounts({ status: [Status.PENDING], limit: 1 })
+      .subscribe({
+        next: response => {
+          this.pendingUserAccounts =
+            this.pendingUserAccountCountFromResponse(response);
+        },
+        error: () => {
+          this.pendingUserAccounts = 0;
+        },
+      });
+  }
+
+  private pendingUserAccountCountFromResponse(response: any): number {
+    if (Array.isArray(response)) return response.length;
+    if (Array.isArray(response?.data)) {
+      return response?.pagination?.total ?? response.data.length;
+    }
+    return 0;
+  }
+
+  private schedulePendingUserAccountsRefresh(): void {
+    if (this.pendingUserAccountsRefreshTimer) {
+      clearTimeout(this.pendingUserAccountsRefreshTimer);
+    }
+
+    this.pendingUserAccountsRefreshTimer = setTimeout(() => {
+      this.refreshPendingUserAccounts();
+    }, 500);
   }
 
   private navigationAreaForUrl(url: string): NavigationArea | null {
