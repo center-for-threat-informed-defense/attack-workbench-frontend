@@ -80,7 +80,10 @@
         class="control"
         [matTooltip]="objectStatus?.deprecateTooltip || 'deprecate'"
         [disabled]="
-          editing || !objectStatus?.loaded || objectStatus?.deprecateDisabled
+          editing ||
+          !objectStatus?.loaded ||
+          objectStatus?.deprecateDisabled ||
+          objectStatus?.deprecated
         "
         (click)="toggleDeprecated()">
         <mat-icon
@@ -99,13 +102,16 @@
         class="control"
         [matTooltip]="objectStatus?.revokeTooltip || 'revoke'"
         [disabled]="
-          editing || !objectStatus?.loaded || objectStatus?.revokeDisabled
+          editing ||
+          !objectStatus?.loaded ||
+          objectStatus?.revokeDisabled ||
+          objectStatus?.revoked
         "
         (click)="toggleRevoked()">
         <mat-icon
           aria-label="revoked-icon"
           fontSet="material-symbols-outlined"
-          >{{ objectStatus?.revoked ? 'report_off' : 'report' }}</mat-icon
+          >report</mat-icon
         >
       </button>
       <app-object-status *ngIf="hasWorkflow" #objectStatus></app-object-status>

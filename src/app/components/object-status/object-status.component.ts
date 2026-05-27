@@ -35,7 +35,7 @@ export class ObjectStatusComponent implements OnInit {
   }
 
   public get revokeTooltip(): string {
-    return this.object?.revoked || this.revoked ? 'un-revoke' : 'revoke';
+    return this.object?.revoked || this.revoked ? 'already revoked' : 'revoke';
   }
 
   public get deprecateDisabled(): boolean {
@@ -44,7 +44,7 @@ export class ObjectStatusComponent implements OnInit {
 
   public get deprecateTooltip(): string {
     return this.object?.deprecated || this.deprecated
-      ? 'undeprecate'
+      ? 'already deprecated'
       : 'deprecate';
   }
 
