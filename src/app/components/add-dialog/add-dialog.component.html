@@ -12,9 +12,10 @@
         *ngIf="config.showPreserveRelationshipsOption"
         color="primary"
         [(ngModel)]="config.preserveRelationships"
-        >Preserve relationships - If set to true, relationships referencing the revoked object are cloned to point to the revoking object before deprecation.
-</mat-checkbox
-      >
+        >Preserve relationships - If set to true, relationships referencing the
+        revoked object are cloned to point to the revoking object before
+        deprecation.
+      </mat-checkbox>
       <app-stix-list
         *ngIf="config.type !== 'user'"
         [config]="{
