@@ -1,3 +1,6 @@
+import { initializeRuntimeConfiguration } from './configuration/runtime-configuration';
+initializeRuntimeConfiguration({});
+
 // This file is required by vitest and loads the Angular testing environment
 
 import '@angular/compiler';

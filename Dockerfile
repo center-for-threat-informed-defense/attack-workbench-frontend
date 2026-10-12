@@ -6,14 +6,12 @@ COPY package*.json ./
 RUN npm ci
 
 COPY . .
-RUN mkdir -p /workspace-seed && cp -R src /workspace-seed/src
-
-# Polling makes file watching reliable with Docker bind mounts.
-ENV CHOKIDAR_USEPOLLING=true
 
 EXPOSE 80 4200
 
-CMD ["sh", "-c", "if [ ! -f src/main.ts ]; then cp -R /workspace-seed/src/. src/; fi; exec npm start -- --host 0.0.0.0 --port 80 --poll 1000"]
+# Polling detects edits through Docker Desktop source mounts.
+# Container mode reads optional /etc/workbench/config.json instead of source JSON.
+CMD ["sh", "-c", "exec npm start -- --container --host 0.0.0.0 --port 80 --poll 1000"]
 
 FROM --platform=${BUILDPLATFORM} node:22-alpine AS build
 
@@ -25,32 +23,35 @@ COPY . .
 ARG TARGETOS
 ARG TARGETARCH
 ARG VERSION=dev
-ARG BUILDTIME=unknown
+ARG BUILDTIME
 ARG REVISION=unknown
 
 # Make the OCI build metadata available while Angular's static assets are built.
-ENV APP_VERSION=${VERSION} \
-    GIT_COMMIT=${REVISION} \
-    BUILD_DATE=${BUILDTIME}
+ENV WORKBENCH_FRONTEND_APP_VERSION=${VERSION} \
+    WORKBENCH_FRONTEND_GIT_COMMIT=${REVISION} \
+    WORKBENCH_FRONTEND_BUILD_DATE=${BUILDTIME}
 
 # Install dependencies
 RUN npm install --cpu ${TARGETARCH} --os ${TARGETOS}
 
 # Build the application
-RUN npm run build-prod --cpu ${TARGETARCH} --os ${TARGETOS}
+RUN npm run build-prod -- --configuration-defaults-only
 
 # Second stage: production environment
 FROM nginx:stable-alpine-slim
 
+# Run the same public-configuration generator used by native development.
+RUN apk add --no-cache nodejs
+
 # Define build arguments
 ARG VERSION=dev
-ARG BUILDTIME=unknown
+ARG BUILDTIME
 ARG REVISION=unknown
 
 # Set version as environment variable for runtime access
-ENV APP_VERSION=$VERSION \
-    GIT_COMMIT=$REVISION \
-    BUILD_DATE=$BUILDTIME
+ENV WORKBENCH_FRONTEND_APP_VERSION=$VERSION \
+    WORKBENCH_FRONTEND_GIT_COMMIT=$REVISION \
+    WORKBENCH_FRONTEND_BUILD_DATE=$BUILDTIME
 
 # Set Docker labels
 LABEL org.opencontainers.image.title="ATT&CK Workbench Frontend Service" \
@@ -71,6 +72,12 @@ RUN rm -rf /usr/share/nginx/html/*
 
 # Copy the application bundles - explicitly specifying the full path
 COPY --from=build /workspace/dist/app/browser /usr/share/nginx/html
+
+COPY --from=build /workspace/.generated/runtime /opt/workbench/.generated/runtime
+COPY scripts/write-runtime-config.mjs /opt/workbench/scripts/write-runtime-config.mjs
+COPY docker/40-workbench-configuration.sh /docker-entrypoint.d/40-workbench-configuration.sh
+RUN chmod +x /docker-entrypoint.d/40-workbench-configuration.sh
+COPY docker/default.conf /etc/nginx/conf.d/default.conf
 
 # Expose port 80
 EXPOSE 80 443

@@ -2,7 +2,7 @@ import { firstValueFrom, of } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { ReleaseTracksConnectorService } from './release-tracks.service';
-import { environment } from 'src/environments/environment';
+import { getRuntimeConfiguration } from 'src/configuration/runtime-configuration';
 
 describe('ReleaseTracksConnectorService', () => {
   let http: {
@@ -27,7 +27,7 @@ describe('ReleaseTracksConnectorService', () => {
   });
 
   it('should retrieve the latest snapshot from the explicit latest endpoint', async () => {
-    const apiUrl = environment.integrations.rest_api.url;
+    const apiUrl = getRuntimeConfiguration().apiUrl;
     const trackId = 'release-track--123';
     http.get.mockReturnValue(
       of({
@@ -51,7 +51,7 @@ describe('ReleaseTracksConnectorService', () => {
   });
 
   it('should export the latest snapshot from the explicit latest endpoint', async () => {
-    const apiUrl = environment.integrations.rest_api.url;
+    const apiUrl = getRuntimeConfiguration().apiUrl;
     const trackId = 'release-track--123';
     const exportPayload = { type: 'bundle', objects: [] };
     http.get.mockReturnValue(of(exportPayload));
@@ -76,7 +76,7 @@ describe('ReleaseTracksConnectorService', () => {
   });
 
   it('should request snapshot history with default pagination', async () => {
-    const apiUrl = environment.integrations.rest_api.url;
+    const apiUrl = getRuntimeConfiguration().apiUrl;
     const trackId = 'release-track--123';
     const response = {
       data: [
@@ -125,7 +125,7 @@ describe('ReleaseTracksConnectorService', () => {
 
     const [url, options] = http.get.mock.calls[0];
     expect(url).toBe(
-      `${environment.integrations.rest_api.url}/release-tracks/release-track--standard/snapshots`
+      `${getRuntimeConfiguration().apiUrl}/release-tracks/release-track--standard/snapshots`
     );
     expect(options.params.get('tagged')).toBe('false');
     expect(options.params.get('limit')).toBe('25');
@@ -145,7 +145,7 @@ describe('ReleaseTracksConnectorService', () => {
 
     const [url, body] = http.post.mock.calls[0];
     expect(url).toBe(
-      `${environment.integrations.rest_api.url}/release-tracks/release-track--standard/snapshots/2026-07-23T13%3A37%3A28.000Z/draft`
+      `${getRuntimeConfiguration().apiUrl}/release-tracks/release-track--standard/snapshots/2026-07-23T13%3A37%3A28.000Z/draft`
     );
     expect(body).toEqual({ confirm_version: '1.1' });
   });
@@ -159,7 +159,7 @@ describe('ReleaseTracksConnectorService', () => {
       .subscribe();
 
     expect(http.delete).toHaveBeenCalledWith(
-      `${environment.integrations.rest_api.url}/release-tracks/release-track--standard/snapshots/2026-07-23T13%3A37%3A28.000Z`
+      `${getRuntimeConfiguration().apiUrl}/release-tracks/release-track--standard/snapshots/2026-07-23T13%3A37%3A28.000Z`
     );
     expect(http.post).not.toHaveBeenCalled();
   });
@@ -174,7 +174,7 @@ describe('ReleaseTracksConnectorService', () => {
       .subscribe();
 
     expect(http.put).toHaveBeenCalledWith(
-      `${environment.integrations.rest_api.url}/release-tracks/release-track--standard/snapshots/2026-07-23T13%3A37%3A28.000Z/release`,
+      `${getRuntimeConfiguration().apiUrl}/release-tracks/release-track--standard/snapshots/2026-07-23T13%3A37%3A28.000Z/release`,
       { version: '1.2' }
     );
   });
@@ -187,7 +187,7 @@ describe('ReleaseTracksConnectorService', () => {
       .subscribe();
 
     expect(http.post).toHaveBeenCalledWith(
-      `${environment.integrations.rest_api.url}/release-tracks/release-track--virtual/virtual/snapshots/create`,
+      `${getRuntimeConfiguration().apiUrl}/release-tracks/release-track--virtual/virtual/snapshots/create`,
       { description: 'Scheduled draft' }
     );
   });
@@ -208,7 +208,7 @@ describe('ReleaseTracksConnectorService', () => {
       .subscribe();
 
     expect(http.put).toHaveBeenCalledWith(
-      `${environment.integrations.rest_api.url}/release-tracks/release-track--virtual/virtual/composition`,
+      `${getRuntimeConfiguration().apiUrl}/release-tracks/release-track--virtual/virtual/composition`,
       composition
     );
   });
@@ -219,7 +219,7 @@ describe('ReleaseTracksConnectorService', () => {
     service.updateSchedule('release-track--virtual', schedule).subscribe();
 
     expect(http.put).toHaveBeenCalledWith(
-      `${environment.integrations.rest_api.url}/release-tracks/release-track--virtual/virtual/schedule`,
+      `${getRuntimeConfiguration().apiUrl}/release-tracks/release-track--virtual/virtual/schedule`,
       schedule
     );
   });
@@ -235,7 +235,7 @@ describe('ReleaseTracksConnectorService', () => {
       .subscribe();
 
     expect(http.post).toHaveBeenCalledWith(
-      `${environment.integrations.rest_api.url}/release-tracks/release-track--virtual/virtual/quarantine/promote`,
+      `${getRuntimeConfiguration().apiUrl}/release-tracks/release-track--virtual/virtual/quarantine/promote`,
       body
     );
   });
@@ -254,7 +254,7 @@ describe('ReleaseTracksConnectorService', () => {
 
     const [url, options] = http.get.mock.calls[0];
     expect(url).toBe(
-      `${environment.integrations.rest_api.url}/release-tracks/release-track--standard/snapshots/latest/release/preview`
+      `${getRuntimeConfiguration().apiUrl}/release-tracks/release-track--standard/snapshots/latest/release/preview`
     );
     expect(options.params.get('format')).toBe('summary');
     expect(options.params.get('increment')).toBe('major');
@@ -269,7 +269,7 @@ describe('ReleaseTracksConnectorService', () => {
       .subscribe();
 
     expect(http.post).toHaveBeenCalledWith(
-      `${environment.integrations.rest_api.url}/release-tracks/release-track--standard/snapshots/latest/release`,
+      `${getRuntimeConfiguration().apiUrl}/release-tracks/release-track--standard/snapshots/latest/release`,
       { increment: 'minor', description: 'Analyst release context' }
     );
   });
@@ -282,7 +282,7 @@ describe('ReleaseTracksConnectorService', () => {
       .subscribe();
 
     expect(http.post).toHaveBeenCalledWith(
-      `${environment.integrations.rest_api.url}/release-tracks/release-track--standard/snapshots/2026-07-23T13%3A37%3A28.000Z/release`,
+      `${getRuntimeConfiguration().apiUrl}/release-tracks/release-track--standard/snapshots/2026-07-23T13%3A37%3A28.000Z/release`,
       { version: '14.1' }
     );
   });
@@ -304,7 +304,7 @@ describe('ReleaseTracksConnectorService', () => {
       .subscribe();
 
     const [url, options] = http.get.mock.calls[0];
-    expect(url).toBe(`${environment.integrations.rest_api.url}/release-tracks`);
+    expect(url).toBe(`${getRuntimeConfiguration().apiUrl}/release-tracks`);
     expect(options.params.get('type')).toBe('virtual');
     expect(options.params.get('limit')).toBe('25');
     expect(options.params.get('offset')).toBe('0');
@@ -316,7 +316,7 @@ describe('ReleaseTracksConnectorService', () => {
 
     const [url, options] = http.delete.mock.calls[0];
     expect(url).toBe(
-      `${environment.integrations.rest_api.url}/release-tracks/release-track--standard`
+      `${getRuntimeConfiguration().apiUrl}/release-tracks/release-track--standard`
     );
     expect(options.params.get('confirm_track_id')).toBe(
       'release-track--standard'
@@ -333,7 +333,7 @@ describe('ReleaseTracksConnectorService', () => {
 
     const [url] = http.get.mock.calls[0];
     expect(url).toBe(
-      `${environment.integrations.rest_api.url}/release-tracks/release-track--standard/snapshots/2026-07-23T13%3A37%3A28.000Z`
+      `${getRuntimeConfiguration().apiUrl}/release-tracks/release-track--standard/snapshots/2026-07-23T13%3A37%3A28.000Z`
     );
   });
 
@@ -347,7 +347,7 @@ describe('ReleaseTracksConnectorService', () => {
       .subscribe();
 
     expect(http.put).toHaveBeenCalledWith(
-      `${environment.integrations.rest_api.url}/release-tracks/release-track--standard/snapshots/2026-07-23T13%3A37%3A28.000Z/description`,
+      `${getRuntimeConfiguration().apiUrl}/release-tracks/release-track--standard/snapshots/2026-07-23T13%3A37%3A28.000Z/description`,
       { description: 'Updated analyst context' }
     );
   });
