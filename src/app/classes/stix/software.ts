@@ -156,7 +156,7 @@ export class Software extends StixObject {
     const postObservable = restAPIService.postSoftware(this);
     const subscription = postObservable.subscribe({
       next: result => {
-        this.deserialize(result.serialize());
+        this.hydrateFromResponse(result);
       },
       complete: () => {
         subscription.unsubscribe();
@@ -188,7 +188,7 @@ export class Software extends StixObject {
     const putObservable = restAPIService.putSoftware(this);
     const subscription = putObservable.subscribe({
       next: result => {
-        this.deserialize(result.serialize());
+        this.hydrateFromResponse(result);
       },
       complete: () => {
         subscription.unsubscribe();

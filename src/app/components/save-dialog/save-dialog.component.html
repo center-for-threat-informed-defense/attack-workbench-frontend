@@ -133,13 +133,15 @@
         <strong>{{ selectedVersionLabel }}</strong>
       </div>
       <div class="save-footer-actions">
-        <button mat-stroked-button mat-dialog-close>Cancel</button>
+        <button mat-stroked-button mat-dialog-close [disabled]="saving">
+          Cancel
+        </button>
         <button
           mat-raised-button
           color="primary"
           [disabled]="!saveEnabled"
           (click)="onConfirmSave()">
-          Save
+          {{ saving ? 'Saving...' : 'Save' }}
         </button>
       </div>
     </footer>
@@ -177,16 +179,18 @@
       </ng-container>
     </ng-template>
     <div class="buttons">
-      <button mat-button matDialogClose>cancel</button>
+      <button mat-button matDialogClose [disabled]="saving">cancel</button>
       <button
         mat-stroked-button
         *ngIf="patch_objects.length > 0"
+        [disabled]="!saveEnabled"
         (click)="patch()">
         apply patches and save
       </button>
       <button
         mat-stroked-button
         *ngIf="patch_objects.length === 0"
+        [disabled]="!saveEnabled"
         (click)="save()">
         save
       </button>

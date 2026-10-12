@@ -212,7 +212,7 @@ export class Analytic extends StixObject {
     const postObservable = restAPIService.postAnalytic(this);
     const subscription = postObservable.subscribe({
       next: result => {
-        this.deserialize(result.serialize());
+        this.hydrateFromResponse(result);
       },
       complete: () => {
         subscription.unsubscribe();
@@ -244,7 +244,7 @@ export class Analytic extends StixObject {
     const putObservable = restAPIService.putAnalytic(this);
     const subscription = putObservable.subscribe({
       next: result => {
-        this.deserialize(result.serialize());
+        this.hydrateFromResponse(result);
       },
       complete: () => {
         subscription.unsubscribe();

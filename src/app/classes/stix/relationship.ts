@@ -630,7 +630,7 @@ export class Relationship extends StixObject {
     this.workflow.state = WorkflowStatus.WorkInProgress;
     return restAPIService.postRelationship(this).pipe(
       switchMap(result => {
-        this.deserialize(result.serialize());
+        this.hydrateFromResponse(result);
         const source_object = this.getObject(
           this.source_object.stix.type,
           this.source_object
@@ -679,7 +679,7 @@ export class Relationship extends StixObject {
     const putObservable = restAPIService.putRelationship(this);
     const subscription = putObservable.subscribe({
       next: result => {
-        this.deserialize(result.serialize());
+        this.hydrateFromResponse(result);
       },
       complete: () => {
         subscription.unsubscribe();
