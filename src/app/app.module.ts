@@ -1,5 +1,5 @@
-import { LoggerModule } from 'ngx-logger';
-import { environment } from 'src/environments/environment';
+import { NgxLoggerLevel, LoggerModule } from 'ngx-logger';
+import { getRuntimeConfiguration } from 'src/configuration/runtime-configuration';
 
 // angular imports
 import { ClipboardModule } from '@angular/cdk/clipboard';
@@ -10,7 +10,7 @@ import {
   provideHttpClient,
   withInterceptorsFromDi,
 } from '@angular/common/http';
-import { NgModule, inject, provideAppInitializer } from '@angular/core';
+import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingStixModule } from './app-routing-stix.module';
 import { AppRoutingModule } from './app-routing.module';
@@ -251,10 +251,6 @@ import { ReleaseTrackPageComponent } from './views/dashboard-page/release-manage
 import { StatusChipComponent } from './components/status-chip/status-chip.component';
 import { WorkbenchChipComponent } from './components/workbench-chip/workbench-chip.component';
 
-export function initConfig(appConfigService: AppConfigService) {
-  return () => appConfigService.loadAppConfig();
-}
-
 @NgModule({
   declarations: [
     AppComponent,
@@ -453,7 +449,7 @@ export function initConfig(appConfigService: AppConfigService) {
       loader: HttpClient,
     }),
     LoggerModule.forRoot({
-      level: environment.log_level,
+      level: NgxLoggerLevel[getRuntimeConfiguration().logLevel],
       disableConsoleLogging: false,
     }),
     MtxPopoverModule,
@@ -506,10 +502,6 @@ export function initConfig(appConfigService: AppConfigService) {
   ],
   providers: [
     AppConfigService,
-    provideAppInitializer(() => {
-      const initializerFn = initConfig(inject(AppConfigService));
-      return initializerFn();
-    }),
     {
       provide: HTTP_INTERCEPTORS,
       useClass: AuthInterceptor,

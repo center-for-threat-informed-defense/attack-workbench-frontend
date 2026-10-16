@@ -95,11 +95,8 @@ An editor can select an exact revision in the latest untagged snapshot; resolvin
 it creates a new draft rather than changing the viewed snapshot. Historical
 and tagged snapshots are review-only.
 
-The [isolated design preview](local-dev.md#virtual-snapshot-design-preview)
-demonstrates the complete manifest, including non-exported LinkById dependencies.
-The current production API does not expose those dependency records. Against
-that API, the contents view explicitly labels its exported-only coverage instead
-of claiming to list the complete manifest.
+The production API does not expose non-exported LinkById dependency records.
+The contents view labels its coverage as exported objects only.
 
 For a virtual track's recurring schedule, use **Find a schedule** in the Config
 tab: typing `hou` suggests **Hourly — at minute 0**, and typing `every 15`

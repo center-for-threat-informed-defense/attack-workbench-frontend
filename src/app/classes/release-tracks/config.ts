@@ -11,12 +11,10 @@ import type {
 } from './enums';
 
 export type InheritedIdentitySetting =
-  | { inherit: true }
-  | { inherit: false; value: string };
+  { inherit: true } | { inherit: false; value: string };
 
 export type InheritedMarkingRefsSetting =
-  | { inherit: true }
-  | { inherit: false; value: string[] };
+  { inherit: true } | { inherit: false; value: string[] };
 
 // Publication metadata for the emitted x-mitre-collection object. Each rule
 // inherits the global system configuration unless overridden at the track
