@@ -55,7 +55,7 @@
     "ngx-autosize": "^2.0.4",
     "ngx-jdenticon": "^2.0.0",
     "ngx-logger": "^5.0.12",
-    "ngx-markdown": "^19.1.1",
+    "ngx-markdown": "^22.1.1",
     "rxjs": "^7.8.1",
     "tslib": "^2.6.2",
     "uuid": "^14.0.0",
