@@ -18,6 +18,13 @@
     "stix"
   ],
   "license": "Apache-2.0",
+  "devEngines": {
+    "runtime": {
+      "name": "node",
+      "version": "22.x",
+      "onFail": "error"
+    }
+  },
   "scripts": {
     "ng": "ng",
     "start": "node scripts/angular.mjs serve",
