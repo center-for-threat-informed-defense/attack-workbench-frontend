@@ -25,7 +25,7 @@ import {
 } from 'src/app/utils/type-mappings';
 import { AttackType } from 'src/app/utils/types';
 import { StixDialogComponent } from 'src/app/views/stix/stix-dialog/stix-dialog.component';
-import { environment } from 'src/environments/environment';
+import { getRuntimeConfiguration } from 'src/configuration/runtime-configuration';
 
 type SnapshotQuarantineEntry = Omit<QuarantineEntry, 'object_modified'> &
   TierEntryDisplayFields & { object_modified: string | Date };
@@ -203,7 +203,7 @@ export class SnapshotQuarantineDialogComponent implements OnDestroy {
     revision.loading = true;
     revision.error = '';
     const url =
-      `${environment.integrations.rest_api.url}/${AttackTypeToPlural[group.attackType]}` +
+      `${getRuntimeConfiguration().apiUrl}/${AttackTypeToPlural[group.attackType]}` +
       `/${encodeURIComponent(group.objectRef)}/modified/${encodeURIComponent(revision.modified)}`;
     this.requests.add(
       this.http

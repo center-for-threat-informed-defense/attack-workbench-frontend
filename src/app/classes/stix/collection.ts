@@ -512,7 +512,7 @@ export class Collection extends StixObject {
     const postObservable = restAPIService.postCollection(this);
     const subscription = postObservable.subscribe({
       next: result => {
-        this.deserialize(result.serialize());
+        this.hydrateFromResponse(result);
       },
       complete: () => {
         subscription.unsubscribe();

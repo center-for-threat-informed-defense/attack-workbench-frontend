@@ -2,6 +2,7 @@
 import angular from '@analogjs/vite-plugin-angular';
 import { defineConfig } from 'vite';
 import path from 'path';
+import './scripts/load-env.cjs';
 
 // https://vite.dev/config/
 export default defineConfig(({ mode }) => ({
@@ -25,7 +26,6 @@ export default defineConfig(({ mode }) => ({
         'node_modules/',
         '.nuxt/',
         'dist/',
-        'src/environments/',
         'src/app/testing/mocks/',
       ],
       all: false,

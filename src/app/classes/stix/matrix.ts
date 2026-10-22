@@ -113,7 +113,7 @@ export class Matrix extends StixObject {
     const postObservable = restAPIService.postMatrix(this);
     const subscription = postObservable.subscribe({
       next: result => {
-        this.deserialize(result.serialize());
+        this.hydrateFromResponse(result);
       },
       complete: () => {
         subscription.unsubscribe();
@@ -137,7 +137,7 @@ export class Matrix extends StixObject {
     const putObservable = restAPIService.putMatrix(this);
     const subscription = putObservable.subscribe({
       next: result => {
-        this.deserialize(result.serialize());
+        this.hydrateFromResponse(result);
       },
       complete: () => {
         subscription.unsubscribe();

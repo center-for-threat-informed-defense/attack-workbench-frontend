@@ -9,7 +9,7 @@ import { AllObjectsPageComponent } from './views/stix/all-objects-page/all-objec
 
 import { RouterModule, Routes } from '@angular/router';
 import { NgModule } from '@angular/core';
-import { environment } from '../environments/environment';
+import { getRuntimeConfiguration } from 'src/configuration/runtime-configuration';
 import { AuthorizationGuard } from './services/helpers/authorization.guard';
 import { Role } from './classes/authn/role';
 import { AttackTypeToRoute } from './utils/type-mappings';
@@ -237,7 +237,7 @@ stixRoutes.push({
   ],
 });
 
-if (environment.integrations.collection_manager.enabled) {
+if (getRuntimeConfiguration().collectionManagerEnabled) {
   stixRoutes.push({
     path: 'collection',
     canActivateChild: [AuthorizationGuard],

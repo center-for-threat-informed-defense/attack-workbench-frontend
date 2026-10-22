@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Observable } from 'rxjs';
 import { catchError, map, share, tap } from 'rxjs/operators';
-import { environment } from '../../../../environments/environment';
+import { getRuntimeConfiguration } from 'src/configuration/runtime-configuration';
 import { logger } from '../../../utils/logger';
 import { ApiConnector } from '../api-connector';
 import {
@@ -61,7 +61,7 @@ export type {
 })
 export class ReleaseTracksConnectorService extends ApiConnector {
   private get apiUrl(): string {
-    return environment.integrations.rest_api.url;
+    return getRuntimeConfiguration().apiUrl;
   }
 
   constructor(

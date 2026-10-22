@@ -150,7 +150,7 @@ export class DataSource extends StixObject {
     const postObservable = restAPIService.postDataSource(this);
     const subscription = postObservable.subscribe({
       next: result => {
-        this.deserialize(result.serialize());
+        this.hydrateFromResponse(result);
       },
       complete: () => {
         subscription.unsubscribe();
@@ -184,7 +184,7 @@ export class DataSource extends StixObject {
     const putObservable = restAPIService.putDataSource(this);
     const subscription = putObservable.subscribe({
       next: result => {
-        this.deserialize(result.serialize());
+        this.hydrateFromResponse(result);
       },
       complete: () => {
         subscription.unsubscribe();

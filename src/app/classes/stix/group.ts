@@ -122,7 +122,7 @@ export class Group extends StixObject {
     const postObservable = restAPIService.postGroup(this);
     const subscription = postObservable.subscribe({
       next: result => {
-        this.deserialize(result.serialize());
+        this.hydrateFromResponse(result);
       },
       complete: () => {
         subscription.unsubscribe();
@@ -154,7 +154,7 @@ export class Group extends StixObject {
     const putObservable = restAPIService.putGroup(this);
     const subscription = putObservable.subscribe({
       next: result => {
-        this.deserialize(result.serialize());
+        this.hydrateFromResponse(result);
       },
       complete: () => {
         subscription.unsubscribe();
