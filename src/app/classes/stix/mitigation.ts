@@ -108,7 +108,7 @@ export class Mitigation extends StixObject {
     const postObservable = restAPIService.postMitigation(this);
     const subscription = postObservable.subscribe({
       next: result => {
-        this.deserialize(result.serialize());
+        this.hydrateFromResponse(result);
       },
       complete: () => {
         subscription.unsubscribe();
@@ -142,7 +142,7 @@ export class Mitigation extends StixObject {
     const putObservable = restAPIService.putMitigation(this);
     const subscription = putObservable.subscribe({
       next: result => {
-        this.deserialize(result.serialize());
+        this.hydrateFromResponse(result);
       },
       complete: () => {
         subscription.unsubscribe();

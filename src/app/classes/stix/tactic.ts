@@ -119,7 +119,7 @@ export class Tactic extends StixObject {
     const postObservable = restAPIService.postTactic(this);
     const subscription = postObservable.subscribe({
       next: result => {
-        this.deserialize(result.serialize());
+        this.hydrateFromResponse(result);
       },
       complete: () => {
         subscription.unsubscribe();
@@ -142,7 +142,7 @@ export class Tactic extends StixObject {
     const putObservable = restAPIService.putTactic(this);
     const subscription = putObservable.subscribe({
       next: result => {
-        this.deserialize(result.serialize());
+        this.hydrateFromResponse(result);
       },
       complete: () => {
         subscription.unsubscribe();

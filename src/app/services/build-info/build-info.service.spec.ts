@@ -5,7 +5,7 @@ import {
 } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
 import { firstValueFrom } from 'rxjs';
-import { environment } from '../../../environments/environment';
+import { getRuntimeConfiguration } from 'src/configuration/runtime-configuration';
 import * as globals from '../../utils/globals';
 import { BuildInfoService } from './build-info.service';
 
@@ -44,9 +44,7 @@ describe('BuildInfoService', () => {
 
     httpTestingController.expectOne('/assets/build-info.json').flush(frontend);
     httpTestingController
-      .expectOne(
-        `${environment.integrations.rest_api.url}/config/system-version`
-      )
+      .expectOne(`${getRuntimeConfiguration().apiUrl}/config/system-version`)
       .flush(restApi);
 
     await expect(result).resolves.toEqual({ frontend, restApi });
@@ -59,9 +57,7 @@ describe('BuildInfoService', () => {
       .expectOne('/assets/build-info.json')
       .flush('missing', { status: 404, statusText: 'Not Found' });
     httpTestingController
-      .expectOne(
-        `${environment.integrations.rest_api.url}/config/system-version`
-      )
+      .expectOne(`${getRuntimeConfiguration().apiUrl}/config/system-version`)
       .flush('unavailable', { status: 503, statusText: 'Unavailable' });
 
     await expect(result).resolves.toEqual({

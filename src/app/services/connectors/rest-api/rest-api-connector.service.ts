@@ -47,7 +47,7 @@ import {
 } from 'src/app/utils/class-mappings';
 import { AttackTypeToPlural } from 'src/app/utils/type-mappings';
 import { AttackType } from 'src/app/utils/types';
-import { environment } from '../../../../environments/environment';
+import { getRuntimeConfiguration } from 'src/configuration/runtime-configuration';
 import { logger } from '../../../utils/logger';
 import { serializeJsonForDownload } from '../../../utils/json-download';
 import { ApiConnector } from '../api-connector';
@@ -153,7 +153,7 @@ export interface MitreIdentityWrites {
 })
 export class RestApiConnectorService extends ApiConnector {
   private get apiUrl(): string {
-    return environment.integrations.rest_api.url;
+    return getRuntimeConfiguration().apiUrl;
   }
 
   constructor(

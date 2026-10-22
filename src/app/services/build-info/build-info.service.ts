@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { forkJoin, Observable, of } from 'rxjs';
 import { catchError, shareReplay } from 'rxjs/operators';
-import { environment } from '../../../environments/environment';
+import { getRuntimeConfiguration } from 'src/configuration/runtime-configuration';
 import * as globals from '../../utils/globals';
 
 export interface BuildInfo {
@@ -48,7 +48,7 @@ export class BuildInfoService {
           .pipe(catchError(() => of(this.frontendFallback))),
         restApi: this.http
           .get<BuildInfo>(
-            `${environment.integrations.rest_api.url}/config/system-version`
+            `${getRuntimeConfiguration().apiUrl}/config/system-version`
           )
           .pipe(catchError(() => of(this.restApiFallback))),
       }).pipe(shareReplay({ bufferSize: 1, refCount: false }));

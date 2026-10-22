@@ -95,11 +95,8 @@ An editor can select an exact revision in the latest untagged snapshot; resolvin
 it creates a new draft rather than changing the viewed snapshot. Historical
 and tagged snapshots are review-only.
 
-The [isolated design preview](local-dev.md#virtual-snapshot-design-preview)
-demonstrates the complete manifest, including non-exported LinkById dependencies.
-The current production API does not expose those dependency records. Against
-that API, the contents view explicitly labels its exported-only coverage instead
-of claiming to list the complete manifest.
+The production API does not expose non-exported LinkById dependency records.
+The contents view labels its coverage as exported objects only.
 
 For a virtual track's recurring schedule, use **Find a schedule** in the Config
 tab: typing `hou` suggests **Hourly — at minute 0**, and typing `every 15`
@@ -318,6 +315,12 @@ Objects imported from collections can be modified, or new objects created. The p
 
 The Workbench will attribute edits to you when you edit existing objects or create new objects. Attribution is shown next to created and modified dates and in the object history timeline. Attribution is represented by an automatically generated icon to easily distinguish different editing/creating organizations or individuals; hovering over the icon will display the full organization name or user display name. Your user display name can be edited or removed through the user profile page. If removed, your username will be shown in its place for attribution.
 
+After a successful save, the editor refreshes its creation attribution, creation
+date, saved revision timestamp, and other base metadata from the server response.
+Subsequent saves retain that creation provenance rather than treating the object
+as newly created. Existing missing or inconsistent provenance is not repaired by
+this behavior.
+
 Edits you make in the knowledge base are attributed to your _organization identity_, which is unique to your Workbench instance. The organization identity can be edited from the admin page accessible from the application homepage; when you first open the application you will be prompted to edit the organization identity to ensure the placeholder identity is not used. Changes to your organization identity will automatically update objects in the knowledge base, but attribution within exported collections will not be automatically affected.
 
 ### Managing Allowed Values
@@ -493,6 +496,11 @@ When creating and/or editing an object, you can add multiple statements and sele
 Any object in the knowledge base, except for marking definitions, can be edited, even those imported from collections. Clicking the "edit" button in the toolbar, or the "edit" link in an object list, will bring you to the edit interface for the object. While editing an object, relationships cannot be viewed or created since they are saved independently of the objects they connect.
 
 Domain-bearing ATT&CK objects expose a Domain field that reads and writes the STIX `x_mitre_domains` list. This includes techniques, campaigns, mitigations, groups, software, analytics, assets, data components, data sources, detection strategies, matrices, and tactics. When an existing object is revised, its domains are retained unless the editor explicitly changes them.
+
+The save dialog disables Save, Cancel, and revision options while persistence and
+release-track synchronization are pending. Repeated confirmation does not submit
+another revision during that operation, including when related objects must be
+patched first. If persistence fails, the dialog enables saving again.
 
 #### Editing Matrices
 

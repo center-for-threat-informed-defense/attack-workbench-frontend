@@ -161,7 +161,7 @@ export class MarkingDefinition extends StixObject {
     const postObservable = restAPIService.postMarkingDefinition(this);
     const subscription = postObservable.subscribe({
       next: result => {
-        this.deserialize(result.serialize());
+        this.hydrateFromResponse(result);
       },
       complete: () => {
         subscription.unsubscribe();
