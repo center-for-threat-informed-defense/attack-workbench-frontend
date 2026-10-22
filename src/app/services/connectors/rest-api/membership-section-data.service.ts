@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { forkJoin, Observable, of } from 'rxjs';
 import { catchError, map, switchMap } from 'rxjs/operators';
 
-import { environment } from 'src/environments/environment';
+import { getRuntimeConfiguration } from 'src/configuration/runtime-configuration';
 import { ReleaseTracksConnectorService } from 'src/app/services/connectors/rest-api/release-tracks.service';
 
 export interface MembershipTrack {
@@ -44,7 +44,7 @@ interface MembershipReference {
 })
 export class MembershipSectionDataService {
   private get apiUrl(): string {
-    return environment.integrations.rest_api.url.replace(/\/+$/, '');
+    return getRuntimeConfiguration().apiUrl.replace(/\/+$/, '');
   }
 
   constructor(

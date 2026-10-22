@@ -103,7 +103,7 @@ export class Note extends StixObject {
     const postObservable = restAPIService.postNote(this);
     const subscription = postObservable.subscribe({
       next: result => {
-        this.deserialize(result.serialize());
+        this.hydrateFromResponse(result);
       },
       complete: () => {
         subscription.unsubscribe();
@@ -135,7 +135,7 @@ export class Note extends StixObject {
     const putObservable = restAPIService.putNote(this);
     const subscription = putObservable.subscribe({
       next: result => {
-        this.deserialize(result.serialize());
+        this.hydrateFromResponse(result);
       },
       complete: () => {
         subscription.unsubscribe();

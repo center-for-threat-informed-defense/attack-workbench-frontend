@@ -102,6 +102,35 @@ export abstract class StixObject extends Serializable {
   }
 
   /**
+   * Refresh a saved object without treating response metadata as a new revision.
+   * Subtypes retain their deserialization behavior and local editor state; base
+   * fields come directly from the response, including absent optional metadata.
+   */
+  protected hydrateFromResponse(result: StixObject): void {
+    this.deserialize(result.serialize(result.modified?.toISOString()));
+    this.stixID = result.stixID;
+    this.type = result.type;
+    this.attackType = result.attackType;
+    this.attackID = result.attackID;
+    this.description = result.description;
+    this.created = result.created;
+    this.modified = result.modified;
+    this.created_by_ref = result.created_by_ref;
+    this.created_by = result.created_by;
+    this.modified_by_ref = result.modified_by_ref;
+    this.modified_by = result.modified_by;
+    this.created_by_user_account = result.created_by_user_account;
+    this.firstInitialized = result.firstInitialized;
+    this.object_marking_refs = result.object_marking_refs;
+    this.version = result.version;
+    this.external_references = result.external_references;
+    this.workflow = result.workflow;
+    this.workspace = result.workspace;
+    this.deprecated = result.deprecated;
+    this.revoked = result.revoked;
+  }
+
+  /**
    * Transform the current object into a raw object for sending to the back-end, stripping any unnecessary fields
    * @abstract
    * @returns {*} the raw object to send

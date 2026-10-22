@@ -35,7 +35,7 @@ import {
   StixTypeToAttackType,
 } from 'src/app/utils/type-mappings';
 import { StixDialogComponent } from 'src/app/views/stix/stix-dialog/stix-dialog.component';
-import { environment } from 'src/environments/environment';
+import { getRuntimeConfiguration } from 'src/configuration/runtime-configuration';
 import {
   SnapshotQuarantineDialogComponent,
   SnapshotQuarantineDialogData,
@@ -380,7 +380,7 @@ export class VirtualSnapshotContentsComponent implements OnChanges, OnDestroy {
       if (!row.modified && row.type !== 'marking-definition')
         throw new Error('The manifest does not identify an exact revision.');
       const url =
-        `${environment.integrations.rest_api.url}/${AttackTypeToPlural[attackType]}` +
+        `${getRuntimeConfiguration().apiUrl}/${AttackTypeToPlural[attackType]}` +
         `/${encodeURIComponent(row.id)}` +
         (row.modified ? `/modified/${encodeURIComponent(row.modified)}` : '');
       return this.http.get<unknown>(url).pipe(

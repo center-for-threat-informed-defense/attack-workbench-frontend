@@ -18,29 +18,35 @@
     "stix"
   ],
   "license": "Apache-2.0",
+  "devEngines": {
+    "runtime": {
+      "name": "node",
+      "version": "22.x",
+      "onFail": "error"
+    }
+  },
   "scripts": {
     "ng": "ng",
-    "start": "ng serve",
+    "start": "node scripts/angular.mjs serve",
     "preview:snapshots": "node scripts/snapshot-preview.mjs",
-    "build": "ng build",
-    "postbuild": "npm run generate:build-info",
-    "build-prod": "ng build --configuration production",
-    "postbuild-prod": "npm run generate:build-info",
+    "build": "node scripts/angular.mjs build",
+    "build-prod": "node scripts/angular.mjs build --configuration production",
+    "build:analyze": "node scripts/angular.mjs build --configuration analyze --stats-json",
+    "analyze:report": "npm run build:analyze && npx esbuild-visualizer --metadata dist/app/stats.json --filename dist/app/esbuild-report.html && open dist/app/esbuild-report.html",
     "generate:build-info": "node scripts/write-build-info.mjs",
+    "generate:configuration": "node scripts/compile-configuration.mjs && node scripts/write-runtime-config.mjs",
     "test": "vitest run",
     "test:watch": "vitest watch",
     "test:ui": "vitest --ui",
     "test:coverage": "vitest run --coverage",
-    "build:analyze": "ng build --configuration analyze --stats-json",
-    "analyze:report": "npm run build:analyze && npx esbuild-visualizer --metadata dist/app/stats.json --filename dist/app/esbuild-report.html && open dist/app/esbuild-report.html",
-    "prepare": "husky || true",
     "lint": "npx eslint src",
     "lint:fix": "npm run lint -- --fix",
     "lint:warnonly": "npm run lint || true",
     "prettier": "npx prettier src --check",
     "prettier:fix": "npm run prettier -- --write",
     "format": "npm run prettier:fix && npm run lint:fix",
-    "check:lockfile": "bash scripts/check-package-lock.sh"
+    "check:lockfile": "bash scripts/check-package-lock.sh",
+    "prepare": "husky || true"
   },
   "dependencies": {
     "@angular/animations": "^19.2.25",
