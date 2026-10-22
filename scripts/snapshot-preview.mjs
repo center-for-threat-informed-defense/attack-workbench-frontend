@@ -5,6 +5,9 @@ import { fileURLToPath } from 'node:url';
 // Design fixture server, never used by normal start/build. All writes are in memory.
 // content_manifest_entries is a proposed read contract, not an existing API field.
 const root = fileURLToPath(new URL('..', import.meta.url));
+const fixtureHost = '127.0.0.1';
+const fixturePort = 4311;
+const fixtureTarget = `http://${fixtureHost}:${fixturePort}`;
 const trackId = 'release-track--snapshot-preview';
 const standardId = 'release-track--component-preview';
 const enterpriseSource = {
@@ -311,7 +314,7 @@ const send = (res, status, data) => {
   res.end(JSON.stringify(data));
 };
 const server = createServer(async (req, res) => {
-  const url = new URL(req.url, 'http://127.0.0.1:4311');
+  const url = new URL(req.url, fixtureTarget);
   const path = decodeURIComponent(url.pathname);
   if (
     req.method === 'POST' &&
@@ -599,40 +602,48 @@ const server = createServer(async (req, res) => {
     message: 'Not available in the snapshot design preview.',
   });
 });
-server.listen(4311, '127.0.0.1', () => {
+let angular;
+let stopping = false;
+server.listen(fixturePort, fixtureHost, () => {
   console.log(
-    'Snapshot design fixture API ready on 127.0.0.1:4311 (in-memory only).'
+    `Snapshot design fixture API ready on ${fixtureTarget} (in-memory only).`
   );
   console.log(
     `Preview: http://localhost:4300/dashboard/release-management/${trackId}`
   );
+  // Use the ordinary development build and proxy with an explicit fixture target.
+  angular = spawn(
+    process.execPath,
+    ['scripts/angular.mjs', 'serve', '--port', '4300', '--host', 'localhost'],
+    {
+      cwd: root,
+      stdio: 'inherit',
+      env: {
+        ...process.env,
+        WORKBENCH_FRONTEND_API_PROXY_TARGET: fixtureTarget,
+        WORKBENCH_FRONTEND_API_URL: '/api',
+      },
+    }
+  );
+  angular.on('exit', code => {
+    server.close();
+    process.exitCode = stopping ? 0 : (code ?? 1);
+  });
+  angular.on('error', error => {
+    console.error(error.message);
+    server.close();
+    process.exitCode = 1;
+  });
 });
-const angular = spawn(
-  process.execPath,
-  [
-    'node_modules/@angular/cli/bin/ng.js',
-    'serve',
-    '--configuration',
-    'snapshot-preview',
-    '--port',
-    '4300',
-    '--host',
-    'localhost',
-  ],
-  { cwd: root, stdio: 'inherit' }
-);
 const stop = () => {
-  angular.kill('SIGTERM');
+  stopping = true;
+  angular?.kill('SIGTERM');
   server.close();
 };
 process.on('SIGINT', stop);
 process.on('SIGTERM', stop);
-angular.on('exit', code => {
-  server.close();
-  process.exitCode = code ?? 0;
-});
 server.on('error', error => {
   console.error(error.message);
-  angular.kill('SIGTERM');
+  angular?.kill('SIGTERM');
   process.exitCode = 1;
 });

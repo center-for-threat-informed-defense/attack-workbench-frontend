@@ -149,7 +149,7 @@ export class DataComponent extends StixObject {
     const postObservable = restAPIService.postDataComponent(this);
     const subscription = postObservable.subscribe({
       next: result => {
-        this.deserialize(result.serialize());
+        this.hydrateFromResponse(result);
       },
       complete: () => {
         subscription.unsubscribe();
@@ -183,7 +183,7 @@ export class DataComponent extends StixObject {
     const putObservable = restAPIService.putDataComponent(this);
     const subscription = putObservable.subscribe({
       next: result => {
-        this.deserialize(result.serialize());
+        this.hydrateFromResponse(result);
       },
       complete: () => {
         subscription.unsubscribe();

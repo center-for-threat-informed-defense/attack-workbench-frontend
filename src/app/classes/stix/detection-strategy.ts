@@ -112,7 +112,7 @@ export class DetectionStrategy extends StixObject {
     const postObservable = restAPIService.postDetectionStrategy(this);
     const subscription = postObservable.subscribe({
       next: result => {
-        this.deserialize(result.serialize());
+        this.hydrateFromResponse(result);
       },
       complete: () => {
         subscription.unsubscribe();
@@ -148,7 +148,7 @@ export class DetectionStrategy extends StixObject {
     const putObservable = restAPIService.putDetectionStrategy(this);
     const subscription = putObservable.subscribe({
       next: result => {
-        this.deserialize(result.serialize());
+        this.hydrateFromResponse(result);
       },
       complete: () => {
         subscription.unsubscribe();

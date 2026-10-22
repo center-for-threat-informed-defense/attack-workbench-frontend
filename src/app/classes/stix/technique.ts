@@ -735,11 +735,7 @@ export class Technique extends StixObject {
     const postObservable = isNewSubtechniqueWithParent
       ? restApiService.postTechnique(this).pipe(
           concatMap(savedTechnique => {
-            const serializedTechnique = savedTechnique.serialize(
-              savedTechnique.modified.toISOString()
-            );
-            this.base_deserialize(serializedTechnique);
-            this.deserialize(serializedTechnique);
+            this.hydrateFromResponse(savedTechnique);
             return this.updateParentRelationship(restApiService).pipe(
               concatMap(() => this.syncTacticsWithParentOrSubs(restApiService)),
               map(() => savedTechnique)
@@ -755,7 +751,7 @@ export class Technique extends StixObject {
 
     const subscription = postObservable.subscribe({
       next: result => {
-        this.deserialize(result.serialize());
+        this.hydrateFromResponse(result);
       },
       complete: () => {
         subscription.unsubscribe();
@@ -790,7 +786,7 @@ export class Technique extends StixObject {
     const putObservable = restAPIService.putTechnique(this);
     const subscription = putObservable.subscribe({
       next: result => {
-        this.deserialize(result.serialize());
+        this.hydrateFromResponse(result);
       },
       complete: () => {
         subscription.unsubscribe();

@@ -1,7 +1,7 @@
 import { Component, Inject, OnInit, ViewEncapsulation } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { forkJoin, Observable, of } from 'rxjs';
-import { catchError, map, switchMap } from 'rxjs/operators';
+import { defer, forkJoin, Observable, of } from 'rxjs';
+import { catchError, finalize, map, switchMap } from 'rxjs/operators';
 import { ExportFormat, SnapshotTier } from 'src/app/classes/release-tracks';
 import type {
   ReleaseTrackObjectTier,
@@ -35,6 +35,7 @@ export class SaveDialogComponent implements OnInit {
   public patch_objects = [];
   public validation: ValidationData = null;
   public validating = false;
+  public saving = false;
   public newState: WorkflowStatus | undefined = WorkflowStatus.WorkInProgress;
   public analyticsToPatch = new Set<string>(); // list of stix ids of analytics that need patching
   public versionChoice: SaveVersionChoice = 'keep';
@@ -46,7 +47,10 @@ export class SaveDialogComponent implements OnInit {
 
   public get saveEnabled() {
     return (
-      !this.validating && this.validation && this.validation.errors.length == 0
+      !this.saving &&
+      !this.validating &&
+      this.validation &&
+      this.validation.errors.length == 0
     );
   }
 
@@ -280,25 +284,14 @@ export class SaveDialogComponent implements OnInit {
    * Apply LinkById patches and save the object
    */
   public patch() {
-    const saves = [];
-    for (const obj of this.patch_objects) {
-      this.patchObject(obj);
-      if (obj.stixID !== this.config.object.stixID)
-        saves.push(obj.save(this.restApiService));
-    }
-    this.stage = 3; // enter loading stage until patching is complete
-    const saveSubscription = forkJoin(saves).subscribe({
-      complete: () => {
-        saveSubscription.unsubscribe();
-        this.save();
-      },
-    });
+    this.save(true);
   }
 
   /**
    * Save the object with the current version and check for patches
    */
   public saveCurrentVersion() {
+    if (!this.saveEnabled || this.stage !== 0) return;
     this.applyWorkflowState();
     if (this.config.patchId || this.config.patchAnalytics) this.parse_patches();
     else this.save();
@@ -308,6 +301,7 @@ export class SaveDialogComponent implements OnInit {
    * Save the object with the next minor version (i.e. 1.0 -> 1.1) and check for patches
    */
   public saveNextMinorVersion() {
+    if (!this.saveEnabled || this.stage !== 0) return;
     this.config.object.version = new VersionNumber(this.nextMinorVersion);
     this.applyWorkflowState();
     if (this.config.patchId || this.config.patchAnalytics) this.parse_patches();
@@ -318,6 +312,7 @@ export class SaveDialogComponent implements OnInit {
    * Save the object with the next major version (i.e. 1.0 -> 2.0) and check for patches
    */
   public saveNextMajorVersion() {
+    if (!this.saveEnabled || this.stage !== 0) return;
     this.config.object.version = new VersionNumber(this.nextMajorVersion);
     this.applyWorkflowState();
     if (this.config.patchId || this.config.patchAnalytics) this.parse_patches();
@@ -336,20 +331,44 @@ export class SaveDialogComponent implements OnInit {
   }
 
   /**
-   * Save the object without patching other objects
+   * Save optional patches, the object, and track enrollment as one guarded operation.
    */
-  private save() {
+  private save(patchObjects = false) {
     if (!this.saveEnabled) {
       return;
     }
+    this.saving = true;
+    const previousDisableClose = this.dialogRef.disableClose;
+    this.dialogRef.disableClose = true;
     this.applyWorkflowState();
-    const sub = this.saveObject()
-      .pipe(switchMap(() => this.syncTracks()))
+    if (patchObjects) this.stage = 3;
+
+    // Acquire the guard before calling save(): model saves subscribe eagerly.
+    defer(() => {
+      const patches = [];
+      if (patchObjects) {
+        for (const obj of this.patch_objects) {
+          this.patchObject(obj);
+          if (obj.stixID !== this.config.object.stixID)
+            patches.push(obj.save(this.restApiService));
+        }
+      }
+      return patches.length ? forkJoin(patches) : of(null);
+    })
+      .pipe(
+        switchMap(() => this.saveObject()),
+        switchMap(() => this.syncTracks()),
+        finalize(() => {
+          this.saving = false;
+          this.dialogRef.disableClose = previousDisableClose;
+        })
+      )
       .subscribe({
-        next: () => {
-          this.dialogRef.close(true);
+        next: () => this.dialogRef.close(true),
+        error: err => {
+          logger.error('Failed to save object', err);
+          if (patchObjects) this.stage = 2;
         },
-        complete: () => sub.unsubscribe(),
       });
   }
 

@@ -13,6 +13,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatRadioModule } from '@angular/material/radio';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { of, Subject } from 'rxjs';
 import { vi } from 'vitest';
 
 import { VersionNumber } from 'src/app/classes/version-number';
@@ -225,6 +226,104 @@ describe('SaveDialogComponent', () => {
     );
     expect(component.dialogRef.close).toHaveBeenCalledWith(true);
   }));
+
+  it('blocks repeated saves until both persistence and track synchronization finish', () => {
+    const persisted = new Subject<unknown>();
+    const enrolled = new Subject<unknown>();
+    mockObject.save.mockReturnValue(persisted);
+    mockReleaseTracksService.addCandidates.mockReturnValue(enrolled);
+    fixture.detectChanges();
+    const saveButton: HTMLButtonElement = fixture.nativeElement.querySelector(
+      'button[color="primary"]'
+    );
+
+    saveButton.click();
+    fixture.detectChanges();
+    expect(saveButton.disabled).toBe(true);
+    expect(component.dialogRef.disableClose).toBe(true);
+    component.onConfirmSave();
+    component.saveNextMajorVersion();
+    expect(mockObject.save).toHaveBeenCalledTimes(1);
+    expect(mockObject.version.toString()).toBe('1.0');
+
+    persisted.next({});
+    persisted.complete();
+    component.onConfirmSave();
+    component.patch();
+    expect(mockObject.save).toHaveBeenCalledTimes(1);
+    expect(component.saveEnabled).toBe(false);
+    expect(component.dialogRef.close).not.toHaveBeenCalled();
+
+    enrolled.next({});
+    enrolled.complete();
+    expect(component.dialogRef.close).toHaveBeenCalledExactlyOnceWith(true);
+    expect(component.saving).toBe(false);
+    expect(component.dialogRef.disableClose).toBeUndefined();
+  });
+
+  it('releases the save guard after a failed POST so the user can try again', fakeAsync(() => {
+    const persisted = new Subject<unknown>();
+    mockObject.save.mockReturnValueOnce(persisted);
+    component.dialogRef.disableClose = false;
+    component.onConfirmSave();
+    persisted.error(new Error('POST failed'));
+    fixture.detectChanges();
+
+    expect(component.saveEnabled).toBe(true);
+    expect(component.dialogRef.disableClose).toBe(false);
+    expect(component.dialogRef.close).not.toHaveBeenCalled();
+    expect(mockReleaseTracksService.addCandidates).not.toHaveBeenCalled();
+
+    component.onConfirmSave();
+    flush();
+    expect(mockObject.save).toHaveBeenCalledTimes(2);
+    expect(component.dialogRef.close).toHaveBeenCalledExactlyOnceWith(true);
+  }));
+
+  it('holds the same guard while patching related objects before saving', () => {
+    const patched = new Subject<unknown>();
+    const persisted = new Subject<unknown>();
+    const enrolled = new Subject<unknown>();
+    const related = {
+      stixID: 'attack-pattern--related',
+      save: vi.fn().mockReturnValue(patched),
+    };
+    component.patch_objects = [related];
+    component.stage = 2;
+    mockObject.save.mockReturnValue(persisted);
+    mockReleaseTracksService.addCandidates.mockReturnValue(enrolled);
+
+    component.patch();
+    component.patch();
+    expect(related.save).toHaveBeenCalledTimes(1);
+    expect(mockObject.save).not.toHaveBeenCalled();
+    expect(component.saveEnabled).toBe(false);
+
+    patched.next({});
+    patched.complete();
+    component.patch();
+    expect(mockObject.save).toHaveBeenCalledTimes(1);
+    persisted.next({});
+    persisted.complete();
+    component.patch();
+    expect(related.save).toHaveBeenCalledTimes(1);
+    expect(component.dialogRef.close).not.toHaveBeenCalled();
+    enrolled.next({});
+    enrolled.complete();
+    expect(component.dialogRef.close).toHaveBeenCalledExactlyOnceWith(true);
+  });
+
+  it('saves once when patch discovery found no related objects', () => {
+    component.stage = 2;
+    mockObject.save.mockReturnValue(of({}));
+    mockReleaseTracksService.addCandidates.mockReturnValue(of({}));
+
+    component.patch();
+
+    expect(mockObject.save).toHaveBeenCalledTimes(1);
+    expect(component.dialogRef.close).toHaveBeenCalledExactlyOnceWith(true);
+    expect(component.saving).toBe(false);
+  });
 
   it('should summarize validation status by severity', () => {
     component.validation = {

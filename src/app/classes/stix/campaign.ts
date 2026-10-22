@@ -183,7 +183,7 @@ export class Campaign extends StixObject {
     const postObservable = restAPIService.postCampaign(this);
     const subscription = postObservable.subscribe({
       next: result => {
-        this.deserialize(result.serialize());
+        this.hydrateFromResponse(result);
       },
       complete: () => {
         subscription.unsubscribe();
@@ -215,7 +215,7 @@ export class Campaign extends StixObject {
     const putObservable = restAPIService.putCampaign(this);
     const subscription = putObservable.subscribe({
       next: result => {
-        this.deserialize(result.serialize());
+        this.hydrateFromResponse(result);
       },
       complete: () => {
         subscription.unsubscribe();

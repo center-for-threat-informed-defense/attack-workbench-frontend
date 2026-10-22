@@ -134,7 +134,7 @@ export class Identity extends StixObject {
     const postObservable = restAPIService.postIdentity(this);
     const subscription = postObservable.subscribe({
       next: result => {
-        this.deserialize(result);
+        this.hydrateFromResponse(result);
       },
       complete: () => {
         subscription.unsubscribe();
@@ -162,7 +162,7 @@ export class Identity extends StixObject {
     const putObservable = restAPIService.putIdentity(this);
     const subscription = putObservable.subscribe({
       next: result => {
-        this.deserialize(result.serialize());
+        this.hydrateFromResponse(result);
       },
       complete: () => {
         subscription.unsubscribe();
